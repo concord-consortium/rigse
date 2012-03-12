@@ -303,4 +303,52 @@ class Investigation < ActiveRecord::Base
     return @reportable_elements
   end
 
+  # return a list of broken parts.
+  def broken_parts
+    page_elements.select { |pe| pe.embeddable.nil? }
+  end
+
+  # is there something wrong with this investigation?
+  def broken?
+    self.broken_parts.size > 0
+  end
+
+  # is it 'safe' to modify this investigation?
+  # TODO: a more thorough check.
+  def can_be_modified?
+    self.offerings.each do |o|
+      return false if o.can_be_deleted? == false
+    end
+    return true
+  end
+  
+  # Is it 'safe' to delete this investigation?
+  def can_be_deleted?
+    return can_be_modified?
+  end
+
+  # Investigation#broken
+  # return a collection broken investigations
+  def self.broken
+    self.all.select { |i| i.broken? }
+  end
+
+  # Investigation#broken_report
+  # print a list of broken investigations
+  def self.broken_report
+    self.broken.each do |i|
+      puts "#{i.id} #{i.name}  #{i.broken_parts.size} #{i.offerings.map {|o| o.learners.size}}"
+    end
+  end
+
+  # Investigation#delete_broken
+  # delete broken investigations which can_be_deleted
+  def self.delete_broken
+    self.broken.each do |i|
+      if i.can_be_deleted?
+        i.destroy
+      end
+    end
+  end
+
 end

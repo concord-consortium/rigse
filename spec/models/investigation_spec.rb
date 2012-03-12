@@ -329,6 +329,80 @@ describe Investigation do
     end
   end
 
+  describe "finding and cleaning broken investigations" do
+    before :each do
+      @bad  = Investigation.create!(@valid_attributes)
+      @good = Investigation.create!(@valid_attributes)
+      @bad_with_learners  = Investigation.create!(@valid_attributes)
+      @offering = mock_model(Portal::Offering, :can_be_deleted? => false)
+      @bad_page_element = mock_model(PageElement, :embeddable => nil)
+      @good_page_element = mock_model(PageElement, :embeddable => mock_model(Embeddable::MultipleChoice))
+      @good.stub(:page_elements => [@good_page_element,@good_page_element])
+      @bad.stub(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
+      @bad_with_learners.stub(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
+      @bad_with_learners.stub(:offerings => [@offering])
+      Investigation.stub!(:all => [@good,@bad,@bad_with_learners])     
+    end
+
+    describe "broken investigations" do
+      describe "broken_parts" do
+        it "should return a list of a broken page_elements" do
+          @bad.broken_parts.should_not be_empty
+          @bad_with_learners.broken_parts.should_not be_empty
+        end
+        it "should return an empty list if the investigation is fine" do
+          @good.broken_parts.should be_empty
+        end
+      end
+      
+      describe "broken?" do
+        it "investigation with broken parts should be marked as broken" do
+          @good.should_not be_broken
+          @bad.should be_broken
+          @bad_with_learners.should be_broken
+        end
+      end
+
+      describe "Investigation#broken" do
+        it "should return a list of broken investigations" do
+          Investigation.broken.should include @bad
+          Investigation.broken.should_not include @good
+        end
+      end
+    end #broken investigations
+
+    describe "deleting broken investigations" do
+      describe "can_be_modified?" do
+        it "should return true for investigations without learners" do
+          @good.should be_can_be_modified
+          @bad.should be_can_be_modified
+        end
+        it "should return false for investigations with learners" do
+          @bad_with_learners.should_not be_can_be_modified
+        end
+      end
+
+      describe "can_be_deleted?" do
+        it "should return true for investigations without learners" do
+          @good.can_be_deleted?.should == true
+          @bad.can_be_deleted?.should == true
+        end
+        it "should return false for investigations with learners" do
+          @bad_with_learners.can_be_deleted?.should == false
+        end
+      end
+
+      describe "delete_broken" do
+        it "should send 'destroy' messages to broken investigations without learners" do
+          @bad_with_learners.should_not_receive(:destroy)
+          @good.should_not_receive(:destroy)
+          @bad.should_receive(:destroy)
+          Investigation.delete_broken
+        end
+      end
+    end # deleting broken investigations
+  end
+
 end
 
 
