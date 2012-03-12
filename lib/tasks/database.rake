@@ -6,22 +6,25 @@ namespace :db do
     when 'mysql', 'mysql2'
       # make sure we can connect to the db...
       ActiveRecord::Base.establish_connection(db_config)
-      File.open("db/#{RAILS_ENV}_data.sql", "w+") do |f|
-        cmd = "mysqldump --lock-tables=false --add-drop-table --quick --extended-insert"
-        if db_config["host"]
-          cmd << " -h #{db_config["host"]}"
-        end
-        if db_config["username"]
-          cmd << " -u #{db_config["username"]}"
-        end
-        if db_config["password"]
-          cmd << " -p'#{db_config["password"]}'"
-        end
-        cmd << " #{db_config["database"]}"
-        # puts "Fetching database\n#{cmd}"
-        puts "Saving database to: db/#{RAILS_ENV}_data.sql"
-        f << `#{cmd}`
+      
+      output_file = "db/#{RAILS_ENV}_data.sql";
+      
+      cmd = "mysqldump --lock-tables=false --add-drop-table --quick --extended-insert"
+      if db_config["host"]
+        cmd << " -h #{db_config["host"]}"
       end
+      if db_config["username"]
+        cmd << " -u #{db_config["username"]}"
+      end
+      if db_config["password"]
+        cmd << " -p'#{db_config["password"]}'"
+      end
+      cmd << " #{db_config["database"]}"
+      
+      cmd << " > #{output_file}"
+      # puts "Fetching database\n#{cmd}"
+      puts "Saving database to: #{output_file}"
+      puts `#{cmd}`
     when 'sqlite3'
       ActiveRecord::Base.establish_connection(db_config)
       File.open("db/#{RAILS_ENV}_data.sql", "w+") do |f|
