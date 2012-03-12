@@ -340,9 +340,9 @@ module ApplicationHelper
   end
 
   def sort_dropdown(selected)
-    selected ||= "created_at ASC"
+    selected ||= "name ASC"
     sort_options = [ ["Oldest", "created_at ASC"], [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
-    select nil, :sort_order, sort_options, {:selected => selected, :include_blank => true }
+    select nil, :sort_order, sort_options, {:selected => selected, :include_blank => false }
   end
 
   def otrunk_edit_button_for(component, options={})

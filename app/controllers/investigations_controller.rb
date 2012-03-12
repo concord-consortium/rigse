@@ -116,7 +116,7 @@ class InvestigationsController < AuthoringController
       :include_drafts => @include_drafts,
       :grade_span => @grade_span,
       :domain_id => @domain_id,
-      :sort_order => @sort_order,
+      :sort_order => @sort_order || 'name ASC',
       :paginate => true,
       :page => pagination
     }
