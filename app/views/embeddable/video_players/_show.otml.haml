@@ -7,4 +7,4 @@
         = image_tag(video_player.image_url, :alt => video_player.name)
         %br
       = video_player.name
-    = video_player.description
+    = video_player.description.html_safe
