@@ -1,5 +1,8 @@
 - # requires: grade_span, portal_clazz_id, domain_id
-- # optional: hide_drafts_checkbox
+- # optional: hide_drafts_checkbox, hide_usage_checkbox
+- if (current_user.anonymous?)
+  - local_assigns[:hide_drafts_checkbox] = true
+  - local_assigns[:hide_usage_checkbox] = true
 
 %h3
   #search_title
@@ -35,5 +38,6 @@
       %td{:style=>"padding: 0.5em;"}
       %td{:style=>"padding: 0.5em;"}
       %td{:style=>"padding: 0.5em; text-align: right"}
-        = label_tag :include_usage_count, 'show count: ', :class=>"right"
-        = check_box_tag :include_usage_count, true, session[:include_usage_count]
+        - unless local_assigns[:hide_usage_checkbox]
+          = label_tag :include_usage_count, 'show count: ', :class=>"right"
+          = check_box_tag :include_usage_count, true, session[:include_usage_count]

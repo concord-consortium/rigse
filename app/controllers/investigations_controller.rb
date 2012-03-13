@@ -110,6 +110,10 @@ class InvestigationsController < AuthoringController
       session[:include_usage_count] = params[:include_usage_count]
     end
 
+    if current_user.anonymous?
+      session[:include_usage_count] = false
+      @include_drafts = false
+    end
     search_options = {
       :name => @name,
       :portal_clazz_id => @portal_clazz_id,
