@@ -762,6 +762,14 @@ ActiveRecord::Schema.define(:version => 20120524200956) do
     t.datetime "updated_at"
   end
 
+  create_table "installer_reports", :force => true do |t|
+    t.text     "body"
+    t.string   "remote_ip"
+    t.boolean  "success"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "investigations", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                      :limit => 36
