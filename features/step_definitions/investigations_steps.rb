@@ -101,6 +101,11 @@ When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name,
   fake_drop(selector_id,to)
 end
 
+
+Then /^I should not see the "([^"]*)" checkbox in the list filter$/ do |arg1|
+  page.should_not have_selector("input[name='#{arg1}'][type='checkbox']")
+end
+
 When /^I show offerings count on the investigations page$/ do 
   visit "/investigations?include_usage_count=true"
 end
