@@ -21,4 +21,12 @@ class MiscController < ActionController::Base
     image_file = File.exists?(theme_file = File.join(image_folder, "#{APP_CONFIG[:theme]}.png")) ? theme_file : File.join(image_folder, "empty.png")
     send_file(image_file, {:type => 'image/png', :disposition => 'inline'} )
   end
+
+  def installer_report
+    body = request.body.read
+    remote_ip = request.env['HTTP_X_FORWARDED_FOR'] || request.remote_ip
+    success = !!(body =~ /Succeeded! Saved and loaded jar./)
+    report = InstallerReport.create(:body => body, :remote_ip => remote_ip, :success => success)
+    render :xml => "<created/>", :status => :created
+  end
 end

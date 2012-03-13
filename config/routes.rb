@@ -484,6 +484,7 @@ constraints :id => /\d+/ do
   match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
   match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
   match '/banner' => 'misc#banner', :as => :banner
+  post  '/installer_report' => 'misc#installer_report', :as => :installer_report
   match '/:controller(/:action(/:id))'
 
   root :to => 'home#index'
