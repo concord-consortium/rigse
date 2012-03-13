@@ -5,15 +5,22 @@
   = field_set_tag 'description' do
     = f.text_area :description, :id => dom_id_for(biologica_meiosis_view, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
   = field_set_tag 'parents' do
-    = "Father: "
+    Father:
     = f.select :father_organism_id, Embeddable::Biologica::Organism.by_scope(@scope).select{|o| o.sex == Embeddable::Biologica::Organism.male}.collect { |org| [ "#{org.name}: #{org.id}", org.id ] }, { :prompt => true }, {:id => dom_id_for(biologica_meiosis_view, :item, :father_organism_select)}
-    = "<br/>Mother: "
+    %br
+    Mother:
     = f.select :mother_organism_id, Embeddable::Biologica::Organism.by_scope(@scope).select{|o| o.sex == Embeddable::Biologica::Organism.female}.collect { |org| [ "#{org.name}: #{org.id}", org.id ] }, { :prompt => true }, {:id => dom_id_for(biologica_meiosis_view, :item, :mother_organism_select)}
   = field_set_tag 'options' do
-    = "Width: " + f.text_field(:width, :id => dom_id_for(biologica_meiosis_view, :item, :width_field)) + " "
-    = "Height: " + f.text_field(:height, :id => dom_id_for(biologica_meiosis_view, :item, :height_field)) + "<br/>"
-    = "Replay Enabled: " + f.check_box(:replay_button_enabled, :id => dom_id_for(biologica_meiosis_view, :item, :replay_enabled_check_box)) + "<br/>"
-    = "Controllable Crossover: " + f.check_box(:controlled_crossover_enabled, :id => dom_id_for(biologica_meiosis_view, :item, :controlled_crossover_enabled_check_box)) + "<br/>"
-    = "Crossover Controls: " + f.check_box(:crossover_control_visible, :id => dom_id_for(biologica_meiosis_view, :item, :crossover_control_visible_check_box)) + "<br/>"
-    = "Controllable Alignment: " + f.check_box(:controlled_alignment_enabled, :id => dom_id_for(biologica_meiosis_view, :item, :controlled_alignment_enabled_check_box)) + "<br/>"
-    = "Alignment Controls: " + f.check_box(:alignment_control_visible, :id => dom_id_for(biologica_meiosis_view, :item, :alignment_control_visible_check_box)) + "<br/>"
+    Width:  #{f.text_field(:width, :id => dom_id_for(biologica_meiosis_view, :item, :width_field))   } 
+    Height: #{f.text_field(:height, :id => dom_id_for(biologica_meiosis_view, :item, :height_field)) }
+    %br/
+    Replay Enabled:  #{f.check_box(:replay_button_enabled, :id => dom_id_for(biologica_meiosis_view, :item, :replay_enabled_check_box)) }
+    %br/
+    Controllable Crossover: #{f.check_box(:controlled_crossover_enabled, :id => dom_id_for(biologica_meiosis_view, :item, :controlled_crossover_enabled_check_box))}
+    %br/
+    Crossover Controls:  #{f.check_box(:crossover_control_visible, :id => dom_id_for(biologica_meiosis_view, :item, :crossover_control_visible_check_box))}
+    %br/
+    Controllable Alignment: #{f.check_box(:controlled_alignment_enabled, :id => dom_id_for(biologica_meiosis_view, :item, :controlled_alignment_enabled_check_box))}
+    %br/
+    Alignment Controls: #{f.check_box(:alignment_control_visible, :id => dom_id_for(biologica_meiosis_view, :item, :alignment_control_visible_check_box))} 
+    %br/

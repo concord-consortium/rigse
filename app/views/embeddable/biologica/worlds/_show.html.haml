@@ -1,4 +1,4 @@
 %div{:id => dom_id_for(biologica_world, :details), :class => 'content'}
   = wrap_edit_link_around_content(biologica_world, options={:complete => mce_init_string}) do
-    = biologica_world.description
+    = biologica_world.description.html_safe
     = biologica_world.species_path

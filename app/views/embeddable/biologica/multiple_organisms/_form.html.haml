@@ -5,9 +5,9 @@
   = field_set_tag 'description' do
     = f.text_area :description, :id => dom_id_for(biologica_multiple_organism, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
   = field_set_tag 'organisms' do
-    = "<select name='multiple_organism[organism_ids][]' multiple='true' size='5'>"
-    = Embeddable::Biologica::Organism.by_scope(@scope).collect {|o| selected = false; selected = true if biologica_multiple_organism.organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n")
-    = "</select>"
+    %select{:name => 'multiple_organism[organism_ids][]', :multiple => 'true', :size => size='5'}
+      = Embeddable::Biologica::Organism.by_scope(@scope).collect {|o| selected = false; selected = true if biologica_multiple_organism.organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n").html_safe
   = field_set_tag 'options' do
-    = "Width: " + f.text_field(:width, :id => dom_id_for(biologica_multiple_organism, :item, :width_field)) + " "
-    = "Height: " + f.text_field(:height, :id => dom_id_for(biologica_multiple_organism, :item, :height_field)) + "<br/>"
+    Width:  #{ f.text_field(:width, :id => dom_id_for(biologica_multiple_organism, :item, :width_field))   }
+    Height: #{ f.text_field(:height, :id => dom_id_for(biologica_multiple_organism, :item, :height_field)) }
+    %br/

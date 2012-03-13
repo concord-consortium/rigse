@@ -4,43 +4,51 @@
   = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(smartgraph_range_question, :item, :name_field)
   = field_set_tag 'details' do
-    = "Prompt: <br/>"
+    Prompt:
+    %br/
     = f.text_area :prompt, :id => dom_id_for(smartgraph_range_question, :item, :prompt_textarea), :rows => 40
-    = "<br/>"
-    = "Answer style: " + f.select(:answer_style, Embeddable::Smartgraph::RangeQuestion.answer_styles, { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :answer_style_select)})
+    %br/
+    Answer style: 
+    = f.select(:answer_style, Embeddable::Smartgraph::RangeQuestion.answer_styles, { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :answer_style_select)})
   = field_set_tag 'data collector' do
     = f.select(:data_collector_id, Embeddable::DataCollector.by_scope(@scope).collect{|dc| ["#{dc.name} (#{dc.id})", dc.id]}, { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :data_collector_select)})
   = field_set_tag 'correct answer' do
-    = "Range min: " + f.text_field(:correct_range_min, :id => dom_id_for(smartgraph_range_question, :item, :correct_range_min_field), :size => 8)+ " "
-    = "Range max: " + f.text_field(:correct_range_max, :id => dom_id_for(smartgraph_range_question, :item, :correct_range_max_field), :size => 8) + " "
-    = "Range axis: " + f.select(:correct_range_axis, ["x", "y"], { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :correct_range_axis_select)})
+    Range min:
+    = f.text_field(:correct_range_min, :id => dom_id_for(smartgraph_range_question, :item, :correct_range_min_field), :size => 8)
+    Range max:
+    = f.text_field(:correct_range_max, :id => dom_id_for(smartgraph_range_question, :item, :correct_range_max_field), :size => 8)
+    Range axis: 
+    = f.select(:correct_range_axis, ["x", "y"], { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :correct_range_axis_select)})
   = field_set_tag 'highlight region' do
-    = "Range min: " + f.text_field(:highlight_range_min, :id => dom_id_for(smartgraph_range_question, :item, :highlight_range_min_field), :size => 8) + " "
-    = "Range max: " + f.text_field(:highlight_range_max, :id => dom_id_for(smartgraph_range_question, :item, :highlight_range_max_field), :size => 8) + " "
-    = "Range axis: " + f.select(:highlight_range_axis, ["x", "y"], { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :highlight_range_axis_select)})
+    Range min: 
+    = f.text_field(:highlight_range_min, :id => dom_id_for(smartgraph_range_question, :item, :highlight_range_min_field), :size => 8)
+    Range max:
+    = f.text_field(:highlight_range_max, :id => dom_id_for(smartgraph_range_question, :item, :highlight_range_max_field), :size => 8)
+    Range axis:
+    = f.select(:highlight_range_axis, ["x", "y"], { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :highlight_range_axis_select)})
   = field_set_tag 'responses' do
     %table{:border => '0'}
       %tr
         %th
-        %th= "Response Text"
-        %th= "Highlight?"
+        %th Response Text
+        %th Highlight?
       %tr
-        %td= "No Answer:"
+        %td No Answer:
         %td= f.text_area(:no_answer_response_text, :id => dom_id_for(smartgraph_range_question, :item, :no_answer_response_text_textarea), :rows => 2, :class => 'mceNoEditor')
         %td= f.check_box(:no_answer_highlight, :id => dom_id_for(smartgraph_range_question, :item, :no_answer_highlight_checkbox) )
       %tr
-        %td= "Correct Answer:"
+        %td Correct Answer
         %td= f.text_area(:correct_response_text, :id => dom_id_for(smartgraph_range_question, :item, :correct_answer_response_text_textarea), :rows => 2, :class => 'mceNoEditor')
         %td= f.check_box(:correct_highlight, :id => dom_id_for(smartgraph_range_question, :item, :correct_highlight_checkbox) )
       %tr
-        %td= "First Wrong Answer:"
+        %td First Wrong Answer
         %td= f.text_area(:first_wrong_answer_response_text, :id => dom_id_for(smartgraph_range_question, :item, :first_wrong_answer_response_text_textarea), :rows => 2, :class => 'mceNoEditor')
         %td= f.check_box(:first_wrong_highlight, :id => dom_id_for(smartgraph_range_question, :item, :first_wrong_highlight_checkbox) )
       %tr
-        %td= "Second Wrong Answer:"
+        %td Second Wrong Answer:
         %td= f.text_area(:second_wrong_answer_response_text, :id => dom_id_for(smartgraph_range_question, :item, :second_wrong_answer_response_text_textarea), :rows => 2, :class => 'mceNoEditor')
         %td= f.check_box(:second_wrong_highlight, :id => dom_id_for(smartgraph_range_question, :item, :second_wrong_highlight_checkbox) )
       %tr
-        %td= "Multiple Wrong Answers:"
+        %td Multiple Wrong Answers:
         %td= f.text_area(:multiple_wrong_answers_response_text, :id => dom_id_for(smartgraph_range_question, :item, :multiple_wrong_answers_response_text_textarea), :rows => 2, :class => 'mceNoEditor')
         %td= f.check_box(:multiple_wrong_highlight, :id => dom_id_for(smartgraph_range_question, :item, :multiple_wrong_highlight_checkbox) )

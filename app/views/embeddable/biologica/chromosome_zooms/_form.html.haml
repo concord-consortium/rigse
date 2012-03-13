@@ -6,59 +6,59 @@
     = f.text_area :description, :id => dom_id_for(biologica_chromosome_zoom, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
   = field_set_tag 'organisms' do
     = "Organisms: "
-    = "<select name='chromosome_zoom[organism_ids][]' multiple='true' size='5'>"
-    = Embeddable::Biologica::Organism.by_scope(@scope).collect {|o| selected = false; selected = true if biologica_chromosome_zoom.organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n")
-    = "</select>"
-    = "<br/>"
+    %select{:name => 'chromosome_zoom[organism_ids][]', :multiple => 'true', :size =>'5'}
+      = Embeddable::Biologica::Organism.by_scope(@scope).collect {|o| selected = false; selected = true if biologica_chromosome_zoom.organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n").html_safe
+    
+    %br/
   = field_set_tag 'options' do
     = "Chromosome a visible: "
     = f.check_box :chromosome_a_visible, :id => dom_id_for(biologica_chromosome_zoom, :item, :chromosome_a_visible_checkbox)
-    = "<br/>"
+    %br/
     = "Chromosome b visible: "
     = f.check_box :chromosome_b_visible, :id => dom_id_for(biologica_chromosome_zoom, :item, :chromosome_b_visible_checkbox)
-    = "<br/>"
+    %br/
     = "Chromosome position in base pairs: "
     = f.text_field :chromosome_position_in_base_pairs, :id => dom_id_for(biologica_chromosome_zoom, :item, :chromosome_position_in_base_pairs_field)
-    = "<br/>"
+    %br/
     = "Chromosome position in cm: "
     = f.text_field :chromosome_position_in_cm, :id => dom_id_for(biologica_chromosome_zoom, :item, :chromosome_position_in_cm_field)
-    = "<br/>"
+    %br/
     = "Zoom level: "
     = f.text_field :zoom_level, :id => dom_id_for(biologica_chromosome_zoom, :item, :zoom_level_field)
-    = "<br/>"
+    %br/
     = "Draw crossover: "
     = f.check_box :draw_crossover, :id => dom_id_for(biologica_chromosome_zoom, :item, :draw_crossover_checkbox)
-    = "<br/>"
+    %br/
     = "Draw genes: "
     = f.check_box :draw_genes, :id => dom_id_for(biologica_chromosome_zoom, :item, :draw_genes_checkbox)
-    = "<br/>"
+    %br/
     = "Draw markers: "
     = f.check_box :draw_markers, :id => dom_id_for(biologica_chromosome_zoom, :item, :draw_markers_checkbox)
-    = "<br/>"
+    %br/
     = "Draw tracks: "
     = f.check_box :draw_tracks, :id => dom_id_for(biologica_chromosome_zoom, :item, :draw_tracks_checkbox)
-    = "<br/>"
+    %br/
     = "G browse url template: "
     = f.text_field :g_browse_url_template, :id => dom_id_for(biologica_chromosome_zoom, :item, :g_browse_url_template_field)
-    = "<br/>"
+    %br/
     = "Image label characteristics text visible: "
     = f.check_box :image_label_characteristics_text_visible, :id => dom_id_for(biologica_chromosome_zoom, :item, :image_label_characteristics_text_visible_checkbox)
-    = "<br/>"
+    %br/
     = "Image label lock symbol visible: "
     = f.check_box :image_label_lock_symbol_visible, :id => dom_id_for(biologica_chromosome_zoom, :item, :image_label_lock_symbol_visible_checkbox)
-    = "<br/>"
+    %br/
     = "Image label name text visible: "
     = f.check_box :image_label_name_text_visible, :id => dom_id_for(biologica_chromosome_zoom, :item, :image_label_name_text_visible_checkbox)
-    = "<br/>"
+    %br/
     = "Image label sex text visible: "
     = f.check_box :image_label_sex_text_visible, :id => dom_id_for(biologica_chromosome_zoom, :item, :image_label_sex_text_visible_checkbox)
-    = "<br/>"
+    %br/
     = "Image label size: "
     = f.text_field :image_label_size, :id => dom_id_for(biologica_chromosome_zoom, :item, :image_label_size_field)
-    = "<br/>"
+    %br/
     = "Image label species text visible: "
     = f.check_box :image_label_species_text_visible, :id => dom_id_for(biologica_chromosome_zoom, :item, :image_label_species_text_visible_checkbox)
-    = "<br/>"
+    %br/
     = "Organism label type: "
     = f.text_field :organism_label_type, :id => dom_id_for(biologica_chromosome_zoom, :item, :organism_label_type_field)
-    = "<br/>"
+    %br/

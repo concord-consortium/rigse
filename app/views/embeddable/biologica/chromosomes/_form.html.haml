@@ -7,5 +7,6 @@
   = field_set_tag 'organism' do
     = f.select :organism_id, Embeddable::Biologica::Organism.by_scope(@scope).collect { |org| [ "#{org.name}: #{org.id}", org.id ] }, { :prompt => true }, {:id => dom_id_for(biologica_chromosome, :item, :organism_select)}
     = field_set_tag 'options' do
-      = "Width: " + f.text_field(:width, :id => dom_id_for(biologica_chromosome, :item, :width_field)) + " "
-      = "Height: " + f.text_field(:height, :id => dom_id_for(biologica_chromosome, :item, :height_field)) + "<br/>"
+      Width:   #{f.text_field(:width, :id => dom_id_for(biologica_chromosome, :item, :width_field))}
+      Height:  #{f.text_field(:height, :id => dom_id_for(biologica_chromosome, :item, :height_field))}
+      %br/
