@@ -46,6 +46,10 @@ class Portal::Offering < ActiveRecord::Base
     self.runnable.is_a? ResourcePage
   end
 
+  def external_activity?
+    self.runnable.is_a? ExternalActivity
+  end
+
   self.extend SearchableModel
 
   @@searchable_attributes = %w{status}

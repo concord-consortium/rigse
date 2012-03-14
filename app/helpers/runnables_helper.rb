@@ -61,8 +61,12 @@ module RunnablesHelper
     html_options={}
     case component
     when Portal::Offering
-      html_options[:class] = 'run_link offering'
-      html_options[:popup] = component.runnable.popup if component.runnable.kind_of?(ExternalActivity)
+      if component.external_activity?
+        html_options[:class] = 'offering'
+        html_options[:popup] = component.runnable.popup
+      else
+        html_options[:class] = 'run_link offering'
+      end
     when ExternalActivity
       html_options[:popup] = component.popup
     else
