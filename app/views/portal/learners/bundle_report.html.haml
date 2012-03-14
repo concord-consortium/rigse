@@ -3,7 +3,6 @@
   = report_details_for_learner(@portal_learner)
   Learner created at: #{@portal_learner.created_at}
   %div{:id => dom_id_for(@portal_learner, :details), :class => 'content'}
-    Bundle Logs
     = render :partial => 'dataservice/bundle_loggers/show', :locals=> { :dataservice_bundle_logger => @portal_learner.bundle_logger }
-    Console Logs
+    = render :partial => 'dataservice/bundle_loggers/events', :locals=> { :dataservice_bundle_logger => @portal_learner.bundle_logger }
     = render :partial => 'dataservice/console_loggers/show', :locals=> { :dataservice_console_logger => @portal_learner.console_logger }

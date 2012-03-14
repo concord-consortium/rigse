@@ -1,0 +1,3 @@
+- options = { :omit_edit => true, :omit_delete => true, :hide_component_name => true }
+= accordion_for(dataservice_bundle_logger, 'Bundle Events') do
+  = render :partial => 'dataservice/launch_process_events/show', :collection => dataservice_bundle_logger.launch_process_events, :as => :event

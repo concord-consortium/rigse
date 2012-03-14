@@ -5,6 +5,7 @@ class Dataservice::BundleLogger < ActiveRecord::Base
   belongs_to :in_progress_bundle, :class_name => "Dataservice::BundleContent"
   has_many   :bundle_contents, :class_name => "Dataservice::BundleContent", :order => :position, :dependent => :destroy
   
+  has_many :launch_process_events, :class_name => "Dataservice::LaunchProcessEvent", :through => :bundle_contents, :order => "id ASC"
 
   has_one :last_non_empty_bundle_content, 
     :class_name => "Dataservice::BundleContent",
