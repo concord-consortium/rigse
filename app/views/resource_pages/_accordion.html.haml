@@ -24,7 +24,7 @@
           %li.menu= link_to 'edit', edit_resource_page_url(resource_page)
           %li.menu= link_to 'delete', resource_page, :class => 'delete', :confirm => "Are you sure you want to delete #{ResourcePage.display_name} #{resource_page.id}", :method => :delete
   %div{:id => dom_id_for(resource_page, :details), :class => 'tiny'}
-    %p= resource_page.description
+    %p= resource_page.description.html_safe
     %p
       %strong= pluralize resource_page.attached_files.size, "attachment"
       %ul
