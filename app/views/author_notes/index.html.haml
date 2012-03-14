@@ -5,7 +5,7 @@ Here they are:
   - @author_notes.each do |author_note|
     %tr
       %td= link_to 'Show', author_note
-      %td= link_to 'edit', edit_teacher_note_path(author_note) 
+      %td= link_to 'edit', edit_author_note_path(author_note) 
       %td= link_to 'Destroy', author_note, :confirm => 'Are you sure?', :method => :delete
 
 = link_to 'Create new AuthorNote Note', new_author_note_path
