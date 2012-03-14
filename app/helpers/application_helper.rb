@@ -64,6 +64,7 @@ module ApplicationHelper
   <li>#{jnlp[:snapshot]}</li>
 </ul>
     HEREDOC
+    info.html_safe
   end
 
   def git_repo_info
