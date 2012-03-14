@@ -1,5 +1,5 @@
 - options = { :omit_edit => true, :omit_delete => true, :hide_componenent_name => true }
-- bundle_summary = capture_haml do
+- bundle_summary = capture do
   Session bundle: #{dataservice_bundle_content.id} (#{dataservice_bundle_content.position}) #{dataservice_bundle_content.session_uuid || "No Session UUID"}
   .tiny
     %div
