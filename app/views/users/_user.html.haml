@@ -7,6 +7,8 @@
         - if (user.changeable?(current_user))
           - if user.portal_teacher
             %li.menu=link_to 'Teacher Page', portal_teacher_path(user.portal_teacher)
+          - if portal_student = user.portal_student
+            %li.menu=link_to 'Student Page', portal_student_path(portal_student)
           %li.menu=link_to 'edit', edit_user_path(user)
           %li.menu=link_to 'Reset Password', reset_password_user_path(user)
   %div{:id => dom_id_for(user, :details), :class => 'tiny'}
