@@ -30,7 +30,7 @@ module RunnablesHelper
     end
 
     classes = "run_link rollover"
-    if component.is_a? Portal::Offering && !component.external_activity?
+    if component.is_a?(Portal::Offering) && !(component.external_activity?)
       classes << ' offering'
     end
     options = {
