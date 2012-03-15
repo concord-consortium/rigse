@@ -30,7 +30,7 @@ module RunnablesHelper
     end
 
     classes = "run_link rollover"
-    if component.is_a? Portal::Offering
+    if component.is_a? Portal::Offering && !component.external_activity?
       classes << ' offering'
     end
     options = {
@@ -39,7 +39,7 @@ module RunnablesHelper
     }
     if component.is_a?(ExternalActivity)
       options[:popup] = component.popup
-    elsif component.is_a?(Portal::Offering) && component.runnable.is_a?(ExternalActivity)
+    elsif component.is_a?(Portal::Offering) && component.external_activity?
       options[:popup] = component.runnable.popup
     end
     link_button("#{image}.png",  run_url_for(component, params), options)
@@ -62,7 +62,7 @@ module RunnablesHelper
     case component
     when Portal::Offering
       if component.external_activity?
-        html_options[:class] = 'offering'
+        html_options[:class] = 'run_link'
         html_options[:popup] = component.runnable.popup
       else
         html_options[:class] = 'run_link offering'
