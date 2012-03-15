@@ -24,9 +24,13 @@ namespace :app do
         [Embeddable::DataCollector, :calibration],
         [Embeddable::DataCollector, :data_table],
         [Embeddable::DataCollector, :prediction_graph_source],
-        []
+        [MavenJnlp::VersionedJnlp, :icon],
+        [Activity, :original],
+        [Dataservice::BundleLogger, :in_progress_bundle],
+        [Dataservice::BundleLogger, :last_non_empty_bundle_content],
+        [Dataservice::ConsoleLogger, :last_console_content]
       ]
-      SKIP = [Itsi::Itsi, Ccportal::Ccportal, ActiveRecord::SessionStore::Session]
+      SKIP = [Itsi::Itsi, Ccportal::Ccportal, Embeddable::Embeddable, ActiveRecord::SessionStore::Session]
       results = {}
       load_all_models
       begin
