@@ -5,5 +5,5 @@ class Portal::SchoolMembership < ActiveRecord::Base
   
   belongs_to :school, :class_name => "Portal::School", :foreign_key => "school_id"
   belongs_to :member, :polymorphic => true
-  belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "member_id", :conditions => "member_type='Portal::Teacher'"
+  # belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "member_id", :conditions => "member_type='Portal::Teacher'"
 end
