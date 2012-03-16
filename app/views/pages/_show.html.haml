@@ -1,6 +1,8 @@
 .item_collection
-  %ul#elements_container.menu
+  - elements_container_id = dom_id_for(page, :elements_container)
+  %ul.menu{:id => elements_container_id}
     - page.page_elements.each_with_index do |element,i|
       = render :partial => 'pages/element_container', :locals => {:element => element, :component => element.embeddable, :page_element => element, :page => page }
   - if (page.changeable?(current_user))
-    =sortable_element :elements_container, :url=> {:action => 'sort_elements', :params => {:page_id => page.id }}, :handle=> "action_menu", :constraint => :vertical, :scroll => "window"
+    - url = polymorphic_url([:sort_elements, page])
+    =sortable_element elements_container_id, :url => url, :handle=> "action_menu", :constraint => :vertical, :scroll => "window"

@@ -1,15 +1,28 @@
-- if params['print']
-  - if sub_page
-    = render :partial=> 'pages/print', :locals=>{:page => sub_page, :inner_page=>inner_page, :teacher_mode => params['teacher_mode'], :hide_title=>true}
+- page_elements_container = dom_id_for(page,:elements_container)
 
+- if (for_teacher_only? page)
+  - view_class = "action_menu teacher_only"
 - else
+  - view_class = "action_menu"
+
+      
+%div{:id => dom_id_for(page,:item), :class =>view_class}
   .action_menu
     .action_menu_header_left
-      = inner_page.menu_name
+      .padded_content
+        %span.page_name inner page: #{page.name}
     .action_menu_header_right
-      - if (inner_page.changeable?(current_user))
-        = remote_link_button "add.png", :url => add_page_embeddable_inner_page_path(inner_page, :id=>inner_page.id), :title => "add new page", :update => dom_id_for(inner_page, :inner_page_area)
+      - if (page.changeable?(current_user))
+        = dropdown_button "add.png", :content_id=>dom_id_for(page, :add_menu),:name=> dom_id_for(page, :add_menu), :title => 'add content to this page'
+        - delete_url = url_for(:controller => "embeddable/inner_pages", :action => 'delete_page', :id => inner_page.id, :page_id => page.id)
+        = remote_link_button "delete.png", :confirm => "Delete THE BIG OLD page #{page.name}?", :url => delete_url, :title => "delete #{page.name}"
+      - else
+        = link_button "disabled.png", "#", :title => "can't add content"
     
-  - if sub_page
-    = render :partial => 'embeddable/inner_pages/page_header', :locals=>{:page => sub_page, :inner_page=>inner_page}
-    = render :partial=> 'pages/show', :locals=>{:page => sub_page, :inner_page=>inner_page}
+  .item_collection
+    %ul.menu{:id => page_elements_container}
+      - page.page_elements.each_with_index do |element,i|
+        = render :partial => 'pages/element_container', :locals => {:element => element, :component => element.embeddable, :page_element => element, :page => page }
+      - if (page.changeable?(current_user))
+        - url = polymorphic_url([:sort_elements, page])
+        =sortable_element page_elements_container, :url => url, :handle=> "action_menu", :constraint => :vertical, :scroll => "window"

@@ -462,7 +462,11 @@ module ApplicationHelper
       embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
       controller = "#{model.class.name.pluralize.underscore}"
       if defined? model.parent
-        options[:redirect] ||= url_for model.parent
+        
+        # allow specification of options[:redirect] = false to skip
+        if options[:redirect].nil?
+          options[:redirect]= url_for model.parent
+        end
       end
       if options[:redirect]
         url = url_for(:controller => controller, :id => model.id, :action => :destroy, :redirect=>options[:redirect])

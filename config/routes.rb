@@ -55,12 +55,14 @@ constraints :id => /\d+/ do
     resources :inner_pages do
       member do
         post :sort_pages
-        post :delete_page
         post :add_page
         post :add_element
-        post :set_page
       end
+      match 'delete_page/:page_id', :controller => 'embeddable__inner_pages', :action => 'delete_page'
     end
+
+    
+    
     resources :lab_book_snapshots
     resources :raw_otmls
     resources :n_logo_models
@@ -275,15 +277,15 @@ constraints :id => /\d+/ do
   resources :author_notes
   resources :lab_book_snapshots
 
-  resources :inner_pages do
-    member do
-      post :sort_pages
-      post :delete_page
-      post :add_page
-      post :add_element
-      post :set_page
-    end
-  end
+  # resources :inner_pages do
+  #   member do
+  #     post :sort_pages
+  #     post :delete_page
+  #     post :add_page
+  #     post :add_element
+  #     post :set_page
+  #   end
+  # end
 
   resources :biologica_chromosome_zooms
 

@@ -200,6 +200,7 @@ class PagesController < ApplicationController
   def destroy
     @page.destroy
     @redirect = params[:redirect]
+
     respond_to do |format|
       format.html { redirect_to(page_url) }
       format.js
@@ -215,7 +216,8 @@ class PagesController < ApplicationController
 
   def add_element
     @page = Page.find(params['page_id'])
-    @container = params['container'] || 'elements_container'
+    # @container no longer used?
+    @container = params['container']
 
     # dynamically instantiate the component based on its type.
     component_class = params['class_name'].constantize
@@ -253,9 +255,16 @@ class PagesController < ApplicationController
   ##
   ##  
   def sort_elements
+    key_name = 'elements_container'
+    params.each_key do |k|
+      key_name = k if k =~ /elements_container/
+    end
     @page.page_elements.each do |element|
-      element.position = params['elements_container'].index(element.id.to_s) + 1
-      element.save
+      element_index = params[key_name].index(element.id.to_s)
+      if element_index
+        element.position = element_index + 1
+        element.save
+      end
     end 
     render :update do |page|
       page << "flatten_sortables();"
