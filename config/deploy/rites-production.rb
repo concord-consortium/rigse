@@ -2,8 +2,8 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/production/rites"
-set :branch, "rites-production"
+set :deploy_to, "/web/portal"
+set :branch, "rites-production-rails3"
 set :gateway, "otto.concord.org"
 
 #############################################################
