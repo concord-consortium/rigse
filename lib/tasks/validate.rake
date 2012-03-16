@@ -47,7 +47,7 @@ namespace :app do
               assocs.each do |assoc|
                 next if OK_TO_BE_NIL.include?([model, assoc.name])
                 value = instance.send(assoc.name)
-                has_nil = (assoc.collection? && value.include?(nil)) || (!assoc.collection? && value.nil?)
+                has_nil = (assoc.collection? && (value.include?(nil) || value.empty?)) || (!assoc.collection? && value.nil?)
                 if has_nil
                   results[model][assoc.name] ||= []
                   results[model][assoc.name] << instance
