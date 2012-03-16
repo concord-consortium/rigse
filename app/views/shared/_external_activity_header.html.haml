@@ -13,7 +13,7 @@
   .action_menu_header_left
     .padded_content
       - if (@external_activity.changeable?(current_user))
-        %h3= "Activity: #{in_place_editor_field :external_activity, 'name'}"
+        %h3= "Activity: #{in_place_editor_field :external_activity, 'name'}".html_safe
         .tiny=in_place_editor_field :external_activity, 'description', {},{:rows=>3, :cols=>80}
         .tiny=in_place_editor_field :external_activity, 'url', {},{:rows=>3, :cols=>80}
         .tiny= "Cohorts: #{@external_activity.cohort_list.join(', ')}"
