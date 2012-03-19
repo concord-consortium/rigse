@@ -84,6 +84,7 @@ class Investigation < ActiveRecord::Base
   # for convenience (will not work in find_by_* &etc.)
   [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
 
+  scope :assigned, where('investigations.offerings_count > 0')
   #
   # IMPORTANT: Use with_gse if you are also going to use domain and grade params... eg:
   # Investigation.with_gse.grade('9-11') == good

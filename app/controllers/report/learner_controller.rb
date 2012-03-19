@@ -31,7 +31,9 @@ class Report::LearnerController < ApplicationController
     @all_teachers          = Portal::Teacher.all.sort_by {|t| t.name.downcase}
 
     # TODO: fix me -- choose runnables better
-    @all_runnables         = Investigation.published.sort_by { |i| i.name.downcase }
+    # @all_runnables         = Investigation.published.sort_by { |i| i.name.downcase }
+    @all_runnables         = Investigation.published + Investigation.assigned
+    @all_runnables         = @all_runnables.uniq.sort_by { |i| i.name.downcase }
 
     @start_date            = params['start_date']
     @end_date              = params['end_date']
