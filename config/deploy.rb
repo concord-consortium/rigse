@@ -637,6 +637,8 @@ namespace :installer do
     # so instead just give the user a chance to manual edit the installer.yml file
     Capistrano::CLI.ui.ask("You can now edit the config/installer.yml file, press enter when done.")
 
+    %x[bundle exec rake build:installer:rebuild_all ]
+
     # post the config back up to remote server
     upload("config/installer.yml", "#{deploy_to}/#{current_dir}/config/installer.yml", :via => :scp)
     # copy the installers themselves up to the remote server

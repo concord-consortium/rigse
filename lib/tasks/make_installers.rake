@@ -136,11 +136,20 @@ namespace :build do
        write_config(config)
     end
     
+    desc 'generate the installer configuration files from the config/installer.yml'
+    task :generate_installer_config => ["#{::Rails.root.to_s}/config/installer.yml"]  do
+       filename = "#{::Rails.root.to_s}/config/installer.yml"
+       config = load_yaml(filename)
+       write_config(config)
+    end
+
     desc 'clean jar and installers folder'
     task :clean do
       puts "cleaning the jar folder"
       %x[rm -rf #{bitrocket_installer_dir}/jars]
       %x[rm -rf #{bitrocket_installer_dir}/installers]
+      %x[rm -f "#{bitrocket_installer_dir}/rites.xml"]
+      %x[rm -f "#{bitrocket_installer_dir}/jnlps.conf"]
     end
     
     file "#{::Rails.root.to_s}/config/installer.yml" do
@@ -155,30 +164,38 @@ namespace :build do
     
     
     desc 'cache jars'
-    task :cache_jars => [:clean, :bump_release] do
+    task :cache_jars => [:clean, :generate_installer_config] do
       puts "Caching jar resources"
       %x[mkdir -p #{bitrocket_installer_dir}/jars/]
       %x[cd #{bitrocket_installer_dir}; ./scripts/cache-jars.sh ]
       remove_otrunk_properties
     end
-      
-  
+
     desc 'build the osx installer'
-    task :build_osx => :cache_jars do
+    task :build_osx do
       puts "building osx installer"
       %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} osx]
       %x[cp #{bitrocket_installer_dir}/installers/*.dmg #{installer_dest}]
     end
+    task :build_mac => :build_osx
 
     desc 'build the windows installer'
-    task :build_win => :cache_jars do
+    task :build_win do
       puts "building win installer"
       %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} windows]
       %x[cp #{bitrocket_installer_dir}/installers/*.exe #{installer_dest}]
     end
+
+    desc 'build the osx installer'
+    task :cache_and_build_osx => [:cache_jars, :build_osx]
+
+    desc 'build the windows installer'
+    task :cache_and_build_win => [:cache_jars, :build_win]
     
     desc 'build all installers: will automatically clean up, recache jars, and bump version numbers.'
-    task :build_all => [:build_win, :build_osx]
-    task :buid_mac => :build_osx
+    task :build_all => [:bump_release, :cache_and_build_win, :cache_and_build_osx]
+
+    desc 'build all installers: will automatically clean up, reache jars. It does NOT bump version numbers.'
+    task :rebuild_all => [:cache_and_build_win, :cache_and_build_osx]
   end
 end
