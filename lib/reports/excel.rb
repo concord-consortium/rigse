@@ -153,4 +153,18 @@ class Reports::Excel
     ]
 
   end
+
+  def get_containers(runnable)
+    containers = []
+    if runnable.kind_of?(Investigation)
+      containers = runnable.activities.student_only
+    elsif runnable.kind_of?(Activity)
+      containers = runnable.sections.student_only
+    elsif runnable.kind_of?(Section)
+      containers = runnable.pages.student_only
+    elsif runnable.kind_of?(Page)
+      containers = [runnable]
+    end
+    return containers
+  end
 end

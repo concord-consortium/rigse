@@ -86,7 +86,7 @@ class Report::LearnerController < ApplicationController
     if params[:commit] == @button_texts[:usage]
       sio = StringIO.new
       runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
-      report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
+      report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :include_child_usage => params[:include_child_usage])
       report.run_report(sio)
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
     elsif params[:commit] == @button_texts[:details]
