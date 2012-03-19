@@ -34,6 +34,7 @@ class YamlEditor
     else
       value = ask("new value for #{@prop_path.join(":")}" ) { |q| q.default = value }
     end
+    # this never actually writes the value back to the properties!!!
     @prop_path.pop
   end
 

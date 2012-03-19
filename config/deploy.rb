@@ -629,10 +629,13 @@ namespace :installer do
     %x[cp config/installer.yml config/installer.yml.mine]
     download("#{deploy_to}/#{current_dir}/config/installer.yml", "config/installer.yml", :via => :scp)
     # build the installers
-    editor = YamlEditor.new('./config/installer.yml')
-    editor.edit
-    editor.write_file
-    %x[bundle exec rake build:installer:build_all ]
+
+    # the yaml editor is broken...
+    # editor = YamlEditor.new('./config/installer.yml')
+    # editor.edit
+    # editor.write_file
+    # so instead just give the user a chance to manual edit the installer.yml file
+    Capistrano::CLI.ui.ask("You can now edit the config/installer.yml file, press enter when done.")
 
     # post the config back up to remote server
     upload("config/installer.yml", "#{deploy_to}/#{current_dir}/config/installer.yml", :via => :scp)
