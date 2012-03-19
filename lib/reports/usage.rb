@@ -11,7 +11,7 @@ class Reports::Usage < Reports::Excel
       #Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50 )
     #]
     # stud.id, class, school, user.id, username, student name, teachers
-    @column_defs = [
+    @shared_column_defs = [
       Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
       Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
       Reports::ColumnDefinition.new(:title => "School",       :width => 25),
@@ -22,18 +22,21 @@ class Reports::Usage < Reports::Excel
     ]
     
     @runnable_start_column = {}
+    @sheet_defs = [[]]
     @runnables.each do |runnable|
-      @runnable_start_column[runnable] = @column_defs.size
-      @column_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.id})\nAssessments Completed", :width => 4, :left_border => true)
-      @column_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
-      @column_defs << Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
+      col_defs = @sheet_defs.last
+      @runnable_start_column[runnable] = {:sheet => (@sheet_defs.size - 1), :column => (col_defs.size + @shared_column_defs.size)}
+      col_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.id})\nAssessments Completed", :width => 4, :left_border => true)
+      col_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
+      col_defs << Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
       if @include_child_usage
         children = (get_containers(runnable) - [runnable])
         children.each do |child|
-          @column_defs << Reports::ColumnDefinition.new(:title => "#{child.name} (#{child.id})\nAssessments Completed", :width => 4)
-          @column_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
+          col_defs << Reports::ColumnDefinition.new(:title => "#{child.name} (#{child.id})\nAssessments Completed", :width => 4)
+          col_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
         end
       end
+      @sheet_defs << [] if (col_defs.size + @shared_column_defs.size) > 250
     end
   end
 
@@ -42,16 +45,25 @@ class Reports::Usage < Reports::Excel
   end
 
   def run_report(stream_or_path,book=Spreadsheet::Workbook.new)
-    sheet = book.create_worksheet :name => 'Usage'
-    write_sheet_headers(sheet, @column_defs)
+    @sheets = []
+    @sheet_defs.each_with_index do |s_def, i|
+      sheet = book.create_worksheet :name => "Usage #{i+1}"
+      write_sheet_headers(sheet, @shared_column_defs + s_def)
+      @sheets << sheet
+    end
     student_learners = sorted_learners.group_by {|l| l.student_id }
     student_learners.each_key do |student_id|
       learners = student_learners[student_id]
-      row = sheet.row(sheet.last_row_index + 1)
       learner_info = report_learner_info_cells(learners.first)
-      row[0, learner_info.size] =  learner_info
+      rows = []
+      @sheets.each do |sheet|
+        row = sheet.row(sheet.last_row_index + 1)
+        row[0, learner_info.size] =  learner_info
+        rows << row
+      end
       @runnables.each do |runnable|
         l = learners.detect {|learner| learner.runnable_type == runnable.class.to_s && learner.runnable_id == runnable.id}
+        row = rows[@runnable_start_column[runnable][:sheet]]
         if (l)
           total_assessments = l.num_answerables
           assess_completed =  l.num_answered
@@ -69,7 +81,7 @@ class Reports::Usage < Reports::Excel
             end
           end
 
-          row[@runnable_start_column[runnable], 3] = row_vals
+          row[@runnable_start_column[runnable][:column], 3] = row_vals
         else
           row_vals = ['n/a', 'n/a', 'not assigned']
           if @include_child_usage
@@ -79,7 +91,7 @@ class Reports::Usage < Reports::Excel
               row_vals << 'n/a'
             end
           end
-          row[@runnable_start_column[runnable], 3] = row_vals
+          row[@runnable_start_column[runnable][:column], 3] = row_vals
         end
       end
     end
