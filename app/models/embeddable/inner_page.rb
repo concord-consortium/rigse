@@ -6,7 +6,7 @@ class Embeddable::InnerPage < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   belongs_to  :static_page, :class_name => "Page"
   has_many :inner_page_pages, :class_name => 'Embeddable::InnerPagePage', :order => :position, :dependent => :destroy
-  has_many :sub_pages, :order => :position, :class_name => "Page", :through => :inner_page_pages, :source => "page"
+  has_many :sub_pages, :order => "#{Page.table_name}.position", :class_name => "Page", :through => :inner_page_pages, :source => "page"
   
   acts_as_replicatable
 
