@@ -46,13 +46,17 @@ class Reports::Usage < Reports::Excel
 
   def run_report(stream_or_path,book=Spreadsheet::Workbook.new)
     @sheets = []
+    print "Creating #{@sheet_defs.size} worksheets for report" if @verbose
     @sheet_defs.each_with_index do |s_def, i|
       sheet = book.create_worksheet :name => "Usage #{i+1}"
       write_sheet_headers(sheet, @shared_column_defs + s_def)
       @sheets << sheet
     end
+    puts " done." if @verbose
+
+    puts "Filling in student data" if @verbose
     student_learners = sorted_learners.group_by {|l| l.student_id }
-    student_learners.each_key do |student_id|
+    iterate_with_status(student_learners.keys) do |student_id|
       learners = student_learners[student_id]
       learner_info = report_learner_info_cells(learners.first)
       rows = []
@@ -96,6 +100,8 @@ class Reports::Usage < Reports::Excel
       end
     end
 
+    print "Writing xls file..." if @verbose
     book.write stream_or_path
+    print " done." if @verbose
   end
 end
