@@ -87,15 +87,17 @@ class Reports::Usage < Reports::Excel
 
           row[@runnable_start_column[runnable][:column], 3] = row_vals
         else
-          row_vals = ['n/a', 'n/a', 'not assigned']
-          if @include_child_usage
-            children = (get_containers(runnable) - [runnable])
-            children.each do |child|
-              row_vals << 'n/a'
-              row_vals << 'n/a'
-            end
-          end
-          row[@runnable_start_column[runnable][:column], 3] = row_vals
+          # The spreadsheet gem doesn't handle tons of strings well,
+          # so let's just leave these blank for now
+#          row_vals = ['n/a', 'n/a', 'not assigned']
+#          if @include_child_usage
+#            children = (get_containers(runnable) - [runnable])
+#            children.each do |child|
+#              row_vals << 'n/a'
+#              row_vals << 'n/a'
+#            end
+#          end
+#          row[@runnable_start_column[runnable][:column], 3] = row_vals
         end
       end
     end
