@@ -399,7 +399,7 @@ module ApplicationHelper
     if title.nil?
       title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window woo."
     end
-    link_to(link_text, url, :popup => true, :title => title)
+    link_to(link_text, url, :target => '_blank', :title => title)
   end
 
   def activation_toggle_link_for(activatable, action='activate', link_text='Activate', title=nil)
@@ -444,7 +444,7 @@ module ApplicationHelper
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
     link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") +
-    link_to(link_text,url,:popup => true)
+    link_to(link_text,url, :target => '_blank')
   end
 
   def otml_link_for(component, params={})
