@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120312205013) do
+ActiveRecord::Schema.define(:version => 20120319212253) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1854,12 +1854,12 @@ ActiveRecord::Schema.define(:version => 20120312205013) do
     t.string   "school_name"
     t.string   "class_name"
     t.integer  "runnable_id"
-    t.integer  "runnable_name"
+    t.string   "runnable_name"
     t.integer  "school_id"
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers"
+    t.text     "answers",         :limit => 2147483647
     t.string   "runnable_type"
   end
 
