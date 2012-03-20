@@ -1129,3 +1129,17 @@ ul.quiet_list {
       font-weight: bold;
       margin-left: 1em 0 0 10px;
       padding: 5px !important; } } }
+
+.item_collection * {
+  li.menu {list-style-type: none;}
+}
+
+.inner_page * {
+  .page {
+      border: 1px solid; 
+      margin: 2px;
+  }
+  .content {
+    padding-bottom: 0.5em;
+  }
+}
