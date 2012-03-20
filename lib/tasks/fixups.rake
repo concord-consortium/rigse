@@ -361,6 +361,14 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
   end
 
   namespace :fixup do
+    desc "makes sure all Report::Learner attributes are not nil"
+    task :remove_report_learner_nils => :environment do
+      Report::Learner.find_each(:batch_size => 100) do |rl|
+        # we just need to trigger the save hooks
+        rl.save
+      end
+    end
+
     desc "reset all activity position information"
     task :reset_activity_positions => :environment do
       # We actually want to reset the position attribute on ALL activities

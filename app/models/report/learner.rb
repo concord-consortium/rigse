@@ -18,6 +18,7 @@ class Report::Learner < ActiveRecord::Base
   validates_uniqueness_of :learner_id
 
   after_create :update_fields
+  before_save :ensure_no_nils
 
   def self.for_learner(learner)
     found = Report::Learner.find_by_learner_id(learner.id) 
@@ -26,6 +27,14 @@ class Report::Learner < ActiveRecord::Base
       learner.reload
     end
     found
+  end
+
+  def ensure_no_nils
+    %w{offering_name teachers_name student_name class_name school_name runnable_name}.each do |attr|
+      cur_val = self.send(attr)
+      self.send("#{attr}=", "") if cur_val.nil?
+    end
+    return true
   end
 
   def calculate_last_run
