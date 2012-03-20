@@ -22,6 +22,6 @@
           %li.menu.page.item.container_element{:id => dom_id_for(sub_page, :container)}
             = render :partial => 'embeddable/inner_pages/page', :locals => locals
          
-      - if (inner_page.changeable?(current_user))
-        = sortable_element inner_page_area_id, :url=> {:controller =>'embeddable/inner_pages', :action => 'sort_pages', :id => inner_page.id, :list_name => inner_page_area_id}, :scroll => "window", :constraint => :vertical
+    - if (inner_page.changeable?(current_user))
+      = sortable_element inner_page_area_id, :url=> {:controller =>'embeddable/inner_pages', :action => 'sort_pages', :id => inner_page.id, :list_name => inner_page_area_id}, :scroll => "window", :constraint => :vertical
 

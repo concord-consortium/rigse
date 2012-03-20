@@ -4,5 +4,7 @@ container = @container || dom_id_for(@inner_page, :inner_page_area)
 page.visual_effect :highlight, container
 
 page.insert_html :bottom, container, render(:partial => 'complete_sub_page', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
-sortable_element container, :url=> {:controller =>'embeddable/inner_pages', :action => 'sort_pages', :id => @inner_page.id, :list_name => container}, :scroll => "window", :constraint => :vertical
+
+page.sortable container,  :url=> {:controller =>'embeddable/inner_pages', :action => 'sort_pages', :id => @inner_page.id, :list_name => container}, :scroll => "window", :constraint => :vertical
+
 page[dom_id_for(@new_page, :item)].scrollTo()
