@@ -17,6 +17,13 @@ class InstallerReport < ActiveRecord::Base
     find(/^Writing to a (temp directory)!$/) == "temp directory"
   end
 
+  def learner
+    learner_id = find(/^Not found URL: .*\/portal\/learners\/(\d+).jnlp.*$/)
+    l = nil
+    l = Portal::Learner.find(learner_id.to_i)
+    return l
+  end
+
   # expects a regular expression with at least one capture group.
   # if more than one capture group is present, only the first group value will be reported
   def find(regexp)
