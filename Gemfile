@@ -5,7 +5,7 @@ source "http://rubygems.org"
 
 #### COMMON
   if ENV['RB_MYSQL2']
-    gem "mysql2",             '< 0.3', :platforms => [:ruby,:mingw] # version restriction is because 0.3 and higher require rails 3.1
+    gem "mysql2",             '~> 0.3', :platforms => [:ruby,:mingw] # version restriction is because 0.3 and higher require rails 3.1
   else
     gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
   end
@@ -20,13 +20,14 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
-  gem "rails",                "~> 3.0.10"
+  gem "rails",                "~> 3.2"
   gem "arrayfields"
   gem "httpclient",           "~> 2.2"
   gem "capistrano-ext",                 :require => "capistrano"
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
-  gem "haml",           :git => "git://github.com/stepheneb/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
+  gem "haml"
+  # gem "haml",           :git => "git://github.com/stepheneb/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
   gem "sass",                 "~> 3.1.7"
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
@@ -56,13 +57,14 @@ source "http://rubygems.org"
   gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
-  gem 'themes_for_rails',     "~> 0.4.2"
+  gem 'themes_for_rails',     "~> 0.4.3"
   gem 'default_value_for',    "~> 1.0.5"
   gem 'exception_notification', "~> 2.5.2"
+  gem 'prototype-rails'
   gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
-  gem 'calendar_date_select'
+  gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
   gem 'delayed_job',          "~> 3.0.1"
   gem 'delayed_job_active_record', "~> 0.3.2"
   gem 'daemons',              "~> 1.1.8"

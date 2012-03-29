@@ -4,7 +4,8 @@
 # See RoleSecurityClassMethods for some methods it provides.
 module RoleRequirementSystem
   def self.included(klass)
-    klass.send :class_inheritable_array, :role_requirements
+    # note this was inheritable _array_ before which might do something different than this
+    klass.send :class_attribute, :role_requirements
     klass.send :include, RoleSecurityInstanceMethods
     klass.send :extend, RoleSecurityClassMethods
     klass.send :helper_method, :url_options_authenticate? 
