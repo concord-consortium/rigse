@@ -75,7 +75,11 @@ group :development do
   gem "what_methods"
   gem "hirb"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
-  gem "ruby-debug19", :platforms => :mri_19
+  platforms :mri_19 do
+    gem 'tddium-linecache19', '0.5.13'
+    gem 'ruby-debug-base19x', '0.11.30.pre10'
+    gem "ruby-debug19", :require => 'ruby-debug'
+  end
   gem "awesome_print"
   gem "interactive_editor"
   gem "pry"
