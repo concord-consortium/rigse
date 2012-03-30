@@ -5,7 +5,7 @@ source "http://rubygems.org"
 
 #### COMMON
   if ENV['RB_MYSQL2']
-    gem "mysql2",             '< 0.3', :platforms => [:ruby,:mingw] # version restriction is because 0.3 and higher require rails 3.1
+    gem "mysql2",             '~> 0.3', :platforms => [:ruby,:mingw]
   else
     gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
   end
@@ -20,7 +20,7 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
-  gem "rails",                "~> 3.0.10"
+  gem "rails",                "~> 3.2"
   gem "arrayfields"
   gem "httpclient",           "~> 2.2"
   gem "capistrano-ext",                 :require => "capistrano"
