@@ -92,12 +92,12 @@ end
 
 group :test, :development do
   gem "selenium-webdriver", "~> 2.12.0"
-  gem "cucumber",          "~> 1.0.2"
-  gem "cucumber-rails",    "~> 1.0.2"
+  gem "cucumber",          "~> 1.1.9"
+  gem "cucumber-rails",    "~> 1.3.0"
   gem "database_cleaner",  "~> 0.7.2"
-  gem "capybara",          "~> 1.1.1"
-  gem "rspec",             "~> 2.6"
-  gem "rspec-rails",       "~> 2.6"
+  gem "capybara",          "~> 1.1.2"
+  gem "rspec",             "~> 2.9.0"
+  gem "rspec-rails",       "~> 2.9.0"
   gem "factory_girl",      "~> 2.0.5"
   gem "email_spec",        "~> 1.2.1"
   gem "fakeweb",           "~> 1.3", :require => false
