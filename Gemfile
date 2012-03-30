@@ -58,7 +58,7 @@ source "http://rubygems.org"
   gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
-  gem 'themes_for_rails',     "~> 0.4.2"
+  gem 'themes_for_rails',     "~> 0.5.0.pre"
   gem 'default_value_for',    "~> 1.0.5"
   gem 'exception_notification', "~> 2.5.2"
   gem 'prototype-rails'
