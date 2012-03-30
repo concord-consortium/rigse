@@ -1,6 +1,6 @@
 class Ccportal::Unit < Ccportal::Ccportal
   self.table_name = :portal_units
-  set_primary_key :unit_id
+  self.primary_key = :unit_id
 
   belongs_to :project, :foreign_key => :unit_project, :class_name => 'Ccportal::Project'
 
