@@ -1,5 +1,5 @@
 class OtrunkExample::OtrunkViewEntry < ActiveRecord::Base
-  set_table_name "otrunk_example_otrunk_view_entries"
+  self.table_name = "otrunk_example_otrunk_view_entries"
   belongs_to :otrunk_import, :class_name => 'OtrunkExample::OtrunkImport'
   has_and_belongs_to_many :otml_files, :class_name => 'OtrunkExample::OtmlFile', :uniq => true, :extend => HasOrBelongsToManyExtensions
   

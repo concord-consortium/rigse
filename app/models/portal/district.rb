@@ -1,5 +1,5 @@
 class Portal::District < ActiveRecord::Base
-  set_table_name :portal_districts
+  self.table_name = :portal_districts
 
   acts_as_replicatable
 

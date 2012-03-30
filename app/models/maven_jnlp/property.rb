@@ -1,5 +1,5 @@
 class MavenJnlp::Property < ActiveRecord::Base
-  set_table_name "maven_jnlp_properties"
+  self.table_name = "maven_jnlp_properties"
   
   has_and_belongs_to_many :versioned_jnlp
 

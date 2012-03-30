@@ -1,5 +1,5 @@
 class Embeddable::Biologica::MultipleOrganism < ActiveRecord::Base
-  set_table_name "embeddable_biologica_multiple_organisms"
+  self.table_name = "embeddable_biologica_multiple_organisms"
 
   
   belongs_to :user

@@ -1,7 +1,7 @@
 require 'fileutils'
 
 class Admin::Project < ActiveRecord::Base
-  set_table_name "admin_projects"
+  self.table_name = "admin_projects"
   
   belongs_to :user
 

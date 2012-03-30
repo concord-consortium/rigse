@@ -1,5 +1,5 @@
 class Embeddable::Biologica::StaticOrganism < ActiveRecord::Base
-  set_table_name "embeddable_biologica_static_organisms"
+  self.table_name = "embeddable_biologica_static_organisms"
 
   
   belongs_to :user

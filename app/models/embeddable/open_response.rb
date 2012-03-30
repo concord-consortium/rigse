@@ -7,7 +7,7 @@ class Embeddable::OpenResponse < ActiveRecord::Base
   MAX_COLUMNS   = 80
   MIN_COLUMNS   = 10
 
-  set_table_name "embeddable_open_responses"
+  self.table_name = "embeddable_open_responses"
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements

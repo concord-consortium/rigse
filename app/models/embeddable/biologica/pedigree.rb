@@ -1,5 +1,5 @@
 class Embeddable::Biologica::Pedigree < ActiveRecord::Base
-  set_table_name "embeddable_biologica_pedigrees"
+  self.table_name = "embeddable_biologica_pedigrees"
 
   
   belongs_to :user

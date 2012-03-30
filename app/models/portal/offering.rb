@@ -1,5 +1,5 @@
 class Portal::Offering < ActiveRecord::Base
-  set_table_name :portal_offerings
+  self.table_name = :portal_offerings
 
   acts_as_replicatable
 

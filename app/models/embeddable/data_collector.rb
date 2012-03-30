@@ -5,7 +5,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   PREDICTION    = "Prediction"
   PREDICTION_ID = 2
 
-  set_table_name "embeddable_data_collectors"
+  self.table_name = "embeddable_data_collectors"
 
   belongs_to :user
   belongs_to :probe_type, :class_name => 'Probe::ProbeType'

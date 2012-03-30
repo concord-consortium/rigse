@@ -1,5 +1,5 @@
 class Ccportal::ClassStudent < Ccportal::Ccportal
-  set_table_name :portal_class_students
+  self.table_name = :portal_class_students
   set_primary_key :class_student_id
 
   belongs_to :student, :foreign_key => :member_id, :class_name => 'Ccportal::Student'

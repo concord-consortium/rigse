@@ -1,5 +1,5 @@
 class Embeddable::MwModelerPage < ActiveRecord::Base
-  set_table_name "embeddable_mw_modeler_pages"
+  self.table_name = "embeddable_mw_modeler_pages"
 
   
   belongs_to :user

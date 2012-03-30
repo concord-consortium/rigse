@@ -1,5 +1,5 @@
 class MavenJnlp::Jar < ActiveRecord::Base
-  set_table_name "maven_jnlp_jars"
+  self.table_name = "maven_jnlp_jars"
   
   has_and_belongs_to_many :versioned_jnlps
 

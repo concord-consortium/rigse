@@ -1,5 +1,5 @@
 class Embeddable::Biologica::Chromosome < ActiveRecord::Base
-  set_table_name "embeddable_biologica_chromosomes"
+  self.table_name = "embeddable_biologica_chromosomes"
 
   
   belongs_to :user

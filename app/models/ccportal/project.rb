@@ -1,5 +1,5 @@
 class Ccportal::Project < Ccportal::Ccportal
-  set_table_name :portal_projects
+  self.table_name = :portal_projects
   set_primary_key :project_id
 
   has_many :units, :foreign_key => :unit_project, :class_name => 'Ccportal::Unit'

@@ -1,6 +1,6 @@
 class Ccportal::Course < Ccportal::Ccportal
 
-  set_table_name :portal_classes
+  self.table_name = :portal_classes
   set_primary_key :class_id
 
   has_one :class_word, :foreign_key => :class_id, :class_name => "Ccportal::ClassWord"

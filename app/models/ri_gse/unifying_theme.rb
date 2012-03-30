@@ -1,5 +1,5 @@
 class RiGse::UnifyingTheme < ActiveRecord::Base
-  set_table_name "ri_gse_unifying_themes"
+  self.table_name = "ri_gse_unifying_themes"
 
   # belongs_to :user
   has_many :big_ideas, :class_name => 'RiGse::BigIdea'

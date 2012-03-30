@@ -1,5 +1,5 @@
 class Embeddable::VideoPlayer < ActiveRecord::Base
-  set_table_name "embeddable_video_players"
+  self.table_name = "embeddable_video_players"
 
   belongs_to :user
   has_many :page_elements, :as => :embeddable

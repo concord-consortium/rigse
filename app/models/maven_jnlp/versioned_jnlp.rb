@@ -1,5 +1,5 @@
 class MavenJnlp::VersionedJnlp < ActiveRecord::Base
-  set_table_name "maven_jnlp_versioned_jnlps"
+  self.table_name = "maven_jnlp_versioned_jnlps"
 
   belongs_to :versioned_jnlp_url, :class_name => "MavenJnlp::VersionedJnlpUrl"
   has_one :maven_jnlp_family, :through => :versioned_jnlp_url, :class_name => "MavenJnlp::MavenJnlpFamily"

@@ -1,5 +1,5 @@
 class Admin::Tag < ActiveRecord::Base
-  set_table_name "admin_tags"
+  self.table_name = "admin_tags"
 
   self.extend SearchableModel
   @@searchable_attributes = %w{scope tag}

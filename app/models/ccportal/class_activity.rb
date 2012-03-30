@@ -1,5 +1,5 @@
 class Ccportal::ClassActivity < Ccportal::Ccportal
-  set_table_name :portal_class_activities
+  self.table_name = :portal_class_activities
   set_primary_key :class_activity_id
 
   belongs_to :course, :foreign_key => :class_id, :class_name => 'Ccportal::Course'

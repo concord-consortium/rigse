@@ -1,5 +1,5 @@
 class Embeddable::RawOtml < ActiveRecord::Base
-  set_table_name "embeddable_raw_otmls"
+  self.table_name = "embeddable_raw_otmls"
 
   belongs_to :user
   has_many :page_elements, :as => :embeddable

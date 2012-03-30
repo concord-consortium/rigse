@@ -1,5 +1,5 @@
 class Embeddable::Smartgraph::RangeQuestion < ActiveRecord::Base
-  set_table_name "embeddable_smartgraph_range_questions"
+  self.table_name = "embeddable_smartgraph_range_questions"
 
 
   

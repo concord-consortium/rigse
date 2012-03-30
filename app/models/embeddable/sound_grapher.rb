@@ -1,5 +1,5 @@
 class Embeddable::SoundGrapher < ActiveRecord::Base
-  set_table_name "embeddable_sound_graphers"
+  self.table_name = "embeddable_sound_graphers"
 
   belongs_to :user
   has_many :page_elements, :as => :embeddable
