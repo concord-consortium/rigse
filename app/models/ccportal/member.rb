@@ -1,5 +1,5 @@
 class Ccportal::Member < Ccportal::Ccportal
-  set_table_name :portal_members
+  self.table_name = :portal_members
   set_primary_key :member_id
 
   #############

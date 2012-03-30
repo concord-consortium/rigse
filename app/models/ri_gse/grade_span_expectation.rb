@@ -1,5 +1,5 @@
 class RiGse::GradeSpanExpectation < ActiveRecord::Base
-  set_table_name "ri_gse_grade_span_expectations"
+  self.table_name = "ri_gse_grade_span_expectations"
 
   # belongs_to :user
 

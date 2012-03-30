@@ -1,5 +1,5 @@
 class Embeddable::Xhtml < ActiveRecord::Base
-  set_table_name "embeddable_xhtmls"
+  self.table_name = "embeddable_xhtmls"
 
   belongs_to :user
   has_many :page_elements, :as => :embeddable

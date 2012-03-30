@@ -2,7 +2,7 @@ require 'digest/md5'  # for the otml md5 this is only for tracking down errors
 
 class Dataservice::BundleContent < ActiveRecord::Base
   require 'otrunk/object_extractor'
-  set_table_name :dataservice_bundle_contents
+  self.table_name = :dataservice_bundle_contents
 
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"

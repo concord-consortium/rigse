@@ -1,5 +1,5 @@
 class Dataservice::BundleLogger < ActiveRecord::Base
-  set_table_name :dataservice_bundle_loggers
+  self.table_name = :dataservice_bundle_loggers
   
   has_one    :learner, :class_name => "Portal::Learner"
   belongs_to :in_progress_bundle, :class_name => "Dataservice::BundleContent"

@@ -1,5 +1,5 @@
 class ResourcePage < ActiveRecord::Base
-  set_table_name :resource_pages
+  self.table_name = :resource_pages
   include Publishable
   include Changeable
 

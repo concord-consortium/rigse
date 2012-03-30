@@ -1,5 +1,5 @@
 class Probe::Calibration < ActiveRecord::Base
-  set_table_name "probe_calibrations"
+  self.table_name = "probe_calibrations"
 
   include Changeable
   

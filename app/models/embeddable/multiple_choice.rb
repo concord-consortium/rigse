@@ -1,5 +1,5 @@
 class Embeddable::MultipleChoice < ActiveRecord::Base
-  set_table_name "embeddable_multiple_choices"
+  self.table_name = "embeddable_multiple_choices"
 
   
   belongs_to :user

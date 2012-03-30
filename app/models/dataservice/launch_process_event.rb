@@ -1,5 +1,5 @@
 class Dataservice::LaunchProcessEvent < ActiveRecord::Base
-  set_table_name :dataservice_launch_process_events
+  self.table_name = :dataservice_launch_process_events
 
   belongs_to :bundle_content, :class_name => "Dataservice::BundleContent", :foreign_key => "bundle_content_id"
 

@@ -1,5 +1,5 @@
 class RiGse::KnowledgeStatement < ActiveRecord::Base
-  set_table_name "ri_gse_knowledge_statements"
+  self.table_name = "ri_gse_knowledge_statements"
 
   # belongs_to :user
   belongs_to :domain, :class_name => 'RiGse::Domain'

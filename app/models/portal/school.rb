@@ -1,5 +1,5 @@
 class Portal::School < ActiveRecord::Base
-  set_table_name :portal_schools
+  self.table_name = :portal_schools
   has_settings
 
   acts_as_replicatable

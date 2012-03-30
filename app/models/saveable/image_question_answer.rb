@@ -1,5 +1,5 @@
 class Saveable::ImageQuestionAnswer < ActiveRecord::Base
-  set_table_name "saveable_image_question_answers"
+  self.table_name = "saveable_image_question_answers"
 
   belongs_to :image_question,  :class_name => 'Saveable::ImageQuestion', :counter_cache => :response_count
   belongs_to :bundle_content, :class_name => 'Dataservice::BundleContent'

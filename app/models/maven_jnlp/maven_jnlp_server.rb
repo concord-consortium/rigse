@@ -1,7 +1,7 @@
 require 'fileutils'
 
 class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
-  set_table_name "maven_jnlp_maven_jnlp_servers"
+  self.table_name = "maven_jnlp_maven_jnlp_servers"
 
   has_many :projects, :class_name => "Admin::Project"
 

@@ -1,5 +1,5 @@
 class Portal::Clazz < ActiveRecord::Base
-  set_table_name :portal_clazzes
+  self.table_name = :portal_clazzes
 
   acts_as_replicatable
 

@@ -1,5 +1,5 @@
 class Probe::VendorInterface < ActiveRecord::Base
-  set_table_name "probe_vendor_interfaces"
+  self.table_name = "probe_vendor_interfaces"
 
   include Changeable
   

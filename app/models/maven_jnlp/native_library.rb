@@ -1,5 +1,5 @@
 class MavenJnlp::NativeLibrary < ActiveRecord::Base
-  set_table_name "maven_jnlp_native_libraries"
+  self.table_name = "maven_jnlp_native_libraries"
   
   has_and_belongs_to_many :versioned_jnlps
   # include MavenJnlp::Resource

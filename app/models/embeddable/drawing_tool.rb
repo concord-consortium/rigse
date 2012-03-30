@@ -1,5 +1,5 @@
 class Embeddable::DrawingTool < ActiveRecord::Base
-  set_table_name "embeddable_drawing_tools"
+  self.table_name = "embeddable_drawing_tools"
 
   
   belongs_to :user

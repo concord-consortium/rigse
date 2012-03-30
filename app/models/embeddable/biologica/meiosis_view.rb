@@ -1,5 +1,5 @@
 class Embeddable::Biologica::MeiosisView < ActiveRecord::Base
-  set_table_name "embeddable_biologica_meiosis_views"
+  self.table_name = "embeddable_biologica_meiosis_views"
 
   
   belongs_to :user

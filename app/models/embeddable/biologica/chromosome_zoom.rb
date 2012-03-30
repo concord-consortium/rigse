@@ -1,5 +1,5 @@
 class Embeddable::Biologica::ChromosomeZoom < ActiveRecord::Base
-  set_table_name "embeddable_biologica_chromosome_zooms"
+  self.table_name = "embeddable_biologica_chromosome_zooms"
 
   
   belongs_to :user

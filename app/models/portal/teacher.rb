@@ -1,5 +1,5 @@
 class Portal::Teacher < ActiveRecord::Base
-  set_table_name :portal_teachers
+  self.table_name = :portal_teachers
 
   acts_as_replicatable
   acts_as_taggable_on :cohorts

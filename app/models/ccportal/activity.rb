@@ -1,5 +1,5 @@
 class Ccportal::Activity < Ccportal::Ccportal
-  set_table_name :portal_activities
+  self.table_name = :portal_activities
   set_primary_key :activity_id
   
   belongs_to :level, :foreign_key => :activity_level, :class_name => 'Ccportal::Level'

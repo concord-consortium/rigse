@@ -1,5 +1,5 @@
 class Probe::PhysicalUnit < ActiveRecord::Base
-  set_table_name "probe_physical_units"
+  self.table_name = "probe_physical_units"
 
 
   include Changeable
