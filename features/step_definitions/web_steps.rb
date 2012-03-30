@@ -32,8 +32,8 @@ end
 World(WithinHelpers)
 
 # Single-line step scoper
-When /^(.*) within (.*[^:])$/ do |step, parent|
-  with_scope(parent) { When step }
+When /^(.*) within (.*[^:])$/ do |step_text, parent|
+  with_scope(parent) { step step_text }
 end
 
 # Rails-Portal specific "#primay" div.
@@ -44,8 +44,8 @@ When /^(.*) in the content$/ do |step|
 end
 
 # Multi-line step scoper
-When /^(.*) within (.*[^:]):$/ do |step, parent, table_or_string|
-  with_scope(parent) { When "#{step}:", table_or_string }
+When /^(.*) within (.*[^:]):$/ do |step_text, parent, table_or_string|
+  with_scope(parent) { step "#{step_text}:", table_or_string }
 end
 
 Given /^(?:|I )am on (.+)$/ do |page_name|
@@ -85,7 +85,7 @@ end
 #
 When /^(?:|I )fill in the following:$/ do |fields|
   fields.rows_hash.each do |name, value|
-    When %{I fill in "#{name}" with "#{value}"}
+    step %{I fill in "#{name}" with "#{value}"}
   end
 end
 
