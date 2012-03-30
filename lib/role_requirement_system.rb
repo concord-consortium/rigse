@@ -4,19 +4,23 @@
 # See RoleSecurityClassMethods for some methods it provides.
 module RoleRequirementSystem
   def self.included(klass)
-    klass.send :class_inheritable_array, :role_requirements
+    # previous this was setup as an inheritable array, but that would mean that the array would be partially
+    # shared down the class hierarchy, I'm guessing that role_requirements shouldn't be shared like that
+    # so instead this is adding an accessor to the singleton of the klass, which nicely works out to keep
+    # all of the requirment separate down the chain of inheritance it actually looks like this isn't used
+    class << klass
+      attr_accessor :role_requirements
+    end
     klass.send :include, RoleSecurityInstanceMethods
     klass.send :extend, RoleSecurityClassMethods
     klass.send :helper_method, :url_options_authenticate? 
-    
-    klass.send :role_requirements=, []
-    
+
   end
   
   module RoleSecurityClassMethods
     
     def reset_role_requirements!
-      self.role_requirements.clear
+      self.role_requirements.clear if self.role_requirements
     end
     
     # Add this to the top of your controller to require a role in order to access it.
