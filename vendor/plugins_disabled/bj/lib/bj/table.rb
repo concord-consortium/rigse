@@ -91,7 +91,7 @@ class Bj
 #
     class Job < Table
       self.table_name = "bj_job"
-      set_primary_key "#{ table_name }_id"
+      self.primary_key = "#{ table_name }_id"
 
       migration { 
         define_method :up do
@@ -166,7 +166,7 @@ class Bj
 
     class JobArchive < Job
       self.table_name = "bj_job_archive"
-      set_primary_key "#{ table_name }_id"
+      self.primary_key = "#{ table_name }_id"
 
       migration {
         define_method(:up) do
@@ -204,7 +204,7 @@ class Bj
   # TODO - initialize with a set of global defaults and fallback to those on perhaps '* * key'
     class Config < Table
       self.table_name = "bj_config"
-      set_primary_key "#{ table_name }_id"
+      self.primary_key = "#{ table_name }_id"
 
       migration {
         define_method(:up) do

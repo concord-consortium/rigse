@@ -1,6 +1,6 @@
 class Ccportal::Member < Ccportal::Ccportal
   self.table_name = :portal_members
-  set_primary_key :member_id
+  self.primary_key = :member_id
 
   #############
   ## Teachers #

@@ -1,7 +1,7 @@
 class Ccportal::Course < Ccportal::Ccportal
 
   self.table_name = :portal_classes
-  set_primary_key :class_id
+  self.primary_key = :class_id
 
   has_one :class_word, :foreign_key => :class_id, :class_name => "Ccportal::ClassWord"
   belongs_to :school, :foreign_key => :class_school, :class_name => "Ccportal::School"

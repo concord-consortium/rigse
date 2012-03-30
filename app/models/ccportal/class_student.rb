@@ -1,6 +1,6 @@
 class Ccportal::ClassStudent < Ccportal::Ccportal
   self.table_name = :portal_class_students
-  set_primary_key :class_student_id
+  self.primary_key = :class_student_id
 
   belongs_to :student, :foreign_key => :member_id, :class_name => 'Ccportal::Student'
   belongs_to :course, :foreign_key => :class_id, :class_name => 'Ccportal::Course'
