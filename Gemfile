@@ -94,7 +94,7 @@ group :test, :development do
   gem "selenium-webdriver", "~> 2.12.0"
   gem "cucumber",          "~> 1.0.2"
   gem "cucumber-rails",    "~> 1.0.2"
-  gem "database_cleaner",  "~> 0.6.7"
+  gem "database_cleaner",  "~> 0.7.2"
   gem "capybara",          "~> 1.1.1"
   gem "rspec",             "~> 2.6"
   gem "rspec-rails",       "~> 2.6"
