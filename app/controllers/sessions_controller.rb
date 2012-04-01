@@ -20,6 +20,13 @@ class SessionsController < ApplicationController
     redirect_back_or_default(root_path)
   end
 
+  # for cucumber testing only
+  def backdoor
+    logout_killing_session!
+    self.current_user = User.find_by_login!(params[:username])
+    head :ok
+  end
+
   protected
   
   def password_authentication

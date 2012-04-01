@@ -10,13 +10,17 @@ def find_or_create_offering(runnable,clazz)
 end
 
 def login_as(username, password)
+  visit "/login/#{username}"
+  @cuke_current_username = User.find_by_login(username)
+end
+
+def login_with_ui_as(username, password)
   visit "/login"
   within("#project-signin") do
     fill_in("login", :with => username)
     fill_in("password", :with => password)
     click_button("Login")
     @cuke_current_username = username
-    #click_button("Submit")
   end
 end
 
