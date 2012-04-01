@@ -88,14 +88,8 @@ class Admin::ProjectsController < ApplicationController
     @admin_project = Admin::Project.find(params[:id])
     
     # Pull in the current theme default home page content, if it isn't set in the project.
-    # This feels hackish, but there is no way to do this without fudging the controller_path if the
-    # _project_info partial contains a nested render without a path, which it does (_project_summary).
-    # This may need to be revisited if any of these internals change. -- Cantina-CMH 6/17/10
     if @admin_project.home_page_content.nil? || @admin_project.home_page_content.empty?
-      saved_path = self.class.instance_variable_get(:@controller_path)
-      self.class.instance_variable_set(:@controller_path, "home")
       render_to_string :partial => "home/project_info"
-      self.class.instance_variable_set(:@controller_path, saved_path)
       
       @admin_project.home_page_content = view_context.instance_variable_get(:@content_for_project_info)
       view_context.instance_variable_set(:@content_for_project_info, nil)
