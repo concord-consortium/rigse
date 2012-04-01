@@ -62,7 +62,8 @@ source "http://rubygems.org"
   gem 'default_value_for',    "~> 1.0.5"
   gem 'exception_notification', "~> 2.5.2"
   gem 'prototype-rails'
-  gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+  # switch to willbryant inorder to pick up some 3.1 necessary changes
+  gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/willbryant/prototype_legacy_helper.git'
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
   # need patched version of calendar_data_select to work in rails 3.1 and higher

@@ -5,8 +5,8 @@ GIT
     calendar_date_select (1.16.3)
 
 GIT
-  remote: git://github.com/rails/prototype_legacy_helper.git
-  revision: a2cd95c3e3c1a4f7a9566efdab5ce59c886cb05f
+  remote: git://github.com/willbryant/prototype_legacy_helper.git
+  revision: fc4fbb8792e7bb511ca8327774bbf4f6a3ec7434
   specs:
     prototype_legacy_helper (0.0.0)
 
