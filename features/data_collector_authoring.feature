@@ -10,7 +10,7 @@ Feature: An author edits a data collector
       | author       | author              | member, author       |
     And I login with username: author password: author
 
-  @selenium
+  @javascript
   Scenario: The author edits a graph and sees the Y-axis label and units change as the probe type changes
     Given the following simple investigations exist:
       | name                 | description           | user                 |
@@ -27,7 +27,7 @@ Feature: An author edits a data collector
     And the "embeddable_data_collector_y_axis_units" field should contain "kPa"
 
 
-  @selenium
+  @javascript
   Scenario: The author edits a graph from list of graphs
     Given I created a data collector
     When I visit /embeddable/data_collectors

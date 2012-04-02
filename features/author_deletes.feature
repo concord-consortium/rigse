@@ -6,7 +6,7 @@ Feature: An author deletes parts of an investigation
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
+  @javascript
   Scenario: The author deletes a page from a section
     Given the following users exist:
       | login  | password | roles          |
@@ -22,7 +22,7 @@ Feature: An author deletes parts of an investigation
     And accept the dialog
     Then I should not see "Page: testing fast cars"
 
-    @selenium
+    @javascript
     Scenario: The author deletes a element from a page
       Given the following users exist:
         | login  | password | roles          |

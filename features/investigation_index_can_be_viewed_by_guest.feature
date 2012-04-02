@@ -21,14 +21,14 @@ Feature: Investigations can be viewed by guests
 
 
 
-  @selenium
+  @javascript
   Scenario: Guest can Change the sort order
     When I sort investigations by "name DESC"
     Then There should be 6 investigations displayed
     And  "e Investigation" should appear before "f Investigation"   
     And  "draft" should not be displayed in the investigations list
 
-  @slenium
+  @javascript
   Scenario: Guests can't see count, or drafts
     When I am on the investigations page
     Then I should not see the "include_drafts" checkbox in the list filter

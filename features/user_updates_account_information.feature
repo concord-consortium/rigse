@@ -7,7 +7,7 @@ Feature: User updates account information
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
+  @javascript
   Scenario Outline: Users can not change their usernames
     Given the following teachers exist:
       | login   | password |
@@ -28,7 +28,7 @@ Feature: User updates account information
       | student  | student  |
       | teacher  | teacher  |
 
-  @selenium
+  @javascript
   Scenario: Students can not change their email addresses
     Given the following students exist:
       | login   | password |

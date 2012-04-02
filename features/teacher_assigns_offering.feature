@@ -33,7 +33,7 @@ Feature: Teacher can assign an offering to a class
     And the activity "Test Activity" is assigned to the class "My Class"
     Then the activity named "Test Activity" should have "offerings_count" equal to "1"
 
-  @selenium
+  @javascript
   Scenario: All potential offerings are visible
     Given the following simple investigations exist:
       | name               | user    |
@@ -51,7 +51,7 @@ Feature: Teacher can assign an offering to a class
     Then I should see "Resource Page: Test Resource Page"
     Then I should see "External Activity: My Activity"
 
-  @selenium
+  @javascript
   Scenario: Offerings from the default class show learner data in the default class
     Given the default class is created
     And adhoc workgroups are disabled
@@ -97,7 +97,7 @@ Feature: Teacher can assign an offering to a class
     Then I should see 'You must set a new password'
 
   @dialog
-  @selenium
+  @javascript
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class
     Given the default class is created
     And the following students exist:

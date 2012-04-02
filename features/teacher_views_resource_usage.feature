@@ -1,4 +1,4 @@
-@selenium
+@javascript
 Feature: Teacher views resource usage
 
   In order to know how many students have viewed a resource page

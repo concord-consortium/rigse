@@ -7,7 +7,7 @@ Feature: A manager updates account information for another user
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
+  @javascript
   Scenario Outline: Managers can change a users email address
     Given the following teachers exist:
       | login   | password     | email               |

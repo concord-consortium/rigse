@@ -67,21 +67,21 @@ Feature: Investigations can be searched
         | copy of z Investigation | teacher | 20              | draft              |
     And I login with username: teacher password: teacher
 
-  @selenium 
+  @javascript 
   Scenario: Default display of public investigations is name ASC
     When I browse public investigations
     Then There should be 20 investigations displayed
     And  "copy" should not be displayed in the investigations list
     And  "a Investigation" should appear before "b Investigation"
 
-  @selenium
+  @javascript
   Scenario: Changing the sort order
     When I sort investigations by "name DESC"
     Then There should be 20 investigations displayed
     And  "copy" should not be displayed in the investigations list
     And  "z Investigation" should appear before "y Investigation"   
 
-  @selenium
+  @javascript
   Scenario: Searching public investigations
     When I sort investigations by "name ASC"
     And I click on the next page of results
@@ -89,14 +89,14 @@ Feature: Investigations can be searched
     And  "copy" should not be displayed in the investigations list
     And "y Investigation" should appear before "z Investigation"
 
-  @selenium
+  @javascript
   Scenario:  browsing unpublished investigations
     When I browse draft investigations
     And I click on the next page of results
     Then There should be 20 investigations displayed
     And "copy" should be displayed in the investigations list
 
-  @selenium
+  @javascript
   Scenario: searching unpublished investigations
     When I browse draft investigations
     And I enter "copy of" in the search box

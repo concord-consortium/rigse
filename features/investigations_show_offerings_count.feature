@@ -13,7 +13,7 @@ Feature: Investigations show the offerings count
       | My Class | teacher |
     And I login with username: teacher password: teacher
 
-  @selenium
+  @javascript
   Scenario: The investigations list can show the offerings count
     Given the following empty investigations exist:
       | name       | user      | offerings_count | created_at                      | publication_status  |
@@ -25,7 +25,7 @@ Feature: Investigations show the offerings count
     And I should see "assigned 10 times"
     And I should see "assigned 20 times"
 
-  @selenium
+  @javascript
   Scenario: The investigations list offering count shows on all pages
     Given the following empty investigations exist:
       | name             | user    | offerings_count | created_at                     | publication_status |

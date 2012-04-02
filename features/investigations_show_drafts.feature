@@ -14,7 +14,7 @@ Feature: Investigations show drafts
       | My Class  | teacher     |
     And I login with username: teacher password: teacher
 
-  @selenium
+  @javascript
   Scenario: The investigations list offering count shows on all pages
     Given the following empty investigations exist:
       | name            | user    | offerings_count | created_at                     | publication_status |

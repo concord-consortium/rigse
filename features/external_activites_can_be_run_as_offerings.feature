@@ -18,7 +18,7 @@ Feature: External Activities can be run as offerings
       | login   | password |
       | student | student  |
 
-  @selenium
+  @javascript
   Scenario: External Activity offerings are runnable
     Given the student "student" belongs to class "My Class"
     And the external activity "My Activity" is assigned to the class "My Class"

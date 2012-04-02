@@ -22,19 +22,19 @@ Feature: Investigations can be sorted
     When I am on the investigations page
     Then the sort order selection should be "name ASC"
 
-  @selenium
+  @javascript
   Scenario: The investigations list can be sorted by name
     When I sort investigations by "name ASC"
     Then "MediumInv" should appear before "NewestInv"
     And "NewestInv" should appear before "OldestInv"
 
-  @selenium
+  @javascript
   Scenario: The investigations list can be sorted by date created
     When I sort investigations by "created_at DESC"
     Then "NewestInv" should appear before "MediumInv"
     And "MediumInv" should appear before "OldestInv"
     
-  @selenium
+  @javascript
   Scenario: The investigations list can be sorted by offerings count
     When I sort investigations by "offerings_count DESC"
     Then "OldestInv" should appear before "MediumInv"
