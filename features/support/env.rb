@@ -55,31 +55,53 @@ Spork.each_run do
   
   # Remove/comment out the lines below if your app doesn't have a database.
   # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
+  probe_tables = %w{
+    probe_calibrations
+    probe_datafilters
+    probe_device_configs
+    probe_physical_units
+    probe_probe_types
+    probe_vendor_interfaces
+  }
+  rigse_tables = %w{
+    ri_gse_assessment_targets
+    ri_gse_big_ideas
+    ri_gse_domains
+    ri_gse_expectations
+    ri_gse_expectation_indicators 
+    ri_gse_expectation_stems
+    ri_gse_grade_span_expectations
+    ri_gse_knowledge_statements
+    ri_gse_unifying_themes
+    ri_gse_assessment_target_unifying_themes
+  }
   begin
-    probe_tables = %w{
-      probe_calibrations
-      probe_datafilters
-      probe_device_configs
-      probe_physical_units
-      probe_probe_types
-      probe_vendor_interfaces
-    }
-    rigse_tables = %w{
-      ri_gse_assessment_targets
-      ri_gse_big_ideas
-      ri_gse_domains
-      ri_gse_expectations
-      ri_gse_expectation_indicators 
-      ri_gse_expectation_stems
-      ri_gse_grade_span_expectations
-      ri_gse_knowledge_statements
-      ri_gse_unifying_themes
-      ri_gse_assessment_target_unifying_themes
-    }
-    DatabaseCleaner.strategy = :truncation, { :except => (probe_tables + rigse_tables) }
+    # DatabaseCleaner.strategy = :truncation, { :except => (probe_tables + rigse_tables) }
+    DatabaseCleaner.strategy = :transaction
   rescue NameError
     raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
   end
+  
+  # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
+  # See the DatabaseCleaner documentation for details. Example:
+  #
+  #   Before('@no-txn,@selenium,@culerity,@celerity,@javascript') do
+  #     # { :except => [:widgets] } may not do what you expect here
+  #     # as tCucumber::Rails::Database.javascript_strategy overrides
+  #     # this setting.
+  #     DatabaseCleaner.strategy = :truncation
+  #   end
+  #
+  #   Before('~@no-txn', '~@selenium', '~@culerity', '~@celerity', '~@javascript') do
+  #     DatabaseCleaner.strategy = :transaction
+  #   end
+  #
+
+  # Possible values are :truncation and :transaction
+  # The :transaction strategy is faster, but might give you threading problems.
+  # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
+  Cucumber::Rails::Database.javascript_strategy = :transaction
+  # Cucumber::Rails::Database.javascript_strategy = :truncation, { :except => (probe_tables + rigse_tables) }
   
   APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
 
@@ -97,16 +119,4 @@ Spork.each_run do
 
   # so we can use things like dom_id_for
   include ApplicationHelper
-  
-  # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
-  # See the DatabaseCleaner documentation for details. Example:
-  #
-  #   Before('@no-txn,@selenium,@culerity,@celerity,@javascript') do
-  #     DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
-  #   end
-  #
-  #   Before('~@no-txn', '~@selenium', '~@culerity', '~@celerity', '~@javascript') do
-  #     DatabaseCleaner.strategy = :transaction
-  #   end
-  #
 end
