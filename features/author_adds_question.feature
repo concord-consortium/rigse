@@ -6,7 +6,7 @@ Feature: An author adds multiple choice questions
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
+  @javascript
   Scenario: The author adds a multiple choice question to an investigation
     Given the following users exist:
       | login  | password | roles          |
@@ -28,7 +28,7 @@ Feature: An author adds multiple choice questions
     And I should see "b"
     And I should see "c"
 
-  @selenium
+  @javascript
   Scenario: The author adds a multiple choice question to an investigation
     Given the following users exist:
       | login  | password | roles  |

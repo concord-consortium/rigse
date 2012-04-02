@@ -20,7 +20,7 @@ Feature: An author creates an investigation
     And I save the investigation
     Then I should see "Investigation was successfully created."
 
-  #@selenium
+  #@javascript
   #Scenario: The author creates a RITES investigation
     #Given a mock gse
     #Given the following users exist:

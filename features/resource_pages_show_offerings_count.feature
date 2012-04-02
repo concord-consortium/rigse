@@ -13,7 +13,7 @@ Feature: Resource Pages show the offerings count
       | My Class | teacher |
     And I login with username: teacher password: teacher
 
-  @selenium
+  @javascript
   Scenario: The resource pages list can show the offerings count
     Given the following resource pages exist:
       | name           | user    | offerings_count | created_at                     | publication_status |

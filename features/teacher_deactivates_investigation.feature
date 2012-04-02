@@ -37,7 +37,7 @@ Feature: Teacher can deactivate investigations from a class
     And I should see "1 student response"
 
   @dialog
-  @selenium
+  @javascript
   Scenario: Teacher drags active investigation with students off of class
     When I am on the class page for "My Class"
     And I drag the investigation "Test Investigation" in the class "My Class" to "#offering_list"

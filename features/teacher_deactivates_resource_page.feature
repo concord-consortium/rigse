@@ -1,4 +1,4 @@
-@selenium
+@javascript
 Feature: Teacher can deactivate resource pages from a class
   So my class can move on to other things
   As a teacher

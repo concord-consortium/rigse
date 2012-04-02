@@ -30,7 +30,7 @@ Feature: Student joins default class
     When I login with username: estudent password: password
     And I should see "Logged in successfully"
 
-  @selenium
+  @javascript
   Scenario: Student in default class joins another class
     Given the option to allow default classes is enabled
     And the following classes exist:
@@ -51,7 +51,7 @@ Feature: Student joins default class
     Then I should see "Successfully registered for class."
     And the student "student" should belong to the class "My Class"
 
-  @selenium
+  @javascript
   Scenario: Student in default class joins another class with invalid information
     Given the option to allow default classes is enabled
     And the following classes exist:

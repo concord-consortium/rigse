@@ -1,4 +1,4 @@
-@selenium
+@javascript
 Feature: Student views resource page
 
   In order see the resource page assigned to me
