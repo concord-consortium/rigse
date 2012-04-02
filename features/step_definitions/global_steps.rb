@@ -11,7 +11,7 @@ end
 
 def login_as(username, password)
   visit "/login/#{username}"
-  @cuke_current_username = User.find_by_login(username)
+  @cuke_current_username = username
 end
 
 def login_with_ui_as(username, password)
