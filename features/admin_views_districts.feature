@@ -7,6 +7,7 @@ Feature: Admin views districts
   Background:
     Given The default project and jnlp resources exist using factories
     And I login as an admin
+    And I go to my home page
 
   Scenario: admin see a list of districts
     When follow "Districts"
