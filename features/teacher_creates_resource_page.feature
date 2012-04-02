@@ -16,7 +16,7 @@ Feature: A teacher creates a resource page
     Then I should see "New Resource"
     When I fill in the following:
       | resource_page[name] | Test Page |
-    And I press "resource_page_submit"
+    And I press "Create Resource page"
     Then I should see "Resource Page was successfully created."
 
 
