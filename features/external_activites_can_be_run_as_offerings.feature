@@ -22,7 +22,7 @@ Feature: External Activities can be run as offerings
   Scenario: External Activity offerings are runnable
     Given the student "student" belongs to class "My Class"
     And the external activity "My Activity" is assigned to the class "My Class"
-    And I login with username: student password: student
+    And I am logged in with the username student
     When I go to my home page
     And follow "My Activity"
     Then I should be on /home

@@ -19,7 +19,7 @@ Feature: Teacher can deactivate investigations from a class
       | Test Investigation  | teacher   | published          |
     And the investigation "Test Investigation" is assigned to the class "My Class"
     And a student has performed work on the investigation "Test Investigation" for the class "My Class"
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
 
   Scenario: Teacher can see if student has performed work on an investigation
     When I am on the class page for "My Class"

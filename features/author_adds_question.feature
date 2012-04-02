@@ -15,7 +15,7 @@ Feature: An author adds multiple choice questions
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |
 
-    And I login with username: author password: author
+    And I am logged in with the username author
     When I show the first page of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
     When I add a "Multiple Choice Question" to the page
@@ -37,7 +37,7 @@ Feature: An author adds multiple choice questions
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |
 
-    And I login with username: author password: author
+    And I am logged in with the username author
     When I show the first page of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
     When I add a "Multiple Choice Question" to the page

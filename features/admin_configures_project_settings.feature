@@ -45,7 +45,7 @@ Feature: Admin configures project settings
     And the following teachers exist:
       | login   | password |
       | teacher | teacher  |
-    When I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the clazz create page
     Then I should not see "Grade Levels:"
     Given I login as an admin
@@ -56,7 +56,7 @@ Feature: Admin configures project settings
     When I check "Enable Grade Levels for Classes"
     And I press "Save"
     Then I should see "Grade Levels for Classes: enabled"
-    When I login with username: teacher password: teacher
+    When I am logged in with the username teacher
     And I am on the clazz create page
     Then I should see "Grade Levels:"
 

@@ -15,7 +15,7 @@ Feature: An author deletes parts of an investigation
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |
 
-    And I login with username: author password: author
+    And I am logged in with the username author
     And I show the first section of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
     When I follow "delete"
@@ -28,7 +28,7 @@ Feature: An author deletes parts of an investigation
         | login  | password | roles          |
         | author | author   | member, author |
       And the author "author" created an investigation named "Test" with text and a open response question
-      And I login with username: author password: author
+      And I am logged in with the username author
       And I show the first page of the "Test" investigation
       Then I should see "Text: "
       When I follow "delete text"

@@ -44,7 +44,7 @@ Feature: Investigations can be searched
           | x Good b        | teacher | 5               | published          | 
           | x Good c        | teacher | 5               | published          | 
           | x Good d        | teacher | 5               | published          | 
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
 
   @javascript
   Scenario: looking at the first page of runnable investigations

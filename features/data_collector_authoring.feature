@@ -8,7 +8,8 @@ Feature: An author edits a data collector
     Given the following users exist:
       | login        | password            | roles                |
       | author       | author              | member, author       |
-    And I login with username: author password: author
+    And I am logged in with the username author
+    
 
   @javascript
   Scenario: The author edits a graph and sees the Y-axis label and units change as the probe type changes

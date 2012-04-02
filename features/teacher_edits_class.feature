@@ -11,7 +11,7 @@ Feature: Teacher can edit their class information
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
-    When I login with username: teacher password: teacher
+    When I am logged in with the username teacher
     And go to the class page for "My Class"
     When I follow "edit"
     Then I should be on the class edit page for "My Class"

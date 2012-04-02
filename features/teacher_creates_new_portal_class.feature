@@ -9,7 +9,7 @@ Feature: Teacher creates new portal class
     And the following teachers exist:
       | login   | password |
       | teacher | teacher  |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And grade levels for classes is enabled
 
   Scenario: Class words are stored as lowercase
