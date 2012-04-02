@@ -65,12 +65,12 @@ Feature: Teacher can assign an offering to a class
     When I login as an admin
     And I am on the class page for "Default Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
+    And I wait 2 seconds
     Then the external activity offering "My Activity" in the class "Default Class" should be a default offering
     And I am logged in with the username teacher
     When I am on the class page for "My Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
+    And I wait 2 seconds
     Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
     And the external activity named "My Activity" should have "offerings_count" equal to "2"
     And I am logged in with the username student
@@ -109,13 +109,13 @@ Feature: Teacher can assign an offering to a class
     And I am logged in with the username teacher
     And I am on the class page for "My Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
+    And I wait 2 seconds
     Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
     And the external activity named "My Activity" should have "offerings_count" equal to "1"
     When I login as an admin
     And am on the class page for "Default Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
+    And I wait 2 seconds
     Then I should see "The External Activity My Activity is already assigned in a class."
     And the external activity named "My Activity" should have "offerings_count" equal to "1"
     And the class "Default Class" should not have any offerings

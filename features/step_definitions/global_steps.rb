@@ -114,11 +114,7 @@ When /^(?:|I )debug$/ do
   0
 end
 
-When /^I wait "(.*)" second(?:|s)$/ do |seconds|
-  sleep(seconds.to_i)
-end
-
-When /^I wait (?:for )(\d+) second[s]?$/ do |seconds|
+When /^I wait (\d+) second[s]?$/ do |seconds|
   sleep(seconds.to_i)
 end
 
