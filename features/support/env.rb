@@ -106,7 +106,7 @@ Spork.each_run do
   APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
 
   require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
-  require 'rspec/mocks'
+  require 'cucumber/rspec/doubles'
   require 'rspec/expectations'
   
   World(RSpec::Rails::Mocks)
