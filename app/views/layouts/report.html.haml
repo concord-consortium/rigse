@@ -44,7 +44,7 @@
 
         #flash
           .padded_contents
-            - flash.each_pair do |key, message|
+            - flash.each do |key, message|
               %div{:class=>"flash flash_#{key}"}= message 
         = content_for :layout
       = render :partial => 'shared/footer'
