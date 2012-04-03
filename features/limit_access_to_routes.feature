@@ -146,7 +146,7 @@ In NO case should the system allow:
     Given the following users exist:
       | login            | password            | roles              |
       | researcher_login | researcher_password | member, researcher |
-    And I am logged in with the username admin_login
+    And I am logged in with the username researcher_login
     When I visit the route <route>
     Then I should be on <route>
 
