@@ -22,7 +22,7 @@ Feature: An author adds multiple choice questions
     Then I should see "Why do you think ..."
     When I follow xpath "//a[@title='edit multiple choice question']"
     # this wait is necessary for IE please fixme
-    And I wait "1" second
+    And I wait 1 second
     Then I should see "choices"
     And I should see "a"
     And I should see "b"
@@ -44,7 +44,7 @@ Feature: An author adds multiple choice questions
     Then I should see "Why do you think ..."
     When I follow xpath "//a[@title='edit multiple choice question']"
     # this wait is necessary for IE please fixme
-    And I wait "1" second
+    And I wait 1 second
     Then I should see "choices"
     And I should see "a"
     And I should see "b"
