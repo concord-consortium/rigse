@@ -23,7 +23,7 @@ Feature: External Activities can be assigned as offerings
   # IT WILL CAUSE THE TEST TO FAIL
   @javascript
   Scenario: External Activities and Investigations are assigned
-    Given And I am logged in with the username teacher
+    Given I am logged in with the username teacher
     And I am on the class page for "My Class"
     When I assign the investigation "Test Investigation"
     And I assign the external activity "My Activity"
