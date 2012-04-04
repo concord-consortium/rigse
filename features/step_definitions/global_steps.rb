@@ -150,3 +150,10 @@ end
 When /^(?:|I )dismiss the dialog$/ do 
   page.driver.browser.switch_to.alert.dismiss
 end
+
+Then /^(?:|I )need to confirm "([^"]*)"$/ do |text|
+  # currently confirmations like this are done with dialogs
+  dialog_text = page.driver.browser.switch_to.alert.text
+  dialog_text.should == text
+  page.driver.browser.switch_to.alert.accept
+end

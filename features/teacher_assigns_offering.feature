@@ -116,7 +116,6 @@ Feature: Teacher can assign an offering to a class
     And am on the class page for "Default Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
     And I wait 2 seconds
-    Then I should see "The External Activity My Activity is already assigned in a class."
-    And accept the dialog
+    Then I need to confirm "The External Activity My Activity is already assigned in a class."
     And the external activity named "My Activity" should have "offerings_count" equal to "1"
     And the class "Default Class" should not have any offerings
