@@ -66,6 +66,8 @@ module NavigationHelpers
       preferences_user_path user
     when /the requirements page/
       "/requirements/"
+    when /the about page/
+      "/about"
     when /the password reset page/
       "/change_password/0"
     when /the edit security questions page for the user "(.*)"/
