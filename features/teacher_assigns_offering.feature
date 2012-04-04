@@ -61,7 +61,7 @@ Feature: Teacher can assign an offering to a class
     And the student "student" is in the class "My Class"
     And the following external activity exists:
       | name        | user    | url    |
-      | My Activity | teacher | /home |
+      | My Activity | teacher | /about |
     When I login as an admin
     And I am on the class page for "Default Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
@@ -76,7 +76,7 @@ Feature: Teacher can assign an offering to a class
     And I am logged in with the username student
     And I am on the class page for "My Class"
     And I follow "run My Activity"
-    Then I should be on my homepage
+    Then I should be on the about page
     And I login as an admin
     And I am on the class page for "Default Class"
     Then I should see "My Activity"
