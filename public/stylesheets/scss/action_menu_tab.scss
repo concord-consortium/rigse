@@ -103,14 +103,17 @@ a.rollover:hover {
       li {
         background: transparent;
         a, a:visited, a:active {
+          color: #fff;
           font-weight: normal;
           text-align: center;
           margin: 7px 0;
           padding: 3px 7px;
           /* CSS3 */
-          border-radius: 8px;
-          -moz-border-radius: 8px;
-          -webkit-border-radius: 8px; }
+          background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+          background: -moz-linear-gradient(top, #f3951d, #dd6e0d)
+          -moz-border-radius: 12px
+          -webkit-border-radius: 12px
+          border-radius: 12px }
         a.rollover {
           background: transparent;
           border-radius: 0px;
