@@ -57,7 +57,7 @@ class Portal::OfferingsController < ApplicationController
       format.jnlp {
         # check if the user is a student in this offering's class
         if params.delete(:redirect)
-          redirect_to portal_offering_url(params)
+          redirect_to portal_offering_path(params)
         else
           if learner = setup_portal_student
             if(!learner.bundle_logger.in_progress_bundle)
