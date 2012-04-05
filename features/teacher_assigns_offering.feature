@@ -90,9 +90,9 @@ Feature: Teacher can assign an offering to a class
     And the student "student" is in the class "My Class"
     And I am logged in with the username teacher
     And I am on the class page for "My Class"
-    Then I should see 'Reset Password'
-    When I follow 'Reset Password'
-    Then I should see 'You must set a new password'
+    Then I should see "Reset Password"
+    When I follow "Reset Password"
+    Then I should see "You must set a new password"
 
   @dialog
   @javascript
