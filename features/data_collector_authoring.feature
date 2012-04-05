@@ -31,6 +31,6 @@ Feature: An author edits a data collector
   @javascript
   Scenario: The author edits a graph from list of graphs
     Given I created a data collector
-    When I visit /embeddable/data_collectors
+    When I visit the route /embeddable/data_collectors
     And I follow "edit graph"
     Then I should see "Probe type"
