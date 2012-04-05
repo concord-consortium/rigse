@@ -659,15 +659,15 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
       end
-      haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
+      haml_tag(:div, :class => 'item report_question_prompt') {
         haml_concat(open_response.prompt)
       }
-      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top; font-weight: bold;') {
+      haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
-      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top;') {
+      haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
@@ -688,15 +688,15 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
       end
-      haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
+      haml_tag(:div, :class => 'item report_question_prompt') {
         haml_concat(image_question.prompt)
       }
-      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top; font-weight: bold;') {
+      haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
-      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top;') {
+      haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
