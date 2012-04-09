@@ -751,7 +751,11 @@ module ApplicationHelper
             }
             all_choices.each_with_index do |choice,i|
               answer_count = answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0
-              correctness = choice.is_correct ? "correct" : "incorrect"
+              if multiple_choice.has_correct_answer?
+                correctness = choice.is_correct ? "correct" : "incorrect"
+              else
+                correctness = "non-correctable"
+              end
               haml_tag(:div, :class => 'row') {
                 haml_tag(:div, :class => "cell optionlabel #{correctness}") {
                   haml_concat("#{i+1}. #{choice.choice}")
