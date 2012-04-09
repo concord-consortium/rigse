@@ -183,6 +183,10 @@ a.rollover {display: none;}
     text-decoration: line-through; }
   .learner_response_content.correct {
     font-style: oblique; }
+  .learner_response_name.incorrect {
+    text-decoration: none; }
+  .learner_response_name.correct {
+    font-style: normal; }
   .item {
     border: none; }
   .ContentFlow {
