@@ -229,13 +229,17 @@ class Portal::OfferingsController < ApplicationController
       @report_embeddable_filter.ignore = false
     end
 
-    embeddables = params[:filter].collect{|type, ids|
-      logger.info "processing #{type}: #{ids.inspect}"
-      klass = type.constantize
-      ids.collect{|id|
-        klass.find(id.to_i)
-      }
-    }.flatten.compact.uniq
+    if params[:filter]
+      embeddables = params[:filter].collect{|type, ids|
+        logger.info "processing #{type}: #{ids.inspect}"
+        klass = type.constantize
+        ids.collect{|id|
+          klass.find(id.to_i)
+        }
+      }.flatten.compact.uniq
+    else
+      embeddables = []
+    end
     @report_embeddable_filter.embeddables = embeddables
 
     redirect_url = report_portal_offering_url(@offering)
