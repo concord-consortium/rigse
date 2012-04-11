@@ -149,6 +149,7 @@ var Workgroup = function(_offering,_launch_url) {
     run_message.update('enter valid passwords for all collaborators');
     run_message.addClassName('wg_important');
     run_button.stopObserving('click');
+    run_button.writeAttribute('href', null);
   };
 
   var enable_run = function() {
@@ -157,6 +158,7 @@ var Workgroup = function(_offering,_launch_url) {
     run_message.removeClassName('wg_important');
     run_button.stopObserving('click');
     run_button.observe('click', launch_action);
+    run_button.writeAttribute('href', launch_url);
   };
 
   var disable_add = function() {
