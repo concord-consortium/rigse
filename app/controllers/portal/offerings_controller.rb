@@ -56,31 +56,27 @@ class Portal::OfferingsController < ApplicationController
 
       format.jnlp {
         # check if the user is a student in this offering's class
-        if params.delete(:redirect)
-          redirect_to portal_offering_path(params)
-        else
-          if learner = setup_portal_student
-            if(!learner.bundle_logger.in_progress_bundle)
-              learner.bundle_logger.start_bundle
-            end
+        if learner = setup_portal_student
+          if(!learner.bundle_logger.in_progress_bundle)
+            learner.bundle_logger.start_bundle
+          end
 
-            launch_event = Dataservice::LaunchProcessEvent.create(
-              :event_type => Dataservice::LaunchProcessEvent::TYPES[:jnlp_requested],
-              :event_details => "Activity launcher delivered. Activity should be opening...",
-              :bundle_content => learner.bundle_logger.in_progress_bundle
-            )
-            if params.delete(:use_installer)
-              render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
-            else
-              render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
-            end
+          launch_event = Dataservice::LaunchProcessEvent.create(
+            :event_type => Dataservice::LaunchProcessEvent::TYPES[:jnlp_requested],
+            :event_details => "Activity launcher delivered. Activity should be opening...",
+            :bundle_content => learner.bundle_logger.in_progress_bundle
+          )
+          if params.delete(:use_installer)
+            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
           else
-            # The current_user is a teacher (or another user acting like a teacher)
-            if params.delete(:use_installer)
-              render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
-            else
-              render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
-            end
+            render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
+          end
+        else
+          # The current_user is a teacher (or another user acting like a teacher)
+          if params.delete(:use_installer)
+            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
+          else
+            render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
           end
         end
       }

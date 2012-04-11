@@ -2,9 +2,7 @@
   .item
     %ul.quiet_list
       %li
-        - run_link_opts = {}
-        - run_link_opts[:redirect] = true if APP_CONFIG[:use_adhoc_workgroups]
-        = run_link_for(offering, nil, run_link_opts)
+        = run_link_for(offering)
         - if current_user.has_role?("admin") && @portal_student
           |
           - learner = @portal_student.learners.find_by_offering_id(offering.id)

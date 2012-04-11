@@ -87,7 +87,6 @@ var Workgroup = function(_offering,_launch_url) {
       onSuccess: function() {
         pending_requests = pending_requests -1;
         close_dialog();
-        window.location = launch_url;
       },
       onFailure: function() {
         pending_requests = pending_requests -1;
@@ -124,6 +123,7 @@ var Workgroup = function(_offering,_launch_url) {
     $(document).observe('keydown', handle_keydown);
     $('show_workgroups').observe('click',show_workgroup_editor);
     $('cancel_button').observe('click',close_dialog);
+    run_button.writeAttribute('href', launch_url);
     lightbox_hood.show();
     lightbox_content.show();
     update_ui();
