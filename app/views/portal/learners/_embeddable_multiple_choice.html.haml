@@ -2,8 +2,6 @@
   %div{:id => dom_id_for(embeddable, :item), :class => 'item'}
     %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
       - saveable = saveable_for_learner(embeddable, learner)
-      - css_style = saveable.answered? ? 'answered' : 'not_answered'
-      - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
       .item{:style => 'display: block;'}
         %strong
           != embeddable.prompt
@@ -12,7 +10,16 @@
         - if saveable && choice.choice == saveable.answer
           - css << " chosen_answer"
         .item{:class => css, :style => 'display: block;'}
-          = "#{i+1}. #{choice.choice}"
+          - if css =~ /chosen_answer/
+            .optioncheckmark.inline_block= choice.is_correct? ? "&#x2713".html_safe : "&nbsp;".html_safe;
+          - else
+            .optioncheckmark.inline_block
+              &nbsp;
+          .inline_block
+            = "#{i+1}. #{choice.choice}"
       - if saveable.answer == 'not answered'
-        .item{:class => 'not_answered', :style => 'font-weight: bold;'}
-          = 'not answered'
+        .item{:style => 'display: block;'}
+          .optioncheckmark.inline_block
+            &nbsp;
+          .inline_block.not_answered{:style => 'font-weight: bold;'}
+            = 'not answered'

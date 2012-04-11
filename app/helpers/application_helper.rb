@@ -744,6 +744,7 @@ module ApplicationHelper
         haml_tag(:div) {
           haml_tag(:div, :class => 'table') {
             haml_tag(:div, :class => 'row', :style => 'display: none;') {
+              haml_tag(:div, :class => "cell cellheader") { haml_concat("Correct?")}
               haml_tag(:div, :class => "cell cellheader") { haml_concat("Option")}
               haml_tag(:div, :class => "cell cellheader") { haml_concat("Graph")}
               haml_tag(:div, :class => "cell cellheader") { haml_concat("Percent")}
@@ -751,12 +752,17 @@ module ApplicationHelper
             }
             all_choices.each_with_index do |choice,i|
               answer_count = answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0
+              checkmark = ""
               if multiple_choice.has_correct_answer?
                 correctness = choice.is_correct ? "correct" : "incorrect"
+                checkmark = "&#x2713;".html_safe if choice.is_correct?
               else
                 correctness = "non-correctable"
               end
               haml_tag(:div, :class => 'row') {
+                haml_tag(:div, :class => "cell optioncheckmark #{correctness}") {
+                  haml_concat(checkmark)
+                }
                 haml_tag(:div, :class => "cell optionlabel #{correctness}") {
                   haml_concat("#{i+1}. #{choice.choice}")
                 }
@@ -774,6 +780,7 @@ module ApplicationHelper
               }
             end
             haml_tag(:div, :class => 'row') {
+              haml_tag(:div, :class => 'cell optioncheckmark')
               haml_tag(:div, :class => 'cell optionlabel') {
                 haml_concat("Not answered")
               }
@@ -790,6 +797,7 @@ module ApplicationHelper
               }
             }
             haml_tag(:div, :class => 'row', :style => 'border-top: 2px solid black;') {
+              haml_tag(:div, :class => 'cell optioncheckmark')
               haml_tag(:div, :class => 'cell optionlabel') {
                 haml_concat("&nbsp;")
               }

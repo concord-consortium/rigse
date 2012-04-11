@@ -162,15 +162,6 @@ a.rollover {display: none;}
 // Reports stuff
 @import "reports";
 
-.item {
-  .incorrect {
-    text-decoration: line-through; }
-  .correct {
-    font-style: oblique; } }
-.optionlabel.incorrect {
-  text-decoration: line-through; }
-.optionlabel.correct {
-  font-style: oblique; }
 .optionbarbar {
   border: 2px solid black; }
 .filter_checkbox,.filter_selection_control,.print_control,#header,#footer,#under_footer {
@@ -179,14 +170,6 @@ a.rollover {display: none;}
   overflow: visible;
   .learner_response {
     page-break-inside: avoid; }
-  .learner_response_content.incorrect {
-    text-decoration: line-through; }
-  .learner_response_content.correct {
-    font-style: oblique; }
-  .learner_response_name.incorrect {
-    text-decoration: none; }
-  .learner_response_name.correct {
-    font-style: normal; }
   .item {
     border: none; }
   .ContentFlow {
