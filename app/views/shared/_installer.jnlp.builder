@@ -58,7 +58,7 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") {
       xml.property :name=> "skip_not_found_dialog", :value => "true"
       xml.property :name=> "not_found_url", :value => polymorphic_url(url_target, {:format => :jnlp}.merge(url_options))
       xml.property :name=> "test_jar_saving", :value => installer_report_url
-      xml.property :name=> "install_on_not_found", :value => "true"
+      xml.property :name=> "install_if_not_found", :value => "true"
 
       # include wrapped_jnlp so we know what jnlp to install from
       xml.property :name=> "wrapped_jnlp", :value => maven_jnlp_info[:href]
