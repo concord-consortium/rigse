@@ -71,17 +71,17 @@ class Portal::OfferingsController < ApplicationController
             :event_details => "Activity launcher delivered. Activity should be opening...",
             :bundle_content => learner.bundle_logger.in_progress_bundle
           )
-          if params.delete(:use_installer)
-            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
-          else
+          if params.delete(:skip_installer)
             render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
+          else
+            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
           end
         else
           # The current_user is a teacher (or another user acting like a teacher)
-          if params.delete(:use_installer)
-            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
-          else
+          if params.delete(:skip_installer)
             render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
+          else
+            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
           end
         end
       }
