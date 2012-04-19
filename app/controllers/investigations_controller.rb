@@ -191,10 +191,10 @@ class InvestigationsController < AuthoringController
       }
 
       format.jnlp   {
-        if params.delete(:use_installer)
-          render :partial => 'shared/installer', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode }
-        else
+        if params.delete(:skip_installer)
           render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode }
+        else
+          render :partial => 'shared/installer', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode }
         end
       }
 

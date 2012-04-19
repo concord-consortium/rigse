@@ -10,7 +10,7 @@ module RunnablesHelper
   def run_url_for(component, params = {}, format = nil)
     format ||= component.run_format
 
-    # this is where we pull in extra parameters for the url, like use_installer
+    # this is where we pull in extra parameters for the url, like skip_installer
     params.update(current_user.extra_params)
     params[:format] = format
     polymorphic_url(component, params)
