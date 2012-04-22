@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/concord-consortium/haml.git
+  revision: 4987b10743d59f3e50d444f10708394ce8b21aac
+  branch: xml-mime-type-and-ie8-keycode-fix
+  specs:
+    haml (3.1.4)
+
+GIT
   remote: git://github.com/courtland/calendar_date_select
   revision: 53947edba07101e2391ca00c5d1dbe6a75cf53d1
   specs:
@@ -123,7 +130,6 @@ GEM
     grit (2.4.1)
       diff-lcs (~> 1.1)
       mime-types (~> 1.15)
-    haml (3.1.4)
     highline (1.6.11)
     hike (1.2.1)
     hirb (0.6.2)
@@ -338,7 +344,7 @@ DEPENDENCIES
   fakeweb (~> 1.3)
   ffi-ncurses (~> 0.3.3)
   grit (~> 2.4)
-  haml
+  haml!
   highline
   hirb
   httpclient (~> 2.2)
