@@ -277,7 +277,7 @@ module OtmlHelper
     # note the .otml on the end of the name, this makes this work even when the current 'format' is dynamic_otml
     # this approach only works will single levels of format changes, for nested partials look at:
     # http://stackoverflow.com/questions/339130/how-do-i-render-a-partial-of-a-different-format-in-rails
-    result = render :partial => "otml/ot_interface_manager.otml", :locals => { :vendor_interface => vendor_interface }
+    result = render :partial => "otml/ot_interface_manager", :formats => [:otml], :locals => { :vendor_interface => vendor_interface }
     return result
   end
 
