@@ -7,4 +7,5 @@
   - @investigations.each do |investigation|
     %tr{:style=>"background-color: #{cycle("#FFF", "#EEE")}"}
       %td= investigation.name
-      %td= investigation.offerings_count
+      - unless session[:include_usage_count].blank?
+        %td= investigation.offerings_count
