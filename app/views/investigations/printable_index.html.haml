@@ -3,7 +3,8 @@
 %table
   %tr
     %th= Investigation.display_name.pluralize
-    %th Usage Count
+    - unless session[:include_usage_count].blank?
+      %th Usage Count
   - @investigations.each do |investigation|
     %tr{:style=>"background-color: #{cycle("#FFF", "#EEE")}"}
       %td= investigation.name
