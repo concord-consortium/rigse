@@ -35,9 +35,13 @@
       <programArguments>${project.outputDirectory} "${product_shortname}-${product_version}"</programArguments>
       <progressText>progress</progressText>
       <workingDirectory>${build_project_directory}</workingDirectory>
+      <ruleEvaluationLogic>or</ruleEvaluationLogic>
       <ruleList>
         <platformTest>
           <type>osx</type>
+        </platformTest>
+        <platformTest>
+          <type>linux</type>
         </platformTest>
         <compareText>
           <logic>equals</logic>
