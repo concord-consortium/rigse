@@ -26,9 +26,15 @@ namespace :build do
     end
     
     def bitrocket_builder_path
-      app_path = ENV['BITROCK_INSTALLER'] || "/Applications/BitRock InstallBuilder Enterprise 6.2.5/bin/Builder.app"
-      app_path = ENV['BITROCK_INSTALLER'] || "/Applications/BitRock InstallBuilder Professional 7.2.0/bin/Builder.app"
-      app_path + "/Contents/MacOS/installbuilder.sh"
+      app_path = ENV['BITROCK_INSTALLER']
+      if RUBY_PLATFORM =~ /darwin/
+        app_path ||= "/Applications/BitRock InstallBuilder Professional 7.2.0/bin/Builder.app"
+        app_path += "/Contents/MacOS/installbuilder.sh"
+      elsif RUBY_PLATFORM =~ /linux/
+        app_path ||= "/opt/installbuilder-8.2.0"
+        app_path += "/bin/builder"
+      end
+      app_path
     end
   
     def default_jnlp_url
@@ -166,14 +172,14 @@ namespace :build do
     desc 'build the osx installer'
     task :build_osx => :cache_jars do
       puts "building osx installer"
-      %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} osx]
+      puts %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} osx]
       %x[cp #{bitrocket_installer_dir}/installers/*.dmg #{installer_dest}]
     end
 
     desc 'build the windows installer'
     task :build_win => :cache_jars do
       puts "building win installer"
-      %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} windows]
+      puts %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} windows]
       %x[cp #{bitrocket_installer_dir}/installers/*.exe #{installer_dest}]
     end
     

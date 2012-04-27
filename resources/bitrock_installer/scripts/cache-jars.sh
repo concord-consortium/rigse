@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source jnlps.conf
+source "$(dirname $0)/../jnlps.conf"
 
 FIRST_URL=""
 count=0
