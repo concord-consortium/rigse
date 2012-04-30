@@ -39,7 +39,11 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") {
     xml.property :name=> "vendor", :value => jnlp_installer_vendor
     xml.property :name=> "product_name", :value => jnlp_installer_project
     xml.property :name=> "product_version", :value => jnlp_installer_version
-    
+    old_versions = jnlp_installer_old_versions
+    if old_versions.size > 0
+      xml.property :name => "product_old_versions", :value => old_versions.join(',')
+    end
+
     # after conversation w/ scott & stephen, dont think we need this.
     # xml.property :name=> "wrapped_jnlp", :value => options[:wrapped_jnlp_url]
     # xml.property :name=> "mangle_wrapped_jnlp", :value => "false"
