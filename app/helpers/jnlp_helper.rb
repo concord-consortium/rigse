@@ -215,7 +215,12 @@ module JnlpHelper
     config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
     config['version'] || "1.0"
   end
-  
+
+  def jnlp_installer_old_versions
+    config = load_yaml("#{::Rails.root.to_s}/config/installer.yml")
+    config['old_versions'] || []
+  end
+
   def jnlp_installer_not_found_url(os)
     "#{APP_CONFIG[:site_url]}/missing_installer/#{os}"
   end
