@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120508233642) do
+ActiveRecord::Schema.define(:version => 20120509005156) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20120508233642) do
     t.boolean  "enable_member_registration",                   :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
     t.boolean  "require_user_consent",                         :default => false
+    t.boolean  "use_periodic_bundle_uploading",                :default => false
   end
 
   create_table "admin_tags", :force => true do |t|
