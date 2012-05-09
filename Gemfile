@@ -82,7 +82,16 @@ group :development do
 end
 
 group :test, :development do
-  gem "selenium-webdriver", "~> 2.12.0"
+  # I tried version 2.21.2 and it gave errors like:
+  # cannot load such file -- {
+  #   "frozen": {
+  #     "app.update.auto": false,
+  #  ...
+  #  (LoadError)
+  # ./features/step_definitions/global_steps.rb:13:in `login_as'
+  # I went back to 2.16 and now it works so there is some bug
+  # or some strange way we or capybara is using it
+  gem "selenium-webdriver", "2.16.0"
   gem "cucumber",          "~> 1.0.2"
   gem "cucumber-rails",    "~> 1.0.2"
   gem "database_cleaner",  "~> 0.6.7"
