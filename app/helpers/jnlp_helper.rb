@@ -52,6 +52,11 @@ module JnlpHelper
       additional_properties = [
         ['otrunk.view.mode', 'student'],
       ]
+      if current_project.use_periodic_bundle_uploading?
+        additional_properties << ['otrunk.periodic.uploading.enabled', 'true']
+        additional_properties << ['otrunk.periodic.uploading.url', dataservice_periodic_bundle_logger_periodic_bundle_contents_url(options[:learner].periodic_bundle_logger)]
+        additional_properties << ['otrunk.periodic.uploading.interval', '300000']  # 5 minutes. TODO: Maybe make this configurable in the admin project settings?
+      end
     else
       additional_properties = [
         ['otrunk.view.mode', 'student'],
