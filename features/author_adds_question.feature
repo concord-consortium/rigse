@@ -51,6 +51,8 @@ Feature: An author adds multiple choice questions
     And I should see "c"
     When I follow "delete" within "span.delete_link"
     And I press "Save"
+    # this is necessary to make sure the Save ajax request has completed
+    Then I should not see "choices"
     And I show the first page of the "testing fast cars" investigation
     Then I should see "Why do you think ..."
     And I should see "b"
