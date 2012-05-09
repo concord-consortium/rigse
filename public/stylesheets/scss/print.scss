@@ -146,7 +146,48 @@ a:hover   {color:black; text-decoration:none;}
 a:active  {color:black; text-decoration:none;}
 a.rollover {display: none;}
 /* hide table elements? */
-.students_listing {
+#students_listing {
   color: black;
   a:link;
+  .reset_password {
+    display: none; }
+  .remove {
+    display: none; }
 }
+.print_button {
+  display: none; }
+.print_link {
+  display: none; }
+
+// Reports stuff
+@import "reports";
+
+.optionbarbar {
+  border: 2px solid black; }
+.filter_checkbox,.filter_selection_control,.print_control,#header,#footer,#under_footer {
+  display: none; }
+.report_embeddable {
+  overflow: visible;
+  .learner_response {
+    page-break-inside: avoid; }
+  .item {
+    border: none; }
+  .ContentFlow {
+    display: none;
+    overflow: visible; }
+  .accordion_container {
+    overflow: visible;
+    border: none;
+    border-bottom: 2px solid black;
+    page-break-inside: avoid;
+    .action_menu {
+      overflow: visible; }
+    .accordion_toggle {
+      display: none; }
+    .accordion_content {
+      overflow: visible; } } }
+#wrapper {
+  overflow: visible; }
+
+.report_question_prompt {
+  width: 545px; }

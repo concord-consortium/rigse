@@ -1,7 +1,7 @@
 / offer people a way to pop-out of iframe:
 %li#home.trail= link_to 'Home', home_path
 %li.trail= link_to 'About', about_path
-%li.trail= link_to 'Help', "http://www.concord.org/projects/rites#participants", :target => "_blank"
+%li.trail= link_to 'Help', "https://sites.google.com/a/ritesproject.net/rites/teacher-support", :target => "_blank"
 - if current_user.has_role?('admin', 'manager', 'researcher', 'author') || current_user.anonymous?
   %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
 -#- if current_user.has_role?('admin')

@@ -24,7 +24,7 @@ module Noteable
   end
   
   def teacher_note_otml
-    h(teacher_note.body).gsub(/\n/,"<br/>")
+    h(teacher_note.body).gsub(/\n/,"<br/>").html_safe
   end
 
 end

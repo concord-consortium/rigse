@@ -2,3 +2,7 @@
 shortname: localRites
 version: "200912.01"
 jnlp_config: http://localhost:3000/investigations/409.jnlp
+old_versions:
+- "200911.03"
+- "200911.02"
+- "200911.01"

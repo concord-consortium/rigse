@@ -92,4 +92,8 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     self.save
     choice
   end
+
+  def has_correct_answer?
+    !(choices.detect{|c| c.is_correct }.nil?)
+  end
 end

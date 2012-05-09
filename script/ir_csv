@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+
+require 'csv'
+
+puts "\nExporting InstallerReport objects to csv."
+print "Writing csv to: ins_rep.csv... "
+CSV.open("ins_rep.csv", "wb") do |csv|
+  csv << ["ID", "Success", "Install Level", "Already existed?", "Learner ID", "Remote IP", "Local Socket", "Local Host", "OS", "Java", "Cache Dir", "Jar"]
+  InstallerReport.all.each {|ir| csv << [ir.id, ir.success, ir.install_level, ir.already_existed?, ir.learner_id, ir.remote_ip, ir.local_socket_address, ir.local_host_address, ir.os, ir.java, ir.cache_dir, ir.saved_jar] }
+end
+puts "done."

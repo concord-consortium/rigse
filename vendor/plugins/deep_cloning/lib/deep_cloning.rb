@@ -117,6 +117,11 @@ module DeepCloning
       end
     end
 
+    # force update of created_at, updated_at if defined
+    t = Time.now
+    kopy.send(:write_attribute, :created_at, t) if kopy.respond_to?(:created_at)
+    kopy.send(:write_attribute, :updated_at, t) if kopy.respond_to?(:updated_at)
+
     return kopy
   end
   

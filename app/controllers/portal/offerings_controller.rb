@@ -66,17 +66,17 @@ class Portal::OfferingsController < ApplicationController
             :event_details => "Activity launcher delivered. Activity should be opening...",
             :bundle_content => learner.bundle_logger.in_progress_bundle
           )
-          if params.delete(:use_installer)
-            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
-          else
+          if params.delete(:skip_installer)
             render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
+          else
+            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
           end
         else
           # The current_user is a teacher (or another user acting like a teacher)
-          if params.delete(:use_installer)
-            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
-          else
+          if params.delete(:skip_installer)
             render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
+          else
+            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
           end
         end
       }
@@ -225,13 +225,17 @@ class Portal::OfferingsController < ApplicationController
       @report_embeddable_filter.ignore = false
     end
 
-    embeddables = params[:filter].collect{|type, ids|
-      logger.info "processing #{type}: #{ids.inspect}"
-      klass = type.constantize
-      ids.collect{|id|
-        klass.find(id.to_i)
-      }
-    }.flatten.compact.uniq
+    if params[:filter]
+      embeddables = params[:filter].collect{|type, ids|
+        logger.info "processing #{type}: #{ids.inspect}"
+        klass = type.constantize
+        ids.collect{|id|
+          klass.find(id.to_i)
+        }
+      }.flatten.compact.uniq
+    else
+      embeddables = []
+    end
     @report_embeddable_filter.embeddables = embeddables
 
     redirect_url = report_portal_offering_url(@offering)

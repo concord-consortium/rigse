@@ -27,7 +27,7 @@ class Report::LearnerController < ApplicationController
       update_learners
     end
     
-    @all_schools           = Portal::School.all.sort_by  {|s| s.name.downcase}
+    @all_schools           = Portal::School.has_teachers.all.sort_by  {|s| s.name.downcase}
     @all_teachers          = Portal::Teacher.all.sort_by {|t| t.name.downcase}
 
     # TODO: fix me -- choose runnables better
