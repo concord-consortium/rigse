@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120320150044) do
+ActiveRecord::Schema.define(:version => 20120508233642) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -162,6 +162,39 @@ ActiveRecord::Schema.define(:version => 20120320150044) do
   end
 
   add_index "dataservice_launch_process_events", ["bundle_content_id"], :name => "index_dataservice_launch_process_events_on_bundle_content_id"
+
+  create_table "dataservice_periodic_bundle_contents", :force => true do |t|
+    t.integer  "periodic_bundle_logger_id"
+    t.text     "body",                      :limit => 2147483647
+    t.boolean  "processed"
+    t.boolean  "valid_xml"
+    t.boolean  "empty"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dataservice_periodic_bundle_contents", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
+
+  create_table "dataservice_periodic_bundle_loggers", :force => true do |t|
+    t.integer  "learner_id"
+    t.text     "imports"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dataservice_periodic_bundle_loggers", ["learner_id"], :name => "learner_index"
+
+  create_table "dataservice_periodic_bundle_parts", :force => true do |t|
+    t.integer  "periodic_bundle_logger_id"
+    t.string   "key"
+    t.text     "value",                     :limit => 16777215
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index"
+  add_index "dataservice_periodic_bundle_parts", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
