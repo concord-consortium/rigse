@@ -21,8 +21,7 @@ Feature: A manager updates account information for another user
       | login     | password   | roles           |
       | mymanager | mymanager  | manager         |
 
-    When I log out
-    And I login with username: mymanager password: mymanager
+    And I am logged in with the username mymanager
     And I am on the user preferences page for the user "<username>"
     Then I should see "User Preferences"
     When I fill in "user_email" with "<changed_email>"
@@ -50,8 +49,7 @@ Feature: A manager updates account information for another user
       | login     | password   | roles           |
       | mymanager | mymanager  | manager         |
 
-    When I log out
-    And I login with username: mymanager password: mymanager
+    And I am logged in with the username mymanager
     And I am on the user list page
     And I click "Reset Password" for user: "<userlogin>"
     Then I should see "Password for <username> (<userlogin>)"

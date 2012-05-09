@@ -17,7 +17,7 @@ Feature: Student offering jnlps are not cached
     And the following simple investigations exist:
       | name                | user      | publication_status |
       | Test Investigation  | teacher   | published          |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And the student "student" belongs to class "My Class"
     And the investigation "Test Investigation" is assigned to the class "My Class"
 

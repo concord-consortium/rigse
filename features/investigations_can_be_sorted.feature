@@ -16,7 +16,7 @@ Feature: Investigations can be sorted
       | NewestInv  | teacher   | 5               | Wed Jan 26 12:00:00 -0500 2011  | published           |
       | MediumInv  | teacher   | 10              | Wed Jan 23 12:00:00 -0500 2011  | published           |
       | OldestInv  | teacher   | 20              | Wed Jan 20 12:00:00 -0500 2011  | published           |
-    And I login with username: teacher password: teacher
+    Given I am logged in with the username teacher
   
   Scenario: The investigation list page has a sort mechanism
     When I am on the investigations page

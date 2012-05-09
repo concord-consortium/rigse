@@ -41,7 +41,7 @@ Feature: Student joins default class
       | login     | password  |
       | student   | student   |
     And the student "student" belongs to class "Default Class"
-    When I login with username: student password: student
+    And I am logged in with the username student
     And I am on the home page
     And I fill in "clazz_class_word" with "word"
     And I press "Submit"
@@ -62,7 +62,7 @@ Feature: Student joins default class
       | login     | password  |
       | student   | student   |
     And the student "student" belongs to class "Default Class"
-    When I login with username: student password: student
+    And I am logged in with the username student
     And I am on the home page
     And I press "Submit"
     Then I should see "Please enter a valid class word and try again."

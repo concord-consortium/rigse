@@ -18,7 +18,7 @@ Feature: Investigations can be duplicated
 
   @javascript
   Scenario: Duplicating investigations have an offering count of 0
-    Given I login with username: author password: author
+    Given I am logged in with the username author
     And I am on the investigations page for "NewestInv"
     When I duplicate the investigation
     Then the investigation "copy of NewestInv" should have been created
@@ -26,14 +26,14 @@ Feature: Investigations can be duplicated
 
   @javascript
   Scenario: Authors can duplicate an investigations
-    Given I login with username: author password: author
+    Given I am logged in with the username author
     And I am on the investigations page for "NewestInv"
     When I duplicate the investigation
     Then the investigation "copy of NewestInv" should have been created
 
   @javascript
   Scenario: Members who are not authors cannot duplicate an investigations
-    Given I login with username: member password: member
+    Given I am logged in with the username member
     And I am on the investigations page for "NewestInv"
     Then I cannot duplicate the investigation
 

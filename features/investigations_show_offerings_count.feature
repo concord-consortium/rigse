@@ -11,7 +11,7 @@ Feature: Investigations show the offerings count
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
-    And I login with username: teacher password: teacher
+    Given I am logged in with the username teacher
 
   @javascript
   Scenario: The investigations list can show the offerings count

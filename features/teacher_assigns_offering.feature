@@ -45,7 +45,7 @@ Feature: Teacher can assign an offering to a class
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
     Then I should see "Investigation: Test Investigation"
     Then I should see "Resource Page: Test Resource Page"
@@ -67,13 +67,13 @@ Feature: Teacher can assign an offering to a class
     And I drag the external activity "My Activity" to "#clazz_offerings"
     And I wait "2" seconds
     Then the external activity offering "My Activity" in the class "Default Class" should be a default offering
-    When I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     When I am on the class page for "My Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
     And I wait "2" seconds
     Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
     And the external activity named "My Activity" should have "offerings_count" equal to "2"
-    When I login with username: student password: student
+    And I am logged in with the username student
     And I am on the class page for "My Class"
     And I follow "run My Activity"
     Then I should be on my homepage
@@ -90,7 +90,7 @@ Feature: Teacher can assign an offering to a class
       | login     | password  |
       | student   | student   |
     And the student "student" is in the class "My Class"
-    When I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
     Then I should see 'Reset Password'
     When I follow 'Reset Password'
@@ -106,7 +106,7 @@ Feature: Teacher can assign an offering to a class
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
-    When I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
     And I wait "2" seconds

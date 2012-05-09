@@ -11,7 +11,7 @@ Feature: Investigation index pages can be printed
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And the following empty investigations exist:
       | name    | user      | offerings_count | created_at                      | publication_status  |
       | NewestInv  | teacher   | 5               | Wed Jan 26 12:00:00 -0500 2011  | published           |

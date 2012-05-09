@@ -65,7 +65,7 @@ Feature: Investigations can be searched
         | copy of x Investigation | teacher | 20              | draft              |
         | copy of y Investigation | teacher | 20              | draft              |
         | copy of z Investigation | teacher | 20              | draft              |
-    And I login with username: teacher password: teacher
+    Given I am logged in with the username teacher
 
   @javascript 
   Scenario: Default display of public investigations is name ASC

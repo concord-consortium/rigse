@@ -215,8 +215,7 @@ Feature: Investigations can be reported on
 
     And a mocked spreadsheet library
 
-    When I log out
-    And I login with username: researcher password: researcher
+    And I am logged in with the username researcher
     And I am on the researcher reports page
     Then I should see "You have selected:"
     When I press "Apply Filters"

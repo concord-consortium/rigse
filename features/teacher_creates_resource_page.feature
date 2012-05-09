@@ -10,7 +10,7 @@ Feature: A teacher creates a resource page
     Given the following teachers exist:
       | login         | password        |
       | teacher       | teacher         |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     When I go to the resource pages page
     And I follow "create Resource Page"
     Then I should see "New Resource"
@@ -33,7 +33,7 @@ Feature: A teacher creates a resource page
       | draft page B      | draft               | teacherB  |
       | private page A    | private             | teacherA  |
       | private page B    | private             | teacherB  |
-    And I login with username: teacherA password: teacher
+    And I am logged in with the username teacherA
     When I go to the resource pages page
     Then I should see "published page A"
     And I should see "published page B"
@@ -52,7 +52,7 @@ Feature: A teacher creates a resource page
       | published page A  | published           | teacherA  |
       | draft page A      | draft               | teacherA  |
       | private page A    | private             | teacherA  |
-    And I login with username: teacherA password: teacher
+    And I am logged in with the username teacherA
     When I am on the homepage
     Then I should see "published page A"
     And I should see "private page A"
@@ -71,7 +71,7 @@ Feature: A teacher creates a resource page
       | BTesting Page   | draft               | teacherB  |
       | BDemo Page      | published           | teacherB  |
 
-    And I login with username: teacherA password: teacher
+    And I am logged in with the username teacherA
     When I search for a resource page named "Testing"
     Then I should see "1Testing Page"
     And I should see "2Testing Page"

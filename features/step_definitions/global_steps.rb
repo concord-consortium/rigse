@@ -9,7 +9,7 @@ def find_or_create_offering(runnable,clazz)
     offering
 end
 
-def login_as(username, password)
+def login_as(username)
   visit "/login/#{username}"
   @cuke_current_username = username
 end
@@ -60,12 +60,22 @@ end
 
 Given /^(?:|I )login as an admin$/ do
   admin = Factory.next(:admin_user)
-  login_as(admin.login, 'password')
+  login_as(admin.login)
 end
 
 
-When /^I am logged in as "([^"]*)"\s*,?\s*"([^"]*)"\s*$/ do |username,password|
-  login_as(username,password)
+# the quote in the pattern is to prevent this from matching other rules
+# and hopefully there is no need for quotes in a usernames
+Given /^I am logged in with the username ([^"]*)$/ do |username|
+  login_as(username)
+end
+
+Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
+  login_with_ui_as(username, password)
+end
+
+When /^I log out$/ do
+  visit "/logout"
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|

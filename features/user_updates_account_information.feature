@@ -16,7 +16,7 @@ Feature: User updates account information
       | login   | password |
       | student | student  |
     When I log out
-    And I login with username: <username> password: <password>
+    And I am logged in with the username <username>
     And I am on the user preferences page for the user "<username>"
     Then I should see "User Preferences"
     And I should see "First name"
@@ -33,7 +33,7 @@ Feature: User updates account information
     Given the following students exist:
       | login   | password |
       | student | student  |
-    When I login with username: student password: student
+    When I am logged in with the username student
     And I am on the user preferences page for the user "student"
     Then I should see "User Preferences"
     And I should see "First name"

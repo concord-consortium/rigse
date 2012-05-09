@@ -20,7 +20,7 @@ Feature: Teacher views resource usage
       | login   | password |
       | student | student  |
     And the student "student" belongs to class "My Class"
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
     And I assign the resource page "Test Resource" to the class "My Class"
 
@@ -34,13 +34,13 @@ Feature: Teacher views resource usage
     Then I should see "Viewed by: 0 students"
 
     When I log out
-    And I login with username: student password: student
+    And I am logged in with the username student
     And I am on the class page for "My Class"
     Then I should see "View Test Resource"
 
     When I follow "View Test Resource"
     And I log out
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the resource pages page
     Then I should see "Test Resource"
 

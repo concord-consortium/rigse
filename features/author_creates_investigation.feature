@@ -11,7 +11,7 @@ Feature: An author creates an investigation
     Given the following users exist:
       | login        | password            | roles                |
       | author       | author              | member, author       |
-    And I login with username: author password: author
+    And I am logged in with the username author
     When I go to the create investigation page
     Then I should see "Investigation: (new)"
     When I fill in the following:
@@ -26,7 +26,7 @@ Feature: An author creates an investigation
     #Given the following users exist:
       #| login        | password            | roles                |
       #| author       | author              | member, author       |
-    #And I login with username: author password: author
+    # And I am logged in with the username author
     #When I go to the create investigation page
     #Then I should see "Investigation: (new)"
     #And I should see "grade span"
