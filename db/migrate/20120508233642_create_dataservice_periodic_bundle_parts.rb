@@ -2,8 +2,9 @@ class CreateDataservicePeriodicBundleParts < ActiveRecord::Migration
   def self.up
     create_table :dataservice_periodic_bundle_parts do |t|
       t.integer :periodic_bundle_logger_id
-      t.string :key
-      t.text :value, :limit => 4.megabytes
+      t.boolean :delta, :default => true
+      t.string  :key
+      t.text    :value, :limit => 4.megabytes
 
       t.timestamps
     end

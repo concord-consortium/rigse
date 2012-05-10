@@ -188,6 +188,7 @@ ActiveRecord::Schema.define(:version => 20120509005156) do
 
   create_table "dataservice_periodic_bundle_parts", :force => true do |t|
     t.integer  "periodic_bundle_logger_id"
+    t.boolean  "delta",                                         :default => true
     t.string   "key"
     t.text     "value",                     :limit => 16777215
     t.datetime "created_at"
