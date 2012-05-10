@@ -53,8 +53,11 @@ module JnlpHelper
         ['otrunk.view.mode', 'student'],
       ]
       if current_project.use_periodic_bundle_uploading?
+        # make sure the periodic bundle logger exists, just in case
+        l = options[:learner]
+        pbl = l.periodic_bundle_logger || Dataservice::PeriodicBundleLogger.create(:learner_id => l.id)
         additional_properties << ['otrunk.periodic.uploading.enabled', 'true']
-        additional_properties << ['otrunk.periodic.uploading.url', dataservice_periodic_bundle_logger_periodic_bundle_contents_url(options[:learner].periodic_bundle_logger)]
+        additional_properties << ['otrunk.periodic.uploading.url', dataservice_periodic_bundle_logger_periodic_bundle_contents_url(pbl)]
         additional_properties << ['otrunk.periodic.uploading.interval', '300000']  # 5 minutes. TODO: Maybe make this configurable in the admin project settings?
       end
     else
