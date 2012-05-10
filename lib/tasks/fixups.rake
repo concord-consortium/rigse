@@ -137,15 +137,7 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
       Portal::Learner.find(:all).each do |learner|
         learner.console_logger = Dataservice::ConsoleLogger.create! unless learner.console_logger
         learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
-        learner.save!
-      end
-    end
-
-    desc "Create bundle and console loggers for learners"
-    task :create_bundle_and_console_loggers_for_learners => :environment do
-      Portal::Learner.find(:all).each do |learner|
-        learner.console_logger = Dataservice::ConsoleLogger.create! unless learner.console_logger
-        learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
+        learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create! unless learner.periodic_bundle_logger
         learner.save!
       end
     end
