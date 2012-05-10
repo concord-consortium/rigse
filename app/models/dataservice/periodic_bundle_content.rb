@@ -4,14 +4,42 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
   set_table_name :dataservice_periodic_bundle_contents
 
   belongs_to :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger"
+  has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "periodic_bundle_content_id"
+
+  before_create :process_bundle
+
+  include BlobExtraction
+
+  def otml
+    read_attribute :body
+  end
+
+  def otml=(val)
+    write_attribute(:body, val)
+  end
+
+  def process_bundle
+    doc = Nokogiri::XML(self.body)
+    self.record_bundle_processing
+    self.valid_xml = doc.errors.any?
+    # Calculate self.empty even when the xml is missing or invalid
+    self.empty = self.body.nil? || self.body.empty? || doc.xpath('/otrunk/objects/OTReferenceMap/map').first.children.size == 0
+    self.extract_blobs unless self.empty
+    true # don't stop the callback chain.
+  end
+
+  def record_bundle_processing
+    self.updated_at = Time.now
+    self.processed = true
+  end
 
   def extract_parts
     self.periodic_bundle_logger = self.periodic_bundle_logger
-    otml = Nokogiri::XML(self.body)
+    doc = Nokogiri::XML(self.body)
 
-    extract_imports(otml)
+    extract_imports(doc)
 
-    extract_entries(otml)
+    extract_entries(doc)
   end
   handle_asynchronously :extract_parts
 
@@ -27,11 +55,11 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
 
   private
 
-  def extract_imports(otml = Nokogiri::XML(self.body))
+  def extract_imports(doc = Nokogiri::XML(self.body))
     # extract the imports and merge them into the bundle logger's import list
     existing_imports = self.periodic_bundle_logger.imports || []
     new_imports = []
-    imports = otml.xpath("/otrunk/imports/import")
+    imports = doc.xpath("/otrunk/imports/import")
     imports.each do |imp|
       k = imp['class']
       new_imports << k
@@ -44,12 +72,12 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     end
   end
 
-  def extract_entries(otml = Nokogiri::XML(self.body))
+  def extract_entries(doc = Nokogiri::XML(self.body))
     # extract all of the entry chunks and save them as Dataservice::PeriodicBundleParts
-    entries = otml.xpath("/otrunk/objects/OTReferenceMap/map/entry")
+    entries = doc.xpath("/otrunk/objects/OTReferenceMap/map/entry")
     entries.each do |entry|
       key = entry['key']
-      extract_non_delta_parts(entry.children.first, otml)
+      extract_non_delta_parts(entry.children.first, doc)
       value = entry.children.to_xml.strip
       part = Dataservice::PeriodicBundlePart.find_or_create_by_periodic_bundle_logger_id_and_key(:periodic_bundle_logger_id => self.periodic_bundle_logger.id, :key => key)
       part.value = value
@@ -57,17 +85,17 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     end
   end
 
-  def extract_non_delta_parts(element, otml)
+  def extract_non_delta_parts(element, doc)
     element.xpath('.//*[@id]').each do |child|
       # first create a part for this child
-      key = part['id']
+      key = child['id']
       part = Dataservice::PeriodicBundlePart.find_or_create_by_periodic_bundle_logger_id_and_key(:periodic_bundle_logger_id => self.periodic_bundle_logger.id, :key => key)
       part.value = child.to_s
       part.delta = false
       part.save
 
       # now replace this child with an object reference
-      obj_ref = Nokogiri::XML::Node.new "object", otml
+      obj_ref = Nokogiri::XML::Node.new "object", doc
       obj_ref['refid'] = key
       child.replace(obj_ref)
     end

@@ -184,7 +184,7 @@ describe Dataservice::BundleContent do
       '
     @expected_body = '<sessionBundles xmlns:xmi="http://www.omg.org/XMI" xmlns:sailuserdata="sailuserdata" start="2010-06-04T11:35:09.053-0400" stop="2010-06-04T11:44:53.604-0400" curnitUUID="cccccccc-0009-0000-0000-000000000000" sessionUUID="863174f4-79a1-4c44-9733-6a94be2963c9" lastModified="2010-06-04T11:44:10.136-0400" timeDifference="743" localIP="10.11.12.235">
           <sockParts podId="dddddddd-0002-0000-0000-000000000000" rimName="ot.learner.data" rimShape="[B">
-            <sockEntries value="' + Dataservice::BundleContent.b64gzip_pack(@expected_otml) + '" millisecondsOffset="541083"/>
+            <sockEntries value="' + B64Gzip.pack(@expected_otml) + '" millisecondsOffset="541083"/>
           </sockParts>
           <agents role="RUN_WORKGROUP"/>
           <sdsReturnAddresses>http://has.staging.concord.org/dataservice/bundle_loggers/6/bundle_contents.bundle</sdsReturnAddresses>

@@ -2,6 +2,7 @@ class Dataservice::Blob < ActiveRecord::Base
   set_table_name :dataservice_blobs
 
   belongs_to :bundle_content, :class_name => "Dataservice::BundleContent", :foreign_key => "bundle_content_id"
+  belongs_to :periodic_bundle_content, :class_name => "Dataservice::PeriodicBundleContent", :foreign_key => "periodic_bundle_content_id"
 
   before_create :create_token
 

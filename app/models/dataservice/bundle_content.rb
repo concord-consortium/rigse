@@ -19,6 +19,8 @@ class Dataservice::BundleContent < ActiveRecord::Base
   include Changeable
 
   include SailBundleContent
+
+  include BlobExtraction
   
   before_save :process_bundle
   # pagination default
@@ -34,27 +36,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
     def searchable_attributes
       @@searchable_attributes
-    end
-
-    
-    def b64gzip_unpack(b64gzip_content)
-      s = StringIO.new(B64::B64.decode(b64gzip_content))
-      z = ::Zlib::GzipReader.new(s)
-      return z.read
-    end
-
-    def b64gzip_pack(content)
-      gzip_string_io = StringIO.new()
-      gzip = Zlib::GzipWriter.new(gzip_string_io)
-
-      # use a fixed modified time so b64gzip_pack always returns the same string with the same input
-      #  the gzip spec (http://www.gzip.org/zlib/rfc-gzip.html) says when gzipping a string mtime defaults to the current time
-      #  so if mtime isn't fixed then calls to this method will return different strings depending when it is called
-      gzip.mtime=1
-      gzip.write(content)
-      gzip.close
-      gzip_string_io.rewind
-      return B64::B64.encode(gzip_string_io.string)
     end
   end
 
@@ -140,7 +121,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
-      return self.class.b64gzip_unpack(otml_b64gzip)
+      return B64Gzip.unpack(otml_b64gzip)
       # ::Zlib::GzipReader.new(StringIO.new(B64::B64.decode(otml_b64gzip))).read
     else
       nil
@@ -151,17 +132,13 @@ class Dataservice::BundleContent < ActiveRecord::Base
     # explicitly flag attributes which will change, especially otml since it has problems auto-detecting it has changed...
     self.otml_will_change!
     self.body_will_change!
-    encoded_str = self.class.b64gzip_pack(self.otml)
+    encoded_str = B64Gzip.pack(self.otml)
     unless self.original_body != nil && self.original_body.length > 0
       self.original_body_will_change!
       self.original_body = self.body
     end
     self.body = self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
   end
-  
-  @@url_resolver = URLResolver.new
-  @@blob_url_regexp = /(?:http.*?\/dataservice|\.\.)\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
-  @@blob_content_regexp = /\s*gzb64:([^<]+)/m
   
   def process_blobs
     # return true unless self.valid_xml
@@ -176,51 +153,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
     return blobs_present
     # above would stop other callbacks from happening
     # return true 
-  end
-  
-  def extract_blobs(host = nil)
-    return false if ! self.otml
-    changed = false
-      
-    if ! host
-      address = URI.parse(APP_CONFIG[:site_url])
-      host = address.host
-    end
-
-    text = self.otml
-
-		# first find all the previously processed blobs, and re-point their urls
-    begin
-      text.gsub!(@@blob_url_regexp) {|match|
-        changed = true
-        match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => $1, :token => $2, :host => host, :format => "blob", :only_path => false})
-        match
-      }
-    rescue Exception => e
-      $stderr.puts "#{e}: #{$&}"
-    end
-    
-    begin
-      # find all the unprocessed blobs, and extract them and create Blob objects for them
-      text.gsub!(@@blob_content_regexp) {|match|
-        changed = true
-        _content = self.class.b64gzip_unpack($1.gsub!(/\s/, ""))
-        # the following find is probably of limited use, and is expensive:
-        # blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
-
-        # sometimes we don't have a valid id, but thats OK, we build our list here:
-        blob = Dataservice::Blob.create(:bundle_content_id => self.id, :content => _content)
-        self.blobs << blob
-        match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
-        match
-      }
-    rescue Exception => e
-      $stderr.puts "#{e}: #{$&}"
-    end
-    
-    self.otml = text if changed
-    
-    return changed
   end
 
   def bundle_content_return_address
@@ -315,7 +247,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
         saveable_image_question = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(@learner_id, @offering_id, $1)
         answer = extractor.get_property_path(chooser, 'embeddedEntries/oTObject').last
         src = answer.nil? ? nil : extractor.get_text_property(answer, 'src')
-        if src =~ @@blob_url_regexp
+        if src =~ BLOB_URL_REGEXP
           blob_id = $1
           if saveable_image_question.response_count == 0 || saveable_image_question.answers.last.blob_id != blob_id.to_i
             saveable_image_question.answers.create(:bundle_content_id => self.id, :blob_id => blob_id)
