@@ -20,9 +20,9 @@ class Embeddable::NLogoModelsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/n_logo_model" } # n_logo_model.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model , :teacher_mode => false } }
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @n_logo_model, :teacher_mode => @teacher_mode} }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model  } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @n_logo_model} }
         format.xml  { render :n_logo_model => @n_logo_model }
       end
     end

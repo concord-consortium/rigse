@@ -13,7 +13,7 @@ xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) {
   jnlp_resources_windows(xml)
 
   xml << "  <application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>\n  "
-  xml.argument polymorphic_url(runnable, :format =>  :config, :teacher_mode => teacher_mode, 
+  xml.argument polymorphic_url(runnable, :format =>  :config, :teacher_mode => local_assigns[:teacher_mode], 
     Rails.application.config.session_options[:key] => session_options[:id])
   xml << "  </application-desc>\n"
 }

@@ -33,9 +33,9 @@ class Embeddable::RawOtmlsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/raw_otml" } # raw_otml.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @raw_otml , :teacher_mode => false } }
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @raw_otml, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @raw_otml, :teacher_mode => @teacher_mode} }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @raw_otml  } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @raw_otml, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @raw_otml} }
         format.xml  { render :raw_otml => @raw_otml }
       end
     end
@@ -50,9 +50,9 @@ class Embeddable::RawOtmlsController < ApplicationController
     else
       respond_to do |format|
         format.html 
-        format.jnlp { render :partial => 'shared/edit', :locals => { :runnable => @raw_otml , :teacher_mode => false } }
-        format.config { render :partial => 'shared/edit', :locals => { :runnable => @raw_otml, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false } }
-        format.dynamic_otml { render :partial => 'shared/edit', :locals => {:runnable => @raw_otml, :teacher_mode => false } }
+        format.jnlp { render :partial => 'shared/edit', :locals => { :runnable => @raw_otml  } }
+        format.config { render :partial => 'shared/edit', :locals => { :runnable => @raw_otml, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.dynamic_otml { render :partial => 'shared/edit', :locals => {:runnable => @raw_otml } }
         format.otml { render :layout => "layouts/embeddable/raw_otml" } # raw_otml.otml.haml
         format.xml  { render :xml => @raw_otml  }
       end
