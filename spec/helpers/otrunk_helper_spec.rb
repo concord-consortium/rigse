@@ -9,7 +9,7 @@ describe OtmlHelper do
 #    default_path = File.join(base,file)
 #    if theme
 #      themed_path = File.join(base,'themes', theme, file)
-#      if File.exists? File.join(RAILS_ROOT,'public',themed_path)
+#      if File.exists? File.join(Rails.root,'public',themed_path)
 #        return "/#{themed_path}"
 #      end
 #    end
