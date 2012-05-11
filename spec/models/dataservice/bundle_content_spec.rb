@@ -310,7 +310,8 @@ describe Dataservice::BundleContent do
           @contents_a = []
           @bundle_logger = mock_model(Dataservice::BundleLogger, {
             :learner => @learner,
-            :bundle_contents => @contents_a
+            :bundle_contents => @contents_a,
+            :reload => true
           })
           @bundle.bundle_logger = @bundle_logger
         end
