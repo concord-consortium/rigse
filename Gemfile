@@ -112,7 +112,7 @@ group :test, :development do
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   # If you update the version of ci_reporter
   # please make sure to update the --require path in Hudson
-  gem "ci_reporter",       "~> 1.6.6"
+  gem "ci_reporter",       "~> 1.7.0"
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"
