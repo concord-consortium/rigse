@@ -17,7 +17,7 @@ class MiscController < ActionController::Base
         :bundle_content => learner.bundle_logger.in_progress_bundle
       )
     end
-    image_folder = File.join(RAILS_ROOT, "public","images","new","banners")
+    image_folder = File.join(Rails.root, "public","images","new","banners")
     image_file = File.exists?(theme_file = File.join(image_folder, "#{APP_CONFIG[:theme]}.png")) ? theme_file : File.join(image_folder, "empty.png")
     send_file(image_file, {:type => 'image/png', :disposition => 'inline'} )
   end

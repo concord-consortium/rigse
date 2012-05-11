@@ -11,9 +11,11 @@ require 'highline/import'
 puts "using db localhosts: #{@hosts.join(', ')}"
 
 FULL_PATH = File.expand_path(__FILE__)
-RAILS_ROOT = File.dirname(File.dirname(FULL_PATH))
-puts "using RAILS_ROOT = #{RAILS_ROOT}"
+rails_root = File.dirname(File.dirname(FULL_PATH))
+puts "using rails_root = #{rails_root}"
 
+# Mock just a bit of the Rails3 Rails object
+Rails = OpenStruct.new( "root" => rails_root, "env" => RAILS_ENV)
 
 @db_admin_username = 'root'
 @db_admin_username = ask("  mysql admin user: ") { |q| q.default = "admin" }
@@ -22,7 +24,7 @@ puts "using RAILS_ROOT = #{RAILS_ROOT}"
 
 
 def rails_file_path(*args)
-  File.join([RAILS_ROOT] + args)
+  File.join([Rails.root] + args)
 end
 
 def create_db(hash)  

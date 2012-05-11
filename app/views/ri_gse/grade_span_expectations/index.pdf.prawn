@@ -14,7 +14,7 @@ pdf.tags :h1 => { :font_size => "3em", :font_weight => :bold },
 
 # serif_font  = "/Library/Fonts/Baskerville.dfont" 
 
-serif_font  = File.join([RAILS_ROOT] + %w{fonts Temporarium_version_1.1 Temporarium.ttf})
+serif_font  = File.join([Rails.root] + %w{fonts Temporarium_version_1.1 Temporarium.ttf})
 
 if File.exists?(serif_font)
   pdf.font_families["Baskerville"] = {
