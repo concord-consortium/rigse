@@ -77,7 +77,7 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     entries = doc.xpath("/otrunk/objects/OTReferenceMap/map/entry")
     entries.each do |entry|
       key = entry['key']
-      extract_non_delta_parts(entry.children.first, doc)
+      extract_non_delta_parts(entry.element_children.first, doc)
       value = entry.children.to_xml.strip
       part = Dataservice::PeriodicBundlePart.find_or_create_by_periodic_bundle_logger_id_and_key(:periodic_bundle_logger_id => self.periodic_bundle_logger.id, :key => key)
       part.value = value
