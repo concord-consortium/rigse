@@ -20,9 +20,9 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml   { render :layout => "layouts/embeddable/smartgraph/range_question" } # smartgraph_range_question.otml.haml
-        format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @smartgraph_range_question , :teacher_mode => false } }
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @smartgraph_range_question, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @smartgraph_range_question , :teacher_mode => false } }
+        format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @smartgraph_range_question  } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @smartgraph_range_question, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @smartgraph_range_question  } }
         format.xml    { render :smartgraph_range_question => @smartgraph_range_question }
       end
     end

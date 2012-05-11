@@ -20,10 +20,10 @@ class Embeddable::ImageQuestionsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml   { render :layout => "layouts/embeddable/image_question" } # image_question.otml.haml
-        format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @image_question, :teacher_mode => false } }
+        format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @image_question } }
 
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @image_question, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @image_question, :teacher_mode => @teacher_moden } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @image_question, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @image_questionn } }
         format.xml    { render :image_question => @image_question }
       end
     end

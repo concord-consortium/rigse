@@ -20,9 +20,9 @@ class Embeddable::Biologica::WorldsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/biologica/world" } # biologica_world.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_world, :teacher_mode => false  } }
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_world, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false  } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_world, :teacher_mode => @teacher_mode} }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_world  } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_world, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_world} }
         format.xml  { render :biologica_world => @biologica_world }
       end
     end
