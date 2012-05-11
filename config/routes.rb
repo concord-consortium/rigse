@@ -236,6 +236,7 @@ constraints :id => /\d+/ do
     resources :console_loggers do
       resources :console_contents, :except => [:create]
     end
+    resources :periodic_bundle_loggers, :only => [:show]
   end
 
   # metal routing
