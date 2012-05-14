@@ -10,6 +10,7 @@ class Dataservice::LaunchProcessEvent < ActiveRecord::Base
     :config_requested => "config requested",
     :bundle_requested => "bundle requested",
     :activity_otml_requested => "activity otml requested",
+    :periodic_activity_otml_requested => "periodic activity otml requested",
     :bundle_saved => "bundle saved"
   }
 end
