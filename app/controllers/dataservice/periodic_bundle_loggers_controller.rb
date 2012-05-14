@@ -8,13 +8,14 @@ class Dataservice::PeriodicBundleLoggersController < ApplicationController
     @dataservice_bundle_logger = Dataservice::PeriodicBundleLogger.find(params[:id])
     eportfolio_bundle = @dataservice_bundle_logger.sail_bundle
     # FIXME How do we now associate launch process events since bundle_content != session?
-#    if @dataservice_bundle_logger.in_progress_bundle
-#      launch_event = Dataservice::LaunchProcessEvent.create(
-#        :event_type => Dataservice::LaunchProcessEvent::TYPES[:bundle_requested],
-#        :event_details => "Learner session data loaded. Loading activity content...",
-#        :bundle_content => @dataservice_bundle_logger.in_progress_bundle
-#      )
-#    end
+    # For now, the in_progress_bundle is still being created, so just use that.
+    if ipb = @dataservice_bundle_logger.learner.bundle_logger.in_progress_bundle
+      launch_event = Dataservice::LaunchProcessEvent.create(
+        :event_type => Dataservice::LaunchProcessEvent::TYPES[:bundle_requested],
+        :event_details => "Learner session data loaded. Loading activity content...",
+        :bundle_content => ipb
+      )
+    end
     respond_to do |format|
       # format.html # show.html.erb
       format.xml  { render :xml => eportfolio_bundle }
