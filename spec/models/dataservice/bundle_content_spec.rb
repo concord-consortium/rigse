@@ -243,7 +243,7 @@ describe Dataservice::BundleContent do
       it "should have an otml property if the xml is valid"  do
         # IMORTANT: this learner_otml is seriously FAKE. (np)
         @learner_otml = "<OTText>Hello World</OTText>"
-        @ziped_otml = Dataservice::BundleContent.b64gzip_pack(@learner_otml)
+        @ziped_otml = B64Gzip.pack(@learner_otml)
         @learner_socks = "<ot.learner.data><sockEntries value=\"#{@ziped_otml}\"/></ot.learner.data>"
         @bundle.body="<sessionBundles>#{@learner_socks}</sessionBundles>"
         @bundle.process_bundle

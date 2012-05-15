@@ -1,3 +1,5 @@
+require 'b64_gzip'
+
 module BlobExtraction
   URL_RESOLVER = URLResolver.new
   BLOB_CONTENT_REGEXP = /\s*gzb64:([^<]+)/m
@@ -29,7 +31,8 @@ module BlobExtraction
       # find all the unprocessed blobs, and extract them and create Blob objects for them
       text.gsub!(BLOB_CONTENT_REGEXP) {|match|
         changed = true
-        _content = B64Gzip.unpack($1.gsub!(/\s/, ""))
+        packed = $1.gsub(/\s/,"")
+        _content = B64Gzip.unpack(packed)
         # the following find is probably of limited use, and is expensive:
         # blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, B64Gzip.unpack($1.gsub!(/\s/, "")))
 
