@@ -40,6 +40,7 @@ class Portal::School < ActiveRecord::Base
   alias :teachers :portal_teachers
   scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
   scope :virtual, { :conditions => 'nces_school_id is NULL' }  
+  scope :has_teachers, joins(:members).group(:school_id)
 
   # TODO: Maybe this?  But also maybe nces_id.nil? technique instead??
   [:virtual?, :real?].each {|method| delegate method, :to=> :district }

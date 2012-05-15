@@ -7,6 +7,8 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
     xml.import :class => "org.concord.sensor.state.OTInterfaceManager"
     xml.import :class => "org.concord.otrunk.overlay.OTOverlay"
     xml.import :class => "org.concord.otrunk.view.document.OTCompoundDoc"
+    xml.import :class => "org.concord.otrunk.navigation.OTNavigationHistoryService"
+    xml.import :class => "org.concord.framework.otrunk.wrapper.OTObjectSet"
   }
 
   xml.objects { 
@@ -34,6 +36,7 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
         xml << ot_interface_manager(true)
         xml.object :refid => "#{runnable.uuid}!/lab_book_bundle"
         xml.object :refid => "#{runnable.uuid}!/script_engine_bundle"
+        xml << ot_navigation_history_service
       }
 
       # FIXME This should probably get figured out in a more dynamic way, 

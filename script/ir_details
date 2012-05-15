@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+
+remote = lambda {|ir| ir.remote_ip }
+socket = lambda {|ir| ir.local_socket_address }
+
+def percent(count, tot)
+  (((count.to_f/tot.to_f)*1000).to_i)/10.0
+end
+
+class Computer
+  attr_reader :os, :local_users, :local_socket_address, :remote_ip, :learner_ids, :learners
+
+  def initialize(irs = [])
+    @irs = irs
+    @remote_ip = irs[0].remote_ip
+    @local_socket_address = irs[0].local_socket_address
+    @local_users = irs.collect{|ir| ir.local_user || "unknown" }.uniq.compact
+    @os = irs[0].os
+    @javas = irs.collect{|ir| ir.java || "unknown" }.uniq.compact
+    @learner_ids = irs.collect{|ir| ir.learner_id }.uniq.compact
+    @learners = irs.collect{|ir| ir.learner }.uniq.compact
+
+    @didnt = []
+    irs.size.times do |i|
+      next if i == 0 # we don't care if it already existed on the first time
+      @didnt << {:time => i, :ir => irs[i]} unless irs[i].already_existed?
+    end
+  end
+
+  def java
+    return "multiple" if @javas.size > 1
+    return @javas[0]
+  end
+
+  def launches
+    return @irs.size
+  end
+
+  def persisted?
+    @didnt.size == 0
+  end
+end
+
+reps = InstallerReport.all
+grouped = reps.extended_group_by([remote, socket])
+
+puts "There are #{grouped.keys.size} remote ips"
+
+@computers = []
+grouped.each do |remote_ip, local_ips|
+  local_ips.each do |local_ip, irs|
+    comp =  Computer.new(irs)
+    @computers << comp
+  end
+end
+
+def report_by(header, collection, lam)
+  puts "\n#{header}"
+  collection.group_by{|c| lam.call(c) }.sort_by{|k,v| k }.each do |k, c|
+    puts("   %4d (%6.2f%%) %s" % [c.size, percent(c.size, collection.size), k])
+  end
+end
+
+puts "Out of #{@computers.size} computers,"
+
+report_by("Java", @computers, lambda {|c| c.java})
+report_by("Launches", @computers, lambda {|c| c.launches > 1 ? "multi" : "once" })
+
+multi = @computers.select{|c| c.launches > 1 }
+report_by("Persistence (of multiple launches)", multi, lambda {|c| c.persisted? ? "persisted" : "did not" })
+
+report_by("OS", @computers, lambda {|c| c.os})
+report_by("Local Users", @computers, lambda {|c| c.local_users.size})
+report_by("Learners", @computers, lambda {|c| c.learners.size})
+report_by("Students", @computers, lambda {|c| c.learners.map{|l| l.student}.uniq.size})
+
+windows = @computers.select{|c| c.os != "Mac" }
+report_by("Local Users (win only)", windows, lambda {|c| c.local_users.size})
+report_by("Learners (win only)", windows, lambda {|c| c.learners.size})
+report_by("Students (win only)", windows, lambda {|c| c.learners.map{|l| l.student}.uniq.size})

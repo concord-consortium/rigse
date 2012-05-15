@@ -24,12 +24,16 @@ $incorrect_color: #ffdddd;
 .cellheader {
   font-weight: bold; }
 
+.optioncheckmark {
+  width: 10px;
+  padding-left: 10px; }
+
 .optionlabel {
-  padding-left: 10px;
+  padding-left: 5px;
   width: 310px; }
 
 .optionbar {
-  width: 300px;
+  width: 290px;
   padding-right: 10px;
   padding-bottom: 2px;
   vertical-align: middle;
@@ -86,6 +90,10 @@ $incorrect_color: #ffdddd;
     font-weight: bold;
     width: 200px;
     vertical-align: top; }
+  .learner_response_checkmark {
+    font-weight: bold;
+    width: 10px;
+    vertical-align: top; }
   .learner_response_content {
     width: 460px;
     vertical-align: top;
@@ -109,45 +117,6 @@ $incorrect_color: #ffdddd;
   .chosen_answer.incorrect {
     background-color: $incorrect_color; } }
 
-@media print {
-  .item {
-    .incorrect {
-      text-decoration: line-through; }
-    .correct {
-      font-style: oblique; } }
-  .optionlabel.incorrect {
-    text-decoration: line-through; }
-  .optionlabel.correct {
-    font-style: oblique; }
-  .filter_checkbox,.filter_selection_control,.print_control,#header,#footer,#under_footer {
-    display: none; }
-  .report_embeddable {
-    overflow: visible;
-    .learner_response {
-      page-break-inside: avoid; }
-    .learner_response_content.incorrect {
-      text-decoration: line-through; }
-    .learner_response_content.correct {
-      font-style: oblique; }
-    .item {
-      border: none; }
-    .ContentFlow {
-      display: none;
-      overflow: visible; }
-    .accordion_container {
-      overflow: visible;
-      border: none;
-      border-bottom: 2px solid black;
-      page-break-inside: avoid;
-      .action_menu {
-        overflow: visible; }
-      .accordion_toggle {
-        display: none; }
-      .accordion_content {
-        overflow: visible; } } }
-  #wrapper {
-    overflow: visible; } }
-
 .question_container {
   display: block;
   overflow: hidden;
@@ -160,3 +129,23 @@ $incorrect_color: #ffdddd;
 
 .report_embeddable .accordion_container {
   margin: 10px 2px; }
+
+.report_question_prompt {
+  width: 565px;
+  display: -moz-inline-block;
+  display: inline-block; }
+
+.report_question_summary_title {
+  width: 90px;
+  display: -moz-inline-block;
+  display: inline-block;
+  text-align: right;
+  vertical-align: top;
+  font-weight: bold; }
+
+.report_question_summary_info {
+  width: 15px;
+  display: -moz-inline-block;
+  display: inline-block;
+  text-align: right;
+  vertical-align: top; }

@@ -6,7 +6,7 @@ class Embeddable::InnerPage < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   belongs_to  :static_page, :class_name => "Page"
   has_many :inner_page_pages, :class_name => 'Embeddable::InnerPagePage', :order => :position, :dependent => :destroy
-  has_many :sub_pages, :class_name => "Page", :through => :inner_page_pages, :source => "page"
+  has_many :sub_pages, :order => "#{Page.table_name}.position", :class_name => "Page", :through => :inner_page_pages, :source => "page"
   
   acts_as_replicatable
 
@@ -81,14 +81,12 @@ class Embeddable::InnerPage < ActiveRecord::Base
   def delete_page(page)
     index = sub_pages.index(page)
     if (index > -1)
-      inner_page_pages[index].remove_from_list
+      inner_page = inner_page_pages[index]
+      inner_page.remove_from_list
+      if inner_page.page
+        inner_page.page.destroy
+      end
       inner_page_pages[index].destroy
-      # inner_page_pages.compact
-      # inner_page_pages.each_with_index do |ipp,index|
-      #   ipp.position=index
-      #   ipp.save
-      # end
-      # page.destroy? or is that being to harsh?
     else
       throw "Unknwown inner_page #{page.id} #{page.name}" 
     end

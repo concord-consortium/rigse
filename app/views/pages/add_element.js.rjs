@@ -1,5 +1,6 @@
-page.visual_effect :highlight, @container
+container = @container || dom_id_for(@page, :elements_container)
+page.visual_effect :highlight, container
 
-page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
-page.sortable 'elements_container', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
+page.insert_html :bottom, container, render(:partial => 'element_container', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
+page.sortable container, :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
 page[dom_id_for(@component, :item)].scrollTo()

@@ -75,7 +75,7 @@ group :development do
   gem "what_methods"
   gem "hirb"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
-  gem "ruby-debug19", :platforms => :mri_19
+  gem "ruby-debug19", :platforms => [:mri_19]
   gem "awesome_print"
   gem "interactive_editor"
   gem "pry"

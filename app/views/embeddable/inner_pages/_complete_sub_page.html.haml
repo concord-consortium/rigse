@@ -1,0 +1,4 @@
+- locals = {:page => @new_page, :inner_page => @inner_page}
+= render :partial => 'embeddable/inner_pages/page_header', :locals => locals
+%li.menu.page.item.container_element{:id => dom_id_for(@new_page, :container)}
+  = render :partial => 'embeddable/inner_pages/page', :locals => locals

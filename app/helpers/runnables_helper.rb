@@ -10,7 +10,7 @@ module RunnablesHelper
   def run_url_for(component, params = {}, format = nil)
     format ||= component.run_format
 
-    # this is where we pull in extra parameters for the url, like use_installer
+    # this is where we pull in extra parameters for the url, like skip_installer
     params.update(current_user.extra_params)
     params[:format] = format
     polymorphic_url(component, params)
@@ -38,9 +38,9 @@ module RunnablesHelper
       :title => title_text(component, verb, run_as)
     }
     if component.is_a?(ExternalActivity)
-      options[:popup] = component.popup
+      options[:target] = '_blank' if component.popup
     elsif component.is_a?(Portal::Offering) && component.external_activity?
-      options[:popup] = component.runnable.popup
+      options[:target] = '_blank' if component.runnable.popup
     end
     link_button("#{image}.png",  run_url_for(component, params), options)
   end
@@ -63,12 +63,12 @@ module RunnablesHelper
     when Portal::Offering
       if component.external_activity?
         html_options[:class] = 'run_link'
-        html_options[:popup] = component.runnable.popup
+        html_options[:target] = '_blank' if component.runnable.popup
       else
         html_options[:class] = 'run_link offering'
       end
     when ExternalActivity
-      html_options[:popup] = component.popup
+      html_options[:target] = '_blank' if component.popup
     else
       html_options[:title] = title
     end
@@ -76,7 +76,7 @@ module RunnablesHelper
     if params[:no_button]
       link_to(link_text, url, html_options)
     else
-      x_button_for(component, verb) + link_to(link_text, url, html_options)
+      x_button_for(component, verb, verb, params) + link_to(link_text, url, html_options)
     end
   end
 
@@ -102,7 +102,7 @@ module RunnablesHelper
 
   def run_link_for(component, as_name = nil, params = {})
     if component.kind_of?(Portal::Offering)
-      offering_link_for(component, nil, {:link_text => "run #{component.name}"})
+      offering_link_for(component, nil, params.merge({:link_text => "run #{component.name}"}))
     else
       x_link_for(component, "run", as_name, params)
     end

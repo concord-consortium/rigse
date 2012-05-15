@@ -6,4 +6,4 @@
       %div{:class => "#{css_style} learner_response_name inline_block"}
         = h(l.name)
       %div{:class => "#{css_style} learner_response_content inline_block"}
-        = saveable.answer ? h(saveable.answer).gsub("\n", '<br/>') : 'not answered'
+        = saveable.answer ? h(saveable.answer).gsub("\n", '<br/>').html_safe : 'not answered'

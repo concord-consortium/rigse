@@ -27,18 +27,29 @@
         :background-color white
         :font-family helvetica, arial, sans-serif
         :color brown
+      .big
+        :font-size 2em
+        :font-weight bold
+      a
+        :color brown
       img
         :float left
         :border none
   %body
     #centered
-      %img{:src=>"http://www.blackbrowngreen.com/images/logos/shovel.gif"}
-      %h1
-        ="As of #{Time.now.strftime("%b %d,  %I:%M%p (%Z)")} "
-        = "The Rites Investigation application is down #{reason ? reason : "for maintenance" }"
+      %p.big
+        As of #{Time.now.strftime("%b %d,  %I:%M%p (%Z)")} 
+        %br
+        the RITES Investigation server 
+        is down #{reason ? reason : "for maintenance" }
         
-      %p= "#{message ? message : "" }"
       %p
-        =" Sorry for the inconvenience. We'll be back  #{back_up ? "by #{back_up}" : "shortly"}"
-        = "Please email us if you need to get in touch."
+        #{message ? message : "" }
+      %p
+        Sorry for the inconvenience. We'll be back  #{back_up ? "by #{back_up}" : "shortly"}
+      %p
+        Please 
+        %a{:href => "mailto:rites-help@concord.org"}
+          email us 
+        if you need to get in touch
 

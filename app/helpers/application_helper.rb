@@ -399,7 +399,7 @@ module ApplicationHelper
     if title.nil?
       title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window woo."
     end
-    link_to(link_text, url, :popup => true, :title => title)
+    link_to(link_text, url, :target => '_blank', :title => title)
   end
 
   def activation_toggle_link_for(activatable, action='activate', link_text='Activate', title=nil)
@@ -444,7 +444,7 @@ module ApplicationHelper
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
     link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") +
-    link_to(link_text,url,:popup => true)
+    link_to(link_text,url, :target => '_blank')
   end
 
   def otml_link_for(component, params={})
@@ -462,7 +462,11 @@ module ApplicationHelper
       embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
       controller = "#{model.class.name.pluralize.underscore}"
       if defined? model.parent
-        options[:redirect] ||= url_for model.parent
+        
+        # allow specification of options[:redirect] = false to skip
+        if options[:redirect].nil?
+          options[:redirect]= url_for model.parent
+        end
       end
       if options[:redirect]
         url = url_for(:controller => controller, :id => model.id, :action => :destroy, :redirect=>options[:redirect])
@@ -655,15 +659,15 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
       end
-      haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
+      haml_tag(:div, :class => 'item report_question_prompt') {
         haml_concat(open_response.prompt)
       }
-      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top; font-weight: bold;') {
+      haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
-      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top;') {
+      haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
@@ -684,15 +688,15 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
       end
-      haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
+      haml_tag(:div, :class => 'item report_question_prompt') {
         haml_concat(image_question.prompt)
       }
-      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top; font-weight: bold;') {
+      haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
-      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top;') {
+      haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
@@ -740,6 +744,7 @@ module ApplicationHelper
         haml_tag(:div) {
           haml_tag(:div, :class => 'table') {
             haml_tag(:div, :class => 'row', :style => 'display: none;') {
+              haml_tag(:div, :class => "cell cellheader") { haml_concat("Correct?")}
               haml_tag(:div, :class => "cell cellheader") { haml_concat("Option")}
               haml_tag(:div, :class => "cell cellheader") { haml_concat("Graph")}
               haml_tag(:div, :class => "cell cellheader") { haml_concat("Percent")}
@@ -747,8 +752,17 @@ module ApplicationHelper
             }
             all_choices.each_with_index do |choice,i|
               answer_count = answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0
-              correctness = choice.is_correct ? "correct" : "incorrect"
+              checkmark = ""
+              if multiple_choice.has_correct_answer?
+                correctness = choice.is_correct ? "correct" : "incorrect"
+                checkmark = "&#x2713;".html_safe if choice.is_correct?
+              else
+                correctness = "non-correctable"
+              end
               haml_tag(:div, :class => 'row') {
+                haml_tag(:div, :class => "cell optioncheckmark #{correctness}") {
+                  haml_concat(checkmark)
+                }
                 haml_tag(:div, :class => "cell optionlabel #{correctness}") {
                   haml_concat("#{i+1}. #{choice.choice}")
                 }
@@ -766,6 +780,7 @@ module ApplicationHelper
               }
             end
             haml_tag(:div, :class => 'row') {
+              haml_tag(:div, :class => 'cell optioncheckmark')
               haml_tag(:div, :class => 'cell optionlabel') {
                 haml_concat("Not answered")
               }
@@ -782,6 +797,7 @@ module ApplicationHelper
               }
             }
             haml_tag(:div, :class => 'row', :style => 'border-top: 2px solid black;') {
+              haml_tag(:div, :class => 'cell optioncheckmark')
               haml_tag(:div, :class => 'cell optionlabel') {
                 haml_concat("&nbsp;")
               }

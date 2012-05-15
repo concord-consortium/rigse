@@ -82,12 +82,14 @@ var Workgroup = function(_offering,_launch_url) {
     lightbox_hood.hide();
     lightbox_content.hide();
     showWait(offering);
+    // Make this request synchronously, so we can be sure it finishes before
+    // the normal link click handling happens.
     new Ajax.Request('/portal/offerings/' + offering + '/start.json', {
       parameters: { students: collaborators.map(function(l){return l.id;}).join(',')  },
+      asynchronous: false,
       onSuccess: function() {
         pending_requests = pending_requests -1;
         close_dialog();
-        window.location = launch_url;
       },
       onFailure: function() {
         pending_requests = pending_requests -1;
@@ -124,6 +126,7 @@ var Workgroup = function(_offering,_launch_url) {
     $(document).observe('keydown', handle_keydown);
     $('show_workgroups').observe('click',show_workgroup_editor);
     $('cancel_button').observe('click',close_dialog);
+    run_button.writeAttribute('href', launch_url);
     lightbox_hood.show();
     lightbox_content.show();
     update_ui();
@@ -149,6 +152,7 @@ var Workgroup = function(_offering,_launch_url) {
     run_message.update('enter valid passwords for all collaborators');
     run_message.addClassName('wg_important');
     run_button.stopObserving('click');
+    run_button.writeAttribute('href', null);
   };
 
   var enable_run = function() {
@@ -157,6 +161,7 @@ var Workgroup = function(_offering,_launch_url) {
     run_message.removeClassName('wg_important');
     run_button.stopObserving('click');
     run_button.observe('click', launch_action);
+    run_button.writeAttribute('href', launch_url);
   };
 
   var disable_add = function() {

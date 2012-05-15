@@ -60,7 +60,7 @@
   device_id: 0
   short_name: pseudo_interface
   driver_short_name: 
-  description: The Simulated Data interface will generate sin wave data with any specified sensor. Use this interface when you have no probeware to attach to your computer but you still want to test your activity.
+  description: The Simulated Data interface will generate sine wave data with any specified sensor. Use this interface when you have no probeware to attach to your computer but you still want to test your activity.
   image: SensorImages/psuedo_interface.jpg
 - name: Vernier LabPro
   uuid: d3df5af2-1820-11de-860a-001ec94098a1

@@ -20,6 +20,6 @@ describe "Portal::Offering" do
     visit portal_offering_path(:id => learner.offering.id, :format => :jnlp)
     xml = Nokogiri::XML(page.driver.response.body)
     main_class = xml.xpath("/jnlp/application-desc/@main-class")
-    main_class.text.should == 'net.sf.sail.emf.launch.EMFLauncher2'
+    main_class.text.should == 'org.concord.LaunchJnlp'
   end
 end

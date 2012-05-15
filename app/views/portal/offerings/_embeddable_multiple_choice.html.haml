@@ -1,10 +1,18 @@
 = accordion_for(embeddable, offering_details_multiple_choice(offering, embeddable), nil, {:show_hide_text => "show responses"}) do
   - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
     - saveable = saveable_for_learner(embeddable, l)
+    - checkmark = ""
     - css_style = saveable.answered? ? 'answered' : 'not_answered'
-    - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
+    - if saveable.answered?
+      - if embeddable.has_correct_answer?
+        - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect'
+        - checkmark = "&#x2713;".html_safe if saveable.answered_correctly?
+      - else
+        - css_style = "non-correctable"
     %div{:id => dom_id_for(embeddable, :saveable, :learner, l.id), :class => "#{css_style} learner_response inline_block"}
       %div{:class => "#{css_style} learner_response_name inline_block"}
         = l.name
+      %div{:class => "#{css_style} learner_response_checkmark inline_block"}
+        = checkmark
       %div{:class => "#{css_style} learner_response_content inline_block"}
         = saveable.answer

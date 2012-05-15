@@ -1,7 +1,12 @@
+<p>
 Your account has been created.
+</p>
 
+<p>
 Username: <%= @user.login %>
+</p>
 
-Visit this url to activate your account:
-
-<%= @url %>
+<p>
+Visit this url to activate your account:</br>
+<%= link_to @url, @url %>
+</p>

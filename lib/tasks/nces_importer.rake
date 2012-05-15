@@ -141,8 +141,8 @@ If APP_CONFIG[:states_and_provinces] is nil then data from all NCES states and p
     # 
     desc 'Create districts and schools from NCES records for States listed in settings.yml'
     task :create_districts_and_schools_from_nces_data => :environment do
-      states_and_provinces = APP_CONFIG[:states_and_provinces] || []
-      active_school_levels = APP_CONFIG[:active_school_levels] || []
+      states_and_provinces = APP_CONFIG[:states_and_provinces] || StatesAndProvinces::STATES_AND_PROVINCES.keys
+      active_school_levels = APP_CONFIG[:active_school_levels] || ["1", "2", "3", "4"]
 
       puts <<-HEREDOC
 

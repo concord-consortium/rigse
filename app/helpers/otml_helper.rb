@@ -281,6 +281,11 @@ module OtmlHelper
     return result
   end
 
+  def ot_navigation_history_service
+    result = render :partial => "otml/ot_navigation_history_service.otml"
+    return result
+  end
+
   def ot_bundles(options={})
     capture_haml do
       haml_tag :bundles do

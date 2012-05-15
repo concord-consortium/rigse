@@ -16,7 +16,7 @@
 
       = field_set_tag 'Settings' do
         .aligned
-          Use Installer:
-          = hidden_field_tag "settings[use_installer]", 0
-          = check_box_tag "settings[use_installer]", 1, !!portal_school.settings_hash["use_installer"]
+          Do Not Use Installer:
+          = hidden_field_tag "settings[skip_installer]", 0
+          = check_box_tag "settings[skip_installer]", 1, !!portal_school.settings_hash["skip_installer"]
 

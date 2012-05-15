@@ -18,6 +18,23 @@ Feature: Investigation index pages can be printed
       | MediumInv  | teacher   | 10              | Wed Jan 23 12:00:00 -0500 2011  | published           |
       | OldestInv  | teacher   | 20              | Wed Jan 20 12:00:00 -0500 2011  | published           |
 
+  @pending
+  Scenario: Teacher prints the listing of all investigations with usage counts
+    When I am on the investigations page
+    Then I should see "NewestInv"
+    And I should see "MediumInv"
+    And I should see "OldestInv"
+    And I should see "printable view"
+    And "printable-view" should have href like "printable_index"
+    And the link to "printable-view" should have a target "_blank"
+    When show usage count is enabled on the session
+    And I am on the investigations printable index page
+    Then I should see "Investigation"
+    And I should see "Usage Count"
+    And I should see "NewestInv"
+    And I should see "MediumInv"
+    And I should see "OldestInv"
+
   Scenario: Teacher prints the listing of all investigations
     When I am on the investigations page
     Then I should see "NewestInv"
@@ -28,7 +45,6 @@ Feature: Investigation index pages can be printed
     And the link to "printable-view" should have a target "_blank"
     When I am on the investigations printable index page
     Then I should see "Investigation"
-    And I should see "Usage Count"
     And I should see "NewestInv"
     And I should see "MediumInv"
     And I should see "OldestInv"
@@ -43,7 +59,6 @@ Feature: Investigation index pages can be printed
     And the link to "printable-view" should have a target "_blank"
     When I am on the investigations printable index page
     Then I should see "Investigations"
-    And I should see "Usage Count"
     And I should see "NewestInv"
     And I should not see "MediumInv"
     And I should not see "OldestInv"

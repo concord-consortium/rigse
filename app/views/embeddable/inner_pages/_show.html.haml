@@ -1,17 +1,27 @@
-%div{ :id => dom_id_for(inner_page, :item) }
+%div.inner_page{ :id => dom_id_for(inner_page, :item)}
+  %div{ :id => dom_id_for(inner_page, :static_page_area)}
+    - if inner_page.static_page
+      = render :partial => 'embeddable/inner_pages/static_page', :locals=>{:page => inner_page.static_page, :inner_page => inner_page}
 
-%table{:width=>"100%"}
-  %tr
-    %td{:valign=>"top", :width => "50%"}
-      %div{ :id => dom_id_for(inner_page, :inner_page_area)}
+  .item
+    .action_menu
+      .action_menu_header_left
+        = inner_page.menu_name
+      .action_menu_header_right
+        - if (inner_page.changeable?(current_user))
+          = remote_link_button "add.png", :url => add_page_embeddable_inner_page_path(inner_page, :id=>inner_page.id), :title => "add new page", :xxxupdate => dom_id_for(inner_page, :inner_page_area), :position => "bottom"
+
+    - inner_page_area_id = dom_id_for(inner_page, :inner_page_area)
+    %ul.menu{:id => inner_page_area_id, :style=>"margin: 0px;" }
+      - inner_page.sub_pages.each do |sub_page|
         - if params['print']
-          - inner_page.sub_pages.each do |sub_page| 
-            = render :partial => 'embeddable/inner_pages/page', :locals=>{:sub_page => sub_page, :inner_page => inner_page}
+          = render :partial=> 'pages/print', :locals=>{:page => sub_page, :inner_page=>inner_page, :teacher_mode => params['teacher_mode'], :hide_title=>true}
         - else
-          = render :partial => 'embeddable/inner_pages/page', :locals=>{:sub_page => inner_page.sub_pages.first, :inner_page => inner_page}
-
-    %td{:valign=>"top"}
-      %div{ :id => dom_id_for(inner_page, :static_page_area)}
-        - if inner_page.static_page
-          = render :partial => 'embeddable/inner_pages/static_page', :locals=>{:page => inner_page.static_page, :inner_page => inner_page}
+          - locals = {:page => sub_page, :inner_page => inner_page}
+          = render :partial => 'embeddable/inner_pages/page_header', :locals => locals
+          %li.menu.page.item.container_element{:id => dom_id_for(sub_page, :container)}
+            = render :partial => 'embeddable/inner_pages/page', :locals => locals
+         
+    - if (inner_page.changeable?(current_user))
+      = sortable_element inner_page_area_id, :url=> {:controller =>'embeddable/inner_pages', :action => 'sort_pages', :id => inner_page.id, :list_name => inner_page_area_id}, :scroll => "window", :constraint => :vertical
 
