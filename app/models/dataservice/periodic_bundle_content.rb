@@ -23,7 +23,7 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     self.record_bundle_processing
     self.valid_xml = doc.errors.any?
     # Calculate self.empty even when the xml is missing or invalid
-    self.empty = self.body.nil? || self.body.empty? || doc.xpath('/otrunk/objects/OTReferenceMap/map').first.children.size == 0
+    self.empty = self.body.nil? || self.body.empty? || ((map = doc.xpath('/otrunk/objects/OTReferenceMap/map').first) && map.element_children.size == 0)
     self.extract_blobs unless self.empty
     true # don't stop the callback chain.
   end
