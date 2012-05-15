@@ -1,5 +1,5 @@
 class Dataservice::PeriodicBundleLogger < ActiveRecord::Base
-  set_table_name :dataservice_periodic_bundle_loggers
+  self.table_name :dataservice_periodic_bundle_loggers
 
   serialize :imports
 

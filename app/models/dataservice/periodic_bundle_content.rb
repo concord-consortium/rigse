@@ -1,7 +1,7 @@
 require 'nokogiri'
 
 class Dataservice::PeriodicBundleContent < ActiveRecord::Base
-  set_table_name :dataservice_periodic_bundle_contents
+  self.table_name :dataservice_periodic_bundle_contents
 
   belongs_to :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger"
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "periodic_bundle_content_id"
