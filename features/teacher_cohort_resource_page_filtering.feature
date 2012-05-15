@@ -38,7 +38,7 @@ Feature: Resource pages can be filtered by cohort
       | a both a       | author   | control, experiment |
 
   Scenario: Resource Pages are visible for the control cohort
-    Given I login with username: teacher password: teacher
+    Given I am logged in with the username teacher
     When I am on the class page for "My Class"
     Then the following should be displayed in the assignables list:
       | name                       |
@@ -58,7 +58,7 @@ Feature: Resource pages can be filtered by cohort
       | Resource Page: a experiment a |
 
   Scenario: Resource Pages are visible for the experiment cohort
-    Given I login with username: bteacher password: teacher
+    Given I am logged in with the username bteacher
     When I am on the class page for "My b Class"
     Then the following should be displayed in the assignables list:
       | name                          |
@@ -78,7 +78,7 @@ Feature: Resource pages can be filtered by cohort
       | Resource Page: a control a |
 
   Scenario: Resource Pages are visible for someone in both cohorts
-    Given I login with username: cteacher password: teacher
+    Given I am logged in with the username cteacher
     When I am on the class page for "My c Class"
     Then the following should be displayed in the assignables list:
       | name                          |
@@ -96,7 +96,7 @@ Feature: Resource pages can be filtered by cohort
       | Resource Page: a both a       |
 
   Scenario: Resource Pages that are untagged are visible to a teacher in neithers
-    Given I login with username: dteacher password: teacher
+    Given I am logged in with the username dteacher
     When I am on the class page for "My d Class"
     Then the following should be displayed in the assignables list:
       | name                       |

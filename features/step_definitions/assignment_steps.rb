@@ -38,5 +38,19 @@ end
 # this is the interactive version of the step above
 When /^I assign the ([^"]+) "([^"]*)" to the class "([^"]*)"$/ do |assignable_type, assignable_name, class_name|
   assignable = assignable_type.gsub(/\s/, "_").classify.constantize.find_by_name(assignable_name)
-  assign_runnable(dom_id_for(assignable))
+  assignable_id = dom_id_for(assignable)
+  assign_runnable(assignable_id)
+  with_scope("#clazz_offerings") do
+    # this isn't the best approach but it might be good enough for now
+    # we need to make sure the assignment has actually happened because it is an ajax call
+    # if we don't make sure then when the ajax does finally happen it might mess up a future step
+    page.should have_content(assignable_name)
+  end
+end
+
+# this is used when the assignment shouldn't actually work
+When /^I try to assign the ([^"]+) "([^"]*)" to the class "([^"]*)"$/ do |assignable_type, assignable_name, class_name|
+  assignable = assignable_type.gsub(/\s/, "_").classify.constantize.find_by_name(assignable_name)
+  assignable_id = dom_id_for(assignable)
+  assign_runnable(assignable_id)
 end

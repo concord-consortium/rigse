@@ -9,7 +9,7 @@ ITSI-SU requires that teachers self-register.
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
+  @javascript
   Scenario: Anonymous user signs up as teacher
     Given I am an anonymous user
     When I go to the pick signup page
@@ -38,7 +38,7 @@ ITSI-SU requires that teachers self-register.
     Then I should see "Logged in successfully"
     And I should not see "Sorry, there was an error creating your account"
 
-  @selenium
+  @javascript
   Scenario: Anonymous user signs up as teacher with form errors
     Given I am an anonymous user
     When I go to the pick signup page

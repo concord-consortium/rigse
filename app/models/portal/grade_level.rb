@@ -1,5 +1,5 @@
 class Portal::GradeLevel < ActiveRecord::Base
-  set_table_name :portal_grade_levels
+  self.table_name = :portal_grade_levels
 
   acts_as_replicatable
 

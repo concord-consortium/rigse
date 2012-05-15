@@ -1,6 +1,6 @@
 class Ccportal::District < Ccportal::Ccportal
-  set_table_name :portal_districts
-  set_primary_key :district_id
+  self.table_name = :portal_districts
+  self.primary_key = :district_id
 
   # has_many :schools, :foreign_key => :school_district
 

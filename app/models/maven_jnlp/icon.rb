@@ -1,5 +1,5 @@
 class MavenJnlp::Icon < ActiveRecord::Base
-  set_table_name "maven_jnlp_icons"
+  self.table_name = "maven_jnlp_icons"
   
   has_many :versioned_jnlps
 

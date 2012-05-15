@@ -21,8 +21,10 @@ When /show the first page of the "(.*)" investigation$/ do |investigation_name|
 end
 
 When /^I save the investigation$/ do
-  scroll_into_view("#investigation_submit")
-  click_button("investigation_submit")
+  # ideally we would find the <input type="submit"> inside the form "new_investigation"
+  # but it isn't clear how to do that
+  scroll_into_view("#new_investigation")
+  click_button("Save")
 end
 
 Given /a mock gse/ do

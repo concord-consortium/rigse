@@ -1,5 +1,5 @@
 class Embeddable::InnerPage < ActiveRecord::Base
-  set_table_name "embeddable_inner_pages"
+  self.table_name = "embeddable_inner_pages"
 
   belongs_to :user
   has_many :page_elements, :as => :embeddable

@@ -12,9 +12,9 @@ Feature: Investigations show drafts
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And I login with username: teacher password: teacher
+    Given I am logged in with the username teacher
 
-  @selenium
+  @javascript
   Scenario: The investigations list offering count shows on all pages
     Given the following empty investigations exist:
       | name            | user    | offerings_count | created_at                     | publication_status |

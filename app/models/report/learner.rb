@@ -3,7 +3,7 @@
 # learners as would be used in a report.
 
 class Report::Learner < ActiveRecord::Base
-  set_table_name "report_learners"
+  self.table_name = "report_learners"
 
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
   serialize    :answers

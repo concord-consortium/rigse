@@ -31,11 +31,11 @@ module SisImporter::DistrictImporterExampleHelpers
   end
 
   def working_test_directory
-    File.join(RAILS_ROOT, 'sis_import_data', 'test')
+    File.join(Rails.root, 'sis_import_data', 'test')
   end
 
   def sis_test_data_dir
-    File.join(RAILS_ROOT,'resources', 'sis_import_test_data')
+    File.join(Rails.root,'resources', 'sis_import_test_data')
   end
 
   def copy_test_data

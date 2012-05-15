@@ -20,7 +20,7 @@ Feature: Student can not see deactivated offerings
     And the following resource pages exist:
       | name          | user      | publication_status |
       | Test Resource | teacher   | published          |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And the student "student" belongs to class "My Class"
     And the investigation "Test Investigation" is assigned to the class "My Class"
     And the resource page "Test Resource" is assigned to the class "My Class"

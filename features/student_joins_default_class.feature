@@ -30,7 +30,7 @@ Feature: Student joins default class
     When I login with username: estudent password: password
     And I should see "Logged in successfully"
 
-  @selenium
+  @javascript
   Scenario: Student in default class joins another class
     Given the option to allow default classes is enabled
     And the following classes exist:
@@ -41,7 +41,7 @@ Feature: Student joins default class
       | login     | password  |
       | student   | student   |
     And the student "student" belongs to class "Default Class"
-    When I login with username: student password: student
+    And I am logged in with the username student
     And I am on the home page
     And I fill in "clazz_class_word" with "word"
     And I press "Submit"
@@ -51,7 +51,7 @@ Feature: Student joins default class
     Then I should see "Successfully registered for class."
     And the student "student" should belong to the class "My Class"
 
-  @selenium
+  @javascript
   Scenario: Student in default class joins another class with invalid information
     Given the option to allow default classes is enabled
     And the following classes exist:
@@ -62,7 +62,7 @@ Feature: Student joins default class
       | login     | password  |
       | student   | student   |
     And the student "student" belongs to class "Default Class"
-    When I login with username: student password: student
+    And I am logged in with the username student
     And I am on the home page
     And I press "Submit"
     Then I should see "Please enter a valid class word and try again."

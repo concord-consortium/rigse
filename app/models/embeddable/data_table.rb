@@ -1,5 +1,5 @@
 class Embeddable::DataTable < ActiveRecord::Base
-  set_table_name "embeddable_data_tables"
+  self.table_name = "embeddable_data_tables"
 
 
   

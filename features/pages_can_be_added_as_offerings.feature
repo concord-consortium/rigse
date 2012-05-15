@@ -14,9 +14,9 @@ Feature: Pages can be assigned as offerings
     And the following page exists:
       | name    | user    | publication_status |
       | My Page | teacher | published          |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
 
-  @selenium
+  @javascript
   Scenario: Pages can be assigned by a Teacher to a class
     When I am on the class page for "My Class"
     

@@ -475,6 +475,10 @@ constraints :id => /\d+/ do
   resources :attached_files
   resources :images
 
+  if Rails.env.cucumber? || Rails.env.test?
+    match '/login/:username' => 'sessions#backdoor', :as => :login_backdoor
+  end
+
   match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
   match '/readme' => 'home#readme', :as => :readme
   match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }

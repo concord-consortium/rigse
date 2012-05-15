@@ -1,4 +1,4 @@
-@selenium
+@javascript
 Feature: Teacher can deactivate resource pages from a class
   So my class can move on to other things
   As a teacher
@@ -15,7 +15,7 @@ Feature: Teacher can deactivate resource pages from a class
     And the following resource pages exist:
       | name           | user      | publication_status |
       | Test Resource  | teacher   | published          |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
     And I assign the resource page "Test Resource" to the class "My Class"
 

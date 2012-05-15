@@ -11,14 +11,14 @@ require 'yaml'
 YAML::ENGINE.yamler = "psych"
 
 JRUBY = defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
-APP_DIR_NAME = File.basename(RAILS_ROOT)
-$LOAD_PATH.unshift(File.join(RAILS_ROOT,"lib"))
+rails_root = File.dirname(File.dirname(File.expand_path(__FILE__)))
+APP_DIR_NAME = File.basename(rails_root)
+$LOAD_PATH.unshift(File.join(rails_root,"lib"))
 
 RAILS_ENV = 'development' unless defined?(RAILS_ENV)
 
 # Mock just a bit of the Rails3 Rails object for lib/app_settings.rb
-Rails = OpenStruct.new( "root" => RAILS_ROOT, "env" => RAILS_ENV)
+Rails = OpenStruct.new( "root" => rails_root, "env" => RAILS_ENV)
 
 # ==================================================================
 #
@@ -39,7 +39,7 @@ def copy_file(source, destination)
 end
 
 def rails_file_path(*args)
-  path = File.join([RAILS_ROOT] + args)
+  path = File.join([Rails.root] + args)
   if File.exists?(path)
     path = Pathname.new(path).realpath.to_s
   end
@@ -66,7 +66,7 @@ end
 
 
 # Add the unpacked gems in vendor/gems to the $LOAD_PATH
-Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir|
+Dir["#{Rails.root}/vendor/gems/**"].each do |dir|
   $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
 end
 

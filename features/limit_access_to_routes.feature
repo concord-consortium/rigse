@@ -32,7 +32,7 @@ In NO case should the system allow:
     Given the following users exist:
       | login       | password       | roles                 |
       | admin_login | admin_password | admin, member, author |
-    And I login with username: admin_login password: admin_password
+    And I am logged in with the username admin_login
     When I visit the route <route>
     Then I should be on <route>
 
@@ -75,7 +75,7 @@ In NO case should the system allow:
     Given the following users exist:
       | login       | password       | roles                 |
       | admin_login | admin_password | admin, member, author |
-    And I login with username: admin_login password: admin_password
+    Given I am logged in with the username admin_login
     When I visit the route <route>
     Then I should be on <route>
 
@@ -113,7 +113,7 @@ In NO case should the system allow:
     Given the following users exist:
       | login       | password       | roles                 |
       | admin_login | admin_password | admin, member, author |
-    And I login with username: admin_login password: admin_password
+    And I am logged in with the username admin_login
     When I visit the route <route>
     Then I should be on <route>
 
@@ -134,7 +134,7 @@ In NO case should the system allow:
     Given the following users exist:
       | login       | password       | roles                 |
       | admin_login | admin_password | admin, member, author |
-    And I login with username: admin_login password: admin_password
+    And I am logged in with the username admin_login
     When I visit the route <route>
     Then I should be on <route>
 
@@ -146,7 +146,7 @@ In NO case should the system allow:
     Given the following users exist:
       | login            | password            | roles              |
       | researcher_login | researcher_password | member, researcher |
-    And I login with username: researcher_login password: researcher_password
+    And I am logged in with the username researcher_login
     When I visit the route <route>
     Then I should be on <route>
 

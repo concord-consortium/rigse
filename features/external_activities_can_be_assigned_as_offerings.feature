@@ -21,9 +21,9 @@ Feature: External Activities can be assigned as offerings
 
   # DO NOT TOUCH THE BROWSER WINDOW THAT SELENIUM IS DRIVING
   # IT WILL CAUSE THE TEST TO FAIL
-  @selenium
+  @javascript
   Scenario: External Activities and Investigations are assigned
-    Given I login with username: teacher password: teacher
+    Given I am logged in with the username teacher
     And I am on the class page for "My Class"
     When I assign the investigation "Test Investigation"
     And I assign the external activity "My Activity"

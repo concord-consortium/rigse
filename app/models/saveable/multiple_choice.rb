@@ -1,5 +1,5 @@
 class Saveable::MultipleChoice < ActiveRecord::Base
-  set_table_name "saveable_multiple_choices"
+  self.table_name = "saveable_multiple_choices"
 
   belongs_to :learner,        :class_name => 'Portal::Learner'
   belongs_to :offering,        :class_name => 'Portal::Offering'

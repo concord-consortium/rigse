@@ -1,5 +1,5 @@
 class Embeddable::Biologica::BreedOffspring < ActiveRecord::Base
-  set_table_name "embeddable_biologica_breed_offsprings"
+  self.table_name = "embeddable_biologica_breed_offsprings"
 
   
   belongs_to :user

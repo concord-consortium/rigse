@@ -1,4 +1,4 @@
-@selenium
+@javascript
 Feature: Student views resource page
 
   In order see the resource page assigned to me
@@ -20,13 +20,13 @@ Feature: Student views resource page
       | login   | password |
       | student | student  |
     And the student "student" belongs to class "My Class"
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
     And I assign the resource page "Test Resource" to the class "My Class"
     And I log out
 
   Scenario: Student opens resource page
-    When I login with username: student password: student
+    And I am logged in with the username student
     And I am on the class page for "My Class"
     Then I should see "View Test Resource"
 

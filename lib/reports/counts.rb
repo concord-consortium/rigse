@@ -1,7 +1,11 @@
 class Reports::Counts
   def report
     puts "Teachers: #{teachers.size}"
+    puts "  By cohort:"
+    puts teacher_counts_by_cohort
     puts "  Active: #{active_teachers.size}"
+    puts "    By cohort:"
+    puts active_teacher_counts_by_cohort
     puts "Students: #{students.size}"
     puts "  Active: #{active_students.size}"
     puts "Classes : #{clazzes.size}"
@@ -42,6 +46,30 @@ class Reports::Counts
     @active_teachers
   end
 
+  def teacher_counts_by_cohort
+    cohort_counts(teachers).map{|name, count| "#{"%15s" % name}: #{"%6d" % count}" }.join("\n")
+  end
+
+  def active_teacher_counts_by_cohort
+    cohort_counts(active_teachers).map{|name, count| "#{"%15s" % name}: #{"%6d" % count}" }.join("\n")
+  end
+
+  def cohort_counts(set)
+    counts = {}
+    set.each do |t|
+      cs = t.cohorts
+      cs.each do |c|
+        counts[c.name] ||= 0
+        counts[c.name] += 1
+      end
+      if cs.size == 0
+        counts['none'] ||= 0
+        counts['none'] += 1
+      end
+    end
+    return counts
+  end
+
   def clazzes
     @clazzes = Portal::Clazz.all unless @clazzes
     @clazzes
@@ -52,7 +80,7 @@ class Reports::Counts
       clazzes = active_learners.collect do |learner|
         learner.offering.clazz
       end
-      @active_clazzes = clazzes.uniq
+      @active_clazzes = clazzes.compact.uniq
     end
     @active_clazzes
   end

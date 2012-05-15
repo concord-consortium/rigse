@@ -1,5 +1,5 @@
 class Portal::Learner < ActiveRecord::Base
-  set_table_name :portal_learners
+  self.table_name = :portal_learners
   
   default_scope :order => 'student_id ASC'
   

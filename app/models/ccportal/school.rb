@@ -1,6 +1,6 @@
 class Ccportal::School < Ccportal::Ccportal
-  set_table_name :portal_schools
-  set_primary_key :school_id
+  self.table_name = :portal_schools
+  self.primary_key = :school_id
 
   has_many :teachers, :foreign_key => :member_id, :class_name => 'Ccportal::Teacher'
   has_many :courses, :foreign_key => :class_school, :class_name => 'Ccportal::Course'

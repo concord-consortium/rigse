@@ -19,7 +19,7 @@ Feature: Teacher can deactivate investigations from a class
       | Test Investigation  | teacher   | published          |
     And the investigation "Test Investigation" is assigned to the class "My Class"
     And a student has performed work on the investigation "Test Investigation" for the class "My Class"
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
 
   Scenario: Teacher can see if student has performed work on an investigation
     When I am on the class page for "My Class"
@@ -37,10 +37,10 @@ Feature: Teacher can deactivate investigations from a class
     And I should see "1 student response"
 
   @dialog
-  @selenium
+  @javascript
   Scenario: Teacher drags active investigation with students off of class
     When I am on the class page for "My Class"
     And I drag the investigation "Test Investigation" in the class "My Class" to "#offering_list"
-    Then I should see "Cannot delete offering with student data. Please deactivate instead."
+    Then I need to confirm "Cannot delete offering with student data. Please deactivate instead."
     And I should see "Test Investigation" within "#clazz_offerings"
     And the investigation "Test Investigation" in the class "My Class" should be active

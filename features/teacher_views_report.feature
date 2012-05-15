@@ -38,7 +38,7 @@ Feature: Teacher views report
         | student_a | Intro to bugs | first investigation | a               | a      |
         | student_a | Intro to bugs | first investigation | image_q         | Y      |
         | student_b | Intro to bugs | first investigation | a               | b      |
-    When I login with username: teacher_a password: teacher_a
+    When I am logged in with the username teacher_a
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
 
@@ -54,7 +54,7 @@ Feature: Teacher views report
         | student_a | Intro to bugs | first investigation | a               | a      |
         | student_a | Intro to bugs | first investigation | image_q         | Y      |
         | student_b | Intro to bugs | first investigation | a               | b      |
-    When I login with username: teacher_a password: teacher_a
+    When I am logged in with the username teacher_a
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
     And I wait 2 seconds
@@ -75,7 +75,7 @@ Feature: Teacher views report
         | student_a | Intro to bugs | first investigation | a               | a      |
         | student_a | Intro to bugs | first investigation | image_q         | Y      |
         | student_b | Intro to bugs | first investigation | a               | b      |
-    When I login with username: teacher_a password: teacher_a
+    When I am logged in with the username teacher_a
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
     And I wait 2 seconds
@@ -98,7 +98,7 @@ Feature: Teacher views report
         | student_a | Intro to bugs | first activity | a               | a      |
         | student_a | Intro to bugs | first activity | image_q         | Y      |
         | student_b | Intro to bugs | first activity | a               | b      |
-    When I login with username: teacher_a password: teacher_a
+    When I am logged in with the username teacher_a
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
     And I wait 2 seconds

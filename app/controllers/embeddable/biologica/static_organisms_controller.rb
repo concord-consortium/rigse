@@ -20,9 +20,9 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/biologica/static_organism" } # biologica_static_organism.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_static_organism, :teacher_mode => false } }
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_static_organism, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false  } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_static_organism, :teacher_mode => @teacher_mode} }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_static_organism } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_static_organism, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_static_organism} }
         format.xml  { render :biologica_static_organism => @biologica_static_organism }
       end
     end

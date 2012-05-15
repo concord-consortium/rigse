@@ -1,5 +1,5 @@
 class Portal::Grade < ActiveRecord::Base
-  set_table_name :portal_grades
+  self.table_name = :portal_grades
   
   acts_as_list
   acts_as_replicatable

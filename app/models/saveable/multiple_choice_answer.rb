@@ -1,5 +1,5 @@
 class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
-  set_table_name "saveable_multiple_choice_answers"
+  self.table_name = "saveable_multiple_choice_answers"
 
   belongs_to :multiple_choice,  :class_name => 'Saveable::MultipleChoice', :counter_cache => :response_count
   belongs_to :bundle_content, :class_name => 'Dataservice::BundleContent'

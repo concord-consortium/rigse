@@ -1,5 +1,5 @@
 class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
-  set_table_name "maven_jnlp_maven_jnlp_families"
+  self.table_name = "maven_jnlp_maven_jnlp_families"
   
   has_many :projects, :class_name => "Admin::Project"
   

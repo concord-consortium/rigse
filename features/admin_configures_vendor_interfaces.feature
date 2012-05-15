@@ -9,9 +9,8 @@ Feature: The Project administrator disables certain vendor interfaces
   Scenario: The project administrator removes some probe interfaces
     Given the following users exist:
       | login        | password            | roles                |
-      | admin_login  | admin_password      | admin, member, author|
       | student_login| student_password    | member               |
-    And I login with username: admin_login password: admin_password
+    And I login as an admin
     And the following vendor interfaces exist:
       | name             | description              |
       | pasco usb        | a pasco usb interface    |
@@ -57,7 +56,6 @@ Feature: The Project administrator disables certain vendor interfaces
   Scenario: The student user can only select configured interfaces
     Given the following users exist:
       | login        | password            | roles                |
-      | admin_login  | admin_password      | admin, member, author|
       | student_login| student_password    | member               |
     And the following vendor interfaces exist:
       | name             | description              |

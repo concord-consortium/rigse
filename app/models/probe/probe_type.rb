@@ -1,5 +1,5 @@
 class Probe::ProbeType < ActiveRecord::Base
-  set_table_name "probe_probe_types"
+  self.table_name = "probe_probe_types"
 
   include Changeable
   

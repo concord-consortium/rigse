@@ -1,5 +1,5 @@
 class Saveable::ImageQuestion < ActiveRecord::Base
-  set_table_name "saveable_image_questions"
+  self.table_name = "saveable_image_questions"
 
   belongs_to :learner,        :class_name => 'Portal::Learner'
   belongs_to :offering,        :class_name => 'Portal::Offering'

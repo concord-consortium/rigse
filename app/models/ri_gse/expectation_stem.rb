@@ -1,5 +1,5 @@
 class RiGse::ExpectationStem < ActiveRecord::Base
-  set_table_name "ri_gse_expectation_stems"
+  self.table_name = "ri_gse_expectation_stems"
 
   # belongs_to :user
   has_many :expectations, :class_name => 'RiGse::Expectation'

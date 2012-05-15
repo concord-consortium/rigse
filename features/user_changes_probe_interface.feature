@@ -11,7 +11,7 @@ Feature: A user changes which probeware interface they are using
     Given the following students exist:
       | login     | password  |
       | student   | student   |
-    And I login with username: student password: student
+    And I am logged in with the username student
     When I go to my preferences
     And I select "Fourier Ecolog" from "user_vendor_interface_id"
     And I press "Save"

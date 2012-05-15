@@ -9,14 +9,18 @@ def find_or_create_offering(runnable,clazz)
     offering
 end
 
-def login_as(username, password)
+def login_as(username)
+  visit "/login/#{username}"
+  @cuke_current_username = username
+end
+
+def login_with_ui_as(username, password)
   visit "/login"
   within("#project-signin") do
     fill_in("login", :with => username)
     fill_in("password", :with => password)
     click_button("Login")
     @cuke_current_username = username
-    #click_button("Submit")
   end
 end
 
@@ -56,12 +60,22 @@ end
 
 Given /^(?:|I )login as an admin$/ do
   admin = Factory.next(:admin_user)
-  login_as(admin.login, 'password')
+  login_as(admin.login)
 end
 
 
-When /^I am logged in as "([^"]*)"\s*,?\s*"([^"]*)"\s*$/ do |username,password|
-  login_as(username,password)
+# the quote in the pattern is to prevent this from matching other rules
+# and hopefully there is no need for quotes in a usernames
+Given /^I am logged in with the username ([^"]*)$/ do |username|
+  login_as(username)
+end
+
+Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
+  login_with_ui_as(username, password)
+end
+
+When /^I log out$/ do
+  visit "/logout"
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|
@@ -100,11 +114,7 @@ When /^(?:|I )debug$/ do
   0
 end
 
-When /^I wait "(.*)" second(?:|s)$/ do |seconds|
-  sleep(seconds.to_i)
-end
-
-When /^I wait (?:for )(\d+) second[s]?$/ do |seconds|
+When /^I wait (\d+) second[s]?$/ do |seconds|
   sleep(seconds.to_i)
 end
 
@@ -139,4 +149,11 @@ end
 
 When /^(?:|I )dismiss the dialog$/ do 
   page.driver.browser.switch_to.alert.dismiss
+end
+
+Then /^(?:|I )need to confirm "([^"]*)"$/ do |text|
+  # currently confirmations like this are done with dialogs
+  dialog_text = page.driver.browser.switch_to.alert.text
+  dialog_text.should == text
+  page.driver.browser.switch_to.alert.accept
 end

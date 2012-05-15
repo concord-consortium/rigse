@@ -1,5 +1,5 @@
 class RiGse::AssessmentTarget < ActiveRecord::Base
-  set_table_name "ri_gse_assessment_targets"
+  self.table_name = "ri_gse_assessment_targets"
 
   
   # belongs_to :user

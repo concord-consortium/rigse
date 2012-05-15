@@ -1,5 +1,5 @@
 class Embeddable::NLogoModel < ActiveRecord::Base
-  set_table_name "embeddable_n_logo_models"
+  self.table_name = "embeddable_n_logo_models"
 
   
   belongs_to :user

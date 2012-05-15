@@ -74,8 +74,9 @@ shared_examples_for 'an embeddable controller' do
           assert_select('security')
           assert_select('resources')
           assert_select('application-desc') do
-            assert_select('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, 
-                Rails.application.config.session_options[:key] => @session_options[:id]))
+            config_url = controller.polymorphic_url(@model_ivar, :format => :config,
+                Rails.application.config.session_options[:key] => @session_options[:id])
+            assert_select('argument', config_url.gsub("&", "&amp;"))
           end
         end
       end
@@ -94,7 +95,7 @@ shared_examples_for 'an embeddable controller' do
             assert_select('void[property=?]', 'properties') do
               assert_select('object[class=?]', 'java.util.Properties') do
                 assert_select('void[method=?]', 'setProperty') do
-                  assert_select('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :teacher_mode => false))
+                  assert_select('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml))
                 end
               end
             end
@@ -115,7 +116,7 @@ shared_examples_for 'an embeddable controller' do
           assert_select('objects') do
             assert_select('OTSystem') do
               assert_select('includes') do
-                assert_select('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :teacher_mode => false))
+                assert_select('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml))
               end
               assert_select('bundles') do
                 assert_select('OTInterfaceManager[local_id=?]', 'interface_manager') do
@@ -203,8 +204,9 @@ shared_examples_for 'an embeddable controller' do
             assert_select('security')
             assert_select('resources')
             assert_select('application-desc') do
-              assert_select('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, 
-                Rails.application.config.session_options[:key] => @session_options[:id], :action => 'edit'))
+              config_url = controller.polymorphic_url(@model_ivar, :format => :config,
+                Rails.application.config.session_options[:key] => @session_options[:id], :action => 'edit')
+              assert_select('argument', config_url.gsub("&", "&amp;"))
             end
           end
         end
@@ -223,7 +225,7 @@ shared_examples_for 'an embeddable controller' do
               assert_select('void') do
                 assert_select('object') do
                   assert_select('void') do
-                    assert_select('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :teacher_mode => false, :action => 'edit'))
+                    assert_select('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :action => 'edit'))
                   end
                 end
               end
@@ -246,7 +248,7 @@ shared_examples_for 'an embeddable controller' do
               assert_select('OTSystem') do
                 assert_select('includes') do
                   # assert_select('OTInclude')
-                  assert_select('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :teacher_mode => false, :action => 'edit'))
+                  assert_select('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :action => 'edit'))
                 end
                 assert_select('bundles')
                 assert_select('overlays')

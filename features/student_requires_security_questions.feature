@@ -12,7 +12,7 @@ Feature: Student must specify security questions before using the portal
       | login     | password |
       | student_a | student  |
     And the student "student_a" has no security questions set
-    And I am logged in as "student_a", "student"
+    And I am logged in with the username student_a
 
     Scenario: Student forced to enter security questions
       When I go to my home page

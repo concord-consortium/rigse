@@ -33,7 +33,7 @@ Feature: Teacher can assign an offering to a class
     And the activity "Test Activity" is assigned to the class "My Class"
     Then the activity named "Test Activity" should have "offerings_count" equal to "1"
 
-  @selenium
+  @javascript
   Scenario: All potential offerings are visible
     Given the following simple investigations exist:
       | name               | user    |
@@ -45,13 +45,13 @@ Feature: Teacher can assign an offering to a class
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
     Then I should see "Investigation: Test Investigation"
     Then I should see "Resource Page: Test Resource Page"
     Then I should see "External Activity: My Activity"
 
-  @selenium
+  @javascript
   Scenario: Offerings from the default class show learner data in the default class
     Given the default class is created
     And adhoc workgroups are disabled
@@ -61,22 +61,20 @@ Feature: Teacher can assign an offering to a class
     And the student "student" is in the class "My Class"
     And the following external activity exists:
       | name        | user    | url    |
-      | My Activity | teacher | /home |
+      | My Activity | teacher | /about |
     When I login as an admin
     And I am on the class page for "Default Class"
-    And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
+    And I assign the external activity "My Activity" to the class "Default Class"
     Then the external activity offering "My Activity" in the class "Default Class" should be a default offering
-    When I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     When I am on the class page for "My Class"
-    And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
+    And I assign the external activity "My Activity" to the class "My Class"
     Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
     And the external activity named "My Activity" should have "offerings_count" equal to "2"
-    When I login with username: student password: student
+    And I am logged in with the username student
     And I am on the class page for "My Class"
     And I follow "run My Activity"
-    Then I should be on my homepage
+    Then I should be on the about page
     And I login as an admin
     And I am on the class page for "Default Class"
     Then I should see "My Activity"
@@ -90,14 +88,14 @@ Feature: Teacher can assign an offering to a class
       | login     | password  |
       | student   | student   |
     And the student "student" is in the class "My Class"
-    When I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
-    Then I should see 'Reset Password'
-    When I follow 'Reset Password'
-    Then I should see 'You must set a new password'
+    Then I should see "Reset Password"
+    When I follow "Reset Password"
+    Then I should see "You must set a new password"
 
   @dialog
-  @selenium
+  @javascript
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class
     Given the default class is created
     And the following students exist:
@@ -106,16 +104,14 @@ Feature: Teacher can assign an offering to a class
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
-    When I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
-    And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
+    And I assign the external activity "My Activity" to the class "My Class"
     Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
     And the external activity named "My Activity" should have "offerings_count" equal to "1"
     When I login as an admin
     And am on the class page for "Default Class"
-    And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
-    Then I should see "The External Activity My Activity is already assigned in a class."
+    And I try to assign the external activity "My Activity" to the class "Default Class"
+    Then I need to confirm "The External Activity My Activity is already assigned in a class."
     And the external activity named "My Activity" should have "offerings_count" equal to "1"
     And the class "Default Class" should not have any offerings

@@ -1,5 +1,5 @@
 class Embeddable::LabBookSnapshot < ActiveRecord::Base
-  set_table_name "embeddable_lab_book_snapshots"
+  self.table_name = "embeddable_lab_book_snapshots"
 
   
   belongs_to :user

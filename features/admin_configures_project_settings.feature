@@ -10,7 +10,7 @@ Feature: Admin configures project settings
     And am on the admin projects page
     Then I should see the sites name
 
-  @selenium
+  @javascript
   Scenario: Admin edits project without setting up jnlps
     Given the most basic default project
     And I login as an admin
@@ -18,7 +18,7 @@ Feature: Admin configures project settings
     When I follow "edit project"
     Then I should see the button "Save"
 
-  @selenium
+  @javascript
   Scenario: Admin edits project with jnlps
     Given The default project and jnlp resources exist using factories
     And I login as an admin
@@ -26,7 +26,7 @@ Feature: Admin configures project settings
     When I follow "edit project"
     Then I should see the button "Save"
 
-  @selenium
+  @javascript
   Scenario: Admin enables default class
     Given The default project and jnlp resources exist using factories
     And I login as an admin
@@ -39,13 +39,13 @@ Feature: Admin configures project settings
     And I press "Save"
     Then I should see "Default Class: enabled"
 
-  @selenium
+  @javascript
   Scenario: Admin enables grade levels for classes
     Given The default project and jnlp resources exist using factories
     And the following teachers exist:
       | login   | password |
       | teacher | teacher  |
-    When I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on the clazz create page
     Then I should not see "Grade Levels:"
     Given I login as an admin
@@ -56,11 +56,11 @@ Feature: Admin configures project settings
     When I check "Enable Grade Levels for Classes"
     And I press "Save"
     Then I should see "Grade Levels for Classes: enabled"
-    When I login with username: teacher password: teacher
+    When I am logged in with the username teacher
     And I am on the clazz create page
     Then I should see "Grade Levels:"
 
-  @selenium
+  @javascript
   Scenario: Admin modifies css for otml
     Given The default project and jnlp resources exist using factories
     And I login as an admin
@@ -74,7 +74,7 @@ Feature: Admin configures project settings
 
   # OTLabbookButton useBitmap="true"
   # OTLabbookBundle scaleDrawTools="false"
-  @selenium
+  @javascript
   Scenario: Admin configures bitmap snapshots
     Given The default project and jnlp resources exist using factories
     And I login as an admin

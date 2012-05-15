@@ -82,7 +82,16 @@ group :development do
 end
 
 group :test, :development do
-  gem "selenium-webdriver", "~> 2.12.0"
+  # When I tried version 2.21.2 before it gave errors like:
+  # cannot load such file -- {
+  #   "frozen": {
+  #     "app.update.auto": false,
+  #  ...
+  #  (LoadError)
+  # ./features/step_definitions/global_steps.rb:13:in `login_as'
+  # Version 2.16 didn't have this problem. However it is possible I got that error when
+  # I was running an older version of FF. I'm not getting the error now.
+  gem "selenium-webdriver", "2.21.2"
   gem "cucumber",          "~> 1.0.2"
   gem "cucumber-rails",    "~> 1.0.2"
   gem "database_cleaner",  "~> 0.6.7"

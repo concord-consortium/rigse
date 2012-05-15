@@ -1,5 +1,5 @@
 class RiGse::ExpectationIndicator < ActiveRecord::Base
-  set_table_name "ri_gse_expectation_indicators"
+  self.table_name = "ri_gse_expectation_indicators"
 
   # belongs_to :user
   belongs_to :expectation, :class_name => 'RiGse::Expectation'

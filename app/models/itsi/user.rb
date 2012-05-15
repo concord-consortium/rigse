@@ -1,5 +1,5 @@
 class Itsi::User < Itsi::Itsi
-  set_table_name "itsidiy_users"
+  self.table_name = "itsidiy_users"
 
   self.extend SearchableModel
 

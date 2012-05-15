@@ -10,10 +10,10 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
   xml.objects { 
     xml.OTSystem(:local_id => "system") { 
       xml.includes { 
-        if teacher_mode && runnable.class == Investigation 
+        if local_assigns[:teacher_mode] && runnable.class == Investigation 
           xml.OTInclude :href => investigation_teacher_otml_url(runnable)
         else
-          xml.OTInclude :href => polymorphic_url(runnable, :format => :otml, :teacher_mode => teacher_mode, :action => 'edit')
+          xml.OTInclude :href => polymorphic_url(runnable, :format => :otml, :teacher_mode => local_assigns[:teacher_mode], :action => 'edit')
         end
       }
       xml.bundles {

@@ -185,12 +185,18 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label
 end
  
 Then /^(?:|I )should be on (.+)$/ do |page_name|
-  current_path = URI.parse(current_url).path
+  # add simple retry support incase there is a redirect here
+  expected_path = path_to(page_name)
+  10.times {
+    current_path = URI.parse(current_url).path
+    break if current_path == expected_path
+    sleep(0.05)
+  }
   if current_path.respond_to? :should
     current_path.should == path_to(page_name)
   else
     assert_equal path_to(page_name), current_path
-  end
+  end    
 end
 
 Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
