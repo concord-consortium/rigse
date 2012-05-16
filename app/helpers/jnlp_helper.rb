@@ -60,6 +60,7 @@ module JnlpHelper
           additional_properties << ['otrunk.periodic.uploading.enabled', 'true']
           additional_properties << ['otrunk.periodic.uploading.url', dataservice_periodic_bundle_logger_periodic_bundle_contents_url(pbl)]
           additional_properties << ['otrunk.periodic.uploading.interval', '300000']  # 5 minutes. TODO: Maybe make this configurable in the admin project settings?
+          additional_properties << ['otrunk.session_end.notification.url', dataservice_periodic_bundle_logger_session_end_notification_url(pbl)]
         end
       end
     else
