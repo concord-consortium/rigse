@@ -1,6 +1,7 @@
 class JnlpAdaptor
   
   attr_reader :jnlp
+  attr_reader :jnlp_url
   attr_reader :net_logo_package_name
 
   OTRUNK_NLOGO_JAR_PACKAGE_MAP = {
@@ -30,6 +31,11 @@ class JnlpAdaptor
       @net_logo_package_name = nil
     else
       @net_logo_package_name = JnlpAdaptor::OTRUNK_NLOGO_JAR_PACKAGE_MAP[otrunk_nlogo_jars.first.name]
+    end
+    
+    @jnlp_url = @jnlp.versioned_jnlp_url.url
+    if project.jnlp_cdn_hostname.present?
+      @jnlp_url = @jnlp_url.sub %r{^http://[^/]*}, "http://#{project.jnlp_cdn_hostname}"
     end
   end
   

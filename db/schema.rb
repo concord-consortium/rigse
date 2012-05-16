@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120524200956) do
     t.boolean  "teachers_can_author",                          :default => true
     t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
+    t.string   "jnlp_cdn_hostname"
   end
 
   create_table "admin_tags", :force => true do |t|

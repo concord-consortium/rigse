@@ -7,7 +7,7 @@ jnlp_headers(runnable)
 session_options = request.env["rack.session.options"]
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 # hard code the codebase because the jar file versions are also hardcoded
-xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") { 
+xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostname.presence || 'jnlp.concord.org'}/dev3") { 
   jnlp_information(xml)
   xml.security {
     xml << "    <all-permissions />"
@@ -65,7 +65,12 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") {
       xml.property :name=> "install_if_not_found", :value => "true"
 
       # include wrapped_jnlp so we know what jnlp to install from
-      xml.property :name=> "wrapped_jnlp", :value => maven_jnlp_info[:href]
+      xml.property :name=> "wrapped_jnlp", :value => jnlp_adaptor.jnlp_url
+
+      # if the cdn is set then tell jnlp2shell to go static
+      if current_project.jnlp_cdn_hostname.present?
+        xml.property :name=> "jnlp2shell.static_www", :value => "true"
+      end
     end
   }
   if(!opportunistic_installer)
