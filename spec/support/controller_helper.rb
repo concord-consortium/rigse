@@ -178,7 +178,8 @@ def generate_default_project_and_jnlps_with_mocks
     :allow_adhoc_schools?           => false,
     :require_user_consent?          => false,
     :allow_default_class            => false,
-    :allow_default_class?           => false
+    :allow_default_class?           => false,
+    :jnlp_cdn_hostname              => ''
   )
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
