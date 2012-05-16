@@ -7,9 +7,10 @@ describe Dataservice::PeriodicBundleContent do
   end
   before(:each) do
     # Delorean.time_travel_to "1 month ago"
+    @bundle_logger = Dataservice::PeriodicBundleLogger.create
     @valid_attributes = {
       :id => 1,
-      :periodic_bundle_logger_id => 1,
+      :periodic_bundle_logger_id => @bundle_logger.id,
       :body => "value for body",
       :created_at => Time.now,
       :updated_at => Time.now,
@@ -21,7 +22,7 @@ describe Dataservice::PeriodicBundleContent do
 
     setup_expected("gzb64:" + B64Gzip.pack("some fake blob data"))
     @valid_attributes_with_blob = {
-      :periodic_bundle_logger_id => 1,
+      :periodic_bundle_logger_id => @bundle_logger.id,
       :body => @expected_body
     }
     # disable the after_save there is observer_spec to test that specific call
@@ -33,6 +34,32 @@ describe Dataservice::PeriodicBundleContent do
 
   it "should create a new instance given valid attributes" do
     Dataservice::PeriodicBundleContent.create!(@valid_attributes)
+  end
+
+  it "should extract each map entry into its own part object" do
+    bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)
+    job = bundle_content.extract_parts
+    job.is_a?(Delayed::Backend::ActiveRecord::Job).should be_true
+    job.invoke_job
+    @bundle_logger.reload
+    (parts = @bundle_logger.periodic_bundle_parts).size.should eql(7)
+    parts.select{|p| p.delta }.size.should eql(2)
+    parts.select{|p| !(p.delta)}.size.should eql(5)
+
+    parts.detect{|p| p.key == "onetwothree" }.value.should == <<PART.strip
+                    <OTBasicObject name="First" id="onetwothree">
+                      <child>
+                        <object refid="fourfivesix"/>
+                      </child>
+                    </OTBasicObject>
+PART
+  end
+
+  it "should extract imports into the bundle logger" do
+    bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)
+    bundle_content.extract_parts.invoke_job
+    @bundle_logger.reload
+    @bundle_logger.imports.size.should eql(18)
   end
 
   it "should extract blobs into separate model objects" do
@@ -63,6 +90,15 @@ describe Dataservice::PeriodicBundleContent do
     bundle_content.save!
     bundle_content.reload
     bundle_content.blobs.size.should eql(1)
+  end
+
+  xit "should reconstitute the parts into a valid learner data format" do
+    @bundle_logger.should_receive(:learner).and_return(mock(Portal::Learner, :uuid => "somefakeid"))
+    bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)
+    bundle_content.extract_parts.invoke_job
+    @bundle_logger.reload
+
+    @bundle_logger.otml.should =~ @reconstituted_regex
   end
 
   # TODO, not supported really, but we should expect more blobs if
@@ -157,12 +193,148 @@ describe Dataservice::PeriodicBundleContent do
                   </entries>
                 </OTLabbookBundle>
               </entry>
+              <entry key="fe6dcc58-6f7d-11df-81fc-001ec94098a1!/nested_objects_with_ids">
+                <OTBasicObject>
+                  <child>
+                    <OTBasicObject name="First" id="onetwothree">
+                      <child>
+                        <OTBasicObject name="Second" id="fourfivesix" />
+                      </child>
+                    </OTBasicObject>
+                  </child>
+                </OTBasicObject>
+              </entry>
             </map>
           </OTReferenceMap>
         </objects>
       </otrunk>
 
       '
+
+      @reconstituted_regex = /<\?xml version="1\.0" encoding="UTF-8"\?>
+<otrunk id="[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}">
+  <imports>
+        <import class="org.concord.otrunk.OTStateRoot" \/>
+    <import class="org.concord.otrunk.user.OTUserObject" \/>
+    <import class="org.concord.otrunk.user.OTReferenceMap" \/>
+    <import class="org.concord.otrunk.ui.OTCardContainer" \/>
+    <import class="org.concord.otrunk.ui.OTSection" \/>
+    <import class="org.concord.otrunk.ui.OTChoice" \/>
+    <import class="org.concord.otrunk.ui.OTText" \/>
+    <import class="org.concord.datagraph.state.OTDataGraphable" \/>
+    <import class="org.concord.data.state.OTDataStore" \/>
+    <import class="org.concord.otrunk.util.OTLabbookBundle" \/>
+    <import class="org.concord.otrunk.util.OTLabbookEntry" \/>
+    <import class="org.concord.datagraph.state.OTDataCollector" \/>
+    <import class="org.concord.datagraph.state.OTDataAxis" \/>
+    <import class="org.concord.otrunk.view.OTFolderObject" \/>
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" \/>
+    <import class="org.concord.graph.util.state.OTDrawingTool" \/>
+    <import class="org.concord.otrunk.labbook.OTLabbookButton" \/>
+    <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" \/>
+  <\/imports>
+  <objects>
+    <OTStateRoot formatVersionString="1.0">
+      <userMap>
+        <entry key="somefakeid">
+          <OTReferenceMap>
+            <user>
+              <OTUserObject id="somefakeid" \/>
+            <\/user>
+            <map>
+              <entry key="fe6dcc58-6f7d-11df-81fc-001ec94098a1!\/lab_book_bundle">
+                <OTLabbookBundle>
+                  <entries>
+                    <OTLabbookEntry timeStamp="June 4 at 11:39" type="Graphs" note="Add a note describing this entry...">
+                      <oTObject>
+                        <object refid="540d78fe-6fef-11df-a23f-6dcecc6a5613"\/>
+                      <\/oTObject>
+                      <container>
+                        <object refid="fe6dcc58-6f7d-11df-81fc-001ec94098a1!\/section_card_container_activity_17\/cards[0]" \/>
+                      <\/container>
+                      <originalObject>
+                        <object refid="fe6dcc58-6f7d-11df-81fc-001ec94098a1!\/data_collector_3" \/>
+                      <\/originalObject>
+                    <\/OTLabbookEntry>
+                    <OTLabbookEntry timeStamp="June 4 at 11:41" type="Snapshots" note="Add a note describing this entry...">
+                      <oTObject>
+                        <object refid="aae0cc59-6fef-11df-a23f-6dcecc6a5613"\/>
+                      <\/oTObject>
+                      <container>
+                        <object refid="fe6dcc58-6f7d-11df-81fc-001ec94098a1!\/section_card_container_activity_17\/cards[0]" \/>
+                      <\/container>
+                      <originalObject>
+                        <object refid="fe6dcc58-6f7d-11df-81fc-001ec94098a1!\/mw_modeler_page_2" \/>
+                      <\/originalObject>
+                      <drawingTool>
+                        <object refid="aae0cc5b-6fef-11df-a23f-6dcecc6a5613"\/>
+                      <\/drawingTool>
+                    <\/OTLabbookEntry>
+                  <\/entries>
+                <\/OTLabbookBundle>
+              <\/entry>
+              <entry key="fe6dcc58-6f7d-11df-81fc-001ec94098a1!\/nested_objects_with_ids">
+                <OTBasicObject>
+                  <child>
+                    <object refid="onetwothree"\/>
+                  <\/child>
+                <\/OTBasicObject>
+              <\/entry>
+            <\/map>
+            <annotations>
+              <entry key="540d78fe-6fef-11df-a23f-6dcecc6a5613">
+                <OTDataCollector id="540d78fe-6fef-11df-a23f-6dcecc6a5613" useDefaultToolBar="false" showControlBar="true" title="Government Support for Educational Technology" displayButtons="4" name="Government Support for Educational Technology" multipleGraphableEnabled="false" autoScaleEnabled="false">
+                  <source>
+                    <OTDataGraphable drawMarks="true" connectPoints="true" visible="true" color="16711680" showAllChannels="false" name="Governmen..." xColumn="0" lineWidth="2.0" yColumn="1" controllable="false">
+                      <dataStore>
+                        <OTDataStore numberChannels="2" \/>
+                      <\/dataStore>
+                    <\/OTDataGraphable>
+                  <\/source>
+                  <xDataAxis>
+                    <OTDataAxis min="1981.708" max="2020.0248" label="Time" labelFormat="None" units="years">
+                      <customGridLabels \/>
+                    <\/OTDataAxis>
+                  <\/xDataAxis>
+                  <dataSetFolder>
+                    <OTFolderObject \/>
+                  <\/dataSetFolder>
+                  <yDataAxis>
+                    <OTDataAxis min="19.401735" max="82.00013" label="Temperature" labelFormat="None" units="C">
+                      <customGridLabels \/>
+                    <\/OTDataAxis>
+                  <\/yDataAxis>
+                <\/OTDataCollector>
+              <\/entry>
+              <entry key="aae0cc59-6fef-11df-a23f-6dcecc6a5613">
+                <OTBlob id="aae0cc59-6fef-11df-a23f-6dcecc6a5613">
+                  <src>http:.*<\/src>
+                <\/OTBlob>
+              <\/entry>
+              <entry key="aae0cc5b-6fef-11df-a23f-6dcecc6a5613">
+                <OTDrawingTool id="aae0cc5b-6fef-11df-a23f-6dcecc6a5613" scaleBackground="true">
+                  <backgroundSrc>
+                    <object refid="aae0cc59-6fef-11df-a23f-6dcecc6a5613" \/>
+                  <\/backgroundSrc>
+                <\/OTDrawingTool>
+              <\/entry>
+              <entry key="fourfivesix">
+                <OTBasicObject name="Second" id="fourfivesix" \/>
+              <\/entry>
+              <entry key="onetwothree">
+                <OTBasicObject name="First" id="onetwothree">
+                  <child>
+                    <object refid="fourfivesix"\/>
+                  <\/child>
+                <\/OTBasicObject>
+              <\/entry>
+            <\/annotations>
+          <\/OTReferenceMap>
+        <\/entry>
+      <\/userMap>
+    <\/OTStateRoot>
+  <\/objects>
+<\/otrunk>/m
     end
 
     describe "process_bunde" do
@@ -213,24 +385,25 @@ describe Dataservice::PeriodicBundleContent do
 
     describe "should run its callbacks" do
       before(:each) do
-        @bundle = Dataservice::BundleContent.new(:body => "hi!")
+        setup_expected("gzb64:" + B64Gzip.pack("some fake blob data"))
+        @bundle = Dataservice::PeriodicBundleContent.new(:body => @expected_body)
       end
 
       it "should process bundles before save" do
         @bundle.should_receive(:process_bundle)
         # this runs the save callbacks and the return value of false causes it to skip the after_save callbacks
-        @bundle.run_callbacks(:save) { false }
+        @bundle.run_callbacks(:create) { false }
       end
 
       it "should call process blobs after processing bundle" do
-        @bundle.should_receive(:process_blobs)
+        @bundle.should_receive(:extract_blobs)
         @bundle.process_bundle
       end
     end
 
     describe "collaborations and collaborators" do
       before(:each) do
-        @bundle = Factory(:dataservice_bundle_content)
+        @bundle = Factory(:dataservice_periodic_bundle_content)
         @student_a = Factory(:portal_student)
         @student_b = Factory(:portal_student)
         @student_c = Factory(:portal_student)
@@ -260,11 +433,11 @@ describe Dataservice::PeriodicBundleContent do
                                 :offering =>@offering)
           @learner_a = mock_model(Portal::Learner)
           @contents_a = []
-          @bundle_logger = mock_model(Dataservice::BundleLogger, {
+          @bundle_logger = mock_model(Dataservice::PeriodicBundleLogger, {
             :learner => @learner,
-            :bundle_contents => @contents_a
+            :periodic_bundle_contents => @contents_a
           })
-          @bundle.bundle_logger = @bundle_logger
+          @bundle.periodic_bundle_logger = @bundle_logger
         end
         xit "should copy the bundle contents" do
           @bundle.collaborators << @student_a
