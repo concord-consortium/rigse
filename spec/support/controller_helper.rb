@@ -170,7 +170,9 @@ def generate_default_project_and_jnlps_with_mocks
     :maven_jnlp_family => @mock_maven_jnlp_family,
     :using_custom_css? => false,
     :allow_adhoc_schools => false,
-    :use_bitmap_snapshots? => false)
+    :use_bitmap_snapshots? => false,
+    :jnlp_cdn_hostname              => ''
+  )
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
   MavenJnlp::MavenJnlpFamily.stub!(:find_by_name).with("gui-testing").and_return(@mock_gui_testing_maven_jnlp_family)
