@@ -86,8 +86,17 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
   end
 
   def extract_non_delta_parts(element, doc)
+    @seen ||= []
     element.xpath('.//*[@id]').each do |child|
-      # first create a part for this child
+      # first extract non-delta parts for all children of this child
+      # so that when we store this child's content, those objects have
+      # been replaced with object references
+      extract_non_delta_parts(child, doc)
+
+      next if @seen.include?(child)
+      @seen << child
+
+      # then create a part for this child
       key = child['id']
       part = Dataservice::PeriodicBundlePart.find_or_create_by_periodic_bundle_logger_id_and_key(:periodic_bundle_logger_id => self.periodic_bundle_logger.id, :key => key)
       part.value = child.to_s
