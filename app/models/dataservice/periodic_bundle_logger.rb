@@ -65,19 +65,19 @@ OTML
 
   def imports_otml
     imps = (self.imports + ['org.concord.otrunk.OTStateRoot', 'org.concord.otrunk.user.OTUserObject', 'org.concord.otrunk.user.OTReferenceMap']).uniq
-    imps.map{|i| %!<import class="#{i}" />! }.join("\n")
+    imps.map{|i| %!    <import class="#{i}" />! }.join("\n")
   end
   
   def map_otml(parts, attr = "map")
-    out = "<#{attr}>\n"
+    out = "            <#{attr}>\n"
     parts.each do |p|
       out << <<PART
-<entry key="#{p.key}">
-#{p.value}
-</entry>
+              <entry key="#{p.key}">
+                #{p.value}
+              </entry>
 PART
     end
-    out << "</#{attr}>"
+    out << "            </#{attr}>"
     out
   end
 end
