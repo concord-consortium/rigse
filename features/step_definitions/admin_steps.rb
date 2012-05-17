@@ -16,7 +16,7 @@ When /^an admin sets the jnlp CDN hostname to "([^"]*)"$/ do |cdn_hostname|
   page.should have_no_button("Save")
 end
 
-Then /^the installer jnlp codebase and wrapped_jnlp should start with "([^"]*)"$/ do |codebase_start|
+Then /^the installer jnlp should have the CDN hostname "([^"]*)" in the right places$/ do |hostname|
   inv = Factory.create(:investigation)
   # switch the driver to rack_test so we can inspect the content
   original_driver = Capybara.current_driver
@@ -25,11 +25,15 @@ Then /^the installer jnlp codebase and wrapped_jnlp should start with "([^"]*)"$
   visit "/investigations/#{inv.id}.jnlp"
   jnlp_xml = Nokogiri::XML(page.driver.response.body)
   codebase = jnlp_xml.xpath("/jnlp/@codebase")
-  codebase.text.should match /^#{codebase_start}.*/
+  codebase.text.should match %r{^http://#{hostname}.*}
 
   wrapped_jnlp_attr = jnlp_xml.xpath("/jnlp/resources/property[@name='wrapped_jnlp']/@value")
   wrapped_jnlp_attr.should_not be_nil
-  wrapped_jnlp_attr.text.should match /^#{codebase_start}.*/
+  wrapped_jnlp_attr.text.should_not match %r{^http://#{hostname}.*}
+
+  mirror_host_attr = jnlp_xml.xpath("/jnlp/resources/property[@name='jnlp2shell.mirror_host']/@value")
+  mirror_host_attr.should_not be_nil
+  mirror_host_attr.text.should == hostname
 
   Capybara.current_driver = original_driver
 end
