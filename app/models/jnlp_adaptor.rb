@@ -28,9 +28,6 @@ class JnlpAdaptor
     end
     
     @jnlp_url = @jnlp.versioned_jnlp_url.url
-    if project.jnlp_cdn_hostname.present?
-      @jnlp_url = @jnlp_url.sub %r{^http://[^/]*}, "http://#{project.jnlp_cdn_hostname}"
-    end
   end
   
   def resource_jars
