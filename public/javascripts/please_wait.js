@@ -52,19 +52,11 @@ var showSmartWait = function(offering) {
           $(timer_dom).update("<br/><br/>" + status_event.event_details);
         }
 
-        if (!!status_id && (status_event.event_type == "bundle_saved" || status_event.event_type == "periodic_activity_otml_requested" || status_event.event_type == "no_session")) {
-          var close = function() {
-            clearInterval(status_id);
-            status_id = null;
-            $(timer_dom).update('completed');
-            $(wait_dom).hide();
-          };
-          if (status_event.event_type == "periodic_activity_otml_requested") {
-            // delay the close slightly
-            setTimeout(close, 10000); // 10 seconds
-          } else {
-            close();
-          }
+        if (!!status_id && (status_event.event_type == "bundle_saved" || status_event.event_type == "no_session")) {
+          clearInterval(status_id);
+          status_id = null;
+          $(timer_dom).update('completed');
+          $(wait_dom).hide();
         }
       },
       onFailure: function() {}

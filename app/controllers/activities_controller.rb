@@ -110,9 +110,8 @@ class ActivitiesController < ApplicationController
       format.dynamic_otml {
         learner = (params[:learner_id] ? Portal::Learner.find(params[:learner_id]) : nil)
         if learner && learner.bundle_logger.in_progress_bundle
-          type_key = (current_project.use_periodic_bundle_uploading? ? :periodic_activity_otml_requested : :activity_otml_requested)
           launch_event = Dataservice::LaunchProcessEvent.create(
-            :event_type => Dataservice::LaunchProcessEvent::TYPES[type_key],
+            :event_type => Dataservice::LaunchProcessEvent::TYPES[:activity_otml_requested],
             :event_details => "Activity content loaded. Activity should now be running...",
             :bundle_content => learner.bundle_logger.in_progress_bundle
           )
