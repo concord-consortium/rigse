@@ -449,7 +449,7 @@ class Portal::ClazzesController < ApplicationController
     end
     
     if request.xhr?
-      replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+      replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz_setup', :locals => {:portal_clazz => @portal_clazz}
       replace_html.gsub!(/\r\n|\r|\n/, "");
       render :update do|page|
         #page << "alert(\"#{replace_html}\")"
