@@ -4,11 +4,14 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
   self.table_name = :dataservice_periodic_bundle_contents
 
   belongs_to :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger"
+  delegate :learner, :to => :periodic_bundle_logger
+
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "periodic_bundle_content_id"
 
   before_create :process_bundle
 
   include BlobExtraction
+  include SaveableExtraction
 
   def otml
     read_attribute :body
@@ -44,7 +47,12 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
   handle_asynchronously :extract_parts
 
   def extract_saveables
-    ## TODO
+    raise "PeriodicBundleContent ##{self.id}: body is empty!" if self.empty
+    extractor = Otrunk::ObjectExtractor.new(self.body)
+    extract_everything(extractor)
+
+    # Also create/update a Report::Learner object for reporting
+    Report::Learner.for_learner(self.learner).update_fields
   end
   handle_asynchronously :extract_saveables
 
