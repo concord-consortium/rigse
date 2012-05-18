@@ -312,4 +312,15 @@ class Portal::Clazz < ActiveRecord::Base
     default_offerings
   end
 
+  def update_offerings_position
+    offerings = self.offerings.sort {|a,b| a.position <=> b.position}
+    position = 1
+    offerings.each do|offering|
+      offering.position = position
+      offering.save
+      position += 1
+    end
+  end
+  
+
 end

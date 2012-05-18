@@ -33,7 +33,7 @@ class Portal::ClazzesController < ApplicationController
     if current_project.allow_default_class
       @offerings = @portal_clazz.offerings_with_default_classes(current_user)
     else
-      @offerings = @portal_clazz.active_offerings
+      @offerings = @portal_clazz.offerings
     end
     respond_to do |format|
       format.html # show.html.erb
@@ -175,6 +175,27 @@ class Portal::ClazzesController < ApplicationController
         object_params = params[:portal_clazz]
         grade_levels = object_params.delete(:grade_levels)
         
+        clazz_investigation_id = params[:clazz_investigations]
+        clazz_investigation_id_hidden = params[:clazz_investigations_hidden]
+       
+        #offerings_to_add = []l
+        #offering_active = nil
+        @portal_clazz.offerings.each do|offering|
+          offering.active = false
+          offering.position = clazz_investigation_id_hidden.index(offering.id.to_s) + 1
+          unless clazz_investigation_id.nil? then
+            if clazz_investigation_id.include?(offering.id.to_s) then
+              offering.active = true
+            end
+          end
+          
+          offering.save
+          #offerings_to_add << offering
+        end
+        
+        #object_params[:offerings] = offerings_to_add
+        
+        
         if Admin::Project.default_project.enable_grade_levels?
           if grade_levels
             # This logic will attempt to prevent someone from removing all grade levels from a class.
@@ -191,7 +212,7 @@ class Portal::ClazzesController < ApplicationController
         end
 
         if okToUpdate && @portal_clazz.update_attributes(object_params)
-          flash[:notice] = 'Class was successfully updated.'
+          flash[:notice] = 'Class was successfully updated.' #+ offerings_to_add.to_s + "-----" + clazz_investigation_id.to_s + "-----" + params[:clazz_investigations].to_s
           format.html { redirect_to(@portal_clazz) }
           format.xml  { head :ok }
         else
@@ -232,6 +253,10 @@ class Portal::ClazzesController < ApplicationController
     unless params[:runnable_type] == 'portal_offering'
       runnable_type = params[:runnable_type].classify
       @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
+      if @offering.position == 0
+        @offering.position = @portal_clazz.offerings.length
+        @offering.save
+      end
       if @offering
         if @portal_clazz.default_class == true
           if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
@@ -275,6 +300,7 @@ class Portal::ClazzesController < ApplicationController
     if (@offering && @offering.can_be_deleted?)
       @runnable = @offering.runnable
       @offering.destroy
+      @portal_clazz.update_offerings_position
       @portal_clazz.reload
       render :update do |page|
         page << "var container = $('#{container}');"
@@ -386,6 +412,55 @@ class Portal::ClazzesController < ApplicationController
     respond_to do |format|
       format.html { render :layout => 'report'}
     end
+  end
+  
+  def get_teachers  
+    if request.xhr?
+      render :partial => 'portal/teachers/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
+      return
+    end
+  end
+    
+  def edit_teachers
+    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    teacher_ids = params[:clazz_teacher_ids]
+    arr_teacher_ids = []
+    if(!teacher_ids.nil? and teacher_ids.length > 0)
+      arr_teacher_ids = teacher_ids.split(",")
+    end
+    
+    begin
+      @portal_clazz.teachers.each do|portal_clazz_teacher|
+        if teacher_ids.index(portal_clazz_teacher.id.to_s).nil?  
+          portal_clazz_teacher.remove_clazz(@portal_clazz)
+        end
+      end
+      
+      arr_teacher_ids.each do|teacher_id|
+        if @portal_clazz.teachers.find_by_id(teacher_id).nil?
+          @teacher = Portal::Teacher.find_by_id(teacher_id)
+          @teacher.add_clazz(@portal_clazz)
+        end
+      end
+      @portal_clazz.reload
+    rescue
+      flash[:notice] = "There was an error while processing your request."
+      return
+    end
+    
+    if request.xhr?
+      replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+      replace_html.gsub!(/\r\n|\r|\n/, "");
+      render :update do|page|
+        #page << "alert(\"#{replace_html}\")"
+        #page << "jQuery('#div_teacher_list').html(\"#{replace_html}\")"
+        page.replace_html  'div_teacher_list',replace_html
+        #page.replace_html  'div_teacher_list', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        #page << "$('div_teacher_list').innerHTML('#{render :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}}')"
+      end
+      return
+    end
+    
   end
 
 end

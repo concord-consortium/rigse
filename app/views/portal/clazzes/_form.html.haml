@@ -1,54 +1,82 @@
-.item
-  = edit_menu_for(portal_clazz, f, { :omit_cancel => true })
-  .content
-    = f.error_messages
-    %table.form
-      %tr
-        %td= label_tag :name, 'Name: ', :class=>"right"
-        %td= f.text_field :name, :size => 50
-      %tr
-        %td
-          =label_tag :class_word, 'Class Word: ', :class=>"right"
-        %td
-          = f.text_field :class_word, :size => 24
-          .tiny.help
-            Class words are not case sensitive
-      - if portal_clazz.new_record?
+= javascript_include_tag "class_setup_info.js" 
+.maincontainer
+  .container
+    .content
+      = f.error_messages
+    .right
+      %table.clazzdata
         %tr
-          - schools = []
-          - if current_user.portal_teacher
-            - schools = current_user.portal_teacher.schools
-          - if schools.empty?
-            - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
-          %td= label_tag :school, 'School: ', :class=>"right"
-          %td= f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
-      %tr
-        %td= label_tag :semester, 'Semester: ', :class=>"right"
-        %td= f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 
-      - if Admin::Project.default_project.enable_grade_levels?
+          %td=label_tag :name, 'Teacher ', :class=>"left"
+          %td=label_tag :name, portal_clazz.teacher.name , :class=>"labelvalue"
+          %td=label_tag :name, 'Semester ', :class=>"left"
+          %td=label_tag :name, portal_clazz.semester.name , :class=>"labelvalue"
+          %td=label_tag :name, 'Class Word ', :class=>"left"
+          %td=label_tag :name, portal_clazz.class_word, :class=>"labelvalue"
+      .header Class Setup Information
+      %table.formnew
         %tr
-          %td= label_tag :grade_levels, 'Grade Levels:'
+          %td= label_tag :name, 'Class Name: ', :class=>"left"
+          %td= f.text_field :name, :size => 50
+        %tr
+          %td= label_tag :semester, 'Term: ', :class=>"left"
+          %td= f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string")
+        %tr
+          %td= label_tag :semester, 'Teacher(s): ', :class=>"left"
+          %td{:class=>"left"}= render :partial => 'portal/teachers/table_for_clazz_setup', :locals => {:portal_clazz => portal_clazz}
+        %tr
+          %td= label_tag :description, 'Description: ', :class=>"left"
+          %td= f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
+        %tr
           %td
-            %table{:style=>"width: 100%;"}
-              - cols = 4
-              - width_perc = (95.0 / cols)
-              - APP_CONFIG[:active_grades].each_with_index do |name,i|
-                - tag_name = "portal_clazz[grade_levels][#{name}]"
-                - if i % cols == 0
-                  %tr
-                %td{:style => "text-align: left; white-space: nowrap; width: #{width_perc}%;"}
-                  = check_box_tag tag_name, "1", !portal_clazz.grades.find_by_name(name).nil?
-                  = label_tag tag_name, name
-      - if action_name == "edit"
+            =label_tag :class_word, 'Class Word: ', :class=>"left"
+          %td
+            = f.text_field :class_word, :size => 24
         %tr
-          %td{:colspan => '2'}
-            = label_tag :teachers, 'Add or remove', :class=>"right"
-            -# %div{:style => "width: 400px; margin: 0 0 0 30%;"}
-            = render :partial => 'portal/teachers/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
-      %tr
-        %td= label_tag :description, 'Description: ', :class=>"right"
-        %td= f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
-
-    = f.hidden_field :teacher_id
-    / .aligned
-    /   = f.submit 'Submit'
+          %td{:colspan=>2}
+            %br
+            .subheader Manage Instructional Materials
+            %div Uncheck the material that you do not want to appear on your and your student’s class list. Drag and drop the material name to reposition it within the list.
+        %tr
+          %td{:colspan=>2}
+            = render :partial => 'shared/offerings_for_clazz', :locals => {:offerings => portal_clazz.offerings}
+        
+        - if portal_clazz.new_record?
+          %tr
+            - schools = []
+            - if current_user.portal_teacher
+              - schools = current_user.portal_teacher.schools
+            - if schools.empty?
+              - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+            %td= label_tag :school, 'School: ', :class=>"right"
+            %td= f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
+         
+        - if Admin::Project.default_project.enable_grade_levels?
+          %tr
+            %td= label_tag :grade_levels, 'Grade Levels:'
+            %td
+              %table{:style=>"width: 100%;"}
+                - cols = 4
+                - width_perc = (95.0 / cols)
+                - APP_CONFIG[:active_grades].each_with_index do |name,i|
+                  - tag_name = "portal_clazz[grade_levels][#{name}]"
+                  - if i % cols == 0
+                    %tr
+                  %td{:style => "text-align: left; white-space: nowrap; width: #{width_perc}%;"}
+                    = check_box_tag tag_name, "1", !portal_clazz.grades.find_by_name(name).nil?
+                    = label_tag tag_name, name
+      
+      .right
+        %table{:width=>"100%"}
+          %tr
+            %td{:style=>"text-align:right"}
+              = f.submit 'Save' 
+              &nbsp;&nbsp; 
+              = link_to "Cancel", portal_clazz_url(portal_clazz)
+            / %td=f.cancel 'Cancel'
+          
+            
+      = f.hidden_field :teacher_id
+      = f.hidden_field :id
+      
+      / .aligned
+      /   = f.submit 'Submit'

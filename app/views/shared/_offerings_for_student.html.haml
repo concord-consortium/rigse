@@ -1,4 +1,5 @@
 - if offerings.size > 0
+- offerings.sort! {|a,b| a.position <=> b.position}  
   = render :partial => 'shared/offering_for_student', :collection => offerings, :as => :offering
 - else
   .item

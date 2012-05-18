@@ -1,0 +1,10 @@
+/- strChecked = offering.runnable? "checked" : ""
+%li
+  %div
+    %table.offerings
+      %tr
+        %td
+          = check_box_tag "clazz_investigations[]", offering.id, offering.active, :class => "filter_checkbox"
+          = hidden_field_tag "clazz_investigations_hidden[]", offering.id
+        %td
+          =offering.name

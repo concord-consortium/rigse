@@ -19,7 +19,8 @@ javascripts:
   - pagination
   - workgroup
   - chosen.proto
-  - pt_event_simulate  
+  - pt_event_simulate
+  - prototype-ui/prototype-ui
 stylesheets: 
 - print:
   - print

@@ -1,0 +1,10 @@
+- if offerings.size > 0
+  - offerings.sort! {|a,b| a.position <=> b.position}  
+  %ul.sortable{:id=>"sortable",}
+    = render :partial => 'shared/offering_for_clazz', :collection => offerings, :as => :offering
+  =sortable_element "sortable"
+- else
+  .item
+    %ul.quiet_list
+      %li
+        .tiny= "No offerings available."
