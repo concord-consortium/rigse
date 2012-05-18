@@ -23,7 +23,7 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     self.record_bundle_processing
     self.valid_xml = !(doc.errors.any?)
     # Calculate self.empty even when the xml is missing or invalid
-    self.empty = self.body.nil? || self.body.empty? || ((map = doc.xpath('/otrunk/objects/OTReferenceMap/map').first) && map.element_children.size == 0)
+    self.empty = self.body.nil? || self.body.empty? || ((map = doc.xpath('/otrunk/objects//OTReferenceMap/map').first) && map.element_children.size == 0)
     self.extract_blobs unless self.empty
     true # don't stop the callback chain.
   end
@@ -74,7 +74,7 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
 
   def extract_entries(doc = Nokogiri::XML(self.body))
     # extract all of the entry chunks and save them as Dataservice::PeriodicBundleParts
-    entries = doc.xpath("/otrunk/objects/OTReferenceMap/map/entry")
+    entries = doc.xpath("/otrunk/objects//OTReferenceMap/map/entry")
     entries.each do |entry|
       key = entry['key']
       extract_non_delta_parts(entry.element_children.first, doc)
