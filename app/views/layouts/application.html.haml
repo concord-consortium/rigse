@@ -30,6 +30,22 @@
       = javascript_tag "var container_id = #{@container_id};"
     - if @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
+    
+    / google analytics
+    %script{ :type => "text/javascript"}
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-6899787-18']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      // only initialize GA if we're running on the portal
+      if (location.host === "sparks.portal.concord.org") {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      }
+      })();
+
   %body
 
     #note{:style=>"display: none;"}
