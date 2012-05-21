@@ -2,12 +2,24 @@ class Reports::Counts
   def report
     puts "Teachers: #{teachers.size}"
     puts "  By cohort:"
-    puts teacher_counts_by_cohort
+    c = teacher_counts_by_cohort
+    File.open("counts-teachers.csv", "w") {|f| f.write(c); f.flush }
+    puts c
     puts "  Active: #{active_teachers.size}"
     puts "    By cohort:"
-    puts active_teacher_counts_by_cohort
+    c = active_teacher_counts_by_cohort
+    File.open("counts-active-teachers.csv", "w") {|f| f.write(c); f.flush }
+    puts c
     puts "Students: #{students.size}"
+    puts "  By cohort:"
+    c = student_counts_by_cohort
+    File.open("counts-students.csv", "w") {|f| f.write(c); f.flush }
+    puts c
     puts "  Active: #{active_students.size}"
+    puts "    By cohort:"
+    c = active_student_counts_by_cohort
+    File.open("counts-active-students.csv", "w") {|f| f.write(c); f.flush }
+    puts c
     puts "Classes : #{clazzes.size}"
     puts "  Active: #{active_clazzes.size}"
   end
@@ -46,14 +58,6 @@ class Reports::Counts
     @active_teachers
   end
 
-  def teacher_counts_by_cohort
-    cohort_counts(teachers).map{|name, count| "#{"%15s" % name}: #{"%6d" % count}" }.join("\n")
-  end
-
-  def active_teacher_counts_by_cohort
-    cohort_counts(active_teachers).map{|name, count| "#{"%15s" % name}: #{"%6d" % count}" }.join("\n")
-  end
-
   def cohort_counts(set)
     counts = {}
     set.each do |t|
@@ -68,6 +72,53 @@ class Reports::Counts
       end
     end
     return counts
+  end
+
+  BY_STATE = lambda {|t| (t.school && t.school.district) ? t.school.district.state : nil }
+  BY_DISTRICT = lambda {|t| t.school ? t.school.district : nil}
+  BY_SCHOOL = lambda {|t| t.school ? t.school : nil}
+  BY_COHORT = lambda {|t|
+    cs = t.cohort_list || "none" if t.is_a?(Portal::Teacher)
+    if t.is_a?(Portal::Student)
+      cs = t.teachers.map{|te| te.cohorts }.flatten.uniq.map{|c| c.name }.join(", ")
+    end
+    cs
+  }
+
+  def teacher_counts_by_cohort
+    cohort_counts(teachers)
+  end
+
+  def active_teacher_counts_by_cohort
+    cohort_counts(active_teachers)
+  end
+
+  def student_counts_by_cohort
+    cohort_counts(students)
+  end
+
+  def active_student_counts_by_cohort
+    cohort_counts(active_students)
+  end
+
+  def cohort_counts(set)
+    t_counts = set.extended_group_by([BY_STATE, BY_DISTRICT, BY_SCHOOL, BY_COHORT])
+    total = {}
+    state_totals = {}
+    district_totals = {}
+    out = "State|District|School|Cohort|Count"
+    t_counts.each do |state, districts|
+      districts.each do |district, schools|
+        schools.each do |school, cohorts|
+          cohorts.each do |cohort, ts|
+            cohort = ["none"] if cohort.empty?
+            cohort = cohort.join(", ") if cohort.is_a?(Array)
+            out << "#{state || "??"}|#{district ? district.name : "??"}|#{school ? school.name : "??" }|#{cohort}|#{ts.size}\n"
+          end
+        end
+      end
+    end
+    out
   end
 
   def clazzes
