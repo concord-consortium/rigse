@@ -4,7 +4,7 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
   self.table_name = :dataservice_periodic_bundle_contents
 
   belongs_to :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger"
-  delegate :learner, :to => :periodic_bundle_logger
+  delegate :learner, :to => :periodic_bundle_logger, :allow_nil => true
 
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "periodic_bundle_content_id"
 

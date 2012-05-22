@@ -5,7 +5,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   self.table_name = :dataservice_bundle_contents
 
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
-  delegate :learner, :to => :bundle_logger
+  delegate :learner, :to => :bundle_logger, :allow_nil => true
 
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
