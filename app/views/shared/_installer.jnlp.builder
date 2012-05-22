@@ -7,7 +7,7 @@ jnlp_headers(runnable)
 session_options = request.env["rack.session.options"]
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 # hard code the codebase because the jar file versions are also hardcoded
-xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") { 
+xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostname.presence || 'jnlp.concord.org'}/dev3") { 
   jnlp_information(xml)
   xml.security {
     xml << "    <all-permissions />"
@@ -32,7 +32,7 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") {
     xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
     # do not use version attributes so we can totally avoid all the jnlp jar versioning issues
     xml.jar :href=> "org/concord/utilities/response-cache/response-cache-0.1.0-20110101.051026-218.jar"
-    xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell-1.0-20120509.180208-438.jar", :main =>"true"
+    xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell-1.0-20120516.210342-439.jar", :main =>"true"
     system_properties(local_assigns).each do |property|
       xml.property(:name => property[0], :value => property[1])
     end
@@ -65,7 +65,13 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") {
       xml.property :name=> "install_if_not_found", :value => "true"
 
       # include wrapped_jnlp so we know what jnlp to install from
-      xml.property :name=> "wrapped_jnlp", :value => maven_jnlp_info[:href]
+      xml.property :name=> "wrapped_jnlp", :value => jnlp_adaptor.jnlp_url
+
+      # if the cdn is set then tell jnlp2shell to go static
+      if current_project.jnlp_cdn_hostname.present?
+        xml.property :name=> "jnlp2shell.static_www", :value => "true"
+        xml.property :name=> "jnlp2shell.mirror_host", :value => current_project.jnlp_cdn_hostname
+      end
     end
   }
   if(!opportunistic_installer)

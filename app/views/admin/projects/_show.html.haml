@@ -108,6 +108,9 @@
                   (User data will be uploaded in one large chunk at the end of the session.)
             = field_set_tag 'Maven Jnlp' do
               %p
+                Jnlp CDN Hostname:
+                = admin_project.jnlp_cdn_hostname
+              %p
                 Maven Jnlp Server:
                 - if admin_project.maven_jnlp_server
                   = admin_project.maven_jnlp_server.name
