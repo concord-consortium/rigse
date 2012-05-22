@@ -83,7 +83,7 @@ describe Dataservice::BundleContent do
 
   # this has to be called after the blob extraction has happened, so we know what url to look for
   def setup_expected(blob)
-    @blob_url = "http://localhost/dataservice/blobs/#{blob.id}.blob/#{blob.token}"
+    @blob_url = "http://#{URI.parse(APP_CONFIG[:site_url]).host}/dataservice/blobs/#{blob.id}.blob/#{blob.token}"
     @expected_otml =   '<?xml version="1.0" encoding="UTF-8"?>
       <otrunk id="04dc61c3-6ff0-11df-a23f-6dcecc6a5613">
         <imports>
@@ -310,7 +310,8 @@ describe Dataservice::BundleContent do
           @contents_a = []
           @bundle_logger = mock_model(Dataservice::BundleLogger, {
             :learner => @learner,
-            :bundle_contents => @contents_a
+            :bundle_contents => @contents_a,
+            :reload => true
           })
           @bundle.bundle_logger = @bundle_logger
         end
@@ -318,7 +319,7 @@ describe Dataservice::BundleContent do
           @bundle.collaborators << @student_a
           @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
           @learner_a.should_receive(:bundle_logger).and_return(@bundle_logger)
-          @bundle.copy_to_collaborators
+          @bundle.copy_to_collaborators.invoke_job
           @contents_a.should have(1).bundle_content
         end
       end

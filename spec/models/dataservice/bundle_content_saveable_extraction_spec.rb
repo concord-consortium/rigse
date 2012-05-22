@@ -48,7 +48,7 @@ describe Dataservice::BundleContent do
     offering = Portal::Offering.create!()
     learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)
     mock_rep_learner = mock(Report::Learner, :update_fields => true)
-    Report::Learner.should_receive(:for_learner).with(learner).exactly(3).times.and_return(mock_rep_learner, mock_rep_learner, mock_rep_learner)
+    Report::Learner.should_receive(:for_learner).with(learner).and_return(mock_rep_learner)
     learner.bundle_logger = blogger
     learner.save!
     blogger.reload
@@ -94,7 +94,7 @@ describe Dataservice::BundleContent do
     bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
     bundle_content.bundle_logger.learner.id.should eql(learner.id)
     
-    bundle_content.extract_saveables
+    bundle_content.extract_saveables.invoke_job
     
     # 1 open response, 1 multiple choice, 2 image questions
     learner.open_responses.size.should eql(1)
