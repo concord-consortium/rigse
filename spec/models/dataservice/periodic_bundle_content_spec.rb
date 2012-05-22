@@ -3,10 +3,10 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Dataservice::PeriodicBundleContent do
 
   after(:each) do
-     # Delorean.back_to_the_present
+     Delorean.back_to_the_present
   end
   before(:each) do
-    # Delorean.time_travel_to "1 month ago"
+    Delorean.time_travel_to "1 month ago"
     @bundle_logger = Dataservice::PeriodicBundleLogger.create
     @valid_attributes = {
       :id => 1,
