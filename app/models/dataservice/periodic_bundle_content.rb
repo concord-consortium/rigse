@@ -63,6 +63,12 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     collabs.each do |student|
       slearner = self.learner.offering.find_or_create_learner(student)
       new_bundle_logger = slearner.periodic_bundle_logger
+
+      # by calling sail_bundle on this student's periodic_bundle_logger
+      # we cause the most recent non-periodic bundle to get processed prior to
+      # creating their first periodic bundle
+      new_bundle_logger.sail_bundle if new_bundle_logger.periodic_bundle_parts.size == 0 && slearner.bundle_logger.last_non_empty_bundle_content != nil
+
       new_attributes = self.attributes.merge({
         :processed => false,
         :periodic_bundle_logger => new_bundle_logger

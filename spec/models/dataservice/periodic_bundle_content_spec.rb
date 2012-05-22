@@ -438,6 +438,7 @@ PART
           @periodic_bundle_logger = mock_model(Dataservice::PeriodicBundleLogger, {
             :learner => @learner,
             :periodic_bundle_contents => @contents_a,
+            :periodic_bundle_parts => [],
             :reload => true
           })
           @bundle_logger = mock_model(Dataservice::BundleLogger, {
@@ -453,6 +454,7 @@ PART
           @bundle.collaborators << @student_a
           @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
           @learner_a.should_receive(:periodic_bundle_logger).and_return(@periodic_bundle_logger)
+          @learner_a.should_receive(:bundle_logger).and_return(mock_model(Dataservice::BundleLogger, {:last_non_empty_bundle_content => nil}))
           @learner.should_receive(:bundle_logger).and_return(@bundle_logger)
           @periodic_bundle.copy_to_collaborators.invoke_job
           @contents_a.should have(1).bundle_content
