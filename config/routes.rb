@@ -236,11 +236,14 @@ constraints :id => /\d+/ do
     resources :console_loggers do
       resources :console_contents, :except => [:create]
     end
+    resources :periodic_bundle_loggers, :only => [:show]
   end
 
   # metal routing
   post '/dataservice/bundle_loggers/:id/bundle_contents.bundle' => 'dataservice/bundle_contents_metal#create', :constraints => { :format => 'bundle' }
   post '/dataservice/console_loggers/:id/console_contents.bundle' => 'dataservice/console_contents_metal#create', :constraints => { :format => 'bundle' }
+  post '/dataservice/periodic_bundle_loggers/:id/periodic_bundle_contents.bundle' => 'dataservice/periodic_bundle_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_periodic_bundle_contents'
+  post '/dataservice/periodic_bundle_loggers/:id/session_end_notification.bundle' => 'dataservice/periodic_bundle_loggers_metal#session_end_notification', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_session_end_notification'
 
   # A prettier version of the blob w/ token url
   match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }

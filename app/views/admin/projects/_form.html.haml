@@ -68,6 +68,12 @@
             = f.check_box :require_user_consent
             %br
             (This option changes whether or not users will be asked for consent to use their data)
+          %li
+            %b
+            = f.label :use_periodic_bundle_uploading, "Use Periodic Bundle Uploading:", :style => "display:inline;"
+            = f.check_box :use_periodic_bundle_uploading
+            %br
+            (This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
       = field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
       %p

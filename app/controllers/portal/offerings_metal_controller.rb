@@ -8,7 +8,7 @@ class Portal::OfferingsMetalController < ActionController::Metal
       if learner && learner.bundle_logger.in_progress_bundle
         last_event = learner.bundle_logger.in_progress_bundle.launch_process_events.last
         if last_event
-          status_event_info["event_type"] = last_event.event_type
+          status_event_info["event_type"] = last_event.event_type.gsub(/\s+/, '_')
           status_event_info["event_details"] = last_event.event_details
         end
       else
