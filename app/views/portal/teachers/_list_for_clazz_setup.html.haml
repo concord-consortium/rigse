@@ -3,6 +3,7 @@
   - current_teachers.each do |portal_teacher|
     / - portal_student_clazz = portal_clazz.student_clazzes.find_by_student_id(portal_student.id)
     %div{:id=>dom_id_for(portal_teacher)}
-      = portal_teacher.name
+      %b 
+        = portal_teacher.name
 -else
   %div No teachers assigned to this class

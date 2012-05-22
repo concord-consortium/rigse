@@ -1,4 +1,4 @@
-- if offerings.size > 0
+- if offerings.length > 0
   - offerings.sort! {|a,b| a.position <=> b.position}  
   %ul.sortable{:id=>"sortable",}
     = render :partial => 'shared/offering_for_clazz', :collection => offerings, :as => :offering
