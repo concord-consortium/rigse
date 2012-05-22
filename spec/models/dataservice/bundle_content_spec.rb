@@ -319,7 +319,7 @@ describe Dataservice::BundleContent do
           @bundle.collaborators << @student_a
           @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
           @learner_a.should_receive(:bundle_logger).and_return(@bundle_logger)
-          @bundle.copy_to_collaborators.invoke_job
+          @bundle.copy_to_collaborators
           @contents_a.should have(1).bundle_content
         end
       end

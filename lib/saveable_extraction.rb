@@ -1,5 +1,6 @@
 module SaveableExtraction
   def extract_everything(extractor = Otrunk::ObjectExtractor.new(self.otml))
+    return unless learner
     extract_open_responses(extractor)
     extract_multiple_choices(extractor)
     extract_image_questions(extractor)
