@@ -57,7 +57,20 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
   handle_asynchronously :extract_saveables
 
   def copy_to_collaborators
-    ## TODO
+    return unless self.learner && self.learner.offering
+    return unless (bundle = self.learner.bundle_logger.in_progress_bundle)
+    return unless (collabs = bundle.collaborators).size > 0
+    collabs.each do |student|
+      slearner = self.learner.offering.find_or_create_learner(student)
+      new_bundle_logger = slearner.periodic_bundle_logger
+      new_attributes = self.attributes.merge({
+        :processed => false,
+        :periodic_bundle_logger => new_bundle_logger
+      })
+      bundle_content = Dataservice::PeriodicBundleContent.create(new_attributes)
+      new_bundle_logger.periodic_bundle_contents << bundle_content
+      new_bundle_logger.reload
+    end
   end
   handle_asynchronously :copy_to_collaborators
 

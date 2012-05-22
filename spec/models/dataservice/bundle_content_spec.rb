@@ -310,7 +310,8 @@ describe Dataservice::BundleContent do
           @contents_a = []
           @bundle_logger = mock_model(Dataservice::BundleLogger, {
             :learner => @learner,
-            :bundle_contents => @contents_a
+            :bundle_contents => @contents_a,
+            :reload => true
           })
           @bundle.bundle_logger = @bundle_logger
         end
@@ -318,7 +319,7 @@ describe Dataservice::BundleContent do
           @bundle.collaborators << @student_a
           @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
           @learner_a.should_receive(:bundle_logger).and_return(@bundle_logger)
-          @bundle.copy_to_collaborators
+          @bundle.copy_to_collaborators.invoke_job
           @contents_a.should have(1).bundle_content
         end
       end

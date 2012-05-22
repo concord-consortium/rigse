@@ -226,8 +226,8 @@ class Dataservice::BundleContent < ActiveRecord::Base
         :bundle_logger => new_bundle_logger
       })
       bundle_content =Dataservice::BundleContent.create(new_attributes)
-      bundle_logger.bundle_contents << bundle_content
-      bundle_logger.reload
+      new_bundle_logger.bundle_contents << bundle_content
+      new_bundle_logger.reload
     end
   end
   handle_asynchronously :copy_to_collaborators

@@ -403,13 +403,14 @@ PART
 
     describe "collaborations and collaborators" do
       before(:each) do
-        @bundle = Factory(:dataservice_periodic_bundle_content)
+        @periodic_bundle = Factory(:dataservice_periodic_bundle_content)
+        @bundle = Factory(:dataservice_bundle_content)
         @student_a = Factory(:portal_student)
         @student_b = Factory(:portal_student)
         @student_c = Factory(:portal_student)
       end
       describe "basic associations" do
-        xit "should allow for collaborators" do
+        it "should allow for collaborators" do
           @bundle.collaborators << @student_a
           @bundle.collaborators << @student_b
           @bundle.collaborators << @student_c
@@ -433,17 +434,27 @@ PART
                                 :offering =>@offering)
           @learner_a = mock_model(Portal::Learner)
           @contents_a = []
-          @bundle_logger = mock_model(Dataservice::PeriodicBundleLogger, {
+          @contents_b = []
+          @periodic_bundle_logger = mock_model(Dataservice::PeriodicBundleLogger, {
             :learner => @learner,
-            :periodic_bundle_contents => @contents_a
+            :periodic_bundle_contents => @contents_a,
+            :reload => true
           })
-          @bundle.periodic_bundle_logger = @bundle_logger
+          @bundle_logger = mock_model(Dataservice::BundleLogger, {
+            :learner => @learner,
+            :bundle_contents => @contents_b,
+            :in_progress_bundle => @bundle,
+            :reload => true
+          })
+          @periodic_bundle.periodic_bundle_logger = @periodic_bundle_logger
+          @bundle.bundle_logger = @bundle_logger
         end
-        xit "should copy the bundle contents" do
+        it "should copy the bundle contents" do
           @bundle.collaborators << @student_a
           @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
-          @learner_a.should_receive(:bundle_logger).and_return(@bundle_logger)
-          @bundle.copy_to_collaborators
+          @learner_a.should_receive(:periodic_bundle_logger).and_return(@periodic_bundle_logger)
+          @learner.should_receive(:bundle_logger).and_return(@bundle_logger)
+          @periodic_bundle.copy_to_collaborators.invoke_job
           @contents_a.should have(1).bundle_content
         end
       end
