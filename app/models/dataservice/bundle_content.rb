@@ -178,7 +178,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     extract_everything(extractor)
 
     # Also create/update a Report::Learner object for reporting
-    Report::Learner.for_learner(learner).update_fields
+    Report::Learner.for_learner(learner).update_fields if learner
   end
   handle_asynchronously :extract_saveables
   

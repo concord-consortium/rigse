@@ -24,7 +24,7 @@ describe Dataservice::PeriodicBundleContent do
     offering = Portal::Offering.create!()
     learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)
     mock_rep_learner = mock(Report::Learner, :update_fields => true)
-    Report::Learner.should_receive(:for_learner).exactly(3).times.with(learner,learner,learner).and_return(mock_rep_learner,mock_rep_learner,mock_rep_learner)
+    Report::Learner.should_receive(:for_learner).exactly(3).times.with(learner).and_return(mock_rep_learner,mock_rep_learner,mock_rep_learner)
     learner.periodic_bundle_logger = blogger
     learner.save!
     blogger.reload
