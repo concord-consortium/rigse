@@ -456,7 +456,7 @@ PART
           @learner_a.should_receive(:periodic_bundle_logger).and_return(@periodic_bundle_logger)
           @learner_a.should_receive(:bundle_logger).and_return(mock_model(Dataservice::BundleLogger, {:last_non_empty_bundle_content => nil}))
           @learner.should_receive(:bundle_logger).and_return(@bundle_logger)
-          @periodic_bundle.copy_to_collaborators.invoke_job
+          @periodic_bundle.copy_to_collaborators
           @contents_a.should have(1).bundle_content
         end
       end
