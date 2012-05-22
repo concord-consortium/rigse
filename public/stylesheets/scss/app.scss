@@ -1157,6 +1157,8 @@ ul.quiet_list {
 .formnew tr { vertical-align: top; }
 .formnew td { padding-top: 10px; padding-left: 10px; }
 .formnew td:nth-child(odd) { width: 20%;}
+.formnew table { margin: 0;}
+.formnew table td { text-align:left;padding:5px 5px 0px 5px}
 
 .offerings{text-align:left;margin:0}
 .offerings tr { vertical-align: top; }
@@ -1178,3 +1180,4 @@ ul.quiet_list {
 
 a.HLink{color:#479492;text-decoration:none;cursor:pointer}
 a.HLink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
+
