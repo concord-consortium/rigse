@@ -9,7 +9,7 @@
   %table.offerings
     %tr
       %td
-        = check_box_tag "clazz_teacher[]", portal_teacher.id, !clazz_teachers.find_by_id(portal_teacher.id).nil? , :class => "filter_checkbox"
+        = check_box_tag "clazz_teacher[]", portal_teacher.id, !clazz_teachers.find_by_id(portal_teacher.id).nil? , {:class => "filter_checkbox", :disabled => (portal_teacher.id == portal_clazz.teacher.id)}
         /= hidden_field_tag "clazz_investigations_hidden[]", offering.id
       %td
         = portal_teacher.last_name + ", " + portal_teacher.first_name 
