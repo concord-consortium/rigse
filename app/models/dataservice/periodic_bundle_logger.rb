@@ -12,6 +12,7 @@ class Dataservice::PeriodicBundleLogger < ActiveRecord::Base
   def sail_bundle
     body = SailBundleContent::EMPTY_BUNDLE
     process_non_periodic_bundle if self.periodic_bundle_parts.size == 0 && self.learner.bundle_logger.last_non_empty_bundle_content != nil
+    process_non_processed_bundles
     if self.periodic_bundle_parts.size > 0
       body = <<BODY
 <sessionBundles xmlns:xmi="http://www.omg.org/XMI" xmlns:sailuserdata="sailuserdata" curnitUUID="cccccccc-0009-0000-0000-000000000000">
@@ -88,5 +89,11 @@ PART
     pbc = Dataservice::PeriodicBundleContent.create(:body => last_bundle.otml, :periodic_bundle_logger => self)
     pbc.extract_parts.invoke_job
     self.reload
+  end
+
+  def process_non_processed_bundles
+    self.periodic_bundle_contents.where(:parts_extracted => false).each do |bc|
+      bc.extract_parts.invoke_job
+    end
   end
 end

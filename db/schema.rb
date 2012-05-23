@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120514185302) do
+ActiveRecord::Schema.define(:version => 20120523211636) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -176,6 +176,7 @@ ActiveRecord::Schema.define(:version => 20120514185302) do
     t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "parts_extracted"
   end
 
   add_index "dataservice_periodic_bundle_contents", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"

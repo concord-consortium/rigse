@@ -40,12 +40,16 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
   end
 
   def extract_parts
-    self.periodic_bundle_logger = self.periodic_bundle_logger
+    return true if self.parts_extracted
+
     doc = Nokogiri::XML(self.body)
 
     extract_imports(doc)
 
     extract_entries(doc)
+
+    self.parts_extracted = true
+    self.save
   end
   handle_asynchronously :extract_parts
 
