@@ -1158,7 +1158,7 @@ ul.quiet_list {
 .formnew td { padding-top: 10px; padding-left: 10px; }
 .formnew td:nth-child(odd) { width: 20%;}
 .formnew table { margin: 0;}
-.formnew table td { text-align:left;padding:5px 5px 0px 5px}
+.formnew table td { text-align:left;padding:0px 5px 0px 5px}
 
 .offerings{text-align:left;margin:0}
 .offerings tr { vertical-align: top; }
@@ -1173,6 +1173,7 @@ ul.quiet_list {
 .labelvalue{font-weight:bold;padding-left:5px}
 .clazzdata{float:right;text-align:left}
 .clazzdata td:nth-child(odd) { padding-left: 20px; text-align: left; }
+td.title { padding-left: 20px; text-align: left; }
 .maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;}
 
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
