@@ -1,7 +1,7 @@
 function add_Edit_Class_Teachers()
 {
 	teacher_list_modal = new UI.Window({ theme:"rites", width:300, height:350}).setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
-	
+	teacher_list_modal.setHeader("Modify Teacher List");
 	var clazz_id = $("portal_clazz_id").value;
 	var options = {
 		method: 'post',
