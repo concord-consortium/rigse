@@ -7,30 +7,34 @@
       - if !(portal_clazz.id.nil?) 
         %table.clazzdata
           %tr
-            %td.title=label_tag :name, 'Teacher ', :class=>"left"
+            %td=label_tag :name, 'Teacher ', :class=>"left"
             %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class=>"labelvalue"
-            %td.title=label_tag :name, 'Semester ', :class=>"left"
+            %td=label_tag :name, 'Semester ', :class=>"left"
             %td=label_tag :name, (portal_clazz.semester.nil?)? '' : portal_clazz.semester.name , :class=>"labelvalue"
-            %td.title=label_tag :name, 'Class Word ', :class=>"left"
+            %td=label_tag :name, 'Class Word ', :class=>"left"
             %td=label_tag :name, portal_clazz.class_word, :class=>"labelvalue"
       .header Class Setup Information
       %table.formnew
         %tr
-          %td= label_tag :name, 'Class Name: ', :class=>"left"
+          %td{:class=>"left", :style=>"white-space:nowrap"}
+            Class Name:  
           %td= f.text_field :name, :size => 50
         %tr
-          %td= label_tag :semester, 'Term: ', :class=>"left"
+          %td{:class=>"left"}
+            Term: 
           %td= f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string")
         - if !(portal_clazz.id.nil?)
           %tr
-            %td= label_tag :semester, 'Teacher(s): ', :class=>"left"
+            %td{:class=>"left"}
+              Teacher(s): 
             %td{:class=>"left"}= render :partial => 'portal/teachers/table_for_clazz_setup', :locals => {:portal_clazz => portal_clazz}
         %tr
-          %td= label_tag :description, 'Description: ', :class=>"left"
+          %td{:class=>"left"}
+            Description: 
           %td= f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
         %tr
-          %td
-            =label_tag :class_word, 'Class Word: ', :class=>"left"
+          %td{ :class=>"left", :style=>"white-space:nowrap"}
+            Class Word: 
           %td
             = f.text_field :class_word, :size => 24
         
@@ -47,7 +51,8 @@
          
         - if Admin::Project.default_project.enable_grade_levels?
           %tr
-            %td= label_tag :grade_levels, 'Grade Levels:'
+            %td
+              Grade Levels: 
             %td
               %table{:style=>"width: 100%;"}
                 - cols = 4
