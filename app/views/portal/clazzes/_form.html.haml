@@ -16,24 +16,24 @@
       .header Class Setup Information
       %table.formnew
         %tr
-          %td{:class=>"left", :style=>"white-space:nowrap"}
+          %td.title{:class=>"left", :style=>"white-space:nowrap"}
             Class Name:  
           %td= f.text_field :name, :size => 50
         %tr
-          %td{:class=>"left"}
+          %td.title{:class=>"left"}
             Term: 
           %td= f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string")
         - if !(portal_clazz.id.nil?)
           %tr
-            %td{:class=>"left"}
+            %td.title{:class=>"left"}
               Teacher(s): 
             %td{:class=>"left"}= render :partial => 'portal/teachers/table_for_clazz_setup', :locals => {:portal_clazz => portal_clazz}
         %tr
-          %td{:class=>"left"}
+          %td.title{:class=>"left"}
             Description: 
           %td= f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
         %tr
-          %td{ :class=>"left", :style=>"white-space:nowrap"}
+          %td.title{ :class=>"left", :style=>"white-space:nowrap"}
             Class Word: 
           %td
             = f.text_field :class_word, :size => 24
@@ -46,12 +46,12 @@
               - schools = current_user.portal_teacher.schools
             - if schools.empty?
               - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
-            %td= label_tag :school, 'School: ', :class=>"right"
+            %td.title= label_tag :school, 'School: ', :class=>"right"
             %td= f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
          
         - if Admin::Project.default_project.enable_grade_levels?
           %tr
-            %td
+            %td.title
               Grade Levels: 
             %td
               %table{:style=>"width: 100%;"}
