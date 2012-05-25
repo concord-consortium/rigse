@@ -25,8 +25,8 @@ Feature: External Activities can be assigned as offerings
   Scenario: External Activities and Investigations are assigned
     Given I am logged in with the username teacher
     And I am on the class page for "My Class"
-    When I assign the investigation "Test Investigation"
-    And I assign the external activity "My Activity"
+    When I assign the investigation "Test Investigation" to the class "My Class"
+    And I assign the external activity "My Activity" to the class "My Class"
     Then I should see "Test Investigation" within "#clazz_offerings"
     And I should see "My Activity" within "#clazz_offerings"
 
