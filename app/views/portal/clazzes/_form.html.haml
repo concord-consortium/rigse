@@ -1,5 +1,5 @@
 = javascript_include_tag "class_setup_info.js" 
-.maincontainer
+.maincontainer.pie
   .container
     .content
       = f.error_messages
@@ -78,7 +78,7 @@
         %table{:width=>"100%"}
           %tr
             %td{:style=>"text-align:right"}
-              = f.submit 'Save' 
+              = f.submit 'Save', {:class => 'pie'} 
               &nbsp;&nbsp;
               - if portal_clazz.id.nil?
                 = link_to "Cancel", home_url 

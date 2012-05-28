@@ -8,7 +8,7 @@ function add_Edit_Class_Teachers()
 		onSuccess: function(transport) {
 			var text = transport.responseText;
 			text += "<div><table cellpadding='5' align='right'><tr>"+
-			"<td><input type='button' value='Save' onclick='save_Class_Teacher_List(this)' /></td>"+
+			"<td><input type='button' value='Save' onclick='save_Class_Teacher_List(this)' class='pie' /></td>"+
 			"<td><a class='hlink' onclick='close_popup()'>Cancel</a></td>"+
 			"</table></div>";
 			modal_window.setContent("<div style='padding:10px'>" + text + "</div>");
