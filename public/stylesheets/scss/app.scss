@@ -1153,13 +1153,13 @@ ul.quiet_list {
 
 
 
-.formnew { width: 100%; text-align: left; }
-.formnew tr { vertical-align: top; }
-.formnew td { padding-top: 10px; padding-left: 10px; }
-.formnew td:nth-child(odd) { width: 112px;}
-.formnew td.title{ width: 112px;}
-.formnew table { margin: 0;}
-.formnew table td { text-align:left;padding:0px 5px 0px 5px}
+.classsetupform { width: 100%; text-align: left; }
+.classsetupform tr { vertical-align: top; }
+.classsetupform td { padding-top: 10px; padding-left: 10px; }
+.classsetupform td:nth-child(odd) { width: 112px;}
+.classsetupform td.title{ width: 112px;}
+.classsetupform table { margin: 0;}
+.classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
 
 .offerings{text-align:left;margin:0}
 .offerings tr { vertical-align: top; }
@@ -1175,11 +1175,11 @@ ul.quiet_list {
 .clazzdata{float:right;text-align:left}
 .clazzdata td:nth-child(odd) { padding-left: 20px; text-align: left; }
 td.title { padding-left: 20px; text-align: left; }
-.maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;}
+.maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}
 
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
 #sortable li { margin: 0 0px 3px 0px; padding: 0.4em;height: 18px;cursor:move }
 
-a.HLink{color:#479492;text-decoration:none;cursor:pointer}
-a.HLink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
+a.hlink{color:#479492;text-decoration:none;cursor:pointer}
+a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 

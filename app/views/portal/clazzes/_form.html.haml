@@ -14,7 +14,7 @@
             %td.title=label_tag :name, 'Class Word ', :class=>"left"
             %td=label_tag :name, portal_clazz.class_word, :class=>"labelvalue"
       .header Class Setup Information
-      %table.formnew
+      %table.classsetupform
         %tr
           %td.title{:class=>"left", :style=>"white-space:nowrap"}
             Class Name:  
@@ -84,11 +84,6 @@
                 = link_to "Cancel", home_url 
               - else
                 = link_to "Cancel", portal_clazz_url(portal_clazz)
-            / %td=f.cancel 'Cancel'
-          
             
       = f.hidden_field :teacher_id
       = f.hidden_field :id
-      
-      / .aligned
-      /   = f.submit 'Submit'

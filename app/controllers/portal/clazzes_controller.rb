@@ -178,7 +178,7 @@ class Portal::ClazzesController < ApplicationController
         clazz_investigation_id = params[:clazz_investigations]
         clazz_investigation_id_hidden = params[:clazz_investigations_hidden]
        
-        #offerings_to_add = []l
+        #offerings_to_add = []
         #offering_active = nil
         @portal_clazz.offerings.each do|offering|
           offering.active = false
@@ -190,11 +190,8 @@ class Portal::ClazzesController < ApplicationController
           end
           
           offering.save
-          #offerings_to_add << offering
+          
         end
-        
-        #object_params[:offerings] = offerings_to_add
-        
         
         if Admin::Project.default_project.enable_grade_levels?
           if grade_levels
@@ -452,11 +449,7 @@ class Portal::ClazzesController < ApplicationController
       replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz_setup', :locals => {:portal_clazz => @portal_clazz}
       replace_html.gsub!(/\r\n|\r|\n/, "");
       render :update do|page|
-        #page << "alert(\"#{replace_html}\")"
-        #page << "jQuery('#div_teacher_list').html(\"#{replace_html}\")"
         page.replace_html  'div_teacher_list',replace_html
-        #page.replace_html  'div_teacher_list', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        #page << "$('div_teacher_list').innerHTML('#{render :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}}')"
       end
       return
     end
