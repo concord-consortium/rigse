@@ -1,6 +1,4 @@
 - teacher_list = (!portal_clazz.school.nil?) ? portal_clazz.school.portal_teachers - portal_clazz.teachers : []
-/ - current_teachers = portal_clazz.teachers.sort { |a,b| (a.user.last_name <=> b.user.last_name) }
-/ = accordion_for(portal_clazz, "Students: #{student_list.length}", 'students_container') do
 - portal_teachers = portal_clazz.school.portal_teachers.sort { |a,b| (a.last_name <=> b.last_name) }
 - clazz_teachers = portal_clazz.teachers  
 %div
@@ -9,7 +7,7 @@
   %table.offerings
     %tr
       %td
-        = check_box_tag "clazz_teacher[]", portal_teacher.id, !clazz_teachers.find_by_id(portal_teacher.id).nil? , {:class => "filter_checkbox", :disabled => (portal_teacher.id == portal_clazz.teacher.id)}
-        /= hidden_field_tag "clazz_investigations_hidden[]", offering.id
+        = check_box_tag "clazz_teacher[]", portal_teacher.id, !clazz_teachers.find_by_id(portal_teacher.id).nil? , {:id=>"clazz_teacher_"+portal_teacher.id.to_s, :class => "filter_checkbox", :disabled => (portal_teacher.id == portal_clazz.teacher.id)}
       %td
-        = portal_teacher.last_name + ", " + portal_teacher.first_name 
+        %label{:for=>"clazz_teacher_"+portal_teacher.id.to_s, :style=>"font-weight:normal"}
+          = portal_teacher.last_name + ", " + portal_teacher.first_name
