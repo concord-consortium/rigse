@@ -5,6 +5,13 @@ http://css3pie.com
 Dual-licensed for use under the Apache License Version 2.0 or the General Public License (GPL) Version 2.
 */
 (function(){
+
+// Added by Zeus - START
+if (!("attachEvent" in window)) {
+	return;
+}
+// Added by Zeus - END
+
 var doc = document;var PIE = window['PIE'];
 
 if( !PIE ) {
@@ -4472,17 +4479,16 @@ PIE[ 'detach' ] = function( el ) {
 
 } // if( !PIE )
 
-// Added by Zeus
-if ("attachEvent" in window) {
-	function loadPIE() {
-		var arrPIE = $(document.body).select(".pie");
-		for (var i = 0; i < arrPIE.length; i++) {
-			PIE.attach(arrPIE[i]);
-		}
-		setTimeout(loadPIE, 1000);
-		return;
+// Added by Zeus - START
+function loadPIE() {
+	var arrPIE = $(document.body).select(".pie");
+	for (var i = 0; i < arrPIE.length; i++) {
+		PIE.attach(arrPIE[i]);
 	}
-	window.attachEvent("onload", loadPIE);
+	setTimeout(loadPIE, 1000);
+	return;
 }
+window.attachEvent("onload", loadPIE);
+// Added by Zeus - END
 
 })();
