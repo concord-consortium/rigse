@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111212182649) do
+ActiveRecord::Schema.define(:version => 20120524200956) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -750,15 +750,14 @@ ActiveRecord::Schema.define(:version => 20111212182649) do
   end
 
   create_table "images", :force => true do |t|
-    t.integer  "parent_id"
-    t.string   "content_type"
-    t.string   "filename"
-    t.string   "thumbnail"
-    t.integer  "size"
-    t.integer  "width"
-    t.integer  "height"
-    t.string   "description"
-    t.string   "uuid",         :limit => 36
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "attribution"
+    t.string   "publication_status", :default => "draft"
+    t.string   "image_file_name"
+    t.integer  "image_file_size"
+    t.string   "image_content_type"
+    t.datetime "image_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

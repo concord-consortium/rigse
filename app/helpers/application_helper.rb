@@ -378,8 +378,9 @@ module ApplicationHelper
     end
   end
 
-  def sort_dropdown(selected)
-    sort_options = [ [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
+  def sort_dropdown(selected, keep = [])
+    default_options = [ [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
+    sort_options = (keep.size > 0 ? default_options.select{|o| keep.include?(o[0]) } : default_options)
     select nil, :sort_order, sort_options, {:selected => selected, :include_blank => true }
   end
 

@@ -1,9 +1,0 @@
-.item
-  .menu
-    %ul
-      %li
-        = truncate(image_item.filename, :length => 20)
-  .content
-    .image_content
-      = if image_item.image?
-        = link_to image_tag(image_item.public_filename(:thumb)), image_item.public_filename

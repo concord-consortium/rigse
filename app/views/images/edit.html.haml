@@ -1,17 +1,13 @@
-%h1 Editing image
+%h1
+  Edit image
 
 = error_messages_for :image
-
-- if @image.image?
-  = link_to image_tag(@image.public_filename(:thumb)), @image.public_filename
-  %br
-- form_for(:image, :url => images_path, :html => { :multipart => true }) do |f|
+= link_to image_tag(@image.image.url(:thumb)), @image.image.url(:attributed)
+%br
+- form_for(@image, :html => { :multipart => true }) do |f|
+  = render :partial => 'form', :locals => {:f => f}
   %p
-    %label{:for => "image"}
-      Upload an Image:
-    = f.file_field :uploaded_data
-  %p
-    = submit_tag 'Update'
+    = submit_tag "Update"
 
 = link_to 'Show', @image
 |

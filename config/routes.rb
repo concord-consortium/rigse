@@ -463,8 +463,8 @@ ActionController::Routing::Routes.draw do |map|
   }
   map.resources :attached_files
 
-  # not being used, but being tested
   map.resources :images
+  map.list_filter_image '/images/list/filter', :controller => 'images', :action => 'index', :method => :post
 
   # Home Controller
   map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
