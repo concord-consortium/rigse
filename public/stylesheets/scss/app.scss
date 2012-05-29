@@ -572,15 +572,15 @@ li.item_selectable {
     font: bold 1.3em Arial, Helvetica, sans-serif !important;
     margin: 10px 0 10px 20px; }
   ul {
-    border-top: solid 1px #a1d3d0;
+    
     list-style: none;
     margin: 0;
     padding: 0; }
   li {
-    background: #f3f2ed;
-    border-bottom: solid 1px #a1d3d0;
+
     color: #ee864e;
-    font-size: 1.3em;
+
+    font-size: 1.4em;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -589,18 +589,20 @@ li.item_selectable {
       font-weight: normal;
       padding: 5px 20px; }
     a {
-      background: #fbf4db;
-      color: #555555;
+      color: #8c878b;
+
       display: block;
       margin: 0;
       padding: 5px 20px; }
     a.selected {
       background: white;
-      color: #ee864e; } }
+      color: #000000;
+	  font-weight: bold; } }
   ul.create {
     border-top: none; }
   .create_link {
-    margin: 10px 0 0 20px; } }
+	text-align: center;
+    margin: 20px 0 0 5px; } }
 
 .user-info-box {
   background: white;
