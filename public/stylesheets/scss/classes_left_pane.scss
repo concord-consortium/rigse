@@ -38,7 +38,6 @@ div#clazzes_selected
 .create_link.button
 {
   button {
-  background: #f6f2e2;
   border: 0 solid #f3951d;
   color: white;
   display: inline;
@@ -47,6 +46,7 @@ div#clazzes_selected
   /* CSS 3 */
   background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
   background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  _background: #f6f2e2;
   border-radius: 12px;
   /* Opera 10.5, IE 9 */
   -moz-border-radius: 12px;
