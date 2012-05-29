@@ -1,24 +1,34 @@
 / TODO: possible refactoring to make more clazzes specific.
 / Clazz navigation: top_node could be course, teacher, student ...
+= javascript_include_tag "clazzes_nav"
 %br
 #clazzes_nav
   .padded_content
-    %h2 Classes:
     - top_container_id = dom_id_for(top_node, :nav_list)
     - top_controller ||= top_node.class.name.tableize
     - sub_controller ||= top_node.clazzes[0] ? top_node.clazzes[0].class.name.tableize : nil
     %ul{:id=>top_container_id}
+      %li 
+        %id
+          - recent_activity_class = '';
+          - if(request.request_uri == '/' || request.request_uri == '/home' )
+            - recent_activity_class = 'selected'
+          = link_to 'Recent Activity', '/', :class=> recent_activity_class
       - top_node.clazzes.each do |clazz|
         %li{:id=>dom_id_for(clazz,:nav_item)}
-          -if clazz.section
-            - link_text = "#{clazz.name}(#{clazz.section})"
-          -else 
-            - link_text = clazz.name
-          -if (selects.include? clazz)
-            = link_to link_text,clazz, :class=> 'selected'
-          -else
-            = link_to link_text, clazz
+          %id
+            -if clazz.section
+              - link_text = "#{clazz.name}(#{clazz.section})"
+            -else 
+              - link_text = clazz.name
+            -if (selects.include? clazz)
+              = link_to link_text,clazz, :class=> 'selected'
+              - if top_node.is_a? Portal::Teacher
+                = render :partial => 'portal/clazzes/selected_class_submenu', :locals => {:portal_clazz => clazz, :submenu_notselected => true}
+            -else
+              = link_to link_text, clazz
     - if top_node.is_a? Portal::Teacher
       %ul.create{:id=>dom_id_for(top_node, :nav_list_create_class)}
         .create_link.button
-          = link_to("Create a Class",new_portal_clazz_path)
+          %button{:class => "left_pane_button", :id => "button 12", :onclick => "createNewClass(\"#{new_portal_clazz_path}\")"}Create a Class
+          %button{:class => "left_pane_button", :id => "button 13", :onclick => "manageClassList()"} Manage list
