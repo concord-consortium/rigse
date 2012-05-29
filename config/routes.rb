@@ -109,6 +109,8 @@ constraints :id => /\d+/ do
         post :remove_offering
         get :edit_offerings
         post :edit_offerings
+        get :roster
+        post :get_students
       end
     end
 

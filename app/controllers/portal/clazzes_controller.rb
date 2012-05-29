@@ -309,9 +309,13 @@ class Portal::ClazzesController < ApplicationController
       @student.add_clazz(@portal_clazz)
       @portal_clazz.reload
       render :update do |page|
-        page.replace_html  'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        page.visual_effect :highlight, 'students_listing'
-        page.replace_html  'student_add_dropdown', view_context.student_add_dropdown(@portal_clazz)
+        page << "if ($('students_listing')){"
+        page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        page << "}"
+        page << "if ($('add_students_listing')){"
+        page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        page << "}"
+        page.replace 'student_add_dropdown', view_context.student_add_dropdown(@portal_clazz)
       end
     else
       render :update do |page|
@@ -385,6 +389,25 @@ class Portal::ClazzesController < ApplicationController
 
     respond_to do |format|
       format.html { render :layout => 'report'}
+    end
+  end
+
+# GET /portal_clazzes/1/roster
+  def roster
+    @portal_clazzes = Portal::Clazz.all
+    @portal_clazz = Portal::Clazz.find(params[:id])
+    if request.xhr?
+      render :partial => 'remote_form_student_roster', :locals => { :portal_clazz => @portal_clazz }
+    end
+      
+    #end
+  end
+
+# GET add/edit student list 
+  def get_students
+    if request.xhr?
+      render :partial => 'portal/students/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
+      return
     end
   end
 
