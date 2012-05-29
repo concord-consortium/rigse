@@ -545,6 +545,8 @@ constraints :id => /\d+/ do
       get :print
     end
   end
+  map.resources :images
+  map.list_filter_image '/images/list/filter', :controller => 'images', :action => 'index', :method => :post
 
   match '/resource_pages/list/filter' => 'resource_pages#index', :as => :list_filter_resource_page, :method => :post
   resources :resource_pages do

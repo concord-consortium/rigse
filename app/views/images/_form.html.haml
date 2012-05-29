@@ -1,5 +1,16 @@
 %p
-  %label{:for => "image"} 
-    Upload A New Image:
-  = form.file_field :uploaded_data
-  = submit_tag 'Create'
+  %label{:for => "name"}
+    Name:
+  = f.text_field :name
+%p
+  %label{:for => "publication_status"}
+    Publication status:
+  = f.select :publication_status, Image.publication_states.map {|s| s.to_s}
+%p
+  %label{:for => "attribution"}
+    Attribution:
+  = f.text_area :attribution, :class => 'mceNoEditor', :rows => 5
+%p
+  %label{:for => "image"}
+    Upload an Image:
+  = f.file_field :image

@@ -698,17 +698,16 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   end
 
   create_table "images", :force => true do |t|
-    t.integer  "parent_id"
-    t.string   "content_type"
-    t.string   "filename"
-    t.string   "thumbnail"
-    t.integer  "size"
-    t.integer  "width"
-    t.integer  "height"
-    t.string   "description"
-    t.string   "uuid",         :limit => 36
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "attribution"
+    t.string   "publication_status", :default => "draft"
+    t.string   "image_file_name"
+    t.integer  "image_file_size"
+    t.string   "image_content_type"
+    t.datetime "image_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "installer_reports", :force => true do |t|
