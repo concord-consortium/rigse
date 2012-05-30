@@ -1,29 +1,31 @@
-= if @image.image?
-  = link_to image_tag(@image.public_filename(:thumb)), @image.public_filename
-%br
-(
-= link_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
+= link_to image_tag(@image.image.url(:attributed)), @image.image.url(:attributed)
 
 %p
-  %bContent type:
-  =h @image.content_type
+  %b
+    Name:
+  =h @image.name
 
 %p
-  %b Filename:
-  =h @image.filename
+  %b
+    Attribution:
+  =(h @image.attribution).gsub("\n", "<br/>\n")
 
 %p
-  %b Size:
-  =h number_to_human_size @image.size
+  %b
+    Embedding URL:
+  - emb_url = "#{request.protocol + request.host + (request.port == 80 ? "" : ":#{request.port}") + @image.image.url(:attributed)}"
+  = link_to emb_url, emb_url
 
 %p
-  %b Width:
-  =h @image.width
-
-%p
-  %b Height:
-  =h @image.height
+  %b
+    Size:
+  - dims = Paperclip::Geometry.from_file(File.open(@image.image.path(:attributed)))
+  =h "#{dims.width.to_i}x#{dims.height.to_i} (#{number_to_human_size File.size(@image.image.path(:attributed))})"
 
 
-= link_to 'Edit', edit_image_path(@image) |
-= link_to 'Back', images_path
+- if @image.changeable?(current_user)
+  = link_to 'Edit', edit_image_path(@image)
+  |
+  = link_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
+  |
+= link_to 'List', images_path

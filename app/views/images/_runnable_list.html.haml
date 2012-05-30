@@ -1,0 +1,15 @@
+#images
+  .action_menu
+    .action_menu_header
+      .action_menu_header_left
+        - if local_assigns[:paginated_objects]
+          %p= page_entries_info paginated_objects, :entry_name => Image.display_name
+          %p.paginator
+            = will_paginate paginated_objects
+      .action_menu_header_right
+        %ul.menu
+          - if Image.can_be_created_by?(current_user)
+            %li= link_to "create #{Image.display_name}", new_image_path
+
+  - images.each do |image|
+    = render(:partial => "image_item", :locals => {:image_item => image})
