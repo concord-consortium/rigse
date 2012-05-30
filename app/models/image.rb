@@ -17,7 +17,8 @@ class Image < ActiveRecord::Base
 
   named_scope :visible_to_user, proc { |u| { :conditions =>
     [ "#{self.table_name}.publication_status = 'published' OR
-      (#{self.table_name}.publication_status = 'private' AND #{self.table_name}.user_id = ?)", u.nil? ? u : u.id ]
+      (#{self.table_name}.publication_status = 'draft' AND #{self.table_name}.user_id = ?) OR
+      (#{self.table_name}.publication_status = 'private' AND #{self.table_name}.user_id = ?)", u.nil? ? u : u.id , u.nil? ? u : u.id ]
   }}
   named_scope :visible_to_user_with_drafts, proc { |u| { :conditions =>
     [ "#{self.table_name}.publication_status IN ('published', 'draft') OR
@@ -31,12 +32,6 @@ class Image < ActiveRecord::Base
   }
 
   named_scope :ordered_by, lambda { |order| { :order => order } }
-
-  # special named scope for combining other named scopes in an OR fashion
-  # FIXME This is probably terribly inefficient
-  named_scope :match_any, lambda { |scopes| {
-    :conditions => "(#{scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")})"
-  }}
 
   include Changeable
   include Publishable
@@ -55,16 +50,7 @@ class Image < ActiveRecord::Base
     def search_list(options)
       name = options[:name]
       name_matches = Image.like(name)
-      is_visible = options[:include_drafts] ? name_matches.not_private : name_matches.published
-
-      images = nil
-
-      if options[:user]
-        by_user = name_matches.by_user(options[:user]) if options[:user]
-        images = Image.match_any([is_visible, by_user])
-      else
-        images = is_visible
-      end
+      images = options[:include_drafts] ? name_matches.visible_to_user_with_drafts(options[:user]) : name_matches.visible_to_user(options[:user])
 
       unless options[:sort_order].blank?
         images = images.ordered_by(options[:sort_order])
