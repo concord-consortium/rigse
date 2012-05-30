@@ -34,12 +34,13 @@ module Paperclip
       wm_dst.binmode
 
       border = 3
-      pointsize = 16
+      pointsize = 14
+
       # scale the text since most images will be displayed at around screen size
-      if @width > 600
-        scale = @width/600.0
-        pointsize = (pointsize*scale).ceil
-      end
+      scale = @width/650.0
+      pointsize = (pointsize*scale).ceil
+      pointsize = 10 if pointsize < 10
+
       watermark_params = %!-background white -fill black -font Arial -border #{border} -bordercolor white -pointsize #{pointsize} -size #{(@width-(2*border)).to_i}x -gravity SouthEast caption:"#{escape(@attribution)}" png:#{tofile(wm_dst)}!
 
       begin
