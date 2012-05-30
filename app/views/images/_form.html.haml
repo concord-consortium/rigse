@@ -14,3 +14,8 @@
   %label{:for => "image"}
     Upload an Image:
   = f.file_field :image
+  .tiny
+    - if f.object && !f.object.new_record?
+      OPTIONAL. If left blank, the existing image will be used.<br/><br/>
+    Your image will be resized to be at most 650 x 400.<br/>
+    For faster uploading, resize the image on your computer before uploading it here.
