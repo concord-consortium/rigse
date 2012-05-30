@@ -4,10 +4,13 @@
   .activity
     .actions
       - if runnable.changeable? current_user
-        %a{:href => template_edit_activity_path(runnable)}
+        %a{:href => (runnable.is_a?(Page) ? page_path(runnable) : template_edit_activity_path(runnable))}
           %img{:alt => "edit", :src => "/images/diy_icons/edit.png", :title => "edit this activity"}/
-      %a{:href => duplicate_activity_url(runnable), :title => "Make your own version of this activity"}
-        %img{:alt => "copy", :src => "/images/diy_icons/page_white_copy.png", :title => "Make your own version of this activity"}/
+      - if runnable.is_a?(Page)
+        %img{:src => "/images/diy_icons/page_grey_copy.png"}
+      - else
+        %a{:href => duplicate_activity_url(runnable), :title => "Make your own version of this activity"}
+          %img{:alt => "copy", :src => "/images/diy_icons/page_white_copy.png", :title => "Make your own version of this activity"}/
       %a{:href => "#", :onclick => "$('#{dom_id_for(runnable,:details)}').toggle(); return false;", :title => "View activity details"}
         %img{:alt => "info", :src => "/images/diy_icons/information.png", :title => "View activity description"}/
       %a{:href => polymorphic_url(runnable) ,  :title => "View a quick preview version of this activity"}
