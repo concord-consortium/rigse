@@ -3,8 +3,7 @@
 .action_menu
   #search_title
     ="Search #{Image.display_name.pluralize}"
-  .progress_container
-    #search_spinner.tiny{:style=>'display: none;'}
+    %span#search_spinner.tiny{:style=>'display: none;'}
       searching ...
       = image_tag "ajax-loader.gif"
 
