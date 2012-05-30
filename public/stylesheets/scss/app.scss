@@ -625,7 +625,7 @@ h2 a, h3 a {
   font-family: arial, helvetica, sans-serif; }
 
 a img {
-  border: 0; }
+  border: 0;vertical-align:middle }
 
 blockquote {
   background-color: white;
@@ -1166,6 +1166,11 @@ ul.quiet_list {
 .offerings td { text-align:left; vertical-align:middle;padding:0 }
 .offerings td:nth-child(odd) { width: 20px;padding-top:5px}
 
+.studentlist{text-align:left;margin:0}
+.studentlist tr { vertical-align: middle; }
+.studentlist td { text-align:left; vertical-align:middle;padding:2px 0 }
+.studentlist td.studentname { text-align:left; vertical-align:middle;padding:2px 0; min-width:150px }
+
 .contentdiv{float:left;}
 .linkdiv{float:right;}
 
@@ -1184,3 +1189,4 @@ a.hlink{color:#479492;text-decoration:none;cursor:pointer}
 a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 
 .pie{position: relative;}
+
