@@ -9,6 +9,7 @@
 - if current_user.has_role?('guest')
   %li.trail= link_to "Activity Previews", activities_path
 - if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'member') || current_user.portal_teacher
+  %li.trail=link_to "#{Image.display_name.pluralize}", images_path
   %li.trail=link_to 'CareerSight', 'http://careersight.concord.org', :target => '_blank'
   %li.trail=link_to 'ProbeSight', 'http://probesight.concord.org', :target => '_blank'
 - if current_user.portal_teacher && current_user.portal_teacher.cohort_list.include?("itsisu")
