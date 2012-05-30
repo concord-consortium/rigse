@@ -2,7 +2,7 @@ module Paperclip
   class AttributorOverlay < Processor
     def initialize(file, options = {}, attachment = nil)
       @file = file
-      @target_geometry = options[:geometry] ? Paperclip::Geometry.parse(options[:geometry]) : Paperclip::Geometry.from_file(@file)
+      @target_geometry = (options[:geometry] && options[:geometry] !~ /#/) ? Paperclip::Geometry.parse(options[:geometry]) : Paperclip::Geometry.from_file(@file)
       @whiny = options[:whiny].nil? ? true : options[:whiny]
       @attach = attachment.instance
       @attribution = @attach.attribution
