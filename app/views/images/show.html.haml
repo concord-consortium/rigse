@@ -1,4 +1,4 @@
-= link_to image_tag(@image.image.url(:thumb)), @image.image.url(:attributed)
+= link_to image_tag(@image.image.url(:attributed)), @image.image.url(:attributed)
 
 %p
   %b
@@ -20,7 +20,7 @@
   %b
     Size:
   - dims = Paperclip::Geometry.from_file(File.open(@image.image.path(:attributed)))
-  =h "#{dims.width.to_i}x#{dims.height.to_i} (#{number_to_human_size @image.image_file_size})"
+  =h "#{dims.width.to_i}x#{dims.height.to_i} (#{number_to_human_size File.size(@image.image.path(:attributed))})"
 
 
 - if @image.changeable?(current_user)
