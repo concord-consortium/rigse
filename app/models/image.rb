@@ -1,6 +1,7 @@
 class Image < ActiveRecord::Base
   belongs_to :user
-  has_attached_file :image, :styles => {:thumb => ["50x50#"], :attributed => ["%wx%h"]},
+  # resize the attributed version to fit within the default-sized activity window
+  has_attached_file :image, :styles => {:thumb => ["50x50#"], :attributed => ["650x400>"]},
                       :processors => [:attributor_append, :thumbnail]
 
   before_create :check_image_presence
