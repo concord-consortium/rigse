@@ -2,14 +2,21 @@ module Paperclip
   class AttributorOverlay < Processor
     def initialize(file, options = {}, attachment = nil)
       @file = file
+      @target_geometry = options[:geometry] ? Paperclip::Geometry.parse(options[:geometry]) : Paperclip::Geometry.from_file(@file)
       @whiny = options[:whiny].nil? ? true : options[:whiny]
       @attach = attachment.instance
       @attribution = @attach.attribution
       @current_format = File.extname(@file.path)
       @basename =  File.basename(@file.path, @current_format)
-      dims = Paperclip::Geometry.from_file(@file)
-      @width = dims.width
-      @height = dims.height
+      @source_geometry = Paperclip::Geometry.from_file(@file)
+      @width = @source_geometry.width
+      @height = @source_geometry.height
+
+      # calculate the scaling require to fit the image into the target_geometry
+      wRatio = @width / @target_geometry.width.to_f
+      hRatio = @height / @target_geometry.height.to_f
+
+      @scale = ((wRatio > hRatio) ? wRatio : hRatio)
     end
 
     def make
@@ -37,8 +44,7 @@ module Paperclip
       pointsize = 14
 
       # scale the text since most images will be displayed at around screen size
-      scale = @width/650.0
-      pointsize = (pointsize*scale).ceil
+      pointsize = (pointsize*@scale).ceil
       pointsize = 10 if pointsize < 10
 
       watermark_params = %!-background white -fill black -font Arial -border #{border} -bordercolor white -pointsize #{pointsize} -size #{(@width-(2*border)).to_i}x -gravity SouthEast caption:"#{escape(@attribution)}" png:#{tofile(wm_dst)}!
