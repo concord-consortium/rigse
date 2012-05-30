@@ -23,8 +23,9 @@
   =h "#{dims.width.to_i}x#{dims.height.to_i} (#{number_to_human_size @image.image_file_size})"
 
 
-= link_to 'Edit', edit_image_path(@image)
-|
-= link_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
-|
-= link_to 'Back', images_path
+- if @image.changeable?(current_user)
+  = link_to 'Edit', edit_image_path(@image)
+  |
+  = link_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
+  |
+= link_to 'List', images_path

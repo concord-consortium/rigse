@@ -5,7 +5,7 @@
 %p
   %label{:for => "publication_status"}
     Publication status:
-  = f.select :publication_status, Image.publication_states.map {|s| s.to_s}
+  = f.select :publication_status, Image.publication_states.select{|s| s.to_s != "draft"}.map {|s| s.to_s}
 %p
   %label{:for => "attribution"}
     Attribution:

@@ -1,4 +1,4 @@
-- locals = { :name => @name, :images => @images, :paginated_objects => @paginated_objects}
+- locals = { :name => @name, :images => @images, :paginated_objects => @paginated_objects, :hide_drafts_checkbox => (current_user.has_role?('manager', 'admin') ? false : true)}
 = render :partial => 'images/search_form', :locals => locals
 = observe_form 'image_search_form', :url => list_filter_image_url(:index=>"yes"),:before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :frequency => 1, :update => {:success => 'offering_list'}
 #offering_list
