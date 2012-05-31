@@ -1,0 +1,57 @@
+/* Padded Content Submenu*/
+div#clazzes_selected
+{
+    a {
+      color: #000000;
+      display: block;
+      margin: 0;
+      padding: 0px 20px; }
+    a.selected {
+      background: url("/images/class_arrow_horizontal.png");
+      background-repeat: no-repeat;
+      background-position: left top;
+      color: #000000;
+      font-weight: bold; }
+    a.upper_of_selected{
+      background: url("/images/class_arrow_vertical.png");
+      background-repeat: repeat-y;
+      background-position: left;
+    }
+}
+
+#clazzes_selected
+{
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: normal;
+  padding: 0px 20px 5px 25px;
+}
+
+#clazzes_selected_submenu
+{
+  margin: 0px 10px;
+  background-color: #ffffff;
+  /*color: #0000ff;*/
+  font-weight: normal;
+}
+
+.create_link.button
+{
+  button {
+  border: 0 solid #f3951d;
+  color: white;
+  display: inline;
+  font: 12px / 1 Arial, Helvetica, sans-serif;
+  padding: 4px 5px;
+  /* CSS 3 */
+  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
+  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  _background: #f6f2e2;
+  border-radius: 12px;
+  /* Opera 10.5, IE 9 */
+  -moz-border-radius: 12px;
+  /* FF1+ */
+  -webkit-border-radius: 12px;
+  /* Saf3+, Chrome */ }
+}
+

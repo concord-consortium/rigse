@@ -1,0 +1,38 @@
+/ TODO: The Submenu of the selected class on the Left Panel.
+/ Clazz navigation: top_node must be a Selected Class of Left Panel
+= javascript_include_tag "clazzes_nav"
+#clazzes_selected
+  .padded_content
+    - materials_link_class = '';
+    - student_roster_link_class = '';
+    - class_setup_link_class = '';
+    - full_status_link_class = '';
+    
+    - case request.request_uri
+      - when url_for(:action => 'materials', :controller => 'clazzes')
+        - materials_link_class = 'selected';
+      - when url_for(:action => 'roster', :controller => 'clazzes')
+        - materials_link_class = 'upper_of_selected';
+        - student_roster_link_class = 'selected';
+      - when url_for(:action => 'edit', :controller => 'clazzes')
+        - materials_link_class = 'upper_of_selected';
+        - student_roster_link_class = 'upper_of_selected';
+        - class_setup_link_class = 'selected';
+      - when url_for(:action => 'status', :controller => 'clazzes')
+        - materials_link_class = 'upper_of_selected';
+        - student_roster_link_class = 'upper_of_selected';
+        - class_setup_link_class = 'upper_of_selected';
+        - full_status_link_class = 'selected';
+      - else
+        - materials_link_class = '';
+        - student_roster_link_class = '';
+        - class_setup_link_class = '';
+        - full_status_link_class = '';
+
+    = link_to 'Materials', {}, :class => materials_link_class, :onclick => 'showMaterials()'
+    = link_to 'Student Roster', {:action => 'roster'}, :class => student_roster_link_class
+    = link_to 'Class Setup', {:action => 'edit'}, :class => class_setup_link_class
+    = link_to 'Full Status', {}, :class => full_status_link_class, :onclick => 'showFullStatus()'
+    
+    
+   
