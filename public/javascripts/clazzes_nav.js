@@ -1,5 +1,5 @@
 /**
- * @author Tanzeel R.A. Kazi
+ * @author Suhas Sanmukh
  */
 
 	
@@ -22,9 +22,4 @@ function showFullStatus()
 function showMaterials()
 {
 	alert('Materials Link Stub');
-}
-
-function studentRoster()
-{
-	alert('Student Roster Stub');
 }

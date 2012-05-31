@@ -30,7 +30,7 @@
         - full_status_link_class = '';
 
     = link_to 'Materials', {}, :class => materials_link_class, :onclick => 'showMaterials()'
-    = link_to 'Student Roster', {}, :class => student_roster_link_class, :onclick => 'studentRoster()'
+    = link_to 'Student Roster', {:action => 'roster'}, :class => student_roster_link_class
     = link_to 'Class Setup', {:action => 'edit'}, :class => class_setup_link_class
     = link_to 'Full Status', {}, :class => full_status_link_class, :onclick => 'showFullStatus()'
     
