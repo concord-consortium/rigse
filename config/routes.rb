@@ -111,9 +111,8 @@ constraints :id => /\d+/ do
         post :edit_offerings
         post :get_teachers
         post :edit_teachers
-        #get :clazz_offerings, :path => :materials
-        #get :roster
-        #post :get_students
+        get :roster
+        post :get_students
       end
     end
 

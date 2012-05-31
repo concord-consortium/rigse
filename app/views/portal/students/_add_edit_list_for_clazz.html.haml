@@ -1,0 +1,8 @@
+%div
+  = student_add_dropdown(portal_clazz)
+%div      
+  = link_to "Add a student who is not registered", new_portal_student_path(:clazz_id => portal_clazz.id), :title => "add a student to #{portal_clazz.name}"
+%br
+%div
+  %div{:id=>'add_students_listing'}
+    = render :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => portal_clazz}
