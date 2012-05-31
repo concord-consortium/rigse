@@ -387,5 +387,13 @@ class Portal::ClazzesController < ApplicationController
       format.html { render :layout => 'report'}
     end
   end
+  
+  def manage_classes
+    if current_user.anonymous?
+      flash[:error] = "Anonymous can't manage classes. Please log in and try again."
+    end
+    
+    @teacher = current_user.portal_teacher;
+  end
 
 end

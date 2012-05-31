@@ -110,6 +110,10 @@ constraints :id => /\d+/ do
         get :edit_offerings
         post :edit_offerings
       end
+      
+      collection do
+        get :manage_classes, :path => 'manage'
+      end
     end
 
     resources :clazzes, :path => :classes do

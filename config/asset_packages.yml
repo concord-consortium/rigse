@@ -157,6 +157,7 @@ stylesheets:
   - data_table
   - reports
   - chosen
+  - classes_left_pane
 
 - genomedynamics:
   - app
