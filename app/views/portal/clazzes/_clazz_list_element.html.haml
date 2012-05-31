@@ -1,0 +1,8 @@
+%li
+  %div.class_list_element
+    %table
+      %tr
+        %td.class_list_element_container{:width => '500'}
+          %input{:type => "checkbox", :width => '50px'}
+          %label #{clazz_ref.name}
+          %a{ :id => "message", :onclick => 'showCopyClassPopup()'} Copy Class

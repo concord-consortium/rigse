@@ -1,0 +1,28 @@
+.main_manage_classes_container
+  .container
+    .content
+    .manage_classes_panel
+      .header Manage Class List
+      .manage_info Checked classes appear on your home page. To make a class inactive, uncheck its box. All data for inactive classes is preserved. Drag and drop class to reorder it in the list.
+      .total_Class_summary My Classes (#{@teacher.clazzes.length} Total, #{@teacher.clazzes.length} Active)
+      %br
+      %br
+      %br
+      .item Active classes
+      
+      - if @teacher.clazzes.length > 0
+        - @teacher.clazzes.sort! {|a,b| a.name <=> b.name}  
+        %ul.sortable{:id=>"sortable",}
+          - @teacher.clazzes.each do |clazz|
+            = render :partial => 'portal/clazzes/clazz_list_element', :locals => {:clazz_ref => clazz}
+        =sortable_element "sortable"
+      - else
+        .item
+          %ul.quiet_list
+            %li
+              .tiny= "No classes created yet!"
+  .bottom_options
+    .right_float
+      %button{ :onclick => "manageClassList(\"/portal/classes/manage\")"} Save
+      = link_to 'Cancel', '/'
+    .clear_both
