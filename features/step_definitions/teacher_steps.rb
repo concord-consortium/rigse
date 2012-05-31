@@ -11,7 +11,10 @@ Then /^I should see the the teacher signup form$/ do
 end
 
 Then /^the teachers "([^"]*)" are in a school named "([^"]*)"$/ do |teachers,school_name|
-  school = Factory(:portal_school, :name=>school_name)
+  school = Portal::School.find_by_name(school_name)
+  if (school.nil?) then
+    school = Factory(:portal_school, :name=>school_name)
+  end
   teachers = teachers.split(",").map { |t| t.strip }
   teachers.map! {|t| User.find_by_login(t)}
   teachers.map! {|u| u.portal_teacher }
@@ -26,6 +29,8 @@ Given /^the following teachers exist:$/ do |users_table|
       cohorts = hash.delete("cohort_list")
       user = Factory(:user, hash)
       user.add_role("member")
+      #user.first_name = hash['fname']
+      #user.last_name = hash['lname']
       user.register
       user.activate
       user.save!
@@ -33,6 +38,10 @@ Given /^the following teachers exist:$/ do |users_table|
       portal_teacher = Factory(:portal_teacher, { :user => user })
       portal_teacher.cohort_list = cohorts if cohorts
       portal_teacher.save!
+      
+      puts 'user-fname '+user.first_name
+      puts 'user-lname '+user.last_name
+      
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...
     end

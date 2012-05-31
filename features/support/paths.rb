@@ -76,6 +76,8 @@ module NavigationHelpers
       $1
     when /\/[\S+\/]+/
       page_name
+    when /the class edit page for My Class/
+     "/portal/classes/#{@portal_clazz.id}/edit"
 
 
     # Add more mappings here.

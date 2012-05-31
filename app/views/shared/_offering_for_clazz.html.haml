@@ -3,7 +3,8 @@
     %table.offerings
       %tr
         %td
-          = check_box_tag "clazz_investigations[]", offering.id, offering.active, :class => "filter_checkbox"
+          = check_box_tag "clazz_investigations[]", offering.id, offering.active, :class => "filter_checkbox",:id=>"clazz_investigations_"+offering.id.to_s
           = hidden_field_tag "clazz_investigations_hidden[]", offering.id
         %td
-          =offering.name
+          %label{:for=>"clazz_investigations_"+offering.id.to_s}
+            =offering.name
