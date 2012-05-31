@@ -93,7 +93,7 @@ class Portal::TeachersController < ApplicationController
 
     # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes
     # will redirect:
-    @user.errors.add(:you, "must select a school") unless @school_selector.valid?
+    @user.errors.add(:you, "must select a school. Please indicate your state and district, then select a school.") unless @school_selector.valid?
     failed_creation
   end
 

@@ -1,5 +1,21 @@
 %p
-  %label{:for => "image"} 
-    Upload A New Image:
-  = form.file_field :uploaded_data
-  = submit_tag 'Create'
+  %label{:for => "name"}
+    Name:
+  = f.text_field :name
+%p
+  %label{:for => "publication_status"}
+    Publication status:
+  = f.select :publication_status, Image.publication_states.select{|s| s.to_s != "draft"}.map {|s| s.to_s}
+%p
+  %label{:for => "attribution"}
+    Attribution:
+  = f.text_area :attribution, :class => 'mceNoEditor', :rows => 5
+%p
+  %label{:for => "image"}
+    Upload an Image:
+  = f.file_field :image
+  .tiny
+    - if f.object && !f.object.new_record?
+      OPTIONAL. If left blank, the existing image will be used.<br/><br/>
+    Your image will be resized to be at most 650 x 400.<br/>
+    For faster uploading, resize the image on your computer before uploading it here.

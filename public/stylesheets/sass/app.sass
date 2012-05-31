@@ -74,17 +74,20 @@ ul, ol
 table
   border-collapse: collapse
   margin: 1em 0
-  .form 
-    width: 100%
-    text-align: left
-    tr 
-      vertical-align: top
-    td 
-      padding-top: 10px
-      padding-left: 10px
-    td:nth-child(odd) 
-      width: 30%
-      text-align: right 
+table.form 
+  width: 100%
+  text-align: left
+  tr 
+    vertical-align: top
+  td 
+    padding-top: 10px
+    padding-left: 10px
+  td:nth-child(odd) 
+    padding-left: 0
+    width: 30%
+    text-align: right
+  table.form
+    margin-left: 0
 
 body
   background:
@@ -289,6 +292,7 @@ body#tinymce
 /* MAIN CONTENT - two columns, #primary on right, #secondary on left
 #content
   font-size: 110%
+  height: auto
   overflow: hidden
   overflow-y: visible
   padding-top: 40px
@@ -300,6 +304,7 @@ body#tinymce
 #primary
   display: inline
   float: left
+  height: auto
   margin: 0 0 0 228px
   min-height: 350px
   padding: 0
