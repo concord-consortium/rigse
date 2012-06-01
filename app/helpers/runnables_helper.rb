@@ -49,7 +49,7 @@ module RunnablesHelper
 
   def x_link_for(component, verb, as_name = nil, params = {})
     link_text = params.delete(:link_text) || "#{verb} "
-    url = run_url_for(component, params)
+    url = run_url_for(component, params, params.delete(:format))
     
     run_type = case component
     when JnlpLaunchable   then "Java Web Start application"

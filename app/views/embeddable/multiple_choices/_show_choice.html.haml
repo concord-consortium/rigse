@@ -1,3 +1,3 @@
 %div{:id => dom_id_for(choice, :item)}
-  %input{:type=>'radio', :value=>"#{choice.choice}"}
+  %input{:type=>'radio', :value=>"#{dom_id_for(choice)}", :name => "questions[#{dom_id_for(multiple_choice)}]", :checked => (local_assigns[:selected] ? true : false)}
   = "#{choice.choice}"
