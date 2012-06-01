@@ -1,4 +1,4 @@
-- if offerings.length > 0
+- if offerings.length > 0 and active_offerings.nil? and active_offerings.length > 0
 - offerings.sort! {|a,b| a.position <=> b.position}  
   = render :partial => 'shared/offering_for_student', :collection => offerings, :as => :offering
 - else
