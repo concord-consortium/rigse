@@ -732,7 +732,6 @@ describe Portal::ClazzesController do
     end
     
     it "all the deactivated offerings should actually get deactivated in the database" do
-      #active_offering = @mock_clazz.offerings[0]
       @post_params[:clazz_investigations] = Array[]
       post :update, @post_params
       
