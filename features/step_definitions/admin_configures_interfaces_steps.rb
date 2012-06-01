@@ -12,7 +12,7 @@ Then /the current project should be using the following interfaces:/ do |interfa
 end
 
 Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
-  login_as(username, password)
+  login_as(username , password)
 end
 
 When /^I log out$/ do
