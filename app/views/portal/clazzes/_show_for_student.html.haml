@@ -10,7 +10,7 @@
       .action_menu_header_right
         = portal_clazz.teachers.size > 0 ? portal_clazz.teachers.map{ |t| t.name}.join(', ') : 'no teachers'
     - if current_project.allow_default_class
-      = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.offerings_with_default_classes(current_user), :active_offerings => portal_clazz.active_offerings }
+      = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.offerings_with_default_classes(current_user) }
     - else
-      = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.active_offerings, :active_offerings => portal_clazz.active_offerings }
+      = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.active_offerings }
 

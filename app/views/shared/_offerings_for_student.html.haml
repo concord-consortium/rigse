@@ -1,7 +1,13 @@
-- if offerings.length > 0 and (active_offerings.nil? == false) and active_offerings.length > 0
-- offerings.sort! {|a,b| a.position <=> b.position}  
-  = render :partial => 'shared/offering_for_student', :collection => offerings, :as => :offering
-- else
+- offerings.sort! {|a,b| a.position <=> b.position}
+
+- active_offerings = []
+- offerings.each do |offering|
+  - if offering.runnable and offering.active then
+    - active_offerings << offering
+  
+= render :partial => 'shared/offering_for_student', :collection => active_offerings, :as => :offering
+  
+- if active_offerings.length == 0
   .item
     %ul.quiet_list
       %li
