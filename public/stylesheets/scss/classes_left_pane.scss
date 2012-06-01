@@ -1,21 +1,39 @@
 /* Padded Content Submenu*/
 div#clazzes_selected
 {
+    text-indent: 20px;
+    div
+    {
+      padding: 3px;
+    }
     a {
       color: #000000;
       display: block;
       margin: 0;
-      padding: 0px 20px; }
+      padding: 0px; }
     a.selected {
+       }
+    a.upper_of_selected{
+      
+    }
+    .selected
+    {
+      padding: 3px;
       background: url("/images/class_arrow_horizontal.png");
       background-repeat: no-repeat;
       background-position: left top;
       color: #000000;
-      font-weight: bold; }
-    a.upper_of_selected{
+      font-weight: bold;
+    }
+    .upper_of_selected
+    {
+      
       background: url("/images/class_arrow_vertical.png");
       background-repeat: repeat-y;
       background-position: left;
+      a.selected {
+        background: none;
+       }
     }
 }
 
@@ -25,6 +43,7 @@ div#clazzes_selected
   color: #000000;
   font-weight: normal;
   padding: 0px 20px 5px 25px;
+  
 }
 
 #clazzes_selected_submenu
