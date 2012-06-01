@@ -29,8 +29,6 @@ Given /^the following teachers exist:$/ do |users_table|
       cohorts = hash.delete("cohort_list")
       user = Factory(:user, hash)
       user.add_role("member")
-      #user.first_name = hash['fname']
-      #user.last_name = hash['lname']
       user.register
       user.activate
       user.save!
@@ -38,9 +36,6 @@ Given /^the following teachers exist:$/ do |users_table|
       portal_teacher = Factory(:portal_teacher, { :user => user })
       portal_teacher.cohort_list = cohorts if cohorts
       portal_teacher.save!
-      
-      puts 'user-fname '+user.first_name
-      puts 'user-lname '+user.last_name
       
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...

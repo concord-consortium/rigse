@@ -1,11 +1,6 @@
 
 Given /^teacher is on edit page for "(.+)"$/ do |class_name|
-  #driver.switch_to.default_content
-  #visit('http://localhost:3000/')
-  #fill_in('login' ,:with => 'teacher')
-  #fill_in('password' ,:with => 'teacher')
   login_as('teacher' , 'teacher')
-  #click_button('idLogInSubmitButton')
   click_link(class_name)
   click_link('edit class information')
 end
@@ -15,16 +10,9 @@ When /^I fill in Class Name with "(.+)"$/ do |className|
 end
 
 And /^I include a teacher named "(.+)"$/ do |teacher_name|
-  #driver.switch_to.default_content
-  #puts "current_url "+current_url
-  #if has_xpath?('//a[@id="idAddTeacher"]')
-  #puts 'yes present'
-  #end  
-  #driver.switch_to.default_content
-  find(:xpath, '//a[@id="idAddTeacher"]').click
-  #puts "current_url "+current_url
+  find(:xpath, '//a[@id="AddTeacher"]').click
   check('Einstien, Albert')
-  click_button('idAddTeacherSaveButton')
+  click_button('AddTeacherSaveButton')
 end
 
 And /^I fill Description with "(.+)"$/ do |description|
@@ -36,23 +24,15 @@ And /^I fill Class Word with "([a-zA-Z0-9]+)"$/ do |classWord|
 end
 
 And /^I select Term "([A-Z]{1}[a-z]+)" from the drop down$/ do |term|
-  if term == "Fall"
-    term_value = "Fall"
-  elsif term == 'Spring'
-    term_value = "Spring"
-  else
-  end
-  select(term_value , :from => 'portal_clazz_semester_id')
+  select(term , :from => 'portal_clazz_semester_id')
 end
 
 And /^I uncheck investigation with label "(.+)"$/ do |investigation_name|
   uncheck(investigation_name)
-  #puts "hi" 
 end
 
 And /^I move first study material to the last position$/ do 
- #puts "bye"
- page.execute_script(
+  page.execute_script(
                       "var sortableList = document.getElementById('sortable');
                        var firstListElement = sortableList.getElementsByTagName('li')[0];
                        var offeringToMove = firstListElement;
@@ -74,10 +54,8 @@ end
 And /^the following offerings exist$/ do |offering_table|
     offering_table.hashes.each do |hash|
       investigation = Factory(:investigation)
-      
       investigation.name = hash['name']
       investigation.save!
-      
       myclazz = Portal::Clazz.find_by_name('My Class')
       @offering = Portal::Offering.new
       @offering.runnable_id = investigation.id

@@ -45,19 +45,16 @@ Given /^(?:|I )am on (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
-When /^I go to the class page for (.+) as (.+)$/ do |class_name, userLoggedInStatus|
-  if userLoggedInStatus == 'loggedIn user'
-    click_link(class_name)
-  else  
-    visit('/portal/classes/'+@portal_clazz.id.to_s)
-  end  
+When /^(?:|I )go to (.+)$/ do |page_name|
+  visit path_to(page_name)
 end
+
 
 When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
 end
 
-When /^(?:|I )follow ([^"]*)$/ do |link|
+When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
 end
 
@@ -106,9 +103,7 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
   attach_file(field, File.expand_path(path))
 end
 
-When /^I go to the class edit page for (.+)$/ do |my_class|
-  visit('/portal/classes/'+@portal_clazz.id.to_s+'/edit')
-end
+
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
   if page.respond_to? :should

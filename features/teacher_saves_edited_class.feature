@@ -12,8 +12,8 @@ Feature: Teacher edits and saves class information
       | Fall     | 2012-12-01 00:00:00 | 2012-03-01 23:59:59 |
       | Spring   | 2012-10-10 23:59:59 | 2013-03-31 23:59:59 |
     And the following classes exist:
-      | name     | teacher | semester |
-      | My Class | teacher | Fall     |
+      | name     | teacher |
+      | My Class | teacher |
    And the classes "My Class" are in a school named "VJTI"
    And the following offerings exist
       | name                      |
@@ -22,11 +22,11 @@ Feature: Teacher edits and saves class information
     @javascript  
  	Scenario: Teacher saves class setup information
  	Given teacher is on edit page for "My Class"
- 	When I fill in Class Name with "P2 Biology"
+ 	When I fill in Class Name with "Basic Electronics"
  	And I select Term "Fall" from the drop down
  	And I include a teacher named "Einstien, Albert"
  	And I fill Description with "This is a biology class"
- 	And I fill Class Word with "Biofeel"
+ 	And I fill Class Word with "BETRX"
  	And I uncheck investigation with label "Lumped circuit abstraction"
  	And I move first study material to the last position 
  	And I press save button

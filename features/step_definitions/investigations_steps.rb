@@ -63,9 +63,7 @@ end
 
 Given /^the following semesters exist:$/ do|semesters_table|
    semesters_table.hashes.each do |hash|
-      @semester = Portal::Semester.new(:name => hash["name"],:start_time => hash["end_time"],:end_time => hash["end_time"])
-      @semester.save!
-      @semestervalue = Portal::Semester.find_by_name(hash["name"]);
+     Factory.create(:portal_semester, hash)
    end
 end
 
@@ -73,33 +71,13 @@ end
 Given /^the following classes exist:$/ do |table|
   table.hashes.each do |hash|
     if hash['teacher']
-      @user = User.find_by_login hash['teacher']
-      @teacher = @user.portal_teacher
+      user = User.find_by_login hash['teacher']
+      teacher = user.portal_teacher
     else
-      @teacher = Factory(:teacher)
+      teacher = Factory(:teacher)
     end
-    hash = hash.merge('teacher' => @teacher)
-    
-    if hash['semester']
-      @semester = Portal::Semester.find_by_name hash['semester']
-    else
-      puts 'Semester not found'
-      # TO-DO: Check if factory for semester exists
-      semester = Factory(:semester)
-    end
-    hash = hash.merge('semester' => semester)
-    
+    hash.merge!('teacher' => teacher)
     Factory.create(:portal_clazz, hash)
-    
-    #@clazzz = Portal::Clazz.find_by_name hash['name']
-    #@teacher.add_clazz(@clazzz)
-    #user1 = User.find_by_login hash['teacher']
-    #teacher1 = user1.portal_teacher
-    #portal_clazz1 = Portal::Clazz.find_by_name hash['name']
-    #teacher1.add_clazz(portal_clazz1)
-    #puts "#{@portal_clazz}"
-    #puts "#{@portal_clazz.teachers.methods}"
-    #puts "#{@portal_clazz.teachers.to_s}"
   end
 end
 
