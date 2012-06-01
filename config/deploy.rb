@@ -15,7 +15,7 @@ set :stages, %w(
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
   sparks-dev sparks-staging sparks-production
-  xproject3-dev)
+  xproject3-dev xproject32-dev )
 
 set :default_stage, "development"
 
