@@ -393,7 +393,32 @@ class Portal::ClazzesController < ApplicationController
       flash[:error] = "Anonymous can't manage classes. Please log in and try again."
     end
     
+    
+    if request.put? then
+      
+      # Position teacher classes
+      # and 
+      # Activate/Deactivate teacher classes
+      arrTeacherClazzPosition = params["teacher_clazz_position"]
+      arrActiveTeacherClazz = params["teacher_clazz"]
+      position = 1
+      arrTeacherClazzPosition.each do |teacher_clazz_id|
+        teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
+        teacher_clazz.position = position;
+        if (arrActiveTeacherClazz.include?(teacher_clazz_id)) then
+          teacher_clazz.active = 1
+        else
+          teacher_clazz.active = 0
+        end
+        teacher_clazz.save!
+        position += 1;
+      end
+      
+    end
+    
     @teacher = current_user.portal_teacher;
+    
   end
+  
 
 end

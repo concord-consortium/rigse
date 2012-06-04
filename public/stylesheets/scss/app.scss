@@ -1152,6 +1152,48 @@ ul.quiet_list {
   }
 }
 
+/* CSS for Manage Classes Page*/
+.manage_classes_panel
+{
+  #sortable li { margin: 0 0px 3px 0px; padding: 0em;cursor:move }
+}
+
+.right_float
+{
+  float: right;
+  bottom: 0;
+  input {
+  border: 0 solid #f3951d;
+  color: white;
+  display: inline;
+  font: 12px / 1 Arial, Helvetica, sans-serif;
+  padding: 4px 5px;
+  /* CSS 3 */
+  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
+  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  _background: #f6f2e2;
+  border-radius: 12px;
+  /* Opera 10.5, IE 9 */
+  -moz-border-radius: 12px;
+  /* FF1+ */
+  -webkit-border-radius: 12px;
+  /* Saf3+, Chrome */ }
+}
+
+.clear_both
+{
+  clear:both;
+}
+
+.main_manage_classes_container{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px}
+
+.popup_content
+{
+  padding: 20px 20px 20px 20px;
+  background-color: #DDDDDD;
+}
+
+/* ---- END CSS for Manage Classes Page ------*/
 
 
 

@@ -1,28 +1,53 @@
-.main_manage_classes_container
-  .container
-    .content
-    .manage_classes_panel
-      .header Manage Class List
-      .manage_info Checked classes appear on your home page. To make a class inactive, uncheck its box. All data for inactive classes is preserved. Drag and drop class to reorder it in the list.
-      .total_Class_summary My Classes (#{@teacher.clazzes.length} Total, #{@teacher.clazzes.length} Active)
-      %br
-      %br
-      %br
-      .item Active classes
+= form_for(@teacher, :url => url_for(:action => :manage_classes, :controller => 'clazzes') ) do |f|
+  .main_manage_classes_container
+    .container
+      .content
+      .manage_classes_panel
+        .header Manage Class List
+        .manage_info Checked classes appear on your home page. To make a class inactive, uncheck its box. All data for inactive classes is preserved. Drag and drop class to reorder it in the list.
+        
+        
+        - active_class_count = 0
+        - active_classes_array = Array.new
+        - position_of_classes = Array.new
+        - @teacher.teacher_clazzes.each do |teacher_clazz| 
+          - if(teacher_clazz.active == 1)
+            - active_classes_array.push(1)
+            - active_class_count += 1
+          - else
+            - active_classes_array.push(0)
+          - position_of_classes.push(teacher_clazz.position)
+        .total_Class_summary My Classes (#{@teacher.clazzes.length} Total, #{active_class_count} Active)
+        %br
+        %br
+        %br
+        .checkbox_title Active classes
+        
+        - if @teacher.teacher_clazzes.length > 0
+          - @teacher.teacher_clazzes.sort! {|a,b| a.position <=> b.position}  
+          %ul.sortable{:id=>"sortable",}
+            - @teacher.teacher_clazzes.each do |teacher_clazz| 
+              - if(teacher_clazz.active == 1)
+                - selected_value = true;
+              - else
+                - selected_value = false;
+              = render :partial => 'portal/clazzes/clazz_list_element', :locals => {:teacher_clazz => teacher_clazz, :active_selected => selected_value}
+          =sortable_element "sortable"
+        - else
+          .item
+            %ul.quiet_list
+              %li
+                .tiny= "No classes created yet!"
+    .bottom_options
+      .right_float
+        = f.submit 'Save'
+        /*%input{ :type => 'submit', :value => 'Save'} */
+        = link_to 'Cancel', '/'
+      .clear_both
       
-      - if @teacher.clazzes.length > 0
-        - @teacher.clazzes.sort! {|a,b| a.name <=> b.name}  
-        %ul.sortable{:id=>"sortable",}
-          - @teacher.clazzes.each do |clazz|
-            = render :partial => 'portal/clazzes/clazz_list_element', :locals => {:clazz_ref => clazz}
-        =sortable_element "sortable"
-      - else
-        .item
-          %ul.quiet_list
-            %li
-              .tiny= "No classes created yet!"
-  .bottom_options
-    .right_float
-      %button{ :onclick => "manageClassList(\"/portal/classes/manage\")"} Save
-      = link_to 'Cancel', '/'
-    .clear_both
+      
+      
+      
+      
+      
+      

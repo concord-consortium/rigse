@@ -3,6 +3,9 @@
     %table
       %tr
         %td.class_list_element_container{:width => '500'}
-          %input{:type => "checkbox", :width => '50px'}
-          %label #{clazz_ref.name}
+          %input{:type => "checkbox", :width => '50px', :id => "teacher_clazz[#{teacher_clazz.id}]", :name => "teacher_clazz[]", :value => teacher_clazz.id, :checked => active_selected}
+          %input{:type => "hidden", :id => "teacher_clazz_position[#{teacher_clazz.id}]", :name => "teacher_clazz_position[]", :value => teacher_clazz.id}
+          
+          %label #{teacher_clazz.clazz.name}
           %a{ :id => "message", :onclick => 'showCopyClassPopup()'} Copy Class
+          
