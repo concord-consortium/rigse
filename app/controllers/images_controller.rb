@@ -19,6 +19,7 @@ class ImagesController < ApplicationController
       :per_page => 36,
       :page => params[:page]
     })
+    @paginated_objects = @images
 
     if request.xhr?
       render :partial => 'runnable_list', :locals => { :images => @images, :paginated_objects => @images }
