@@ -123,7 +123,7 @@ class ImagesController < ApplicationController
   protected
 
   def teacher_required
-    return if logged_in? && (current_user.portal_teacher || current_user.has_role?("admin"))
+    return true if logged_in? && (current_user.portal_teacher || current_user.has_role?("admin"))
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end
