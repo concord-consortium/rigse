@@ -387,5 +387,9 @@ class Portal::ClazzesController < ApplicationController
       format.html { render :layout => 'report'}
     end
   end
-
+  
+  def materials
+    @portal_clazz = Portal::Clazz.find(params[:id]);
+  end
+  
 end
