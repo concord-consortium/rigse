@@ -6,6 +6,8 @@ module Paperclip
       @whiny = options[:whiny].nil? ? true : options[:whiny]
       @attach = attachment.instance
       @attribution = @attach.attribution
+      # some versions of ImageMagick don't like an empty string caption
+      @attribution = " " if @attribution.nil? || @attribution.empty?
       @current_format = File.extname(@file.path)
       @basename =  File.basename(@file.path, @current_format)
       @source_geometry = Paperclip::Geometry.from_file(@file)
@@ -66,8 +68,8 @@ module Paperclip
       %!"#{ File.expand_path(destination.path) }[0]"!
     end
 
-    def escape(str = "")
-      str = "" if str.nil?
+    def escape(str = " ")
+      str = " " if str.nil? || str.empty?
       str.gsub(/"/, %q!\"!).gsub(/\$/, %q!\$!)
     end
   end
