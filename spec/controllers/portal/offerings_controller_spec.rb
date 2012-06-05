@@ -85,7 +85,6 @@ describe Portal::OfferingsController do
     it 'should render an html form' do
       get :show, :id => @offering.id, :format => 'run_html'
 
-
       form_regex = /<form.*?action='\/portal\/offerings\/(\d+)\/answers'/
       response.body.should =~ form_regex
       response.body =~ form_regex
@@ -128,6 +127,12 @@ describe Portal::OfferingsController do
       mc_saveables = Saveable::MultipleChoice.find(:all)
       mc_saveables.size.should == (mc_saveables_size + 1)
       mc_saveables.last.answer.should == choice.choice
+    end
+
+    it 'should disable the submit button when there is no learner' do
+      controller.stub!(:setup_portal_student).and_return(nil)
+      get :show, :id => @offering.id, :format => 'run_html'
+      response.body.should =~ /<input.*class='disabled'.*type='submit'/
     end
   end
 end
