@@ -5,9 +5,15 @@ module Paperclip
       @target_geometry = (options[:geometry] && options[:geometry] !~ /#/) ? Paperclip::Geometry.parse(options[:geometry]) : Paperclip::Geometry.from_file(@file)
       @whiny = options[:whiny].nil? ? true : options[:whiny]
       @attach = attachment.instance
-      @attribution = @attach.attribution
+      @attribution = @attach.attribution || ""
+
+      if @attach.user
+        @attribution += "\n" unless @attribution.empty?
+        @attribution += "Uploaded by: #{@attach.user.name}"
+      end
       # some versions of ImageMagick don't like an empty string caption
-      @attribution = " " if @attribution.nil? || @attribution.empty?
+      @attribution = " " if @attribution.empty?
+
       @current_format = File.extname(@file.path)
       @basename =  File.basename(@file.path, @current_format)
       @source_geometry = Paperclip::Geometry.from_file(@file)

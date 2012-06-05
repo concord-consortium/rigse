@@ -60,8 +60,9 @@ class ImagesController < ApplicationController
   # POST /images
   # POST /images.xml
   def create
+    params[:image][:user_id] = current_user.id.to_s
     @image = Image.new(params[:image])
-    @image.user = current_user
+
     respond_to do |format|
       if @image.save
         flash[:notice] = 'Image was successfully created.'
