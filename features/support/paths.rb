@@ -29,6 +29,9 @@ module NavigationHelpers
       "/investigations/new"
     when /the create resource page page/
       "/resource_pages/new"
+    when /the images page/
+      puts "Going to the images page"
+      "/images"
     when /the resource pages page/
       "/resource_pages/"
     when /the resource pages with drafts page/

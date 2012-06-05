@@ -1,8 +1,8 @@
 class Reports::ConcludingCareerStem < Reports::Excel
-  COLS_PER_SHEET = 245
   def initialize(opts = {})
     super(opts)
 
+    @cols_per_sheet = 245
     @runnables = opts[:runnables] || Activity.published
     @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
 
@@ -21,12 +21,18 @@ class Reports::ConcludingCareerStem < Reports::Excel
     ]
 
     # Sanity checks
-    num_sheets_required = (@runnables.size/COLS_PER_SHEET.to_f).ceil
-    raise Reports::Errors::TooManySheetsError if num_sheets_required > MAX_SHEETS
-
-    max_cols_required = (@runnables.size > COLS_PER_SHEET ? (COLS_PER_SHEET) : @runnables.size) + @common_columns.size
-    max_cells_required = max_cols_required * @student_learners.size
+    while max_cells_required > MAX_CELLS && @cols_per_sheet > (245/5)
+      @cols_per_sheet -= 20
+    end
     raise Reports::Errors::TooManyCellsError if max_cells_required > MAX_CELLS
+
+    num_sheets_required = (@runnables.size/@cols_per_sheet.to_f).ceil
+    raise Reports::Errors::TooManySheetsError if num_sheets_required > MAX_SHEETS
+  end
+
+  def max_cells_required
+    max_cols_required = (@runnables.size > @cols_per_sheet ? (@cols_per_sheet) : @runnables.size) + @common_columns.size
+    max_cells_required = max_cols_required * @student_learners.size
   end
 
   def sorted_learners
@@ -81,14 +87,14 @@ class Reports::ConcludingCareerStem < Reports::Excel
     print "Setting up sheets..." if @verbose
     @sheets = {} # keys are arrays of runnables, value is the sheet they should go on
     range_start = 0
-    range_end = (COLS_PER_SHEET-1)
+    range_end = (@cols_per_sheet-1)
     count = 0
     while range_start < @runnables.size
       range_end = (@runnables.size - 1) if range_end >= @runnables.size
       set = @runnables[range_start..range_end]
       @sheets[set] = create_sheet(set, count += 1)
-      range_start += COLS_PER_SHEET
-      range_end += COLS_PER_SHEET
+      range_start += @cols_per_sheet
+      range_end += @cols_per_sheet
     end
     puts " done." if @verbose
 

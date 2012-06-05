@@ -229,8 +229,9 @@ module ApplicationHelper
     render :partial => partial, :locals => locals
   end
 
-  def render_show_partial_for(component,teacher_mode=false,substitute=nil)
-    render_partial_for(component, {:teacher_mode => teacher_mode, :substitute => substitute})
+  def render_show_partial_for(component, _opts = {})
+    opts = {:teacher_mode => false, :substitute => nil}.merge(_opts)
+    render_partial_for(component, opts)
   end
 
   def render_edit_partial_for(component,opts={})
@@ -1282,4 +1283,13 @@ module ApplicationHelper
     return false
   end
 
+  # Rails 2.3 way of switching the format for a block of code
+  # see: http://stackoverflow.com/questions/339130/how-do-i-render-a-partial-of-a-different-format-in-rails
+  def with_format(format, &block)
+    old_format = @template_format
+    @template_format = format.to_s
+    result = block.call
+    @template_format = old_format
+    return result
+  end
 end

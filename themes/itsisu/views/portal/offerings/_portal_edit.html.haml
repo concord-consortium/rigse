@@ -23,7 +23,9 @@
       .runnable-info
         = runnable.published? ? "(published)" : "(private)"
         %span.runnable-links{:id =>"runnable-links#{runnable.id}"}
-          = run_link_for(runnable,nil,{:title => runnable.description})
+          - run_params = {}
+          - run_params[:format] = :run_html if runnable.is_a?(Page)
+          = run_link_for(runnable,nil,run_params)
         -#%a{:class => 'button-link try-link', 
           -#:id => "try_button_#{runnable.id}", 
           -#:href => "/diy/view/52/type/runnable/", 
