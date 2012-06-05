@@ -1,7 +1,11 @@
+var student_list_modal = null;
 function get_School_Student_List()
 {
-	teacher_list_modal = new UI.Window({ theme:"rites", width:400, height:350}).setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
-	teacher_list_modal.setHeader("Add Students to Roster");
+	student_list_modal = student_list_modal || null
+	if(student_list_modal == null)
+		student_list_modal = new UI.Window({ theme:"rites", width:400, height:350})
+	student_list_modal.setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
+	student_list_modal.setHeader("Add Students to Roster");
 	var clazz_id = $("portal_clazz_id").value;
 	var options = {
 		method: 'post',
@@ -10,7 +14,7 @@ function get_School_Student_List()
 			text += "<div><table cellpadding='5' align='right'><tr>"+
 			"<td><a class='hlink' onclick='close_popup()'>Cancel</a></td>"+
 			"</table></div>";
-			teacher_list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
+			student_list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
 		}
 	};
 	var target_url = "/portal/classes/"+clazz_id+"/get_students";
@@ -19,7 +23,7 @@ function get_School_Student_List()
 
 function close_popup()
 {
-	teacher_list_modal.hide();
+	student_list_modal.hide();
 }
 
 function add_Class_Students(btnSave)

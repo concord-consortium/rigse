@@ -54,6 +54,12 @@ When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
 end
 
+When /^(?:|I )press "([^"]*)" inside element with selector "([^"]*)"$/ do |button, selector|
+  within(selector) do
+    find_button(button).click
+  end
+end
+
 When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
 end
@@ -222,5 +228,22 @@ end
 
 
 And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
-  pending  
+  page.execute_script("
+    var bSuccess = false;
+    
+    var strDropdownId = '#{dropdown_id}_chzn';
+    var arrListItems =  Prototype.Selector.select('#'+ strDropdownId +'> div.chzn-drop > ul.chzn-results > li');    
+    
+    for (var i = 0; i < arrListItems.length; i++)
+    {
+      if (arrListItems[i].innerHTML.stripTags().strip() == '#{label}')
+      {
+        bSuccess = true;
+        arrListItems[i].simulate('mouseup');
+        break;
+      }
+    }
+    
+    return bSuccess;
+  ")  
 end

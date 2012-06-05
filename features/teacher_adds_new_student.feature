@@ -24,9 +24,12 @@ should be able to add a new student
 			And I login with username: teacher password: teacher
 			And I am on "Student Roster" page for "My Class"
 			When I press "Add New Student"
-			And I select "Robert, Alfred ( student )" from the html dropdown "student_id_selector_chzn"
-			And I press "Add"
-			And I press "Cancel"
+			And I should see "Student Name"
+			And I select "Robert, Alfred ( student )" from the html dropdown "student_id_selector"
+			And I should see "Robert, Alfred"
+			And I press "Add" inside element with selector "#student_add_dropdown"
+			And I should see "Robert, Alfred"
+			And I follow "Cancel"
 			Then I should see "Robert, Alfred"
 		@javascript	
 		Scenario: Teacher can add an unregistered user
