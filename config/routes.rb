@@ -215,6 +215,7 @@ ActionController::Routing::Routes.draw do |map|
   map.open_id_complete '/opensession', :controller => "sessions", :action => "create", :requirements => { :method => :get }
   map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
   map.school_selector '/portal/school_selector/update', :controller => 'portal/school_selector', :action => 'update'
+  map.installer_report '/installer_report', :controller => 'misc', :action => 'installer_report', :requirements => {:method => :post}
 
   # Restful Authentication Resources
   map.resources :users, :member => {
