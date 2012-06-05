@@ -75,7 +75,7 @@ describe ImagesController do
     describe "with valid params" do
       
       it "should expose a newly created image as @image" do
-        Image.should_receive(:new).with({'these' => 'params'}).and_return(mock_image(:save => true))
+        Image.should_receive(:new).with({'user_id' => @logged_in_user.id.to_s, 'these' => 'params'}).and_return(mock_image(:save => true))
         post :create, :image => {:these => 'params'}
         assigns(:image).should equal(mock_image)
       end
@@ -91,7 +91,7 @@ describe ImagesController do
     describe "with invalid params" do
   
       it "should expose a newly created but unsaved image as @image" do
-        Image.stub!(:new).with({'these' => 'params'}).and_return(mock_image(:save => false))
+        Image.stub!(:new).with({'user_id' => @logged_in_user.id.to_s, 'these' => 'params'}).and_return(mock_image(:save => false))
         post :create, :image => {:these => 'params'}
         assigns(:image).should equal(mock_image)
       end
