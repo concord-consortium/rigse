@@ -77,6 +77,15 @@ Given /^the following classes exist:$/ do |table|
       teacher = Factory(:teacher)
     end
     hash.merge!('teacher' => teacher)
+    
+    if !(hash['semester'].nil?) then
+      semester = Portal::Semester.find_by_name(hash['semester']);
+      if (semester.nil?) then
+        semester = Factory.create(:portal_semester, :name => hash['semester']);
+      end
+      hash.merge!('semester' => semester);
+    end
+    
     Factory.create(:portal_clazz, hash)
   end
 end

@@ -79,8 +79,9 @@ module NavigationHelpers
     when /the class edit page for "(.+)"/
       portal_clazz = Portal::Clazz.find_by_name $1
       "/portal/classes/#{portal_clazz.id}/edit"
-
-
+    when /"Student Roster" page for "(.+)"/
+      portal_clazz = Portal::Clazz.find_by_name $1
+      "/portal/classes/#{portal_clazz.id}/roster"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

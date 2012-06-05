@@ -103,6 +103,13 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
   attach_file(field, File.expand_path(path))
 end
 
+And /^I accept the upcoming javascript confirm box$/ do
+  page.evaluate_script('window.confirm = function() { return true; }')
+end
+
+And /^I decline the upcoming javascript confirm box$/ do
+  page.evaluate_script('window.confirm = function() { return false; }')
+end
 
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
@@ -211,4 +218,9 @@ end
 
 Then /^show me the page$/ do
   save_and_open_page
+end
+
+
+And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
+  pending  
 end

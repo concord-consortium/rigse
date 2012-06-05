@@ -23,6 +23,7 @@ describe Portal::ClazzesController do
     @normal_user = Factory.next(:anonymous_user)
     @admin_user = Factory.next(:admin_user)
     @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [@mock_school])
+    @authorized_student = Factory.create(:portal_student, :user =>Factory.create(:user, :login => "authorized_student"))
     @another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "another_authorized_teacher"), :schools => [@mock_school])
     @unauthorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "unauthorized_teacher"), :schools => [@mock_school])
 
@@ -755,6 +756,19 @@ describe Portal::ClazzesController do
       assert_nil(@another_authorized_teacher.clazzes.find_by_id(@mock_clazz.id))
       assert_not_nil(@yet_another_authorized_teacher.clazzes.find_by_id(@mock_clazz.id))
       
+    end
+  end
+
+  describe "Post add a new student to a class" do
+    
+    it "should add a new student to the class" do
+      post_params = {
+        :id => @mock_clazz.id.to_s,
+        :student_id => @authorized_student.id.to_s
+      }
+      post :add_student, post_params
+      newStudentInClazz = Portal::StudentClazz.find_by_clazz_id_and_student_id(@mock_clazz.id, @authorized_student.id)
+      assert_not_nil(newStudentInClazz)
     end
   end
 end

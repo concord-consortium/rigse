@@ -1,10 +1,9 @@
-
-Given /^teacher is on edit page for "(.+)"$/ do |class_name|
-  login_as('teacher' , 'teacher')
+=begin
+Given /^I go to edit page for "(.+)"$/ do |class_name|
   click_link(class_name)
   click_link('edit class information')
 end
-
+=end
 When /^I fill in Class Name with "(.+)"$/ do |className|
   fill_in('portal_clazz_name', :with => className)
 end
@@ -31,13 +30,29 @@ And /^I uncheck investigation with label "(.+)"$/ do |investigation_name|
   uncheck(investigation_name)
 end
 
-And /^I move first study material to the last position$/ do 
+And /^I move investigation named "(.+)" to the top of the list$/ do |investigation_name|
   page.execute_script(
-                      "var sortableList = document.getElementById('sortable');
-                       var firstListElement = sortableList.getElementsByTagName('li')[0];
-                       var offeringToMove = firstListElement;
-                       sortableList.removeChild(offeringToMove);
-                       sortableList.appendChild(offeringToMove);"
+                      "
+                      
+                       var sortableList = document.getElementById('sortable');
+                       var arrListChildren = sortableList.getElementsByTagName('li');
+                       var offeringToMove;
+                       for(var i=0; i< arrListChildren.length; i++)
+                       {
+                          if(arrListChildren[i].innerHTML.stripTags().strip().toLowerCase() == \"#{investigation_name}\".toLowerCase())
+                          {
+                            offeringToMove = arrListChildren[i];
+                            break;
+                          }
+                       }
+                       var listFirstChild = arrListChildren[0]; 
+                       if(offeringToMove && offeringToMove != listFirstChild)
+                       {
+                        sortableList.removeChild(offeringToMove);
+                        sortableList.insertBefore(offeringToMove,listFirstChild);
+                       }
+                       
+                       "
                      )
  
 end
@@ -63,4 +78,23 @@ And /^the following offerings exist$/ do |offering_table|
       @offering.runnable_type = 'Investigation'
       @offering.save!
     end
+end
+
+
+And /^the first investigation in the list should be "(.+)"$/ do |investigation_name|
+ 
+  page.execute_script(
+                      "
+                       var bSortSuccess = false;
+                       var arrListItems = Prototype.Selector.select('ul.quiet_list>li');
+                       var firstChild = arrListItems[0];
+                       var strLinkText = firstChild.innerHTML.stripTags().strip().toLowerCase().replace('run ','')
+                       if(strLinkText == \"#{investigation_name}\".toLowerCase())
+                       {
+                          bSortSuccess = true;
+                       }
+                       
+                       return bSortSuccess; 
+                      "
+                     )
 end

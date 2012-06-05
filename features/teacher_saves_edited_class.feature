@@ -19,15 +19,17 @@ Feature: Teacher edits and saves class information
       | name                      |
       | Lumped circuit abstraction|
       | static discipline         |
+      | Non Linear Devices        |
     @javascript  
  	Scenario: Teacher saves class setup information
- 	Given teacher is on edit page for "My Class"
+ 	Given I login with username: teacher password: teacher
+ 	And I am on "the class edit page for "My Class""
  	When I fill in Class Name with "Basic Electronics"
  	And I select Term "Fall" from the drop down
  	And I include a teacher named "Einstien, Albert"
  	And I fill Description with "This is a biology class"
  	And I fill Class Word with "BETRX"
  	And I uncheck investigation with label "Lumped circuit abstraction"
- 	And I move first study material to the last position 
+ 	And I move investigation named "Non Linear Devices" to the top of the list 
  	And I press save button
  	Then new data for the class should be saved
