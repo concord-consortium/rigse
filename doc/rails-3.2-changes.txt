@@ -1,0 +1,34 @@
+Current Changes to move to rails 3.2
+
+- using formats option for the ot_interface_manager call in otml_helper, also in spec/views/activities/_show.otml.haml_spec.rb
+- gem updates
+- deep_cloning fixes
+- rspec "theme unimplemented" extension fix
+- remove rack_hotfix that it not needed anymore
+- change RoleRequirementsSystem to work on Rails 3.2 (this looks like it isn't really used anyway)
+- change Clonable to use dup instead of clone
+- update features/support/env.rb
+- switch cucumber steps to use "step" method instead of When, Then, or Given
+- handle strange capybara return from popup dialogs
+- modified test for a valid active record connection
+- remove debug_rjs (not supported in rails 3.2)
+- use flash.each instead of each_pair
+
+Some of these can probabably be pulled back into rails 3.0 to reduce the differences, here are my current candidates for this:
+- using formats option for the ot_interface_manager call in otml_helper, also in spec/views/activities/_show.otml.haml_spec.rb
+- handle strange capybara return from popup dialogs
+- use flash.each instead of each_pair
+
+Others might be simplied by coming up with a way that works in rails 3.0 and rails 3.2:
+- change RoleRequirementsSystem to work on Rails 3.2 (this looks like it isn't really used anyway)
+- modified test for a valid active record connection
+
+If all of that can be done then the changes are just:
+- gem updates
+- deep_cloning fixes
+- rspec "theme unimplemented" extension fix
+- remove rack_hotfix that it not needed anymore
+- change Clonable to use dup instead of clone
+- update features/support/env.rb
+- switch cucumber steps to use "step" method instead of When, Then, or Given
+- remove debug_rjs (not supported in rails 3.2)
