@@ -1,6 +1,7 @@
 class JnlpAdaptor
   
   attr_reader :jnlp
+  attr_reader :jnlp_url
   attr_reader :net_logo_package_name
 
   OTRUNK_NLOGO_JAR_PACKAGE_MAP = {
@@ -31,6 +32,8 @@ class JnlpAdaptor
     else
       @net_logo_package_name = JnlpAdaptor::OTRUNK_NLOGO_JAR_PACKAGE_MAP[otrunk_nlogo_jars.first.name]
     end
+    
+    @jnlp_url = @jnlp.versioned_jnlp_url.url
   end
   
   def resource_jars

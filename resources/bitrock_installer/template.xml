@@ -35,9 +35,13 @@
       <programArguments>${project.outputDirectory} "${product_shortname}-${product_version}"</programArguments>
       <progressText>progress</progressText>
       <workingDirectory>${build_project_directory}</workingDirectory>
+      <ruleEvaluationLogic>or</ruleEvaluationLogic>
       <ruleList>
         <platformTest>
           <type>osx</type>
+        </platformTest>
+        <platformTest>
+          <type>linux</type>
         </platformTest>
         <compareText>
           <logic>equals</logic>
@@ -60,16 +64,28 @@
       <!-- Actions executed if the condition is true -->
       <actionList>
        <setInstallerVariable>
+           <name>global_vendordir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${env(SYSTEMDRIVE)}\Documents and Settings\All Users\Application Data\${project.vendor}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
+           <name>local_vendordir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${user_home_directory}\Application Data\${project.vendor}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
            <name>global_installdir</name>
            <persist>1</persist>
            <show>0</show>
-           <value>${env(SYSTEMDRIVE)}\Documents and Settings\All Users\Application Data\${project.vendor}\${product_shortname}-${product_version}</value>
+           <value>${global_vendordir}\${product_shortname}-${product_version}</value>
        </setInstallerVariable>
        <setInstallerVariable>
            <name>local_installdir</name>
            <persist>1</persist>
            <show>0</show>
-           <value>${user_home_directory}\Application Data\${project.vendor}\${product_shortname}-${product_version}</value>
+           <value>${local_vendordir}\${product_shortname}-${product_version}</value>
        </setInstallerVariable>
       </actionList>
       <!-- Actions executed if the condition is false -->
@@ -85,16 +101,28 @@
       <!-- Actions executed if the condition is true -->
       <actionList>
        <setInstallerVariable>
+           <name>global_vendordir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${env(ProgramData)}\${project.vendor}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
+           <name>local_vendordir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${env(LOCALAPPDATA)}\${project.vendor}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
            <name>global_installdir</name>
            <persist>1</persist>
            <show>0</show>
-           <value>${env(ProgramData)}\${project.vendor}\${product_shortname}-${product_version}</value>
+           <value>${global_vendordir}\${product_shortname}-${product_version}</value>
        </setInstallerVariable>
        <setInstallerVariable>
            <name>local_installdir</name>
            <persist>1</persist>
            <show>0</show>
-           <value>${env(LOCALAPPDATA)}\${project.vendor}\${product_shortname}-${product_version}</value>
+           <value>${local_vendordir}\${product_shortname}-${product_version}</value>
        </setInstallerVariable>
       </actionList>
       <!-- Actions executed if the condition is false -->
@@ -109,16 +137,28 @@
       <!-- Actions executed if the condition is true -->
       <actionList>
        <setInstallerVariable>
+           <name>global_vendordir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>/Library/Application Support/${project.vendor}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
+           <name>local_vendordir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${user_home_directory}/Library/Application Support/${project.vendor}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
            <name>global_installdir</name>
            <persist>1</persist>
            <show>0</show>
-           <value>/Library/Application Support/${project.vendor}/${product_shortname}-${product_version}</value>
+           <value>${global_vendordir}/${product_shortname}-${product_version}</value>
        </setInstallerVariable>
        <setInstallerVariable>
            <name>local_installdir</name>
            <persist>1</persist>
            <show>0</show>
-           <value>${user_home_directory}/Library/Application Support/${project.vendor}/${product_shortname}-${product_version}</value>
+           <value>${local_vendordir}/${product_shortname}-${product_version}</value>
        </setInstallerVariable>
       </actionList>
       <!-- Actions executed if the condition is false -->
@@ -128,14 +168,62 @@
   </initializationActionList>
   <preInstallationActionList>
     <dirName>
-      <path>${global_installdir}</path>
-      <variable>global_vendordir</variable>
-    </dirName>
-    <dirName>
       <path>${global_vendordir}</path>
       <variable>global_rootdir</variable>
     </dirName>
   </preInstallationActionList>
+  <postInstallationActionList>
+    <runProgram>
+      <abortOnError>0</abortOnError>
+      <program>/bin/chmod</program>
+      <programArguments>-R ugo+w "${vendordir}"</programArguments>
+      <ruleEvaluationLogic>or</ruleEvaluationLogic>
+      <show>0</show>
+      <showMessageOnError>0</showMessageOnError>
+      <ruleList>
+        <platformTest>
+          <type>linux</type>
+        </platformTest>
+        <platformTest>
+          <type>osx</type>
+        </platformTest>
+      </ruleList>
+    </runProgram>
+    <runProgram>
+      <abortOnError>0</abortOnError>
+      <program>/bin/chmod</program>
+      <programArguments>-R +a "everyone allow list,search,add_file,add_subdirectory,file_inherit,directory_inherit" "${vendordir}"</programArguments>
+      <show>0</show>
+      <showMessageOnError>0</showMessageOnError>
+      <ruleList>
+        <platformTest>
+          <type>osx</type>
+        </platformTest>
+      </ruleList>
+    </runProgram>
+    <runProgram>
+      <abortOnError>0</abortOnError>
+      <program>cacls</program>
+      <programArguments>${vendordir} /e /t /p Everyone:f</programArguments>
+      <ruleEvaluationLogic>or</ruleEvaluationLogic>
+      <show>0</show>
+      <showMessageOnError>0</showMessageOnError>
+      <ruleList>
+        <platformTest>
+          <type>windows-xp</type>
+        </platformTest>
+        <platformTest>
+          <type>windows-vista</type>
+        </platformTest>
+        <platformTest>
+          <type>windows-7</type>
+        </platformTest>
+        <platformTest>
+          <type>windows-8</type>
+        </platformTest>
+      </ruleList>
+    </runProgram>
+  </postInstallationActionList>
   <enableRollback>1</enableRollback>
   <enableTimestamp>1</enableTimestamp>
   <outputDirectory>./installers</outputDirectory>
@@ -267,6 +355,11 @@
               <persist>1</persist>
               <value>${global_installdir}</value>
             </setInstallerVariable>
+            <setInstallerVariable>
+              <name>vendordir</name>
+              <persist>1</persist>
+              <value>${global_vendordir}</value>
+            </setInstallerVariable>
           </actionList>
           <ruleList>
             <fileTest>
@@ -282,6 +375,11 @@
               <name>installdir</name>
               <persist>1</persist>
               <value>${local_installdir}</value>
+            </setInstallerVariable>
+            <setInstallerVariable>
+              <name>vendordir</name>
+              <persist>1</persist>
+              <value>${local_vendordir}</value>
             </setInstallerVariable>
             <showInfo>
               <text>You do not have sufficient privileges to install ${product_fullname} globally.</text>

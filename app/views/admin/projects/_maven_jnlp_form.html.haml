@@ -4,6 +4,9 @@
   - else
     %ul.menu_v
       %li
+        Jnlp CDN Hostname:
+        = text_field :admin_project, :jnlp_cdn_hostname, :size => 60
+      %li
         Maven Jnlp Server:
         = select(:admin_project, :maven_jnlp_server_id, MavenJnlp::MavenJnlpServer.all.collect {|mjs| [ mjs.name, mjs.id ]}, { :selected => admin_project.maven_jnlp_server.id }, { :id => dom_id_for(admin_project, :select_maven_jnlp_server)})
       %li

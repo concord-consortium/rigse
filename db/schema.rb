@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120524200956) do
     t.boolean  "teachers_can_author",                          :default => true
     t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
+    t.string   "jnlp_cdn_hostname"
   end
 
   create_table "admin_tags", :force => true do |t|
@@ -758,6 +759,14 @@ ActiveRecord::Schema.define(:version => 20120524200956) do
     t.integer  "image_file_size"
     t.string   "image_content_type"
     t.datetime "image_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "installer_reports", :force => true do |t|
+    t.text     "body"
+    t.string   "remote_ip"
+    t.boolean  "success"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

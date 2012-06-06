@@ -52,10 +52,10 @@
             (This option changes whether or not teachers are considered authors by default.)
           %li
             %b
-            = f.label :opportunistic_installer, "Opportunistic Installer:", :style => "display:inline;"
+            = f.label :opportunistic_installer, "Use JavaClientLauncher:", :style => "display:inline;"
             = f.check_box :opportunistic_installer
             %br
-            (This option changes the boot up process of the installer to automatically launch the non installer jnlp if no installation is found.)
+            (This option changes the boot up process to use an existing installation or automatically install the necessary jars if no installation is found.)
           %li
             %b
             = f.label :allow_adhoc_schools, "Teachers can create schools:", :style => "display:inline;"

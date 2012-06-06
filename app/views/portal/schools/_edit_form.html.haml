@@ -1,0 +1,22 @@
+.item
+  = edit_menu_for(portal_school, f, { :omit_cancel => true })
+  .content
+    %p
+      = field_set_tag 'State or Province' do
+        .aligned
+          = portal_school.state
+
+      = field_set_tag 'District' do
+        .aligned
+          = portal_school.district.name
+
+      = field_set_tag 'School' do
+        .aligned
+          = portal_school.name
+
+      = field_set_tag 'Settings' do
+        .aligned
+          Do Not Use Installer:
+          = hidden_field_tag "settings[skip_installer]", 0
+          = check_box_tag "settings[skip_installer]", 1, !!portal_school.settings_hash["skip_installer"]
+

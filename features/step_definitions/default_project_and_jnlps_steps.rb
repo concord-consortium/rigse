@@ -1,5 +1,7 @@
 Given /^the most basic default project$/ do
-  Factory.create(:admin_project_no_jnlps)
+  p = Factory.build(:admin_project_no_jnlps)
+  p.save(false)
+  p
 end
 
 #

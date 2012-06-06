@@ -17,4 +17,7 @@
       %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'matching: ', :class=>"right"
         = text_field_tag :name, name
+      %td{:style=>"padding: 0.5em;"}
+        = label_tag :filter, 'only mine: ', :class=>"right"
+        = check_box_tag :only_mine, only_mine
 

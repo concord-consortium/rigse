@@ -185,34 +185,42 @@ module JnlpHelper
   ## and track things like jnlp / previous versions &etc.
   ##
   def jnlp_installer_vendor
-    "Concord Consortium".gsub(/\s+/,"")
+    "ConcordConsortium"
   end
   
   #
   # convinient
   #
   def load_yaml(filename) 
-    file_txt = ""
-    File.open(filename, "r") do |f|
-      file_txt = f.read
+    file_txt = "---"
+    begin
+      File.open(filename, "r") do |f|
+        file_txt = f.read
+      end
+    rescue
     end
-    return YAML::load(file_txt)
+    return YAML::load(file_txt) || {}
   end
   
   # IMPORTANT: should match <project><name>XXXX</name></project> value
   # from bitrock installer
   def jnlp_installer_project
     config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
-    config['shortname'] || "RITES"
+    config['shortname'] || "General"
   end
   
   # IMPORTANT: should match <project><version>XXXX</version></project> value
   # from bitrock installer config file: eg: projects/rites/rites.xml
   def jnlp_installer_version
     config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
-    config['version'] || "200912.2"
+    config['version'] || "1.0"
   end
-  
+
+  def jnlp_installer_old_versions
+    config = load_yaml("#{::Rails.root.to_s}/config/installer.yml")
+    config['old_versions'] || []
+  end
+
   def jnlp_installer_not_found_url(os)
     "#{APP_CONFIG[:site_url]}/missing_installer/#{os}"
   end
