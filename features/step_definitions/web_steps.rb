@@ -245,5 +245,11 @@ And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
     }
     
     return bSuccess;
-  ")  
+  ")
+  
+
 end
+
+
+
+
