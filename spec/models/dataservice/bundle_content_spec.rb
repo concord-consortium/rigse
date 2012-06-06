@@ -83,7 +83,7 @@ describe Dataservice::BundleContent do
 
   # this has to be called after the blob extraction has happened, so we know what url to look for
   def setup_expected(blob)
-    @blob_url = "http://localhost/dataservice/blobs/#{blob.id}.blob/#{blob.token}"
+    @blob_url = "http://#{URI.parse(APP_CONFIG[:site_url]).host}/dataservice/blobs/#{blob.id}.blob/#{blob.token}"
     @expected_otml =   '<?xml version="1.0" encoding="UTF-8"?>
       <otrunk id="04dc61c3-6ff0-11df-a23f-6dcecc6a5613">
         <imports>
@@ -184,7 +184,7 @@ describe Dataservice::BundleContent do
       '
     @expected_body = '<sessionBundles xmlns:xmi="http://www.omg.org/XMI" xmlns:sailuserdata="sailuserdata" start="2010-06-04T11:35:09.053-0400" stop="2010-06-04T11:44:53.604-0400" curnitUUID="cccccccc-0009-0000-0000-000000000000" sessionUUID="863174f4-79a1-4c44-9733-6a94be2963c9" lastModified="2010-06-04T11:44:10.136-0400" timeDifference="743" localIP="10.11.12.235">
           <sockParts podId="dddddddd-0002-0000-0000-000000000000" rimName="ot.learner.data" rimShape="[B">
-            <sockEntries value="' + Dataservice::BundleContent.b64gzip_pack(@expected_otml) + '" millisecondsOffset="541083"/>
+            <sockEntries value="' + B64Gzip.pack(@expected_otml) + '" millisecondsOffset="541083"/>
           </sockParts>
           <agents role="RUN_WORKGROUP"/>
           <sdsReturnAddresses>http://has.staging.concord.org/dataservice/bundle_loggers/6/bundle_contents.bundle</sdsReturnAddresses>
@@ -243,7 +243,7 @@ describe Dataservice::BundleContent do
       it "should have an otml property if the xml is valid"  do
         # IMORTANT: this learner_otml is seriously FAKE. (np)
         @learner_otml = "<OTText>Hello World</OTText>"
-        @ziped_otml = Dataservice::BundleContent.b64gzip_pack(@learner_otml)
+        @ziped_otml = B64Gzip.pack(@learner_otml)
         @learner_socks = "<ot.learner.data><sockEntries value=\"#{@ziped_otml}\"/></ot.learner.data>"
         @bundle.body="<sessionBundles>#{@learner_socks}</sessionBundles>"
         @bundle.process_bundle

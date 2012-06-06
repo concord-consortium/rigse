@@ -96,6 +96,16 @@
                   %b
                     No
                   (Users will not be asked for consent to use their data in reports.)
+              %li
+                Use periodic bundle uploading:
+                - if admin_project.use_periodic_bundle_uploading?
+                  %b
+                    Yes
+                  (User data will be uploaded in smaller chunks at intervals throughout the session.)
+                - else
+                  %b
+                    No
+                  (User data will be uploaded in one large chunk at the end of the session.)
             = field_set_tag 'Maven Jnlp' do
               %p
                 Jnlp CDN Hostname:

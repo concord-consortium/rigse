@@ -10,6 +10,7 @@ class Portal::Learner < ActiveRecord::Base
   
   belongs_to :console_logger, :class_name => "Dataservice::ConsoleLogger", :foreign_key => "console_logger_id", :dependent => :destroy
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id", :dependent => :destroy
+  has_one    :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger", :foreign_key => "learner_id", :dependent => :destroy
 
   has_many :open_responses, :class_name => "Saveable::OpenResponse" do
     def answered
@@ -45,13 +46,19 @@ class Portal::Learner < ActiveRecord::Base
     learner.create_bundle_logger
   end
 
+  # have to create this after so that the learner id can be stored in the new bundle logger
+  after_create do |learner|
+    learner.create_periodic_bundle_logger
+  end
+
   def valid_loggers?
-    console_logger && bundle_logger
+    console_logger && bundle_logger && periodic_bundle_logger
   end
 
   def create_new_loggers
     create_console_logger
     create_bundle_logger
+    create_periodic_bundle_logger
   end
   
   # validates_presence_of :console_logger, :message => "console_logger association not specified"

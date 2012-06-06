@@ -46,7 +46,7 @@ class Portal::Student < ActiveRecord::Base
   
   ## TODO: fix with has_many finderSQL
   def schools
-    schools = self.clazzes.map {|c| c.school }.uniq.flatten
+    schools = self.clazzes.map {|c| c.school }.uniq.flatten.compact
   end
 
   def school

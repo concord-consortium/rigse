@@ -44,9 +44,7 @@ namespace :build do
     def write_file_with_template_replacements(filename,template,replacements)
       File.open(template, "r") do |f|
         file_txt = f.read
-        replacements.each_pair do |k,v|
-          file_txt.gsub!(/\#{#{k}}/,v)
-        end
+        file_txt.gsub!(/\#\{([^\}]+)\}/) {|match| replacements[$1] || "" }
         File.open(filename, "w") do |f|
            f.write(file_txt)
         end
@@ -173,7 +171,7 @@ namespace :build do
     task :cache_jars => [:clean, :generate_installer_config] do
       puts "Caching jar resources"
       %x[mkdir -p #{bitrocket_installer_dir}/jars/]
-      %x[cd #{bitrocket_installer_dir}; ./scripts/cache-jars.sh ]
+      puts %x[cd #{bitrocket_installer_dir}; ./scripts/cache-jars.sh ]
       remove_otrunk_properties
     end
 

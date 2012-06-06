@@ -36,6 +36,13 @@ When /^(.*) within (.*[^:])$/ do |step_text, parent|
   with_scope(parent) { step step_text }
 end
 
+# Rails-Portal specific "#primay" div.
+# hacky fix for bug junit reports in capybara (> 0.9.0)
+# jenkins will choke on nested CDATA entries.
+When /^(.*) in the content$/ do |step|
+  When "#{step} within #primary"
+end
+
 # Multi-line step scoper
 When /^(.*) within (.*[^:]):$/ do |step_text, parent, table_or_string|
   with_scope(parent) { step "#{step_text}:", table_or_string }

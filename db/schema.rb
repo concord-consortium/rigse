@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120514185302) do
+ActiveRecord::Schema.define(:version => 20120523211636) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120514185302) do
     t.boolean  "allow_adhoc_schools",                          :default => false
     t.boolean  "require_user_consent",                         :default => false
     t.string   "jnlp_cdn_hostname"
+    t.boolean  "use_periodic_bundle_uploading",                :default => false
   end
 
   create_table "admin_tags", :force => true do |t|
@@ -73,12 +74,6 @@ ActiveRecord::Schema.define(:version => 20120514185302) do
     t.datetime "updated_at"
   end
 
-  create_table "admin_tags", :force => true do |t|
-    t.string   "scope"
-    t.string   "tag"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
   create_table "attached_files", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -110,14 +105,16 @@ ActiveRecord::Schema.define(:version => 20120514185302) do
   end
 
   create_table "dataservice_blobs", :force => true do |t|
-    t.binary   "content",           :limit => 16777215
+    t.binary   "content",                    :limit => 16777215
     t.string   "token"
     t.integer  "bundle_content_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "periodic_bundle_content_id"
   end
 
   add_index "dataservice_blobs", ["bundle_content_id"], :name => "index_dataservice_blobs_on_bundle_content_id"
+  add_index "dataservice_blobs", ["periodic_bundle_content_id"], :name => "pbc_idx"
 
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
@@ -164,10 +161,45 @@ ActiveRecord::Schema.define(:version => 20120514185302) do
 
   add_index "dataservice_launch_process_events", ["bundle_content_id"], :name => "index_dataservice_launch_process_events_on_bundle_content_id"
 
+  create_table "dataservice_periodic_bundle_contents", :force => true do |t|
+    t.integer  "periodic_bundle_logger_id"
+    t.text     "body",                      :limit => 16777215
+    t.boolean  "processed"
+    t.boolean  "valid_xml"
+    t.boolean  "empty"
+    t.string   "uuid"
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
+    t.boolean  "parts_extracted"
+  end
+
+  add_index "dataservice_periodic_bundle_contents", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
+
+  create_table "dataservice_periodic_bundle_loggers", :force => true do |t|
+    t.integer  "learner_id"
+    t.text     "imports"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "dataservice_periodic_bundle_loggers", ["learner_id"], :name => "learner_index"
+
+  create_table "dataservice_periodic_bundle_parts", :force => true do |t|
+    t.integer  "periodic_bundle_logger_id"
+    t.boolean  "delta",                                         :default => true
+    t.string   "key"
+    t.text     "value",                     :limit => 16777215
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+  end
+
+  add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index"
+  add_index "dataservice_periodic_bundle_parts", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
+
   create_table "delayed_jobs", :force => true do |t|
-    t.integer  "priority",   :default => 0
-    t.integer  "attempts",   :default => 0
-    t.text     "handler"
+    t.integer  "priority",                         :default => 0
+    t.integer  "attempts",                         :default => 0
+    t.text     "handler",    :limit => 2147483647
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
@@ -2109,7 +2141,7 @@ ActiveRecord::Schema.define(:version => 20120514185302) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"name"=>"15", "scope_type"=>"15", "scope_id"=>nil}
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|
@@ -2169,10 +2201,10 @@ ActiveRecord::Schema.define(:version => 20120514185302) do
     t.boolean  "site_admin",                               :default => false
     t.string   "type"
     t.integer  "external_user_domain_id"
-    t.boolean  "of_consenting_age",                        :default => false
-    t.boolean  "have_consent",                             :default => false
     t.string   "external_id"
     t.boolean  "require_password_reset",                   :default => false
+    t.boolean  "of_consenting_age",                        :default => false
+    t.boolean  "have_consent",                             :default => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

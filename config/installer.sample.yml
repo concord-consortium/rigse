@@ -6,3 +6,5 @@ old_versions:
 - "200911.03"
 - "200911.02"
 - "200911.01"
+jnlp_cdn_mirror: jars.dev.concord.org
+use_static_www: "true"

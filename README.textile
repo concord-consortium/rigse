@@ -243,8 +243,37 @@ h4. Rspec, Rspec-rails
 
 h4. Cucumber
 
-h4. Webrat
 
+h4. Capybara
+
+You can customize your selenium drivers by editing @ ~/.capybara.rb @
+This file is sourced by @ ./features/support/local_config.rb @
+
+Here is a sample file which checks for an ENV param named @ SELENIUM_CONFIG @
+
+<code><pre>
+    case ENV['SELENIUM_CONFIG']
+    when 'saucelabs-ie'
+        Capybara.server_port = ENV['RAILS_PORT'].to_i
+        Capybara.app_host = "http://app#{Capybara.server_port}.test.dev.concord.org"
+        selenium_remote :url => "http://ccdev:aebecf9c-b426-44f8-9726-6eb747a7340e@ondemand.saucelabs.com:80/wd/hub",
+          :desired_capabilities => Selenium::WebDriver::Remote::Capabilities.internet_explorer(:platform => "WINDOWS")
+    when 'ff6'
+      puts "----- using Firefox 6 profile ---- "
+      Selenium::WebDriver::Firefox.path= '/usr/local/bin/firefox6'
+      Capybara.register_driver :selenium do |app|
+        Capybara::Selenium::Driver.new(app, :profile => 'ff6')
+      end
+    when 'chrome'
+      puts "---- using Chrome profile ----"
+      Capybara.register_driver :selenium do |app|
+        Capybara::Selenium::Driver.new(app, :browser => :chrome)
+      end
+    else 
+        # by default don't customize anything, this ought to keep the current capybara tests running as before
+      #
+    end
+</pre></code>
 h4. Factory Girl
 
 bq. factory_girl allows you to quickly define prototypes for each of your models and ask for instances with properties that are important to the test at hand.
