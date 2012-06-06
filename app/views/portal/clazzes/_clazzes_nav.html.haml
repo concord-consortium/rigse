@@ -21,11 +21,13 @@
         - clazz_list = top_node.clazzes
       
       - clazz_list.each do |clazz_item|
+        - is_active = true;
         - if top_node.is_a? Portal::Teacher 
           - clazz = clazz_item.clazz
+          - is_active = clazz_item.active
         - else
           - clazz = clazz_item
-        - if(clazz.active)
+        - if(is_active)
           %li{:id=>dom_id_for(clazz,:nav_item)}
             -if clazz.section
               - link_text = "#{clazz.name}(#{clazz.section})"
@@ -40,6 +42,6 @@
     - if top_node.is_a? Portal::Teacher
       %ul.create{:id=>dom_id_for(top_node, :nav_list_create_class)}
         .create_link.button
-          %button{:class => "left_pane_button pie", :id => "button 12", :onclick => "createNewClass(\"#{new_portal_clazz_path}\")"}Create a Class
+          %button{:class => "left_pane_button pie", :id => "btn_create_class", :onclick => "createNewClass(\"#{new_portal_clazz_path}\")"}Create a Class
           - manage_class_list_url = url_for(:action => 'manage', :controller => Portal::ClazzesController)
-          %button{:class => "left_pane_button pie", :id => "button 13", :onclick => "manageClassList(\"/portal/classes/manage\")"} Manage list
+          %button{:class => "left_pane_button pie", :id => "btn_manage_classes", :onclick => "manageClassList(\"/portal/classes/manage\")"} Manage list

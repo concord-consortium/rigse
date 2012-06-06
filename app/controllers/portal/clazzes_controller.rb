@@ -27,7 +27,7 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1
   # GET /portal_clazzes/1.xml
   def show
-    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }], :conditions => ['active = ?', 1])
+    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     if current_project.allow_default_class
@@ -397,7 +397,8 @@ class Portal::ClazzesController < ApplicationController
   
   def manage_classes
     if current_user.anonymous?
-      flash[:error] = "Anonymous can't manage classes. Please log in and try again."
+      redirect_to home_url
+      return
     end
     
     
@@ -420,9 +421,9 @@ class Portal::ClazzesController < ApplicationController
         teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
         teacher_clazz.position = position;
         if (arrActiveTeacherClazz.include?(teacher_clazz_id)) then
-          teacher_clazz.clazz.active = true
+          teacher_clazz.active = true
         else
-          teacher_clazz.clazz.active = false
+          teacher_clazz.active = false
         end
         teacher_clazz.clazz.save!
         teacher_clazz.save!
@@ -436,23 +437,48 @@ class Portal::ClazzesController < ApplicationController
   end
   
   def copy_class
+    
+    response_value = {
+      :success => true,
+      :error_msg => nil
+    }
+    
+    if current_user.anonymous?
+      response_value[:success] = false
+      response_value[:error_msg] = "Anonymous can't copy classes. Please log in and try again."
+      render :json => response_value
+      return
+    end
+    
+    teacher = current_user.portal_teacher
+    
     class_to_copy = Portal::Clazz.find(params[:id]);
     
     params[:portal_clazz] = class_to_copy
     
-    new_class = Portal::Clazz.find_or_create_by_name(
-        params[:clazz_name],
+    new_class = Portal::Clazz.new(
+        :name => params[:clazz_name],
         :class_word => params[:clazz_word],
         :description => params[:clazz_desc],
         :grades => class_to_copy.grades,
-        :teacher_id => class_to_copy.teacher_id,
+        :teacher_id => teacher.id,
         :teacher => class_to_copy.teacher,
         :course => class_to_copy.course,
         :semester_id => class_to_copy.semester_id
     )
-      
+        
     if(!new_class.save)
+      response_value[:success] = false
+      response_value[:error_msg] = new_class.errors
+      render :json => response_value      
       return
+    end
+    
+    class_to_copy.offerings.each do |offering|
+       new_offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(new_class.id, offering.runnable_type, offering.runnable_id)
+       new_offering.status = offering.status
+       new_offering.active = offering.active
+       new_offering.save!
     end
     
     teacher_clazz_count = new_class.teacher.teacher_clazzes.length
@@ -461,9 +487,7 @@ class Portal::ClazzesController < ApplicationController
     teacher_clazz.position = position
     teacher_clazz.save!
     
-    render :update do |page|
-      page.reload
-    end
+    render :json => response_value
     
   end
 

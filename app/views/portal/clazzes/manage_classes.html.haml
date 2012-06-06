@@ -1,3 +1,4 @@
+= javascript_include_tag "manage_classes"
 = form_for(@teacher, :url => url_for(:action => :manage_classes, :controller => 'clazzes') ) do |f|
   .main_manage_classes_container.pie
     .container
@@ -18,7 +19,7 @@
         
         
           - @teacher.teacher_clazzes.each do |teacher_clazz| 
-            - if(teacher_clazz.clazz.active)
+            - if(teacher_clazz.active)
               - active_classes_array.push(1)
               - active_class_count += 1
             - else
@@ -33,7 +34,7 @@
           - if @teacher.teacher_clazzes.length > 0
             %ul.sortable{:id=>"sortable",}
               - @teacher.teacher_clazzes.each do |teacher_clazz| 
-                - if(teacher_clazz.clazz.active)
+                - if(teacher_clazz.active)
                   - selected_value = true;
                 - else
                   - selected_value = false;

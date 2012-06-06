@@ -1,8 +1,13 @@
 class AddPositionFieldToClazz < ActiveRecord::Migration
+  
+  class Portal::TeacherClazz < ActiveRecord::Base
+    set_table_name :portal_teacher_clazzes
+  end 
+  
   def self.up
     add_column :portal_teacher_clazzes, :position, :integer, :default=>0
-    
-    teachers = Portal::Teacher.find(:all)
+    Portal::TeacherClazz.reset_column_information
+    teachers = Portal::Teacher.all
     teachers.each do |teacher|
       teacher_clazzes = teacher.teacher_clazzes
       position = 1

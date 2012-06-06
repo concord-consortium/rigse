@@ -1175,7 +1175,7 @@ ul.quiet_list {
     margin: 0;
   }
   a{
-    
+    margin-top: 5px;
   }
   input
   {
@@ -1199,6 +1199,13 @@ ul.quiet_list {
 .class_list_element_container
 {
   width:500px;
+  table
+  {
+    td
+    {
+      vertical-align: middle;
+    }
+  }
 }
 
 .manage_classes_panel
@@ -1252,7 +1259,6 @@ ul.quiet_list {
 .popup_content
 {
   padding: 20px 20px 20px 20px;
-  background-color: #DDDDDD;
   textarea
   {
     width: 350px;
