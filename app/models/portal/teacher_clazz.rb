@@ -5,6 +5,7 @@ class Portal::TeacherClazz < ActiveRecord::Base
   
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
+  default_scope :order => 'position ASC'
   
   [:name, :description].each { |m| delegate m, :to => :clazz }
   

@@ -114,6 +114,13 @@ constraints :id => /\d+/ do
         get :roster
         post :get_students
       end
+      
+      collection do
+        #get :manage_classes, :path => 'manage'
+        match 'manage', :to => 'clazzes#manage_classes' 
+        #post :manage_classes_save, :as => 'manage_save'
+      end
+      
     end
 
     resources :clazzes, :path => :classes do

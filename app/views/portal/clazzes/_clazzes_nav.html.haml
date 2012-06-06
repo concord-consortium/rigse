@@ -29,4 +29,5 @@
       %ul.create{:id=>dom_id_for(top_node, :nav_list_create_class)}
         .create_link.button
           %button{:class => "left_pane_button pie", :id => "button 12", :onclick => "createNewClass(\"#{new_portal_clazz_path}\")"}Create a Class
-          %button{:class => "left_pane_button pie", :id => "button 13", :onclick => "manageClassList()"} Manage list
+          - manage_class_list_url = url_for(:action => 'manage', :controller => Portal::ClazzesController)
+          %button{:class => "left_pane_button pie", :id => "button 13", :onclick => "manageClassList(\"/portal/classes/manage\")"} Manage list
