@@ -138,13 +138,6 @@ class Portal::ClazzesController < ApplicationController
 
     respond_to do |format|
       if okToCreate && @portal_clazz.save
-      
-        teacher_clazz_count = @portal_clazz.teacher.teacher_clazzes.length
-        position = teacher_clazz_count
-        teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@portal_clazz.id, @portal_clazz.teacher.id)
-        teacher_clazz.position = position
-        teacher_clazz.save!
-      
         flash[:notice] = 'Class was successfully created.'
         format.html { redirect_to(@portal_clazz) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
@@ -568,6 +561,10 @@ class Portal::ClazzesController < ApplicationController
         :course => class_to_copy.course,
         :semester_id => class_to_copy.semester_id
     )
+    
+    class_to_copy.teachers.each do |other_teacher|
+        new_class.add_teacher(other_teacher)
+    end
         
     if(!new_class.save)
       response_value[:success] = false
@@ -582,12 +579,6 @@ class Portal::ClazzesController < ApplicationController
        new_offering.active = offering.active
        new_offering.save!
     end
-    
-    teacher_clazz_count = new_class.teacher.teacher_clazzes.length
-    position = teacher_clazz_count
-    teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(new_class.id, new_class.teacher.id)
-    teacher_clazz.position = position
-    teacher_clazz.save!
     
     render :json => response_value
     

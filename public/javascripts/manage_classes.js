@@ -107,6 +107,10 @@ function copyClass(btnSave)
 											{
 												if (response.error_msg.hasOwnProperty(strKey))
 												{
+													if (error_msg != "")
+													{
+														error_msg += "<br />";
+													}
 													error_msg += strKey.replace(/_/g, " ").capitalize() + " " + response.error_msg[strKey];
 												}
 											}											
