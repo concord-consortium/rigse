@@ -52,7 +52,7 @@ class Image < ActiveRecord::Base
     def search_list(options)
       name = options[:name]
       name_matches = Image.like(name)
-      images = options[:include_drafts] ? name_matches.visible_to_user_with_drafts(options[:user]) : name_matches.visible_to_user(options[:user])
+      images = options[:only_current_users] ? name_matches.by_user(options[:user]) : name_matches.visible_to_user(options[:user])
 
       unless options[:sort_order].blank?
         images = images.ordered_by(options[:sort_order])
