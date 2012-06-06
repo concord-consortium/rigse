@@ -65,16 +65,16 @@
                     No
                   (Teachers are not considered authors by default and can only author when given the "author" role.)
               %li
-                Opportunistic Installer:
+                Use JavaClientLauncher:
                 - if admin_project.opportunistic_installer?
                   %b
                     Yes
-                  (The installer launcher will automatically launch the non installer jnlp if no installation is found.)
+                  (The launcher will use an existing installation or automatically install the necessary jars if no installation is found.)
                 - else
                   %b
                     No
-                  (The installer launcher will show the user a dialog and open the a page where the user can download the installer)
-                  
+                  (The launcher will use the configured jnlp directly, and launch via Java WebStart.)
+
               %li
                 Teachers can create schools:
                 - if admin_project.allow_adhoc_schools?
@@ -86,6 +86,9 @@
                     No
                   (Teachers must choose their school from a list when registering.)
             - field_set_tag 'Maven Jnlp' do
+              %p
+                Jnlp CDN Hostname:
+                = admin_project.jnlp_cdn_hostname
               %p
                 Maven Jnlp Server:
                 - if admin_project.maven_jnlp_server

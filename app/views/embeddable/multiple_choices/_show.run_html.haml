@@ -1,0 +1,10 @@
+%div{:id => dom_id_for(multiple_choice, :details), :class => 'content'}
+  = multiple_choice.prompt
+  - current_answer = nil
+  - if local_assigns[:learner]
+    - if saveable = Saveable::MultipleChoice.find_by_learner_id_and_multiple_choice_id(learner.id, multiple_choice.id)
+      - current_answer = saveable.answers.last.choice if saveable.answered?
+  - multiple_choice.choices.each do |choice|
+    - selected = (current_answer == choice) ? true : false
+    - with_format(:html) do
+      = render :partial => "embeddable/multiple_choices/show_choice", :locals => {:multiple_choice => multiple_choice, :choice => choice, :selected => selected}

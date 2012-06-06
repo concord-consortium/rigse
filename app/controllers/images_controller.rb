@@ -6,19 +6,20 @@ class ImagesController < ApplicationController
   # GET /images
   # GET /images.xml
   def index
-    @include_drafts = param_find(:include_drafts, true)
+    @only_mine = param_find(:only_mine, true)
     @name = param_find(:name)
     @sort_order = param_find(:sort_order, true)
 
     @images = Image.search_list({
       :name => @name,
+      :only_current_users => @only_mine,
       :user => current_user,
-      :include_drafts => @include_drafts,
       :sort_order => @sort_order,
       :paginate => true,
       :per_page => 36,
       :page => params[:page]
     })
+    @paginated_objects = @images
 
     if request.xhr?
       render :partial => 'runnable_list', :locals => { :images => @images, :paginated_objects => @images }
@@ -59,8 +60,9 @@ class ImagesController < ApplicationController
   # POST /images
   # POST /images.xml
   def create
+    params[:image][:user_id] = current_user.id.to_s
     @image = Image.new(params[:image])
-    @image.user = current_user
+
     respond_to do |format|
       if @image.save
         flash[:notice] = 'Image was successfully created.'
@@ -122,7 +124,7 @@ class ImagesController < ApplicationController
   protected
 
   def teacher_required
-    return if logged_in? && (current_user.portal_teacher || current_user.has_role?("admin"))
+    return true if logged_in? && (current_user.portal_teacher || current_user.has_role?("admin"))
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end

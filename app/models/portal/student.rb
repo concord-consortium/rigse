@@ -48,9 +48,19 @@ class Portal::Student < ActiveRecord::Base
   def schools
     schools = self.clazzes.map {|c| c.school }.uniq.flatten
   end
+
   def school
     return schools.last
   end
+
+  def teachers
+    teachers = self.clazzes.map {|c| c.teachers }.flatten.uniq
+  end
+
+  def has_teacher?(teacher)
+    self.teachers.include?(teacher)
+  end
+
   ##
   ## Strange approach to alter the behavior of Clazz.children()
   ## to reflect a student-centric world view.

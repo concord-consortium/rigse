@@ -266,6 +266,18 @@ class User < ActiveRecord::Base
     self
   end
 
+  # If this user is a student, allow the student's teacher(s) to make
+  # changes to this.
+  def is_user?(user)
+    if user == self
+      true
+    elsif user.portal_teacher && self.portal_student && self.portal_student.has_teacher?(user.portal_teacher)
+      true
+    else
+      false
+    end
+  end
+
   def school
     return @school if @school
     school_person = self.portal_teacher || self.portal_student

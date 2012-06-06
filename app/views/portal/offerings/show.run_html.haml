@@ -1,0 +1,3 @@
+%form{:action => answers_portal_offering_path(@offering), :method => :post}
+  = render_show_partial_for(@offering.runnable, {:locals => {:learner => @learner}})
+  %input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => (@learner.nil? ? "disabled" : "")}

@@ -14,6 +14,7 @@ module RunnablesHelper
   def run_url_for(component, params = {}, format = nil)
     format ||= component.run_format
 
+    # this is where we pull in extra parameters for the url, like skip_installer
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
   end
@@ -49,7 +50,7 @@ module RunnablesHelper
 
   def x_link_for(component, verb, as_name = nil, params = {})
     link_text = params.delete(:link_text) || "#{verb} "
-    url = run_url_for(component, params)
+    url = run_url_for(component, params, params.delete(:format))
     
     run_type = case component
     when JnlpLaunchable   then "Java Web Start application"
