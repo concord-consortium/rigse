@@ -1,14 +1,14 @@
 class AddActiveFieldToClazz < ActiveRecord::Migration
   def self.up
-    add_column :portal_teacher_clazzes, :active, :integer, :default=>1
-    teacher_clazzes = Portal::TeacherClazz.find(:all)
-    teacher_clazzes.each do |teacher_clazz|
-      teacher_clazz.active = 1 
-      teacher_clazz.save!
+    add_column :portal_clazzes, :active, :boolean, :default=>true
+    portal_clazzes = Portal::Clazz.find(:all)
+    portal_clazzes.each do |clazz|
+      clazz.active = true 
+      clazz.save!
     end
   end
 
   def self.down
-    remove_column :portal_teacher_clazzes, :active
-  end
+    remove_column :portal_clazzes, :active
+  end 
 end
