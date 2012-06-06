@@ -1153,9 +1153,63 @@ ul.quiet_list {
 }
 
 /* CSS for Manage Classes Page*/
+
+.total_Class_summary
+{
+    font-weight:bold;
+    font-size: 1.3em;
+    color: #000000;
+    display:inline;
+    float: left;
+    padding-top: 20px;
+}
+
+.class_list_element
+{
+  div
+  {
+    float: left;
+  }
+  table
+  {
+    margin: 0;
+  }
+  a{
+    
+  }
+  input
+  {
+    display: inline;
+    width: 50px;
+    margin: 6px;
+    border: 0;
+  }
+  label
+  {
+    font-weight:bold;
+    font-size: 1.3em;
+    color: #000000;
+    display:inline;
+    text-transform: none;
+  }
+  
+}
+
+
+.class_list_element_container
+{
+  width:500px;
+}
+
 .manage_classes_panel
 {
-  #sortable li { margin: 0 0px 3px 0px; padding: 0em;cursor:move }
+  #sortable li { 
+    margin: 0; 
+    padding: 3px 0px 0px 0px ;
+    cursor:move ;
+    height:auto;
+    }
+    #sortable { list-style-type: none; margin: 0; padding: 0;width:auto; }
 }
 
 .right_float
@@ -1180,6 +1234,14 @@ ul.quiet_list {
   /* Saf3+, Chrome */ }
 }
 
+.bottom_options
+{
+  button
+  {
+    display: inline;
+  }
+}
+
 .clear_both
 {
   clear:both;
@@ -1191,6 +1253,15 @@ ul.quiet_list {
 {
   padding: 20px 20px 20px 20px;
   background-color: #DDDDDD;
+  textarea
+  {
+    width: 350px;
+  }
+  
+  td
+  {
+    padding-top: 10px; 
+  }
 }
 
 /* ---- END CSS for Manage Classes Page ------*/

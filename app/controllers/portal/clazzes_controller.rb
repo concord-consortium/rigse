@@ -27,7 +27,7 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1
   # GET /portal_clazzes/1.xml
   def show
-    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
+    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }], :conditions => ['active = ?', 1])
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     if current_project.allow_default_class
@@ -138,6 +138,13 @@ class Portal::ClazzesController < ApplicationController
 
     respond_to do |format|
       if okToCreate && @portal_clazz.save
+      
+        teacher_clazz_count = @portal_clazz.teacher.teacher_clazzes.length
+        position = teacher_clazz_count
+        teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@portal_clazz.id, @portal_clazz.teacher.id)
+        teacher_clazz.position = position
+        teacher_clazz.save!
+      
         flash[:notice] = 'Class was successfully created.'
         format.html { redirect_to(@portal_clazz) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
@@ -399,17 +406,25 @@ class Portal::ClazzesController < ApplicationController
       # Position teacher classes
       # and 
       # Activate/Deactivate teacher classes
-      arrTeacherClazzPosition = params["teacher_clazz_position"]
-      arrActiveTeacherClazz = params["teacher_clazz"]
+      arrTeacherClazzPosition = params['teacher_clazz_position']
+      
+      arrActiveTeacherClazz = nil
+      if (params.has_key? 'teacher_clazz') then
+        arrActiveTeacherClazz = params['teacher_clazz']
+      else
+        arrActiveTeacherClazz = []
+      end
+      
       position = 1
       arrTeacherClazzPosition.each do |teacher_clazz_id|
         teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
         teacher_clazz.position = position;
         if (arrActiveTeacherClazz.include?(teacher_clazz_id)) then
-          teacher_clazz.active = 1
+          teacher_clazz.clazz.active = true
         else
-          teacher_clazz.active = 0
+          teacher_clazz.clazz.active = false
         end
+        teacher_clazz.clazz.save!
         teacher_clazz.save!
         position += 1;
       end
@@ -420,5 +435,37 @@ class Portal::ClazzesController < ApplicationController
     
   end
   
+  def copy_class
+    class_to_copy = Portal::Clazz.find(params[:id]);
+    
+    params[:portal_clazz] = class_to_copy
+    
+    new_class = Portal::Clazz.find_or_create_by_name(
+        params[:clazz_name],
+        :class_word => params[:clazz_word],
+        :description => params[:clazz_desc],
+        :grades => class_to_copy.grades,
+        :teacher_id => class_to_copy.teacher_id,
+        :teacher => class_to_copy.teacher,
+        :course => class_to_copy.course,
+        :semester_id => class_to_copy.semester_id
+    )
+      
+    if(!new_class.save)
+      return
+    end
+    
+    teacher_clazz_count = new_class.teacher.teacher_clazzes.length
+    position = teacher_clazz_count
+    teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(new_class.id, new_class.teacher.id)
+    teacher_clazz.position = position
+    teacher_clazz.save!
+    
+    render :update do |page|
+      page.reload
+    end
+    
+  end
+
 
 end
