@@ -113,6 +113,7 @@ constraints :id => /\d+/ do
         post :edit_teachers
         get :roster
         post :get_students
+        post :copy_class
       end
       
       collection do
