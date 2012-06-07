@@ -771,4 +771,104 @@ describe Portal::ClazzesController do
       assert_not_nil(newStudentInClazz)
     end
   end
+
+  describe "Put teacher Manage class" do
+    before(:each) do
+      @mock_clazz_name_2 = "Random Test Class 2"
+      @mock_clazz_2 = mock_clazz({ :name => @mock_clazz_name_2, :teachers => [@authorized_teacher], :course => @mock_course })
+      teacher_clazz = Portal::TeacherClazz.new()
+      teacher_clazz.clazz_id = @mock_clazz_2.id
+      teacher_clazz.teacher_id = @authorized_teacher.id
+      teacher_clazz.save!
+      
+      @mock_clazz_name_3 = "Random Test Class 3"
+      @mock_clazz_3 = mock_clazz({ :name => @mock_clazz_name_3, :teachers => [@authorized_teacher], :course => @mock_course })
+      teacher_clazz.clazz_id = @mock_clazz_3.id
+      teacher_clazz.teacher_id = @authorized_teacher.id
+      teacher_clazz.save!
+      
+      @mock_clazz_name_4 = "Random Test Class 4"
+      @mock_clazz_4 = mock_clazz({ :name => @mock_clazz_name_4, :teachers => [@authorized_teacher], :course => @mock_course })
+      teacher_clazz.clazz_id = @mock_clazz_4.id
+      teacher_clazz.teacher_id = @authorized_teacher.id
+      teacher_clazz.save!
+      
+      @mock_clazz_name_5 = "Random Test Class 5"
+      @mock_clazz_5 = mock_clazz({ :name => @mock_clazz_name_5, :teachers => [@authorized_teacher], :course => @mock_course })
+      teacher_clazz.clazz_id = @mock_clazz_5.id
+      teacher_clazz.teacher_id = @authorized_teacher.id
+      teacher_clazz.save!
+    end
+    it "should should save all the activated and deactivated classes and in a right order" do
+      @post_params = {
+        :teacher_clazz  => Array[@mock_clazz.id , @mock_clazz_2.id , @mock_clazz_3.id , @mock_clazz_4.id , @mock_clazz_5.id ],
+        :teacher_clazz_position  => Array[@mock_clazz_5.id , @mock_clazz_4.id , @mock_clazz_3.id  ,@mock_clazz_4.id ,@mock_clazz.id ]
+      }
+       put :manage_classes, @post_params
+      
+      @teacher_clazz1 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
+      assert_not_nil(@teacher_clazz1)
+      
+      @teacher_clazz2 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_2.id, @authorized_teacher.id)
+      assert_not_nil(@teacher_clazz2)
+      
+      @teacher_clazz3 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_3.id, @authorized_teacher.id)
+      assert_not_nil(@teacher_clazz3)
+      
+      @teacher_clazz4 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_4.id, @authorized_teacher.id)
+      assert_not_nil(@teacher_clazz4)
+      
+      @teacher_clazz5 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_5.id, @authorized_teacher.id)
+      assert_not_nil(@teacher_clazz5)
+    end
+  end
+  
+  describe "Put teacher Creates copy of a class" do
+    before(:each) do
+     
+      @StudentClazz = Portal::StudentClazz.new
+      @StudentClazz.clazz_id = @mock_clazz.id
+      @StudentClazz.student_id = @authorized_student.id
+      @StudentClazz.save!
+      
+          
+      @investigation = Factory(:investigation)
+      @investigation.name = 'Fluid Mechanics'
+      @investigation.save!
+      @offering = Portal::Offering.new
+      @offering.runnable_id = @investigation.id
+      @offering.clazz_id = @mock_clazz.id
+      @offering.runnable_type = 'Investigation'
+      @offering.save!
+      controller.stub!(:current_user).and_return(@authorized_teacher_user)
+      
+    end
+    it "should create a new class thats the copy of original class" do
+      @post_params = {
+        :id => @mock_clazz.id,
+        :clazz_name  => 'Concept of physics',
+        :clazz_desc  => 'Concept of physics',
+        :clazz_word => 'Phy'
+      }
+      xhr :post, :copy_class, @post_params
+      @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
+      assert_not_nil(@copy_clazz)
+
+      @mock_clazz.teachers.each do |teacher|
+        assert_not_nil(@copy_clazz.teachers.find_by_id(teacher.id))
+      end
+      
+      @mock_clazz.offerings.each do |offering|
+        assert_not_nil(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id))
+      end
+      
+      @mock_clazz.students.each do |student|
+        assert_nil(@copy_clazz.students.find_by_id(student.id))
+      end
+      
+    end
+  end  
+  
+  
+  
 end
