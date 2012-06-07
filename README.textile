@@ -112,7 +112,9 @@ This project uses an asset manager for JS & CSS files. Run the asset packager if
 
 This task should run automatically when using 'cap deploy'.
 You may also run the asset packager task manually.
+
 bc. bin/rake asset:packager:build_all
+
 This will build all the assets within the project.
 
 Start server and open http://localhost:3000
