@@ -17,8 +17,9 @@ class Portal::TeacherClazz < ActiveRecord::Base
   
   before_save do |teacher_clazz|
     if teacher_clazz.id.nil?
-	  position = teacher_clazz.teacher.teacher_clazzes.length + 1
-	  teacher_clazz.position = position
+      position = teacher_clazz.teacher.teacher_clazzes.length + 1
+      teacher_clazz.position = position
     end
   end
+  
 end
