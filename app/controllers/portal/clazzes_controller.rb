@@ -138,7 +138,6 @@ class Portal::ClazzesController < ApplicationController
 
     respond_to do |format|
       if okToCreate && @portal_clazz.save
-      
         flash[:notice] = 'Class was successfully created.'
         format.html { redirect_to(@portal_clazz) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
