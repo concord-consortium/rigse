@@ -563,7 +563,7 @@ class Portal::ClazzesController < ApplicationController
     )
     
     class_to_copy.teachers.each do |other_teacher|
-        new_class.add_teacher(other_teacher)
+      new_class.add_teacher(other_teacher)
     end
         
     if(!new_class.save)
