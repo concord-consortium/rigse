@@ -42,3 +42,19 @@ Given /^the following teachers exist:$/ do |users_table|
     end
   end
 end
+
+
+Given /^the following teacher and class mapping exists:$/ do |teacher_clazz|
+  teacher_clazz.hashes.each do |hash|
+    portal_clazz = Portal::Clazz.find_by_name(hash['class_name'])
+    user = User.find_by_login(hash['teacher'])
+    portal_teacher = Portal::Teacher.find_by_user_id(user.id)
+    teacher_clazz = Portal::TeacherClazz.new()
+    teacher_clazz.clazz_id = portal_clazz.id
+    teacher_clazz.teacher_id = portal_teacher.id
+    save_result = teacher_clazz.save
+    if (save_result == false)
+      return save_result
+    end
+  end
+end

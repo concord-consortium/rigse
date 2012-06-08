@@ -10,8 +10,10 @@ module HtmlSelectorsHelpers
 
     when "the page"
       "html > body"
-    when "left panel of manage class page"
+    when "left panel for class navigation"
       "div#clazzes_nav"
+    when "the popup"
+      "div.ui-window div.content"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

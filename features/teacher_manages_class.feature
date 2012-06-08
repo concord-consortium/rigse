@@ -8,39 +8,39 @@ Feature: Teacher manages a class
     Given The default project and jnlp resources exist using factories
     And the following teachers exist:
       | login    | password | first_name   | last_name |
-      | teacher  | teacher  | John         |  Nash     |
-      | teacher1 | teacher  | Steve        |  Ford     |
-    And  the teachers "teacher , teacher1" are in a school named "VJTI"  
+      | john     | teacher  | John         | Nash      |
+      | steve    | teacher  | Steve        | Ford      |
+    And the teachers "john, steve" are in a school named "Harvard School"  
     And the following classes exist:
-      | name       | teacher | class_word |
-      | My Class 1 | teacher | C1         |
-      | My Class 2 | teacher | C2         |
-      | My Class 3 | teacher | C3         |
-      | My Class 4 | teacher | C4         |
-      | My Class 5 | teacher | C5         |
-    And the classes "My Class 1" are in a school named "VJTI"
-    And the classes "My Class 2" are in a school named "VJTI"
-    And the classes "My Class 3" are in a school named "VJTI"
-    And the classes "My Class 4" are in a school named "VJTI"
-    And the classes "My Class 5" are in a school named "VJTI"  
+      | name        | teacher | class_word |
+      | Physics     | john    | phy        |
+      | Chemistry   | john    | chem       |
+      | Mathematics | john    | math       |
+      | Biology     | john    | bio        |
+      | Geography   | john    | geo        |
+    And the classes "Physics" are in a school named "Harvard School"
+    And the classes "Chemistry" are in a school named "Harvard School"
+    And the classes "Mathematics" are in a school named "Harvard School"
+    And the classes "Biology" are in a school named "Harvard School"
+    And the classes "Geography" are in a school named "Harvard School"  
 	And the following offerings exist in the classes:
-      | name                      | class             |
-      | Lumped circuit abstraction| My Class 1        |
-      | static discipline         | My Class 1        |
-      | Non Linear Devices        | My Class 1        |
+      | name                      | class     |
+      | Lumped circuit abstraction| Physics   |
+      | static discipline         | Physics   |
+      | Non Linear Devices        | Physics   |
     And the following students exist:
       | login     | password  |
       | student   | student   |  
-    And the student "student" belongs to class "My Class 1"
-    And the student "student" belongs to class "My Class 2"
-    And the student "student" belongs to class "My Class 3"
-    And the student "student" belongs to class "My Class 4"
-    And the student "student" belongs to class "My Class 5"  
+    And the student "student" belongs to class "Physics"
+    And the student "student" belongs to class "Chemistry"
+    And the student "student" belongs to class "Mathematics"
+    And the student "student" belongs to class "Biology"
+    And the student "student" belongs to class "Geography"
+    And I login with username: john password: teacher
+    And I go to the Manage Class Page  
   
  @javascript
- Scenario: Teacher can follow link to Manage their Class Page 
- 	Given I login with username: teacher password: teacher
- 	When I go to the Manage Class Page
+ Scenario: Teacher should be on Manage their Class Page 
     Then I should be on Manage Class Page
     
  @javascript
@@ -51,76 +51,66 @@ Feature: Teacher manages a class
     
  @javascript
   Scenario: Teacher can reorder the class list
-    Given I login with username: teacher password: teacher
-    And I am on Manage Class Page
-    And I move "My Class 3" to the top of the list with id "sortable"
-    And I press "Save"    
-    Then "My Class 3" should be the first on the list with id "sortable"
-    And "My Class 3" should be the first class within left panel of manage class page
+    When I move "Mathematics" to the top of the list with id "sortable"
+    And I press "Save"
+    Then "Mathematics" should be the first on the list with id "sortable"
+    And "Mathematics" should be the first class within left panel for class navigation
     
   
   @javascript 
   Scenario: Teacher deactivates classes
-    Given I login with username: teacher password: teacher
-    And I am on Manage Class Page
-    When I uncheck "My Class 4"
-    And I uncheck "My Class 5"
+    When I uncheck "Biology"
+    And I uncheck "Geography"
     And I press "Save"
-    Then I should not see "My Class 4" within left panel of manage class page
-    And I should not see "My Class 5" within left panel of manage class page
+    Then I should not see "Biology" within left panel for class navigation
+    And I should not see "Geography" within left panel for class navigation
     
   @javascript 
-  Scenario: Student logs in and visits a class page which some other teacher has deactivated
-    Given I login with username: teacher password: teacher
-    And I am on Manage Class Page
-    When I uncheck "My Class 4"
-    And I uncheck "My Class 5"
+  Scenario: Student logs in and visits a class page which the teacher has deactivated
+    When I uncheck "Biology"
+    And I uncheck "Geography"
     And I press "Save"
     And I log out 
     And I login with username: student password: student
-    Then I should see "My Class 1"
-    And I should see "My Class 2"
-    And I should see "My Class 3"
-    And I should see "My Class 4"
-    And I should see "My Class 5"
+    Then I should see "Physics"
+    And I should see "Chemistry"
+    And I should see "Mathematics"
+    And I should see "Biology"
+    And I should see "Geography"
     
     
   @javascript 
-  Scenario: Teacher logs in and visits a class page which some other  teacher has deactivated
-    Given Following teacher and class mapping exists:
+  Scenario: Teacher logs in and visits a class page which some other teacher has deactivated
+    Given the following teacher and class mapping exists:
     	| class_name  | teacher  |
-    	| My Class 3  | teacher1 |
-    	| My Class 4  | teacher1 |
-    	| My Class 5  | teacher1 | 
-    And login with username: teacher password: teacher
-    And I am on Manage Class Page
-    And I uncheck "My Class 4"
-    And I uncheck "My Class 5"
+    	| Mathematics | steve    |
+    	| Biology     | steve    |
+    	| Geography   | steve    | 
+    When I uncheck "Biology"
+    And I uncheck "Geography"
     And I press "Save"
     And I log out 
-    And I login with username: teacher1 password: teacher
-    And I should see "My Class 3"
-    And I should see "My Class 4"
-    And I should see "My Class 5"    
+    And I login with username: steve password: teacher
+    Then I should see "Mathematics"
+    And I should see "Biology"
+    And I should see "Geography"    
         
  
  
   @javascript
   Scenario: Teacher creates a copy of a class
-    Given Following teacher and class mapping exists:
+    Given the following teacher and class mapping exists:
     	| class_name  | teacher  |
-    	| My Class 1  | teacher1 |
-    And I login with username: teacher password: teacher
-    And I am on Manage Class Page
-    And I follow copy class link for first class
-    And I fill in "Class Name:" with "Copy of My Class 1"
+    	| Physics     | steve    |
+    When I follow copy class link for first class
+    And I fill in "Class Name:" with "Copy of Physics"
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
-    And I press "Save" inside element with selector ".popup_content"
-    Then I should see "Copy of My Class 1"
-    Then "Copy of My Class 1" should be the last on the list with id "sortable"
-    And "Copy of My Class 1" should be the last class within left panel of manage class page
-    And there should be no student in "Copy of My Class 1"
+    And I press "Save" within the popup
+    Then I should see "Copy of Physics"
+    And "Copy of Physics" should be the last on the list with id "sortable"
+    And "Copy of Physics" should be the last class within left panel for class navigation
+    And there should be no student in "Copy of Physics"
     And I should see "Steve Ford"
     And I should see "John Nash"
     And I should see "Lumped circuit abstraction"
@@ -128,57 +118,52 @@ Feature: Teacher manages a class
     And I should see "Non Linear Devices"    
     
 
-@javascript
-Scenario: Teacher creates a copy of a class and after that another teacher of original logs in
-    Given Following teacher and class mapping exists:
+  @javascript
+  Scenario: Teacher creates a copy of a class to which another teacher belongs and the other teacher logs in.
+    Given the following teacher and class mapping exists:
     	| class_name  | teacher  |
-    	| My Class 1  | teacher1 |
-    	| My Class 2  | teacher1 |
-    	| My Class 3  | teacher1 |   
-    And I login with username: teacher password: teacher
-    And I am on Manage Class Page
+    	| Physics     | steve    |
+    	| Chemistry   | steve    |
+    	| Mathematics | steve    |   
     When I follow copy class link for first class
-    And I fill in "Class Name:" with "Copy of My Class 1"
+    And I fill in "Class Name:" with "Copy of Physics"
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
-    And I press "Save" inside element with selector ".popup_content"
+    And I press "Save" within the popup
     And I log out
-    And login with username: teacher1 password: teacher
+    And login with username: steve password: teacher
     And I am on Manage Class Page
-    Then I should see "Copy of My Class 1"
+    Then I should see "Copy of Physics"
     
 
     
     
  @javascript
- Scenario: Teacher fills in class name with a blank string while creating a copy class
-	Given I login with username: teacher password: teacher
-    And I am on Manage Class Page
-    And I follow copy class link for first class
+ Scenario: Teacher fills in class name with a blank string while creating copy of a class
+    When I follow copy class link for first class
     And I fill in "Class Name:" with ""
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
-    And I press "Save" inside element with selector ".popup_content"
+    And I press "Save" within the popup
     Then I should see "Name can't be blank"
 
  @javascript   
- Scenario: Teacher fills in class name with a blank string while creating a copy class
-	Given I login with username: teacher password: teacher
-    And I am on Manage Class Page
-    And I follow copy class link for first class
-    And I fill in "Class Name:" with "Copy of My Class 1"
+ Scenario: Teacher fills in class word with a blank string while creating copy of a class
+    When I follow copy class link for first class
+    And I fill in "Class Name:" with "Copy of Physics"
     And I fill in "Class Word:" with ""
     And I fill in "Class Description" with "electronics class"
-    And I press "Save" inside element with selector ".popup_content"
+    And I press "Save" within the popup
     Then I should see "Class word can't be blank"
     
   @javascript  
   Scenario: Teacher fills in class word which has already been taken
-	Given I login with username: teacher password: teacher
-    And I am on Manage Class Page
-    And I follow copy class link for first class
-    And I fill in "Class Name:" with "Copy of My Class 1"
-    And I fill in "Class Word:" with "C1"
+    When I follow copy class link for first class
+    And I fill in "Class Name:" with "Copy of Physics"
+    And I fill in "Class Word:" with "phy"
     And I fill in "Class Description" with "electronics class"
-    And I press "Save" inside element with selector ".popup_content"
+    And I press "Save" within the popup
     Then I should see "Class word has already been taken"  
+    
+    
+    
