@@ -246,10 +246,15 @@ And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
     
     return bSuccess;
   ")
-  
-
 end
 
+And /^I receive a file for download with a filename like "(.+)"$/ do |filename|
+
+  pattern = "filename=(.*?)#{Regexp.escape(filename)}(.*?)"
+  pattern = Regexp.compile(pattern)
+
+  page.response_headers['Content-Disposition'].should =~ pattern
+end
 
 
 

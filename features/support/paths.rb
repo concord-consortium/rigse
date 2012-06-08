@@ -87,6 +87,10 @@ module NavigationHelpers
     when /Instructional Materials page for "(.+)"/
       portal_clazz = Portal::Clazz.find_by_name $1
       "/portal/classes/#{portal_clazz.id}/materials"
+    when /report of offering "(.+)"/
+      investigation = Investigation.find_by_name($1)
+      offering = Portal::Offering.find_by_runnable_id investigation.id
+      "/portal/offerings/#{offering.id}/report"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
