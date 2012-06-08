@@ -10,7 +10,7 @@
     %ul{:id=>top_container_id}
       %li 
         - recent_activity_class = '';
-        - if(request.request_uri == '/' || request.request_uri == '/home' )
+        - if(request.fullpath == '/' || request.fullpath == '/home' )
           - recent_activity_class = 'selected'
         = link_to 'Recent Activity', '/', :class=> recent_activity_class
       

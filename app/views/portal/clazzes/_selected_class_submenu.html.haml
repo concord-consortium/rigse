@@ -8,7 +8,7 @@
     - class_setup_link_class = '';
     - full_status_link_class = '';
     
-    - case request.request_uri
+    - case request.fullpath
       - when url_for(:action => 'materials', :controller => 'clazzes')
         - materials_link_class = 'selected';
       - when url_for(:action => 'roster', :controller => 'clazzes')
