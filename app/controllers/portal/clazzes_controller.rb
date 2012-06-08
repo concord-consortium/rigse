@@ -584,5 +584,13 @@ class Portal::ClazzesController < ApplicationController
     
   end
 
-
+  
+  def materials
+    if current_user.anonymous?
+      redirect_to home_url
+      return
+    end
+    @portal_clazz = Portal::Clazz.find(params[:id]);
+  end
+  
 end
