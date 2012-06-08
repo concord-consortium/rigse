@@ -3,16 +3,6 @@
  */
 
 var oPopUpWindow;
-	
-function createNewClass(portalClazzPath)
-{
-	window.location.href = portalClazzPath;
-}
-
-function manageClassList(ManagePath)
-{
-	window.location.href = ManagePath;
-}
 
 function showFullStatus()
 {

@@ -41,7 +41,8 @@
               = link_to link_text, clazz
     - if top_node.is_a? Portal::Teacher
       %ul.create{:id=>dom_id_for(top_node, :nav_list_create_class)}
-        .create_link.button
-          %button{:class => "left_pane_button pie", :id => "btn_create_class", :onclick => "createNewClass(\"#{new_portal_clazz_path}\")"}Create a Class
-          - manage_class_list_url = url_for(:action => 'manage', :controller => Portal::ClazzesController)
-          %button{:class => "left_pane_button pie", :id => "btn_manage_classes", :onclick => "manageClassList(\"/portal/classes/manage\")"} Manage list
+        .create_link
+          = link_to 'Create a Class', new_portal_clazz_path, :class=>"button pie", :id=>"btn_create_class"
+          &nbsp;
+          = link_to 'Manage list', manage_portal_clazzes_url, :class=>"button pie", :id=>"btn_manage_classes"
+          

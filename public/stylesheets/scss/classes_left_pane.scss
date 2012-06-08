@@ -53,14 +53,14 @@ div#clazzes_selected
   font-weight: normal;
 }
 
-.create_link.button
+.create_link
 {
-  button {
+  a.button {
   border: 0 solid #f3951d;
   color: white;
   display: inline;
   font: 12px / 1 Arial, Helvetica, sans-serif;
-  padding: 4px 5px;
+  padding: 4px 6px;
   /* CSS 3 */
   background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
   background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
