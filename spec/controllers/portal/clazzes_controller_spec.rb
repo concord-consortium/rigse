@@ -823,7 +823,7 @@ describe Portal::ClazzesController do
     end
   end
   
-  describe "Put teacher Creates copy of a class" do
+  describe "Post teacher Creates copy of a class" do
     before(:each) do
      
       @StudentClazz = Portal::StudentClazz.new
