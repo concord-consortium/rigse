@@ -1152,6 +1152,125 @@ ul.quiet_list {
   }
 }
 
+/* CSS for Manage Classes Page*/
+
+.total_Class_summary
+{
+    font-weight:bold;
+    font-size: 1.3em;
+    color: #000000;
+    display:inline;
+    float: left;
+    padding-top: 20px;
+}
+
+.class_list_element
+{
+  div
+  {
+    float: left;
+  }
+  table
+  {
+    margin: 0;
+  }
+  a{
+    margin-top: 5px;
+  }
+  input
+  {
+    display: inline;
+    width: 50px;
+    margin: 6px;
+    border: 0;
+  }
+  label
+  {
+    font-weight:bold;
+    font-size: 1.3em;
+    color: #000000;
+    display:inline;
+    text-transform: none;
+  }
+  
+}
+
+
+.class_list_element_container
+{
+  width:500px;
+  table
+  {
+    td
+    {
+      vertical-align: middle;
+    }
+  }
+}
+
+.manage_classes_panel
+{
+  #sortable li { 
+    margin: 0; 
+    padding: 3px 0px 0px 0px ;
+    cursor:move ;
+    height:auto;
+    }
+    #sortable { list-style-type: none; margin: 0; padding: 0;width:auto; }
+}
+
+.right_float
+{
+  float: right;
+  bottom: 0;
+  input {
+  border: 0 solid #f3951d;
+  color: white;
+  display: inline;
+  font: 12px / 1 Arial, Helvetica, sans-serif;
+  padding: 4px 5px;
+  /* CSS 3 */
+  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
+  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  _background: #f6f2e2;
+  border-radius: 12px;
+  /* Opera 10.5, IE 9 */
+  -moz-border-radius: 12px;
+  /* FF1+ */
+  -webkit-border-radius: 12px;
+  /* Saf3+, Chrome */ }
+}
+
+.bottom_options
+{
+  button
+  {
+    display: inline;
+  }
+}
+
+.clear_both
+{
+  clear:both;
+}
+
+.main_manage_classes_container{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px}
+
+.popup_content
+{
+  padding: 20px 20px 20px 20px;
+  textarea
+  {
+    width: 350px;
+  }
+  
+  td
+  {
+    padding-top: 10px; 
+  }
+}
+
+/* ---- END CSS for Manage Classes Page ------*/
 
 
 

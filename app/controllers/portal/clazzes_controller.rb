@@ -387,5 +387,100 @@ class Portal::ClazzesController < ApplicationController
       format.html { render :layout => 'report'}
     end
   end
+  
+  def manage_classes
+    if current_user.anonymous?
+      redirect_to home_url
+      return
+    end
+    
+    
+    if request.put? then
+      
+      # Position teacher classes
+      # and 
+      # Activate/Deactivate teacher classes
+      arrTeacherClazzPosition = params['teacher_clazz_position']
+      
+      arrActiveTeacherClazz = nil
+      if (params.has_key? 'teacher_clazz') then
+        arrActiveTeacherClazz = params['teacher_clazz']
+      else
+        arrActiveTeacherClazz = []
+      end
+      
+      position = 1
+      arrTeacherClazzPosition.each do |teacher_clazz_id|
+        teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
+        teacher_clazz.position = position;
+        if (arrActiveTeacherClazz.include?(teacher_clazz_id)) then
+          teacher_clazz.active = true
+        else
+          teacher_clazz.active = false
+        end
+        teacher_clazz.clazz.save!
+        teacher_clazz.save!
+        position += 1;
+      end
+      
+    end
+    
+    @teacher = current_user.portal_teacher;
+    
+  end
+  
+  def copy_class
+    
+    response_value = {
+      :success => true,
+      :error_msg => nil
+    }
+    
+    if current_user.anonymous?
+      response_value[:success] = false
+      response_value[:error_msg] = "Anonymous can't copy classes. Please log in and try again."
+      render :json => response_value
+      return
+    end
+    
+    teacher = current_user.portal_teacher
+    
+    class_to_copy = Portal::Clazz.find(params[:id]);
+    
+    params[:portal_clazz] = class_to_copy
+    
+    new_class = Portal::Clazz.new(
+        :name => params[:clazz_name],
+        :class_word => params[:clazz_word],
+        :description => params[:clazz_desc],
+        :grades => class_to_copy.grades,
+        :teacher_id => teacher.id,
+        :teacher => class_to_copy.teacher,
+        :course => class_to_copy.course,
+        :semester_id => class_to_copy.semester_id
+    )
+    
+    class_to_copy.teachers.each do |other_teacher|
+        new_class.add_teacher(other_teacher)
+    end
+        
+    if(!new_class.save)
+      response_value[:success] = false
+      response_value[:error_msg] = new_class.errors
+      render :json => response_value      
+      return
+    end
+    
+    class_to_copy.offerings.each do |offering|
+       new_offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(new_class.id, offering.runnable_type, offering.runnable_id)
+       new_offering.status = offering.status
+       new_offering.active = offering.active
+       new_offering.save!
+    end
+    
+    render :json => response_value
+    
+  end
+
 
 end

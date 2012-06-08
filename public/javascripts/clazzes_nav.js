@@ -2,16 +2,17 @@
  * @author Suhas Sanmukh
  */
 
+var oPopUpWindow;
 	
 function createNewClass(portalClazzPath)
 {
 	window.location.href = portalClazzPath;
 }
 
-function manageClassList()
+function manageClassList(ManagePath)
 {
-	alert('Manage Classes Stub');
-	/* indow.location.href = 'manage'; */
+	/*alert('Manage Classes Stub');*/
+	window.location.href = ManagePath;
 }
 
 function showFullStatus()
@@ -23,3 +24,11 @@ function showMaterials()
 {
 	alert('Materials Link Stub');
 }
+
+function studentRoster()
+{
+	alert('Student Roster Stub');
+}
+
+
+
