@@ -1,0 +1,20 @@
+- learners = offering.learners;
+- if investigation.activities.length > 0
+  %table.reportsummary
+    %tr
+      %th
+        ACTIVITY
+      - investigation.activities.each do |activity|
+        %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
+          = activity.name
+    - if learners.length > 0
+      = render :partial => 'investigation_student_report_summary',:collection => learners, :as => :learner,:locals=> {:investigation => investigation}
+    - else
+      %tr
+        %td{:colspan=>"#{investigation.activities.length + 1}", :style=>"border-top:solid 1px #666"}
+          No students have launched this investigation yet
+- else
+  %div.item No activities available in this class
+        
+  
+  
