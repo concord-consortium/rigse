@@ -19,10 +19,4 @@ function showFullStatus()
 	alert('Full Status Link Stub');
 }
 
-function showMaterials()
-{
-	alert('Materials Link Stub');
-}
-
-
 
