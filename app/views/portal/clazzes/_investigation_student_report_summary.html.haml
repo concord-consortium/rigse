@@ -6,6 +6,6 @@
       -learner_report = learner.report_learner
       -percentage = 0
       - if !learner_report.nil?
-        percentage = learner_report.num_answered*100/learner_report.num_answerables
+        - percentage = learner_report.num_answered*100/learner_report.num_answerables
       .progressbar
-        .progress{:style=>'width:'+percentage.to_s+'px'}
+        .progress{:style=>"width:#{percentage}px"}
