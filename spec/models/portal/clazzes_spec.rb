@@ -124,8 +124,44 @@ describe Portal::Clazz do
       # new_clazz.valid?.should == true
     end
     
-    it "should require at least one teacher" do
+    it "should require a non blank class name" do
+      @course = Factory(:portal_course)
+      @start_date = DateTime.parse("2009-01-02")
+      @section_a = "section a"
+      @section_b = "section b"
+      
+      @new_clazz = Factory(:portal_clazz, {
+        :section => @section_a,
+        :start_time => @start_date,
+        :course => @course,
+        :name => 'name',
+        :class_word => 'cw'
+      })
+      
+      @new_clazz.name = ''
+      @new_clazz.valid?.should == false
+      
     end
+    
+    it "should require a non blank class word" do
+      @course = Factory(:portal_course)
+      @start_date = DateTime.parse("2009-01-02")
+      @section_a = "section a"
+      @section_b = "section b"
+      
+      @new_clazz = Factory(:portal_clazz, {
+        :section => @section_a,
+        :start_time => @start_date,
+        :course => @course,
+        :name => 'Name',
+        :class_word => 'cw'
+      })
+      
+      @new_clazz.class_word = ''
+      
+      @new_clazz.valid?.should == false
+    end
+    
   end
 
   describe ".default_class" do
