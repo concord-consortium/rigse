@@ -23,23 +23,25 @@
             = link_to 'Add new Materials to this class', portal_clazz_url(portal_clazz), :class=>"button pie"
       %br.clearboth
       %br.clearboth
-      %div.clearboth
-        %div.scrollertab{:style=>"margin-right:5px;float:left",:onmouseover=>"startScroll('l',5)", :onmouseout=>"stopScroll()"}
-          &#9664;
-        %div{:id=>"oTabcontainer"}
-          %table{:style=>"margin:0;padding:0",:border=>0,:cellpadding=>0,:cellspacing=>0}
-            %tr
-              - clazz_offerings.each do |offering|
-                %td
-                  .tab{:id=>"material_tab_#{offering.runnable_id}", :onClick=>"showInstructionalMaterial(this)"}
-                    = offering.name
-        %div.scrollertab{:style=>"margin-left:5px;float:right",:onmouseover=>"startScroll('r',5)", :onmouseout=>"stopScroll()"}
-          &#9654;
-      .data_container_header.clearboth
-        &nbsp;
-      %div.data_container{:style => 'clear: both;'}
-        = render :partial => 'material_details',:collection => clazz_offerings, :as => :current_offering
-      %script $('material_tab_#{clazz_offerings[0].runnable_id}').simulate('click')
-        
+      - if clazz_offerings.length > 0
+        %div.clearboth
+          %div.scrollertab{:style=>"margin-right:5px;float:left",:onmouseover=>"startScroll('l',5)", :onmouseout=>"stopScroll()"}
+            &#9664;
+          %div{:id=>"oTabcontainer"}
+            %table{:style=>"margin:0;padding:0",:border=>0,:cellpadding=>0,:cellspacing=>0}
+              %tr
+                - clazz_offerings.each do |offering|
+                  %td
+                    .tab{:id=>"material_tab_#{offering.runnable_id}", :onClick=>"showInstructionalMaterial(this)"}
+                      = offering.name
+          %div.scrollertab{:style=>"margin-left:5px;float:right",:onmouseover=>"startScroll('r',5)", :onmouseout=>"stopScroll()"}
+            &#9654;
+        .data_container_header.clearboth
+          &nbsp;
+        %div.data_container{:style => 'clear: both;'}
+          = render :partial => 'material_details',:collection => clazz_offerings, :as => :current_offering
+        %script $('material_tab_#{clazz_offerings[0].runnable_id}').simulate('click')
+      - else
+        %div No offerings present
       = f.hidden_field :teacher_id
       = f.hidden_field :id
