@@ -1,12 +1,15 @@
+- learner = learners.find_by_student_id(student.id) 
 %tr
   %td
-    =learner.last_name + ", " + learner.first_name
+    =student.user.last_name + ", " + student.user.first_name
   - investigation.activities.each do |activity|
     %td
-      -learner_report = learner.report_learner
-      -percentage = 0
-      - if !learner_report.nil?
-        - if !learner_report.num_answerables.nil? && !learner_report.num_answered.nil? && learner_report.num_answerables > 0
-          - percentage = learner_report.num_answered*100/learner_report.num_answerables
+      - percentage = 0
+      - if !learner.nil?
+        - learner_report = learner.report_learner
+        - if !learner_report.nil?
+          - report = learner_report.find_by_runnable_id(activity.id)
+          - if !report.num_answerables.nil? && !report.num_answered.nil? && report.num_answerables > 0
+            - percentage = report.num_answered*100/report.num_answerables
       .progressbar
         .progress{:style=>"width:#{percentage}px"}
