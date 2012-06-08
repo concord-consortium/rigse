@@ -158,6 +158,7 @@ stylesheets:
   - reports
   - chosen
   - classes_left_pane
+  - instructional_materials
 
 - genomedynamics:
   - app

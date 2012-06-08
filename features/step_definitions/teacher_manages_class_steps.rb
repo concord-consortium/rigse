@@ -63,22 +63,6 @@ Then /^"(.+)" should be the last on the list with id "(.+)"$/ do|class_name, id_
                     ")
 end
 
-Given /^Following teacher and class mapping exists:$/ do |teacher_clazz|
-  teacher_clazz.hashes.each do |hash|
-    begin
-        clazz = Portal::Clazz.find_by_name(hash['class_name'])
-        user = User.find_by_login(hash['teacher'])
-        teacher = Portal::Teacher.find_by_user_id(user.id)
-        teacher_clazzObj = Portal::TeacherClazz.new()
-        teacher_clazzObj.clazz_id = clazz.id
-        teacher_clazzObj.teacher_id = teacher.id
-        teacher_clazzObj.save!
-        rescue ActiveRecord::RecordInvalid
-          # assume this user is already created...
-        end 
-    end
-end
-
 
 And /^"(.+)" should be the last class$/ do |class_name|
   within(:xpath, '//li[last()]') do
@@ -96,23 +80,5 @@ end
 And /^there should be no student in "(.+)"$/ do |class_name|
   click_link(class_name)
   page.has_content?('No students registered for this class yet.')  
-end
-
-And /^the following offerings exist in the classes:?/ do |offering_list|
-   offering_list.hashes.each do |hash|
-    begin
-        investigation = Factory(:investigation)
-        investigation.name = hash['name']
-        investigation.save!
-        myclazz = Portal::Clazz.find_by_name(hash['class'])
-        offering = Portal::Offering.new
-        offering.runnable_id = investigation.id
-        offering.clazz_id = myclazz.id
-        offering.runnable_type = 'Investigation'
-        offering.save!
-        rescue ActiveRecord::RecordInvalid
-          # assume this user is already created...
-        end 
-    end 
 end
 

@@ -772,69 +772,89 @@ describe Portal::ClazzesController do
     end
   end
 
+
   describe "Put teacher Manage class" do
     before(:each) do
-      @mock_clazz_name_2 = "Random Test Class 2"
-      @mock_clazz_2 = mock_clazz({ :name => @mock_clazz_name_2, :teachers => [@authorized_teacher], :course => @mock_course })
-      teacher_clazz = Portal::TeacherClazz.new()
-      teacher_clazz.clazz_id = @mock_clazz_2.id
-      teacher_clazz.teacher_id = @authorized_teacher.id
-      teacher_clazz.save!
       
-      @mock_clazz_name_3 = "Random Test Class 3"
-      @mock_clazz_3 = mock_clazz({ :name => @mock_clazz_name_3, :teachers => [@authorized_teacher], :course => @mock_course })
-      teacher_clazz.clazz_id = @mock_clazz_3.id
-      teacher_clazz.teacher_id = @authorized_teacher.id
-      teacher_clazz.save!
+      controller.stub!(:current_user).and_return(@authorized_teacher_user)
       
-      @mock_clazz_name_4 = "Random Test Class 4"
-      @mock_clazz_4 = mock_clazz({ :name => @mock_clazz_name_4, :teachers => [@authorized_teacher], :course => @mock_course })
-      teacher_clazz.clazz_id = @mock_clazz_4.id
-      teacher_clazz.teacher_id = @authorized_teacher.id
-      teacher_clazz.save!
+      @mock_teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
       
-      @mock_clazz_name_5 = "Random Test Class 5"
-      @mock_clazz_5 = mock_clazz({ :name => @mock_clazz_name_5, :teachers => [@authorized_teacher], :course => @mock_course })
-      teacher_clazz.clazz_id = @mock_clazz_5.id
-      teacher_clazz.teacher_id = @authorized_teacher.id
-      teacher_clazz.save!
+      mock_clazz_name = "Mock Class Physics"
+      @mock_clazz_phy = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+      @authorized_teacher.add_clazz(@mock_clazz_phy)
+      @authorized_teacher.save!
+      @mock_teacher_clazz_phy = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
+      
+      mock_clazz_name = "Mock Class Chemistry"
+      @mock_clazz_chem = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+      @authorized_teacher.add_clazz(@mock_clazz_chem)
+      @authorized_teacher.save!
+      @mock_teacher_clazz_chem = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
+      
+      mock_clazz_name = "Mock Class Biology"
+      @mock_clazz_bio = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+      @authorized_teacher.add_clazz(@mock_clazz_bio)
+      @authorized_teacher.save!
+      @mock_teacher_clazz_bio = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
+      
+      mock_clazz_name = "Mock Class Mathematics"
+      @mock_clazz_math = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+      @authorized_teacher.add_clazz(@mock_clazz_math)
+      @authorized_teacher.save!
+      @mock_teacher_clazz_math = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
+      
+      @authorized_teacher.reload
+            
     end
-    it "should should save all the activated and deactivated classes and in a right order" do
+    
+    it "should should save all the activated and deactivated classes and in the right order" do
       @post_params = {
-        :teacher_clazz  => Array[@mock_clazz.id , @mock_clazz_2.id , @mock_clazz_3.id , @mock_clazz_4.id , @mock_clazz_5.id ],
-        :teacher_clazz_position  => Array[@mock_clazz_5.id , @mock_clazz_4.id , @mock_clazz_3.id  ,@mock_clazz_4.id ,@mock_clazz.id ]
+        'teacher_clazz'  => Array[@mock_teacher_clazz.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_bio.id , @mock_teacher_clazz_math.id ],
+        'teacher_clazz_position'  => Array[@mock_teacher_clazz_math.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_chem.id, @mock_teacher_clazz_bio.id ,@mock_teacher_clazz.id ]
       }
-       put :manage_classes, @post_params
+      put :manage_classes, @post_params
       
-      @teacher_clazz1 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
-      assert_not_nil(@teacher_clazz1)
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active)
+      assert_equal(teacher_clazz.position, 5)
       
-      @teacher_clazz2 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_2.id, @authorized_teacher.id)
-      assert_not_nil(@teacher_clazz2)
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active)
+      assert_equal(teacher_clazz.position, 2)
       
-      @teacher_clazz3 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_3.id, @authorized_teacher.id)
-      assert_not_nil(@teacher_clazz3)
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active == false)
+      assert_equal(teacher_clazz.position, 3)
       
-      @teacher_clazz4 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_4.id, @authorized_teacher.id)
-      assert_not_nil(@teacher_clazz4)
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active)
+      assert_equal(teacher_clazz.position, 4)
       
-      @teacher_clazz5 = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_5.id, @authorized_teacher.id)
-      assert_not_nil(@teacher_clazz5)
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active)
+      assert_equal(teacher_clazz.position, 1)
+      
     end
   end
   
-  describe "Put teacher Creates copy of a class" do
+  describe "Post teacher Creates copy of a class" do
     before(:each) do
      
-      @StudentClazz = Portal::StudentClazz.new
-      @StudentClazz.clazz_id = @mock_clazz.id
-      @StudentClazz.student_id = @authorized_student.id
-      @StudentClazz.save!
-      
+      @student_clazz = Portal::StudentClazz.new
+      @student_clazz.clazz_id = @mock_clazz.id
+      @student_clazz.student_id = @authorized_student.id
+      @student_clazz.save!
           
       @investigation = Factory(:investigation)
       @investigation.name = 'Fluid Mechanics'
       @investigation.save!
+      
       @offering = Portal::Offering.new
       @offering.runnable_id = @investigation.id
       @offering.clazz_id = @mock_clazz.id
@@ -842,29 +862,32 @@ describe Portal::ClazzesController do
       @offering.save!
       controller.stub!(:current_user).and_return(@authorized_teacher_user)
       
-    end
-    it "should create a new class thats the copy of original class" do
       @post_params = {
         :id => @mock_clazz.id,
         :clazz_name  => 'Concept of physics',
         :clazz_desc  => 'Concept of physics',
         :clazz_word => 'Phy'
       }
+    end
+    
+    it "should create a new class that's a copy of the original class with investigations and teachers but no students" do
+      
       xhr :post, :copy_class, @post_params
+      
       @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
       assert_not_nil(@copy_clazz)
 
+      assert_equal(@copy_clazz.teachers.length, @mock_clazz.teachers.length)
       @mock_clazz.teachers.each do |teacher|
         assert_not_nil(@copy_clazz.teachers.find_by_id(teacher.id))
       end
       
+      assert_equal(@copy_clazz.offerings.length, @mock_clazz.offerings.length)
       @mock_clazz.offerings.each do |offering|
         assert_not_nil(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id))
       end
       
-      @mock_clazz.students.each do |student|
-        assert_nil(@copy_clazz.students.find_by_id(student.id))
-      end
+      assert_equal(@copy_clazz.students.length, 0)
       
     end
   end  
