@@ -20,7 +20,7 @@
           %td
             = link_to 'Manage Materials', edit_portal_clazz_url(portal_clazz), :class=>"button pie"
           %td{:style => "padding-left:10px"}
-            = link_to 'Add new Materials to this class', "javascript:void(0)", :class=>"button pie", :onClick=>"alert('Add materials stub');"
+            = link_to 'Add new Materials to this class', portal_clazz_url(portal_clazz), :class=>"button pie"
       %br.clearboth
       %br.clearboth
       %div.clearboth

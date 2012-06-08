@@ -5,8 +5,9 @@
       %th
         ACTIVITY
       - investigation.activities.each do |activity|
+        - activity_name = (activity.name.length > 10)? activity.name[0,10]+"..." : activity.name
         %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
-          = activity.name
+          = activity_name
     - if learners.length > 0
       = render :partial => 'investigation_student_report_summary',:collection => learners, :as => :learner,:locals=> {:investigation => investigation}
     - else
