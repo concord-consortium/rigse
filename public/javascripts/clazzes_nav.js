@@ -11,7 +11,6 @@ function createNewClass(portalClazzPath)
 
 function manageClassList(ManagePath)
 {
-	/*alert('Manage Classes Stub');*/
 	window.location.href = ManagePath;
 }
 
@@ -23,11 +22,6 @@ function showFullStatus()
 function showMaterials()
 {
 	alert('Materials Link Stub');
-}
-
-function studentRoster()
-{
-	alert('Student Roster Stub');
 }
 
 

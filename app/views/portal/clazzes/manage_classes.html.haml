@@ -12,7 +12,6 @@
         -else
           .manage_info Checked classes appear on your home page. To make a class inactive, uncheck its box. All data for inactive classes is preserved. Drag and drop class to reorder it in the list.
           
-          
           - active_class_count = 0
           - active_classes_array = Array.new
           - position_of_classes = Array.new
@@ -49,7 +48,6 @@
         .bottom_options
           .right_float
             = f.submit 'Save', :class => 'pie'
-            /*%input{ :type => 'submit', :value => 'Save'} */
             = link_to 'Cancel', '/'
           .clear_both
       

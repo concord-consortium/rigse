@@ -178,8 +178,6 @@ class Portal::ClazzesController < ApplicationController
         clazz_investigation_id = params[:clazz_investigations]
         clazz_investigation_id_hidden = params[:clazz_investigations_hidden]
        
-        #offerings_to_add = []
-        #offering_active = nil
         @portal_clazz.offerings.each do|offering|
           offering.active = false
           offering.position = clazz_investigation_id_hidden.index(offering.id.to_s) + 1

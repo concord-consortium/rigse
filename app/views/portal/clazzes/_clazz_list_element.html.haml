@@ -14,5 +14,5 @@
               %td{:style=>"width:350px;"}
                 %label{:for => "teacher_clazz[#{teacher_clazz.id}]"} #{clazz.name}
               %td
-                %a{ :id => "message",:href => "javascript:void(0)", :onclick => "showCopyClassPopup(#{clazz.id}, \"#{url_encode clazz.name}\", \"#{url_encode clazz.class_word}\", \"#{url_encode teacher_clazz.clazz.description}\")" } Copy Class
+                %a{ :id => "copy_class_link",:href => "javascript:void(0)", :onclick => "showCopyClassPopup(#{clazz.id}, \"#{url_encode clazz.name}\", \"#{url_encode clazz.class_word}\", \"#{url_encode teacher_clazz.clazz.description}\")" } Copy Class
               
