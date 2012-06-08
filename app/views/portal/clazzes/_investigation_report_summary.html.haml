@@ -1,4 +1,5 @@
 - learners = offering.learners;
+- students = offering.clazz.students;
 - if investigation.activities.length > 0
   %table.reportsummary
     %tr
@@ -8,14 +9,14 @@
         - activity_name = (activity.name.length > 10)? activity.name[0,10]+"..." : activity.name
         %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
           = activity_name
-    - if learners.length > 0
-      = render :partial => 'investigation_student_report_summary',:collection => learners, :as => :learner,:locals=> {:investigation => investigation}
+    - if students.length > 0
+      = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners}
     - else
       %tr
         %td{:colspan=>"#{investigation.activities.length + 1}", :style=>"border-top:solid 1px #666"}
-          No students have launched this investigation yet
+          No students have registered for this class yet.
 - else
-  %div.item No activities available in this class
+  %div.item No activities available in this investigation.
         
   
   
