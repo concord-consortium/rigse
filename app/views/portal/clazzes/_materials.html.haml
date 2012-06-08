@@ -42,6 +42,6 @@
           = render :partial => 'material_details',:collection => clazz_offerings, :as => :current_offering
         %script $('material_tab_#{clazz_offerings[0].runnable_id}').simulate('click')
       - else
-        %div No offerings present
+        %div No offerings present.
       = f.hidden_field :teacher_id
       = f.hidden_field :id
