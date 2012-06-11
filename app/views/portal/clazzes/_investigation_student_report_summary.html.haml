@@ -2,14 +2,16 @@
 %tr
   %td
     =student.user.last_name + ", " + student.user.first_name
+    - user_data = nil
+    - if !learner.nil?
+      - user_data = Portal::OfferingsController.user_report_data(offering.id, learner.id)
   - investigation.activities.each do |activity|
     %td
       - percentage = 0
-      - if !learner.nil?
-        - learner_report = learner.report_learner
+      - if !user_data.nil?
+        - learner_report = user_data[activity.id]
         - if !learner_report.nil?
-          - report = learner_report.find_by_runnable_id(activity.id)
-          - if !report.num_answerables.nil? && !report.num_answered.nil? && report.num_answerables > 0
-            - percentage = report.num_answered*100/report.num_answerables
+          - if !learner_report["total"].nil? && !learner_report["answered"].nil? && learner_report["total"] > 0
+            - percentage = learner_report["answered"]*100/learner_report["total"]
       .progressbar
         .progress{:style=>"width:#{percentage}px"}

@@ -10,7 +10,7 @@
         %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
           = activity_name
     - if students.length > 0
-      = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners}
+      = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners, :offering=>offering}
     - else
       %tr
         %td{:colspan=>"#{investigation.activities.length + 1}", :style=>"border-top:solid 1px #666"}
