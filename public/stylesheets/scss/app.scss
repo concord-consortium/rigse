@@ -1274,6 +1274,40 @@ ul.quiet_list {
 
 
 
+/* ---- CSS for Student roster page -----*/
+
+table.teacher_clazz_table th, table.teacher_clazz_table td
+{
+    border: 1px solid #242323;
+    padding-left:10px;
+    /*text-align: center !important; /*Forcely added !important as in Action_menu_tab.scss Align Left is marked !important*/
+   
+   .change_password
+  {
+    padding-left:20px;
+  }
+  
+  .remove_student
+  {
+    padding-left:20px;
+  }
+}
+
+.floatR
+{
+  float : right;
+}
+
+.floatL
+{
+  float : left;
+}
+
+.clearBoth
+{
+  clear : both;
+}
+
 .classsetupform { width: 100%; text-align: left; }
 .classsetupform tr { vertical-align: top; }
 .classsetupform td { padding-top: 10px; padding-left: 10px; }
@@ -1295,10 +1329,11 @@ ul.quiet_list {
 .contentdiv{float:left;}
 .linkdiv{float:right;}
 
-.header{color:#3A878B;font-size:20px;font-weight:bold;clear:both}
+.header{padding-left: 10px;color:#3A878B;font-size:20px;font-weight:bold;clear:both}
 .subheader{color:#3A878B;font-size:16px;font-weight:bold}
 .labelvalue{font-weight:bold;padding-left:5px}
 .clazzdata{float:right;text-align:left}
+.clazzsummary{padding-left: 10px;float:left;text-align:left}
 .clazzdata td:nth-child(odd) { padding-left: 20px; text-align: left; }
 td.title { padding-left: 20px; text-align: left; }
 .maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}

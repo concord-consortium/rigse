@@ -3,8 +3,8 @@
   .container
     .content
       = f.error_messages
-    .right
-      %table.clazzdata
+    %div
+      %table.clazzdata.floatR
         %tr
           %td.title=label_tag :name, 'Teacher ', :class=>"left"
           %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class=>"labelvalue"
@@ -12,13 +12,19 @@
           %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class=>"labelvalue"
           %td.title=label_tag :name, 'Class Word ', :class=>"left"
           %td=label_tag :name, portal_clazz.class_word, :class=>"labelvalue"
-      .header Student Roster
+      .header.clearBoth Student Roster
+      .clazzsummary
+        ='Class Name : '
+        %span{:style => "font-weight:bold"} #{portal_clazz.name}
+        %br
+        ='Student Count :' 
+        %span{:style => "font-weight:bold"} #{portal_clazz.students.length}
       %table.clazzdata
         %tr
-          %td
+          %td.hide_in_print
             %input{:type=>"button", :value=>"Add New Student", :onclick=>"get_School_Student_List()", :class=>"pie"} 
-          %td{:style=>"padding-left:10px"}
-            %input{:type=>"button", :value=>"Print Student Roster", :onclick=>"autoPrintNextTime(); window.open('#{class_list_portal_clazz_url(portal_clazz)}'); return false;", :class=>"pie"}
+          %td.hide_in_print{:style=>"padding-left:10px"}
+            %input{:type=>"button", :value=>"Print Student Roster", :onclick=>"window.print();", :class=>"pie"}
 
       %table{:width=>"100%", :style=>"clear:both"}
         %tr
@@ -30,7 +36,7 @@
       .right
         %table{:width=>"100%"}
           %tr
-            %td{:style=>"text-align:right"}
+            %td.hide_in_print{:style=>"text-align:right"}
               = link_to "Cancel", portal_clazz_url(portal_clazz)
             
       = f.hidden_field :teacher_id
