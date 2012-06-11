@@ -1,5 +1,5 @@
 class Portal::OfferingsController < ApplicationController
-
+  
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
 
@@ -360,5 +360,47 @@ class Portal::OfferingsController < ApplicationController
       format.xml  { render :xml => @status_event_info }
     end
   end
-
+  
+  def self.user_report_data(offering_id, learner_id)
+    
+    learner = Portal::Learner.find(learner_id)
+    offering = Portal::Offering.find(offering_id)
+    investigation = Investigation.find(offering.runnable_id)
+    
+    user_data = {}
+    
+    activities = investigation.activities
+    activities.each do |activity|
+      num_answerable = 0
+      num_answered = 0
+      activity.sections.each do|section|
+        section.pages.each do |page|
+          page_embeddables = page.page_elements
+          num_answerable += page_embeddables.length
+          page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
+            begin
+              reportUtil = Report::Util.factory(offering)
+              saveable = reportUtil.saveable(learner, embeddable)
+            rescue Exception => exc
+              return exc.message
+            end
+            case true 
+              when embeddable.kind_of?(Embeddable::MultipleChoice)
+                num_answered += (saveable.answer != 'not answered')? 1 : 0
+              when embeddable.kind_of?(Embeddable::OpenResponse)
+                num_answered += (saveable.answered?)? 1 : 0
+              when embeddable.kind_of?(Embeddable::ImageQuestion)
+                num_answered += (saveable.answered?)? 1 : 0
+            end
+          end
+        end
+        data = {'answered'=> num_answered, 'total'=> num_answerable}
+        user_data[activity.id] = data     
+      end
+    end
+    return user_data
+    
+    
+  end
+  
 end
