@@ -377,7 +377,7 @@ class Portal::OfferingsController < ApplicationController
         section.pages.each do |page|
           page_embeddables = page.page_elements
           num_answerable += page_embeddables.length
-          page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
+          page_embeddables.map{ |pe| pe.embeddable }.each do |embeddable|
             begin
               reportUtil = Report::Util.factory(offering)
               saveable = reportUtil.saveable(learner, embeddable)
