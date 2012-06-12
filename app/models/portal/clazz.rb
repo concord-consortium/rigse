@@ -22,7 +22,8 @@ class Portal::Clazz < ActiveRecord::Base
   before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
-
+  validates_presence_of :name
+  
   include Changeable
 
   # String constants for error messages -- Cantina-CMH 6/2/10
