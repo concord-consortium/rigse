@@ -82,19 +82,19 @@ end
 
 
 And /^the first investigation in the list should be "(.+)"$/ do |investigation_name|
- 
-  page.execute_script(
-                      "
-                       var bSortSuccess = false;
-                       var arrListItems = Prototype.Selector.select('ul.quiet_list>li');
-                       var firstChild = arrListItems[0];
-                       var strLinkText = firstChild.innerHTML.stripTags().strip().toLowerCase().replace('run ','')
-                       if(strLinkText == \"#{investigation_name}\".toLowerCase())
-                       {
-                          bSortSuccess = true;
-                       }
-                       
-                       return bSortSuccess; 
-                      "
-                     )
+  result = page.execute_script(
+                                "
+                                 var bSortSuccess = false;
+                                 var arrListItems = Prototype.Selector.select('ul.quiet_list>li');
+                                 var firstChild = arrListItems[0];
+                                 var strLinkText = firstChild.innerHTML.stripTags().strip().toLowerCase().replace('run ','')
+                                 if(strLinkText == \"#{investigation_name}\".toLowerCase())
+                                 {
+                                    bSortSuccess = true;
+                                 }
+                                 
+                                 return bSortSuccess; 
+                                "
+                               )
+ raise 'Not first on the list' if result == false
 end

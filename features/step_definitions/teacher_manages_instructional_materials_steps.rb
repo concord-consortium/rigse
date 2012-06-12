@@ -11,17 +11,22 @@ And /^I click tab number "(.+)"$/ do |tab_number|
 end
 
 And /^I should see progress bars for the students$/ do
-  page.execute_script("
+  result = page.execute_script("
     var arrProgressBars = $$('div.progress');
     var bProgressBarWidthIncreased = false;
+    var iWidth = null;
     for (var i = 0; i < arrProgressBars.length; i++)
     {
-      if (arrProgressBars[i].style.width > 0)
+      iWidth = parseInt(arrProgressBars[i].style.width, 10);
+      if (iWidth > 0)
       {
         bProgressBarWidthIncreased = true;
       }
     }
-    
     return bProgressBarWidthIncreased;
   ")
+  
+   raise 'Progress bar fail' if result == false
+  
+  
 end
