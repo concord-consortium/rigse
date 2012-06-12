@@ -51,10 +51,11 @@
           #content_header.main_content_colors
             = content_for :content_header
           #js_flash{:style=>"display: none;"}
-          #flash
-            .padded_contents
-              - flash.each do |key, message|
-                %div{:class=>"flash flash_#{key}"}= message
+          #main_flash_message_div
+            #flash
+              .padded_contents
+                - flash.each do |key, message|
+                  %div{:class=>"flash flash_#{key}"}= message
           = content_for :layout
 
 
