@@ -122,7 +122,7 @@ class Report::Learner < ActiveRecord::Base
     
     learner = Portal::Learner.find(learner_id)
     offering = Portal::Offering.find(offering_id)
-    investigation = Investigation.find(offering.runnable_id)
+    investigation = ::Investigation.find(offering.runnable_id)
     
     user_data = {}
     
@@ -141,14 +141,7 @@ class Report::Learner < ActiveRecord::Base
             rescue Exception => exc
               return exc.message
             end
-            case true 
-              when embeddable.kind_of?(Embeddable::MultipleChoice)
-                num_answered += (saveable.answer != 'not answered')? 1 : 0
-              when embeddable.kind_of?(Embeddable::OpenResponse)
-                num_answered += (saveable.answered?)? 1 : 0
-              when embeddable.kind_of?(Embeddable::ImageQuestion)
-                num_answered += (saveable.answered?)? 1 : 0
-            end
+            num_answered += (saveable.answered?)? 1 : 0
           end
         end
         data = {'answered'=> num_answered, 'total'=> num_answerable}
