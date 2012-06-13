@@ -602,7 +602,7 @@ li.item_selectable {
     border-top: none; }
   .create_link {
 	text-align: center;
-    margin: 20px 0 0 5px; } }
+    margin: 20px 0 0 0px; } }
 
 .user-info-box {
   background: white;
@@ -1308,7 +1308,15 @@ table.teacher_clazz_table th, table.teacher_clazz_table td
   clear : both;
 }
 
-.classsetupform { width: 100%; text-align: left; }
+.classsetupform { 
+  width: 100%; text-align: left;
+  #sortable li label{ 
+    margin: 0; 
+    padding: 3px 0px 0px 0px ;
+    cursor:move ;
+    height:auto;
+    }
+}
 .classsetupform tr { vertical-align: top; }
 .classsetupform td { padding-top: 10px; padding-left: 10px; }
 .classsetupform td:nth-child(odd) { width: 112px;}

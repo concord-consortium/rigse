@@ -31,13 +31,6 @@
           %td
             .item{:id=>'students_listing'}
               = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => portal_clazz}
-      %br
-      %br
-      .right
-        %table{:width=>"100%"}
-          %tr
-            %td.hide_in_print{:style=>"text-align:right"}
-              = link_to "Cancel", portal_clazz_url(portal_clazz)
             
       = f.hidden_field :teacher_id
       = f.hidden_field :id
