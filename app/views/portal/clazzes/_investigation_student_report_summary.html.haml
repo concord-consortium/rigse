@@ -4,7 +4,7 @@
     =student.user.last_name + ", " + student.user.first_name
     - user_data = nil
     - if !learner.nil?
-      - user_data = Portal::OfferingsController.user_report_data(offering.id, learner.id)
+      - user_data = Report::Learner.user_report_data(offering.id, learner.id)
   - investigation.activities.each do |activity|
     %td
       - percentage = 0
