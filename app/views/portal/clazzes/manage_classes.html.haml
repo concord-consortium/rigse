@@ -38,7 +38,7 @@
                 - else
                   - selected_value = false;
                 = render :partial => 'portal/clazzes/clazz_list_element', :locals => {:teacher_clazz => teacher_clazz, :active_selected => selected_value}
-            =sortable_element "sortable"
+            =sortable_element "sortable",:onUpdate=>'function(){}'
           - else
             .item
               %ul.quiet_list
