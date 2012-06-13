@@ -24,25 +24,6 @@ Feature: Teacher manages instructional materials of a class
       | Chemistry   | teacher | chem       | Fall     |
     And the classes "My Class, Physics, Mathematics" are in a school named "Harvard School"
       
-    And the following simple investigations exist:
-      | name                 | user    |
-      | Radioactivity        | teacher |
-      | Plant reproduction   | teacher |
-      | Aerodynamics         | teacher |
-    
-    And the investigation "Radioactivity" is assigned to the class "My Class"
-    And the investigation "Plant reproduction" is assigned to the class "My Class"
-    And the investigation "Aerodynamics" is assigned to the class "My Class"
-    
-    And the investigation "Radioactivity" is assigned to the class "Physics"
-    And the investigation "Plant reproduction" is assigned to the class "Physics"
-    And the investigation "Aerodynamics" is assigned to the class "Physics"
-    
-    And the following offerings exist in the classes:
-      | name                       | class       |
-      | Lumped circuit abstraction | Mathematics |
-      | Static discipline          | Mathematics |
-    
     And the following multiple choice questions exists:
            | prompt | answers | correct_answer |
            | a      | a,b,c,d | a              |
@@ -51,6 +32,29 @@ Feature: Teacher manages instructional materials of a class
 	       | d      | a,b,c,d | a              |
 	       | e      | a,b,c,d | a              |
     And there is an image question with the prompt "image_q"
+      
+      
+    And the following investigations with multiple choices exist:
+        | investigation        | activity       | section   | page   | multiple_choices | image_questions | user      |
+        | Radioactivity        | Radio activity | section a | page 1 | a                | image_q         | teacher   |
+        | Plant reproduction   | Plant activity | section b | page 2 | b                | image_q         | teacher   |
+        | Aerodynamics         | Air activity   | section c | page 3 | c                | image_q         | teacher   |
+        
+    And the following assignments exist:
+        | type          | name                 | class       |
+        | investigation | Radioactivity        | My Class    |
+        | investigation | Plant reproduction   | My Class    |
+        | investigation | Aerodynamics         | My Class    |
+        | investigation | Radioactivity        | Physics     |
+        | investigation | Plant reproduction   | Physics     |
+        | investigation | Aerodynamics         | Physics     |
+
+    And the following offerings exist in the classes:
+      | name                       | class       |
+      | Lumped circuit abstraction | Mathematics |
+      | Static discipline          | Mathematics |
+    
+    
     
     And the following students exist:
       | login     | password  | first_name | last_name |
@@ -101,7 +105,7 @@ Feature: Teacher manages instructional materials of a class
     
  @javascript
  Scenario: Teacher should be able to switch tabs 
-    When I click tab number "2" within the tab block for Instructional Materials 
+    When I click the tab of Instructional Materials with text "Plant reproduction" 
     Then I should see "Investigation: Plant reproduction"
     
     
@@ -149,9 +153,9 @@ Feature: Teacher manages instructional materials of a class
   
  Scenario: Teacher should be able to run the investigation 
  	When I follow "Run Investigation"
- 	Then I receive a file for download with a filename like "_investigation_radioactivity.jnlp"
+ 	Then I receive a file for download with a filename like "_investigation_"
  
  Scenario: Teacher should be able to run the activity 
     When I follow "Run Activity"
-    Then I receive a file for download with a filename like "_activity_radioactivity.jnlp"
+    Then I receive a file for download with a filename like "_activity_"
  

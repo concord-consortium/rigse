@@ -6,22 +6,45 @@ Then /^A report window opens of offering "(.+)"$/ do |offering|
   end
 end
 
-And /^I click tab number "(.+)"$/ do |tab_number|
-  find("div#material_tab_#{tab_number}").click
+And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
+  result = page.execute_script("
+    var arrTabs = $$('#oTabcontainer div.tab');
+    arrTabs.concat( $$('#oTabcontainer div.selected_tab') );
+    var bSuccess = false;
+    var strTabText = null;
+    for (var i = 0; i < arrTabs.length; i++)
+    {
+      strTabText = arrTabs[i].innerHTML.stripTags().strip();
+      if (strTabText == '#{text}')
+      {
+        arrTabs[i].simulate('click');
+        bSuccess = true;
+      }
+    }
+    return bSuccess;
+  ")
+  
+   raise 'Tab switch failed' if result == false
+  
 end
 
 And /^I should see progress bars for the students$/ do
-  page.execute_script("
+  result = page.execute_script("
     var arrProgressBars = $$('div.progress');
     var bProgressBarWidthIncreased = false;
+    var iWidth = null;
     for (var i = 0; i < arrProgressBars.length; i++)
     {
-      if (arrProgressBars[i].style.width > 0)
+      iWidth = parseInt(arrProgressBars[i].style.width, 10);
+      if (iWidth > 0)
       {
         bProgressBarWidthIncreased = true;
       }
     }
-    
     return bProgressBarWidthIncreased;
   ")
+  
+   raise 'Progress bar fail' if result == false
+  
+  
 end
