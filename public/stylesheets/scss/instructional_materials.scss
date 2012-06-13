@@ -7,6 +7,15 @@
   text-align:left;
 }
 
+.tabright{
+  margin-left:5px;
+  float:right;
+}
+.tableft{
+  margin-right:5px;
+  float:left;
+}
+
 .tab{
   background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#aaa));
   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffaaaaaa);
@@ -39,6 +48,7 @@
 .data_container{
   border:solid 1px #666;
   padding:5px 5px 5px 15px;
+  clear:both;
 }
 .data_container_header{
   height:10px;
@@ -112,3 +122,9 @@
   width:564px;
   float:left;
 }
+
+#oTabcontainer > table{
+  padding:0;
+  margin:0;
+}
+
