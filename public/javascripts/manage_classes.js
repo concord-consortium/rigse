@@ -7,7 +7,6 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
 	class_word = decodeURIComponent(class_word);
 	class_description = decodeURIComponent(class_description);
 	
-	/*alert("Enter Inside");*/
 	var oInnerHtml = '<div class="popup_content">'+
 	'<input type="hidden" id="copyClass_copy_class_id" name="copyClass_copy_class_id" value="'+copy_clazz_id+'" />'+
 	'<div id="class_form_fill_error_text" name="copy_class_error_text" class="bold"></div>'+
@@ -51,10 +50,8 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
 
 function destroyIt()
 {
-	/*alert("Destroying !!");*/
 	oPopUpWindow.destroy();
 }
-
 
 function ClassActiveCheckBoxChanged()
 {
@@ -131,17 +128,6 @@ function copyClass(btnSave)
 	
 	error_text = document.getElementById('class_form_fill_error_text');
 	
-	/*if(clazz_name == "")
-	{
-		error_text.innerHTML = "Name can't be blank";
-		return;
-	}
-	else if(clazz_word == "")
-	{
-		error_text.innerHTML = "Class word can't be blank";
-		return;
-	}*/
-	
 	var strParams = "clazz_name="+encodeURIComponent(clazz_name) +
 					"&clazz_word="+encodeURIComponent(clazz_word) +
 					"&clazz_desc="+encodeURIComponent(clazz_desc) +
@@ -180,7 +166,6 @@ function copyClass(btnSave)
 				oSubmitText.style.display = "none";
 				btnSave.disabled = false;
 			}
-			//destroyIt();
 		}
 	};
 	var target_url = "/portal/classes/"+copy_clazz_id+"/copy_class";

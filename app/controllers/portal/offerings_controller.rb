@@ -1,5 +1,5 @@
 class Portal::OfferingsController < ApplicationController
-
+  
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
 
@@ -360,5 +360,5 @@ class Portal::OfferingsController < ApplicationController
       format.xml  { render :xml => @status_event_info }
     end
   end
-
+  
 end

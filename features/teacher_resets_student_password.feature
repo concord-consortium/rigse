@@ -20,8 +20,8 @@ Feature: Teacher can reset a students password
     And the student "student" is in the class "My Class"
     When I login with username: teacher password: teacher
     And I am on the class page for "My Class"
-    Then I should see "Reset Password"
-    When I click "Reset Password"
+    Then I should see "Change Password"
+    When I click "Change Password"
     Then I should see "You must set a new password"
     When I fill in "user_password" with "new_password"
     And I fill in "user_password_confirmation" with "new_password"

@@ -17,19 +17,6 @@ class AddPositionFieldToClazz < ActiveRecord::Migration
         position += 1
       end
     end
-    
-=begin
-    teacher_number = 1;
-    teacher_class_count = 0;
-    teacher_clazzes = Portal::TeacherClazz.find(:all) # Gives all rows in the portal_teacher_clazzes
-    teacher_clazzes.each do |teacher_clazz| # for every row
-      if(teacher_number == teacher_clazzes.teacher_id and teacher_class_count != 0) # l
-        teacher_class_count += 1;
-      else
-        teacher_number = teacher_clazzes.teacher_id
-        teacher_class_count = 0
-      teacher_clazzes.position = teacher_class_count;
-=end
   end
 
   def self.down
