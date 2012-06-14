@@ -56,6 +56,69 @@ function destroyIt()
 }
 
 
+function ClassActiveCheckBoxChanged()
+{
+	if (oDraggedElement != null)
+	{
+		return;
+	}
+	SaveManageClassListState();
+}
+
+function SaveManageClassListState()
+{
+	showModalPopup();
+	//$$(".edit_portal_teacher")[0].submit()
+	var oForm = $$("form.edit_portal_teacher")[0];
+	var target_url = oForm.getAttribute('action');
+	
+	var arrFormElements = oForm.elements;
+	
+	var strParams = "";
+	var oFormElement = null;
+	var strElementType = null;
+	var strElementName = null;
+	var strElementValue = null;
+	
+	
+	for (var i = 0; i < arrFormElements.length; i++)
+	{
+		oFormElement = arrFormElements[i];
+		strElementType = oFormElement.getAttribute("type");
+		strElementName = oFormElement.getAttribute("name");
+		strElementValue = oFormElement.value || "";
+		if (strElementName == null
+			|| (strElementType == "checkbox" && !oFormElement.checked))
+		{
+			continue;
+		}
+		
+		if (strParams != "")
+		{
+			strParams += "&";
+		}
+		
+		strParams += encodeURIComponent(strElementName) + "=" + encodeURIComponent(strElementValue); 
+	}
+	
+	var options = {
+		method: 'post',
+		parameters: strParams,
+		onSuccess: function(transport) {
+			initManageClasses();
+			hideModalPopup();
+			return;
+		}
+	};
+	
+	new Ajax.Request(target_url, options);
+}
+
+function ClassDragComplete()
+{
+	SaveManageClassListState();
+}
+
 function copyClass(btnSave)
 {
 	btnSave.disabled = true;
@@ -126,31 +189,62 @@ function copyClass(btnSave)
 	return;
 }
 
-var strDraggedElementCheckBoxID="";
-var bDraggedElementChecked;
+function showModalPopup() {
+	var el = document.getElementById("invisible_modal");
+	el.style.visibility = "visible";
+}
+
+
+function hideModalPopup() {
+	var el = document.getElementById("invisible_modal");
+	el.style.visibility = "hidden";
+}
+
+var oDraggedElement = null;
+var bElementDragged = false;
 
 function ChangeOrder(elementDragged)
 {
-	var oDraggedElementCheckBox = $$('#'+elementDragged.element.id+' input:[type="checkbox"]')[0];
-	strDraggedElementCheckBoxID = oDraggedElementCheckBox.id;
-	bDraggedElementChecked = oDraggedElementCheckBox.checked;
+	oDraggedElement = elementDragged.element;
 }
 
 function UpdateOrder()
 {
-	var oDraggedElementCheckBox;
-	if(strDraggedElementCheckBoxID.length > 0)
+	window.console.log("asdasd");
+	if(oDraggedElement != null)
 	{
 		setTimeout (function(){
-			document.getElementById(strDraggedElementCheckBoxID).checked = bDraggedElementChecked;
-			strDraggedElementCheckBoxID = "";
-			},20);
+			if (!bElementDragged)
+			{
+				return;
+			}
+			var oCheckbox = oDraggedElement.getElementsByTagName("input")[0];
+			oCheckbox.checked = !oCheckbox.checked;
+			oDraggedElement = null;
+			bElementDragged = false;
+			},150);
+	}
+	else
+	{
+		oDraggedElement = null;
+		bElementDragged = false;
 	}
 }
 
-document.observe("dom:loaded", function() {
+function initManageClasses() {
+	oDraggedElement = null;
+	bElementDragged = false;
+	
 	Sortable.sortables.sortable.draggables.each(function(oDraggable){
-		oDraggable.options.change = ChangeOrder;
+		oDraggable.options.change = function (params) {
+			var oLabel = params.element.getElementsByTagName("label")[0];
+			oLabel.removeAttribute("for");
+			return;
+			bElementDragged = true;
+			ChangeOrder(params);
+		};
 		oDraggable.options.onEnd = UpdateOrder;
 	});
-});
+}
+
+document.observe("dom:loaded", initManageClasses);

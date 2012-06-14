@@ -9,7 +9,7 @@
           %table{:cellpadding => "0", :cellspacing => "0", :border => "0"}
             %tr
               %td{:style=>"width:50px;"}
-                %input{:type => "checkbox", :id => "teacher_clazz[#{teacher_clazz.id}]", :name => "teacher_clazz[]", :value => teacher_clazz.id, :checked => active_selected}
+                %input{:type => "checkbox", :id => "teacher_clazz[#{teacher_clazz.id}]", :name => "teacher_clazz[]", :value => teacher_clazz.id, :checked => active_selected, :onclick=>"ClassActiveCheckBoxChanged()"}
                 %input{:type => "hidden", :id => "teacher_clazz_position[#{teacher_clazz.id}]", :name => "teacher_clazz_position[]", :value => teacher_clazz.id}
               %td{:style=>"width:350px;"}
                 %label{:for => "teacher_clazz[#{teacher_clazz.id}]", :title=> clazz.name} #{clazz.name.truncate(20)}

@@ -394,8 +394,9 @@ class Portal::ClazzesController < ApplicationController
       return
     end
     
+    @teacher = current_user.portal_teacher;
     
-    if request.put? then
+    if request.put?
       
       # Position teacher classes
       # and 
@@ -403,7 +404,7 @@ class Portal::ClazzesController < ApplicationController
       arrTeacherClazzPosition = params['teacher_clazz_position']
       
       arrActiveTeacherClazz = nil
-      if (params.has_key? 'teacher_clazz') then
+      if (params.has_key? 'teacher_clazz')
         arrActiveTeacherClazz = params['teacher_clazz']
       else
         arrActiveTeacherClazz = []
@@ -413,7 +414,7 @@ class Portal::ClazzesController < ApplicationController
       arrTeacherClazzPosition.each do |teacher_clazz_id|
         teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
         teacher_clazz.position = position;
-        if (arrActiveTeacherClazz.include?(teacher_clazz_id)) then
+        if (arrActiveTeacherClazz.include?(teacher_clazz_id))
           teacher_clazz.active = true
         else
           teacher_clazz.active = false
@@ -423,9 +424,14 @@ class Portal::ClazzesController < ApplicationController
         position += 1;
       end
       
+      render(:update) { |page|
+        page.replace_html 'clazzes_nav', :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @teacher, :selects => []}
+        page.replace_html 'manage_classes_panel', :partial => 'portal/clazzes/manage_clazzes_panel', :locals => {:@teacher => @teacher}
+      }
+      return
     end
     
-    @teacher = current_user.portal_teacher;
+    
     
   end
   
