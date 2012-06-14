@@ -63,42 +63,9 @@ function SaveManageClassListState()
 	showModalPopup();
 	//$$(".edit_portal_teacher")[0].submit()
 	var oForm = $$("form.edit_portal_teacher")[0];
-	var target_url = oForm.getAttribute('action');
-	
-	var arrFormElements = oForm.elements;
-	
-	var strParams = "";
-	var oFormElement = null;
-	var strElementType = null;
-	var strElementName = null;
-	var strElementValue = null;
-	
-	
-	for (var i = 0; i < arrFormElements.length; i++)
-	{
-		oFormElement = arrFormElements[i];
-		strElementType = oFormElement.getAttribute("type");
-		strElementName = oFormElement.getAttribute("name");
-		strElementValue = oFormElement.value || "";
-		if (
-			strElementName === null ||
-			(strElementType == "checkbox" && !oFormElement.checked)
-			)
-		{
-			continue;
-		}
-		
-		if (strParams !== "")
-		{
-			strParams += "&";
-		}
-		
-		strParams += encodeURIComponent(strElementName) + "=" + encodeURIComponent(strElementValue); 
-	}
 	
 	var options = {
 		method: 'post',
-		parameters: strParams,
 		onSuccess: function(transport) {
 			setTimeout(function () {
 				initManageClasses();
@@ -110,7 +77,8 @@ function SaveManageClassListState()
 	};
 	
 	Sortable.destroy("sortable");
-	new Ajax.Request(target_url, options);
+	oForm.request(options);
+	return;
 }
 
 function ClassDragComplete()
