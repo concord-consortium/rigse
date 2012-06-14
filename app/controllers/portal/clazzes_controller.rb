@@ -494,6 +494,7 @@ class Portal::ClazzesController < ApplicationController
       return
     end
     
+    @teacher = current_user.portal_teacher;
     
     if request.put?
       
@@ -523,9 +524,14 @@ class Portal::ClazzesController < ApplicationController
         position += 1;
       end
       
+      render(:update) { |page|
+        page.replace_html 'clazzes_nav', :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @teacher, :selects => []}
+        page.replace_html 'manage_classes_panel', :partial => 'portal/clazzes/manage_clazzes_panel', :locals => {:@teacher => @teacher}
+      }
+      return
     end
     
-    @teacher = current_user.portal_teacher;
+    
     
   end
   

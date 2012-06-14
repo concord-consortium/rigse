@@ -1,8 +1,9 @@
 / TODO: possible refactoring to make more clazzes specific.
 / Clazz navigation: top_node could be course, teacher, student ...
-= javascript_include_tag "clazzes_nav"
-%br
+
 #clazzes_nav
+  = javascript_include_tag "clazzes_nav"
+  %br
   .padded_content
     - top_container_id = dom_id_for(top_node, :nav_list)
     - top_controller ||= top_node.class.name.tableize

@@ -53,6 +53,71 @@ function destroyIt()
 	oPopUpWindow.destroy();
 }
 
+function ClassActiveCheckBoxChanged()
+{
+	SaveManageClassListState();
+}
+
+function SaveManageClassListState()
+{
+	showModalPopup();
+	//$$(".edit_portal_teacher")[0].submit()
+	var oForm = $$("form.edit_portal_teacher")[0];
+	var target_url = oForm.getAttribute('action');
+	
+	var arrFormElements = oForm.elements;
+	
+	var strParams = "";
+	var oFormElement = null;
+	var strElementType = null;
+	var strElementName = null;
+	var strElementValue = null;
+	
+	
+	for (var i = 0; i < arrFormElements.length; i++)
+	{
+		oFormElement = arrFormElements[i];
+		strElementType = oFormElement.getAttribute("type");
+		strElementName = oFormElement.getAttribute("name");
+		strElementValue = oFormElement.value || "";
+		if (
+			strElementName === null ||
+			(strElementType == "checkbox" && !oFormElement.checked)
+			)
+		{
+			continue;
+		}
+		
+		if (strParams !== "")
+		{
+			strParams += "&";
+		}
+		
+		strParams += encodeURIComponent(strElementName) + "=" + encodeURIComponent(strElementValue); 
+	}
+	
+	var options = {
+		method: 'post',
+		parameters: strParams,
+		onSuccess: function(transport) {
+			setTimeout(function () {
+				initManageClasses();
+				hideModalPopup();
+				return;
+			}, 150);
+			return;
+		}
+	};
+	
+	Sortable.destroy("sortable");
+	new Ajax.Request(target_url, options);
+}
+
+function ClassDragComplete()
+{
+	SaveManageClassListState();
+}
+
 function copyClass(btnSave)
 {
 	btnSave.disabled = true;
@@ -105,37 +170,34 @@ function copyClass(btnSave)
 			}
 		}
 	};
+	
 	var target_url = "/portal/classes/"+copy_clazz_id+"/copy_class";
 	new Ajax.Request(target_url, options);
 	oSubmitText.style.display = "inline";
 	return;
 }
 
-var strDraggedElementCheckBoxID="";
-var bDraggedElementChecked;
-
-function ChangeOrder(elementDragged)
-{
-	var oDraggedElementCheckBox = $$('#'+elementDragged.element.id+' input:[type="checkbox"]')[0];
-	strDraggedElementCheckBoxID = oDraggedElementCheckBox.id;
-	bDraggedElementChecked = oDraggedElementCheckBox.checked;
+function showModalPopup() {
+	var el = document.getElementById("invisible_modal");
+	el.style.visibility = "visible";
 }
 
-function UpdateOrder()
-{
-	var oDraggedElementCheckBox;
-	if(strDraggedElementCheckBoxID.length > 0)
-	{
-		setTimeout (function(){
-			document.getElementById(strDraggedElementCheckBoxID).checked = bDraggedElementChecked;
-			strDraggedElementCheckBoxID = "";
-			},20);
-	}
+
+function hideModalPopup() {
+	var el = document.getElementById("invisible_modal");
+	el.style.visibility = "hidden";
 }
 
-document.observe("dom:loaded", function() {
+
+function initManageClasses() {
+	Sortable.create("sortable", {onUpdate:ClassDragComplete});
 	Sortable.sortables.sortable.draggables.each(function(oDraggable){
-		oDraggable.options.change = ChangeOrder;
-		oDraggable.options.onEnd = UpdateOrder;
+		oDraggable.options.change = function (params) {
+			var oLabel = params.element.getElementsByTagName("label")[0];
+			oLabel.removeAttribute("for");
+			return;
+		};
 	});
-});
+}
+
+document.observe("dom:loaded", initManageClasses);
