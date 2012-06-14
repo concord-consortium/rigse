@@ -1156,7 +1156,7 @@ ul.quiet_list {
 
 .invisible_modal
 {
-  visibility: hidden;
+     display: none;
      position: absolute;
      left: 0px;
      top: 0px;
@@ -1169,6 +1169,11 @@ ul.quiet_list {
      filter: alpha(opacity=50);
      cursor: wait;
      zoom: 1;
+}
+
+.invisible_modal.show
+{
+  display: block;
 }
 
 .total_Class_summary

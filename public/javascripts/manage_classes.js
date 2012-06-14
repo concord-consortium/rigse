@@ -147,25 +147,65 @@ function copyClass(btnSave)
 
 function showModalPopup() {
 	var el = document.getElementById("invisible_modal");
-	el.style.visibility = "visible";
+	el.className = "invisible_modal show";
 }
 
 
 function hideModalPopup() {
 	var el = document.getElementById("invisible_modal");
-	el.style.visibility = "hidden";
+	el.className = "invisible_modal";
 }
 
 
+var g_oMouseDownTimer = null;
+var g_strLabelFor = null;
+
+function removeLabelFor()
+{
+	var oElement = this;
+	g_oMouseDownTimer = setTimeout(function () {
+		var oLabel = oElement.getElementsByTagName("label")[0];
+		g_strLabelFor = oLabel.getAttribute("for");
+		oLabel.removeAttribute("for");
+		return;
+	}, 250);
+}
+
+function applyLabelFor()
+{
+	var oElement = this;
+	
+	if (g_strLabelFor !== null)
+	{
+		clearTimeout(g_oMouseDownTimer);
+	}
+	
+	if (g_strLabelFor === null)
+	{
+		return;
+	}
+	
+	setTimeout(function () {
+		var oLabel = oElement.getElementsByTagName("label")[0];
+		oLabel.setAttribute("for", g_strLabelFor);
+		g_strLabelFor = null;
+		return;
+	}, 50);
+}
+
 function initManageClasses() {
+	
+	var arrSortableElems = $$("#sortable > li"); 
+	var oElem = null
+	
+	for (var i = 0; i < arrSortableElems.length; i++)
+	{
+		oElem = arrSortableElems[i];
+		oElem.observe("mousedown", removeLabelFor);
+		oElem.observe("mouseup", applyLabelFor);
+	}
+	
 	Sortable.create("sortable", {onUpdate:ClassDragComplete});
-	Sortable.sortables.sortable.draggables.each(function(oDraggable){
-		oDraggable.options.change = function (params) {
-			var oLabel = params.element.getElementsByTagName("label")[0];
-			oLabel.removeAttribute("for");
-			return;
-		};
-	});
 }
 
 document.observe("dom:loaded", initManageClasses);
