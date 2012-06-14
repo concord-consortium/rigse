@@ -5,41 +5,7 @@
   = javascript_include_tag "clazzes_nav"
   %br
   .padded_content
-    - top_container_id = dom_id_for(top_node, :nav_list)
-    - top_controller ||= top_node.class.name.tableize
-    - sub_controller ||= top_node.clazzes[0] ? top_node.clazzes[0].class.name.tableize : nil
-    %ul{:id=>top_container_id}
-      %li 
-        - recent_activity_class = '';
-        - if(request.fullpath == '/' || request.fullpath == '/home' )
-          - recent_activity_class = 'selected'
-        = link_to 'Recent Activity', '/', :class=> recent_activity_class
-      
-      - clazz_list = nil
-      - if top_node.is_a? Portal::Teacher
-        - clazz_list = top_node.teacher_clazzes
-      - else
-        - clazz_list = top_node.clazzes
-      
-      - clazz_list.each do |clazz_item|
-        - is_active = true;
-        - if top_node.is_a? Portal::Teacher 
-          - clazz = clazz_item.clazz
-          - is_active = clazz_item.active
-        - else
-          - clazz = clazz_item
-        - if(is_active)
-          %li{:id=>dom_id_for(clazz,:nav_item)}
-            -if clazz.section
-              - link_text = "#{clazz.name}(#{clazz.section})"
-            -else 
-              - link_text = clazz.name
-            -if (selects.include? clazz)
-              = link_to link_text,clazz, :class=> 'selected'
-              - if top_node.is_a? Portal::Teacher
-                = render :partial => 'portal/clazzes/selected_class_submenu', :locals => {:portal_clazz => clazz, :submenu_notselected => true}
-            -else
-              = link_to link_text, clazz
+    = render :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => top_node, :selects => selects}
     - if top_node.is_a? Portal::Teacher
       %ul.create{:id=>dom_id_for(top_node, :nav_list_create_class)}
         .create_link
