@@ -55,10 +55,6 @@ function destroyIt()
 
 function ClassActiveCheckBoxChanged()
 {
-	if (oDraggedElement != null)
-	{
-		return;
-	}
 	SaveManageClassListState();
 }
 
@@ -84,13 +80,15 @@ function SaveManageClassListState()
 		strElementType = oFormElement.getAttribute("type");
 		strElementName = oFormElement.getAttribute("name");
 		strElementValue = oFormElement.value || "";
-		if (strElementName == null
-			|| (strElementType == "checkbox" && !oFormElement.checked))
+		if (
+			strElementName === null ||
+			(strElementType == "checkbox" && !oFormElement.checked)
+			)
 		{
 			continue;
 		}
 		
-		if (strParams != "")
+		if (strParams !== "")
 		{
 			strParams += "&";
 		}
@@ -102,12 +100,16 @@ function SaveManageClassListState()
 		method: 'post',
 		parameters: strParams,
 		onSuccess: function(transport) {
-			initManageClasses();
-			hideModalPopup();
+			setTimeout(function () {
+				initManageClasses();
+				hideModalPopup();
+				return;
+			}, 150);
 			return;
 		}
 	};
 	
+	Sortable.destroy("sortable");
 	new Ajax.Request(target_url, options);
 }
 
@@ -168,6 +170,7 @@ function copyClass(btnSave)
 			}
 		}
 	};
+	
 	var target_url = "/portal/classes/"+copy_clazz_id+"/copy_class";
 	new Ajax.Request(target_url, options);
 	oSubmitText.style.display = "inline";
@@ -185,50 +188,15 @@ function hideModalPopup() {
 	el.style.visibility = "hidden";
 }
 
-var oDraggedElement = null;
-var bElementDragged = false;
-
-function ChangeOrder(elementDragged)
-{
-	oDraggedElement = elementDragged.element;
-}
-
-function UpdateOrder()
-{
-	window.console.log("asdasd");
-	if(oDraggedElement != null)
-	{
-		setTimeout (function(){
-			if (!bElementDragged)
-			{
-				return;
-			}
-			var oCheckbox = oDraggedElement.getElementsByTagName("input")[0];
-			oCheckbox.checked = !oCheckbox.checked;
-			oDraggedElement = null;
-			bElementDragged = false;
-			},150);
-	}
-	else
-	{
-		oDraggedElement = null;
-		bElementDragged = false;
-	}
-}
 
 function initManageClasses() {
-	oDraggedElement = null;
-	bElementDragged = false;
-	
+	Sortable.create("sortable", {onUpdate:ClassDragComplete});
 	Sortable.sortables.sortable.draggables.each(function(oDraggable){
 		oDraggable.options.change = function (params) {
 			var oLabel = params.element.getElementsByTagName("label")[0];
 			oLabel.removeAttribute("for");
 			return;
-			bElementDragged = true;
-			ChangeOrder(params);
 		};
-		oDraggable.options.onEnd = UpdateOrder;
 	});
 }
 
