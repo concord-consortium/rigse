@@ -52,7 +52,8 @@ Feature: Teacher manages a class
  @javascript
   Scenario: Teacher can reorder the class list
     When I move "Mathematics" to the top of the list with id "sortable"
-    And I press "Save"
+    And the Manage class list state starts saving
+    And the modal for saving manage classes dissappears
     Then "Mathematics" should be the first on the list with id "sortable"
     And "Mathematics" should be the first class within left panel for class navigation
     
@@ -61,7 +62,8 @@ Feature: Teacher manages a class
   Scenario: Teacher deactivates classes
     When I uncheck "Biology"
     And I uncheck "Geography"
-    And I press "Save"
+    And the Manage class list state starts saving
+    And the modal for saving manage classes dissappears
     Then I should not see "Biology" within left panel for class navigation
     And I should not see "Geography" within left panel for class navigation
     
@@ -69,7 +71,8 @@ Feature: Teacher manages a class
   Scenario: Student logs in and visits a class page which the teacher has deactivated
     When I uncheck "Biology"
     And I uncheck "Geography"
-    And I press "Save"
+    And the Manage class list state starts saving
+    And the modal for saving manage classes dissappears
     And I log out 
     And I login with username: student password: student
     Then I should see "Physics"
@@ -88,7 +91,8 @@ Feature: Teacher manages a class
     	| Geography   | steve    | 
     When I uncheck "Biology"
     And I uncheck "Geography"
-    And I press "Save"
+    And the Manage class list state starts saving
+    And the modal for saving manage classes dissappears
     And I log out 
     And I login with username: steve password: teacher
     Then I should see "Mathematics"

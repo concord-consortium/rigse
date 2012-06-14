@@ -35,6 +35,14 @@ And /^I move "(.+)" to the top of the list with id "(.+)"$/ do|sortable_name, id
                      )
 end  
 
+And /^the Manage class list state starts saving$/ do
+  page.execute_script("SaveManageClassListState();")
+end
+
+And /^the modal for saving manage classes dissappears$/ do
+  page.has_no_css?('div.invisible_modal.show')
+end
+
 Then /^"(.+)" should be the first on the list with id "(.+)"$/ do|class_name, id_of_list|
   result = page.execute_script("
                                  var bSortSuccess = false;
