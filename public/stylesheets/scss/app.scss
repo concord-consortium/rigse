@@ -1166,7 +1166,9 @@ ul.quiet_list {
      z-index: 1000;
      background-color:#FFFFFF;
      opacity: 0.5;
+     filter: alpha(opacity=50);
      cursor: wait;
+     zoom: 1;
 }
 
 .total_Class_summary
