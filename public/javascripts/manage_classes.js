@@ -196,7 +196,7 @@ function applyLabelFor()
 function initManageClasses() {
 	
 	var arrSortableElems = $$("#sortable > li"); 
-	var oElem = null
+	var oElem = null;
 	
 	for (var i = 0; i < arrSortableElems.length; i++)
 	{
