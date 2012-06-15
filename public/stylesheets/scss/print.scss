@@ -147,7 +147,7 @@ a:active  {color:black; text-decoration:none;}
 a.rollover {display: none;}
 
 /* hide table elements? */
-table.teacher_clazz_table th, table.teacher_clazz_table td
+table.teacher_class_table th, table.teacher_class_table td
 {
     border: 1px solid #242323;
     padding-left:10px;
@@ -184,7 +184,7 @@ table.teacher_clazz_table th, table.teacher_clazz_table td
 }
 
 .header{padding-left: 5px;clear:both}
-.clazzsummary{padding-left: 5px;float:left;text-align:left}
+.classsummary{padding-left: 5px;float:left;text-align:left}
 
 .print_button {
   display: none; }

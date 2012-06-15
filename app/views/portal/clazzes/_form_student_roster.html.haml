@@ -4,7 +4,7 @@
     .content
       = f.error_messages
     %div
-      %table.clazzdata.floatR
+      %table.classdata.floatR
         %tr
           %td.title=label_tag :name, 'Teacher ', :class=>"left"
           %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class=>"labelvalue"
@@ -13,13 +13,13 @@
           %td.title=label_tag :name, 'Class Word ', :class=>"left"
           %td=label_tag :name, portal_clazz.class_word, :class=>"labelvalue"
       .header.clearBoth Student Roster
-      .clazzsummary
+      .classsummary
         ='Class Name : '
         %span{:style => "font-weight:bold"} #{portal_clazz.name}
         %br
         ='Student Count :' 
         %span{:style => "font-weight:bold"} #{portal_clazz.students.length}
-      %table.clazzdata
+      %table.classdata
         %tr
           %td.hide_in_print
             %input{:type=>"button", :value=>"Add New Student", :onclick=>"get_School_Student_List()", :class=>"pie"} 
