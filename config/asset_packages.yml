@@ -21,7 +21,6 @@ javascripts:
   - chosen.proto
   - pt_event_simulate
   - prototype-ui/prototype-ui
-  - pie/PIE_uncompressed
 stylesheets: 
 - print:
   - print
