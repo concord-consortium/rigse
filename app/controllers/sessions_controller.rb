@@ -151,7 +151,7 @@ class SessionsController < ApplicationController
 
   def delete_cc_cookie
     #cookies.delete CCCookieAuth.cookie_name.to_sym
-    if cookies.kind_of? ActionController::CookieJar
+    if cookies.kind_of? ActionDispatch::Cookies::CookieJar
       cookies.delete(CCCookieAuth.cookie_name.to_sym, {:domain => cookie_domain})
     else
       cookies.delete CCCookieAuth.cookie_name.to_sym
@@ -163,7 +163,7 @@ class SessionsController < ApplicationController
     # cookies match: wordpress_* and wordpress_logged_in_*
     cookies.each do |key, val|
       if key.to_s =~ /^wordpress_/
-        if cookies.kind_of? ActionController::CookieJar
+        if cookies.kind_of? ActionDispatch::Cookies::CookieJar
           cookies.delete(key, {:domain => cookie_domain})
         else
           cookies.delete key
