@@ -65,6 +65,10 @@ ActiveRecord::Schema.define(:version => 20120523211636) do
     t.boolean  "require_user_consent",                         :default => false
     t.string   "jnlp_cdn_hostname"
     t.boolean  "use_periodic_bundle_uploading",                :default => false
+    t.text     "rpc_admin_login"
+    t.text     "rpc_admin_email"
+    t.text     "rpc_admin_password"
+    t.text     "word_press_url"
   end
 
   create_table "admin_tags", :force => true do |t|

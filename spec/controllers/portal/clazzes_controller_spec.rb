@@ -44,6 +44,10 @@ describe Portal::ClazzesController do
     @mock_project.stub(:snapshot_enabled).and_return(false)
     @mock_project.stub(:allow_default_class).and_return(false)
     @mock_project.stub(:use_student_security_questions).and_return(false)
+    @mock_project.stub(:word_press_url).and_return(nil)
+    @mock_project.stub(:rpc_admin_login).and_return(nil)
+    @mock_project.stub(:rpc_admin_email).and_return(nil)
+    @mock_project.stub(:rpc_admin_password).and_return(nil)
     Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 

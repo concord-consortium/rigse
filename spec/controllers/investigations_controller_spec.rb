@@ -7,6 +7,10 @@ describe InvestigationsController do
       :using_custom_css? => false,
       :use_student_security_questions => false,
       :use_bitmap_snapshots? => false)
+    @current_project.stub(:word_press_url).and_return(nil)
+    @current_project.stub(:rpc_admin_login).and_return(nil)
+    @current_project.stub(:rpc_admin_email).and_return(nil)
+    @current_project.stub(:rpc_admin_password).and_return(nil)
     Admin::Project.stub!(:default_project).and_return(@current_project)
     controller.stub(:before_render) {
       response.template.stub(:net_logo_package_name).and_return("blah")

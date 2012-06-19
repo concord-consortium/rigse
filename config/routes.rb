@@ -201,6 +201,11 @@ constraints :id => /\d+/ do
   match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions
   match '/opensession' => 'sessions#create', :as => :open_id_complete, :constraints => { :method => 'get' }
   match '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => 'get' }
+  post '/remote_login' => 'sessions#remote_login', :as => :remote_login
+  post '/remote_logout' => 'sessions#remote_logout', :as => :remote_logout
+  get '/verify_cc_token' => 'sessions#verify_cc_token', :as => :verify_cc_token
+  post '/blog/post_blog' => 'blogs#post_blog', :as => :post_blog
+
 
   resources :users do
     member do

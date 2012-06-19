@@ -179,7 +179,11 @@ def generate_default_project_and_jnlps_with_mocks
     :require_user_consent?          => false,
     :allow_default_class            => false,
     :allow_default_class?           => false,
-    :jnlp_cdn_hostname              => ''
+    :jnlp_cdn_hostname              => '',
+    :word_press_url                 => nil,
+    :rpc_admin_login                => nil,
+    :rpc_admin_email                => nil,
+    :rpc_admin_password             => nil
   )
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)

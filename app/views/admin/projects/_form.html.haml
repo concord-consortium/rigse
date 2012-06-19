@@ -81,6 +81,25 @@
           Description
         = f.text_area :description, :id => dom_id_for(admin_project, :item, :textarea), :class => 'tinymce_textarea'
       %p
+        - field_set_tag '<b>Geniverse blog integration</b>' do
+          %ul.menu_v
+            %li
+              %b
+                Wordpress blog site URL:
+              = f.text_field :word_press_url, :size => 60
+            %li
+              %b
+                RPC Admin login:
+              = f.text_field :rpc_admin_login,  :size => 60
+            %li
+              %b
+                RPC Admin email:
+              = f.text_field :rpc_admin_email, :size => 60
+            %li
+              %b
+                RPC Admin password:
+              = f.text_field :rpc_admin_password,  :size => 60
+      %p
         = render :partial => "home_page_content_field", :locals => { :admin_project => admin_project, :f => f }
       %p
         = render :partial => "custom_css_field", :locals => { :admin_project => admin_project, :f => f }

@@ -175,16 +175,11 @@ stylesheets:
   - window/window
   - window/rites
   - live_validation
-  - accordion
-  - notes
   - action_menu_tab
+  - notes
   - drop_down
   - data_table
   - reports
-  - themes/geniverse/geniverse
-  - themes/geniverse/action_menu_tab
-  - themes/geniverse/drop_down
-  - themes/geniverse/accordion
 
 - interactions:
   - app

@@ -2,6 +2,6 @@
 - content_for(:authored_investigations) do
   = field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} you've authored" do
     %ul
-      - current_user.investigations.each do |inv|
+      - current_user.send(TOP_LEVEL_CONTAINER_NAME_PLURAL).each do |inv|
         %li
           = link_to_container(inv)

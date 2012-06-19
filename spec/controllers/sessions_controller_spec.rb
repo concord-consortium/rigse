@@ -1,6 +1,7 @@
 require File.expand_path('../../spec_helper', __FILE__)
 describe SessionsController do
 
+  # Huh?? I thought we were using factories & mocks
   fixtures        :users
   
   def do_create
@@ -63,6 +64,11 @@ describe SessionsController do
 
             it "kills existing login"        do 
               controller.should_receive(:logout_keeping_session!)
+              do_create
+            end    
+
+            it "sets a CC auth token" do 
+              controller.should_receive(:save_cc_cookie)
               do_create
             end    
 
@@ -274,6 +280,7 @@ describe SessionsController do
     end
     it 'logs me out'                   do 
       controller.should_receive(:logout_killing_session!)
+      controller.should_receive(:delete_cc_cookie)
       do_destroy 
     end
 
@@ -296,6 +303,15 @@ describe SessionsController do
     it "should route the destroy sessions action correctly" do
       { :get => logout_path }.should route_to(:controller => "sessions", :action => "destroy")
     end
+    it "should route the verify_cc_token action correctly" do
+      route_for(:controller => 'sessions', :action => 'verify_cc_token').should == "/verify_cc_token"
+    end
+    it "should route the remote_login action correctly" do
+      route_for(:controller => 'sessions', :action => 'remote_login', :method => :post).should == "/remote_login"
+    end
+    it "should route the remote_logout action correctly" do
+      route_for(:controller => 'sessions', :action => 'remote_logout', :method => :post).should == "/remote_logout"
+    end
   end
   
   describe "route recognition" do
@@ -307,6 +323,59 @@ describe SessionsController do
     end
     it "should generate params from DELETE /session correctly" do
       { :get => "/logout" }.should route_to(:controller => "sessions", :action => "destroy")
+    end
+    it "should generate params from GET /verify_cc_token correctly" do
+      params_from(:get, '/verify_cc_token').should == {:controller => 'sessions', :action => 'verify_cc_token'}
+    end
+    it "should generate params from GET /remote_login correctly" do
+      params_from(:post, '/remote_login').should == {:method => :post, :controller => 'sessions', :action => 'remote_login'}
+    end
+    it "should generate params from put /remote_logout correctly" do
+      params_from(:post, '/remote_logout').should == {:method => :post, :controller => 'sessions', :action => 'remote_logout'}
+    end
+  end
+ 
+  describe "remote json authentication actions" do
+    before(:each) do
+      @user  = mock_user
+      @login_params = { :login => 'quentin', :password => 'testpassword' }
+      User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
+      User.stub!(:authenticate).with(@login_params[:login], 'badpassword').and_return(false)
+    end
+    describe "remote_login" do
+      describe "with a valid login" do
+        it "should log the user in" do
+          controller.should_receive(:save_cc_cookie)
+          @user.should_receive(:first_name).and_return("mock")
+          @user.should_receive(:last_name).and_return("user")
+          post :remote_login, @login_params
+          response.should be_success
+          json_data = ActiveSupport::JSON.decode(response.body)
+          json_data['first'].should == "mock"
+          controller.current_user.should == @user
+        end
+      end
+      describe "with a bad login" do
+        it "should report a failure (403)" do
+          post :remote_login, {:login => @login_params[:login], :password => "badpassword"}
+          response.should_not be_success
+          response.code.should == "403"
+          json_data = ActiveSupport::JSON.decode(response.body)
+          json_data['error'].should_not be_nil
+        end
+      end
+    end
+
+    describe "remote logout" do
+      it "should remove cookies" do
+        pending "This breaks when run at the same time as the users_controller_spec" do
+        controller.should_receive(:delete_cc_cookie)
+        post :remote_logout
+        response.should be_success, "Should successfully log out: #{response.inspect}"
+        json_data = ActiveSupport::JSON.decode(response.body)
+        json_data['message'].should_not be_nil
+        end
+      end
     end
   end
   
