@@ -1,6 +1,6 @@
 require 'builder'
 require 'net/http'
-require 'lib/wordpress'
+require 'wordpress'
 
 class Blog::BlogsController < ApplicationController
   def post_blog

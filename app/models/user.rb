@@ -1,5 +1,5 @@
 require 'digest/sha1'
-require 'lib/wordpress'
+require 'wordpress'
 
 class User < ActiveRecord::Base
   NO_EMAIL_STRING='no-email-'
