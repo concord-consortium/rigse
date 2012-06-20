@@ -46,7 +46,7 @@
 :javascript
   var selectors = $('school_selector').select('select','input');
   var on_change_func = function() {
-    var url = '/portal/school_selector/update';
+    var url = school_selector_update_path;
     var params = $('new_portal_teacher').serialize();
     var request = new Ajax.Updater('school_selector', url, {
       method: 'post',
