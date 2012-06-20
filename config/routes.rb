@@ -189,7 +189,7 @@ constraints :id => /\d+/ do
     end
 
   end
-  match '/portal/school_selector/update' => 'portal/school_selector#update'
+  match '/portal/school_selector/update' => 'portal/school_selector#update', :as => :school_selector_update
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/login' => 'sessions#new', :as => :login
   match '/register' => 'users#create', :as => :register
