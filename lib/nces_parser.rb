@@ -17,6 +17,7 @@ class NcesParser
     # The rake task that calls this class loads this value like this:
     # states_and_provinces = APP_CONFIG[:states_and_provinces] 
     # which as an example might be equal to: ["RI", "MA"]
+    states_and_provinces = nil if states_and_provinces.is_a?(Array) and states_and_provinces.empty?
     @states_and_provinces = states_and_provinces
   end
   
