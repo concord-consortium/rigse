@@ -26,7 +26,7 @@ module CCCookieAuth
   end
 
   def self.secret
-    ActionController::Base.session_options[:secret]
+    RailsPortal::Application.config.secret_token
   end
 
   def self.sign(payload,key)
