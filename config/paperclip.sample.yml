@@ -1,0 +1,5 @@
+storage: s3
+s3_credentials:
+  access_key_id: <your access key here>
+  secret_access_key: <your secret code here>
+  bucket: <your bucket name here>
