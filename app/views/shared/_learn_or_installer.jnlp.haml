@@ -1,0 +1,5 @@
+- locals = { :runnable => runnable, :learner => learner }
+- if skip_installer || !(current_project.opportunistic_installer?)
+  = render :partial => 'shared/learn', :locals => locals
+- else
+  = render :partial => 'shared/installer', :locals => locals

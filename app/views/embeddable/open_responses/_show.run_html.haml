@@ -1,4 +1,8 @@
 %div{:id => dom_id_for(open_response, :details), :class => 'content'}
-  = open_response.prompt
-
-  %textarea{:type => 'text', :style=>"width: 100%;", :value =>open_response.default_response, :class=> "mceNoEditor",:id => dom_id_for(open_response, :item, :default_response_field)}
+  = open_response.prompt.html_safe
+  - value = open_response.default_response
+  - if local_assigns[:learner]
+    - if saveable = Saveable::OpenResponse.find_by_learner_id_and_open_response_id(learner.id, open_response.id)
+      - value = saveable.answer if saveable.answered?
+  %textarea{:type => 'text', :style=>"width: 100%;", :class=> "mceNoEditor", :name => "questions[#{dom_id_for(open_response)}]", :id => dom_id_for(open_response, :item, :default_response_field)}
+    = value

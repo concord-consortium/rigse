@@ -93,3 +93,4 @@ config/sis_import_data.yml
 *.sublime_project.*
 public/system/fragments
 public/system/images
+config/paperclip.yml
