@@ -12,16 +12,28 @@
     %script{ :src=> "https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js", :type => "text/javascript"}
     %script{ :src=> "https://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.3/scriptaculous.js", :type => "text/javascript"}
 
-    = stylesheet_link_merged(current_theme.to_sym, {'media' => 'screen, presentation'})
-    = stylesheet_link_merged('print', {'media' => 'print'})
-    = javascript_include_merged :base
+    / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
+    / see the yaml file too: config/asset_packages.yml
+    != stylesheet_link_merged(theme_name.to_sym, {'media' => 'screen, presentation'})
+    != stylesheet_link_merged(:print, {'media' => 'print'})
+    != javascript_include_merged :base
 
+    / tiny_mce didn't play nice with the asset_packager..
+    = javascript_include_tag("tiny_mce/tiny_mce")
+
+    = calendar_date_select_includes "silver"
+
+    = csrf_meta_tag
+
+    / shouldn't probably do this here, do it on domloaded elsewhere..:
+    = javascript_tag mce_init_string
     - if protect_against_forgery?
       = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
     - if (defined? @container_id) && @container_id
       = javascript_tag "var container_id = #{@container_id};"
     - if defined? @container_type && @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
+    = calendar_date_select_includes "silver"
   %body
     #wrapper.run_html
       - with_format(:html) do
@@ -34,4 +46,4 @@
         = render :partial => 'shared/footer'
         #under_footer
           - if current_user.has_role?('admin')
-            = display_system_info
+            = display_system_info.html_safe

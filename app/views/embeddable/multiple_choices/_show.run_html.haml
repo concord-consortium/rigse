@@ -1,5 +1,5 @@
 %div{:id => dom_id_for(multiple_choice, :details), :class => 'content'}
-  = multiple_choice.prompt
+  = multiple_choice.prompt.html_safe
   - current_answer = nil
   - if local_assigns[:learner]
     - if saveable = Saveable::MultipleChoice.find_by_learner_id_and_multiple_choice_id(learner.id, multiple_choice.id)
