@@ -473,7 +473,16 @@ p.note {
     padding: 0.5em;
     border-bottom: 2px dashed #cccccc; }
   #content {
-    padding-left: 30px; } }
+    padding-left: 30px; }
+  .warning {
+    font-size: 1.2em;
+    color: red;
+    padding: 15px 5px; }
+  input[type="button"], input.button, input[type="submit"] {
+    width: 9em;
+    height: 2.2em;
+    margin: 20px 0px;
+    font-size: 1.7em; } }
 
 .item {
   background-color: white;
