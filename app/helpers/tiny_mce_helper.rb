@@ -32,7 +32,8 @@ tinyMCE.init({
     theme_advanced_statusbar_location : 'bottom',
     convert_newlines_to_brs : false,
     convert_fonts_to_spans : true,
-    theme_advanced_path : false
+    theme_advanced_path : false,
+    valid_elements: #{valid_elements}
 });
 HEREDOC
   end
@@ -61,6 +62,35 @@ HEREDOC
 
   def mce_buttons(n)
     return mce_theme_buttons(n) || default_mce_buttons(n)
+  end
+
+  # This is the defaults (according to http://www.tinymce.com/wiki.php/Configuration:valid_elements)
+  # along with allowing iframes.
+  def valid_elements
+    str = "'@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|"
+    str << "onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|"
+    str << "onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|"
+    str << "name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,"
+    str << "#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|"
+    str << "src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,"
+    str << "-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|"
+    str << "height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|"
+    str << "height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,"
+    str << "#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor"
+    str << "|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,"
+    str << "-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face"
+    str << "|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],"
+    str << "object[classid|width|height|codebase|*],param[name|value|_value],embed[type|width"
+    str << "|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,"
+    str << "button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|"
+    str << "valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],"
+    str << "input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value],"
+    str << "kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],"
+    str << "q[cite],samp,select[disabled|multiple|name|size],small,"
+    str << "textarea[cols|rows|disabled|name|readonly],tt,var,big,"
+    str << "iframe[align<bottom?left?middle?right?top|class|frameborder|height|id"
+    str << "|longdesc|marginheight|marginwidth|name|scrolling<auto?no?yes|src|width]'"
+    str
   end
 
 end
