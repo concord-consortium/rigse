@@ -1,0 +1,203 @@
+// Customizations of the default theme for GeniGames
+#wrapper{
+  width: 1090px;
+}
+
+#lead.project-header{
+  width: 1090px;
+}
+
+// START app.css overrides
+table {
+  &.tablesorter th, &.yui-dt-table th, &.roster-table th {
+    background: #a0d1d0 url(/portal/images/new/bg-thead.png) left bottom repeat-x !important;
+  }
+}
+
+a.more, ul.more a {
+  background: transparent url(/portal/images/new/icon-arrow-more.gif) right center no-repeat;
+}
+
+.graphic-input li {
+  background: url(/portal/images/new/bg-sprite-btns.png) right -39px no-repeat;
+}
+
+#page {
+  #header li.graphic-input {
+    background: url(/portal/images/new/bg-sprite-btns.png) right -39px no-repeat;
+  }
+  #wrapper #secondary .graphic-input {
+    background: url(/portal/images/new/bg-sprite-btns.png) right -39px no-repeat;
+  }
+}
+
+#footer {
+  background: transparent url(/portal/images/new/bg-footer.png) center bottom no-repeat;
+}
+
+body {
+  background: {
+    image: url(/portal/images/new/bg-body.png);
+  }
+}
+
+#wrapper {
+  background: #f3f2ed url(/portal/images/new/bg-content.gif) 0 0 repeat-y;
+}
+
+#userlinks {
+  background: url(/portal/images/new/bg-userlinks.png) repeat-y right top;
+}
+
+.project-header h1 {
+  background: {
+    image: url(/portal/images/new/banners/empty.png);
+  }
+  &.genigames {
+    background: white url(/portal/images/new/banners/geniverse.png) 0 0 no-repeat;
+  }
+}
+
+.page-utility a {
+  background: transparent url(/portal/images/new/bg-sprite-btns.png) 0 0 no-repeat;
+}
+
+.login-area {
+  h2 {
+    background: transparent url(/portal/images/new/headers-sprite.png) 0 -75px no-repeat;
+  }
+  input[type='submit'], button, ul.menu li a#printable-view {
+    &.button {
+      background: transparent url(/portal/images/new/bg-sprite-btns.png) -130px -69px no-repeat;
+    }
+  }
+}
+
+#project-signin, #new_portal_teacher, #new_portal_student {
+  fieldset {
+    ul.graphic-input li input {
+      background: transparent url(/portal/images/new/bg-sprite-btns.png) -32px -39px no-repeat !important;
+    }
+  }
+}
+// END app.css overrides
+
+// START accordion.css overrides
+.accordion_toggle_closed {
+  background-image: url(/portal/images/plus-minus-sprite.png);
+  &:hover {
+    background-image: url(/portal/images/plus-minus-sprite.png);
+  }
+}
+
+.accordion_toggle_open {
+  background-image: url(/portal/images/plus-minus-sprite.png);
+  &:hover {
+    background-image: url(/portal/images/plus-minus-sprite.png);
+  }
+}
+
+.accordion_container {
+  .accordion_content {
+    .accordion_page {
+      background-image: url(/portal/images/red_dot.png);
+      &:hover {
+        background-image: url(/portal/images/red_dot.png);
+      }
+    }
+  }
+}
+// END accordion.css overrides
+
+// START window/rites.css overrides
+.rites .nw {
+  background:transparent url(/portal/portal/stylesheets/window/rites/top_unactive.gif) no-repeat scroll 0px 0px;
+}
+.rites_focused .nw {
+  background:transparent url(/portal/portal/stylesheets/window/rites/top.gif) no-repeat scroll 0px 0px !important;
+}
+
+.rites .ne {
+  background:transparent url(/portal/stylesheets/window/rites/top_unactive.gif) no-repeat scroll right -44px;
+}
+
+.rites_focused .ne {
+  background:transparent url(/portal/stylesheets/window/rites/top.gif) no-repeat scroll right -44px !important;
+}
+
+.rites .n {
+  background:transparent url(/portal/stylesheets/window/rites/top_unactive.gif) repeat-x scroll right -22px;
+}
+
+.rites_focused .n {
+  background:transparent url(/portal/stylesheets/window/rites/top.gif) repeat-x scroll right -22px !important;
+}
+
+.rites .sw {
+  background:transparent url(/portal/stylesheets/window/rites/bottom_unactive.gif) no-repeat scroll 0 0px;
+}
+
+.rites_focused .sw {
+  background:transparent url(/portal/stylesheets/window/rites/bottom.gif) no-repeat scroll 0 0px !important;
+}
+
+.rites .se {
+  background:transparent url(/portal/stylesheets/window/rites/bottom_unactive.gif) no-repeat scroll right -30px;
+}
+
+.rites_focused .se {
+  background:transparent url(/portal/stylesheets/window/rites/bottom.gif) no-repeat scroll right -30px !important;
+}
+
+.rites .se_resize_handle {
+  background:transparent url(/portal/stylesheets/window/rites/bottom_unactive.gif) no-repeat scroll right -45px;
+}
+
+.rites_focused .se_resize_handle {
+  background:transparent url(/portal/stylesheets/window/rites/bottom.gif) no-repeat scroll right -45px !important;
+}
+
+.rites .s {
+  background:transparent url(/portal/stylesheets/window/rites/bottom_unactive.gif) repeat-x scroll 0 -15px;
+} 
+
+.rites_focused .s {
+  background:transparent url(/portal/stylesheets/window/rites/bottom.gif) repeat-x scroll 0 -15px !important;
+}
+
+.rites .buttons a.close {
+  background:transparent url(/portal/stylesheets/window/rites/button_unactive.gif) no-repeat 0 0; 
+}
+
+.rites_focused .buttons a.close {
+  background:transparent url(/portal/stylesheets/window/rites/buttons.gif) no-repeat 0 0 !important;    
+}
+
+.rites .buttons.over a.close {
+  background:transparent url(/portal/stylesheets/window/rites/buttons_over.gif) no-repeat 0 0px !important; 
+}
+
+.rites .buttons a.maximize {
+  background:transparent url(/portal/stylesheets/window/rites/button_unactive.gif) no-repeat 0 0;
+}
+
+.rites_focused .buttons a.maximize {
+  background:transparent url(/portal/stylesheets/window/rites/buttons.gif) no-repeat 0 -30px !important;
+}
+
+.rites .buttons.over a.maximize {
+  background:transparent url(/portal/stylesheets/window/rites/buttons_over.gif) no-repeat 0 -30px !important;  
+}
+
+.rites .buttons a.minimize {
+  background:transparent url(/portal/stylesheets/window/rites/button_unactive.gif) no-repeat 0 0;
+}
+
+.rites_focused .buttons a.minimize {
+  background:transparent url(/portal/stylesheets/window/rites/buttons.gif) no-repeat 0 -15px !important;
+}
+
+.rites .buttons.over a.minimize {
+  background:transparent url(/portal/stylesheets/window/rites/buttons_over.gif) no-repeat 0 -15px !important;
+}
+// END window/rites.css overrides
