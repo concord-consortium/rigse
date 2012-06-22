@@ -1,0 +1,3 @@
+= render :partial => 'shared/form_save_warning', :locals => { :skip_warning_popup => true }
+= render :partial=> 'investigations/show', :locals=>{:investigation => @investigation }
+%input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => 'disabled'}

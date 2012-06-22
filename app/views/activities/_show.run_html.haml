@@ -1,2 +1,5 @@
-%h3= activity.name
-%p= activity.description
+%h2= activity.name
+- activity.sections.each do |section|
+  - style = section.teacher_only? ? "teacher_only" : ""
+  %div{ :id => dom_id_for(section, :item), :class => style}
+    = render :partial => 'sections/show', :locals => {:learner => local_assigns[:learner], :section => section}

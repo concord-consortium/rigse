@@ -1,5 +1,5 @@
 module JnlpLaunchable
   def run_format
-    :jnlp
+    USING_JNLPS ? :jnlp : :run_html
   end
 end
