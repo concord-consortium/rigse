@@ -2,7 +2,7 @@
 // This is a temprorary fix...
 
 document.dialog.close();
-$('js_flash').insert({top:'<br/><br/>adding page ... <img src="/images/rites-wait.gif">'});
+$('js_flash').insert({top:'<br/><br/>adding page ... <%= image_tag("rites-wait.gif") %>'});
 $('js_flash').show();
 window.location = '<%= url_for @page %>';
 

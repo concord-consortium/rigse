@@ -1,7 +1,7 @@
 module DrawToolHelper
 
   def dt_pallet_image
-    "/images/otrunk_objects/draw_tool.gif";
+    image_path("otrunk_objects/draw_tool.gif");
   end
   
   def dt_padding
