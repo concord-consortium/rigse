@@ -12,7 +12,7 @@ tinyMCE.init({
     auto_resize : true,
     remove_script_host : false,
     relative_urls : false,
-    content_css : "/stylesheets/otml.css, /stylesheets/project.css",
+    content_css : "#{stylesheet_path('otml.css')}, #{stylesheet_path('project.css')}",
     gecko_spellcheck : true,
     theme_advanced_resizing : true,
     theme_advanced_resizing_use_cookie : true,
