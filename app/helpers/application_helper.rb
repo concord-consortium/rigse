@@ -618,7 +618,7 @@ module ApplicationHelper
       reportUtil = Report::Util.factory(offering)
       questions = reportUtil.embeddables(:type => options[:type])
       type_id_lambda = lambda{|s|
-        types = Investigation.reportable_types.map{|t| t.to_s.demodulize.underscore }
+        types = ResponseTypes.reportable_types.map{|t| t.to_s.demodulize.underscore }
         type = types.detect{|t| s.respond_to?(t) }
         if type
           type_id = "#{type}_id"
