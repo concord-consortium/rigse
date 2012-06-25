@@ -1,3 +1,4 @@
-%form{:action => answers_portal_offering_path(@offering), :method => :post}
+= render :partial => 'shared/form_save_warning'
+%form.run_html_form{:action => answers_portal_offering_path(@offering), :method => :post}
   = render_show_partial_for(@offering.runnable, {:locals => {:learner => @learner}})
-  %input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => (@learner.nil? ? "disabled" : "")}
+  %input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => (@learner.nil? ? "disabled" : ""), :onclick => 'window.onbeforeunload = null; return true;'}
