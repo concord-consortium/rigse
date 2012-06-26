@@ -22,7 +22,7 @@ When /^an admin sets the jnlp CDN hostname to "([^"]*)"$/ do |cdn_hostname|
   click_link "edit project"
   fill_in "admin_project[jnlp_cdn_hostname]", :with => cdn_hostname
   # we turn on the opportunisitc installer inorder to test the most functionality
-  check "Opportunistic Installer"
+  check "Use JavaClientLauncher"
   click_button "Save"
   page.should have_no_button("Save")
 end
