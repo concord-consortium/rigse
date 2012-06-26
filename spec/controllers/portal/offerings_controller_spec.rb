@@ -46,7 +46,7 @@ describe Portal::OfferingsController do
   end
 
   describe "run_html offering" do
-    integrate_views
+    render_views
     before(:each) do
       generate_default_project_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
@@ -68,6 +68,7 @@ describe Portal::OfferingsController do
       @xhtml.reload
 
       @multiple_choice.save
+      @multiple_choice.create_default_choices
       @multiple_choice.reload
 
       @open_response.save
@@ -110,7 +111,7 @@ describe Portal::OfferingsController do
       @clazz.should_receive(:is_student?).and_return(true)
 
       mc_sym = "embeddable__multiple_choice_#{@multiple_choice.id}"
-      or_sym = "embeddable__open_response_#{@multiple_choice.id}"
+      or_sym = "embeddable__open_response_#{@open_response.id}"
 
       choice = @multiple_choice.choices.last
       answers = {mc_sym => "embeddable__multiple_choice_choice_#{choice.id}", or_sym => "This is an OR answer"}
