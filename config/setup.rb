@@ -75,7 +75,6 @@ require 'uuidtools'
 require rails_file_path(%w{ lib local_names })
 require rails_file_path(%w{ config initializers 00_core_extensions })
 require rails_file_path(%w{ lib app_settings })
-require rails_file_path(%w{ lib states_and_provinces })
 
 include AppSettings
 

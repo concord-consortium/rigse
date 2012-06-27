@@ -28,16 +28,6 @@ describe Admin::Project do
     @new_valid_project.should_not be_valid
   end
 
-  it "should not create a new instance given an invalid abbreviations in :states_and_provinces" do
-    @new_valid_project.states_and_provinces = %w{RI MA ZZ}
-    @new_valid_project.should_not be_valid
-  end
-
-  it "should not create a new instance if states_and_provinces is a hash" do
-    @new_valid_project.states_and_provinces = {'RI' => 'Rhode Island', 'MA' => 'Massachusetts'}
-    @new_valid_project.should_not be_valid
-  end
-  
   describe "a projects list of enabled vendor interfaces" do
 
     before(:all) do

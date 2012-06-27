@@ -24,7 +24,6 @@ class Admin::Project < ActiveRecord::Base
 
   validates_format_of :url, :with => URI::regexp(%w(http https))
   validates_length_of :name, :minimum => 1
-  validate :states_and_provinces_array_members_must_match_list
   
   default_value_for :enabled_vendor_interfaces do
     Probe::VendorInterface.all
@@ -33,17 +32,6 @@ class Admin::Project < ActiveRecord::Base
   if USING_JNLPS
     validates_associated :maven_jnlp_server
     validates_associated :maven_jnlp_family
-  end
-
-  def states_and_provinces_array_members_must_match_list
-    if states_and_provinces && states_and_provinces.is_a?(Array)
-      unknown_provinces = states_and_provinces.select { |i| StatesAndProvinces::STATES_AND_PROVINCES[i] ? false : i }
-      unless unknown_provinces.empty?
-        errors.add(:states_and_provinces, "array members: #{unknown_provinces.join(', ')} must match list of known state and province two-character abreviations")
-      end
-    else
-      errors.add(:states_and_provinces, "must be an array")
-    end
   end
 
   before_save :update_jnlp_version_str_if_snapshot
