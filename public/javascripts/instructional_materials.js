@@ -67,6 +67,9 @@ document.observe("dom:loaded", function() {
 			showInstructionalMaterial(oTab);
 		});
 	});
-	var strTabID = arrTabs[0].id;
-	setSelectedTab(strTabID);
+	if (arrTabs.length > 0)
+	{
+		var strTabID = arrTabs[0].id;
+		setSelectedTab(strTabID);
+	}
 });
