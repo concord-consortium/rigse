@@ -7,6 +7,7 @@ class Image < ActiveRecord::Base
 
   before_create :check_image_presence
   before_save :check_image_presence
+  before_image_post_process :clean_image_filename
 
   validates_presence_of :user_id, :name, :publication_status
 
@@ -79,5 +80,10 @@ class Image < ActiveRecord::Base
     res << "[#{self.publication_status.upcase}]" if %w(draft private).include?(self.publication_status)
     res << self.name
     res.join(" ")
+  end
+
+  def clean_image_filename
+    new_filename = image_file_name.downcase.gsub(/[^a-z0-9\-\_\.]+/, '-').gsub(/[-]+/,'-')
+    self.image.instance_write(:file_name, new_filename)
   end
 end
