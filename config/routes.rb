@@ -205,7 +205,7 @@ constraints :id => /\d+/ do
   post '/remote_login' => 'sessions#remote_login', :as => :remote_login
   post '/remote_logout' => 'sessions#remote_logout', :as => :remote_logout
   get '/verify_cc_token' => 'sessions#verify_cc_token', :as => :verify_cc_token
-  post '/blog/post_blog' => 'blogs#post_blog', :as => :post_blog
+  post '/blog/post_blog' => 'blog/blogs#post_blog', :as => :post_blog
 
 
   resources :users do
