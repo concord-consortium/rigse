@@ -1,0 +1,18 @@
+
+- clazz = teacher_clazz.clazz
+
+%li{:id=>"sortable_class_element_#{clazz.id}"}
+  %div.class_list_element
+    %table
+      %tr
+        %td.class_list_element_container
+          %table{:cellpadding => "0", :cellspacing => "0", :border => "0"}
+            %tr
+              %td{:style=>"width:50px;"}
+                %input{:type => "checkbox", :id => "teacher_clazz[#{teacher_clazz.id}]", :name => "teacher_clazz[]", :value => teacher_clazz.id, :checked => active_selected, :onclick=>"ClassActiveCheckBoxChanged()"}
+                %input{:type => "hidden", :id => "teacher_clazz_position[#{teacher_clazz.id}]", :name => "teacher_clazz_position[]", :value => teacher_clazz.id}
+              %td{:style=>"width:350px;"}
+                %label{:for => "teacher_clazz[#{teacher_clazz.id}]", :title=> clazz.name} #{clazz.name.truncate(20)}
+              %td
+                %a{ :id => "copy_class_link",:href => "javascript:void(0)", :onclick => "showCopyClassPopup(#{clazz.id}, \"#{url_encode clazz.name}\", \"#{url_encode clazz.class_word}\", \"#{url_encode teacher_clazz.clazz.description}\")" } Copy Class
+              

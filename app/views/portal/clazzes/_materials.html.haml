@@ -5,17 +5,17 @@
     .content
       = f.error_messages
     .right
-      %table.clazzdata
+      %table.classdata
         %tr
           %td.title=label_tag :name, 'Teacher ', :class => 'left'
-          %td=label_tag :name, portal_clazz.teacher.name , :class => 'labelvalue'
+          %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class => 'labelvalue'
           %td.title=label_tag :name, 'Semester ', :class => "left"
-          %td=label_tag :name, portal_clazz.semester.name , :class => 'labelvalue'
+          %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class => 'labelvalue'
           %td.title=label_tag :name, 'Class Word ', :class => 'left'
           %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
       .header Instructional Materials
       %br
-      %table.clazzdata
+      %table.classdata
         %tr
           %td
             = link_to 'Manage Materials', edit_portal_clazz_url(portal_clazz), :class=>"button pie"

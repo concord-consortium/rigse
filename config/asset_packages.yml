@@ -21,7 +21,6 @@ javascripts:
   - chosen.proto
   - pt_event_simulate
   - prototype-ui/prototype-ui
-  - pie/PIE
 stylesheets: 
 - print:
   - print
@@ -157,6 +156,7 @@ stylesheets:
   - data_table
   - reports
   - chosen
+  - classes_left_pane
   - instructional_materials
 
 - genomedynamics:

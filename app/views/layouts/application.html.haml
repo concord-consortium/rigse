@@ -34,6 +34,14 @@
     - if @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
     = calendar_date_select_includes "silver"
+    
+    / PIE needs to be conditionally included for IE.
+    / The boxed conditional comment below is required.
+    / Do NOT remove it unless you know what you're doing.
+    /[if lt IE 10]
+      = javascript_include_tag("pie/PIE")
+
+    
   %body
 
     #note{:style=>"display: none;"}
@@ -51,10 +59,11 @@
           #content_header.main_content_colors
             = content_for :content_header
           #js_flash{:style=>"display: none;"}
-          #flash
-            .padded_contents
-              - flash.each do |key, message|
-                %div{:class=>"flash flash_#{key}"}= message
+          #main_flash_message_div
+            #flash
+              .padded_contents
+                - flash.each do |key, message|
+                  %div{:class=>"flash flash_#{key}"}= message
           = content_for :layout
 
 

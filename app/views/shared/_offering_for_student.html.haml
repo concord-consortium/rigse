@@ -1,16 +1,15 @@
--if offering.runnable
-  .item
-    %ul.quiet_list
-      %li
-        = run_link_for(offering)
-        - if current_user.has_role?("admin") && @portal_student
-          |
-          - learner = @portal_student.learners.find_by_offering_id(offering.id)
-          - if learner
-            = report_link_for(@portal_student.learners.find_by_offering_id(offering.id), 'bundle_report', 'Bundles ')
-          - else
-            No bundles
-      %li
-        .tiny= offering.description
+.item
+  %ul.quiet_list
+    %li
+      = run_link_for(offering)
+      - if current_user.has_role?("admin") && @portal_student
+        |
+        - learner = @portal_student.learners.find_by_offering_id(offering.id)
+        - if learner
+          = report_link_for(@portal_student.learners.find_by_offering_id(offering.id), 'bundle_report', 'Bundles ')
+        - else
+          No bundles
+    %li
+      .tiny= offering.description
 
 -#%li= link_to "View #{offering.name}", offering.runnable, :target => '_blank'
