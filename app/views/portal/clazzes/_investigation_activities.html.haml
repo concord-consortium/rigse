@@ -1,0 +1,16 @@
+%div
+  - if investigation.activities.length > 0
+    %div{:id=>"oExpandCollapseText_#{investigation.id}",:style=>"width:20px;float:left"} +
+    = link_to('Show Run Activity buttons', 'javascript: void(0);', :onclick => "showHideActivityButtons('#{investigation.id}',this)")
+    %div{:id=>"activity_list_container_#{investigation.id}",:style=>"font-weight:bold"}
+      %table.materials
+        - counter = 0
+        - investigation.activities.each do |activity|
+        - counter+=1
+          %tr
+            %td{:width=>"100px",:class=>"activitybuttoncontainer_#{investigation.id}",:style=>"display:none"}
+              %div
+                = link_to "Run Activity", run_url_for(activity,{}), :class=>"button pie"
+            %td{:style=>"font-weight:bold"} 
+              Activity #{counter}: 
+              = activity.name

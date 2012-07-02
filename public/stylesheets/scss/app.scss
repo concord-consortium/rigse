@@ -572,15 +572,15 @@ li.item_selectable {
     font: bold 1.3em Arial, Helvetica, sans-serif !important;
     margin: 10px 0 10px 20px; }
   ul {
-    border-top: solid 1px #a1d3d0;
+    
     list-style: none;
     margin: 0;
     padding: 0; }
   li {
-    background: #f3f2ed;
-    border-bottom: solid 1px #a1d3d0;
+
     color: #ee864e;
-    font-size: 1.3em;
+
+    font-size: 1.4em;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -589,18 +589,20 @@ li.item_selectable {
       font-weight: normal;
       padding: 5px 20px; }
     a {
-      background: #fbf4db;
-      color: #555555;
+      color: #8c878b;
+
       display: block;
       margin: 0;
       padding: 5px 20px; }
     a.selected {
       background: white;
-      color: #ee864e; } }
+      color: #000000;
+	  font-weight: bold; } }
   ul.create {
     border-top: none; }
   .create_link {
-    margin: 10px 0 0 20px; } }
+	text-align: center;
+    margin: 20px 0 0 0px; } }
 
 .user-info-box {
   background: white;
@@ -625,7 +627,7 @@ h2 a, h3 a {
   font-family: arial, helvetica, sans-serif; }
 
 a img {
-  border: 0; }
+  border: 0;vertical-align:middle }
 
 blockquote {
   background-color: white;
@@ -1148,4 +1150,233 @@ ul.quiet_list {
   .content {
     padding-bottom: 0.5em;
   }
+}
+
+/* CSS for Manage Classes Page*/
+
+.invisible_modal
+{
+     display: none;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     text-align:center;
+     z-index: 1000;
+     background-color:#FFFFFF;
+     opacity: 0.5;
+     filter: alpha(opacity=50);
+     cursor: wait;
+     zoom: 1;
+}
+
+.invisible_modal.show
+{
+  display: block;
+}
+
+.total_Class_summary
+{
+    font-weight:bold;
+    font-size: 1.3em;
+    color: #000000;
+    display:inline;
+    float: left;
+    padding-top: 20px;
+}
+
+.class_list_element
+{
+  div
+  {
+    float: left;
+  }
+  table
+  {
+    margin: 0;
+  }
+  a{
+    margin-top: 5px;
+  }
+  input
+  {
+    display: inline;
+    width: 50px;
+    margin: 6px;
+    border: 0;
+  }
+  label
+  {
+    font-weight:bold;
+    font-size: 1.3em;
+    color: #000000;
+    display:inline;
+    text-transform: none;
+  }
+  
+}
+
+
+.class_list_element_container
+{
+  width:500px;
+  table
+  {
+    td
+    {
+      vertical-align: middle;
+    }
+  }
+}
+
+.manage_classes_panel
+{
+  #sortable li label{ 
+    margin: 0; 
+    padding: 3px 0px 0px 0px ;
+    cursor:move ;
+    height:auto;
+    }
+    #sortable { list-style-type: none; margin: 0; padding: 0;width:auto; }
+}
+
+.right_float
+{
+  float: right;
+  bottom: 0;
+  input {
+  border: 0 solid #f3951d;
+  color: white;
+  display: inline;
+  font: 12px / 1 Arial, Helvetica, sans-serif;
+  padding: 4px 5px;
+  /* CSS 3 */
+  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
+  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  _background: #f6f2e2;
+  border-radius: 12px;
+  /* Opera 10.5, IE 9 */
+  -moz-border-radius: 12px;
+  /* FF1+ */
+  -webkit-border-radius: 12px;
+  /* Saf3+, Chrome */ }
+}
+
+.bottom_options
+{
+  button
+  {
+    display: inline;
+  }
+}
+
+.clear_both
+{
+  clear:both;
+}
+
+.main_manage_classes_container{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px}
+
+.popup_content
+{
+  padding: 20px 20px 20px 20px;
+  textarea
+  {
+    width: 350px;
+  }
+  
+  td
+  {
+    padding-top: 10px; 
+  }
+}
+
+/* ---- END CSS for Manage Classes Page ------*/
+
+
+
+/* ---- CSS for Student roster page -----*/
+
+table.teacher_class_table th, table.teacher_class_table td
+{
+    border: 1px solid #242323;
+    padding-left:10px;
+    /*text-align: center !important; /*Forcely added !important as in Action_menu_tab.scss Align Left is marked !important*/
+   
+   .change_password
+  {
+    padding-left:20px;
+  }
+  
+  .remove_student
+  {
+    padding-left:20px;
+  }
+}
+
+.floatR
+{
+  float : right;
+}
+
+.floatL
+{
+  float : left;
+}
+
+.clearBoth
+{
+  clear : both;
+}
+
+.classsetupform { 
+  width: 100%; text-align: left;
+  #sortable li label{ 
+    margin: 0; 
+    padding: 3px 0px 0px 0px ;
+    cursor:move ;
+    height:auto;
+    }
+}
+.classsetupform tr { vertical-align: top; }
+.classsetupform td { padding-top: 10px; padding-left: 10px; }
+.classsetupform td:nth-child(odd) { width: 112px;}
+.classsetupform td.title{ width: 112px;}
+.classsetupform table { margin: 0;}
+.classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
+
+.offerings{text-align:left;margin:0}
+.offerings tr { vertical-align: top; }
+.offerings td { text-align:left; vertical-align:middle;padding:0 }
+.offerings td:nth-child(odd) { width: 20px;padding-top:5px}
+
+.studentlist{text-align:left;margin:0}
+.studentlist tr { vertical-align: middle; }
+.studentlist td { text-align:left; vertical-align:middle;padding:2px 0 }
+.studentlist td.studentname { text-align:left; vertical-align:middle;padding:2px 0; min-width:150px }
+
+.contentdiv{float:left;}
+.linkdiv{float:right;}
+
+.header{padding-left: 10px;color:#3A878B;font-size:20px;font-weight:bold;clear:both}
+.subheader{color:#3A878B;font-size:16px;font-weight:bold}
+.labelvalue{font-weight:bold;padding-left:5px}
+.classdata{float:right;text-align:left}
+.classsummary{padding-left: 10px;float:left;text-align:left}
+.classdata td:nth-child(odd) { padding-left: 20px; text-align: left; }
+td.title { padding-left: 20px; text-align: left; }
+.maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}
+
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#sortable li { margin: 0 0px 3px 0px; padding: 0.4em;height: 18px;cursor:move }
+
+a.hlink{color:#479492;text-decoration:none;cursor:pointer}
+a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
+
+.pie{position: relative;}
+
+#setup_flash_message_div{
+  color:black;
+  font-weight:bold;
 }

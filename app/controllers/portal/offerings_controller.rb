@@ -1,5 +1,5 @@
 class Portal::OfferingsController < ApplicationController
-
+  
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
 
@@ -332,4 +332,33 @@ class Portal::OfferingsController < ApplicationController
       render :status => 500, :text => "problem loading offering"
     end
   end
+
+  def launch_status
+    # NOTE: If the user is requesting json, this is actually handled
+    # at the rack/metal layer, in launch_status.rb.
+    @offering = Portal::Offering.find(params[:id])
+    @learner = Portal::Learner.find_by_offering_id_and_student_id(@offering.id, current_user.portal_student.id)
+    @status_event_info = {}
+    if @learner && @learner.bundle_logger.in_progress_bundle
+      last_event = @learner.bundle_logger.in_progress_bundle.launch_process_events.last
+      if last_event
+        @status_event_info["event_type"] = last_event.event_type
+        @status_event_info["event_details"] = last_event.event_details
+      end
+    else
+      # no in progress bundle. use a special response to indicate there's no active session
+      @status_event_info = {"event_type" => "no_session", "event_details" => "There's not a current session." }
+    end
+
+    # don't cache these responses!
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+
+    respond_to do |format|
+      format.json { render :json => @status_event_info }
+      format.xml  { render :xml => @status_event_info }
+    end
+  end
+  
 end

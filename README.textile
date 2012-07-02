@@ -105,6 +105,18 @@ Save a copy of the development database to make subsequent clean starts much qui
 
 bc. bin/rake db:dump
 
+This project uses an asset manager for JS & CSS files. Run the asset packager if any of the following are true:
+* Files included within config/asset_packages.yml have been modified.
+* Files within config/asset_packages.yml have been removed or new files have been added.
+* JS and/or CSS does not seem to be updated in production mode but is updated and working in development mode.
+
+This task should run automatically when using 'cap deploy'.
+You may also run the asset packager task manually.
+
+bc. bin/rake asset:packager:build_all
+
+This will build all the assets within the project.
+
 Start server and open http://localhost:3000
 
 bc. rails s -eproduction

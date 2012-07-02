@@ -11,6 +11,14 @@ Then /the current project should be using the following interfaces:/ do |interfa
   end
 end
 
+Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
+  login_as(username, password)
+end
+
+When /^I log out$/ do
+  visit "/logout"
+end
+
 Given /^I am an anonymous user$/ do
   User.anonymous(true)
   visit('/logout')

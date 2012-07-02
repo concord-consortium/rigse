@@ -22,7 +22,8 @@ class Portal::Clazz < ActiveRecord::Base
   before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
-
+  validates_presence_of :name
+  
   include Changeable
 
   # String constants for error messages -- Cantina-CMH 6/2/10
@@ -311,5 +312,16 @@ class Portal::Clazz < ActiveRecord::Base
     default_offerings       = self.active_offerings.reject { |o| real_offering_runnables.include?(o.runnable) }
     default_offerings
   end
+
+  def update_offerings_position
+    offerings = self.offerings.sort {|a,b| a.position <=> b.position}
+    position = 1
+    offerings.each do|offering|
+      offering.position = position
+      offering.save
+      position += 1
+    end
+  end
+  
 
 end

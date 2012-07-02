@@ -2,7 +2,16 @@
 %h1="#{portal_clazz.name}"
 .clazz_info{:id => dom_id_for(portal_clazz,:item)}
   .clazz_details{:id => dom_id_for(portal_clazz, :details)}
+    
     .action_menu
+      #setup_flash_message_div{:style=>"display:none"}
+        #flash
+          .padded_contents
+          - flash.each do |key, message|
+            %div{:class=>"flash flash_#{key}"}= message
+            %br
+      - if request.url == portal_clazz_url(portal_clazz)
+        %script $("main_flash_message_div").hide();$("setup_flash_message_div").show();
       .action_menu_header_left
       .action_menu_header_right
         -if portal_clazz.changeable? current_user
