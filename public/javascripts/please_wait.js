@@ -69,10 +69,12 @@ var showSmartWait = function(offering) {
 };
 
 var showWait = function(offering) {
-  if (!!offering && typeof(offering) == "string") {
-    showSmartWait(offering);
-  } else {
-    showCountdownWait();
+  if (typeof(skipShowWait) == "undefined" || (typeof(skipShowWait) == "boolean" && !skipShowWait)) {
+    if (!!offering && typeof(offering) == "string") {
+      showSmartWait(offering);
+    } else {
+      showCountdownWait();
+    }
   }
 };
 

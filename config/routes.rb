@@ -164,6 +164,7 @@ constraints :id => /\d+/ do
         get :separated_report
         post :report_embeddable_filter
         get :learners
+        post :answers
       end
     end
 

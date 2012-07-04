@@ -217,17 +217,22 @@ module ApplicationHelper
     opts = {
       :teacher_mode => false,
       :substitute    => nil,
-      :partial      => 'show'
+      :partial      => 'show',
+      :locals       => {}
     }
     opts.merge!(_opts)
     teacher_mode = opts[:teacher_mode]
     substitute = opts[:substitute]
     partial = "#{class_name.pluralize}/#{opts[:partial]}"
-    render :partial => partial, :locals => { demodulized_class_name.to_sym => (substitute ? substitute : component), :teacher_mode => teacher_mode}
+    locals = opts[:locals]
+    locals[demodulized_class_name.to_sym] = substitute ? substitute : component
+    locals[:teacher_mode] = teacher_mode
+    render :partial => partial, :locals => locals
   end
 
-  def render_show_partial_for(component,teacher_mode=false,substitute=nil)
-    render_partial_for(component, {:teacher_mode => teacher_mode, :substitute => substitute})
+  def render_show_partial_for(component, _opts = {})
+    opts = {:teacher_mode => false, :substitute => nil}.merge(_opts)
+    render_partial_for(component, opts)
   end
 
   def render_edit_partial_for(component,opts={})
@@ -1259,5 +1264,15 @@ module ApplicationHelper
     end
     # TODO add aditional can-author conditions
     return false
+  end
+
+  # Rails 3.0 way of switching the format for a block of code
+  # see: http://stackoverflow.com/questions/339130/how-do-i-render-a-partial-of-a-different-format-in-rails
+  def with_format(format, &block)
+    old_formats = formats
+    self.formats = [format]
+    block.call
+    self.formats = old_formats
+    nil
   end
 end

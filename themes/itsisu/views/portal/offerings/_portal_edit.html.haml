@@ -1,0 +1,35 @@
+-#required locals: assinged, is_being_edited, portal_clazz, runnable
+.activity-box
+  .runnable-title
+    - if is_being_edited
+      %input{:type => "checkbox",
+        :checked => offering_id,
+        :disabled => !is_being_edited,
+        :onclick => "updateOfferings(this, #{portal_clazz.id}, #{runnable.id}, #{offering_id}, '#{runnable.class}')",
+        :value => "#{runnable.id}",
+        :name => "runnable_id"}
+    - else
+      %input{:type => "checkbox",
+        :checked => assigned,
+        :disabled => !is_being_edited,
+        :value => "#{runnable.id}",
+        :name => "runnable_id"}
+    = runnable.name
+    - cache("runnable_info_#{runnable.class.to_s}_#{runnable.id}_") do
+      %a.info-link{:href => "#", 
+        :onclick => "toggle_info_block(this, '#runnable-description-#{runnable.id}'); if (window.event) event.returnValue=false; return false;", 
+        :title => "View runnable description"}
+        %span.info
+      .runnable-info
+        = runnable.published? ? "(published)" : "(private)"
+        %span.runnable-links{:id =>"runnable-links#{runnable.id}"}
+          - run_params = {}
+          - run_params[:format] = :run_html if runnable.is_a?(Page)
+          = run_link_for(runnable,nil,run_params)
+        -#%a{:class => 'button-link try-link', 
+          -#:id => "try_button_#{runnable.id}", 
+          -#:href => "/diy/view/52/type/runnable/", 
+          -#:title => "Try this runnable (as a teacher, do not save data)"} 
+          -#try it. 
+      -#.runnable-description{:id => "runnable-description-#{runnable.id}"}
+        -#= runnable.description
