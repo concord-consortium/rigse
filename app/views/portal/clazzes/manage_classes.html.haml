@@ -1,0 +1,14 @@
+= javascript_include_tag "manage_classes"
+= form_for(@teacher, :url => url_for(:action => :manage_classes, :controller => 'clazzes') ) do |f|
+  .main_manage_classes_container.pie
+    .container
+      .content
+        = render :partial => 'portal/clazzes/manage_clazzes_panel', :locals => {:@teacher => @teacher}
+.invisible_modal{:id => 'invisible_modal'}
+      
+      
+      
+      
+      
+      
+      
