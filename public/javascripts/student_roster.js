@@ -12,7 +12,7 @@ function get_School_Student_List()
 		onSuccess: function(transport) {
 			var text = transport.responseText;
 			text += "<div><table cellpadding='5' align='right'><tr>"+
-			"<td><a class='hlink' onclick='close_popup()'>Cancel</a></td>"+
+			"<td><a class='hlink' href='javascript:void(0);' onclick='close_popup()'>Cancel</a></td>"+
 			"</table></div>";
 			student_list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
 		}
