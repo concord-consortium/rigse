@@ -1,0 +1,5 @@
+%h1= section.name
+- section.pages.each do |page|
+  - style = page.teacher_only? ? "teacher_only" : ""
+  %div{ :id => dom_id_for(page, :item), :class => style}
+    = render :partial => 'pages/show', :locals => {:learner => local_assigns[:learner], :page => page}

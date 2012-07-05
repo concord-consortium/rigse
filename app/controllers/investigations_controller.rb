@@ -184,6 +184,7 @@ class InvestigationsController < AuthoringController
     # display for teachers? Later we can determin via roles?
     @teacher_mode = params[:teacher_mode]
     respond_to do |format|
+      format.run_html   { render :show, :layout => "layouts/run" }
       format.html {
         if params['print']
           render :print, :layout => "layouts/print"

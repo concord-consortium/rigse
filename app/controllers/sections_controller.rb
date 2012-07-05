@@ -97,6 +97,7 @@ class SectionsController < ApplicationController
   def show
     @teacher_mode = params[:teacher_mode]
     respond_to do |format|
+      format.run_html   { render :show, :layout => "layouts/run" }
       format.html {
         if params['print'] 
           render :print, :layout => "layouts/print"

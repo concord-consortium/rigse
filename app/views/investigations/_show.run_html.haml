@@ -1,0 +1,5 @@
+%h1= investigation.name
+- investigation.activities.each do |activity|
+  - style = activity.teacher_only? ? "teacher_only" : ""
+  %div{ :id => dom_id_for(activity, :item), :class => style}
+    = render :partial => 'activities/show', :locals => {:learner => local_assigns[:learner], :activity => activity}

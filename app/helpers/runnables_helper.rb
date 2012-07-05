@@ -1,7 +1,7 @@
 module RunnablesHelper
   def title_text(component, verb, run_as)
     text = "#{verb.capitalize} the #{component.class.display_name}: '#{component.name}' as a #{run_as}."
-    if component.is_a? JnlpLaunchable
+    if component.is_a?(JnlpLaunchable) && USING_JNLPS
       text << " The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
     end
     text
@@ -24,7 +24,7 @@ module RunnablesHelper
 
     unless run_as
       run_as = case component
-      when JnlpLaunchable   then "Java Web Start application"
+      when JnlpLaunchable   then USING_JNLPS ? "Java Web Start application" : "Browser Activity"
       when ExternalActivity then "External Activity"
       end
     end
@@ -50,7 +50,7 @@ module RunnablesHelper
     url = run_url_for(component, params, params.delete(:format))
     
     run_type = case component
-    when JnlpLaunchable   then "Java Web Start application"
+    when JnlpLaunchable   then USING_JNLPS ? "Java Web Start application" : "Browser Activity"
     when ExternalActivity then "External Activity"
     end
     

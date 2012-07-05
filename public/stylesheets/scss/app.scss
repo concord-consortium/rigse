@@ -468,12 +468,17 @@ p.note {
 .item_selectable .container_element .action_menu, .item_selected .container_element .action_menu {
   border-bottom: none; }
 
+#wrapper.run_html {
+  background: white;
+}
+
 .run_html {
   .item {
     padding: 0.5em;
     border-bottom: 2px dashed #cccccc; }
   #content {
-    padding-left: 30px; }
+    overflow-x: visible;
+    padding-left: 5px; }
   .warning {
     font-size: 1.2em;
     color: red;
