@@ -30,7 +30,7 @@ source "http://rubygems.org"
   gem "sass",                 "~> 3.1.7"
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
-  gem "spreadsheet",          "~> 0.6.9"  #see http://spreadsheet.rubyforge.org/
+  gem "spreadsheet",          "~> 0.7.3"  #see http://spreadsheet.rubyforge.org/
 
   # ruby-ole is a spreadsheet dependency but v1.2.11.1 doesn't work on Ruby 1.9.3
   gem "ruby-ole",             "~> 1.2.11.2"
