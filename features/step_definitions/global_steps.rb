@@ -154,9 +154,6 @@ end
 Then /^(?:|I )need to confirm "([^"]*)"$/ do |text|
   # currently confirmations like this are done with dialogs
   dialog_text = page.driver.browser.switch_to.alert.text
-  # in some cases the above line returns a hash with a 'text' key
-  # I don't know why that is
-  dialog_text = dialog_text['text'] if dialog_text.is_a?(Hash)
   dialog_text.should == text
   page.driver.browser.switch_to.alert.accept
 end
