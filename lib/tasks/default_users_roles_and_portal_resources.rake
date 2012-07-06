@@ -190,8 +190,6 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         user.save!
       end
 
-      User.suspend_default_users unless APP_CONFIG[:enable_default_users]
-
       admin_user.add_role('admin')
       
       # Set the site_admin attribute to true for the site_admin.
@@ -468,6 +466,14 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         puts "You must have created the default author user first"
         puts "try running the default_users_roles task"
       end
+    end
+
+    task :suspend_default_users => :environment do
+      User.suspend_default_users
+    end
+
+    task :unsuspend_default_users => :environment do
+      User.unsuspend_default_users
     end
   end
 end

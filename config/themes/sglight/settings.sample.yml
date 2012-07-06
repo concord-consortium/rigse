@@ -23,7 +23,6 @@ development: &id003
   :site_district: Lightweight Smart Graphs-district
   :site_name: Lightweight Smart Graphs
   :site_url: http://localhost:3000
-  :enable_default_users: true
   :include_otrunk_examples: false
   :default_admin_user:
     :first_name: Stephen

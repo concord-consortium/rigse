@@ -7,7 +7,6 @@ development: &non_production_settings
     :email: stephen.bannasch@gmail.com
     :first_name: Stephen
     :last_name: Bannasch
-  :enable_default_users: true
   :include_otrunk_examples: false
   :site_district: Rails Portal-district
   :site_school: Rails Portal-school
@@ -62,7 +61,6 @@ staging:
   :site_url: http://rails-portal.staging.concord.org
   :description: ""
   :default_admin_user: *default_admin_user
-  :enable_default_users: true
   :include_otrunk_examples: false
   :states_and_provinces: *states_and_provinces
   :active_school_levels: *active_school_levels
@@ -96,7 +94,6 @@ production:
   :site_url: http://rails-portal.concord.org
   :description: ""
   :default_admin_user: *default_admin_user
-  :enable_default_users: false
   :include_otrunk_examples: false
   :states_and_provinces: *states_and_provinces
   :active_school_levels: *active_school_levels

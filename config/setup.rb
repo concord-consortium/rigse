@@ -1005,21 +1005,6 @@ Any full member can become part of the site school and district.
       get_active_school_levels(env)
 
       #
-      # ---- enable_default_users ----
-      #
-      puts <<-HEREDOC
-
-A number of default users are created that are good for testing but insecure for
-production deployments. Setting this value to true will enable the default users
-setting it to false will disable the default_users for this envioronment.
-
-      HEREDOC
-      default_users = @settings_config[env][:enable_default_users]
-      default_users = false if default_users.nil?
-      default_users = ask("  enable_default_users: ", ['true', 'false']) { |q| q.default = default_users.to_s }
-      @settings_config[env][:enable_default_users] = eval(default_users)
-
-      #
       # ---- maven_jnlp ----
       #
       get_maven_jnlp_settings(env)
