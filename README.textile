@@ -47,21 +47,22 @@ Change to the project directory:
 
 bc. cd xproject
 
-Setup rvm to use Ruby 1.9.2-p290 and a gemset named xproject
-(p290 is used to get libyaml installed by rvm)
+Setup rvm to use Ruby 1.9.3-p125 and a gemset named xproject
+(newer versions of 1.9.3 ought to work as well)
 
-bc. rvm use 1.9.2-p290
+bc. rvm use 1.9.3-p125
 rvm gemset create xproject
 
 Make an @.rvmrc@ file so rvm will use this ruby gemset combo automatically when you change to this directory:
 
-bc. echo "rvm use 1.9.2-p290@xproject" > .rvmrc
+bc. echo "rvm use 1.9.3-p125@xproject" > .rvmrc
 
 Test out the @.rvmrc@ file and start using the gemset
 
 bc. cd ..;cd xproject
 
 Install "bundler":http://gembundler.com/
+(typically rvm will install bundler for you when you install ruby)
 
 bc. gem install bundler
 
