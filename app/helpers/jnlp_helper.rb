@@ -1,7 +1,7 @@
 module JnlpHelper
   
   def jnlp_adaptor
-    @_jnlp_adaptor ||= JnlpAdaptor.new(current_project)
+    @_jnlp_adaptor ||= JnlpAdaptor.new
   end
   
   def jnlp_icon_url

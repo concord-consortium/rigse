@@ -4,7 +4,7 @@
 # default MavenJnlp::MavenJnlpServer specified in app settings
 #
 Factory.sequence :default_maven_jnlp_maven_jnlp_server do |n|
-  server, family, version = Admin::Project.default_jnlp_info
+  server, family, version = JnlpAdaptor.default_jnlp_info
   attrs = { :host => server[:host], :path => server[:path] }
   unless mj_server = MavenJnlp::MavenJnlpServer.find(:first, :conditions => attrs)
     mj_server = Factory.create :maven_jnlp_maven_jnlp_server do |f|
@@ -18,7 +18,7 @@ Factory.sequence :default_maven_jnlp_maven_jnlp_server do |n|
 end
 
 Factory.define :maven_jnlp_maven_jnlp_server, :class => MavenJnlp::MavenJnlpServer do |f|
-  server, family, version = Admin::Project.default_jnlp_info
+  server, family, version = JnlpAdaptor.default_jnlp_info
   f.host server[:host]
   f.path server[:path]
   f.name server[:name]
@@ -26,7 +26,7 @@ end
 
 Factory.define :admin_project_no_jnlps, :class => Admin::Project do |f|
   name, url = Admin::Project.default_project_name_url
-
+  
   f.user  { |p| Factory.next(:admin_user) }
   f.name  name
   f.url  url
@@ -34,20 +34,9 @@ Factory.define :admin_project_no_jnlps, :class => Admin::Project do |f|
   f.states_and_provinces  APP_CONFIG[:states_and_provinces] || []
   f.snapshot_enabled  0
   f.enable_default_users  APP_CONFIG[:enable_default_users]
-
 end
 
 Factory.define :admin_project, :parent => :admin_project_no_jnlps do |f|
-  if USING_JNLPS
-    server, family, version = Admin::Project.default_jnlp_info
-    begin
-      maven_jnlp_server = Factory.next(:default_maven_jnlp_maven_jnlp_server)
-      f.maven_jnlp_server maven_jnlp_server
-      f.maven_jnlp_family maven_jnlp_server.maven_jnlp_families.find_by_name(family)
-    rescue
-    end
-    f.jnlp_version_str version
-  end
 end
 
 # Factory.define :maven_jnlp_versioned_jnlp, :class => MavenJnlp::VersionedJnlp do |f|

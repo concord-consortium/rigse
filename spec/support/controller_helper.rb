@@ -42,7 +42,7 @@ def generate_default_project_and_jnlps_with_factories
   #   @maven_jnlp_family.stub!(:newest_snapshot_version).and_return(@maven_jnlp_family.snapshot_version)
   # end
   if USING_JNLPS
-    server, family, version = Admin::Project.default_jnlp_info
+    server, family, version = JnlpAdaptor.default_jnlp_info
     @maven_jnlp_server = Factory.next(:default_maven_jnlp_maven_jnlp_server)
     @maven_jnlp_family = @maven_jnlp_server.maven_jnlp_families.find_by_name(family)
     if version == "snapshot"
@@ -88,8 +88,7 @@ class ArrayOfVersionedJnlpUrls < Array
 end
 
 def generate_jnlps_with_mocks
-  project_name, project_url = Admin::Project.default_project_name_url
-  server, family, version = Admin::Project.default_jnlp_info
+  server, family, version = JnlpAdaptor.default_jnlp_info
 
   @mock_maven_jnlp_icon ||= mock_model(MavenJnlp::Icon)
 
@@ -158,8 +157,8 @@ end
 
 # Generates a mock project and associated jnlp resources
 def generate_default_project_and_jnlps_with_mocks
-  project_name, project_url = Admin::Project.default_project_name_url
-  server, family, version = Admin::Project.default_jnlp_info
+  project_name, project_url = Admin::Project.default_project_name_url 
+  jnlpserver, family, version = JnlpAdaptor.default_jnlp_info
   generate_jnlps_with_mocks
   @mock_project = mock_model(Admin::Project,
     :name                           => project_name,
@@ -182,15 +181,16 @@ def generate_default_project_and_jnlps_with_mocks
     :jnlp_cdn_hostname              => ''
   )
 
-  MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
-  MavenJnlp::MavenJnlpFamily.stub!(:find_by_name).with("gui-testing").and_return(@mock_gui_testing_maven_jnlp_family)
   Admin::Project.stub!(:default_project).and_return(@mock_project)
   mock_anonymous_user
   mock_admin_user
   mock_researcher_user
   
   # we have to do this because we can't easily stub helper methods so instead we are stubbing one level lower
-  mock_jnlp_adapter = JnlpAdaptor.new(@mock_project)
+  MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
+  JnlpAdaptor.stub(:maven_jnlp_server).and_return(@mock_maven_jnlp_server)
+  JnlpAdaptor.stub(:maven_jnlp_family).and_return(@mock_maven_jnlp_family)
+  mock_jnlp_adapter = JnlpAdaptor.new
   JnlpAdaptor.stub(:new).and_return(mock_jnlp_adapter)
   @mock_project
 end

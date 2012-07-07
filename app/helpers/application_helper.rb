@@ -107,19 +107,19 @@ module ApplicationHelper
   end
 
   def maven_jnlp_info
-    if current_project.maven_jnlp_family
+    if JnlpAdaptor.maven_jnlp_family
       {
         :name => jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name,
         :version => jnlp_adaptor.jnlp.versioned_jnlp_url.version_str,
         :href => jnlp_adaptor.jnlp.versioned_jnlp_url.url,
-        :snapshot => current_project.snapshot_enabled ? "(snapshot)" : "(frozen)"
+        :snapshot => JnlpAdaptor.snapshot_enabled ? "(snapshot)" : "(frozen)"
       }
     else
       {
         :name => 'unknown',
         :version => 'unknown',
         :href => 'unknown',
-        :snapshot => current_project.snapshot_enabled ? "(snapshot)" : "(frozen)"
+        :snapshot => JnlpAdaptor.snapshot_enabled ? "(snapshot)" : "(frozen)"
       }
     end
   end

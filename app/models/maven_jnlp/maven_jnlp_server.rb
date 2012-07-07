@@ -3,8 +3,6 @@ require 'fileutils'
 class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   self.table_name = "maven_jnlp_maven_jnlp_servers"
 
-  has_many :projects, :class_name => "Admin::Project"
-
   has_many :maven_jnlp_families, :class_name => "MavenJnlp::MavenJnlpFamily"
 
   acts_as_replicatable
@@ -93,7 +91,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   end
 
   def update_maven_jnlp_server_object
-    server, family, version = Admin::Project.default_jnlp_info
+    server, family, version = JnlpAdaptor.default_jnlp_info
     # TODO
     # Portals need a way of getting more of the jnlp versions ... for now get all versions 
     # ... later perhaps expand use of settings or portal params to specify sets of versions
