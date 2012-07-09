@@ -36,16 +36,16 @@ class JnlpAdaptor
   end
 
   def self.maven_jnlp_server
-      server, family, version = default_jnlp_info
-      MavenJnlp::MavenJnlpServer.find_by_name(server[:name])
+    server, family, version = default_jnlp_info
+    MavenJnlp::MavenJnlpServer.find_by_name(server[:name])
   end
 
   def self.maven_jnlp_family
-      server, family, version = default_jnlp_info
-      jnlp_server = maven_jnlp_server
-      return nil if jnlp_server.nil?
+    server, family, version = default_jnlp_info
+    jnlp_server = maven_jnlp_server
+    return nil if jnlp_server.nil?
 
-      jnlp_server.maven_jnlp_families.find_by_name(family)
+    jnlp_server.maven_jnlp_families.find_by_name(family)
   end
 
   def self.jnlp_version_str
@@ -73,7 +73,7 @@ class JnlpAdaptor
     @default_maven_jnlp_server = JnlpAdaptor.maven_jnlp_server
     @jnlp_family = JnlpAdaptor.maven_jnlp_family
 
-    # lets try not updating here so we can be more explicit about it somewhere else
+    # this might slow down the tests and requests but trying at CC didn't show any difference
     # @jnlp_family.update_snapshot_jnlp_url
 
     default_version_str = JnlpAdaptor.jnlp_version_str
