@@ -21,7 +21,7 @@ namespace :app do
     end
     
     desc "generate MavenJnlp resources from jnlp servers in settings.yml"
-    task :generate_maven_jnlp_resources => [:environment, :empty_jnlp_object_cache, :generate_names_for_maven_jnlp_servers] do
+    task :generate_maven_jnlp_resources, :interactive, :needs => [:environment, :empty_jnlp_object_cache, :generate_names_for_maven_jnlp_servers] do |t, args|
       puts <<-HEREDOC
 
 Generate MavenJnlp family of resources from jnlp servers in settings.yml.
@@ -42,6 +42,12 @@ If you want to generate resources for all the MavenJnlp familes hosted on the Ma
 delete all the family names assigned to: maven_jnlp_families.
 
       HEREDOC
+
+      if args[:interactive]
+        interactive = args[:interactive] == 'true'
+      else
+        interactive = ::Rails.env == 'development'
+      end
 
       maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
       if maven_jnlp_families = APP_CONFIG[:maven_jnlp_families]
@@ -71,7 +77,7 @@ Generating: #{families} MavenJnlp families from this jnlp server specification:
 
         HEREDOC
 
-        if ::Rails.env != 'development' || wrapped_agree("Do you want to do this? (y/n) ")
+        if !interactive || wrapped_agree("Do you want to do this? (y/n) ")
           mj_server.create_maven_jnlp_families(true)
         end
         puts
