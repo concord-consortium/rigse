@@ -1,0 +1,51 @@
+- investigation = Investigation.find_by_id(current_offering.runnable_id)
+
+%div.clearboth{:id=>"material_tab_#{current_offering.runnable_id}_data", :style=>"display:none"}
+  %br
+  %div
+    %table.investigationdata{:width=>"100%"}
+      %tr
+        %td.subheader
+          Investigation:
+        %td
+          %div{:style=>"float:left;font-size:16px;font-weight:bold"}
+            = current_offering.name.capitalize
+          %div.item{:style=>"float:left;padding-top:2px"}
+            = "(added on #{current_offering.created_at.strftime('%d %B %Y')})"
+        %td{:style=>"white-space:nowrap"}
+          = link_to "Run Investigation", run_url_for(current_offering, {}), :class=>"button pie"
+  %br
+  %div
+    = render :partial => 'investigation_activities', :locals => { :investigation => investigation }
+  
+  %div
+    %table{:width=>"100%"}
+      %tr
+        %td{:width=>"200px"}
+          %span.subheader
+            Student Submissions
+        %td
+          %table
+            %tr
+              %td
+                %span.legend_progress
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;In Progress
+              %td
+                &nbsp;&nbsp;
+              %td
+                %span.legend_not_started
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Not yet started
+          
+        %td
+          %div.right
+            %span.linkbutton.pie
+              = report_link_for(current_offering, 'report', 'Run Report')
+      %tr
+        %td{:colspan=>"3"}
+          %div{:style=>"overflow:auto;width:575px"}
+            = render :partial => 'investigation_report_summary', :locals => { :investigation => investigation, :offering=>current_offering }
+  
