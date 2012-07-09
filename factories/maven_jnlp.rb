@@ -12,7 +12,7 @@ Factory.sequence :default_maven_jnlp_maven_jnlp_server do |n|
       f.path server[:path]
       f.name server[:name]
     end
-    mj_server.create_maven_jnlp_families
+    mj_server.create_maven_jnlp_families(false)
   end
   mj_server
 end
