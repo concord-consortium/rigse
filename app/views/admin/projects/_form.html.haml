@@ -8,18 +8,10 @@
         %ul.menu_v
           %li
             %b
-              Name:
-            = f.text_field :name, :size => 60
-          %li
-            %b
-              Url:
-            = f.text_field :url,  :size => 60
-          %li
-            %b
-              Enable Default Users:
-            = f.check_box :enable_default_users
+            = f.label :active, "Mark this project as active:", :style => "display:inline;"
+            = f.check_box :active
             %br
-            (Default users should normally be disabled on a production system.)
+            (The first project marked active will be used for the portal settings.)
           %li
             %b
               Enable Student Security Questions:

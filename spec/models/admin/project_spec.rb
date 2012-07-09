@@ -4,28 +4,12 @@ describe Admin::Project do
   before(:each) do
     generate_jnlps_with_mocks
     @new_valid_project = Admin::Project.new(
-      :name => "Example Project",
-      :url => "http://rites.org",
-      :states_and_provinces => %w{RI MA},
-      :maven_jnlp_server_id => @mock_maven_jnlp_server.id,
-      :maven_jnlp_family_id => @mock_maven_jnlp_family.id,
-      :jnlp_version_str => @mock_maven_jnlp_family.snapshot_version,
-      :snapshot_enabled => false
+      :active => true
     )
   end
 
   it "should create a new instance given valid attributes" do
     @new_valid_project.should be_valid
-  end
-
-  it "should not create a new instance given an invalid server_url" do
-    @new_valid_project.url = "ftp://rites.org"
-    @new_valid_project.should_not be_valid
-  end
-
-  it "should not create a new instance given an empty name" do
-    @new_valid_project.name = ""
-    @new_valid_project.should_not be_valid
   end
 
   describe "a projects list of enabled vendor interfaces" do

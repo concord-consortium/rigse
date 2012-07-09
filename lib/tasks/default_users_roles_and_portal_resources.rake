@@ -207,7 +207,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     
     #######################################################################
     #
-    # Create default portal resources: district, school, course, and class, investigation and grades
+    # Create default portal resources: project, district, school, course, and class, investigation and grades
     #
     #######################################################################   
     desc "Create default portal resources"
@@ -241,6 +241,12 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # to make sure the list is ordered correctly in case a new grade level is added
       grades_in_order.each_with_index do |grade, i|
         grade.insert_at(i)
+      end
+
+      # make a default project if it doesn't exist
+      project = Admin::Project.first
+      if project.nil?
+        project = Admin::Project.create
       end
 
       # make a default district and school

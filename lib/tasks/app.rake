@@ -144,7 +144,6 @@ This task will:
         else
           puts "\n\nskipping task: rake app:import:generate_otrunk_examples_rails_models\n\n"
         end
-        Rake::Task['app:convert:create_default_project_from_config_settings_yml'].invoke
         Rake::Task['portal:setup:download_nces_data'].invoke
         Rake::Task['portal:setup:import_nces_from_files'].invoke
         Rake::Task['portal:setup:create_districts_and_schools_from_nces_data'].invoke

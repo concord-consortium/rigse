@@ -25,15 +25,9 @@ Factory.define :maven_jnlp_maven_jnlp_server, :class => MavenJnlp::MavenJnlpServ
 end
 
 Factory.define :admin_project_no_jnlps, :class => Admin::Project do |f|
-  name, url = Admin::Project.default_project_name_url
-  
   f.user  { |p| Factory.next(:admin_user) }
-  f.name  name
-  f.url  url
+  f.active true
   f.opportunistic_installer true
-  f.states_and_provinces  APP_CONFIG[:states_and_provinces] || []
-  f.snapshot_enabled  0
-  f.enable_default_users  APP_CONFIG[:enable_default_users]
 end
 
 Factory.define :admin_project, :parent => :admin_project_no_jnlps do |f|

@@ -53,7 +53,6 @@ def generate_default_project_and_jnlps_with_factories
     @versioned_jnlp = @versioned_jnlp_url.versioned_jnlp
   end
   @admin_project = Factory.create(:admin_project)
-  Admin::Project.create_or_update_default_project_from_settings_yml
   generate_default_users_with_factories
   generate_default_school_resources_with_factories
 end
@@ -157,20 +156,12 @@ end
 
 # Generates a mock project and associated jnlp resources
 def generate_default_project_and_jnlps_with_mocks
-  project_name, project_url = Admin::Project.default_project_name_url 
-  jnlpserver, family, version = JnlpAdaptor.default_jnlp_info
+  server, family, version = JnlpAdaptor.default_jnlp_info
   generate_jnlps_with_mocks
   @mock_project = mock_model(Admin::Project,
-    :name                           => project_name,
-    :url                            => project_url,
+    :active                         => true,
     :home_page_content              => nil,
     :use_student_security_questions => false,
-    :jnlp_version_str               => version,
-    :snapshot_enabled               => false,
-    :enable_default_users           => APP_CONFIG[:enable_default_users],
-    :states_and_provinces           => APP_CONFIG[:states_and_provinces],
-    :maven_jnlp_server              => @mock_maven_jnlp_server,
-    :maven_jnlp_family              => @mock_maven_jnlp_family,
     :using_custom_css?              => false,
     :use_bitmap_snapshots?          => false,
     :allow_adhoc_schools            => false,

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120523211636) do
+ActiveRecord::Schema.define(:version => 20120621133703) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -40,15 +40,7 @@ ActiveRecord::Schema.define(:version => 20120523211636) do
 
   create_table "admin_projects", :force => true do |t|
     t.integer  "user_id"
-    t.string   "name"
-    t.string   "url"
     t.text     "description"
-    t.text     "states_and_provinces"
-    t.integer  "maven_jnlp_server_id"
-    t.integer  "maven_jnlp_family_id"
-    t.string   "jnlp_version_str"
-    t.boolean  "snapshot_enabled"
-    t.boolean  "enable_default_users"
     t.string   "uuid",                           :limit => 36
     t.datetime "created_at",                                                      :null => false
     t.datetime "updated_at",                                                      :null => false
@@ -65,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20120523211636) do
     t.boolean  "require_user_consent",                         :default => false
     t.boolean  "use_periodic_bundle_uploading",                :default => false
     t.string   "jnlp_cdn_hostname"
+    t.boolean  "active"
   end
 
   create_table "admin_tags", :force => true do |t|

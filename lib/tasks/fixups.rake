@@ -117,11 +117,6 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
       puts
     end
     
-    desc 'create default Project from config/settings.yml'
-    task :create_default_project_from_config_settings_yml => :environment do
-      Admin::Project.create_or_update_default_project_from_settings_yml
-    end
-
     desc 'generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls'
     task :generate_date_str_for_versioned_jnlp_urls => :environment do
       puts "\nprocessing #{MavenJnlp::VersionedJnlpUrl.count} MavenJnlp::VersionedJnlpUrl model instances, generating date_str from version_str\n"      
