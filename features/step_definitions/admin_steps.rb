@@ -69,3 +69,11 @@ Then /^the non installer jnlp codebase should not start with "([^"]*)"$/ do |cod
 
   Capybara.current_driver = original_driver
 end
+
+When /^I create a new project with the description "([^"]*)"$/ do |description|
+  click_link "create Project"
+  fill_in "admin_project[description]", :with => description
+  click_button "Save"
+  page.should have_no_button("Save")
+end
+
