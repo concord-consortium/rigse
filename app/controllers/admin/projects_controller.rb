@@ -48,7 +48,7 @@ class Admin::ProjectsController < ApplicationController
     end
 
     # If default_project is in collection to be displayed then put it first.
-    unless @admin_projects.length == 1 || @admin_projects[0].default_project?
+    unless @admin_projects.length <= 1 || @admin_projects[0].default_project?
       if @admin_projects.delete(default_project)
         @admin_projects.unshift(default_project)
       end
