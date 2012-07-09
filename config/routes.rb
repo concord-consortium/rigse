@@ -251,11 +251,7 @@ constraints :id => /\d+/ do
   match 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/ }, :format => 'blob'
 
   namespace :admin do
-    resources :projects do
-      member do
-        put :update_form
-      end
-    end
+    resources :projects
     resources :tags
   end
 

@@ -74,8 +74,10 @@
             = f.check_box :use_periodic_bundle_uploading
             %br
             (This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
-      = field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
-        = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
+          %li
+            Jnlp CDN Hostname:
+            = f.text_field :jnlp_cdn_hostname, :size => 60
+
       %p
         %b
           Description
