@@ -40,7 +40,7 @@ end
 # hacky fix for bug junit reports in capybara (> 0.9.0)
 # jenkins will choke on nested CDATA entries.
 When /^(.*) in the content$/ do |step|
-  When "#{step} within #primary"
+  step "#{step} within #primary"
 end
 
 # Multi-line step scoper
