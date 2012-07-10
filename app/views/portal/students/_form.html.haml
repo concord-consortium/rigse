@@ -80,4 +80,8 @@
 
     %tr
       %td
-      %td= f.submit 'Submit'
+      - if signup
+        %td= f.submit 'Submit'
+      - else
+        %td
+          %input{:type=>"button", :value=>"Submit", :onclick=>"add_New_Student_To_Class();", :class=>"pie"}
