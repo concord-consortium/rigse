@@ -322,8 +322,15 @@ class Portal::ClazzesController < ApplicationController
   def add_student
     @student = nil
     @portal_clazz = Portal::Clazz.find(params[:id])
-
-    if params[:student_id] && (!params[:student_id].empty?)
+    valid_data = false
+    begin
+      student_id = params[:student_id].to_i
+      valid_data = true && student_id != 0
+    rescue
+      valid_data = false
+    end
+    
+    if params[:student_id] && (!params[:student_id].empty?) && valid_data
       @student = Portal::Student.find(params[:student_id])
     end
     if @student
@@ -333,8 +340,11 @@ class Portal::ClazzesController < ApplicationController
         page << "if ($('students_listing')){"
         page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
         page << "}"
-        page << "if ($('add_students_listing')){"
-        page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        #page << "if ($('add_students_listing')){"
+        #page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        #page << "}"
+        page << "if ($('oClassStudentCount')){"
+        page.replace_html 'oClassStudentCount', @portal_clazz.students.length.to_s
         page << "}"
         page.replace 'student_add_dropdown', student_add_dropdown(@portal_clazz)
       end
@@ -343,7 +353,7 @@ class Portal::ClazzesController < ApplicationController
         # previous message was "that was a total failure"
         # this case should not happen, but if it does, display something
         # more friendly such as:
-        # page << "$('flash').update('Please elect a user from the list before clicking add button.')"
+        page << "alert('Please select a user from the list before clicking add button.')"
       end
     end
   end
@@ -471,6 +481,10 @@ class Portal::ClazzesController < ApplicationController
 
 # GET /portal_clazzes/1/roster
   def roster
+    if current_user.anonymous?
+      redirect_to home_url
+      return
+    end
     @portal_clazzes = Portal::Clazz.all
     @portal_clazz = Portal::Clazz.find(params[:id])
     if request.xhr?
@@ -483,7 +497,10 @@ class Portal::ClazzesController < ApplicationController
 # GET add/edit student list 
   def get_students
     if request.xhr?
-      render :partial => 'portal/students/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
+      @portal_student = Portal::Student.new
+      @user = User.new
+      render :partial => 'portal/students/form', :locals => {:portal_student => @portal_student, :portal_clazz => Portal::Clazz.find_by_id(params[:id]), :signup => false}
+      #render :partial => 'portal/students/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
       return
     end
   end

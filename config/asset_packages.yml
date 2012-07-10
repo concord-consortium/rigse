@@ -29,6 +29,7 @@ stylesheets:
   - accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -43,6 +44,7 @@ stylesheets:
   - accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -57,6 +59,7 @@ stylesheets:
   - please_wait
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - accordion
   - notes
@@ -76,6 +79,7 @@ stylesheets:
   - themes/investigations/accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - notes
   - data_table
@@ -87,6 +91,7 @@ stylesheets:
   - themes/itsisu/drop_down
   - themes/itsisu/accordion
   - window/window
+  - window/lightbox
   - window/itsisu
   - live_validation
   - notes
@@ -97,6 +102,7 @@ stylesheets:
   - app
   - accordion
   - window/window
+  - window/lightbox
   - window/rites
   - live_validation
   - action_menu_tab
@@ -114,6 +120,7 @@ stylesheets:
   - themes/sglight/accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - notes
   - data_table
@@ -125,6 +132,7 @@ stylesheets:
   - please_wait
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - accordion
   - notes
@@ -156,6 +164,7 @@ stylesheets:
   - please_wait
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -171,6 +180,7 @@ stylesheets:
   - accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -184,6 +194,7 @@ stylesheets:
   - accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - accordion
   - notes
