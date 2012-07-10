@@ -21,7 +21,7 @@ namespace :app do
     end
     
     desc "generate MavenJnlp resources from jnlp servers in settings.yml"
-    task :generate_maven_jnlp_resources, :interactive, :needs => [:environment, :empty_jnlp_object_cache, :generate_names_for_maven_jnlp_servers] do |t, args|
+    task :generate_maven_jnlp_resources, [:interactive] => [:environment, :empty_jnlp_object_cache, :generate_names_for_maven_jnlp_servers] do |t, args|
       puts <<-HEREDOC
 
 Generate MavenJnlp family of resources from jnlp servers in settings.yml.
