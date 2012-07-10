@@ -77,3 +77,9 @@ When /^I create a new project with the description "([^"]*)"$/ do |description|
   page.should have_no_button("Save")
 end
 
+Then /^I switch to "([^"]*)"$/ do |username|
+  visit path_to("the switch page")
+  select(username, :from => 'user_id')
+  click_button('Switch')
+end
+

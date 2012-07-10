@@ -64,6 +64,8 @@ module NavigationHelpers
     when /the user preferences page for the user "(.*)"/
       user = User.find_by_login $1
       preferences_user_path user
+    when /the switch page/
+      switch_user_path User.find_by_login(@cuke_current_username)
     when /the requirements page/
       "/requirements/"
     when /the about page/
