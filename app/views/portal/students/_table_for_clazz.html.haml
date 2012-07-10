@@ -1,23 +1,26 @@
 - student_list = (students_in_class(portal_clazz.students)).sort { |a,b| (a.user.last_name <=> b.user.last_name) }
-%table{:width=>"100%"}
-  %th
-    Student name
-  %th
-    Student login
-  %th.reset_password
-    Reset Password
-  %th.remove
-    Remove
-  - student_list.each do |portal_student|
-    - portal_student_clazz = portal_clazz.student_clazzes.find_by_student_id(portal_student.id)
-    %tr{:id=>dom_id_for(portal_student_clazz)}
-      %td
-        = link_to portal_student.user.name, portal_student
-      %td
-        = portal_student.user.login
-      %td.reset_password
-        - if portal_student.user.changeable?(current_user)
-          = link_to 'Reset Password', reset_password_user_path(portal_student.user)
-      %td.remove
-        - if portal_clazz.changeable?(current_user)
-          = remote_link_button "delete.png", :url => portal_clazz_student_clazz_url(portal_clazz, portal_student_clazz), :confirm => "This action will remove the student: '#{portal_student.name}' from the class: #{portal_clazz.name}. \nAre you sure you want to do this?", :method => :delete, :title => "remove #{portal_student.name} from #{portal_clazz.name}"
+- if student_list.length > 0
+  %table.teacher_class_table{:width=>"90%"}
+    %tr
+      %td.show_border
+        %b Name
+      %td.show_border 
+        %b User Name
+      %td.hide_in_print
+       
+    - student_list.each do |portal_student|
+      - portal_student_clazz = portal_clazz.student_clazzes.find_by_student_id(portal_student.id)
+      %tr{:id=>dom_id_for(portal_student_clazz)}
+        %td.show_border
+          - student_name = portal_student.user.last_name + ", " +portal_student.user.first_name
+          = link_to student_name, portal_student
+        %td.show_border
+          = portal_student.user.login
+        %td.remove.hide_in_print
+          - if portal_clazz.changeable?(current_user)
+            = link_to_remote "Remove Student", :url => portal_clazz_student_clazz_url(portal_clazz, portal_student_clazz), :confirm => "This action will remove the student: '#{portal_student.name}' from the class: #{portal_clazz.name}. \nAre you sure you want to do this?", :method => :delete, :html => {:title => "remove #{portal_student.name} from #{portal_clazz.name}" , :class => "change_password"}
+          - if portal_student.user.changeable?(current_user)
+            = link_to 'Change Password', reset_password_user_path(portal_student.user), :class => "change_password"
+- else
+  %br
+  %div No students registered for this class yet.

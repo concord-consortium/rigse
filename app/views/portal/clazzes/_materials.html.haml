@@ -1,0 +1,46 @@
+= javascript_include_tag "instructional_materials.js"
+- clazz_offerings = @portal_clazz.offerings.sort{|a,b| a.position<=>b.position}
+.maincontainer.pie
+  .container
+    .content
+      = f.error_messages
+    .right
+      %table.classdata
+        %tr
+          %td.title=label_tag :name, 'Teacher ', :class => 'left'
+          %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class => 'labelvalue'
+          %td.title=label_tag :name, 'Semester ', :class => "left"
+          %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class => 'labelvalue'
+          %td.title=label_tag :name, 'Class Word ', :class => 'left'
+          %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
+      .header Instructional Materials
+      %br
+      %table.classdata
+        %tr
+          %td
+            = link_to 'Manage Materials', edit_portal_clazz_url(portal_clazz), :class=>"button pie"
+          %td{:style => "padding-left:10px"}
+            = link_to 'Add new Materials to this class', portal_clazz_url(portal_clazz), :class=>"button pie"
+      %br.clearboth
+      %br.clearboth
+      - if clazz_offerings.length > 0
+        %div.clearboth
+          %div.scrollertab.tableft
+            &#9664;
+          %div{:id=>"oTabcontainer"}
+            %table{:border=>0,:cellpadding=>0,:cellspacing=>0}
+              %tr
+                - clazz_offerings.each do |offering|
+                  %td
+                    .tab{:id=>"material_tab_#{offering.runnable_id}"}
+                      = offering.name
+          %div.scrollertab.tabright
+            &#9654;
+        .data_container_header.clearboth
+          &nbsp;
+        %div.data_container
+          = render :partial => 'material_details',:collection => clazz_offerings, :as => :current_offering
+      - else
+        %div No offerings present.
+      = f.hidden_field :teacher_id
+      = f.hidden_field :id

@@ -31,7 +31,10 @@ Then /^the class "([^"]*)" should not have any offerings$/ do |class_name|
 end
 
 Then /^the classes "([^"]*)" are in a school named "([^"]*)"$/ do |classes,school_name|
-  school = Factory(:portal_school, :name=>school_name)
+  school = Portal::School.find_by_name(school_name)
+  if (school.nil?) then
+    school = Factory(:portal_school, :name=>school_name)
+  end
   classes = classes.split(",").map { |t| t.strip }
   classes.map! {|t| Portal::Clazz.find_by_name(t)}
   classes.each {|t| t.course.school =  school; t.course.save!; t.reload; }

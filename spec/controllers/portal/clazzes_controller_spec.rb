@@ -23,6 +23,8 @@ describe Portal::ClazzesController do
     @normal_user = Factory.next(:anonymous_user)
     @admin_user = Factory.next(:admin_user)
     @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [@mock_school])
+    @authorized_student = Factory.create(:portal_student, :user =>Factory.create(:user, :login => "authorized_student"))
+    @another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "another_authorized_teacher"), :schools => [@mock_school])
     @unauthorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "unauthorized_teacher"), :schools => [@mock_school])
 
     @authorized_teacher_user = @authorized_teacher.user
@@ -33,7 +35,7 @@ describe Portal::ClazzesController do
 
     @mock_clazz_name = "Random Test Class"
     @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
-    @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+    @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course })
 
     @controller.stub(:before_render) {
       response.template.stub_chain(:current_project, :name).and_return("Test Project")
@@ -63,6 +65,7 @@ describe Portal::ClazzesController do
     setup_for_repeated_tests
     stub_current_user :admin_user # Make admin our default test user
   end
+
 
   describe "GET show" do
     it "assigns the requested class as @portal_clazz" do
@@ -331,6 +334,10 @@ describe Portal::ClazzesController do
     end
 
     it "will not let me remove the last teacher from the given class" do
+      #remove one teacher
+      delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @another_authorized_teacher.id }
+      
+      #remove last teacher
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
 
       @mock_clazz.reload
@@ -659,4 +666,230 @@ describe Portal::ClazzesController do
       post :add_offering, post_params
     end
   end
+
+  
+  describe "Post edit class information" do
+    before(:each) do
+      setup_for_repeated_tests
+      page = Factory.create(:page)
+      post_params = {
+        :runnable_id => page.id, 
+        :runnable_type => "page", 
+        :dragged_dom_id => "page_#{page.id}", 
+        :dropped_dom_id => "clazz_offerings",
+        :id => @mock_clazz.id
+      }
+    
+      post :add_offering, post_params
+      offers = Array.new
+      @mock_clazz.offerings.each do|offering|
+        offers << offering.id.to_s
+      end
+      
+      @post_params = {
+          :id => @mock_clazz.id,
+          :portal_clazz => {
+            :name => 'electrical engineering circuits and system',
+            :class_word => 'EECS',
+            :semester_id => @mock_semester.id,
+            :description => 'Test!',
+            :teacher_id => @authorized_teacher.id.to_s,
+            :grade_levels => {
+              :"6" => "1",
+              :"7" => "1",
+              :"9" => "1"
+            }
+          },
+          :clazz_investigations => offers,
+          :clazz_investigations_hidden => offers,
+          :clazz_teacher_ids => (@authorized_teacher.id.to_s + "," + @another_authorized_teacher.id.to_s)
+        }
+        
+    end
+    
+    
+    
+
+    it "should not save the edited class info if the class name is blank" do
+      @post_params[:portal_clazz][:name] = ''
+      post :update, @post_params
+      @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
+      assert_not_equal(@portal_clazz.name , '', 'Class saved with no name.')
+    end
+    
+    it "should not save the edited class info if the class word is blank" do
+      @post_params[:portal_clazz][:class_word] = ''
+      post :update, @post_params
+      @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
+      assert_not_equal(@portal_clazz.class_word , '', 'Class saved with blank class word.')
+    end  
+    
+    it "should not update the class info if there is no teacher" do
+      @post_params[:clazz_teacher_ids] = ''
+      xhr :post, :edit_teachers, @post_params
+      assert_equal(flash[:notice], 'There should be atleast one teacher assigned to the class.')
+    end
+    
+    it "all the deactivated offerings should actually get deactivated in the database" do
+      @post_params[:clazz_investigations] = Array[]
+      post :update, @post_params
+      
+      @mock_clazz.reload
+      
+      @mock_clazz.offerings.each do |offering|
+        assert_equal(offering.active, false)
+      end
+    end
+    
+    it "all newly assigned teachers and teachers removed from the class should be updated in the database" do
+      @yet_another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "yet_another_authorized_teacher"), :schools => [@mock_school])
+      @post_params[:clazz_teacher_ids] = @authorized_teacher.id.to_s + "," + @yet_another_authorized_teacher.id.to_s
+      xhr :post, :edit_teachers, @post_params
+      
+      @authorized_teacher.reload
+      @another_authorized_teacher.reload
+      @yet_another_authorized_teacher.reload
+      
+      assert_not_nil(@authorized_teacher.clazzes.find_by_id(@mock_clazz.id))
+      assert_nil(@another_authorized_teacher.clazzes.find_by_id(@mock_clazz.id))
+      assert_not_nil(@yet_another_authorized_teacher.clazzes.find_by_id(@mock_clazz.id))
+      
+    end
+  end
+
+  describe "Post add a new student to a class" do
+    
+    it "should add a new student to the class" do
+      post_params = {
+        :id => @mock_clazz.id.to_s,
+        :student_id => @authorized_student.id.to_s
+      }
+      post :add_student, post_params
+      newStudentInClazz = Portal::StudentClazz.find_by_clazz_id_and_student_id(@mock_clazz.id, @authorized_student.id)
+      assert_not_nil(newStudentInClazz)
+    end
+  end
+
+
+  describe "Put teacher Manage class" do
+    before(:each) do
+      
+      controller.stub!(:current_user).and_return(@authorized_teacher_user)
+      
+      @mock_teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
+      
+      mock_clazz_name = "Mock Class Physics"
+      @mock_clazz_phy = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+      @authorized_teacher.add_clazz(@mock_clazz_phy)
+      @authorized_teacher.save!
+      @mock_teacher_clazz_phy = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
+      
+      mock_clazz_name = "Mock Class Chemistry"
+      @mock_clazz_chem = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+      @authorized_teacher.add_clazz(@mock_clazz_chem)
+      @authorized_teacher.save!
+      @mock_teacher_clazz_chem = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
+      
+      mock_clazz_name = "Mock Class Biology"
+      @mock_clazz_bio = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+      @authorized_teacher.add_clazz(@mock_clazz_bio)
+      @authorized_teacher.save!
+      @mock_teacher_clazz_bio = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
+      
+      mock_clazz_name = "Mock Class Mathematics"
+      @mock_clazz_math = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+      @authorized_teacher.add_clazz(@mock_clazz_math)
+      @authorized_teacher.save!
+      @mock_teacher_clazz_math = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
+      
+      @authorized_teacher.reload
+            
+    end
+    
+    it "should should save all the activated and deactivated classes and in the right order" do
+      @post_params = {
+        'teacher_clazz'  => Array[@mock_teacher_clazz.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_bio.id , @mock_teacher_clazz_math.id ],
+        'teacher_clazz_position'  => Array[@mock_teacher_clazz_math.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_chem.id, @mock_teacher_clazz_bio.id ,@mock_teacher_clazz.id ]
+      }
+      put :manage_classes, @post_params
+      
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active)
+      assert_equal(teacher_clazz.position, 5)
+      
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active)
+      assert_equal(teacher_clazz.position, 2)
+      
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active == false)
+      assert_equal(teacher_clazz.position, 3)
+      
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active)
+      assert_equal(teacher_clazz.position, 4)
+      
+      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
+      assert_not_nil(teacher_clazz)
+      assert(teacher_clazz.active)
+      assert_equal(teacher_clazz.position, 1)
+      
+    end
+  end
+  
+  describe "Post teacher Creates copy of a class" do
+    before(:each) do
+     
+      @student_clazz = Portal::StudentClazz.new
+      @student_clazz.clazz_id = @mock_clazz.id
+      @student_clazz.student_id = @authorized_student.id
+      @student_clazz.save!
+          
+      @investigation = Factory(:investigation)
+      @investigation.name = 'Fluid Mechanics'
+      @investigation.save!
+      
+      @offering = Portal::Offering.new
+      @offering.runnable_id = @investigation.id
+      @offering.clazz_id = @mock_clazz.id
+      @offering.runnable_type = 'Investigation'
+      @offering.save!
+      controller.stub!(:current_user).and_return(@authorized_teacher_user)
+      
+      @post_params = {
+        :id => @mock_clazz.id,
+        :clazz_name  => 'Concept of physics',
+        :clazz_desc  => 'Concept of physics',
+        :clazz_word => 'Phy'
+      }
+    end
+    
+    it "should create a new class that's a copy of the original class with investigations and teachers but no students" do
+      
+      xhr :post, :copy_class, @post_params
+      
+      @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
+      assert_not_nil(@copy_clazz)
+
+      assert_equal(@copy_clazz.teachers.length, @mock_clazz.teachers.length)
+      @mock_clazz.teachers.each do |teacher|
+        assert_not_nil(@copy_clazz.teachers.find_by_id(teacher.id))
+      end
+      
+      assert_equal(@copy_clazz.offerings.length, @mock_clazz.offerings.length)
+      @mock_clazz.offerings.each do |offering|
+        assert_not_nil(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id))
+      end
+      
+      assert_equal(@copy_clazz.students.length, 0)
+      
+    end
+  end  
+  
+  
+  
 end

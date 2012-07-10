@@ -145,15 +145,47 @@ a:visited {color:black; text-decoration:none;}
 a:hover   {color:black; text-decoration:none;}
 a:active  {color:black; text-decoration:none;}
 a.rollover {display: none;}
+
 /* hide table elements? */
-#students_listing {
-  color: black;
-  a:link;
-  .reset_password {
-    display: none; }
+table.teacher_class_table th, table.teacher_class_table td
+{
+    border: 1px solid #242323;
+    padding-left:10px;
+    color: black;
+   
+   .change_password
+  {
+    padding-left:20px;
+  }
+  
+  .remove_student
+  {
+    padding-left:20px;
+  }
+  
   .remove {
-    display: none; }
+    padding-left:20px;
+  }
 }
+
+.floatR
+{
+  float : right;
+}
+
+.floatL
+{
+  float : left;
+}
+
+.clearBoth
+{
+  clear : both;
+}
+
+.header{padding-left: 5px;clear:both}
+.classsummary{padding-left: 5px;float:left;text-align:left}
+
 .print_button {
   display: none; }
 .print_link {
@@ -191,3 +223,11 @@ a.rollover {display: none;}
 
 .report_question_prompt {
   width: 545px; }
+  
+.hide_in_print
+{ display:none;}
+
+.show_border
+{
+  border: 1px solid #242323;
+}

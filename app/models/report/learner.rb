@@ -117,4 +117,38 @@ class Report::Learner < ActiveRecord::Base
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
   end
+  
+  def self.user_report_data(offering_id, learner_id)
+    
+    learner = Portal::Learner.find(learner_id)
+    offering = Portal::Offering.find(offering_id)
+    investigation = ::Investigation.find(offering.runnable_id)
+    
+    user_data = {}
+    
+    activities = investigation.activities
+    activities.each do |activity|
+      num_answerable = 0
+      num_answered = 0
+      activity.sections.each do|section|
+        section.pages.each do |page|
+          page_embeddables = page.page_elements
+          num_answerable += page_embeddables.length
+          page_embeddables.map{ |pe| pe.embeddable }.each do |embeddable|
+            begin
+              reportUtil = Report::Util.factory(offering)
+              saveable = reportUtil.saveable(learner, embeddable)
+            rescue Exception => exc
+              return exc.message
+            end
+            num_answered += (saveable.answered?)? 1 : 0
+          end
+        end
+        data = {'answered'=> num_answered, 'total'=> num_answerable}
+        user_data[activity.id] = data     
+      end
+    end
+    return user_data
+  end
+  
 end

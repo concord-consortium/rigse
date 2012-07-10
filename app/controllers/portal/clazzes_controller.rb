@@ -33,7 +33,7 @@ class Portal::ClazzesController < ApplicationController
     if current_project.allow_default_class
       @offerings = @portal_clazz.offerings_with_default_classes(current_user)
     else
-      @offerings = @portal_clazz.active_offerings
+      @offerings = @portal_clazz.offerings
     end
     respond_to do |format|
       format.html # show.html.erb
@@ -175,6 +175,22 @@ class Portal::ClazzesController < ApplicationController
         object_params = params[:portal_clazz]
         grade_levels = object_params.delete(:grade_levels)
         
+        clazz_investigation_id = params[:clazz_investigations]
+        clazz_investigation_id_hidden = params[:clazz_investigations_hidden]
+       
+        @portal_clazz.offerings.each do|offering|
+          offering.active = false
+          offering.position = clazz_investigation_id_hidden.index(offering.id.to_s) + 1
+          unless clazz_investigation_id.nil? then
+            if clazz_investigation_id.include?(offering.id.to_s) then
+              offering.active = true
+            end
+          end
+          
+          offering.save
+          
+        end
+        
         if Admin::Project.default_project.enable_grade_levels?
           if grade_levels
             # This logic will attempt to prevent someone from removing all grade levels from a class.
@@ -232,6 +248,10 @@ class Portal::ClazzesController < ApplicationController
     unless params[:runnable_type] == 'portal_offering'
       runnable_type = params[:runnable_type].classify
       @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
+      if @offering.position == 0
+        @offering.position = @portal_clazz.offerings.length
+        @offering.save
+      end
       if @offering
         if @portal_clazz.default_class == true
           if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
@@ -275,6 +295,7 @@ class Portal::ClazzesController < ApplicationController
     if (@offering && @offering.can_be_deleted?)
       @runnable = @offering.runnable
       @offering.destroy
+      @portal_clazz.update_offerings_position
       @portal_clazz.reload
       render :update do |page|
         page << "var container = $('#{container}');"
@@ -309,9 +330,13 @@ class Portal::ClazzesController < ApplicationController
       @student.add_clazz(@portal_clazz)
       @portal_clazz.reload
       render :update do |page|
-        page.replace_html  'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        page.visual_effect :highlight, 'students_listing'
-        page.replace_html  'student_add_dropdown', view_context.student_add_dropdown(@portal_clazz)
+        page << "if ($('students_listing')){"
+        page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        page << "}"
+        page << "if ($('add_students_listing')){"
+        page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        page << "}"
+        page.replace 'student_add_dropdown', view_context.student_add_dropdown(@portal_clazz)
       end
     else
       render :update do |page|
@@ -387,5 +412,189 @@ class Portal::ClazzesController < ApplicationController
       format.html { render :layout => 'report'}
     end
   end
+  
+  def get_teachers  
+    if request.xhr?
+      render :partial => 'portal/teachers/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
+      return
+    end
+  end
+    
+  def edit_teachers
+    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    teacher_ids = params[:clazz_teacher_ids]
+    teacher_ids.strip!
+    
+    if (teacher_ids.length == 0) then
+      flash[:notice] = 'There should be atleast one teacher assigned to the class.'
+    else
+      arr_teacher_ids = []
+      if(!teacher_ids.nil? and teacher_ids.length > 0)
+        arr_teacher_ids = teacher_ids.split(",")
+      end
+      
+      begin
+        @portal_clazz.teachers.each do|portal_clazz_teacher|
+          if arr_teacher_ids.index(portal_clazz_teacher.id.to_s).nil?  
+            portal_clazz_teacher.remove_clazz(@portal_clazz)
+          end
+        end
+        
+        arr_teacher_ids.each do|teacher_id|
+          if @portal_clazz.teachers.find_by_id(teacher_id).nil?
+            @teacher = Portal::Teacher.find_by_id(teacher_id)
+            @teacher.add_clazz(@portal_clazz)
+          end
+        end
+        @portal_clazz.reload
+      rescue
+        flash[:notice] = "There was an error while processing your request."
+        return
+      end
+    end
+    
+    if request.xhr?
+      
+      if (flash[:notice].nil?) then
+        replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz_setup', :locals => {:portal_clazz => @portal_clazz}
+      else
+        replace_html = flash[:notice]
+      end
+      replace_html.gsub!(/\r\n|\r|\n/, '');
+      render :update do|page|
+        page.replace_html  'div_teacher_list',replace_html
+      end
+      return
+    end
+    
+  end
 
+# GET /portal_clazzes/1/roster
+  def roster
+    @portal_clazzes = Portal::Clazz.all
+    @portal_clazz = Portal::Clazz.find(params[:id])
+    if request.xhr?
+      render :partial => 'remote_form_student_roster', :locals => { :portal_clazz => @portal_clazz }
+    end
+      
+    #end
+  end
+
+# GET add/edit student list 
+  def get_students
+    if request.xhr?
+      render :partial => 'portal/students/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
+      return
+    end
+  end
+  
+  def manage_classes
+    if current_user.anonymous?
+      redirect_to home_url
+      return
+    end
+    
+    @teacher = current_user.portal_teacher;
+    
+    if request.put?
+      
+      # Position teacher classes
+      # and 
+      # Activate/Deactivate teacher classes
+      arrTeacherClazzPosition = params['teacher_clazz_position']
+      
+      arrActiveTeacherClazz = nil
+      if (params.has_key? 'teacher_clazz')
+        arrActiveTeacherClazz = params['teacher_clazz']
+      else
+        arrActiveTeacherClazz = []
+      end
+      
+      position = 1
+      arrTeacherClazzPosition.each do |teacher_clazz_id|
+        teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
+        teacher_clazz.position = position;
+        if (arrActiveTeacherClazz.include?(teacher_clazz_id))
+          teacher_clazz.active = true
+        else
+          teacher_clazz.active = false
+        end
+        teacher_clazz.clazz.save!
+        teacher_clazz.save!
+        position += 1;
+      end
+      
+      render(:update) { |page|
+        page.replace_html 'clazz_list_container', :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => @teacher, :selects => []}
+        page.replace_html 'manage_classes_panel', :partial => 'portal/clazzes/manage_clazzes_panel', :locals => {:@teacher => @teacher}
+      }
+      return
+    end
+    
+    
+    
+  end
+  
+  def copy_class
+    
+    response_value = {
+      :success => true,
+      :error_msg => nil
+    }
+    
+    if current_user.anonymous?
+      response_value[:success] = false
+      response_value[:error_msg] = "Anonymous can't copy classes. Please log in and try again."
+      render :json => response_value
+      return
+    end
+    
+    teacher = current_user.portal_teacher
+    
+    class_to_copy = Portal::Clazz.find(params[:id]);
+    
+    params[:portal_clazz] = class_to_copy
+    
+    new_class = Portal::Clazz.new(
+        :name => params[:clazz_name],
+        :class_word => params[:clazz_word],
+        :description => params[:clazz_desc],
+        :grades => class_to_copy.grades,
+        :teacher_id => teacher.id,
+        :teacher => class_to_copy.teacher,
+        :course => class_to_copy.course,
+        :semester_id => class_to_copy.semester_id
+    )
+    
+    class_to_copy.teachers.each do |other_teacher|
+      new_class.add_teacher(other_teacher)
+    end
+        
+    if(!new_class.save)
+      response_value[:success] = false
+      response_value[:error_msg] = new_class.errors
+      render :json => response_value      
+      return
+    end
+    
+    class_to_copy.offerings.each do |offering|
+       new_offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(new_class.id, offering.runnable_type, offering.runnable_id)
+       new_offering.status = offering.status
+       new_offering.active = offering.active
+       new_offering.save!
+    end
+    
+    render :json => response_value
+    
+  end
+
+  
+  def materials
+    if current_user.anonymous?
+      redirect_to home_url
+      return
+    end
+    @portal_clazz = Portal::Clazz.find(params[:id]);
+  end
+  
 end
