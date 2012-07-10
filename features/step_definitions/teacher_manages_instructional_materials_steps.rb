@@ -2,6 +2,7 @@
 Then /^A report window opens of offering "(.+)"$/ do |offering|
   #offering = Portal::Offering.find_by_name(offering)
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+    page.should have_content("Report")
     assert_match(path_to("report of offering \"#{offering}\""), current_url)
   end
 end

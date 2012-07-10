@@ -2,6 +2,7 @@ class Portal::OfferingsController < ApplicationController
   
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
+  before_filter :student_teacher_admin_or_config, :only => [:answers]
 
   def current_clazz
     Portal::Offering.find(params[:id]).clazz
@@ -29,6 +30,10 @@ class Portal::OfferingsController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @offering }
 
+      format.run_html   {
+        @learner = setup_portal_student
+        render :show, :layout => "layouts/run"
+      }
       format.run_sparks_html   {
         if learner = setup_portal_student
           session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
@@ -66,18 +71,10 @@ class Portal::OfferingsController < ApplicationController
             :event_details => "Activity launcher delivered. Activity should be opening...",
             :bundle_content => learner.bundle_logger.in_progress_bundle
           )
-          if params.delete(:skip_installer)
-            render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
-          else
-            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
-          end
+          render :partial => 'shared/learn_or_installer', :locals => { :skip_installer => params.delete(:skip_installer), :runnable => @offering.runnable, :learner => learner }
         else
           # The current_user is a teacher (or another user acting like a teacher)
-          if params.delete(:skip_installer)
-            render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
-          else
-            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
-          end
+          render :partial => 'shared/show_or_installer', :locals => { :skip_installer => params.delete(:skip_installer), :runnable => @offering.runnable, :teacher_mode => true }
         end
       }
     end
@@ -333,32 +330,62 @@ class Portal::OfferingsController < ApplicationController
     end
   end
 
-  def launch_status
-    # NOTE: If the user is requesting json, this is actually handled
-    # at the rack/metal layer, in launch_status.rb.
+  def answers
     @offering = Portal::Offering.find(params[:id])
-    @learner = Portal::Learner.find_by_offering_id_and_student_id(@offering.id, current_user.portal_student.id)
-    @status_event_info = {}
-    if @learner && @learner.bundle_logger.in_progress_bundle
-      last_event = @learner.bundle_logger.in_progress_bundle.launch_process_events.last
-      if last_event
-        @status_event_info["event_type"] = last_event.event_type
-        @status_event_info["event_details"] = last_event.event_details
+    if @offering
+      learner = setup_portal_student
+      if learner && params[:questions]
+        # create saveables
+        params[:questions].each do |dom_id, value|
+          # translate the dom id into an actual Embeddable
+          embeddable = parse_embeddable(dom_id)
+          # create saveable
+          create_saveable(embeddable, @offering, learner, value) if embeddable
+        end
       end
+      flash[:notice] = "Your answers have been saved."
+      redirect_to :home
     else
-      # no in progress bundle. use a special response to indicate there's no active session
-      @status_event_info = {"event_type" => "no_session", "event_details" => "There's not a current session." }
-    end
-
-    # don't cache these responses!
-    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
-
-    respond_to do |format|
-      format.json { render :json => @status_event_info }
-      format.xml  { render :xml => @status_event_info }
+      render :text => 'problem loading offering', :status => 500
     end
   end
-  
+
+  private
+
+  def parse_embeddable(dom_id)
+    # make sure to support at least Embeddable::OpenResponse, Embeddable::MultipleChoice, and Embeddable::MultipleChoiceChoice
+    if dom_id =~ /embeddable__([^\d]+)_(\d+)$/
+      klass = "Embeddable::#{$1.classify}".constantize
+      return klass.find($2.to_i) if klass
+    end
+    nil
+  end
+
+  def create_saveable(embeddable, offering, learner, answer)
+    case embeddable
+    when Embeddable::OpenResponse
+      saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(learner.id, offering.id, embeddable.id)
+      if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
+        saveable_open_response.answers.create(:bundle_content_id => nil, :answer => answer)
+      end
+    when Embeddable::MultipleChoice
+      choice = parse_embeddable(answer)
+      answer = choice ? choice.choice : ""
+      if embeddable && choice
+        saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(learner.id, offering.id, embeddable.id)
+        if saveable.answers.empty? || saveable.answers.last.answer != answer
+          saveable.answers.create(:bundle_content_id => nil, :choice_id => choice.id)
+        end
+      else
+        if ! choice
+          logger.error("Missing Embeddable::MultipleChoiceChoice id: #{choice_id}")
+        elsif ! embeddable
+          logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
+        end
+      end
+    else
+      nil
+    end
+  end
+
 end

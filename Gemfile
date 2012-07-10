@@ -67,6 +67,8 @@ source "http://rubygems.org"
   gem 'delayed_job_active_record', "~> 0.3.2"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 "~> 0.6.7"
+  # to support hosting paperclip attachments on S3:
+  gem "aws-s3",               :require => "aws/s3"
 
 group :development do
   gem "rake",                 "~> 0.9.2"

@@ -80,7 +80,7 @@ class Report::Util
       @offering = offering_or_learner
 
       @learners = @offering.learners
-      @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
+      @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 || l.saveable_count > 0 } if show_only_active_learners
     end
 
     @report_embeddable_filter = @offering.report_embeddable_filter

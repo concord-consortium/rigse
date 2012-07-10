@@ -1,3 +1,6 @@
+%h3= page.name
 - page.page_elements.each do |element|
-  %div{ :id => dom_id_for(element.embeddable, :item), :class => style_for_item(element) }
-    = render_show_partial_for(element.embeddable)
+  - style = "item"
+  - style += " teacher_only" if element.teacher_only?
+  %div{ :id => dom_id_for(element.embeddable, :item), :class => style}
+    = render_show_partial_for(element.embeddable, {:locals => {:learner => local_assigns[:learner]}}) rescue "<div class='warning'>#{element.embeddable.display_name} isn't a supported type for this mode.</div>".html_safe
