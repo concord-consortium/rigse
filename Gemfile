@@ -73,6 +73,7 @@ source "http://rubygems.org"
   gem 'rush',                 "~> 0.6.7"
   # to support hosting paperclip attachments on S3:
   gem "aws-s3",               :require => "aws/s3"
+  gem "newrelic_rpm"
 
 group :development do
   gem "rake",                 "~> 0.9.2"
