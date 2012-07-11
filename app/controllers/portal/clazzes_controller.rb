@@ -5,6 +5,7 @@ class Portal::ClazzesController < ApplicationController
   # this only protects management actions:
   include RestrictedPortalController
 
+
   before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
   before_filter :student_teacher_admin_or_config, :only => [:show]
 
@@ -361,9 +362,13 @@ class Portal::ClazzesController < ApplicationController
     begin
       @teacher.add_clazz(@portal_clazz)
       @portal_clazz.reload
+      replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz_setup', :locals => {:portal_clazz => @portal_clazz}
+      replace_html.gsub!(/\r\n|\r|\n/, '');
       render :update do |page|
-        page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        page.visual_effect :highlight, 'teachers_listing'
+        #page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        #page.visual_effect :highlight, 'teachers_listing'
+        page.replace_html  'div_teacher_list',replace_html
+        page.replace 'teacher_add_dropdown', view_context.teacher_add_dropdown(@portal_clazz)
       end
     rescue
       render :update do |page|
@@ -393,7 +398,14 @@ class Portal::ClazzesController < ApplicationController
         render(:update) { |page| page.redirect_to home_url }
       else
         # Redraw the entire table, to disable delete links as needed. -- Cantina-CMH 6/9/10
-        render(:update) { |page| page.replace_html 'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz} }
+        #render(:update) { |page| page.replace_html 'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz} }
+        replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz_setup', :locals => {:portal_clazz => @portal_clazz}
+        replace_html.gsub!(/\r\n|\r|\n/, '');
+        render :update do|page|
+          page.replace_html  'div_teacher_list',replace_html
+          page.replace 'teacher_add_dropdown', view_context.teacher_add_dropdown(@portal_clazz)
+        end
+        return
       end
 
       # Former remove_teacher.js.rjs has been deleted. It was very similar to destroy.js.rjs. -- Cantina-CMH 6/9/10
@@ -596,5 +608,6 @@ class Portal::ClazzesController < ApplicationController
     end
     @portal_clazz = Portal::Clazz.find(params[:id]);
   end
+  
   
 end
