@@ -15,7 +15,7 @@ class Reports::Detail < Reports::Excel
       Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
       Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
-      Reports::ColumnDefinition.new(:title => "# Completed", :width => 10, :left_border => true),
+      Reports::ColumnDefinition.new(:title => "# Completed", :width => 10, :left_border => :thin),
       Reports::ColumnDefinition.new(:title => "% Completed", :width => 10),
       Reports::ColumnDefinition.new(:title => "# Correct",   :width => 10),
       Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
@@ -52,7 +52,7 @@ class Reports::Detail < Reports::Excel
 
       # Iterate containers
       containers.each do |a|
-        sheet_defs << Reports::ColumnDefinition.new(:title => "#{a.name}\nAssessments Completed", :width => 4, :left_border => true)
+        sheet_defs << Reports::ColumnDefinition.new(:title => "#{a.name}\nAssessments Completed", :width => 4, :left_border => :thin)
         sheet_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
 
         reportable_header_counter = setup_sheet_runnables(a, reportable_header_counter, header_defs, answer_defs)
@@ -70,7 +70,7 @@ class Reports::Detail < Reports::Excel
     reportables.each do |r|
       reportable_header_counter += 1
       header_defs << Reports::ColumnDefinition.new(:title => container.name, :heading_row => 0, :col_index => reportable_header_counter)
-      answer_defs << Reports::ColumnDefinition.new(:title => clean_text((r.respond_to?(:prompt) ? r.prompt : r.name)), :width => 25, :left_border => first)
+      answer_defs << Reports::ColumnDefinition.new(:title => clean_text((r.respond_to?(:prompt) ? r.prompt : r.name)), :width => 25, :left_border => (first ? :thin : :none))
       first = false
     end # reportables
     return reportable_header_counter

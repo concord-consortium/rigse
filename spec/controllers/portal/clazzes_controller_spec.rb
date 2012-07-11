@@ -42,8 +42,6 @@ describe Portal::ClazzesController do
     }
     @mock_project = mock_model(Admin::Project, :name => "Test Project")
     @mock_project.stub(:enable_grade_levels?).and_return(true)
-    @mock_project.stub(:maven_jnlp_family).and_return(nil)
-    @mock_project.stub(:snapshot_enabled).and_return(false)
     @mock_project.stub(:allow_default_class).and_return(false)
     @mock_project.stub(:use_student_security_questions).and_return(false)
     Admin::Project.stub(:default_project).and_return(@mock_project)
@@ -135,16 +133,14 @@ describe Portal::ClazzesController do
         @mock_clazz.teachers = teachers
         
         
-        xml_http_html_request :post, :edit, :id => @mock_clazz.id
+        xml_http_html_request :post, :get_teachers, :id => @mock_clazz.id
 
         response.content_type.should == "text/html"
 
         # All users should see the list of current teachers
-        assert_select("div#teachers_listing") do
+        assert_select("table.teachers_listing") do
           teachers.each do |teacher|
-            assert_select("tr#portal__teacher_#{teacher.id}") do |e|
-              assert_select("img[src*='delete']")
-            end
+            assert_select("tr#portal__teacher_#{teacher.id}")
           end
         end
       end
@@ -156,63 +152,45 @@ describe Portal::ClazzesController do
       assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]", false)
     end
 
+    def can_edit(teacher)
+      assert_select("table.teachers_listing") do
+        assert_select("input#clazz_teacher_#{teacher.id}:not([disabled='disabled'])") 
+      end
+    end
+
+    def cant_edit(teacher)
+      assert_select("table.teachers_listing") do
+        assert_select("input#clazz_teacher_#{teacher.id}[disabled='disabled']") 
+      end
+    end
+
     describe "conditions for a user trying to remove a teacher from a class" do
-      it "the user is allowed to remove any teacher in the list" do
+      it "the user is allowed to remove other teachers in the list" do
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
 
-        xml_http_html_request :post, :edit, :id => @mock_clazz.id
+        xml_http_html_request :post, :get_teachers, :id => @mock_clazz.id
 
-        assert_select("div#teachers_listing") do
-          teachers.each do |teacher|
-            assert_select("tr#portal__teacher_#{teacher.id}") do
-              assert_select("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
-                assert_select("img[src*='delete.png']")
-              end
-            end
-          end
-        end
+        can_edit(@random_teacher)
+        cant_edit(@authorized_teacher) # currently logged in.
       end
 
-      it "this teacher is the last teacher assigned to this class" do
-        # @mock_clazz should only have one teacher, but let's make sure
-        teachers = [@authorized_teacher]
-        @mock_clazz.teachers = teachers
-
-        xml_http_html_request :post, :edit, :id => @mock_clazz.id
-
-        # There should be only one teacher listed, and it should not be enabled
-        assert_select("div#teachers_listing") do
-          assert_select("tr#portal__teacher_#{teachers.first.id}") do
-            assert_select("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
-          end
-        end
-      end
-
-      # REMOVED -- teachers can remove themselves, but will be immediately redirected away from the edit page.
-      # it "this teacher is the current user" do
-      #   login_as :authorized_teacher_user
-      #
-      #   teachers = [@authorized_teacher, @random_teacher]
+      # TODO: Verify we are fine with preventing the current user from removing themselves.
+      # it "this teacher is the last teacher assigned to this class" do
+      #   # @mock_clazz should only have one teacher, but let's make sure
+      #   teachers = [@authorized_teacher]
       #   @mock_clazz.teachers = teachers
-      #
-      #   xml_http_request :post, :edit, :id => @mock_clazz.id
-      #
-      #   # Only the current user's teacher should be disabled; all others should be enabled
+
+      #   xml_http_html_request :post, :edit, :id => @mock_clazz.id
+
+      #   # There should be only one teacher listed, and it should not be enabled
       #   assert_select("div#teachers_listing") do
-      #     teachers.each do |teacher|
-      #       assert_select("tr#portal__teacher_#{teacher.id}") do
-      #         if teacher.user == @logged_in_user
-      #           assert_select("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_CURRENT_USER)
-      #         else
-      #           assert_select("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
-      #             assert_select("img[src*='delete.png']")
-      #           end
-      #         end
-      #       end
+      #     assert_select("tr#portal__teacher_#{teachers.first.id}") do
+      #       assert_select("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
       #     end
       #   end
       # end
+
 
       it "this teacher is the current user" do
         stub_current_user :authorized_teacher_user
@@ -220,32 +198,18 @@ describe Portal::ClazzesController do
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
 
-        xml_http_html_request :post, :edit, :id => @mock_clazz.id
+        1.upto 10 do |i|
+          teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
+          @mock_clazz.school.portal_teachers << teacher
+        end
 
-        # The current user's teacher should produce a different warning message on click; all
-        # others should use the default confirm text. All users' delete links should be enabled.
-        assert_select("div#teachers_listing") do
-          teachers.each do |teacher|
-            assert_select("tr#portal__teacher_#{teacher.id}") do
-              assert_select("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do |elem|
-                assert_select("img[src*='delete.png']")
+        xml_http_html_request :post, :get_teachers, :id => @mock_clazz.id
 
-                warning_str = Portal::Clazz.WARNING_REMOVE_TEACHER_CURRENT_USER(@mock_clazz.name).gsub(/(\\|<\/|\r\n|[\n\r"'])/) do
-                  ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP[$1]
-                end
-                confirm_str = Portal::Clazz.CONFIRM_REMOVE_TEACHER(teacher.name, @mock_clazz.name).gsub(/(\\|<\/|\r\n|[\n\r"'])/) do
-                  ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP[$1]
-                end
-
-                if teacher.user == @logged_in_user
-                  elem.to_s.should include(warning_str)
-                  elem.to_s.should_not include(confirm_str)
-                else
-                  elem.to_s.should include(confirm_str)
-                  elem.to_s.should_not include(warning_str)
-                end
-              end
-            end
+        teachers.each do |teacher|
+          if teacher == @authorized_teacher
+            cant_edit(teacher)
+          else
+            can_edit(teacher)
           end
         end
       end
@@ -261,25 +225,13 @@ describe Portal::ClazzesController do
         setup_for_repeated_tests
         stub_current_user user
 
-        1.upto 10 do |i|
-          teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
-          @mock_clazz.school.portal_teachers << teacher
-        end
-
         xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
         if user == :unauthorized_teacher_user
-          assert_select("select#teacher_id_selector[name=teacher_id]", false, 
-            "Unauthorized users should not see the 'add teacher' dropdown")
+          assert_select("a#AddTeacher", false, 
+            "Unauthorized users should not see the 'add teacher' link")
         else
-          assert_select("select#teacher_id_selector[name=teacher_id]") do |elem|
-            assert_select("option[value=#{@authorized_teacher.id}]", false,
-              "cannot add teachers who are already assigned to this class")
-
-            @mock_clazz.school.portal_teachers.reject { |t| t.id == @authorized_teacher.id }.each do |t|
-              assert_select("option[value='#{t.id}']")
-            end
-          end
+          assert_select("a#AddTeacher")
         end
       end
     end

@@ -25,7 +25,7 @@
             - unless(current_user.anonymous?)
               %li.menu=link_to 'duplicate', duplicate_section_url(section)
             - if (section.changeable?(current_user))
-              %li.menu=link_to 'delete', section, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{section.id}", :method => :delete
+              %li.menu=link_to 'delete', section, :class => 'delete', :data => { :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{section.id}" }, :method => :delete
       %div{:id => dom_id_for(section, :details), :class => 'tiny'}
         %p=section.description
         %p

@@ -1,6 +1,28 @@
-# http://www.usps.com/ncsc/lookups/usps_abbreviations.html
 
-module StatesAndProvinces
+class Portal::StateOrProvince
+  
+  # Rails 3.2 only, returns uniq non nil state strings from current districts
+  def self.from_districts
+    Portal::District.where("state IS NOT NULL").uniq.pluck(:state)
+  end
+
+  def self.state_and_province_abbreviations
+    Portal::StateOrProvince::STATES_AND_PROVINCES.keys.sort
+  end
+
+  def self.configured
+    case APP_CONFIG[:states_and_provinces] 
+    when 'all'
+      state_and_province_abbreviations
+    when nil
+      []
+    else
+      APP_CONFIG[:states_and_provinces]
+    end
+  end
+
+
+  # http://www.usps.com/ncsc/lookups/usps_abbreviations.html
   STATES_AND_PROVINCES = {
     'AL' => 'Alabama',
     'AK' => 'Alaska',

@@ -80,3 +80,7 @@ Then /^"([^"]*)" should have href like "([^"]*)" with params "([^"]*)"$/ do |lin
   a = page.find("a##{link}")
   a[:href].should =~ /#{href}.*#{params}/i
 end
+
+When /^show usage count is enabled on the session$/ do
+  pending # express the regexp above with the code you wish you had
+end

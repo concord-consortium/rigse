@@ -23,7 +23,6 @@ development: &id003
   :site_district: DEFAULT Investigations-district
   :help_email: default-investigations@concord.org
   :use_gse: true
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :login: stephen
@@ -73,7 +72,6 @@ production:
   :site_district: DEFAULT Investigations-district
   :help_email: default-investigations@concord.org
   :use_gse: true
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :login: stephen

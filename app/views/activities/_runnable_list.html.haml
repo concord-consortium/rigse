@@ -25,7 +25,7 @@
             - unless(current_user.anonymous?)
               %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
             - if (activity.changeable?(current_user))
-              %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{activity.id}", :method => :delete
+              %li.menu=link_to 'delete', activity, :class => 'delete', :data => { :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{activity.id}" }, :method => :delete
       %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
         %p=activity.description
         %p

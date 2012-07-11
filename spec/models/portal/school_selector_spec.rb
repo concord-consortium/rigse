@@ -10,6 +10,7 @@ describe Portal::SchoolSelector do
     @adhoc = mock_model(Admin::Project,    {:allow_adhoc_schools => true })
     @no_adhoc = mock_model(Admin::Project, {:allow_adhoc_schools => false })
     Admin::Project.stub!(:default_project).and_return(@adhoc)
+    @district1 = Factory(:portal_district, {:state => "MA", :name => "no district"} )
   end
   describe "when presented for the first time (no query params)" do
     it "needs a state" do
@@ -36,7 +37,6 @@ describe Portal::SchoolSelector do
 
   describe "when the user has selected the USA as the country" do
     before(:each) do
-      @district1 = Factory(:portal_district, {:state => "MA", :name => "no district"} )
       @district2 = Factory(:portal_district, {:state => "MA"} )
       @district3 = Factory(:portal_district, {:state => "NY"} )
 

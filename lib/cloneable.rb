@@ -17,7 +17,7 @@ module Cloneable
 #    end
 #  end
 
-  def clone(options = {})
+  def dup(options = {})
     if self.class.respond_to?("cloneable_associations")
       new_assocs = self.class.cloneable_associations
     else

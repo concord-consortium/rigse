@@ -24,7 +24,6 @@ development: &development
   :site_district: Geniverse District
   :site_name: Geniverse
   :site_url: http://localhost:3000
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :last_name: Bannasch
