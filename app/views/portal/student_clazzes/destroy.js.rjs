@@ -5,8 +5,11 @@ end
   page << "if ($('students_listing')){"
   page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @clazz}
   page << "}"
-  page << "if ($('add_students_listing')){"
-  page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @clazz}
+  #page << "if ($('add_students_listing')){"
+  #page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @clazz}
+  #page << "}"
+  page << "if ($('oClassStudentCount')){"
+  page.replace_html 'oClassStudentCount', @clazz.students.length.to_s
   page << "}"
   page << "if ($('student_add_dropdown')){"
   page.replace 'student_add_dropdown', student_add_dropdown(@clazz)
