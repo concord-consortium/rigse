@@ -593,14 +593,13 @@ li.item_selectable {
     font: bold 1.3em Arial, Helvetica, sans-serif !important;
     margin: 10px 0 10px 20px; }
   ul {
-    
+    border-top: 1px solid #A1D3D0;
     list-style: none;
     margin: 0;
     padding: 0; }
   li {
-
+    border-bottom: 1px solid #A1D3D0;
     color: #ee864e;
-
     font-size: 1.4em;
     list-style: none;
     margin: 0;
