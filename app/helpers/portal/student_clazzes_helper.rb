@@ -18,7 +18,7 @@ module Portal::StudentClazzesHelper
     other_clazzes = []
     default_value =  "Add another student from this school."
     if clazz.school 
-      other_clazzes = (clazz.school.clazzes - [clazz])
+      other_clazzes = (clazz.school.clazzes.includes(:students => :user) - [clazz])
       if clazz.school.name && clazz.school.name.length > 1
         default_value = "Add student from #{clazz.school.name.titlecase}"
       end
