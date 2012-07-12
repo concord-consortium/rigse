@@ -1665,6 +1665,7 @@ ActiveRecord::Schema.define(:version => 20120621133703) do
     t.datetime "updated_at",                                        :null => false
     t.boolean  "active",                         :default => true
     t.boolean  "default_offering",               :default => false
+    t.integer  "position",                       :default => 0
   end
 
   create_table "portal_school_memberships", :force => true do |t|
@@ -1752,6 +1753,8 @@ ActiveRecord::Schema.define(:version => 20120621133703) do
     t.integer  "teacher_id"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
+    t.boolean  "active",                    :default => true
+    t.integer  "position",                  :default => 0
   end
 
   add_index "portal_teacher_clazzes", ["clazz_id"], :name => "index_portal_teacher_clazzes_on_clazz_id"
