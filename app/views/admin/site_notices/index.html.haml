@@ -1,8 +1,13 @@
-%table
+%table{:cellpadding => '2', :cellspacing => '0', :border => '1', :class => 'notice_list'}
   - @all_notices.each do |notice|
     %tr
-      %td 
-        = notice.created_at
-      %td 
+      %td{:class => 'notice_text'} 
         = notice.notice_html.html_safe
-= link_to 'create new notice', new_admin_site_notice_path
+      %td{:class => 'notice_date'} 
+        = notice.created_at.strftime("%m-%d-%Y")
+      %td{:class => 'notice_edit_delete_link'}
+        = link_to 'edit', admin_site_notices_path
+        &nbsp &nbsp &nbsp
+        = link_to 'delete', admin_site_notices_path
+%br        
+= link_to 'create new notice', new_admin_site_notice_path, :class => 'new_notice_link'

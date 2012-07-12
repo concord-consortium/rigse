@@ -5,7 +5,6 @@ class Admin::SiteNoticesController < ApplicationController
       redirect_to(:home)
       return    
     end
-    @site_notice = SiteNotice.new
   end
 
   def create
@@ -21,10 +20,13 @@ class Admin::SiteNoticesController < ApplicationController
       site_notice_roles.notice_id = site_notice.id
       site_notice_roles.role_id = role_id  
     end
-    @all_notices = SiteNotice.all
+    redirect_to admin_site_notices_path
   end
   def index
-    current_user_id = current_user.id
     @all_notices = SiteNotice.all
+  end
+  def edit
+    @all_notices = SiteNotice.all
+    redirect_to admin_site_notices_path
   end
 end
