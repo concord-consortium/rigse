@@ -34,14 +34,14 @@
 
         - case left_pane_submenu_item
           - when Portal::Teacher.LEFT_PANE_ITEM['MATERIALS']
-            - clazz_url = url_for([:materials, clazz])
+            - clazz_url = [:materials, clazz]
           - when Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER']
-            - clazz_url = url_for([:roster, clazz])
+            - clazz_url = [:roster, clazz]
           - when Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP']
-            - clazz_url = url_for([:edit, clazz])
+            - clazz_url = [:edit, clazz]
           - else
-            - clazz_url = url_for([clazz])
-      
+            - clazz_url = [clazz]
+          - clazz_url = url_for(clazz_url)
       
       - if (is_active)
         %li{:id=>dom_id_for(clazz,:nav_item)}
