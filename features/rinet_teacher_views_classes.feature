@@ -11,18 +11,21 @@ their imported classes. (because it comes from SIS)
   Background:
     Given The default project and jnlp resources exist using factories
 
+  @pending
   Scenario: Rinet Teachers can view their classes
     Given I am a Rinet teacher
     When I login with the link tool
     Then I should be forwarded to my home page
     And I should see a list of my classes
   
+  @pending
   Scenario: Rinet Teachers can view their students
     Given I am a Rinet teacher
     When I login with the link tool
     And I look at my first classes page
     Then I should see a list of my students
 
+  @pending
   Scenario: Rinet Teachers can not modify their classes
     Given I am a Rinet teacher
     When I login with the link tool
