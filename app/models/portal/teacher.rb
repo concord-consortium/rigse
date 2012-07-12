@@ -51,7 +51,7 @@ class Portal::Teacher < ActiveRecord::Base
     return @@LEFT_PANE_ITEM
   end
 
-  def self.save_left_pane_submenu_item(item_value)
+  def self.save_left_pane_submenu_item(current_user, item_value)
     if current_user.nil? or current_user.portal_teacher.nil?
       return
     end

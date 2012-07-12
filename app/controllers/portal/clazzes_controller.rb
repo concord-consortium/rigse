@@ -38,7 +38,7 @@ class Portal::ClazzesController < ApplicationController
     end
     
     # Save the left pane sub-menu item
-    Portal::Teacher.save_left_pane_submenu_item(Portal::Teacher.LEFT_PANE_ITEM['NONE'])
+    Portal::Teacher.save_left_pane_submenu_item(current_user, Portal::Teacher.LEFT_PANE_ITEM['NONE'])
     
     respond_to do |format|
       format.html # show.html.erb
@@ -73,7 +73,7 @@ class Portal::ClazzesController < ApplicationController
     end
     
     # Save the left pane sub-menu item
-    Portal::Teacher.save_left_pane_submenu_item(Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP'])
+    Portal::Teacher.save_left_pane_submenu_item(current_user, Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP'])
     
   end
 
@@ -514,7 +514,7 @@ class Portal::ClazzesController < ApplicationController
     end
     
     # Save the left pane sub-menu item
-    Portal::Teacher.save_left_pane_submenu_item(Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])
+    Portal::Teacher.save_left_pane_submenu_item(current_user, Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])
     
   end
 
@@ -639,7 +639,7 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:id])
     
     # Save the left pane sub-menu item
-    Portal::Teacher.save_left_pane_submenu_item(Portal::Teacher.LEFT_PANE_ITEM['MATERIALS'])
+    Portal::Teacher.save_left_pane_submenu_item(current_user, Portal::Teacher.LEFT_PANE_ITEM['MATERIALS'])
     
   end
   
