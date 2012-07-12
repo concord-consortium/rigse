@@ -7,7 +7,7 @@
     You originally logged in as: <b>#{@original_user.name}</b>.
   
 
-- form_for :user, @user, :url => switch_user_path(@user), :html => { :method => :put }  do |form|
+= form_for @user, :url => switch_user_path(@user), :html => { :method => :put }  do |form|
   .item{:style=>"min-height: 400px;"}
     .content
       %fieldset

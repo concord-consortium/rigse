@@ -9,17 +9,77 @@ class JnlpAdaptor
     "otrunk-nlogo4"  => "otrunknl4"
   }
   
-  def initialize(project=Admin::Project.default_project)
-    @default_maven_jnlp_server = project.maven_jnlp_server
-    @jnlp_family = project.maven_jnlp_family
-    @jnlp_family.update_snapshot_jnlp_url
-    default_version_str = project.jnlp_version_str
-    if project.snapshot_enabled
-      @jnlp = @jnlp_family.snapshot_jnlp_url.versioned_jnlp
+  # Returns an array of the default maven_jnlp server,  family, and jnlp snampshot version info
+  # 
+  # Example:
+  # 
+  #   server, family, version = JnlpAdaptor.default_jnlp_info
+  #
+  #   server  # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
+  #   family  # => "all-otrunk-snapshot"
+  #   version # => "0.1.0-20091013.161730"
+  #    
+  def self.default_jnlp_info
+    default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
+    # => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
+    server = APP_CONFIG[:maven_jnlp_servers].find { |s| s[:name] == default_maven_jnlp[:server] }
+    # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
+    family = default_maven_jnlp[:family]
+    # => "all-otrunk-snapshot"
+    version = default_maven_jnlp[:version]
+    # => "snapshot"
+    [server, family, version]
+  end
+
+  def self.jnlp_version
+    @jnlp_version ||= default_jnlp_info[2]
+  end
+
+  def self.maven_jnlp_server
+    server, family, version = default_jnlp_info
+    MavenJnlp::MavenJnlpServer.find_by_name(server[:name])
+  end
+
+  def self.maven_jnlp_family
+    server, family, version = default_jnlp_info
+    jnlp_server = maven_jnlp_server
+    return nil if jnlp_server.nil?
+
+    jnlp_server.maven_jnlp_families.find_by_name(family)
+  end
+
+  def self.jnlp_version_str
+    # instead of just returning the version string from the settings.yml
+    # we need to get the family and depending on the that return the most
+    # recent snapshot
+    if jnlp_version == 'snapshot'
+      # return the most recent snapshot_version that is in the database
+      # don't do any network look ups here
+      maven_jnlp_family.snapshot_version
     else
-      jnlp_url = @jnlp_family.versioned_jnlp_urls.find_by_version_str(default_version_str)
-      @jnlp = jnlp_url.versioned_jnlp
+      jnlp_version
     end
+  end
+
+  def self.snapshot_enabled
+    jnlp_version == 'snapshot'
+  end
+
+  def self.update_snapshot_version
+    maven_jnlp_family.update_snapshot_jnlp_url
+  end
+
+  def initialize
+    @default_maven_jnlp_server = JnlpAdaptor.maven_jnlp_server
+    @jnlp_family = JnlpAdaptor.maven_jnlp_family
+
+    # this might slow down the tests and requests but trying at CC didn't show any difference
+    # @jnlp_family.update_snapshot_jnlp_url
+
+    default_version_str = JnlpAdaptor.jnlp_version_str
+    jnlp_url = @jnlp_family.versioned_jnlp_urls.find_by_version_str(default_version_str)
+    @jnlp = jnlp_url.versioned_jnlp
+
     otrunk_nlogo_jars = @jnlp.jars.select { |j2| j2.name[/otrunk-nlogo.*?/] }
     if otrunk_nlogo_jars.empty?
       @net_logo_package_name = nil

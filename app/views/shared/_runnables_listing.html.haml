@@ -24,7 +24,7 @@
             - unless(current_user.anonymous?)
               %li.menu=link_to 'duplicate', polymorphic_url(runnable, :action => :duplicate) unless runnable.kind_of?(ResourcePage)
             - if (runnable.changeable?(current_user))
-              %li.menu=link_to 'delete', runnable, :class => 'delete', :confirm => "Are you sure you want to delete #{runnable.class.display_name} #{runnable.id}", :method => :delete
+              %li.menu=link_to 'delete', runnable, :class => 'delete', :data => { :confirm => "Are you sure you want to delete #{runnable.class.display_name} #{runnable.id}" }, :method => :delete
       %div{:id => dom_id_for(runnable, :details), :class => 'tiny'}
         %p=runnable.description
         %p

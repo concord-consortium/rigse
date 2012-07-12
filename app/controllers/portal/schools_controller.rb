@@ -25,13 +25,7 @@ class Portal::SchoolsController < ApplicationController
   end
 
   def states_and_provinces
-    if APP_CONFIG[:states_and_provinces]
-      @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a.select { |s| APP_CONFIG[:states_and_provinces].any? { |i| i == s[0] } }
-    else
-      @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a
-    end
-    @states_and_provinces.collect! {|i| i.reverse}
-    @states_and_provinces.sort! { |a, b| a[1] <=> b[1] }
+    @states_and_provinces = Portal::StateOrProvince.from_districts.sort
   end
   
   public

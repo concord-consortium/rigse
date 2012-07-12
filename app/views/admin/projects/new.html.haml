@@ -1,38 +1,4 @@
 %h1 New admin_project
 
-= error_messages_for :admin_project 
-
-= form_for([:admin, @admin_project]) do |f| 
-  %p
-    %b Name
-    %br
-    = f.text_field :name 
-  %p
-    %b Url
-    %br
-    = f.text_field :url 
-  %p
-    %b States and provinces
-    %br
-    = f.text_area :states_and_provinces 
-  %p
-    %b Maven jnlp server
-    %br
-    = f.text_field :maven_jnlp_server_id 
-  %p
-    %b Maven jnlp family
-    %br
-    = f.text_field :maven_jnlp_family_id 
-  %p
-    %b Jnlp version
-    %br
-    = f.text_field :jnlp_version_str 
-  %p
-    %b Snapshot enabled
-    %br
-    = f.check_box :snapshot_enabled 
-
-  %p
-    = f.submit "Create"
-    
-= link_to 'Back', admin_admin_projects_path
+= form_for(@admin_project, :before => "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => 'form', :locals => { :admin_project => @admin_project, :f => f }

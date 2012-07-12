@@ -23,7 +23,6 @@ development: &id003
   :description: ""
   :site_district: Genome Dynamics-district
   :use_gse: false
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :login: stephen
