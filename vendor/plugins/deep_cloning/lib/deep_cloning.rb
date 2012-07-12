@@ -2,7 +2,7 @@
 
 module DeepCloning
   def self.included(base) #:nodoc:
-    base.alias_method_chain :clone, :deep_cloning
+    base.alias_method_chain :dup, :deep_cloning
     base.module_eval do
       @@no_dupes = false
       @@seen_source_objects = {}
@@ -35,7 +35,7 @@ module DeepCloning
           return get_stored_object(obj)
         end
         # puts "Haven't seen object #{obj}"
-        return record_object(obj, obj.clone(opts))
+        return record_object(obj, obj.dup(opts))
       end
       
       def set_no_duplicates(b)
@@ -83,19 +83,19 @@ module DeepCloning
   # ==== Cloning really deep with multiple associations
   #   pirate.clone :include => [:mateys, {:treasures => :gold_pieces}]
   # 
-  def clone_with_deep_cloning options = {}
-    kopy = clone_without_deep_cloning
+  def dup_with_deep_cloning options = {}
+    kopy = dup_without_deep_cloning
     kopy.save(:validate => false) # skip validations when cloning
     
     if options[:except]
       Array(options[:except]).each do |attribute|
-        kopy.send(:write_attribute, attribute, attributes_from_column_definition[attribute.to_s])
+        dc_initialize_attribute kopy, attribute
       end
     end
     
     get_never_clone.each do |attribute|
       if kopy.query_attribute(attribute)
-        kopy.send(:write_attribute, attribute, attributes_from_column_definition[attribute.to_s])
+        dc_initialize_attribute kopy, attribute
       end
     end
     
@@ -132,6 +132,13 @@ module DeepCloning
       set_never_clone(Array(options[:never_clone]))
     end
     
-    clone(options)
+    dup(options)
+  end
+  
+  # this was added to work around the fact that rails 3.2 removed the attributes_from_column_definition
+  # method.  It seems this is pretty inefficient, but perhaps that doesn't matter
+  def dc_initialize_attribute(kopy, attribute)
+    default_value = self.class.initialize_attributes(self.class.column_defaults.dup)[attribute.to_s]
+    kopy.send(:write_attribute, attribute, default_value)
   end
 end

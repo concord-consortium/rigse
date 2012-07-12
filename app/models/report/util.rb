@@ -125,7 +125,7 @@ class Report::Util
 
     @page_elements  = reportables.extended_group_by(lambdas)
 
-    Investigation.saveable_types.each do |type|
+    ResponseTypes.saveable_types.each do |type|
       all = []
       if @learners.size == 1
         all = type.find_all_by_learner_id(@learners[0].id)

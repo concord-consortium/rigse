@@ -5,7 +5,7 @@ source "http://rubygems.org"
 
 #### COMMON
   if ENV['RB_MYSQL2']
-    gem "mysql2",             '< 0.3', :platforms => [:ruby,:mingw] # version restriction is because 0.3 and higher require rails 3.1
+    gem "mysql2",             '~> 0.3', :platforms => [:ruby,:mingw]
   else
     gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
   end
@@ -20,17 +20,17 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
-  gem "rails",                "~> 3.0.10"
+  gem "rails",                "~> 3.2"
   gem "arrayfields"
   gem "httpclient",           "~> 2.2"
   gem "capistrano-ext",                 :require => "capistrano"
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
-  gem "haml",           :git => "git://github.com/stepheneb/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
+  gem "haml",           :git => "git://github.com/concord-consortium/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
   gem "sass",                 "~> 3.1.7"
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
-  gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
+  gem "spreadsheet",          "~> 0.7.3"  #see http://spreadsheet.rubyforge.org/
 
   # ruby-ole is a spreadsheet dependency but v1.2.11.1 doesn't work on Ruby 1.9.3
   gem "ruby-ole",             "~> 1.2.11.2"
@@ -56,13 +56,17 @@ source "http://rubygems.org"
   gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
-  gem 'themes_for_rails',     "~> 0.4.2"
+  gem 'themes_for_rails',     "~> 0.5.0.pre"
   gem 'default_value_for',    "~> 1.0.5"
   gem 'exception_notification', "~> 2.5.2"
-  gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+  gem 'prototype-rails'
+  # switch to willbryant inorder to pick up some 3.1 necessary changes
+  gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/willbryant/prototype_legacy_helper.git'
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
-  gem 'calendar_date_select'
+  # need patched version of calendar_data_select to work in rails 3.1 and higher
+  # this is because of the removed RAILS_ROOT constant
+  gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
   gem 'delayed_job',          "~> 3.0.1"
   gem 'delayed_job_active_record', "~> 0.3.2"
   gem 'daemons',              "~> 1.1.8"
@@ -77,7 +81,7 @@ group :development do
   gem "what_methods"
   gem "hirb"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
-  gem "ruby-debug19", :platforms => [:mri_19]
+  gem "debugger", :platforms => [:mri_19]
   gem "awesome_print"
   gem "interactive_editor"
   gem "pry"
@@ -94,19 +98,19 @@ group :test, :development do
   # Version 2.16 didn't have this problem. However it is possible I got that error when
   # I was running an older version of FF. I'm not getting the error now.
   gem "selenium-webdriver", "2.21.2"
-  gem "cucumber",          "~> 1.0.2"
-  gem "cucumber-rails",    "~> 1.0.2"
-  gem "database_cleaner",  "~> 0.6.7"
-  gem "capybara",          "~> 1.1.1"
-  gem "rspec",             "~> 2.6"
-  gem "rspec-rails",       "~> 2.6"
+  gem "cucumber",          "~> 1.1.9"
+  gem "cucumber-rails",    "~> 1.3.0"
+  gem "database_cleaner",  "~> 0.7.2"
+  gem "capybara",          "~> 1.1.2"
+  gem "rspec",             "~> 2.9.0"
+  gem "rspec-rails",       "~> 2.9.0"
   gem "factory_girl",      "~> 2.0.5"
   gem "email_spec",        "~> 1.2.1"
   gem "fakeweb",           "~> 1.3", :require => false
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   # If you update the version of ci_reporter
   # please make sure to update the --require path in Hudson
-  gem "ci_reporter",       "~> 1.6.6"
+  gem "ci_reporter",       "~> 1.7.0"
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"

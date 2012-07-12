@@ -39,7 +39,7 @@ describe Portal::SchoolsController do
     login_admin
     @school = mock_school
     @nces_school = nces_mock_school
-    @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a
+    @states_and_provinces = ['KS', 'MA']
   end
 
   describe "GET index" do

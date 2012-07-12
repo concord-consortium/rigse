@@ -36,7 +36,7 @@
     %div{:class => class_setup_link_class}
       = link_to 'Class Setup', edit_portal_clazz_url(portal_clazz)
     %div{:class => full_status_link_class}
-      = link_to 'Full Status', {}, :onclick => 'showFullStatus()'
+      = link_to 'Full Status', {}, :onclick => 'showFullStatus(); return false;'
     
     
    

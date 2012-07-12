@@ -19,7 +19,7 @@ module FailsInThemes
 
       if style = themes[ApplicationController.get_theme]
         # expect this to fail
-        raise RSpec::Core::PendingExampleFixedError.new("Expected to fail. No Error was raised.") if error.nil?
+        raise RSpec::Core::Pending::PendingExampleFixedError.new("Expected to fail. No Error was raised.") if error.nil?
         raise RSpec::Core::Pending::PendingDeclaredInExample.new("Need to determine if failure is expected under theme: #{ApplicationController.get_theme}") if style == :todo
       else
         # otherwise pass any exceptions upstream

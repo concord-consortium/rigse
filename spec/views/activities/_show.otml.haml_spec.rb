@@ -6,6 +6,6 @@ describe "/activities/_show.otml.haml" do
     # however it fails set the format correctly in this case, whereas when explicity setting the partial file name rails
     # figures the format from the file name
     # render :locals => {:teacher_mode => false, :activity => Factory.build(:activity)}
-    render :partial => 'activities/show.otml', :locals => {:teacher_mode => false, :activity => Factory.build(:activity)}
+    render :partial => 'activities/show', :formats => [:otml], :locals => {:teacher_mode => false, :activity => Factory.build(:activity)}
   end
 end

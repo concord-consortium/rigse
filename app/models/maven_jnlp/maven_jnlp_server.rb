@@ -3,8 +3,6 @@ require 'fileutils'
 class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   self.table_name = "maven_jnlp_maven_jnlp_servers"
 
-  has_many :projects, :class_name => "Admin::Project"
-
   has_many :maven_jnlp_families, :class_name => "MavenJnlp::MavenJnlpFamily"
 
   acts_as_replicatable
@@ -93,7 +91,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   end
 
   def update_maven_jnlp_server_object
-    server, family, version = Admin::Project.default_jnlp_info
+    server, family, version = JnlpAdaptor.default_jnlp_info
     # TODO
     # Portals need a way of getting more of the jnlp versions ... for now get all versions 
     # ... later perhaps expand use of settings or portal params to specify sets of versions
@@ -133,7 +131,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   # Creates the MavenJnlp Families (and all related resources such as VersionedJnlpUrls,
   # VersionedJnlps, Jars, NativeLibraries, Icons) listed in the application settings
   #
-  def create_maven_jnlp_families
+  def create_maven_jnlp_families(verbose=false)
     @mj_families = APP_CONFIG[:maven_jnlp_families]
     @mj_families << "gui-testing"
     # remove duplicated 'gui-testing' in case settings.yml already specified importing all jnlp families
@@ -143,7 +141,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
       # Rails model instances for the families specified in the app settings
       maven_jnlp_server_object.maven_jnlp_families.each do |mjf_object|
         if self.maven_jnlp_families.find_by_url(mjf_object.url)
-          unless RUNNING_TESTS
+          if verbose
             puts "\nmaven_jnlp_family: #{mjf_object.url} "
             puts "already exists "
           end
@@ -153,7 +151,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
             :url              => mjf_object.url,
             :snapshot_version => mjf_object.snapshot_version)
           mjf.save!
-          unless RUNNING_TESTS
+          if verbose
             puts "\nmaven_jnlp_family: #{mjf_object.url} "
             puts "current snapshot version: #{mjf_object.snapshot_version} "
             puts "generating #{mjf_object.versions.length} versioned_jnlp resources:"
@@ -162,7 +160,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
           mjf.create_versioned_jnlp_urls(mjf_object)
           mjf.snapshot_jnlp_url.versioned_jnlp
         else
-          puts "skipping maven_jnlp_family: #{mjf_object.url} " unless RUNNING_TESTS
+          puts "skipping maven_jnlp_family: #{mjf_object.url} " if verbose
         end
       end
     end

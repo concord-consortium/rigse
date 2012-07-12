@@ -36,7 +36,6 @@ production: &prod
     :last_name: Paessel
     :login: knowuh
     :email: knowuh@gmail.com
-  :enable_default_users: true
   :states_and_provinces:
     - RI
     - MA

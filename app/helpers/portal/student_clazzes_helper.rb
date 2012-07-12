@@ -30,7 +30,7 @@ module Portal::StudentClazzesHelper
     student_list = other_students.sort { |a,b| (a.user.last_name.upcase <=> b.user.last_name.upcase) }
     
     if (student_list && student_list.size > 0)
-      # default_value = "Add a registered #{current_project.name} student"
+      # default_value = "Add a registered #{APP_CONFIG[:site_name]} student"
       # default_value = "Add another student from this school."
       options = [[default_value,default_value]]
       options = options + (student_list.map { |s| [ truncate(s.user.name_and_login,:length => 50), s.id ] })
