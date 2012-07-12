@@ -270,11 +270,7 @@ constraints :id => /\d+/ do
       end
     end
     resources :tags
-    resources :site_notices do
-      collection do
-            
-      end
-    end
+    resources :site_notices
   end
 
   namespace :maven_jnlp do
