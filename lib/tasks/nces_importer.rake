@@ -13,7 +13,7 @@ namespace :portal do
     # Download NCES CCD data files from NCES website
     # 
     desc 'Download NCES CCD data files from NCES website'
-    task :download_nces_data do
+    task :download_nces_data => :environment do
       if Portal::StateOrProvince.configured.empty?
         puts "Not downloading NCES data because states_and_provinces is an empty array"
         next
