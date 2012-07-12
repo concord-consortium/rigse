@@ -68,4 +68,7 @@ class HomeController < ApplicationController
   #     redirect_to :controller => :passwords, :action=>'reset', :reset_code => 0
   #   end
   # end
+  
+  def recent_activity
+  end
 end
