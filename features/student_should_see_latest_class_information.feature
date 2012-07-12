@@ -37,7 +37,7 @@ Feature: Student should see latest class information
     And I fill Class Word with "betrx"
     And I uncheck investigation with label "Lumped circuit abstraction"
     And I move investigation named "Non Linear Devices" to the top of the list
-    And I press save button
+    And I press "Save"
     
     
   @javascript

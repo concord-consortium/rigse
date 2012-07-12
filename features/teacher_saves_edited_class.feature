@@ -37,7 +37,7 @@ Feature: Teacher edits and saves class information
     And I fill Class Word with "BETRX"
     And I uncheck investigation with label "Lumped circuit abstraction"
     And I move investigation named "Non Linear Devices" to the top of the list
-    And I press save button
+    And I press "Save"
     Then new data for the class should be saved
     
     
