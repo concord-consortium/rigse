@@ -68,8 +68,11 @@ stylesheets:
   - data_table
   - reports
   - workgroup
-  - chosen 
+  - chosen
   - site_notices
+  - classes_left_pane
+  - instructional_materials
+
 - investigations:
   - themes/investigations/investigations
   - themes/investigations/action_menu_tab
