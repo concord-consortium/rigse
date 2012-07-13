@@ -6,7 +6,7 @@ class AddCompletePercentToReportLearner < ActiveRecord::Migration
   end
 
   def self.up
-    add_column :report_learners, :complete_percent, :double
+    add_column :report_learners, :complete_percent, :float
     Report::Learner.reset_column_information
     learners = Report::Learner.all
     learners.each do |learner|
