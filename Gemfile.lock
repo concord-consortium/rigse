@@ -6,6 +6,13 @@ GIT
     haml (3.1.4)
 
 GIT
+  remote: git://github.com/concord-consortium/rush
+  revision: 10d9715697d7cc5ce069c32093289b809dea8bd3
+  specs:
+    rush (0.6.8)
+      session
+
+GIT
   remote: git://github.com/courtland/calendar_date_select
   revision: 53947edba07101e2391ca00c5d1dbe6a75cf53d1
   specs:
@@ -16,13 +23,6 @@ GIT
   revision: fc4fbb8792e7bb511ca8327774bbf4f6a3ec7434
   specs:
     prototype_legacy_helper (0.0.0)
-
-GIT
-  remote: git://github.com/concord-consortium/rush
-  revision: d560e575284f2c578d0200d558e2b1ebfd1410e8
-  specs:
-    rush (0.6.8)
-      session
 
 GEM
   remote: http://rubygems.org/
