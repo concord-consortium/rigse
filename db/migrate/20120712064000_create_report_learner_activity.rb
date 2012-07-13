@@ -1,9 +1,9 @@
 class CreateReportLearnerActivity < ActiveRecord::Migration
   def self.up
-    create table :report_learner_activity do |t|
+    create_table :report_learner_activity do |t|
       t.integer  :learner_id
       t.integer  :activity_id
-      t.double   :complete_percent
+      t.float   :complete_percent
     end
     add_index :report_learner_activity, :learner_id
     add_index :report_learner_activity, :activity_id

@@ -52,6 +52,7 @@ class Report::Learner < ActiveRecord::Base
     self.num_answerables = report_util.embeddables.size
     self.num_answered = report_util.answered_number(self.learner)
     self.num_correct = report_util.correct_number(self.learner)
+    self.complete_percent = report_util.complete_percent(self.learner)
 
     # We might also want to gather 'saveables' in An associated model?
     # AU: We'll use a serialized column to store a hash, for now
