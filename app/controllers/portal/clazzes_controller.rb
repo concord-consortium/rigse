@@ -346,7 +346,7 @@ class Portal::ClazzesController < ApplicationController
         page << "if ($('oClassStudentCount')){"
         page.replace_html 'oClassStudentCount', @portal_clazz.students.length.to_s
         page << "}"
-        page.replace 'student_add_dropdown', view_context.student_add_dropdown(@portal_clazz)
+        page.replace 'student_add_dropdown', student_add_dropdown(@portal_clazz)
       end
     else
       render :update do |page|
