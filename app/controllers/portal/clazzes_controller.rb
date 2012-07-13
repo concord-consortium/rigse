@@ -623,8 +623,7 @@ class Portal::ClazzesController < ApplicationController
       redirect_to home_url
       return
     end
-    
-    @portal_clazz = Portal::Clazz.find(params[:id]);
+    @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:id])
     
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_user, Portal::Teacher.LEFT_PANE_ITEM['MATERIALS'])
