@@ -6,6 +6,8 @@ class Section < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
+  has_many :external_activities, :as => :template
+
   has_one :investigation, :through => :activity
 
   has_many :pages, :order => :position, :dependent => :destroy do

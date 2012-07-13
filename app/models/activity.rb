@@ -7,6 +7,8 @@ class Activity < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
+  has_many :external_activities, :as => :template
+
   has_many :sections, :order => :position, :dependent => :destroy do
     def student_only
       find(:all, :conditions => {'teacher_only' => false})

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120621133703) do
+ActiveRecord::Schema.define(:version => 20120713194959) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -609,6 +609,8 @@ ActiveRecord::Schema.define(:version => 20120621133703) do
     t.boolean  "popup"
     t.boolean  "append_survey_monkey_uid"
     t.string   "report_url"
+    t.integer  "template_id"
+    t.string   "template_type"
   end
 
   add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"

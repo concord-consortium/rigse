@@ -7,6 +7,8 @@ class ExternalActivity < ActiveRecord::Base
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
 
+  belongs_to :template, :polymorphic => true
+
   acts_as_replicatable
   acts_as_taggable_on :cohorts
 
