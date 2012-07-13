@@ -26,7 +26,7 @@
             - unless(current_user.anonymous?)
               %li.menu=link_to 'copy', duplicate_investigation_url(investigation)
             - if (investigation.changeable?(current_user))
-              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{investigation.id}", :method => :delete 
+              %li.menu=link_to 'delete', investigation, :class => 'delete', :data => { :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{investigation.id}" }, :method => :delete 
       %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
         %p=investigation.description
         %p

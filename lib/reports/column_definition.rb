@@ -6,10 +6,10 @@ class Reports::ColumnDefinition
   def initialize(opts = {})
     @title = opts[:title] || 'Title'
     @width = opts[:width] || 12
-    @left_border = !!opts[:left_border]
-    @top_border = !!opts[:top_border]
-    @right_border = !!opts[:right_border]
-    @bottom_border = !!opts[:bottom_border]
+    @left_border = opts[:left_border] || :none
+    @top_border = opts[:top_border] || :none
+    @right_border = opts[:right_border] || :none
+    @bottom_border = opts[:bottom_border] || :none
     @col_index = opts[:col_index]
     @heading_row = opts[:heading_row] || 1 # allow for one additional row above
   end
