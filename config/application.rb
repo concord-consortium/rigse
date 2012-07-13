@@ -94,22 +94,4 @@ module RailsPortal
   end
   
   # ANONYMOUS_USER = User.find_by_login('anonymous')
-  
-  # Special-case for when the migration that adds the default_user
-  # attribute hasn't been run yet.
-  # TODO: This causes troubles when the user table is not present.
-  # Like on a fresh install, or in various migration situations
-  # begin
-  #   site_admin = User.site_admin
-  #   if site_admin.respond_to? :default_user
-  #     if APP_CONFIG[:enable_default_users]
-  #       User.unsuspend_default_users
-  #     else
-  #       User.suspend_default_users
-  #     end
-  #   end
-  # rescue StandardError => e
-  # # rescue Mysql::Error => e
-  #   puts "e"
-  # end
 end

@@ -23,7 +23,6 @@ development: &id003
   :site_district: Cross Project Portal-district
   :help_email: xproject-investigations@concord.org
   :use_gse: false
-  :enable_default_users: true
   :help_email: xproject@concord.org
   :admin_email: aunger@concord.org
   :default_admin_user:

@@ -14,4 +14,9 @@ describe MavenJnlp::MavenJnlpServer do
   it "should create a new instance given valid attributes" do
     MavenJnlp::MavenJnlpServer.create!(@valid_attributes)
   end
+
+  it "should run update_maven_jnlp_server_object" do
+    server = Factory.create(:maven_jnlp_maven_jnlp_server)
+    server.update_maven_jnlp_server_object
+  end
 end

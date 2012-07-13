@@ -93,4 +93,10 @@ Feature: Admin configures project settings
     And I press "Save"
     Then I should see "Use Bitmaps in Labbook Exclusively: Yes"
 
+  Scenario: Admin creates a new project
+    Given I login as an admin
+    And am on the admin projects page
+    When I create a new project with the description "test project"
+    Then I should see "test project"
+
 

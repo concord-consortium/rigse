@@ -2,7 +2,7 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %title
-      = @page_title || current_project.name
+      = @page_title || APP_CONFIG[:site_name]
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
     %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
     %meta{ :name => "distribution", :content => "all" }
@@ -46,7 +46,7 @@
       = render :partial => 'shared/activity_trail'
       #header
         .left_content
-          %h1= current_project.name
+          %h1= APP_CONFIG[:site_name]
         .right_content
           .padded_content_right
             Welcome
