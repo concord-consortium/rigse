@@ -115,8 +115,30 @@ class Report::Learner < ActiveRecord::Base
     end
     calculate_last_run
     update_answers
+    update_activity_completion_status
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
+  end
+  
+  def update_activity_completion_status
+    report_util = Report::Util.new(self.learner, false, true)
+    
+    offering = self.learner.offering
+    assignable = offering.runnable
+    activities = []
+    if assignable.is_a? Investigation
+      activitites = assignable.activities
+    elsif assignable.is_a? Activity
+      activitites = [assignable]
+    end
+    
+    activities.each do|activity|
+      complete_percent = report_util.complete_percent(self.learner,activity)
+      report_learner_activity = Report::LearnerActivity.find_or_create_by_learner_id_and_activity_id(self.learner.id, activity.id)
+      report_learner_activity.complete_percent = complete_percent
+      report_learner_activity.save!
+    end
+    
   end
   
   def self.user_report_data(offering_id, learner_id)
