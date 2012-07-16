@@ -112,7 +112,7 @@ constraints :id => /\d+/ do
         post :get_teachers
         post :edit_teachers
         get :roster
-        post :get_students
+        post :add_new_student
         post :copy_class
         get :materials
       end
