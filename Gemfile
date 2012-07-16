@@ -63,6 +63,7 @@ source "http://rubygems.org"
   gem 'prototype-rails'
   # switch to willbryant inorder to pick up some 3.1 necessary changes
   gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/willbryant/prototype_legacy_helper.git'
+  gem "in_place_editing",     "~> 1.2.0"
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
