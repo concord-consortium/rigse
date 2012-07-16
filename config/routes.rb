@@ -202,7 +202,7 @@ constraints :id => /\d+/ do
     end
 
   end
-  match '/portal/school_selector/update' => 'portal/school_selector#update'
+  match '/portal/school_selector/update' => 'portal/school_selector#update', :as => :school_selector_update
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/login' => 'sessions#new', :as => :login
   match '/register' => 'users#create', :as => :register
@@ -264,11 +264,7 @@ constraints :id => /\d+/ do
   match 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/ }, :format => 'blob'
 
   namespace :admin do
-    resources :projects do
-      member do
-        put :update_form
-      end
-    end
+    resources :projects
     resources :tags
     resources :site_notices do
       member do

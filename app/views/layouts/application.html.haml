@@ -2,7 +2,7 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
-    %title= @page_title || current_project.name
+    %title= @page_title || APP_CONFIG[:site_name]
     %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
     %meta{ :name => "distribution", :content => "all" }
     %meta{ :name => "robots", :content => "all" }

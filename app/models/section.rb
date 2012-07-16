@@ -53,7 +53,7 @@ class Section < ActiveRecord::Base
       WHERE pages.section_id = \#\{id\}" }!
   end
 
-  delegate :saveable_types, :reportable_types, :to => :investigation
+  include ResponseTypes
 
   acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true

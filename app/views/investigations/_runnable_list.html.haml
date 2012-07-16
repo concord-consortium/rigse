@@ -51,7 +51,7 @@
                 %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
               - if (investigation.changeable?(current_user))
                 %li.menu=link_to 'edit', investigation
-                %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete Investigation #{investigation.id}", :method => :delete 
+                %li.menu=link_to 'delete', investigation, :class => 'delete', :data => { :confirm => "Are you sure you want to delete Investigation #{investigation.id}" }, :method => :delete 
         %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
           %p=investigation.description
           %p

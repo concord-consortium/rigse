@@ -336,7 +336,7 @@ class Portal::ClazzesController < ApplicationController
         page << "if ($('add_students_listing')){"
         page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
         page << "}"
-        page.replace 'student_add_dropdown', view_context.student_add_dropdown(@portal_clazz)
+        page.replace 'student_add_dropdown', student_add_dropdown(@portal_clazz)
       end
     else
       render :update do |page|

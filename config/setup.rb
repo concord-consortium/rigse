@@ -75,7 +75,6 @@ require 'uuidtools'
 require rails_file_path(%w{ lib local_names })
 require rails_file_path(%w{ config initializers 00_core_extensions })
 require rails_file_path(%w{ lib app_settings })
-require rails_file_path(%w{ lib states_and_provinces })
 
 include AppSettings
 
@@ -1004,21 +1003,6 @@ Any full member can become part of the site school and district.
       # ---- valid_school_levels  ----
       #
       get_active_school_levels(env)
-
-      #
-      # ---- enable_default_users ----
-      #
-      puts <<-HEREDOC
-
-A number of default users are created that are good for testing but insecure for
-production deployments. Setting this value to true will enable the default users
-setting it to false will disable the default_users for this envioronment.
-
-      HEREDOC
-      default_users = @settings_config[env][:enable_default_users]
-      default_users = false if default_users.nil?
-      default_users = ask("  enable_default_users: ", ['true', 'false']) { |q| q.default = default_users.to_s }
-      @settings_config[env][:enable_default_users] = eval(default_users)
 
       #
       # ---- maven_jnlp ----

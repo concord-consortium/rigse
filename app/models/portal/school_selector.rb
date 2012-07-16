@@ -23,12 +23,6 @@ class Portal::SchoolSelector
     return @@country_choices
   end
 
-  def self.usa_states
-    return %w[ AL AK AS AZ AR CA CO CT DE DC FM FL GA GU HI ID IL IN IA KS
-               KY LA ME MH MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND MP
-               OH OK OR PW PA PR RI SC SD TN TX UT VT VI VA WA WV WI WY ]
-  end
-
   def initialize(params)
     params = params['school_selector'] if params['school_selector']
     params = params.reject { |k,v| v.nil? || v.empty? || v.blank? }
@@ -229,7 +223,7 @@ class Portal::SchoolSelector
 
   def state_choices
     if @country == USA
-      return Portal::SchoolSelector.usa_states
+      return Portal::StateOrProvince.from_districts
     end
     return []
   end

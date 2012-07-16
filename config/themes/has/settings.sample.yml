@@ -23,7 +23,6 @@ development: &id003
   :site_district: HAS Investigations-district
   :help_email: apallant@concord.org
   :use_gse: false
-  :enable_default_users: true
   :admin_email: aunger@concord.org
   :tiny_mce:
     :buttons1:
