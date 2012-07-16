@@ -1,32 +1,33 @@
-%h1 
-  New Notice
-  .editor#editor
-    %textarea{:class => 'tinymce_textarea' , :rows => '40', :name => 'notice_html'}
-      %p
-  .filters#filters  
-    %span
-      %h5 
-        Receivers
-    .roles#roles
-      %span By Roles
-      %br  
-      = check_box_tag 'role[]','1', true, :id => 'admin'
-      = label_tag 'admin', 'Admin'    
-      %br 
-      = check_box_tag 'role[]','2', true, :id => 'manager'
-      = label_tag 'manager', 'Manager'    
-      %br 
-      = check_box_tag 'role[]','3', true, :id => 'researcher'
-      = label_tag 'researcher', 'Researcher'     
-      %br 
-      = check_box_tag 'role[]','4', true, :id => 'author'
-      = label_tag 'author', 'Author'     
-      %br 
-      = check_box_tag 'role[]','5', false, :id => 'member'
-      = label_tag 'member', 'Member'    
-      %br 
-      = check_box_tag 'role[]','6', false,:id => 'guest'
-      = label_tag 'guest', 'Guest'    
-      
-  .submit#submit
-    = submit_tag 'Publish Notice', {:class => 'pie'} 
+%h1
+New Notice
+.editor#editor
+  %textarea{:class => 'tinymce_textarea' , :rows => '40', :name => 'notice_html'}
+    %p
+.filters#filters  
+  .sectionheader
+    Receivers 
+  .roles#roles
+    .checkboxcontainers 
+      .rolescheckboxes
+        = check_box_tag 'role[]','1', true, :id => 'admin'
+        = label_tag 'admin', 'Admin'   
+      .rolescheckboxes
+        = check_box_tag 'role[]','2', true, :id => 'manager'
+        = label_tag 'manager', 'Manager'    
+      .rolescheckboxes
+        = check_box_tag 'role[]','3', true, :id => 'researcher'
+        = label_tag 'researcher', 'Researcher'  
+        
+    .checkboxcontainers
+      .rolescheckboxes 
+        = check_box_tag 'role[]','4',  true, :id => 'author'
+        = label_tag 'author', 'Author'     
+      .rolescheckboxes
+        = check_box_tag 'role[]','5',  true, :id => 'member'
+        = label_tag 'member', 'Member'    
+      .rolescheckboxes
+        = check_box_tag 'role[]','6',  true,:id => 'guest'
+        = label_tag 'guest', 'Guest'   
+    
+.submit#submit
+  = submit_tag 'Publish Notice', {:class => 'pie'} 
