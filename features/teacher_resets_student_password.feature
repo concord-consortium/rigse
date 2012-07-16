@@ -18,7 +18,7 @@ Feature: Teacher can reset a students password
       | login     | password  |
       | student   | student   |
     And the student "student" is in the class "My Class"
-    When I am logged in with the username teacher
+    And I am logged in with the username teacher
     And I am on the class page for "My Class"
     Then I should see "Change Password"
     When I click "Change Password"

@@ -18,10 +18,11 @@ should be able to add a new student
 			      | My Class   | teacher | Fall     |
 			      | My Class 2 | teacher | Fall     |
 			And the classes "My Class,My Class 2" are in a school named "VJTI"      
+			And I am logged in with the username teacher
+
 		@javascript	
 		Scenario: Teacher can add a registered user
 			Given the student "student" belongs to class "My Class 2"
-			And I login with username: teacher password: teacher
 			And I am on "Student Roster" page for "My Class"
 			When I press "Add New Student"
 			And I should see "Student Name"
@@ -35,7 +36,6 @@ should be able to add a new student
 		Scenario: Teacher can add an unregistered user
 			Given the student "student" belongs to class "My Class"
 			And the student "student" belongs to class "My Class 2"
-			And I login with username: teacher password: teacher
 			And I am on "Student Roster" page for "My Class"
 			When I press "Add New Student"
 			And I follow "Add a student who is not registered"

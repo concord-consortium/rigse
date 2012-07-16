@@ -14,7 +14,7 @@ Feature: Teacher navigates using left pane
       | name       | teacher | class_word 			|
       | My Class   | teacher | PhysicsClass         |   
    
-   And I login with username: teacher password: teacher
+   And I login with username: teacher
  
    @javascript
    Scenario: Teacher sees his/her classes  
