@@ -1,4 +1,4 @@
-- investigation = Investigation.find_by_id(current_offering.runnable_id)
+- investigation = current_offering.runnable # note this assumes the runnable is a Investigation
 
 %div.clearboth{:id=>"material_tab_#{current_offering.runnable_id}_data", :style=>"display:none"}
   %br
