@@ -8,10 +8,9 @@ class CreateReportLearnerActivity < ActiveRecord::Migration
     add_index :report_learner_activity, :learner_id
     add_index :report_learner_activity, :activity_id
     
-    learners = Report::Learner.all
-    learners.each do |learner|
-      report_util = Report::Util.new(learner, false, true)
-      report_util.update_activity_completion_status
+    report_learners = Report::Learner.find(:all)
+    report_learners.each do |report_learner|
+      report_learner.update_activity_completion_status
     end
   end
 
