@@ -54,6 +54,8 @@ class Report::Learner < ActiveRecord::Base
     self.num_correct = report_util.correct_number(self.learner)
     self.complete_percent = report_util.complete_percent(self.learner)
 
+    update_activity_completion_status
+
     # We might also want to gather 'saveables' in An associated model?
     # AU: We'll use a serialized column to store a hash, for now
     answers_hash = {}
@@ -116,7 +118,6 @@ class Report::Learner < ActiveRecord::Base
     end
     calculate_last_run
     update_answers
-    update_activity_completion_status
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
   end
@@ -127,10 +128,10 @@ class Report::Learner < ActiveRecord::Base
     offering = self.learner.offering
     assignable = offering.runnable
     activities = []
-    if assignable.is_a? Investigation
-      activitites = assignable.activities
-    elsif assignable.is_a? Activity
-      activitites = [assignable]
+    if assignable.is_a? ::Investigation
+      activities = assignable.activities
+    elsif assignable.is_a? ::Activity
+      activities = [assignable]
     end
     
     activities.each do|activity|
@@ -139,7 +140,6 @@ class Report::Learner < ActiveRecord::Base
       report_learner_activity.complete_percent = complete_percent
       report_learner_activity.save!
     end
-    
   end
   
   def self.user_report_data(offering_id, learner_id)
