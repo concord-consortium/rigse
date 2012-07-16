@@ -65,7 +65,7 @@ Feature: Teacher manages instructional materials of a class
       | dave      | My Class      | Radioactivity       | a               | a      |
       | dave      | My Class      | Radioactivity       | image_q         | Y      |
       
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
     
     

@@ -28,7 +28,7 @@ Feature: Student should see latest class information
       | static discipline         |
       | Non Linear Devices        |
     And the student "student" belongs to class "My Class"
-    And I login with username: teacher password: teacher
+    And I am logged in with the username teacher
     And I am on "the class edit page for "My Class""
     And I fill in Class Name with "Basic Electronics"
     And I select Term "Fall" from the drop down
@@ -42,13 +42,13 @@ Feature: Student should see latest class information
     
   @javascript
   Scenario: Student should see the updated class name
-    When I login with username: student password: student
+    When I login with username: student
     Then I should see "Basic Electronics"
     
     
   @javascript
   Scenario: Student should see all the updated information of a class
-    When I login with username: student password: student
+    When I login with username: student
     And I follow "Basic Electronics"
     Then I should see "Semester: Fall"
     And I should see "Class Word: betrx"

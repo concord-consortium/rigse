@@ -36,7 +36,7 @@ Feature: Teacher manages a class
     And the student "student" belongs to class "Mathematics"
     And the student "student" belongs to class "Biology"
     And the student "student" belongs to class "Geography"
-    And I login with username: john password: teacher
+    And I am logged in with the username john
     And I go to the Manage Class Page
     
     
@@ -78,7 +78,7 @@ Feature: Teacher manages a class
     And the Manage class list state starts saving
     And the modal for saving manage classes dissappears
     And I log out
-    And I login with username: student password: student
+    And I login with username: student
     Then I should see "Physics"
     And I should see "Chemistry"
     And I should see "Mathematics"
@@ -98,7 +98,7 @@ Feature: Teacher manages a class
     And the Manage class list state starts saving
     And the modal for saving manage classes dissappears
     And I log out
-    And I login with username: steve password: teacher
+    And I login with username: steve
     Then I should see "Mathematics"
     And I should see "Biology"
     And I should see "Geography"
@@ -138,7 +138,7 @@ Feature: Teacher manages a class
     And I fill in "Class Description" with "electronics class"
     And I press "Save" within the popup
     And I log out
-    And login with username: steve password: teacher
+    And login with username: steve
     And I am on Manage Class Page
     Then I should see "Copy of Physics"
     

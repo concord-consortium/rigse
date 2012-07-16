@@ -22,7 +22,7 @@ Feature: Teacher changes password of a student
     
   @javascript
   Scenario: Teacher changes password of a student
-    Given I login with username: teacher password: teacher
+    Given I am logged in with the username teacher
     And I am on "Student Roster" page for "My Class"
     When I follow "Change Password"
     Then I should see "You must set a new password"
