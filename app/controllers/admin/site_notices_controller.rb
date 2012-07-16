@@ -8,17 +8,17 @@ class Admin::SiteNoticesController < ApplicationController
   end
 
   def create
-    site_notice = SiteNotice.new
+    site_notice = Admin::SiteNotice.new
     site_notice.notice_html = params[:notice_html]
-    site_notice.creator_id = current_user.id
+    site_notice.created_by = current_user.id
     site_notice.save!
     
     #storing all roles that should see this notice
     roles = params[:role]
     roles.each do |role_id|
-      site_notice_roles = SiteNoticeRole.new
+      site_notice_roles = Admin::SiteNoticeRole.new
       site_notice_roles.notice_id = site_notice.id
-      site_notice_roles.role_id = role_id  
+      site_notice_roles.role_id = role_id
       site_notice_roles.save!
     end
     redirect_to admin_site_notices_path
@@ -60,26 +60,65 @@ class Admin::SiteNoticesController < ApplicationController
   end
    
     
-   def remove_notice
-      #delete notice
-      
-      notice_roles = SiteNoticeRole.find_all_by_notice_id(params[:id])
-      notice_roles.each do |notice_role|
-        notice_role.destroy
+  def remove_notice
+    #delete notice
+  
+    notice_roles = SiteNoticeRole.find_all_by_notice_id(params[:id])
+    notice_roles.each do |notice_role|
+      notice_role.destroy
+    end
+    
+    SiteNotice.find(params[:id]).destroy
+    
+    if request.xhr?
+      render :update do |page|
+        page << "$('#{params[:id]}').remove();"
       end
-      
-      SiteNotice.find(params[:id]).destroy
-      
-      if request.xhr?
-        render :update do |page|
-            page << "$('#{params[:id]}').remove();"
-        end
-        return
-      end
-      
-      #redirect_to :action => 'index';
-      #redirect_to admin_site_notices_path
+      return
+    end
+    
+    #redirect_to :action => 'index';
+    #redirect_to admin_site_notices_path
    end
+  
+
+  def toggle_notice_display
+    user_collapsed_notice = Admin::NoticeUserDisplayStatus.find_or_create_by_user_id(current_user.id)
+    status_to_be_set = (user_collapsed_notice.collapsed_status.nil? || user_collapsed_notice.collapsed_status == false)? true : false
+    dateTime = Time.new
+    collapsed_timestamp = dateTime.to_time
+    user_collapsed_notice.last_collapsed_at_time = collapsed_timestamp
+    user_collapsed_notice.collapsed_status = status_to_be_set
+    user_collapsed_notice.save!
+    if request.xhr?
+      render :update do |page|
+         if status_to_be_set
+            page << "$('user_notice_container_div').hide()";
+            page << "$('oHideShowLink').update('Show Notices')";
+         else
+            page << "$('user_notice_container_div').show();"
+            page << "$('oHideShowLink').update('Hide Notices')";
+         end
+      end
+      return 
+    end
+  end
+  
+  def dismiss_notice
+    notice = Admin::SiteNotice.find(params[:id])
+    user_notice = SiteNoticeUser.new
+    user_notice.user_id = current_user.id
+    user_notice.notice_id = params[:id]
+    user_notice.notice_dismissed = 1
+    user_notice.save!
+    if request.xhr?
+       render :update do |page|
+           page << "$('#{dom_id_for(notice)}').remove();"
+       end
+       return
+    end    
+  end  
+
   
     
 end
