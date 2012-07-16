@@ -90,16 +90,7 @@ group :development do
   gem "pry"
 end
 
-group :test, :development do
-  # When I tried version 2.21.2 before it gave errors like:
-  # cannot load such file -- {
-  #   "frozen": {
-  #     "app.update.auto": false,
-  #  ...
-  #  (LoadError)
-  # ./features/step_definitions/global_steps.rb:13:in `login_as'
-  # Version 2.16 didn't have this problem. However it is possible I got that error when
-  # I was running an older version of FF. I'm not getting the error now.
+group :test do
   gem "selenium-webdriver", "2.21.2"
   gem "cucumber",          "~> 1.1.9"
   gem "cucumber-rails",    "~> 1.3.0"
@@ -107,19 +98,16 @@ group :test, :development do
   gem "capybara",          "~> 1.1.2"
   gem "rspec",             "~> 2.9.0"
   gem "rspec-rails",       "~> 2.9.0"
-  gem "factory_girl",      "~> 2.0.5"
   gem "email_spec",        "~> 1.2.1"
   gem "fakeweb",           "~> 1.3", :require => false
-  gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
-  # If you update the version of ci_reporter
-  # please make sure to update the --require path in Hudson
   gem "ci_reporter",       "~> 1.7.0"
+  gem "delorean",           "~> 1.1"
+end
+
+group :test, :development do
+  gem "factory_girl",      "~> 2.0.5"
+  gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"
-  gem "delorean",           "~> 1.1"
-  # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
-  # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
-  # gem "ZenTest",                  "= 4.1.4"
-  # gem "autotest-rails",           "= 4.1.0"
 end
