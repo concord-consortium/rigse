@@ -29,6 +29,8 @@
         - class_setup_link_class = '';
         - full_status_link_class = '';
 
+    %div{:class => materials_link_class}
+      = link_to 'Materials', materials_portal_clazz_url(portal_clazz)
     %div{:class => student_roster_link_class}
       = link_to 'Student Roster', roster_portal_clazz_url(portal_clazz)
     %div{:class => class_setup_link_class}
