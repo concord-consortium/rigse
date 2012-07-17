@@ -1,0 +1,57 @@
+= javascript_include_tag "instructional_materials.js"
+- strTime =(7.day.ago).to_s.gsub(" UTC","");
+- learner_offerings = (Report::Learner.where("last_run > '#{strTime}'")).select(:offering_id).uniq
+/- clazz_offerings = Portal::Clazz.offerings.find_by_clazz_id(learner_offerings.offering_id);/
+- investigation = Investigation.all;
+%div
+  .right 
+    =Portal::Offering.find(:all, :select => "DISTINCT clazz_id").inspect 
+  -counter = 0;
+  
+  -investigation.each do |investigation_id|
+    -investigation1 = investigation[counter];
+    -counter +=1;
+    %div        
+      %table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:100%;"}
+        %tr
+          %td{:colspan=>2}
+            - if investigation.length > 0
+              %div{:id=>"oExpandCollapseText_#{counter}",:style=>"width:20px;float:left"} +
+              = link_to('Show details', 'javascript: void(0);', :onclick => "showHideActivityDetails('#{counter}',this)")
+           
+        %tr
+          %td{:rowspan=>2,:style=>"vertical-align:top"}
+            %table{:style=>"width:120px"}
+              %tr
+                %td
+                  Class Name
+                %td
+                  =investigation1.name
+              %tr
+                %td{:colspan=>2}
+                  Class Size    
+              %tr
+                %td{:colspan=>2}
+                  %div.right
+                    %span.linkbutton.pie
+                      Run Report
+          %td{:style=>"vertical-align:top;align:left"}
+            %table.number_of_activities{:border=>0,:cellpadding=>0,:cellspacing=>0}
+              %tr.legend_row
+                %td
+                  #LeftMost.legend_progress
+                %td
+                  #Middle.legend_completed
+                %td
+                  #RightMost.legend_not_started
+              %tr
+                %td{:style=>"text-align:right;"}
+                  2
+                %td
+                  6
+                %td
+                  8
+        %tr.legend_data
+          %td{:class=>"DivHideShowDetail#{counter}",:colspan=>3,:style=>"float:left;font-size:16px;font-weight:bold"}
+            = render :partial => 'recent_details',:locals => { :investigation => investigation1,:learner_offerings => learner_offerings}
+  

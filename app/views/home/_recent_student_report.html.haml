@@ -1,0 +1,30 @@
+
+- students = Portal::Offering.find(2).clazz.students
+- learner  = Portal::Offering.find(2).learners
+
+
+- if investigation.activities.length > 0
+  %table.inProgressSummary
+    %tr
+      %th
+        In Progress  
+        = investigation.activities.length
+              
+      %th        
+      - activity_counter = 0
+      - investigation.activities.each do |activity|
+        - activity_counter = activity_counter + 1
+        - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(10)
+        %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
+          = activity_name
+    
+    - if true
+      = render :partial => 'recent_student_report_summary',:locals=> {:investigation => investigation,:learner_offerings => learner_offerings}
+    - else 
+      %tr
+        %td{:colspan=>"#{investigation.activities.length + 1}", :style=>"border-top:solid 1px #666"}
+          No students have registered for this class yet.
+- else
+  %div.item No activities available in this investigation.   
+  
+  
