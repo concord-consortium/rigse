@@ -105,6 +105,7 @@ class Portal::Learner < ActiveRecord::Base
   
   def saveable_count
     runnable = self.offering.runnable
+    runnable = runnable.template if runnable.is_a?(ExternalActivity) && runnable.template
     runnable.saveable_types.inject(0) do |count, saveable_class|
       saveable_association = saveable_class.to_s.demodulize.tableize
       count + self.send(saveable_association).length
@@ -113,6 +114,7 @@ class Portal::Learner < ActiveRecord::Base
   
   def saveable_answered
     runnable = self.offering.runnable
+    runnable = runnable.template if runnable.is_a?(ExternalActivity) && runnable.template
     runnable.saveable_types.inject(0) do |count, saveable_class|
       saveable_association = saveable_class.to_s.demodulize.tableize
       count + self.send(saveable_association).send(:answered).length
@@ -121,6 +123,7 @@ class Portal::Learner < ActiveRecord::Base
   
   def refresh_saveable_response_objects
     # runnable = self.offering.runnable
+    # runnable = runnable.template if runnable.is_a?(ExternalActivity) && runnable.template
     # runnable.saveable_types.each do |saveable_class|
     #   saveable_association = saveable_class.to_s.demodulize.tableize
     #   saveable_id_symbol = "#{saveable_association.singularize}_id".to_sym
