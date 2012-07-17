@@ -1,6 +1,8 @@
 - if current_user.has_role?('admin', 'manager','researcher')
   %li.trail= link_to 'Reports', learner_report_path
 - if current_user.has_role?('admin', 'manager')
+  - if SmartgraphsConnector.authoring_url
+    %li.trail= link_to 'Publishing', smartgraphs_connector.manage_list_path
   %li.trail= link_to 'Districts', portal_districts_path
   %li.trail= link_to 'Schools', portal_schools_path
   - if APP_CONFIG[:use_gse]
