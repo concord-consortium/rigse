@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/smartgraphs-connector
-  revision: 592cf3615e65c672167c14719ef58c21fbdb93f6
+  revision: 739a8059008c5c8c6cc5f30e7956d97fe99019e9
   specs:
     smartgraphs_connector (0.0.1)
       haml (~> 3.1.4)
