@@ -50,11 +50,55 @@ namespace :portal do
         )
       }
 
+      # add the default student
+      student_user = User.find_by_login 'student'
+      default_student = student_user.portal_student
+      students << default_student
+      default_student.clazzes << clazz
+
       offerings.each { |offering| 
         students.each{ |student|
           Factory(:portal_learner, :offering => offering, :student => student)
         }
       }
     end
+
+    desc 'Load db with a mixed runnable type class'
+    task :load_mixed_runnable_type_class => :environment do
+      Dir.glob(File.join(Rails.root, 'factories/*.rb')).each { |f| require(f) }
+
+      # try to use the default teacher
+      teacher_user = User.find_by_login 'teacher'
+      teacher = teacher_user.portal_teacher
+      clazz = Factory(:portal_clazz, :name => "Mixed Runnable Types", :teachers => [teacher])
+
+      runnables = [
+        Factory(:investigation, :name => "Investigation Sample",
+            :activities => (1 .. 3).map{|number| Factory(:activity, :name => "Activity #{number}")}
+          ),
+        Factory(:activity, :name => "Activity Sample",
+            :sections => (1 .. 3).map{|number| Factory(:section, :name => "Section #{number}")}
+          ),
+        Factory(:page, :name => "Page Sample"),
+        Factory(:external_activity, :name => "External Activity Sample"),
+        Factory(:resource_page, :name => "External Activity Sample")
+      ]
+
+      offerings = runnables.map { |runnable| 
+        Factory(:portal_offering, :clazz => clazz,
+          :runnable => runnable
+        )
+      }
+
+      # add the default student
+      student_user = User.find_by_login 'student'
+      student = student_user.portal_student
+      student.clazzes << clazz
+
+      offerings.each { |offering| 
+        Factory(:portal_learner, :offering => offering, :student => student)
+      }
+    end
   end
+
 end
