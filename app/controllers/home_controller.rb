@@ -70,5 +70,6 @@ class HomeController < ApplicationController
   # end
   
   def recent_activity
+    @report_learner = Report::Learner.all
   end
 end

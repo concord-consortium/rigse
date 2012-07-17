@@ -1,5 +1,26 @@
 %h1
-  Recent activity
-  
+  Recent activity 
+  =(7.day.ago).to_s.gsub(" UTC","");
+%div 
+  -strTime =(4.day.ago).to_s.gsub(" UTC","");
+  =(User.where("activated_at > '#{strTime}'")).select(:last_name).uniq.inspect
 #recent_activity_container
-  This container will contain the recent activity of the students.
+  %table{:width=>"100%"}
+    %tr
+      %td{:width=>"200px"}
+        %table{:style=>"margin:1em 0"}
+          %tr{}
+            %td
+              %span.legend_progress
+                &nbsp;&nbsp;
+              %span
+                &nbsp;In Progress
+            %td
+              &nbsp;&nbsp;
+            %td
+              %span.legend_not_started
+                &nbsp;&nbsp;
+              %span
+                &nbsp;Not yet started
+            
+  = render :partial => 'recent', :locals => { :report_learner => @report_learner}
