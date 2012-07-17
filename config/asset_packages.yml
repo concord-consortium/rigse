@@ -111,6 +111,8 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - classes_left_pane
+  - instructional_materials
 
 - sglight:
   - themes/sglight/sglight
