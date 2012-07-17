@@ -1,11 +1,13 @@
 = Deep Cloning Plugin
 
+This has been modified quite a bit by the Concord Consortium
+
 This plugin gives every ActiveRecord::Base object the possibility to do a deep clone.
 
-Repository is on github: http://github.com/DefV/deep_cloning/tree/master
+The original repository is on github: http://github.com/DefV/deep_cloning
 
-Install with:
-  script/plugin install git://github.com/DefV/deep_cloning.git
+There used to be a nice set of tests that came with the plugin but they haven't been runnable
+in a long time so they have been removed. There is some tests in specs/models/deep_cloning_spec.rb
 
 == Example
 
