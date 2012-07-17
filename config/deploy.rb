@@ -6,7 +6,7 @@ require File.expand_path('../../lib/yaml_editor', __FILE__)
 set :stages, %w(
   rites-dev rites-staging rites-production rites-aws1
   itsisu-dev itsisu-staging itsisu-production
-  smartgraphs-dev smartgraphs-staging smartgraphs-production
+  smartgraphs-dev smartgraphs-staging smartgraphs-production sg
   has-dev has-staging has-production
   geniverse-dev geniverse-production
   assessment-dev assessment-staging assessment-production
