@@ -27,7 +27,7 @@ Feature: Student can not see deactivated offerings
 
   Scenario: Student should see activated offerings
     When I log out
-    And I login with username: student password: student
+    And I login with username: student
     Then I should see "run Test Investigation" in the content
     And I should see "View Test Resource" in the content
 
@@ -36,7 +36,7 @@ Feature: Student can not see deactivated offerings
     And I follow "Deactivate" on the investigation "Test Investigation" from the class "My Class"
     And I follow "Deactivate" on the resource page "Test Resource" from the class "My Class"
     And I log out
-    And I login with username: student password: student
+    And I login with username: student
     Then I should be on the homepage
     And I should not see "run Test Investigation" in the content
     And I should not see "View Test Resource" in the content

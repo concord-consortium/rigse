@@ -25,7 +25,7 @@ should be able to remove a student
 		And the student "student" belongs to class "My Class"
 	@javascript
 	Scenario: Teacher removes a student
-		Given I login with username: teacher password: teacher
+		Given I am logged in with the username teacher
 		And I am on "Student Roster" page for "My Class"
 		And I accept the upcoming javascript confirm box
 		When I follow "Remove Student"
