@@ -1,11 +1,6 @@
 namespace :portal do
   namespace :dev do
     
-    desc 'Load db with imaginary data for development use'
-    task :load_mockup_data => :environment do
-      MockupDataLoader.new.load
-    end
-    
     desc "erase data from portal resources"
     task :erase_portal_data => :environment do
       Portal::District.delete_all
