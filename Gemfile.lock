@@ -13,6 +13,15 @@ GIT
       session
 
 GIT
+  remote: git://github.com/concord-consortium/smartgraphs-connector
+  revision: e5665968e551f96fa725929a7719c6cfa5112878
+  specs:
+    smartgraphs_connector (0.0.1)
+      haml (~> 3.1.4)
+      json (~> 1.6.3)
+      rails (~> 3.2.6)
+
+GIT
   remote: git://github.com/courtland/calendar_date_select
   revision: 53947edba07101e2391ca00c5d1dbe6a75cf53d1
   specs:
@@ -370,6 +379,7 @@ DEPENDENCIES
   rush!
   sass (~> 3.1.7)
   selenium-webdriver (= 2.21.2)
+  smartgraphs_connector!
   spork (~> 0.9.0.rc9)
   spreadsheet (~> 0.7.3)
   syntax (~> 1.0)

@@ -506,6 +506,8 @@ constraints :id => /\d+/ do
   post  '/installer_report' => 'misc#installer_report', :as => :installer_report
   match '/:controller(/:action(/:id))'
 
+  mount SmartgraphsConnector::Engine, :at => 'smartgraphs_connector'
+
   root :to => 'home#index'
 
 end

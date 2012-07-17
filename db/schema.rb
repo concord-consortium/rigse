@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120713194959) do
+ActiveRecord::Schema.define(:version => 20120716215928) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -2141,6 +2141,15 @@ ActiveRecord::Schema.define(:version => 20120713194959) do
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
+
+  create_table "smartgraphs_connector_persistences", :force => true do |t|
+    t.integer  "learner_id"
+    t.text     "content",    :limit => 16777215
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "smartgraphs_connector_persistences", ["learner_id"], :name => "sg_connector_learner_idx"
 
   create_table "student_views", :force => true do |t|
     t.integer "user_id",       :null => false

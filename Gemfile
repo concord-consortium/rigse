@@ -74,6 +74,7 @@ source "http://rubygems.org"
   # to support hosting paperclip attachments on S3:
   gem "aws-s3",               :require => "aws/s3"
   gem "newrelic_rpm"
+  gem 'smartgraphs_connector',  :git => 'git://github.com/concord-consortium/smartgraphs-connector'
 
 group :development do
   gem "rake",                 "~> 0.9.2"
