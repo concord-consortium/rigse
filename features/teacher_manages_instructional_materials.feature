@@ -109,9 +109,9 @@ Feature: Teacher manages instructional materials of a class
     
     
   @javascript
-  Scenario: Teacher should be able to show 'Run Activity' buttons
-    When I follow "Show Run Activity buttons"
-    Then I should see "Run Activity"
+  Scenario: Teacher should be able to hide activities and their "Run Activity" buttons 
+    When I follow "Hide Activities"
+    Then I should see "Show Activities"
     
     
   @javascript
