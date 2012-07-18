@@ -1,28 +1,38 @@
+- runnable = offering.runnable
+- activities = []
+- if runnable.is_a? ::Investigation
+  - activities = runnable.activities
+- else runnable.is_a? ::Activity
+  - activities = [runnable]
 
-- learners = offering.learners;
-- students = offering.clazz.students;
-
-- if investigation.activities.length > 0
-  %table.inProgressSummary
-    %tr
-      %th
-        In Progress  
-        = investigation.activities.length              
-      %th        
-      - activity_counter = 0
-      - investigation.activities.each do |activity|
-        - activity_counter = activity_counter + 1
-        - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(10)
-        %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
-          = activity_name
-    
-    - if true
-      = render :partial => 'recent_student_report_summary',:locals=> {:investigation => investigation,:students=>students,:learners=>learners,:offering => offering}
-    - else 
+- if activities.length > 0
+  - if offering.clazz.students.length > 0
+    %table.inProgressSummary
       %tr
-        %td{:colspan=>"#{investigation.activities.length + 1}", :style=>"border-top:solid 1px #666"}
-          No students have registered for this class yet.
+        %th
+          In Progress              
+        %th        
+        - activity_counter = 0
+        - activities.each do |activity|
+          - activity_counter = activity_counter + 1
+          - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(10)
+          %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
+            = activity_name
+      = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1}
+    %table.inProgressSummary
+      %tr
+        %th
+          Not yet started              
+      = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0}
+    %table.inProgressSummary
+      %tr
+        %th
+          Completed              
+      = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100}
+  - else
+    .item
+      No students have registered for this class yet.
 - else
-  %div.item No activities available in this investigation.   
+  %div.item No activities available in this offering.   
   
   
