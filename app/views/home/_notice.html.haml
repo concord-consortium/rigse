@@ -7,21 +7,24 @@
   - if @notice_display_type == @NOTICE_DISPLAY_TYPES[:no_notice]
     No Notice
   - else
-    .notice_collapse_expand#notice_collapse_expand
     - if @notice_display_type == @NOTICE_DISPLAY_TYPES[:collapsed_notices]
       = link_to_remote "Show Notices", :url => "#{toggle_notice_display_admin_site_notices_path}",:method =>:post, :html => { :id =>"oHideShowLink", :title =>'Show Notices' }
     - else
       = link_to_remote "Hide Notices", :url => "#{toggle_notice_display_admin_site_notices_path}",:method =>:post, :html => { :id =>"oHideShowLink", :title =>'Hide Notices' }
     .user_notice_container_div{:id=>"user_notice_container_div", :style => notice_collapse_table_style }  
-      %table{:cellpadding => '2', :cellspacing => '0',:class => "all_notice_to_render"}
+      %table{:cellpadding => '2', :cellspacing => '0', :border => '1',:class => "all_notice_to_render", :id => "all_notice_to_render"}
+        %tr{:class=>'notice_header'}
+          %th Notice
+          %th Date
+          %th Dismiss
         - @all_notices_to_render.each do |notice|
-          %tr{:id=>"#{dom_id_for(notice)}"}
-            %td.cell
+          %tr{:id=>"#{dom_id_for(notice)}", :class => 'notice_text'}
+            %td{:class => 'notice_text'}
               = notice.notice_html.html_safe
-            %td.cell
+            %td{:class => 'notice_date'}
               - if(notice.updated_at)
                 = notice.updated_at.strftime("%m-%d-%Y")
               - else
                 = notice.created_at.strftime("%m-%d-%Y")
-            %td.cell
+            %td{:class => 'delete_notice'}
               = link_to_remote "dismiss", :url => "#{dismiss_notice_admin_site_notice_path(notice)}",:confirm => "Are you sure you want to dismiss this notice", :method =>:post, :title =>'Dismiss Notice'

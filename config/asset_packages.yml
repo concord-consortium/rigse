@@ -159,7 +159,7 @@ stylesheets:
   - chosen
   - classes_left_pane
   - instructional_materials
-  - site_notice_form
+  - site_notice
 
 - genomedynamics:
   - app

@@ -87,7 +87,9 @@ class HomeController < ApplicationController
         end
       end      
     end
-    
+    if @all_notices_to_render.length == 0
+      @notice_display_type = @NOTICE_DISPLAY_TYPES[:no_notice]
+    end
   end
   
   def readme
