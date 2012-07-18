@@ -1,15 +1,13 @@
 
-- students = Portal::Offering.find(2).clazz.students
-- learner  = Portal::Offering.find(2).learners
-
+- learners = offering.learners;
+- students = offering.clazz.students;
 
 - if investigation.activities.length > 0
   %table.inProgressSummary
     %tr
       %th
         In Progress  
-        = investigation.activities.length
-              
+        = investigation.activities.length              
       %th        
       - activity_counter = 0
       - investigation.activities.each do |activity|
@@ -19,7 +17,7 @@
           = activity_name
     
     - if true
-      = render :partial => 'recent_student_report_summary',:locals=> {:investigation => investigation,:learner_offerings => learner_offerings}
+      = render :partial => 'recent_student_report_summary',:locals=> {:investigation => investigation,:students=>students,:learners=>learners,:offering => offering}
     - else 
       %tr
         %td{:colspan=>"#{investigation.activities.length + 1}", :style=>"border-top:solid 1px #666"}
