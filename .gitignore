@@ -15,6 +15,7 @@ config/sds.yml
 config/initializers/site_keys.rb
 config/mailer.yml
 config/additional_users.yml
+config/aws_s3.yml
 config/settings.yml
 config/nces_data
 public/images/0*
