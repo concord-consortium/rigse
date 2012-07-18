@@ -37,11 +37,11 @@ function showHideActivityButtons(investigation_id, oLink){
     var strLinkText = "";
     var strExpandCollapseText = "";
     if(bVisible){
-        strLinkText = "Show Run Activity buttons";
+        strLinkText = "Show Activities";
         strExpandCollapseText = "+";
     }
     else{
-        strLinkText = "Hide Run Activity buttons";
+        strLinkText = "Hide Activities";
         strExpandCollapseText = "-";
     }
     
