@@ -1,24 +1,43 @@
-- students = Portal::Offering.find(offering.clazz_id).clazz.students 
-- learners = Portal::Offering.find(offering.clazz_id).learners     
--students.each do |student_id|
-  - learner = learners.find_by_student_id(student_id.id)
-  %tr      
-    %td
-      =student_id.user.last_name      
-      - user_data = nil
-    - if !learner.nil?
-      - user_data = Report::Learner.user_report_data(offering.id, learner.id)
-         
-    %td
-     
-      = investigation.created_at.strftime('%d %b %Y')
-      - investigation.activities.each do |activity|  
-        - percentage = 0
-        - if !user_data.nil?
-          - learner_report = user_data[activity.id]
-          - if !learner_report.nil?
-            - if !learner_report["total"].nil? && !learner_report["answered"].nil? && learner_report["total"] > 0
-              - percentage = learner_report["answered"]*100/learner_report["total"]          
-        %td
-          .progressbar
-            .progress{:style=>"width:#{percentage}%"}     
+- students = offering.clazz.students 
+- learners = offering.learners
+- runnable = offering.runnable
+- activities = []
+- if runnable.is_a? ::Investigation
+  - activities = runnable.activities
+- else runnable.is_a? ::Activity
+  - activities = [runnable]
+
+- students.each do |student|
+  - learner = learners.find_by_student_id(student.id)
+  - report_learner = nil
+  - total_complete_percent = 0
+  - if !learner.nil?
+    - report_learner = learner.report_learner
+    - total_complete_percent = report_learner.complete_percent
+
+  %tr
+    - case filter_percent
+      - when 0
+        - if total_complete_percent == 0
+          %td
+            =student.user.last_name + ", " + student.user.first_name
+      - when 100
+        - if total_complete_percent == 100
+          %td
+            =student.user.last_name + ", " + student.user.first_name
+          %td
+            = report_learner.last_run.strftime('%d/%m/%Y')
+      - when -1    
+        - if report_learner && total_complete_percent > 0 && total_complete_percent < 100
+          - report_learner_activities = learner.learner_activities
+          %td
+            =student.user.last_name + ", " + student.user.first_name
+            %td
+              = report_learner.last_run.strftime('%d/%m/%Y')
+            - activities.each do |activity|  
+              - percentage = 0
+              - if !report_learner_activities.find_by_activity_id(activity.id).nil?
+                - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent   
+              %td
+                .progressbar
+                  .progress{:style=>"width:#{percentage}%"}     

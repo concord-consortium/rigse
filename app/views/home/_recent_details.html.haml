@@ -1,6 +1,3 @@
-
-
-
 %div.clearboth{:id=>"material_tab_1_data", :style=>"display:block"}
   %br
   %div{:style=>"float:left;"}
@@ -8,26 +5,5 @@
       %tr
         %td
           %div{:stlyle=>"overflow:auto;width:100%px"}
-            = render :partial => 'recent_student_report', :locals => { :investigation => investigation,:offering => current_offering}
-      %tr
-        %td
-          %table
-            %tr
-              %th
-                Not yet Started
-            %tr
-              %td
-                Name
-              
-      %tr
-        %td
-          %table
-            %tr
-              %th{:colspan=>2}
-                Completed
-            %tr
-              %td
-                Name
-              %td
-                Date
+            = render :partial => 'recent_student_report', :locals => { :offering => current_offering}
   
