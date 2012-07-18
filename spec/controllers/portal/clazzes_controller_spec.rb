@@ -112,6 +112,19 @@ describe Portal::ClazzesController do
         end
       end
     end
+    
+    
+    it "saves the position of the left pane submenu item for an authorized teacher" do
+      setup_for_repeated_tests
+      stub_current_user :authorized_teacher_user
+
+      get :show, { :id => @mock_clazz.id }
+
+      # All users should see the full class details summary
+      @authorized_teacher.reload
+      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['NONE']
+    end
+    
   end # end describe GET show
 
   describe "XMLHttpRequest edit" do
@@ -846,5 +859,49 @@ describe Portal::ClazzesController do
   end  
   
   
+  # GET edit
+  describe "GET edit" do
+    
+    it "saves the position of the left pane submenu item for an authorized teacher" do
+      stub_current_user :authorized_teacher_user
+
+      get :edit, { :id => @mock_clazz.id }
+
+      # All users should see the full class details summary
+      @authorized_teacher.reload
+      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP']
+    end
+    
+  end
+  
+  # GET materials
+  describe "GET materials" do
+    
+    it "saves the position of the left pane submenu item for an authorized teacher" do
+      stub_current_user :authorized_teacher_user
+
+      get :materials, { :id => @mock_clazz.id }
+
+      # All users should see the full class details summary
+      @authorized_teacher.reload
+      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['MATERIALS']
+    end
+    
+  end
+  
+  # GET roster
+  describe "GET roster" do
+    
+    it "saves the position of the left pane submenu item for an authorized teacher" do
+      stub_current_user :authorized_teacher_user
+
+      get :roster, { :id => @mock_clazz.id }
+
+      # All users should see the full class details summary
+      @authorized_teacher.reload
+      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER']
+    end
+    
+  end
   
 end
