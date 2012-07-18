@@ -15,15 +15,15 @@
 - total_students = students.length
 - if true
   %tr.legend_row
-    %td.LeftMost_legend_completed{:style=>"width:#{num_completed*100/total_students}%"}          
-    %td.Middle_legend_progress{:style=>"width:#{(num_in_progress*100/total_students)}%"}   
-    %td.RightMost_legend_not_started{:style=>"width:#{(num_not_started*100/total_students)}%"}   
+    %td.LeftMost_legend_completed{:style=>"width:#{(num_completed*100/total_students).round(0)}%"}          
+    %td.Middle_legend_progress{:style=>"width:#{(num_in_progress*100/total_students).round(0)}%"}   
+    %td.RightMost_legend_not_started{:style=>"width:#{(num_not_started*100/total_students).round(0)}%"}   
   %tr
     %td{:style=>"text-align:right;"}
-      = num_completed
+      #{num_completed == 0 ? "": num_completed} 
     %td
-      = num_in_progress
+      #{num_in_progress == 0 ? "": num_in_progress}
     %td
-      = num_not_started
+      #{num_not_started == 0 ? "": num_not_started}
 - else
   no student has completed the Investigation

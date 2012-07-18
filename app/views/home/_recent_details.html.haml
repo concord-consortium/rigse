@@ -2,5 +2,5 @@
   %table{:width=>"100%",:style=>"text-align:left"}      
     %tr
       %td
-        %div{:style=>"overflow:auto;width:430px"}
-          = render :partial => 'recent_student_report', :locals => { :offering => current_offering}
+        %div{:style=>"position:relative"}
+          = render :partial => 'recent_student_report', :locals => { :offering => current_offering, :students=>students, :learners=>learners}

@@ -140,11 +140,20 @@
 .recent_activity_table td {
   font-weight: normal;
 }
+.recent_activity_table th{
+  padding-bottom:5px;
+}
 .recent_activity_container table {
   margin: 0px
 }
-.number_of_activities td {
+
+.status_count_graph{
+  margin:0;
+  padding:0;
+}
+.status_count_graph td {
   text-align: right;
+  font-weight:bold;
 }
 .LeftMost_legend_completed {
   background-color: #FF8513;
@@ -159,8 +168,10 @@
   border: solid 1px #666;
 }
 .showhidedetails {
-
+  white-space:nowrap;
   float: right;
+  font-weight:normal;
+  width:100px;
 }
 .report {
   height: 25px;
@@ -172,21 +183,19 @@
 .activityprogressbar_container {
   font-size: 13px
 }
-.inProgressSummary th {
-  text-align: left;
-  vertical-align: middle;
-  padding-left: 10px;
-  font-weight: bold;
-}
-.inProgressSummary td {
-  padding-left: 10px;
-}
+
+
 .progressbar_row table {
   margin-top: 15px
 }
 .investigation_info {
-  width: 180px;
+  width: 150px;
 }
+
+.investigation_info table{
+  width: 150px;
+}
+
 .investigation_info th {
   text-align: left;
   vertical-align:top;
@@ -195,4 +204,46 @@
 }
 .investigation_activities {
 }
+
+.progress_summary_container
+{
+  padding:0;
+  margin:0;
+}
+
+.inProgressSummary{text-align:left;border:0;margin-top:0px;}
+.inProgressSummary tr { vertical-align: top; }
+.inProgressSummary td { text-align:left; vertical-align:middle;padding:2px;width:115px;height:20px;background-color:#F3F2ED}
+.inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;cursor:pointer;width:115px;height:20px;background-color:#F3F2ED}
+
+.expand_collapse_activities{padding-left:15px;}
+
+.class_offering_name{text-align:left;float:left}
+
+.progress_summary_container .inProgressSummary{text-align:left;border:0;margin-top:0px;margin-left:209px}
+.progress_summary_container .inProgressSummary tr { vertical-align: top; }
+.progress_summary_container .inProgressSummary td { text-align:left; vertical-align:middle;padding:2px;width:115px;height:20px;background-color:#F3F2ED}
+.progress_summary_container .inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;cursor:pointer;width:115px;height:20px;background-color:#F3F2ED}
+.progress_summary_container .student_name{white-space:nowrap}
+.progress_summary_container .locked_left { 
+/* the code below removes the table cells (column) and puts them out to the left of the table */ 
+position:absolute; 
+left: 0px;
+width:115px;
+height:20px;
+}
+.progress_summary_container .date_locked_left { 
+/* the code below removes the table cells (column) and puts them out to the left of the table */ 
+position:absolute; 
+left: 119px;
+width:85px !important;
+height:20px;
+}
+
+@-moz-document url-prefix() {
+    .progress_summary_container .locked_left {
+        margin-top:-1px;
+    }
+}
+
 

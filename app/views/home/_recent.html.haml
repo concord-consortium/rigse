@@ -1,5 +1,7 @@
 = javascript_include_tag "instructional_materials.js"
-  
+
+- students = clazz_offering.clazz.students 
+- learners = clazz_offering.learners
 %div
   .right
     - clazz = clazz_offering.clazz
@@ -12,39 +14,40 @@
     
     %div        
       %table.recent_activity_table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:100%;"}
-        %tr{:style=>"align:right"}
-          %td{:colspan=>2,:style=>"align:right"}
-            %div
-              .showhidedetails
-                %span.expandcollapse{:id=>"oExpandCollapseText_#{runnable.investigation.id}"} +
-                = link_to('Show details', 'javascript: void(0);', :onclick => "showHideActivityDetails('#{runnable.investigation.id}',this)")
-           
         %tr
-          %td.investigation_info{:rowspan=>2,:style=>"vertical-align:top"}
-            %table{:border=>0,:cellpadding=>0,:cellspacing=>0}
-              %tr
-                %th
-                  = clazz.name + ":" 
-                %th
-                  = investigation_name
-              - if runnable.is_a? ::Activity
+          %th{:colspan=>3}
+            .class_offering_name
+              = clazz.name + ": "
+              = investigation_name
+            .showhidedetails
+              %span.expandcollapse{:id=>"oExpandCollapseText_#{clazz_offering.id}"} +
+              = link_to('Show details', 'javascript: void(0);', :onclick => "showHideActivityDetails('#{clazz_offering.id}',this)")
+        %tr
+          %td.investigation_info{:style=>"vertical-align:top"}
+            %div
+              %table{:border=>0,:cellpadding=>0,:cellspacing=>0}
+                - if runnable.is_a? ::Activity
+                  %tr
+                    %td
+                      = runnable.name
+                %tr
+                  %td
+                    Class Size = 
+                    = clazz.students.length    
                 %tr
                   %td{:colspan=>2}
-                    = runnable.name
-              %tr
-                %td{:colspan=>2}
-                  Class Size = 
-                  = clazz.students.length    
-              %tr
-                %td{:colspan=>2}
-                  .report
-                    %span.linkbutton.pie
-                      = report_link_for(clazz_offering, 'report', 'Run Report')
-          %td.investigation_activities.pad15{:style=>"vertical-align:top;align:left"}
-            %table.number_of_activities{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:400px"}
-              = render :partial => 'recent_activity_graph', :locals => {:offering => clazz_offering}
+                    .report
+                      %span.linkbutton.pie
+                        = report_link_for(clazz_offering, 'report', 'Run Report')
+          %td.investigation_activities.pad15{:colspan=>2,:style=>"vertical-align:top;align:left"}
+            %div
+              %table.status_count_graph{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:400px"}
+                = render :partial => 'recent_activity_graph', :locals => {:offering => clazz_offering, :students=>students, :learners=>learners}
         %tr.legend_data
-          %td.pad15.expand_collapse_activities{:class=>"DivHideShowDetail#{runnable.investigation.id}",:colspan=>3,:style=>"display:none;float:left;font-size:16px;font-weight:bold"}
-            = render :partial => 'recent_details',:locals => { :current_offering => clazz_offering}
+          %td
+            &nbsp;
+          %td.expand_collapse_activities{:class=>"DivHideShowDetail#{clazz_offering.id}",:colspan=>2,:style=>"display:none;float:left;font-size:16px;font-weight:bold"}
+            = render :partial => 'recent_details',:locals => { :current_offering => clazz_offering, :students=>students, :learners=>learners}
+%br
            
   
