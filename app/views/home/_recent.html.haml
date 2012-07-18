@@ -1,21 +1,28 @@
 = javascript_include_tag "instructional_materials.js"
 - strTime =(7.day.ago).to_s.gsub(" UTC","");
 - learner_offerings = (Report::Learner.where("last_run > '#{strTime}'")).select(:offering_id).uniq
-/- clazz_offerings = Portal::Clazz.offerings.find_by_clazz_id(learner_offerings.offering_id);/
-- investigation = Investigation.all;
+- clazz_offerings=Array.new
+- learner_offerings.each do |learner_offering|
+  - reportlearner = Report::Learner.find_by_offering_id(learner_offering.offering_id)
+  - offering = Portal::Offering.find_by_runnable_id(reportlearner.runnable_id)
+  - clazz_offerings.push(offering)  
 %div
-  .right 
-    =Portal::Offering.find(:all, :select => "DISTINCT clazz_id").inspect 
+  .right
+    /=Portal::Offering.find(:all, :select => "DISTINCT clazz_id").inspect /
   -counter = 0;
+   
+  -clazz_offerings.each do |clazz_offering|  
+    -if clazz_offering.runnable.is_a? ::Investigation     
+      -investigation1 = Investigation.find_by_id(clazz_offering.runnable_id)          
+    -elsif clazz_offering.runnable.is_a? ::Activity
   
-  -investigation.each do |investigation_id|
-    -investigation1 = investigation[counter];
+    
     -counter +=1;
     %div        
-      %table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:100%;"}
-        %tr
-          %td{:colspan=>2}
-            - if investigation.length > 0
+      %table.recent_activity_table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:100%;"}
+        %tr{:style=>"align:right"}
+          %td{:colspan=>2,:style=>"align:right"}
+            %div
               %div{:id=>"oExpandCollapseText_#{counter}",:style=>"width:20px;float:left"} +
               = link_to('Show details', 'javascript: void(0);', :onclick => "showHideActivityDetails('#{counter}',this)")
            
@@ -23,9 +30,9 @@
           %td{:rowspan=>2,:style=>"vertical-align:top"}
             %table{:style=>"width:120px"}
               %tr
-                %td
-                  Class Name
-                %td
+                %th
+                  Class Name                  
+                %th
                   =investigation1.name
               %tr
                 %td{:colspan=>2}
@@ -37,21 +44,9 @@
                       Run Report
           %td{:style=>"vertical-align:top;align:left"}
             %table.number_of_activities{:border=>0,:cellpadding=>0,:cellspacing=>0}
-              %tr.legend_row
-                %td
-                  #LeftMost.legend_progress
-                %td
-                  #Middle.legend_completed
-                %td
-                  #RightMost.legend_not_started
-              %tr
-                %td{:style=>"text-align:right;"}
-                  2
-                %td
-                  6
-                %td
-                  8
+              = render :partial => 'recent_activity_graph'
         %tr.legend_data
           %td{:class=>"DivHideShowDetail#{counter}",:colspan=>3,:style=>"float:left;font-size:16px;font-weight:bold"}
-            = render :partial => 'recent_details',:locals => { :investigation => investigation1,:learner_offerings => learner_offerings}
+            = render :partial => 'recent_details',:locals => { :investigation => investigation1,:current_offering => clazz_offering,:learner_offerings => learner_offerings}
+           
   

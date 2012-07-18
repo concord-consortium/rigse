@@ -1,5 +1,5 @@
 
-- learner = Report::Learner.find_by_offering_id(1);
+
 
 %div.clearboth{:id=>"material_tab_1_data", :style=>"display:block"}
   %br
@@ -7,12 +7,27 @@
     %table{:width=>"100%",:style=>"text-align:left"}      
       %tr
         %td
-          %div{:style=>"overflow:auto;width:100%px"}
-            = render :partial => 'recent_student_report', :locals => { :investigation => investigation,:learner_offerings => learner_offerings}
+          %div{:stlyle=>"overflow:auto;width:100%px"}
+            = render :partial => 'recent_student_report', :locals => { :investigation => investigation,:offering => current_offering}
       %tr
         %td
-          Not Yet Started
+          %table
+            %tr
+              %th
+                Not yet Started
+            %tr
+              %td
+                Name
+              
       %tr
         %td
-          Completed
+          %table
+            %tr
+              %th{:colspan=>2}
+                Completed
+            %tr
+              %td
+                Name
+              %td
+                Date
   

@@ -1,21 +1,23 @@
 %h1
   Recent activity 
-  =(7.day.ago).to_s.gsub(" UTC","");
-%div 
-  -strTime =(4.day.ago).to_s.gsub(" UTC","");
-  =(User.where("activated_at > '#{strTime}'")).select(:last_name).uniq.inspect
+
 #recent_activity_container
   %table{:width=>"100%"}
     %tr
-      %td{:width=>"200px"}
+      %td{:width=>"75%",:style=>"float:right"}
         %table{:style=>"margin:1em 0"}
           %tr{}
             %td
+              %span.legend_completed
+                &nbsp;&nbsp;
+              %span
+                &nbsp;Completed
+            %td
+              &nbsp;&nbsp;
               %span.legend_progress
                 &nbsp;&nbsp;
               %span
                 &nbsp;In Progress
-            %td
               &nbsp;&nbsp;
             %td
               %span.legend_not_started
