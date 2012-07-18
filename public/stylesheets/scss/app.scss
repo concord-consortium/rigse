@@ -621,9 +621,10 @@ li.item_selectable {
 	  font-weight: bold; } }
   ul.create {
     border-top: none; }
-  .create_link {
+  .create_link,
+  .manage_classes_link {
 	text-align: center;
-    margin: 20px 0 0 0px; } }
+    margin: 10px 0 0 0px; } }
 
 .user-info-box {
   background: white;
