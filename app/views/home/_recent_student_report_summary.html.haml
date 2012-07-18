@@ -1,5 +1,3 @@
-- students = offering.clazz.students 
-- learners = offering.learners
 - runnable = offering.runnable
 - activities = []
 - if runnable.is_a? ::Investigation
@@ -15,24 +13,26 @@
     - report_learner = learner.report_learner
     - total_complete_percent = report_learner.complete_percent
 
-  %tr
-    - case filter_percent
-      - when 0
-        - if total_complete_percent == 0
-          %td
+  - case filter_percent
+    - when 0
+      - if total_complete_percent == 0
+        %tr
+          %td.student_name
             =student.user.last_name + ", " + student.user.first_name
-      - when 100
-        - if total_complete_percent == 100
-          %td
-            =student.user.last_name + ", " + student.user.first_name
+    - when 100
+      - if total_complete_percent == 100
+        %tr
+          %td.student_name.locked_left
+            = student.user.last_name + ", " + student.user.first_name
           %td
             = report_learner.last_run.strftime('%d/%m/%Y')
-      - when -1    
-        - if report_learner && total_complete_percent > 0 && total_complete_percent < 100
-          - report_learner_activities = learner.learner_activities
-          %td
-            =student.user.last_name + ", " + student.user.first_name
-            %td
+    - when -1    
+      - if report_learner && total_complete_percent > 0 && total_complete_percent < 100
+        - report_learner_activities = learner.learner_activities
+        %tr
+          %td.student_name.locked_left
+            = student.user.last_name + ", " + student.user.first_name
+            %td.date_locked_left
               = report_learner.last_run.strftime('%d/%m/%Y')
             - activities.each do |activity|  
               - percentage = 0
