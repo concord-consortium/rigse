@@ -1,14 +1,29 @@
+- students = offering.clazz.students 
+- learners = offering.learners
+- num_completed = 0
+- num_in_progress = 0
+- total_students = 0
+- students.each do |student|
+  - learner = learners.find_by_student_id(student.id)
+  - report_learner = nil
+  - if !learner.nil?
+    - report_learner = learner.report_learner
+    - total_complete_percent = report_learner.complete_percent
+    - num_completed += (total_complete_percent == 100)? 1 :0
+    - num_in_progress += (total_complete_percent > 0 && total_complete_percent < 100)? 1 :0
+- num_not_started = students.length - (num_completed + num_in_progress)
+- total_students = students.length
 - if true
   %tr.legend_row
-    %td.LeftMost_legend_completed          
-    %td.Middle_legend_progress
-    %td.RightMost_legend_not_started
+    %td.LeftMost_legend_completed{:style=>"width:#{num_completed*100/total_students}%"}          
+    %td.Middle_legend_progress{:style=>"width:#{(num_in_progress*100/total_students)}%"}   
+    %td.RightMost_legend_not_started{:style=>"width:#{(num_not_started*100/total_students)}%"}   
   %tr
     %td{:style=>"text-align:right;"}
-      2
+      = num_completed
     %td
-      6
+      = num_in_progress
     %td
-      8
+      = num_not_started
 - else
   no student has completed the Investigation

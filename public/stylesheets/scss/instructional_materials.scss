@@ -127,4 +127,72 @@
   padding:0;
   margin:0;
 }
+.legend_completed {
+  background-color: #FF8513;
+  border: solid 1px #666;
+  width: 10px;
+  height: 10px;
+}
+.legend_row {
+  height: 35px;
+  width: 300px;
+}
+.recent_activity_table td {
+  font-weight: normal;
+}
+.recent_activity_container table {
+  margin: 0px
+}
+.number_of_activities td {
+  text-align: right;
+}
+.LeftMost_legend_completed {
+  background-color: #FF8513;
+  border: solid 1px #666;
+}
+.Middle_legend_progress {
+  background-color: #FFCC99;
+  border: solid 1px #666;
+}
+.RightMost_legend_not_started {
+  background-color: White;
+  border: solid 1px #666;
+}
+.showhidedetails {
+
+  float: right;
+}
+.report {
+  height: 25px;
+  margin-top:10px;
+}
+.pad15 {
+  padding-left: 15px;
+}
+.activityprogressbar_container {
+  font-size: 13px
+}
+.inProgressSummary th {
+  text-align: left;
+  vertical-align: middle;
+  padding-left: 10px;
+  font-weight: bold;
+}
+.inProgressSummary td {
+  padding-left: 10px;
+}
+.progressbar_row table {
+  margin-top: 15px
+}
+.investigation_info {
+  width: 180px;
+}
+.investigation_info th {
+  text-align: left;
+  vertical-align:top;
+  width:90px;
+  
+}
+.investigation_activities {
+}
 

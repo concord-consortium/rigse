@@ -1,9 +1,6 @@
-%div.clearboth{:id=>"material_tab_1_data", :style=>"display:block"}
-  %br
-  %div{:style=>"float:left;"}
-    %table{:width=>"100%",:style=>"text-align:left"}      
-      %tr
-        %td
-          %div{:stlyle=>"overflow:auto;width:100%px"}
-            = render :partial => 'recent_student_report', :locals => { :offering => current_offering}
-  
+.activityprogressbar_container
+  %table{:width=>"100%",:style=>"text-align:left"}      
+    %tr
+      %td
+        %div{:style=>"overflow:auto;width:430px"}
+          = render :partial => 'recent_student_report', :locals => { :offering => current_offering}

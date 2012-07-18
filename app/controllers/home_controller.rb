@@ -71,5 +71,13 @@ class HomeController < ApplicationController
   
   def recent_activity
     @report_learner = Report::Learner.all
+    strTime =(7.day.ago).to_s.gsub(" UTC","");
+    learner_offerings = (Report::Learner.where("last_run > '#{strTime}'")).select(:offering_id).uniq
+    @clazz_offerings=Array.new
+    learner_offerings.each do |learner_offering|
+     reportlearner = Report::Learner.find_by_offering_id(learner_offering.offering_id)
+     offering = Portal::Offering.find_by_runnable_id(reportlearner.runnable_id)
+     @clazz_offerings.push(offering)
+    end
   end
 end
