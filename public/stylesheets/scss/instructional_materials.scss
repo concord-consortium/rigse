@@ -222,6 +222,7 @@
 {
   padding:0;
   margin:0;
+  padding-bottom:5px;
 }
 
 .inProgressSummary{text-align:left;border:0;margin-top:0px;}
@@ -239,18 +240,18 @@
 .progress_summary_container .inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;cursor:pointer;width:115px;height:20px;background-color:#F3F2ED}
 .progress_summary_container .student_name{white-space:nowrap}
 .progress_summary_container .locked_left { 
-/* the code below removes the table cells (column) and puts them out to the left of the table */ 
-position:absolute; 
-left: 0px;
-width:115px;
-height:20px;
+  /* the code below removes the table cells (column) and puts them out to the left of the table */ 
+  position:absolute; 
+  left: 0px;
+  width:115px;
+  height:20px;
 }
 .progress_summary_container .date_locked_left { 
-/* the code below removes the table cells (column) and puts them out to the left of the table */ 
-position:absolute; 
-left: 119px;
-width:85px !important;
-height:20px;
+  /* the code below removes the table cells (column) and puts them out to the left of the table */ 
+  position:absolute; 
+  left: 119px;
+  width:85px !important;
+  height:20px;
 }
 
 @-moz-document url-prefix() {
