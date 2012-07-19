@@ -87,7 +87,7 @@ class HomeController < ApplicationController
     end
     
     strTime =(7.day.ago).to_s.gsub(" UTC","");
-    learner_offerings = ((Report::Learner.where("last_run > '#{strTime}'")).order("last_run DESC")).select(:offering_id).uniq
+    learner_offerings = ((Report::Learner.where("last_run > '#{strTime}' and complete_percent > 0")).order("last_run DESC")).select(:offering_id).uniq
     @clazz_offerings=Array.new    
     
     
