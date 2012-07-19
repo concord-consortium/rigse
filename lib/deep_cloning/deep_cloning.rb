@@ -113,7 +113,16 @@ module DeepCloning
                           self.send(association).collect { |obj| clone_object(obj, opts) }
                         end
         # puts "cloned_object: #{cloned_object}"
-        kopy.send("#{association}=", cloned_object)
+        begin
+          kopy.send("#{association}=", cloned_object)
+        rescue ActiveRecord::RecordNotSaved
+          logger.warn "failed to add object(s) to association: #{association}"
+          logger.warn "  source object: #{self.inspect}"
+          logger.warn "  object(s) added: #{cloned_object}"
+          array_of_objects = [cloned_object].flatten
+          logger.warn "  object(s) errors: #{array_of_objects.map{|obj| obj.errors.full_messages}}"
+          raise
+        end
       end
     end
 
