@@ -4,13 +4,12 @@
   - sub_controller ||= top_node.clazzes[0] ? top_node.clazzes[0].class.name.tableize : nil
   %ul{:id=>top_container_id}
     
-    -# Commenting the Recent Activity link as per the code cleanup
-    -# required for push to production.
-    -#%li 
-    -#  - recent_activity_class = '';
-    -#  - if(request.fullpath == '/' || request.fullpath == '/home' )
-    -#    - recent_activity_class = 'selected'
-    -#  = link_to 'Recent Activity', '/', :class=> recent_activity_class
+    - if top_node.is_a? Portal::Teacher
+      %li 
+        - recent_activity_class = '';
+        - if(request.fullpath == recent_activity_path )
+          - recent_activity_class = 'selected'
+        = link_to 'Recent Activity', [:recent_activity], :class=> recent_activity_class
     
     - clazz_list = nil
     - if top_node.is_a? Portal::Teacher
