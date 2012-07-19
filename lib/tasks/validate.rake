@@ -72,7 +72,12 @@ namespace :app do
         class_count = 0
         model_count = 0
         clazz.find_each do |model|
-          if !model.valid?
+          begin
+            if !model.valid?
+              count += 1
+              class_count += 1
+            end
+          rescue
             count += 1
             class_count += 1
           end
