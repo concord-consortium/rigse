@@ -165,9 +165,12 @@ class HomeController < ApplicationController
     @report_learner = Report::Learner.all
     
     teacher_clazzes = current_user.portal_teacher.clazzes;
+    portal_teacher_clazzes = current_user.portal_teacher.teacher_clazzes
     portal_teacher_offerings = [];
     teacher_clazzes.each do|teacher_clazz|
-     portal_teacher_offerings.concat(teacher_clazz.offerings)
+     if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active && teacher_clazz.students.length > 0
+      portal_teacher_offerings.concat(teacher_clazz.offerings)
+     end
     end
     
     strTime =(7.day.ago).to_s.gsub(" UTC","");
