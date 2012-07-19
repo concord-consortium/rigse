@@ -157,14 +157,36 @@ class HomeController < ApplicationController
   # end
   
   def recent_activity
-    @report_learner = Report::Learner.all
-    strTime =(7.day.ago).to_s.gsub(" UTC","");
-    learner_offerings = (Report::Learner.where("last_run > '#{strTime}'")).select(:offering_id).uniq
-    @clazz_offerings=Array.new
-    learner_offerings.each do |learner_offering|
-     reportlearner = Report::Learner.find_by_offering_id(learner_offering.offering_id)
-     offering = Portal::Offering.find_by_runnable_id(reportlearner.runnable_id)
-     @clazz_offerings.push(offering)
+    if current_user.anonymous?
+      redirect_to home_url
+      return
     end
+  
+    @report_learner = Report::Learner.all
+    
+    teacher_clazzes = current_user.portal_teacher.clazzes;
+    portal_teacher_offerings = [];
+    teacher_clazzes.each do|teacher_clazz|
+     portal_teacher_offerings.concat(teacher_clazz.offerings)
+    end
+    
+    strTime =(7.day.ago).to_s.gsub(" UTC","");
+    learner_offerings = ((Report::Learner.where("last_run > '#{strTime}'")).order("last_run DESC")).select(:offering_id).uniq
+    @clazz_offerings=Array.new    
+    
+    
+    learner_offerings.each do |learner_offering|
+     portal_teacher_offerings.each do|teacher_offering|
+      reportlearner = Report::Learner.find_by_offering_id(learner_offering.offering_id)
+      if reportlearner.offering_id == teacher_offering.id
+       offering = Portal::Offering.find(reportlearner.offering_id)
+       @clazz_offerings.push(offering)
+      end
+     
+     end
+    
+    end
+    
+    
   end
 end
