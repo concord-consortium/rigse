@@ -132,7 +132,9 @@ module DeepCloning
       set_never_clone(Array(options[:never_clone]))
     end
     
-    dup(options)
+    ActiveRecord::Base.transaction do
+      dup(options)
+    end
   end
   
   # this was added to work around the fact that rails 3.2 removed the attributes_from_column_definition
