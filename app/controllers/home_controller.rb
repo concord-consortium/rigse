@@ -168,9 +168,9 @@ class HomeController < ApplicationController
     portal_teacher_clazzes = current_user.portal_teacher.teacher_clazzes
     portal_teacher_offerings = [];
     teacher_clazzes.each do|teacher_clazz|
-     if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active && teacher_clazz.students.length > 0
-      portal_teacher_offerings.concat(teacher_clazz.offerings)
-     end
+      if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active && teacher_clazz.students.length > 0
+        portal_teacher_offerings.concat(teacher_clazz.offerings)
+      end
     end
     
     strTime =(7.day.ago).to_s.gsub(" UTC","");
@@ -179,15 +179,15 @@ class HomeController < ApplicationController
     
     
     learner_offerings.each do |learner_offering|
-     portal_teacher_offerings.each do|teacher_offering|
-      reportlearner = Report::Learner.find_by_offering_id(learner_offering.offering_id)
-      if reportlearner.offering_id == teacher_offering.id
-       offering = Portal::Offering.find(reportlearner.offering_id)
-       @clazz_offerings.push(offering)
+      portal_teacher_offerings.each do|teacher_offering|
+        reportlearner = Report::Learner.find_by_offering_id(learner_offering.offering_id)
+        if reportlearner.offering_id == teacher_offering.id
+          offering = Portal::Offering.find(reportlearner.offering_id)
+          if offering.inprogress_students_count > 0 || offering.completed_students_count > 0
+            @clazz_offerings.push(offering)
+          end
+        end
       end
-     
-     end
-    
     end
     
     
