@@ -15,7 +15,7 @@
     %div        
       %table.recent_activity_table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:100%;"}
         %tr
-          %th{:colspan=>3}
+          %th{:colspan=>2}
             .class_offering_name
               = clazz.name + ": "
               = investigation_name
@@ -39,14 +39,14 @@
                     .report
                       %span.linkbutton.pie
                         = report_link_for(clazz_offering, 'report', 'Run Report')
-          %td.investigation_activities.pad15{:colspan=>2,:style=>"vertical-align:top;align:left"}
+          %td.investigation_activities.pad15{:style=>"vertical-align:top;align:left"}
             %div
-              %table.status_count_graph{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:400px"}
-                = render :partial => 'recent_activity_graph', :locals => {:offering => clazz_offering, :students=>students, :learners=>learners}
+              %table.status_count_graph{:border=>0,:cellpadding=>0,:cellspacing=>0}
+                = render :partial => 'recent_activity_graph', :locals => {:offering => clazz_offering, :students=>students}
         %tr.legend_data
           %td
             &nbsp;
-          %td.expand_collapse_activities{:class=>"DivHideShowDetail#{clazz_offering.id}",:colspan=>2,:style=>"display:none;float:left;font-size:16px;font-weight:bold"}
+          %td.expand_collapse_activities{:class=>"DivHideShowDetail#{clazz_offering.id}",:style=>"display:none;float:left;font-size:16px;font-weight:bold"}
             = render :partial => 'recent_details',:locals => { :current_offering => clazz_offering, :students=>students, :learners=>learners}
 %br
            

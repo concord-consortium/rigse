@@ -60,11 +60,11 @@ function showHideActivityDetails(investigation_id, oLink){
 	var strLinkText = ""; 
 	var strExpandCollapseText = "";
 	if(bVisible){
-		strLinkText = "Show Details";
+		strLinkText = "Show details";
 		strExpandCollapseText = "+";
 	}
 	else{
-		strLinkText = "Hide Details";
+		strLinkText = "Hide details";
 		strExpandCollapseText = "-";
 	}
 	

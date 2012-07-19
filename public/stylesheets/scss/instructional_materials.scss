@@ -150,6 +150,7 @@
 .status_count_graph{
   margin:0;
   padding:0;
+  width:480px;
 }
 .status_count_graph td {
   text-align: right;
@@ -172,14 +173,15 @@
   float: right;
   font-weight:normal;
   width:100px;
+  a{
+    text-decoration:underline;
+  }
 }
 .report {
   height: 25px;
   margin-top:10px;
 }
-.pad15 {
-  padding-left: 15px;
-}
+
 .activityprogressbar_container {
   font-size: 13px
 }
