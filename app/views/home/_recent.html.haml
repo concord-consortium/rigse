@@ -2,7 +2,7 @@
 
 - students = clazz_offering.clazz.students 
 - learners = clazz_offering.learners
--if clazz_offering.clazz.students.length > 0
+-if clazz_offering.clazz.students.length > 0 && (clazz_offering.inprogress_students_count > 0 || clazz_offering.completed_students_count > 0)
   %div
     .right
       - clazz = clazz_offering.clazz
