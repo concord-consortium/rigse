@@ -63,10 +63,21 @@
 .investigationdata tr { vertical-align: top; }
 .investigationdata td { text-align:left; vertical-align:top;padding:5px }
 
-.reportsummary{text-align:left; border:solid 1px #666;border-right:0;}
+.reportsummary{text-align:left;margin-left:125px}
 .reportsummary tr { vertical-align: top; }
-.reportsummary td { text-align:left; vertical-align:middle;padding:5px; border-right:solid 1px #666}
-.reportsummary th { text-align:left; vertical-align:middle;padding:5px;font-weight:bold;background-color:#F9EEC1; border-right:solid 1px #666 }
+.reportsummary td { text-align:left; vertical-align:middle;padding:5px; width:115px;height:20px;background-color:White;border:solid 1px #ccc;}
+.reportsummary th { text-align:left; vertical-align:middle;padding:5px;font-weight:bold;background-color:#F9EEC1;width:115px;height:20px;border:solid 1px #ccc; }
+.reportsummary .locked_left { 
+  position:absolute; 
+  left: 27px;
+  width:115px;
+  height:20px;
+}
+@-moz-document url-prefix() {
+    .reportsummary .locked_left {
+        margin-top:-1px;
+    }
+}
 
 .legend_progress{
   background-color:#FFCC99;

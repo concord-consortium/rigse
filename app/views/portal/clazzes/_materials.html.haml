@@ -32,7 +32,7 @@
               %tr
                 - clazz_offerings.each do |offering|
                   %td
-                    .tab{:id=>"material_tab_#{offering.id}"}
+                    .tab{:id=>"material_tab_#{offering.id}", :title=>"#{offering.name}"}
                       = offering.name
           %div.scrollertab.tabright
             &#9654;
