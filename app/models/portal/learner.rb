@@ -18,6 +18,8 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
   
+  has_many :learner_activities, :class_name => "Report::LearnerActivity"
+  
   has_many :image_questions, :class_name => "Saveable::ImageQuestion" do
     def answered
       find(:all).select { |question| question.answered? }

@@ -3,7 +3,7 @@
 - if investigation.activities.length > 0
   %table.reportsummary
     %tr
-      %th
+      %th.locked_left
         ACTIVITY
       - activity_counter = 0
       - investigation.activities.each do |activity|
@@ -19,6 +19,3 @@
           No students have registered for this class yet.
 - else
   %div.item No activities available in this investigation.
-        
-  
-  
