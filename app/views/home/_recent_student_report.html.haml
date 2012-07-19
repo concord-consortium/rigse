@@ -6,7 +6,7 @@
   - activities = [runnable]
 
 - if activities.length > 0
-  - if offering.clazz.students.length > 0
+  - if offering.inprogress_students_count > 0
     .progress_summary_container{:style=>"width:375px;overflow:auto"}
       %table.inProgressSummary
         %tr
@@ -21,20 +21,19 @@
               = activity_name
         = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
     %br
+  - if offering.notstarted_students_count > 0
     %table.inProgressSummary
       %tr
         %th
           Not yet started              
       = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
     %br
+  - if offering.completed_students_count > 0
     %table.inProgressSummary
       %tr
         %th
           Completed              
       = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100, :students=>students, :learners=>learners}
-  - else
-    .item
-      No students have registered for this class yet.
 - else
   %div.item No activities available in this offering.   
   

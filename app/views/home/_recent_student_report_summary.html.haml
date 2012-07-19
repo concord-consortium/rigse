@@ -11,7 +11,8 @@
   - total_complete_percent = 0
   - if !learner.nil?
     - report_learner = learner.report_learner
-    - total_complete_percent = report_learner.complete_percent
+    - if !report_learner.nil?
+      - total_complete_percent = report_learner.complete_percent
 
   - case filter_percent
     - when 0
