@@ -494,6 +494,7 @@ constraints :id => /\d+/ do
   match '/readme' => 'home#readme', :as => :readme
   match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
   match '/home' => 'home#index', :as => :home
+  match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
   match '/about' => 'home#about', :as => :about
   match '/report' => 'home#report', :as => :report
   match '/test_exception' => 'home#test_exception', :as => :test_exception
