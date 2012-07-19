@@ -20,20 +20,43 @@
             %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
               = activity_name
         = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
-    %br
+  - else
+    %table.messagetable
+      %tr
+        %th
+          In Progress
+      %tr
+        %td No students with incomplete progress. 
+  %br
+  
   - if offering.notstarted_students_count > 0
     %table.inProgressSummary
       %tr
         %th
           Not yet started              
       = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
-    %br
+  - else
+    %table.messagetable
+      %tr
+        %th
+          Not yet started
+      %tr
+        %td All students have started this offering.
+  %br
+  
   - if offering.completed_students_count > 0
     %table.inProgressSummary
       %tr
         %th
           Completed              
       = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100, :students=>students, :learners=>learners}
+  - else
+    %table.messagetable
+      %tr
+        %th
+          Completed
+      %tr
+        %td No student has completed this offering yet.
 - else
   %div.item No activities available in this offering.   
   
