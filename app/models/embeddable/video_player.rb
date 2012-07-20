@@ -48,7 +48,7 @@ class Embeddable::VideoPlayer < ActiveRecord::Base
   def validate_video_url  
     return unless self.has_video_url?
     return true if UrlChecker.valid?(self.video_url)
-    errors.add_to_base("bad video url: #{self.video_url}")
+    errors.add(:video_url, "bad video url: #{self.video_url}")
   end
 
 end
