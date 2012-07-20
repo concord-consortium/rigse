@@ -58,7 +58,7 @@ And /^I move investigation named "(.+)" to the top of the list$/ do |investigati
 end
 
 And /^I press save button$/ do
-  click_button('portal_clazz_submit')
+  click_button('Save')
 end
 
 Then /^new data for the class should be saved$/ do
