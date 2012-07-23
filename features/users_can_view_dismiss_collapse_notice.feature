@@ -4,7 +4,7 @@ Feature: Users can view notices created by project staff
   I should be able to view notices created by the project staff
   In order to be notified about updates or important information
 
-  Background: 
+  Background:
     Given The default project and jnlp resources exist using factories
     
     And the following users exist:
