@@ -26,9 +26,17 @@ class Admin::SiteNoticesController < ApplicationController
         end
       else
         flash[:error] = "Select atleast one role"
+        respond_to do |format|
+          format.html { render :action => "new" }
+        end
+        return
       end       
     else
       flash[:error] = "Text cannot be blank"
+      respond_to do |format|
+          format.html { render :action => "new" }
+      end
+      return
     end
     redirect_to admin_site_notices_path
   end
@@ -55,9 +63,14 @@ class Admin::SiteNoticesController < ApplicationController
   
   def update
     #Storing new html for notice
+    
+    @notice = Admin::SiteNotice.find(params[:id])
+    @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    @notice_role_ids = @notice_roles.map{|notice_role| notice_role.role_id}
+    
     if params[:notice_html] =~ /\S+/
       if !params[:role].nil?
-        site_notice = Admin::SiteNotice.find(params[:id])
+        site_notice = @notice
         site_notice.notice_html= params[:notice_html]
         site_notice.updated_by = current_user.id
         site_notice.save!
@@ -77,9 +90,17 @@ class Admin::SiteNoticesController < ApplicationController
         end
       else
         flash[:error] = "Select atleast one role"
+        respond_to do |format|
+          format.html { render :action => "edit"}
+        end
+        return
       end
     else
       flash[:error] = "Text cannot be blank"
+      respond_to do |format|
+          format.html { render :action => "edit" }
+      end
+      return
     end  
        
     redirect_to admin_site_notices_path
