@@ -32,7 +32,7 @@ class Admin::SiteNotice < ActiveRecord::Base
     all_roles.each do |role|
       if(user.has_role?(role.title))
         all_role_ids_of_user << role.id
-      end      
+      end
     end
     
     notice_user_display_status = Admin::NoticeUserDisplayStatus.find_by_user_id(user.id)
@@ -47,16 +47,22 @@ class Admin::SiteNotice < ActiveRecord::Base
     
     site_notice_roles = Admin::SiteNoticeRole.where(:role_id => all_role_ids_of_user)
     all_notices = []
+    all_notice_ids = []
     latest_notice_at_time = DateTime.new(1990,01,01);
     
     if site_notice_roles
       site_notice_roles.each do |site_notice_role|
         site_notice = Admin::SiteNotice.find(site_notice_role.notice_id)
         
+        if all_notice_ids.include?(site_notice.id)
+          next
+        end
+        
         if site_notice.updated_at > latest_notice_at_time
           latest_notice_at_time = site_notice.updated_at
         end
         
+        all_notice_ids << site_notice.id
         all_notices << site_notice
       end
     end
