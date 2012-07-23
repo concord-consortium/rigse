@@ -18,15 +18,15 @@ Feature: Users can view notices created by project staff
       | login    | password | first_name   | last_name |
       | teacher  | teacher  | John         | Nash      |
     And the following students exist:
-		  | login     | password  |
-		  | student   | student	  |
-		  
+        | login     | password  |
+        | student   | student   |
+    
     And I login as an admin
     And I create the following notices:
-    	| notice_html          | roles                                   |
-    	| Notice for all users | Admin,Member,Researcher,Author,Manager  |
+        | notice_html          | roles                                   |
+        | Notice for all users | Admin,Member,Researcher,Author,Manager  |
     
-    		    	
+    
   @javascript
   Scenario: Member roles should see notices
     When I login with username: teacher password: teacher
@@ -59,8 +59,8 @@ Feature: Users can view notices created by project staff
 
   @javascript
   Scenario: Students should see notices
-	And I login with username: student password: student
-	And am on the my home page
+    And I login with username: student password: student
+    And am on the my home page
     Then I should not see "Notice for all users"
   
   @dialog
