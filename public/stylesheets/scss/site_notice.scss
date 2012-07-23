@@ -5,7 +5,6 @@
 .notice_text {
   width: 450px;
   text-align: left;
-  border-bottom:solid 1px #ddd;
 }
 
 .table_row {
@@ -18,13 +17,27 @@
 
 .notice_date {
   width: 85px;
-  border-bottom:solid 1px #ddd;
 }
 
 .delete_notice {
   width: 50px;
   font-weight: bold;
   text-align: center;
+}
+
+.notice_container .notice_date {
+  width: 85px;
+  border-bottom:solid 1px #ddd;
+}
+.notice_container .delete_notice {
+  width: 50px;
+  font-weight: bold;
+  text-align: center;
+  border-bottom:solid 1px #ddd;
+}
+.notice_container .notice_text {
+  width: 450px;
+  text-align: left;
   border-bottom:solid 1px #ddd;
 }
 

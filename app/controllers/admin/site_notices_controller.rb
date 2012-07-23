@@ -26,9 +26,17 @@ class Admin::SiteNoticesController < ApplicationController
         end
       else
         flash[:error] = "Select atleast one role"
+        respond_to do |format|
+          format.html { render :action => "new" }
+        end
+        return
       end       
     else
       flash[:error] = "Text cannot be blank"
+      respond_to do |format|
+          format.html { render :action => "new" }
+      end
+      return
     end
     redirect_to admin_site_notices_path
   end
@@ -55,9 +63,14 @@ class Admin::SiteNoticesController < ApplicationController
   
   def update
     #Storing new html for notice
+    
+    @notice = Admin::SiteNotice.find(params[:id])
+    @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    @notice_role_ids = @notice_roles.map{|notice_role| notice_role.role_id}
+    
     if params[:notice_html] =~ /\S+/
       if !params[:role].nil?
-        site_notice = Admin::SiteNotice.find(params[:id])
+        site_notice = @notice
         site_notice.notice_html= params[:notice_html]
         site_notice.updated_by = current_user.id
         site_notice.save!
@@ -77,9 +90,17 @@ class Admin::SiteNoticesController < ApplicationController
         end
       else
         flash[:error] = "Select atleast one role"
+        respond_to do |format|
+          format.html { render :action => "edit"}
+        end
+        return
       end
     else
       flash[:error] = "Text cannot be blank"
+      respond_to do |format|
+          format.html { render :action => "edit" }
+      end
+      return
     end  
        
     redirect_to admin_site_notices_path
@@ -119,9 +140,8 @@ class Admin::SiteNoticesController < ApplicationController
   def toggle_notice_display
     user_collapsed_notice = Admin::NoticeUserDisplayStatus.find_or_create_by_user_id(current_user.id)
     status_to_be_set = (user_collapsed_notice.collapsed_status.nil? || user_collapsed_notice.collapsed_status == false)? true : false
-    dateTime = Time.new
-    collapsed_timestamp = dateTime.to_time
-    user_collapsed_notice.last_collapsed_at_time = collapsed_timestamp
+    
+    user_collapsed_notice.last_collapsed_at_time = DateTime.now
     user_collapsed_notice.collapsed_status = status_to_be_set
     user_collapsed_notice.save!
     if request.xhr?
