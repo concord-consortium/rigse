@@ -14,14 +14,23 @@
         Notices
     .user_notice_container_div{:id=>"user_notice_container_div", :style => notice_collapse_table_style }  
       %table{:cellpadding => '0', :cellspacing => '0', :border => '0',:class => "all_notice_to_render", :id => "all_notice_to_render"}
+        - if @notices.length == 1
+          - notice_date_class = "notice_date"
+          - notice_text_class = "notice_text"
+          - delete_notice_class = "delete_notice"
+        - else
+          - notice_date_class = "notice_date_with_border"
+          - notice_text_class = "notice_text_with_border"
+          - delete_notice_class = "delete_notice_with_border"
+          
         - @notices.each do |notice|
           %tr{:id=>"#{dom_id_for(notice)}"}
-            %td{:class => 'notice_date'}
+            %td{:class => "#{notice_date_class}"}
               - if(notice.updated_at)
                 = notice.updated_at.strftime("%m-%d-%Y")
               - else
                 = notice.created_at.strftime("%m-%d-%Y")
-            %td{:class => 'notice_text'}
+            %td{:class => "#{notice_text_class}"}
               = notice.notice_html.html_safe
-            %td{:class => 'delete_notice'}
+            %td{:class => "#{delete_notice_class}"}
               = link_to_remote "x", :url => "#{dismiss_notice_admin_site_notice_path(notice)}",:confirm => "Are you sure you want to dismiss this notice", :method =>:post, :html =>{:title =>'Dismiss'}
