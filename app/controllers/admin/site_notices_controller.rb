@@ -119,9 +119,8 @@ class Admin::SiteNoticesController < ApplicationController
   def toggle_notice_display
     user_collapsed_notice = Admin::NoticeUserDisplayStatus.find_or_create_by_user_id(current_user.id)
     status_to_be_set = (user_collapsed_notice.collapsed_status.nil? || user_collapsed_notice.collapsed_status == false)? true : false
-    dateTime = Time.new
-    collapsed_timestamp = dateTime.to_time
-    user_collapsed_notice.last_collapsed_at_time = collapsed_timestamp
+    
+    user_collapsed_notice.last_collapsed_at_time = DateTime.now
     user_collapsed_notice.collapsed_status = status_to_be_set
     user_collapsed_notice.save!
     if request.xhr?

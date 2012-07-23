@@ -14,7 +14,7 @@
         Notices
     .user_notice_container_div{:id=>"user_notice_container_div", :style => notice_collapse_table_style }  
       %table{:cellpadding => '0', :cellspacing => '0', :border => '0',:class => "all_notice_to_render", :id => "all_notice_to_render"}
-        - @all_notices_to_render.each do |notice|
+        - @notices.each do |notice|
           %tr{:id=>"#{dom_id_for(notice)}"}
             %td{:class => 'notice_date'}
               - if(notice.updated_at)

@@ -16,6 +16,16 @@ class Admin::SiteNotice < ActiveRecord::Base
   
   def self.get_notices_for_user(user)
     
+    notices_hash = {
+      :notices => [],
+      :notice_display_type => self.NOTICE_DISPLAY_TYPES[:no_notice]
+    }
+    
+    # Notices should not be displayed for students    
+    if user.portal_student
+      return notices_hash
+    end
+    
     all_notices_ids = Array.new
     all_role_ids_of_user = Array.new
     all_roles = Role.all
@@ -78,11 +88,9 @@ class Admin::SiteNotice < ActiveRecord::Base
       notice_display_type = self.NOTICE_DISPLAY_TYPES[:no_notice]
     end
     
-    return_value = {
-      :notices => all_notices_to_render,
-      :notice_display_type => notice_display_type
-    }
+    notices_hash[:notices] = all_notices_to_render
+    notices_hash[:notice_display_type] = notice_display_type
     
-    return return_value
+    return notices_hash
   end
 end

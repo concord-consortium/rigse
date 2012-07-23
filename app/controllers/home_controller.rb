@@ -2,9 +2,9 @@ class HomeController < ApplicationController
   caches_page   :project_css
   
   def index
-   notice_hash = Admin::SiteNotice.get_notices_for_user(current_user)
-   @all_notices_to_render = notice_hash[:notices]
-   @notice_display_type = notice_hash[:notice_display_type]
+   notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
+   @notices = notices_hash[:notices]
+   @notice_display_type = notices_hash[:notice_display_type]
   end
   
   def readme
@@ -111,9 +111,9 @@ class HomeController < ApplicationController
       end
     end
     
-   notice_hash = Admin::SiteNotice.get_notices_for_user(current_user)
-   @all_notices_to_render = notice_hash[:notices]
-   @notice_display_type = notice_hash[:notice_display_type]
+   notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
+   @notices = notices_hash[:notices]
+   @notice_display_type = notices_hash[:notice_display_type]
   end
   
 end
