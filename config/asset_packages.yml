@@ -38,7 +38,7 @@ stylesheets:
   - reports
   - workgroup
   - chosen
-
+  - site_notices
 - default:
   - app
   - accordion
@@ -69,6 +69,7 @@ stylesheets:
   - reports
   - workgroup
   - chosen 
+  - site_notices
 - investigations:
   - themes/investigations/investigations
   - themes/investigations/action_menu_tab
@@ -167,6 +168,7 @@ stylesheets:
   - chosen
   - classes_left_pane
   - instructional_materials
+  - site_notice
 
 - genomedynamics:
   - app

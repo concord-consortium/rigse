@@ -266,6 +266,20 @@ constraints :id => /\d+/ do
   namespace :admin do
     resources :projects
     resources :tags
+
+    resources :site_notices do
+      member do
+        delete :remove_notice
+        post :dismiss_notice
+      end
+      
+      collection do
+        #get :manage_classes, :path => 'manage'
+        post :toggle_notice_display 
+        #post :manage_classes_save, :as => 'manage_save'
+      end
+      
+    end
   end
 
   namespace :maven_jnlp do

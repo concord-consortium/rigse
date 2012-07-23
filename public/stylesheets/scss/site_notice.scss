@@ -1,0 +1,107 @@
+.notice_header {
+  background-color: #FEE9AA;
+}
+
+.notice_text {
+  width: 500px;
+  text-align: left;
+  padding: 5px;
+}
+
+.table_row {
+  text-align: center;
+}
+
+.edit_notice {
+  width: 100px;
+}
+
+.notice_date {
+  width: 100px;
+}
+
+.delete_notice {
+  width: 45px;
+  padding-left: 22px;
+}
+
+a.create_notice, a.create_notice:visited, a.create_notice:active {
+  float: right;
+  background: -moz-linear-gradient(center top , #F3951D, #DD6E0D) repeat scroll 0 0 transparent;
+  border-radius: 12px 12px 12px 12px;
+  color: #FFFFFF;
+  font-weight: normal;
+  margin: 7px 0;
+  padding: 3px 7px;
+  text-align: center;
+  background: -webkit-gradient(linear, left top, left bottom,from(#F3951D), to(#DD6E0D));
+  -webkit-border-radius: 12px;
+}
+
+.roles {
+  font-size: 15px;
+}
+
+.checkboxcontainers{
+  height:50px;
+}
+
+.rolescheckboxes {
+  float: left;
+  margin-left: 50px;
+  width:100px;
+}
+
+.submit{
+  float:right;
+}
+
+.notice_container{
+  padding: 10px 10px 10px 10px;
+}
+
+.notice_collapse_expand#notice_collapse_expand{
+  height : 50px;
+}
+
+.user_notice_container_div{
+  height : 100px;
+  overflow: auto;  
+}
+
+.all_notice_to_render{
+  width : 100%;
+}
+
+a.notice_expand_collapse, a.notice_expand_collapse:visited, a.notice_expand_collapse:active{
+  float:right;
+  background: -moz-linear-gradient(center top , #F3951D, #DD6E0D) repeat scroll 0 0 transparent;
+    border-radius: 12px 12px 12px 12px;
+    color: #FFFFFF;
+    font-weight: normal;
+    margin: 7px 0;
+    padding: 3px 7px;
+    text-align: center; 
+    background: -webkit-gradient(linear, left top, left bottom,from(#F3951D), to(#DD6E0D));
+    -webkit-border-radius: 12px;    
+}
+
+.cell{
+  border:1px solid black
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
