@@ -1,12 +1,12 @@
 = javascript_include_tag "site_notices.js"
 - notice_collapse_table_style = ""
-- if (@notice_display_type == @NOTICE_DISPLAY_TYPES[:collapsed_notices])
+- if (@notice_display_type == Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
   - notice_collapse_table_style = "display : none;"
-- if @notice_display_type != @NOTICE_DISPLAY_TYPES[:no_notice]
+- if @notice_display_type != Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:no_notice]
   .notice_container#notice_container
     .notices_top
       .showhide_notices
-        - if @notice_display_type == @NOTICE_DISPLAY_TYPES[:collapsed_notices]
+        - if @notice_display_type == Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices]
           = link_to_remote "Show Notices", :url => "#{toggle_notice_display_admin_site_notices_path}",:method =>:post, :html => { :id =>"oHideShowLink", :title =>'Show Notices', :onclick=>"toggle_Notice_Display(this)" }
         - else
           = link_to_remote "Hide Notices", :url => "#{toggle_notice_display_admin_site_notices_path}",:method =>:post, :html => { :id =>"oHideShowLink", :title =>'Hide Notices', :onclick=>"toggle_Notice_Display(this)" }
