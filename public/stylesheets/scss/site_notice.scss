@@ -1,5 +1,5 @@
 .notice_header {
-  background-color: #FEE9AA;
+  font-weight:bold;
 }
 
 .notice_text {
@@ -23,6 +23,22 @@
   width: 50px;
   font-weight: bold;
   text-align: center;
+}
+
+.notice_container .notice_date {
+  width: 85px;
+  border-bottom:solid 1px #ddd;
+}
+.notice_container .delete_notice {
+  width: 50px;
+  font-weight: bold;
+  text-align: center;
+  border-bottom:solid 1px #ddd;
+}
+.notice_container .notice_text {
+  width: 450px;
+  text-align: left;
+  border-bottom:solid 1px #ddd;
 }
 
 a.create_notice, a.create_notice:visited, a.create_notice:active {
@@ -57,7 +73,7 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
 }
 
 .notice_container{
-  padding: 0px 10px 10px 0px;
+  padding: 5px 10px 10px 0px;
   overflow:hidden;
   border-top:solid 2px #bbb; 
   border-bottom:solid 2px #bbb; 
@@ -110,6 +126,7 @@ a.notice_expand_collapse, a.notice_expand_collapse:visited, a.notice_expand_coll
 }
 .notice_headertext{
   font-weight:bold; 
+  background-color:Transparent;
 }
 .back_link{
     float: right;
