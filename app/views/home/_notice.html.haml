@@ -14,16 +14,19 @@
         Notices
     .user_notice_container_div{:id=>"user_notice_container_div", :style => notice_collapse_table_style }  
       %table{:cellpadding => '0', :cellspacing => '0', :border => '0',:class => "all_notice_to_render", :id => "all_notice_to_render"}
-        - if @notices.length == 1
-          - notice_date_class = "notice_date"
-          - notice_text_class = "notice_text"
-          - delete_notice_class = "delete_notice"
-        - else
-          - notice_date_class = "notice_date_with_border"
-          - notice_text_class = "notice_text_with_border"
-          - delete_notice_class = "delete_notice_with_border"
-          
+        - counter = 1
         - @notices.each do |notice|
+          - if @notices.length == 1 || counter == @notices.length
+            - notice_date_class = "notice_date"
+            - notice_text_class = "notice_text"
+            - delete_notice_class = "delete_notice"
+          - else
+            - notice_date_class = "notice_date_with_border"
+            - notice_text_class = "notice_text_with_border"
+            - delete_notice_class = "delete_notice_with_border"
+            
+          - counter = counter + 1
+          
           %tr{:id=>"#{dom_id_for(notice)}"}
             %td{:class => "#{notice_date_class}"}
               - if(notice.updated_at)
