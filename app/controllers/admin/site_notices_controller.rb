@@ -47,7 +47,7 @@ class Admin::SiteNoticesController < ApplicationController
       redirect_to(:home)
       return
      end
-     @all_notices = Admin::SiteNotice.all  
+       @all_notices = Admin::SiteNotice.find(:all,:order=> 'created_at desc') 
   end
   
   def edit
