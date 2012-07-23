@@ -47,7 +47,7 @@ class Admin::SiteNoticesController < ApplicationController
       redirect_to(:home)
       return
      end
-     @all_notices = Admin::SiteNotice.all  
+       @all_notices = Admin::SiteNotice.find(:all,:order=> 'created_at desc') 
   end
   
   def edit
@@ -127,7 +127,10 @@ class Admin::SiteNoticesController < ApplicationController
         page << "notices_table = document.getElementById('notice_list')"
         page << "all_notices = notices_table.getElementsByTagName('tr')"
         page << "if(all_notices.length == 1)"
+        page << "{"
         page << "$('notice_list').remove();"
+        page << "$('no_notice_msg').update('You have no notices.<br/>To create a notice click the \"Create New Notice\" button.')"
+        page << "}"
       end
       return
     end
