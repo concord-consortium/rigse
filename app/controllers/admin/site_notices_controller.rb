@@ -34,10 +34,20 @@ class Admin::SiteNoticesController < ApplicationController
   end
   
   def index
-    @all_notices = Admin::SiteNotice.all
+     unless current_user.has_role?('admin') or current_user.has_role?('manager')
+      flash[:notice] = "Please log in as an administrator or manager"
+      redirect_to(:home)
+      return
+     end
+     @all_notices = Admin::SiteNotice.all  
   end
   
   def edit
+    unless current_user.has_role?('admin') or current_user.has_role?('manager')
+      flash[:notice] = "Please log in as an administrator or manager"
+      redirect_to(:home)
+      return
+    end  
     @notice = Admin::SiteNotice.find(params[:id])
     @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
     @notice_role_ids = @notice_roles.map{|notice_role| notice_role.role_id}
@@ -93,6 +103,10 @@ class Admin::SiteNoticesController < ApplicationController
     if request.xhr?
       render :update do |page|
         page << "$('#{params[:id]}').remove();"
+        page << "notices_table = document.getElementById('notice_list')"
+        page << "all_notices = notices_table.getElementsByTagName('tr')"
+        page << "if(all_notices.length == 1)"
+        page << "$('notice_list').remove();"
       end
       return
     end
@@ -136,16 +150,15 @@ class Admin::SiteNoticesController < ApplicationController
         page << "$('#{dom_id_for(notice)}').remove();"
         page << "notice_table = document.getElementById('all_notice_to_render')
                   all_notices = notice_table.getElementsByTagName('tr')
-                  if(all_notices.length == 1)
+                  if(all_notices.length == 0)
                   {
                     $('oHideShowLink').remove();
-                    $('user_notice_container_div').remove();
-                    $('notice_container').innerHTML = 'No Notice';
+                    $('notice_container').remove();
                   }
                 "
       end
       return
     end    
   end  
-
+    
 end

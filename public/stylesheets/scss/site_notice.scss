@@ -3,9 +3,8 @@
 }
 
 .notice_text {
-  width: 500px;
+  width: 450px;
   text-align: left;
-  padding: 5px;
 }
 
 .table_row {
@@ -17,12 +16,13 @@
 }
 
 .notice_date {
-  width: 100px;
+  width: 85px;
 }
 
 .delete_notice {
-  width: 45px;
-  padding-left: 22px;
+  width: 50px;
+  font-weight: bold;
+  text-align: center;
 }
 
 a.create_notice, a.create_notice:visited, a.create_notice:active {
@@ -48,7 +48,7 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
 
 .rolescheckboxes {
   float: left;
-  margin-left: 50px;
+  margin-left: 75px;
   width:100px;
 }
 
@@ -57,25 +57,44 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
 }
 
 .notice_container{
-  padding: 10px 10px 10px 10px;
+  padding: 0px 10px 10px 0px;
+  overflow:hidden;
+  border-top:solid 2px #bbb; 
+  border-bottom:solid 2px #bbb; 
 }
-
+.showhide_notices{
+  float:right;
+  padding-bottom:5px;
+}
 .notice_collapse_expand#notice_collapse_expand{
   height : 50px;
 }
-
-.user_notice_container_div{
-  height : 100px;
-  overflow: auto;  
+.all_notice_to_render p{
+  margin:0px;  
 }
 
 .all_notice_to_render{
-  width : 100%;
+  margin:0px;
+  padding:2px;
+} 
+.all_notice_to_render td{
+  vertical-align:top;
+  padding:2px;
+}
+.user_notice_container_div{
+  max-height : 125px;
+  overflow: auto;  
+  clear:both;
+}
+
+.edit_delete{
+  float: left;
+  margin-left:19px;
 }
 
 a.notice_expand_collapse, a.notice_expand_collapse:visited, a.notice_expand_collapse:active{
-  float:right;
-  background: -moz-linear-gradient(center top , #F3951D, #DD6E0D) repeat scroll 0 0 transparent;
+    float:right;
+    background: -moz-linear-gradient(center top , #F3951D, #DD6E0D) repeat scroll 0 0 transparent;
     border-radius: 12px 12px 12px 12px;
     color: #FFFFFF;
     font-weight: normal;
@@ -87,9 +106,16 @@ a.notice_expand_collapse, a.notice_expand_collapse:visited, a.notice_expand_coll
 }
 
 .cell{
-  border:1px solid black
+  border:1px solid black;
 }
-
+.notice_headertext{
+  font-weight:bold; 
+}
+.back_link{
+    float: right;
+    margin-right: 17px;
+    margin-top: 3px;
+}
 
 
 
