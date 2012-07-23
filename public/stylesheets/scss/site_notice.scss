@@ -35,15 +35,28 @@
 
 .notice_container .notice_date {
   width: 85px;
-  border-bottom:solid 1px #ddd;
 }
 .notice_container .delete_notice {
   width: 50px;
   font-weight: bold;
   text-align: center;
-  border-bottom:solid 1px #ddd;
 }
 .notice_container .notice_text {
+  width: 450px;
+  text-align: left;
+}
+
+.notice_container .notice_date_with_border {
+  width: 85px;
+  border-bottom:solid 1px #ddd;
+}
+.notice_container .delete_notice_with_border {
+  width: 50px;
+  font-weight: bold;
+  text-align: center;
+  border-bottom:solid 1px #ddd;
+}
+.notice_container .notice_text_with_border {
   width: 450px;
   text-align: left;
   border-bottom:solid 1px #ddd;
@@ -72,8 +85,7 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
 
 .rolescheckboxes {
   float: left;
-  margin-left: 75px;
-  width:100px;
+  margin-left: 50px;
 }
 
 .submit{
