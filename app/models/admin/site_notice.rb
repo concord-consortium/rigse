@@ -94,6 +94,8 @@ class Admin::SiteNotice < ActiveRecord::Base
       notice_display_type = self.NOTICE_DISPLAY_TYPES[:no_notice]
     end
     
+    all_notices_to_render.sort! {|a,b| b.updated_at <=> a.updated_at }
+    
     notices_hash[:notices] = all_notices_to_render
     notices_hash[:notice_display_type] = notice_display_type
     
