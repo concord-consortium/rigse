@@ -70,6 +70,10 @@ module NavigationHelpers
       "/requirements/"
     when /the about page/
       "/about"
+    when /the admin create notice page/
+      "/admin/site_notices/new"
+    when /the site notices index page/  
+      "/admin/site_notices"
     when /the password reset page/
       "/change_password/0"
     when /the edit security questions page for the user "(.*)"/
