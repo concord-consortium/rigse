@@ -507,7 +507,7 @@ class Portal::ClazzesController < ApplicationController
   end
 
 # GET add/edit student list 
-  def get_students
+  def add_new_student
     if request.xhr?
       @portal_student = Portal::Student.new
       @user = User.new
