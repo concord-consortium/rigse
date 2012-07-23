@@ -6,14 +6,14 @@
     %table{:cellpadding => '2', :cellspacing => '0', :border => '1', :class => 'notice_list', :id => 'notice_list'}
       %tr{:class=>'notice_header'}
         %th Notice
-        %th Created on
+        %th Updated on
         %th 
       - @all_notices.each do |notice|
         %tr{:id => notice.id, :class=> 'table_row'}
           %td{:class => 'notice_text'} 
             = notice.notice_html.html_safe
           %td{:class => 'notice_date'} 
-            = notice.created_at.strftime("%m-%d-%Y")
+            = notice.updated_at.strftime("%m-%d-%Y")
           %td{:class => 'edit_notice'}
             %span.edit_delete
               = link_to "Edit", {:action => 'edit', :id => notice.id}
