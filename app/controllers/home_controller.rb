@@ -2,94 +2,7 @@ class HomeController < ApplicationController
   caches_page   :project_css
   
   def index
-    all_notices_ids = Array.new
-    all_roles_of_user = Array.new
-    all_role = Role.all
-    all_role.each do |role|
-      if(current_user.has_role?(role.title))
-        all_roles_of_user << role.id     
-      end      
-    end
-    
-    last_collapsed_at_time_obj = Admin::NoticeUserDisplayStatus.find_by_user_id(current_user.id)
-    
-    if(!last_collapsed_at_time_obj.nil? and last_collapsed_at_time_obj.collapsed_status == true)
-      last_collapsed_at_time = last_collapsed_at_time_obj.last_collapsed_at_time
-    else
-      last_collapsed_at_time = DateTime.new(1990,01,01);
-    end
-    
-    latest_notice_id_obj = Admin::SiteNoticeRole.where(:role_id => all_roles_of_user)
-    if(!latest_notice_id_obj.nil?)
-      latest_notice_id_obj.each do |notice|
-        all_notices_ids <<  notice.notice_id
-      end
-      latest_notice_at_time = Admin::SiteNotice.where(:id => all_notices_ids).maximum("updated_at")
-    end
-    
-    @all_notices_to_render = Array.new
-    
-    
-    @NOTICE_DISPLAY_TYPES = {
-      :no_notice => 1,
-      :new_notices => 2,
-      :collapsed_notices => 3
-    }
-    
-    if(latest_notice_id_obj.nil?)
-      @notice_display_type = @NOTICE_DISPLAY_TYPES[:no_notice]
-    elsif ( (last_collapsed_at_time_obj.nil?) ? true : (last_collapsed_at_time < latest_notice_at_time) )
-      @notice_display_type = @NOTICE_DISPLAY_TYPES[:new_notices]
-      flag = 0
-      all_notices_ids = all_notices_ids.uniq
-      all_notices = Admin::SiteNotice.where(:id => all_notices_ids)
-      dismissed_notices = Admin::SiteNoticeUser.find_all_by_user_id(current_user.id)
-      if(!dismissed_notices.nil?)
-        all_notices.each do |notice|
-          dismissed_notices.each do |dismissed|
-            if dismissed.notice_id == notice.id 
-              flag = 1
-            end  
-          end
-          if(flag == 0)
-            @all_notices_to_render << notice
-          else
-            flag = 0          
-          end  
-        end
-      else
-        all_notices.each do |notice|
-           @all_notices_to_render << notice 
-        end
-      end  
-    elsif(last_collapsed_at_time >= latest_notice_at_time)
-      @notice_display_type = @NOTICE_DISPLAY_TYPES[:collapsed_notices]
-      flag = 0
-      all_notices_ids = all_notices_ids.uniq
-      all_notices = Admin::SiteNotice.where(:id => all_notices_ids) 
-      dismissed_notices = Admin::SiteNoticeUser.find_all_by_user_id(current_user.id)
-      if(!dismissed_notices.nil?)
-        all_notices.each do |notice|
-          dismissed_notices.each do |dismissed|
-            if dismissed.notice_id == notice.id 
-              flag = 1
-            end  
-          end
-          if(flag == 0)
-            @all_notices_to_render << notice
-          else
-            flag = 0          
-          end  
-        end
-      else
-        all_notices.each do |notice|
-           @all_notices_to_render << notice 
-        end
-      end      
-    end
-    if @all_notices_to_render.length == 0
-      @notice_display_type = @NOTICE_DISPLAY_TYPES[:no_notice]
-    end
+   
   end
   
   def readme
@@ -196,6 +109,98 @@ class HomeController < ApplicationController
       end
     end
     
-    
+   get_notices
   end
+  
+  def get_notices
+    all_notices_ids = Array.new
+    all_roles_of_user = Array.new
+    all_role = Role.all
+    all_role.each do |role|
+      if(current_user.has_role?(role.title))
+        all_roles_of_user << role.id     
+      end      
+    end
+    
+    last_collapsed_at_time_obj = Admin::NoticeUserDisplayStatus.find_by_user_id(current_user.id)
+    
+    if(!last_collapsed_at_time_obj.nil? and last_collapsed_at_time_obj.collapsed_status == true)
+      last_collapsed_at_time = last_collapsed_at_time_obj.last_collapsed_at_time
+    else
+      last_collapsed_at_time = DateTime.new(1990,01,01);
+    end
+    
+    latest_notice_id_obj = Admin::SiteNoticeRole.where(:role_id => all_roles_of_user)
+    if(!latest_notice_id_obj.nil?)
+      latest_notice_id_obj.each do |notice|
+        all_notices_ids <<  notice.notice_id
+      end
+      latest_notice_at_time = Admin::SiteNotice.where(:id => all_notices_ids).maximum("updated_at")
+    end
+    
+    @all_notices_to_render = Array.new
+    
+    
+    @NOTICE_DISPLAY_TYPES = {
+      :no_notice => 1,
+      :new_notices => 2,
+      :collapsed_notices => 3
+    }
+    
+    if(latest_notice_id_obj.nil?)
+      @notice_display_type = @NOTICE_DISPLAY_TYPES[:no_notice]
+    elsif ( (last_collapsed_at_time_obj.nil?) ? true : (last_collapsed_at_time < latest_notice_at_time) )
+      @notice_display_type = @NOTICE_DISPLAY_TYPES[:new_notices]
+      flag = 0
+      all_notices_ids = all_notices_ids.uniq
+      all_notices = Admin::SiteNotice.where(:id => all_notices_ids)
+      dismissed_notices = Admin::SiteNoticeUser.find_all_by_user_id(current_user.id)
+      if(!dismissed_notices.nil?)
+        all_notices.each do |notice|
+          dismissed_notices.each do |dismissed|
+            if dismissed.notice_id == notice.id 
+              flag = 1
+            end  
+          end
+          if(flag == 0)
+            @all_notices_to_render << notice
+          else
+            flag = 0          
+          end  
+        end
+      else
+        all_notices.each do |notice|
+           @all_notices_to_render << notice 
+        end
+      end  
+    elsif(last_collapsed_at_time >= latest_notice_at_time)
+      @notice_display_type = @NOTICE_DISPLAY_TYPES[:collapsed_notices]
+      flag = 0
+      all_notices_ids = all_notices_ids.uniq
+      all_notices = Admin::SiteNotice.where(:id => all_notices_ids) 
+      dismissed_notices = Admin::SiteNoticeUser.find_all_by_user_id(current_user.id)
+      if(!dismissed_notices.nil?)
+        all_notices.each do |notice|
+          dismissed_notices.each do |dismissed|
+            if dismissed.notice_id == notice.id 
+              flag = 1
+            end  
+          end
+          if(flag == 0)
+            @all_notices_to_render << notice
+          else
+            flag = 0          
+          end  
+        end
+      else
+        all_notices.each do |notice|
+           @all_notices_to_render << notice 
+        end
+      end      
+    end
+    if @all_notices_to_render.length == 0
+      @notice_display_type = @NOTICE_DISPLAY_TYPES[:no_notice]
+    end
+  end
+  
 end
