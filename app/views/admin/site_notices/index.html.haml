@@ -1,18 +1,21 @@
-%table{:cellpadding => '2', :cellspacing => '0', :border => '1', :class => 'notice_list'}
-  %tr{:class=>'notice_header'}
-    %th Notice
-    %th Created at
-    %th Edit
-    %th Delete
-  - @all_notices.each do |notice|
-    %tr{:id => notice.id, :class=> 'table_row'}
-      %td{:class => 'notice_text'} 
-        = notice.notice_html.html_safe
-      %td{:class => 'notice_date'} 
-        = notice.created_at.strftime("%m-%d-%Y")
-      %td{:class => 'edit_notice'}
-        = link_to "Edit", {:action => 'edit', :id => notice.id}
-      %td{:class => 'delete_notice'}
-        = remote_link_button "delete.png", :url => {:action=>'remove_notice', :id => notice.id},:confirm => "Are you sure you want to delete this notice", :method => :delete, :title =>'Delete Notice'
-        
+-if(@all_notices.length > 0)
+  %h1
+    Notices
+  %table{:cellpadding => '2', :cellspacing => '0', :border => '1', :class => 'notice_list', :id => 'notice_list'}
+    %tr{:class=>'notice_header'}
+      %th Notice
+      %th Created on
+      %th 
+    - @all_notices.each do |notice|
+      %tr{:id => notice.id, :class=> 'table_row'}
+        %td{:class => 'notice_text'} 
+          = notice.notice_html.html_safe
+        %td{:class => 'notice_date'} 
+          = notice.created_at.strftime("%m-%d-%Y")
+        %td{:class => 'edit_notice'}
+          %span.edit_delete
+            = link_to "Edit", {:action => 'edit', :id => notice.id}
+          %span.edit_delete
+            = remote_link_button "delete.png", :url => {:action=>'remove_notice'},:confirm => "Are you sure you want to delete this notice", :method => :delete, :title =>'Delete Notice', :id => 'delete_' + notice.id.to_s
+          
 = link_to 'create new notice', new_admin_site_notice_path, {:class => 'create_notice'}

@@ -1,10 +1,14 @@
-%h1 
-Edit Notice
+%div
+  
+  %h1
+    New Notice 
 .editor#editor
   %textarea{:class => 'tinymce_textarea' ,:value=>"Hi", :rows => '40', :name => 'notice_html'}
     =@notice.notice_html.html_safe
+%br
+%br
 .filters#filters  
-  .sectionheader
+  %h1
     Receivers 
   .roles#roles
     .checkboxcontainers 
@@ -24,10 +28,9 @@ Edit Notice
         = label_tag 'author', 'Author'     
       .rolescheckboxes
         = check_box_tag 'role[]','5',  @notice_role_ids.include?(5), :id => 'member'
-        = label_tag 'member', 'Member'    
-      .rolescheckboxes
-        = check_box_tag 'role[]','6',  @notice_role_ids.include?(6),:id => 'guest'
-        = label_tag 'guest', 'Guest'    
+        = label_tag 'member', 'Member'      
     
 .submit#submit
   = submit_tag 'Update Notice', {:class => 'pie'} 
+.back_link
+  = link_to "Cancel", {:action => 'index'}
