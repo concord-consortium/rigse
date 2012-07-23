@@ -1,7 +1,7 @@
 class Admin::SiteNoticesController < ApplicationController
   def new
     unless current_user.has_role?('admin') or current_user.has_role?('manager')
-      flash[:notice] = "Please log in as an administrator or manager"
+      flash[:error] = "Please log in as an administrator or manager"
       redirect_to(:home)
       return    
     end
