@@ -8,36 +8,43 @@ class Admin::SiteNoticesController < ApplicationController
   end
 
   def create
-    if params[:notice_html] =~ /\S+/
-      if !params[:role].nil?
-        site_notice = Admin::SiteNotice.new
-        site_notice.notice_html = params[:notice_html]
-        site_notice.created_by = current_user.id
-        site_notice.save!
-        
-        #storing all roles that should see this notice
-        
-        roles = params[:role]
-        roles.each do |role_id|
-          site_notice_roles = Admin::SiteNoticeRole.new
-          site_notice_roles.notice_id = site_notice.id
-          site_notice_roles.role_id = role_id
-          site_notice_roles.save!
-        end
-      else
-        flash[:error] = "Select atleast one role"
-        respond_to do |format|
-          format.html { render :action => "new" }
-        end
-        return
-      end       
-    else
+    unless current_user.has_role?('admin') or current_user.has_role?('manager')
+      flash[:notice] = "Please log in as an administrator or manager"
+      redirect_to(:home)
+      return    
+    end
+    
+    unless params[:notice_html] =~ /\S+/
       flash[:error] = "Text cannot be blank"
       respond_to do |format|
           format.html { render :action => "new" }
       end
       return
     end
+    
+    if params[:role].nil?
+      flash[:error] = "Select atleast one role"
+      respond_to do |format|
+        format.html { render :action => "new" }
+      end
+      return
+    end
+    
+    site_notice = Admin::SiteNotice.new
+    site_notice.notice_html = params[:notice_html]
+    site_notice.created_by = current_user.id
+    site_notice.save!
+    
+    #storing all roles that should see this notice
+    
+    roles = params[:role]
+    roles.each do |role_id|
+      site_notice_role = Admin::SiteNoticeRole.new
+      site_notice_role.notice_id = site_notice.id
+      site_notice_role.role_id = role_id
+      site_notice_role.save!
+    end
+    
     redirect_to admin_site_notices_path
   end
   
@@ -47,7 +54,8 @@ class Admin::SiteNoticesController < ApplicationController
       redirect_to(:home)
       return
      end
-       @all_notices = Admin::SiteNotice.find(:all,:order=> 'created_at desc') 
+     
+     @all_notices = Admin::SiteNotice.find(:all,:order=> 'updated_at desc') 
   end
   
   def edit
@@ -55,7 +63,8 @@ class Admin::SiteNoticesController < ApplicationController
       flash[:notice] = "Please log in as an administrator or manager"
       redirect_to(:home)
       return
-    end  
+    end
+    
     @notice = Admin::SiteNotice.find(params[:id])
     @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
     @notice_role_ids = @notice_roles.map{|notice_role| notice_role.role_id}
@@ -68,41 +77,40 @@ class Admin::SiteNoticesController < ApplicationController
     @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
     @notice_role_ids = @notice_roles.map{|notice_role| notice_role.role_id}
     
-    if params[:notice_html] =~ /\S+/
-      if !params[:role].nil?
-        site_notice = @notice
-        site_notice.notice_html= params[:notice_html]
-        site_notice.updated_by = current_user.id
-        site_notice.save!
-          
-        notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
-        notice_roles.each do |notice_role|
-          notice_role.destroy
-        end
-          
-        #Storing new roles
-        roles = params[:role]
-        roles.each do |role_id|
-          site_notice_roles = Admin::SiteNoticeRole.new
-          site_notice_roles.notice_id = params[:id]
-          site_notice_roles.role_id = role_id 
-          site_notice_roles.save!
-        end
-      else
-        flash[:error] = "Select atleast one role"
-        respond_to do |format|
-          format.html { render :action => "edit"}
-        end
-        return
-      end
-    else
+    unless params[:notice_html] =~ /\S+/
       flash[:error] = "Text cannot be blank"
       respond_to do |format|
           format.html { render :action => "edit" }
       end
       return
-    end  
-       
+    end
+   
+    if params[:role].nil?
+      flash[:error] = "Select atleast one role"
+      respond_to do |format|
+        format.html { render :action => "edit"}
+      end
+      return
+    end
+  
+    site_notice = @notice
+    site_notice.notice_html= params[:notice_html]
+    site_notice.updated_by = current_user.id
+    site_notice.save!
+      
+    #notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    notice_role_ids = @notice_roles.map {|nr| nr.id}
+    Admin::SiteNoticeRole.delete(notice_role_ids)
+    
+    #Storing new roles
+    roles = params[:role]
+    roles.each do |role_id|
+      site_notice_role = Admin::SiteNoticeRole.new
+      site_notice_role.notice_id = @notice.id
+      site_notice_role.role_id = role_id
+      site_notice_role.save!
+    end
+    
     redirect_to admin_site_notices_path
   end
    
