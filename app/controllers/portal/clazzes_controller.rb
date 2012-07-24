@@ -644,4 +644,8 @@ class Portal::ClazzesController < ApplicationController
   end
   
   
+  def sort_offerings
+    params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
+  end
+  
 end
