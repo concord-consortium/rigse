@@ -15,43 +15,9 @@
         %td= label_tag :user, 'Email: ', :class=>"right"
         %td= text_field :user, :email, {:live => false}
 
-      - # conditionally allow for 'adhoc_school' entry
-      - if current_project.allow_adhoc_schools?
-        %tr
-          %td= label_tag :school, 'School: ', :class=>"right"
-          %td
-            #school_choice
-              = select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
-              .tiny.help#show_write_in
-                I can't find my school in the list.
-            #school_write_in{:style => 'display: none;'}
-              = text_field :school, :name, {:live => false }
-              .tiny.help#show_select
-                Go back to the school list.
-            :javascript
-              new Chosen($('school_id'));
-              var value = 'Type your school name here';
-              var sel=null;
-              $('show_write_in').observe("click", function(e) {
-                $('school_choice').hide();
-                sel = $$('select#school_id option').find(function(ele){return !!ele.selected});
-                $$('select#school_id option')[0].selected=true;
-                $('school_name').value = value;
-                $('school_write_in').show();
-              });
-              $('show_select').observe("click", function(e) {
-                $('school_write_in').hide();
-                $('school_choice').show();
-                if (sel) { sel.selected=true; }
-                value = $('school_name').value;
-                $('school_name').value ='';
-              });
-      - else
-        %tr
-          %td= label_tag :school, 'School: ', :class=>"right"
-          %td= select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
-        :javascript
-          new Chosen($('school_id'));
+      - # just use a default school for now
+      = hidden_field 'school', 'id', :value => Portal::School.last.id
+
       = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
       %tr
         %td
