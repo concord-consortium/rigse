@@ -34,7 +34,7 @@ module Clipboard
         obj_array = clazz.find(:all, :conditions => {:id => clipboard_data_id})
         results = obj_array.empty? ? nil : obj_array.first
       rescue NameError
-        error_message = "unkown object in clipboard %s (id:%d)" % [clipboard_data_type,id]
+        error_message = "unkown object in clipboard %s (id:%d)" % [clipboard_data_type,clipboard_data_id]
         logger.warn(error_message)
         flash[:warn]=error_message
       end
