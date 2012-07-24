@@ -1,8 +1,10 @@
-Feature: Teacher removes a student
+
+D:\GIT\RIGSE>@git.exe %*
+Feature: Teacher changes password of a student
   
-  In order to  keep correct students assigned to the class
+  In order to update student login information
   As a teacher
-  I should be able to remove a student
+  I should be able to change the password of a student
   
   Background:
     Given The default project and jnlp resources exist using factories
@@ -12,12 +14,7 @@ Feature: Teacher removes a student
     And the following teachers exist:
       | login    | password   | first_name | last_name  |
       | teacher  | teacher    | John       | Nash       |
-    And the teachers "teacher" are in a school named "VJTI"
-    
-    And the following semesters exist:
-      | name     | start_time          | end_time            |
-      | Fall     | 2012-12-01 00:00:00 | 2012-03-01 23:59:59 |
-      | Spring   | 2012-10-10 23:59:59 | 2013-03-31 23:59:59 |
+    And  the teachers "teacher" are in a school named "VJTI"
     And the following classes exist:
       | name     | teacher | semester |
       | My Class | teacher | Fall     |
@@ -26,11 +23,15 @@ Feature: Teacher removes a student
     
     
   @javascript
-  Scenario: Teacher removes a student
+  Scenario: Teacher changes password of a student
     Given I login with username: teacher password: teacher
     And I am on "Student Roster" page for "My Class"
-    And I accept the upcoming javascript confirm box
-    When I follow "Remove Student"
-    Then I should see "No students registered for this class yet."
+    When I follow "Change Password"
+    Then I should see "You must set a new password"
     
     
+D:\GIT\RIGSE>@set ErrorLevel=%ErrorLevel%
+
+D:\GIT\RIGSE>@rem Restore the original console codepage.
+
+D:\GIT\RIGSE>@chcp %cp_oem% > nul < nul
