@@ -9,7 +9,7 @@ set :branch, "master"
 #  Servers
 #############################################################
 
-set :domain, "aws1.rites.concord.org"
+set :domain, "aws1.sparks.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
 # DISABLE SOME OF THE DESTRUCTIVE DB TASKS

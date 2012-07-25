@@ -4,7 +4,7 @@ require 'haml'
 require File.expand_path('../../lib/yaml_editor', __FILE__)
 
 set :stages, %w(
-  rites-staging rites-production rites-aws1
+  rites-staging rites-production
   itsisu-dev itsisu-staging itsisu-production
   smartgraphs-dev smartgraphs-staging smartgraphs-production
   has-dev has-staging has-production
@@ -14,7 +14,7 @@ set :stages, %w(
   xproject-dev
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
-  sparks-dev sparks-staging sparks-production
+  sparks-dev sparks-staging sparks-production sparks-aws1
   xproject3-dev xproject32-dev )
 
 set :default_stage, "development"
