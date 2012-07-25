@@ -133,6 +133,8 @@ stylesheets:
   - data_table
   - reports
   - chosen
+  - classes_left_pane
+  - instructional_materials
 
 - has:
   - app
