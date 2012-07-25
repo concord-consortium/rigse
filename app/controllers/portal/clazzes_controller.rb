@@ -597,4 +597,12 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.find(params[:id]);
   end
   
+  def fullstatus
+    if current_user.anonymous?
+      redirect_to home_url
+      return
+    end
+    @portal_clazz = Portal::Clazz.find(params[:id]);
+  end
+  
 end

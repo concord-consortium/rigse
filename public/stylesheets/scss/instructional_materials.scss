@@ -104,6 +104,11 @@
   background-color:#FFCC99;
   float:left;
 }
+.progress.activity{
+  height:15px;
+  background-color:Orange;
+  float:left;
+}
 
 
 .linkbutton {
@@ -139,3 +144,27 @@
   margin:0;
 }
 
+#oFullStatusDiv
+{
+  padding:0;
+  margin:0;
+}
+#oFullStatusDiv .reportsummary{text-align:left;margin-left:125px;border:0;margin-top:0px;}
+#oFullStatusDiv .reportsummary tr { vertical-align: top; }
+#oFullStatusDiv .reportsummary td { text-align:left; vertical-align:middle;padding:5px;width:115px;height:20px;background-color:White;border:solid 1px #ccc;}
+#oFullStatusDiv .reportsummary th { text-align:center; vertical-align:middle;padding:5px;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;cursor:pointer;width:115px;height:20px; }
+#oFullStatusDiv .reportsummary th.activity { text-align:center; vertical-align:middle;padding:5px;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;cursor:pointer;width:115px;height:20px; }
+#oFullStatusDiv .student_name{white-space:nowrap}
+#oFullStatusDiv .locked_left { 
+  position:absolute; 
+  left: 10px;
+  width:115px;
+  height:20px;
+  text-align:left;
+}
+
+@-moz-document url-prefix() {
+    #oFullStatusDiv .locked_left {
+        margin-top:-1px;
+    }
+}
