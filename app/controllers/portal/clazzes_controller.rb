@@ -285,7 +285,7 @@ class Portal::ClazzesController < ApplicationController
       render :update do |page|
         page << "var element = $('#{dom_id}');"
         page << "element.remove();"
-        page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
+        page.insert_html :bottom, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
       end
     end
     @offering.refresh_saveable_response_objects
