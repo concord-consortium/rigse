@@ -95,7 +95,47 @@ class Portal::Offering < ActiveRecord::Base
   def run_format
     runnable.run_format
   end
+  
+  def completed_students_count
+    students = self.clazz.students 
+    learners = self.learners
+    num_completed = 0
+    students.each do |student|
+      learner = learners.find_by_student_id(student.id)
+      report_learner = nil
+      if !learner.nil?
+        report_learner = learner.report_learner
+        if !report_learner.nil?
+          total_complete_percent = report_learner.complete_percent
+          num_completed += (total_complete_percent == 100)? 1 :0
+        end
+      end
+    end
+    num_completed
+  end
+  
+  def inprogress_students_count
+    students = self.clazz.students 
+    learners = self.learners
+    num_in_progress = 0
+    students.each do |student|
+      learner = learners.find_by_student_id(student.id)
+      report_learner = nil
+      if !learner.nil?
+        report_learner = learner.report_learner
+        if !report_learner.nil?
+          total_complete_percent = report_learner.complete_percent
+          num_in_progress += (total_complete_percent > 0 && total_complete_percent < 100)? 1 :0
+        end
+      end
+    end
+    num_in_progress  
+  end
 
+  def notstarted_students_count
+    num_not_started = 0
+    num_not_started = self.clazz.students.length - (completed_students_count + inprogress_students_count)
+  end
   # def saveable_count
   #   @saveable_count ||= begin
   #     runnable = self.runnable

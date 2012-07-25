@@ -2,7 +2,9 @@ class HomeController < ApplicationController
   caches_page   :project_css
   
   def index
-    
+   notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
+   @notices = notices_hash[:notices]
+   @notice_display_type = notices_hash[:notice_display_type]
   end
   
   def readme
@@ -68,4 +70,57 @@ class HomeController < ApplicationController
   #     redirect_to :controller => :passwords, :action=>'reset', :reset_code => 0
   #   end
   # end
+  
+  def recent_activity
+    if current_user.anonymous?
+      redirect_to home_url
+      return
+    end
+  
+    @report_learner = Report::Learner.all
+    
+    teacher_clazzes = current_user.portal_teacher.clazzes;
+    portal_teacher_clazzes = current_user.portal_teacher.teacher_clazzes
+    portal_teacher_offerings = [];
+    teacher_clazzes.each do|teacher_clazz|
+      if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active && teacher_clazz.students.length > 0
+        portal_teacher_offerings.concat(teacher_clazz.offerings)
+      end
+    end
+    
+    strTime =(7.day.ago).to_s.gsub(" UTC","");
+    learner_offerings = ((Report::Learner.where("last_run > '#{strTime}' and complete_percent > 0")).order("last_run DESC")).select(:offering_id).uniq
+    
+    if (learner_offerings.count == 0)
+      redirect_to root_path
+      return
+    end
+    
+    @clazz_offerings=Array.new    
+    
+    
+    learner_offerings.each do |learner_offering|
+      portal_teacher_offerings.each do|teacher_offering|
+        reportlearner = Report::Learner.find_by_offering_id(learner_offering.offering_id)
+        if reportlearner.offering_id == teacher_offering.id
+          offering = Portal::Offering.find(reportlearner.offering_id)
+          if offering.inprogress_students_count > 0 || offering.completed_students_count > 0
+            @clazz_offerings.push(offering)
+          end
+        end
+      end
+    end
+    
+    
+    if (@clazz_offerings.count == 0)
+      redirect_to root_path
+      return
+    end
+
+   notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
+   @notices = notices_hash[:notices]
+   @notice_display_type = notices_hash[:notice_display_type]
+
+  end
+  
 end

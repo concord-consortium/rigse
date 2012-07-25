@@ -63,10 +63,21 @@
 .investigationdata tr { vertical-align: top; }
 .investigationdata td { text-align:left; vertical-align:top;padding:5px }
 
-.reportsummary{text-align:left; border:solid 1px #666;border-right:0;}
+.reportsummary{text-align:left;margin-left:125px}
 .reportsummary tr { vertical-align: top; }
-.reportsummary td { text-align:left; vertical-align:middle;padding:5px; border-right:solid 1px #666}
-.reportsummary th { text-align:left; vertical-align:middle;padding:5px;font-weight:bold;background-color:#F9EEC1; border-right:solid 1px #666 }
+.reportsummary td { text-align:left; vertical-align:middle;padding:5px; width:115px;height:20px;background-color:White;border:solid 1px #ccc;}
+.reportsummary th { text-align:left; vertical-align:middle;padding:5px;font-weight:bold;background-color:#F9EEC1;width:115px;height:20px;border:solid 1px #ccc; }
+.reportsummary .locked_left { 
+  position:absolute; 
+  left: 27px;
+  width:115px;
+  height:20px;
+}
+@-moz-document url-prefix() {
+    .reportsummary .locked_left {
+        margin-top:-1px;
+    }
+}
 
 .legend_progress{
   background-color:#FFCC99;
@@ -127,4 +138,129 @@
   padding:0;
   margin:0;
 }
+.legend_completed {
+  background-color: #FF8513;
+  border: solid 1px #666;
+  width: 10px;
+  height: 10px;
+}
+.legend_row {
+  height: 35px;
+  width: 300px;
+}
+.recent_activity_table td {
+  font-weight: normal;
+}
+.recent_activity_table th{
+  padding-bottom:5px;
+}
+.recent_activity_container table {
+  margin: 0px
+}
+
+.status_count_graph{
+  margin:0;
+  padding:0;
+  width:480px;
+}
+.status_count_graph td {
+  text-align: right;
+  font-weight:bold;
+}
+.LeftMost_legend_completed {
+  background-color: #FF8513;
+  border: solid 1px #666;
+}
+.Middle_legend_progress {
+  background-color: #FFCC99;
+  border: solid 1px #666;
+}
+.RightMost_legend_not_started {
+  background-color: White;
+  border: solid 1px #666;
+}
+.showhidedetails {
+  white-space:nowrap;
+  float: right;
+  font-weight:normal;
+  width:100px;
+  a{
+    text-decoration:underline;
+  }
+}
+.report {
+  height: 25px;
+  margin-top:10px;
+}
+
+.activityprogressbar_container {
+  font-size: 13px
+}
+
+
+.progressbar_row table {
+  margin-top: 15px
+}
+.investigation_info {
+  width: 150px;
+}
+
+.investigation_info table{
+  width: 150px;
+}
+
+.investigation_info th {
+  text-align: left;
+  vertical-align:top;
+  width:90px;
+  
+}
+.investigation_activities {
+}
+
+.progress_summary_container
+{
+  padding:0;
+  margin:0;
+  padding-bottom:5px;
+}
+
+.inProgressSummary{text-align:left;border:0;margin-top:0px;}
+.inProgressSummary tr { vertical-align: top; }
+.inProgressSummary td { text-align:left; vertical-align:middle;padding:2px;width:115px;height:20px;background-color:#F3F2ED}
+.inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;cursor:pointer;width:115px;height:20px;background-color:#F3F2ED}
+
+.expand_collapse_activities{padding-left:15px;}
+
+.class_offering_name{text-align:left;float:left}
+
+.progress_summary_container .inProgressSummary{text-align:left;border:0;margin-top:0px;margin-left:209px}
+.progress_summary_container .inProgressSummary tr { vertical-align: top; }
+.progress_summary_container .inProgressSummary td { text-align:left; vertical-align:middle;padding:2px;width:115px;height:20px;background-color:#F3F2ED}
+.progress_summary_container .inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;cursor:pointer;width:115px;height:20px;background-color:#F3F2ED}
+.progress_summary_container .student_name{white-space:nowrap}
+.progress_summary_container .locked_left { 
+  /* the code below removes the table cells (column) and puts them out to the left of the table */ 
+  position:absolute; 
+  left: 0px;
+  width:115px;
+  height:20px;
+}
+.progress_summary_container .date_locked_left { 
+  /* the code below removes the table cells (column) and puts them out to the left of the table */ 
+  position:absolute; 
+  left: 119px;
+  width:85px !important;
+  height:20px;
+}
+
+@-moz-document url-prefix() {
+    .progress_summary_container .locked_left {
+        margin-top:-1px;
+    }
+}
+
+.messagetable{width:100%}
+.messagetable td{font-style:italic;text-align:left}
+.messagetable th{font-weight:bold;text-align:left}
 
