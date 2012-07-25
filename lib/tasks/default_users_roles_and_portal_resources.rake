@@ -246,7 +246,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # make a default project if it doesn't exist
       project = Admin::Project.first
       if project.nil?
-        project = Admin::Project.create
+        project = Admin::Project.create(:active => true)
       end
 
       # make a default district and school

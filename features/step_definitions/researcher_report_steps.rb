@@ -146,6 +146,10 @@ Given /^the following student answers:$/ do |answer_table|
     offering = find_or_create_offering(assignable, clazz)
     learner = offering.find_or_create_learner(student)
     add_response(learner,hash['question_prompt'],hash['answer'])
+    
+    report_learner = Report::Learner.for_learner(learner)
+    report_learner.last_run = DateTime.now
+    report_learner.update_fields
   end
 end
 

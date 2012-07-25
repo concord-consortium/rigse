@@ -1,0 +1,35 @@
+%h1
+  Recent activity
+= render :partial => "notice"
+-if @clazz_offerings.length > 0  
+  .recent_activity_container
+    %table{:width=>"100%"}
+      %tr
+        %td{:width=>"75%",:style=>"float:right"}
+          %table{:style=>"margin:1em 0"}
+            %tr{}
+              %td
+                %span.legend_completed
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Completed
+              %td
+                &nbsp;&nbsp;
+                %span.legend_progress
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;In Progress
+                &nbsp;&nbsp;
+              %td
+                %span.legend_not_started
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Not yet started
+              
+    = render :partial => 'recent', :collection => @clazz_offerings, :as => :clazz_offering, :locals => { :report_learner => @report_learner}
+-else
+  %br
+  %br
+  .no_activity
+    No Recent Activity
+ 

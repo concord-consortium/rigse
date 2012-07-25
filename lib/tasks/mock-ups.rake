@@ -1,10 +1,6 @@
+
 namespace :portal do
   namespace :dev do
-    
-    desc 'Load db with imaginary data for development use'
-    task :load_mockup_data => :environment do
-      MockupDataLoader.new.load
-    end
     
     desc "erase data from portal resources"
     task :erase_portal_data => :environment do
@@ -23,5 +19,24 @@ namespace :portal do
       Portal::Learner.delete_all
       Portal::SdsConfig.delete_all
     end
+
+    desc 'Load db with a large Class with 26 students and 10 investigations with 3 activities in each'
+    task :load_large_class => :environment do
+      require 'mock_data'
+
+      # with an updated FactoryGirl this will be easier
+      Dir.glob(File.join(Rails.root, 'factories/*.rb')).each { |f| require(f) }
+      MockData.load_large_class
+    end
+
+    desc 'Load db with a mixed runnable type class'
+    task :load_mixed_runnable_type_class => :environment do
+      require 'mock_data'
+
+      # with an updated FactoryGirl this will be easier
+      Dir.glob(File.join(Rails.root, 'factories/*.rb')).each { |f| require(f) }
+      MockData.load_mixed_runnable_type_class
+    end
   end
+
 end

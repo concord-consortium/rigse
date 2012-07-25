@@ -23,6 +23,6 @@ Feature: Student offering jnlps are not cached
 
   Scenario: Student should see activated offerings
     When I log out
-    And I login with username: student password: student
+    And I login with username: student
     And I follow "run Test Investigation"
     Then the jnlp should not be cached
