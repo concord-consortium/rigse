@@ -92,3 +92,4 @@ sis_import_data
 config/sis_import_data.yml
 *.sublime_project.*
 config/paperclip.yml
+config/google_analytics.yml
