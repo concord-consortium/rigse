@@ -1,9 +1,4 @@
-/[if lt IE 10]
-  %style
-    th.locked_left, td.locked_left{margin-top:-1px;}
 %tr
-  %th.locked_left
-    &nbsp;
   - offerings.each do |offering|
     - activities_display = "none"
     - offering_display = ""
@@ -18,20 +13,19 @@
       - activities = assignable.activities
     - elsif assignable.is_a? ::Activity
       - activities = [assignable]
-       
     %th{:class=>"investigation_summary_row_#{offering.id}",:title=>"#{offering.name}", :style=>"display:#{offering_display}", :onclick=>"showHideDetailedSummary(#{offering.id}, true, \"#{url_for([:offering_collapsed_status, offering])}\")"}
-      = offering.name.truncate(13) 
-      >>
+      %div.progressbar_container 
+        = offering.name.truncate(7) 
+        >>
     - if activities.length > 0
       %th.activity{:colspan=>"#{activities.length}",:title=>"#{offering.name}", :class=>"investigation_detail_row_#{offering.id}", :style=>"display:#{activities_display}", :onclick=>"showHideDetailedSummary(#{offering.id},false,\"#{offering_collapsed_status_portal_offering_path(offering)}\")"} 
-        = offering.name.truncate(13) 
-        <<
+        %div.progressbar_container 
+          = offering.name.truncate(7) 
+          <<
 %tr
-  %th.locked_left
-    ACTIVITY
   - offerings.each do |offering|
-    - offering_display = ""
     - activities_display = "none"
+    - offering_display = ""
     - activities_collapsed = offering.teacher_full_status.find_by_teacher_id(current_user.portal_teacher.id) 
     - if !activities_collapsed.nil?
       - activities_collapsed = activities_collapsed.offering_collapsed
@@ -43,14 +37,15 @@
       - activities = assignable.activities
     - elsif assignable.is_a? ::Activity
       - activities = [assignable]
-      
     - activity_counter = 0
     %th{:class=>"investigation_summary_row_#{offering.id}", :style=>"display:#{offering_display}"} 
-      Summary
+      %div.progressbar_container 
+        Summary
     - activities.each do |activity|
       - activity_counter = activity_counter + 1
-      - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(15)
+      - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(9)
       - activity_name_tooltip = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
       %th{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id} activity", :title=>"#{activity_name_tooltip}", :style=>"display:#{activities_display}"}
-        = activity_name
+        %div.progressbar_container 
+          = activity_name
 

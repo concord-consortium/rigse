@@ -13,7 +13,7 @@
           %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class => 'labelvalue'
           %td.title=label_tag :name, 'Class Word ', :class => 'left'
           %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
-      .header Full Status
+      .header.fullstatus Full Status
       %br
       %table
         %tr
@@ -29,13 +29,16 @@
               &nbsp;&nbsp;
             %span
               &nbsp;Not yet started
-      %div{:id=>"oFullStatusDiv",:style=>"width:585px;overflow:auto"}      
+      %div{:id=>"oFullStatusDiv",:style=>"width:620px"}      
         - if clazz_offerings.length > 0
           - students = portal_clazz.students;
           - if students.length > 0
-            %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
-              = render :partial => 'clazz_student_report_summary_header', :locals=> {:offerings=>clazz_offerings}
-              = render :partial => 'clazz_student_report_summary',:collection => students, :as => :student,:locals=> {:offerings=>clazz_offerings}
+            .student_div.floatL
+              = render :partial => 'clazz_student_report_learner_list', :locals=> {:offerings=>clazz_offerings, :students=>students}
+            .progress_div.floatL
+              %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
+                = render :partial => 'clazz_student_report_summary_header',:locals=> {:offerings=>clazz_offerings}
+                = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offerings=>clazz_offerings}
           - else
             %div No students have registered for this class yet.
         - else
