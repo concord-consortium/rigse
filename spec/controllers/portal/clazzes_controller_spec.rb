@@ -690,7 +690,7 @@ describe Portal::ClazzesController do
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       assert_not_equal(@portal_clazz.class_word , '', 'Class saved with blank class word.')
-    end  
+    end
     
     it "should not update the class info if there is no teacher" do
       @post_params[:clazz_teacher_ids] = ''
@@ -856,7 +856,7 @@ describe Portal::ClazzesController do
       assert_equal(@copy_clazz.students.length, 0)
       
     end
-  end  
+  end
   
   
   # GET edit
@@ -904,4 +904,33 @@ describe Portal::ClazzesController do
     
   end
   
+  
+  describe "Post teacher sorts class offerings on class summary page" do
+    before(:each) do
+      @physics_offering = Factory.create(:portal_offering)
+      @chemistry_offering = Factory.create(:portal_offering)
+      @biology_offering = Factory.create(:portal_offering)
+      @mathematics_offering = Factory.create(:portal_offering)
+      @params = {
+        :clazz_offerings => [@physics_offering.id, @chemistry_offering.id, @biology_offering.id , @mathematics_offering.id]
+      }
+    end
+    it "should store position of all the offerings after teacher sorts offerings" do
+      
+      # Save initial offering positions
+      xhr :post, :sort_offerings, @params
+      offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
+      offerings.each do |offering|
+        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+      end
+      
+      # Update offering positions and verify they have been updated
+      @params[:clazz_offerings] = [@mathematics_offering.id, @biology_offering.id, @chemistry_offering.id, @physics_offering.id]
+      xhr :post, :sort_offerings, @params
+      offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
+      offerings.each do |offering|
+        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+      end
+    end
+  end
 end
