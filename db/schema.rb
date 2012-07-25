@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120621133703) do
+ActiveRecord::Schema.define(:version => 20120713194959) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -609,6 +609,8 @@ ActiveRecord::Schema.define(:version => 20120621133703) do
     t.boolean  "popup"
     t.boolean  "append_survey_monkey_uid"
     t.string   "report_url"
+    t.integer  "template_id"
+    t.string   "template_type"
   end
 
   add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"
@@ -1665,6 +1667,7 @@ ActiveRecord::Schema.define(:version => 20120621133703) do
     t.datetime "updated_at",                                        :null => false
     t.boolean  "active",                         :default => true
     t.boolean  "default_offering",               :default => false
+    t.integer  "position",                       :default => 0
   end
 
   create_table "portal_school_memberships", :force => true do |t|
@@ -1752,6 +1755,8 @@ ActiveRecord::Schema.define(:version => 20120621133703) do
     t.integer  "teacher_id"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
+    t.boolean  "active",                    :default => true
+    t.integer  "position",                  :default => 0
   end
 
   add_index "portal_teacher_clazzes", ["clazz_id"], :name => "index_portal_teacher_clazzes_on_clazz_id"

@@ -90,6 +90,9 @@ class Report::Util
     end
 
     assignable = @offering.runnable
+    if assignable.is_a?(ExternalActivity) && assignable.template
+      assignable = assignable.template
+    end
 
     @saveables               = []
     @saveables_by_type       = {}

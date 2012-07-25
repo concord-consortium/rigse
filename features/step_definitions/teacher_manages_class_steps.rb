@@ -92,3 +92,20 @@ And /^there should be no student in "(.+)"$/ do |class_name|
   page.has_content?('No students registered for this class yet.')  
 end
 
+Given /^the mixed runnable types class$/ do 
+  require 'mock_data'
+  MockData.load_mixed_runnable_type_class
+end
+
+Then /^each material has a report link$/ do
+  # start by assuming what tabs are there
+
+  # it starts out with the first one selected in this case Investigation
+  page.should have_content("Run Report")  
+
+  [ 'Activity', 'Page', 'External Activity', 'Resource Page' ].each { |name| 
+    puts "Finding #{name} Sample"
+    find('div.tab', :text => "#{name} Sample").click
+    page.should have_selector('a', :text => "Run Report", :visible => true)
+  }
+end

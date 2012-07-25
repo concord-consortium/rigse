@@ -69,7 +69,7 @@ Feature: The Project administrator disables certain vendor interfaces
       | pasco usb        |
       | vernier usb      |
 
-    When I login with username: student_login password: student_password
+    When I login with username: student_login
     When I follow "Preferences"
     Then I should see "User Preferences"
     And I should see "Probeware Interface"

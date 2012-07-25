@@ -1,13 +1,13 @@
 namespace :db do
   desc "Dump the current database to a MySQL file" 
   task :dump => :environment do
-    db_config = ActiveRecord::Base.configurations[RAILS_ENV]
+    db_config = ActiveRecord::Base.configurations[Rails.env]
     case db_config["adapter"]
     when 'mysql', 'mysql2'
       # make sure we can connect to the db...
       ActiveRecord::Base.establish_connection(db_config)
       
-      output_file = "db/#{RAILS_ENV}_data.sql";
+      output_file = "db/#{Rails.env}_data.sql";
       
       cmd = "mysqldump --lock-tables=false --add-drop-table --quick --extended-insert"
       if db_config["host"]
@@ -27,7 +27,7 @@ namespace :db do
       puts `#{cmd}`
     when 'sqlite3'
       ActiveRecord::Base.establish_connection(db_config)
-      File.open("db/#{RAILS_ENV}_data.sql", "w+") do |f|
+      File.open("db/#{Rails.env}_data.sql", "w+") do |f|
         f << `sqlite3  #{db_config["database"]} .dump`
       end
     else
@@ -48,7 +48,7 @@ namespace :db do
   end
   
   task :load => :environment do
-    db_config = ActiveRecord::Base.configurations[RAILS_ENV]
+    db_config = ActiveRecord::Base.configurations[Rails.env]
     
     RemoveTables.up
     
@@ -64,7 +64,7 @@ namespace :db do
       if db_config["password"]
         cmd << " -p'#{db_config["password"]}'"
       end
-      db_path = "db/#{RAILS_ENV}_data.sql"
+      db_path = "db/#{Rails.env}_data.sql"
       `gunzip --force #{db_path}.gz` if File.exists? db_path + '.gz'
       cmd << " #{db_config["database"]} < #{db_path}"
       # puts "Fetching database\n#{cmd}"

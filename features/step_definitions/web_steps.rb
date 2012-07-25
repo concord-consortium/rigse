@@ -269,5 +269,8 @@ And /^I receive a file for download with a filename like "(.+)"$/ do |filename|
   page.response_headers['Content-Disposition'].should =~ pattern
 end
 
+And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor_id|
+  evaluate_script("tinyMCE.getInstanceById('#{editor_id}').setContent('#{html}');")
+end
 
 

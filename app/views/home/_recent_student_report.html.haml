@@ -1,0 +1,63 @@
+- runnable = offering.runnable
+- activities = []
+- if runnable.is_a? ::Investigation
+  - activities = runnable.activities
+- else runnable.is_a? ::Activity
+  - activities = [runnable]
+
+- if activities.length > 0
+  - if offering.inprogress_students_count > 0
+    .progress_summary_container{:style=>"width:465px;overflow:auto"}
+      %table.inProgressSummary
+        %tr
+          %th.locked_left
+            In-progress              
+          %th.date_locked_left        
+          - activity_counter = 0
+          - activities.each do |activity|
+            - activity_counter = activity_counter + 1
+            - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(10)
+            %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
+              = activity_name
+        = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
+  - else
+    %table.messagetable
+      %tr
+        %th
+          In-progress
+      %tr
+        %td No students with incomplete progress. 
+  %br
+  
+  - if offering.notstarted_students_count > 0
+    %table.inProgressSummary
+      %tr
+        %th
+          Not yet started              
+      = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
+  - else
+    %table.messagetable
+      %tr
+        %th
+          Not yet started
+      %tr
+        %td All students have started this offering.
+  %br
+  
+  - if offering.completed_students_count > 0
+    %table.inProgressSummary
+      %tr
+        %th
+          Completed              
+      = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100, :students=>students, :learners=>learners}
+  - else
+    %table.messagetable
+      %tr
+        %th
+          Completed
+      %tr
+        %td No student has completed this offering yet.
+- else
+  %div.item No activities available in this offering.   
+  
+  

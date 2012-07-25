@@ -103,7 +103,7 @@ Spork.each_run do
   Cucumber::Rails::Database.javascript_strategy = :transaction
   # Cucumber::Rails::Database.javascript_strategy = :truncation, { :except => (probe_tables + rigse_tables) }
   
-  APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
+  APP_CONFIG[:theme] = 'xproject' #lots of tests seem to be broken if we try to use another theme
 
   require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
   require 'cucumber/rspec/doubles'

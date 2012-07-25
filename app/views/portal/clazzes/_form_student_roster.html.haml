@@ -18,17 +18,25 @@
         %span{:style => "font-weight:bold"} #{portal_clazz.name}
         %br
         ='Student Count :' 
-        %span{:style => "font-weight:bold"} #{portal_clazz.students.length}
+        %span{:id=>"oClassStudentCount", :style => "font-weight:bold"} #{portal_clazz.students.length}
       %table.classdata
         %tr
-          %td.hide_in_print
-            %input{:type=>"button", :value=>"Add New Student", :onclick=>"get_School_Student_List()", :class=>"pie"} 
           %td.hide_in_print{:style=>"padding-left:10px"}
             %input{:type=>"button", :value=>"Print Student Roster", :onclick=>"window.print();", :class=>"pie"}
-
+      %br.clearBoth
+      %br
+      %table.clearBoth
+        %tr
+          %td.hide_in_print{:style=>"padding-left:10px"}
+            = student_add_dropdown(portal_clazz)
+        %tr
+          %td.hide_in_print{:style=>"padding-left:10px"}
+            - add_student_url = new_portal_student_path(:clazz_id => portal_clazz.id)
+            = link_to "Add a student who is not registered", "#", :title => "add a student to #{portal_clazz.name}", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
+            
       %table{:width=>"100%", :style=>"clear:both"}
         %tr
-          %td
+          %td{:style=>"padding-left:5px"}
             .item{:id=>'students_listing'}
               = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => portal_clazz}
             

@@ -238,6 +238,9 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
     run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"
+    run "ln -nfs #{shared_path}/config/paperclip.yml #{release_path}/config/paperclip.yml"
+    run "ln -nfs #{shared_path}/config/aws_s3.yml #{release_path}/config/aws_s3.yml"
+    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
     run "ln -nfs #{shared_path}/config/sis_import_data.yml #{release_path}/config/sis_import_data.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
@@ -250,7 +253,6 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
-    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
 
     # support for running SproutCore app from the public directory
     run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
