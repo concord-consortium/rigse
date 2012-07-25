@@ -1,8 +1,6 @@
 - if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
   = render_portal_clazz_partial 'portal/clazzes/show'
   = render_portal_clazz_partial 'portal/offerings/list_for_clazz'
-  %br
-  = render_portal_clazz_partial 'portal/students/list_for_clazz'
 - elsif current_user.has_role?("manager", "researcher")
   = render :partial => 'shared/offering_for_teacher', :collection => @portal_clazz.offerings, :as => :offering
 - else

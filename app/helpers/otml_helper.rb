@@ -282,7 +282,7 @@ module OtmlHelper
   end
 
   def ot_navigation_history_service
-    result = render :partial => "otml/ot_navigation_history_service.otml"
+    result = render :partial => "otml/ot_navigation_history_service", :formats => [:otml]
     return result
   end
 

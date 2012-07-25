@@ -48,7 +48,15 @@ class SessionsController < ApplicationController
     new_cookie_flag = (params[:remember_me] == "1")
     handle_remember_cookie! new_cookie_flag
     flash[:notice] = "Logged in successfully"
-    redirect_to(root_path) # unless !check_student_security_questions_ok
+    
+    redirect_path = root_path
+    
+    if current_user.portal_teacher
+      # Teachers are redirected to the "Recent Activity" page
+      redirect_path = recent_activity_path
+    end
+    
+    redirect_to(redirect_path) # unless !check_student_security_questions_ok
   end
 
   def note_failed_signin

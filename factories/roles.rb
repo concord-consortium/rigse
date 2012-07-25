@@ -5,7 +5,7 @@
 # Factory.next :member_role
 # Factory.next :guest_role
 #
-%w| guest member admin researcher|.each_with_index do |role_name,index|  
+%w| guest member admin researcher manager author|.each_with_index do |role_name,index|  
   Factory.sequence "#{role_name}_role".to_sym do |n| 
     role = Role.find_by_title(role_name)
     unless role

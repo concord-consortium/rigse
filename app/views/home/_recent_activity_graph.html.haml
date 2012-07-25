@@ -1,0 +1,24 @@
+- total_students = students.length
+- num_completed = offering.completed_students_count
+- num_in_progress = offering.inprogress_students_count
+- num_not_started = offering.notstarted_students_count
+- if true
+  %tr.legend_row
+    - if num_completed > 0
+      %td.LeftMost_legend_completed{:style=>"width:#{(num_completed*100/total_students).round}%"}          
+    - if num_in_progress > 0
+      %td.Middle_legend_progress{:style=>"width:#{(num_in_progress*100/total_students).round}%"}   
+    - if num_not_started > 0
+      %td.RightMost_legend_not_started{:style=>"width:#{(num_not_started*100/total_students).round}%"}   
+  %tr
+    - if num_completed > 0
+      %td{:style=>"text-align:right;"}
+        = num_completed
+    - if num_in_progress > 0 
+      %td
+        = num_in_progress
+    - if num_not_started > 0
+      %td
+        = num_not_started
+- else
+  no student has completed the Investigation

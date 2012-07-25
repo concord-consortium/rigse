@@ -26,7 +26,7 @@ private
       when 'textile'
         @html = RedCloth.new(File.read(@document_path)).to_html
       when 'md'
-        @html = Maruku.new(File.read(@document_path)).to_html
+        @html = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new).render(File.read(@document_path))
       else
         @html = "<p>Document: <i><b>#{File.basename(@document_path)}</i></b> not displayable.</p>"
       end

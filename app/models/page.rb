@@ -6,6 +6,8 @@ class Page < ActiveRecord::Base
   belongs_to :section
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
+  has_many :external_activities, :as => :template
+
   has_one :activity, :through => :section
 
   # this could work if the finder sql was redone

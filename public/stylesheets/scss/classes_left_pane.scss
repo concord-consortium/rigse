@@ -43,14 +43,14 @@ div#classes_selected
 }
 
 
-.create_link
+.create_link,
+.manage_classes_link
 {
   a.button {
   border: 0 solid #f3951d;
   color: white;
   display: inline;
   font: 12px / 1 Arial, Helvetica, sans-serif;
-  padding: 4px 3px;
   /* CSS 3 */
   background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
   background: -moz-linear-gradient(top, #f3951d, #dd6e0d);

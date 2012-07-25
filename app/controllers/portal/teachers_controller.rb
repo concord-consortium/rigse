@@ -41,9 +41,6 @@ class Portal::TeachersController < ApplicationController
   def new
     @portal_teacher = Portal::Teacher.new
     @school_selector = Portal::SchoolSelector.new(params)
-    #
-    # TODO: We dont use domains or grades for teachers anymore.
-    load_domains_and_grades
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @portal_teacher }
@@ -71,7 +68,6 @@ class Portal::TeachersController < ApplicationController
     if params[:domain]
       @domain = RiGse::Domain.find(params[:domain][:id])
     end
-    load_domains_and_grades
 
     @user = User.new(params[:user])
     @school_selector = Portal::SchoolSelector.new(params)
@@ -138,20 +134,5 @@ class Portal::TeachersController < ApplicationController
     flash.now[:error] = message
     render :action => :new
   end
-  
-  
-  private 
-  def load_domains_and_grades
-    # @portal_districts = Portal::District.virtual + Portal::District.real
-    # Maybe this easier, and cleaner:
-    @portal_districts = Portal::District.find(:all, :order => :name)
-    @portal_grades = Portal::Grade.active
-    if (@portal_grades && @portal_grades.size > 1)
-      @default_grade_id = @portal_grades.last.id
-    end
-    @domains = RiGse::Domain.all
-  end
-  
-  
   
 end

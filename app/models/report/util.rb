@@ -90,6 +90,9 @@ class Report::Util
     end
 
     assignable = @offering.runnable
+    if assignable.is_a?(ExternalActivity) && assignable.template
+      assignable = assignable.template
+    end
 
     @saveables               = []
     @saveables_by_type       = {}
@@ -166,12 +169,16 @@ class Report::Util
     return saveables(:learner => learner).size
   end
 
-  def complete_percent(learner)
-    completed = Float(complete_number(learner))
-    total = Float(embeddables.size)
+  def complete_percent(learner,activity = nil)
+    completed = Float(complete_number(learner,activity))
+    if activity 
+      total = Float(activity.reportable_elements.map { |r| r[:embeddable]}.size)  
+    else
+      total = Float(embeddables.size)
+    end
     return total < 0.5 ? 0.0 : (completed/total) * 100.0
   end
-
+  
   def answered_number(learner)
     return saveables(:learner => learner, :answered => true).size
   end

@@ -70,6 +70,10 @@ module NavigationHelpers
       "/requirements/"
     when /the about page/
       "/about"
+    when /the admin create notice page/
+      "/admin/site_notices/new"
+    when /the site notices index page/  
+      "/admin/site_notices"
     when /the password reset page/
       "/change_password/0"
     when /the edit security questions page for the user "(.*)"/
@@ -88,6 +92,8 @@ module NavigationHelpers
       "/portal/classes/#{portal_clazz.id}/roster"
     when /Manage Class Page/
       "/portal/classes/manage"
+    when /Recent Activity Page/
+      "/recent_activity"  
     when /Instructional Materials page for "(.+)"/
       portal_clazz = Portal::Clazz.find_by_name $1
       "/portal/classes/#{portal_clazz.id}/materials"
