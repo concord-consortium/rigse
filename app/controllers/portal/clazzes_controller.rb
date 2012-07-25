@@ -648,4 +648,12 @@ class Portal::ClazzesController < ApplicationController
     params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
   end
   
+  def fullstatus
+    if current_user.anonymous?
+      redirect_to home_url
+      return
+    end
+    @portal_clazz = Portal::Clazz.find(params[:id]);
+  end
+  
 end
