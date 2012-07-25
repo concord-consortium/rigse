@@ -105,13 +105,6 @@ class Activity < ActiveRecord::Base
 
   end
 
-  ##
-  ## Hackish stubs: Noah Paessel
-  ##
-  def offerings
-    []
-  end
-
   def parent
     return investigation
   end
