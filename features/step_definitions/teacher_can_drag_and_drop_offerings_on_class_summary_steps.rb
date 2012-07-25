@@ -33,7 +33,7 @@ And /^I move the offering named "(.+)" to the top of the list on the class summa
   raise 'Could not move the offering in the list' if result == false
 end
 
-Then /^the offering named "(.+)" should be the first on the list on the class summary$/ do|class_name|
+Then /^the offering named "(.+)" should be the first on the list on the class summary page$/ do|class_name|
   result = page.execute_script("
                                  var bSortSuccess = false;
                                  var strUlId = 'clazz_offerings'
