@@ -37,7 +37,7 @@
           - if students.length > 0
             .student_div.floatL
               = render :partial => 'clazz_student_report_learner_list', :locals=> {:offerings=>clazz_offerings, :students=>students}
-            .progress_div.floatL
+            .progress_div.floatL.webkit_scrollbars
               %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
                 = render :partial => 'clazz_student_report_summary_header',:locals=> {:offerings=>clazz_offerings}
                 = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offerings=>clazz_offerings}
