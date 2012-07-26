@@ -15,12 +15,12 @@
       - activities = [assignable]
     %th{:class=>"investigation_summary_row_#{offering.id}",:title=>"#{offering.name}", :style=>"display:#{offering_display}", :onclick=>"showHideDetailedSummary(#{offering.id}, true, \"#{url_for([:offering_collapsed_status, offering])}\")"}
       %div.progressbar_container 
-        = offering.name.truncate(7) 
+        = offering.name.truncate(6) 
         >>
     - if activities.length > 0
       %th.activity{:colspan=>"#{activities.length}",:title=>"#{offering.name}", :class=>"investigation_detail_row_#{offering.id}", :style=>"display:#{activities_display}", :onclick=>"showHideDetailedSummary(#{offering.id},false,\"#{offering_collapsed_status_portal_offering_path(offering)}\")"} 
         %div.progressbar_container 
-          = offering.name.truncate(7) 
+          = offering.name.truncate(6) 
           <<
 %tr
   - offerings.each do |offering|
@@ -43,9 +43,9 @@
         Summary
     - activities.each do |activity|
       - activity_counter = activity_counter + 1
-      - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(9)
+      - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
       - activity_name_tooltip = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
       %th{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id} activity", :title=>"#{activity_name_tooltip}", :style=>"display:#{activities_display}"}
         %div.progressbar_container 
-          = activity_name
+          = activity_name.truncate(8)
 
