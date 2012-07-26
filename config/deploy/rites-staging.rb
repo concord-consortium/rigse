@@ -9,7 +9,7 @@ set :branch, "master"
 #  Servers
 #############################################################
 
-set :domain, "rites-staging.dev.concord.org"
+set :domain, "rites-investigations.staging.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
 # DISABLE SOME OF THE DESTRUCTIVE DB TASKS

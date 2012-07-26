@@ -57,7 +57,6 @@ Feature: Teacher adds a new student
   Scenario: Teacher adds another student from the pop up
     Given the student "student" belongs to class "My Class"
     And the student "student" belongs to class "My Class 2"
-    And I login with username: teacher password: teacher
     And I am on "Student Roster" page for "My Class"
     And I follow "Add a student who is not registered"
     And I should see "Add and Register New Student"

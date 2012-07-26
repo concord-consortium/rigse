@@ -15,6 +15,7 @@ config/sds.yml
 config/initializers/site_keys.rb
 config/mailer.yml
 config/additional_users.yml
+config/aws_s3.yml
 config/settings.yml
 config/nces_data
 public/images/0*
@@ -91,3 +92,4 @@ sis_import_data
 config/sis_import_data.yml
 *.sublime_project.*
 config/paperclip.yml
+config/google_analytics.yml

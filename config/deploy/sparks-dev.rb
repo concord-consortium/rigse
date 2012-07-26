@@ -12,3 +12,6 @@ set :branch, "sparks-dev"
 set :domain, "sparks.dev.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
+
+after 'deploy:symlink', 'import:create_or_update_sparks_content'
+

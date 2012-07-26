@@ -58,7 +58,7 @@ source "http://rubygems.org"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
   gem 'themes_for_rails',     "~> 0.5.0.pre"
-  gem 'default_value_for',    "~> 1.0.5"
+  gem 'default_value_for',    "~> 2.0.1"
   gem 'exception_notification', "~> 2.5.2"
   gem 'prototype-rails'
   # switch to willbryant inorder to pick up some 3.1 necessary changes
