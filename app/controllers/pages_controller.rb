@@ -1,6 +1,9 @@
 class PagesController < ApplicationController
   helper :all
   
+  # so we can use dom_id_for
+  include ApplicationHelper
+
   before_filter :find_entities, :except => [:create,:new,:index,:delete_element,:add_element]
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
@@ -304,7 +307,7 @@ class PagesController < ApplicationController
           @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
         end
         if (@component)
-          @container = params['container'] || 'elements_container'
+          @container = params['container'] || dom_id_for(@page, :elements_container)
           @component.name = "copy of #{@component.name}"
           @component.user = @page.user
           @component.pages << @page
@@ -314,11 +317,15 @@ class PagesController < ApplicationController
           @element.save
         end
       end
-      render :update do |page|
-        page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
-        page.sortable 'elements_container', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
-        page[dom_id_for(@component, :item)].scrollTo()  
-        page.visual_effect :highlight, dom_id_for(@component, :item)
+      if @element.nil?
+        logger.warn "Paste failed. original: #{@original} container: #{@container} component: #{@component} element: #{@element}"
+      else 
+        render :update do |page|
+          page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
+          page.sortable 'elements_container', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
+          page[dom_id_for(@component, :item)].scrollTo()  
+          page.visual_effect :highlight, dom_id_for(@component, :item)
+        end
       end
     end
   end

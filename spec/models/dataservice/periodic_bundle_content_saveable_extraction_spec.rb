@@ -84,7 +84,8 @@ describe Dataservice::PeriodicBundleContent do
       saveable.answers[0].answer.should eql('someChoice')
     end
     learner.image_questions.each do |saveable|
-      bundle_content.blobs.include?(saveable.answer).should be_true
+      bundle_content.blobs.include?(saveable.answer[:blob]).should be_true
+      saveable.answer[:note].should eql('Add a note describing this entry...')
     end
   end
 

@@ -9,8 +9,8 @@ class Saveable::ImageQuestionAnswer < ActiveRecord::Base
   acts_as_list :scope => :image_question_id
   
   def answer
-    if blob
-      blob
+    if blob || note
+      {:blob => blob, :note => note}
     else
       "not answered"
     end

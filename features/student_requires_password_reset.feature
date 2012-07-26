@@ -10,7 +10,6 @@ Feature: Student requires a password reset
       | login   | password | require_password_reset |
       | student | student  | true                   |
 
-  @javascript
   Scenario: Student forced to change password
     # And the student "student" has security questions set
     When I am logged in with the username student
@@ -18,14 +17,12 @@ Feature: Student requires a password reset
     Then I should be on the password reset page
     Then I should see "You must set a new password."
 
-  @javascript
   Scenario: Student tries to navigate to their preferences
     When I am logged in with the username student
     When I go to my preferences
     Then I should be on the password reset page
     And I should see "You must set a new password."
 
-  @javascript
   Scenario: Student updates password with errors
     When I am logged in with the username student
     And I am on my home page
@@ -35,7 +32,6 @@ Feature: Student requires a password reset
     And I press "Submit"
     Then I should see "Your password could not be changed."
 
-  @javascript
   Scenario: Student updates password
     When I am logged in with the username student
     And I am on my home page

@@ -113,7 +113,16 @@ module DeepCloning
                           self.send(association).collect { |obj| clone_object(obj, opts) }
                         end
         # puts "cloned_object: #{cloned_object}"
-        kopy.send("#{association}=", cloned_object)
+        begin
+          kopy.send("#{association}=", cloned_object)
+        rescue ActiveRecord::RecordNotSaved
+          logger.warn "failed to add object(s) to association: #{association}"
+          logger.warn "  source object: #{self.inspect}"
+          logger.warn "  object(s) added: #{cloned_object}"
+          array_of_objects = [cloned_object].flatten
+          logger.warn "  object(s) errors: #{array_of_objects.map{|obj| obj.errors.full_messages}}"
+          raise
+        end
       end
     end
 
@@ -121,6 +130,8 @@ module DeepCloning
     t = Time.now
     kopy.send(:write_attribute, :created_at, t) if kopy.respond_to?(:created_at)
     kopy.send(:write_attribute, :updated_at, t) if kopy.respond_to?(:updated_at)
+
+    kopy.save(:validate => false) # skip validations when cloning
 
     return kopy
   end
@@ -132,7 +143,9 @@ module DeepCloning
       set_never_clone(Array(options[:never_clone]))
     end
     
-    dup(options)
+    ActiveRecord::Base.transaction do
+      dup(options)
+    end
   end
   
   # this was added to work around the fact that rails 3.2 removed the attributes_from_column_definition

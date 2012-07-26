@@ -44,6 +44,7 @@ describe Portal::ClazzesController do
     @mock_project.stub(:enable_grade_levels?).and_return(true)
     @mock_project.stub(:allow_default_class).and_return(false)
     @mock_project.stub(:use_student_security_questions).and_return(false)
+    @mock_project.stub!(:require_user_consent?).and_return(false)
     Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 

@@ -20,8 +20,10 @@
       - if offering.resource_page?
         = render :partial => 'resource_pages/accordion', :locals => { :resource_page => offering.runnable, :offering => offering }
       - else
-        = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=>"Show Individual Reports"}) do
+      - show_hide_text = offering.individual_reportable? ? "Show Individual Reports" : "Show Students"
+      = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=>show_hide_text}) do
           %div{:id => dom_id_for(offering, :details), :class => 'tiny', :style => 'clear: both;'}
+          - if offering.printable_report?
             %div{:class => 'offering_print_all'}= link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
             %span.author= "Author: #{offering.runnable.user.name}"
             %p= "Description: #{offering.runnable.description}"

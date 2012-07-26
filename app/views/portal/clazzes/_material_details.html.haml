@@ -5,8 +5,9 @@
     - if runnable.is_a? Investigation
       = render :partial => 'material_details_investigation',
            :locals => { :investigation => runnable, :current_offering => current_offering }
-    - else 
-      %div.right
-        %span.linkbutton.pie
-          = report_link_for(current_offering, 'report', 'Run Report')
+    - else
+      - if current_offering.reportable?
+        %div.right
+          %span.linkbutton.pie
+            = report_link_for(current_offering, 'report', 'Run Report')
   
