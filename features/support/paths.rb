@@ -90,6 +90,9 @@ module NavigationHelpers
     when /"Student Roster" page for "(.+)"/
       portal_clazz = Portal::Clazz.find_by_name $1
       "/portal/classes/#{portal_clazz.id}/roster"
+    when /the full status page for "(.+)"/
+      portal_clazz = Portal::Clazz.find_by_name $1
+      "/portal/classes/#{portal_clazz.id}/fullstatus"
     when /Manage Class Page/
       "/portal/classes/manage"
     when /Recent Activity Page/
