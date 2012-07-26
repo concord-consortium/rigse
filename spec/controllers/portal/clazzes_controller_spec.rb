@@ -933,4 +933,25 @@ describe Portal::ClazzesController do
       end
     end
   end
+  
+  describe "GET fullstatus" do
+    before(:each) do
+      @params = {
+        :id => @mock_clazz.id
+      }
+    end
+    it "should redirect to home page for anonymous user" do
+      stub_current_user :normal_user
+      get :fullstatus, @params
+      response.should_not be_success
+      response.should redirect_to home_url
+    end
+    it "should retrieve the class when user not anonymous user" do
+      stub_current_user :authorized_teacher_user
+      get :fullstatus, @params
+      assigns[:portal_clazz] = @mock_clazz
+      response.should be_success
+      assert_template "fullstatus"
+    end
+  end
 end
