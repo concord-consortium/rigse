@@ -15,22 +15,22 @@
           %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
       .header.fullstatus Full Status
       %br
-      %table
-        %tr
-          %td
-            %span.legend_progress
+      - if clazz_offerings.length > 0
+        %table
+          %tr
+            %td
+              %span.legend_progress
+                &nbsp;&nbsp;
+              %span
+                &nbsp;In Progress
+            %td
               &nbsp;&nbsp;
-            %span
-              &nbsp;In Progress
-          %td
-            &nbsp;&nbsp;
-          %td
-            %span.legend_not_started
-              &nbsp;&nbsp;
-            %span
-              &nbsp;Not yet started
-      %div{:id=>"oFullStatusDiv",:style=>"width:620px"}      
-        - if clazz_offerings.length > 0
+            %td
+              %span.legend_not_started
+                &nbsp;&nbsp;
+              %span
+                &nbsp;Not yet started
+        %div{:id=>"oFullStatusDiv",:style=>"width:620px"}      
           - students = portal_clazz.students;
           - if students.length > 0
             .student_div.floatL
@@ -41,8 +41,8 @@
                 = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offerings=>clazz_offerings}
           - else
             %div No students have registered for this class yet.
-        - else
-          %div No offerings present.
+      - else
+        %div No offerings present.
                 
 = f.hidden_field :teacher_id
 = f.hidden_field :id
