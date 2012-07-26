@@ -655,6 +655,9 @@ class Portal::ClazzesController < ApplicationController
       return
     end
     @portal_clazz = Portal::Clazz.find(params[:id]);
+    
+    # Save the left pane sub-menu item
+    Portal::Teacher.save_left_pane_submenu_item(current_user, Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS'])
   end
   
 end

@@ -351,7 +351,7 @@ class Portal::OfferingsController < ApplicationController
   end
 
   def offering_collapsed_status
-    if current_user.portal_teacher.nil? && request.xhr?
+    if current_user.portal_teacher.nil?
       render :nothing=>true
       return
     end
@@ -364,10 +364,7 @@ class Portal::OfferingsController < ApplicationController
     portal_teacher_full_status.offering_collapsed = offering_collapsed
     portal_teacher_full_status.save!
     
-    if request.xhr?
-      render :nothing=>true
-      return
-    end
+    render :nothing=>true
     
   end
 

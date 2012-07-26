@@ -41,6 +41,8 @@
             - clazz_url = [:roster, clazz]
           - when Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP']
             - clazz_url = [:edit, clazz]
+          - when Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS']
+            - clazz_url = [:fullstatus, clazz]
           - else
             - clazz_url = [clazz]
           - clazz_url = url_for(clazz_url)
