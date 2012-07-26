@@ -13,24 +13,26 @@
           %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class => 'labelvalue'
           %td.title=label_tag :name, 'Class Word ', :class => 'left'
           %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
-      .header.fullstatus Full Status
-      %br
-      - if clazz_offerings.length > 0
-        %table
-          %tr
-            %td
-              %span.legend_progress
+    .header.fullstatus Full Status
+    %br
+    - if clazz_offerings.length > 0
+      %div.clearboth
+        %div
+          %table
+            %tr
+              %td
+                %span.legend_progress
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;In Progress
+              %td
                 &nbsp;&nbsp;
-              %span
-                &nbsp;In Progress
-            %td
-              &nbsp;&nbsp;
-            %td
-              %span.legend_not_started
-                &nbsp;&nbsp;
-              %span
-                &nbsp;Not yet started
-        %div{:id=>"oFullStatusDiv",:style=>"width:620px"}      
+              %td
+                %span.legend_not_started
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Not yet started
+        %div{:id=>"oFullStatusDiv"}      
           - students = portal_clazz.students;
           - if students.length > 0
             .student_div.floatL
@@ -39,10 +41,11 @@
               %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
                 = render :partial => 'clazz_student_report_summary_header',:locals=> {:offerings=>clazz_offerings}
                 = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offerings=>clazz_offerings}
+            .clearboth{:style=>"height:10px"}
           - else
             %div No students have registered for this class yet.
-      - else
-        %div No offerings present.
+    - else
+      %div No offerings present.
                 
 = f.hidden_field :teacher_id
 = f.hidden_field :id
