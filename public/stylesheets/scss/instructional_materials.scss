@@ -104,6 +104,11 @@
   background-color:#FFCC99;
   float:left;
 }
+.progress.activity{
+  height:15px;
+  background-color:Orange;
+  float:left;
+}
 
 
 .linkbutton {
@@ -264,3 +269,51 @@
 .messagetable td{font-style:italic;text-align:left}
 .messagetable th{font-weight:bold;text-align:left}
 
+#oFullStatusDiv
+{
+  padding:0;
+  margin:0;
+  width:620px;
+  clear:both;
+}
+.header.fullstatus
+{
+  padding-left:0;
+  color: #3A878B;
+  font-size: 20px;
+  font-weight: bold;
+  clear: both;
+}
+
+#oFullStatusDiv .reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px}
+#oFullStatusDiv .reportsummary tr { vertical-align: middle; }
+#oFullStatusDiv .reportsummary td { text-align:center; vertical-align:middle;width:70px;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
+#oFullStatusDiv .reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;cursor:pointer;width:70px;height:20px;;padding:5px}
+#oFullStatusDiv .reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;cursor:pointer;width:70px;height:20px;;padding:5px}
+#oFullStatusDiv .student_name{white-space:nowrap}
+#oFullStatusDiv .progress_div{width:500px;overflow:auto;text-align:left}
+div.progressbar_container {height:15px;padding-top:5px;padding-left:3px}
+
+
+#oFullStatusDiv .student_list{text-align:left;border:0;margin-top:0px;width:115px}
+#oFullStatusDiv .student_list tr { vertical-align: middle; }
+#oFullStatusDiv .student_list td { text-align:left; vertical-align:middle;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
+#oFullStatusDiv .student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;cursor:pointer;height:20px;padding:5px }
+td.student_name div.progressbar_container {height:20px;padding-top:0px;padding-left:3px}
+
+#oFullStatusDiv .progressbar{
+  width:60px;
+  height:10px;
+  border:solid 1px #666;
+  background-color:White;
+}
+#oFullStatusDiv .progress{
+  height:10px;
+  background-color:#FFCC99;
+  float:left;
+}
+#oFullStatusDiv .progress.activity{
+  height:10px;
+  background-color:Orange;
+  float:left;
+}

@@ -1,0 +1,51 @@
+= javascript_include_tag "full_status.js"
+- clazz_offerings = portal_clazz.offerings.sort{|a,b| a.position<=>b.position}
+.maincontainer.pie
+  .container
+    .content
+      = f.error_messages
+    .right
+      %table.classdata
+        %tr
+          %td.title=label_tag :name, 'Teacher ', :class => 'left'
+          %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class => 'labelvalue'
+          %td.title=label_tag :name, 'Semester ', :class => "left"
+          %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class => 'labelvalue'
+          %td.title=label_tag :name, 'Class Word ', :class => 'left'
+          %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
+    .header.fullstatus Full Status
+    %br
+    - if clazz_offerings.length > 0
+      %div.clearboth
+        %div
+          %table
+            %tr
+              %td
+                %span.legend_progress
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;In Progress
+              %td
+                &nbsp;&nbsp;
+              %td
+                %span.legend_not_started
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Not yet started
+        %div{:id=>"oFullStatusDiv"}      
+          - students = portal_clazz.students;
+          - if students.length > 0
+            .student_div.floatL
+              = render :partial => 'clazz_student_report_learner_list', :locals=> {:offerings=>clazz_offerings, :students=>students}
+            .progress_div.floatL
+              %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
+                = render :partial => 'clazz_student_report_summary_header',:locals=> {:offerings=>clazz_offerings}
+                = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offerings=>clazz_offerings}
+            .clearboth{:style=>"height:10px"}
+          - else
+            %div No students have registered for this class yet.
+    - else
+      %div No offerings present.
+                
+= f.hidden_field :teacher_id
+= f.hidden_field :id

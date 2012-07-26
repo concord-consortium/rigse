@@ -350,6 +350,24 @@ class Portal::OfferingsController < ApplicationController
     end
   end
 
+  def offering_collapsed_status
+    if current_user.portal_teacher.nil?
+      render :nothing=>true
+      return
+    end
+    offering_collapsed = true
+    teacher_id = current_user.portal_teacher.id
+    portal_teacher_full_status = Portal::TeacherFullStatus.find_or_create_by_offering_id_and_teacher_id(params[:id],teacher_id)
+    
+    offering_collapsed = (portal_teacher_full_status.offering_collapsed.nil?)? false : !portal_teacher_full_status.offering_collapsed
+    
+    portal_teacher_full_status.offering_collapsed = offering_collapsed
+    portal_teacher_full_status.save!
+    
+    render :nothing=>true
+    
+  end
+
   private
 
   def parse_embeddable(dom_id)

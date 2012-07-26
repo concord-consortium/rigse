@@ -18,7 +18,7 @@
         - materials_link_class = 'upper_of_selected';
         - student_roster_link_class = 'upper_of_selected';
         - class_setup_link_class = 'selected';
-      - when url_for(:action => 'status', :controller => 'clazzes')
+      - when url_for(:action => 'fullstatus', :controller => 'clazzes')
         - materials_link_class = 'upper_of_selected';
         - student_roster_link_class = 'upper_of_selected';
         - class_setup_link_class = 'upper_of_selected';
@@ -36,7 +36,7 @@
     %div{:class => class_setup_link_class}
       = link_to 'Class Setup', edit_portal_clazz_url(portal_clazz)
     %div{:class => full_status_link_class}
-      = link_to 'Full Status', {}, :onclick => 'showFullStatus(); return false;'
+      = link_to 'Full Status', fullstatus_portal_clazz_url(portal_clazz)
     
     -# Commented as part of the cleanup tasks
     -# for CC to push to production.
