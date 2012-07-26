@@ -215,7 +215,6 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/sis_import_data"
     run "mkdir -p #{shared_path}/config/nces_data"
     run "mkdir -p #{shared_path}/public/otrunk-examples"
-    run "mkdir -p #{shared_path}/public/sparks-content"
     run "mkdir -p #{shared_path}/public/installers"
     run "mkdir -p #{shared_path}/config/initializers"
     run "mkdir -p #{shared_path}/system/attachments" # paperclip file attachment location
@@ -247,7 +246,6 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
-    run "ln -nfs #{shared_path}/public/sparks-content #{release_path}/public/sparks-content"
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/sis_import_data #{release_path}/sis_import_data"
@@ -356,13 +354,6 @@ namespace :import do
   task :import_sis_import_data, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
     "bundle exec rake RAILS_ENV=#{rails_env} app:import:rinet --trace"
-  end
-
-  # 01/27/2010
-  desc "create or update a git svn clone of sparks-content"
-  task :create_or_update_sparks_content, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-    "bundle exec rake RAILS_ENV=#{rails_env} app:import:create_or_update_sparks_content --trace"
   end
 
 end
