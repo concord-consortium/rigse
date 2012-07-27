@@ -31,14 +31,11 @@
       - if report_learner && total_complete_percent > 0 && total_complete_percent < 100
         - report_learner_activities = learner.learner_activities
         %tr
-          %td.student_name.locked_left
-            = student.user.last_name + ", " + student.user.first_name
-            %td.date_locked_left
-              = report_learner.last_run.strftime('%m/%d')
-            - activities.each do |activity|  
-              - percentage = 0
-              - if !report_learner_activities.find_by_activity_id(activity.id).nil?
-                - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent   
-              %td
+          - activities.each do |activity|  
+            - percentage = 0
+            - if !report_learner_activities.find_by_activity_id(activity.id).nil?
+              - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent   
+            %td
+              %div.progressbar_container
                 .progressbar
                   .progress{:style=>"width:#{percentage}%"}     
