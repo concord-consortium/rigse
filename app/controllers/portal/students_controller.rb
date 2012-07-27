@@ -251,7 +251,7 @@ class Portal::StudentsController < ApplicationController
     @security_questions = SecurityQuestion.fill_array
     @user = User.new
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @portal_student }
     end
   end
