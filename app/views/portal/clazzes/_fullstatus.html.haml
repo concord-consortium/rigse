@@ -1,5 +1,6 @@
 = javascript_include_tag "full_status.js"
 - clazz_offerings = portal_clazz.offerings.sort{|a,b| a.position<=>b.position}
+- students = portal_clazz.students;
 .maincontainer.pie
   .container
     .content
@@ -15,7 +16,7 @@
           %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
     .header.fullstatus Full Status
     %br
-    - if clazz_offerings.length > 0
+    - if clazz_offerings.length > 0 && students.length > 0
       %div.clearboth
         %div
           %table
@@ -33,11 +34,10 @@
                 %span
                   &nbsp;Not yet started
         %div{:id=>"oFullStatusDiv"}      
-          - students = portal_clazz.students;
           - if students.length > 0
             .student_div.floatL
               = render :partial => 'clazz_student_report_learner_list', :locals=> {:offerings=>clazz_offerings, :students=>students}
-            .progress_div.floatL.webkit_scrollbars
+            .progress_div.webkit_scrollbars
               %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
                 = render :partial => 'clazz_student_report_summary_header',:locals=> {:offerings=>clazz_offerings}
                 = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offerings=>clazz_offerings}
@@ -45,7 +45,10 @@
           - else
             %div No students have registered for this class yet.
     - else
-      %div No offerings present.
+      - if students.length > 0
+        %div No offerings present.
+      - else
+        %div No students have registered for this class yet.
                 
 = f.hidden_field :teacher_id
 = f.hidden_field :id
