@@ -81,8 +81,11 @@ class Portal::StudentsController < ApplicationController
       end
     end
 
-    if current_project.require_user_consent?
-      unless params[:user][:of_consenting_age]
+    # Only do this check if the student is signing themselves up.
+    if current_project.require_user_consent? && params[:clazz] && params[:clazz][:class_word]
+      if params[:user][:of_consenting_age]
+        @user.asked_age = true
+      else
         errors << [:you, "must specify your age."]
       end
     end
@@ -244,6 +247,22 @@ class Portal::StudentsController < ApplicationController
     end
   end
 
+  def ask_consent
+    @portal_student = Portal::Student.find(params[:id])
+    @user = @portal_student.user
+  end
+
+  def update_consent
+    @portal_student = Portal::Student.find(params[:id])
+    @portal_student.user.asked_age = true;
+    @portal_student.save
+    if @portal_student.user.update_attributes(params[:user])
+      redirect_to home_path
+    else
+      render :action => "ask_consent"
+    end
+  end
+
   # GET /portal_students/signup
   # GET /portal_students/signup.xml
   def signup
@@ -251,7 +270,7 @@ class Portal::StudentsController < ApplicationController
     @security_questions = SecurityQuestion.fill_array
     @user = User.new
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @portal_student }
     end
   end

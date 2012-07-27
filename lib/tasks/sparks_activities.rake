@@ -23,7 +23,7 @@ namespace :app do
   
     def git_clone_sparks_content
       puts "\ncreating local git repository of sparks-content: #{sparks_content_dir}"
-      `git clone git://github.com/gigamorph/sparks.git public/sparks-content`
+      `git clone git://github.com/concord-consortium/sparks.git public/sparks-content`
     end
     
     def git_svn_clone_sparks_content
@@ -31,6 +31,13 @@ namespace :app do
       `git svn clone https://svn.concord.org/svn/projects/trunk/sparks/sparks-content public`
     end
 
+    def build_sparks_content
+      # This isn't working right, and the built files are currently being checked in to git anyway
+      # Dir.chdir(sparks_content_dir) do
+      #   puts "\nbuilding sparks-content files: #{sparks_content_dir}"
+      #   puts `unset BUNDLE_GEMFILE && bundle install --gemfile Gemfile && bundle exec rake --trace`
+      # end
+    end
 
     desc "create or update a git svn clone of sparks-activities"
     task :create_or_update_sparks_content => :environment do
@@ -39,6 +46,7 @@ namespace :app do
       else
         git_clone_sparks_content
       end
+      # build_sparks_content
     end
   end
 end

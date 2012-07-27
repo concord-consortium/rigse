@@ -6,6 +6,7 @@ describe HomeController do
     @test_project = mock("project")
     Admin::Project.stub(:default_project).and_return(@test_project)
     @test_project.stub!(:use_student_security_questions).and_return(false)
+    @test_project.stub!(:require_user_consent?).and_return(false)
     controller.stub(:before_render) {
       response.template.stub(:current_project).and_return(@test_project)
     }

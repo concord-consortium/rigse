@@ -138,6 +138,38 @@ class Portal::Offering < ActiveRecord::Base
     num_not_started = 0
     num_not_started = self.clazz.students.length - (completed_students_count + inprogress_students_count)
   end
+  
+
+  def internal_report?
+    klass = runnable.class
+
+    # handle ExernalActivities that are backed by a reportable template
+    if klass == ExternalActivity
+      if runnable.template
+        klass = runnable.template.class
+      end
+    end
+
+    return [Investigation, Activity, Page].include? klass    
+  end
+
+  def reportable?
+    if internal_report?
+      true
+    else
+      runnable.class == ExternalActivity && !runnable.report_url.blank?
+    end
+  end
+
+  def individual_reportable?
+    internal_report?
+  end
+
+  def printable_report?
+    internal_report?
+  end
+
+
   # def saveable_count
   #   @saveable_count ||= begin
   #     runnable = self.runnable

@@ -13,7 +13,7 @@ Feature: Teacher manages a mix instructional materials of a class
     And the following students exist:
        | login     | password  | first_name | last_name |
        | student   | password  | Student    | Doe       |
-    And the mixed runnable types class
+    And the mixed runnable types class exists
     And I am logged in with the username teacher
 
   Scenario: Teacher can view materials page for class with multiple runnable types
@@ -23,4 +23,4 @@ Feature: Teacher manages a mix instructional materials of a class
   @javascript
   Scenario: Teacher can run a report for each material
     When I go to the Instructional Materials page for "Mixed Runnable Types"
-	Then each material has a report link
+    Then I can view a report for materials in the mixed runnable type class

@@ -285,7 +285,7 @@ class Portal::ClazzesController < ApplicationController
       render :update do |page|
         page << "var element = $('#{dom_id}');"
         page << "element.remove();"
-        page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
+        page.insert_html :bottom, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
       end
     end
     @offering.refresh_saveable_response_objects
@@ -630,12 +630,16 @@ class Portal::ClazzesController < ApplicationController
     
   end
   
+  def sort_offerings
+    params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
+    render :nothing => true
+  end
+  
   def fullstatus
     if current_user.anonymous?
       redirect_to home_url
       return
     end
-    @portal_clazz = Portal::Clazz.find(params[:id]);
     
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_user, Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS'])

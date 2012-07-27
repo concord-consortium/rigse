@@ -1,30 +1,33 @@
 - if offering.runnable
-  .dropdown{:id => dom_id_for(offering.runnable,"print_dropdown")}
-    .container
-      %ul{:style=>"overflow-y: auto; max-height: 300px;"}
-        %li=link_to("print investigation", investigation_url(offering.runnable,:print=>true), :target => '_blank' )
-        %li=link_to("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true),:target => '_blank' )
-        %hr
-        .tiny
-          - offering.runnable.print_listing.each do |listing|
-            - listing.each_key do |key|
-              %li= link_to("print #{key}", section_url(listing[key],:print=>true),:target => '_blank' )
+  %li{ :id => dom_id_for(offering,"list"), :class => "offering #{"no-delete" unless offering.can_be_deleted?}", :style => 'list-style:none'}
+    .dropdown{:id => dom_id_for(offering.runnable,"print_dropdown")}
+      .container
+        %ul{:style=>"overflow-y: auto; max-height: 300px;"}
+          %li=link_to("print investigation", investigation_url(offering.runnable,:print=>true), :target => '_blank' )
+          %li=link_to("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true),:target => '_blank' )
+          %hr
+          .tiny
+            - offering.runnable.print_listing.each do |listing|
+              - listing.each_key do |key|
+                %li= link_to("print #{key}", section_url(listing[key],:print=>true),:target => '_blank' )
 
-  .dropdown{:id => dom_id_for(offering.runnable,"run_dropdown")}
-    .container
-      %ul
-        %li= preview_link_for(offering.runnable, nil, :link_text => "preview as a student...")
-        %li= run_link_for(offering.runnable, nil, :teacher_mode => true, :link_text => "run in teacher mode")
-  %div{ :id => dom_id_for(offering), :class => "offering #{"no-delete" unless offering.can_be_deleted?}" }
-    - if offering.resource_page?
-      = render :partial => 'resource_pages/accordion', :locals => { :resource_page => offering.runnable, :offering => offering }
-    - else  
-      = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=>"Show Individual Reports"}) do
-        %div{:id => dom_id_for(offering, :details), :class => 'tiny', :style => 'clear: both;'}
-          %div{:class => 'offering_print_all'}= link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
-          %span.author= "Author: #{offering.runnable.user.name}"
-          %p= "Description: #{offering.runnable.description}"
-          %p= updated_time_text(offering.runnable)
-          %p= pluralize(offering.learners.length, "student response")
-          = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
-  = draggable_element dom_id_for(offering), :revert => true
+    .dropdown{:id => dom_id_for(offering.runnable,"run_dropdown")}
+      .container
+        %ul
+          %li= preview_link_for(offering.runnable, nil, :link_text => "preview as a student...")
+          %li= run_link_for(offering.runnable, nil, :teacher_mode => true, :link_text => "run in teacher mode")
+    %div{ :id => dom_id_for(offering), :class => "offering #{"no-delete" unless offering.can_be_deleted?}", :style => 'list-style:none'}
+      - if offering.resource_page?
+        = render :partial => 'resource_pages/accordion', :locals => { :resource_page => offering.runnable, :offering => offering }
+      - else
+      - show_hide_text = offering.individual_reportable? ? "Show Individual Reports" : "Show Students"
+      = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=>show_hide_text}) do
+          %div{:id => dom_id_for(offering, :details), :class => 'tiny', :style => 'clear: both;'}
+          - if offering.printable_report?
+            %div{:class => 'offering_print_all'}= link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
+            %span.author= "Author: #{offering.runnable.user.name}"
+            %p= "Description: #{offering.runnable.description}"
+            %p= updated_time_text(offering.runnable)
+            %p= pluralize(offering.learners.length, "student response")
+            = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
+    = sortable_element 'clazz_offerings',:url => { :action => "sort_offerings" }

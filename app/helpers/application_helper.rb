@@ -393,6 +393,8 @@ module ApplicationHelper
   end
 
   def report_link_for(reportable, action='report', link_text='Report ', title=nil)
+    return "" if reportable.respond_to?('reportable?') && !reportable.reportable?
+
     reportable_display_name = reportable.class.display_name.downcase
     action_string = action.gsub('_', ' ')
     name = reportable.name
@@ -688,7 +690,7 @@ module ApplicationHelper
     answered_saveables = reportUtil.saveables(:embeddable => image_question, :answered => true)
     answered = answered_saveables.size
     skipped = total - answered
-    answers_map = answered_saveables.sort_by{|s| [s.learner.last_name, s.learner.first_name]}.map{|sa| {:name => sa.learner.name, :image_url => dataservice_blob_raw_url(:id => sa.answer.id, :token => sa.answer.token)} }
+    answers_map = answered_saveables.sort_by{|s| [s.learner.last_name, s.learner.first_name]}.map{|sa| {:name => sa.learner.name, :note => sa.answer[:note], :image_url => dataservice_blob_raw_url(:id => sa.answer[:blob].id, :token => sa.answer[:blob].token)} }
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
@@ -706,14 +708,19 @@ module ApplicationHelper
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
       }
-      haml_tag(:div, :style => 'width: 670px') {
+      haml_tag(:div, :style => 'width: 710px') {
         haml_concat(contentflow("image_question_#{image_question.id}_content_flow") do
           capture_haml do
             answers_map.each do |b|
               haml_tag(:div, :class => 'item') {
                 haml_tag(:img, :class =>' content', :src=> b[:image_url], :title => b[:name])
                 haml_tag(:div, :class => 'caption') {
-                  haml_concat(b[:name])
+                  haml_tag(:div, :class => 'user') {
+                    haml_concat(b[:name])
+                  }
+                  haml_tag(:div, :class => 'note') {
+                    haml_concat(b[:note])
+                  }
                 }
               }
             end
@@ -878,8 +885,10 @@ module ApplicationHelper
           haml_concat options[:print_link]
           haml_concat " | "
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
-          haml_concat " | "
-          haml_concat report_link_for(offering, 'report', 'Report')
+          report_link = report_link_for(offering, 'report', 'Report')
+          if !report_link.blank?
+            haml_concat " | #{report_link}"
+          end
           haml_concat " | "
 
           if offering.active?
@@ -1275,4 +1284,19 @@ module ApplicationHelper
     self.formats = old_formats
     nil
   end
+
+  def google_analytics_config
+    <<CONFIG
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', '#{GOOGLE_ANALYTICS_ACCOUNT}']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+CONFIG
+  end
+
 end

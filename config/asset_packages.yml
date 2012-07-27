@@ -69,9 +69,9 @@ stylesheets:
   - reports
   - workgroup
   - chosen
-  - site_notices
   - classes_left_pane
   - instructional_materials
+
 
 - investigations:
   - themes/investigations/investigations
@@ -142,6 +142,8 @@ stylesheets:
   - data_table
   - reports
   - chosen
+  - classes_left_pane
+  - instructional_materials
 
 - has:
   - app
@@ -211,6 +213,8 @@ stylesheets:
   - app
   - accordion
   - please_wait
+  - window/window
+  - window/rites
   - live_validation
   - accordion
   - notes
@@ -220,4 +224,6 @@ stylesheets:
   - reports
   - workgroup
   - chosen
+  - classes_left_pane
+  - instructional_materials
 

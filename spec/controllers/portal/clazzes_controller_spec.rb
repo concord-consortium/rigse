@@ -44,6 +44,7 @@ describe Portal::ClazzesController do
     @mock_project.stub(:enable_grade_levels?).and_return(true)
     @mock_project.stub(:allow_default_class).and_return(false)
     @mock_project.stub(:use_student_security_questions).and_return(false)
+    @mock_project.stub!(:require_user_consent?).and_return(false)
     Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 
@@ -689,7 +690,7 @@ describe Portal::ClazzesController do
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       assert_not_equal(@portal_clazz.class_word , '', 'Class saved with blank class word.')
-    end  
+    end
     
     it "should not update the class info if there is no teacher" do
       @post_params[:clazz_teacher_ids] = ''
@@ -855,7 +856,7 @@ describe Portal::ClazzesController do
       assert_equal(@copy_clazz.students.length, 0)
       
     end
-  end  
+  end
   
   
   # GET edit
@@ -903,4 +904,54 @@ describe Portal::ClazzesController do
     
   end
   
+  
+  describe "Post teacher sorts class offerings on class summary page" do
+    before(:each) do
+      @physics_offering = Factory.create(:portal_offering)
+      @chemistry_offering = Factory.create(:portal_offering)
+      @biology_offering = Factory.create(:portal_offering)
+      @mathematics_offering = Factory.create(:portal_offering)
+      @params = {
+        :clazz_offerings => [@physics_offering.id, @chemistry_offering.id, @biology_offering.id , @mathematics_offering.id]
+      }
+    end
+    it "should store position of all the offerings after teacher sorts offerings" do
+      
+      # Save initial offering positions
+      xhr :post, :sort_offerings, @params
+      offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
+      offerings.each do |offering|
+        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+      end
+      
+      # Update offering positions and verify they have been updated
+      @params[:clazz_offerings] = [@mathematics_offering.id, @biology_offering.id, @chemistry_offering.id, @physics_offering.id]
+      xhr :post, :sort_offerings, @params
+      offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
+      offerings.each do |offering|
+        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+      end
+    end
+  end
+  
+  describe "GET fullstatus" do
+    before(:each) do
+      @params = {
+        :id => @mock_clazz.id
+      }
+    end
+    it "should redirect to home page for anonymous user" do
+      stub_current_user :normal_user
+      get :fullstatus, @params
+      response.should_not be_success
+      response.should redirect_to home_url
+    end
+    it "should retrieve the class when user not anonymous user" do
+      stub_current_user :authorized_teacher_user
+      get :fullstatus, @params
+      assigns[:portal_clazz] = @mock_clazz
+      response.should be_success
+      assert_template "fullstatus"
+    end
+  end
 end

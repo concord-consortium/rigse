@@ -92,20 +92,33 @@ And /^there should be no student in "(.+)"$/ do |class_name|
   page.has_content?('No students registered for this class yet.')  
 end
 
-Given /^the mixed runnable types class$/ do 
+Given /^the mixed runnable types class exists$/ do 
   require 'mock_data'
-  MockData.load_mixed_runnable_type_class
+  @mixed_runnable_type_clazz = MockData.load_mixed_runnable_type_class
+  @mixed_runnable_type_clazz.teachers << User.find_by_login("teacher").portal_teacher
 end
 
-Then /^each material has a report link$/ do
+Then /^I can view a report for materials in the mixed runnable type class$/ do
+  @mixed_runnable_type_clazz.should_not be_nil
   # start by assuming what tabs are there
 
-  # it starts out with the first one selected in this case Investigation
-  page.should have_content("Run Report")  
 
-  [ 'Activity', 'Page', 'External Activity', 'Resource Page' ].each { |name| 
-    puts "Finding #{name} Sample"
-    find('div.tab', :text => "#{name} Sample").click
-    page.should have_selector('a', :text => "Run Report", :visible => true)
+  offering_names = @mixed_runnable_type_clazz.offerings.map{|o| o.name}
+
+  offering_names.each { |name| 
+    puts "Checking materials tab for #{name}"
+
+    # it starts out with the first tab selected so we don't need to click in that case
+    if name != offering_names.first
+      find('div.tab', :text => name).click
+    end
+
+    if first('a', :text => "Run Report", :visible => true)
+      click_link("Run Report")
+      new_window=page.driver.browser.window_handles.last 
+      page.within_window new_window do
+        page.should have_content("Report")
+      end
+    end
   }
 end

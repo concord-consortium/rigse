@@ -1,9 +1,23 @@
 .ContentFlow .globalCaption {
   margin: 0 auto;
+  position: absolute;
+  left: 400px;
+  top: 0px;
+  text-align: left;
+  width: 300px;
+  background-color: #ffffff;
+  z-index: 0;
 }
 
 .ContentFlow .scrollbar {
   margin: 0px auto 0;
+  position: relative;
+  left: -140px;
+}
+
+.ContentFlow .flow {
+  position: relative;
+  left: -140px;
 }
 
 .ContentFlow .flow .item {
@@ -15,4 +29,8 @@
 
 .ContentFlow {
   background-color: #ffffff;
+}
+
+.ContentFlow .globalCaption .note {
+  font-weight: 100;
 }

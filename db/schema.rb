@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120713194959) do
+ActiveRecord::Schema.define(:version => 20120809155106) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -2014,6 +2014,7 @@ ActiveRecord::Schema.define(:version => 20120713194959) do
     t.integer  "position"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
+    t.text     "note"
   end
 
   add_index "saveable_image_question_answers", ["image_question_id", "position"], :name => "i_q_id_and_position_index"
@@ -2203,6 +2204,7 @@ ActiveRecord::Schema.define(:version => 20120713194959) do
     t.boolean  "require_password_reset",                   :default => false
     t.boolean  "of_consenting_age",                        :default => false
     t.boolean  "have_consent",                             :default => false
+    t.boolean  "asked_age",                                :default => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

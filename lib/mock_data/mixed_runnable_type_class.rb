@@ -12,6 +12,12 @@ module MockData
           ),
         Factory(:page, :name => "Page Sample"),
         Factory(:external_activity, :name => "External Activity Sample"),
+        Factory(:external_activity, :name => "External Activity with internal reporting Sample",
+          :template => Factory(:activity, :name => "Backing Activity for External Activity")),
+        Factory(:external_activity, :name => "External Activity with external reporting Sample",
+          :url => "/mock_html/test-external-activity.html",
+          :report_url => "/mock_html/test-external-report.html"),
+
         Factory(:resource_page, :name => "Resource Page Sample")
       ]
 
@@ -26,5 +32,7 @@ module MockData
       offerings.each { |offering| 
         Factory(:portal_learner, :offering => offering, :student => default_student)
       }
+
+      clazz
   end
 end
