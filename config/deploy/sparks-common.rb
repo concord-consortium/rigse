@@ -21,6 +21,6 @@ namespace :deploy do
 
   task :sparks_shared_symlink do
     run "ln -nfs #{shared_path}/public/sparks-content #{release_path}/public/sparks-content"
-    run "ln -nfs #{shared_path}/public/sparks-content/qucs #{release_path}/public/sparks/qucsator/solve"
+    run "ln -nfs #{shared_path}/public/sparks-content/lib/qucsator/solve #{release_path}/public/sparks/qucsator/solve"
   end
 end
