@@ -81,3 +81,22 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     Then I should see "Logged in successfully"
+
+  Scenario: Student registered when default classes are enabled
+    Given the option to allow default classes is enabled
+    When I go to the pick signup page
+    And I press "Sign up as a student"
+    Then I should see "Student Signup"
+    And I should not see "Class Word"
+    When I fill in the following:
+      | user_first_name            | Example             |
+      | user_last_name             | Student             |
+      | user_password              | password            |
+      | user_password_confirmation | password            |
+    And I press "Submit"
+    Then I should see "Your username is: estudent"
+    And I should not see "Sorry, there was an error creating your account"
+    When I login with username: estudent password: password
+    And I should see "Logged in successfully"
+
+
