@@ -145,6 +145,7 @@ h3. Roll your own theme:
 For now the best thing to do is to copy an existing set of themes. eg:
 
 <pre><code>
+  mkdir ./config/themes/<new_theme_name>
   cp ./config/themes/<old_theme_name>/settings.sample.yml ./config/themes/<new_theme_name>
   cp -r ./themes/<old_theme_name> ./themes/<new_theme_name>
   cp -r ./public/stylesheets/themes/<old_theme_name> ./public/stylesheets/themes/<new_theme_name>
@@ -738,9 +739,6 @@ config/initializers/fix_mailer_on_rails_2.3.4.rb fixes the problem.
 The code is borrowed from "Dmitry Polushkin":https://rails.lighthouseapp.com/projects/8994/tickets/2340-action-mailer-cant-deliver-mail-via-smtp-on-ruby-191
 
 h2. Databases
-
-If you are using mysql 5.5 or later you'll need the mysql2 gem.  This will be enabled by bundlers Gemfile if you define the environment variable:
-RB_MYSQL2=true
 
 On OS X the mysql2 gem usually can't find the mysql client library that it needs to run.  The command below fixes that.  It assumes your mysql is installed in the default basedir of /usr/local/mysql/lib.  And it assumes you are using bundler.
 <code><pre>

@@ -26,7 +26,7 @@
           %td.student_name.locked_left
             = student.user.last_name + ", " + student.user.first_name
           %td
-            = report_learner.last_run.strftime('%m/%d/%Y')
+            = report_learner.last_run.strftime('%m/%d')
     - when -1    
       - if report_learner && total_complete_percent > 0 && total_complete_percent < 100
         - report_learner_activities = learner.learner_activities
@@ -34,7 +34,7 @@
           %td.student_name.locked_left
             = student.user.last_name + ", " + student.user.first_name
             %td.date_locked_left
-              = report_learner.last_run.strftime('%m/%d/%Y')
+              = report_learner.last_run.strftime('%m/%d')
             - activities.each do |activity|  
               - percentage = 0
               - if !report_learner_activities.find_by_activity_id(activity.id).nil?

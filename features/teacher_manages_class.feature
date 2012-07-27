@@ -64,10 +64,8 @@ Feature: Teacher manages a class
   @javascript
   Scenario: Teacher deactivates classes
     When I uncheck "Biology"
-    And I uncheck "Geography"
-    And the Manage class list state starts saving
-    And the modal for saving manage classes dissappears
     Then I should not see "Biology" within left panel for class navigation
+    When I uncheck "Geography"
     And I should not see "Geography" within left panel for class navigation
     
     

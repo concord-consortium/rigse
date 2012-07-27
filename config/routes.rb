@@ -115,6 +115,7 @@ constraints :id => /\d+/ do
         post :add_new_student
         post :copy_class
         get :materials
+        get :fullstatus
       end
       
       collection do
@@ -165,6 +166,7 @@ constraints :id => /\d+/ do
         post :report_embeddable_filter
         get :learners
         post :answers
+        post :offering_collapsed_status
       end
     end
 
@@ -180,6 +182,10 @@ constraints :id => /\d+/ do
         get :register
         post :register
         post :confirm
+      end
+      member do
+        get :ask_consent
+        put :update_consent
       end
     end
 

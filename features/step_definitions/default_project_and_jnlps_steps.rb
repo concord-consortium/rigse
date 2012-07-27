@@ -40,6 +40,12 @@ def enable_security_questions(enable)
   project.save
 end
 
+def enable_student_consent(enable)
+  project = get_project
+  project.require_user_consent = enable
+  project.save
+end
+
 Given /^the default project has security questions enabled$/ do
   enable_security_questions(true)
 end
@@ -50,6 +56,10 @@ end
 
 Given /^the option to allow default classes is disabled$/ do
   enabled_default_class(false)
+end
+
+Given /^the default project has student consent enabled$/ do
+  enable_student_consent(true)
 end
 
 Given /^adhoc workgroups are disabled$/ do
