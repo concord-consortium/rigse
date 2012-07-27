@@ -4,7 +4,7 @@ require 'haml'
 require File.expand_path('../../lib/yaml_editor', __FILE__)
 
 set :stages, %w(
-  rites-dev rites-staging rites-production rites-aws1
+  rites-staging rites-production
   itsisu-dev itsisu-staging itsisu-production
   smartgraphs-dev smartgraphs-staging smartgraphs-production
   has-dev has-staging has-production
@@ -14,7 +14,7 @@ set :stages, %w(
   xproject-dev
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
-  sparks-dev sparks-staging sparks-production
+  sparks-dev sparks-staging sparks-production sparks-aws1
   xproject3-dev xproject32-dev )
 
 set :default_stage, "development"
@@ -227,6 +227,7 @@ namespace :deploy do
     run "touch #{shared_path}/config/initializers/site_keys.rb"
     run "touch #{shared_path}/config/initializers/subdirectory.rb"
     run "touch #{shared_path}/config/database.yml"
+    run "touch #{shared_path}/config/google_analytics.yml"
 
     # support for running a SproutCore app from within the public directory
     run "mkdir -p #{shared_path}/public/static"
@@ -253,6 +254,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
+    run "ln -nfs #{shared_path}/config/google_analytics.yml #{release_path}/config/google_analytics.yml"
 
     # support for running SproutCore app from the public directory
     run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
@@ -329,7 +331,7 @@ namespace :import do
     run "cd #{shared_path} && " +
       "mkdir -p public && " +
       "cd public && " +
-      "git clone git://github.com/stepheneb/otrunk-examples.git"
+      "git clone git://github.com/concord-consortium/otrunk-examples.git"
   end
 
   desc"Download nces data files from NCES websites"

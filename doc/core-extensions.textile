@@ -46,8 +46,3 @@ default:
 smartgraphs:
   Portal::Clazz : Study Group
 </code></pre>
-
-
-h2. Rails
-
-ActionView::Helpers::CaptureHelper is extended with the method:  set_content_for

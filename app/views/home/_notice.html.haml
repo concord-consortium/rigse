@@ -12,7 +12,7 @@
           = link_to_remote "Hide Notices", :url => "#{toggle_notice_display_admin_site_notices_path}",:method =>:post, :html => { :id =>"oHideShowLink", :title =>'Hide Notices', :onclick=>"toggle_Notice_Display(this)" }
       .notice_header
         Notices
-    .user_notice_container_div{:id=>"user_notice_container_div", :style => notice_collapse_table_style }  
+    .user_notice_container_div.webkit_scrollbars{:id=>"user_notice_container_div", :style => notice_collapse_table_style }  
       %table{:cellpadding => '0', :cellspacing => '0', :border => '0',:class => "all_notice_to_render", :id => "all_notice_to_render"}
         - counter = 1
         - @notices.each do |notice|

@@ -11,6 +11,8 @@ class Activity < ActiveRecord::Base
 
   has_many :external_activities, :as => :template
 
+  has_many :external_activities, :as => :template
+
   has_many :sections, :order => :position, :dependent => :destroy do
     def student_only
       find(:all, :conditions => {'teacher_only' => false})
@@ -105,13 +107,6 @@ class Activity < ActiveRecord::Base
       end
     end
 
-  end
-
-  ##
-  ## Hackish stubs: Noah Paessel
-  ##
-  def offerings
-    []
   end
 
   def parent

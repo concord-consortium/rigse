@@ -21,6 +21,6 @@ module HasImage
   def valid_image?
     return unless self.has_image?
     return true if UrlChecker.valid?(self.image_url)
-    errors.add_to_base("bad image url: #{self.image_url}")
+    errors.add(:image_url, "bad image url: #{self.image_url}")
   end
 end

@@ -314,11 +314,15 @@ class PagesController < ApplicationController
           @element.save
         end
       end
-      render :update do |page|
-        page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
-        page.sortable 'elements_container', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
-        page[dom_id_for(@component, :item)].scrollTo()  
-        page.visual_effect :highlight, dom_id_for(@component, :item)
+      if @element.nil?
+        logger.warn "Paste failed. original: #{@original} container: #{@container} component: #{@component} element: #{@element}"
+      else 
+        render :update do |page|
+          page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
+          page.sortable 'elements_container', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
+          page[dom_id_for(@component, :item)].scrollTo()  
+          page.visual_effect :highlight, dom_id_for(@component, :item)
+        end
       end
     end
   end

@@ -46,15 +46,4 @@ RailsPortal::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
-
-  config.after_initialize do
-    
-    # Run this after the initializers so APP_CONFIG is defined
-    Rails.configuration.middleware.use ExceptionNotifier,
-      :email_prefix => "[#{APP_CONFIG[:site_name]} Exception] ",
-      :sender_address => %("Application Error" <#{APP_CONFIG[:help_email]}>),
-      :exception_recipients => APP_CONFIG[:admin_email]
-
-  end
-
 end

@@ -1,9 +1,11 @@
-- content_for :report_title do
+- report_title = capture do
   - section = (@offering.clazz.section && @offering.clazz.section.length > 0) ? @offering.clazz.section : nil
   - section = (section ? "(#{section})" : "")
   = "Report for: #{@offering.clazz.name} #{section}"
-- content_for :report_summary do
+- report_summary = capture do
   = offering_report_summary(@offering)
 
 != use_contentflow
-= render :partial => '/portal/reports/report', :locals => {:report_context => @offering, :offering => @offering, :learners => @learners, :page_elements => @page_elements}
+= render :partial => '/portal/reports/report', :locals => {:report_context => @offering, 
+    :offering => @offering, :learners => @learners, :page_elements => @page_elements,
+    :report_title => report_title, :report_summary => report_summary }

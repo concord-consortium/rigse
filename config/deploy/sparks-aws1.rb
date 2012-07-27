@@ -9,9 +9,12 @@ set :branch, "master"
 #  Servers
 #############################################################
 
-set :domain, "aws1.rites.concord.org"
+set :domain, "aws1.sparks.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
+
+after 'deploy:symlink', 'import:create_or_update_sparks_content'
+
 # DISABLE SOME OF THE DESTRUCTIVE DB TASKS
 namespace :db do
  desc 'Loads the production database in db/production_data.sql on the remote server'

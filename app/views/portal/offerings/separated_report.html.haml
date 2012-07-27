@@ -2,9 +2,9 @@
 - section = (section ? "(#{section})" : "")
 - show_print = true
 - @learners.each do |learner|
-  - set_content_for :report_title do
+  - report_title = capture do
     = "Report for: #{learner.name}, #{@offering.clazz.name} #{section}"
-  - set_content_for :report_summary do
+  - report_summary = capture do
     = learner_report_summary(learner, {:show_selection_controls => false})
-  = render :partial => '/portal/reports/report', :locals => {:report_context => learner, :offering => @offering, :learners => learner, :page_elements => @page_elements, :show_selection_controls => false, :show_print_controls => show_print, :show_print_all => false}
+  = render :partial => '/portal/reports/report', :locals => {:report_context => learner, :offering => @offering, :learners => learner, :page_elements => @page_elements, :show_selection_controls => false, :show_print_controls => show_print, :show_print_all => false, :report_title => report_title, :report_summary => report_summary}
   - show_print = false
