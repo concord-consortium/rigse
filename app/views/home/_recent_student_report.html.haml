@@ -7,19 +7,20 @@
 
 - if activities.length > 0
   - if offering.inprogress_students_count > 0
-    .progress_summary_container.webkit_scrollbars{:style=>"width:465px;overflow:auto"}
-      %table.inProgressSummary
-        %tr
-          %th.locked_left
-            In-progress              
-          %th.date_locked_left        
-          - activity_counter = 0
-          - activities.each do |activity|
-            - activity_counter = activity_counter + 1
-            - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(10)
-            %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
-              = activity_name
-        = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
+    #recent_activity_inprogress
+      .student_div.floatL
+        = render :partial => 'recent_student_report_learner_list', :locals=> {:offering=>offering, :students=>students, :learners=>learners}  
+      .progress_summary_container.webkit_scrollbars
+        %table.inProgressSummary
+          %tr
+            - activity_counter = 0
+            - activities.each do |activity|
+              - activity_counter = activity_counter + 1
+              - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
+              %th{:id=>"activity_header_text#{activity.id}",:title=>"#{activity.name}"}
+                %div.progressbar_container
+                  = activity_name.truncate(8)
+          = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
   - else
     %table.messagetable
       %tr

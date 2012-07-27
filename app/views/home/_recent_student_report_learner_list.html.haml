@@ -1,0 +1,22 @@
+%table.student_list
+  %tr
+    %th
+      %div.progressbar_container 
+        In-progress
+    %th
+      %div.progressbar_container 
+        &nbsp;
+  - students.each do |student|
+    - learner = learners.find_by_student_id(student.id)
+    - report_learner = nil
+    - if !learner.nil?
+      - report_learner = learner.report_learner
+    - student_name = student.user.last_name + ", " + student.user.first_name
+    - if report_learner
+      %tr
+        %td.student_name{:title=>"#{student_name}"}
+          %div.progressbar_container
+            = student_name.truncate(15)
+        %td.last_update_date
+          %div.progressbar_container
+            = report_learner.last_run.strftime('%m/%d')
