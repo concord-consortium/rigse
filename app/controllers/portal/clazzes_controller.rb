@@ -387,7 +387,7 @@ class Portal::ClazzesController < ApplicationController
         #page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
         #page.visual_effect :highlight, 'teachers_listing'
         page.replace_html  'div_teacher_list',replace_html
-        page.replace 'teacher_add_dropdown', view_context.teacher_add_dropdown(@portal_clazz)
+        page.replace 'teacher_add_dropdown', teacher_add_dropdown(@portal_clazz)
       end
     rescue
       render :update do |page|
@@ -422,7 +422,7 @@ class Portal::ClazzesController < ApplicationController
         replace_html.gsub!(/\r\n|\r|\n/, '');
         render :update do|page|
           page.replace_html  'div_teacher_list',replace_html
-          page.replace 'teacher_add_dropdown', view_context.teacher_add_dropdown(@portal_clazz)
+          page.replace 'teacher_add_dropdown', teacher_add_dropdown(@portal_clazz)
         end
         return
       end
