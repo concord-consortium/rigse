@@ -4,7 +4,7 @@
 %div{:id => dom_id_for(report_context, :report), :class => 'item', :style => 'page-break-after: always;'}
   = form_for :report_embeddable_filter, :url => report_embeddable_filter_portal_offering_url(offering), :html => {:id => dom_id_for(offering, :form)} do |filter_form|
     %h3{:class => 'inline_block'}
-      %span= yield :report_title
+      %span= report_title
     - if show_selection_controls
       %div{:class => 'inline_block', :style => 'position: relative; top: -3px; left: 15px;'}
         = filter_form.submit "Show all", :class => 'filter_selection_control'
@@ -17,5 +17,5 @@
           = link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
     %div{:id => dom_id_for(offering, :details), :class => 'content'}
       %div{:style => 'font-weight: bold', :class => 'inline-block'}
-        = content_for :report_summary
+        = report_summary
       = render :partial => '/portal/reports/container_heading', :locals => { :indent => 0, :map => page_elements, :show_selection_controls => show_selection_controls, :offering => offering, :learners => learners}

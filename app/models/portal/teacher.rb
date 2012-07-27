@@ -12,6 +12,8 @@ class Portal::Teacher < ActiveRecord::Base
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
 
+  has_many :offering_full_status, :class_name => "Portal::TeacherFullStatus", :foreign_key => "teacher_id"
+
   # because of has many polymorphs, we SHOULDN't need the following relationships defined, but
   # HACK: noah went ahead, and explicitly defined them, because it wasn't working.
   #
