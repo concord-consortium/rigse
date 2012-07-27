@@ -145,6 +145,7 @@ h3. Roll your own theme:
 For now the best thing to do is to copy an existing set of themes. eg:
 
 <pre><code>
+  mkdir ./config/themes/<new_theme_name>
   cp ./config/themes/<old_theme_name>/settings.sample.yml ./config/themes/<new_theme_name>
   cp -r ./themes/<old_theme_name> ./themes/<new_theme_name>
   cp -r ./public/stylesheets/themes/<old_theme_name> ./public/stylesheets/themes/<new_theme_name>
