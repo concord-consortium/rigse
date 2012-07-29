@@ -714,7 +714,7 @@ Here are the current settings in config/database.yml:
       @db_config[env]['database'] = ask("  database name: ") { |q| q.default = @db_config[env]['database'] }
       @db_config[env]['username'] = ask("       username: ") { |q| q.default = @db_config[env]['username'] }
       @db_config[env]['password'] = ask("       password: ") { |q| q.default = @db_config[env]['password'] }
-      @db_config[env]['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
+      @db_config[env]['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql2<% end %>"
     end
 
     @db_config['cucumber'] = @db_config['test']
@@ -732,7 +732,7 @@ specify the values for the mysql database name, host, username, password, and as
     @db_config['itsi']['username']  = ask("       username: ") { |q| q.default = @db_config['itsi']['username'] }
     @db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
     @db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
-    @db_config['itsi']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
+    @db_config['itsi']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql2<% end %>"
 
     puts <<-HEREDOC
 
@@ -746,7 +746,7 @@ specify the values for the mysql database name, host, username, password.
     @db_config['ccportal']['host']      = ask("           host: ") { |q| q.default = @db_config['ccportal']['host']  }
     @db_config['ccportal']['username']  = ask("       username: ") { |q| q.default = @db_config['ccportal']['username'] }
     @db_config['ccportal']['password']  = ask("       password: ") { |q| q.default = @db_config['ccportal']['password'] }
-    @db_config['ccportal']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
+    @db_config['ccportal']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql2<% end %>"
 
     puts <<-HEREDOC
 
