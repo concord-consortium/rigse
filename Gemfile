@@ -4,11 +4,7 @@ YAML::ENGINE.yamler= "psych" if defined?(YAML::ENGINE)
 source "http://rubygems.org"
 
 #### COMMON
-  if ENV['RB_MYSQL2']
-    gem "mysql2",             '~> 0.3', :platforms => [:ruby,:mingw]
-  else
-    gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
-  end
+  gem "mysql2",             '~> 0.3', :platforms => [:ruby,:mingw]
 
   platforms :jruby do
     gem "activerecord-jdbcmysql-adapter",  "~> 1.1.3"
