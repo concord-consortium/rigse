@@ -1,4 +1,8 @@
 RailsPortal::Application.routes.draw do
+  get "search/index"
+  match '/search/list/filter' => 'search#show', :as => :list_filter_search, :method => :get
+
+
 constraints :id => /\d+/ do
   namespace :saveable do
     namespace :sparks do

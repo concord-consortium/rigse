@@ -78,7 +78,9 @@ class Activity < ActiveRecord::Base
   {
     :conditions =>{:publication_status => "published"}
   }
-
+  
+  scope :ordered_by, lambda { |order| { :order => order } }
+  
   class <<self
     def searchable_attributes
       @@searchable_attributes

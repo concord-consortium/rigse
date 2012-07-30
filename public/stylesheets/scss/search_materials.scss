@@ -1,0 +1,46 @@
+.search_materials tr
+{
+  vertical-align:top;
+  text-align:left;
+}
+.result_material tr
+{
+  border-bottom:2px solid #FEE9AA;
+}
+.search_materials th
+{
+  color: #EE864E;
+}
+.search_label,.material_type{
+  font-weight:bold;
+  color: #247A7E;
+}
+.filters{
+  background-color:#fbf4da;
+  width:100%;
+}
+.material_header
+{
+  font-weight:bold;
+  font-size:16px;
+  color: #247A7E;
+}
+.material_type{
+  width:120px;
+}
+.material_list{
+  width:450px;
+}
+.material_button {
+  margin-right:10px;
+}
+.material_thumbnail{
+  height: 40px;
+  width: 40px;
+  background: gray;
+  margin: auto;
+}
+.material_type{
+  text-align:center;
+  font-size:12px;
+}

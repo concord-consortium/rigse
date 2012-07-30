@@ -1,0 +1,19 @@
+
+/- locals = {:domain_id => @domain_id, :grade_span => @grade_span, :name => @name, :investigations => @investigations, :sort_order => @sort_order, :paginated_objects   => @paginated_objects,:investigations_only => true}
+.search_materials
+  %h1
+    Instructional Materials
+  %form{:id => 'material_search_form', :onkeypress => 'return event.keyCode!=13', :remote =>true , :autocomplete => "off"}
+    %table{:cellpadding=>2,:cellspacing=>0}
+      %tr
+        %td
+          .search_label
+            SEARCH
+        %td
+          = text_field_tag :name
+        %td
+          = submit_to_remote("GO","GO")
+    = render :partial=>"search/filters"
+  #results
+  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :update => {:success => 'results'}       
+  /= observe_field 'sort_checkbox', :url => list_filter_search_url, :frequency => 1, :update => {:success => 'results'} 

@@ -1,0 +1,46 @@
+%table.filters{:cellpadding=>5,:cellspacing=>0}
+  %tr
+    %th
+      Sort By
+    %th
+      Scientific Domain
+    %th
+      Grade
+    %th
+      Material
+    %th
+      Probes
+  %tr
+    %td
+      = sort_dropdown(@sort_order)  
+    %td
+      %div
+        =check_box_tag :physicalscience, true, true
+        Physical Science
+      %div
+        =check_box_tag :earthscience, true, true
+        Earth & Space Science 
+      %div
+        =check_box_tag :lifescience, true, true
+        Life Acience
+    %td
+      %div
+        =check_box_tag :allgrades, true, true
+        All Grades
+      %div
+        =check_box_tag :grade5_6, true, true
+        5-6
+    %td        
+      %div
+        =check_box_tag :investigation, true, true
+        Investigation
+      %div
+        =check_box_tag :activity, true, true
+        Activity 
+    %td
+      %div
+        =check_box_tag :force, true, true
+        Force
+      %div
+        =check_box_tag :light, true, true
+        Light

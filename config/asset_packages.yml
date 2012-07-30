@@ -179,7 +179,8 @@ stylesheets:
   - classes_left_pane
   - instructional_materials
   - site_notice
-
+  - search_materials
+  
 - genomedynamics:
   - app
   - accordion
