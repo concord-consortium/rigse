@@ -356,6 +356,10 @@ namespace :import do
     "bundle exec rake RAILS_ENV=#{rails_env} app:import:rinet --trace"
   end
 
+  desc "Restore couchdb from S3"
+  task :restore_couchdb_from_backup, :roles => :app do
+    sudo "/usr/bin/restore_couchdb.sh"
+  end
 end
 
 #############################################################
