@@ -45,8 +45,8 @@ Feature: Teacher can see full status
     
   @javascript
   Scenario: Teacher can see all the offerings of the class
-    Then I should see "Radi... >>"
-    And I should see "Plan... >>"
+    Then I should see "Rad... >>"
+    And I should see "Pla... >>"
     
     
   @javascript
@@ -57,33 +57,33 @@ Feature: Teacher can see full status
     
   @javascript
   Scenario: Teacher can see all the activities when an offering is expanded
-    When I expand the column "Radi..." on the Full Status page
-    Then the column for "Radi..." on the Full Status page should be expanded
-    And I should see "Radio ..."
-    And I should see "Nuclea..."
+    When I expand the column "Rad..." on the Full Status page
+    Then the column for "Rad..." on the Full Status page should be expanded
+    And I should see "Radio..."
+    And I should see "Nucle..."
     
     
   @javascript
   Scenario: Offering collapsed state is maintained across different parts of the application
-    When I expand the column "Radi..." on the Full Status page
-    And the column for "Radi..." on the Full Status page should be expanded
-    And I should see "Radio ..."
-    And I should see "Nuclea..."
+    When I expand the column "Rad..." on the Full Status page
+    And the column for "Rad..." on the Full Status page should be expanded
+    And I should see "Radio..."
+    And I should see "Nucle..."
     And I go to the class edit page for "My Class"
     And I am on the full status page for "My Class"
-    Then the column for "Radi..." on the Full Status page should be expanded
+    Then the column for "Rad..." on the Full Status page should be expanded
     
     
   @javascript
   Scenario: Offering collapsed state is maintained across sessions
-    When I expand the column "Radi..." on the Full Status page
-    And the column for "Radi..." on the Full Status page should be expanded
-    And I should see "Radio ..."
-    And I should see "Nuclea..."
+    When I expand the column "Rad..." on the Full Status page
+    And the column for "Rad..." on the Full Status page should be expanded
+    And I should see "Radio..."
+    And I should see "Nucle..."
     And I log out
     And I login with username: teacher password: teacher
     And I am on the full status page for "My Class"
-    Then the column for "Radi..." on the Full Status page should be expanded
+    Then the column for "Rad..." on the Full Status page should be expanded
     
     
   @javascript
