@@ -1,0 +1,16 @@
+%tr
+  - assignable = offering.runnable
+  - activities = []
+  - if assignable.is_a? ::Investigation
+    - activities = assignable.activities
+  - elsif assignable.is_a? ::Activity
+    - activities = [assignable]
+  - activity_counter = 0
+  - activities.each do |activity|
+    - activity_counter = activity_counter + 1
+    - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
+    - activity_name_tooltip = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
+    %th{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
+      %div.progressbar_container 
+        = activity_name.truncate(8)
+
