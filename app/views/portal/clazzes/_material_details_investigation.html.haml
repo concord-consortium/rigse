@@ -42,5 +42,5 @@
             = report_link_for(current_offering, 'report', 'Run Report')
     %tr
       %td{:colspan=>"3"}
-        %div{:style=>"overflow:auto;width:575px"}
+        %div
           = render :partial => 'investigation_report_summary', :locals => { :investigation => investigation, :offering=>current_offering }
