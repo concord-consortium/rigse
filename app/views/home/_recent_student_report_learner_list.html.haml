@@ -12,7 +12,7 @@
     - if !learner.nil?
       - report_learner = learner.report_learner
     - student_name = student.user.last_name + ", " + student.user.first_name
-    - if report_learner
+    - if report_learner && report_learner.complete_percent < 100
       %tr
         %td.student_name{:title=>"#{student_name}"}
           %div.progressbar_container
