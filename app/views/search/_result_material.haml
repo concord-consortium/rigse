@@ -1,9 +1,10 @@
 %table.result_material{:cellpadding=>0,:cellspacing=>0}
   %tr
-    %td.material_type
-      .material_thumbnail
-      .material_type
-        = type
+    -if !params[:investigation].nil? && !params[:activity].nil?
+      %td.material_type
+        .material_thumbnail
+        .material_type
+          = type
     %td.material_list
       - materials.each do |material|
         %div
@@ -17,4 +18,6 @@
                 =link_to_remote 'Preview'
           .material_body
             = material.description 
+            %i
+              Used in: #{material.offerings_count} classes.
         %br    

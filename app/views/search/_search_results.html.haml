@@ -1,9 +1,34 @@
-%h1
-  Search Results
+- show_message_onSearch= ""
+-unless @investigations.nil?
+  - if @investigations.length == 1
+    - show_message_onSearch += "#{@investigations.length} investigation"
+  - elsif @investigations.length > 0
+    - show_message_onSearch += "#{@investigations.length} investigations"
+-unless @activities.nil?
+  -unless @investigations.nil?
+    - if @investigations.length > 0
+      - show_message_onSearch += ","
+  - if @activities.length == 1
+    - show_message_onSearch += " #{@activities.length} activity"
+  - elsif @activities.length > 0
+    - show_message_onSearch += " #{@activities.length} activities"
 
+- show_message_onSearch +=" matching"
+- if @name != "" 
+  - show_message_onSearch +=" search term \"#{@name}\" and" 
+- show_message_onSearch +=" selected criteria"
+
+%p
+  -if params[:investigation] == "true" || params[:activity] == "true"
+    - if @b_check == true
+      = show_message_onSearch
+    - else
+      No Result Found    
+  -else
+    Select investigation or activity checkbox
 %br
 -unless @investigations.nil?
-  - if @investigations.length>0  
+  - if @investigations.length>0    
     = render :partial=>'search/result_material',:locals=>{:materials=>@investigations,:type=>'Investigations'}
 -unless @activities.nil?
   - if @activities.length>0  

@@ -17,5 +17,10 @@
           = submit_to_remote("GO","GO")
     = render :partial=>"search/filters"
   #results
-  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1    
+  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();"    
+  .progress_container
+    #search_spinner{:style=>'display: none;'}
+      = image_tag "ajax-loader.gif"
+      ( loading .... ) 
+  #offering_list
   /= observe_field 'sort_checkbox', :url => list_filter_search_url, :frequency => 1, :update => {:success => 'results'} 
