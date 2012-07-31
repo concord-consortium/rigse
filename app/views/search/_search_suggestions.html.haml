@@ -1,0 +1,17 @@
+-if textlength>0
+  #suggestions
+    -unless @investigations.nil?
+      - if @investigations.length>0  
+        - @investigations.each do |investigation|
+          %a.suggestion_link{:onclick=>'select_material()'} 
+            .suggestion
+              = investigation.name
+    -unless @activities.nil?
+      - if @activities.length>0  
+        - @activities.each do |activity|
+          %a.suggestion_link{:onclick=>'select_material()'}
+            .suggestion
+              = activity.name
+-else
+  %div
+       

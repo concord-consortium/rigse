@@ -24,6 +24,7 @@ class SearchController < ApplicationController
      
     render :update do |page|
         page.replace_html 'results', :partial => 'search/search_results' 
+        page<<"$('suggestions').remove()"
       end  
     else
       respond_to do |format|
@@ -53,8 +54,11 @@ class SearchController < ApplicationController
     end
     
     if request.xhr?
-      render :partial => 'search/search_results'
-      
+      render :update do |page|
+        
+        page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@name.length}}
+        page.replace_html 'results', :partial => 'search/search_results' 
+      end   
     else
       respond_to do |format|
           format.html do

@@ -1,5 +1,6 @@
 
 /- locals = {:domain_id => @domain_id, :grade_span => @grade_span, :name => @name, :investigations => @investigations, :sort_order => @sort_order, :paginated_objects   => @paginated_objects,:investigations_only => true}
+= javascript_include_tag "search_materials"
 .search_materials
   %h1
     Instructional Materials
@@ -11,9 +12,10 @@
             SEARCH
         %td
           = text_field_tag :name
+          #search_suggestions
         %td
           = submit_to_remote("GO","GO")
     = render :partial=>"search/filters"
   #results
-  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :update => {:success => 'results'}       
+  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1    
   /= observe_field 'sort_checkbox', :url => list_filter_search_url, :frequency => 1, :update => {:success => 'results'} 
