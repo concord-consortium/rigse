@@ -88,9 +88,17 @@ class HomeController < ApplicationController
       end
     end
     
-    time_limit = Report::Learner.order("last_run DESC").first.last_run - 7.days
+    latest_report_learner = Report::Learner.order("last_run DESC").first
+    unless latest_report_learner
+      # There are no report learners
+      redirect_to root_path
+      return
+    end
+    
+    time_limit = latest_report_learner.last_run - 7.days
     learner_offerings = (Report::Learner.where("last_run > '#{time_limit}' and complete_percent > 0").order("last_run DESC")).select(:offering_id).uniq
     
+      # There are no report learners for this filter
     
     @clazz_offerings=Array.new    
     
