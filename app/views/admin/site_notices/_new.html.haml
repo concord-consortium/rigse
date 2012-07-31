@@ -1,33 +1,33 @@
 %div
   %h1
-    Create Notice  
+    Create Notice
 .editor#editor
   %textarea{:class => 'tinymce_textarea' , :rows => '40', :name => 'notice_html'}
-    &nbsp;
+    = @notice_html
 %br
 %br
-.filters#filters  
+.filters#filters
   %h1
-    Receivers 
+    Receivers
   .roles#roles
-    .checkboxcontainers 
+    .checkboxcontainers
       .rolescheckboxes
-        = check_box_tag 'role[]','1', true, :id => 'admin'
-        = label_tag 'admin', 'Admin'   
+        = check_box_tag 'role[]','1', (@roles or @roles_ids.include?(Role.find_by_title('admin').id.to_s)), :id => 'admin'
+        = label_tag 'admin', 'Admin'
       .rolescheckboxes
-        = check_box_tag 'role[]','2', true, :id => 'manager'
-        = label_tag 'manager', 'Manager'    
+        = check_box_tag 'role[]','2', (@roles or @roles_ids.include?(Role.find_by_title('manager').id.to_s)), :id => 'manager'
+        = label_tag 'manager', 'Manager'
       .rolescheckboxes
-        = check_box_tag 'role[]','3', true, :id => 'researcher'
-        = label_tag 'researcher', 'Researcher'  
+        = check_box_tag 'role[]','3', (@roles or @roles_ids.include?(Role.find_by_title('researcher').id.to_s)), :id => 'researcher'
+        = label_tag 'researcher', 'Researcher'
         
     .checkboxcontainers
-      .rolescheckboxes 
-        = check_box_tag 'role[]','4',  true, :id => 'author'
-        = label_tag 'author', 'Author'     
       .rolescheckboxes
-        = check_box_tag 'role[]','5',  true, :id => 'member'
-        = label_tag 'member', 'Member'    
+        = check_box_tag 'role[]','4',( @roles or @roles_ids.include?(Role.find_by_title('author').id.to_s)), :id => 'author'
+        = label_tag 'author', 'Author'
+      .rolescheckboxes
+        = check_box_tag 'role[]','5', (@roles or @roles_ids.include?(Role.find_by_title('member').id.to_s)), :id => 'member'
+        = label_tag 'member', 'Member'
       
     
 .submit#submit

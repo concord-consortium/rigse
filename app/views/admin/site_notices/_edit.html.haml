@@ -1,10 +1,11 @@
 %div
-  
+  = f.error_messages
   %h1
     Edit Notice 
 .editor#editor
-  %textarea{:class => 'tinymce_textarea' ,:value=>"Hi", :rows => '40', :name => 'notice_html'}
-    =@notice.notice_html.html_safe
+  %textarea{:class => 'tinymce_textarea', :rows => '40', :name => 'notice_html'}
+    = @notice.notice_html
+    
 %br
 %br
 .filters#filters  
@@ -14,23 +15,23 @@
     .checkboxcontainers 
       .rolescheckboxes
         = check_box_tag 'role[]','1', @notice_role_ids.include?(1), :id => 'admin'
-        = label_tag 'admin', 'Admin'   
+        = label_tag 'admin', 'Admin'
       .rolescheckboxes
         = check_box_tag 'role[]','2', @notice_role_ids.include?(2), :id => 'manager'
-        = label_tag 'manager', 'Manager'    
+        = label_tag 'manager', 'Manager'
       .rolescheckboxes
         = check_box_tag 'role[]','3', @notice_role_ids.include?(3), :id => 'researcher'
-        = label_tag 'researcher', 'Researcher'     
+        = label_tag 'researcher', 'Researcher'
       
     .checkboxcontainers
       .rolescheckboxes 
         = check_box_tag 'role[]','4',  @notice_role_ids.include?(4), :id => 'author'
-        = label_tag 'author', 'Author'     
+        = label_tag 'author', 'Author'
       .rolescheckboxes
         = check_box_tag 'role[]','5',  @notice_role_ids.include?(5), :id => 'member'
-        = label_tag 'member', 'Member'      
+        = label_tag 'member', 'Member'
     
 .submit#submit
-  = submit_tag 'Update Notice', {:class => 'pie'} 
+  = submit_tag 'Update Notice', {:class => 'pie'}
 .back_link
   = link_to "Cancel", {:action => 'index'}
