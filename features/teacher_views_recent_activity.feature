@@ -21,7 +21,6 @@ Feature: Teacher can see recent activity
       | Mathematics | teacher | math       | Fall     |
       | Chemistry   | teacher | chem       | Fall     |
       | Mechanics   | teacher | mech       | Fall     |
-      
     And the classes "My Class, Physics, Mathematics" are in a school named "Harvard School"
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
@@ -44,7 +43,6 @@ Feature: Teacher can see recent activity
       | investigation | Plant reproduction   | Physics     |
       | investigation | Aerodynamics         | Physics     |
       | investigation | Aerodynamics         | Mechanics   |
-      
     And the following offerings exist in the classes:
       | name                       | class       |
       | Lumped circuit abstraction | Mathematics |
@@ -94,7 +92,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
-    Then I should see "In-progress Air act... gaurav, ankur "
+    Then I should see "gaurav, ankur" in In-progress on the recent activity page
     And I should see "Completed Smith, Chuck"
     And I should see "Not yet started done, shon"
     
