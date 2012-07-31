@@ -28,3 +28,8 @@ Then /^I should see the progress of the student$/ do
  click_link('Show detail')
  page.should have_selector('div.progressbar') 
 end
+
+When /^(?:I )should see "(.*)" in In-progress on the recent activity page$/ do |student_name|
+  step_text = "I should see the xpath \"//tr/td/div[contains(.,'#{student_name}')]\""
+  step step_text
+end
