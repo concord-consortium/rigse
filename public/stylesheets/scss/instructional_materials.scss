@@ -234,7 +234,7 @@
 .inProgressSummary{text-align:left;border:0;margin-top:0px;}
 .inProgressSummary tr { vertical-align: top; }
 .inProgressSummary td { text-align:left; vertical-align:middle;padding:2px;width:115px;height:20px;background-color:#F3F2ED}
-.inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;cursor:pointer;width:115px;height:20px;background-color:#F3F2ED}
+.inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;width:115px;height:20px;background-color:#F3F2ED}
 
 .class_offering_name{text-align:left;float:left;font-size:16px}
 
@@ -245,12 +245,12 @@
 .progress_summary_container .inProgressSummary{text-align:left;border:0;margin:0px;margin-left:-1px}
 .progress_summary_container .inProgressSummary tr { vertical-align: middle; }
 .progress_summary_container .inProgressSummary td { text-align:center; vertical-align:middle;width:70px;height:20px;padding:5px}
-.progress_summary_container .inProgressSummary th { text-align:center; vertical-align:middle;font-weight:bold;cursor:pointer;width:70px;height:20px;padding:5px}
+.progress_summary_container .inProgressSummary th { text-align:center; vertical-align:middle;font-weight:bold;width:70px;height:20px;padding:5px}
 
 #recent_activity_inprogress .student_list{text-align:left;border:0;margin-top:0px;width:155px}
 #recent_activity_inprogress .student_list tr { vertical-align: middle; }
 #recent_activity_inprogress .student_list td { text-align:left; vertical-align:middle;height:20px;padding:5px}
-#recent_activity_inprogress .student_list th { text-align:left; vertical-align:middle;font-weight:bold;cursor:pointer;height:20px;padding:5px }
+#recent_activity_inprogress .student_list th { text-align:left; vertical-align:middle;font-weight:bold;height:20px;padding:5px }
 #recent_activity_inprogress td.student_name div.progressbar_container {height:20px;padding-top:0px;}
 #recent_activity_inprogress td.last_update_date div.progressbar_container {height:20px;padding-top:0px;}
 
