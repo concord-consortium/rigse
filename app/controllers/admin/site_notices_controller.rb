@@ -182,7 +182,7 @@ class Admin::SiteNoticesController < ApplicationController
   def dismiss_notice
     notice = Admin::SiteNotice.find(params[:id])
     user_notice = Admin::SiteNoticeUser.find_or_create_by_notice_id_and_user_id(notice.id , current_user.id)
-    user_notice.notice_dismissed = 1
+    user_notice.notice_dismissed = true
     user_notice.updated_at = DateTime.now
     user_notice.save!
     if request.xhr?
