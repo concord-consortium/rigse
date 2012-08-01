@@ -443,62 +443,6 @@ class Portal::ClazzesController < ApplicationController
       format.html { render :layout => 'report'}
     end
   end
-  
-  def get_teachers  
-    if request.xhr?
-      render :partial => 'portal/teachers/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
-      return
-    end
-  end
-    
-  def edit_teachers
-    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
-    teacher_ids = params[:clazz_teacher_ids]
-    teacher_ids.strip!
-    
-    if (teacher_ids.length == 0) then
-      flash[:notice] = 'There should be atleast one teacher assigned to the class.'
-    else
-      arr_teacher_ids = []
-      if(!teacher_ids.nil? and teacher_ids.length > 0)
-        arr_teacher_ids = teacher_ids.split(",")
-      end
-      
-      begin
-        @portal_clazz.teachers.each do|portal_clazz_teacher|
-          if arr_teacher_ids.index(portal_clazz_teacher.id.to_s).nil?  
-            portal_clazz_teacher.remove_clazz(@portal_clazz)
-          end
-        end
-        
-        arr_teacher_ids.each do|teacher_id|
-          if @portal_clazz.teachers.find_by_id(teacher_id).nil?
-            @teacher = Portal::Teacher.find_by_id(teacher_id)
-            @teacher.add_clazz(@portal_clazz)
-          end
-        end
-        @portal_clazz.reload
-      rescue
-        flash[:notice] = "There was an error while processing your request."
-        return
-      end
-    end
-    
-    if request.xhr?
-      
-      if (flash[:notice].nil?) then
-        replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz_setup', :locals => {:portal_clazz => @portal_clazz}
-      else
-        replace_html = flash[:notice]
-      end
-      replace_html.gsub!(/\r\n|\r|\n/, '');
-      render :update do|page|
-        page.replace_html  'div_teacher_list',replace_html
-      end
-      return
-    end
-    
-  end
 
 # GET /portal_clazzes/1/roster
   def roster
