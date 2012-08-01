@@ -10,12 +10,16 @@ When /^(?:|I )create a notice "(.*)" for the roles "(.*)"$/ do|notice_html, sele
   uncheck('Author')
   uncheck('Member')
   
-  selected_roles = selected_roles.split(',')
-  selected_roles.each do |selected_role|
-    check(selected_role)
+  unless selected_roles == ''
+    selected_roles = selected_roles.split(',')
+    selected_roles.each do |selected_role|
+      check(selected_role)
+    end
   end
   
   step('I press "Publish Notice"')
+  
+  step "I should see \"#{notice_html}\""
 end
 
 And /^(?:|I )create the following notices:$/ do |table|
