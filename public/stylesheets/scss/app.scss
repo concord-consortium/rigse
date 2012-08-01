@@ -1386,9 +1386,9 @@ table.teacher_class_table th, table.teacher_class_table td
 #student_roster #student_id_selector{width:294px !important}
 #student_roster #students_listing{padding-right:0px !important}
 
-table.add_student, table.student_list{margin:0;clear:both;}
-table.student_list .action_link_container{width:235px;padding-left:0px}
-table.student_list a.change_password{padding-left:10px}
+table.add_student, table.roster_student_list{margin:0;clear:both;}
+table.roster_student_list .action_link_container{width:235px;padding-left:0px}
+table.roster_student_list a.change_password{padding-left:10px}
 
 .contentdiv{float:left;}
 .linkdiv{float:right;}
