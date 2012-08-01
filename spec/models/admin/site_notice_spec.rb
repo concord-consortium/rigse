@@ -45,7 +45,7 @@ describe Admin::SiteNotice do
       assert(notice_ids.include?(@third_notice.id))
     end
     it"should show collapsed notice container if there are no recent notices and user had collapsed the notice container" do
-      Factory.create(:notice_user_display_status,:user_id => @admin_user.id,:last_collapsed_at_time => DateTime.now, :collapsed_status => true)
+      Factory.create(:notice_user_display_status,:user_id => @admin_user.id,:last_collapsed_at_time => DateTime.now + 1.day, :collapsed_status => true)
       notices_hash = Admin::SiteNotice.get_notices_for_user(@admin_user)
       assert_equal(notices_hash[:notice_display_type] , Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
 
