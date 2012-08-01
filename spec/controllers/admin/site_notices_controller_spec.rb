@@ -91,20 +91,20 @@ describe Admin::SiteNoticesController do
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Text cannot be blank/i
+      flash[:error].should =~ /Notice text is blank/i
 
       @post_params[:notice_html] = ' '
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Text cannot be blank/i
+      flash[:error].should =~ /Notice text is blank/i
     end
     it("should not create a notice if no role is selected") do
       @post_params[:role] = nil
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Select atleast one role/i
+      flash[:error].should =~ /No role is selected/i
     end
   end
 
@@ -155,20 +155,20 @@ describe Admin::SiteNoticesController do
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Text cannot be blank/i
+      flash[:error].should =~ /Notice text is blank/i
 
       @post_params[:notice_html] = "       "
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Text cannot be blank/i
+      flash[:error].should =~ /Notice text is blank/i
     end
     it("should not create a notice if no role is selected") do
       @post_params[:role] = nil
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Select atleast one role/i
+      flash[:error].should =~ /No role is selected/i
     end
   end
 
