@@ -2,17 +2,13 @@
 - students = offering.clazz.students;
 - if investigation.activities.length > 0
   - if students.length > 0
-    %table.reportsummary
-      %tr
-        %th.locked_left
-          ACTIVITY
-        - activity_counter = 0
-        - investigation.activities.each do |activity|
-          - activity_counter = activity_counter + 1
-          - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(10)
-          %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
-            = activity_name
-      = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners, :offering=>offering}
+    .student_div.floatL
+      = render :partial => 'investigation_student_report_learner_list', :locals=> {:students=>students}
+    .progress_div.floatL.webkit_scrollbars
+      %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
+        = render :partial => 'investigation_student_report_summary_header',:locals=> {:offering=>offering}
+        = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners, :offering=>offering}
+    .clearboth{:style=>"height:10px"}
   - else
     %div.item No students have registered for this class yet.
 - else

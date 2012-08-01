@@ -94,3 +94,15 @@ And /^the first investigation in the list should be "(.+)"$/ do |investigation_n
                                )
  raise 'Not first on the list' if result == false
 end
+
+
+When /^(?:I )follow remove image for the teacher name "(.*)"$/ do |teacher_name|
+  step_text = "follow xpath \"//tr[td/b[contains(., '#{teacher_name}')]]/td/a[@class='rollover']\""
+  step step_text
+end
+
+
+When /^(?:I )follow Add Another Teacher drop down$/ do
+  step_text = "follow xpath \"//div[@id='teacher_id_selector_chzn']/a\""
+  step step_text
+end

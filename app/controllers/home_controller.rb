@@ -88,10 +88,18 @@ class HomeController < ApplicationController
       end
     end
     
-    strTime =(7.day.ago).to_s.gsub(" UTC","");
-    learner_offerings = ((Report::Learner.where("last_run > '#{strTime}' and complete_percent > 0")).order("last_run DESC")).select(:offering_id).uniq
+    latest_report_learner = Report::Learner.order("last_run DESC").first
+    unless latest_report_learner
+      # There are no report learners
+      redirect_to root_path
+      return
+    end
+    
+    time_limit = latest_report_learner.last_run - 7.days
+    learner_offerings = (Report::Learner.where("last_run > '#{time_limit}' and complete_percent > 0").order("last_run DESC")).select(:offering_id).uniq
     
     if (learner_offerings.count == 0)
+      # There are no report learners for this filter
       redirect_to root_path
       return
     end
