@@ -1,7 +1,7 @@
 - current_teachers = portal_clazz.teachers.sort { |a,b| (a.user.last_name <=> b.user.last_name) }
 - if current_teachers.length > 0
-  - current_teachers.each do |portal_teacher|
-    %table
+  %table
+    - current_teachers.each do |portal_teacher|
       %tr
         %td{:id=>dom_id_for(portal_teacher),:style=>"padding-left:0px"}
           %b 

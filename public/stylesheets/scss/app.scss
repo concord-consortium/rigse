@@ -1402,8 +1402,11 @@ table.roster_student_list a.change_password{padding-left:10px}
 td.title { padding-left: 20px; text-align: left; }
 .maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}
 
-#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-#sortable li { margin: 0 0px 3px 0px; padding: 0.4em;height: 18px;cursor:move }
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
+#sortable li { margin: 0 0px 5px 0px; padding: 0.4em;cursor:move }
+#sortable li label { padding-top:0 }
+#sortable td {vertical-align:top }
+#sortable td.offering_name{padding-top:2px}
 
 a.hlink{color:#479492;text-decoration:none;cursor:pointer}
 a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
