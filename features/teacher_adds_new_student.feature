@@ -1,5 +1,5 @@
 Feature: Teacher adds a new student
-  
+
   As a teacher
   I should be able to add a new student
   In order to assign students to the class
@@ -8,12 +8,11 @@ Feature: Teacher adds a new student
   Background:
     Given The default project and jnlp resources exist using factories
     And the following students exist:
-      | login      | password   | first_name  | last_name  |
-      | student    | student    | Alfred      | Robert     |
-      
+      | login   | password | first_name | last_name |
+      | student | student  | Alfred     | Robert    |
     And the following teachers exist:
-      | login    | password   | first_name | last_name  |
-      | teacher  | teacher    | John       | Nash       |
+      | login   | password | first_name | last_name |
+      | teacher | teacher  | John       | Nash      |
     And  the teachers "teacher" are in a school named "Harvard"
     And the following classes exist:
       | name       | teacher | semester |
@@ -24,10 +23,10 @@ Feature: Teacher adds a new student
     
   @javascript
   Scenario: Teacher can add a registered user
-    Given the student "student" belongs to class "My Class 2"
+    When the student "student" belongs to class "My Class 2"
     When I login with username: teacher password: teacher
     And I am on "Student Roster" page for "My Class"
-    And I follow "Add student from Harvard"
+    And I follow "Search for registered student."
     And I should see "Robert, Alfred"
     And I select "Robert, Alfred ( student )" from the html dropdown "student_id_selector"
     And I should see "Robert, Alfred"
@@ -37,11 +36,11 @@ Feature: Teacher adds a new student
     
   @javascript
   Scenario: Teacher can add an unregistered user
-    Given the student "student" belongs to class "My Class"
+    When the student "student" belongs to class "My Class"
     And the student "student" belongs to class "My Class 2"
     And I login with username: teacher password: teacher
     And I am on "Student Roster" page for "My Class"
-    And I follow "Add a student who is not registered"
+    And I follow "Register and add new student"
     And I should see "Add and Register New Student"
     And I fill in the following:
       | user_first_name            | John   |
@@ -56,11 +55,11 @@ Feature: Teacher adds a new student
     
   @javascript
   Scenario: Teacher adds another student from the pop up
-    Given the student "student" belongs to class "My Class"
+    When the student "student" belongs to class "My Class"
     And the student "student" belongs to class "My Class 2"
     And I login with username: teacher password: teacher
     And I am on "Student Roster" page for "My Class"
-    And I follow "Add a student who is not registered"
+    And I follow "Register and add new student"
     And I should see "Add and Register New Student"
     And I fill in the following:
       | user_first_name            | John   |
