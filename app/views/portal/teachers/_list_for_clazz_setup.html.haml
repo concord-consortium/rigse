@@ -2,8 +2,8 @@
 - if current_teachers.length > 0
   %table
     - current_teachers.each do |portal_teacher|
-      %tr
-        %td{:id=>dom_id_for(portal_teacher),:style=>"padding-left:0px"}
+      %tr{:id=>dom_id_for(portal_teacher)}
+        %td{:style=>"padding-left:0px"}
           %b 
             = portal_teacher.name
         %td
