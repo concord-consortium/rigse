@@ -108,7 +108,7 @@
                 Jnlp CDN Hostname:
                 = admin_project.jnlp_cdn_hostname
             = field_set_tag 'Project Description' do
-              %p= admin_project.description
+              %p= admin_project.description.html_safe
             = field_set_tag 'Home Page Content' do
               %p= admin_project.home_page_content.html_safe unless admin_project.home_page_content.nil?
             = render :partial => 'custom_css', :locals => { :admin_project => admin_project }
