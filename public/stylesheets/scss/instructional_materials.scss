@@ -163,7 +163,8 @@
 .status_count_graph{
   margin:0;
   padding:0;
-  width:480px;
+  width:470px;
+  float:right;
 }
 .status_count_graph td {
   text-align: right;
@@ -204,11 +205,18 @@
   margin-top: 15px
 }
 .investigation_info {
-  width: 150px;
+  width:150px;
+  text-align:left;
+}
+.investigation_info > div{
+  width:150px;
+  text-align:left;
+  padding:0;
+  margin:0;
 }
 
 .investigation_info table{
-  width: 150px;
+  width:100%
 }
 
 .investigation_info th {
@@ -218,6 +226,9 @@
   
 }
 .investigation_activities {
+  vertical-align:top;
+  text-align:left;
+  padding-right:10px;
 }
 
 .progress_summary_container
@@ -246,8 +257,8 @@
 
 #recent_activity_inprogress .student_list{text-align:left;border:0;margin-top:0px;width:155px}
 #recent_activity_inprogress .student_list tr { vertical-align: middle; }
-#recent_activity_inprogress .student_list td { text-align:left; vertical-align:middle;height:20px;padding:5px}
-#recent_activity_inprogress .student_list th { text-align:left; vertical-align:middle;font-weight:bold;height:20px;padding:5px }
+#recent_activity_inprogress .student_list td { text-align:left; vertical-align:middle;height:20px;padding:5px;background-color:Transparent;border:0}
+#recent_activity_inprogress .student_list th { text-align:left; vertical-align:middle;font-weight:bold;height:20px;padding:5px;background-color:Transparent;border:0 }
 #recent_activity_inprogress td.student_name div.progressbar_container {height:20px;padding-top:0px;}
 #recent_activity_inprogress td.last_update_date div.progressbar_container {height:20px;padding-top:0px;}
 
