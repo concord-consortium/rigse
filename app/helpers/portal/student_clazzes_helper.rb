@@ -16,11 +16,11 @@ module Portal::StudentClazzesHelper
     span_tag = "<span id='#{span_id}' class='#{span_class}'>"
 
     other_clazzes = []
-    default_value =  "Add another student from this school."
+    default_value =  "Search for registered student."
     if clazz.school 
       other_clazzes = (clazz.school.clazzes.includes(:students => :user) - [clazz])
       if clazz.school.name && clazz.school.name.length > 1
-        default_value = "Add student from #{clazz.school.name.titlecase}"
+        default_value = "Search for registered student."
       end
     end
     other_students  = other_clazzes.map { |c| c.students}.flatten.uniq
@@ -37,9 +37,10 @@ module Portal::StudentClazzesHelper
       select_opts = options_for_select(options, :selected => default_value)
       span_tag = <<-EOF
           #{span_tag}
-          <table><tr>
+          <table width='100%'><tr>
           <td>#{select_tag('student_id',  select_opts ,:id => 'student_id_selector')}</td>
           <td>#{button_to_remote("Add", :url => {:controller => 'portal/clazzes', :action=>'add_student', :id => clazz}, :with => "'student_id='+$('student_id_selector').value")}</td>
+          <td>&nbsp;&nbsp;or&nbsp;&nbsp;</td>
           </tr></table>
         </span>
         #{make_chosen('student_id_selector')}

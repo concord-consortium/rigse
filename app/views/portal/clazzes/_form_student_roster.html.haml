@@ -3,7 +3,7 @@
   .container
     .content
       = f.error_messages
-    %div
+    %div{:id=>"student_roster"}
       %table.classdata.floatR
         %tr
           %td.title=label_tag :name, 'Teacher ', :class=>"left"
@@ -25,16 +25,15 @@
             %input{:type=>"button", :value=>"Print Student Roster", :onclick=>"window.print();", :class=>"pie"}
       %br.clearBoth
       %br
-      %table.clearBoth
+      %table.add_student{:width=>"100%"}
         %tr
           %td.hide_in_print{:style=>"padding-left:10px"}
             = student_add_dropdown(portal_clazz)
-        %tr
-          %td.hide_in_print{:style=>"padding-left:10px"}
+          %td.hide_in_print{:style=>"text-align:right"}
             - add_student_url = new_portal_student_path(:clazz_id => portal_clazz.id)
-            = link_to "Add a student who is not registered", "#", :title => "add a student to #{portal_clazz.name}", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
+            = link_to "Register and add new student", "#", :title => "add a student to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
             
-      %table{:width=>"100%", :style=>"clear:both"}
+      %table.student_list{:width=>"100%"}
         %tr
           %td{:style=>"padding-left:5px"}
             .item{:id=>'students_listing'}
