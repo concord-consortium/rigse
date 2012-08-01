@@ -1,5 +1,3 @@
-= javascript_include_tag "instructional_materials.js"
-
 - students = clazz_offering.clazz.students 
 - learners = clazz_offering.learners
 -if clazz_offering.clazz.students.length > 0 && (clazz_offering.inprogress_students_count > 0 || clazz_offering.completed_students_count > 0)
@@ -40,7 +38,7 @@
                       .report
                         %span.linkbutton.pie
                           = report_link_for(clazz_offering, 'report', 'Run Report')
-            %td.investigation_activities.pad15{:style=>"vertical-align:top;align:left"}
+            %td.investigation_activities{}
               %div
                 %table.status_count_graph{:border=>0,:cellpadding=>0,:cellspacing=>0}
                   = render :partial => 'recent_activity_graph', :locals => {:offering => clazz_offering, :students=>students}
