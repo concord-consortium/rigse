@@ -1,33 +1,38 @@
+- admin_id = Role.find_by_title('admin').id
+- manager_id = Role.find_by_title('manager').id
+- researcher_id = Role.find_by_title('researcher').id
+- author_id = Role.find_by_title('author').id
+- member_id = Role.find_by_title('member').id
 %div
   %h1
-    Create Notice  
+    Create Notice
 .editor#editor
   %textarea{:class => 'tinymce_textarea' , :rows => '40', :name => 'notice_html'}
-    &nbsp;
+    = @notice_html
 %br
 %br
-.filters#filters  
+.filters#filters
   %h1
-    Receivers 
+    Receivers
   .roles#roles
-    .checkboxcontainers 
+    .checkboxcontainers
       .rolescheckboxes
-        = check_box_tag 'role[]','1', true, :id => 'admin'
-        = label_tag 'admin', 'Admin'   
+        = check_box_tag 'role[]',admin_id, (@all_roles_selected_by_default or @role_ids.include?(admin_id)), :id => 'admin'
+        = label_tag 'admin', 'Admin'
       .rolescheckboxes
-        = check_box_tag 'role[]','2', true, :id => 'manager'
-        = label_tag 'manager', 'Manager'    
+        = check_box_tag 'role[]',manager_id, (@all_roles_selected_by_default or @role_ids.include?(manager_id)), :id => 'manager'
+        = label_tag 'manager', 'Manager'
       .rolescheckboxes
-        = check_box_tag 'role[]','3', true, :id => 'researcher'
-        = label_tag 'researcher', 'Researcher'  
+        = check_box_tag 'role[]',researcher_id, (@all_roles_selected_by_default or @role_ids.include?(researcher_id)), :id => 'researcher'
+        = label_tag 'researcher', 'Researcher'
         
     .checkboxcontainers
-      .rolescheckboxes 
-        = check_box_tag 'role[]','4',  true, :id => 'author'
-        = label_tag 'author', 'Author'     
       .rolescheckboxes
-        = check_box_tag 'role[]','5',  true, :id => 'member'
-        = label_tag 'member', 'Member'    
+        = check_box_tag 'role[]',author_id,(@all_roles_selected_by_default or @role_ids.include?(author_id)), :id => 'author'
+        = label_tag 'author', 'Author'
+      .rolescheckboxes
+        = check_box_tag 'role[]',member_id, (@all_roles_selected_by_default or @role_ids.include?(member_id)), :id => 'member'
+        = label_tag 'member', 'Member'
       
     
 .submit#submit

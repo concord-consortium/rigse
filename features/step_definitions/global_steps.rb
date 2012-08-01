@@ -127,6 +127,10 @@ Then /^I should not see the xpath "([^"]*)"$/ do |xpath|
   page.should have_no_xpath xpath
 end
 
+Then /^I should see the xpath "([^"]*)"$/ do |xpath|
+  page.should have_xpath xpath
+end
+
 Then /^the location should be "([^"]*)"$/ do |location|
   current_url.should == location
 end
