@@ -1,9 +1,21 @@
 - current_teachers = portal_clazz.teachers.sort { |a,b| (a.user.last_name <=> b.user.last_name) }
 - if current_teachers.length > 0
-  - current_teachers.each do |portal_teacher|
-    / - portal_student_clazz = portal_clazz.student_clazzes.find_by_student_id(portal_student.id)
-    %div{:id=>dom_id_for(portal_teacher)}
-      %b 
-        = portal_teacher.name
+  %table
+    - current_teachers.each do |portal_teacher|
+      %tr
+        %td{:id=>dom_id_for(portal_teacher),:style=>"padding-left:0px"}
+          %b 
+            = portal_teacher.name
+        %td
+          - reason = portal_clazz.reason_user_cannot_remove_teacher_from_class(current_user, portal_teacher)
+          - if !reason
+            - if portal_teacher.user_id == current_user.id
+              - confirm = Portal::Clazz.WARNING_REMOVE_TEACHER_CURRENT_USER(portal_clazz.name)
+            - else
+              - confirm = Portal::Clazz.CONFIRM_REMOVE_TEACHER(portal_teacher.name, portal_clazz.name)
+            = remote_link_button "delete.png", :url => {:action=>'remove_teacher', :id => portal_clazz, :teacher_id => portal_teacher.id}, :confirm => confirm, :method => :delete, :title => "remove #{portal_teacher.name} from #{portal_clazz.name}"
+          - else
+            %span{:class => "rollover"}
+              = image_tag "delete_grey.png", :title => reason
 -else
   %div No teachers assigned to this class
