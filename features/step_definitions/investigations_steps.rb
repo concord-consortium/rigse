@@ -5,6 +5,23 @@ Given /^the following empty investigations exist:$/ do |table|
   end
 end
 
+Given /^the following linked investigations exist:$/ do |table|
+  table.hashes.each do |hash|
+    user = User.find_by_login hash['user']
+    inv = Factory.create(:investigation, hash.merge('user' => user))
+      inv.activities << (Factory :activity, { :user => user })
+      inv.activities[0].sections << (Factory :section, {:user => user})
+      inv.activities[0].sections[0].pages << (Factory :page, {:user => user})
+      open_response = (Factory :open_response, {:user => user})
+      open_response.pages << inv.activities[0].sections[0].pages[0]
+      draw_tool = (Factory :drawing_tool, {:user => user, :background_image_url => "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg"})
+      draw_tool.pages << inv.activities[0].sections[0].pages[0]
+      snapshot_button = (Factory :lab_book_snapshot, {:user => user, :target_element => draw_tool})
+      snapshot_button.pages << inv.activities[0].sections[0].pages[0]
+      inv.reload
+  end
+end
+
 Given /^the following simple investigations exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     user = User.first(:conditions => { :login => hash.delete('user') })
@@ -303,6 +320,19 @@ end
 Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do |inv_name, count|
   investigation = Investigation.find_by_name inv_name
   investigation.offerings_count.should == count.to_i
+end
+
+Then /^the investigation "([^"]*)" should have correct linked embeddables$/ do |inv_name|
+  copy = Investigation.find_by_name inv_name
+  orig = Investigation.find_by_name inv_name.gsub(/^copy of /, '')
+
+  orig_draw_tool = orig.pages.first.drawing_tools.first
+  copy_draw_tool = copy.pages.first.drawing_tools.first
+
+  orig_snap = orig.pages.first.lab_book_snapshots.first
+  copy_snap = copy.pages.first.lab_book_snapshots.first
+
+  copy_snap.target_element.should == copy_draw_tool
 end
 
 def show_actions_menu
