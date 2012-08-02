@@ -15,6 +15,9 @@ Feature: Investigations can be duplicated
       | NewestInv | author | 5               | Wed Jan 26 12:00:00 -0500 2011 | published          |
       | MediumInv | author | 10              | Wed Jan 23 12:00:00 -0500 2011 | published          |
       | OldestInv | author | 20              | Wed Jan 20 12:00:00 -0500 2011 | published          |
+    And the following linked investigations exist:
+      | name         | user   | offerings_count | created_at                     | publication_status |
+      | WithLinksInv | author | 5               | Wed Jan 25 12:00:00 -0500 2011 | published          |
 
   @javascript
   Scenario: Duplicating investigations have an offering count of 0
@@ -37,3 +40,10 @@ Feature: Investigations can be duplicated
     And I am on the investigations page for "NewestInv"
     Then I cannot duplicate the investigation
 
+  @javascript
+  Scenario: Investigations with linked embeddables should have their links point to the new cloned embeddable
+    Given PENDING
+    And I am logged in with the username author
+    And I am on the investigations page for "WithLinksInv"
+    When I duplicate the investigation
+    Then the investigation "copy of WithLinksInv" should have correct linked embeddables
