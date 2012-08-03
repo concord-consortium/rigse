@@ -1,4 +1,5 @@
 function showInstructionalMaterial(oMaterialTab){
+    setTableHeaders(1);
     var oSelectedTab = $$('.selected_tab')[0];
     if(oSelectedTab){
         oSelectedTab.removeClassName('selected_tab');
@@ -87,18 +88,19 @@ function setSelectedTab(strTabID){
 }
 
 document.observe("dom:loaded", function() {
-    setTableHeaders(1);
     var arrTabs = $$('#oTabcontainer .tab');
     arrTabs.each(function(oTab){
         oTab.observe('click',function(){
             showInstructionalMaterial(oTab);
         });
     });
+    setTableHeaders(1);
     if (arrTabs.length > 0)
     {
         var strTabID = arrTabs[0].id;
         setSelectedTab(strTabID);
     }
+
 });
 
 function setTableHeaders(iDefaultWidth)
