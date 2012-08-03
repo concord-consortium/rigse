@@ -57,12 +57,32 @@ width: 300px;
 }
 .suggestion{
   padding: 2px;
-  cursor:pointer;
+  cursor:default;
+}
+.suggestion_link:hover
+{
+  color:black;
 }
 .suggestion:hover
 {
-  background-color:#B4B4B4;;
+  background-color:#FEE9AA;
 }
 .suggestion_link{
   color:black;
 }
+
+.sort_radio {
+  display: none
+}
+
+.sort_container label {
+  cursor: pointer
+}
+.sort_container {
+  width:80px;
+}
+.highlightoption {
+  font-weight: bold;
+  text-decoration: underline;
+}
+

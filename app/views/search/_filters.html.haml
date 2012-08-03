@@ -12,7 +12,19 @@
       Probes
   %tr
     %td
-      = sort_dropdown(@sort_order)  
+      .sort_container
+        %div
+          = label_tag 'sort_dropdown_created_at_ASC','Oldest',:onclick=>'highlightlabel(this)'
+          = radio_button_tag :sort_dropdown,'created_at ASC',nil,:class=>'sort_radio'
+        %div
+          = label_tag 'sort_dropdown_created_at_DESC','Newest',:onclick=>'highlightlabel(this)'  
+          = radio_button_tag :sort_dropdown,'created_at DESC',nil,:class=>'sort_radio'
+        %div
+          = label_tag 'sort_dropdown_name_ASC','Alphabetical',:class=>'highlightoption',:onclick=>'highlightlabel(this)'
+          = radio_button_tag :sort_dropdown,'name ASC',true,:class=>'sort_radio'
+        %div
+          = label_tag 'sort_dropdown_offerings_count_DESC' ,'Popularity',:onclick=>'highlightlabel(this)'
+          = radio_button_tag :sort_dropdown,'offerings_count DESC',nil,:class=>'sort_radio'   
     %td
       %div
         =check_box_tag :physicalscience, true, true

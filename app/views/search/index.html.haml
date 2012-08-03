@@ -4,20 +4,23 @@
 .search_materials
   %h1
     Instructional Materials
-  %form{:id => 'material_search_form', :onkeypress => 'return event.keyCode!=13', :remote =>true , :autocomplete => "off"}
+  %form{:id => 'material_search_form',:url => list_filter_search_url, :onkeypress => 'return event.keyCode!=13', :remote =>true }
     %table{:cellpadding=>2,:cellspacing=>0}
       %tr
         %td
           .search_label
             SEARCH
         %td
-          = text_field_tag :name
+          = text_field_tag :name,nil, :autocomplete => "off", :onkeydown=>'showsuggestion()'
           #search_suggestions
         %td
+          
+          = hidden_field_tag :show_suggestion, 'true'
           = submit_to_remote("GO","GO")
+          
     = render :partial=>"search/filters"
   #results
-  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();"    
+  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();" 
   .progress_container
     #search_spinner{:style=>'display: none;'}
       = image_tag "ajax-loader.gif"
