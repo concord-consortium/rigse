@@ -8,8 +8,14 @@ class AddCompletePercentToReportLearner < ActiveRecord::Migration
 
   def self.up
     add_column :report_learners, :complete_percent, :float
-    
-    execute "UPDATE report_learners SET complete_percent = ((IFNULL(num_answered, 0) * 100) / num_answerables)"
+    Report::Learner.reset_column_information
+    report_learners = Report::Learner.all
+    report_learners.each do |report_learner|
+      portal_learner = report_learner.learner
+      report_util = Report::Util.new(portal_learner, false, true)
+      report_learner.complete_percent = report_util.complete_percent(portal_learner)
+      report_learner.save!
+    end
   end
 
   def self.down

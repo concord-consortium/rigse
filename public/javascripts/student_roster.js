@@ -25,7 +25,7 @@ function get_Add_Register_Student_Popup(strURL)
             student_list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
         }
     };
-    var target_url = "/portal/classes/"+clazz_id+"/add_new_student";
+    var target_url = "/portal/classes/"+clazz_id+"/add_new_student_popup";
     new Ajax.Request(target_url, options);
 }
 

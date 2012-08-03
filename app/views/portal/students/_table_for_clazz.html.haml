@@ -13,9 +13,9 @@
       %tr{:id=>dom_id_for(portal_student_clazz)}
         %td.show_border
           - student_name = portal_student.user.last_name + ", " +portal_student.user.first_name
-          = link_to student_name, portal_student
-        %td.show_border
-          = portal_student.user.login
+          = link_to student_name.truncate(33), portal_student,:title=>"#{student_name}"
+        %td.show_border{:title=>"#{portal_student.user.login}"}
+          = portal_student.user.login.truncate(20)
         %td.remove.hide_in_print.action_link_container
           - if portal_clazz.changeable?(current_user)
             = link_to_remote "Remove Student", :url => portal_clazz_student_clazz_url(portal_clazz, portal_student_clazz), :confirm => "This action will remove the student: '#{portal_student.name}' from the class: #{portal_clazz.name}. \nAre you sure you want to do this?", :method => :delete, :html => {:title => "remove #{portal_student.name} from #{portal_clazz.name}" , :class => "change_password"}
