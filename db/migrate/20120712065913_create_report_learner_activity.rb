@@ -150,14 +150,12 @@ class CreateReportLearnerActivity < ActiveRecord::Migration
       
       
       UPDATE temp_report_learner_activity SET
-        complete_percent = (saveable_answered * 100) / saveable_answerables;
-        
-      
+        complete_percent = IFNULL( ( (saveable_answered * 100) / saveable_answerables ), 0 );
       
       
       INSERT INTO report_learner_activity 
       (learner_id, activity_id, complete_percent)
-      SELECT learner_id, activity_id, complete_percent
+      SELECT A.learner_id, A.activity_id, A.complete_percent
       FROM temp_report_learner_activity A
       LEFT OUTER JOIN report_learner_activity B
         ON A.learner_id = B.learner_id
