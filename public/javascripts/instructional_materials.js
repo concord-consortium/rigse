@@ -9,6 +9,8 @@ function showInstructionalMaterial(oMaterialTab){
     oMaterialTab.removeClassName('tab');
     oMaterialTab.addClassName('selected_tab');
     $(oMaterialTab.id + "_data").show();
+    
+    setTableHeaders();
 }
 
 function startScroll(direction,size){
@@ -85,6 +87,7 @@ function setSelectedTab(strTabID){
 }
 
 document.observe("dom:loaded", function() {
+    setTableHeaders(1);
     var arrTabs = $$('#oTabcontainer .tab');
     arrTabs.each(function(oTab){
         oTab.observe('click',function(){
@@ -97,3 +100,24 @@ document.observe("dom:loaded", function() {
         setSelectedTab(strTabID);
     }
 });
+
+function setTableHeaders(iDefaultWidth)
+{
+    var iWidth;
+    $$("th.expand_collapse_text").each(function(oTitle){
+        var oChild = oTitle.childElements()[0];
+        if(oChild)
+        {
+            if(iDefaultWidth)
+                iWidth = iDefaultWidth;
+            else
+                iWidth = (oTitle.getStyle('display') == "none")? 1 : oTitle.offsetWidth*0.9;
+            oChild.setStyle({'display':'none'});
+            oChild.setStyle({'width':iWidth+'px'});
+        }
+    });
+    
+    $$("th.expand_collapse_text > div.progressbar_container").each(function(oTitle){
+        oTitle.setStyle({'display':''});
+    });
+}
