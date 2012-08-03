@@ -32,6 +32,6 @@
     = render :partial=>'search/result_material',:locals=>{:materials=>@investigations,:type=>'Investigations'}
 -unless @activities.nil?
   - if @activities.length>0  
-    = render :partial=>'search/result_material',:locals=>{:materials=>@activities,:type=>'Activities'}
+    = render :partial=>'search/result_activity',:locals=>{:materials=>@activities,:type=>'Activities'}
 %br
 #data

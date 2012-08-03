@@ -18,6 +18,10 @@ width: 300px;
   font-weight:bold;
   color: #247A7E;
 }
+#filter_container
+{
+ background-color:#fbf4da; 
+}
 .filters{
   background-color:#fbf4da;
   width:100%;
@@ -35,7 +39,7 @@ width: 300px;
   width:450px;
 }
 .material_button {
-  margin-right:10px;
+  margin-right:6px;
   margin-top: 2px;
 }
 .material_thumbnail{
@@ -59,6 +63,7 @@ width: 300px;
   padding: 2px;
   cursor:default;
 }
+
 .suggestion_link:hover
 {
   color:black;
@@ -84,5 +89,41 @@ width: 300px;
 .highlightoption {
   font-weight: bold;
   text-decoration: underline;
+}
+search_materials{
+  margin:0 0 0 0px;
+  background-color:white;
+}
+
+.probes_container{
+  overflow:auto;
+  height:100px;
+  background-color:white;
+  }
+#select_none_probes{
+  cursor:pointer;
+ text-decoration:underline;
+ font-weight:bold;
+}
+.material_list .material_list_item{
+  border-bottom: 2px solid #FBF4DA;
+  margin-bottom:5px;
+}
+
+td.material_list div.material_list_item:last-child{
+  border-bottom: none;
+}
+
+.domin_container
+{
+  width:100px;
+}
+.grade_container
+{
+  width:100px;
+}
+.material_container
+{
+  width:100px;
 }
 

@@ -1,58 +1,70 @@
-%table.filters{:cellpadding=>5,:cellspacing=>0}
-  %tr
-    %th
-      Sort By
-    %th
-      Scientific Domain
-    %th
-      Grade
-    %th
-      Material
-    %th
-      Probes
-  %tr
-    %td
-      .sort_container
-        %div
-          = label_tag 'sort_dropdown_created_at_ASC','Oldest',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_dropdown,'created_at ASC',nil,:class=>'sort_radio'
-        %div
-          = label_tag 'sort_dropdown_created_at_DESC','Newest',:onclick=>'highlightlabel(this)'  
-          = radio_button_tag :sort_dropdown,'created_at DESC',nil,:class=>'sort_radio'
-        %div
-          = label_tag 'sort_dropdown_name_ASC','Alphabetical',:class=>'highlightoption',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_dropdown,'name ASC',true,:class=>'sort_radio'
-        %div
-          = label_tag 'sort_dropdown_offerings_count_DESC' ,'Popularity',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_dropdown,'offerings_count DESC',nil,:class=>'sort_radio'   
-    %td
-      %div
-        =check_box_tag :physicalscience, true, true
-        Physical Science
-      %div
-        =check_box_tag :earthscience, true, true
-        Earth & Space Science 
-      %div
-        =check_box_tag :lifescience, true, true
-        Life Acience
-    %td
-      %div
-        =check_box_tag :allgrades, true, true
-        All Grades
-      %div
-        =check_box_tag :grade5_6, true, true
-        5-6
-    %td        
-      %div
-        =check_box_tag :investigation, true, true
-        Investigation
-      %div
-        =check_box_tag :activity, true, true
-        Activity 
-    %td
-      %div
-        =check_box_tag :force, true, true
-        Force
-      %div
-        =check_box_tag :light, true, true
-        Light
+-probe_types = Probe::ProbeType.all;
+#filter_container{:style=>"overflow:hidden"}
+  %div{:style=>"float:right"}
+    %div{:id=>"oExpandCollapseText",:style=>"width:20px;float:left"} -
+    = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
+  %table.filters.collapse_filters{:cellpadding=>5,:cellspacing=>0}
+    %tr
+      %th
+        Sort By
+      %th
+        Scientific Domain
+      %th
+        Grade
+      %th
+        Material
+      %th.probes_header
+        Probes
+    %tr
+      %td
+        .sort_container
+          %div
+            = label_tag 'sort_dropdown_created_at_ASC','Oldest',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_dropdown,'created_at ASC',nil,:class=>'sort_radio'
+          %div
+            = label_tag 'sort_dropdown_created_at_DESC','Newest',:onclick=>'highlightlabel(this)'  
+            = radio_button_tag :sort_dropdown,'created_at DESC',nil,:class=>'sort_radio'
+          %div
+            = label_tag 'sort_dropdown_name_ASC','Alphabetical',:class=>'highlightoption',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_dropdown,'name ASC',true,:class=>'sort_radio'
+          %div
+            = label_tag 'sort_dropdown_offerings_count_DESC' ,'Popularity',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_dropdown,'offerings_count DESC',nil,:class=>'sort_radio'   
+  
+      %td
+        .domin_container
+          %div
+            =check_box_tag :physicalscience, true, true
+            Physical Science
+          %div
+            =check_box_tag :earthscience, true, true
+            Earth & Space Science 
+          %div
+            =check_box_tag :lifescience, true, true
+            Life Acience
+      %td
+        .grade_container
+          %div
+            =check_box_tag :allgrades, true, true
+            All Grades
+          %div
+            =check_box_tag :grade5_6, true, true
+            5-6
+      %td
+        .material_container        
+          %div
+            =check_box_tag :investigation, true, true
+            Investigation
+          %div
+            =check_box_tag :activity, true, false,:onchange=>"showHideProbes(this)"
+            Activity 
+      %td
+        .probes_container{:style=>"overflow:auto;height:100px"}
+          #select_none_probes{:onclick=>"uncheckedallprobes();"}
+            select none
+          - probe_types.each do |probe|
+            %div
+              =check_box_tag :"probe_#{probe.id}", true, true,:class=>"probe_items"
+              =label_tag "probe_#{probe.id}","#{probe.name}"
+              
+          

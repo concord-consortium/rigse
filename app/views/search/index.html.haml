@@ -14,10 +14,9 @@
           = text_field_tag :name,nil, :autocomplete => "off", :onkeydown=>'showsuggestion()'
           #search_suggestions
         %td
-          
-          = hidden_field_tag :show_suggestion, 'true'
-          = submit_to_remote("GO","GO")
-          
+          .material_button.button
+            = hidden_field_tag :show_suggestion, 'true'
+            = submit_to_remote("GO","GO")
     = render :partial=>"search/filters"
   #results
   = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();" 
@@ -26,4 +25,4 @@
       = image_tag "ajax-loader.gif"
       ( loading .... ) 
   #offering_list
-  /= observe_field 'sort_checkbox', :url => list_filter_search_url, :frequency => 1, :update => {:success => 'results'} 
+  
