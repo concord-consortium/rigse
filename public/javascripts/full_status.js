@@ -18,10 +18,10 @@ function showHideDetailedSummary(investigation_id, bShowDetails, strURL)
     
     arrSummaryRows.each(function(oSummaryRow){
         oSummaryRow.setStyle({'display':strSummaryRowDisplay});
-    })
+    });
     arrDetailRows.each(function(oDetailRow){
         oDetailRow.setStyle({'display':strDetailRowDisplay});
-    })
+    });
     
     setTableHeaders();
     
@@ -29,7 +29,7 @@ function showHideDetailedSummary(investigation_id, bShowDetails, strURL)
 }
 
 document.observe("dom:loaded", function() {
-    setTableHeaders()
+    setTableHeaders();
 });
 
 
@@ -37,19 +37,19 @@ function setTableHeaders(iDefaultWidth)
 {
     var iWidth;
     $$("th.expand_collapse_text").each(function(oTitle){
-        var oChild = oTitle.childElements()[0]
+        var oChild = oTitle.childElements()[0];
         if(oChild)
         {
             if(iDefaultWidth)
-                iWidth = iDefaultWidth
+                iWidth = iDefaultWidth;
             else
-                iWidth = (oTitle.getStyle('display') == "none")? 1 : oTitle.offsetWidth*0.9
-            oChild.setStyle({'display':'none'}) 
-            oChild.setStyle({'width':iWidth+'px'})
+                iWidth = (oTitle.getStyle('display') == "none")? 1 : oTitle.offsetWidth*0.9;
+            oChild.setStyle({'display':'none'});
+            oChild.setStyle({'width':iWidth+'px'});
         }
-    })
+    });
     
     $$("th.expand_collapse_text > div.progressbar_container").each(function(oTitle){
-        oTitle.setStyle({'display':''})
-    })
+        oTitle.setStyle({'display':''});
+    });
 }
