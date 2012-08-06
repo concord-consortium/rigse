@@ -18,6 +18,10 @@ Given /^the following linked investigations exist:$/ do |table|
       draw_tool.pages << inv.activities[0].sections[0].pages[0]
       snapshot_button = (Factory :lab_book_snapshot, {:user => user, :target_element => draw_tool})
       snapshot_button.pages << inv.activities[0].sections[0].pages[0]
+      prediction_graph = (Factory :data_collector, {:user => user})
+      prediction_graph.pages << inv.activities[0].sections[0].pages[0]
+      displaying_graph = (Factory :data_collector, {:user => user, :prediction_graph_source => prediction_graph})
+      displaying_graph.pages << inv.activities[0].sections[0].pages[0]
       inv.reload
   end
 end
@@ -322,7 +326,20 @@ Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do 
   investigation.offerings_count.should == count.to_i
 end
 
-Then /^the investigation "([^"]*)" should have correct linked embeddables$/ do |inv_name|
+Then /^the investigation "([^"]*)" should have correct linked prediction graphs/ do |inv_name|
+  copy = Investigation.find_by_name inv_name
+  orig = Investigation.find_by_name inv_name.gsub(/^copy of /, '')
+
+  orig_prediction_graph = orig.pages.first.data_collectors.first
+  copy_prediction_graph = copy.pages.first.data_collectors.first
+
+  orig_dc = orig.pages.first.data_collectors.last
+  copy_dc = copy.pages.first.data_collectors.last
+
+  copy_dc.prediction_graph_source.should == copy_prediction_graph
+end
+
+Then /^the investigation "([^"]*)" should have correct linked snapshot buttons/ do |inv_name|
   copy = Investigation.find_by_name inv_name
   orig = Investigation.find_by_name inv_name.gsub(/^copy of /, '')
 
