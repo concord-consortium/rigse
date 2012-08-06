@@ -140,7 +140,7 @@ class HomeController < ApplicationController
       return
     end
     
-    latest_report_learner = Report::Learner.where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC").first
+    latest_report_learner = Report::Learner.where('complete_percent > 0').where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC").first
     unless latest_report_learner
       # There are no report learners
       @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
