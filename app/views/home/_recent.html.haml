@@ -5,13 +5,13 @@
     .right
       - clazz = clazz_offering.clazz
       - runnable = clazz_offering.runnable 
-      -if runnable.is_a? ::Investigation     
-        - investigation_name = runnable.name          
+      -if runnable.is_a? ::Investigation
+        - investigation_name = runnable.name
       -elsif runnable.is_a? ::Activity
         - investigation_name = runnable.investigation.name
-    
       
-      %div        
+      
+      %div
         %table.recent_activity_table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:100%;"}
           %tr
             %th{:colspan=>2}
@@ -32,7 +32,7 @@
                   %tr
                     %td
                       Class Size = 
-                      = clazz.students.length    
+                      = clazz.students.length
                   %tr
                     %td{:colspan=>2}
                       .report
@@ -48,5 +48,5 @@
               = render :partial => 'recent_student_report', :locals => { :offering => clazz_offering, :students=>students, :learners=>learners}
   %br
   %br
-           
+  
   
