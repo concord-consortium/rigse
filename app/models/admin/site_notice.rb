@@ -1,6 +1,11 @@
 class Admin::SiteNotice < ActiveRecord::Base
-  has_many :site_notice_roles, :class_name => 'Admin::SiteNoticeRole', :foreign_key => 'notice_id', :primary_key => 'id'
-  has_many :site_notice_users, :class_name => 'Admin::SiteNoticeUser', :foreign_key => 'notice_id', :primary_key => 'id'
+  self.table_name = "admin_site_notices"
+  has_many :admin_site_notice_roles, :class_name => 'Admin::SiteNoticeRole', :foreign_key => 'notice_id', :primary_key => 'id'
+  has_many :admin_site_notice_users, :class_name => 'Admin::SiteNoticeUser', :foreign_key => 'notice_id', :primary_key => 'id'
+  
+  belongs_to :creator, :class_name => 'User', :foreign_key => 'created_by'
+  belongs_to :updater, :class_name => 'User', :foreign_key => 'updated_by'
+  
   validates :notice_html, :created_by, :presence => true
   
   
@@ -27,11 +32,11 @@ class Admin::SiteNotice < ActiveRecord::Base
     all_notices = Array.new
     user_roles = user.roles
     user_roles.each do |role|
-      notice_roles = role.site_notice_roles
+      notice_roles = role.admin_site_notice_roles
       if(notice_roles)
         notice_roles.each do |notice_role|
-          notice_dismissed = Admin::SiteNoticeUser.find_by_notice_id_and_user_id(notice_role.site_notice.id, user.id)
-          all_notices << notice_role.site_notice if notice_dismissed.nil? or (notice_role.site_notice.updated_at > notice_dismissed.updated_at)
+          notice_dismissed = Admin::SiteNoticeUser.find_by_notice_id_and_user_id(notice_role.admin_site_notice.id, user.id)
+          all_notices << notice_role.admin_site_notice if notice_dismissed.nil? or (notice_role.admin_site_notice.updated_at > notice_dismissed.updated_at)
         end
       end
     end
