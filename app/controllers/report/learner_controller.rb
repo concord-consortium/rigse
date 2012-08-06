@@ -44,9 +44,12 @@ class Report::LearnerController < ApplicationController
       @start_date = nil
     end
 
+    @parsed_end_date = @end_date
     begin
-      Time.parse(@end_date)
+      Time.parse(@end_date + " 23:59:59")
+      @parsed_end_date += " 23:59:59"
     rescue
+      @parsed_end_date = nil
       @end_date = nil
     end
 
@@ -71,7 +74,7 @@ class Report::LearnerController < ApplicationController
                           :teachers   => @select_teachers,
                           :runnables  => @select_runnables,
                           :start_date => @start_date,
-                          :end_date   => @end_date
+                          :end_date   => @parsed_end_date
                         })
 
     # The learners we have selected:
