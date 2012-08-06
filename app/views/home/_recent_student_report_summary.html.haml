@@ -23,7 +23,7 @@
     - when 100
       - if total_complete_percent == 100
         %tr
-          %td.student_name.locked_left
+          %td.student_name
             = student.user.last_name + ", " + student.user.first_name
           %td
             = report_learner.last_run.strftime('%m/%d')
