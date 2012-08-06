@@ -34,7 +34,7 @@
     %table.inProgressSummary
       %tr
         %th
-          Not yet started              
+          Not yet started
       = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
   - else
     %table.messagetable
@@ -49,7 +49,7 @@
     %table.inProgressSummary
       %tr
         %th
-          Completed              
+          Completed
       = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100, :students=>students, :learners=>learners}
   - else
     %table.messagetable
@@ -59,6 +59,6 @@
       %tr
         %td No student has completed this offering yet.
 - else
-  %div.item No activities available in this offering.   
+  %div.item No activities available in this offering.
   
   
