@@ -4,7 +4,7 @@ When /^(?:I )expand the column "(.*)" on the Full Status page$/ do |offering_nam
 end
 
 When /^the column for "(.*)" on the Full Status page should be (expanded|collapsed)$/ do |column_name, expanded_or_collapsed|
-  xpath_expression = "//th[@class[contains(., 'activity investigation_detail_row_')] and contains(., '#{column_name}')]"
+  xpath_expression = "//th[@title='#{column_name}' and contains(., '#{column_name}')]"
   element = page.find(:xpath, xpath_expression)
   if expanded_or_collapsed == 'expanded'
     element.should be_visible
