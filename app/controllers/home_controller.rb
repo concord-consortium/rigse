@@ -95,7 +95,6 @@ class HomeController < ApplicationController
     @notice_display_type = notices_hash[:notice_display_type]
     
     
-    @report_learner = Report::Learner.all
     @clazz_offerings=Array.new
     
     @recent_activity_msgs = {
@@ -108,7 +107,7 @@ class HomeController < ApplicationController
     @student_count = 0
     
     portal_teacher = current_user.portal_teacher
-    teacher_clazzes = portal_teacher.clazzes;
+    teacher_clazzes = portal_teacher.clazzes
     if teacher_clazzes.count == 0
       # If there are no classes assigned then return to the home page
       redirect_to root_path
@@ -117,10 +116,14 @@ class HomeController < ApplicationController
     
     portal_teacher_clazzes = portal_teacher.teacher_clazzes
     portal_teacher_offerings = [];
+    portal_student_ids = []
     teacher_clazzes.each do|teacher_clazz|
       if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active
         @offerings_count += teacher_clazz.offerings.count
-        student_count = teacher_clazz.students.length
+        
+        students = teacher_clazz.students
+        portal_student_ids.concat(students.map{|s| s.id})
+        student_count = students.count
         @student_count += student_count
         if student_count > 0
           portal_teacher_offerings.concat(teacher_clazz.offerings)
@@ -137,7 +140,7 @@ class HomeController < ApplicationController
       return
     end
     
-    latest_report_learner = Report::Learner.order("last_run DESC").first
+    latest_report_learner = Report::Learner.where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC").first
     unless latest_report_learner
       # There are no report learners
       @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
@@ -145,7 +148,7 @@ class HomeController < ApplicationController
     end
     
     time_limit = latest_report_learner.last_run - 7.days
-    learner_offerings = (Report::Learner.where("last_run > '#{time_limit}' and complete_percent > 0").order("last_run DESC")).select(:offering_id).uniq
+    learner_offerings = (Report::Learner.where("last_run > '#{time_limit}' and complete_percent > 0").where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC")).select(:offering_id).uniq
     
     
     if (learner_offerings.count == 0)
