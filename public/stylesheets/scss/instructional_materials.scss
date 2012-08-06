@@ -296,6 +296,8 @@
 #oFullStatusDiv .reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:110px;height:20px;padding:5px}
 #oFullStatusDiv .student_name{white-space:nowrap}
 #oFullStatusDiv .progress_div{width:485px;overflow:auto;text-align:left}
+
+
 div.progressbar_container {height:15px;padding-top:5px;}
 th.expand_collapse_text div.progressbar_container{width:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
@@ -304,6 +306,8 @@ th.expand_collapse_text div.progressbar_container{width:1px;white-space:nowrap;o
 #oFullStatusDiv .student_list tr { vertical-align: middle; }
 #oFullStatusDiv .student_list td { text-align:left; vertical-align:middle;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
 #oFullStatusDiv .student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;height:20px;padding:5px }
+#oFullStatusDiv td.student_name div.progressbar_container {width:118px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
 td.student_name div.progressbar_container {height:20px;padding-top:0px;}
 th.expand_collapse_text{cursor:pointer}
 th.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
