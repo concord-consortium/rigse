@@ -308,7 +308,8 @@ th.expand_collapse_text div.progressbar_container{width:1px;white-space:nowrap;o
 #oFullStatusDiv .student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;height:20px;padding:5px }
 #oFullStatusDiv td.student_name div.progressbar_container {width:118px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-td.student_name div.progressbar_container {height:20px;padding-top:0px;}
+
+td.student_name div.progressbar_container {height:20px;padding-top:0px;width:108px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #oFullStatusDiv th.expand_collapse_text.offering_name{cursor:pointer}
 th.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
 th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
