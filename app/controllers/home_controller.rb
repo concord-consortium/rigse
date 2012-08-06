@@ -6,13 +6,6 @@ class HomeController < ApplicationController
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
    
-   if current_user.portal_teacher
-     portal_teacher = current_user.portal_teacher
-     if portal_teacher.teacher_clazzes.count > 0
-       redirect_to recent_activity_path
-       return
-     end
-   end
   end
   
   def readme
