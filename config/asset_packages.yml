@@ -200,6 +200,8 @@ stylesheets:
   - app
   - accordion
   - please_wait
+  - window/window
+  - window/rites
   - live_validation
   - accordion
   - notes
