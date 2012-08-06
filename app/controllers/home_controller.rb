@@ -76,31 +76,68 @@ class HomeController < ApplicationController
       redirect_to home_url
       return
     end
-  
+    
+    unless current_user.portal_teacher
+      redirect_to home_url
+      return
+    end
+    
+    notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
+    @notices = notices_hash[:notices]
+    @notice_display_type = notices_hash[:notice_display_type]
+    
+    
     @report_learner = Report::Learner.all
+    @clazz_offerings=Array.new
+    
+    @recent_activity_msgs = {
+      :no_offerings => 'You need to assign investigations to your classes.<br />Once your students have started work this page will show you a dashboard of recent student progress.',
+      :no_students => 'You have not yet assigned students to your classes.<br />Once your students have started work this page will show you a dashboard of recent student progress.',
+      :no_activity => 'Once your students have started work this page will show you a dashboard of recent student progress.'
+    }
+    @no_recent_activity_msg = nil
+    @offerings_count = 0
+    @student_count = 0
     
     teacher_clazzes = current_user.portal_teacher.clazzes;
     portal_teacher_clazzes = current_user.portal_teacher.teacher_clazzes
     portal_teacher_offerings = [];
     teacher_clazzes.each do|teacher_clazz|
-      if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active && teacher_clazz.students.length > 0
-        portal_teacher_offerings.concat(teacher_clazz.offerings)
+      if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active
+        @offerings_count += teacher_clazz.offerings.count
+        student_count = teacher_clazz.students.length
+        @student_count += student_count
+        if student_count > 0
+          portal_teacher_offerings.concat(teacher_clazz.offerings)
+        end
       end
+    end
+    
+    
+    if @offerings_count == 0
+      @no_recent_activity_msg = @recent_activity_msgs[:no_offerings]
+      return
+    elsif @student_count == 0
+      @no_recent_activity_msg = @recent_activity_msgs[:no_students]
+      return
     end
     
     latest_report_learner = Report::Learner.order("last_run DESC").first
     unless latest_report_learner
       # There are no report learners
-      redirect_to root_path
+      @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
       return
     end
     
     time_limit = latest_report_learner.last_run - 7.days
     learner_offerings = (Report::Learner.where("last_run > '#{time_limit}' and complete_percent > 0").order("last_run DESC")).select(:offering_id).uniq
     
-      # There are no report learners for this filter
     
-    @clazz_offerings=Array.new    
+    if (learner_offerings.count == 0)
+      # There are no report learners for this filter
+      @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
+      return
+    end
     
     
     learner_offerings.each do |learner_offering|
@@ -115,12 +152,9 @@ class HomeController < ApplicationController
       end
     end
     
-    notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
-    @notices = notices_hash[:notices]
-    @notice_display_type = notices_hash[:notice_display_type]
     
     if (@clazz_offerings.count == 0)
-      redirect_to root_path
+      @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
       return
     end
     
