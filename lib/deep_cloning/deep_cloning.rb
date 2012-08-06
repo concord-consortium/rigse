@@ -131,6 +131,8 @@ module DeepCloning
     kopy.send(:write_attribute, :created_at, t) if kopy.respond_to?(:created_at)
     kopy.send(:write_attribute, :updated_at, t) if kopy.respond_to?(:updated_at)
 
+    kopy.save(:validate => false) # skip validations when cloning
+
     return kopy
   end
   

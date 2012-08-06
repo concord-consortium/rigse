@@ -42,16 +42,14 @@ Feature: Investigations can be duplicated
 
   @javascript
   Scenario: Investigations with linked snapshot buttons should have their links point to the new cloned embeddable
-    Given PENDING
-    And I am logged in with the username author
+    Given I am logged in with the username author
     And I am on the investigations page for "WithLinksInv"
     When I duplicate the investigation
     Then the investigation "copy of WithLinksInv" should have correct linked snapshot buttons
 
   @javascript
   Scenario: Investigations with linked prediction graphs should have their links point to the new cloned embeddable
-    Given PENDING
-    And I am logged in with the username author
+    Given I am logged in with the username author
     And I am on the investigations page for "WithLinksInv"
     When I duplicate the investigation
     Then the investigation "copy of WithLinksInv" should have correct linked prediction graphs
