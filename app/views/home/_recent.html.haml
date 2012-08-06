@@ -1,6 +1,7 @@
 - students = clazz_offering.clazz.students 
 - learners = clazz_offering.learners
--if clazz_offering.clazz.students.length > 0 && (clazz_offering.inprogress_students_count > 0 || clazz_offering.completed_students_count > 0)
+- if clazz_offering.clazz.students.length > 0 && (clazz_offering.inprogress_students_count > 0 || clazz_offering.completed_students_count > 0)
+  - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
   %div
     .right
       - clazz = clazz_offering.clazz
