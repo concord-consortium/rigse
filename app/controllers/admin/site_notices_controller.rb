@@ -24,8 +24,6 @@ class Admin::SiteNoticesController < ApplicationController
     @role_ids = params[:role] ? params[:role] : []
     @all_roles_selected_by_default = false
     
-    @notice_html = '' if @notice_html == '<html />' #fix for IE 9. IE 9 sends '<html />' for blank text
-    
     unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
       error = "Notice text is blank"
     end

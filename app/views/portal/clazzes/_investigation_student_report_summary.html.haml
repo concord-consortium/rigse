@@ -8,5 +8,5 @@
         - if !report_learner_activities.find_by_activity_id(activity.id).nil?
           - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
       %div.progressbar_container
-        .progressbar
+        .progressbar{:title=>"#{percentage.round(1)}%"}
           .progress{:style=>"width:#{percentage}%"}
