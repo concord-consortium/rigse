@@ -5,7 +5,7 @@
     - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
     .student_div.floatL
       = render :partial => 'investigation_student_report_learner_list', :locals=> {:students=>students}
-    .progress_div.floatL.webkit_scrollbars
+    .progress_div.webkit_scrollbars
       %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
         = render :partial => 'investigation_student_report_summary_header',:locals=> {:offering=>offering}
         = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners, :offering=>offering}
