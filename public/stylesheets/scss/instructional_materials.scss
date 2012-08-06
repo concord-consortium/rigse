@@ -63,15 +63,15 @@
 .investigationdata tr { vertical-align: top; }
 .investigationdata td { text-align:left; vertical-align:top;padding:5px }
 
-.reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px}
+.reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px;width:100%}
 .reportsummary tr { vertical-align: middle; }
-.reportsummary td { text-align:center; vertical-align:middle;min-width:70px;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
-.reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;min-width:70px;height:20px;;padding:5px}
-.reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:70px;height:20px;;padding:5px}
+.reportsummary td { text-align:center; vertical-align:middle;min-width:105px;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
+.reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;min-width:105px;height:20px;;padding:5px}
+.reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:105px;height:20px;;padding:5px}
 .student_name{white-space:nowrap}
-.progress_div{width:470px;overflow:auto;text-align:left}
+.progress_div{width:464px;overflow:auto;text-align:left}
 
-.student_list{text-align:left;border:0;margin-top:0px;width:115px}
+.student_list{text-align:left;border:0;margin-top:0px;width:120px}
 .student_list tr { vertical-align: middle; }
 .student_list td { text-align:left; vertical-align:middle;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
 .student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;height:20px;padding:5px }
