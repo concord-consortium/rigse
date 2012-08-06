@@ -19,7 +19,7 @@
           +&nbsp;
         = offering.name
     - if activities.length > 0
-      %th.expand_collapse_text.activity{:colspan=>"#{activities.length}",:title=>"#{offering.name}", :class=>"investigation_detail_row_#{offering.id}", :style=>"display:#{activities_display}", :onclick=>"showHideDetailedSummary(#{offering.id},false,\"#{offering_collapsed_status_portal_offering_path(offering)}\")"} 
+      %th.expand_collapse_text.activity.offering_name{:colspan=>"#{activities.length}",:title=>"#{offering.name}", :class=>"investigation_detail_row_#{offering.id}", :style=>"display:#{activities_display}", :onclick=>"showHideDetailedSummary(#{offering.id},false,\"#{offering_collapsed_status_portal_offering_path(offering)}\")"} 
         %div.progressbar_container
           %span
             %b -&nbsp;
