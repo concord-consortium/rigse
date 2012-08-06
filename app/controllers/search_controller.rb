@@ -1,13 +1,9 @@
 class SearchController < ApplicationController
-  include RestrictedController
+
   in_place_edit_for :investigation, :name
   
   def index
-   if request.xhr?
-     render :update do |page| 
-        page<<"$('suggestions').remove()"
-      end  
-   end   
+    
   end
   
   def show
@@ -38,7 +34,7 @@ class SearchController < ApplicationController
     end
     
     if request.xhr?
-      render :update do |page|
+      render :update do |page| 
         @bshow = params[:show_suggestion]
         if @bshow=='true'
           page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@name.length}}

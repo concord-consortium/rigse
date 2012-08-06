@@ -1,17 +1,59 @@
+var suggestioncount=-1;
+
 function select_material(e){
  var strSuggestiontext=e.textContent.trim();
  $('name').value=strSuggestiontext;
  $('suggestions').remove();
- $('show_suggestion').writeAttribute('name','no_suggestion')
+ $('show_suggestion').writeAttribute('name','no_suggestion');
+ suggestioncount=-1;
 }
 
 function highlightlabel(e){
 	$$('.highlightoption')[0].removeClassName('highlightoption');
 	e.addClassName('highlightoption');
 }
- 
-function showsuggestion(){
-	$('show_suggestion').writeAttribute('name','show_suggestion')
+
+function showsuggestion(event,oelem){	
+	$('show_suggestion').writeAttribute('name','show_suggestion');
+	var osuggestions=$$('.suggestion');
+	var ohoverelements=$$('.suggestionhover');
+	if(osuggestions.length==0)
+	{
+		return;
+	}
+	if(ohoverelements.length>0)
+	{
+	 ohoverelements[0].removeClassName('suggestionhover');
+	}
+	switch (event.keyCode)
+	{
+		case 40:
+			suggestioncount++;
+			if(suggestioncount>=osuggestions.length)
+			{
+				suggestioncount=0;
+			}
+			osuggestions[suggestioncount].addClassName('suggestionhover');
+			break;
+		
+		case 38:
+			suggestioncount--;
+			if(suggestioncount<=-1)
+			{
+				suggestioncount=osuggestions.length-1;
+			}
+			osuggestions[suggestioncount].addClassName('suggestionhover');
+			break;
+		
+		case 13:
+			select_material(osuggestions[suggestioncount]);
+			suggestioncount=-1;
+			break;
+		
+		default:
+			suggestioncount=-1;
+	}
+	
 }
 
 function showHideProbes(activity){
@@ -51,4 +93,8 @@ function uncheckedallprobes()
 		e.checked= false;
 		
 	})
+}
+
+function removesuggestions(){
+	$('suggestions').remove();
 }

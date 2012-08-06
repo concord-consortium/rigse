@@ -5,7 +5,15 @@
 }
 .result_material tr
 {
-  border-bottom:2px solid #FEE9AA;
+  border-top:2px solid #FEE9AA;
+}
+.result_material td
+{
+  padding-top:15px;
+}
+.result_material
+{
+  width:100%;
 }
 .search_materials th
 {
@@ -24,8 +32,16 @@ width: 300px;
 }
 .filters{
   background-color:#fbf4da;
-  width:100%;
+  margin-left: 15px;
+  float:left;
 }
+
+.sortbycolumn{width:95px;}
+.domaincolumn{width:165px;}
+.gradecolumn{width:90px;}
+.materialcolumn{width:100px;}
+.probescolumn{width:145px;}
+
 .material_header
 {
   font-weight:bold;
@@ -46,18 +62,18 @@ width: 300px;
   height: 40px;
   width: 40px;
   background: gray;
-  margin: auto;
 }
 .material_type{
-  text-align:center;
   font-size:12px;
 }
 #search_suggestions{
-  border:1px solid gray;
-  border-top:0px;
   position: absolute;
   width: 310px;
   background-color: white;
+}
+#suggestions{
+  border:1px solid gray;
+  border-top:0px;
 }
 .suggestion{
   padding: 2px;
@@ -72,6 +88,10 @@ width: 300px;
 {
   background-color:#FEE9AA;
 }
+.suggestionhover
+{
+  background-color:#FEE9AA;
+}
 .suggestion_link{
   color:black;
 }
@@ -80,7 +100,7 @@ width: 300px;
   display: none
 }
 
-.sort_container label {
+.sortbycolumn label {
   cursor: pointer
 }
 .sort_container {
@@ -97,8 +117,9 @@ search_materials{
 
 .probes_container{
   overflow:auto;
-  height:100px;
+  height:95px;
   background-color:white;
+  border: 1px solid #CCC;
   }
 #select_none_probes{
   cursor:pointer;
@@ -106,8 +127,9 @@ search_materials{
  font-weight:bold;
 }
 .material_list .material_list_item{
-  border-bottom: 2px solid #FBF4DA;
-  margin-bottom:5px;
+  border-bottom: 1px solid #DDD;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 td.material_list div.material_list_item:last-child{

@@ -2,7 +2,7 @@
 /- locals = {:domain_id => @domain_id, :grade_span => @grade_span, :name => @name, :investigations => @investigations, :sort_order => @sort_order, :paginated_objects   => @paginated_objects,:investigations_only => true}
 = javascript_include_tag "search_materials"
 .search_materials
-  %h1
+  %h1{:style=>'color:black'}
     Instructional Materials
   %form{:id => 'material_search_form',:url => list_filter_search_url, :onkeypress => 'return event.keyCode!=13', :remote =>true }
     %table{:cellpadding=>2,:cellspacing=>0}
@@ -11,12 +11,12 @@
           .search_label
             SEARCH
         %td
-          = text_field_tag :name,nil, :autocomplete => "off", :onkeydown=>'showsuggestion()'
+          = text_field_tag :name,nil, :autocomplete => "off", :onkeydown=>'showsuggestion(event,this)'
           #search_suggestions
         %td
           .material_button.button
             = hidden_field_tag :show_suggestion, 'true'
-            = submit_to_remote("GO","GO")
+            = submit_to_remote :GO,:GO, :url => list_filter_search_url, :complete =>'removesuggestions()'
     = render :partial=>"search/filters"
   #results
   = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();" 

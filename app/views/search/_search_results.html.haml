@@ -18,7 +18,7 @@
   - show_message_onSearch +=" search term \"#{@name}\" and" 
 - show_message_onSearch +=" selected criteria"
 
-%p
+%p{:style=>'font-weight:bold'}
   -if params[:investigation] == "true" || params[:activity] == "true"
     - if @b_check == true
       = show_message_onSearch
@@ -26,12 +26,9 @@
       No Result Found    
   -else
     Select investigation or activity checkbox
-%br
 -unless @investigations.nil?
   - if @investigations.length>0    
     = render :partial=>'search/result_material',:locals=>{:materials=>@investigations,:type=>'Investigations'}
 -unless @activities.nil?
   - if @activities.length>0  
     = render :partial=>'search/result_activity',:locals=>{:materials=>@activities,:type=>'Activities'}
-%br
-#data
