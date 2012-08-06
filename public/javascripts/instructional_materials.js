@@ -54,6 +54,7 @@ function showHideActivityButtons(investigation_id, oLink){
 
 
 function showHideActivityDetails(investigation_id, oLink){
+    setTableHeaders(1);
     var bVisible = false;
     $$('.DivHideShowDetail'+investigation_id).each(function(oButtonContainer){
         oButtonContainer.toggle();
@@ -73,6 +74,7 @@ function showHideActivityDetails(investigation_id, oLink){
     
     $('oExpandCollapseText_'+investigation_id).update(strExpandCollapseText);
     oLink.update(strLinkText);
+    setTableHeaders();
 }
 
 

@@ -38,4 +38,7 @@
             %td
               %div.progressbar_container
                 .progressbar
-                  .progress{:style=>"width:#{percentage}%"}     
+                  - if percentage == 100
+                    .progress.completed{:style=>"width:#{percentage}%"}
+                  - else
+                    .progress{:style=>"width:#{percentage}%"}     
