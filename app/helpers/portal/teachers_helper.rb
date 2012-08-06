@@ -16,7 +16,7 @@ module Portal::TeachersHelper
     span_tag = "<span id='#{span_id}' class='#{span_class}'>"
 
     other_clazzes = []
-    default_value =  "Add another teacher."
+    default_value =  "Click and type name to search for registered teacher"
     teacher_list = (!clazz.school.nil?) ? clazz.school.portal_teachers - clazz.teachers : []
     
     teacher_list = teacher_list.sort { |a,b| (a.list_name <=> b.list_name) }.map { |t| [t.list_name,t.id] }
@@ -28,7 +28,7 @@ module Portal::TeachersHelper
       span_tag = <<-EOF
           #{span_tag}
           <table><tr>
-          <td style="vertical-align:middle;padding-left:0px">#{select_tag('teacher_id',  select_opts ,:id => 'teacher_id_selector')}</td>
+          <td style="vertical-align:middle;padding-left:0px">#{select_tag('teacher_id',  select_opts ,:id => 'teacher_id_selector', :style => 'width: 358px;')}</td>
           <td style="vertical-align:middle">#{button_to_remote("Add", :url => {:controller => 'portal/clazzes', :action=>'add_teacher', :id => clazz}, :with => "'teacher_id='+$('teacher_id_selector').value")}</td>
           </tr></table>
           <div class="item">(Note: Make sure new teacher is registered before trying to add them.)</div>
