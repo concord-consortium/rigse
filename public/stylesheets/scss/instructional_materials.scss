@@ -63,18 +63,18 @@
 .investigationdata tr { vertical-align: top; }
 .investigationdata td { text-align:left; vertical-align:top;padding:5px }
 
-.reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px}
+.reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px;width:100%}
 .reportsummary tr { vertical-align: middle; }
-.reportsummary td { text-align:center; vertical-align:middle;width:70px;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
-.reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;width:70px;height:20px;;padding:5px}
-.reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;cursor:pointer;width:70px;height:20px;;padding:5px}
+.reportsummary td { text-align:center; vertical-align:middle;min-width:105px;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
+.reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;min-width:105px;height:20px;;padding:5px}
+.reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:105px;height:20px;;padding:5px}
 .student_name{white-space:nowrap}
-.progress_div{width:470px;overflow:auto;text-align:left}
+.progress_div{width:464px;overflow:auto;text-align:left}
 
-.student_list{text-align:left;border:0;margin-top:0px;width:115px}
+.student_list{text-align:left;border:0;margin-top:0px;width:120px}
 .student_list tr { vertical-align: middle; }
 .student_list td { text-align:left; vertical-align:middle;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
-.student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;cursor:pointer;height:20px;padding:5px }
+.student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;height:20px;padding:5px }
 
 .legend_progress{
   background-color:#FFCC99;
@@ -91,7 +91,7 @@
 }
 
 .progressbar{
-  width:60px;
+  min-width:60px;
   height:10px;
   border:solid 1px #666;
   background-color:White;
@@ -101,9 +101,15 @@
   background-color:#FFCC99;
   float:left;
 }
+.progress.completed{
+  height:10px;
+  background-color:#FF8513;
+  float:left;
+}
+
 .progress.activity{
   height:10px;
-  background-color:Orange;
+  background-color:#FFAD5B;
   float:left;
 }
 
@@ -283,35 +289,22 @@
   clear: both;
 }
 
-#oFullStatusDiv .reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px}
+#oFullStatusDiv .reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px;width:100%}
 #oFullStatusDiv .reportsummary tr { vertical-align: middle; }
-#oFullStatusDiv .reportsummary td { text-align:center; vertical-align:middle;width:70px;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
-#oFullStatusDiv .reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;cursor:pointer;width:70px;height:20px;;padding:5px}
-#oFullStatusDiv .reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;cursor:pointer;width:70px;height:20px;;padding:5px}
+#oFullStatusDiv .reportsummary td { text-align:center; vertical-align:middle;min-width:110px;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
+#oFullStatusDiv .reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;min-width:110px;height:20px;padding:5px}
+#oFullStatusDiv .reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:110px;height:20px;padding:5px}
 #oFullStatusDiv .student_name{white-space:nowrap}
-#oFullStatusDiv .progress_div{width:500px;overflow:auto;text-align:left}
-div.progressbar_container {height:15px;padding-top:5px;padding-left:3px}
+#oFullStatusDiv .progress_div{width:485px;overflow:auto;text-align:left}
+div.progressbar_container {height:15px;padding-top:5px;}
+th.expand_collapse_text div.progressbar_container{width:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 
-#oFullStatusDiv .student_list{text-align:left;border:0;margin-top:0px;width:115px}
+#oFullStatusDiv .student_list{text-align:left;border:0;margin-top:0px;width:130px}
 #oFullStatusDiv .student_list tr { vertical-align: middle; }
 #oFullStatusDiv .student_list td { text-align:left; vertical-align:middle;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
-#oFullStatusDiv .student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;cursor:pointer;height:20px;padding:5px }
-td.student_name div.progressbar_container {height:20px;padding-top:0px;padding-left:2px}
-
-#oFullStatusDiv .progressbar{
-  width:60px;
-  height:10px;
-  border:solid 1px #666;
-  background-color:White;
-}
-#oFullStatusDiv .progress{
-  height:10px;
-  background-color:#FFCC99;
-  float:left;
-}
-#oFullStatusDiv .progress.activity{
-  height:10px;
-  background-color:Orange;
-  float:left;
-}
+#oFullStatusDiv .student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;height:20px;padding:5px }
+td.student_name div.progressbar_container {height:20px;padding-top:0px;}
+th.expand_collapse_text{cursor:pointer}
+th.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
+th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}

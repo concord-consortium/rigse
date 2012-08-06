@@ -21,8 +21,20 @@
         %span.subheader
           Student Submissions
       %td
+        %div.right
+          %span.linkbutton.pie
+            = report_link_for(current_offering, 'report', 'Run Report')
+    %tr
+      %td{:colspan=>"2"}
         %table
           %tr
+            %td
+              %span.legend_completed
+                &nbsp;&nbsp;
+              %span
+                &nbsp;Completed
+            %td
+              &nbsp;&nbsp;
             %td
               %span.legend_progress
                 &nbsp;&nbsp;
@@ -35,12 +47,7 @@
                 &nbsp;&nbsp;
               %span
                 &nbsp;Not yet started
-        
-      %td
-        %div.right
-          %span.linkbutton.pie
-            = report_link_for(current_offering, 'report', 'Run Report')
     %tr
-      %td{:colspan=>"3"}
+      %td{:colspan=>"2"}
         %div
           = render :partial => 'investigation_report_summary', :locals => { :investigation => investigation, :offering=>current_offering }
