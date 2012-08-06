@@ -5,6 +5,14 @@ class HomeController < ApplicationController
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
+   
+   if current_user.portal_teacher
+     portal_teacher = current_user.portal_teacher
+     if portal_teacher.teacher_clazzes.count > 0
+       redirect_to recent_activity_path
+       return
+     end
+   end
   end
   
   def readme
@@ -99,8 +107,15 @@ class HomeController < ApplicationController
     @offerings_count = 0
     @student_count = 0
     
-    teacher_clazzes = current_user.portal_teacher.clazzes;
-    portal_teacher_clazzes = current_user.portal_teacher.teacher_clazzes
+    portal_teacher = current_user.portal_teacher
+    teacher_clazzes = portal_teacher.clazzes;
+    if teacher_clazzes.count == 0
+      # If there are no classes assigned then return to the home page
+      redirect_to root_path
+      return
+    end
+    
+    portal_teacher_clazzes = portal_teacher.teacher_clazzes
     portal_teacher_offerings = [];
     teacher_clazzes.each do|teacher_clazz|
       if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active
