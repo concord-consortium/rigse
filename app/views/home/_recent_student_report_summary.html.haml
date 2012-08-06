@@ -37,7 +37,7 @@
               - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
             %td
               %div.progressbar_container
-                .progressbar
+                .progressbar{:title=>"#{percentage}%"}
                   - if percentage == 100
                     .progress.completed{:style=>"width:#{percentage}%"}
                   - else
