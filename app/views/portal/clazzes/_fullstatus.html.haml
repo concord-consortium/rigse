@@ -44,6 +44,7 @@
                   
         %div{:id=>"oFullStatusDiv"}      
           - if students.length > 0
+            - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
             .student_div.floatL
               = render :partial => 'clazz_student_report_learner_list', :locals=> {:offerings=>clazz_offerings, :students=>students}
             .progress_div.webkit_scrollbars
