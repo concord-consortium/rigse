@@ -124,6 +124,9 @@ And /^I decline the upcoming javascript confirm box$/ do
   page.evaluate_script('window.confirm = function() { return false; }')
 end
 
+Then /^(?:|I )should see "([^"]*)" (\d+) times?$/ do |text, count|
+  (page.find(:xpath, '//body').text.split(text).length - 1).should == count.to_i
+end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
   if page.respond_to? :should
