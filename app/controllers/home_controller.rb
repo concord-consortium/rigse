@@ -73,10 +73,6 @@ class HomeController < ApplicationController
   # end
   
   def recent_activity
-    if current_user.anonymous?
-      redirect_to home_url
-      return
-    end
     
     unless current_user.portal_teacher
       redirect_to home_url
