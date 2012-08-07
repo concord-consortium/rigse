@@ -1,6 +1,9 @@
 class PagesController < ApplicationController
   helper :all
   
+  # so we can use dom_id_for
+  include ApplicationHelper
+
   before_filter :find_entities, :except => [:create,:new,:index,:delete_element,:add_element]
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
@@ -304,7 +307,7 @@ class PagesController < ApplicationController
           @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
         end
         if (@component)
-          @container = params['container'] || 'elements_container'
+          @container = params['container'] || dom_id_for(@page, :elements_container)
           @component.name = "copy of #{@component.name}"
           @component.user = @page.user
           @component.pages << @page
