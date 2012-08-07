@@ -57,8 +57,8 @@ Feature: Investigations can be searched
   Scenario: looking at the second page of runnable investigations
     When I am on the class page for "My Class"
     And I click on the next page of results
-    Then I should be on the class page for "My Class"
     Then  "x Good a" should be displayed in the investigations list
+    And I should be on the class page for "My Class"
 
   @javascript
   Scenario:  searching through the list of runnable investigations
