@@ -24,29 +24,30 @@
         %div.right
           %span.linkbutton.pie
             = report_link_for(current_offering, 'report', 'Run Report')
-    %tr
-      %td{:colspan=>"2"}
-        %table
-          %tr
-            %td
-              %span.legend_completed
+    - if current_offering.clazz.students.length > 0 && investigation.activities.length > 0
+      %tr
+        %td{:colspan=>"2"}
+          %table
+            %tr
+              %td
+                %span.legend_completed
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Completed
+              %td
                 &nbsp;&nbsp;
-              %span
-                &nbsp;Completed
-            %td
-              &nbsp;&nbsp;
-            %td
-              %span.legend_progress
+              %td
+                %span.legend_progress
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;In Progress
+              %td
                 &nbsp;&nbsp;
-              %span
-                &nbsp;In Progress
-            %td
-              &nbsp;&nbsp;
-            %td
-              %span.legend_not_started
-                &nbsp;&nbsp;
-              %span
-                &nbsp;Not yet started
+              %td
+                %span.legend_not_started
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Not Yet Started
     %tr
       %td{:colspan=>"2"}
         %div
