@@ -28,7 +28,7 @@ class SearchController < ApplicationController
     search_options = {
       :name => @name,
       :sort_order => @sort_order || 'created_at DESC',
-      :paginate => true
+      :paginate => false
     }
     
     unless params[:investigation].nil?
