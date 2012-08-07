@@ -23,7 +23,7 @@
       - report_learner_activities = learner.learner_activities
     %td{:class=>"investigation_summary_row_#{offering.id}", :style=>"display:#{offering_display}"}
       %div.progressbar_container
-        .progressbar{:title=>"#{percentage.round(1)}%"}
+        .progressbar
           - if percentage == 100
             .progress.completed{:style=>"width:#{percentage}%"}
           - else
@@ -34,7 +34,7 @@
         - unless report_learner_activities.nil? || report_learner_activities.find_by_activity_id(activity.id).nil?
           - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
         %div.progressbar_container
-          .progressbar{:title=>"#{percentage.round(1)}%"}
+          .progressbar
             - if percentage == 100
               .progress.completed{:style=>"width:#{percentage}%"}
             - else
