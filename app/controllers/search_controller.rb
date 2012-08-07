@@ -7,17 +7,29 @@ class SearchController < ApplicationController
        redirect_to root_path
        return
     end
+    search_options = {
+      :sort_order => 'created_at DESC'
+    }
+    @investigations = Investigation.search_list(search_options)
+    @activities = Activity.search_list(search_options)
+    unless @investigations.nil? || @activities.nil?
+      @b_check=true
+    end
   end
   
   def show
-     @name = params[:search_term]
-     @suggestions = []
-     @sort_order = param_find(:sort_order, (params[:method] == :get))
-     search_options = {
-      :name => @name,
-      :sort_order => @sort_order || 'created_at DESC',
-      :paginate => true,
-    #  :page => pagination
+    unless current_user.portal_teacher
+      redirect_to root_path
+      return
+    end
+    @name = params[:search_term]
+    @suggestions = []
+    @sort_order = param_find(:sort_order, (params[:method] == :get))
+    search_options = {
+     :name => @name,
+     :sort_order => @sort_order || 'created_at DESC',
+     :paginate => true,
+     #:page => pagination
     }
     
     unless params[:investigation].nil?
