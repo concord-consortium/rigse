@@ -1,5 +1,4 @@
-
-/- locals = {:domain_id => @domain_id, :grade_span => @grade_span, :name => @name, :investigations => @investigations, :sort_order => @sort_order, :paginated_objects   => @paginated_objects,:investigations_only => true}
+/- locals = {:search_name => @name, :investigations => @investigations,:activities => @activities, :sort_order => @sort_order}
 = javascript_include_tag "search_materials"
 .search_materials
   %h1{:style=>'color:black'}
@@ -19,10 +18,9 @@
             = submit_to_remote :GO,:GO, :url => list_filter_search_url, :complete =>'removesuggestions()'
     = render :partial=>"search/filters"
   #results
-  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();" 
+  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();"
   .progress_container
     #search_spinner{:style=>'display: none;'}
       = image_tag "ajax-loader.gif"
-      ( loading .... ) 
+      ( loading ... )
   #offering_list
-  

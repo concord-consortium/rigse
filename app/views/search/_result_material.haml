@@ -10,15 +10,14 @@
       - materials.each do |investigation|
         .material_list_item
           %div
-            %div{:style=>'overflow:hidden'} 
+            %div{:style=>'overflow:hidden'}
               .material_header{:style=>'float:left'}
                 = investigation.name
               .material_button{:style=>'float:right'}
-                =link_to 'Assign to class','',:class=>"button"
+                = button_to 'Assign to class',:class=>"button"
               .material_button{:style=>'float:right'}
-                = link_to "Preview", run_url_for(investigation, {}),:class=>"button"
+                = button_to "Preview"
           .material_body
             = investigation.description 
             %i
               Used in: #{investigation.offerings_count} classes.
-        
