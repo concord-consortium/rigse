@@ -89,3 +89,20 @@ When /^I add a "([^"]*)" to the page$/ do |embeddable|
   page.execute_script("$('add_menu').hide()")
 end
 
+When /^I copy the embeddable "([^"]*)"$/ do |embeddable|
+  # select the embeddable
+  find(:xpath, %!//span[@class="component_title" and contains(., "#{embeddable}")]/../../..//div[@class="item item_selectable "]!).click
+
+  show_actions_menu
+  click_link("copy Text: content goes here ...")
+  page.driver.browser.switch_to.alert.dismiss
+  page.execute_script("$('actions_menu').hide()")
+end
+
+When /^I paste the embeddable "([^"]*)"$/ do |embeddable|
+  show_actions_menu
+  click_link("paste Text: content goes here ...")
+  page.execute_script("$('actions_menu').hide()")
+end
+
+
