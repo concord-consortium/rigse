@@ -1,16 +1,19 @@
 class SearchController < ApplicationController
 
-  in_place_edit_for :investigation, :name
+  in_place_edit_for :investigation, :search_term
   
   def index
-    
+    unless current_user.portal_teacher
+       redirect_to root_path
+       return
+    end
   end
   
   def show
-    @suggestions = []
-    @name = params[:name]
-    @sort_order = param_find(:sort_order, (params[:method] == :get))
-    search_options = {
+     @name = params[:search_term]
+     @suggestions = []
+     @sort_order = param_find(:sort_order, (params[:method] == :get))
+     search_options = {
       :name => @name,
       :sort_order => @sort_order || 'created_at DESC',
       :paginate => true,

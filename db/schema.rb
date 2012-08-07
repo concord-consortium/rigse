@@ -1,5 +1,7 @@
 
 D:\GIT\RIGSE>@git.exe %*
+
+D:\GIT\RIGSE>@git.exe %*
 # encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
@@ -2272,6 +2274,12 @@ ActiveRecord::Schema.define(:version => 20120816154045) do
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
 end
+
+D:\GIT\RIGSE>@set ErrorLevel=%ErrorLevel%
+
+D:\GIT\RIGSE>@rem Restore the original console codepage.
+
+D:\GIT\RIGSE>@chcp %cp_oem% > nul < nul
 
 D:\GIT\RIGSE>@set ErrorLevel=%ErrorLevel%
 

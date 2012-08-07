@@ -1,8 +1,8 @@
 var suggestioncount=-1;
 
-function select_material(e){
+function select_suggestion(e){
     var strSuggestiontext = e.textContent.trim();
-    $('name').value = strSuggestiontext;
+    $('search_term').value = strSuggestiontext;
     $('suggestions').remove();
     $('show_suggestion').writeAttribute('name','no_suggestion');
     suggestioncount =- 1;
@@ -46,7 +46,7 @@ function showsuggestion(event,oelem){
             break;
         
         case 13:
-            select_material(osuggestions[suggestioncount]);
+            select_suggestion(osuggestions[suggestioncount]);
             suggestioncount=-1;
             break;
         

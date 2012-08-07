@@ -4,7 +4,7 @@
     -unless @suggestions.nil?
       - if @suggestions.length > 0
         - @suggestions.each do |suggestion|
-          %a.suggestion_link{:onclick=>'select_material(this)'}
+          %a.suggestion_link{:onclick=>'select_suggestion(this)'}
             .suggestion
               = suggestion.name
 -else
