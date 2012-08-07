@@ -4,8 +4,8 @@ class SearchController < ApplicationController
   
   def index
     unless current_user.portal_teacher
-       redirect_to root_path
-       return
+      redirect_to root_path
+      return
     end
     search_options = {
       :sort_order => 'created_at DESC'
@@ -26,10 +26,9 @@ class SearchController < ApplicationController
     @suggestions = []
     @sort_order = param_find(:sort_order, (params[:method] == :get))
     search_options = {
-     :name => @name,
-     :sort_order => @sort_order || 'created_at DESC',
-     :paginate => true,
-     #:page => pagination
+      :name => @name,
+      :sort_order => @sort_order || 'created_at DESC',
+      :paginate => true
     }
     
     unless params[:investigation].nil?
@@ -41,7 +40,7 @@ class SearchController < ApplicationController
         @b_check = @b_check || false;
       end
     end
-    unless params[:activity].nil?  
+    unless params[:activity].nil?
       @activities = Activity.search_list(search_options)
       if @activities.length > 0
         @suggestions += @activities
@@ -62,12 +61,11 @@ class SearchController < ApplicationController
       end
     else
       respond_to do |format|
-          format.html do
+        format.html do
             render 'index'
-          end
-          format.js
         end
+        format.js
+      end
     end
   end
-  
 end
