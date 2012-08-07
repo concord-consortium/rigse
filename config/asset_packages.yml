@@ -38,7 +38,7 @@ stylesheets:
   - reports
   - workgroup
   - chosen
-  - site_notices
+  - site_notice
 - default:
   - app
   - accordion
