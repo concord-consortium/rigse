@@ -13,7 +13,7 @@
           = text_field_tag :search_term,nil, :autocomplete => "off", :onkeydown=>'showsuggestion(event,this)'
           #search_suggestions
         %td
-          .material_button.button
+          .go_button.button
             = hidden_field_tag :show_suggestion, 'true'
             = submit_to_remote :GO,:GO, :url => list_filter_search_url, :complete =>'removesuggestions()'
     = render :partial=>"search/filters"
