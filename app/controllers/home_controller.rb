@@ -129,16 +129,8 @@ class HomeController < ApplicationController
       return
     end
     
-    latest_report_learner = Report::Learner.where('complete_percent > 0').where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC").first
-    unless latest_report_learner
-      # There are no report learners
-      @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
-      return
-    end
     
-    time_limit = latest_report_learner.last_run - 7.days
-    learner_offerings = (Report::Learner.where("last_run > '#{time_limit}' and complete_percent > 0").where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC")).select(:offering_id).uniq
-    
+    learner_offerings = (Report::Learner.where("complete_percent > 0").where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC")).select(:offering_id).uniq
     
     if (learner_offerings.count == 0)
       # There are no report learners for this filter
