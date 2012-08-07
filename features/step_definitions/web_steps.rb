@@ -208,8 +208,23 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label
 end
  
 Then /^(?:|I )should be on (.+)$/ do |page_name|
+  # often path_to does a DB lookup, and often this is called while the page is still loading
+  # since there is only a single DB connection this can result in 2 threads trying to use the same connection at once
+  # so to work around this, we just try multple times if there is an error
+  expected_path = nil
+  3.times { |time|
+    begin
+      expected_path = path_to(page_name)
+      break
+    rescue
+      throw if time == 2
+      sleep(0.05)
+      next
+    end
+  }
+
+
   # add simple retry support incase there is a redirect here
-  expected_path = path_to(page_name)
   10.times {
     current_path = URI.parse(current_url).path
     break if current_path == expected_path
