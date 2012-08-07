@@ -25,7 +25,7 @@
     %table.messagetable
       %tr
         %th
-          In-progress
+          In Progress
       %tr
         %td No students with incomplete progress. 
   %br
@@ -34,13 +34,13 @@
     %table.inProgressSummary
       %tr
         %th
-          Not yet started
+          Not Yet Started
       = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
   - else
     %table.messagetable
       %tr
         %th
-          Not yet started
+          Not Yet Started
       %tr
         %td All students have started this offering.
   %br
