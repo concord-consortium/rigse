@@ -1,8 +1,9 @@
 -@suggestions.sort! { |a,b| a.name <=> b.name }
 -if textlength>0
-  #suggestions
-    -unless @suggestions.nil?
-      - if @suggestions.length > 0
+ 
+  -unless @suggestions.nil?
+    - if @suggestions.length > 0
+      #suggestions
         - @suggestions.each do |suggestion|
           %a.suggestion_link{:onclick=>'select_suggestion(this)'}
             .suggestion
