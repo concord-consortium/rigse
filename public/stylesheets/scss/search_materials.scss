@@ -3,17 +3,19 @@
   vertical-align:top;
   text-align:left;
 }
+.results_container{
+  border-top:2px solid #FEE9AA;
+  padding-top: 10px;
+}
 .result_material tr
 {
-  border-top:2px solid #FEE9AA;
+  border-top:none;
 }
-.result_material td
-{
-  padding-top:15px;
-}
+
 .result_material
 {
   width:100%;
+  margin:0px;
 }
 .search_materials th
 {
@@ -57,6 +59,7 @@ width: 300px;
 .material_button {
   margin-right:6px;
   margin-top: 2px;
+  display:none;
 }
 .material_thumbnail{
   height: 40px;

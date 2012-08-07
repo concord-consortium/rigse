@@ -23,10 +23,11 @@
   - if @b_check == true
     = show_message_onSearch
   - else
-    No Results Found    
--unless @investigations.nil?
-  - if @investigations.length>0
-    = render :partial=>'search/result_material',:locals=>{:materials=>@investigations,:type=>'Investigations'}
--unless @activities.nil?
-  - if @activities.length>0
-    = render :partial=>'search/result_activity',:locals=>{:materials=>@activities,:type=>'Activities'}
+    No Results Found   
+.results_container     
+  -unless @investigations.nil?
+    - if @investigations.length>0
+      = render :partial=>'search/result_material',:locals=>{:materials=>@investigations,:type=>'Investigations'}
+  -unless @activities.nil?
+    - if @activities.length>0
+      = render :partial=>'search/result_activity',:locals=>{:materials=>@activities,:type=>'Activities'}
