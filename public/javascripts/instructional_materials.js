@@ -93,6 +93,7 @@ document.observe("dom:loaded", function() {
             showInstructionalMaterial(oTab);
         });
     });
+    setTableHeaders(1);
     if (arrTabs.length > 0)
     {
         var strTabID = arrTabs[0].id;
@@ -104,14 +105,16 @@ document.observe("dom:loaded", function() {
 function setTableHeaders(iDefaultWidth)
 {
     var iWidth;
+    var iContainerWidth;
     $$("th.expand_collapse_text").each(function(oTitle){
         var oChild = oTitle.childElements()[0];
         if(oChild)
         {
+            iContainerWidth = (oTitle.offsetWidth > 0)? oTitle.offsetWidth-10 : 1;
             if(iDefaultWidth)
                 iWidth = iDefaultWidth;
             else
-                iWidth = (oTitle.getStyle('display') == "none")? 1 : (oTitle.offsetWidth-10);
+                iWidth = (oTitle.getStyle('display') == "none")? 1 : iContainerWidth;
             oChild.setStyle({'display':'none'});
             oChild.setStyle({'width':iWidth+'px'});
         }
