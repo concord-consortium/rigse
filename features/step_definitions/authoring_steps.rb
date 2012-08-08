@@ -89,9 +89,15 @@ When /^I add a "([^"]*)" to the page$/ do |embeddable|
   page.execute_script("$('add_menu').hide()")
 end
 
-When /^I copy the embeddable "([^"]*)"$/ do |embeddable|
+When /^I copy the embeddable "([^"]*)"(?: by clicking on the (title|content))$/ do |embeddable, click_point|
   # select the embeddable
-  find(:xpath, %!//span[@class="component_title" and contains(., "#{embeddable}")]/../../..//div[@class="item item_selectable "]!).click
+  elem = case click_point
+  when "title"
+    find(:xpath, %!//span[@class="component_title" and contains(., "#{embeddable}")]!)
+  else
+    find(:xpath, %!//span[@class="component_title" and contains(., "#{embeddable}")]/../../..//div[@class="item item_selectable "]!)
+  end
+  elem.click
 
   show_actions_menu
   click_link("copy Text: content goes here ...")

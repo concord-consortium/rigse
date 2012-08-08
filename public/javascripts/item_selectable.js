@@ -28,7 +28,11 @@ var item_select = function(event) {
   if (selected) {
     var type = '';
     var id = '';
-    
+
+    if (selected.down('.item')) {
+      selected = selected.down('.item');
+    }
+
     selected.identify().gsub(/item_([\w|_]+)_(\d+)/, function(match){
       type = match[1];
       id = match[2];
