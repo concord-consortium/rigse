@@ -97,8 +97,8 @@ class HomeController < ApplicationController
     
     portal_teacher = current_user.portal_teacher
     teacher_clazzes = portal_teacher.clazzes
-    portal_teacher_clazzes = portal_teacher.teacher_clazzes
-    if (portal_teacher_clazzes.select{|tc| tc.active }).count == 0
+    portal_teacher_clazzes = portal_teacher.teacher_clazzes.select{|tc| tc.active }
+    if portal_teacher_clazzes.count == 0
       # If there are no active classes assigned then return to the home page
       redirect_to root_path
       return
@@ -107,7 +107,7 @@ class HomeController < ApplicationController
     portal_teacher_offerings = [];
     portal_student_ids = []
     teacher_clazzes.each do|teacher_clazz|
-      if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active
+      if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id)
         @offerings_count += teacher_clazz.offerings.count
         
         students = teacher_clazz.students
