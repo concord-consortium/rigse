@@ -153,7 +153,7 @@ Feature: Teacher can see recent activity
       | dave      | My Class      | Radioactivity       | a               | a      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
-    Then I should see "Completed No student has completed this offering yet."
+    Then I should see "Completed No student has completed this investigation yet."
     
     
   @javascript
@@ -164,7 +164,7 @@ Feature: Teacher can see recent activity
       | chuck   | Mechanics | Aerodynamics  | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
-    Then I should see "Not Yet Started All students have started this offering."
+    Then I should see "Not Yet Started All students have started this investigation."
     
     
   @javascript
