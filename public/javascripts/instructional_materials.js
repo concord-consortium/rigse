@@ -115,7 +115,7 @@ function setTableHeaders(iDefaultWidth)
             if(iDefaultWidth)
                 iWidth = iDefaultWidth;
             else
-                iWidth = (oTitle.getStyle('display') == "none")? 1 : oTitle.offsetWidth*0.9;
+                iWidth = (oTitle.getStyle('display') == "none")? 1 : (oTitle.offsetWidth-10);
             oChild.setStyle({'display':'none'});
             oChild.setStyle({'width':iWidth+'px'});
         }
