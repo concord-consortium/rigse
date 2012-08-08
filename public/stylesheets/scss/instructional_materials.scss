@@ -69,9 +69,9 @@
 .reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;min-width:70px;height:20px;;padding:4px}
 .reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:70px;height:20px;;padding:4px}
 .student_name{white-space:nowrap}
-.progress_div{width:480px;overflow:auto;text-align:left}
+.progress_div{width:474px;overflow:auto;text-align:left}
 
-.student_list{text-align:left;border:0;margin-top:0px;width:95px}
+.student_list{text-align:left;border:0;margin-top:0px;width:100px}
 .student_list tr { vertical-align: middle; }
 .student_list td { text-align:left; vertical-align:middle;height:20px;background-color:White;border:solid 1px #ccc;padding:4px}
 .student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;height:20px;padding:4px }
@@ -247,25 +247,25 @@
 
 .inProgressSummary{text-align:left;border:0;margin-top:0px;}
 .inProgressSummary tr { vertical-align: top; }
-.inProgressSummary td { text-align:left; vertical-align:middle;padding:2px;width:115px;height:20px;background-color:#F3F2ED}
-.inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;width:115px;height:20px;background-color:#F3F2ED}
+.inProgressSummary td { text-align:left; vertical-align:middle;padding:2px;width:115px;height:20px;background-color:Transparent}
+.inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;width:115px;height:20px;background-color:Transparent}
 
 .class_offering_name{text-align:left;float:left;font-size:16px}
 
 #recent_activity_inprogress .student_name{white-space:nowrap}
-#recent_activity_inprogress .progress_summary_container{width:490px;overflow:auto;text-align:left}
+#recent_activity_inprogress .progress_summary_container{width:468px;overflow:auto;text-align:left}
 #recent_activity_inprogress div.progressbar_container {height:20px;padding-top:2px;padding-left:0}
 
 .progress_summary_container .inProgressSummary{text-align:left;border:0;margin:0px;margin-left:-1px;width:100%}
 .progress_summary_container .inProgressSummary tr { vertical-align: middle; }
-.progress_summary_container .inProgressSummary td { text-align:center; vertical-align:middle;min-width:70px;height:20px;padding:5px}
-.progress_summary_container .inProgressSummary th { text-align:center; vertical-align:middle;font-weight:bold;min-width:70px;height:20px;padding:5px}
+.progress_summary_container .inProgressSummary td { text-align:center; vertical-align:middle;min-width:70px;height:20px;padding:4px}
+.progress_summary_container .inProgressSummary th { text-align:center; vertical-align:middle;font-weight:bold;min-width:70px;height:20px;padding:4px}
 
-#recent_activity_inprogress .student_list{text-align:left;border:0;margin-top:0px;width:140px}
+#recent_activity_inprogress .student_list{text-align:left;border:0;margin-top:0px;width:155px}
 #recent_activity_inprogress .student_list tr { vertical-align: middle; }
-#recent_activity_inprogress .student_list td { text-align:left; vertical-align:middle;height:20px;padding:5px;background-color:Transparent;border:0}
-#recent_activity_inprogress .student_list th { text-align:left; vertical-align:middle;font-weight:bold;height:20px;padding:5px;background-color:Transparent;border:0 }
-#recent_activity_inprogress td.student_name div.progressbar_container {height:20px;padding-top:0px;width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#recent_activity_inprogress .student_list td { text-align:left; vertical-align:middle;height:20px;padding:4px;background-color:Transparent;border:0}
+#recent_activity_inprogress .student_list th { text-align:left; vertical-align:middle;font-weight:bold;height:20px;padding:4px;background-color:Transparent;border:0 }
+#recent_activity_inprogress td.student_name div.progressbar_container {height:20px;padding-top:0px;width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #recent_activity_inprogress td.last_update_date div.progressbar_container {height:20px;padding-top:0px;}
 #recent_activity_inprogress th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
 
@@ -310,7 +310,7 @@ th.expand_collapse_text div.progressbar_container{width:1px;white-space:nowrap;o
 #oFullStatusDiv td.student_name div.progressbar_container {width:118px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 
-td.student_name div.progressbar_container {height:20px;padding-top:0px;width:85px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+td.student_name div.progressbar_container {height:20px;padding-top:0px;width:88px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #oFullStatusDiv th.expand_collapse_text.offering_name{cursor:pointer}
 th.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
 th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
