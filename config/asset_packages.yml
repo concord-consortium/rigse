@@ -38,7 +38,7 @@ stylesheets:
   - reports
   - workgroup
   - chosen
-  - site_notices
+  - site_notice
 - default:
   - app
   - accordion
@@ -69,7 +69,7 @@ stylesheets:
   - reports
   - workgroup
   - chosen
-  - site_notices
+  - site_notice
   - classes_left_pane
   - instructional_materials
 
