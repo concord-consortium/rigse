@@ -4,7 +4,7 @@ function select_suggestion(e){
     var strSuggestiontext = e.textContent.trim();
     $('search_term').value = strSuggestiontext;
     $('suggestions').remove();
-    $('show_suggestion').writeAttribute('name','no_suggestion');
+    //$('show_suggestion').writeAttribute('name','no_suggestion');
     suggestioncount =- 1;
 }
 
@@ -13,12 +13,25 @@ function highlightlabel(e){
     e.addClassName('highlightoption');
 }
 
+function searchsuggestions(e,oElement){
+    if(e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 38 ){
+       // if(e.keyCode == 13)
+        return false;    
+        }
+        
+    new Ajax.Request('search/get_search_suggestions', {parameters:{search_term:oElement.value},method: 'get'} );
+}
+
 function showsuggestion(event,oelem){
-    $('show_suggestion').writeAttribute('name','show_suggestion');
+   // $('show_suggestion').writeAttribute('name','show_suggestion');
     var osuggestions=$$('.suggestion');
     var ohoverelements=$$('.suggestionhover');
     if(osuggestions.length === 0)
-    {
+    {   
+        if(event.keyCode==13)
+        {   
+            submitsuggestion();
+        }
         return;
     }
     if(ohoverelements.length > 0)
@@ -46,8 +59,13 @@ function showsuggestion(event,oelem){
             break;
         
         case 13:
-            select_suggestion(osuggestions[suggestioncount]);
-            suggestioncount=-1;
+            if (suggestioncount!=-1)
+            {
+              select_suggestion(osuggestions[suggestioncount]);
+              suggestioncount=-1;
+            }
+            $('prevent_submit').setValue(0);
+            submitsuggestion();
             break;
         
         default:
@@ -93,4 +111,26 @@ function uncheckedallprobes()
 
 function removesuggestions(){
     $('suggestions').remove();
+}
+
+function preventsubmit(){
+    $('prevent_submit').setValue(1);
+}
+
+function submitsuggestion(){
+    document.getElementsByName('GO')[0].click();
+}
+
+function CheckSubmitStatus(){
+    var oVal=$('prevent_submit');
+  
+    if (oVal.value==1)
+    {  
+        oVal.setValue(0);
+        return false;
+    }
+    else
+    {  
+        return true;
+    }
 }

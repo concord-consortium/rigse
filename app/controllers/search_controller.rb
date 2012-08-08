@@ -52,10 +52,7 @@ class SearchController < ApplicationController
     
     if request.xhr?
       render :update do |page| 
-        @bshow = params[:show_suggestion]
-        if @bshow=='true'
-          page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@name.length}}
-        end
+       
         page.replace_html 'offering_list', :partial => 'search/search_results'
         
       end
@@ -68,4 +65,23 @@ class SearchController < ApplicationController
       end
     end
   end
+  
+  def get_search_suggestions
+    @name = params[:search_term]
+    search_options = {
+      :name => @name,
+      :sort_order => 'created_at DESC'
+    }
+    
+    @investigations = Investigation.search_list(search_options)
+    @activities = Activity.search_list(search_options)
+    @suggestions= [];
+    @suggestions = @investigations + @activities
+    if request.xhr?
+       render :update do |page|
+         page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@name.length}}
+       end
+    end
+  end
+  
 end

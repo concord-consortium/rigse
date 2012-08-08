@@ -10,15 +10,16 @@
           .search_label
             SEARCH
         %td
-          = text_field_tag :search_term,nil, :autocomplete => "off", :onkeydown=>'showsuggestion(event,this)'
+          = text_field_tag :search_term,nil, :autocomplete => "off",:onkeydown=>'preventsubmit();showsuggestion(event,this)',:onkeyup=>'searchsuggestions(event,this)'
           #search_suggestions
         %td
           .go_button.button
-            = hidden_field_tag :show_suggestion, 'true'
+            = hidden_field_tag :show_suggestion3, 'true'
             = submit_to_remote :GO,:GO, :url => list_filter_search_url, :complete =>'removesuggestions()'
     = render :partial=>"search/filters"
+  = hidden_field 'prevent','submit',:value=>"0"
   #results
-  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();"
+  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "if(CheckSubmitStatus()) {PendingStart();} else return false;", :complete=> "PendingEnd();"
   .progress_container
     #search_spinner{:style=>'display: none;'}
       = image_tag "ajax-loader.gif"

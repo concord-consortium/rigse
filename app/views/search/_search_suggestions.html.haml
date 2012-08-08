@@ -1,4 +1,5 @@
 -@suggestions.sort! { |a,b| a.name <=> b.name }
+-@suggestions.uniq!{|x| x.name}
 -if textlength>0
  
   -unless @suggestions.nil?
