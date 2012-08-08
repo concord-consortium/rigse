@@ -25,7 +25,7 @@
         %tr
           %td.student_name
             = student.user.last_name + ", " + student.user.first_name
-          %td
+          %td{:title=>"#{report_learner.last_run.strftime('%m/%d/%Y')}"}
             = report_learner.last_run.strftime('%m/%d')
     - when -1
       - if report_learner && total_complete_percent > 0 && total_complete_percent < 100
