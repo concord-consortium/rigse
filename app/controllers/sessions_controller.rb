@@ -53,8 +53,8 @@ class SessionsController < ApplicationController
     
     if current_user.portal_teacher
       portal_teacher = current_user.portal_teacher
-      if portal_teacher.teacher_clazzes.count > 0
-        # Teachers are redirected to the "Recent Activity" page
+      if (portal_teacher.teacher_clazzes.select{|tc| tc.active }).count > 0
+        # Teachers with active classes are redirected to the "Recent Activity" page
         redirect_path = recent_activity_path
       end
     end
