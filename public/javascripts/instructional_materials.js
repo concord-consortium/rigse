@@ -98,4 +98,26 @@ document.observe("dom:loaded", function() {
         var strTabID = arrTabs[0].id;
         setSelectedTab(strTabID);
     }
+
 });
+
+function setTableHeaders(iDefaultWidth)
+{
+    var iWidth;
+    $$("th.expand_collapse_text").each(function(oTitle){
+        var oChild = oTitle.childElements()[0];
+        if(oChild)
+        {
+            if(iDefaultWidth)
+                iWidth = iDefaultWidth;
+            else
+                iWidth = (oTitle.getStyle('display') == "none")? 1 : (oTitle.offsetWidth-10);
+            oChild.setStyle({'display':'none'});
+            oChild.setStyle({'width':iWidth+'px'});
+        }
+    });
+    
+    $$("th.expand_collapse_text > div.progressbar_container").each(function(oTitle){
+        oTitle.setStyle({'display':''});
+    });
+}
