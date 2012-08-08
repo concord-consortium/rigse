@@ -11,8 +11,8 @@
         = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners, :offering=>offering}
     .clearboth{:style=>"height:10px"}
   - else
-    %div.item 
+    %div.item.messagetext 
       %br No students have registered for this class yet.
 - else
-  %div.item 
+  %div.item.messagetext
     %br  No activities available in this investigation.
