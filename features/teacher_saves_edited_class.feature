@@ -23,7 +23,7 @@ Feature: Teacher edits and saves class information
     @javascript  
  	Scenario: Teacher saves class setup information
  	Given I am logged in with the username teacher
- 	And I am on "the class edit page for "My Class""
+ 	And I am on the class edit page for "My Class"
  	When I fill in Class Name with "Basic Electronics"
  	And I select Term "Fall" from the drop down
  	And I include a teacher named "Einstien, Albert"

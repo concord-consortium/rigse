@@ -87,7 +87,7 @@ Feature: Teacher manages instructional materials of a class
  @javascript
  Scenario: Teacher can click button to Manage Materials 
  	When I follow "Manage Materials"
-    Then I should be on "the class edit page for "My Class""
+    Then I should be on the class edit page for "My Class"
  
  
  @javascript
