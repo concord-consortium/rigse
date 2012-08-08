@@ -43,10 +43,10 @@ Feature: Teacher navigates using left pane
     Then I should be on Instructional Materials page for "My Class"
     
     
-#  @pending
-#  Scenario: Teacher visits Full Status page
-#    When I follow "My Class"
-#    And I follow "Full Status"
-#    Then I should see Full Status page of "My Class"
+  @javascript
+  Scenario: Teacher visits Full Status page
+    When I follow "My Class"
+    And I follow "Full Status"
+    Then I should be on the full status page for "My Class"
     
     
