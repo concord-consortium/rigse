@@ -35,7 +35,6 @@ Background:
    And I fill Description with "This is a biology class"
    And I fill Class Word with "betrx"
    And I uncheck investigation with label "Lumped circuit abstraction"
-   And I move investigation named "Non Linear Devices" to the top of the list
    And I press "Save"
 
 @javascript
@@ -54,4 +53,3 @@ Scenario: Student should see all the updated information of a class
     And I should not see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "static discipline"
-    And the first investigation in the list should be "Non Linear Devices"        
