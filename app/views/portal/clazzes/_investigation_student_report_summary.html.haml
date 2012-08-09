@@ -1,12 +1,16 @@
 - learner = learners.find_by_student_id(student.id)
 %tr
   - investigation.activities.each do |activity|
-    %td
-      - percentage = 0
-      - if !learner.nil?
-        - report_learner_activities = learner.learner_activities
-        - if !report_learner_activities.find_by_activity_id(activity.id).nil?
-          - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
-      %div.progressbar_container
-        .progressbar
-          .progress{:style=>"width:#{percentage}%"}
+    - unless activity.teacher_only
+      %td
+        - percentage = 0
+        - if !learner.nil?
+          - report_learner_activities = learner.learner_activities
+          - if !report_learner_activities.find_by_activity_id(activity.id).nil?
+            - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
+        %div.progressbar_container
+          .progressbar
+            - if percentage == 100
+              .progress.completed{:style=>"width:#{percentage}%"}
+            - else
+              .progress{:style=>"width:#{percentage}%"}
