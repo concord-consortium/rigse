@@ -31,14 +31,15 @@
       - if report_learner && total_complete_percent > 0 && total_complete_percent < 100
         - report_learner_activities = learner.learner_activities
         %tr
-          - activities.each do |activity|  
-            - percentage = 0
-            - if !report_learner_activities.find_by_activity_id(activity.id).nil?
-              - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
-            %td
-              %div.progressbar_container
-                .progressbar
-                  - if percentage == 100
-                    .progress.completed{:style=>"width:#{percentage}%"}
-                  - else
-                    .progress{:style=>"width:#{percentage}%"}
+          - activities.each do |activity|
+            - unless activity.teacher_only
+              - percentage = 0
+              - if !report_learner_activities.find_by_activity_id(activity.id).nil?
+                - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
+              %td
+                %div.progressbar_container
+                  .progressbar
+                    - if percentage == 100
+                      .progress.completed{:style=>"width:#{percentage}%"}
+                    - else
+                      .progress{:style=>"width:#{percentage}%"}
