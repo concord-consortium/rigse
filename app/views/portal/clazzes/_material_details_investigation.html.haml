@@ -9,7 +9,9 @@
         %div.item{:style=>"float:left;padding-top:2px"}
           = "(assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
       %td{:style=>"white-space:nowrap"}
-        = link_to "Run Investigation", run_url_for(current_offering, {}), :class=>"button pie"
+        = link_to "Run as Teacher", run_url_for(current_offering, {:teacher_mode => true}), :class=>"button pie"
+        %div{:style=>"height:10px"}
+        = link_to "Run as Student", run_url_for(current_offering, {}), :class=>"button pie"
 %br
 %div
   = render :partial => 'investigation_activities', :locals => { :investigation => investigation }
