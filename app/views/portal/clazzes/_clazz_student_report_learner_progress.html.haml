@@ -14,6 +14,7 @@
     - elsif assignable.is_a? ::Activity
       - activities = [assignable]
     
+    - activities = activities.select {|activity| !activity.teacher_only}
     
     - learner = offering.learners.find_by_student_id(student.id)
     - report_learner_activities = nil
@@ -21,13 +22,14 @@
     - unless learner.nil? || learner.report_learner.nil?
       - percentage = learner.report_learner.complete_percent
       - report_learner_activities = learner.learner_activities
-    %td{:class=>"investigation_summary_row_#{offering.id}", :style=>"display:#{offering_display}"}
-      %div.progressbar_container
-        .progressbar
-          - if percentage == 100
-            .progress.completed{:style=>"width:#{percentage}%"}
-          - else
-            .progress{:style=>"width:#{percentage}%"}
+    - if activities.length > 0
+      %td{:class=>"investigation_summary_row_#{offering.id}", :style=>"display:#{offering_display}"}
+        %div.progressbar_container
+          .progressbar
+            - if percentage == 100
+              .progress.completed{:style=>"width:#{percentage}%"}
+            - else
+              .progress{:style=>"width:#{percentage}%"}
     - activities.each do |activity|
       %td{:class=>"investigation_detail_row_#{offering.id}", :style=>"display:#{activities_display}"}
         - percentage = 0
