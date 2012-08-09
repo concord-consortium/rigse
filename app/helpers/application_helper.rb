@@ -688,7 +688,7 @@ module ApplicationHelper
     answered_saveables = reportUtil.saveables(:embeddable => image_question, :answered => true)
     answered = answered_saveables.size
     skipped = total - answered
-    answers_map = answered_saveables.sort_by{|s| [s.learner.last_name, s.learner.first_name]}.map{|sa| {:name => sa.learner.name, :image_url => dataservice_blob_raw_url(:id => sa.answer.id, :token => sa.answer.token)} }
+    answers_map = answered_saveables.sort_by{|s| [s.learner.last_name, s.learner.first_name]}.map{|sa| {:name => sa.learner.name, :note => sa.answer[:note], :image_url => dataservice_blob_raw_url(:id => sa.answer[:blob].id, :token => sa.answer[:blob].token)} }
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
@@ -706,14 +706,19 @@ module ApplicationHelper
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
       }
-      haml_tag(:div, :style => 'width: 670px') {
+      haml_tag(:div, :style => 'width: 710px') {
         haml_concat(contentflow("image_question_#{image_question.id}_content_flow") do
           capture_haml do
             answers_map.each do |b|
               haml_tag(:div, :class => 'item') {
                 haml_tag(:img, :class =>' content', :src=> b[:image_url], :title => b[:name])
                 haml_tag(:div, :class => 'caption') {
-                  haml_concat(b[:name])
+                  haml_tag(:div, :class => 'user') {
+                    haml_concat(b[:name])
+                  }
+                  haml_tag(:div, :class => 'note') {
+                    haml_concat(b[:note])
+                  }
                 }
               }
             end
