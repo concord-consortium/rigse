@@ -15,11 +15,12 @@
           %tr
             - activity_counter = 0
             - activities.each do |activity|
-              - activity_counter = activity_counter + 1
-              - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
-              %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}",:title=>"#{activity.name}"}
-                %div.progressbar_container
-                  = activity_name
+              - unless activity.teacher_only
+                - activity_counter = activity_counter + 1
+                - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
+                %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}",:title=>"#{activity.name}"}
+                  %div.progressbar_container
+                    = activity_name
           = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
   - else
     %table.messagetable
