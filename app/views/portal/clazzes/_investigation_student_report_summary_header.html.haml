@@ -7,9 +7,10 @@
     - activities = [assignable]
   - activity_counter = 0
   - activities.each do |activity|
-    - activity_counter = activity_counter + 1
-    - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
-    - activity_name_tooltip = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
-    %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
-      %div.progressbar_container 
-        = activity_name
+    - unless activity.teacher_only
+      - activity_counter = activity_counter + 1
+      - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
+      - activity_name_tooltip = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
+      %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
+        %div.progressbar_container 
+          = activity_name
