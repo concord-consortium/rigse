@@ -21,22 +21,46 @@ Feature: Teacher reorders materials assigned to the class
       | name     | teacher |
       | My Class | teacher |
     And the classes "My Class" are in a school named "VJTI"
-    And the following offerings exist
+    And the student "student" belongs to class "My Class"   
+
+  @javascript
+  Scenario: Teacher reorders materials and students sees them in the correct order
+    Given the following offerings exist
        | name                      |
        | Lumped circuit abstraction|
        | static discipline         |
        | Non Linear Devices        |
-    And the student "student" belongs to class "My Class"   
     And I am logged in with the username teacher
     And I am on the class edit page for "My Class"
     And I move investigation named "Non Linear Devices" to the top of the list
     And I press "Save"
-
-  @javascript
-  Scenario: Student should see all the updated information of a class
     When I login with username: student
     And I follow "My Class"
     And I should see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "static discipline"
-    And the first investigation in the list should be "Non Linear Devices"     
+    And I debug
+    And the first investigation in the list should be "Non Linear Devices"
+
+  @javascript
+  Scenario: Teacher reorders materials with the default class feature enabled
+    Given the default class is created
+    And the following default class offerings exist
+       | name                      |
+       | Lumped circuit abstraction|
+       | static discipline         |
+       | Non Linear Devices        |
+    And I am logged in with the username teacher
+    When I am on the class page for "My Class"
+    And I assign the investigation "Lumped circuit abstraction" to the class "My Class"
+    And I assign the investigation "static discipline" to the class "My Class"
+    And I assign the investigation "Non Linear Devices" to the class "My Class"
+    And I am on the class edit page for "My Class"
+    And I move investigation named "Non Linear Devices" to the top of the list
+    And I press "Save"
+    When I login with username: student
+    And I follow "My Class"
+    And I should see "Lumped circuit abstraction"
+    And I should see "Non Linear Devices"
+    And I should see "static discipline"
+    And the first investigation in the list should be "Non Linear Devices"
