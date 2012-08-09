@@ -13,18 +13,19 @@
       - activities = assignable.activities
     - elsif assignable.is_a? ::Activity
       - activities = [assignable]
-    %th.expand_collapse_text.offering_name{:class=>"investigation_summary_row_#{offering.id}",:title=>"#{offering.name}", :style=>"display:#{offering_display}", :onclick=>"showHideDetailedSummary(#{offering.id}, true, \"#{url_for([:offering_collapsed_status, offering])}\")"}
-      %div.progressbar_container
-        %span
-          +&nbsp;
-        = offering.name
+    - activities = activities.select {|activity| !activity.teacher_only}
     - if activities.length > 0
+      %th.expand_collapse_text.offering_name{:class=>"investigation_summary_row_#{offering.id}",:title=>"#{offering.name}", :style=>"display:#{offering_display}", :onclick=>"showHideDetailedSummary(#{offering.id}, true, \"#{url_for([:offering_collapsed_status, offering])}\")"}
+        %div.progressbar_container
+          %span
+            +&nbsp;
+          = offering.name
       %th.expand_collapse_text.activity.offering_name{:colspan=>"#{activities.length}",:title=>"#{offering.name}", :class=>"investigation_detail_row_#{offering.id}", :style=>"display:#{activities_display}", :onclick=>"showHideDetailedSummary(#{offering.id},false,\"#{offering_collapsed_status_portal_offering_path(offering)}\")"} 
         %div.progressbar_container
           %span
             %b -&nbsp;
           = offering.name
-          
+
 %tr
   - offerings.each do |offering|
     - activities_display = "none"
@@ -40,10 +41,13 @@
       - activities = assignable.activities
     - elsif assignable.is_a? ::Activity
       - activities = [assignable]
+    - activities = activities.select {|activity| !activity.teacher_only}
     - activity_counter = 0
-    %th.expand_collapse_text{:class=>"investigation_summary_row_#{offering.id}", :style=>"display:#{offering_display}"} 
-      %div.progressbar_container
-        Summary
+    - if activities.length > 0
+      %th.expand_collapse_text{:class=>"investigation_summary_row_#{offering.id}", :style=>"display:#{offering_display}"} 
+        %div.progressbar_container
+          Summary
+    
     - activities.each do |activity|
       - activity_counter = activity_counter + 1
       - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
