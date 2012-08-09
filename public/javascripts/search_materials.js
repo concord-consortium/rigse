@@ -18,7 +18,6 @@ function searchsuggestions(e,oElement){
        // if(e.keyCode == 13)
         return false;    
         }
-        
     new Ajax.Request('search/get_search_suggestions', {parameters:{search_term:oElement.value},method: 'get'} );
 }
 
@@ -64,7 +63,7 @@ function showsuggestion(event,oelem){
               select_suggestion(osuggestions[suggestioncount]);
               suggestioncount=-1;
             }
-            $('prevent_submit').setValue(0);
+           
             submitsuggestion();
             break;
         
@@ -117,13 +116,17 @@ function preventsubmit(){
     $('prevent_submit').setValue(1);
 }
 
+function allowsubmit(){
+    $('prevent_submit').setValue(0);
+}
+
 function submitsuggestion(){
+    $('prevent_submit').setValue(0);
     document.getElementsByName('GO')[0].click();
 }
 
 function CheckSubmitStatus(){
     var oVal=$('prevent_submit');
-  
     if (oVal.value==1)
     {  
         oVal.setValue(0);

@@ -23,7 +23,6 @@ class SearchController < ApplicationController
       return
     end
     @name = params[:search_term]
-    @suggestions = []
     @sort_order = param_find(:sort_order, (params[:method] == :get))
     search_options = {
       :name => @name,
@@ -35,7 +34,6 @@ class SearchController < ApplicationController
       @investigations = Investigation.search_list(search_options) 
       if @investigations.length > 0
         @b_check = @b_check || true;
-        @suggestions += @investigations
       else
         @b_check = @b_check || false;
       end
@@ -43,7 +41,6 @@ class SearchController < ApplicationController
     unless params[:activity].nil?
       @activities = Activity.search_list(search_options)
       if @activities.length > 0
-        @suggestions += @activities
         @b_check = @b_check || true;
       else
         @b_check = @b_check || false;
@@ -52,8 +49,8 @@ class SearchController < ApplicationController
     
     if request.xhr?
       render :update do |page| 
-       
         page.replace_html 'offering_list', :partial => 'search/search_results'
+        page << "$('suggestions').remove();"
         
       end
     else
