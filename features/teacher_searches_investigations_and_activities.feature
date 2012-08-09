@@ -59,6 +59,7 @@ Feature: Teacher can search investigations and activities
   @javascript
   Scenario: Teacher can search investigations and activities from search box
     When I fill in "search_term" with "Random interactivity"
+    And I press "GO"
     Then I should see "No Results Found"
     
     
