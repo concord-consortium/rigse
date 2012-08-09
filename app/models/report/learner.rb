@@ -59,13 +59,14 @@ class Report::Learner < ActiveRecord::Base
     report_util.saveables(:learner => self.learner).each do |s|
       hash = {:answer => s.answer, :answered => s.answered? }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
-      if hash[:answer].kind_of?(Dataservice::Blob)
-        blob = hash[:answer]
+      if hash[:answer][:blob]
+        blob = hash[:answer][:blob]
         hash[:answer] = {
           :type => "Dataservice::Blob",
           :id => blob.id,
           :token => blob.token,
-          :file_extension => blob.file_extension
+          :file_extension => blob.file_extension,
+          :note => hash[:answer][:note]
         }
       end
       answers_hash["#{s.embeddable.class.to_s}|#{s.embeddable.id}"] = hash

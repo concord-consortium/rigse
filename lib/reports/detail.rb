@@ -71,6 +71,10 @@ class Reports::Detail < Reports::Excel
       reportable_header_counter += 1
       header_defs << Reports::ColumnDefinition.new(:title => container.name, :heading_row => 0, :col_index => reportable_header_counter)
       answer_defs << Reports::ColumnDefinition.new(:title => clean_text((r.respond_to?(:prompt) ? r.prompt : r.name)), :width => 25, :left_border => (first ? :thin : :none))
+      if r.is_a?(Embeddable::ImageQuestion)
+        reportable_header_counter += 1
+        answer_defs << Reports::ColumnDefinition.new(:title => 'note', :width => 25, :left_border => :none)
+      end
       first = false
     end # reportables
     return reportable_header_counter
@@ -124,7 +128,7 @@ class Reports::Detail < Reports::Excel
             if ans[:answer].kind_of?(Hash) && ans[:answer][:type] == "Dataservice::Blob"
               blob = ans[:answer]
               url = "#{@blobs_url}/#{blob[:id]}/#{blob[:token]}.#{blob[:file_extension]}"
-              Spreadsheet::Link.new url, url
+              [Spreadsheet::Link.new(url, url), ans[:answer][:note]]
             else
               case ans[:is_correct]
                 when true then "(correct) #{ans[:answer]}"
@@ -133,7 +137,7 @@ class Reports::Detail < Reports::Excel
               end
               # "#{(ans[:is_correct] ? "(correct)" : "")}#{ans[:answer]}"
             end
-          }
+          }.flatten
         end
         row.concat all_answers
       end
