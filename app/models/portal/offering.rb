@@ -96,6 +96,22 @@ class Portal::Offering < ActiveRecord::Base
     runnable.run_format
   end
 
+  def reportable?
+    klass = runnable.class
+
+    # handle ExernalActivities that are backed by a reportable template
+    if klass == ExternalActivity
+      if runnable.template
+        klass = runnable.template
+      elsif !runnable.report_url.blank?
+        return true
+      end
+    end
+
+    return [Investigation, Activity, Page].include? klass
+  end
+
+
   # def saveable_count
   #   @saveable_count ||= begin
   #     runnable = self.runnable

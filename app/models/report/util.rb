@@ -124,6 +124,8 @@ class Report::Util
       lambdas = [activity_lambda, section_lambda, page_lambda]
     elsif assignable.is_a? Activity
       lambdas = [section_lambda, page_lambda]
+    elsif assignable.is_a? Page
+      lambdas = [page_lambda]
     end
 
     @page_elements  = reportables.extended_group_by(lambdas)
