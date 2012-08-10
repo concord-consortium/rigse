@@ -1,4 +1,5 @@
 function showInstructionalMaterial(oMaterialTab){
+    setTableHeaders(1);
     var oSelectedTab = $$('.selected_tab')[0];
     if(oSelectedTab){
         oSelectedTab.removeClassName('selected_tab');
@@ -9,6 +10,7 @@ function showInstructionalMaterial(oMaterialTab){
     oMaterialTab.removeClassName('tab');
     oMaterialTab.addClassName('selected_tab');
     $(oMaterialTab.id + "_data").show();
+    setTableHeaders();
 }
 
 function startScroll(direction,size){
@@ -110,7 +112,7 @@ function setTableHeaders(iDefaultWidth)
         var oChild = oTitle.childElements()[0];
         if(oChild)
         {
-            iContainerWidth = (oTitle.offsetWidth > 0)? oTitle.offsetWidth-10 : 1;
+            iContainerWidth = (oTitle.offsetWidth > 10)? oTitle.offsetWidth-10 : 1;
             if(iDefaultWidth)
                 iWidth = iDefaultWidth;
             else
