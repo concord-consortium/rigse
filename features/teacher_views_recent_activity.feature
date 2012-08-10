@@ -17,13 +17,13 @@ Feature: Teacher can see recent activity
       | Fall   |
       | Spring |
     And the following classes exist:
-      | name        | teacher | class_word | semester |
-      | My Class    | teacher | my_class   | Fall     |
-      | Physics     | teacher | physics    | Fall     |
-      | Mathematics | teacher | math       | Fall     |
-      | Chemistry   | teacher | chem       | Fall     |
-      | Mechanics   | teacher | mech       | Fall     |
-      | Biology     | albert  | biol       | Fall     |
+      | name        | teacher | semester |
+      | My Class    | teacher | Fall     |
+      | Physics     | teacher | Fall     |
+      | Mathematics | teacher | Fall     |
+      | Chemistry   | teacher | Fall     |
+      | Mechanics   | teacher | Fall     |
+      | Biology     | albert  | Fall     |
     And the classes "My Class, Physics, Mathematics" are in a school named "Harvard School"
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
@@ -34,10 +34,11 @@ Feature: Teacher can see recent activity
       | e      | a,b,c,d | a              |
     And there is an image question with the prompt "image_q"
     And the following investigations with multiple choices exist:
-      | investigation      | activity       | section   | page   | multiple_choices | image_questions | user      |
-      | Radioactivity      | Radio activity | section a | page 1 | a                | image_q         | teacher   |
-      | Plant reproduction | Plant activity | section b | page 2 | b                | image_q         | teacher   |
-      | Aerodynamics       | Air activity   | section c | page 3 | c                | image_q         | teacher   |
+      | investigation      | activity       | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
+      | Radioactivity      | Radio activity | section a | page 1 | a                | image_q         | teacher   | false                 |
+      | Plant reproduction | Plant activity | section b | page 2 | b                | image_q         | teacher   | false                 |
+      | Aerodynamics       | Air activity   | section c | page 3 | c                | image_q         | teacher   | false                 |
+      | Aerodynamics       | Aeroplane      | section d | page 4 | d                | image_q         | teacher   | true                  |
     And the following assignments exist:
       | type          | name                 | class       |
       | investigation | Radioactivity        | My Class    |
@@ -97,6 +98,16 @@ Feature: Teacher can see recent activity
     And I login with username: albert password: albert
     Then I should see "You have not yet assigned students to your classes."
     And I should see "Once your students have started work this page will show you a dashboard of recent student progress."
+    
+    
+  @javascript
+  Scenario: Teacher should not see teacher only activity
+    When the following student answers:
+      | student   | class         | investigation       | question_prompt | answer |
+      | ankur     | Physics       | Aerodynamics        | d               | y      |
+    And I follow "Recent Activity" within left panel for class navigation
+    And I follow "Show detail" within the first recent activity on the recent activity page
+    Then I should not see "Aeroplane"
     
     
   @javascript
