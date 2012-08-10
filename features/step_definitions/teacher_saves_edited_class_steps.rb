@@ -1,6 +1,17 @@
-
+=begin
+Given /^I go to edit page for "(.+)"$/ do |class_name|
+  click_link(class_name)
+  click_link('edit class information')
+end
+=end
 When /^I fill in Class Name with "(.+)"$/ do |className|
   fill_in('portal_clazz_name', :with => className)
+end
+
+And /^I include a teacher named "(.+)"$/ do |teacher_name|
+  find(:xpath, '//a[@id="AddTeacher"]').click
+  check('Einstien, Albert')
+  click_button('AddTeacherSaveButton')
 end
 
 And /^I fill Description with "(.+)"$/ do |description|

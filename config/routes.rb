@@ -110,7 +110,7 @@ constraints :id => /\d+/ do
         get :edit_offerings
         post :edit_offerings
         get :roster
-        post :add_new_student_popup
+        post :add_new_student
         post :copy_class
         get :materials
         get :fullstatus

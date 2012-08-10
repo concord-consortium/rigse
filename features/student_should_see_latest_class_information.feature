@@ -32,6 +32,7 @@ Feature: Student should see latest class information
     And I am on "the class edit page for "My Class""
     And I fill in Class Name with "Basic Electronics"
     And I select Term "Fall" from the drop down
+    And I include a teacher named "Einstien, Albert"
     And I fill Description with "This is a biology class"
     And I fill Class Word with "betrx"
     And I uncheck investigation with label "Lumped circuit abstraction"

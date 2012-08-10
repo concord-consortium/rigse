@@ -1,10 +1,10 @@
 %table.student_list
   %tr
-    %th
+    %th{:style=>"border-bottom:solid 1px #F9EEC1"}
       %div.progressbar_container
-        INVESTIGATION
+        &nbsp;
   %tr
-    %th
+    %th{:style=>"border-top:solid 1px #F9EEC1"}
       %div.progressbar_container 
         ACTIVITY
   - students.each do |student|
@@ -12,4 +12,4 @@
     %tr
       %td.student_name{:title=>"#{student_name}"}
         %div.progressbar_container
-          = student_name.truncate(21)
+          = student_name.truncate(15)
