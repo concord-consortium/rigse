@@ -1,17 +1,15 @@
 - show_message_onSearch= ""
--unless @investigations.nil?
-  - if @investigations.length == 1
-    - show_message_onSearch += "#{@investigations.length} investigation"
-  - elsif @investigations.length > 0
-    - show_message_onSearch += "#{@investigations.length} investigations"
--unless @activities.nil?
-  -unless @investigations.nil?
-    - if @investigations.length > 0
-      - show_message_onSearch += ","
-  - if @activities.length == 1
-    - show_message_onSearch += " #{@activities.length} activity"
-  - elsif @activities.length > 0
-    - show_message_onSearch += " #{@activities.length} activities"
+- if @investigations_count == 1
+  - show_message_onSearch += "#{@investigations_count} investigation"
+- elsif @investigations_count > 0
+  - show_message_onSearch += "#{@investigations_count} investigations"
+
+- if @activities_count > 0 && @investigations_count > 0
+  - show_message_onSearch += ","
+- if @activities_count == 1
+  - show_message_onSearch += " #{@activities_count} activity"
+- elsif @activities_count > 0
+  - show_message_onSearch += " #{@activities_count} activities"
 
 - show_message_onSearch +=" matching"
 - if @name != ""
@@ -20,11 +18,12 @@
 - show_message_onSearch +=" selected criteria"
 
 %p{:style=>'font-weight:bold'}
-  - if @b_check == true
+  - if @activities_count > 0 or @investigations_count > 0
     = show_message_onSearch
   - else
-    No Results Found   
-.results_container     
+    No Results Found
+
+.results_container
   -unless @investigations.nil?
     - if @investigations.length>0
       = render :partial=>'search/result_material',:locals=>{:materials=>@investigations,:type=>'Investigations'}

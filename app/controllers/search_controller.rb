@@ -7,14 +7,33 @@ class SearchController < ApplicationController
       redirect_to root_path
       return
     end
+    
+    @name = params[:search_term]
+    @sort_order = param_find(:sort_order, (params[:method] == :get))
+    
     search_options = {
-      :sort_order => 'created_at DESC'
+      :name => @name|| "",
+      :sort_order => @sort_order || 'created_at DESC',
+      :paginate => false
+      #:page => params[:investigation_page]? params[:investigation_page] : 1,
+      #:per_page => 10
     }
     @investigations = Investigation.search_list(search_options)
-    @activities = Activity.search_list(search_options)
-    unless @investigations.nil? || @activities.nil?
+    @investigations_count = @investigations.length
+    @investigations = @investigations.paginate(:page => params[:investigation_page]? params[:activity_page] : 1, :per_page => 10) 
+    activity_search_options = {
+      :name => @name || "",
+      :sort_order => @sort_order || 'created_at DESC',
+      :paginate => false
+      #:page => params[:activity_page]? params[:activity_page] : 1,
+      #:per_page => 10
+    }
+    @activities = Activity.search_list(activity_search_options)
+    @activities_count = @activities.length
+    unless @investigations_count || @investigations_count
       @b_check=true
     end
+    @activities = @activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
   end
   
   def show
@@ -25,27 +44,41 @@ class SearchController < ApplicationController
     @name = params[:search_term]
     @sort_order = param_find(:sort_order, (params[:method] == :get))
     search_options = {
-      :name => @name,
+      :name => @name || '',
       :sort_order => @sort_order || 'created_at DESC',
-      :paginate => false
+      :paginate => false,
+      #:page => params[:investigation_page] ? params[:investigation_page] : 1,
+      #:per_page => 10
     }
     
-    unless params[:investigation].nil?
-      @investigations = Investigation.search_list(search_options) 
-      if @investigations.length > 0
+    @investigations = Investigation.search_list(search_options)
+    @investigations_count = @investigations.length
+    if @investigations_count > 0
+      @b_check = @b_check || true;
+      @suggestions += @investigations
+    else
+      @b_check = @b_check || false;
+    end
+    @investigations = @investigations.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
+    
+    activity_search_options = {
+      :name => @name || '',
+      :sort_order => @sort_order || 'created_at DESC',
+      :paginate => false,
+      #:page => params[:activity_page] ? params[:activity_page] : 1,
+      #:per_page => 10
+    }
+    
+      @activities = Activity.search_list(activity_search_options)
+      @activities_count = @activities.length
+      if @activities_count > 0
+        @suggestions += @activities
         @b_check = @b_check || true;
       else
         @b_check = @b_check || false;
       end
-    end
-    unless params[:activity].nil?
-      @activities = Activity.search_list(search_options)
-      if @activities.length > 0
-        @b_check = @b_check || true;
-      else
-        @b_check = @b_check || false;
-      end
-    end
+      @activities = @activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
+    
     
     if request.xhr?
       render :update do |page| 

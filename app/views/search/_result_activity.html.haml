@@ -1,4 +1,5 @@
-
+%p= page_entries_info materials, :model=>"Activity"
+= will_paginate materials, {:param_name => 'activity_page', :params => {:search_term => @name, :investigation_page => 1}}
 
 %table.result_material{:cellpadding=>0,:cellspacing=>0}
   %tr
