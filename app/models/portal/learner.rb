@@ -140,4 +140,8 @@ class Portal::Learner < ActiveRecord::Base
   def run_format
     offering.runnable.run_format
   end
+
+  def reportable?
+    offering.individual_reportable?
+  end
 end

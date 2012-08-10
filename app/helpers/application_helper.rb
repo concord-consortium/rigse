@@ -393,6 +393,8 @@ module ApplicationHelper
   end
 
   def report_link_for(reportable, action='report', link_text='Report ', title=nil)
+    return "" if reportable.respond_to?('reportable?') && !reportable.reportable?
+
     reportable_display_name = reportable.class.display_name.downcase
     action_string = action.gsub('_', ' ')
     name = reportable.name
@@ -883,8 +885,10 @@ module ApplicationHelper
           haml_concat options[:print_link]
           haml_concat " | "
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
-          haml_concat " | "
-          haml_concat report_link_for(offering, 'report', 'Report')
+          report_link = report_link_for(offering, 'report', 'Report')
+          if !report_link.blank?
+            haml_concat " | #{report_link}"
+          end
           haml_concat " | "
 
           if offering.active?
