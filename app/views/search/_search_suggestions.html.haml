@@ -5,7 +5,7 @@
   -unless @suggestions.nil?
     - if @suggestions.length > 0
       #suggestions
-        - @suggestions.each do |suggestion|
+        - @suggestions.take(10).each do |suggestion|
           %a.suggestion_link{:onclick=>'select_suggestion(this)'}
             .suggestion
               = suggestion.name

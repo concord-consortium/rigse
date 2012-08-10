@@ -15,7 +15,7 @@
         %td
           .go_button.button
             = hidden_field_tag :show_suggestion3, 'true'
-            = submit_to_remote :GO,:GO, :url => list_filter_search_url, :before=>'PendingStart()', :complete =>'PendingEnd();removesuggestions();'
+            = submit_to_remote :GO,:GO, :url => list_filter_search_url, :before=>'abortAjaxRequest();PendingStart()', :complete =>'PendingEnd();removesuggestions();'
     = render :partial=>"search/filters"
   = hidden_field 'prevent','submit',:value=>"0"
   #results
@@ -26,4 +26,4 @@
       = image_tag "ajax-loader.gif"
       ( Searching ... )
     #offering_list
-      = render :partial => 'search/search_results'
+      = render :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities}
