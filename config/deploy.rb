@@ -11,6 +11,7 @@ set :stages, %w(
   geniverse-dev geniverse-production
   assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
+  interactions-aws-staging interactions-aws-production
   xproject-dev
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
