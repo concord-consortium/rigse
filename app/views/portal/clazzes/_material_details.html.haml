@@ -6,19 +6,6 @@
       = render :partial => 'material_details_investigation',
            :locals => { :investigation => runnable, :current_offering => current_offering }
     - else
-      %div
-        %table.investigationdata{:width=>"100%"}
-          %tr
-            %td.subheader
-              = current_offering.runnable.class.display_name
-            %td
-              %div{:style=>"float:left;font-size:16px;font-weight:bold"}
-                = current_offering.name
-              %div.item{:style=>"float:left;padding-top:2px"}
-                = "(assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
-            %td{:style=>"white-space:nowrap"}
-              = link_to "Run #{current_offering.runnable.class.display_name}", run_url_for(current_offering, {}), :class=>"button pie"
-
       - if current_offering.reportable?
         %div.right
           %span.linkbutton.pie

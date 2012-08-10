@@ -23,4 +23,4 @@ Feature: Teacher manages a mix instructional materials of a class
   @javascript
   Scenario: Teacher can run a report for each material
     When I go to the Instructional Materials page for "Mixed Runnable Types"
-	  Then I can view a report for materials in the mixed runnable type class
+    Then I can view a report for materials in the mixed runnable type class

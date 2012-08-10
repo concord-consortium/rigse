@@ -52,6 +52,9 @@ class Report::Learner < ActiveRecord::Base
     self.num_answerables = report_util.embeddables.size
     self.num_answered = report_util.answered_number(self.learner)
     self.num_correct = report_util.correct_number(self.learner)
+    self.complete_percent = report_util.complete_percent(self.learner)
+
+    update_activity_completion_status
 
     # We might also want to gather 'saveables' in An associated model?
     # AU: We'll use a serialized column to store a hash, for now
@@ -119,37 +122,24 @@ class Report::Learner < ActiveRecord::Base
     self.save
   end
   
-  def self.user_report_data(offering_id, learner_id)
+  def update_activity_completion_status
+    report_util = Report::Util.new(self.learner, false, true)
     
-    learner = Portal::Learner.find(learner_id)
-    offering = Portal::Offering.find(offering_id)
-    investigation = ::Investigation.find(offering.runnable_id)
-    
-    user_data = {}
-    
-    activities = investigation.activities
-    activities.each do |activity|
-      num_answerable = 0
-      num_answered = 0
-      activity.sections.each do|section|
-        section.pages.each do |page|
-          page_embeddables = page.page_elements
-          num_answerable += page_embeddables.length
-          page_embeddables.map{ |pe| pe.embeddable }.each do |embeddable|
-            begin
-              reportUtil = Report::Util.factory(offering)
-              saveable = reportUtil.saveable(learner, embeddable)
-            rescue Exception => exc
-              return exc.message
-            end
-            num_answered += (saveable.answered?)? 1 : 0
-          end
-        end
-        data = {'answered'=> num_answered, 'total'=> num_answerable}
-        user_data[activity.id] = data     
-      end
+    offering = self.learner.offering
+    assignable = offering.runnable
+    activities = []
+    if assignable.is_a? ::Investigation
+      activities = assignable.activities
+    elsif assignable.is_a? ::Activity
+      activities = [assignable]
     end
-    return user_data
+    
+    activities.each do|activity|
+      complete_percent = report_util.complete_percent(self.learner,activity)
+      report_learner_activity = Report::LearnerActivity.find_or_create_by_learner_id_and_activity_id(self.learner.id, activity.id)
+      report_learner_activity.complete_percent = complete_percent
+      report_learner_activity.save!
+    end
   end
   
 end

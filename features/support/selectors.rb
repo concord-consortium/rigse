@@ -18,6 +18,10 @@ module HtmlSelectorsHelpers
       "div#oTabcontainer"
     when "activity button list of Instructional Material page"
       "table.materials"
+    when "the first recent activity on the recent activity page"
+      [:xpath, "//div[@class=\"recent_activity_container\"]/div[1]"]
+    when "the activity table"
+      [:xpath, "//div[@class = 'progress_div webkit_scrollbars']/table"]
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

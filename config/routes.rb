@@ -109,12 +109,11 @@ constraints :id => /\d+/ do
         post :remove_offering
         get :edit_offerings
         post :edit_offerings
-        post :get_teachers
-        post :edit_teachers
         get :roster
-        post :get_students
+        post :add_new_student_popup
         post :copy_class
         get :materials
+        get :fullstatus
       end
       
       collection do
@@ -165,6 +164,7 @@ constraints :id => /\d+/ do
         post :report_embeddable_filter
         get :learners
         post :answers
+        post :offering_collapsed_status
       end
     end
 
@@ -270,6 +270,20 @@ constraints :id => /\d+/ do
   namespace :admin do
     resources :projects
     resources :tags
+
+    resources :site_notices do
+      member do
+        delete :remove_notice
+        post :dismiss_notice
+      end
+      
+      collection do
+        #get :manage_classes, :path => 'manage'
+        post :toggle_notice_display 
+        #post :manage_classes_save, :as => 'manage_save'
+      end
+      
+    end
   end
 
   namespace :maven_jnlp do
@@ -498,6 +512,7 @@ constraints :id => /\d+/ do
   match '/readme' => 'home#readme', :as => :readme
   match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
   match '/home' => 'home#index', :as => :home
+  match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
   match '/about' => 'home#about', :as => :about
   match '/report' => 'home#report', :as => :report
   match '/test_exception' => 'home#test_exception', :as => :test_exception

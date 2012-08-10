@@ -6,9 +6,11 @@ class Portal::Offering < ActiveRecord::Base
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true, :counter_cache => "offerings_count"
 
+  has_many :learners, :dependent => :destroy, :class_name => "Portal::Learner", :foreign_key => "offering_id"
+
   has_one :report_embeddable_filter, :dependent => :destroy, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
 
-  has_many :learners, :dependent => :destroy, :class_name => "Portal::Learner", :foreign_key => "offering_id"
+  has_many :teacher_full_status, :dependent => :destroy, :class_name => "Portal::TeacherFullStatus", :foreign_key => "offering_id"
 
   [:name, :description].each { |m| delegate m, :to => :runnable }
 
@@ -95,6 +97,48 @@ class Portal::Offering < ActiveRecord::Base
   def run_format
     runnable.run_format
   end
+  
+  def completed_students_count
+    students = self.clazz.students 
+    learners = self.learners
+    num_completed = 0
+    students.each do |student|
+      learner = learners.find_by_student_id(student.id)
+      report_learner = nil
+      if !learner.nil?
+        report_learner = learner.report_learner
+        if !report_learner.nil?
+          total_complete_percent = report_learner.complete_percent
+          num_completed += (total_complete_percent == 100)? 1 :0
+        end
+      end
+    end
+    num_completed
+  end
+  
+  def inprogress_students_count
+    students = self.clazz.students 
+    learners = self.learners
+    num_in_progress = 0
+    students.each do |student|
+      learner = learners.find_by_student_id(student.id)
+      report_learner = nil
+      if !learner.nil?
+        report_learner = learner.report_learner
+        if !report_learner.nil?
+          total_complete_percent = report_learner.complete_percent
+          num_in_progress += (total_complete_percent > 0 && total_complete_percent < 100)? 1 :0
+        end
+      end
+    end
+    num_in_progress  
+  end
+
+  def notstarted_students_count
+    num_not_started = 0
+    num_not_started = self.clazz.students.length - (completed_students_count + inprogress_students_count)
+  end
+  
 
   def internal_report?
     klass = runnable.class
@@ -124,6 +168,7 @@ class Portal::Offering < ActiveRecord::Base
   def printable_report?
     internal_report?
   end
+
 
   # def saveable_count
   #   @saveable_count ||= begin
