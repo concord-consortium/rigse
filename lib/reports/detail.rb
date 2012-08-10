@@ -116,7 +116,7 @@ class Reports::Detail < Reports::Excel
         get_containers(runnable).each do |container|
           # <=================================================>
           reportables = container.reportable_elements.map {|re| re[:embeddable] }
-          answers = reportables.map{|r| l.answers["#{r.class.to_s}|#{r.id}"] || {:answered => false, :answer => "not answered"} }
+          answers = reportables.map{|r| l.answers["#{r.class.to_s}|#{r.id}"] || default_answer_for(r) }
           #Bellow is bad, it gets the answers in the wrong order!
           #answers = @report_utils[l.offering].saveables(:learner => l, :embeddables => reportables )
           answered_answers = answers.select{|s| s[:answered]  }
@@ -127,8 +127,12 @@ class Reports::Detail < Reports::Excel
           all_answers += answers.collect{|ans|
             if ans[:answer].kind_of?(Hash) && ans[:answer][:type] == "Dataservice::Blob"
               blob = ans[:answer]
-              url = "#{@blobs_url}/#{blob[:id]}/#{blob[:token]}.#{blob[:file_extension]}"
-              [Spreadsheet::Link.new(url, url), ans[:answer][:note]]
+              if blob[:id] && blob[:token]
+                url = "#{@blobs_url}/#{blob[:id]}/#{blob[:token]}.#{blob[:file_extension]}"
+                [Spreadsheet::Link.new(url, url), (ans[:answer][:note] || "")]
+              else
+                ["not answered", ""]
+              end
             else
               case ans[:is_correct]
                 when true then "(correct) #{ans[:answer]}"
@@ -143,5 +147,12 @@ class Reports::Detail < Reports::Excel
       end
     end
     @book.write stream_or_path
+  end
+
+  def default_answer_for(embeddable)
+    if embeddable.is_a?(Embeddable::ImageQuestion)
+      return {:answered => false, :answer => {:type => "Dataservice::Blob"}}
+    end
+    return {:answered => false, :answer => "not answered"}
   end
 end
