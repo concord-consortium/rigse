@@ -1,24 +1,24 @@
 class Admin::SiteNoticesController < ApplicationController
-  before_filter :admin_or_manager, :except => [:toggle_notice_display, :dismiss_notice]
-  
-  protected
-  
-  def admin_or_manager
+  def new
     unless current_user.has_role?('admin') or current_user.has_role?('manager')
       flash[:error] = "Please log in as an administrator or manager"
       redirect_to(:home)
+      return
     end
-  end
-  
-  public
-  
-  def new
+    
     @all_roles_selected_by_default = true
     @role_ids = []
     @notice_html = ''
   end
 
   def create
+    
+    unless current_user.has_role?('admin') or current_user.has_role?('manager')
+      flash[:notice] = "Please log in as an administrator or manager"
+      redirect_to(:home)
+      return
+    end
+    
     error = nil
     @notice_html = params[:notice_html] ? params[:notice_html] : ''
     @role_ids = params[:role] ? params[:role] : []
@@ -63,10 +63,22 @@ class Admin::SiteNoticesController < ApplicationController
   end
   
   def index
+     unless current_user.has_role?('admin') or current_user.has_role?('manager')
+      flash[:notice] = "Please log in as an administrator or manager"
+      redirect_to(:home)
+      return
+     end
+     
      @all_notices = Admin::SiteNotice.find(:all,:order=> 'updated_at desc') 
   end
   
   def edit
+    unless current_user.has_role?('admin') or current_user.has_role?('manager')
+      flash[:notice] = "Please log in as an administrator or manager"
+      redirect_to(:home)
+      return
+    end
+    
     @notice = Admin::SiteNotice.find(params[:id])
     @notice_html = @notice.notice_html
     @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])

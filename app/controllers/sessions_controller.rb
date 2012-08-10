@@ -52,8 +52,11 @@ class SessionsController < ApplicationController
     redirect_path = root_path
     
     if current_user.portal_teacher
-      # Teachers are redirected to the "Recent Activity" page
-      redirect_path = recent_activity_path
+      portal_teacher = current_user.portal_teacher
+      if portal_teacher.teacher_clazzes.count > 0
+        # Teachers are redirected to the "Recent Activity" page
+        redirect_path = recent_activity_path
+      end
     end
     
     redirect_to(redirect_path) # unless !check_student_security_questions_ok
