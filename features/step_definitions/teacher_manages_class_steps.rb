@@ -95,6 +95,7 @@ end
 Given /^the mixed runnable types class exists$/ do 
   require 'mock_data'
   @mixed_runnable_type_clazz = MockData.load_mixed_runnable_type_class
+  @mixed_runnable_type_clazz.teachers << User.find_by_login("teacher").portal_teacher
 end
 
 Then /^I can view a report for materials in the mixed runnable type class$/ do
