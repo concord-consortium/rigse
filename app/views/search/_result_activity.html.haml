@@ -20,11 +20,12 @@
                 %span.material_header
                   = "#{activity.name}, "
                 %span
-                  from
-                  = activity.parent.name
+                  from investigation "
+                  =activity.parent.name
+                  "
                 - offering_clazz_names = offerings.map{|o| o.clazz.name}
                 - if(offering_clazz_names.length>0)
-                  .assignedTo
+                  %span.assignedTo
                   (Assigned to
                   = offering_clazz_names.join(", ")
                   )
