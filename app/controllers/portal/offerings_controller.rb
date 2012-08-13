@@ -371,6 +371,9 @@ class Portal::OfferingsController < ApplicationController
   def get_recent_student_report
     offering = Portal::Offering.find(params[:id])
     students = offering.clazz.students
+    if !students.nil? && students.length > 0
+      students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
+    end
     learners = offering.learners
     progress_report = ""
     div_id = "DivHideShowDetail"+ offering.id.to_s
