@@ -91,7 +91,7 @@ function setSelectedTab(strTabID){
         });
         oTab.observe('mouseout',stopScroll);
     });
-}7f473743861c8645a5c3eae0dd68a2873d2078ea
+}
 
 document.observe("dom:loaded", function() {
     var arrTabs = $$('#oTabcontainer .tab');
