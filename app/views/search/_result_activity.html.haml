@@ -24,7 +24,8 @@
                 .material_button{:style=>'float:right'}
                   = link_to "Preview",'',:class=>"button"
             .material_body
-              = activity.description.html_safe
+              -unless activity.description.nil?
+                = activity.description.html_safe
               %i
                 -if(activity.offerings.length==0)
                   Not used in any class.

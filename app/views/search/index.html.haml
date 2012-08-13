@@ -10,12 +10,12 @@
           .search_label{:style=>'width:60px'}
             SEARCH
         %td
-          = text_field_tag :search_term,nil, :autocomplete => "off",:onkeydown=>'preventsubmit();showsuggestion(event,this)',:onkeyup=>'searchsuggestions(event,this)'
+          = text_field_tag :search_term,nil, :autocomplete => "off",:onkeydown=>'if(goButttondisabled){return false;}preventsubmit();showsuggestion(event,this)',:onkeyup=>'if(goButttondisabled){return false;}searchsuggestions(event,this)'
           
         %td
           .go_button.button
             = hidden_field_tag :show_suggestion3, 'true'
-            = submit_to_remote :GO,:GO, :url => list_filter_search_url, :before=>'if(abortAjaxRequest()){LoadingStart();}else return false;', :complete =>'LoadingEnd();removesuggestions();'
+            = submit_to_remote :GO,:GO, :url => list_filter_search_url, :before=>'abortAjaxRequest();LoadingStart();', :complete =>'LoadingEnd();removesuggestions();'
     = render :partial=>"search/filters"
   = hidden_field 'prevent','submit',:value=>"0"
   #results

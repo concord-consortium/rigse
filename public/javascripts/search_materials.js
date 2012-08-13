@@ -137,24 +137,21 @@ function CheckSubmitStatus() {
 }
 
 function disableForm(){
-    $('search_term').disabled=true;
+    preventsubmit();
+    $('search_term').addClassName('disabledGo');
     document.getElementsByName('GO')[0].addClassName('disabledGo');
     goButttondisabled=true;
 }
 
 function enableForm(){
-    $('prevent_submit').setValue(1);
-    $('search_term').disabled=false;
+    allowsubmit();
+    $('search_term').removeClassName('disabledGo');
     document.getElementsByName('GO')[0].removeClassName('disabledGo');
     goButttondisabled=false;
 }
 
 function abortAjaxRequest() {
     
-    if(goButttondisabled)
-    {   
-        return false;
-    }
     if(ajaxRequestSend) {
         ajaxRequest.transport.abort();
         ajaxRequestSend = 0;
@@ -163,7 +160,6 @@ function abortAjaxRequest() {
             $('suggestions').remove();
         }
     }
-     return true;
 }
 
 function LoadingStart (pre,post) {

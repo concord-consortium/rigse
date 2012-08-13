@@ -21,7 +21,8 @@
               .material_button{:style=>'float:right'}
                 = button_to "Preview"
           .material_body
-            = investigation.description.html_safe 
+            -unless investigation.description.nil?
+              = investigation.description.html_safe 
             %i
               -if(investigation.offerings_count==0)
                 Not used in any class.
