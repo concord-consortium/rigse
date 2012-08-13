@@ -128,38 +128,20 @@ class Portal::Offering < ActiveRecord::Base
   end
 
   def completed_students_count
-    students = self.clazz.students 
-    learners = self.learners
+    student_ids = self.clazz.students.map{|item| item.id}
+    learners = self.learners.select{|item| student_ids.include?(item.student_id)}
+    learners_completed = learners.select {|item|!item.report_learner.nil? && item.report_learner.complete_percent == 100}
     num_completed = 0
-    students.each do |student|
-      learner = learners.find_by_student_id(student.id)
-      report_learner = nil
-      if !learner.nil?
-        report_learner = learner.report_learner
-        if !report_learner.nil?
-          total_complete_percent = report_learner.complete_percent
-          num_completed += (total_complete_percent == 100)? 1 :0
-        end
-      end
-    end
+    num_completed = learners_completed.count
     num_completed
   end
   
   def inprogress_students_count
-    students = self.clazz.students 
-    learners = self.learners
+    student_ids = self.clazz.students.map{|item| item.id}
+    learners = self.learners.select{|item| student_ids.include?(item.student_id)}
+    learners_in_progress = learners.select {|item| !item.report_learner.nil? && item.report_learner.complete_percent > 0 &&  item.report_learner.complete_percent < 100}
     num_in_progress = 0
-    students.each do |student|
-      learner = learners.find_by_student_id(student.id)
-      report_learner = nil
-      if !learner.nil?
-        report_learner = learner.report_learner
-        if !report_learner.nil?
-          total_complete_percent = report_learner.complete_percent
-          num_in_progress += (total_complete_percent > 0 && total_complete_percent < 100)? 1 :0
-        end
-      end
-    end
+    num_in_progress = learners_in_progress.length
     num_in_progress  
   end
 

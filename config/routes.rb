@@ -165,6 +165,7 @@ constraints :id => /\d+/ do
         get :learners
         post :answers
         post :offering_collapsed_status
+        post :get_recent_student_report
       end
     end
 

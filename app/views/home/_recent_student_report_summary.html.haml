@@ -36,7 +36,7 @@
               - percentage = 0
               - if !report_learner_activities.find_by_activity_id(activity.id).nil?
                 - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
-              %td
+              %td.student_progress
                 %div.progressbar_container
                   .progressbar
                     - if percentage == 100

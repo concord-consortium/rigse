@@ -368,6 +368,19 @@ class Portal::OfferingsController < ApplicationController
     
   end
 
+  def get_recent_student_report
+    offering = Portal::Offering.find(params[:id])
+    students = offering.clazz.students
+    learners = offering.learners
+    progress_report = ""
+    div_id = "DivHideShowDetail"+ offering.id.to_s
+    render :update do |page|
+      page.replace_html(div_id, :partial => "home/recent_student_report", :locals => { :offering => offering, :students=>students, :learners=>learners})
+      page << 'setTableHeaders()'
+    end
+    return
+  end
+
   private
 
   def parse_embeddable(dom_id)

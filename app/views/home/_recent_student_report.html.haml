@@ -1,3 +1,4 @@
+%br
 - runnable = offering.runnable
 - activities = []
 - if runnable.is_a? ::Investigation
@@ -9,7 +10,7 @@
   - if offering.inprogress_students_count > 0
     #recent_activity_inprogress
       .student_div.floatL
-        = render :partial => 'recent_student_report_learner_list', :locals=> {:offering=>offering, :students=>students, :learners=>learners}  
+        = render :partial => 'home/recent_student_report_learner_list', :locals=> {:offering=>offering, :students=>students, :learners=>learners}  
       .progress_summary_container.webkit_scrollbars
         %table.inProgressSummary
           %tr
@@ -21,7 +22,7 @@
                 %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}",:title=>"#{activity.name}"}
                   %div.progressbar_container
                     = activity_name
-          = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
+          = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
   - else
     %table.messagetable
       %tr
@@ -36,7 +37,7 @@
       %tr
         %th
           Not Yet Started
-      = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
+      = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
   - else
     %table.messagetable
       %tr
@@ -51,7 +52,7 @@
       %tr
         %th
           Completed
-      = render :partial => 'recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100, :students=>students, :learners=>learners}
+      = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100, :students=>students, :learners=>learners}
   - else
     %table.messagetable
       %tr

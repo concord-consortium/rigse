@@ -53,7 +53,7 @@ function showHideActivityButtons(investigation_id, oLink){
 }
 
 
-function showHideActivityDetails(investigation_id, oLink){
+function showHideActivityDetails(investigation_id, oLink, strURL){
     setTableHeaders(1);
     var bVisible = false;
     $$('.DivHideShowDetail'+investigation_id).each(function(oButtonContainer){
@@ -74,6 +74,10 @@ function showHideActivityDetails(investigation_id, oLink){
     
     $('oExpandCollapseText_'+investigation_id).update(strExpandCollapseText);
     oLink.update(strLinkText);
+    
+    if($('DivHideShowDetail'+investigation_id).children.length === 0)
+        new Ajax.Request(strURL, {asynchronous:true, evalScripts:true, method:'post'});
+    
     setTableHeaders();
 }
 
