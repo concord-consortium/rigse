@@ -1,6 +1,21 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::OfferingsController do
+  describe "Show Jnlp Offering" do
+    it "renders a jnlp" do
+      offering = Factory(:portal_offering)
+      get :show, :id => offering.id, :format => :jnlp
+      response.should render_template('shared/_show_or_installer')
+    end
+
+    it "renders a jnlp as a learner" do
+      learner = Factory(:full_portal_learner)
+      stub_current_user(learner.student.user)
+      get :show, :id => learner.offering.id, :format => :jnlp
+      response.should render_template('shared/_learn_or_installer')
+    end
+  end
+
   describe "External Activities Offering" do
     before(:each) do
       generate_default_project_and_jnlps_with_mocks
