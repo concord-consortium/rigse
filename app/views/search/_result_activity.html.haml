@@ -13,12 +13,22 @@
         - unless activity.parent.nil?
           .material_list_item
             %div
+              - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
+              - offerings=Portal::Offering.where(:runnable_id=>activity.id, :runnable_type=>"Activity", :clazz_id=>teacher_clazz_ids)
+
               %div{:style=>'overflow:hidden'}
                 %span.material_header
                   = "#{activity.name}, "
                 %span
                   from
                   = activity.parent.name
+                - offering_clazz_names = offerings.map{|o| o.clazz.name}
+                - if(offering_clazz_names.length>0)
+                  .assignedTo
+                  (Assigned to
+                  = offering_clazz_names.join(", ")
+                  )
+                  = offering_clazz_names.count
                 .material_button{:style=>'float:right'}
                   =link_to 'Assign to class','',:class=>"button"
                 .material_button{:style=>'float:right'}

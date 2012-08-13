@@ -37,12 +37,19 @@ width: 300px;
 {
  background-color:#fbf4da; 
 }
-.filters{
+.filters
+{
   background-color:#fbf4da;
   margin-left: 15px;
   float:left;
 }
-
+.assignedTo
+{
+  padding-left: 10px;
+  float: left;
+  color:#8C878B;
+  margin-top: 2px;
+}
 .sortbycolumn{width:95px;}
 .domaincolumn{width:165px;}
 .gradecolumn{width:90px;}

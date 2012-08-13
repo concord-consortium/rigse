@@ -13,9 +13,18 @@
       - materials.each do |investigation|
         .material_list_item
           %div
+            - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
+            - offerings=Portal::Offering.where(:runnable_id=>investigation.id, :runnable_type=>"Investigation", :clazz_id=>teacher_clazz_ids)
+            
             %div{:style=>'overflow:hidden'}
               .material_header{:style=>'float:left'}
                 = investigation.name
+                - offering_clazz_names = offerings.map{|o| o.clazz.name}
+              - if(offerings.length>0)
+                .assignedTo
+                  (Assigned to
+                  = offering_clazz_names.join(", ")
+                  )
               .material_button{:style=>'float:right'}
                 = button_to 'Assign to class',:class=>"button"
               .material_button{:style=>'float:right'}
