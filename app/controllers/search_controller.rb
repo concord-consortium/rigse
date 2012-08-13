@@ -10,11 +10,11 @@ class SearchController < ApplicationController
     search_options=get_investigation_searchoptions()
     @investigations = Investigation.search_list(search_options)
     @investigations_count = @investigations.length
-    @investigations = @investigations.paginate(:page => params[:investigation_page]? params[:investigation_page] : 1, :per_page => 2) 
+    @investigations = @investigations.paginate(:page => params[:investigation_page]? params[:investigation_page] : 1, :per_page => 10) 
     activity_search_options=get_activity_searchoptions()
     @activities = Activity.search_list(activity_search_options)
     @activities_count = @activities.length
-    @activities = @activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 2)
+    @activities = @activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
   end
   
   def show
@@ -26,11 +26,11 @@ class SearchController < ApplicationController
     search_options=get_investigation_searchoptions()
     investigations = Investigation.search_list(search_options)
     @investigations_count = investigations.length
-    investigations = investigations.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 2)
+    investigations = investigations.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
     activity_search_options=get_activity_searchoptions()
     activities = Activity.search_list(activity_search_options)
     @activities_count = activities.length
-    activities = activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 2)
+    activities = activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
     
     if request.xhr?
       render :update do |page| 

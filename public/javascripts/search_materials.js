@@ -19,7 +19,7 @@ function searchsuggestions(e, oElement) {
         // if(e.keyCode == 13)
         return false;
     }
-    ajaxRequest = new Ajax.Request('get_search_suggestions', {
+    ajaxRequest = new Ajax.Request('search/get_search_suggestions', {
         parameters : {
             search_term : oElement.value
         },

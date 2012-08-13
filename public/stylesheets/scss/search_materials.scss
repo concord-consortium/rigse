@@ -3,6 +3,9 @@
   vertical-align:top;
   text-align:left;
 }
+#material_search_form{
+  padding-bottom:0px;
+}
 .results_container{
   border-top:2px solid #FEE9AA;
   padding-top: 10px;
@@ -12,10 +15,11 @@
   border-top:none;
 }
 .search_results{
-  margin-top:65px;
+  margin-top:15px;
 }
 .align_middle{
   vertical-align:middle;
+  width:60px;
 }
 .result_material
 {
@@ -69,6 +73,7 @@ width: 300px;
 .go_button{
   margin-right:6px;
   margin-top: 2px;
+  margin-left:5px;
 }
 .material_thumbnail{
   height: 40px;
@@ -79,9 +84,13 @@ width: 300px;
   font-size:12px;
 }
 #search_suggestions{
-  position: absolute;
   width: 312px;
+  position: relative;
+  left: 65px;
   background-color: white;
+}
+search_resultscontainer{
+  position: absolute;
 }
 #suggestions{
   border:1px solid gray;
