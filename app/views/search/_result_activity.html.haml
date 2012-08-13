@@ -20,15 +20,13 @@
                 %span.material_header
                   = "#{activity.name}, "
                 %span
-                  from investigation "
-                  =activity.parent.name
-                  "
+                  from investigation
+                  ="\"#{activity.parent.name}\""
                 - offering_clazz_names = offerings.map{|o| o.clazz.name}
                 - if(offering_clazz_names.length>0)
                   %span.assignedTo
                   (Assigned to
-                  = offering_clazz_names.join(", ")
-                  )
+                  = offering_clazz_names.join(", ")+")"
                   = offering_clazz_names.count
                 .material_button{:style=>'float:right'}
                   =link_to 'Assign to class','',:class=>"button"
