@@ -13,9 +13,16 @@ class Portal::LearnersController < ApplicationController
   end
   
   def learner_teacher_admin
-    redirect_home unless (Portal::Learner.find(params[:id]).student.user == current_user) || 
-      current_clazz.is_teacher?(current_user) ||
-      current_user.has_role?('admin')
+    authorized_user = (Portal::Learner.find(params[:id]).student.user == current_user) ||
+        current_clazz.is_teacher?(current_user) ||
+        current_user.has_role?('admin')
+    if !authorized_user
+      if request.format.config?
+        raise "unauthorized config request"
+      else
+        redirect_home
+      end
+    end
   end
   
   public
