@@ -6,10 +6,7 @@
 #material_search_form{
   padding-bottom:0px;
 }
-.results_container{
-  border-top:2px solid #FEE9AA;
-  padding-top: 10px;
-}
+
 .result_material tr
 {
   border-top:none;
@@ -17,9 +14,8 @@
 .search_results{
   margin-top:15px;
 }
-.align_middle{
+.search_table td{
   vertical-align:middle;
-  width:60px;
 }
 .result_material
 {
@@ -72,7 +68,6 @@ width: 300px;
 }
 .go_button{
   margin-right:6px;
-  margin-top: 2px;
   margin-left:5px;
 }
 .material_thumbnail{
@@ -91,6 +86,11 @@ width: 300px;
 }
 search_resultscontainer{
   position: absolute;
+}
+.border_top{
+  border-top: 2px solid #FEE9AA;
+  padding-top: 10px;
+  margin-top: 25px;
 }
 #suggestions{
   border:1px solid gray;
@@ -167,3 +167,13 @@ search_materials{
   width:100px;
 }
 
+.disabledGo,
+input.disabledGo
+{
+  cursor:default;
+  opacity: 0.5;
+}
+
+.material_list .material_list_item:last-child {
+  border-bottom:none;
+}

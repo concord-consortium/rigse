@@ -88,6 +88,7 @@ class Activity < ActiveRecord::Base
 
     def search_list(options)
       name = options[:name]
+      sort_order = options[:sort_order] || "name ASC"
       if (options[:include_drafts])
         activities = Activity.like(name)
       else
@@ -99,7 +100,9 @@ class Activity < ActiveRecord::Base
       if portal_clazz
         activities = activities - portal_clazz.offerings.map { |o| o.runnable }
       end
-
+      if activities.respond_to? :ordered_by
+        activities = activities.ordered_by(sort_order)
+      end
       if options[:paginate]
         activities = activities.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
       else

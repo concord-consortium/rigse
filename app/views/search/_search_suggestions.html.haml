@@ -1,13 +1,20 @@
--@suggestions.sort! { |a,b| a.name <=> b.name }
--@suggestions.uniq!{|x| x.name}
+-investigations.sort! { |a,b| a.name <=> b.name }
+-investigations.uniq!{|x| x.name}
+-activities.sort! { |a,b| a.name <=> b.name }
+-activities.uniq!{|x| x.name}
 -if textlength>0
- 
-  -unless @suggestions.nil?
-    - if @suggestions.length > 0
-      #suggestions
-        - @suggestions.take(10).each do |suggestion|
+  #suggestions
+    -unless investigations.nil?
+      - if investigations.length > 0
+        - investigations.take(4).each do |investigation|
           %a.suggestion_link{:onclick=>'select_suggestion(this)'}
             .suggestion
-              = suggestion.name
+              = investigation.name
+    -unless activities.nil?
+      - if activities.length > 0
+        - activities.take(4).each do |activity|
+          %a.suggestion_link{:onclick=>'select_suggestion(this)'}
+            .suggestion
+              = activity.name
 -else
   %div

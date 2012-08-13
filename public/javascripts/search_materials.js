@@ -1,6 +1,7 @@
 var suggestioncount = -1;
-var ajaxRequest = "";
+var ajaxRequest;
 var ajaxRequestSend = 0;
+var goButttondisabled=false;
 function select_suggestion(e) {
     var strSuggestiontext = e.textContent.trim();
     $('search_term').value = strSuggestiontext;
@@ -19,7 +20,7 @@ function searchsuggestions(e, oElement) {
         // if(e.keyCode == 13)
         return false;
     }
-    ajaxRequest = new Ajax.Request('search/get_search_suggestions', {
+    ajaxRequest = new Ajax.Request('/search/get_search_suggestions', {
         parameters : {
             search_term : oElement.value
         },
@@ -135,7 +136,25 @@ function CheckSubmitStatus() {
     }
 }
 
+function disableForm(){
+    $('search_term').disabled=true;
+    document.getElementsByName('GO')[0].addClassName('disabledGo');
+    goButttondisabled=true;
+}
+
+function enableForm(){
+    $('prevent_submit').setValue(1);
+    $('search_term').disabled=false;
+    document.getElementsByName('GO')[0].removeClassName('disabledGo');
+    goButttondisabled=false;
+}
+
 function abortAjaxRequest() {
+    
+    if(goButttondisabled)
+    {   
+        return false;
+    }
     if(ajaxRequestSend) {
         ajaxRequest.transport.abort();
         ajaxRequestSend = 0;
@@ -143,6 +162,36 @@ function abortAjaxRequest() {
         if($('suggestions')) {
             $('suggestions').remove();
         }
-
     }
+     return true;
+}
+
+function LoadingStart (pre,post) {
+  disableForm();
+  if (typeof pre == 'undefined' )  { pre  = startUpdate; }
+  if (typeof post == 'undefined') { post = endUpdate;  }
+  PendingRequests++;
+  pre.call();
+  if (typeof PendingQue[post] == 'undefined') {
+    PendingQue[post] = 0;
+  }
+  else {
+    PendingQue[post] = PendingQue[post] + 1;
+  }
+}
+
+function LoadingEnd (post) {
+  enableForm();
+  if (typeof post == 'undefined') { post = endUpdate;  }
+  PendingRequests--;
+  if (typeof PendingQue[post] == 'undefined') { 
+    PendingQue[post] = 0;
+    //console.log("ERROR: PendingEnd called before PendingStart");
+  }
+  else {
+    PendingQue[post] = PendingQue[post] - 1;
+  }
+  if (PendingQue[post] < 1) {
+    post.call();
+  }
 }

@@ -4,10 +4,10 @@
   %h1{:style=>'color:black'}
     Instructional Materials
   %form{:id => 'material_search_form',:url => list_filter_search_url, :onkeypress => 'return event.keyCode!=13', :remote =>true }
-    %table{:cellpadding=>0,:cellspacing=>0,:style=>'margin-bottom:0px'}
+    %table.search_table{:cellpadding=>0,:cellspacing=>0,:style=>'margin-bottom:0px'}
       %tr
-        %td.align_middle
-          .search_label
+        %td
+          .search_label{:style=>'width:60px'}
             SEARCH
         %td
           = text_field_tag :search_term,nil, :autocomplete => "off",:onkeydown=>'preventsubmit();showsuggestion(event,this)',:onkeyup=>'searchsuggestions(event,this)'
@@ -15,11 +15,11 @@
         %td
           .go_button.button
             = hidden_field_tag :show_suggestion3, 'true'
-            = submit_to_remote :GO,:GO, :url => list_filter_search_url, :before=>'abortAjaxRequest();PendingStart()', :complete =>'PendingEnd();removesuggestions();'
+            = submit_to_remote :GO,:GO, :url => list_filter_search_url, :before=>'if(abortAjaxRequest()){LoadingStart();}else return false;', :complete =>'LoadingEnd();removesuggestions();'
     = render :partial=>"search/filters"
   = hidden_field 'prevent','submit',:value=>"0"
   #results
-  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "if(CheckSubmitStatus()) {PendingStart();} else return false;", :complete=> "PendingEnd();"
+  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "if(CheckSubmitStatus()) {LoadingStart();} else return false;", :complete=> "LoadingEnd();"
   .search_resultscontainer
     #search_suggestions
     .search_results

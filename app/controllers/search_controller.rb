@@ -86,7 +86,7 @@ class SearchController < ApplicationController
     @suggestions = investigations + activities
     if request.xhr?
        render :update do |page|
-         page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@search_term.length}}
+         page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@search_term.length,:investigations=>investigations,:activities=>activities}}
        end
     end
   end
