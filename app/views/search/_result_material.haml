@@ -21,7 +21,10 @@
               .material_button{:style=>'float:right'}
                 = button_to "Preview"
           .material_body
-            = investigation.description 
+            = investigation.description.html_safe 
             %i
-              Used in: #{investigation.offerings_count} classes.
+              -if(investigation.offerings_count==0)
+                Not used in any class.
+              -else
+                Used in: #{investigation.offerings_count} classes.
 
