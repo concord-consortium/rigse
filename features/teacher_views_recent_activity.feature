@@ -71,7 +71,7 @@ Feature: Teacher can see recent activity
     When I login with username: albert password: albert
     And I follow "Recent Activity" within left panel for class navigation
     Then I should see "You need to assign investigations to your classes."
-    And I should see "Once your students have started work this page will show you a dashboard of recent student progress."
+    And I should see "As your students get started, their progress will be displayed here."
     
     
   @javascript
@@ -84,7 +84,7 @@ Feature: Teacher can see recent activity
      | investigation | Digestion | Biology |
     And the student "monty" belongs to class "Biology"
     And I login with username: albert password: albert
-    Then I should see "Once your students have started work this page will show you a dashboard of recent student progress."
+    Then I should see "As your students get started, their progress will be displayed here."
     
     
   @javascript
@@ -97,7 +97,7 @@ Feature: Teacher can see recent activity
      | investigation | Digestion | Biology |
     And I login with username: albert password: albert
     Then I should see "You have not yet assigned students to your classes."
-    And I should see "Once your students have started work this page will show you a dashboard of recent student progress."
+    And I should see "As your students get started, their progress will be displayed here."
     
     
   @javascript
