@@ -17,11 +17,11 @@
             - offerings=Portal::Offering.where(:runnable_id=>investigation.id, :runnable_type=>"Investigation", :clazz_id=>teacher_clazz_ids)
             
             %div{:style=>'overflow:hidden'}
-              .material_header{:style=>'float:left'}
+              %span.material_header
                 = investigation.name
                 - offering_clazz_names = offerings.map{|o| o.clazz.name}
               - if(offerings.length>0)
-                .assignedTo
+                %span.assignedTo
                   (Assigned to
                   = offering_clazz_names.join(", ")
                   )

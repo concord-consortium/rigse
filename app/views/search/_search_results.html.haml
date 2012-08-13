@@ -12,9 +12,9 @@
   - show_message_onSearch += " #{@activities_count} activities"
 
 - show_message_onSearch +=" matching"
-- if @name != ""
-  - unless @name.nil?
-    - show_message_onSearch +=" search term \"#{@name}\" and"
+- if @search_term != ""
+  - unless @search_term.nil?
+    - show_message_onSearch +=" search term \"#{@search_term}\" and"
 - show_message_onSearch +=" selected criteria"
 
 %p{:style=>'font-weight:bold'}
