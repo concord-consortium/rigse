@@ -7,8 +7,25 @@ Then /^A report window opens of offering "(.+)"$/ do |offering|
 end
 
 And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
-  element = page.find(:xpath, "//div[@id='oTabcontainer']//div[(@class='tab' or @class='selected_tab') and contains(., '#{text}')]")
-  element.click
+  script_text = "
+    var arrTabs = $$('#oTabcontainer div.tab');
+    arrTabs = arrTabs.concat( $$('#oTabcontainer div.selected_tab') );
+    var strTabText = null;
+    for (var i = 0; i < arrTabs.length; i++)
+    {
+      strTabText = arrTabs[i].innerHTML.stripTags().strip();
+      if (strTabText == '#{text}')
+      {
+        arrTabs[i].simulate('click');
+        return true;
+      }
+    }
+    return false;
+  "
+  result = page.execute_script(script_text)
+  
+   raise 'Tab switch failed' if result == false
+  
 end
 
 And /^I should see progress bars for the students$/ do
