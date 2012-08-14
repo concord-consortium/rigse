@@ -233,6 +233,13 @@ constraints :id => /\d+/ do
       get :reset_password
     end
     resource :security_questions, :only => [:edit, :update]
+
+    # this is added to prevent caching and reuse of jnlp files by other users
+    # this caching or saving of jnlps could still happen, but adding this eliminates 
+    # one potential way it could be cached and reused
+    namespace :portal do
+      resources :offerings, :only => [:show], :constraints => { :format => 'jnlp'}
+    end
   end
 
   match '/users/reports/account_report' => 'users#account_report', :as => :users_account_report, :method => :get
