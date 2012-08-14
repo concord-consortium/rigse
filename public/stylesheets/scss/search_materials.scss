@@ -22,9 +22,12 @@
   width:100%;
   margin:0px;
 }
-.search_materials th
+.filterheader
 {
   color: #EE864E;
+  margin-bottom:2px;
+  font-weight:bold;
+  font-size:13px;
 }
 input[name='search_term'] {
 width: 300px;
@@ -43,6 +46,7 @@ width: 300px;
   background-color:#fbf4da;
   margin-left: 15px;
   float:left;
+  font-size:12px;
 }
 .assignedTo
 {
@@ -92,9 +96,9 @@ width: 300px;
   position: absolute;
   background-color: white;
 }
-search_resultscontainer{
-  position: absolute;
-  margin-top:5px;
+
+.search_resultscontainer{
+  margin-top:10px;
 }
 .border_top{
   padding-top: 10px;
@@ -157,7 +161,7 @@ search_materials{
 }
 .material_list .material_list_item{
   border-bottom: 1px solid #DDD;
-  padding:5px 0px 5px 10px;
+  padding:5px 10px 5px 10px;
 }
 
 .domin_container
@@ -198,4 +202,12 @@ input.disabledGo
 }
 .materials_container .pagination{
   padding:0px 0px 5px 10px;
+}
+.showhidefilters{
+  float:right;
+  margin-right:10px;
+  text-decoration:underline;
+}
+#offering_list .bookmark{
+  color:#3F3F3F;
 }
