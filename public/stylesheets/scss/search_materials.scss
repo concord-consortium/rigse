@@ -130,9 +130,12 @@ width: 300px;
 }
 
 .sort_radio {
-  display: none
+   width:0px;
+   height:0px;
+   border:0px;
+   outline:none;
+   opacity: 0;
 }
-
 .sortbycolumn label {
   cursor: pointer
 }
