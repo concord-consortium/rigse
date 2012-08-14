@@ -129,6 +129,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
+    And I should see "Recent Activity"
     Then "Physics:[\s\r\n]+Aerodynamics" should appear before "My Class:[\s\r\n]+Radioactivity"
     
     
