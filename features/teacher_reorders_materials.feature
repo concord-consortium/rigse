@@ -39,7 +39,6 @@ Feature: Teacher reorders materials assigned to the class
     And I should see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "static discipline"
-    And I debug
     And the first investigation in the list should be "Non Linear Devices"
 
   @javascript

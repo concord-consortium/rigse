@@ -54,6 +54,5 @@ Feature: Student should see latest class information
     And I should not see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "static discipline"
-    And the first investigation in the list should be "Non Linear Devices"
     
     
