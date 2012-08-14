@@ -1,24 +1,18 @@
 - learners = offering.learners;
 - students = offering.clazz.students;
 - if investigation.activities.length > 0
-  %table.reportsummary
-    %tr
-      %th
-        ACTIVITY
-      - activity_counter = 0
-      - investigation.activities.each do |activity|
-        - activity_counter = activity_counter + 1
-        - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name.truncate(10)
-        %th{:id=>"activity_header_text#{activity.id}",:class=>"class",:title=>"#{activity.name}"}
-          = activity_name
-    - if students.length > 0
-      = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners, :offering=>offering}
-    - else
-      %tr
-        %td{:colspan=>"#{investigation.activities.length + 1}", :style=>"border-top:solid 1px #666"}
-          No students have registered for this class yet.
+  - if students.length > 0
+    - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
+    .student_div.floatL
+      = render :partial => 'investigation_student_report_learner_list', :locals=> {:students=>students}
+    .progress_div.webkit_scrollbars
+      %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
+        = render :partial => 'investigation_student_report_summary_header',:locals=> {:offering=>offering}
+        = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners, :offering=>offering}
+    .clearboth{:style=>"height:10px"}
+  - else
+    %div.item.messagetext 
+      %br No students have registered for this class yet.
 - else
-  %div.item No activities available in this investigation.
-        
-  
-  
+  %div.item.messagetext
+    %br  No activities available in this investigation.

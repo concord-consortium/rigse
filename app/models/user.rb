@@ -18,7 +18,12 @@ class User < ActiveRecord::Base
   has_many :drawing_tools, :class_name => 'Embeddable::DrawingTool'
   has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
   has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
-
+  
+  has_many :created_notices, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
+  has_many :updated_notices, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
+  
+  has_one :notice_user_display_status, :class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
+  
   scope :active, { :conditions => { :state => 'active' } }
   scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
   scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
@@ -177,6 +182,11 @@ class User < ActiveRecord::Base
   def name_and_login
     _fullname = "#{last_name}, #{first_name}".strip
     _fullname.empty? ? login : "#{_fullname} ( #{login} )"
+  end
+  
+  def full_name
+    _fullname = "#{last_name}, #{first_name}".strip
+    _fullname.empty? ? login : "#{_fullname}"
   end
 
   # Check if a user has a role.

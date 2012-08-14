@@ -112,6 +112,19 @@ describe Portal::ClazzesController do
         end
       end
     end
+    
+    
+    it "saves the position of the left pane submenu item for an authorized teacher" do
+      setup_for_repeated_tests
+      stub_current_user :authorized_teacher_user
+
+      get :show, { :id => @mock_clazz.id }
+
+      # All users should see the full class details summary
+      @authorized_teacher.reload
+      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['NONE']
+    end
+    
   end # end describe GET show
 
   describe "XMLHttpRequest edit" do
@@ -123,28 +136,6 @@ describe Portal::ClazzesController do
       xml_http_html_request :post, :edit, :id => @mock_clazz.id
       
       response.should_not be_success
-    end
-
-    [:admin_user, :authorized_teacher_user].each do |user|
-      it "shows the details of all teachers assigned to the requested class with removal links to #{user}" do
-        setup_for_repeated_tests
-        stub_current_user user
-
-        teachers = [@authorized_teacher, @random_teacher]
-        @mock_clazz.teachers = teachers
-        
-        
-        xml_http_html_request :post, :get_teachers, :id => @mock_clazz.id
-
-        response.content_type.should == "text/html"
-
-        # All users should see the list of current teachers
-        assert_select("table.teachers_listing") do
-          teachers.each do |teacher|
-            assert_select("tr#portal__teacher_#{teacher.id}")
-          end
-        end
-      end
     end
 
     it "should not allow me to modify the requested class's school" do
@@ -166,15 +157,6 @@ describe Portal::ClazzesController do
     end
 
     describe "conditions for a user trying to remove a teacher from a class" do
-      it "the user is allowed to remove other teachers in the list" do
-        teachers = [@authorized_teacher, @random_teacher]
-        @mock_clazz.teachers = teachers
-
-        xml_http_html_request :post, :get_teachers, :id => @mock_clazz.id
-
-        can_edit(@random_teacher)
-        cant_edit(@authorized_teacher) # currently logged in.
-      end
 
       # TODO: Verify we are fine with preventing the current user from removing themselves.
       # it "this teacher is the last teacher assigned to this class" do
@@ -193,27 +175,6 @@ describe Portal::ClazzesController do
       # end
 
 
-      it "this teacher is the current user" do
-        stub_current_user :authorized_teacher_user
-
-        teachers = [@authorized_teacher, @random_teacher]
-        @mock_clazz.teachers = teachers
-
-        1.upto 10 do |i|
-          teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
-          @mock_clazz.school.portal_teachers << teacher
-        end
-
-        xml_http_html_request :post, :get_teachers, :id => @mock_clazz.id
-
-        teachers.each do |teacher|
-          if teacher == @authorized_teacher
-            cant_edit(teacher)
-          else
-            can_edit(teacher)
-          end
-        end
-      end
     end
 
     [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
@@ -229,10 +190,10 @@ describe Portal::ClazzesController do
         xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
         if user == :unauthorized_teacher_user
-          assert_select("a#AddTeacher", false, 
+          assert_select("select#teacher_id_selector", false, 
             "Unauthorized users should not see the 'add teacher' link")
         else
-          assert_select("a#AddTeacher")
+          assert_select("select#teacher_id_selector")
         end
       end
     end
@@ -677,12 +638,6 @@ describe Portal::ClazzesController do
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       assert_not_equal(@portal_clazz.class_word , '', 'Class saved with blank class word.')
-    end  
-    
-    it "should not update the class info if there is no teacher" do
-      @post_params[:clazz_teacher_ids] = ''
-      xhr :post, :edit_teachers, @post_params
-      assert_equal(flash[:notice], 'There should be atleast one teacher assigned to the class.')
     end
     
     it "all the deactivated offerings should actually get deactivated in the database" do
@@ -694,21 +649,6 @@ describe Portal::ClazzesController do
       @mock_clazz.offerings.each do |offering|
         assert_equal(offering.active, false)
       end
-    end
-    
-    it "all newly assigned teachers and teachers removed from the class should be updated in the database" do
-      @yet_another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "yet_another_authorized_teacher"), :schools => [@mock_school])
-      @post_params[:clazz_teacher_ids] = @authorized_teacher.id.to_s + "," + @yet_another_authorized_teacher.id.to_s
-      xhr :post, :edit_teachers, @post_params
-      
-      @authorized_teacher.reload
-      @another_authorized_teacher.reload
-      @yet_another_authorized_teacher.reload
-      
-      assert_not_nil(@authorized_teacher.clazzes.find_by_id(@mock_clazz.id))
-      assert_nil(@another_authorized_teacher.clazzes.find_by_id(@mock_clazz.id))
-      assert_not_nil(@yet_another_authorized_teacher.clazzes.find_by_id(@mock_clazz.id))
-      
     end
   end
 
@@ -843,8 +783,128 @@ describe Portal::ClazzesController do
       assert_equal(@copy_clazz.students.length, 0)
       
     end
-  end  
+  end
   
   
+  # GET edit
+  describe "GET edit" do
+    
+    it "saves the position of the left pane submenu item for an authorized teacher" do
+      stub_current_user :authorized_teacher_user
+
+      get :edit, { :id => @mock_clazz.id }
+
+      # All users should see the full class details summary
+      @authorized_teacher.reload
+      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP']
+    end
+    
+  end
   
+  # GET materials
+  describe "GET materials" do
+    
+    it "saves the position of the left pane submenu item for an authorized teacher" do
+      stub_current_user :authorized_teacher_user
+
+      get :materials, { :id => @mock_clazz.id }
+
+      # All users should see the full class details summary
+      @authorized_teacher.reload
+      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['MATERIALS']
+    end
+    
+  end
+  
+  # GET roster
+  describe "GET roster" do
+    
+    it "saves the position of the left pane submenu item for an authorized teacher" do
+      stub_current_user :authorized_teacher_user
+
+      get :roster, { :id => @mock_clazz.id }
+
+      # All users should see the full class details summary
+      @authorized_teacher.reload
+      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER']
+    end
+    
+  end
+  
+  
+  describe "Post teacher sorts class offerings on class summary page" do
+    before(:each) do
+      @physics_offering = Factory.create(:portal_offering)
+      @chemistry_offering = Factory.create(:portal_offering)
+      @biology_offering = Factory.create(:portal_offering)
+      @mathematics_offering = Factory.create(:portal_offering)
+      @params = {
+        :clazz_offerings => [@physics_offering.id, @chemistry_offering.id, @biology_offering.id , @mathematics_offering.id]
+      }
+    end
+    it "should store position of all the offerings after teacher sorts offerings" do
+      
+      # Save initial offering positions
+      xhr :post, :sort_offerings, @params
+      offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
+      offerings.each do |offering|
+        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+      end
+      
+      # Update offering positions and verify they have been updated
+      @params[:clazz_offerings] = [@mathematics_offering.id, @biology_offering.id, @chemistry_offering.id, @physics_offering.id]
+      xhr :post, :sort_offerings, @params
+      offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
+      offerings.each do |offering|
+        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+      end
+    end
+  end
+  
+  describe "GET fullstatus" do
+    before(:each) do
+      @params = {
+        :id => @mock_clazz.id
+      }
+    end
+    it "should redirect to home page for anonymous user" do
+      stub_current_user :normal_user
+      get :fullstatus, @params
+      response.should_not be_success
+      response.should redirect_to home_url
+    end
+    it "should retrieve the class when user not anonymous user" do
+      stub_current_user :authorized_teacher_user
+      get :fullstatus, @params
+      assigns[:portal_clazz] = @mock_clazz
+      response.should be_success
+      assert_template "fullstatus"
+    end
+  end
+
+  describe "Post add new student popup" do
+    it "should show a popup to add a new student" do
+      #creating real objects for project and making it current project
+      #A related example http://stackoverflow.com/questions/5223247/rspec-error-mock-employee-1-received-unexpected-messageto-ary-withno-args
+      @mock_project = Admin::Project.new
+      @mock_project.home_page_content = nil
+      @mock_project.use_student_security_questions = true
+      @mock_project.use_bitmap_snapshots = true
+      @mock_project.allow_adhoc_schools = true
+      @mock_project.require_user_consent = true
+      @mock_project.allow_default_class = true
+      @mock_project.jnlp_cdn_hostname = ''
+      @mock_project.save!
+      Admin::Project.stub(:default_project).and_return(@mock_project)
+      
+      stub_current_user :authorized_teacher_user
+      
+      @params = {
+        :id => @mock_clazz.id
+      }
+      xhr :post, :add_new_student_popup, @params
+      response.should be_success
+      assert_template :partial => "portal/students/_form"
+    end
+  end
 end

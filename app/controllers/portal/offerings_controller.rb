@@ -350,6 +350,40 @@ class Portal::OfferingsController < ApplicationController
     end
   end
 
+  def offering_collapsed_status
+    if current_user.portal_teacher.nil?
+      render :nothing=>true
+      return
+    end
+    offering_collapsed = true
+    teacher_id = current_user.portal_teacher.id
+    portal_teacher_full_status = Portal::TeacherFullStatus.find_or_create_by_offering_id_and_teacher_id(params[:id],teacher_id)
+    
+    offering_collapsed = (portal_teacher_full_status.offering_collapsed.nil?)? false : !portal_teacher_full_status.offering_collapsed
+    
+    portal_teacher_full_status.offering_collapsed = offering_collapsed
+    portal_teacher_full_status.save!
+    
+    render :nothing=>true
+    
+  end
+
+  def get_recent_student_report
+    offering = Portal::Offering.find(params[:id])
+    students = offering.clazz.students
+    if !students.nil? && students.length > 0
+      students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
+    end
+    learners = offering.learners
+    progress_report = ""
+    div_id = "DivHideShowDetail"+ offering.id.to_s
+    render :update do |page|
+      page.replace_html(div_id, :partial => "home/recent_student_report", :locals => { :offering => offering, :students=>students, :learners=>learners})
+      page << 'setTableHeaders()'
+    end
+    return
+  end
+
   private
 
   def parse_embeddable(dom_id)

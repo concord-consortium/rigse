@@ -1,0 +1,23 @@
+%table.student_list
+  %tr
+    %th
+      %div.progressbar_container 
+        In Progress
+    %th
+      %div.progressbar_container 
+        &nbsp;
+  - students.each do |student|
+    - learner = learners.find_by_student_id(student.id)
+    - report_learner = nil
+    - unless learner.nil?
+      - report_learner = learner.report_learner
+    - student_name = student.user.last_name + ", " + student.user.first_name
+    - if report_learner && report_learner.complete_percent > 0 && report_learner.complete_percent < 100
+      %tr
+        %td.student_name{:title=>"#{student_name}"}
+          %div.progressbar_container
+            = student_name
+        %td.last_update_date{:title=>"#{report_learner.last_run.strftime('%m/%d/%Y')}"}
+          %div.progressbar_container
+            = report_learner.last_run.strftime('%m/%d')
+            

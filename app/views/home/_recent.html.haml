@@ -1,0 +1,50 @@
+- students = clazz_offering.clazz.students 
+- learners = clazz_offering.learners
+- if clazz_offering.clazz.students.length > 0 && (clazz_offering.inprogress_students_count > 0 || clazz_offering.completed_students_count > 0)
+  - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
+  %div
+    .right
+      - clazz = clazz_offering.clazz
+      - runnable = clazz_offering.runnable 
+      -if runnable.is_a? ::Investigation
+        - investigation_name = runnable.name
+      -elsif runnable.is_a? ::Activity
+        - investigation_name = runnable.investigation.name
+      
+      
+      %div
+        %table.recent_activity_table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:100%;"}
+          %tr
+            %th{:colspan=>2}
+              .class_offering_name
+                = clazz.name + ": "
+                = investigation_name
+              .showhidedetails
+                %span.expandcollapse{:id=>"oExpandCollapseText_#{clazz_offering.id}"} +
+                = link_to('Show detail', 'javascript: void(0);', :onclick => "showHideActivityDetails('#{clazz_offering.id}',this,'#{get_recent_student_report_portal_offering_url(clazz_offering)}')")
+          %tr
+            %td.investigation_info{:style=>"vertical-align:top"}
+              %div
+                %table{:border=>0,:cellpadding=>0,:cellspacing=>0}
+                  - if runnable.is_a? ::Activity
+                    %tr
+                      %td
+                        = runnable.name
+                  %tr
+                    %td
+                      Class Size = 
+                      = clazz.students.length
+                  %tr
+                    %td{:colspan=>2}
+                      .report
+                        %span.linkbutton.pie
+                          = report_link_for(clazz_offering, 'report', 'Run Report')
+            %td.investigation_activities
+              %div
+                %table.status_count_graph{:border=>0,:cellpadding=>0,:cellspacing=>0}
+                  = render :partial => 'recent_activity_graph', :locals => {:offering => clazz_offering, :students=>students}
+          %tr.legend_data
+            %td.expand_collapse_activities{:id=>"DivHideShowDetail#{clazz_offering.id}", :class=>"DivHideShowDetail#{clazz_offering.id}",:style=>"display:none;", :colspan=>"2"}
+              Loading...
+  %br
+  %br
