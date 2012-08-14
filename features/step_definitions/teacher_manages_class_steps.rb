@@ -110,7 +110,7 @@ Then /^I can view a report for materials in the mixed runnable type class$/ do
 
     # it starts out with the first tab selected so we don't need to click in that case
     if name != offering_names.first
-      find('div.tab', :text => name).click
+      step "I click the tab of Instructional Materials with text \"#{name}\""
     end
 
     if first('a', :text => "Run Report", :visible => true)
