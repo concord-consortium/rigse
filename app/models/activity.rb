@@ -89,11 +89,12 @@ class Activity < ActiveRecord::Base
     def search_list(options)
       name = options[:name]
       sort_order = options[:sort_order] || "name ASC"
+      
       if (options[:include_drafts])
         activities = Activity.like(name)
       else
-        # activities = Activity.published.like(name)
-        activities = Activity.published.like(name)
+        published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+        activities = Activity.where(:investigation_id => published_investigation_ids).where('publication_status <> "draft" or publication_status is null').like(name)
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
