@@ -31,7 +31,7 @@ Feature: An author deletes parts of an investigation
       | author | author   | member, author |
     And the author "author" created an investigation named "Test" with text and a open response question
     And I am logged in with the username author
-    And I show the first page of the "Test" investigation
+    And I go to the first page of the "Test" investigation
     Then I should see "Text: "
     When I follow "delete text"
     And accept the dialog

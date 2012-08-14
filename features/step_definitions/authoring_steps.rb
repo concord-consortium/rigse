@@ -14,12 +14,6 @@ When /show the first section of the "(.*)" investigation$/ do |investigation_nam
   visit section_path(section)
 end
 
-When /show the first page of the "(.*)" investigation$/ do |investigation_name|
-  investigation = Investigation.find_by_name(investigation_name)
-  page = investigation.pages.first
-  visit page_path(page)
-end
-
 When /^I save the investigation$/ do
   # ideally we would find the <input type="submit"> inside the form "new_investigation"
   # but it isn't clear how to do that

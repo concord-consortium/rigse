@@ -16,7 +16,7 @@ Feature: An copies and pastes embeddables
       | testing fast cars | how fast can cars go? | author |
 
     And I am logged in with the username author
-    When I show the first page of the "testing fast cars" investigation
+    When I go to the first page of the "testing fast cars" investigation
     And I add a "Text" to the page
     Then I should see "content goes here ..."
     When I copy the embeddable "Text: content goes here ..." by clicking on the content
@@ -35,7 +35,7 @@ Feature: An copies and pastes embeddables
       | testing fast cars | how fast can cars go? | author |
 
     And I am logged in with the username author
-    When I show the first page of the "testing fast cars" investigation
+    When I go to the first page of the "testing fast cars" investigation
     And I add a "Text" to the page
     Then I should see "content goes here ..."
     When I copy the embeddable "Text: content goes here ..." by clicking on the title
