@@ -11,7 +11,7 @@
             SEARCH
         %td
           = text_field_tag :search_term,nil, :autocomplete => "off",:onkeydown=>'if(goButttondisabled){return false;}preventsubmit();showsuggestion(event,this)',:onkeyup=>'if(goButttondisabled){return false;}searchsuggestions(event,this)'
-          
+          #search_suggestions
         %td
           .go_button.button
             = hidden_field_tag :show_suggestion3, 'true'
@@ -21,8 +21,6 @@
   #results
   = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "if(CheckSubmitStatus()) {LoadingStart();} else return false;", :complete=> "LoadingEnd();"
   .search_resultscontainer
-    #search_suggestions
-    .search_results
     .progress_container
     #search_spinner{:style=>'display: none;'}
       = image_tag "ajax-loader.gif"

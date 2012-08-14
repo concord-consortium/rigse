@@ -22,16 +22,20 @@ class SearchController < ApplicationController
       redirect_to root_path
       return
     end
-    
-    search_options=get_investigation_searchoptions()
-    investigations = Investigation.search_list(search_options)
-    @investigations_count = investigations.length
-    investigations = investigations.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
-    activity_search_options=get_activity_searchoptions()
-    activities = Activity.search_list(activity_search_options)
-    @activities_count = activities.length
-    activities = activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
-    
+    @investigations_count=0
+    @activities_count=0
+    unless params[:investigation].nil?
+      search_options=get_investigation_searchoptions()
+      investigations = Investigation.search_list(search_options)
+      @investigations_count = investigations.length
+      investigations = investigations.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
+    end
+    unless params[:activity].nil?
+      activity_search_options=get_activity_searchoptions()
+      activities = Activity.search_list(activity_search_options)
+      @activities_count = activities.length
+      activities = activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
+    end  
     if request.xhr?
       render :update do |page| 
         page.replace_html 'offering_list', :partial => 'search/search_results',:locals=>{:investigations=>investigations,:activities=>activities}
@@ -49,10 +53,10 @@ class SearchController < ApplicationController
   
   def get_investigation_searchoptions
     @search_term = params[:search_term]
-    @sort_order = param_find(:sort_order, (params[:method] == :get))
+    @sort_order = param_find(:sort_order, (params[:method] == :get)) || 'name ASC'
     search_options = {
       :name => @search_term || '',
-      :sort_order => @sort_order || 'name ASC',
+      :sort_order => @sort_order,
       :paginate => false,
       #:page => params[:investigation_page] ? params[:investigation_page] : 1,
       #:per_page => 10
@@ -62,10 +66,10 @@ class SearchController < ApplicationController
 
   def get_activity_searchoptions
     @search_term = params[:search_term]
-    @sort_order = param_find(:sort_order, (params[:method] == :get))
+    @sort_order = param_find(:sort_order, (params[:method] == :get)) || 'name ASC'
     activity_search_options = {
       :name => @search_term || '',
-      :sort_order => @sort_order || 'name ASC',
+      :sort_order => @sort_order,
       :paginate => false,
       #:page => params[:activity_page] ? params[:activity_page] : 1,
       #:per_page => 10

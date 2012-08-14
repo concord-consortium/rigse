@@ -1,42 +1,45 @@
-%p.border_top= page_entries_info materials, :model=>"Activity"
-= will_paginate materials, {:param_name => 'activity_page', :params => {:search_term => @name, :investigation_page => 1}}
-
-%table.result_material{:cellpadding=>0,:cellspacing=>0}
-  %tr
-    -if false
-      %td.material_type
-        .material_thumbnail
-        .material_type
-          = type
-    %td.material_list
-      - materials.each do |activity|
-        - unless activity.parent.nil?
-          .material_list_item
-            %div
-              - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
-              - offerings=Portal::Offering.where(:runnable_id=>activity.id, :runnable_type=>"Activity", :clazz_id=>teacher_clazz_ids)
-
-              %div{:style=>'overflow:hidden'}
-                %span.material_header
-                  = "#{activity.name}, "
-                %span
-                  from investigation
-                  ="\"#{activity.parent.name}\""
-                - offering_clazz_names = offerings.map{|o| o.clazz.name}
-                - if(offering_clazz_names.length>0)
-                  %span.assignedTo
-                  (Assigned to
-                  = offering_clazz_names.join(", ")+")"
-                  = offering_clazz_names.count
-                .material_button{:style=>'float:right'}
-                  =link_to 'Assign to class','',:class=>"button"
-                .material_button{:style=>'float:right'}
-                  = link_to "Preview",'',:class=>"button"
-            .material_body
-              -unless activity.description.nil?
-                = activity.description.html_safe
-              %i
-                -if(activity.offerings.length==0)
-                  Not used in any class.
-                -else
-                  Used in #{activity.offerings.length} classes.
+.materials_container
+  .material_list_header
+    Activities
+  %p.border_top= page_entries_info materials, :model=>"Activity"
+  = will_paginate materials, {:param_name => 'activity_page', :params => {:search_term => @name, :investigation_page => 1}}
+  
+  %table.result_material{:cellpadding=>0,:cellspacing=>0}
+    %tr
+      -if false
+        %td.material_type
+          .material_thumbnail
+          .material_type
+            = type
+      %td.material_list
+        - materials.each do |activity|
+          - unless activity.parent.nil?
+            .material_list_item
+              %div
+                - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
+                - offerings=Portal::Offering.where(:runnable_id=>activity.id, :runnable_type=>"Activity", :clazz_id=>teacher_clazz_ids)
+  
+                %div{:style=>'overflow:hidden'}
+                  %span.material_header
+                    = "#{activity.name}, "
+                  %span
+                    from investigation
+                    ="\"#{activity.parent.name}\""
+                  - offering_clazz_names = offerings.map{|o| o.clazz.name}
+                  - if(offering_clazz_names.length>0)
+                    %span.assignedTo
+                    (Assigned to
+                    = offering_clazz_names.join(", ")+")"
+                    = offering_clazz_names.count
+                  .material_button{:style=>'float:right'}
+                    =link_to 'Assign to class','',:class=>"button"
+                  .material_button{:style=>'float:right'}
+                    = link_to "Preview",'',:class=>"button"
+              .material_body
+                -unless activity.description.nil?
+                  = activity.description.html_safe
+                %i
+                  -if(activity.offerings.length==0)
+                    Not used in any class.
+                  -else
+                    Used in #{activity.offerings.length} classes.

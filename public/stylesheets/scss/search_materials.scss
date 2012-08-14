@@ -35,8 +35,9 @@ width: 300px;
 }
 #filter_container
 {
- background-color:#fbf4da; 
-}
+ background-color:#fbf4da;
+ margin-top:10px;
+  }
 .filters
 {
   background-color:#fbf4da;
@@ -52,16 +53,16 @@ width: 300px;
   margin-top:3px;
 }
 .sortbycolumn{width:95px;}
-.domaincolumn{width:165px;}
-.gradecolumn{width:90px;}
-.materialcolumn{width:100px;}
-.probescolumn{width:145px;}
+.domaincolumn{width:165px;display:none;}
+.gradecolumn{width:90px;display:none;}
+.materialcolumn{width:100px;display:none;}
+.probescolumn{width:145px;display:none;}
 
 .material_header
 {
   font-weight:bold;
   font-size:16px;
-  color: #247A7E;
+  color:#BF4726;
 }
 .material_type{
   width:120px;
@@ -88,17 +89,16 @@ width: 300px;
 }
 #search_suggestions{
   width: 312px;
-  position: relative;
-  left: 65px;
+  position: absolute;
   background-color: white;
 }
 search_resultscontainer{
   position: absolute;
+  margin-top:5px;
 }
 .border_top{
-  border-top: 2px solid #FEE9AA;
   padding-top: 10px;
-  margin-top: 25px;
+  padding-left:10px;
 }
 #suggestions{
   border:1px solid gray;
@@ -157,10 +157,8 @@ search_materials{
 }
 .material_list .material_list_item{
   border-bottom: 1px solid #DDD;
-  padding-bottom: 5px;
-  padding-top: 5px;
+  padding:5px 0px 5px 10px;
 }
-
 
 .domin_container
 {
@@ -184,4 +182,20 @@ input.disabledGo
 
 .material_list .material_list_item:last-child {
   border-bottom:none;
+}
+.materials_container
+{
+  border:1px solid #AAA;
+  margin-top:10px;
+}
+.material_list_header
+{
+ background-color: #EDC323;
+ color:#555;
+ font-weight:bold;
+ padding:2px;
+ padding-left: 5px;
+}
+.materials_container .pagination{
+  padding:0px 0px 5px 10px;
 }

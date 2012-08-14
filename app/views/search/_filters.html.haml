@@ -1,5 +1,5 @@
 -probe_types = Probe::ProbeType.all;
-#filter_container{:style=>"overflow:hidden;display:none"}
+#filter_container{:style=>"overflow:hidden;"}
   %div{:style=>"float:right"}
     %div{:id=>"oExpandCollapseText",:style=>"width:20px;float:left"}  
     = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
@@ -7,28 +7,28 @@
     %tr
       %th
         Sort By
-      %th
-        Scientific Domain
-      %th
-        Grade
-      %th
-        Material
-      %th.probes_header
-        Probes
+      / %th
+      /   Scientific Domain
+      / %th
+      /   Grade
+      / %th
+      /   Material
+      / %th.probes_header
+      /   Probes 
     %tr
       %td.sortbycolumn
         %div
-          = label_tag 'sort_dropdown_created_at_ASC','Oldest',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_dropdown,'created_at ASC',nil,:class=>'sort_radio'
+          = label_tag 'sort_order_created_at_ASC','Oldest',:class=>(@sort_order == "created_at ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+          = radio_button_tag :sort_order,'created_at ASC',(@sort_order == "created_at ASC"),:class=>'sort_radio'
         %div
-          = label_tag 'sort_dropdown_created_at_DESC','Newest',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_dropdown,'created_at DESC',true,:class=>'sort_radio'
+          = label_tag 'sort_order_created_at_DESC','Newest',:class=>(@sort_order == "created_at DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+          = radio_button_tag :sort_order,'created_at DESC',(@sort_order == "created_at DESC"),:class=>'sort_radio'
         %div
-          = label_tag 'sort_dropdown_name_ASC','Alphabetical',:class=>'highlightoption',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_dropdown,'name ASC',nil,:class=>'sort_radio'
+          = label_tag 'sort_order_name_ASC','Alphabetical',:class=>(@sort_order == "name ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+          = radio_button_tag :sort_order,'name ASC',(@sort_order == "name ASC"),:class=>'sort_radio'
         %div
-          = label_tag 'sort_dropdown_offerings_count_DESC' ,'Popularity',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_dropdown,'offerings_count DESC',nil,:class=>'sort_radio'
+          = label_tag 'sort_order_offerings_count_DESC' ,'Popularity',:class=>(@sort_order == "offerings_count DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+          = radio_button_tag :sort_order,'offerings_count DESC',(@sort_order == "offerings_count DESC"),:class=>'sort_radio'
       %td.domaincolumn
         %div
           =check_box_tag :physicalscience, true, true
