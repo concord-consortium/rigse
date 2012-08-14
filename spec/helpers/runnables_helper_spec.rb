@@ -109,7 +109,7 @@ describe RunnablesHelper do
       offering.stub!(:resource_page?).and_return false
       offering.stub!(:run_format).and_return :jnlp
       offering.stub!(:external_activity?).and_return false
-      helper.run_link_for(offering).should be_link_like("http://test.host/portal/offerings/#{offering.id}.jnlp",
+      helper.run_link_for(offering).should be_link_like("http://test.host/users/#{@anonymous_user.id}/portal/offerings/#{offering.id}.jnlp",
                                                              "run_link rollover",
                                                              "/images/run.png")
     end

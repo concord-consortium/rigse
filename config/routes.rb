@@ -238,7 +238,7 @@ constraints :id => /\d+/ do
     # this caching or saving of jnlps could still happen, but adding this eliminates 
     # one potential way it could be cached and reused
     namespace :portal do
-      resources :offerings, :only => [:show], :constraints => { :format => 'jnlp'}
+      resources :offerings, :only => [:show]
     end
   end
 

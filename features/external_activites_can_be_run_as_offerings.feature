@@ -13,7 +13,7 @@ Feature: External Activities can be run as offerings
       | My Class | teacher |
     And the following external activity exists:
       | name        | user    | url               |
-      | My Activity | teacher | /home |
+      | My Activity | teacher | /mock_html/test-exernal-activity.html |
     And the following students exist:
       | login   | password |
       | student | student  |
@@ -25,4 +25,4 @@ Feature: External Activities can be run as offerings
     And I am logged in with the username student
     When I go to my home page
     And follow "My Activity"
-    Then I should be on /home
+    Then I should be on /mock_html/test-exernal-activity.html
