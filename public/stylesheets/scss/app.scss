@@ -593,14 +593,13 @@ li.item_selectable {
     font: bold 1.3em Arial, Helvetica, sans-serif !important;
     margin: 10px 0 10px 20px; }
   ul {
-    
+    border-top: 1px solid #A1D3D0;
     list-style: none;
     margin: 0;
     padding: 0; }
   li {
-
+    border-bottom: 1px solid #A1D3D0;
     color: #ee864e;
-
     font-size: 1.4em;
     list-style: none;
     margin: 0;
@@ -618,12 +617,12 @@ li.item_selectable {
     a.selected {
       background: white;
       color: #000000;
-	  font-weight: bold; } }
+      font-weight: bold; } }
   ul.create {
     border-top: none; }
   .create_link,
   .manage_classes_link {
-	text-align: center;
+    text-align: center;
     margin: 10px 0 0 0px; } }
 
 .user-info-box {
@@ -1363,8 +1362,8 @@ table.teacher_class_table th, table.teacher_class_table td
 }
 .classsetupform tr { vertical-align: top; }
 .classsetupform td { padding-top: 10px; padding-left: 10px; }
-.classsetupform td:nth-child(odd) { width: 112px;}
-.classsetupform td.title{ width: 112px;}
+.classsetupform td:nth-child(odd) { width: 112px !important;}
+.classsetupform td.title{ width: 60px;}
 .classsetupform table { margin: 0;}
 .classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
 
@@ -1383,6 +1382,14 @@ table.teacher_class_table th, table.teacher_class_table td
 .studentlist td { text-align:left; vertical-align:middle;padding:2px 0 }
 .studentlist td.studentname { text-align:left; vertical-align:middle;padding:2px 0; min-width:150px }
 
+#student_roster{padding-right:10px}
+#student_roster #student_id_selector{width:294px !important}
+#student_roster #students_listing{padding-right:0px !important}
+
+table.add_student, table.roster_student_list{margin:0;clear:both;}
+table.roster_student_list .action_link_container{width:235px;padding-left:0px}
+table.roster_student_list a.change_password{padding-left:10px}
+
 .contentdiv{float:left;}
 .linkdiv{float:right;}
 
@@ -1395,8 +1402,11 @@ table.teacher_class_table th, table.teacher_class_table td
 td.title { padding-left: 20px; text-align: left; }
 .maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}
 
-#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-#sortable li { margin: 0 0px 3px 0px; padding: 0.4em;height: 18px;cursor:move }
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
+#sortable li { margin: 0 0px 5px 0px; padding: 0.4em;cursor:move }
+#sortable li label { padding-top:0 }
+#sortable td {vertical-align:top }
+#sortable td.offering_name{padding-top:2px}
 
 a.hlink{color:#479492;text-decoration:none;cursor:pointer}
 a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
@@ -1406,4 +1416,26 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 #setup_flash_message_div{
   color:black;
   font-weight:bold;
+}
+#teacher_id_selector
+{
+  width:250px;
+}
+
+/* CSS classes to display scrollbars on Mac OS X Lion */
+.webkit_scrollbars::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 11px;
+    height: 11px;
+}
+.webkit_scrollbars::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid white; /* should match background, can't be transparent */
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.no_recent_activity
+{
+  font-style: italic;
+  text-align: center;
 }

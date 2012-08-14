@@ -1,17 +1,6 @@
-=begin
-Given /^I go to edit page for "(.+)"$/ do |class_name|
-  click_link(class_name)
-  click_link('edit class information')
-end
-=end
+
 When /^I fill in Class Name with "(.+)"$/ do |className|
   fill_in('portal_clazz_name', :with => className)
-end
-
-And /^I include a teacher named "(.+)"$/ do |teacher_name|
-  find(:xpath, '//a[@id="AddTeacher"]').click
-  check('Einstien, Albert')
-  click_button('AddTeacherSaveButton')
 end
 
 And /^I fill Description with "(.+)"$/ do |description|
@@ -93,4 +82,16 @@ And /^the first investigation in the list should be "(.+)"$/ do |investigation_n
                                 "
                                )
  raise 'Not first on the list' if result == false
+end
+
+
+When /^(?:I )follow remove image for the teacher name "(.*)"$/ do |teacher_name|
+  step_text = "follow xpath \"//tr[td/b[contains(., '#{teacher_name}')]]/td/a[@class='rollover']\""
+  step step_text
+end
+
+
+When /^(?:I )follow Add Another Teacher drop down$/ do
+  step_text = "follow xpath \"//div[@id='teacher_id_selector_chzn']/a\""
+  step step_text
 end

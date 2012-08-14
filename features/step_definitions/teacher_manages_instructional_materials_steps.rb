@@ -3,30 +3,12 @@ Then /^A report window opens of offering "(.+)"$/ do |offering|
   #offering = Portal::Offering.find_by_name(offering)
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
     page.should have_content("Report for:")
-    assert_match(path_to("report of offering \"#{offering}\""), current_url)
   end
 end
 
 And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
-  result = page.execute_script("
-    var arrTabs = $$('#oTabcontainer div.tab');
-    arrTabs.concat( $$('#oTabcontainer div.selected_tab') );
-    var bSuccess = false;
-    var strTabText = null;
-    for (var i = 0; i < arrTabs.length; i++)
-    {
-      strTabText = arrTabs[i].innerHTML.stripTags().strip();
-      if (strTabText == '#{text}')
-      {
-        arrTabs[i].simulate('click');
-        bSuccess = true;
-      }
-    }
-    return bSuccess;
-  ")
-  
-   raise 'Tab switch failed' if result == false
-  
+  element = page.find(:xpath, "//div[@id='oTabcontainer']//div[(@class='tab' or @class='selected_tab') and contains(., '#{text}')]")
+  element.click
 end
 
 And /^I should see progress bars for the students$/ do

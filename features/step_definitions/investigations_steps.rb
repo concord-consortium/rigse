@@ -57,7 +57,7 @@ Given /^the author "([^"]*)" created an investigation named "([^"]*)" with text 
   investigation.save
 end
 
-#Table: | investigation | activity | section   | page   | multiple_choices |
+#Table: | investigation | activity | activity_teacher_only | section   | page   | multiple_choices |
 Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     investigation = Investigation.find_or_create_by_name(hash['investigation'])
@@ -65,6 +65,13 @@ Given /^the following investigations with multiple choices exist:$/ do |investig
     investigation.save
     # ITSISU requires descriptions on activities
     activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
+    
+    if hash['activity_teacher_only']
+      # Create a teacher only activity if specified
+      activity.teacher_only = (hash['activity_teacher_only'] == 'true')
+      activity.save
+    end
+    
     section = Section.find_or_create_by_name(hash['section'])
     page = Page.find_or_create_by_name(hash['page'])
     mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }

@@ -171,4 +171,70 @@ describe Portal::OfferingsController do
       response.body.should =~ /<input.*class='disabled'.*type='submit'/
     end
   end
+  
+  describe "POST offering_collapsed_status" do
+    before(:each) do
+      @mock_semester = Factory.create(:portal_semester, :name => "Fall")
+      @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
+      
+      @admin_user = Factory.next(:admin_user)
+      @manager_user = Factory.next(:manager_user)
+      @researcher_user = Factory.next(:researcher_user)
+      @author_user = Factory.next(:author_user)
+      @guest_user = Factory.next(:anonymous_user)
+      @student_user = Factory.create(:user, :login => "authorized_student")
+      @portal_student = Factory.create(:portal_student, :user => @student_user)
+      @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [@mock_school])
+      @authorized_teacher_user = @authorized_teacher.user
+      @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz)
+      @params = {
+        :id => @offering.id
+      }
+    end
+    it "should render nothing and return for users other than teacher" do
+      stub_current_user :admin_user
+      xhr :post, :offering_collapsed_status, @params
+      response.body.should be_blank
+
+      stub_current_user :manager_user
+      xhr :post, :offering_collapsed_status, @params
+      response.body.should be_blank
+      
+      stub_current_user :researcher_user
+      xhr :post, :offering_collapsed_status, @params
+      response.body.should be_blank
+
+      stub_current_user :author_user
+      xhr :post, :offering_collapsed_status, @params
+      response.body.should be_blank
+
+      stub_current_user :guest_user
+      xhr :post, :offering_collapsed_status, @params
+      response.body.should be_blank
+
+      stub_current_user :student_user
+      xhr :post, :offering_collapsed_status, @params
+      response.body.should be_blank
+    end
+    it "should maintain the offering collapse expand status when user is a teacher" do
+      stub_current_user :authorized_teacher_user
+      #when teacher has never expanded or collapsed before
+      portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
+      assert_nil(portal_teacher_full_status)
+      
+      # after first expand
+      xhr :post, :offering_collapsed_status, @params
+      portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
+      assert_not_nil(portal_teacher_full_status)
+      assert_equal(portal_teacher_full_status.offering_collapsed, false)
+      response.body.should be_blank
+      
+      #when teacher has collapsed and expanded many times before
+      xhr :post, :offering_collapsed_status, @params
+      portal_teacher_full_status.reload
+      assert_not_nil(portal_teacher_full_status)
+      assert_equal(portal_teacher_full_status.offering_collapsed, true)
+      response.body.should be_blank
+    end
+  end
 end
