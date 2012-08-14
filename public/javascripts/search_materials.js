@@ -2,8 +2,14 @@ var suggestioncount = -1;
 var ajaxRequest;
 var ajaxRequestSend = 0;
 var goButttondisabled=false;
-function select_suggestion(e) {
-    var strSuggestiontext = e.textContent.trim();
+function select_suggestion(search_box) {
+    var strSuggestiontext;
+    try{
+        strSuggestiontext = fulltrim(search_box.textContent);
+    }
+    catch(e){
+        strSuggestiontext = fulltrim(search_box.innerText);
+    }
     $('search_term').value = strSuggestiontext;
     $('suggestions').remove();
     //$('show_suggestion').writeAttribute('name','no_suggestion');
@@ -190,4 +196,8 @@ function LoadingEnd (post) {
   if (PendingQue[post] < 1) {
     post.call();
   }
+}
+
+function fulltrim(inputText){
+    return inputText.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 }
