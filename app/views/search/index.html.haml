@@ -10,7 +10,7 @@
           .search_label{:style=>'width:60px'}
             SEARCH
         %td
-          = text_field_tag :search_term,nil, :autocomplete => "off",:onkeydown=>'if(goButttondisabled){return false;}preventsubmit();showsuggestion(event,this)',:onkeyup=>'if(goButttondisabled){return false;}searchsuggestions(event,this)'
+          = text_field_tag :search_term,@search_term, :autocomplete => "off",:onkeydown=>'if(goButttondisabled){return false;}preventsubmit();showsuggestion(event,this)',:onkeyup=>'if(goButttondisabled){return false;}searchsuggestions(event,this)'
           #search_suggestions
         %td
           .go_button.button
