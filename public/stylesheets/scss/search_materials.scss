@@ -77,7 +77,6 @@ width: 300px;
 .material_button {
   margin-right:6px;
   margin-top: 2px;
-  display:none;
 }
 .go_button{
   margin-right:6px;
@@ -216,3 +215,11 @@ input.disabledGo
 #offering_list .bookmark{
   color:#3F3F3F;
 }
+
+.material_detail{margin:0;padding:0;}
+.material_detail td{font-weight:bold;padding:5px 5px 0px 5px;vertical-align:top;text-align:left;}
+.material_detail td.title{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
+.material_detail td.check_box{width:25px;;padding:7px 5px 0px 5px}
+.material_detail label.clazz_name{text-transform: none;} 
+
+.messagetext{font-style:italic}

@@ -201,3 +201,35 @@ function LoadingEnd (post) {
 function fulltrim(inputText){
     return inputText.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 }
+
+var list_modal = null;
+
+function close_popup()
+{
+    list_modal.hide();
+    list_modal = null;
+}
+
+function get_Assign_To_Class_Popup(material_id,material_type)
+{
+    list_modal = list_modal || null;
+    if(list_modal !== null)
+    {
+        close_popup();
+    }
+    list_modal = new UI.Window({ theme:"lightbox", width:500, height:350});
+    list_modal.setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
+    list_modal.setHeader("Assign Materials to a Class");
+    
+    var options = {
+        method: 'post',
+        parameters : {'material_type':material_type,'material_id':material_id},
+        onSuccess: function(transport) {
+            var text = transport.responseText;
+            text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
+            list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
+        }
+    };
+    var target_url = "/search/get_current_material_unassigned_clazzes";
+    new Ajax.Request(target_url, options);
+}

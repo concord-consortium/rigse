@@ -1,0 +1,48 @@
+- if material.class == ::Investigation
+  - investigation_name = material.name
+  - activity_name = ""
+  - portal_offerings = nil
+- elsif material.class == ::Activity
+  - investigation_name = (material.parent)? material.parent.name : ""
+  - activity_name = material.name
+  - portal_offerings = []
+  - if material.parent
+    - portal_offerings = Portal::Offering.where(:runnable_id=>material.parent.id,:runnable_type=>"Investigation")
+
+- if investigation_name.length > 0
+  %div
+    %table.material_detail
+      %tr
+        %td.title Investigation: 
+        %td 
+          = investigation_name
+- if activity_name.length > 0
+  %table.material_detail
+    %tr
+      %td.title Activity: 
+      %td 
+        = activity_name
+%br
+- if clazzes.length > 0
+  %div Select Class(es)
+  %form{:id=>"add_material_form"}
+    %table.material_detail{:width=>"100%"}
+      - clazzes.each do|clazz|
+        %tr
+          %td.check_box
+            = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s
+            
+          %td 
+            = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
+            - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
+              (Activity #{activity_name} is already assigned)
+- else
+  .messagetext This material is assigned to all the classes
+%br
+%table.classdata
+  %tr
+    - if clazzes.length > 0
+      %td
+        = link_to_remote "Save", :url => {:action=>'add_material_to_clazzes', :material_id => material.id,:material_type => material.class.to_s}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
+    %td
+      = link_to "Cancel", "#",:onclick=>"close_popup()" 

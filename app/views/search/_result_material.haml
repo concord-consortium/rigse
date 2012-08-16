@@ -15,31 +15,8 @@
             = type
       %td.material_list
         - materials.each do |investigation|
-          .material_list_item
-            %div
-              - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
-              - offerings=Portal::Offering.where(:runnable_id=>investigation.id, :runnable_type=>"Investigation", :clazz_id=>teacher_clazz_ids)
-              
-              %div{:style=>'overflow:hidden'}
-                %span.material_header
-                  = investigation.name
-                  - offering_clazz_names = offerings.map{|o| o.clazz.name}
-                - if(offerings.length>0)
-                  %span.assignedTo
-                    (Assigned to
-                    = offering_clazz_names.join(", ")+")"
-                .material_button{:style=>'float:right'}
-                  = button_to 'Assign to class',:class=>"button"
-                .material_button{:style=>'float:right'}
-                  = button_to "Preview"
-            .material_body
-              -unless investigation.description.nil?
-                = investigation.description.html_safe 
-              %i
-                -if(investigation.offerings_count==0)
-                  Not used in any class.
-                -else
-                  Used in #{investigation.offerings_count} classes.
+          %div.material_list_item{:id=>"search_investigation_#{investigation.id}"}
+            = render :partial => 'result_item', :locals=>{:material=>investigation}
   %br
   = will_paginate materials, {:param_name => 'investigation_page', :params => {:search_term => @search_term, :activity_page => 1}}
   

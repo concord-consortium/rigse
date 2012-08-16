@@ -3,10 +3,11 @@ class SearchController < ApplicationController
   in_place_edit_for :investigation, :search_term
   
   def index
-    unless current_user.portal_teacher
+    unless current_user.portal_teacher || current_user.anonymous?
       redirect_to root_path
       return
     end
+    flash[:notice] = nil
     search_options=get_investigation_searchoptions()
     @investigations = Investigation.search_list(search_options)
     @investigations_count = @investigations.length
@@ -18,10 +19,11 @@ class SearchController < ApplicationController
   end
   
   def show
-    unless current_user.portal_teacher
+    unless current_user.portal_teacher || current_user.anonymous?
       redirect_to root_path
       return
     end
+    flash[:notice] = nil
     @investigations_count=0
     @activities_count=0
     unless params[:investigation].nil?
@@ -91,6 +93,52 @@ class SearchController < ApplicationController
     if request.xhr?
        render :update do |page|
          page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@search_term.length,:investigations=>investigations,:activities=>activities}}
+       end
+    end
+  end
+  
+  def get_current_material_unassigned_clazzes
+    material_type = params[:material_type]
+    if material_type == "Investigation"
+      material = ::Investigation.find(params[:material_id])
+    elsif material_type == "Activity"
+      material = ::Activity.find(params[:material_id])
+    end
+  
+    teacher_clazzes = current_user.portal_teacher.teacher_clazzes
+    teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
+    teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
+    puts "Teacher Offerrrrrrrrrrrrrrings#{teacher_offerings.inspect}"
+    assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
+    unassigned_teacher_clazzes = teacher_clazzes.select{|item| assigned_clazz_ids.index(item.clazz_id).nil?}
+    unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
+    render :partial => 'material_unassigned_clazzes', :locals => {:material=>material,:clazzes=>unassigned_clazzes}
+  end
+  
+  def add_material_to_clazzes
+    clazz_ids = params[:clazz_id]
+    runnable_id = params[:material_id].to_i
+    runnable_type = params[:material_type].classify
+    clazz_ids.each do|clazz_id|
+      portal_clazz = Portal::Clazz.find(clazz_id)
+      offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(portal_clazz.id,runnable_type,runnable_id)
+      if offering.position == 0
+        offering.position = portal_clazz.offerings.length
+        offering.save
+      end
+    end
+    
+    if runnable_type == "Investigation"
+      material = ::Investigation.find(runnable_id)
+    elsif runnable_type == "Activity"
+      material = ::Activity.find(runnable_id)
+    end
+    
+    if request.xhr?
+       render :update do |page|
+         page << "alert('#{runnable_type} is assigned to the selected classes successfully.')"
+         page << "close_popup()"
+         page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
        end
     end
   end

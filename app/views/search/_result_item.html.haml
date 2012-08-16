@@ -1,0 +1,39 @@
+%div
+  - unless current_user.anonymous?
+    - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
+    - offerings=Portal::Offering.where(:runnable_id=>material.id, :runnable_type=>"#{material.class.to_s}", :clazz_id=>teacher_clazz_ids)
+  
+  %div{:style=>'overflow:hidden'}
+    %table{:width=>"100%"}
+      %tr
+        %td
+          %span.material_header
+            = material.name
+          - if material.parent
+            %span
+              from investigation
+              ="\"#{material.parent.name}\""
+          - unless current_user.anonymous?
+            - offering_clazz_names = offerings.map{|o| o.clazz.name}
+            - if(offerings.length>0)
+              %span.assignedTo
+                (Assigned to
+                = offering_clazz_names.join(", ")+")"
+        %td{:width=>"75px"}
+          %div{:style=>'float:right'}
+            = link_to "Preview",run_url_for(material,{}),:class=>"button"
+        %td{:width=>"125px"}
+          %div{:style=>'float:right'}
+            - if current_user.portal_teacher
+              = link_to 'Assign to class','#',:class=>"button", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')"
+            - else
+              - flash[:notice]= "Please login or register as a teacher"
+              = link_to 'Assign to class',home_url,:class=>"button"
+.material_body
+  -unless material.description.nil?
+    = material.description.html_safe 
+  %i
+    -if(material.offerings.count == 0)
+      Not used in any class.
+    -else
+      Used in #{material.offerings.count} classes.

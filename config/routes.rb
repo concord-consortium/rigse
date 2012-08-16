@@ -1,6 +1,8 @@
 RailsPortal::Application.routes.draw do
   get "search/index"
   match '/search/list/filter' => 'search#show', :as => :list_filter_search, :method => :get
+  post '/search/get_current_material_unassigned_clazzes'
+  post '/search/add_material_to_clazzes'
 
 
 constraints :id => /\d+/ do
