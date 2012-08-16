@@ -155,6 +155,14 @@ Given /^the following student answers:$/ do |answer_table|
   end
 end
 
+Given /^the student "([^"]*)" has run the investigation "([^"]*)" in the class "([^"]*)"$/ do |student, investigation, clazz|
+  student = User.find_by_login(student).portal_student
+  clazz = Portal::Clazz.find_by_name(clazz)
+  investigation = Investigation.find_by_name(investigation)
+  offering = find_or_create_offering(investigation, clazz)
+  learner = offering.find_or_create_learner(student)
+end
+
 Given /^a recording of a report for "([^"]*)"$/ do |name|
   investigation = Investigation.find_by_name(name)
   buffer = StringIO.new

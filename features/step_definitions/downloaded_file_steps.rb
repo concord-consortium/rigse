@@ -8,7 +8,7 @@ Then /^the jnlp should not be cached$/ do
   headers['Cache-Control'].should match "no-cache"
 end
 
-Then /^a jnlp file should be downloaded$/ do
+Then /^a jnlp file is downloaded$/ do
   headers = page.driver.response.headers
   headers["Content-Type"].should match "application/x-java-jnlp-file"
 
@@ -20,28 +20,43 @@ Then /^a jnlp file should be downloaded$/ do
 
 end
 
-Then /^the jnlp file has a configuration for the student and offering$/ do
+def xml_text_or_nil(xpath_result)
+  xpath_result.first.text unless xpath_result.blank?
+end
+
+def download_config(session)
   argument = @jnlp_xml.xpath("/jnlp/application-desc/argument")
   config_url = argument.text
-  Capybara.session_name = :java_session
+  Capybara.session_name = session
   visit config_url
   headers = page.driver.response.headers
   headers["Content-Type"].should match "application/xml"
 
   @config_xml = Nokogiri::XML(page.driver.response.body)
 
-  # check the otml url
-  otml_url = @config_xml.xpath(
+  @config_otml_url = xml_text_or_nil @config_xml.xpath(
   	 "//void[@method='setProperty']/string[preceding-sibling::string[text()='sailotrunk.otmlurl']]"
   )
 
-  investigation = Investigation.first
-  otml_url.text.should match %r{investigations/#{investigation.id}.*otml}
-
-  # check the bundle post url
-  bundle_post_url = @config_xml.xpath(
+  @config_bundle_post_url = xml_text_or_nil @config_xml.xpath(
  	"//object[contains(@class,'PortfolioManagerService')]/void[@property='bundlePoster']/*/void[@property='postUrl']/string"
-  	)
+  )
+end
+
+Then /^the jnlp file has a configuration for the student and offering$/ do
+  download_config(:java_session)
+
+  investigation = Investigation.first
+  @config_otml_url.should match %r{investigations/#{investigation.id}.*otml}
+
   learner = Portal::Learner.first
-  bundle_post_url.text.should match %r{bundle_loggers/#{learner.bundle_logger.id}.*bundle}  
+  @config_bundle_post_url.should match %r{bundle_loggers/#{learner.bundle_logger.id}.*bundle}  
+end
+
+Then /^I simulate opening the jnlp a second time$/ do
+  download_config(:java_session2)
+end
+
+Then /^I should see an error message in the Java application$/ do
+  @config_otml_url.should match /invalid/
 end
