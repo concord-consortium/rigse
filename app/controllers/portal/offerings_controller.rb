@@ -1,6 +1,8 @@
 class Portal::OfferingsController < ApplicationController
   
   include RestrictedPortalController
+  include Portal::LearnerJnlpRenderer
+  
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
   before_filter :student_teacher_admin_or_config, :only => [:answers]
 
@@ -62,16 +64,7 @@ class Portal::OfferingsController < ApplicationController
       format.jnlp {
         # check if the user is a student in this offering's class
         if learner = setup_portal_student
-          if(!learner.bundle_logger.in_progress_bundle)
-            learner.bundle_logger.start_bundle
-          end
-
-          launch_event = Dataservice::LaunchProcessEvent.create(
-            :event_type => Dataservice::LaunchProcessEvent::TYPES[:jnlp_requested],
-            :event_details => "Activity launcher delivered. Activity should be opening...",
-            :bundle_content => learner.bundle_logger.in_progress_bundle
-          )
-          render :partial => 'shared/learn_or_installer', :locals => { :skip_installer => params.delete(:skip_installer), :runnable => @offering.runnable, :learner => learner }
+          render_learner_jnlp learner
         else
           # The current_user is a teacher (or another user acting like a teacher)
           render :partial => 'shared/show_or_installer', :locals => { :skip_installer => params.delete(:skip_installer), :runnable => @offering.runnable, :teacher_mode => true }

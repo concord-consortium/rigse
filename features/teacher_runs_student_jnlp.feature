@@ -25,3 +25,4 @@ Feature: Teacher runs student jnlps
   Scenario: Teacher runs student jnlp from Class Page
     When I run the student's investigation
     Then a jnlp file is downloaded
+    And the jnlp file has a read-only configuration for the student and offering

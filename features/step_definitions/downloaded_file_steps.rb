@@ -53,6 +53,16 @@ Then /^the jnlp file has a configuration for the student and offering$/ do
   @config_bundle_post_url.should match %r{bundle_loggers/#{learner.bundle_logger.id}.*bundle}  
 end
 
+Then /^the jnlp file has a read-only configuration for the student and offering$/ do
+  download_config(:java_session)
+
+  investigation = Investigation.first
+  @config_otml_url.should match %r{investigations/#{investigation.id}.*otml}
+
+  learner = Portal::Learner.first
+  @config_bundle_post_url.should be_nil
+end
+
 Then /^I simulate opening the jnlp a second time$/ do
   download_config(:java_session2)
 end

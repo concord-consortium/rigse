@@ -3,6 +3,7 @@ class Portal::LearnersController < ApplicationController
   layout 'report', :only => %w{report open_response_report multiple_choice_report bundle_report}
   
   include RestrictedPortalController
+  include Portal::LearnerJnlpRenderer
   
   before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report]
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
@@ -91,8 +92,7 @@ class Portal::LearnersController < ApplicationController
     
     respond_to do |format|
       format.html # show.html.erb
-      format.jnlp { render :partial => 'shared/learn',
-        :locals => { :runnable => @portal_learner.offering.runnable, :learner => @portal_learner } }
+      format.jnlp { render_learner_jnlp @portal_learner }
       format.config { 
         # if this isn't the learner then it is launched read only
         properties = {}
