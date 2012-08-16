@@ -1,10 +1,15 @@
 - content_for :top_menu_items do
   =link_to(TOP_LEVEL_CONTAINER_NAME_PLURAL, investigations_path)
 
-=render :partial => 'sessions/new'
-.padded_content
-  - unless current_project.home_page_content.nil? || current_project.home_page_content.empty?
-    = current_project.home_page_content.html_safe unless current_project.home_page_content.nil?
-  - else
-    - render_project_info
-    = content_for :project_info
+- if current_project.nil?
+  You need to create a project object for this portal. One way to do this is run 
+  %pre 
+    bin/rake app:setup:new_app
+- else
+  =render :partial => 'sessions/new'
+  .padded_content
+    - unless current_project.home_page_content.blank?
+      = current_project.home_page_content.html_safe
+    - else
+      - render_project_info
+      = content_for :project_info

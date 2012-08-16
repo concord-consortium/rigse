@@ -51,6 +51,10 @@ module NavigationHelpers
     when /the investigations page for "(.*)"/
       inv = Investigation.find_by_name $1
       investigation_path inv
+    when /the first page of the "(.*)" investigation/ 
+      investigation = Investigation.find_by_name($1)
+      page = investigation.pages.first
+      page_path(page)
     when /the investigations like "(.*)"/
       "/investigations?name=#{$1}"
     when /the resource pages printable index page/
@@ -64,10 +68,16 @@ module NavigationHelpers
     when /the user preferences page for the user "(.*)"/
       user = User.find_by_login $1
       preferences_user_path user
+    when /the switch page/
+      switch_user_path User.find_by_login(@cuke_current_username)
     when /the requirements page/
       "/requirements/"
     when /the about page/
       "/about"
+    when /the admin create notice page/
+      "/admin/site_notices/new"
+    when /the site notices index page/  
+      "/admin/site_notices"
     when /the password reset page/
       "/change_password/0"
     when /the edit security questions page for the user "(.*)"/
@@ -78,8 +88,26 @@ module NavigationHelpers
       $1
     when /\/[\S+\/]+/
       page_name
-
-
+    when /the class edit page for "(.+)"/
+      portal_clazz = Portal::Clazz.find_by_name $1
+      "/portal/classes/#{portal_clazz.id}/edit"
+    when /"Student Roster" page for "(.+)"/
+      portal_clazz = Portal::Clazz.find_by_name $1
+      "/portal/classes/#{portal_clazz.id}/roster"
+    when /the full status page for "(.+)"/
+      portal_clazz = Portal::Clazz.find_by_name $1
+      "/portal/classes/#{portal_clazz.id}/fullstatus"
+    when /Manage Class Page/
+      "/portal/classes/manage"
+    when /Recent Activity Page/
+      "/recent_activity"  
+    when /Instructional Materials page for "(.+)"/
+      portal_clazz = Portal::Clazz.find_by_name $1
+      "/portal/classes/#{portal_clazz.id}/materials"
+    when /report of offering "(.+)"/
+      investigation = Investigation.find_by_name($1)
+      offering = Portal::Offering.find_by_runnable_id investigation.id
+      "/portal/offerings/#{offering.id}/report"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

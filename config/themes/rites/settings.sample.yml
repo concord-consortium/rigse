@@ -23,7 +23,6 @@ development: &id003
   :site_district: RITES Investigations-district
   :help_email: rites-investigations@concord.org
   :use_gse: true
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :login: stephen
@@ -70,7 +69,6 @@ production:
   :site_district: RITES Investigations-district
   :help_email: rites-investigations@concord.org
   :use_gse: true
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :login: stephen

@@ -70,7 +70,12 @@ Given /^I am logged in with the username ([^"]*)$/ do |username|
   login_as(username)
 end
 
-Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
+Given /^(?:|I )login with username[\s=:,]*(\S+)$/ do |username|
+  login_as(username)
+  visit "/"
+end
+
+Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
   login_with_ui_as(username, password)
 end
 
@@ -120,6 +125,10 @@ end
 
 Then /^I should not see the xpath "([^"]*)"$/ do |xpath|
   page.should have_no_xpath xpath
+end
+
+Then /^I should see the xpath "([^"]*)"$/ do |xpath|
+  page.should have_xpath xpath
 end
 
 Then /^the location should be "([^"]*)"$/ do |location|

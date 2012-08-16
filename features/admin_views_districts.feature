@@ -18,6 +18,7 @@ Feature: Admin views districts
     When follow "Districts"
     When I follow "create District"    
     And I fill in "portal_district_name" with "Test District"
+    And I select "WY" from "portal_district[state]"
     And press "Save"
     And I follow "Districts"
     Then I should see "Test District"

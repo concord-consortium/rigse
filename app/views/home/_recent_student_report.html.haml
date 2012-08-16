@@ -1,0 +1,64 @@
+%br
+- runnable = offering.runnable
+- activities = []
+- if runnable.is_a? ::Investigation
+  - activities = runnable.activities
+- else runnable.is_a? ::Activity
+  - activities = [runnable]
+
+- if activities.length > 0
+  - if offering.inprogress_students_count > 0
+    #recent_activity_inprogress
+      .student_div.floatL
+        = render :partial => 'home/recent_student_report_learner_list', :locals=> {:offering=>offering, :students=>students, :learners=>learners}  
+      .progress_summary_container.webkit_scrollbars
+        %table.inProgressSummary
+          %tr
+            - activity_counter = 0
+            - activities.each do |activity|
+              - unless activity.teacher_only
+                - activity_counter = activity_counter + 1
+                - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
+                %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}",:title=>"#{activity.name}"}
+                  %div.progressbar_container
+                    = activity_name
+          = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
+  - else
+    %table.messagetable
+      %tr
+        %th
+          In Progress
+      %tr
+        %td No students with incomplete progress. 
+  %br
+  
+  - if offering.notstarted_students_count > 0
+    %table.inProgressSummary
+      %tr
+        %th
+          Not Yet Started
+      = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
+  - else
+    %table.messagetable
+      %tr
+        %th
+          Not Yet Started
+      %tr
+        %td All students have started this investigation.
+  %br
+  
+  - if offering.completed_students_count > 0
+    %table.inProgressSummary
+      %tr
+        %th
+          Completed
+      = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100, :students=>students, :learners=>learners}
+  - else
+    %table.messagetable
+      %tr
+        %th
+          Completed
+      %tr
+        %td No student has completed this investigation yet.
+- else
+  %div.item No activities available in this investigation.

@@ -14,6 +14,7 @@ end
 
 
 def for_each_model_instance(find_conditions = {}, &block)
+
   skip = [Itsi::Itsi, Ccportal::Ccportal, Embeddable::Embeddable, ActiveRecord::SessionStore::Session]
   ar_models = ActiveRecord::Base.descendants.delete_if {|m| skip.include?(m) }.sort_by{|m| m.name }
   find_conditions.merge!({:batch_size => 5})
@@ -34,8 +35,60 @@ def for_each_model_instance(find_conditions = {}, &block)
   end
 end
 
+def all_active_record_classes
+  model_classes = ActiveRecord::Base.connection.tables.map{|table_name| 
+    if clazz = table_name.classify.safe_constantize 
+      clazz
+    else
+      table_name_parts = table_name.split('_')
+      module_name = []
+      module_name << table_name_parts.shift
+
+      if clazz = "#{module_name.join('_').classify}::#{table_name_parts.join('_').classify}".safe_constantize
+        clazz
+      else 
+        module_name << table_name_parts.shift        
+        "#{module_name.join('_').classify}::#{table_name_parts.join('_').classify}".safe_constantize
+      end
+    end
+  }.compact
+end
+
 namespace :app do
   namespace :validate do
+    desc "List model instances"
+    task :list_model_class_names => :environment do
+      all_active_record_classes.each{|clazz| puts clazz.name}
+    end
+
+    task :count_invalid_instances => :environment do
+      count = 0
+      all_active_record_classes.each{|clazz| 
+        print clazz.name
+        if [Portal::Nces06School, Portal::School, RiGse::AssessmentTargetUnifyingTheme].include? clazz
+          puts "skipped"
+          next
+        end
+        class_count = 0
+        model_count = 0
+        clazz.find_each do |model|
+          begin
+            if !model.valid?
+              count += 1
+              class_count += 1
+            end
+          rescue
+            count += 1
+            class_count += 1
+          end
+          model_count += 1
+          print '.' if (model_count % 1000 == 0)
+        end
+        puts class_count
+      }
+      puts "total: #{count}"
+    end
+
     desc "Process all of the model objects and find timestamps that have nil values"
     task :fix_nil_timestamps => :environment do
       (puts "You must run this rake task in production mode!" and return) unless Rails.env.production?

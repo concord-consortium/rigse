@@ -11,9 +11,9 @@ Feature: Teacher can edit their class information
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
-    When I am logged in with the username teacher
-    And go to the class page for "My Class"
-    When I follow "edit"
+    And I am logged in with the username teacher
+    When I go to the class page for "My Class"
+    And I follow "edit"
     Then I should be on the class edit page for "My Class"
 
   Scenario: Anonymous user can not view class
@@ -21,8 +21,8 @@ Feature: Teacher can edit their class information
       | name      |
       | My Class  |
     And I am an anonymous user
-    When I go to the class page for "My Class"
-    Then I should be on my home page
+    When I go to the class page for "My Class" 
+    Then I should be on "my home page"
 
   Scenario: Anonymous user cannot not edit class
     Given the following classes exist:
@@ -30,4 +30,9 @@ Feature: Teacher can edit their class information
       | My Class  |
     And I am an anonymous user
     When I go to the class edit page for "My Class"
-    Then I should be on my home page
+    Then I should be on "my home page"
+    
+
+    
+   
+    

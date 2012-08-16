@@ -51,17 +51,6 @@ module StringExtensions
 end
 String.send(:include, StringExtensions)
 
-module ActionView
-  module Helpers
-    module CaptureHelper
-      def set_content_for(name, content = nil, &block)
-        @_content_for.delete(name)
-        content_for(name, content, &block)
-      end
-    end
-  end
-end
-
 # Sproutcore wants urls with fragment then query, whereas default URI ouputs query then fragment
 module URI
   class Generic

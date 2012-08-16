@@ -1,0 +1,39 @@
+%p Your age:
+%p
+  = radio_button :user, :of_consenting_age, "true"
+  I am 18 years old or older.
+%p
+  = radio_button :user, :of_consenting_age, "false"
+  I am under 18 years old.
+
+  #consent_form{:style => ("display: none;" unless @user.asked_age? && @user.of_consenting_age?)}
+    = render :partial => "shared/consent/consent_form"
+:javascript
+  var consenting_age_true  = $('user_of_consenting_age_true');
+  var consenting_age_false = $('user_of_consenting_age_false');
+  var consent_true  = $('user_have_consent_true');
+  var consent_false = $('user_have_consent_false');
+  var consent_form  = $('consent_form');
+
+- unless @user.asked_age
+  :javascript
+    // initialy nothing is checked:
+    consenting_age_true.checked = false;
+    consenting_age_false.checked = false;
+
+:javascript
+  var consenting_age = function() {
+    return consenting_age_true.checked
+  }
+  var showconsent = function() {
+    if(consenting_age()) {
+      consent_form.show();
+      consent_true.checked = true;
+      consent_false.checked = false;
+    }
+    else {
+      consent_form.hide();
+    }
+  }
+  consenting_age_true.observe('click',showconsent);
+  consenting_age_false.observe('click',showconsent);

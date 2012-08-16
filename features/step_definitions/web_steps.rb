@@ -40,7 +40,7 @@ end
 # hacky fix for bug junit reports in capybara (> 0.9.0)
 # jenkins will choke on nested CDATA entries.
 When /^(.*) in the content$/ do |step|
-  When "#{step} within #primary"
+  step "#{step} within #primary"
 end
 
 # Multi-line step scoper
@@ -56,8 +56,15 @@ When /^(?:|I )go to (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
+
 When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
+end
+
+When /^(?:|I )press "([^"]*)" inside element with selector "([^"]*)"$/ do |button, selector|
+  within(selector) do
+    find_button(button).click
+  end
 end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
@@ -107,6 +114,18 @@ end
 
 When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
   attach_file(field, File.expand_path(path))
+end
+
+And /^I accept the upcoming javascript confirm box$/ do
+  page.evaluate_script('window.confirm = function() { return true; }')
+end
+
+And /^I decline the upcoming javascript confirm box$/ do
+  page.evaluate_script('window.confirm = function() { return false; }')
+end
+
+Then /^(?:|I )should see "([^"]*)" (\d+) times?$/ do |text, count|
+  (page.find(:xpath, '//body').text.split(text).length - 1).should == count.to_i
 end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
@@ -192,8 +211,23 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label
 end
  
 Then /^(?:|I )should be on (.+)$/ do |page_name|
+  # often path_to does a DB lookup, and often this is called while the page is still loading
+  # since there is only a single DB connection this can result in 2 threads trying to use the same connection at once
+  # so to work around this, we just try multple times if there is an error
+  expected_path = nil
+  3.times { |time|
+    begin
+      expected_path = path_to(page_name)
+      break
+    rescue
+      throw if time == 2
+      sleep(0.05)
+      next
+    end
+  }
+
+
   # add simple retry support incase there is a redirect here
-  expected_path = path_to(page_name)
   10.times {
     current_path = URI.parse(current_url).path
     break if current_path == expected_path
@@ -222,3 +256,39 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+
+And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
+  page.execute_script("
+    var bSuccess = false;
+    
+    var strDropdownId = '#{dropdown_id}_chzn';
+    var arrListItems =  Prototype.Selector.select('#'+ strDropdownId +'> div.chzn-drop > ul.chzn-results > li');    
+    
+    for (var i = 0; i < arrListItems.length; i++)
+    {
+      if (arrListItems[i].innerHTML.stripTags().strip() == '#{label}')
+      {
+        bSuccess = true;
+        arrListItems[i].simulate('mouseup');
+        break;
+      }
+    }
+    
+    return bSuccess;
+  ")
+end
+
+And /^I receive a file for download with a filename like "(.+)"$/ do |filename|
+
+  pattern = "filename=(.*?)#{Regexp.escape(filename)}(.*?)"
+  pattern = Regexp.compile(pattern)
+
+  page.response_headers['Content-Disposition'].should =~ pattern
+end
+
+And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor_id|
+  evaluate_script("tinyMCE.getInstanceById('#{editor_id}').setContent('#{html}');")
+end
+
+

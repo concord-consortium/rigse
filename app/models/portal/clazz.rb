@@ -7,8 +7,10 @@ class Portal::Clazz < ActiveRecord::Base
   belongs_to :semester, :class_name => "Portal::Semester", :foreign_key => "semester_id"
   # belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
 
-  has_many :offerings, :dependent => :destroy, :class_name => "Portal::Offering", :foreign_key => "clazz_id"
-  has_many :active_offerings, :class_name => "Portal::Offering", :foreign_key => 'clazz_id', :conditions => { :active => true }
+  has_many :offerings, :dependent => :destroy, :class_name => "Portal::Offering", :foreign_key => "clazz_id",
+    :order => :position
+  has_many :active_offerings, :class_name => "Portal::Offering", :foreign_key => 'clazz_id', 
+    :conditions => { :active => true }, :order => :position
 
   has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
   has_many :students, :through => :student_clazzes, :class_name => "Portal::Student"
@@ -23,7 +25,8 @@ class Portal::Clazz < ActiveRecord::Base
   before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
-
+  validates_presence_of :name
+  
   include Changeable
 
   # String constants for error messages -- Cantina-CMH 6/2/10
@@ -322,5 +325,16 @@ class Portal::Clazz < ActiveRecord::Base
     default_offerings       = self.active_offerings.reject { |o| real_offering_runnables.include?(o.runnable) }
     default_offerings
   end
+
+  def update_offerings_position
+    offerings = self.offerings.sort {|a,b| a.position <=> b.position}
+    position = 1
+    offerings.each do|offering|
+      offering.position = position
+      offering.save
+      position += 1
+    end
+  end
+  
 
 end

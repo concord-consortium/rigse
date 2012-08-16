@@ -4,7 +4,7 @@ require 'haml'
 require File.expand_path('../../lib/yaml_editor', __FILE__)
 
 set :stages, %w(
-  rites-dev rites-staging rites-production
+  rites-staging rites-production
   itsisu-dev itsisu-staging itsisu-production
   smartgraphs-dev smartgraphs-staging smartgraphs-production
   has-dev has-staging has-production
@@ -12,10 +12,11 @@ set :stages, %w(
   genigames-baseline-production genigames-ungamed-production
   assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
+  interactions-aws-staging interactions-aws-production
   xproject-dev
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
-  sparks-dev sparks-staging sparks-production
+  sparks-dev sparks-staging sparks-production sparks-aws1
   xproject3-dev xproject32-dev )
 
 set :default_stage, "development"
@@ -216,7 +217,6 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/sis_import_data"
     run "mkdir -p #{shared_path}/config/nces_data"
     run "mkdir -p #{shared_path}/public/otrunk-examples"
-    run "mkdir -p #{shared_path}/public/sparks-content"
     run "mkdir -p #{shared_path}/public/installers"
     run "mkdir -p #{shared_path}/config/initializers"
     run "mkdir -p #{shared_path}/system/attachments" # paperclip file attachment location
@@ -228,6 +228,7 @@ namespace :deploy do
     run "touch #{shared_path}/config/initializers/site_keys.rb"
     run "touch #{shared_path}/config/initializers/subdirectory.rb"
     run "touch #{shared_path}/config/database.yml"
+    run "touch #{shared_path}/config/google_analytics.yml"
 
     # support for running a SproutCore app from within the public directory
     run "mkdir -p #{shared_path}/public/static"
@@ -239,19 +240,21 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
     run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"
+    run "ln -nfs #{shared_path}/config/paperclip.yml #{release_path}/config/paperclip.yml"
+    run "ln -nfs #{shared_path}/config/aws_s3.yml #{release_path}/config/aws_s3.yml"
+    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
     run "ln -nfs #{shared_path}/config/sis_import_data.yml #{release_path}/config/sis_import_data.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
-    run "ln -nfs #{shared_path}/public/sparks-content #{release_path}/public/sparks-content"
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/sis_import_data #{release_path}/sis_import_data"
     run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
-    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
+    run "ln -nfs #{shared_path}/config/google_analytics.yml #{release_path}/config/google_analytics.yml"
 
     # support for running SproutCore app from the public directory
     run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
@@ -328,7 +331,7 @@ namespace :import do
     run "cd #{shared_path} && " +
       "mkdir -p public && " +
       "cd public && " +
-      "git clone git://github.com/stepheneb/otrunk-examples.git"
+      "git clone git://github.com/concord-consortium/otrunk-examples.git"
   end
 
   desc"Download nces data files from NCES websites"
@@ -355,13 +358,10 @@ namespace :import do
     "bundle exec rake RAILS_ENV=#{rails_env} app:import:rinet --trace"
   end
 
-  # 01/27/2010
-  desc "create or update a git svn clone of sparks-content"
-  task :create_or_update_sparks_content, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-    "bundle exec rake RAILS_ENV=#{rails_env} app:import:create_or_update_sparks_content --trace"
+  desc "Restore couchdb from S3"
+  task :restore_couchdb_from_backup, :roles => :app do
+    sudo "/usr/bin/restore_couchdb.sh"
   end
-
 end
 
 #############################################################
@@ -447,12 +447,6 @@ namespace :convert do
   task :copy_truncated_xhtml_into_name, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:copy_truncated_xhtml_into_name --trace"
-  end
-
-  desc "create default Project from config/settings.yml"
-  task :create_default_project_from_config_settings_yml, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:create_default_project_from_config_settings_yml --trace"
   end
 
   desc "generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls"

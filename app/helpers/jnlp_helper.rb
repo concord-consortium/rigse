@@ -1,7 +1,7 @@
 module JnlpHelper
   
   def jnlp_adaptor
-    @_jnlp_adaptor ||= JnlpAdaptor.new(current_project)
+    @_jnlp_adaptor ||= JnlpAdaptor.new
   end
   
   def jnlp_icon_url
@@ -167,7 +167,7 @@ module JnlpHelper
   
   def jnlp_information(xml, learner = nil)
     xml.information { 
-      xml.title current_project.name
+      xml.title APP_CONFIG[:site_name]
       xml.vendor "Concord Consortium"
       xml.homepage :href => APP_CONFIG[:site_url]
       xml.description APP_CONFIG[:description]

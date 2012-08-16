@@ -1,0 +1,43 @@
+= javascript_include_tag "student_roster.js" 
+.maincontainer.pie
+  .container
+    .content
+      = f.error_messages
+    %div{:id=>"student_roster"}
+      %table.classdata.floatR
+        %tr
+          %td.title=label_tag :name, 'Teacher ', :class=>"left"
+          %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class=>"labelvalue"
+          %td.title=label_tag :name, 'Semester ', :class=>"left"
+          %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class=>"labelvalue"
+          %td.title=label_tag :name, 'Class Word ', :class=>"left"
+          %td=label_tag :name, portal_clazz.class_word, :class=>"labelvalue"
+      .header.clearBoth Student Roster
+      .classsummary
+        ='Class Name : '
+        %span{:style => "font-weight:bold"} #{portal_clazz.name}
+        %br
+        ='Student Count :' 
+        %span{:id=>"oClassStudentCount", :style => "font-weight:bold"} #{portal_clazz.students.length}
+      %table.classdata
+        %tr
+          %td.hide_in_print{:style=>"padding-left:10px"}
+            %input{:type=>"button", :value=>"Print Student Roster", :onclick=>"window.print();", :class=>"pie"}
+      %br.clearBoth
+      %br
+      %table.add_student{:width=>"100%"}
+        %tr
+          %td.hide_in_print{:style=>"padding-left:10px"}
+            = student_add_dropdown(portal_clazz)
+          %td.hide_in_print{:style=>"text-align:right"}
+            - add_student_url = new_portal_student_path(:clazz_id => portal_clazz.id)
+            = link_to "Register and add new student", "#", :title => "add a student to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
+            
+      %table.student_list{:width=>"100%"}
+        %tr
+          %td{:style=>"padding-left:5px"}
+            .item{:id=>'students_listing'}
+              = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => portal_clazz}
+            
+      = f.hidden_field :teacher_id
+      = f.hidden_field :id

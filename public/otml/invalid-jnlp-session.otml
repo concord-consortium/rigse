@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="42248aa0-e5c3-11e1-aff1-0800200c9a66" >
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+  </imports>
+  
+  <objects>
+    <OTSystem>
+    
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <viewEntries>
+            <OTViewEntry 
+              objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>               
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      
+      <root>
+        <OTCompoundDoc name="Document Object">
+          <bodyText>
+            Sorry the jnlp file that was launched is no longer valid. 
+            <br/>
+            Please go back to your browser and run the activity again.
+          </bodyText>
+        </OTCompoundDoc>
+      </root>
+      
+    </OTSystem>
+  </objects>
+</otrunk>

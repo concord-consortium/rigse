@@ -4,11 +4,7 @@ YAML::ENGINE.yamler= "psych" if defined?(YAML::ENGINE)
 source "http://rubygems.org"
 
 #### COMMON
-  if ENV['RB_MYSQL2']
-    gem "mysql2",             '~> 0.3', :platforms => [:ruby,:mingw]
-  else
-    gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
-  end
+  gem "mysql2",             '~> 0.3', :platforms => [:ruby,:mingw]
 
   platforms :jruby do
     gem "activerecord-jdbcmysql-adapter",  "~> 1.1.3"
@@ -50,18 +46,20 @@ source "http://rubygems.org"
   gem "activerecord-import",  "~> 0.2.8"
   # gem "fastercsv",            "~> 1.5"
   gem "net-sftp",             "~> 2.0",   :require => "net/sftp"
-  gem "maruku",               "~> 0.6"
+  gem "redcarpet",            "~> 2.1.1"
   gem "syntax",               "~> 1.0"
   gem "paperclip",            "~> 2.4.0"
   gem "acts-as-taggable-on",  "~> 2.1.1"
+  gem "acts_as_list",         "~> 0.1.6"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
   gem 'themes_for_rails',     "~> 0.5.0.pre"
-  gem 'default_value_for',    "~> 1.0.5"
+  gem 'default_value_for',    "~> 2.0.1"
   gem 'exception_notification', "~> 2.5.2"
   gem 'prototype-rails'
   # switch to willbryant inorder to pick up some 3.1 necessary changes
   gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/willbryant/prototype_legacy_helper.git'
+  gem "in_place_editing",     "~> 1.2.0"
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
@@ -70,9 +68,10 @@ source "http://rubygems.org"
   gem 'delayed_job',          "~> 3.0.1"
   gem 'delayed_job_active_record', "~> 0.3.2"
   gem 'daemons',              "~> 1.1.8"
-  gem 'rush',                 "~> 0.6.7"
+  gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
   # to support hosting paperclip attachments on S3:
   gem "aws-s3",               :require => "aws/s3"
+  gem "newrelic_rpm"
 
 group :development do
   gem "rake",                 "~> 0.9.2"
@@ -87,36 +86,24 @@ group :development do
   gem "pry"
 end
 
-group :test, :development do
-  # When I tried version 2.21.2 before it gave errors like:
-  # cannot load such file -- {
-  #   "frozen": {
-  #     "app.update.auto": false,
-  #  ...
-  #  (LoadError)
-  # ./features/step_definitions/global_steps.rb:13:in `login_as'
-  # Version 2.16 didn't have this problem. However it is possible I got that error when
-  # I was running an older version of FF. I'm not getting the error now.
-  gem "selenium-webdriver", "2.21.2"
+group :test do
+  gem "selenium-webdriver", "2.25.0"
   gem "cucumber",          "~> 1.1.9"
-  gem "cucumber-rails",    "~> 1.3.0"
+  gem "cucumber-rails",    "~> 1.3.0", :require => false
   gem "database_cleaner",  "~> 0.7.2"
   gem "capybara",          "~> 1.1.2"
   gem "rspec",             "~> 2.9.0"
   gem "rspec-rails",       "~> 2.9.0"
-  gem "factory_girl",      "~> 2.0.5"
   gem "email_spec",        "~> 1.2.1"
   gem "fakeweb",           "~> 1.3", :require => false
-  gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
-  # If you update the version of ci_reporter
-  # please make sure to update the --require path in Hudson
   gem "ci_reporter",       "~> 1.7.0"
+  gem "delorean",           "~> 1.1"
+end
+
+group :test, :development do
+  gem "factory_girl",      "~> 2.0.5"
+  gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"
-  gem "delorean",           "~> 1.1"
-  # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
-  # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
-  # gem "ZenTest",                  "= 4.1.4"
-  # gem "autotest-rails",           "= 4.1.0"
 end

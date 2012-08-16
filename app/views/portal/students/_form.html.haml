@@ -37,47 +37,14 @@
             = render :partial => "security_questions/header"
             = render :partial => "security_questions/fields"
 
-    - if current_project.require_user_consent?
-      %tr
-        %td{:colspan => '2', :style=> "text-align: left;"}
-          %p Your age:
-          %p
-            = radio_button :user, :of_consenting_age, "true"
-            I am 18 years old or older.
-          %p
-            = radio_button :user, :of_consenting_age, "false"
-            I am under 18 years old.
-          - if @user.of_consenting_age?
-            #consent_form= render :partial => "shared/consent_form"
-          - else
-            #consent_form{:style => "display: none;"}= render :partial => "shared/consent_form"
-          :javascript
-            var consenting_age_true  = $('user_of_consenting_age_true');
-            var consenting_age_false = $('user_of_consenting_age_false');
-            var consent_true  = $('user_have_consent_true');
-            var consent_false = $('user_have_consent_false');
-            var consent_form  = $('consent_form');
-
-            // initialy nothing is checked:
-            consenting_age_true.checked = false;
-            consenting_age_false.checked = false;
-
-            var consenting_age = function() {
-              return consenting_age_true.checked
-            }
-            var showconsent = function() {
-              if(consenting_age()) {
-                consent_form.show();
-                consent_true.checked = true;
-                consent_false.checked = false;
-              }
-              else {
-                consent_form.hide();
-              }
-            }
-            consenting_age_true.observe('click',showconsent);
-            consenting_age_false.observe('click',showconsent);
-
+      - if current_project.require_user_consent?
+        %tr
+          %td{:colspan => '2', :style=> "text-align: left;"}
+            = render :partial => "shared/consent/ask_for_consent"
     %tr
       %td
-      %td= f.submit 'Submit'
+      - if signup
+        %td= f.submit 'Submit'
+      - else
+        %td
+          %input{:type=>"button", :value=>"Submit", :onclick=>"add_New_Student_To_Class();", :class=>"pie"}

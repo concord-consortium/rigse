@@ -5,6 +5,7 @@ class Portal::TeacherClazz < ActiveRecord::Base
   
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
+  default_scope :order => 'position ASC'
   
   [:name, :description].each { |m| delegate m, :to => :clazz }
   
@@ -37,4 +38,12 @@ class Portal::TeacherClazz < ActiveRecord::Base
     rescue
     end
   end
+
+  before_save do |teacher_clazz|
+    if teacher_clazz.id.nil?
+      position = teacher_clazz.teacher.teacher_clazzes.length + 1
+      teacher_clazz.position = position
+    end
+  end
+
 end

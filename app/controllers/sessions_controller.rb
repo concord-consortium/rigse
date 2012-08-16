@@ -109,7 +109,18 @@ class SessionsController < ApplicationController
     save_cc_cookie
     save_blog_cookie
     flash[:notice] = "Logged in successfully"
-    redirect_to(root_path) # unless !check_student_security_questions_ok
+    
+    redirect_path = root_path
+    
+    if current_user.portal_teacher
+      portal_teacher = current_user.portal_teacher
+      if (portal_teacher.teacher_clazzes.select{|tc| tc.active }).count > 0
+        # Teachers with active classes are redirected to the "Recent Activity" page
+        redirect_path = recent_activity_path
+      end
+    end
+    
+    redirect_to(redirect_path) # unless !check_student_security_questions_ok
   end
 
   def note_failed_signin

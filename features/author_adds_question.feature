@@ -16,7 +16,7 @@ Feature: An author adds multiple choice questions
       | testing fast cars | how fast can cars go? | author |
 
     And I am logged in with the username author
-    When I show the first page of the "testing fast cars" investigation
+    When I go to the first page of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
     When I add a "Multiple Choice Question" to the page
     Then I should see "Why do you think ..."
@@ -38,7 +38,7 @@ Feature: An author adds multiple choice questions
       | testing fast cars | how fast can cars go? | author |
 
     And I am logged in with the username author
-    When I show the first page of the "testing fast cars" investigation
+    When I go to the first page of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
     When I add a "Multiple Choice Question" to the page
     Then I should see "Why do you think ..."
@@ -53,7 +53,7 @@ Feature: An author adds multiple choice questions
     And I press "Save"
     # this is necessary to make sure the Save ajax request has completed
     Then I should not see "choices"
-    And I show the first page of the "testing fast cars" investigation
+    And I go to the first page of the "testing fast cars" investigation
     Then I should see "Why do you think ..."
     And I should see "b"
     And I should see "c"

@@ -16,6 +16,8 @@ class Investigation < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
+  has_many :external_activities, :as => :template
+
   @@embeddable_klasses = [
     Embeddable::Xhtml,
     Embeddable::OpenResponse,

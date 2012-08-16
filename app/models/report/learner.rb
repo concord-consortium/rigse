@@ -52,6 +52,9 @@ class Report::Learner < ActiveRecord::Base
     self.num_answerables = report_util.embeddables.size
     self.num_answered = report_util.answered_number(self.learner)
     self.num_correct = report_util.correct_number(self.learner)
+    self.complete_percent = report_util.complete_percent(self.learner)
+
+    update_activity_completion_status
 
     # We might also want to gather 'saveables' in An associated model?
     # AU: We'll use a serialized column to store a hash, for now
@@ -59,14 +62,17 @@ class Report::Learner < ActiveRecord::Base
     report_util.saveables(:learner => self.learner).each do |s|
       hash = {:answer => s.answer, :answered => s.answered? }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
-      if hash[:answer].kind_of?(Dataservice::Blob)
-        blob = hash[:answer]
-        hash[:answer] = {
-          :type => "Dataservice::Blob",
-          :id => blob.id,
-          :token => blob.token,
-          :file_extension => blob.file_extension
-        }
+      if hash[:answer].is_a? Hash
+        if hash[:answer][:blob]
+          blob = hash[:answer][:blob]
+          hash[:answer] = {
+            :type => "Dataservice::Blob",
+            :id => blob.id,
+            :token => blob.token,
+            :file_extension => blob.file_extension,
+            :note => hash[:answer][:note]
+          }
+        end
       end
       answers_hash["#{s.embeddable.class.to_s}|#{s.embeddable.id}"] = hash
     end
@@ -117,4 +123,25 @@ class Report::Learner < ActiveRecord::Base
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
   end
+  
+  def update_activity_completion_status
+    report_util = Report::Util.new(self.learner, false, true)
+    
+    offering = self.learner.offering
+    assignable = offering.runnable
+    activities = []
+    if assignable.is_a? ::Investigation
+      activities = assignable.activities
+    elsif assignable.is_a? ::Activity
+      activities = [assignable]
+    end
+    
+    activities.each do|activity|
+      complete_percent = report_util.complete_percent(self.learner,activity)
+      report_learner_activity = Report::LearnerActivity.find_or_create_by_learner_id_and_activity_id(self.learner.id, activity.id)
+      report_learner_activity.complete_percent = complete_percent
+      report_learner_activity.save!
+    end
+  end
+  
 end

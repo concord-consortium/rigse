@@ -75,7 +75,6 @@ require 'uuidtools'
 require rails_file_path(%w{ lib local_names })
 require rails_file_path(%w{ config initializers 00_core_extensions })
 require rails_file_path(%w{ lib app_settings })
-require rails_file_path(%w{ lib states_and_provinces })
 
 include AppSettings
 
@@ -715,7 +714,7 @@ Here are the current settings in config/database.yml:
       @db_config[env]['database'] = ask("  database name: ") { |q| q.default = @db_config[env]['database'] }
       @db_config[env]['username'] = ask("       username: ") { |q| q.default = @db_config[env]['username'] }
       @db_config[env]['password'] = ask("       password: ") { |q| q.default = @db_config[env]['password'] }
-      @db_config[env]['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
+      @db_config[env]['adapter'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql2<% end %>"
     end
 
     @db_config['cucumber'] = @db_config['test']
@@ -733,7 +732,7 @@ specify the values for the mysql database name, host, username, password, and as
     @db_config['itsi']['username']  = ask("       username: ") { |q| q.default = @db_config['itsi']['username'] }
     @db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
     @db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
-    @db_config['itsi']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
+    @db_config['itsi']['adapter'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql2<% end %>"
 
     puts <<-HEREDOC
 
@@ -747,7 +746,7 @@ specify the values for the mysql database name, host, username, password.
     @db_config['ccportal']['host']      = ask("           host: ") { |q| q.default = @db_config['ccportal']['host']  }
     @db_config['ccportal']['username']  = ask("       username: ") { |q| q.default = @db_config['ccportal']['username'] }
     @db_config['ccportal']['password']  = ask("       password: ") { |q| q.default = @db_config['ccportal']['password'] }
-    @db_config['ccportal']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
+    @db_config['ccportal']['adapter'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql2<% end %>"
 
     puts <<-HEREDOC
 
@@ -1004,21 +1003,6 @@ Any full member can become part of the site school and district.
       # ---- valid_school_levels  ----
       #
       get_active_school_levels(env)
-
-      #
-      # ---- enable_default_users ----
-      #
-      puts <<-HEREDOC
-
-A number of default users are created that are good for testing but insecure for
-production deployments. Setting this value to true will enable the default users
-setting it to false will disable the default_users for this envioronment.
-
-      HEREDOC
-      default_users = @settings_config[env][:enable_default_users]
-      default_users = false if default_users.nil?
-      default_users = ask("  enable_default_users: ", ['true', 'false']) { |q| q.default = default_users.to_s }
-      @settings_config[env][:enable_default_users] = eval(default_users)
 
       #
       # ---- maven_jnlp ----

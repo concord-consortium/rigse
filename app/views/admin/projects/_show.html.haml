@@ -12,16 +12,13 @@
           %p
             %ul.menu_v
               %li
-                Url: 
-                = h(admin_project.url)
-              %li
-                Default Users:
+                Project Active:
                 %b
-                  - if admin_project.enable_default_users
-                    enabled.
+                  - if admin_project.active
+                    Yes
                   - else
-                    disabled.
-                (Default users should normally be disabled on a production system.)
+                    No
+                (This option determines is this project is used for project settings.)
               %li
                 Student Security Questions:
                 %b
@@ -110,15 +107,6 @@
               %p
                 Jnlp CDN Hostname:
                 = admin_project.jnlp_cdn_hostname
-              %p
-                Maven Jnlp Server:
-                - if admin_project.maven_jnlp_server
-                  = admin_project.maven_jnlp_server.name
-                  %ul.menu_h
-                    -  maven_jnlp_info.each do |elem|
-                      %li= elem
-                - else
-                  no server configured
             = field_set_tag 'Geniverse Blog Integration' do
               %ul.menu_v
                 %li
@@ -135,7 +123,7 @@
                   %i
                     hidden
             = field_set_tag 'Project Description' do
-              %p= admin_project.description
+              %p= admin_project.description.html_safe
             = field_set_tag 'Home Page Content' do
               %p= admin_project.home_page_content.html_safe unless admin_project.home_page_content.nil?
             = render :partial => 'custom_css', :locals => { :admin_project => admin_project }

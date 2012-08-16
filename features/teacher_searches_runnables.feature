@@ -57,18 +57,18 @@ Feature: Investigations can be searched
   Scenario: looking at the second page of runnable investigations
     When I am on the class page for "My Class"
     And I click on the next page of results
-    Then I should still be on the class page for "My Class"
     Then  "x Good a" should be displayed in the investigations list
+    And I should be on the class page for "My Class"
 
   @javascript
   Scenario:  searching through the list of runnable investigations
-    When I visit the class page for "My Class"
+    When I go to the class page for "My Class"
     Then I enter "Investigation" in the search box
     And I wait for all pending requests to complete
     Then There should be 20 investigations displayed
     And  I should see "Next" within "#offering_list"
     When I click on the next page of results
-    Then I should still be on the class page for "My Class"
+    Then I should be on the class page for "My Class"
     And  I should see "Previous" within "#offering_list"
 
 

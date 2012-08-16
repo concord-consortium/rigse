@@ -5,6 +5,27 @@ Given /^the following empty investigations exist:$/ do |table|
   end
 end
 
+Given /^the following linked investigations exist:$/ do |table|
+  table.hashes.each do |hash|
+    user = User.find_by_login hash['user']
+    inv = Factory.create(:investigation, hash.merge('user' => user))
+      inv.activities << (Factory :activity, { :user => user })
+      inv.activities[0].sections << (Factory :section, {:user => user})
+      inv.activities[0].sections[0].pages << (Factory :page, {:user => user})
+      open_response = (Factory :open_response, {:user => user})
+      open_response.pages << inv.activities[0].sections[0].pages[0]
+      draw_tool = (Factory :drawing_tool, {:user => user, :background_image_url => "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg"})
+      draw_tool.pages << inv.activities[0].sections[0].pages[0]
+      snapshot_button = (Factory :lab_book_snapshot, {:user => user, :target_element => draw_tool})
+      snapshot_button.pages << inv.activities[0].sections[0].pages[0]
+      prediction_graph = (Factory :data_collector, {:user => user})
+      prediction_graph.pages << inv.activities[0].sections[0].pages[0]
+      displaying_graph = (Factory :data_collector, {:user => user, :prediction_graph_source => prediction_graph})
+      displaying_graph.pages << inv.activities[0].sections[0].pages[0]
+      inv.reload
+  end
+end
+
 Given /^the following simple investigations exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     user = User.first(:conditions => { :login => hash.delete('user') })
@@ -36,7 +57,7 @@ Given /^the author "([^"]*)" created an investigation named "([^"]*)" with text 
   investigation.save
 end
 
-#Table: | investigation | activity | section   | page   | multiple_choices |
+#Table: | investigation | activity | activity_teacher_only | section   | page   | multiple_choices |
 Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     investigation = Investigation.find_or_create_by_name(hash['investigation'])
@@ -44,6 +65,13 @@ Given /^the following investigations with multiple choices exist:$/ do |investig
     investigation.save
     # ITSISU requires descriptions on activities
     activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
+    
+    if hash['activity_teacher_only']
+      # Create a teacher only activity if specified
+      activity.teacher_only = (hash['activity_teacher_only'] == 'true')
+      activity.save
+    end
+    
     section = Section.find_or_create_by_name(hash['section'])
     page = Page.find_or_create_by_name(hash['page'])
     mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
@@ -61,6 +89,13 @@ Given /^the following investigations with multiple choices exist:$/ do |investig
   end
 end
 
+Given /^the following semesters exist:$/ do|semesters_table|
+   semesters_table.hashes.each do |hash|
+     Factory.create(:portal_semester, hash)
+   end
+end
+
+
 Given /^the following classes exist:$/ do |table|
   table.hashes.each do |hash|
     if hash['teacher']
@@ -69,7 +104,17 @@ Given /^the following classes exist:$/ do |table|
     else
       teacher = Factory(:teacher)
     end
-    Factory.create(:portal_clazz, hash.merge('teacher' => teacher))
+    hash.merge!('teacher' => teacher)
+    
+    if !(hash['semester'].nil?) then
+      semester = Portal::Semester.find_by_name(hash['semester']);
+      if (semester.nil?) then
+        semester = Factory.create(:portal_semester, :name => hash['semester']);
+      end
+      hash.merge!('semester' => semester);
+    end
+    
+    Factory.create(:portal_clazz, hash)
   end
 end
 
@@ -286,6 +331,32 @@ end
 Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do |inv_name, count|
   investigation = Investigation.find_by_name inv_name
   investigation.offerings_count.should == count.to_i
+end
+
+Then /^the investigation "([^"]*)" should have correct linked prediction graphs/ do |inv_name|
+  copy = Investigation.find_by_name inv_name
+  orig = Investigation.find_by_name inv_name.gsub(/^copy of /, '')
+
+  orig_prediction_graph = orig.pages.first.data_collectors.first
+  copy_prediction_graph = copy.pages.first.data_collectors.first
+
+  orig_dc = orig.pages.first.data_collectors.last
+  copy_dc = copy.pages.first.data_collectors.last
+
+  copy_dc.prediction_graph_source.should == copy_prediction_graph
+end
+
+Then /^the investigation "([^"]*)" should have correct linked snapshot buttons/ do |inv_name|
+  copy = Investigation.find_by_name inv_name
+  orig = Investigation.find_by_name inv_name.gsub(/^copy of /, '')
+
+  orig_draw_tool = orig.pages.first.drawing_tools.first
+  copy_draw_tool = copy.pages.first.drawing_tools.first
+
+  orig_snap = orig.pages.first.lab_book_snapshots.first
+  copy_snap = copy.pages.first.lab_book_snapshots.first
+
+  copy_snap.target_element.should == copy_draw_tool
 end
 
 def show_actions_menu

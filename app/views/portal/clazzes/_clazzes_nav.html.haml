@@ -1,24 +1,15 @@
 / TODO: possible refactoring to make more clazzes specific.
 / Clazz navigation: top_node could be course, teacher, student ...
-%br
+
 #clazzes_nav
+  = javascript_include_tag "clazzes_nav"
+  %br
   .padded_content
-    %h2 Classes:
-    - top_container_id = dom_id_for(top_node, :nav_list)
-    - top_controller ||= top_node.class.name.tableize
-    - sub_controller ||= top_node.clazzes[0] ? top_node.clazzes[0].class.name.tableize : nil
-    %ul{:id=>top_container_id}
-      - top_node.clazzes.each do |clazz|
-        %li{:id=>dom_id_for(clazz,:nav_item)}
-          -if clazz.section
-            - link_text = "#{clazz.name}(#{clazz.section})"
-          -else 
-            - link_text = clazz.name
-          -if (selects.include? clazz)
-            = link_to link_text,clazz, :class=> 'selected'
-          -else
-            = link_to link_text, clazz
+    = render :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => top_node, :selects => selects}
     - if top_node.is_a? Portal::Teacher
-      %ul.create{:id=>dom_id_for(top_node, :nav_list_create_class)}
-        .create_link.button
-          = link_to("Create a Class",new_portal_clazz_path)
+      .create{:id=>dom_id_for(top_node, :nav_list_create_class)}
+        .create_link
+          = link_to 'Create a Class', new_portal_clazz_path, :class=>"button pie", :id=>"btn_create_class"
+        .manage_classes_link
+          = link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"button pie", :id=>"btn_manage_classes"
+          

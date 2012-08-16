@@ -19,7 +19,8 @@ javascripts:
   - pagination
   - workgroup
   - chosen.proto
-  - pt_event_simulate  
+  - pt_event_simulate
+  - prototype-ui/prototype-ui
 stylesheets: 
 - print:
   - print
@@ -28,6 +29,7 @@ stylesheets:
   - accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -36,12 +38,13 @@ stylesheets:
   - reports
   - workgroup
   - chosen
-
+  - site_notice
 - default:
   - app
   - accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -56,6 +59,7 @@ stylesheets:
   - please_wait
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - accordion
   - notes
@@ -64,7 +68,11 @@ stylesheets:
   - data_table
   - reports
   - workgroup
-  - chosen 
+  - chosen
+  - site_notice
+  - classes_left_pane
+  - instructional_materials
+
 - investigations:
   - themes/investigations/investigations
   - themes/investigations/action_menu_tab
@@ -72,6 +80,7 @@ stylesheets:
   - themes/investigations/accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - notes
   - data_table
@@ -83,6 +92,7 @@ stylesheets:
   - themes/itsisu/drop_down
   - themes/itsisu/accordion
   - window/window
+  - window/lightbox
   - window/itsisu
   - live_validation
   - notes
@@ -93,6 +103,7 @@ stylesheets:
   - app
   - accordion
   - window/window
+  - window/lightbox
   - window/rites
   - live_validation
   - action_menu_tab
@@ -100,6 +111,8 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - classes_left_pane
+  - instructional_materials
 
 - sglight:
   - themes/sglight/sglight
@@ -108,6 +121,7 @@ stylesheets:
   - themes/sglight/accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - notes
   - data_table
@@ -119,6 +133,7 @@ stylesheets:
   - please_wait
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - accordion
   - notes
@@ -127,6 +142,8 @@ stylesheets:
   - data_table
   - reports
   - chosen
+  - classes_left_pane
+  - instructional_materials
 
 - has:
   - app
@@ -148,6 +165,7 @@ stylesheets:
   - please_wait
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -155,12 +173,16 @@ stylesheets:
   - data_table
   - reports
   - chosen
+  - classes_left_pane
+  - instructional_materials
+  - site_notice
 
 - genomedynamics:
   - app
   - accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -174,6 +196,7 @@ stylesheets:
   - accordion
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
   - action_menu_tab
   - notes
@@ -200,6 +223,8 @@ stylesheets:
   - app
   - accordion
   - please_wait
+  - window/window
+  - window/rites
   - live_validation
   - accordion
   - notes
@@ -209,4 +234,6 @@ stylesheets:
   - reports
   - workgroup
   - chosen
+  - classes_left_pane
+  - instructional_materials
 

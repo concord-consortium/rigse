@@ -1,0 +1,13 @@
+- total_default_users = User.default.count
+- active_default_users = User.default.find_all_by_state('active').count
+
+- if active_default_users > 0
+  %b
+    This portal has 
+    = total_default_users == active_default_users ? 'the' : 'some'
+    default users active
+  %br
+  To deactive the default users run this capistrano command
+  %pre
+    cap [portal_instance] rake_tasks:invoke task=app:setup:suspend_default_users
+

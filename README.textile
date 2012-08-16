@@ -47,21 +47,22 @@ Change to the project directory:
 
 bc. cd xproject
 
-Setup rvm to use Ruby 1.9.2-p290 and a gemset named xproject
-(p290 is used to get libyaml installed by rvm)
+Setup rvm to use Ruby 1.9.3-p125 and a gemset named xproject
+(newer versions of 1.9.3 ought to work as well)
 
-bc. rvm use 1.9.2-p290
+bc. rvm use 1.9.3-p125
 rvm gemset create xproject
 
 Make an @.rvmrc@ file so rvm will use this ruby gemset combo automatically when you change to this directory:
 
-bc. echo "rvm use 1.9.2-p290@xproject" > .rvmrc
+bc. echo "rvm use 1.9.3-p125@xproject" > .rvmrc
 
 Test out the @.rvmrc@ file and start using the gemset
 
 bc. cd ..;cd xproject
 
 Install "bundler":http://gembundler.com/
+(typically rvm will install bundler for you when you install ruby)
 
 bc. gem install bundler
 
@@ -105,6 +106,18 @@ Save a copy of the development database to make subsequent clean starts much qui
 
 bc. bin/rake db:dump
 
+This project uses an asset manager for JS & CSS files. Run the asset packager if any of the following are true:
+* Files included within config/asset_packages.yml have been modified.
+* Files within config/asset_packages.yml have been removed or new files have been added.
+* JS and/or CSS does not seem to be updated in production mode but is updated and working in development mode.
+
+This task should run automatically when using 'cap deploy'.
+You may also run the asset packager task manually.
+
+bc. bin/rake asset:packager:build_all
+
+This will build all the assets within the project.
+
 Start server and open http://localhost:3000
 
 bc. rails s -eproduction
@@ -132,6 +145,7 @@ h3. Roll your own theme:
 For now the best thing to do is to copy an existing set of themes. eg:
 
 <pre><code>
+  mkdir ./config/themes/<new_theme_name>
   cp ./config/themes/<old_theme_name>/settings.sample.yml ./config/themes/<new_theme_name>
   cp -r ./themes/<old_theme_name> ./themes/<new_theme_name>
   cp -r ./public/stylesheets/themes/<old_theme_name> ./public/stylesheets/themes/<new_theme_name>
@@ -725,9 +739,6 @@ config/initializers/fix_mailer_on_rails_2.3.4.rb fixes the problem.
 The code is borrowed from "Dmitry Polushkin":https://rails.lighthouseapp.com/projects/8994/tickets/2340-action-mailer-cant-deliver-mail-via-smtp-on-ruby-191
 
 h2. Databases
-
-If you are using mysql 5.5 or later you'll need the mysql2 gem.  This will be enabled by bundlers Gemfile if you define the environment variable:
-RB_MYSQL2=true
 
 On OS X the mysql2 gem usually can't find the mysql client library that it needs to run.  The command below fixes that.  It assumes your mysql is installed in the default basedir of /usr/local/mysql/lib.  And it assumes you are using bundler.
 <code><pre>

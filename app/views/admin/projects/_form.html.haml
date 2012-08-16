@@ -8,18 +8,10 @@
         %ul.menu_v
           %li
             %b
-              Name:
-            = f.text_field :name, :size => 60
-          %li
-            %b
-              Url:
-            = f.text_field :url,  :size => 60
-          %li
-            %b
-              Enable Default Users:
-            = f.check_box :enable_default_users
+            = f.label :active, "Mark this project as active:", :style => "display:inline;"
+            = f.check_box :active
             %br
-            (Default users should normally be disabled on a production system.)
+            (The first project marked active will be used for the portal settings.)
           %li
             %b
               Enable Student Security Questions:
@@ -74,8 +66,10 @@
             = f.check_box :use_periodic_bundle_uploading
             %br
             (This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
-      = field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
-        = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
+          %li
+            Jnlp CDN Hostname:
+            = f.text_field :jnlp_cdn_hostname, :size => 60
+
       %p
         %b
           Description

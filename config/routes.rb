@@ -109,7 +109,19 @@ constraints :id => /\d+/ do
         post :remove_offering
         get :edit_offerings
         post :edit_offerings
+        get :roster
+        post :add_new_student_popup
+        post :copy_class
+        get :materials
+        get :fullstatus
       end
+      
+      collection do
+        #get :manage_classes, :path => 'manage'
+        match 'manage', :to => 'clazzes#manage_classes' 
+        #post :manage_classes_save, :as => 'manage_save'
+      end
+      
     end
 
     resources :clazzes, :path => :classes do
@@ -152,6 +164,8 @@ constraints :id => /\d+/ do
         post :report_embeddable_filter
         get :learners
         post :answers
+        post :offering_collapsed_status
+        post :get_recent_student_report
       end
     end
 
@@ -167,6 +181,10 @@ constraints :id => /\d+/ do
         get :register
         post :register
         post :confirm
+      end
+      member do
+        get :ask_consent
+        put :update_consent
       end
     end
 
@@ -221,6 +239,13 @@ constraints :id => /\d+/ do
       get :reset_password
     end
     resource :security_questions, :only => [:edit, :update]
+
+    # this is added to prevent caching and reuse of jnlp files by other users
+    # this caching or saving of jnlps could still happen, but adding this eliminates 
+    # one potential way it could be cached and reused
+    namespace :portal do
+      resources :offerings, :only => [:show]
+    end
   end
 
   match '/users/reports/account_report' => 'users#account_report', :as => :users_account_report, :method => :get
@@ -256,12 +281,22 @@ constraints :id => /\d+/ do
   match 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/ }, :format => 'blob'
 
   namespace :admin do
-    resources :projects do
-      member do
-        put :update_form
-      end
-    end
+    resources :projects
     resources :tags
+
+    resources :site_notices do
+      member do
+        delete :remove_notice
+        post :dismiss_notice
+      end
+      
+      collection do
+        #get :manage_classes, :path => 'manage'
+        post :toggle_notice_display 
+        #post :manage_classes_save, :as => 'manage_save'
+      end
+      
+    end
   end
 
   namespace :maven_jnlp do
@@ -490,6 +525,7 @@ constraints :id => /\d+/ do
   match '/readme' => 'home#readme', :as => :readme
   match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
   match '/home' => 'home#index', :as => :home
+  match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
   match '/about' => 'home#about', :as => :about
   match '/report' => 'home#report', :as => :report
   match '/test_exception' => 'home#test_exception', :as => :test_exception

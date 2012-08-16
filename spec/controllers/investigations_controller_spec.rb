@@ -6,7 +6,8 @@ describe InvestigationsController do
       :name => "test project",
       :using_custom_css? => false,
       :use_student_security_questions => false,
-      :use_bitmap_snapshots? => false)
+      :use_bitmap_snapshots? => false,
+      :require_user_consent? => false)
     @current_project.stub(:word_press_url).and_return(nil)
     @current_project.stub(:rpc_admin_login).and_return(nil)
     @current_project.stub(:rpc_admin_email).and_return(nil)

@@ -16,7 +16,7 @@
 
 #lead.project-header
   %h1{:class => theme_name}
-    %a{ :href => "/" }= "#{current_project.name}"
+    %a{ :href => "/" }= "#{APP_CONFIG[:site_name]}"
 
 #nav_top
   %span.hidden.doNotPrint

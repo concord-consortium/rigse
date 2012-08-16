@@ -5,3 +5,6 @@
     /   = f.text_field :name, :id => dom_id_for(drawing_tool, :item, :name_field)
     = field_set_tag 'background image' do
       = f.text_field :background_image_url   
+    = field_set_tag 'options' do
+      = f.label "Preferred Height"
+      = f.text_field :preferred_height

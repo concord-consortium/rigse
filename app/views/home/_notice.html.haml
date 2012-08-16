@@ -1,0 +1,39 @@
+= javascript_include_tag "site_notices.js"
+- notice_collapse_table_style = ""
+- if (@notice_display_type == Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
+  - notice_collapse_table_style = "display : none;"
+- if @notice_display_type != Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:no_notice]
+  .notice_container#notice_container
+    .notices_top
+      .showhide_notices
+        - if @notice_display_type == Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices]
+          = link_to_remote "Show Notices", :url => "#{toggle_notice_display_admin_site_notices_path}",:method =>:post, :html => { :id =>"oHideShowLink", :title =>'Show Notices', :onclick=>"toggle_Notice_Display(this)" }
+        - else
+          = link_to_remote "Hide Notices", :url => "#{toggle_notice_display_admin_site_notices_path}",:method =>:post, :html => { :id =>"oHideShowLink", :title =>'Hide Notices', :onclick=>"toggle_Notice_Display(this)" }
+      .notice_header
+        Notices
+    .user_notice_container_div.webkit_scrollbars{:id=>"user_notice_container_div", :style => notice_collapse_table_style }  
+      %table{:cellpadding => '0', :cellspacing => '0', :border => '0',:class => "all_notice_to_render", :id => "all_notice_to_render"}
+        - counter = 1
+        - @notices.each do |notice|
+          - if @notices.length == 1 || counter == @notices.length
+            - notice_date_class = "notice_date"
+            - notice_text_class = "notice_text"
+            - delete_notice_class = "delete_notice"
+          - else
+            - notice_date_class = "notice_date_with_border"
+            - notice_text_class = "notice_text_with_border"
+            - delete_notice_class = "delete_notice_with_border"
+            
+          - counter = counter + 1
+          
+          %tr{:id=>"#{dom_id_for(notice)}"}
+            %td{:class => "#{notice_date_class}"}
+              - if(notice.updated_at)
+                = notice.updated_at.strftime("%m-%d-%Y")
+              - else
+                = notice.created_at.strftime("%m-%d-%Y")
+            %td{:class => "#{notice_text_class}"}
+              = notice.notice_html.html_safe
+            %td{:class => "#{delete_notice_class}"}
+              = link_to_remote "x", :url => "#{dismiss_notice_admin_site_notice_path(notice)}",:confirm => "Are you sure you want to dismiss this notice", :method =>:post, :html =>{:title =>'Dismiss'}

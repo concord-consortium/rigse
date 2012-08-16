@@ -1,0 +1,56 @@
+%div
+  %table.investigationdata{:width=>"100%"}
+    %tr
+      %td.subheader
+        Investigation:
+      %td
+        %div{:style=>"float:left;font-size:16px;font-weight:bold"}
+          = current_offering.name
+        %div.item{:style=>"float:left;padding-top:2px"}
+          = "(assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
+      %td{:style=>"white-space:nowrap"}
+        = link_to "Run as Teacher", run_url_for(current_offering.runnable, {:teacher_mode => true}), :class=>"button pie"
+        %div{:style=>"height:10px"}
+        = link_to "Run as Student", run_url_for(current_offering.runnable, {}), :class=>"button pie"
+%br
+%div
+  = render :partial => 'investigation_activities', :locals => { :investigation => investigation }
+
+%div
+  %table{:width=>"100%"}
+    %tr
+      %td{:width=>"200px"}
+        %span.subheader
+          Student Submissions
+      %td
+        %div.right
+          %span.linkbutton.pie
+            = report_link_for(current_offering, 'report', 'Run Report')
+    - if current_offering.clazz.students.length > 0 && investigation.activities.length > 0
+      %tr
+        %td{:colspan=>"2"}
+          %table
+            %tr
+              %td
+                %span.legend_completed
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Completed
+              %td
+                &nbsp;&nbsp;
+              %td
+                %span.legend_progress
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;In Progress
+              %td
+                &nbsp;&nbsp;
+              %td
+                %span.legend_not_started
+                  &nbsp;&nbsp;
+                %span
+                  &nbsp;Not Yet Started
+    %tr
+      %td{:colspan=>"2"}
+        %div
+          = render :partial => 'investigation_report_summary', :locals => { :investigation => investigation, :offering=>current_offering }

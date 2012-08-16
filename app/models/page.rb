@@ -6,6 +6,8 @@ class Page < ActiveRecord::Base
   belongs_to :section
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
+  has_many :external_activities, :as => :template
+
   has_one :activity, :through => :section
 
   # this could work if the finder sql was redone
@@ -93,7 +95,6 @@ class Page < ActiveRecord::Base
 
   accepts_nested_attributes_for :page_elements, :allow_destroy => true
 
-  default_value_for :position, 1;
   default_value_for :description, ""
 
   send_update_events_to :investigation
