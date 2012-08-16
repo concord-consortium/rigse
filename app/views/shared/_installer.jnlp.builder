@@ -4,7 +4,22 @@
 #   authoring
 #   teacher_mode
 jnlp_headers(runnable)
-session_options = request.env["rack.session.options"]
+config_url_options = {:format => :config}
+
+if local_assigns[:jnlp_session]
+  config_url_options[:jnlp_session] = jnlp_session
+else
+  # we should really stop putting the session in the jnlp
+  config_url_options[Rails.application.config.session_options[:key]] = request.env["rack.session.options"]
+end
+
+if(local_assigns[:learner])
+  url_target = learner
+else
+  url_target = runnable
+  config_url_options[:teacher_mode] = local_assigns[:teacher_mode]
+end
+
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 # hard code the codebase because the jar file versions are also hardcoded
 xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostname.presence || 'jnlp.concord.org'}/dev3") { 
@@ -15,13 +30,6 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostna
   jnlp_mac_java_config(xml)
 
   opportunistic_installer = current_project.opportunistic_installer?
-  url_options = {Rails.application.config.session_options[:key] => session_options[:id]}
-  if(local_assigns[:learner])
-    url_target = learner
-  else
-    url_target = runnable
-    url_options[:teacher_mode] = local_assigns[:teacher_mode]
-  end
   
   jnlp = jnlp_adaptor.jnlp
   # from jnlpwrapper.concord.org
@@ -60,7 +68,6 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostna
     # and set the not_found_url to be the jnlp url + session property
     if(opportunistic_installer)
       xml.property :name=> "skip_not_found_dialog", :value => "true"
-      xml.property :name=> "not_found_url", :value => polymorphic_url(url_target, {:format => :jnlp}.merge(url_options))
       xml.property :name=> "test_jar_saving", :value => installer_report_url
       xml.property :name=> "install_if_not_found", :value => "true"
 
@@ -88,6 +95,6 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostna
 
 
   xml << "  <application-desc main-class='org.concord.LaunchJnlp'>\n  "
-  xml.argument polymorphic_url(url_target, {:format => :config}.merge(url_options))
+  xml.argument polymorphic_url(url_target, config_url_options)
   xml << "  </application-desc>\n"
 }

@@ -4,16 +4,34 @@ class Portal::LearnersController < ApplicationController
   
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
-  
+
   before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report]
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
-  before_filter :learner_teacher_admin, :only => [:show]
+  before_filter :handle_jnlp_session, :only => [:show]
+  before_filter :authorize_show, :only => [:show]
   
   def current_clazz
     Portal::Learner.find(params[:id]).offering.clazz
   end
   
-  def learner_teacher_admin
+  def handle_jnlp_session
+    if request.format.config? && params[:jnlp_session]
+      # this will only work once for this token
+      if jnlp_user = Dataservice::JnlpSession.get_user_from_token(params[:jnlp_session])
+        # store this user in the rails session so future request use this user
+        self.current_user = jnlp_user
+      else
+        # no valid jnlp_session could be found for this token
+        render :partial => 'shared/sail',
+          :formats => [:config],
+          :locals => {
+            :otml_url => "#{APP_CONFIG[:site_url]}/otml/invalid-jnlp-session.otml"
+          }
+      end
+    end
+  end
+
+  def authorize_show
     authorized_user = (Portal::Learner.find(params[:id]).student.user == current_user) ||
         current_clazz.is_teacher?(current_user) ||
         current_user.has_role?('admin')

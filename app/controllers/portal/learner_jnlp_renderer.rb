@@ -1,5 +1,7 @@
 module Portal::LearnerJnlpRenderer
   def render_learner_jnlp(learner)
+    jnlp_session = Dataservice::JnlpSession.create!(:user => current_user)
+
     # only start a bundle if this really is the learner, this method is also used by teachers
     # who want run jnlps 
     if current_user == learner.student.user
@@ -17,6 +19,6 @@ module Portal::LearnerJnlpRenderer
     render :partial => 'shared/learn_or_installer', :locals => { 
       :skip_installer => params.delete(:skip_installer), 
       :runnable => learner.offering.runnable, 
-      :learner => learner }
+      :learner => learner, :jnlp_session => jnlp_session.token }
   end
 end

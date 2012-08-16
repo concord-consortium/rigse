@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120809155106) do
+ActiveRecord::Schema.define(:version => 20120814024858) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -172,6 +172,16 @@ ActiveRecord::Schema.define(:version => 20120809155106) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "dataservice_jnlp_sessions", :force => true do |t|
+    t.string   "token"
+    t.integer  "user_id"
+    t.integer  "access_count", :default => 0
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
+  add_index "dataservice_jnlp_sessions", ["token"], :name => "index_dataservice_jnlp_sessions_on_token"
 
   create_table "dataservice_launch_process_events", :force => true do |t|
     t.string   "event_type"
