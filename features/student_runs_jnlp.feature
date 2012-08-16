@@ -30,6 +30,7 @@ Feature: Student runs a jnlps
     When I follow "run Test Investigation"
     Then the jnlp should not be cached
 
+  @pending
   Scenario: Student runs the same jnlp a second time
     When I follow "run Test Investigation"
     And a jnlp file is downloaded
