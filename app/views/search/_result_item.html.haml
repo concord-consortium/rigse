@@ -13,12 +13,7 @@
             %span
               from investigation
               ="\"#{material.parent.name}\""
-          - unless current_user.anonymous?
-            - offering_clazz_names = offerings.map{|o| o.clazz.name}
-            - if(offerings.length>0)
-              %span.assignedTo
-                (Assigned to
-                = offering_clazz_names.join(", ")+")"
+          
         %td{:width=>"75px"}
           %div{:style=>'float:right'}
             = link_to "Preview",run_url_for(material,{}),:class=>"button"
@@ -29,6 +24,14 @@
             - else
               - flash[:notice]= "Please login or register as a teacher"
               = link_to 'Assign to a Class',home_url,:class=>"button"
+      %tr
+        %td{:colspan=>3}
+          - unless current_user.anonymous?
+            - offering_clazz_names = offerings.map{|o| o.clazz.name}
+            - if(offerings.length>0)
+              %span.assignedTo
+                (Assigned to
+                = offering_clazz_names.join(", ")+")"
 .material_body
   -unless material.description.nil?
     = material.description.html_safe 
