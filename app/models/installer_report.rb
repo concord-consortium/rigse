@@ -1,4 +1,26 @@
 class InstallerReport < ActiveRecord::Base
+  belongs_to :jnlp_session, :foreign_key => :jnlp_session_id, :class_name => "Dataservice::JnlpSession"
+
+  self.extend SearchableModel
+  @@searchable_attributes = %w{body}
+
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+  end
+
+  def name
+    if my_learner = learner
+      return learner.name
+    else
+      "Unknown Learner"
+    end
+  end
+
+  def changeable?(something)
+    false
+  end
 
   # some helpers for extracting info out of the body text dump
   def cache_dir
@@ -35,6 +57,9 @@ class InstallerReport < ActiveRecord::Base
 
   def learner_id
     id = find(/^Not found URL: .*\/portal\/learners\/(\d+).jnlp.*$/)
+    if id.nil?
+      id = find(/^portalLearner = (.*)$/)
+    end
     return (id ? id.to_i : nil)
   end
 

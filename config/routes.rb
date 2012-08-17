@@ -509,6 +509,8 @@ constraints :id => /\d+/ do
     end
   end
 
+  resources :installer_reports
+
   resources :attached_files
   resources :images
 

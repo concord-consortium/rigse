@@ -5,9 +5,11 @@
 #   teacher_mode
 jnlp_headers(runnable)
 config_url_options = {:format => :config}
+installer_report_options = {}
 
 if local_assigns[:jnlp_session]
-  config_url_options[:jnlp_session] = jnlp_session
+  config_url_options[:jnlp_session] = jnlp_session.token
+  installer_report_options[:jnlp_session_id] = jnlp_session.id
 else
   # we should really stop putting the session in the jnlp
   config_url_options[Rails.application.config.session_options[:key]] = request.env["rack.session.options"]
@@ -63,12 +65,17 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostna
     xml.property :name=> "jnlp2shell.compact_paths", :value => "true"
     xml.property :name=> "jnlp2shell.read_only", :value => "true"
     
+
+    if(local_assigns[:learner])
+      xml.property :name=> "portalLearner", :value => learner.id
+    end
+
     # check if the opportunistic installer is enabled
     # if so then skip the not found dialog
     # and set the not_found_url to be the jnlp url + session property
     if(opportunistic_installer)
       xml.property :name=> "skip_not_found_dialog", :value => "true"
-      xml.property :name=> "test_jar_saving", :value => installer_report_url
+      xml.property :name=> "test_jar_saving", :value => installer_report_url(installer_report_options)
       xml.property :name=> "install_if_not_found", :value => "true"
 
       # include wrapped_jnlp so we know what jnlp to install from
