@@ -104,6 +104,7 @@ class SearchController < ApplicationController
     end
   
     teacher_clazzes = current_user.portal_teacher.teacher_clazzes
+    teacher_clazzes = teacher_clazzes.select{|item| item.active == true}
     teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
     teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
     assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}

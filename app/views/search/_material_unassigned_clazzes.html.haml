@@ -24,26 +24,27 @@
         = activity_name
 %br
 - if clazzes.length > 0
-  %div{:style=>"padding-left:5px"} Select Class(es)
+  %div.assign_class_header Select Class(es)
   %form{:id=>"add_material_form"}
-    %table.material_detail{:width=>"100%"}
-      - clazzes.each do|clazz|
-        %tr
-          %td.check_box
-            = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s
-            
-          %td 
-            = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
-            - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
-              (Activity #{activity_name} is already assigned)
+    .unassigned_classes_container
+      %table.material_detail{:width=>"100%"}
+        - clazzes.each do|clazz|
+          %tr
+            %td.check_box
+              = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s
+              
+            %td 
+              = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
+              - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
+                (Activity #{activity_name} is already assigned)
 - else
   .messagetext This material is assigned to all the classes
 %br
 %table.classdata
   %tr
-    - if clazzes.length > 0
-      %td
-        = link_to_remote "Save", :url => {:action=>'add_material_to_clazzes', :material_id => material.id,:material_type => material.class.to_s}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
     %td
+      - if clazzes.length > 0
+        = link_to_remote "Save", :url => {:action=>'add_material_to_clazzes', :material_id => material.id,:material_type => material.class.to_s}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
+        &nbsp;&nbsp;
       = link_to "Cancel", "#",:onclick=>"close_popup()"
 %div{:style=>"clear:both"}

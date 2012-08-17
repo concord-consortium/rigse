@@ -219,8 +219,9 @@ input.disabledGo
 .material_detail{margin:0;padding:0;text-transform: none;}
 .material_detail td{font-weight:bold;padding:5px 5px 0px 5px;vertical-align:top;text-align:left;}
 .material_detail td.title{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
-.material_detail td.check_box{width:25px;;padding:7px 5px 0px 5px}
+.material_detail td.check_box{width:20px;;padding:7px 0px 0px 5px}
 .material_detail label.clazz_name{text-transform: none;} 
+.assign_class_header{font-weight:bold;padding-left:5px;}
 
 .messagetext{font-style:italic}
 
@@ -231,3 +232,4 @@ input.disabledGo
   width: 530px;
 }
 .material_list_item a{text-transform: none;}
+.unassigned_classes_container{height:250px;overflow-y:auto;}
