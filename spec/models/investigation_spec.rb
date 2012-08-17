@@ -151,8 +151,8 @@ describe Investigation do
     
     it "should find all grade 8 phsysics investigations, including drafts" do
       options = {
-        :grade_span => @eight,
-        :domain_id  => @physics.id,
+        :grade_span => [@eight],
+        :domain_id  => [@physics.id],
         :include_drafts => true
       }
       found = Investigation.search_list(options)
@@ -165,7 +165,7 @@ describe Investigation do
   
     it "should find all grade phsysics investigations, including drafts" do
       options = {
-        :domain_id  => @physics.id,
+        :domain_id  => [@physics.id],
         :include_drafts => true
       }
       found = Investigation.search_list(options)
@@ -194,8 +194,8 @@ describe Investigation do
     
     it "should find only published, in grade 8 physics domain" do
       options = {
-        :grade_span => @eight,
-        :domain_id  => @physics.id,
+        :grade_span => [@eight],
+        :domain_id  => [@physics.id],
         :include_drafts => false
       }
       found = Investigation.search_list(options)
@@ -209,7 +209,7 @@ describe Investigation do
 
     it "should find only published in pysics domain" do
       options = {
-        :domain_id  => @physics.id,
+        :domain_id  => [@physics.id],
         :include_drafts => false
       }
       found = Investigation.search_list(options)

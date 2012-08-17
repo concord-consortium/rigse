@@ -30,7 +30,7 @@ describe SearchController do
   before(:each) do
     setup_for_repeated_tests
   end
-  
+
   describe "Show all study materials materials" do
     it "should redirect to root for all the users other than teacher" do
       [@admin_user, @author_user, @manager_user, @researcher_user, @student_user].each do |user_other_than_teacher|
@@ -95,6 +95,70 @@ describe SearchController do
       
       post :show, @post_params
       assert_template "index"
+    end
+  end
+  
+  describe "get current material for the classes" do
+    before(:each) do
+      @clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])
+    end
+    it "should get investigations that are unassigned to the class" do
+      @post_params = {
+        :material_type => 'Investigation',
+        :material_id => @chemistry_investigation.id
+      }
+      xhr :post, :get_current_material_unassigned_clazzes, @post_params
+      assert_template :partial => '_material_unassigned_clazzes'
+    end
+
+    it "should get activities that are unassigned to the class" do
+      @post_params = {
+        :material_type => 'Activity',
+        :material_id => @laws_of_motion_activity.id
+      }
+      xhr :post, :get_current_material_unassigned_clazzes, @post_params
+      assert_template :partial => '_material_unassigned_clazzes'
+    end
+  end
+  
+  describe "add materials to classes" do
+    before(:each) do
+      @clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])
+      @another_clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])
+    end
+    it "should assign investigation to the classes" do
+      @post_params = {
+        :clazz_id => [@clazz.id, @another_clazz.id],
+        :material_id => @chemistry_investigation.id,
+        :material_type => 'Investigation'
+      }
+      xhr :post, :add_material_to_clazzes, @post_params
+      
+      runnable_id = @post_params[:material_id]
+      runnable_type = @post_params[:material_type].classify
+      offering_for_clazz = Portal::Offering.find_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
+      offering_for_another_clazz = Portal::Offering.find_by_clazz_id_and_runnable_type_and_runnable_id(@another_clazz.id,runnable_type,runnable_id)
+      
+      assert_not_nil(offering_for_clazz)
+      assert_not_nil(offering_for_another_clazz)
+      assert_select_rjs :replace_html, "search_#{runnable_type.downcase}_#{runnable_id}"
+    end
+    it "should assign activity to the classes" do
+      @post_params = {
+        :clazz_id => [@clazz.id, @another_clazz.id],
+        :material_id => @laws_of_motion_activity.id,
+        :material_type => 'Activity'
+      }
+      xhr :post, :add_material_to_clazzes, @post_params
+      
+      runnable_id = @post_params[:material_id]
+      runnable_type = @post_params[:material_type].classify
+      offering_for_clazz = Portal::Offering.find_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
+      offering_for_another_clazz = Portal::Offering.find_by_clazz_id_and_runnable_type_and_runnable_id(@another_clazz.id,runnable_type,runnable_id)
+      
+      assert_not_nil(offering_for_clazz)
+      assert_not_nil(offering_for_another_clazz)
+      assert_select_rjs :replace_html, "search_#{runnable_type.downcase}_#{runnable_id}"
     end
   end
 end

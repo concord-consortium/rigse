@@ -21,7 +21,7 @@ Feature: Student must give consent for research study
     And I am logged in with the username teacher
     And I am on "Student Roster" page for "My Class"
     And I follow "Register and add new student"
-    And I should see "Add and Register New Student"
+    And I should see "Register and Add New Student"
     And I should not see "Your age"
     Then I fill in the following:
       | user_first_name            | Example  |

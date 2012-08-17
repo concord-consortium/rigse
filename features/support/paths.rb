@@ -101,7 +101,7 @@ module NavigationHelpers
       "/portal/classes/manage"
     when /Recent Activity Page/
       "/recent_activity"
-    when /the search page/
+    when /the search instruction material page/
       "/search"
     when /Instructional Materials page for "(.+)"/
       portal_clazz = Portal::Clazz.find_by_name $1
