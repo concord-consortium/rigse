@@ -133,7 +133,7 @@ class SearchController < ApplicationController
     
     if request.xhr?
        render :update do |page|
-         page << "alert('#{runnable_type} is assigned to the selected classes successfully.')"
+         page << "alert('#{runnable_type} is assigned to the selected class(es) successfully.')"
          page << "close_popup()"
          page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
        end

@@ -216,7 +216,7 @@ input.disabledGo
   color:#3F3F3F;
 }
 
-.material_detail{margin:0;padding:0;}
+.material_detail{margin:0;padding:0;text-transform: none;}
 .material_detail td{font-weight:bold;padding:5px 5px 0px 5px;vertical-align:top;text-align:left;}
 .material_detail td.title{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
 .material_detail td.check_box{width:25px;;padding:7px 5px 0px 5px}
@@ -230,3 +230,4 @@ input.disabledGo
   position: absolute;
   width: 530px;
 }
+.material_list_item a{text-transform: none;}

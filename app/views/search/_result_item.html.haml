@@ -22,13 +22,13 @@
         %td{:width=>"75px"}
           %div{:style=>'float:right'}
             = link_to "Preview",run_url_for(material,{}),:class=>"button"
-        %td{:width=>"125px"}
+        %td{:width=>"130px"}
           %div{:style=>'float:right'}
             - if current_user.portal_teacher
-              = link_to 'Assign to class','#',:class=>"button", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')"
+              = link_to 'Assign to a Class','#',:class=>"button", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')"
             - else
               - flash[:notice]= "Please login or register as a teacher"
-              = link_to 'Assign to class',home_url,:class=>"button"
+              = link_to 'Assign to a Class',home_url,:class=>"button"
 .material_body
   -unless material.description.nil?
     = material.description.html_safe 
