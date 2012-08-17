@@ -24,7 +24,7 @@
             = student_add_dropdown(portal_clazz)
           %td.hide_in_print{:style=>"text-align:right"}
             - add_student_url = new_portal_student_path(:clazz_id => portal_clazz.id)
-            = link_to "Register and add new student", "#", :title => "add a student to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
+            = link_to "Register and add new student", "#", :title => "Add a student to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
             
       %table.roster_student_list{:width=>"100%"}
         %tr

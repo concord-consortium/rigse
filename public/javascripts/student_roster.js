@@ -15,7 +15,7 @@ function get_Add_Register_Student_Popup(strURL)
     }
     student_list_modal = new UI.Window({ theme:"lightbox", width:400, height:350});
     student_list_modal.setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
-    student_list_modal.setHeader("Add and Register New Student");
+    student_list_modal.setHeader("Register and Add New Student");
     var clazz_id = $("portal_clazz_id").value;
     var options = {
         method: 'post',

@@ -18,7 +18,7 @@
           = portal_student.user.login.truncate(20)
         %td.remove.hide_in_print.action_link_container
           - if portal_clazz.changeable?(current_user)
-            = link_to_remote "Remove Student", :url => portal_clazz_student_clazz_url(portal_clazz, portal_student_clazz), :confirm => "This action will remove the student: '#{portal_student.name}' from the class: #{portal_clazz.name}. \nAre you sure you want to do this?", :method => :delete, :html => {:title => "remove #{portal_student.name} from #{portal_clazz.name}" , :class => "change_password"}
+            = link_to_remote "Remove Student", :url => portal_clazz_student_clazz_url(portal_clazz, portal_student_clazz), :confirm => "This action will remove the student: '#{portal_student.name}' from the class: #{portal_clazz.name}. \nAre you sure you want to do this?", :method => :delete, :html => {:title => "Remove #{portal_student.name} from #{portal_clazz.name}" , :class => "change_password"}
           - if portal_student.user.changeable?(current_user)
             = link_to 'Change Password', reset_password_user_path(portal_student.user), :class => "change_password"
 - else
