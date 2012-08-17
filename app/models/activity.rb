@@ -67,6 +67,23 @@ class Activity < ActiveRecord::Base
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
 
+  scope :with_gse, {
+    :joins => "left outer JOIN investigations on (investigations.id = activities.investigation_id) left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
+  }
+
+  scope :domain, lambda { |domain_id|
+    {
+      :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
+    }
+  }
+
+  scope :grade, lambda { |gs|
+    gs = gs.size > 0 ? gs : "%"
+    {
+      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","):gs ]
+    }
+  }
+
   scope :like, lambda { |name|
     name = "%#{name}%"
     {
@@ -87,14 +104,44 @@ class Activity < ActiveRecord::Base
     end
 
     def search_list(options)
+      grade_span = options[:grade_span] || ""
+      domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
       name = options[:name]
       sort_order = options[:sort_order] || "name ASC"
       
-      if (options[:include_drafts])
-        activities = Activity.like(name)
+      
+      if APP_CONFIG[:use_gse]
+        if domain_id.length > 0
+          if (options[:include_drafts])
+            activities = Activity.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+          else
+            published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+            activities = Activity.where(:investigation_id => published_investigation_ids).where('activities.publication_status <> "draft" or activities.publication_status is null').like(name)
+            activities = activities.with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+          end
+        elsif (!grade_span.empty?)
+          if (options[:include_drafts])
+            activities = Activity.like(name).with_gse.grade(grade_span)
+          else
+            published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+            activities = Activity.where(:investigation_id => published_investigation_ids).where('activities.publication_status <> "draft" or activities.publication_status is null').like(name)
+            activities = activities.with_gse.grade(grade_span)
+          end
+        else
+          if (options[:include_drafts])
+            activities = Activity.like(name)
+          else
+            published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+            activities = Activity.where(:investigation_id => published_investigation_ids).where('activities.publication_status <> "draft" or activities.publication_status is null').like(name)
+          end
+        end
       else
-        published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-        activities = Activity.where(:investigation_id => published_investigation_ids).where('publication_status <> "draft" or publication_status is null').like(name)
+        if (options[:include_drafts])
+          activities = Activity.like(name)
+        else
+          published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+          activities = Activity.where(:investigation_id => published_investigation_ids).where('activities.publication_status <> "draft" or activities.publication_status is null').like(name)
+        end
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil

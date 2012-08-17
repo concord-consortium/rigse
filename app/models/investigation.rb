@@ -99,14 +99,14 @@ class Investigation < ActiveRecord::Base
 
   scope :domain, lambda { |domain_id|
     {
-      :conditions => ['ri_gse_knowledge_statements.domain_id = ?', domain_id]
+      :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
     }
   }
 
   scope :grade, lambda { |gs|
     gs = gs.size > 0 ? gs : "%"
     {
-      :conditions => ['ri_gse_grade_span_expectations.grade_span LIKE ?', gs ]
+      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","):gs ]
     }
   }
 
@@ -139,14 +139,14 @@ class Investigation < ActiveRecord::Base
     def search_list(options)
       grade_span = options[:grade_span] || ""
       sort_order = options[:sort_order] || "name ASC"
-      domain_id = options[:domain_id].to_i
+      domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
       name = options[:name]
       if APP_CONFIG[:use_gse]
-        if domain_id > 0
+        if domain_id.length > 0
           if (options[:include_drafts])
-            investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+            investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
           else
-            investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+            investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
           end
         elsif (!grade_span.empty?)
           if (options[:include_drafts])

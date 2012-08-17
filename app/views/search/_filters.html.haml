@@ -1,56 +1,67 @@
 -probe_types = Probe::ProbeType.all;
+-scientific_domains=RiGse::Domain.all.collect { |d| [d.name,d.id] }
+-grades=RiGse::GradeSpanExpectation.grade_spans
 #filter_container{:style=>"overflow:hidden;"}
+  #filtermask
   .showhidefilters
     %div{:id=>"oExpandCollapseText",:style=>"width:10px;float:left"}
       \-    
     = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
-  %table.filters.collapse_filters{:cellpadding=>0,:cellspacing=>0}
-    
-    %tr
-      %td.sortbycolumn
-        .filterheader
-          Sort By
-        %div
-          = label_tag 'sort_order_created_at_ASC','Oldest',:class=>(@sort_order == "created_at ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_order,'created_at ASC',(@sort_order == "created_at ASC"),:class=>'sort_radio'
-        %div
-          = label_tag 'sort_order_created_at_DESC','Newest',:class=>(@sort_order == "created_at DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_order,'created_at DESC',(@sort_order == "created_at DESC"),:class=>'sort_radio'
-        %div
-          = label_tag 'sort_order_name_ASC','Alphabetical',:class=>(@sort_order == "name ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_order,'name ASC',(@sort_order == "name ASC"),:class=>'sort_radio'
-        %div
-          = label_tag 'sort_order_offerings_count_DESC' ,'Popularity',:class=>(@sort_order == "offerings_count DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
-          = radio_button_tag :sort_order,'offerings_count DESC',(@sort_order == "offerings_count DESC"),:class=>'sort_radio'
-      %td.domaincolumn
-        %div
-          =check_box_tag :physicalscience, true, true
-          Physical Science
-        %div
-          =check_box_tag :earthscience, true, true
-          Earth & Space Science 
-        %div
-          =check_box_tag :lifescience, true, true
-          Life Science
-      %td.gradecolumn
-        %div
-          =check_box_tag :allgrades, true, true
-          All Grades
-        %div
-          =check_box_tag :grade5_6, true, true
-          5-6
-      %td.materialcolumn
-        %div
-          = check_box_tag :investigation, true, true
-          = label_tag 'investigation','Investigation'
-        %div
-          = check_box_tag :activity, true, true,:onchange=>"showHideProbes(this)"
-          = label_tag 'activity','Activity'
-      %td.probescolumn
-        .probes_container
-          #select_none_probes{:onclick=>"uncheckedallprobes();"}
-            Select None
-          - probe_types.each do |probe|
+  %div{:style=>'clear:both'}
+  #filters_wrapper.visible
+    %table.filters.collapse_filters{:cellpadding=>0,:cellspacing=>0}
+      
+      %tr
+        %td.sortbycolumn
+          .filterheader
+            Sort By
+          %div
+            = label_tag 'sort_order_created_at_ASC','Oldest',:class=>(@sort_order == "created_at ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_order,'created_at ASC',(@sort_order == "created_at ASC"),:class=>'sort_radio'
+          %div
+            = label_tag 'sort_order_created_at_DESC','Newest',:class=>(@sort_order == "created_at DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_order,'created_at DESC',(@sort_order == "created_at DESC"),:class=>'sort_radio'
+          %div
+            = label_tag 'sort_order_name_ASC','Alphabetical',:class=>(@sort_order == "name ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_order,'name ASC',(@sort_order == "name ASC"),:class=>'sort_radio'
+          %div
+            = label_tag 'sort_order_offerings_count_DESC' ,'Popularity',:class=>(@sort_order == "offerings_count DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_order,'offerings_count DESC',(@sort_order == "offerings_count DESC"),:class=>'sort_radio'
+        %td.domaincolumn
+          .filterheader
+            Scientific Domain
+          -scientific_domains.each do |domain|
             %div
-              =check_box_tag 'probe[]',"probe_#{probe.id}",true,:id=>"probe_#{probe.id}",:class=>"probe_items"
-              =label_tag "probe_#{probe.id}","#{probe.name}"
+              = check_box_tag 'domain_id[]',domain[1], (@domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
+              = label_tag domain[0].gsub(/\s+/, ""), domain[0]
+            /= check_box_tag :domain_id, domain, true
+        %td.gradecolumn
+          .filterheader
+            Grade
+          %div
+            = check_box_tag 'grade_span[]','%',(@grade_span.include?('%'))?true:false,:id=>'allgrades'
+            = label_tag 'allgrades', 'All Grades'
+          -grades.each do |grade|
+            
+            %div
+              = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade
+              = label_tag grade, grade
+        %td.materialcolumn
+          .filterheader
+            Material
+          %div
+            = @investigation_checkedstatus
+            = check_box_tag 'material[]', 'investigation', @material_type.include?('investigation'),:id=>'investigation'
+            = label_tag 'investigation','Investigation'
+          %div
+            = @activity_checkedstatus
+            = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onchange=>"showHideProbes(this)"
+            = label_tag 'activity','Activity'
+        %td.probescolumn
+          .probes_container
+            #select_none_probes{:onclick=>"uncheckedallprobes();"}
+              Select None
+            - probe_types.each do |probe|
+              %div
+                =check_box_tag 'probe[]',"probe_#{probe.id}",true,:id=>"probe_#{probe.id}",:class=>"probe_items"
+                =label_tag "probe_#{probe.id}","#{probe.name}"

@@ -2,6 +2,7 @@ var suggestioncount = -1;
 var ajaxRequest;
 var ajaxRequestSend = 0;
 var goButttondisabled=false;
+var animating=false;
 function select_suggestion(search_box) {
     var strSuggestiontext;
     try{
@@ -87,24 +88,38 @@ function showHideProbes(activity) {
         bVisible = bVisible || oButtonContainer.getStyle('display') == 'none';
     });
 }
-
 function showHideFilters(oLink) {
-    var bVisible = false;
-    $$('.collapse_filters').each(function(oButtonContainer) {
-        oButtonContainer.toggle();
-        bVisible = bVisible || oButtonContainer.getStyle('display') == 'none';
-    });
-
+    
+    var filterwrapper=$('filters_wrapper');
     var strLinkText = "";
     var strExpandCollapseText = "";
-    if(bVisible) {
-        strLinkText = "Show Filters";
-        strExpandCollapseText = "+";
-    } else {
-        strLinkText = "Hide Filters";
-        strExpandCollapseText = "-";
+    if (animating)
+    {
+        return false;
     }
-
+    if(filterwrapper.hasClassName('visible'))
+    {
+     Effect.BlindUp('filters_wrapper', { duration: 0.5 });
+     filterwrapper.removeClassName('visible');
+     strLinkText = "Show Filters";
+     strExpandCollapseText = "+";
+     animating=true;
+     setTimeout(function(){
+         animating=false;
+     },500);
+    }
+    else
+    {
+     Effect.BlindDown('filters_wrapper', { duration: 0.5 });
+     filterwrapper.addClassName('visible');
+     strLinkText = "Hide Filters";
+     strExpandCollapseText = "-";
+     working=true;
+      setTimeout(function(){
+         animating=false;
+     },500);
+    }
+    
     $('oExpandCollapseText').update(strExpandCollapseText);
     oLink.update(strLinkText);
 }
@@ -145,6 +160,7 @@ function CheckSubmitStatus() {
 function disableForm(){
     preventsubmit();
     $('search_term').addClassName('disabledGo');
+    $('filtermask').addClassName('showmask');
     document.getElementsByName('GO')[0].addClassName('disabledGo');
     goButttondisabled=true;
 }
@@ -152,6 +168,7 @@ function disableForm(){
 function enableForm(){
     allowsubmit();
     $('search_term').removeClassName('disabledGo');
+    $('filtermask').removeClassName('showmask');
     document.getElementsByName('GO')[0].removeClassName('disabledGo');
     goButttondisabled=false;
 }

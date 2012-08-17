@@ -44,7 +44,7 @@ width: 300px;
 .filters
 {
   background-color:#fbf4da;
-  margin-left: 15px;
+  margin:0px 0px 15px 15px;
   float:left;
   font-size:12px;
 }
@@ -57,7 +57,7 @@ width: 300px;
   margin-top:3px;
 }
 .sortbycolumn{width:95px;}
-.domaincolumn{width:165px;display:none;}
+.domaincolumn{width:170px;display:none;}
 .gradecolumn{width:90px;display:none;}
 .materialcolumn{width:100px;display:none;}
 .probescolumn{width:145px;display:none;}
@@ -223,3 +223,10 @@ input.disabledGo
 .material_detail label.clazz_name{text-transform: none;} 
 
 .messagetext{font-style:italic}
+
+.showmask{
+  display:block;
+  height: 115px;
+  position: absolute;
+  width: 530px;
+}
