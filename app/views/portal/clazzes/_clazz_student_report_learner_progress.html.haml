@@ -1,9 +1,10 @@
 %tr
-  - offerings.each do |offering|
+  - offering_statuses.each do |offering_status|
+    - offering = offering_status.offering
     - activities_display = "none"
     - offering_display = ""
     - activities_collapsed = offering.teacher_full_status.find_by_teacher_id(current_user.portal_teacher.id) 
-    - unless activities_collapsed.nil?
+    - if activities_collapsed
       - activities_collapsed = activities_collapsed.offering_collapsed
       - activities_display = (activities_collapsed)? "none" : ""
       - offering_display = (activities_collapsed)? "" : "none"
@@ -16,13 +17,8 @@
     
     - activities = activities.select {|activity| !activity.teacher_only}
     
-    - learner = offering.learners.find_by_student_id(student.id)
-    - report_learner_activities = nil
-    - percentage = 0
-    - unless learner.nil? || learner.report_learner.nil?
-      - percentage = learner.report_learner.complete_percent
-      - report_learner_activities = learner.learner_activities
     - if activities.length > 0
+      - percentage = offering_status.complete_percent(student)
       %td{:class=>"investigation_summary_row_#{offering.id}", :style=>"display:#{offering_display}"}
         %div.progressbar_container
           .progressbar
@@ -31,10 +27,8 @@
             - else
               .progress{:style=>"width:#{percentage}%"}
     - activities.each do |activity|
+      - percentage = offering_status.activity_complete_percent(student, activity)
       %td{:class=>"investigation_detail_row_#{offering.id}", :style=>"display:#{activities_display}"}
-        - percentage = 0
-        - unless report_learner_activities.nil? || report_learner_activities.find_by_activity_id(activity.id).nil?
-          - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
         %div.progressbar_container
           .progressbar
             - if percentage == 100

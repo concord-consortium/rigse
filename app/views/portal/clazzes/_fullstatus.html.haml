@@ -1,6 +1,6 @@
 = javascript_include_tag "full_status.js"
 - clazz_offerings = portal_clazz.offerings.sort{|a,b| a.position<=>b.position}
-- students = portal_clazz.students;
+- students = portal_clazz.students.includes(:user);
 .maincontainer.pie
   .container
     .content
@@ -17,6 +17,7 @@
     .header.fullstatus Full Status
     %br
     - if clazz_offerings.length > 0 && students.length > 0
+      - offering_statuses = clazz_offerings.map{|offering| Report::OfferingStatus.new(offering)}
       %div.clearboth
         %div
           %table
@@ -50,7 +51,7 @@
             .progress_div.webkit_scrollbars
               %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
                 = render :partial => 'clazz_student_report_summary_header',:locals=> {:offerings=>clazz_offerings}
-                = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offerings=>clazz_offerings}
+                = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offering_statuses=>offering_statuses}
             .clearboth{:style=>"height:10px"}
           - else
             %div.messagetext No students have registered for this class yet.

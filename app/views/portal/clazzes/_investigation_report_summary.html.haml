@@ -1,14 +1,16 @@
-- learners = offering.learners;
-- students = offering.clazz.students;
+- offering_status = Report::OfferingStatus.new(offering)
+- student_statuses = offering_status.student_statuses
 - if investigation.activities.length > 0
-  - if students.length > 0
-    - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
+  - if student_statuses.length > 0
     .student_div.floatL
-      = render :partial => 'investigation_student_report_learner_list', :locals=> {:students=>students}
+      = render :partial => 'investigation_student_report_learner_list',
+          :locals=> {:students=>offering_status.students}
     .progress_div.webkit_scrollbars
       %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
         = render :partial => 'investigation_student_report_summary_header',:locals=> {:offering=>offering}
-        = render :partial => 'investigation_student_report_summary',:collection => students, :as => :student,:locals=> {:investigation => investigation,:learners=>learners, :offering=>offering}
+        = render :partial => 'investigation_student_report_summary',:collection => student_statuses,
+          :as => :student_status,
+          :locals=> {:investigation => investigation}
     .clearboth{:style=>"height:10px"}
   - else
     %div.item.messagetext 

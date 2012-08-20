@@ -4,7 +4,7 @@
       %div.progressbar_container 
         ACTIVITY
   - students.each do |student|
-    - student_name = student.user.last_name + ", " + student.user.first_name
+    - student_name = student.user.full_name
     %tr
       %td.student_name{:title=>"#{student_name}"}
         %div.progressbar_container

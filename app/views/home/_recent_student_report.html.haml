@@ -1,5 +1,6 @@
 %br
 - runnable = offering.runnable
+- offering_status = Report::OfferingStatus.new(offering)
 - activities = []
 - if runnable.is_a? ::Investigation
   - activities = runnable.activities
@@ -22,7 +23,8 @@
                 %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}",:title=>"#{activity.name}"}
                   %div.progressbar_container
                     = activity_name
-          = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering,:filter_percent=>-1, :students=>students, :learners=>learners}
+          = render :partial => 'home/recent_student_report_summary',
+            :locals=> {:offering_status => offering_status,:filter_percent=>-1}
   - else
     %table.messagetable
       %tr
@@ -37,7 +39,8 @@
       %tr
         %th
           Not Yet Started
-      = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>0, :students=>students, :learners=>learners}
+      = render :partial => 'home/recent_student_report_summary',
+        :locals=> {:offering_status => offering_status, :filter_percent=>0}
   - else
     %table.messagetable
       %tr
@@ -52,7 +55,8 @@
       %tr
         %th
           Completed
-      = render :partial => 'home/recent_student_report_summary',:locals=> {:offering => offering, :filter_percent=>100, :students=>students, :learners=>learners}
+      = render :partial => 'home/recent_student_report_summary',
+        :locals=> {:offering_status => offering_status, :filter_percent=>100}
   - else
     %table.messagetable
       %tr
