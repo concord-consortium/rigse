@@ -139,14 +139,28 @@ end
 Given /^the following student answers:$/ do |answer_table|
   assignable_type = answer_table.column_names[2]
   assignable_class = assignable_type.gsub(/\s/, "_").classify.constantize
-  answer_table.hashes.each do |hash|
+  first_date = DateTime.now - answer_table.hashes.length
+  answer_table.hashes.each_with_index do |hash, index|
     student = User.find_by_login(hash['student']).portal_student
     clazz = Portal::Clazz.find_by_name(hash['class'])
     assignable = assignable_class.find_by_name(hash[assignable_type])
     offering = find_or_create_offering(assignable, clazz)
     learner = offering.find_or_create_learner(student)
     add_response(learner,hash['question_prompt'],hash['answer'])
+    
+    report_learner = Report::Learner.for_learner(learner)
+    # need to make sure the last_run is sequencial inorder for some tests to work
+    report_learner.last_run = first_date + index
+    report_learner.update_fields
   end
+end
+
+Given /^the student "([^"]*)" has run the investigation "([^"]*)" in the class "([^"]*)"$/ do |student, investigation, clazz|
+  student = User.find_by_login(student).portal_student
+  clazz = Portal::Clazz.find_by_name(clazz)
+  investigation = Investigation.find_by_name(investigation)
+  offering = find_or_create_offering(investigation, clazz)
+  learner = offering.find_or_create_learner(student)
 end
 
 Given /^a recording of a report for "([^"]*)"$/ do |name|

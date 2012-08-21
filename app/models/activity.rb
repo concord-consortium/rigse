@@ -6,6 +6,8 @@ class Activity < ActiveRecord::Base
   belongs_to :original
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
+  
+  has_many :learner_activities, :class_name => "Report::LearnerActivity"
 
   has_many :external_activities, :as => :template
 
@@ -103,13 +105,6 @@ class Activity < ActiveRecord::Base
       end
     end
 
-  end
-
-  ##
-  ## Hackish stubs: Noah Paessel
-  ##
-  def offerings
-    []
   end
 
   def parent

@@ -58,3 +58,10 @@ Given /^the following teacher and class mapping exists:$/ do |teacher_clazz|
     end
   end
 end
+
+When /^I run the student's investigation$/ do
+  visit path_to('the class page for "My Class"')
+  within(".accordion_content") do
+    click_link 'Run'
+  end
+end

@@ -12,6 +12,11 @@ describe Activity do
     Activity.create!(@valid_attributes)
   end
   
+  it "should be destroy'able" do
+    act = Activity.create!(@valid_attributes)
+    act.destroy
+  end
+
   describe "should be publishable" do
     before(:each) do
       @activity = Activity.create!(@valid_attributes)

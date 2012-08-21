@@ -1,0 +1,6 @@
+= form_for @portal_student, :url => update_consent_portal_student_path(@portal_student) do |f|
+  = error_messages_for 'user'
+  = error_messages_for 'portal_student', :object_name => 'student'
+
+  = render :partial => 'shared/consent/ask_for_consent'
+  = f.submit 'Submit'

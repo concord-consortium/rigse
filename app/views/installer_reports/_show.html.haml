@@ -1,0 +1,10 @@
+- options = { :omit_delete => true, :omit_edit => true }
+- header = capture do
+  Learner: #{installer_report.name} 
+  - if installer_report.jnlp_session
+    JnlpSession#id: #{installer_report.jnlp_session.id}
+    Accesses: #{installer_report.jnlp_session.access_count}
+= accordion_for(installer_report, header) do
+  %div{:id => dom_id_for(installer_report, :item), :class => 'item'}
+    %div{:id => dom_id_for(installer_report, :details), :class => 'content'}
+      = installer_report.body

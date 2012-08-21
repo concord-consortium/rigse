@@ -18,7 +18,12 @@ class User < ActiveRecord::Base
   has_many :drawing_tools, :class_name => 'Embeddable::DrawingTool'
   has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
   has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
-
+  
+  has_many :created_notices, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
+  has_many :updated_notices, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
+  
+  has_one :notice_user_display_status, :class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
+  
   scope :active, { :conditions => { :state => 'active' } }
   scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
   scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
@@ -63,7 +68,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 1..40
-  validates_uniqueness_of   :login
+  validates_uniqueness_of   :login, :case_sensitive => false
   validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
 
   validates_format_of       :first_name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
@@ -74,7 +79,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of     :email
   validates_length_of       :email,    :within => 6..100 #r@a.wk
-  validates_uniqueness_of   :email
+  validates_uniqueness_of   :email, :case_sensitive => false
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
   validates_presence_of     :vendor_interface_id
@@ -160,7 +165,8 @@ class User < ActiveRecord::Base
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :vendor_interface_id, :external_id
+  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, 
+                  :vendor_interface_id, :external_id, :of_consenting_age, :have_consent
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
@@ -176,6 +182,11 @@ class User < ActiveRecord::Base
   def name_and_login
     _fullname = "#{last_name}, #{first_name}".strip
     _fullname.empty? ? login : "#{_fullname} ( #{login} )"
+  end
+  
+  def full_name
+    _fullname = "#{last_name}, #{first_name}".strip
+    _fullname.empty? ? login : "#{_fullname}"
   end
 
   # Check if a user has a role.

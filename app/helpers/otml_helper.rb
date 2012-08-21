@@ -336,10 +336,6 @@ module OtmlHelper
     end 
   end
     
-  def preview_warning
-    APP_CONFIG[:otml_preview_message] || "Your data will not be saved"
-  end
-  
   def otml_css_path(base="stylesheets",name="otml")
     theme = APP_CONFIG[:theme]
     file = "#{name}.css"

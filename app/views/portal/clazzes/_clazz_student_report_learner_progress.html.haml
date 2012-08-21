@@ -1,0 +1,37 @@
+%tr
+  - offering_statuses.each do |offering_status|
+    - offering = offering_status.offering
+    - activities_display = "none"
+    - offering_display = ""
+    - activities_collapsed = offering.teacher_full_status.find_by_teacher_id(current_user.portal_teacher.id) 
+    - if activities_collapsed
+      - activities_collapsed = activities_collapsed.offering_collapsed
+      - activities_display = (activities_collapsed)? "none" : ""
+      - offering_display = (activities_collapsed)? "" : "none"
+    - assignable = offering.runnable
+    - activities = []
+    - if assignable.is_a? ::Investigation
+      - activities = assignable.activities
+    - elsif assignable.is_a? ::Activity
+      - activities = [assignable]
+    
+    - activities = activities.select {|activity| !activity.teacher_only}
+    
+    - if activities.length > 0
+      - percentage = offering_status.complete_percent(student)
+      %td{:class=>"investigation_summary_row_#{offering.id}", :style=>"display:#{offering_display}"}
+        %div.progressbar_container
+          .progressbar
+            - if percentage == 100
+              .progress.completed{:style=>"width:#{percentage}%"}
+            - else
+              .progress{:style=>"width:#{percentage}%"}
+    - activities.each do |activity|
+      - percentage = offering_status.activity_complete_percent(student, activity)
+      %td{:class=>"investigation_detail_row_#{offering.id}", :style=>"display:#{activities_display}"}
+        %div.progressbar_container
+          .progressbar
+            - if percentage == 100
+              .progress.completed{:style=>"width:#{percentage}%"}
+            - else
+              .progress.activity{:style=>"width:#{percentage}%"}

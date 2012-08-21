@@ -27,14 +27,14 @@ module Rack
       path_info = env[PATH_INFO]
       if path_info[CONFIG_REGEX] || path_info[JNLP_REGEX]
         if (query_string = env[QUERY_STRING]) && session_param = query_string[/#{session_key}=[^&]*/]
-          if cookie = env[HTTP_COOKIE]
+          if (cookie = env[HTTP_COOKIE]).blank?
+            env[HTTP_COOKIE] = session_param
+          else
             if cookie[/#{session_key}=/]
               cookie[/#{session_key}=[^;]*/] = session_param
             else
               cookie << SEMI_COLON + session_param
             end
-          else
-            env[HTTP_COOKIE] = session_param
           end
         end
       end

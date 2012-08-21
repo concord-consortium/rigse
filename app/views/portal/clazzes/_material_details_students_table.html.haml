@@ -1,0 +1,51 @@
+%div
+  - offering_status = Report::OfferingStatus.new(offering)
+  - student_statuses = offering_status.student_statuses
+  - assignable = offering.runnable
+  - activities = []
+  - if assignable.is_a? ::Investigation
+    - activities = assignable.activities.student_only
+  - else
+    - activities = [assignable]
+
+  - if student_statuses.length > 0
+    .student_div.floatL
+      %table.student_list
+        %tr
+          %th
+            %div.progressbar_container 
+              ACTIVITY
+        - student_statuses.each do |student_status|
+          - student = student_status.student
+          - student_name = student.user.full_name
+          %tr
+            %td.student_name{:title=>"#{student_name}"}
+              %div.progressbar_container
+                = student_name
+    .progress_div.webkit_scrollbars
+      %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
+        %tr
+          - activities.each_with_index do |activity, index|
+            - activity_name = (activity.name.nil?)? "Activity #{index}" : activity.name
+            - activity_name_tooltip = (activity.name.nil?)? "Activity #{index}" : activity.name
+            %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
+              %div.progressbar_container 
+                = activity_name
+        - student_statuses.each do |student_status|
+          %tr
+            - activities.each do |activity|
+              %td
+                - if assignable.is_a? Investigation
+                  - percentage = student_status.activity_complete_percent(activity)
+                - else
+                  - percentage = student_status.complete_percent
+                %div.progressbar_container
+                  .progressbar
+                    - if percentage == 100
+                      .progress.completed{:style=>"width:#{percentage}%"}
+                    - else
+                      .progress{:style=>"width:#{percentage}%"}
+    .clearboth{:style=>"height:10px"}
+  - else
+    %div.item.messagetext 
+      %br No students have registered for this class yet.

@@ -1,0 +1,33 @@
+
+D:\GIT\RIGSE>@git.exe %*
+%table.result_material{:cellpadding=>0,:cellspacing=>0}
+  %tr
+    -if false
+      %td.material_type
+        .material_thumbnail
+        .material_type
+          = type
+    %td.material_list
+      - materials.each do |activity|
+        - unless activity.parent.nil?
+          .material_list_item
+            %div
+              %div{:style=>'overflow:hidden'}
+                %span.material_header
+                  = "#{activity.name}, "
+                %span
+                  from
+                  = activity.parent.name
+                .material_button{:style=>'float:right'}
+                  =link_to 'Assign to class','',:class=>"button"
+                .material_button{:style=>'float:right'}
+                  = link_to "Preview",'',:class=>"button"
+            .material_body
+              = activity.description
+              %i
+                Used in: #{activity.offerings.length} classes.
+D:\GIT\RIGSE>@set ErrorLevel=%ErrorLevel%
+
+D:\GIT\RIGSE>@rem Restore the original console codepage.
+
+D:\GIT\RIGSE>@chcp %cp_oem% > nul < nul

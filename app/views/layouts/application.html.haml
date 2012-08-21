@@ -41,7 +41,9 @@
     /[if lt IE 10]
       = javascript_include_tag("pie/PIE")
 
-    
+    - if USING_GOOGLE_ANALYTICS
+      = javascript_tag google_analytics_config
+
   %body
 
     #note{:style=>"display: none;"}

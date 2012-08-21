@@ -6,7 +6,6 @@ var oPopUpWindow;
 
 function showFullStatus()
 {
-	alert('Full Status Link Stub');
+    alert('Full Status Link Stub');
 }
-
 

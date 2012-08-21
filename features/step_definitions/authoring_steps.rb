@@ -14,12 +14,6 @@ When /show the first section of the "(.*)" investigation$/ do |investigation_nam
   visit section_path(section)
 end
 
-When /show the first page of the "(.*)" investigation$/ do |investigation_name|
-  investigation = Investigation.find_by_name(investigation_name)
-  page = investigation.pages.first
-  visit page_path(page)
-end
-
 When /^I save the investigation$/ do
   # ideally we would find the <input type="submit"> inside the form "new_investigation"
   # but it isn't clear how to do that
@@ -88,4 +82,27 @@ When /^I add a "([^"]*)" to the page$/ do |embeddable|
   click_link(embeddable)
   page.execute_script("$('add_menu').hide()")
 end
+
+When /^I copy the embeddable "([^"]*)"(?: by clicking on the (title|content))$/ do |embeddable, click_point|
+  # select the embeddable
+  elem = case click_point
+  when "title"
+    find(:xpath, %!//span[@class="component_title" and contains(., "#{embeddable}")]!)
+  else
+    find(:xpath, %!//span[@class="component_title" and contains(., "#{embeddable}")]/../../..//div[@class="item item_selectable "]!)
+  end
+  elem.click
+
+  show_actions_menu
+  click_link("copy Text: content goes here ...")
+  page.driver.browser.switch_to.alert.dismiss
+  page.execute_script("$('actions_menu').hide()")
+end
+
+When /^I paste the embeddable "([^"]*)"$/ do |embeddable|
+  show_actions_menu
+  click_link("paste Text: content goes here ...")
+  page.execute_script("$('actions_menu').hide()")
+end
+
 

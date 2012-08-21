@@ -3,11 +3,13 @@
   - top_controller ||= top_node.class.name.tableize
   - sub_controller ||= top_node.clazzes[0] ? top_node.clazzes[0].class.name.tableize : nil
   %ul{:id=>top_container_id}
-    %li 
-      - recent_activity_class = '';
-      - if(request.fullpath == '/' || request.fullpath == '/home' )
-        - recent_activity_class = 'selected'
-      = link_to 'Recent Activity', '/', :class=> recent_activity_class
+    
+    - if top_node.is_a? Portal::Teacher
+      %li 
+        - recent_activity_class = '';
+        - if(request.fullpath == recent_activity_path )
+          - recent_activity_class = 'selected'
+        = link_to 'Recent Activity', [:recent_activity], :class=> recent_activity_class
     
     - clazz_list = nil
     - if top_node.is_a? Portal::Teacher
@@ -15,22 +17,48 @@
     - else
       - clazz_list = top_node.clazzes
     
+    - left_pane_submenu_item = 0
+    - if top_node.is_a? Portal::Teacher
+      - unless top_node.left_pane_submenu_item.nil?
+        - left_pane_submenu_item = top_node.left_pane_submenu_item
+    
     - clazz_list.each do |clazz_item|
+      
       - is_active = true;
       - if top_node.is_a? Portal::Teacher 
         - clazz = clazz_item.clazz
         - is_active = clazz_item.active
       - else
         - clazz = clazz_item
-      - if(is_active)
+      
+      - clazz_url = nil
+      - if top_node.is_a? Portal::Teacher
+
+        - case left_pane_submenu_item
+          - when Portal::Teacher.LEFT_PANE_ITEM['MATERIALS']
+            - clazz_url = [:materials, clazz]
+          - when Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER']
+            - clazz_url = [:roster, clazz]
+          - when Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP']
+            - clazz_url = [:edit, clazz]
+          - when Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS']
+            - clazz_url = [:fullstatus, clazz]
+          - else
+            - clazz_url = [clazz]
+          - clazz_url = url_for(clazz_url)
+      - else
+        - clazz_url = [clazz]
+        - clazz_url = url_for(clazz_url)
+        
+      - if (is_active)
         %li{:id=>dom_id_for(clazz,:nav_item)}
           -if clazz.section
             - link_text = "#{clazz.name}(#{clazz.section})"
           -else 
             - link_text = clazz.name
           -if (selects.include? clazz)
-            = link_to link_text,clazz, :class=> 'selected'
+            = link_to link_text, clazz, :class=> 'selected'
             - if top_node.is_a? Portal::Teacher
               = render :partial => 'portal/clazzes/selected_class_submenu', :locals => {:portal_clazz => clazz, :submenu_notselected => true}
           -else
-            = link_to link_text, clazz
+            = link_to link_text, clazz_url

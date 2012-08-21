@@ -2,16 +2,14 @@
 Then /^A report window opens of offering "(.+)"$/ do |offering|
   #offering = Portal::Offering.find_by_name(offering)
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
-    page.should have_content("Report")
-    assert_match(path_to("report of offering \"#{offering}\""), current_url)
+    page.should have_content("Report for:")
   end
 end
 
 And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
-  result = page.execute_script("
+  script_text = "
     var arrTabs = $$('#oTabcontainer div.tab');
-    arrTabs.concat( $$('#oTabcontainer div.selected_tab') );
-    var bSuccess = false;
+    arrTabs = arrTabs.concat( $$('#oTabcontainer div.selected_tab') );
     var strTabText = null;
     for (var i = 0; i < arrTabs.length; i++)
     {
@@ -19,11 +17,12 @@ And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
       if (strTabText == '#{text}')
       {
         arrTabs[i].simulate('click');
-        bSuccess = true;
+        return true;
       }
     }
-    return bSuccess;
-  ")
+    return false;
+  "
+  result = page.execute_script(script_text)
   
    raise 'Tab switch failed' if result == false
   

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120716215928) do
+ActiveRecord::Schema.define(:version => 20120816154045) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -30,6 +30,12 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
+
+  create_table "admin_notice_user_display_statuses", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "last_collapsed_at_time"
+    t.boolean  "collapsed_status"
+  end
 
   create_table "admin_project_vendor_interfaces", :force => true do |t|
     t.integer  "admin_project_id"
@@ -58,6 +64,29 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
     t.boolean  "use_periodic_bundle_uploading",                :default => false
     t.string   "jnlp_cdn_hostname"
     t.boolean  "active"
+  end
+
+  create_table "admin_site_notice_roles", :force => true do |t|
+    t.integer  "notice_id"
+    t.integer  "role_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "admin_site_notice_users", :force => true do |t|
+    t.integer  "notice_id"
+    t.integer  "user_id"
+    t.boolean  "notice_dismissed"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  create_table "admin_site_notices", :force => true do |t|
+    t.text     "notice_html"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "admin_tags", :force => true do |t|
@@ -143,6 +172,16 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "dataservice_jnlp_sessions", :force => true do |t|
+    t.string   "token"
+    t.integer  "user_id"
+    t.integer  "access_count", :default => 0
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
+  add_index "dataservice_jnlp_sessions", ["token"], :name => "index_dataservice_jnlp_sessions_on_token"
 
   create_table "dataservice_launch_process_events", :force => true do |t|
     t.string   "event_type"
@@ -643,8 +682,9 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
     t.text     "body"
     t.string   "remote_ip"
     t.boolean  "success"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "jnlp_session_id"
   end
 
   create_table "investigations", :force => true do |t|
@@ -1753,8 +1793,8 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
     t.datetime "end_time"
     t.integer  "clazz_id"
     t.integer  "teacher_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.boolean  "active",                    :default => true
     t.integer  "position",                  :default => 0
   end
@@ -1762,13 +1802,23 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
   add_index "portal_teacher_clazzes", ["clazz_id"], :name => "index_portal_teacher_clazzes_on_clazz_id"
   add_index "portal_teacher_clazzes", ["teacher_id"], :name => "index_portal_teacher_clazzes_on_teacher_id"
 
+  create_table "portal_teacher_full_status", :force => true do |t|
+    t.integer "offering_id"
+    t.integer "teacher_id"
+    t.boolean "offering_collapsed"
+  end
+
+  add_index "portal_teacher_full_status", ["offering_id"], :name => "index_portal_teacher_full_status_on_offering_id"
+  add_index "portal_teacher_full_status", ["teacher_id"], :name => "index_portal_teacher_full_status_on_teacher_id"
+
   create_table "portal_teachers", :force => true do |t|
-    t.string   "uuid",            :limit => 36
+    t.string   "uuid",                   :limit => 36
     t.integer  "user_id"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
     t.integer  "domain_id"
-    t.integer  "offerings_count",               :default => 0
+    t.integer  "offerings_count",                      :default => 0
+    t.integer  "left_pane_submenu_item"
   end
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
@@ -1870,6 +1920,15 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
     t.boolean  "ignore"
   end
 
+  create_table "report_learner_activity", :force => true do |t|
+    t.integer "learner_id"
+    t.integer "activity_id"
+    t.float   "complete_percent"
+  end
+
+  add_index "report_learner_activity", ["activity_id"], :name => "index_report_learner_activity_on_activity_id"
+  add_index "report_learner_activity", ["learner_id"], :name => "index_report_learner_activity_on_learner_id"
+
   create_table "report_learners", :force => true do |t|
     t.integer  "learner_id"
     t.integer  "student_id"
@@ -1890,8 +1949,9 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",         :limit => 16777215
+    t.text     "answers",          :limit => 16777215
     t.string   "runnable_type"
+    t.float    "complete_percent"
   end
 
   add_index "report_learners", ["class_id"], :name => "index_report_learners_on_class_id"
@@ -2014,6 +2074,7 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
     t.integer  "position"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
+    t.text     "note"
   end
 
   add_index "saveable_image_question_answers", ["image_question_id", "position"], :name => "i_q_id_and_position_index"
@@ -2212,6 +2273,7 @@ ActiveRecord::Schema.define(:version => 20120716215928) do
     t.boolean  "require_password_reset",                   :default => false
     t.boolean  "of_consenting_age",                        :default => false
     t.boolean  "have_consent",                             :default => false
+    t.boolean  "asked_age",                                :default => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

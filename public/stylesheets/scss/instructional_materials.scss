@@ -63,10 +63,18 @@
 .investigationdata tr { vertical-align: top; }
 .investigationdata td { text-align:left; vertical-align:top;padding:5px }
 
-.reportsummary{text-align:left; border:solid 1px #666;border-right:0;}
-.reportsummary tr { vertical-align: top; }
-.reportsummary td { text-align:left; vertical-align:middle;padding:5px; border-right:solid 1px #666}
-.reportsummary th { text-align:left; vertical-align:middle;padding:5px;font-weight:bold;background-color:#F9EEC1; border-right:solid 1px #666 }
+.reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px;width:100%}
+.reportsummary tr { vertical-align: middle; }
+.reportsummary td { text-align:center; vertical-align:middle;min-width:70px;height:20px;background-color:White;border:solid 1px #ccc;padding:4px}
+.reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;min-width:70px;height:20px;;padding:4px}
+.reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:70px;height:20px;;padding:4px}
+.student_name{white-space:nowrap}
+.progress_div{width:474px;overflow:auto;text-align:left}
+
+.student_list{text-align:left;border:0;margin-top:0px;width:100px}
+.student_list tr { vertical-align: middle; }
+.student_list td { text-align:left; vertical-align:middle;height:20px;background-color:White;border:solid 1px #ccc;padding:4px}
+.student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;height:20px;padding:4px }
 
 .legend_progress{
   background-color:#FFCC99;
@@ -83,14 +91,25 @@
 }
 
 .progressbar{
-  width:100px;
-  height:15px;
+  min-width:60px;
+  height:10px;
   border:solid 1px #666;
   background-color:White;
 }
 .progress{
-  height:15px;
+  height:10px;
   background-color:#FFCC99;
+  float:left;
+}
+.progress.completed{
+  height:10px;
+  background-color:#FF8513;
+  float:left;
+}
+
+.progress.activity{
+  height:10px;
+  background-color:#FFAD5B;
   float:left;
 }
 
@@ -127,4 +146,178 @@
   padding:0;
   margin:0;
 }
+.legend_completed {
+  background-color: #FF8513;
+  border: solid 1px #666;
+  width: 10px;
+  height: 10px;
+}
+.legend_row {
+  height: 35px;
+  width: 300px;
+}
+.recent_activity_table td {
+  font-weight: normal;
+}
+.recent_activity_table th{
+  padding-bottom:5px;
+}
+.recent_activity_container table {
+  margin: 0px
+}
 
+.status_count_graph{
+  margin:0;
+  padding:0;
+  width:470px;
+  float:right;
+}
+.status_count_graph td {
+  text-align: right;
+  font-weight:bold;
+}
+.LeftMost_legend_completed {
+  background-color: #FF8513;
+  border: solid 1px #666;
+}
+.Middle_legend_progress {
+  background-color: #FFCC99;
+  border: solid 1px #666;
+}
+.RightMost_legend_not_started {
+  background-color: White;
+  border: solid 1px #666;
+}
+.showhidedetails {
+  white-space:nowrap;
+  float: right;
+  font-weight:normal;
+  width:100px;
+  a{
+    text-decoration:underline;
+  }
+}
+.report {
+  height: 25px;
+  margin-top:10px;
+}
+
+.activityprogressbar_container {
+  font-size: 13px
+}
+
+
+.progressbar_row table {
+  margin-top: 15px
+}
+.investigation_info {
+  width:150px;
+  text-align:left;
+}
+.investigation_info > div{
+  width:150px;
+  text-align:left;
+  padding:0;
+  margin:0;
+}
+
+.investigation_info table{
+  width:100%
+}
+
+.investigation_info th {
+  text-align: left;
+  vertical-align:top;
+  width:90px;
+  
+}
+.investigation_activities {
+  vertical-align:top;
+  text-align:left;
+  padding-right:10px;
+}
+
+.progress_summary_container
+{
+  padding:0;
+  margin:0;
+  width:475px;
+  overflow:auto;
+}
+
+.inProgressSummary{text-align:left;border:0;margin-top:0px;}
+.inProgressSummary tr { vertical-align: top; }
+.inProgressSummary td { text-align:left; vertical-align:middle;padding:2px;width:115px;height:20px;background-color:Transparent}
+.inProgressSummary th { text-align:left; vertical-align:middle;padding:2px;font-weight:bold;width:115px;height:20px;background-color:Transparent}
+
+.class_offering_name{text-align:left;float:left;font-size:16px}
+
+#recent_activity_inprogress .student_name{white-space:nowrap}
+#recent_activity_inprogress .progress_summary_container{width:468px;overflow:auto;text-align:left}
+#recent_activity_inprogress div.progressbar_container {height:20px;padding-top:0px;padding-left:0}
+#recent_activity_inprogress td.student_progress div.progressbar_container {height:18px;padding-left:0;padding-top:2px}
+#recent_activity_inprogress td.student_progress{padding:6px 4px 4px 4px}
+
+.progress_summary_container .inProgressSummary{text-align:left;border:0;margin:0px;margin-left:-1px;width:100%}
+.progress_summary_container .inProgressSummary tr { vertical-align: middle; }
+.progress_summary_container .inProgressSummary td { text-align:center; vertical-align:middle;min-width:70px;height:20px;padding:5px 4px 6px 4px}
+.progress_summary_container .inProgressSummary th { text-align:center; vertical-align:middle;font-weight:bold;min-width:70px;height:20px;padding:5px 4px 5px 4px}
+
+#recent_activity_inprogress .student_list{text-align:left;border:0;margin-top:0px;width:155px}
+#recent_activity_inprogress .student_list tr { vertical-align: middle; }
+#recent_activity_inprogress .student_list td { text-align:left; vertical-align:middle;height:20px;padding:5px 4px 5px 4px;background-color:Transparent;border:0;}
+#recent_activity_inprogress .student_list th { text-align:left; vertical-align:middle;font-weight:bold;height:20px;padding:5px 4px 5px 4px;background-color:Transparent;border:0;}
+#recent_activity_inprogress td.student_name div.progressbar_container {height:20px;padding-top:0px;width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#recent_activity_inprogress td.last_update_date div.progressbar_container {height:20px;padding-top:0px;}
+#recent_activity_inprogress th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
+#recent_activity_inprogress div.progressbar_container {height:15px;padding-top:3px;}
+
+.messagetable{width:100%}
+.messagetable td{font-style:italic;text-align:left}
+.messagetable th{font-weight:bold;text-align:left}
+
+#oFullStatusDiv
+{
+  padding:0;
+  margin:0;
+  width:620px;
+  clear:both;
+}
+.header.fullstatus
+{
+  padding-left:0;
+  color: #3A878B;
+  font-size: 20px;
+  font-weight: bold;
+  clear: both;
+}
+
+#oFullStatusDiv .reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px;width:100%}
+#oFullStatusDiv .reportsummary tr { vertical-align: middle; }
+#oFullStatusDiv .reportsummary td { text-align:center; vertical-align:middle;min-width:110px;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
+#oFullStatusDiv .reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;min-width:110px;height:20px;padding:5px}
+#oFullStatusDiv .reportsummary th.offering_name { text-align:left;}
+#oFullStatusDiv .reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:110px;height:20px;padding:5px}
+#oFullStatusDiv .reportsummary th.activity.offering_name { text-align:left;}
+
+#oFullStatusDiv .student_name{white-space:nowrap}
+#oFullStatusDiv .progress_div{width:484px;overflow:auto;text-align:left}
+
+
+div.progressbar_container {height:15px;padding-top:5px;}
+th.expand_collapse_text div.progressbar_container{width:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+
+#oFullStatusDiv .student_list{text-align:left;border:0;margin-top:0px;width:130px}
+#oFullStatusDiv .student_list tr { vertical-align: middle; }
+#oFullStatusDiv .student_list td { text-align:left; vertical-align:middle;height:20px;background-color:White;border:solid 1px #ccc;padding:5px}
+#oFullStatusDiv .student_list th { text-align:left; vertical-align:middle;font-weight:bold;background-color:#F9EEC1; border:solid 1px #ccc;height:20px;padding:5px }
+#oFullStatusDiv td.student_name div.progressbar_container {width:118px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+
+td.student_name div.progressbar_container {height:20px;padding-top:0px;width:88px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#oFullStatusDiv th.expand_collapse_text.offering_name{cursor:pointer}
+th.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
+th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
+
+.messagetext{font-style:italic;}

@@ -8,6 +8,7 @@ describe SecurityQuestionsController do
     stub_current_user @student.user
     @test_project = mock("project",:name=> "Test Project")
     @test_project.should_receive(:use_student_security_questions).and_return(true)
+    @test_project.stub!(:require_user_consent?).and_return(false)
     Admin::Project.stub(:default_project).and_return(@test_project)
   end
   

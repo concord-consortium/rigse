@@ -17,8 +17,20 @@ describe Investigation do
       @source_investigation.activities << (Factory :activity, { :user => @original_author })
       @source_investigation.activities[0].sections << (Factory :section, {:user => @original_author})
       @source_investigation.activities[0].sections[0].pages << (Factory :page, {:user => @original_author})
+
       open_response = (Factory :open_response, {:user => @original_author})
       open_response.pages << @source_investigation.activities[0].sections[0].pages[0]
+
+      draw_tool = (Factory :drawing_tool, {:user => @original_author, :background_image_url => "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg"})
+      draw_tool.pages << @source_investigation.activities[0].sections[0].pages[0]
+      snapshot_button = (Factory :lab_book_snapshot, {:user => @original_author, :target_element => draw_tool})
+      snapshot_button.pages << @source_investigation.activities[0].sections[0].pages[0]
+
+      prediction_graph = (Factory :data_collector, {:user => @original_author})
+      prediction_graph.pages << @source_investigation.activities[0].sections[0].pages[0]
+      displaying_graph = (Factory :data_collector, {:user => @original_author, :prediction_graph_source => prediction_graph})
+      displaying_graph.pages << @source_investigation.activities[0].sections[0].pages[0]
+
       @source_investigation.reload
       @dest_investigation = @source_investigation.duplicate(@new_author)
       @dest_investigation.save
@@ -81,6 +93,22 @@ describe Investigation do
         @dest_investigation.pages.first.page_elements.first.should_not be_nil
         @dest_investigation.pages.first.page_elements.first.should be_changeable(@new_author)
         @dest_investigation.pages.first.page_elements.first.should_not be_changeable(@original_author)
+      end
+
+      it "should have a lab book button which points to the new investigation drawing tool" do
+        source_draw_tool = @source_investigation.pages.first.drawing_tools.first
+        dest_draw_tool = @dest_investigation.pages.first.drawing_tools.first
+        source_snap = @source_investigation.pages.first.lab_book_snapshots.first
+        dest_snap = @dest_investigation.pages.first.lab_book_snapshots.first
+        dest_snap.target_element.should == dest_draw_tool
+      end
+
+      it "should have a data collector which points to the new investigation prediction graph" do
+        source_prediction_graph = @source_investigation.pages.first.data_collectors.first
+        dest_prediction_graph = @dest_investigation.pages.first.data_collectors.first
+        source_dc = @source_investigation.pages.first.data_collectors.last
+        dest_dc = @dest_investigation.pages.first.data_collectors.last
+        dest_dc.prediction_graph_source.should == dest_prediction_graph
       end
     end
   end
