@@ -227,15 +227,32 @@ input.disabledGo
 
 .messagetext{font-style:italic}
 
+.disabledfilters{
+  color:gray;
+}
+
 .disabledfilters #filtermask{
   display:block;
   height: 150px;
   position: absolute;
   width: 630px;
+  z-index:10;
   background-color:#FBF4DA;
   -moz-opacity: 0;
   opacity: 0;
   filter: alpha(opacity=0);
 }
+
+
+.disabledfilters input[type='checkbox']{
+  -moz-opacity: 0.5;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+
 .material_list_item a{text-transform: none;}
 .unassigned_classes_container{height:250px;overflow-y:auto;}
+
+.tablecell input[type='checkbox'],.tablecell label{
+  vertical-align:middle;
+}
