@@ -89,12 +89,15 @@ class Activity < ActiveRecord::Base
     }
     
   scope :probe, lambda { |pt|
-    pt = pt.size > 0 ? pt : []
+    pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
     {
       :conditions => ['probe_probe_types.id in (?)', pt ]
     }
   }
 
+  scope :activity_group, {
+      :group => "#{self.table_name}.id"
+    }
 
   scope :like, lambda { |name|
     name = "%#{name}%"
@@ -126,11 +129,11 @@ class Activity < ActiveRecord::Base
         if domain_id.length > 0
           if probe_type.length > 0
             if (options[:include_drafts])
-              activities = Activity.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              activities = Activity.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
               activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
-              activities = activities.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              activities = activities.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
             end
           else
             if (options[:include_drafts])
@@ -144,11 +147,11 @@ class Activity < ActiveRecord::Base
         elsif (!grade_span.empty?)
           if probe_type.length > 0
             if (options[:include_drafts])
-              activities = Activity.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+              activities = Activity.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
               activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
-              activities = activities.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+              activities = activities.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
             end
           else
             if (options[:include_drafts])
@@ -162,10 +165,10 @@ class Activity < ActiveRecord::Base
         else
           if probe_type.length > 0
             if (options[:include_drafts])
-              activities = Activity.like(name).probe_type.probe(probe_type).uniq
+              activities = Activity.like(name).activity_group.probe_type.probe(probe_type).uniq
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-              activities = Activity.where(:investigation_id => published_investigation_ids).like(name).probe_type.probe(probe_type).uniq
+              activities = Activity.where(:investigation_id => published_investigation_ids).like(name).activity_group.probe_type.probe(probe_type).uniq
             end
           else
             if (options[:include_drafts])

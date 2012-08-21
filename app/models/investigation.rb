@@ -115,7 +115,7 @@ class Investigation < ActiveRecord::Base
     }
     
   scope :probe, lambda { |pt|
-    pt = pt.size > 0 ? pt : []
+    pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
     {
       :conditions => ['probe_probe_types.id in (?)', pt ]
     }
@@ -127,6 +127,10 @@ class Investigation < ActiveRecord::Base
      :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
     }
   }
+
+  scope :activity_group, {
+      :group => "#{self.table_name}.id"
+    }
 
   scope :ordered_by, lambda { |order| { :order => order } }
 
@@ -158,9 +162,9 @@ class Investigation < ActiveRecord::Base
         if domain_id.length > 0
           if probe_type.length > 0
             if (options[:include_drafts])
-              investigations = Investigation.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              investigations = Investigation.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
             else
-              investigations = Investigation.published.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
             end
           else
             if (options[:include_drafts])
@@ -172,9 +176,9 @@ class Investigation < ActiveRecord::Base
         elsif (!grade_span.empty?)
           if probe_type.length > 0
             if (options[:include_drafts])
-              investigations = Investigation.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+              investigations = Investigation.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
             else
-              investigations = Investigation.published.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+              investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
             end
           else
             if (options[:include_drafts])
@@ -186,9 +190,9 @@ class Investigation < ActiveRecord::Base
         else
           if probe_type.length > 0
             if (options[:include_drafts])
-              investigations = Investigation.like(name).probe_type.probe(probe_type).uniq
+              investigations = Investigation.like(name).activity_group.probe_type.probe(probe_type)
             else
-              investigations = Investigation.published.like(name).probe_type.probe(probe_type).uniq
+              investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type)
             end
           else
             if (options[:include_drafts])
