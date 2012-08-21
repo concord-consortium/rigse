@@ -1,4 +1,4 @@
--probe_types = Probe::ProbeType.all;
+-probe_types = Probe::ProbeType.all.sort!{ |a,b| a.name <=> b.name };
 -scientific_domains=RiGse::Domain.all.collect { |d| [(d.name.nil?) ? d.id.to_s : d.name,d.id] }
 -grades=RiGse::GradeSpanExpectation.grade_spans
 #filter_container{:style=>"overflow:hidden;"}
@@ -65,5 +65,5 @@
               Select None
             - probe_types.each do |probe|
               %div
-                =check_box_tag 'probe[]',"#{probe.id}",true,:id=>"probe_#{probe.id}",:class=>"probe_items"
+                = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"
                 =label_tag "probe_#{probe.id}","#{probe.name}"

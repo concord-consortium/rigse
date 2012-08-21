@@ -120,7 +120,7 @@ class Activity < ActiveRecord::Base
       domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
       name = options[:name]
       sort_order = options[:sort_order] || "name ASC"
-      probe_type = options[:probe_type] || ""
+      probe_type = options[:probe_type] || []
       
       if APP_CONFIG[:use_gse]
         if domain_id.length > 0

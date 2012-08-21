@@ -2,7 +2,7 @@
 -investigations.uniq!{|x| x.name}
 -activities.sort! { |a,b| a.name <=> b.name }
 -activities.uniq!{|x| x.name}
--if textlength>0
+-if textlength>0 && @suggestions.length>0
   #suggestions
     -unless investigations.nil?
       - if investigations.length > 0
