@@ -55,9 +55,11 @@
             = label_tag 'investigation','Investigation'
           %div
             = @activity_checkedstatus
-            = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onchange=>"showHideProbes(this)"
+            = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity'
             = label_tag 'activity','Activity'
         %td.probescolumn
+          .filterheader
+            Probes
           .probes_container
             #select_none_probes{:onclick=>"uncheckedallprobes();"}
               Select None

@@ -57,10 +57,10 @@ width: 300px;
   margin-top:3px;
 }
 .sortbycolumn{width:95px;}
-.domaincolumn{width:170px;display:none;}
-.gradecolumn{width:90px;display:none;}
-.materialcolumn{width:100px;display:none;}
-.probescolumn{width:145px;display:none;}
+.domaincolumn{width:170px;}
+.gradecolumn{width:90px;}
+.materialcolumn{width:100px;}
+.probescolumn{width:145px;}
 
 .material_header
 {
@@ -155,11 +155,13 @@ search_materials{
   height:95px;
   background-color:white;
   border: 1px solid #CCC;
+  padding-left: 5px;
   }
 #select_none_probes{
-  cursor:pointer;
+ cursor:pointer;
  text-decoration:underline;
  font-weight:bold;
+ margin-bottom: 5px;
 }
 .material_list .material_list_item{
   border-bottom: 1px solid #DDD;
@@ -225,11 +227,15 @@ input.disabledGo
 
 .messagetext{font-style:italic}
 
-.showmask{
+.disabledfilters #filtermask{
   display:block;
-  height: 115px;
+  height: 150px;
   position: absolute;
-  width: 530px;
+  width: 630px;
+  background-color:#FBF4DA;
+  -moz-opacity: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
 }
 .material_list_item a{text-transform: none;}
 .unassigned_classes_container{height:250px;overflow-y:auto;}

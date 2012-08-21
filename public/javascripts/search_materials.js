@@ -81,13 +81,6 @@ function showsuggestion(event, oelem) {
     }
 }
 
-function showHideProbes(activity) {
-    var bVisible = false;
-    $$('.probes_container,.probes_header').each(function(oButtonContainer) {
-        oButtonContainer.toggle();
-        bVisible = bVisible || oButtonContainer.getStyle('display') == 'none';
-    });
-}
 function showHideFilters(oLink) {
     
     var filterwrapper=$('filters_wrapper');
@@ -160,7 +153,7 @@ function CheckSubmitStatus() {
 function disableForm(){
     preventsubmit();
     $('search_term').addClassName('disabledGo');
-    $('filtermask').addClassName('showmask');
+    $('filter_container').addClassName('disabledfilters');
     document.getElementsByName('GO')[0].addClassName('disabledGo');
     goButttondisabled=true;
 }
@@ -168,7 +161,7 @@ function disableForm(){
 function enableForm(){
     allowsubmit();
     $('search_term').removeClassName('disabledGo');
-    $('filtermask').removeClassName('showmask');
+    $('filter_container').removeClassName('disabledfilters');
     document.getElementsByName('GO')[0].removeClassName('disabledGo');
     goButttondisabled=false;
 }
