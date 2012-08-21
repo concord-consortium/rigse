@@ -22,6 +22,7 @@ class Report::OfferingStatus
       student_status_map[student] = student_status
       student_statuses << student_status
       student_status.learner = learners.find{|learner| learner.student_id == student.id}
+      student_status.offering = offering
     }
   end
 

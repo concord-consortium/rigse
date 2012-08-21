@@ -1,26 +1,38 @@
 - runnable = current_offering.runnable # note this assumes the runnable is a Investigation
-
 %div.clearboth{:id=>"material_tab_#{current_offering.id}_data", :style=>"display:none"}
   %br
-    - if runnable.is_a? Investigation
-      = render :partial => 'material_details_investigation',
-           :locals => { :investigation => runnable, :current_offering => current_offering }
-    - else
-      %div
-        %table.investigationdata{:width=>"100%"}
-          %tr
-            %td.subheader
-              = current_offering.runnable.class.display_name
-            %td
-              %div{:style=>"float:left;font-size:16px;font-weight:bold"}
-                = current_offering.name
-              %div.item{:style=>"float:left;padding-top:2px"}
-                = "(assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
-            %td{:style=>"white-space:nowrap"}
-              = link_to "Run #{current_offering.runnable.class.display_name}", run_url_for(current_offering, {}), :class=>"button pie"
+    %div
+      %table.investigationdata{:width=>"100%"}
+        %tr
+          %td.subheader= runnable.class.display_name + ':'
+          %td
+            %div{:style=>"float:left;font-size:16px;font-weight:bold"}
+              = current_offering.name
+            %div.item{:style=>"float:left;padding-top:2px"}
+              = "(assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
+          %td{:style=>"white-space:nowrap"}
+            = link_to "Run as Teacher", run_url_for(runnable, {:teacher_mode => true}), :class=>"button pie"
+            %div{:style=>"height:10px"}
+            = link_to "Run as Student", run_url_for(runnable, {}), :class=>"button pie"
 
-      - if current_offering.reportable?
-        %div.right
-          %span.linkbutton.pie
-            = report_link_for(current_offering, 'report', 'Run Report')
-  
+      - if runnable.is_a? Investigation
+        %br
+        %div
+          = render :partial => 'investigation_activities', :locals => { :investigation => runnable }
+
+      %div
+        %table{:width=>"100%"}
+          %tr
+            %td{:width=>"200px"}
+              %span.subheader
+                Student Submissions
+            %td
+              - if current_offering.reportable?
+                %div.right
+                  %span.linkbutton.pie= report_link_for(current_offering, 'report', 'Run Report')
+          - if current_offering.clazz.students.length > 0
+            %tr
+              %td{:colspan=>"2"}= render :partial => 'progress_bar_legend'
+          %tr
+            %td{:colspan=>"2"}
+              = render :partial => 'material_details_students_table', :locals => {:offering => current_offering}

@@ -118,11 +118,9 @@ Feature: Teacher manages instructional materials of a class
     When I go to Instructional Materials page for "Chemistry"
     Then I should see "No offerings present"
     
-  Scenario: Teacher should see a message if no activities are present
+  Scenario: Teacher should not get an error if no activities are present
     When I go to Instructional Materials page for "Mathematics"
-    Then I should see "No activities available in this investigation"
-    And I should not see "Show Run Activity buttons"
-    And I should not see "Hide Run Activity buttons"
+    Then I should see "Investigation: Lumped circuit abstraction"
 
   Scenario: Teacher should see a message if no students are present
     When I go to Instructional Materials page for "Physics"
@@ -132,7 +130,6 @@ Feature: Teacher manages instructional materials of a class
   Scenario: Teacher should be able to run investigation as teacher
     When I follow "Run as Teacher"
     Then I receive a file for download with a filename like "_investigation_"
-    
     
   Scenario: Teacher should be able to run investigation as student
     When I follow "Run as Student"

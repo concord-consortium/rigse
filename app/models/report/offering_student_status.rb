@@ -1,17 +1,25 @@
 class Report::OfferingStudentStatus
   attr_accessor :learner
   attr_accessor :student
+  attr_accessor :offering
 
   # this is redundant with the Report::Learner object, but that object doesn't handle
   # students that don't have learners for the offering
   def complete_percent
     if learner
-      if learner.report_learner.nil?
-        learner.report_learner = Report::Learner.for_learner(learner)
-      end
+       # check if this is a reportable thing, if not then base the percent on the existance of the learner
+       if offering.individual_reportable?
+        if learner.report_learner.nil?
+          learner.report_learner = Report::Learner.for_learner(learner)
+        end
 
-      # this will need to handle the case of external activities
-      learner.report_learner.complete_percent
+        learner.report_learner.complete_percent
+      else
+        # return 99.99 because all we can tell is whether it is in progress
+        # if we return 100 then the progress bar will indicate it is compelete
+        # 99.99 is enough to fill up the progress bar but keep the in_progress color
+        99.99
+      end
     else
       0
     end
