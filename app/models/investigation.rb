@@ -110,6 +110,17 @@ class Investigation < ActiveRecord::Base
     }
   }
 
+  scope :probe_type, {
+    :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
+    }
+    
+  scope :probe, lambda { |pt|
+    pt = pt.size > 0 ? pt : []
+    {
+      :conditions => ['probe_probe_types.id in (?)', pt ]
+    }
+  }
+
   scope :like, lambda { |name|
     name = "%#{name}%"
     {
@@ -141,24 +152,50 @@ class Investigation < ActiveRecord::Base
       sort_order = options[:sort_order] || "name ASC"
       domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
       name = options[:name]
+      probe_type = options[:probe_type]
+      
       if APP_CONFIG[:use_gse]
         if domain_id.length > 0
-          if (options[:include_drafts])
-            investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              investigations = Investigation.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+            else
+              investigations = Investigation.published.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+            end
           else
-            investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            if (options[:include_drafts])
+              investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            else
+              investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            end
           end
         elsif (!grade_span.empty?)
-          if (options[:include_drafts])
-            investigations = Investigation.like(name).with_gse.grade(grade_span)
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              investigations = Investigation.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+            else
+              investigations = Investigation.published.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+            end
           else
-            investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+            if (options[:include_drafts])
+              investigations = Investigation.like(name).with_gse.grade(grade_span)
+            else
+              investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+            end
           end
         else
-          if (options[:include_drafts])
-            investigations = Investigation.like(name)
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              investigations = Investigation.like(name).probe_type.probe(probe_type).uniq
+            else
+              investigations = Investigation.published.like(name).probe_type.probe(probe_type).uniq
+            end
           else
-            investigations = Investigation.published.like(name)
+            if (options[:include_drafts])
+              investigations = Investigation.like(name)
+            else
+              investigations = Investigation.published.like(name)
+            end
           end
         end
       else
