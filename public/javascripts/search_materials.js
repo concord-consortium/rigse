@@ -243,3 +243,24 @@ function get_Assign_To_Class_Popup(material_id,material_type)
     var target_url = "/search/get_current_material_unassigned_clazzes";
     new Ajax.Request(target_url, options);
 }
+function materialCheckOnClick(ObjId)
+{
+    if(!$('investigation').checked &&  !$('activity').checked ){
+        $(ObjId).checked="checked";
+    }
+
+}
+
+function selectAllGreades(grades)
+{
+    if($('allgrades').checked){
+        grades.each(function(obj){
+            $(obj).checked= "checked";
+        })
+    }
+    else{
+        grades.each(function(obj){
+            $(obj).checked= false;
+        })
+    }
+}

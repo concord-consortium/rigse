@@ -39,23 +39,23 @@
           .filterheader
             Grade
           %div
-            = check_box_tag 'grade_span[]','%',(@grade_span.include?('%'))?true:false,:id=>'allgrades'
+            = check_box_tag 'grade_span[]','%',(@grade_span.include?('%'))?true:false,:id=>'allgrades',:onclick=>"selectAllGreades(#{grades});"
             = label_tag 'allgrades', 'All Grades'
           -grades.each do |grade|
             
             %div
-              = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade
+              = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade,:class=>'grade'
               = label_tag grade, grade
         %td.materialcolumn
           .filterheader
             Material
           %div
             = @investigation_checkedstatus
-            = check_box_tag 'material[]', 'investigation', @material_type.include?('investigation'),:id=>'investigation'
+            = check_box_tag 'material[]', 'investigation', @material_type.include?('investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'investigation','Investigation'
           %div
             = @activity_checkedstatus
-            = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity'
+            = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
         %td.probescolumn
           .filterheader
