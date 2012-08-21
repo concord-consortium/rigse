@@ -68,7 +68,8 @@ Feature: Investigations can be searched
     Then There should be 20 investigations displayed
     And  I should see "Next" within "#offering_list"
     When I click on the next page of results
-    Then I should be on the class page for "My Class"
+    Then "z Investigation" should be displayed in the investigations list
+    And  I should be on the class page for "My Class"
     And  I should see "Previous" within "#offering_list"
 
 
