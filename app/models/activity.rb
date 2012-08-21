@@ -84,6 +84,18 @@ class Activity < ActiveRecord::Base
     }
   }
 
+  scope :probe_type, {
+    :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
+    }
+    
+  scope :probe, lambda { |pt|
+    pt = pt.size > 0 ? pt : []
+    {
+      :conditions => ['probe_probe_types.id in (?)', pt ]
+    }
+  }
+
+
   scope :like, lambda { |name|
     name = "%#{name}%"
     {
@@ -108,31 +120,60 @@ class Activity < ActiveRecord::Base
       domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
       name = options[:name]
       sort_order = options[:sort_order] || "name ASC"
-      
+      probe_type = options[:probe_type] || ""
       
       if APP_CONFIG[:use_gse]
         if domain_id.length > 0
-          if (options[:include_drafts])
-            activities = Activity.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              activities = Activity.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
+              activities = activities.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+            end
           else
-            published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-            activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
-            activities = activities.with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            if (options[:include_drafts])
+              activities = Activity.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
+              activities = activities.with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            end
           end
         elsif (!grade_span.empty?)
-          if (options[:include_drafts])
-            activities = Activity.like(name).with_gse.grade(grade_span)
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              activities = Activity.like(name).probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
+              activities = activities.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+            end
           else
-            published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-            activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
-            activities = activities.with_gse.grade(grade_span)
+            if (options[:include_drafts])
+              activities = Activity.like(name).with_gse.grade(grade_span)
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
+              activities = activities.with_gse.grade(grade_span)
+            end
           end
         else
-          if (options[:include_drafts])
-            activities = Activity.like(name)
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              activities = Activity.like(name).probe_type.probe(probe_type).uniq
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.where(:investigation_id => published_investigation_ids).like(name).probe_type.probe(probe_type).uniq
+            end
           else
-            published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-            activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
+            if (options[:include_drafts])
+              activities = Activity.like(name)
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
+            end
           end
         end
       else

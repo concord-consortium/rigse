@@ -14,12 +14,12 @@ class SearchController < ApplicationController
     if @material_type.include?('investigation')
       @investigations = Investigation.search_list(search_options)
       @investigations_count = @investigations.length
-      @investigations = @investigations.paginate(:page => params[:investigation_page]? params[:investigation_page] : 1, :per_page => 10) 
+      @investigations = @investigations.paginate(:page => @investigation_page, :per_page => 10) 
     end
     if @material_type.include?('activity')
       @activities = Activity.search_list(search_options)
       @activities_count = @activities.length
-      @activities = @activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
+      @activities = @activities.paginate(:page => @activity_page, :per_page => 10)
     end
   end
   
@@ -35,12 +35,12 @@ class SearchController < ApplicationController
     if @material_type.include?('investigation')
       investigations = Investigation.search_list(search_options)
       @investigations_count = investigations.length
-      investigations = investigations.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
+      investigations = investigations.paginate(:page => @investigation_page, :per_page => 10)
     end
     if @material_type.include?('activity')
       activities = Activity.search_list(search_options)
       @activities_count = activities.length
-      activities = activities.paginate(:page => params[:activity_page]? params[:activity_page] : 1, :per_page => 10)
+      activities = activities.paginate(:page => @activity_page, :per_page => 10)
     end  
     if request.xhr?
       render :update do |page| 
@@ -65,12 +65,14 @@ class SearchController < ApplicationController
     @investigation_page=params[:investigation_page]|| 1
     @activity_page = params[:activity_page] || 1
     @material_type = param_find(:material, (params[:method] == :get)) || ['investigation','activity']
+    @probe_type = param_find(:probe, (params[:method] == :get)) || []
     search_options = {
       :name => @search_term || '',
       :sort_order => @sort_order,
       :domain_id => @domain_id || [],
       :grade_span => @grade_span|| [],
-      :paginate => false
+      :paginate => false,
+      :probe_type => @probe_type
       #:page => params[:investigation_page] ? params[:investigation_page] : 1,
       #:per_page => 10
     }
