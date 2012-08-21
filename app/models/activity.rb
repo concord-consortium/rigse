@@ -124,7 +124,7 @@ class Activity < ActiveRecord::Base
             activities = Activity.like(name).with_gse.grade(grade_span)
           else
             published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-            activities = Activity.where(:investigation_id => published_investigation_ids).where('activities.publication_status <> "draft" or activities.publication_status is null').like(name)
+            activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
             activities = activities.with_gse.grade(grade_span)
           end
         else
@@ -132,7 +132,7 @@ class Activity < ActiveRecord::Base
             activities = Activity.like(name)
           else
             published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-            activities = Activity.where(:investigation_id => published_investigation_ids).where('activities.publication_status <> "draft" or activities.publication_status is null').like(name)
+            activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
           end
         end
       else
@@ -140,7 +140,7 @@ class Activity < ActiveRecord::Base
           activities = Activity.like(name)
         else
           published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-          activities = Activity.where(:investigation_id => published_investigation_ids).where('activities.publication_status <> "draft" or activities.publication_status is null').like(name)
+          activities = Activity.where(:investigation_id => published_investigation_ids).like(name)
         end
       end
 
