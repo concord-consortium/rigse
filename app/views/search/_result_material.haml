@@ -15,8 +15,12 @@
             = type
       %td.material_list
         - materials.each do |investigation|
-          %div.material_list_item{:id=>"search_investigation_#{investigation.id}"}
-            = render :partial => 'result_item', :locals=>{:material=>investigation}
+          - if investigation==materials.last
+            %div.material_list_item{:id=>"search_investigation_#{investigation.id}",:style=>"border:none"}
+              = render :partial => 'result_item', :locals=>{:material=>investigation}
+          - else
+            %div.material_list_item{:id=>"search_investigation_#{investigation.id}"}
+              = render :partial => 'result_item', :locals=>{:material=>investigation}
   %br
   = will_paginate materials, {:param_name => 'investigation_page', :params => {:search_term => @search_term, :activity_page => @activity_page}}
   
