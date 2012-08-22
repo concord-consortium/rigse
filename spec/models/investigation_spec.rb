@@ -274,9 +274,6 @@ describe Investigation do
       }
       found = Investigation.search_list(options)
       found.should_not include(@investigation)
-      found.each do |inv|
-        puts "{inv.inspect}"
-      end
     end
   end 
 
