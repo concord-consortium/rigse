@@ -199,7 +199,7 @@ class Activity < ActiveRecord::Base
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
               if probe_type.include?("0")
-                activities = Activity.published.like(name).investigation.activity_group.where('id not in (?)', Activity.no_probe).uniq
+                activities = Activity.published.like(name).investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).uniq
               else
                 activities = Activity.published.like(name).investigation.activity_group.probe_type.probe(probe_type).uniq
               end
