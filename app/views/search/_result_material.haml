@@ -3,7 +3,7 @@
   .material_list_header
     Investigations
   %p.border_top= page_entries_info materials, :model=>"Investigation"
-  = will_paginate materials, {:param_name => 'investigation_page', :params => {:search_term => @search_term, :activity_page => @activity_page}}
+  = will_paginate materials, {:param_name => 'investigation_page', :params => {:search_term => @search_term, :activity_page => @activity_page,:type=>"inv"}}
   
   %table.result_material{:cellpadding=>0,:cellspacing=>0}
     %tr
@@ -22,5 +22,5 @@
             %div.material_list_item{:id=>"search_investigation_#{investigation.id}"}
               = render :partial => 'result_item', :locals=>{:material=>investigation}
   %br
-  = will_paginate materials, {:param_name => 'investigation_page', :params => {:search_term => @search_term, :activity_page => @activity_page}}
+  = will_paginate materials, {:param_name => 'investigation_page', :params => {:search_term => @search_term, :activity_page => @activity_page,:type=>"inv"}}
   
