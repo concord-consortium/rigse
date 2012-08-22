@@ -209,7 +209,6 @@ class Investigation < ActiveRecord::Base
             end
           end
         elsif probe_type.length > 0
-          puts "Investigationnnnnnnnnnnnnnnnnnnnn No Probeeeeeeeeeeeeeeeeeeeeeeeee #{}"
           if (options[:include_drafts])
             if probe_type.include?("0")
               investigations = Investigation.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe)
