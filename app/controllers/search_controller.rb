@@ -57,6 +57,17 @@ class SearchController < ApplicationController
     end
   end
   
+  def unauthorized_user
+    notice_msg = 'Please login or register as a teacher'
+    redirect_url = root_url
+    
+    # Set notice message
+    flash[:notice] = notice_msg
+    
+    # Redirect to the login page
+    redirect_to redirect_url
+  end
+  
   def get_searchoptions
     @search_term = params[:search_term]
     @sort_order = param_find(:sort_order, (params[:method] == :get)) || 'name ASC'
