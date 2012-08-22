@@ -259,3 +259,36 @@ And /^I preview materials on the search instructional materials page$/ do
   end
   step 'I receive a file for download with a filename like ".jnlp"'
 end
+
+When /^I should be able to filter the search results on the basis of domains and grades on the search instructional materials page$/ do
+  #domain
+  step 'I check "Biological Science"'
+  step 'I should see "Digestive System"'
+  #grades
+  step 'I am on the search instructional materials page'
+  step 'I uncheck "All Grades"'
+  step 'I should wait 2 seconds'
+  step 'I check "5-6"'
+  step 'I should wait 2 seconds'
+  step 'I should not see "Digestive System"'
+  step 'I should not see "Bile Juice"'
+  step 'I check "10-11"'
+  step 'I should wait 2 seconds'
+  step 'I should see "Digestive System"'
+  step 'I should see "Bile Juice"'
+  step 'I check "All Grades"'
+  step 'I should see "Digestive System"'
+  step 'I should see "Bile Juice"'
+end
+
+When /^I should be able to filter the search results on the basis of probes on the search instructional materials page$/ do
+  #probes
+  step 'I check "UVA Intensity"'
+  step 'I should wait 2 seconds'
+  step 'I should not see "A Weather Underground"'
+  step 'I should not see "A heat spontaneously"'
+  step 'I check "Temperature"'
+  step 'I should wait 2 seconds'
+  step 'I should see "A Weather Underground"'
+  step 'I should see "A heat spontaneously"'
+end

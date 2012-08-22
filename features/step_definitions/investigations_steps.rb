@@ -383,3 +383,33 @@ Then /^I cannot duplicate the investigation$/ do
   show_actions_menu
   page.should have_no_content('duplicate')
 end
+
+And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to domain "([^"]*)" and has grade "([^"]*)"$/ do |investigation_name, activity_name, domain_name, grade_value|
+  @domain = Factory.create( :rigse_domain, { :name => domain_name } )
+  knowledge_statement = Factory.create( :rigse_knowledge_statement, { :domain => @domain } )
+  assessment_target = Factory.create( :rigse_assessment_target, { :knowledge_statement => knowledge_statement })
+  
+  @grade = grade_value
+  grade_span_expection  = Factory.create( :rigse_grade_span_expectation, {:assessment_target => assessment_target, :grade_span => @grade} )
+  
+  investigation = 
+    {
+      :name => investigation_name,
+      :grade_span_expectation => grade_span_expection
+    }
+      
+  @published = []
+  @drafts = []
+  
+  published = Factory.create(:investigation, investigation)
+  published.name << " (published) "
+  published.publish!
+  published.save
+  @published << published.reload
+  Factory.create(:activity, :investigation_id => published.id , :name => activity_name)
+  draft = Factory.create(:investigation, investigation)
+  draft.name << " (draft) "
+  draft.save
+  @drafts << draft.reload
+  
+end

@@ -46,8 +46,16 @@ Feature: Teacher can search study materials
       | Mathematics | teacher    | math       |
       | Biology     | teacher    | bio        |
       | Geography   | teacher    | geo        |
+    And the investigation "Digestive System" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
     And I login with username: teacher password: teacher
-    And I am on the search instructional materials page
+    And I am on the search instructional materials page"
+    
+    
+  @javascript
+  Scenario: Teacher can filter search results
+    When the project settings enables use of Grade Span Expectation
+    Then I should be able to filter the search results on the basis of domains and grades on the search instructional materials page
+    And the project settings disables use of Grade Span Expectation
     
     
   Scenario: Anonymous user can not assign study materials to the class
@@ -87,7 +95,7 @@ Feature: Teacher can search study materials
     
     
   @javascript
-  Scenario: search results should be paginated
+  Scenario: Search results should be paginated
     When the count of a search result is greater than the page size on the search instructional materials page
     Then the search results should be paginated on the search instructional materials page
     
