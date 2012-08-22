@@ -121,7 +121,8 @@ function uncheckedallprobes(allChecked) {
     $$(".probe_items").each(function(e) {
         e.checked = allChecked;
     });
-    $('probe_0').checked= !allChecked;
+    if(allChecked)
+        $('probe_0').checked = !allChecked;
 }
 
 function removesuggestions() {
