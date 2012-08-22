@@ -1,6 +1,9 @@
 .material_icon
-  %div{:style=>"margin-top:35px"}
-    =material.class.to_s
+  .icon_image
+    -if(material.class.to_s=="Investigation")
+      I
+    -else
+      A
 %div
   - unless current_user.anonymous?
     - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
