@@ -31,29 +31,29 @@
           .filterheader
             Scientific Domain
           -scientific_domains.each do |domain|
-            %div
+            .tablecell
               = check_box_tag 'domain_id[]',domain[1], (@domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
               = label_tag domain[0].gsub(/\s+/, ""), domain[0]
             /= check_box_tag :domain_id, domain, true
         %td.gradecolumn
           .filterheader
             Grade
-          %div
+          .tablecell
             = check_box_tag 'grade_span[]','%',(@grade_span.include?('%'))?true:false,:id=>'allgrades',:onclick=>"selectAllGreades(#{grades});"
             = label_tag 'allgrades', 'All Grades'
           -grades.each do |grade|
             
-            %div
+            .tablecell
               = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade,:class=>'grade'
               = label_tag grade, grade
         %td.materialcolumn
           .filterheader
             Material
-          %div
+          .tablecell
             = @investigation_checkedstatus
             = check_box_tag 'material[]', 'investigation', @material_type.include?('investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'investigation','Investigation'
-          %div
+          .tablecell
             = @activity_checkedstatus
             = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
@@ -64,6 +64,6 @@
             #select_none_probes{:onclick=>"uncheckedallprobes();"}
               Select None
             - probe_types.each do |probe|
-              %div
+              .tablecell
                 = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"
                 =label_tag "probe_#{probe.id}","#{probe.name}"

@@ -1,15 +1,15 @@
 - show_message_onSearch= ""
 - if @investigations_count == 1
-  - show_message_onSearch += "#{@investigations_count}  <a href='#investigations_bookmark' class='bookmark'>investigation</a>"
+  - show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)' class='bookmark'>investigation</a>"
 - elsif @investigations_count > 0
-  - show_message_onSearch += "#{@investigations_count}  <a href='#investigations_bookmark' class='bookmark'>investigations</a>"
+  - show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)' class='bookmark'>investigations</a>"
 
 - if @activities_count > 0 && @investigations_count > 0
   - show_message_onSearch += ","
 - if @activities_count == 1
-  - show_message_onSearch += " #{@activities_count} <a href='#activities_bookmark' class='bookmark'>activity</a>"
+  - show_message_onSearch += " #{@activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)' class='bookmark'>activity</a>"
 - elsif @activities_count > 0
-  - show_message_onSearch += " #{@activities_count} <a href='#activities_bookmark' class='bookmark'>activities</a>"
+  - show_message_onSearch += " #{@activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)' class='bookmark'>activities</a>"
 
 - show_message_onSearch +=" matching"
 - if @search_term != ""

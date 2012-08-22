@@ -256,11 +256,26 @@ function selectAllGreades(grades)
     if($('allgrades').checked){
         grades.each(function(obj){
             $(obj).checked= "checked";
-        })
+        });
     }
     else{
         grades.each(function(obj){
             $(obj).checked= false;
-        })
+        });
     }
 }
+
+document.observe("dom:loaded", function() {
+    var objquery=window.location.href.parseQuery([separator = '&']);
+    if (objquery.type!==undefined)
+    {
+        if (objquery.type=='act')
+        {
+            window.scrollTo(0,$("activities_bookmark").offsetTop);
+        }
+         if (objquery.type=='inv')
+        {
+            window.scrollTo(0,$("investigations_bookmark").offsetTop);
+        }
+    }
+});
