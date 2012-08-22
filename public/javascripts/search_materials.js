@@ -117,10 +117,11 @@ function showHideFilters(oLink) {
     oLink.update(strLinkText);
 }
 
-function uncheckedallprobes() {
+function uncheckedallprobes(allChecked) {
     $$(".probe_items").each(function(e) {
-        e.checked = false;
+        e.checked = allChecked;
     });
+    $('probe_0').checked= !allChecked;
 }
 
 function removesuggestions() {
@@ -251,17 +252,42 @@ function materialCheckOnClick(ObjId)
 
 }
 
-function selectAllGreades(grades)
+function selectAllGreades(gradeObj,grades)
 {
-    if($('allgrades').checked){
-        grades.each(function(obj){
-            $(obj).checked= "checked";
-        });
+    
+    if(gradeObj.id == 'allgrades'){
+        if($(gradeObj).checked){
+            grades.each(function(obj){
+                $(obj).checked= "checked";
+            });
+        }
+        else if(!$(gradeObj).checked){
+            grades.each(function(obj){
+                $(obj).checked= false;
+            });
+        }
     }
-    else{
-        grades.each(function(obj){
-            $(obj).checked= false;
-        });
+    else {
+        if(!$(gradeObj).checked){
+            $('allgrades').checked= false;
+        }
+        else{
+            allgrades_selected = true;
+            grades.each(function(obj){
+                allgrades_selected = allgrades_selected && $(obj).checked;
+                
+            });
+            if(allgrades_selected){
+                $('allgrades').checked= "checked";
+            }
+        }
+    }
+}
+
+function uncheckednoprobe(probeObj)
+{
+    if($(probeObj).checked){
+        $('probe_0').checked= false;
     }
 }
 

@@ -43,5 +43,7 @@
       Not used in any class.
     -else
       Used in #{material.offerings.count} classes.
-  %div
-    = "Required equipment:#{probe_types(material).map { |p| p.name }.join(", ")} "
+  - required_equipments = probe_types(material).map { |p| p.name }.join(", ") 
+  - if required_equipments != ""
+    %div
+      = "Required equipment:#{required_equipments} "

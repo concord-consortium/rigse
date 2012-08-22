@@ -1,4 +1,4 @@
--probe_types = Probe::ProbeType.all.sort!{ |a,b| a.name <=> b.name };
+-probe_types = Probe::ProbeType.all.sort!{ |a,b| a.name.downcase <=> b.name.downcase };
 -scientific_domains=RiGse::Domain.all.collect { |d| [(d.name.nil?) ? d.id.to_s : d.name,d.id] }
 -grades=RiGse::GradeSpanExpectation.grade_spans
 #filter_container{:style=>"overflow:hidden;"}
@@ -39,12 +39,12 @@
           .filterheader
             Grade
           .tablecell
-            = check_box_tag 'grade_span[]','%',(@grade_span.include?('%'))?true:false,:id=>'allgrades',:onclick=>"selectAllGreades(#{grades});"
+            = check_box_tag 'grade_span[]','%',(@grade_span.include?('%'))?true:false,:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
             = label_tag 'allgrades', 'All Grades'
           -grades.each do |grade|
             
             .tablecell
-              = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade,:class=>'grade'
+              = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
               = label_tag grade, grade
         %td.materialcolumn
           .filterheader
@@ -61,9 +61,18 @@
           .filterheader
             Probes
           .probes_container
-            #select_none_probes{:onclick=>"uncheckedallprobes();"}
-              Select None
+            .tablecell
+              = check_box_tag 'probe[]',"0",(@probe_type.include?("0")),:id=>"probe_0",:class=>"probe_no_check",:onclick=>"uncheckedallprobes(false);"
+              = label_tag "probe_0","No Probes"
+            %div
+              Select 
+              %span#select_none_probes{:onclick=>"uncheckedallprobes(false);"} 
+                None
+              %span
+                |
+              %span#select_none_probes{:onclick=>"uncheckedallprobes(true);"} 
+                All
             - probe_types.each do |probe|
               .tablecell
-                = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"
+                = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items",:onclick=>"uncheckednoprobe(this);"
                 =label_tag "probe_#{probe.id}","#{probe.name}"
