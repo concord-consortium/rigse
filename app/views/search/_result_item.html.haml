@@ -44,7 +44,7 @@
     -else
       Used in #{material.offerings.count} classes.
   - required_equipments = probe_types(material).map { |p| p.name }.join(", ") 
-  - if required_equipments != ""
+  - unless required_equipments == ""
     #required_equipment_container
       %span#required_equipment
         Required equipment:

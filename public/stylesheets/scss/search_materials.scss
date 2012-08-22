@@ -157,11 +157,14 @@ search_materials{
   border: 1px solid #CCC;
   padding-left: 5px;
   }
-#select_none_probes{
- cursor:pointer;
- text-decoration:underline;
- font-weight:bold;
+#select_none_probes,#select_all_probes{
  margin-bottom: 5px;
+}
+#select_none_probes a,#select_all_probes a{
+  text-decoration:underline;
+  font-weight:bold;
+  cursor:pointer;
+  color:black;
 }
 .material_list .material_list_item{
   border-bottom: 1px solid #DDD;
