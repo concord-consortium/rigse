@@ -111,9 +111,13 @@ class Activity < ActiveRecord::Base
     }
   }
 
-  scope :published,
+  scope :investigation,
   {
     :joins => "left outer JOIN investigations ON investigations.id = activities.investigation_id",
+  }
+
+  scope :published,
+  {
     :conditions =>['activities.publication_status = "published" OR investigations.publication_status = "published"']
   }
   
@@ -136,68 +140,68 @@ class Activity < ActiveRecord::Base
           if probe_type.length > 0
             if (options[:include_drafts])
               if probe_type.include?("0")
-                activities = Activity.like(name).activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+                activities = Activity.like(name).investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
               else
-                activities = Activity.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+                activities = Activity.like(name).investigation.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
               end
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-              activities = Activity.published.like(name)
+              activities = Activity.published.like(name).investigation
               if probe_type.include?("0")
-                activities = activities.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+                activities = activities.investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
               else
-                activities = activities.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+                activities = activities.investigation.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
               end
             end
           else
             if (options[:include_drafts])
-              activities = Activity.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+              activities = Activity.like(name).investigation.with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-              activities = Activity.published.like(name)
-              activities = activities.with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+              activities = Activity.published.like(name).investigation
+              activities = activities.investigation.with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
             end
           end
         elsif (!grade_span.empty?)
           if probe_type.length > 0
             if (options[:include_drafts])
               if probe_type.include?("0")
-                activities = Activity.like(name).activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).uniq
+                activities = Activity.like(name).investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).uniq
               else
-                activities = Activity.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+                activities = Activity.like(name).investigation.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
               end
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-              activities = Activity.published.like(name)
+              activities = Activity.published.like(name).investigation
               if probe_type.include?("0")
-                activities = activities.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).uniq
+                activities = activities.investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).uniq
               else
-                activities = activities.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+                activities = activities.investigation.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
               end
             end
           else
             if (options[:include_drafts])
-              activities = Activity.like(name).with_gse.grade(grade_span)
+              activities = Activity.like(name).investigation.with_gse.grade(grade_span)
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-              activities = Activity.published.like(name)
-              activities = activities.with_gse.grade(grade_span)
+              activities = Activity.published.like(name).investigation
+              activities = activities.investigation.with_gse.grade(grade_span)
             end
           end
         else
           if probe_type.length > 0
             if (options[:include_drafts])
               if probe_type.include?("0")
-                activities = Activity.like(name).activity_group.where('activities.id not in (?)', Activity.no_probe).uniq
+                activities = Activity.like(name).investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).uniq
               else
-                activities = Activity.like(name).activity_group.probe_type.probe(probe_type).uniq
+                activities = Activity.like(name).investigation.activity_group.probe_type.probe(probe_type).uniq
               end
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
               if probe_type.include?("0")
-                activities = Activity.published.like(name).activity_group.where('id not in (?)', Activity.no_probe).uniq
+                activities = Activity.published.like(name).investigation.activity_group.where('id not in (?)', Activity.no_probe).uniq
               else
-                activities = Activity.published.like(name).activity_group.probe_type.probe(probe_type).uniq
+                activities = Activity.published.like(name).investigation.activity_group.probe_type.probe(probe_type).uniq
               end
             end
           else
@@ -205,7 +209,7 @@ class Activity < ActiveRecord::Base
               activities = Activity.like(name)
             else
               published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-              activities = Activity.published.like(name)
+              activities = Activity.published.like(name).investigation
             end
           end
         end
@@ -214,7 +218,7 @@ class Activity < ActiveRecord::Base
           activities = Activity.like(name)
         else
           published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
-          activities = Activity.published.like(name)
+          activities = Activity.published.like(name).investigation
         end
       end
 
