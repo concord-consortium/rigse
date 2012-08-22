@@ -111,6 +111,9 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - workgroup
+  - chosen
+  - site_notice
   - classes_left_pane
   - instructional_materials
 
