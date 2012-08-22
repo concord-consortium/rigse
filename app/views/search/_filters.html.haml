@@ -39,7 +39,7 @@
           .filterheader
             Grade
           .tablecell
-            = check_box_tag 'grade_span[]','%',(@grade_span.include?('%'))?true:false,:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
+            = check_box_tag 'grade_span[]',"",(@grade_span.length > 0 && (@grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
             = label_tag 'allgrades', 'All Grades'
           -grades.each do |grade|
             

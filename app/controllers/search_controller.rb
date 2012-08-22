@@ -72,7 +72,7 @@ class SearchController < ApplicationController
     @search_term = params[:search_term]
     @sort_order = param_find(:sort_order, (params[:method] == :get)) || 'name ASC'
     @domain_id = param_find(:domain_id, (params[:method] == :get)) || []
-    @grade_span = param_find(:grade_span, (params[:method] == :get)) || ["%"]
+    @grade_span = param_find(:grade_span, (params[:method] == :get)) || ""
     @investigation_page=params[:investigation_page]|| 1
     @activity_page = params[:activity_page] || 1
     @material_type = param_find(:material, (params[:method] == :get)) || ['investigation','activity']
