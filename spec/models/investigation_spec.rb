@@ -145,6 +145,35 @@ describe Investigation do
       @public_non_gse.save
       @public_non_gse.reload
       @draft_non_gse  = Factory.create(:investigation, :name => "draft non-gse investigation"); 
+    
+      @investigation = Investigation.find_by_name_and_publication_status('grade 7 physics', 'published')
+      
+      @probe_activity_published = Factory.create(:activity, :name => 'probe_activity(published)')
+      @probe_activity_published.investigation = @investigation
+      @probe_activity_published.save!
+      
+      section = Factory.create(:section)
+      section.activity = @probe_activity_published
+      section.save!
+      
+      page = Factory.create(:page)
+      page.section = section
+      page.save!
+      
+      page_element = PageElement.new
+      page_element.id = 1
+      page_element.page = page
+      page_element.embeddable_type = 'Embeddable::DataCollector'
+      page_element.save!
+      
+      embeddable_data_collectors = Factory.create(:data_collector)
+      
+      page_element.embeddable = embeddable_data_collectors
+      page_element.save!
+      
+      @probe_type = Factory.create(:probe_type)
+      embeddable_data_collectors.probe_type = @probe_type
+      embeddable_data_collectors.save!
     end
     # search (including drafts):
     # search for drafts in grade 8                # two entries
@@ -228,6 +257,26 @@ describe Investigation do
       found.should include(*@published)
       found.should include(@public_non_gse)
       found.should_not include(*@drafts)
+    end
+    it "should search investigations that require probes" do
+      options = {
+        :include_drafts => false,
+        :probe_type => [@probe_type.id]
+      }
+      found = Investigation.search_list(options)
+      assert_equal found.length, 1
+      found.should include(@investigation)
+    end
+    it "should search investigations that does require probes" do
+      options = {
+        :include_drafts => false,
+        :probe_type => ['0']
+      }
+      found = Investigation.search_list(options)
+      found.should_not include(@investigation)
+      found.each do |inv|
+        puts "{inv.inspect}"
+      end
     end
   end 
 
