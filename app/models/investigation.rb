@@ -176,7 +176,7 @@ class Investigation < ActiveRecord::Base
               if probe_type.include?("0")
                 investigations = Investigation.published.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
               else
-                              investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+                investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
               end
             end
           else
@@ -208,23 +208,26 @@ class Investigation < ActiveRecord::Base
               investigations = Investigation.published.like(name).with_gse.grade(grade_span)
             end
           end
-        else
-          if probe_type.length > 0
-            if (options[:include_drafts])
-              if probe_type.include?("0")
-                investigations = Investigation.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe)
-              else
-                investigations = Investigation.like(name).activity_group.probe_type.probe(probe_type)
-              end
+        elsif probe_type.length > 0
+          puts "Investigationnnnnnnnnnnnnnnnnnnnn No Probeeeeeeeeeeeeeeeeeeeeeeeee #{}"
+          if (options[:include_drafts])
+            if probe_type.include?("0")
+              investigations = Investigation.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe)
+            else
+              investigations = Investigation.like(name).activity_group.probe_type.probe(probe_type)
+            end
+          else
+            if probe_type.include?("0")
+              investigations = Investigation.published.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe)
             else
               investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type)
             end
+          end
+        else
+          if (options[:include_drafts])
+            investigations = Investigation.like(name)
           else
-            if (options[:include_drafts])
-              investigations = Investigation.like(name)
-            else
-              investigations = Investigation.published.like(name)
-            end
+            investigations = Investigation.published.like(name)
           end
         end
       else
