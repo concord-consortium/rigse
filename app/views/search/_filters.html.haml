@@ -60,7 +60,7 @@
         %td.probescolumn
           .filterheader
             Probes
-          .probes_container
+          .probes_container.webkit_scrollbars
             .tablecell
               = check_box_tag 'probe[]',"0",(@probe_type.include?("0")),:id=>"probe_0",:class=>"probe_no_check",:onclick=>"uncheckedallprobes(false);"
               = label_tag "probe_0","No Probes"
