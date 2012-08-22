@@ -1,3 +1,6 @@
+.material_icon
+  %div{:style=>"margin-top:35px"}
+    =material.class.to_s
 %div
   - unless current_user.anonymous?
     - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
@@ -6,6 +9,7 @@
   %div{:style=>'overflow:hidden'}
     %table{:width=>"100%"}
       %tr
+        %td
         %td
           %span.material_header
             = material.name
