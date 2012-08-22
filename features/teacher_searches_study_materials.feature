@@ -14,10 +14,10 @@ Feature: Teacher can search study materials
       | author | author   | member, author |
     And the following simple investigations exist:
       | name                   | user   | publication_status | description                                     |
-      | Radioactivity          | author | published          | Radioactivity is a great subject                |
+      | Radioactivity          | author | published          | Nuclear Energy is a great subject               |
       | Set Theory             | author | published          | Set Theory decay is a great subject             |
       | Mechanics              | author | published          | Mechanics is a great subject                    |
-      | Geometry               | author | published          | Geometry is a great subject                     |
+      | Geometry               | author | published          | Triangle is a great subject                     |
       | integration calculus   | author | published          | integration calculus is a great subject         |
       | differential calculus  | author | published          | differential calculus decay is a great subject  |
       | differential equations | author | published          | differential equations is a great subject       |
@@ -27,13 +27,13 @@ Feature: Teacher can search study materials
       | radar theory           | author | published          | radar theory is a great subject                 |
     And the following activities for the above investigations exist:
       | name                        | investigation | user    | publication_status | description                            |
-      | Radioactive decay           | Radioactivity | author  | published          | Radioactive decay is a great material  |
+      | Radioactive decay           | Radioactivity | author  | published          | Nuclear Energy is a great material     |
       | Gama Rays                   | Radioactivity | author  | published          | Gama Rays is a great material          |
       | Venn Diagram                | Set Theory    | author  | published          | Venn Diagram is a great material       |
       | operations on sets          | Set Theory    | author  | published          | operations on sets is a great material |
       | Fluid Mechanics             | Mechanics     | author  | published          | Fluid Mechanics is a great material    |
       | Circular Motion             | Mechanics     | author  | published          | Circular Motion is a great material    |
-      | Geometry                    | Geometry      | author  | published          | Geometry is a great material           |
+      | Geometry                    | Geometry      | author  | published          | Triangle is a great material           |
       | intersecting lines          | Geometry      | author  | published          | intersecting lines is a great material |
       | parallel lines              | Geometry      | author  | published          | parallel lines is a great material     |
       | graphs and lines            | Geometry      | author  | published          | parallel lines is a great material     |
@@ -47,23 +47,22 @@ Feature: Teacher can search study materials
       | Biology     | teacher    | bio        |
       | Geography   | teacher    | geo        |
     And the investigation "Digestive System" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
+    
+    And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
     And I login with username: teacher password: teacher
     And I am on the search instructional materials page"
     
     
   @javascript
   Scenario: Teacher can filter search results
-    When the project settings enables use of Grade Span Expectation
     Then I should be able to filter the search results on the basis of domains and grades on the search instructional materials page
-    And the project settings disables use of Grade Span Expectation
+    And I should be able to filter the search results on the basis of probes on the search instructional materials page
     
     
   Scenario: Anonymous user can not assign study materials to the class
     When I log out
     And I go to the search instructional materials page
-    And I assign materials on the search instructional materials page
-    Then I should be on my home page
-    And I should see "Please login or register as a teacher"
+    Then I should not be able to assign materials on the search instructional materials page
     
     
   Scenario: Anonymous user can preview
@@ -91,7 +90,7 @@ Feature: Teacher can search study materials
     
   @javascript
   Scenario: Teacher can group search study materials
-    Then I should be able to group the search results on the search instructional materials page
+    Then I should be able to see grouped search results on the search instructional materials page
     
     
   @javascript
@@ -101,8 +100,8 @@ Feature: Teacher can search study materials
     
     
   @javascript
-  Scenario: Teacher can assign investigations and activites to the class
-    Then I can assign investigations and activites to the class on the search instructional materials page
+  Scenario: Teacher can assign investigations and activites to a class
+    Then I can assign investigations and activities to a class on the search instructional materials page
     
     
   Scenario: Teacher can preview investigations

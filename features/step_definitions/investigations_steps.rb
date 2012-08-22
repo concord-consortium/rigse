@@ -413,3 +413,54 @@ And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to domain "([^
   @drafts << draft.reload
   
 end
+
+And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to probe "([^"]*)"$/ do |investigation_name, activity_name, probe_name|
+  
+  domain_name = "random domain"
+  
+  @domain = Factory.create( :rigse_domain, { :name => domain_name } )
+  knowledge_statement = Factory.create( :rigse_knowledge_statement, { :domain => @domain } )
+  assessment_target = Factory.create( :rigse_assessment_target, { :knowledge_statement => knowledge_statement })
+  
+  @grade = "10-11"
+  grade_span_expection  = Factory.create( :rigse_grade_span_expectation, {:assessment_target => assessment_target, :grade_span => @grade} )
+  
+  
+  @probe_type = Probe::ProbeType.find_by_name(probe_name)
+  unless @probe_type
+    @probe_type = Factory.create(:probe_type, :name => probe_name)
+    @probe_type.save!
+  end
+  
+  investigation_hash = {
+    :name => investigation_name,
+    :grade_span_expectation => grade_span_expection
+  }
+  
+  investigation = Factory.create(:investigation, investigation_hash)
+  investigation.publish
+  investigation.save!
+  
+  @probe_activity = Factory.create(:activity, :investigation_id => investigation.id, :name => activity_name)
+  @probe_activity.save!
+  
+  section = Factory.create(:section,:activity_id => @probe_activity.id)
+  section.save!
+  page = Factory.create(:page, :section => section)
+  page.save!
+  
+  page_element = PageElement.new
+  page_element.id = 1
+  page_element.page = page
+  page_element.embeddable_type = 'Embeddable::DataCollector'
+  page_element.save!
+  
+  embeddable_data_collectors = Factory.create(:data_collector)
+  
+  page_element.embeddable = embeddable_data_collectors
+  page_element.save!
+  
+  embeddable_data_collectors.probe_type = @probe_type
+  embeddable_data_collectors.save!
+  
+end
