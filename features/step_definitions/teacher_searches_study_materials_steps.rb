@@ -369,7 +369,7 @@ When /^(?:|I )should be able to filter the search results on the basis of probes
   step 'I should wait 2 seconds'
   step 'I should see "A Weather Underground"'
   step 'I should see "A heat spontaneously"'
-  step 'I check "No Probes"'
+  step 'I check "No Probes Required"'
   step 'I should not see "A Weather Underground"'
   step 'I should not see "A heat spontaneously"'
   
