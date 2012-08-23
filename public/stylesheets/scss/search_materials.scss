@@ -58,11 +58,11 @@ width: 300px;
   font-size:14px;
   margin-left:98px;
 }
-.sortbycolumn{width:95px;}
+.sortbycolumn{width:92px;}
 .domaincolumn{width:170px;}
-.gradecolumn{width:90px;}
+.gradecolumn{width:88px;}
 .materialcolumn{width:100px;}
-.probescolumn{width:150px;}
+.probescolumn{width:155px;}
 
 .material_header
 {
@@ -279,7 +279,14 @@ input.disabledGo
 
 .tablecell input[type='checkbox'],.tablecell label{
   vertical-align:middle;
+  
 }
+.tablecell input[type='checkbox']
+{
+  margin:0;padding:0;
+  border:solid 1px #999;
+}
+
 #required_equipment_container
 {
   margin-top: 5px;

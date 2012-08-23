@@ -250,7 +250,7 @@ var list_modal = null;
 
 function close_popup()
 {
-    list_modal.hide();
+    list_modal.destroy();
     list_modal = null;
 }
 
