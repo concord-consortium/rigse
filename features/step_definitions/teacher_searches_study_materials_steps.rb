@@ -119,7 +119,6 @@ When /^(?:|I )should be able to sort search and filter results on the search ins
   step 'the Investigation "differential calculus" is assigned to the class "Mathematics"'
   step 'the Investigation "integration calculus" is assigned to the class "Mathematics"'
   step 'the Investigation "integration calculus" is assigned to the class "Geography"'
-  
   #sort order by popularity
   find(:xpath, "//label[@for = 'sort_order_offerings_count_DESC']").click
   step 'I should wait 2 seconds'
@@ -375,4 +374,22 @@ When /^(?:|I )should be able to filter the search results on the basis of probes
   step 'I should not see "A heat spontaneously"'
   
   step 'the project setting for Grade Span Expectation is restored'
+end
+When /^(?:|I )should be able to see number of instructional materials used in classes on the search instructional materials page$/ do
+  #investigation
+  step 'the Investigation "differential calculus" is assigned to the class "Physics"'
+  step 'the Investigation "differential calculus" is assigned to the class "Geography"'
+  step 'the Investigation "differential calculus" is assigned to the class "Mathematics"'
+  step 'I am on the search instructional materials page'
+  within(:xpath,"//div[@class='material_list_item' and contains(., 'differential calculus')][1]") do
+    step 'I should see "Used in 3 classes."'
+  end
+  #activity
+  step 'the Activity "Geometry" is assigned to the class "Physics"'
+  step 'the Activity "Geometry" is assigned to the class "Geography"'
+  step 'the Activity "Geometry" is assigned to the class "Mathematics"'
+  step 'I am on the search instructional materials page'
+  within(:xpath,"//div[@class='material_list_item' and contains(., 'Geometry')][3]") do
+    step 'I should see "Used in 3 classes."'
+  end
 end

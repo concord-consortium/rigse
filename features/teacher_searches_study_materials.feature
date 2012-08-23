@@ -112,3 +112,8 @@ Feature: Teacher can search study materials
     Then I can preview activities on the search instructional materials page
     
     
+  @javascript
+  Scenario: Teacher can see number of instructional materials
+    Then I should be able to see number of instructional materials used in classes on the search instructional materials page
+    
+    
