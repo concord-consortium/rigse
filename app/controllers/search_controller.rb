@@ -149,11 +149,15 @@ class SearchController < ApplicationController
     end
     
     if request.xhr?
-       render :update do |page|
-         page << "alert('#{runnable_type} is assigned to the selected class(es) successfully.')"
-         page << "close_popup()"
-         page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
-       end
+      render :update do |page|
+        if clazz_ids.count > 0
+          page << "alert('#{runnable_type} is assigned to the selected class(es) successfully.')"
+          page << "close_popup()"
+          page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
+        else
+          page << "alert('Select atleast one class to assign this #{runnable_type}.')"
+        end
+      end
     end
   end
   
