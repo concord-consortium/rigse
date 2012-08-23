@@ -164,4 +164,6 @@ div.buttons{
     font-size:18px;
     padding-top:5px;
     cursor:move;
+    width:98%;
+    text-align:left;
 }
