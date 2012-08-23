@@ -23,7 +23,7 @@ function highlightlabel(e) {
 }
 
 function searchsuggestions(e, oElement) {
-    if(e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 38) {
+    if(e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 38 || e.keyCode == 27) {
         // if(e.keyCode == 13)
         return false;
     }
@@ -38,6 +38,20 @@ function searchsuggestions(e, oElement) {
 
 function showsuggestion(event, oelem) {
     // $('show_suggestion').writeAttribute('name','show_suggestion');
+    if(event.keyCode == 27){
+        //
+        $('search_suggestions').hide();
+        if(event.stop){
+            event.stop();
+        }
+        else{
+            event.returnValue = false;
+        }
+        
+        
+
+        return;
+    }
     var osuggestions = $$('.suggestion');
     var ohoverelements = $$('.suggestionhover');
     $('search_suggestions').show();
