@@ -89,7 +89,6 @@ Feature: Teacher manages instructional materials of a class
     And I should see "Aerodynamics" within the tab block for Instructional Materials
     And I should see "Investigation: Radioactivity"
         
-  @javascript
   Scenario: Teacher should be able to switch tabs
     When I click the tab of Instructional Materials with text "Plant reproduction"
     Then I should see "Investigation: Plant reproduction"
@@ -113,7 +112,6 @@ Feature: Teacher manages instructional materials of a class
   Scenario: Teacher should be able to see student attempt progress bars
     Then I should see progress bars for the students
         
-  @javascript
   Scenario: Teacher should see a message if no offerings are present
     When I go to Instructional Materials page for "Chemistry"
     Then I should see "No offerings present"
@@ -139,13 +137,11 @@ Feature: Teacher manages instructional materials of a class
     When I follow "Run Activity"
     Then I receive a file for download with a filename like "_activity_"
 
-  @javascript
   Scenario: Teacher should not see teacher only activity in the activity table
     When I go to Instructional Materials page for "My Class"
     And I click the tab of Instructional Materials with text "Aerodynamics"
     Then I should not see "Aeroplane" within the activity table
 
-  @javascript
   Scenario: Teacher should see teacher only activity
     When I go to Instructional Materials page for "My Class"
     And I click the tab of Instructional Materials with text "Aerodynamics"
