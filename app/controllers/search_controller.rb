@@ -7,7 +7,7 @@ class SearchController < ApplicationController
       redirect_to root_path
       return
     end
-    flash[:notice] = nil
+    
     search_options=get_searchoptions()
     @investigations_count=0
     @activities_count=0
@@ -28,7 +28,7 @@ class SearchController < ApplicationController
       redirect_to root_path
       return
     end
-    flash[:notice] = nil
+    
     @investigations_count=0
     @activities_count=0
     search_options=get_searchoptions()
@@ -130,7 +130,7 @@ class SearchController < ApplicationController
   end
   
   def add_material_to_clazzes
-    clazz_ids = params[:clazz_id]
+    clazz_ids = params[:clazz_id] || []
     runnable_id = params[:material_id].to_i
     runnable_type = params[:material_type].classify
     clazz_ids.each do|clazz_id|
