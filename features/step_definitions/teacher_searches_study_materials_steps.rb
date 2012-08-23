@@ -375,7 +375,7 @@ When /^(?:|I )should be able to filter the search results on the basis of probes
   
   step 'the project setting for Grade Span Expectation is restored'
 end
-When /^(?:|I )should be able to see number of instructional materials used in classes on the search instructional materials page$/ do
+When /^(?:|I )should be able to see number classes to which instructional materials are assigned on the search instructional materials page$/ do
   #investigation
   step 'the Investigation "differential calculus" is assigned to the class "Physics"'
   step 'the Investigation "differential calculus" is assigned to the class "Geography"'

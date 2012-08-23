@@ -113,7 +113,7 @@ Feature: Teacher can search study materials
     
     
   @javascript
-  Scenario: Teacher can see number of instructional materials
-    Then I should be able to see number of instructional materials used in classes on the search instructional materials page
+  Scenario: Teacher can see number classes to which instructional materials are assigned
+    Then I should be able to see number classes to which instructional materials are assigned on the search instructional materials page
     
     
