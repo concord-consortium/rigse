@@ -3,6 +3,7 @@ var ajaxRequest;
 var ajaxRequestSend = 0;
 var goButttondisabled=false;
 var animating=false;
+var ajaxRequestCounter = 0;
 function select_suggestion(search_box) {
     var strSuggestiontext;
     try{
@@ -27,9 +28,11 @@ function searchsuggestions(e, oElement) {
         // if(e.keyCode == 13)
         return false;
     }
+    ajaxRequestCounter ++;
     ajaxRequest = new Ajax.Request('/search/get_search_suggestions', {
         parameters : {
-            search_term : oElement.value
+            search_term : oElement.value,
+            ajaxRequestCounter:ajaxRequestCounter
         },
         method : 'get'
     });
