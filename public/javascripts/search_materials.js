@@ -197,6 +197,21 @@ function abortAjaxRequest() {
     }
 }
 
+var startUpdate = function(progress_sel,update_sel) {
+  if (typeof progress_sel == 'undefined')  { progress_sel = 'search_spinner';      }
+  if (typeof update_sel == 'undefined')    { update_sel = 'offering_list';  }
+  $(update_sel).hide();
+  $(progress_sel).show();
+};
+
+var endUpdate = function (progress_sel, update_sel) {
+  if (typeof progress_sel == 'undefined')  { progress_sel = 'search_spinner';      }
+  if (typeof update_sel == 'undefined')    { update_sel = 'offering_list';  }
+  $(update_sel).show();
+  $(progress_sel).hide();
+};
+
+
 function LoadingStart (pre,post) {
   disableForm();
   if (typeof pre == 'undefined' )  { pre  = startUpdate; }
