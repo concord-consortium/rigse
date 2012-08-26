@@ -1,4 +1,6 @@
 RailsPortal::Application.routes.draw do
+  mount Lightweight::Engine => '/lightweight'
+
 constraints :id => /\d+/ do
   namespace :saveable do
     namespace :sparks do

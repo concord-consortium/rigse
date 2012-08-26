@@ -73,6 +73,9 @@ source "http://rubygems.org"
   gem "aws-s3",               :require => "aws/s3"
   gem "newrelic_rpm"
 
+
+  gem "lightweight_activities",   :git => "git://github.com/concord-consortium/lightweight-activities-plugin.git", :require => 'lightweight'
+
 group :development do
   gem "rake",                 "~> 0.9.2"
   gem "highline"

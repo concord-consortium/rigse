@@ -6,6 +6,14 @@ GIT
     haml (3.1.4)
 
 GIT
+  remote: git://github.com/concord-consortium/lightweight-activities-plugin.git
+  revision: 5b747c9d5100c2553973a1ec13493407b40d7a3e
+  specs:
+    lightweight_activities (0.0.1)
+      haml (~> 3.1.4)
+      rails (~> 3.2.6)
+
+GIT
   remote: git://github.com/concord-consortium/rush
   revision: 10d9715697d7cc5ce069c32093289b809dea8bd3
   specs:
@@ -349,6 +357,7 @@ DEPENDENCIES
   jruby-openssl (~> 0.7.4)
   json (~> 1.6.3)
   launchy (~> 2.0.5)
+  lightweight_activities!
   mysql2 (~> 0.3)
   net-sftp (~> 2.0)
   newrelic_rpm

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120816154045) do
+ActiveRecord::Schema.define(:version => 20120826223616) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -703,6 +703,61 @@ ActiveRecord::Schema.define(:version => 20120816154045) do
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
     t.integer "jar_id"
     t.integer "versioned_jnlp_id"
+  end
+
+  create_table "lightweight_interactive_items", :force => true do |t|
+    t.integer  "interactive_page_id"
+    t.integer  "interactive_id"
+    t.string   "interactive_type"
+    t.integer  "position"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "lightweight_interactive_items", ["interactive_id", "interactive_type"], :name => "interactive_items_interactive_idx"
+  add_index "lightweight_interactive_items", ["interactive_page_id", "position"], :name => "interactive_items_by_page_idx"
+
+  create_table "lightweight_interactive_pages", :force => true do |t|
+    t.string   "name"
+    t.integer  "lightweight_activity_id"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.text     "text"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "lightweight_interactive_pages", ["lightweight_activity_id", "position"], :name => "interactive_pages_by_activity_idx"
+  add_index "lightweight_interactive_pages", ["user_id"], :name => "interactive_pages_user_idx"
+
+  create_table "lightweight_lightweight_activities", :force => true do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.string   "publication_status"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "lightweight_lightweight_activities", ["publication_status"], :name => "lightweight_activities_publication_status_idx"
+  add_index "lightweight_lightweight_activities", ["user_id"], :name => "lightweight_activities_user_idx"
+
+  create_table "lightweight_mw_interactives", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "lightweight_mw_interactives", ["user_id"], :name => "mw_interactives_user_idx"
+
+  create_table "lightweight_question_items", :force => true do |t|
+    t.integer  "interactive_page_id"
+    t.integer  "question_id"
+    t.string   "question_type"
+    t.integer  "position"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   create_table "maven_jnlp_icons", :force => true do |t|
