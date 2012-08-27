@@ -10,7 +10,7 @@
     .header.fullstatus Full Status
     %br
     - if clazz_offerings.length > 0 && students.length > 0
-      - offering_statuses = clazz_offerings.map{|offering| Report::OfferingStatus.new(offering)}
+      - offering_statuses = clazz_offerings.map{|offering| Report::OfferingStatus.new(offering, current_user)}
       %div.clearboth
         %div
           = render :partial => 'progress_bar_legend'
@@ -19,10 +19,10 @@
           - if students.length > 0
             - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
             .student_div.floatL
-              = render :partial => 'clazz_student_report_learner_list', :locals=> {:offerings=>clazz_offerings, :students=>students}
+              = render :partial => 'clazz_student_report_learner_list', :locals=> {:students=>students}
             .progress_div.webkit_scrollbars
               %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
-                = render :partial => 'clazz_student_report_summary_header',:locals=> {:offerings=>clazz_offerings}
+                = render :partial => 'clazz_student_report_summary_header',:locals=> {:offering_statuses => offering_statuses}
                 = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offering_statuses=>offering_statuses}
             .clearboth{:style=>"height:10px"}
           - else
