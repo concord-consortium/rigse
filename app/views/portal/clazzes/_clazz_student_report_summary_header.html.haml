@@ -37,9 +37,9 @@
       %th.expand_collapse_text
         %div.progressbar_container= offering.name
 
-
-%tr
-  = investigation_columns.join.html_safe
+- if show_investigation_row
+  %tr
+    = investigation_columns.join.html_safe
 
 %tr
   = activity_columns.join.html_safe

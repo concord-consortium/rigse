@@ -1,5 +1,5 @@
 = javascript_include_tag "full_status.js"
-- clazz_offerings = portal_clazz.offerings.sort{|a,b| a.position<=>b.position}
+- clazz_offerings = portal_clazz.offerings.includes(:runnable).sort{|a,b| a.position<=>b.position}
 - students = portal_clazz.students.includes(:user);
 .maincontainer.pie
   .container
@@ -17,12 +17,15 @@
 
         %div{:id=>"oFullStatusDiv"}      
           - if students.length > 0
+            - show_investigation_row = clazz_offerings.any?{|offering| offering.runnable.is_a? Investigation}
             - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
             .student_div.floatL
-              = render :partial => 'clazz_student_report_learner_list', :locals=> {:students=>students}
+              = render :partial => 'clazz_student_report_learner_list',
+                :locals=> {:students=>students, :show_investigation_row => show_investigation_row}
             .progress_div.webkit_scrollbars
               %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
-                = render :partial => 'clazz_student_report_summary_header',:locals=> {:offering_statuses => offering_statuses}
+                = render :partial => 'clazz_student_report_summary_header',
+                  :locals=> {:offering_statuses => offering_statuses, :show_investigation_row => show_investigation_row}
                 = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offering_statuses=>offering_statuses}
             .clearboth{:style=>"height:10px"}
           - else

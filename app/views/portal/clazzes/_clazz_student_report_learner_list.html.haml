@@ -1,8 +1,9 @@
 %table.student_list
-  %tr
-    %th
-      %div.progressbar_container
-        INVESTIGATION
+  - if show_investigation_row
+    %tr
+      %th
+        %div.progressbar_container
+          INVESTIGATION
   %tr
     %th
       %div.progressbar_container 
