@@ -1,32 +1,45 @@
-%tr
-  - offering_statuses.each do |offering_status|
-    - offering = offering_status.offering
+- investigation_columns = []
+- activity_columns = []
+
+- offering_statuses.each do |offering_status|
+  - offering = offering_status.offering
+
+  - if offering.runnable.is_a? Investigation
     - activities = offering_status.student_activities
-
     - if activities.length > 0
-      %th.expand_collapse_text.offering_name{:class=>"investigation_summary_row_#{offering.id}",:title=>"#{offering.name}", :style=>offering_status.offering_display_style, :onclick=>"showHideDetailedSummary(#{offering.id}, true, \"#{url_for([:offering_collapsed_status, offering])}\")"}
-        %div.progressbar_container
-          %span
-            +&nbsp;
-          = offering.name
-      %th.expand_collapse_text.activity.offering_name{:colspan=>"#{activities.length}",:title=>"#{offering.name}", :class=>"investigation_detail_row_#{offering.id}", :style=>offering_status.activities_display_style, :onclick=>"showHideDetailedSummary(#{offering.id},false,\"#{offering_collapsed_status_portal_offering_path(offering)}\")"}
-        %div.progressbar_container
-          %span
-            %b -&nbsp;
-          = offering.name
+      - investigation_columns << capture do
+        %th.expand_collapse_text.offering_name{:class=>"investigation_summary_row_#{offering.id}",:title=>"#{offering.name}", :style=>offering_status.offering_display_style, :onclick=>"showHideDetailedSummary(#{offering.id}, true, \"#{url_for([:offering_collapsed_status, offering])}\")"}
+          %div.progressbar_container
+            %span
+              +&nbsp;
+            = offering.name
+        %th.expand_collapse_text.activity.offering_name{:colspan=>"#{activities.length}",:title=>"#{offering.name}", :class=>"investigation_detail_row_#{offering.id}", :style=>offering_status.activities_display_style, :onclick=>"showHideDetailedSummary(#{offering.id},false,\"#{offering_collapsed_status_portal_offering_path(offering)}\")"}
+          %div.progressbar_container
+            %span
+              %b -&nbsp;
+            = offering.name
+
+      - activity_columns << capture do
+        %th.expand_collapse_text{:class=>"investigation_summary_row_#{offering.id}", :style=>offering_status.offering_display_style}
+          %div.progressbar_container
+            Summary
+
+        - activities.each_with_index do |activity, index|
+          - activity_name = (activity.name.nil?)? "Activity #{index + 1}" : activity.name
+          %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id} activity", :title=>"#{activity_name}", :style=>offering_status.activities_display_style}
+            %div.progressbar_container
+              = activity_name
+  - else
+    - investigation_columns << capture do
+      / use an empty header when it is not an investigation
+      %th
+    - activity_columns << capture do
+      %th.expand_collapse_text
+        %div.progressbar_container= offering.name
+
 
 %tr
-  - offering_statuses.each do |offering_status|
-    - offering = offering_status.offering
-    - activities = offering_status.student_activities
+  = investigation_columns.join.html_safe
 
-    - if activities.length > 0
-      %th.expand_collapse_text{:class=>"investigation_summary_row_#{offering.id}", :style=>offering_status.offering_display_style}
-        %div.progressbar_container
-          Summary
-
-    - activities.each_with_index do |activity, index|
-      - activity_name = (activity.name.nil?)? "Activity #{index + 1}" : activity.name
-      %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id} activity", :title=>"#{activity_name}", :style=>offering_status.activities_display_style}
-        %div.progressbar_container
-          = activity_name
+%tr
+  = activity_columns.join.html_safe
