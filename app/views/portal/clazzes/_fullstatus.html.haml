@@ -20,29 +20,8 @@
       - offering_statuses = clazz_offerings.map{|offering| Report::OfferingStatus.new(offering)}
       %div.clearboth
         %div
-          %table
-            %tr
-              %td
-                %span.legend_completed
-                  &nbsp;&nbsp;
-                %span
-                  &nbsp;Completed
-              %td
-                &nbsp;&nbsp;
-              %td
-                %span.legend_progress
-                  &nbsp;&nbsp;
-                %span
-                  &nbsp;In Progress
-              %td
-                &nbsp;&nbsp;
-              %td
-                %span.legend_not_started
-                  &nbsp;&nbsp;
-                %span
-                  &nbsp;Not Yet Started
-                
-                  
+          = render :partial => 'progress_bar_legend'
+
         %div{:id=>"oFullStatusDiv"}      
           - if students.length > 0
             - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
