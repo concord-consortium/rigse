@@ -4,14 +4,7 @@
     .content
       = f.error_messages
     %div{:id=>"student_roster"}
-      %table.classdata.floatR
-        %tr
-          %td.title=label_tag :name, 'Teacher ', :class=>"left"
-          %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class=>"labelvalue"
-          %td.title=label_tag :name, 'Semester ', :class=>"left"
-          %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class=>"labelvalue"
-          %td.title=label_tag :name, 'Class Word ', :class=>"left"
-          %td=label_tag :name, portal_clazz.class_word, :class=>"labelvalue"
+      = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
       .header.clearBoth Student Roster
       .classsummary
         ='Class Name : '
