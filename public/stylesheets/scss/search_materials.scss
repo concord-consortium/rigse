@@ -276,6 +276,11 @@ input.disabledGo
 
 .material_list_item a{text-transform: none;}
 .unassigned_classes_container{height:250px;overflow-y:auto;}
+.unassigned_classes_container input[type='checkbox']
+{
+  margin:0;padding:0;
+  border:solid 1px #999;
+}
 
 .tablecell input[type='checkbox'],.tablecell label{
   vertical-align:middle;
