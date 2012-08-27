@@ -13,6 +13,7 @@ set :stages, %w(
   interactions-staging interactions-production
   interactions-aws-staging interactions-aws-production
   xproject-dev
+  lightweight-mw
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
   sparks-dev sparks-staging sparks-production sparks-aws1
