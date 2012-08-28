@@ -65,7 +65,7 @@
             = check_box_tag 'probe[]', '0', no_probes_req_selected, :id=>'probe_0', :class=>'probe_no_check', :onclick=>'uncheckedallprobes(false);'
             = label_tag "probe_0","No Probes Required",:class=>"probes_label"
           .probes_container.webkit_scrollbars
-            #probes_overlay{ :style=> (no_probes_req_selected ? '' : 'display: none;') }
+            
             %div
               Select&nbsp;
               %span#select_all_probes
@@ -78,3 +78,4 @@
               .tablecell
                 = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items",:onclick=>"uncheckednoprobe(this);"
                 = label_tag "probe_#{probe.id}","#{probe.name}",:class=>"probes_label"
+          #probes_overlay{ :style=> (no_probes_req_selected ? '' : 'display: none;') }

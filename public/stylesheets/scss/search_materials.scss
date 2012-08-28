@@ -295,7 +295,9 @@ input.disabledGo
 }
 #probes_overlay
 {
-position: absolute;
+position: relative;
+top: -96px;
+left: 6px;
 width: 153px;
 height: 95px;
 margin-left: -5px;
