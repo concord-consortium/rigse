@@ -3,7 +3,8 @@
   - activity_name = ""
   - portal_offerings = nil
 - elsif material.class == ::Activity
-  - investigation_name = (material.parent)? material.parent.name : ""
+  - investigation_name = ""
+  - parent_name = (material.parent)? material.parent.name : ""
   - activity_name = material.name
   - portal_offerings = []
   - if material.parent
@@ -22,11 +23,15 @@
       %td.title Activity: 
       %td 
         = activity_name
+    %tr
+      %td.title Part&nbsp;Of: 
+      %td 
+        = parent_name
 %br
 - if clazzes.length > 0
   %div.assign_class_header Select Class(es)
   %form{:id=>"add_material_form"}
-    .unassigned_classes_container
+    .unassigned_classes_container.webkit_scrollbars
       %table.material_detail{:width=>"100%"}
         - clazzes.each do|clazz|
           %tr
