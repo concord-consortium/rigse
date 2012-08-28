@@ -56,7 +56,7 @@ width: 300px;
 .material_body{
   margin-top:3px;
   font-size:14px;
-  margin-left:98px;
+  margin-left:121px;
 }
 .sortbycolumn{width:92px;}
 .domaincolumn{width:170px;}
@@ -73,17 +73,12 @@ width: 300px;
 .material_icon{
   float:left;
   margin:17px 10px 17px 5px;
-  height:75px;
-  width: 75px;
-  border: 3px solid;
+  height:100px;
+  width: 100px;
+  border: 1px solid;
   text-align:center;
 }
-.icon_image{
-  margin-top: 0px;
-  font-family: Times new roman;
-  font-size: 80px;
-  line-height: 80px;
-}
+
 .material_type{
   width:120px;
 }
@@ -300,11 +295,13 @@ input.disabledGo
 #probes_overlay
 {
 position: absolute;
-width: 150px;
+width: 153px;
 height: 95px;
 margin-left: -5px;
 background-color: #333;
-opacity: 0.6;
+-webkit-opacity: 0.4;
+-moz-opacity: 0.4;
+opacity: 0.4;
 }
 
 .noprobesrequired{

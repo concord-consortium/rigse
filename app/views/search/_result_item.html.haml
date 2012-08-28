@@ -1,9 +1,9 @@
 .material_icon
   .icon_image
     -if(material.class.to_s=="Investigation")
-      I
+      =image_tag("search/investigation.gif",:size=>"100x100")
     -else
-      A
+      =image_tag("search/activity.gif",:size=>"100x100")
 %div
   - unless current_user.anonymous?
     - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}

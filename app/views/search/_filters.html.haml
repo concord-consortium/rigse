@@ -58,13 +58,14 @@
             = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
         %td.probescolumn
+          - no_probes_req_selected = @probe_type.include?("0")
           .filterheader
             Probes
           .noprobesrequired
-            = check_box_tag 'probe[]',"0",(@probe_type.include?("0")),:id=>"probe_0",:class=>"probe_no_check",:onclick=>"uncheckedallprobes(false);"
+            = check_box_tag 'probe[]', '0', no_probes_req_selected, :id=>'probe_0', :class=>'probe_no_check', :onclick=>'uncheckedallprobes(false);'
             = label_tag "probe_0","No Probes Required",:class=>"probes_label"
           .probes_container.webkit_scrollbars
-            #probes_overlay
+            #probes_overlay{ :style=> (no_probes_req_selected ? '' : 'display: none;') }
             %div
               Select&nbsp;
               %span#select_all_probes

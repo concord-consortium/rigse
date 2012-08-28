@@ -138,7 +138,6 @@ function uncheckedallprobes(allChecked) {
     $$(".probe_items").each(function(e) {
         e.checked = allChecked;
     });
-    console.log($('probe_0').checked)
     if(allChecked)
         $('probe_0').checked = !allChecked;
     if($('probe_0').checked){
@@ -147,7 +146,6 @@ function uncheckedallprobes(allChecked) {
     }
     else
         $('probes_overlay').style.display='none';
-    console.log($('probe_0').checked)
 }
 
 function removesuggestions() {
