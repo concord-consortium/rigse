@@ -60,18 +60,19 @@
         %td.probescolumn
           .filterheader
             Probes
+          .noprobesrequired
+            = check_box_tag 'probe[]',"0",(@probe_type.include?("0")),:id=>"probe_0",:class=>"probe_no_check",:onclick=>"uncheckedallprobes(false);"
+            = label_tag "probe_0","No Probes Required",:class=>"probes_label"
           .probes_container.webkit_scrollbars
-            .tablecell
-              = check_box_tag 'probe[]',"0",(@probe_type.include?("0")),:id=>"probe_0",:class=>"probe_no_check",:onclick=>"uncheckedallprobes(false);"
-              = label_tag "probe_0","No Probes Required",:class=>"probes_label"
+            #probes_overlay
             %div
               Select&nbsp;
               %span#select_all_probes
-                %a{:href => 'javascript: void(0);', :onclick=>"uncheckedallprobes(true);"}All
+                %a{:href => 'javascript: void(0);', :onclick=>"uncheckedallprobes(true);"}all
               %span
                 |
               %span#select_none_probes
-                %a{:href => 'javascript: void(0);', :onclick=>"uncheckedallprobes(false);"}None
+                %a{:href => 'javascript: void(0);', :onclick=>"uncheckedallprobes(false);"}none
             - probe_types.each do |probe|
               .tablecell
                 = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items",:onclick=>"uncheckednoprobe(this);"
