@@ -94,8 +94,10 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
   margin-left: 50px;
 }
 
-.submit{
+.submit_button_container{
   float:right;
+  padding-right: 10px;
+  padding-top: 1px;
 }
 
 .notice_container{

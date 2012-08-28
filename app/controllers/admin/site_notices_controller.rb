@@ -13,26 +13,29 @@ class Admin::SiteNoticesController < ApplicationController
   public
   
   def new
+    @action_type = 'Create Notice'
     @all_roles_selected_by_default = true
-    @role_ids = []
-    @notice_html = ''
+    @notice_role_ids = []
+    @notice_html = '<p> </p>' #fix for IE 9
   end
 
   def create
     error = nil
+    @action_type = 'Create Notice'
     @notice_html = params[:notice_html] ? params[:notice_html] : ''
-    @role_ids = params[:role] ? params[:role] : []
+    @notice_role_ids = params[:role] ? params[:role] : []
     @all_roles_selected_by_default = false
     
     unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
       error = "Notice text is blank"
+      @notice_html = '<p> </p>' #fix for IE 9
     end
     
-    if @role_ids.count == 0
+    if @notice_role_ids.count == 0
       error = error ? error + "<br>No role is selected</br>" : "" +  "No role is selected"
     end
     
-    @role_ids.map!{|a| a.to_i }
+    @notice_role_ids.map!{|a| a.to_i }
     
     if error
       flash[:error] = error.html_safe
@@ -50,7 +53,7 @@ class Admin::SiteNoticesController < ApplicationController
     
     #storing all roles that should see this notice
     
-    @role_ids.each do |role_id|
+    @notice_role_ids.each do |role_id|
       site_notice_role = Admin::SiteNoticeRole.new
       site_notice_role.notice_id = site_notice.id
       site_notice_role.role_id = role_id
@@ -65,6 +68,8 @@ class Admin::SiteNoticesController < ApplicationController
   end
   
   def edit
+    @action_type = 'Edit Notice'
+    @all_roles_selected_by_default = false
     @notice = Admin::SiteNotice.find(params[:id])
     @notice_html = @notice.notice_html
     @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
@@ -73,6 +78,8 @@ class Admin::SiteNoticesController < ApplicationController
   
   def update
     
+    @action_type = 'Edit Notice'
+    @all_roles_selected_by_default = false
     @notice = Admin::SiteNotice.find(params[:id])
     @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
     
@@ -83,6 +90,7 @@ class Admin::SiteNoticesController < ApplicationController
     
     unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
       error = "Notice text is blank"
+      @notice_html = '<p> </p>' #fix for IE 9
     end
     
     if @notice_role_ids.count == 0
