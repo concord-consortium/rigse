@@ -51,8 +51,6 @@ function showsuggestion(event, oelem) {
             event.returnValue = false;
         }
         
-        
-
         return;
     }
     var osuggestions = $$('.suggestion');
@@ -267,7 +265,7 @@ function get_Assign_To_Class_Popup(material_id,material_type)
     {
         close_popup();
     }
-    list_modal = new UI.Window({ theme:"lightbox", width:500, height:500});
+    list_modal = new UI.Window({ theme:"lightbox", width:500, height:600});
     list_modal.setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
     list_modal.setHeader("Assign Materials to a Class");
     

@@ -129,7 +129,8 @@ class SearchController < ApplicationController
     assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
     unassigned_teacher_clazzes = teacher_clazzes.select{|item| assigned_clazz_ids.index(item.clazz_id).nil?}
     unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
-    render :partial => 'material_unassigned_clazzes', :locals => {:material=>material,:clazzes=>unassigned_clazzes}
+    assigned_clazzes = Portal::Clazz.where(:id=>assigned_clazz_ids)
+    render :partial => 'material_unassigned_clazzes', :locals => {:material=>material,:clazzes=>unassigned_clazzes,:assigned_clazzes => assigned_clazzes}
   end
   
   def add_material_to_clazzes

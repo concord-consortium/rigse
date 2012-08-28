@@ -243,7 +243,7 @@ input.disabledGo
 .material_detail td.check_box{width:20px;;padding:7px 0px 0px 5px}
 .material_detail label.clazz_name{text-transform: none;} 
 .assign_class_header{font-weight:bold;padding-left:5px;}
-
+.assigned_material_detail td{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
 .messagetext{font-style:italic}
 
 .disabledfilters{
@@ -270,7 +270,8 @@ input.disabledGo
 }
 
 .material_list_item a{text-transform: none;}
-.unassigned_classes_container{height:250px;overflow-y:auto;}
+.unassigned_classes_container{height:200px;overflow-y:auto;}
+.assigned_classes_container{height:150px;overflow-y:auto;}
 .unassigned_classes_container input[type='checkbox']
 {
   margin:0;padding:0;

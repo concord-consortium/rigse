@@ -41,9 +41,20 @@
             %td 
               = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
               - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
-                (Activity #{activity_name} is already assigned)
+                (Already assigned as part of #{parent_name})
 - else
   .messagetext This material is assigned to all the classes
+- if assigned_clazzes.length > 0
+  .assign_class_header
+    %br
+    %br
+    Already assigned to the following class(es)
+    .assigned_classes_container.webkit_scrollbars
+      %table.assigned_material_detail{:width=>"100%"}
+        - assigned_clazzes.each do|clazz|
+          %tr
+            %td.assigned_clazzes_material
+              = clazz.name
 %br
 %table.classdata
   %tr
