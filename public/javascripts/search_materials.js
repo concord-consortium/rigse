@@ -265,7 +265,7 @@ function get_Assign_To_Class_Popup(material_id,material_type)
     {
         close_popup();
     }
-    list_modal = new UI.Window({ theme:"lightbox", width:500, height:600});
+    list_modal = new UI.Window({ theme:"lightbox", width:500});
     list_modal.setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
     list_modal.setHeader("Assign Materials to a Class");
     
@@ -275,7 +275,10 @@ function get_Assign_To_Class_Popup(material_id,material_type)
         onSuccess: function(transport) {
             var text = transport.responseText;
             text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
-            list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
+            list_modal.setContent("<div id='windowcontent' style='padding:10px'>" + text + "</div>");
+            var contentheight=$('windowcontent').getHeight();
+            var contentoffset=40;
+            list_modal.setSize(500,contentheight+contentoffset);
         }
     };
     var target_url = "/search/get_current_material_unassigned_clazzes";
