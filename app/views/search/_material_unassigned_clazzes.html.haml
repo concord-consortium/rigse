@@ -41,7 +41,8 @@
             %td 
               = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
               - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
-                (Already assigned as part of #{parent_name})
+                %br
+                (Already assigned as part of "#{parent_name}")
 - else
   .messagetext This material is assigned to all the classes.
 - if assigned_clazzes.length > 0
