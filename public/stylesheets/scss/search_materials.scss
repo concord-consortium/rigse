@@ -245,7 +245,7 @@ input.disabledGo
 .assign_class_header{font-weight:bold;padding-left:5px;}
 .assigned_material_detail td{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
 .messagetext{font-style:italic}
-
+.assigned_material_detail{margin:0;padding:0;text-transform: none;}
 .disabledfilters{
   color:gray;
 }
@@ -271,7 +271,7 @@ input.disabledGo
 
 .material_list_item a{text-transform: none;}
 .unassigned_classes_container{height:200px;overflow-y:auto;}
-.assigned_classes_container{height:150px;overflow-y:auto;}
+.assigned_classes_container{padding-top:5px;height:150px;overflow-y:auto;}
 .unassigned_classes_container input[type='checkbox']
 {
   margin:0;padding:0;
