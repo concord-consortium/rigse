@@ -295,12 +295,10 @@ input.disabledGo
 }
 #probes_overlay
 {
-position: relative;
-top: -96px;
-left: 6px;
+margin-top: -96px;
 width: 153px;
 height: 95px;
-margin-left: -5px;
+margin-left: 1px;
 background-color: #333;
 -webkit-opacity: 0.4;
 -moz-opacity: 0.4;
