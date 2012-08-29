@@ -208,6 +208,13 @@ Then /^(?:|I )can assign investigations and activities to a class on the search 
   step 'I follow "Save"'
   step 'I go to the class page for "Mathematics"'
   step 'I should see "Geometry"'
+  #Teacher should see class in which investigation is assigned
+  step 'I am on the search instructional materials page'
+  within(:xpath,"//div[@class='material_list_item' and contains(., '#{investigation_name}')]") do
+    step 'I follow "Assign to a Class"'
+  end
+  step 'I should see "Already assigned to the following class(es)"'
+  step 'I should see "Mathematics"'
   #After search
   step 'I am on the search instructional materials page'
   step 'I fill in "search_term" with "graph theory"'
@@ -235,6 +242,9 @@ Then /^(?:|I )can assign investigations and activities to a class on the search 
   within(:xpath,"//div[@class='material_list_item' and contains(., '#{activity_name}')]") do
     step 'I follow "Assign to a Class"'
   end
+  #Investigation should come before activity
+  step '"Mechanics" should appear before "Fluid Mechanics"'
+  
   step 'I check "Physics"'
   step 'I follow "Save"'
   step 'I go to the class page for "Physics"'
@@ -361,11 +371,11 @@ When /^(?:|I )should be able to filter the search results on the basis of probes
   step 'I should see "A Weather Underground"'
   step 'I should see "A heat spontaneously"'
   step 'I should see "Required equipment"'
-  step 'I follow "All"'
+  step 'I follow "all"'
   step 'I should wait 2 seconds'
   step 'I should see "A Weather Underground"'
   step 'I should see "A heat spontaneously"'
-  step 'I follow "None"'
+  step 'I follow "none"'
   step 'I should wait 2 seconds'
   step 'I should see "A Weather Underground"'
   step 'I should see "A heat spontaneously"'
