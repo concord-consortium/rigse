@@ -24,7 +24,11 @@
         - class_setup_link_class = 'upper_of_selected';
         - full_status_link_class = 'selected';
       - else
-        - materials_link_class = 'selected';
+        - referer_url = (request.referer)? request.referer.to_s : ""
+        - if referer_url.length > 0 && (!referer_url.index("edit").nil? || !referer_url.index("new").nil?)
+          - materials_link_class = '';
+        -else
+          - materials_link_class = 'selected';
         - student_roster_link_class = '';
         - class_setup_link_class = '';
         - full_status_link_class = '';
@@ -37,10 +41,7 @@
       = link_to 'Class Setup', edit_portal_clazz_url(portal_clazz)
     %div{:class => full_status_link_class}
       = link_to 'Full Status', fullstatus_portal_clazz_url(portal_clazz)
-    
     -# Commented as part of the cleanup tasks
     -# for CC to push to production.
     -#%div{:class => full_status_link_class}
     -#  = link_to 'Full Status', {}, :onclick => 'showFullStatus()'
-    
-   
