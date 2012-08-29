@@ -26,10 +26,14 @@ Feature: Teacher can see full status
       | Radioactivity        | Nuclear Energy | section a | page 1 | a                | image_q         | teacher   | false                 |
       | Plant reproduction   | Plant activity | section b | page 2 | b                | image_q         | teacher   | false                 |
       | Radioactivity        | Aeroplane      | section d | page 4 | d                | image_q         | teacher   | true                  |
+    And the following activities with multiple choices exist:
+      | activity | section   | page   | multiple_choices | image_questions | user      |
+      | Algebra  | section a | page 1 | a                | image_q         | teacher   |
     And the following assignments exist:
       | type          | name                 | class       |
       | investigation | Radioactivity        | My Class    |
       | investigation | Plant reproduction   | My Class    |
+      | activity      | Algebra              | My Class    |
     And the following students exist:
       | login     | password  | first_name | last_name |
       | dave      | student   | Dave       | Doe       |
@@ -40,12 +44,18 @@ Feature: Teacher can see full status
       | student   | class    | investigation      | question_prompt | answer |
       | dave      | My Class | Radioactivity      | a               | y      |
       | chuck     | My Class | Plant reproduction | b               | Y      |
+    And the following student answers:
+      | student   | class    | activity            | question_prompt | answer |
+      | Chuck     | My Class | Algebra             | a               | y      |
     And I login with username: teacher password: teacher
     And I am on the full status page for "My Class"
     
+  @javascript
   Scenario: Teacher can see all the offerings of the class
     Then I should see "Radioactivity"
     And I should see "Plant reproduction"
+    And I should see "Algebra"
+    
     
   Scenario: Teacher can see all the students assigned to the class
     Then I should see "Doe, Dave"
