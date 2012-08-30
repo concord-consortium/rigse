@@ -44,11 +44,17 @@
           - when Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS']
             - clazz_url = [:fullstatus, clazz]
           - else
-            - clazz_url = [:materials, clazz]
+            - if current_user.portal_teacher
+              - clazz_url = [:materials, clazz]
+            - else
+              - clazz_url = [clazz]
           - clazz_url = url_for(clazz_url)
       - else
-        - clazz_url = [:materials, clazz]
-        - clazz_url = url_for(clazz_url)
+        - if current_user.portal_teacher
+          - clazz_url = [:materials, clazz]
+        - else
+          - clazz_url = [clazz]
+        - clazz_url = url_for(clazz_url) 
         
       - if (is_active)
         %li{:id=>dom_id_for(clazz,:nav_item)}
