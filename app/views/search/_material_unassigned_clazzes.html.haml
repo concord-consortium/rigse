@@ -46,10 +46,10 @@
 - else
   .messagetext This material is assigned to all the classes.
 - if assigned_clazzes.length > 0
-  .assign_class_header
-    %br
-    %br
-    Already assigned to the following class(es)
+  %br
+  %br
+  .already_assign_class_header Already assigned to the following class(es)
+  %div{:style=>"padding:5px"}
     .assigned_classes_container.webkit_scrollbars
       %table.assigned_material_detail{:width=>"100%"}
         - assigned_clazzes.each do|clazz|
