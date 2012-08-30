@@ -158,7 +158,9 @@ class Admin::SiteNoticesController < ApplicationController
     user_collapsed_notice.collapsed_status = status_to_be_set
     user_collapsed_notice.save!
     if request.xhr?
-      render(:update) { |page| }
+      render :update do |page|
+        status_to_be_set ? page << "$('oHideShowLink').setAttribute('title','Show Notices')" : page << "$('oHideShowLink').setAttribute('title','Hide Notices')"
+      end
       return 
     end
   end
