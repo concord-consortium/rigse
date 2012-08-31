@@ -14,10 +14,19 @@
     
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
-    != stylesheet_link_merged(theme_name.to_sym, {'media' => 'screen, presentation'})
-    != stylesheet_link_merged(:print, {'media' => 'print'})
-    != javascript_include_merged :base
+  
+    != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     
+    / TODO: if we think that themes need there own print
+    / make a themed link here:
+    != stylesheet_link_tag 'print', {'media' => 'print'}
+    
+    / TODO: if we thinkg that themes need their own
+    / javascript, add theme_ to this:
+    != javascript_include_tag 'application'
+    / TODO: consider moving assets from zeus into 
+    / package (mange_classes,instructional_materials, &etc.)
+
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag("tiny_mce/tiny_mce")
 

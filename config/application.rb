@@ -4,7 +4,7 @@ require 'rails/all'
 
 module RailsPortal
   class Application < Rails::Application
-    
+    config.assets.enabled = true
     Bundler.require(:default, Rails.env) if defined?(Bundler)
   
     config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
