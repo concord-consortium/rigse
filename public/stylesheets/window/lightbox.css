@@ -157,7 +157,7 @@ div.buttons{
 .lightbox .move_handle,
 .lightbox_focused .move_handle{
     position:absolute;
-    left:-45px;
+    padding-left:5px;
     z-index:14;
     font-weight:bold;
     color:#DF720F;
