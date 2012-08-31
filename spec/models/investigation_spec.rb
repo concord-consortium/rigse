@@ -236,7 +236,7 @@ describe Investigation do
       end
     end
 
-    it "should find only published in pysics domain" do
+    it "should find only published in physics domain" do
       options = {
         :domain_id  => [@physics.id],
         :include_drafts => false

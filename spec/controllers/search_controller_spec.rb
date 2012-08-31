@@ -47,18 +47,25 @@ describe SearchController do
       end
     end
     it "should show all study materials materials" do
-      @post_params = {
-          #:material => ['investigation', 'activity']
-       }
-      post :index, @post_params
+      post :index
       assert_response :success
       assert_template 'index'
       assert_not_nil assigns[:investigations]
       assert_not_nil assigns[:investigations_count]
       assert_equal assigns[:investigations_count], 5
+      all_investigations = [@physics_investigation, @chemistry_investigation, @biology_investigation, @mathematics_investigation, @lines]
+      retrieved_investigations = assigns[:investigations]
+      retrieved_investigations.each do |investigation|
+        assert(all_investigations.include?(investigation))
+      end
       assert_not_nil assigns[:activities]
       assert_not_nil assigns[:activities_count]
       assert_equal assigns[:activities_count], 4
+      all_activities = [@laws_of_motion_activity, @fluid_mechanics_activity, @thermodynamics_activity, @parallel_lines]
+      retrieved_activities = assigns[:activities]
+      retrieved_activities.each do |activity|
+        assert(all_activities.include?(activity))
+      end
     end
     it "should search investigations" do
       @post_params = {
@@ -70,6 +77,11 @@ describe SearchController do
       assert_not_nil assigns[:investigations]
       assert_not_nil assigns[:investigations_count]
       assert_equal assigns[:investigations_count], 5
+      all_investigations = [@physics_investigation, @chemistry_investigation, @biology_investigation, @mathematics_investigation, @lines]
+      retrieved_investigations = assigns[:investigations]
+      retrieved_investigations.each do |investigation|
+        assert(all_investigations.include?(investigation))
+      end
       assert_nil assigns[:activities]
       assert_equal assigns[:activities_count],0
     end
@@ -85,6 +97,11 @@ describe SearchController do
       assert_not_nil assigns[:activities]
       assert_not_nil assigns[:activities_count]
       assert_equal assigns[:activities_count], 4
+      all_activities = [@laws_of_motion_activity, @fluid_mechanics_activity, @thermodynamics_activity, @parallel_lines]
+      retrieved_activities = assigns[:activities]
+      retrieved_activities.each do |activity|
+        assert(all_activities.include?(activity))
+      end
     end
   end
 
@@ -98,24 +115,26 @@ describe SearchController do
           :investigation => nil
         }
         xhr :post, :show, @post_params
-        response.should redirect_to("/")
+        response.should redirect_to(:root)
         
         post :show, @post_params
-        response.should redirect_to("/")
+        response.should redirect_to(:root)
       end
     end
-    it "should search all study materials materials" do
+    it "should search all study materials materials matching the search term" do
       @post_params = {
         :search_term => 'lines',
         :material => ['activity', 'investigation']
       }
       xhr :post, :show, @post_params
       assert_equal assigns[:investigations_count], 1
+      assigns[:investigations] = [@lines]
       assert_equal assigns[:activities_count], 1
+      assigns[:activities] = [@parallel_lines]
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
     end
-    it "should search activities" do
+    it "should search activities matching the search term" do
       @post_params = {
         :search_term => @laws_of_motion_activity.name,
         :material => ['activity']
@@ -124,6 +143,7 @@ describe SearchController do
       xhr :post, :show, @post_params
       assert_not_nil assigns(:activities_count)
       assert_equal assigns(:activities_count), 1
+      assigns[:activities] = [@laws_of_motion_activity]
       assert_equal assigns(:investigations_count), 0
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
@@ -132,7 +152,7 @@ describe SearchController do
       assert_template "index"
     end
 
-    it "should search investigations" do
+    it "should search investigations matching the search term" do
       @post_params = {
         :search_term => @physics_investigation.name,
         :activity => nil,
@@ -142,6 +162,7 @@ describe SearchController do
       xhr :post, :show, @post_params
       assert_not_nil assigns(:investigations_count)
       assert_equal assigns(:investigations_count), 1
+      assigns[:investigations] = [@physics_investigation]
       assert_equal assigns(:activities_count), 0
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
@@ -151,29 +172,50 @@ describe SearchController do
     end
   end
   
-  describe "POST get_current_material_unassigned_clazzes" do
+  describe "Post get_current_material_unassigned_clazzes" do
     before(:each) do
-      @clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])
+      #remove all the classes assigned to the teacher
+      teacher_clazzes = Portal::TeacherClazz.where(:teacher_id => @teacher.id)
+      teacher_clazzes.each do |teacher_clazz|
+        teacher_clazz.destroy
+      end
+      #assign new classes to the teacher
+      @physics_clazz = Factory.create(:portal_clazz, :name => 'Physics Clazz', :course => @mock_course,:teachers => [@teacher])
+      @chemistry_clazz = Factory.create(:portal_clazz, :name => 'Chemistry Clazz', :course => @mock_course,:teachers => [@teacher])
+      @mathematics_clazz = Factory.create(:portal_clazz, :name => 'Mathematics Clazz', :course => @mock_course,:teachers => [@teacher])
+      
+      @investigations_for_all_clazz = Factory.create(:investigation, :name => 'investigations_for_all_clazz', :user => @author_user, :publication_status => 'published')
+      @activity_for_all_clazz = Factory.create(:activity, :name => 'activity_for_all_clazz' ,:investigation_id => @physics_investigation.id, :user => @author_user)
+    
+      #assign activity_for_all_clazz to physics class
+      Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@physics_clazz.id,'Activity',@activity_for_all_clazz.id)
+      
+      #assign investigations_for_all_clazz to physics class
+      Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@physics_clazz.id,'Investigation',@investigations_for_all_clazz.id)
     end
-    it "should get investigations that are unassigned to the class" do
-      @post_params = {
-        :material_type => 'Investigation',
-        :material_id => @chemistry_investigation.id
-      }
-      xhr :post, :get_current_material_unassigned_clazzes, @post_params
-      assert_template :partial => '_material_unassigned_clazzes'
-    end
-
-    it "should get activities that are unassigned to the class" do
+    it "should get all the classes to which the activity is not assigned" do
       @post_params = {
         :material_type => 'Activity',
-        :material_id => @laws_of_motion_activity.id
+        :material_id => @activity_for_all_clazz.id
       }
       xhr :post, :get_current_material_unassigned_clazzes, @post_params
       assert_template :partial => '_material_unassigned_clazzes'
+      assigns[:material].should eq @activity_for_all_clazz
+      assigns[:assigned_clazzes].should eq [@physics_clazz]
+      assigns[:unassigned_clazzes].should eq [@chemistry_clazz, @mathematics_clazz]
     end
-  end
-  
+    it "should get all the classes to which the investigation is not assigned" do
+      @post_params = {
+        :material_type => 'Investigation',
+        :material_id => @investigations_for_all_clazz.id
+      }
+      xhr :post, :get_current_material_unassigned_clazzes, @post_params
+      assert_template :partial => '_material_unassigned_clazzes'
+      assigns[:material].should eq @investigations_for_all_clazz
+      assigns[:assigned_clazzes].should eq [@physics_clazz]
+      assigns[:unassigned_clazzes].should eq [@chemistry_clazz, @mathematics_clazz]
+    end
+  end  
   describe "POST add_material_to_clazzes" do
     before(:each) do
       @clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])

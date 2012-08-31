@@ -252,7 +252,7 @@ describe Activity do
       end
     end
 
-    it "should find only published activities in pysics domain" do
+    it "should find only published activities in physics domain" do
       options = {
         :domain_id  => [@physics.id],
         :include_drafts => false
