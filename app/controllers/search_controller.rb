@@ -1,8 +1,7 @@
 class SearchController < ApplicationController
 
   in_place_edit_for :investigation, :search_term
-  
-  def index
+  def search_material
     unless current_user.portal_teacher || current_user.anonymous?
       redirect_to root_path
       return
@@ -23,28 +22,15 @@ class SearchController < ApplicationController
     end
   end
   
+  def index
+    search_material();
+  end
+  
   def show
-    unless current_user.portal_teacher || current_user.anonymous?
-      redirect_to root_path
-      return
-    end
-    
-    @investigations_count=0
-    @activities_count=0
-    search_options=get_searchoptions()
-    if @material_type.include?('investigation')
-      investigations = Investigation.search_list(search_options)
-      @investigations_count = investigations.length
-      investigations = investigations.paginate(:page => @investigation_page, :per_page => 10)
-    end
-    if @material_type.include?('activity')
-      activities = Activity.search_list(search_options)
-      @activities_count = activities.length
-      activities = activities.paginate(:page => @activity_page, :per_page => 10)
-    end  
+    search_material();
     if request.xhr?
       render :update do |page| 
-        page.replace_html 'offering_list', :partial => 'search/search_results',:locals=>{:investigations=>investigations,:activities=>activities}
+        page.replace_html 'offering_list', :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities}
         page << "$('suggestions').remove();"
       end
     else
