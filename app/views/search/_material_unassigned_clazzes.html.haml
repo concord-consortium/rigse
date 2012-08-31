@@ -1,14 +1,14 @@
-- if material.class == ::Investigation
-  - investigation_name = material.name
+- if @material.class == ::Investigation
+  - investigation_name = @material.name
   - activity_name = ""
   - portal_offerings = nil
-- elsif material.class == ::Activity
+- elsif @material.class == ::Activity
   - investigation_name = ""
-  - parent_name = (material.parent)? material.parent.name : ""
-  - activity_name = material.name
+  - parent_name = (@material.parent)? @material.parent.name : ""
+  - activity_name = @material.name
   - portal_offerings = []
-  - if material.parent
-    - portal_offerings = Portal::Offering.where(:runnable_id=>material.parent.id,:runnable_type=>"Investigation")
+  - if @material.parent
+    - portal_offerings = Portal::Offering.where(:runnable_id=>@material.parent.id,:runnable_type=>"Investigation")
 
 - if investigation_name.length > 0
   %div
@@ -28,12 +28,12 @@
       %td 
         = parent_name
 %br
-- if clazzes.length > 0
+- if @unassigned_clazzes.length > 0
   %div.assign_class_header Select Class(es)
   %form{:id=>"add_material_form"}
     .unassigned_classes_container.webkit_scrollbars
       %table.material_detail{:width=>"100%"}
-        - clazzes.each do|clazz|
+        - @unassigned_clazzes.each do|clazz|
           %tr
             %td.check_box
               = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s
@@ -45,14 +45,14 @@
                 (Already assigned as part of "#{parent_name}")
 - else
   .messagetext This material is assigned to all the classes.
-- if assigned_clazzes.length > 0
+- if @assigned_clazzes.length > 0
   %br
   %br
   .already_assign_class_header Already assigned to the following class(es)
   %div{:style=>"padding:5px"}
     .assigned_classes_container.webkit_scrollbars
       %table.assigned_material_detail{:width=>"100%"}
-        - assigned_clazzes.each do|clazz|
+        - @assigned_clazzes.each do|clazz|
           %tr
             %td.assigned_clazzes_material
               = clazz.name
@@ -60,8 +60,8 @@
 %table.classdata
   %tr
     %td
-      - if clazzes.length > 0
-        = link_to_remote "Save", :url => {:action=>'add_material_to_clazzes', :material_id => material.id,:material_type => material.class.to_s}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
+      - if @unassigned_clazzes.length > 0
+        = link_to_remote "Save", :url => {:action=>'add_material_to_clazzes', :material_id => @material.id,:material_type => @material.class.to_s}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
         &nbsp;&nbsp;
       = link_to "Cancel", "#",:onclick=>"close_popup()"
 %div{:style=>"clear:both"}

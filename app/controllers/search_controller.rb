@@ -1,12 +1,19 @@
 class SearchController < ApplicationController
-
-  in_place_edit_for :investigation, :search_term
-  def search_material
+  
+  before_filter :teacher_only, :only => [:index, :show]
+  
+  protected
+  
+  def teacher_only
     unless current_user.portal_teacher || current_user.anonymous?
-      redirect_to root_path
-      return
+      redirect_to(:root)
     end
-    
+  end
+  
+  in_place_edit_for :investigation, :search_term
+  
+  public
+  def search_material
     search_options=get_searchoptions()
     @investigations_count=0
     @activities_count=0
@@ -103,9 +110,9 @@ class SearchController < ApplicationController
   def get_current_material_unassigned_clazzes
     material_type = params[:material_type]
     if material_type == "Investigation"
-      material = ::Investigation.find(params[:material_id])
+      @material = ::Investigation.find(params[:material_id])
     elsif material_type == "Activity"
-      material = ::Activity.find(params[:material_id])
+      @material = ::Activity.find(params[:material_id])
     end
   
     teacher_clazzes = current_user.portal_teacher.teacher_clazzes
@@ -114,9 +121,9 @@ class SearchController < ApplicationController
     teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
     assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
     unassigned_teacher_clazzes = teacher_clazzes.select{|item| assigned_clazz_ids.index(item.clazz_id).nil?}
-    unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
-    assigned_clazzes = Portal::Clazz.where(:id=>assigned_clazz_ids)
-    render :partial => 'material_unassigned_clazzes', :locals => {:material=>material,:clazzes=>unassigned_clazzes,:assigned_clazzes => assigned_clazzes}
+    @unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
+    @assigned_clazzes = Portal::Clazz.where(:id=>assigned_clazz_ids)
+    render :partial => 'material_unassigned_clazzes'
   end
   
   def add_material_to_clazzes
