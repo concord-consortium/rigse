@@ -94,3 +94,4 @@ config/sis_import_data.yml
 config/paperclip.yml
 config/google_analytics.yml
 chromedriver.log
+public/assets/
