@@ -122,6 +122,12 @@ Feature: Teacher manages instructional materials of a class
 
   @javascript
   Scenario: Teacher should be able to see student attempt progress bars
+    When the following student answers:
+      | student   | class         | investigation            | question_prompt | answer |
+      | dave      | My Class      | Plant reproduction       | b               | a      |
+      | dave      | My Class      | Plant reproduction       | image_q         | Y      |
+    And I am on Instructional Materials page for "My Class"
+    And I click the tab of Instructional Materials with text "Plant reproduction"
     Then I should see progress bars for the students
         
   Scenario: Teacher should see a message if no offerings are present
@@ -135,7 +141,6 @@ Feature: Teacher manages instructional materials of a class
   Scenario: Teacher should see a message if no students are present
     When I go to Instructional Materials page for "Physics"
     Then I should see "No students have registered for this class yet"
-    
     
   Scenario: Teacher should be able to run investigation as teacher
     When I follow "Run as Teacher" for the investigation "Aerodynamics"
