@@ -61,17 +61,16 @@ stylesheets:
   - window/rites
   - window/lightbox
   - live_validation
-  - accordion
-  - notes
   - action_menu_tab
+  - notes
   - drop_down
   - data_table
   - reports
   - workgroup
   - chosen
-  - site_notice
   - classes_left_pane
   - instructional_materials
+  - site_notice
 
 - investigations:
   - themes/investigations/investigations
@@ -175,6 +174,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - workgroup
   - chosen
   - classes_left_pane
   - instructional_materials
@@ -218,10 +218,10 @@ stylesheets:
   - please_wait
   - window/window
   - window/rites
+  - window/lightbox
   - live_validation
-  - accordion
-  - notes
   - action_menu_tab
+  - notes
   - drop_down
   - data_table
   - reports
@@ -229,4 +229,5 @@ stylesheets:
   - chosen
   - classes_left_pane
   - instructional_materials
+  - site_notice
 
