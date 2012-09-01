@@ -39,15 +39,18 @@ Scenario: Anonymous user can not assign instructional materials to the class
     And I follow assign to a class link for activity "Fluid Mechanics"
     
     
+  @dialog
   @javascript
   Scenario: Teacher can assign investigations to a class
     When I follow assign to a class link for investigation "Geometry"
     And I check "Mathematics"
     And I follow "Save"
+    And accept the dialog
     And I go to the class page for "Mathematics"
     Then I should see "Geometry"
     
     
+  @dialog
   @javascript
   Scenario: Teacher can assign activities to a class
     And I uncheck "Investigation"
@@ -58,6 +61,7 @@ Scenario: Anonymous user can not assign instructional materials to the class
     And "Mechanics" should appear before "Fluid Mechanics"
     And I check "Physics"
     And I follow "Save"
+    And accept the dialog
     And I go to the class page for "Physics"
     And I should see "Fluid Mechanics"
     
