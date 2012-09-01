@@ -464,3 +464,14 @@ And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to probe "([^"
   embeddable_data_collectors.save!
   
 end
+
+When /^(?:|I )create investigations "(.+)" before "(.+)" by date$/ do |investigation_name1, investigation_name2|
+  created_at = Date.today
+  ['investigation_name1', 'investigation_name2'].each do |investigation|
+    inv = Investigation.find_or_create_by_name(investigation)
+    created_at = created_at - 1
+    inv.created_at = created_at
+    inv.updated_at = created_at
+    inv.save!
+  end
+end
