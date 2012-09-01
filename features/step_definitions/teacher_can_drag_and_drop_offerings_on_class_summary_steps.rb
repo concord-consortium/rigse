@@ -1,11 +1,12 @@
 And /^I move the offering named "(.+)" to the top of the list on the class summary page$/ do|sortable_name|
   result = page.execute_script(
                       "
-                       var bReturnValue = true;
+                       var bReturnValue = false;
                        var strUlId = 'clazz_offerings';
                        var sortableList = document.getElementById(strUlId);
                        if (sortableList === null)
                        {
+                          bReturnValue = true;
                           return bReturnValue;
                        }
                        var arrListChildren = sortableList.getElementsByClassName('offering');
@@ -25,6 +26,7 @@ And /^I move the offering named "(.+)" to the top of the list on the class summa
                        {
                         sortableList.removeChild(offeringToMove);
                         sortableList.insertBefore(offeringToMove,listFirstChild);
+                        bReturnValue = true;
                        }
                        Sortable.sortables[strUlId].onUpdate.call();
                        return bReturnValue;
