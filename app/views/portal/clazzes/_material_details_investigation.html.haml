@@ -1,5 +1,4 @@
 
-D:\GIT\RIGSE>@git.exe %*
 %div
   %table.investigationdata{:width=>"100%"}
     %tr
@@ -46,8 +45,3 @@ D:\GIT\RIGSE>@git.exe %*
       %td{:colspan=>"3"}
         %div{:style=>"overflow:auto;width:575px"}
           = render :partial => 'investigation_report_summary', :locals => { :investigation => investigation, :offering=>current_offering }
-D:\GIT\RIGSE>@set ErrorLevel=%ErrorLevel%
-
-D:\GIT\RIGSE>@rem Restore the original console codepage.
-
-D:\GIT\RIGSE>@chcp %cp_oem% > nul < nul
