@@ -841,6 +841,7 @@ describe Portal::ClazzesController do
       @params = {
         :clazz_offerings => [@physics_offering.id, @chemistry_offering.id, @biology_offering.id , @mathematics_offering.id]
       }
+      stub_current_user :authorized_teacher_user
     end
     it "should store position of all the offerings after teacher sorts offerings" do
       
