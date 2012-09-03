@@ -63,6 +63,7 @@ Feature: Teacher can see full status
     
   Scenario: Teacher can see all the activities when an offering is expanded except teacher only activity
     When I expand the column "Radioactivity" on the Full Status page
+    And I should wait 5 seconds
     Then the column for "Radioactivity" on the Full Status page should be expanded
     And I should see "Radio activity"
     And I should see "Nuclear Energy"
@@ -72,6 +73,7 @@ Feature: Teacher can see full status
   @javascript
   Scenario: Offering collapsed state is maintained across different parts of the application
     When I expand the column "Radioactivity" on the Full Status page
+    And I should wait 5 seconds
     And the column for "Radioactivity" on the Full Status page should be expanded
     And I should see "Radio activity"
     And I should see "Nuclear Energy"
@@ -83,6 +85,7 @@ Feature: Teacher can see full status
   @javascript
   Scenario: Offering collapsed state is maintained across sessions
     When I expand the column "Radioactivity" on the Full Status page
+    And I should wait 5 seconds
     And the column for "Radioactivity" on the Full Status page should be expanded
     And I should see "Radio activity"
     And I should see "Nuclear Energy"

@@ -26,6 +26,8 @@ module HtmlSelectorsHelpers
       "div#suggestions"
     when "result box"
       "div.results_container"
+    when "the student list on the student roster page" 
+      "div#students_listing"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
