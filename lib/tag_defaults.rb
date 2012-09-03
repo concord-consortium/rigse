@@ -159,7 +159,7 @@ module TagDefaults
           unit = key[2]
           key_string = "#{grade_level}#{subject}".gsub(/\s+/,"").downcase
           # hacky ordering of grade levels
-          order = 5
+          order = 6
           case key_string
           when /^elementary3\-4/i
             order = 0
@@ -171,6 +171,8 @@ module TagDefaults
             order = 3
           when /^math/i
             order = 4
+          when /^stemcareer/i
+            order = 5
           end
           key_string = "#{order}#{key_string}"
           unless results[key_string]
@@ -233,7 +235,9 @@ module TagDefaults
     results = []
     gll = self.grade_levels
     sal = self.subject_areas
+    sal = [EmptyTag.new] if sal.empty?
     ul = self.units
+    ul = [EmptyTag.new] if ul.empty?
     gll.each do |grade|
       sal.each do |subject|
         ul.each do |unit|
@@ -242,5 +246,11 @@ module TagDefaults
       end
     end
     return results
+  end
+
+  class EmptyTag
+    def name
+      ""
+    end
   end
 end
