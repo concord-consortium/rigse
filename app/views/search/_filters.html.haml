@@ -1,0 +1,81 @@
+-probe_types = Probe::ProbeType.all.sort!{ |a,b| a.name.downcase <=> b.name.downcase };
+-scientific_domains=RiGse::Domain.all.collect { |d| [(d.name.nil?) ? d.id.to_s : d.name,d.id] }
+-grades=RiGse::GradeSpanExpectation.grade_spans
+#filter_container{:style=>"overflow:hidden;"}
+  #filtermask
+  .showhidefilters
+    %div{:id=>"oExpandCollapseText",:style=>"width:10px;float:left"}
+      \-    
+    = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
+  %div{:style=>'clear:both'}
+  #filters_wrapper.visible
+    %table.filters.collapse_filters{:cellpadding=>0,:cellspacing=>0}
+      
+      %tr
+        %td.sortbycolumn
+          .filterheader
+            Sort By
+          %div
+            = label_tag 'sort_order_created_at_ASC','Oldest',:class=>(@sort_order == "created_at ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_order,'created_at ASC',(@sort_order == "created_at ASC"),:class=>'sort_radio'
+          %div
+            = label_tag 'sort_order_created_at_DESC','Newest',:class=>(@sort_order == "created_at DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_order,'created_at DESC',(@sort_order == "created_at DESC"),:class=>'sort_radio'
+          %div
+            = label_tag 'sort_order_name_ASC','Alphabetical',:class=>(@sort_order == "name ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_order,'name ASC',(@sort_order == "name ASC"),:class=>'sort_radio'
+          %div
+            = label_tag 'sort_order_offerings_count_DESC' ,'Popularity',:class=>(@sort_order == "offerings_count DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = radio_button_tag :sort_order,'offerings_count DESC',(@sort_order == "offerings_count DESC"),:class=>'sort_radio'
+        %td.domaincolumn
+          .filterheader
+            Scientific Domain
+          -scientific_domains.each do |domain|
+            .tablecell
+              = check_box_tag 'domain_id[]',domain[1], (@domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
+              = label_tag domain[0].gsub(/\s+/, ""), domain[0]
+            /= check_box_tag :domain_id, domain, true
+        %td.gradecolumn
+          .filterheader
+            Grade
+          .tablecell
+            = check_box_tag 'grade_span[]',"",(@grade_span.length > 0 && (@grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
+            = label_tag 'allgrades', 'All Grades'
+          -grades.each do |grade|
+            
+            .tablecell
+              = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
+              = label_tag grade, grade
+        %td.materialcolumn
+          .filterheader
+            Material
+          .tablecell
+            = @investigation_checkedstatus
+            = check_box_tag 'material[]', 'investigation', @material_type.include?('investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
+            = label_tag 'investigation','Investigation'
+          .tablecell
+            = @activity_checkedstatus
+            = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
+            = label_tag 'activity','Activity'
+        %td.probescolumn
+          - no_probes_req_selected = @probe_type.include?("0")
+          .filterheader
+            Probes
+          .noprobesrequired
+            = check_box_tag 'probe[]', '0', no_probes_req_selected, :id=>'probe_0', :class=>'probe_no_check', :onclick=>'uncheckedallprobes(false);'
+            = label_tag "probe_0","No Probes Required",:class=>"probes_label"
+          .probes_container.webkit_scrollbars
+            
+            %div
+              Select&nbsp;
+              %span#select_all_probes
+                %a{:href => 'javascript: void(0);', :onclick=>"uncheckedallprobes(true);"}all
+              %span
+                |
+              %span#select_none_probes
+                %a{:href => 'javascript: void(0);', :onclick=>"uncheckedallprobes(false);"}none
+            - probe_types.each do |probe|
+              .tablecell
+                = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items",:onclick=>"uncheckednoprobe(this);"
+                = label_tag "probe_#{probe.id}","#{probe.name}",:class=>"probes_label"
+          #probes_overlay{ :style=> (no_probes_req_selected ? '' : 'display: none;') }

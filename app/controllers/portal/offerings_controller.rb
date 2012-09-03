@@ -372,7 +372,7 @@ class Portal::OfferingsController < ApplicationController
     div_id = "DivHideShowDetail"+ offering.id.to_s
     render :update do |page|
       page.replace_html(div_id, :partial => "home/recent_student_report", :locals => { :offering => offering, :students=>students, :learners=>learners})
-      page << 'setTableHeaders()'
+      page << "setRecentActivityTableHeaders(null,#{params[:id]})"
     end
     return
   end
