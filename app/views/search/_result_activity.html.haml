@@ -1,33 +1,25 @@
-
-D:\GIT\RIGSE>@git.exe %*
-%table.result_material{:cellpadding=>0,:cellspacing=>0}
-  %tr
-    -if false
-      %td.material_type
-        .material_thumbnail
-        .material_type
-          = type
-    %td.material_list
-      - materials.each do |activity|
-        - unless activity.parent.nil?
-          .material_list_item
-            %div
-              %div{:style=>'overflow:hidden'}
-                %span.material_header
-                  = "#{activity.name}, "
-                %span
-                  from
-                  = activity.parent.name
-                .material_button{:style=>'float:right'}
-                  =link_to 'Assign to class','',:class=>"button"
-                .material_button{:style=>'float:right'}
-                  = link_to "Preview",'',:class=>"button"
-            .material_body
-              = activity.description
-              %i
-                Used in: #{activity.offerings.length} classes.
-D:\GIT\RIGSE>@set ErrorLevel=%ErrorLevel%
-
-D:\GIT\RIGSE>@rem Restore the original console codepage.
-
-D:\GIT\RIGSE>@chcp %cp_oem% > nul < nul
+#activities_bookmark
+.materials_container
+  .material_list_header
+    Activities
+  %p.border_top= page_entries_info materials, :model=>"Activity"
+  = will_paginate materials, {:param_name => 'activity_page', :params => {:controller => 'search', :action => 'index', :search_term => @search_term, :investigation_page => @investigation_page,:type=>'act'}}
+  
+  %table.result_material{:cellpadding=>0,:cellspacing=>0}
+    %tr
+      -if false
+        %td.material_type
+          .material_thumbnail
+          .material_type
+            = type
+      %td.material_list
+        - materials.each do |activity|
+          - unless activity.parent.nil?
+            -if materials.last==activity
+              %div.material_list_item{:id=>"search_activity_#{activity.id}",:style=>"border:none"}
+                = render :partial => 'result_item', :locals=>{:material=>activity}
+            -else
+              %div.material_list_item{:id=>"search_activity_#{activity.id}"}
+                = render :partial => 'result_item', :locals=>{:material=>activity}
+  %br
+  = will_paginate materials, {:param_name => 'activity_page', :params => {:controller => 'search', :action => 'index', :search_term => @search_term, :investigation_page => @investigation_page,:type=>'act'}}

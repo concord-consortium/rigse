@@ -841,6 +841,7 @@ describe Portal::ClazzesController do
       @params = {
         :clazz_offerings => [@physics_offering.id, @chemistry_offering.id, @biology_offering.id , @mathematics_offering.id]
       }
+      stub_current_user :authorized_teacher_user
     end
     it "should store position of all the offerings after teacher sorts offerings" do
       
@@ -873,10 +874,10 @@ describe Portal::ClazzesController do
       response.should_not be_success
       response.should redirect_to home_url
     end
-    it "should retrieve the class when user not anonymous user" do
+    it "should retrieve the class when user is not anonymous user" do
       stub_current_user :authorized_teacher_user
       get :fullstatus, @params
-      assigns[:portal_clazz] = @mock_clazz
+      assert_equal assigns[:portal_clazz], @mock_clazz
       response.should be_success
       assert_template "fullstatus"
     end

@@ -1,6 +1,7 @@
 
 Then /^A report window opens of offering "(.+)"$/ do |offering|
   #offering = Portal::Offering.find_by_name(offering)
+  step 'I wait 2 seconds'
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
     page.should have_content("Report for:")
   end

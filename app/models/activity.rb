@@ -67,6 +67,43 @@ class Activity < ActiveRecord::Base
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
 
+  scope :with_gse, {
+    :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
+  }
+
+  scope :domain, lambda { |domain_id|
+    {
+      :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
+    }
+  }
+
+  scope :grade, lambda { |gs|
+    gs = gs.size > 0 ? gs : "%"
+    {
+      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","):gs ]
+    }
+  }
+
+  scope :probe_type, {
+    :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
+  }
+    
+  scope :probe, lambda { |pt|
+    pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
+    {
+      :conditions => ['probe_probe_types.id in (?)', pt ]
+    }
+  }
+
+  scope :no_probe,{
+    :select => "activities.id", 
+    :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
+  }
+
+  scope :activity_group, {
+      :group => "#{self.table_name}.id"
+    }
+
   scope :like, lambda { |name|
     name = "%#{name}%"
     {
@@ -74,30 +111,122 @@ class Activity < ActiveRecord::Base
     }
   }
 
-  scope :published,
+  scope :investigation,
   {
-    :conditions =>{:publication_status => "published"}
+    :joins => "left outer JOIN investigations ON investigations.id = activities.investigation_id",
   }
 
+  scope :published,
+  {
+    :conditions =>['activities.publication_status = "published" OR investigations.publication_status = "published"']
+  }
+  
+  scope :ordered_by, lambda { |order| { :order => order } }
+  
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
 
     def search_list(options)
+      grade_span = options[:grade_span] || ""
+      domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
       name = options[:name]
-      if (options[:include_drafts])
-        activities = Activity.like(name)
+      sort_order = options[:sort_order] || "name ASC"
+      probe_type = options[:probe_type] || []
+      
+      if APP_CONFIG[:use_gse]
+        if domain_id.length > 0
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              if probe_type.include?("0")
+                activities = Activity.like(name).investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              else
+                activities = Activity.like(name).investigation.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              end
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.published.like(name).investigation
+              if probe_type.include?("0")
+                activities = activities.investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              else
+                activities = activities.investigation.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              end
+            end
+          else
+            if (options[:include_drafts])
+              activities = Activity.like(name).investigation.with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.published.like(name).investigation
+              activities = activities.investigation.with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            end
+          end
+        elsif (!grade_span.empty?)
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              if probe_type.include?("0")
+                activities = Activity.like(name).investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).uniq
+              else
+                activities = Activity.like(name).investigation.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+              end
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.published.like(name).investigation
+              if probe_type.include?("0")
+                activities = activities.investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).with_gse.grade(grade_span).uniq
+              else
+                activities = activities.investigation.activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+              end
+            end
+          else
+            if (options[:include_drafts])
+              activities = Activity.like(name).investigation.with_gse.grade(grade_span)
+            else
+              published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+              activities = Activity.published.like(name).investigation
+              activities = activities.investigation.with_gse.grade(grade_span)
+            end
+          end
+        elsif probe_type.length > 0
+          if (options[:include_drafts])
+            if probe_type.include?("0")
+              activities = Activity.like(name).investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).uniq
+            else
+              activities = Activity.like(name).investigation.activity_group.probe_type.probe(probe_type).uniq
+            end
+          else
+            published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+            if probe_type.include?("0")
+              activities = Activity.published.like(name).investigation.activity_group.where('activities.id not in (?)', Activity.no_probe).uniq
+            else
+              activities = Activity.published.like(name).investigation.activity_group.probe_type.probe(probe_type).uniq
+            end
+          end
+        else
+          if (options[:include_drafts])
+            activities = Activity.like(name)
+          else
+            published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+            activities = Activity.published.like(name).investigation
+          end
+        end
       else
-        # activities = Activity.published.like(name)
-        activities = Activity.like(name)
+        if (options[:include_drafts])
+          activities = Activity.like(name)
+        else
+          published_investigation_ids = (Investigation.published.all.map{|inv| inv.id})
+          activities = Activity.published.like(name).investigation
+        end
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
       if portal_clazz
         activities = activities - portal_clazz.offerings.map { |o| o.runnable }
       end
-
+      if activities.respond_to? :ordered_by
+        activities = activities.ordered_by(sort_order)
+      end
       if options[:paginate]
         activities = activities.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
       else

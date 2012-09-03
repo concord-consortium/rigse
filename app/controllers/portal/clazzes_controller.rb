@@ -446,7 +446,7 @@ class Portal::ClazzesController < ApplicationController
 
 # GET /portal_clazzes/1/roster
   def roster
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       redirect_to home_url
       return
     end
@@ -474,7 +474,7 @@ class Portal::ClazzesController < ApplicationController
   end
   
   def manage_classes
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       redirect_to home_url
       return
     end
@@ -527,9 +527,9 @@ class Portal::ClazzesController < ApplicationController
       :error_msg => nil
     }
     
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       response_value[:success] = false
-      response_value[:error_msg] = "Anonymous can't copy classes. Please log in and try again."
+      response_value[:error_msg] = "You need to be a teacher to copy classes. Please log in as a teacher and try again."
       render :json => response_value
       return
     end
@@ -575,7 +575,7 @@ class Portal::ClazzesController < ApplicationController
 
   
   def materials
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       redirect_to home_url
       return
     end
@@ -589,12 +589,14 @@ class Portal::ClazzesController < ApplicationController
   
   
   def sort_offerings
-    params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
+    if current_user.portal_teacher
+      params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
+    end
     render :nothing => true
   end
   
   def fullstatus
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       redirect_to home_url
       return
     end

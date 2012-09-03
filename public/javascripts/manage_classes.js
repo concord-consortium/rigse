@@ -30,8 +30,8 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
     '<div class="bottom_options">'+
     '<div class="right_float">'+
     '<label id="submit_text" style="display : none; font-color: #ff0000"  > Submitting Data......</label>'+
-    '<button class="pie" onclick="copyClass(this)">Save</button>'+
-    '<button class="pie" onclick="destroyIt()">Cancel</button>'+
+    '<button class="pie" onclick="copyClass(this)">Save</button>&nbsp;&nbsp;'+
+    '<a href="javascript:void(0)" onclick="destroyIt()">Cancel</a>'+
     '</div>'+
     '<div class="clear_both">'+
     '</div>'+
@@ -41,10 +41,11 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
     'document.getElementById("copyClass_name").focus();'+
     '</script>';
     
-    oPopUpWindow = new UI.Window({ theme: "rites",
+    oPopUpWindow = new UI.Window({ theme: "lightbox",
         shadow: true,
         width:  500,
         height: 250}).setContent(oInnerHtml).show(true).center();
+    oPopUpWindow.setHeader("Copy Class");
     oPopUpWindow.activate();
     
 }
