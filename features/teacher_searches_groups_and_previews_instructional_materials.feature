@@ -61,11 +61,11 @@
     And I should preview activity "differential calculus" on the search instructional materials page
     
     
-  Scenario: Teacher can preview instructional materials
+  Scenario: Teacher can preview investigation
     Then I should preview investigation "Geometry" on the search instructional materials page
     
     
- Scenario: Teacher can preview instructional materials
+ Scenario: Teacher can preview activity
     And I should preview activity "differential calculus" on the search instructional materials page
     
     
