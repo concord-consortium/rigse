@@ -287,6 +287,7 @@ function get_Assign_To_Class_Popup(material_id,material_type)
             var contentheight=$('windowcontent').getHeight();
             var contentoffset=40;
             list_modal.setSize(500,contentheight+contentoffset);
+            list_modal.center();
         }
     };
     var target_url = "/search/get_current_material_unassigned_clazzes";
