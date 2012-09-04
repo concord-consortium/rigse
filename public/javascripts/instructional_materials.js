@@ -54,7 +54,7 @@ function showHideActivityButtons(investigation_id, oLink){
 
 
 function showHideActivityDetails(investigation_id, oLink, strURL){
-    setTableHeaders(1);
+    setRecentActivityTableHeaders(1,investigation_id);
     var bVisible = false;
     $$('.DivHideShowDetail'+investigation_id).each(function(oButtonContainer){
         oButtonContainer.toggle();
@@ -78,7 +78,7 @@ function showHideActivityDetails(investigation_id, oLink, strURL){
     if($('DivHideShowDetail'+investigation_id).children.length === 0)
         new Ajax.Request(strURL, {asynchronous:true, evalScripts:true, method:'post'});
     
-    setTableHeaders();
+    setRecentActivityTableHeaders(null,investigation_id);
 }
 
 
@@ -118,6 +118,29 @@ function setTableHeaders(iDefaultWidth)
         if(oChild)
         {
             iContainerWidth = (oTitle.offsetWidth > 10)? oTitle.offsetWidth-10 : 1;
+            if(iDefaultWidth)
+                iWidth = iDefaultWidth;
+            else
+                iWidth = (oTitle.getStyle('display') == "none")? 1 : iContainerWidth;
+            oChild.setStyle({'display':'none'});
+            oChild.setStyle({'width':iWidth+'px'});
+        }
+    });
+    
+    $$("th.expand_collapse_text > div.progressbar_container").each(function(oTitle){
+        oTitle.setStyle({'display':''});
+    });
+}
+
+function setRecentActivityTableHeaders(iDefaultWidth,offering_id)
+{
+    var iWidth;
+    var iContainerWidth;
+    $$(".DivHideShowDetail"+ offering_id + " th.expand_collapse_text").each(function(oTitle){
+        var oChild = oTitle.childElements()[0];
+        if(oChild)
+        {
+            iContainerWidth = (oTitle.offsetWidth > 0)? oTitle.offsetWidth-10 : 1;
             if(iDefaultWidth)
                 iWidth = iDefaultWidth;
             else

@@ -1,0 +1,29 @@
+/- locals = {:search_name => @name, :investigations => @investigations,:activities => @activities, :sort_order => @sort_order}
+= javascript_include_tag "search_materials"
+.search_materials
+  %h1{:style=>'color:black'}
+    Instructional Materials
+  %form{:id => 'material_search_form',:url => list_filter_search_url, :onkeypress => 'return event.keyCode!=13', :remote =>true }
+    %table.search_table{:cellpadding=>0,:cellspacing=>0,:style=>'margin-bottom:0px'}
+      %tr
+        %td
+          .search_label{:style=>'width:60px'}
+            SEARCH
+        %td
+          = text_field_tag :search_term,@search_term, :autocomplete => "off",:onkeydown=>'if(goButttondisabled){return false;}preventsubmit();showsuggestion(event,this)',:onkeyup=>'if(goButttondisabled){return false;}searchsuggestions(event,this)'
+          #search_suggestions
+        %td
+          .go_button.button
+            = hidden_field_tag :show_suggestion3, 'true'
+            = submit_to_remote :GO,:GO, :url => list_filter_search_url, :before=>'abortAjaxRequest();LoadingStart();', :complete =>'LoadingEnd();removesuggestions();'
+    = render :partial=>"search/filters"
+  = hidden_field 'prevent','submit',:value=>"0"
+  #results
+  = observe_form 'material_search_form', :url => list_filter_search_url, :frequency => 1, :before => "if(CheckSubmitStatus()) {LoadingStart();} else return false;", :complete=> "LoadingEnd();"
+  .search_resultscontainer
+    .progress_container
+    #search_spinner{:style=>'display: none;'}
+      = image_tag "ajax-loader.gif"
+      ( Searching ... )
+    #offering_list
+      = render :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities}

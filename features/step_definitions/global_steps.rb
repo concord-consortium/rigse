@@ -166,3 +166,24 @@ Then /^(?:|I )need to confirm "([^"]*)"$/ do |text|
   dialog_text.should == text
   page.driver.browser.switch_to.alert.accept
 end
+
+
+When /^the project setting for Grade Span Expectation is (saved|restored)$/ do |saved_restored|
+  if (saved_restored == 'saved')
+    unless @app_config_use_gse
+      @app_config_use_gse = APP_CONFIG[:use_gse]
+    end
+  else
+    @app_config_use_gse = APP_CONFIG[:use_gse]
+  end
+end
+
+When /^the project settings (enables|disables) use of Grade Span Expectation$/ do |enable_disable|
+  step 'the project setting for Grade Span Expectation is saved'
+  
+  if (enable_disable == 'enables')
+    APP_CONFIG[:use_gse] = true
+  else
+    APP_CONFIG[:use_gse] = false
+  end
+end

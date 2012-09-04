@@ -44,16 +44,16 @@ Feature: Teacher reorders materials assigned to the class
   @javascript
   Scenario: Teacher reorders materials with the default class feature enabled
     Given the default class is created
-    And the following default class offerings exist
+    And the following offerings exist
        | name                      |
        | Lumped circuit abstraction|
        | static discipline         |
        | Non Linear Devices        |
     And I am logged in with the username teacher
     When I am on the class page for "My Class"
-    And I assign the investigation "Lumped circuit abstraction" to the class "My Class"
-    And I assign the investigation "static discipline" to the class "My Class"
-    And I assign the investigation "Non Linear Devices" to the class "My Class"
+    And the Investigation "Lumped circuit abstraction" is assigned to the class "My Class"
+    And the Investigation "static discipline" is assigned to the class "My Class"
+    And the Investigation "Non Linear Devices" is assigned to the class "My Class"
     And I am on the class edit page for "My Class"
     And I move investigation named "Non Linear Devices" to the top of the list
     And I press "Save"

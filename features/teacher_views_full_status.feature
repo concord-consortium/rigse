@@ -26,10 +26,14 @@ Feature: Teacher can see full status
       | Radioactivity        | Nuclear Energy | section a | page 1 | a                | image_q         | teacher   | false                 |
       | Plant reproduction   | Plant activity | section b | page 2 | b                | image_q         | teacher   | false                 |
       | Radioactivity        | Aeroplane      | section d | page 4 | d                | image_q         | teacher   | true                  |
+    And the following activities with multiple choices exist:
+      | activity | section   | page   | multiple_choices | image_questions | user      |
+      | Algebra  | section a | page 1 | a                | image_q         | teacher   |
     And the following assignments exist:
       | type          | name                 | class       |
       | investigation | Radioactivity        | My Class    |
       | investigation | Plant reproduction   | My Class    |
+      | activity      | Algebra              | My Class    |
     And the following students exist:
       | login     | password  | first_name | last_name |
       | dave      | student   | Dave       | Doe       |
@@ -40,20 +44,26 @@ Feature: Teacher can see full status
       | student   | class    | investigation      | question_prompt | answer |
       | dave      | My Class | Radioactivity      | a               | y      |
       | chuck     | My Class | Plant reproduction | b               | Y      |
+    And the following student answers:
+      | student   | class    | activity            | question_prompt | answer |
+      | Chuck     | My Class | Algebra             | a               | y      |
     And I login with username: teacher password: teacher
     And I am on the full status page for "My Class"
     
+  @javascript
   Scenario: Teacher can see all the offerings of the class
     Then I should see "Radioactivity"
     And I should see "Plant reproduction"
+    And I should see "Algebra"
+    
     
   Scenario: Teacher can see all the students assigned to the class
     Then I should see "Doe, Dave"
     And I should see "Smith, Chuck"
     
-  @javascript
   Scenario: Teacher can see all the activities when an offering is expanded except teacher only activity
     When I expand the column "Radioactivity" on the Full Status page
+    And I should wait 5 seconds
     Then the column for "Radioactivity" on the Full Status page should be expanded
     And I should see "Radio activity"
     And I should see "Nuclear Energy"
@@ -63,6 +73,7 @@ Feature: Teacher can see full status
   @javascript
   Scenario: Offering collapsed state is maintained across different parts of the application
     When I expand the column "Radioactivity" on the Full Status page
+    And I should wait 5 seconds
     And the column for "Radioactivity" on the Full Status page should be expanded
     And I should see "Radio activity"
     And I should see "Nuclear Energy"
@@ -74,6 +85,7 @@ Feature: Teacher can see full status
   @javascript
   Scenario: Offering collapsed state is maintained across sessions
     When I expand the column "Radioactivity" on the Full Status page
+    And I should wait 5 seconds
     And the column for "Radioactivity" on the Full Status page should be expanded
     And I should see "Radio activity"
     And I should see "Nuclear Energy"
@@ -83,7 +95,6 @@ Feature: Teacher can see full status
     Then the column for "Radioactivity" on the Full Status page should be expanded
     
     
-  @javascript
   Scenario: Anonymous user cannot see the full status page
     When I am an anonymous user
     And I go to the full status page for "My Class"
