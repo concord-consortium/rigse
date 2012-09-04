@@ -100,9 +100,9 @@ div.buttons{
     float:right;
     background:transparent url(/stylesheets/window/lightbox/buttons.png) no-repeat 0 0; 
     background-repeat: no-repeat;
-    height:42px;
-    width:42px;
-    margin: -23px -23px 0 0px;        
+    height:29px;
+    width:29px;
+    margin: -16px -16px 0 0px;        
     padding-top:0px; /* padding-top = buttons order, it will be reset to 0, do not use padding, use margin*/       
     overflow:hidden;
 }
