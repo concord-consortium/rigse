@@ -1,4 +1,11 @@
 RailsPortal::Application.routes.draw do
+  get "search/index"
+  match '/search/list/filter' => 'search#show', :as => :list_filter_search, :method => :get
+  post '/search/get_current_material_unassigned_clazzes'
+  post '/search/add_material_to_clazzes'
+  get 'search/unauthorized_user' => 'search#unauthorized_user'
+
+
 constraints :id => /\d+/ do
   namespace :saveable do
     namespace :sparks do
@@ -268,6 +275,7 @@ constraints :id => /\d+/ do
       resources :console_contents, :except => [:create]
     end
     resources :periodic_bundle_loggers, :only => [:show]
+    resources :bucket_loggers, :only => [:show]
   end
 
   # metal routing
@@ -275,6 +283,10 @@ constraints :id => /\d+/ do
   post '/dataservice/console_loggers/:id/console_contents.bundle' => 'dataservice/console_contents_metal#create', :constraints => { :format => 'bundle' }
   post '/dataservice/periodic_bundle_loggers/:id/periodic_bundle_contents.bundle' => 'dataservice/periodic_bundle_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_periodic_bundle_contents'
   post '/dataservice/periodic_bundle_loggers/:id/session_end_notification.bundle' => 'dataservice/periodic_bundle_loggers_metal#session_end_notification', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_session_end_notification'
+
+  post '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents_by_learner'
+  get  '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_loggers#show_by_learner',   :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_by_learner'
+  post '/dataservice/bucket_loggers/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents'
 
   # A prettier version of the blob w/ token url
   match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
@@ -513,6 +525,8 @@ constraints :id => /\d+/ do
       get :printable_index
     end
   end
+
+  resources :installer_reports
 
   resources :attached_files
   resources :images

@@ -1,3 +1,4 @@
+
 # encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
@@ -11,7 +12,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120814024858) do
+ActiveRecord::Schema.define(:version => 20120830195146) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -141,6 +142,25 @@ ActiveRecord::Schema.define(:version => 20120814024858) do
 
   add_index "dataservice_blobs", ["bundle_content_id"], :name => "index_dataservice_blobs_on_bundle_content_id"
   add_index "dataservice_blobs", ["periodic_bundle_content_id"], :name => "pbc_idx"
+
+  create_table "dataservice_bucket_contents", :force => true do |t|
+    t.integer  "bucket_logger_id"
+    t.text     "body"
+    t.boolean  "processed"
+    t.boolean  "empty"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "dataservice_bucket_contents", ["bucket_logger_id"], :name => "index_dataservice_bucket_contents_on_bucket_logger_id"
+
+  create_table "dataservice_bucket_loggers", :force => true do |t|
+    t.integer  "learner_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "dataservice_bucket_loggers", ["learner_id"], :name => "index_dataservice_bucket_loggers_on_learner_id"
 
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
@@ -686,8 +706,9 @@ ActiveRecord::Schema.define(:version => 20120814024858) do
     t.text     "body"
     t.string   "remote_ip"
     t.boolean  "success"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "jnlp_session_id"
   end
 
   create_table "investigations", :force => true do |t|

@@ -1370,12 +1370,12 @@ table.teacher_class_table th, table.teacher_class_table td
 .offerings{text-align:left;margin:0}
 .offerings tr { vertical-align: top; }
 .offerings td { text-align:left; vertical-align:middle;padding:0 }
-.offerings td:nth-child(odd) { width: 20px;padding-top:5px}
+.offerings td:nth-child(odd) { width: 20px !important;padding-top:5px}
 
 .teachers_listing{text-align:left;margin:0}
 .teachers_listing tr { vertical-align: top; }
 .teachers_listing td { text-align:left; vertical-align:middle;padding:0 }
-.teachers_listing td:nth-child(odd) { width: 20px;padding-top:5px}
+.teachers_listing td:nth-child(odd) { width: 20px !important;padding-top:5px}
 
 .studentlist{text-align:left;margin:0}
 .studentlist tr { vertical-align: middle; }
@@ -1439,3 +1439,5 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
   font-style: italic;
   text-align: center;
 }
+
+#div_teacher_list td {width:auto !important;white-space:nowrap;}

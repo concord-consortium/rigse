@@ -1,0 +1,60 @@
+.material_icon
+  .icon_image
+    -if(material.class.to_s=="Investigation")
+      =image_tag("search/investigation.gif",:size=>"100x100")
+    -else
+      =image_tag("search/activity.gif",:size=>"100x100")
+%div
+  - unless current_user.anonymous?
+    - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
+    - offerings=Portal::Offering.where(:runnable_id=>material.id, :runnable_type=>"#{material.class.to_s}", :clazz_id=>teacher_clazz_ids)
+  
+  %div{:style=>'overflow:hidden'}
+    %table{:width=>"100%"}
+      %tr
+        %td
+        %td
+          %span.material_header
+            = material.name
+          - if material.parent
+            %span
+              from investigation
+              ="\"#{material.parent.name}\""
+          -unless material.user.name.nil?
+            %div
+              %span{:style=>"font-weight:bold"}
+                ="By #{material.user.name}"
+        %td{:width=>"75px"}
+          %div{:style=>'float:right'}
+            = link_to "Preview",run_url_for(material,{}),:class=>"button"
+        %td{:width=>"130px"}
+          %div{:style=>'float:right'}
+            - if current_user.portal_teacher
+              = link_to 'Assign to a Class','#',:class=>"button", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')"
+            - else
+              = link_to 'Assign to a Class', url_for({ :controller => 'search', :action => 'unauthorized_user' }), :class=>"button"
+      %tr
+        %td{:colspan=>3}
+          - unless current_user.anonymous?
+            - offering_clazz_names = offerings.map{|o| o.clazz.name}
+            - if(offerings.length>0)
+              %span.assignedTo
+                (Assigned to
+                = offering_clazz_names.join(", ")+")"
+.material_body
+  -unless material.description.nil?
+    = material.description.html_safe 
+  %i
+    -if(material.offerings.count == 0)
+      Not used in any class.
+    -elsif(material.offerings.count == 1)
+      Used in 1 class.
+    -else
+      Used in #{material.offerings.count} classes.
+  - required_equipments = probe_types(material).map { |p| p.name }.join(", ") 
+  - unless required_equipments == ""
+    #required_equipment_container
+      %span#required_equipment
+        Required equipment:
+      %span{:style=>"font-weight:bold;"}
+        = "#{required_equipments} "

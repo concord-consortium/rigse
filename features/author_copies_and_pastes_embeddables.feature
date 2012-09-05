@@ -6,6 +6,7 @@ Feature: An copies and pastes embeddables
   Background:
     Given The default project and jnlp resources exist using factories
 
+  @dialog
   @javascript
   Scenario: The author copies and pastes an embeddable by clicking on the embeddable content
     Given the following users exist:
@@ -25,6 +26,7 @@ Feature: An copies and pastes embeddables
     And I wait 1 second
     Then I should see "Text: content goes here ..." 2 times
 
+  @dialog
   @javascript
   Scenario: The author copies and pastes an embeddable by clicking on the embeddable title
     Given the following users exist:

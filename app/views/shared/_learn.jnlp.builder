@@ -1,7 +1,7 @@
 jnlp_headers(runnable)
 config_url_options = {:format => :config}
 if local_assigns[:jnlp_session]
-  config_url_options[:jnlp_session] = jnlp_session
+  config_url_options[:jnlp_session] = jnlp_session.token
 else
   # we should really stop putting the session in the jnlp
   config_url_options[Rails.application.config.session_options[:key]] =  request.env["rack.session.options"][:id]

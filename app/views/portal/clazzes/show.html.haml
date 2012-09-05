@@ -1,6 +1,11 @@
 - if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
   = render_portal_clazz_partial 'portal/clazzes/show'
   = render_portal_clazz_partial 'portal/offerings/list_for_clazz'
+  = link_to 'Manage Student Roster', roster_portal_clazz_url(@portal_clazz), :class => "button pie", :id=>"btn_manage_student_roster"
+  / all these br's are to keep a strange scroll bar from showing up
+  %br
+  %br
+
 - elsif current_user.has_role?("manager", "researcher")
   = render :partial => 'shared/offering_for_teacher', :collection => @portal_clazz.offerings, :as => :offering
 - else

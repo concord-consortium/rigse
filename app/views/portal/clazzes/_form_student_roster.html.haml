@@ -4,14 +4,7 @@
     .content
       = f.error_messages
     %div{:id=>"student_roster"}
-      %table.classdata.floatR
-        %tr
-          %td.title=label_tag :name, 'Teacher ', :class=>"left"
-          %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class=>"labelvalue"
-          %td.title=label_tag :name, 'Semester ', :class=>"left"
-          %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class=>"labelvalue"
-          %td.title=label_tag :name, 'Class Word ', :class=>"left"
-          %td=label_tag :name, portal_clazz.class_word, :class=>"labelvalue"
+      = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
       .header.clearBoth Student Roster
       .classsummary
         ='Class Name : '
@@ -31,9 +24,9 @@
             = student_add_dropdown(portal_clazz)
           %td.hide_in_print{:style=>"text-align:right"}
             - add_student_url = new_portal_student_path(:clazz_id => portal_clazz.id)
-            = link_to "Register and add new student", "#", :title => "add a student to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
+            = link_to "Register and add new student", "#", :title => "Add a student to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
             
-      %table.student_list{:width=>"100%"}
+      %table.roster_student_list{:width=>"100%"}
         %tr
           %td{:style=>"padding-left:5px"}
             .item{:id=>'students_listing'}

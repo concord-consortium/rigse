@@ -1,45 +1,34 @@
-- runnable = offering.runnable
+- runnable = offering_status.offering.runnable
 - activities = []
 - if runnable.is_a? ::Investigation
-  - activities = runnable.activities
+  - activities = runnable.activities.student_only
 - else runnable.is_a? ::Activity
   - activities = [runnable]
 
-- students.each do |student|
-  - learner = learners.find_by_student_id(student.id)
-  - report_learner = nil
-  - total_complete_percent = 0
-  - unless learner.nil?
-    - report_learner = learner.report_learner
-    - unless report_learner.nil?
-      - total_complete_percent = report_learner.complete_percent
+- offering_status.student_statuses.each do |student_status|
+  - total_complete_percent = student_status.complete_percent
+  - user = student_status.student.user
 
   - case filter_percent
     - when 0
       - if total_complete_percent == 0
         %tr
-          %td.student_name
-            =student.user.last_name + ", " + student.user.first_name
+          %td.student_name= user.full_name
     - when 100
       - if total_complete_percent == 100
         %tr
-          %td.student_name
-            = student.user.last_name + ", " + student.user.first_name
-          %td{:title=>"#{report_learner.last_run.strftime('%m/%d/%Y')}"}
-            = report_learner.last_run.strftime('%m/%d')
+          %td.student_name= user.full_name
+          %td{:title=>"#{student_status.last_run.strftime('%m/%d/%Y')}"}
+            = student_status.last_run.strftime('%m/%d')
     - when -1
-      - if report_learner && total_complete_percent > 0 && total_complete_percent < 100
-        - report_learner_activities = learner.learner_activities
+      - if total_complete_percent > 0 && total_complete_percent < 100
         %tr
           - activities.each do |activity|
-            - unless activity.teacher_only
-              - percentage = 0
-              - if !report_learner_activities.find_by_activity_id(activity.id).nil?
-                - percentage = report_learner_activities.find_by_activity_id(activity.id).complete_percent
-              %td.student_progress
-                %div.progressbar_container
-                  .progressbar
-                    - if percentage == 100
-                      .progress.completed{:style=>"width:#{percentage}%"}
-                    - else
-                      .progress{:style=>"width:#{percentage}%"}
+            - percentage = student_status.activity_complete_percent(activity)
+            %td.student_progress
+              %div.progressbar_container
+                .progressbar
+                  - if percentage == 100
+                    .progress.completed{:style=>"width:#{percentage}%"}
+                  - else
+                    .progress{:style=>"width:#{percentage}%"}

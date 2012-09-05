@@ -5,14 +5,7 @@
     .content
       = f.error_messages
     .right
-      %table.classdata
-        %tr
-          %td.title=label_tag :name, 'Teacher ', :class => 'left'
-          %td=label_tag :name, (portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name , :class => 'labelvalue'
-          %td.title=label_tag :name, 'Semester ', :class => "left"
-          %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class => 'labelvalue'
-          %td.title=label_tag :name, 'Class Word ', :class => 'left'
-          %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
+      = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
       .header Instructional Materials
       %br
       %table.classdata
@@ -20,7 +13,7 @@
           %td
             = link_to 'Manage Materials', edit_portal_clazz_url(portal_clazz), :class=>"button pie"
           %td{:style => "padding-left:10px"}
-            = link_to 'Add new Materials to this class', portal_clazz_url(portal_clazz), :class=>"button pie"
+            = link_to 'Add new Materials to this class', '/search', :class=>"button pie"
       %br.clearboth
       %br.clearboth
       - if clazz_offerings.length > 0
