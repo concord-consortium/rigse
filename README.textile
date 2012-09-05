@@ -140,18 +140,27 @@ bc. rake cucumber
 
 All these tests should pass. If you add features make sure and add tests for these new features.
 
-h3. Roll your own theme:
+h3. Theme support & Rolling your own theme:
 
-For now the best thing to do is to copy an existing set of themes. eg:
+We are using the "themes_for_rails":https://github.com/lucasefe/themes_for_rails gem
+Theme views go in app/themes/(name)/views/
+Theme assets go in app/assets/theme/(name)/
+Sample config files go in config/themes/(name)/settings.sample.yml
+
+For now the best thing to do is to copy an existing theme. eg:
 
 <pre><code>
   mkdir ./config/themes/<new_theme_name>
+  
+  # configuration files:
   cp ./config/themes/<old_theme_name>/settings.sample.yml ./config/themes/<new_theme_name>
+  
+  # view files:
   cp -r ./themes/<old_theme_name> ./themes/<new_theme_name>
-  cp -r ./public/stylesheets/themes/<old_theme_name> ./public/stylesheets/themes/<new_theme_name>
-  cp -r ./public/stylesheets/sass/themes/<old_theme_name> ./public/stylesheets/sass/themes/<new_theme_name>
-  # edit the assets file to package your style sheets. copy an example.
-  vim ./config/asset_packages.yml
+  
+  # assets:
+  cp -r ./app/assets/themes/<old_theme_name> ./app/assets/themes/<new_theme_name>
+
   # then pass arguments to setup.
   ruby ./config/setup.rb -t <new_theme_name>
 </code></pre>
@@ -348,32 +357,6 @@ h3. Running the feature tests with cucumber
 <pre><code>  rake cucumber FEATURE=features/student_can_not_see_deactivated_offerings.feature</code></pre>  
 
 h2. Understanding the Codebase
-
-
-h3. Themes
-
-We are using theme_support plugin -- except it doesn't play very well with compass and asset_packager.  So, we handle sass/stylesheets free-hand.
-Here is a short description of how to setup a new theme:
-
-# Copy an existing theme from RAILS_ROOT/themes/
-# modify settings.yml to and add a theme: theme_name entry
-# Put sass files in public/stylesheets/sass/themes/<theme-name>/*.sass
-# These sass files will be compiled and moved into public/stylesheets/themes/<theme-name>/*.css
-# Configure your themes assets in asset_packages.yml under the stylesheets section with the format:
-
-<pre><code> 
-  - <themename>:
-    - themes/<themename>/style_name
-      - (others)
-</code></pre>  
-
-  eg:
-
-<pre><code> 
-  - itsisu
-    - themes/itsisu/itsisu
-    - accordion
-</code></pre>  
 
 
 h3. Some video walk-throughs
@@ -747,17 +730,25 @@ install_name_tool -change libmysqlclient.16.dylib /usr/local/mysql/lib/libmysqlc
 
 h2. CSS
 
-h3. Asset Packager
+h3. Rails 3 Asset Pipeline
 
-Portal authoring and portal site uses: "Asset Packager docs":http://synthesis.sbecker.net/pages/asset_packager
+The portal uses the "Rails 3 Asset Pipeline":http://guides.rubyonrails.org/asset_pipeline.html
+stylesheets, images, javascript should all be placed in the app/assets/ directory structure.
+theme specific assets should be placed in app/assets/theme/themename/.
 
-cap deploy will trigger the asset_packager to run.
-you can also run locally by hand: rake asset:packager:build_all
+You should read the Rails guide for more information about the asset Pipeline.
 
-Assets are configured in config/asset_packages.yml
+themes_for_rails has been configured to play nice with the asset pipeline. See the initializer:
+config/initializers/themes_for_rails.rb
 
-Packages up your css/javascript so you're not sending 143 files down to the user at the same time. Reduces
-load times and saves you bandwidth.
+cap deploy should trigger the rake task assets:precompile to run.
+
+You can also run locally by hand: bundle exec rake assets:precompile
+
+The assets will be compiled to public/assets which should be ignored by .gitignore
+
+When running in development mode you do not need to pre-compile your assets.
+
 
 h2. Routing
 
