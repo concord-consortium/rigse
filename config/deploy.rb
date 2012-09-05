@@ -278,8 +278,8 @@ namespace :deploy do
 
   desc "Create asset packages for production"
   task :create_asset_packages, :roles => :app do
-    run "cd #{deploy_to}/current && bundle exec compass compile --sass-dir public/stylesheets/scss/ --css-dir public/stylesheets/ -s compact --force"
-    run "cd #{deploy_to}/current && bundle exec rake asset:packager:build_all --trace"
+    # run "cd #{deploy_to}/current && bundle exec compass compile --sass-dir public/stylesheets/scss/ --css-dir public/stylesheets/ -s compact --force"
+    run "cd #{deploy_to}/current && bundle exec rake rake assets:precompile --trace"
   end
 
 end
