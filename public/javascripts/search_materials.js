@@ -301,6 +301,26 @@ function materialCheckOnClick(ObjId)
 
 }
 
+var g_saveAssignToClassInProgress = false;
+
+function validateSaveAssignToClass()
+{
+    var returnValue = false;
+    if (g_saveAssignToClassInProgress)
+    {
+        return returnValue;
+    }
+    
+    returnValue = true;
+    return returnValue;
+}
+
+function setSaveAssignToClassInProgress(value)
+{
+    g_saveAssignToClassInProgress = !!value;
+    return;
+}
+
 function selectAllGreades(gradeObj,grades)
 {
     
