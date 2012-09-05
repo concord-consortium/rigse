@@ -207,6 +207,10 @@ input.disabledGo
   opacity: 0.5;
 }
 
+#search_spinner img {
+vertical-align: middle;
+}
+
 .material_list .material_list_item:last-child {
   border-bottom:none;
 }
