@@ -6,7 +6,7 @@
       =image_tag("search/activity.gif",:size=>"100x100")
 %div
   - unless current_user.anonymous?
-    - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.map{|item| item.clazz_id}
+    - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
     - offerings=Portal::Offering.where(:runnable_id=>material.id, :runnable_type=>"#{material.class.to_s}", :clazz_id=>teacher_clazz_ids)
   
   %div{:style=>'overflow:hidden'}
