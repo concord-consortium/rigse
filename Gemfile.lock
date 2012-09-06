@@ -396,7 +396,7 @@ DEPENDENCIES
   spreadsheet (~> 0.7.3)
   syntax (~> 1.0)
   themes_for_rails (~> 0.5.1)
-  therubyracer
+  therubyracer (~> 0.10.2)
   uglifier
   uuidtools (~> 2.1.2)
   what_methods
