@@ -46,4 +46,13 @@ RailsPortal::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  # Minify/uglify/compress assets from the pipeline
+  config.assets.compress = true
+  config.assets.js_compressor = :uglifier
+  config.assets.css_compressor = :yui
+
+  # Generate digests for assets' URLs.
+  config.assets.digest = true
+
 end

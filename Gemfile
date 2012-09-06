@@ -73,11 +73,13 @@ source "http://rubygems.org"
   gem "aws-s3",               :require => "aws/s3"
   gem "newrelic_rpm"
 
-# group :assets do
+group :assets do
   # gem "sass",                 "~> 3.1.7"
   gem 'sass-rails' # if running rails 3.1 or greater
   gem "compass-rails"
-# end
+  gem 'uglifier'
+  gem 'yui-compressor'
+end
 
 group :development do
   gem "rake",                 "~> 0.9.2"
