@@ -94,3 +94,4 @@ config/sis_import_data.yml
 config/paperclip.yml
 config/google_analytics.yml
 public/assets/
+public/*/calendar_date_select
