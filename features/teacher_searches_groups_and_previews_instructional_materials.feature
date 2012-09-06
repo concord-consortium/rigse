@@ -52,13 +52,13 @@
   Scenario: Anonymous user can preview investigation
     When I log out
     And I go to the search instructional materials page
-    And I should preview investigation "Geometry" on the search instructional materials page
+    Then I should preview investigation "Geometry" on the search instructional materials page
     
     
   Scenario: Anonymous user can preview activity
     When I log out
     And I go to the search instructional materials page
-    And I should preview activity "differential calculus" on the search instructional materials page
+    Then I should preview activity "differential calculus" on the search instructional materials page
     
     
   Scenario: Teacher can preview investigation
@@ -66,7 +66,7 @@
     
     
  Scenario: Teacher can preview activity
-    And I should preview activity "differential calculus" on the search instructional materials page
+    Then I should preview activity "differential calculus" on the search instructional materials page
     
     
   @javascript
@@ -168,7 +168,7 @@
     
   @javascript
   Scenario: Search results should be paginated
-    When the count of a search result is greater than the page size on the search instructional materials page
+    When I enter search text "is a great material" on the search instructional materials page
     Then the search results should be paginated on the search instructional materials page
     
     

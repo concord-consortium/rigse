@@ -28,6 +28,7 @@ When /^(?:|I )search study material "(.+)" on the search instructional materials
   step_text = "I fill in \"search_term\" with \"#{search_text}\""
   step step_text
   step 'I press "GO"'
+  step 'I should wait 2 seconds'
 end
 
 When /^(?:|I )should see search results for "(.+)" on the search instructional materials page$/ do|search_text|
@@ -39,6 +40,7 @@ When /^(?:|I )follow "(.+)" in Sort By on the search instructional materials pag
   find(:xpath, "//label[contains(., '#{label_name}')]").click
   step 'I should wait 2 seconds'
 end
+
 
 Then /^the search results should be paginated on the search instructional materials page$/ do
   #pagination for investigations
