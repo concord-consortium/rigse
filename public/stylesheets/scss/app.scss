@@ -1205,6 +1205,7 @@ ul.quiet_list {
     display:inline;
     float: left;
     padding-top: 20px;
+    padding-left:10px;
 }
 
 .class_list_element
@@ -1258,9 +1259,14 @@ ul.quiet_list {
     padding: 3px 0px 0px 0px ;
     cursor:move ;
     height:auto;
-    }
-    #sortable { list-style-type: none; margin: 0; padding: 0;width:auto; }
-    #sortable td {vertical-align:middle; }
+  }
+  #sortable { list-style-type: none; margin: 0; padding: 0px 0px 0px 10px;width:auto; }
+  #sortable td {vertical-align:middle; }
+  .checkbox_title,.manage_info
+  {
+    padding-left:10px;
+  }
+  
 }
 
 .right_float
