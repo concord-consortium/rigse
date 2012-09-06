@@ -81,6 +81,12 @@ group :assets do
   gem 'yui-compressor'
 end
 
+# as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
+# when compressing assets without a javascript runtime:
+group :production do
+  gem 'therubyracer',         "~>0.10.2"
+end
+
 group :development do
   gem "rake",                 "~> 0.9.2"
   gem "highline"
