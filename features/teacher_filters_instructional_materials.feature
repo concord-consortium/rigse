@@ -66,7 +66,7 @@ Feature: Teacher can search and filter instructional materials
     
     
   @javascript
-  Scenario: Teacher views  investigations and activities without sensors
+  Scenario: Teacher views investigations and activities without sensors
     When I check "No Sensors Required"
     And I should wait 2 seconds
     Then I should not see "A Weather Underground"

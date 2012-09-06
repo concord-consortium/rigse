@@ -30,7 +30,7 @@ Feature: Teacher can search and assign instructional materials to a class
     And I am on the search instructional materials page
     
     
-Scenario: Anonymous user can not assign instructional materials to the class
+  Scenario: Anonymous user can not assign instructional materials to the class
     When I log out
     And I go to the search instructional materials page
     And I follow assign to a class link for investigation "Geometry"
@@ -57,7 +57,7 @@ Scenario: Anonymous user can not assign instructional materials to the class
   @dialog
   @javascript
   Scenario: Teacher can assign activities to a class
-    And I uncheck "Investigation"
+    When I uncheck "Investigation"
     And I should wait 2 seconds
     And I check "Activity"
     And I should wait 2 seconds
@@ -70,7 +70,7 @@ Scenario: Anonymous user can not assign instructional materials to the class
     And I should wait 2 seconds
     And accept the dialog
     And I go to the class page for "Physics"
-    And I should see "Fluid Mechanics"
+    Then I should see "Fluid Mechanics"
     
     
   @javascript

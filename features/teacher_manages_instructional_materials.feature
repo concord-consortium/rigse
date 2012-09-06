@@ -113,7 +113,7 @@ Feature: Teacher manages instructional materials of a class
   @javascript
   Scenario: Teacher should be able to run the report
     When I click the tab of Instructional Materials with text "Radioactivity"
-    When I follow "Run Report"
+    And I follow "Run Report"
     Then A report window opens of offering "Radioactivity"
         
   Scenario: Teacher should be able to see all students assigned to the class

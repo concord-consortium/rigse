@@ -66,7 +66,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should preview investigation "Geometry" on the search instructional materials page
     
     
- Scenario: Teacher can preview activity
+  Scenario: Teacher can preview activity
     Then I should preview activity "differential calculus" on the search instructional materials page
     
     
@@ -157,7 +157,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I should see "Geometry"
     And I should see "Triangle is a great subject"
     And I should see "Triangle is a great material"
-    And I should not see "Radioactivity"
+    Then I should not see "Radioactivity"
     When I enter search text "Radioactivity" on the search instructional materials page
     And I check "Investigation"
     And I uncheck "Activity"
