@@ -279,7 +279,7 @@ namespace :deploy do
   desc "Create asset packages for production"
   task :create_asset_packages, :roles => :app do
     # run "cd #{deploy_to}/current && bundle exec compass compile --sass-dir public/stylesheets/scss/ --css-dir public/stylesheets/ -s compact --force"
-    run "cd #{deploy_to}/current && bundle exec rake rake assets:precompile --trace"
+    run "cd #{deploy_to}/current && bundle exec rake assets:precompile"
   end
 
 end
@@ -664,6 +664,6 @@ namespace 'account_data' do
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
-after 'deploy:symlink', 'deploy:create_asset_packages'
+after 'deploy:create_symlink', 'deploy:create_asset_packages'
 after 'deploy:create_asset_packages', 'deploy:cleanup'
 after 'installer:create', 'deploy:restart'
