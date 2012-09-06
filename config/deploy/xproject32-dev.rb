@@ -4,4 +4,4 @@ set :domain, "xproject32.dev.concord.org"
 set :deploy_to, "/web/portal"
 server domain, :app, :web
 role :db, domain, :primary => true
-set :branch, "rails3.2"
+set :branch, "asset_pipeline"
