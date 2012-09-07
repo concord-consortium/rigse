@@ -48,6 +48,7 @@ Scenario: Anonymous user can not assign instructional materials to the class
     And I should see "Geometry"
     When I check "Mathematics"
     And I follow "Save"
+    And I should wait 2 seconds
     And accept the dialog
     And I go to the class page for "Mathematics"
     Then I should see "Geometry"
@@ -66,6 +67,7 @@ Scenario: Anonymous user can not assign instructional materials to the class
     And "Mechanics" should appear before "Fluid Mechanics"
     When I check "Physics"
     And I follow "Save"
+    And I should wait 2 seconds
     And accept the dialog
     And I go to the class page for "Physics"
     And I should see "Fluid Mechanics"
