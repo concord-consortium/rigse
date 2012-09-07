@@ -21,7 +21,7 @@ function get_Add_Register_Student_Popup(strURL)
         method: 'post',
         onSuccess: function(transport) {
             var text = transport.responseText;
-            text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
+            text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold;margin-left: 7px;'></div>"+ text;
             student_list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
         }
     };
