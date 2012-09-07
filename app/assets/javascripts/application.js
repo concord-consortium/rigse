@@ -22,4 +22,6 @@
 = require 'chosen.proto'
 = require 'pt_event_simulate'
 = require 'prototype-ui/prototype-ui'
+= require './tiny_mce/tiny_mce.js'
+= require_tree './in_place_rich_editor'
 */
