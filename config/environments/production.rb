@@ -47,11 +47,18 @@ RailsPortal::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
+  #### Asset Pipeline:  #####
+  
   # Minify/uglify/compress assets from the pipeline
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :yui
+  config.assets.precompile += %w( print.css otml.css project.css pie/PIE.js calendar_date_select/calendar_date_select.js calendar_date_select/silver.css)
 
+  # Production servers may compile missing assets. (missed by precompile)
+  # Requires asset helper gems in production bundle
+  config.assets.compile = true
+  
   # Generate digests for assets' URLs.
   config.assets.digest = true
 

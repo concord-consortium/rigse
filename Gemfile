@@ -73,14 +73,17 @@ source "http://rubygems.org"
   gem "aws-s3",               :require => "aws/s3"
   gem "newrelic_rpm"
 
-group :assets do
-  # gem "sass",                 "~> 3.1.7"
+# Ideally we pre-compile all asetts and then run production
+# with out the asset compiling requirements. But We have dynamic assets
+# generated a prototype helper 'calendar_date_picker'
+# group :assets do
   gem 'sass-rails' # if running rails 3.1 or greater
   gem "compass-rails"
   gem 'uglifier'
   gem 'yui-compressor'
-end
+# end
 
+# see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:
 group :production do
