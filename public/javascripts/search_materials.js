@@ -104,40 +104,41 @@ function showsuggestion(event, oelem) {
     }
 }
 
-function showHideFilters(oLink) {
+function showHideFilters(linkElement) {
     
-    var filterwrapper=$('filters_wrapper');
-    var strLinkText = "";
-    var strExpandCollapseText = "";
     if (animating)
     {
         return false;
     }
-    if(filterwrapper.hasClassName('visible'))
+    
+    var filtersWrapper = $('filters_wrapper');
+    var linkText = "";
+    var expandCollapseText = "";
+    var afterFinishCallback = function(){
+        animating = false;
+    };
+    
+    if (filtersWrapper.hasClassName('visible'))
     {
-     Effect.BlindUp('filters_wrapper', { duration: 0.5 });
-     filterwrapper.removeClassName('visible');
-     strLinkText = "Show Filters";
-     strExpandCollapseText = "+";
-     animating=true;
-     setTimeout(function(){
-         animating=false;
-     },500);
+        Effect.BlindUp(filtersWrapper, { duration: 0.5, afterFinish: afterFinishCallback });
+        filtersWrapper.removeClassName('visible');
+        linkText = "Show Filters";
+        expandCollapseText = "+";
+        animating = true;
     }
     else
     {
-     Effect.BlindDown('filters_wrapper', { duration: 0.5 });
-     filterwrapper.addClassName('visible');
-     strLinkText = "Hide Filters";
-     strExpandCollapseText = "-";
-     working=true;
-      setTimeout(function(){
-         animating=false;
-     },500);
+        Effect.BlindDown(filtersWrapper, { duration: 0.5, afterFinish: afterFinishCallback });
+        filtersWrapper.addClassName('visible');
+        linkText = "Hide Filters";
+        expandCollapseText = "-";
+        animating = true;
     }
     
-    $('oExpandCollapseText').update(strExpandCollapseText);
-    oLink.update(strLinkText);
+    $('oExpandCollapseText').update(expandCollapseText);
+    linkElement.update(linkText);
+    
+    return true;
 }
 
 function uncheckedallprobes(allChecked) {
