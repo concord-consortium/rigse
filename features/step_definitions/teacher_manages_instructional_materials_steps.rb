@@ -4,10 +4,11 @@ Then /^A report window opens of offering "(.+)"$/ do |offering|
   step 'I wait 2 seconds'
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
     page.should have_content("Report for:")
+    page.should have_content("#{offering}")
   end
 end
 
-And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
+And /^(?:|I )click the tab of Instructional Materials with text "(.+)"$/ do |text|
   script_text = "
     var arrTabs = $$('#oTabcontainer div.tab');
     arrTabs = arrTabs.concat( $$('#oTabcontainer div.selected_tab') );
@@ -29,7 +30,7 @@ And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
   
 end
 
-And /^I should see progress bars for the students$/ do
+And /^(?:|I )should see progress bars for the students$/ do
   result = page.execute_script("
     var arrProgressBars = $$('div.progress');
     var bProgressBarWidthIncreased = false;
@@ -48,4 +49,16 @@ And /^I should see progress bars for the students$/ do
    raise 'Progress bar fail' if result == false
   
   
+end
+
+When /^(?:|I )follow "(.+)" for the investigation "(.+)"$/ do |link, investigation_name|
+  within(:xpath, "//tr[contains(.,'#{investigation_name}') and contains(.,'Investigation:')]") do
+    step "I follow \"#{link}\""
+  end
+end
+
+When /^(?:|I )follow "(.+)" for the activity "(.+)"$/ do |link, activity_name|
+  within(:xpath, "//tr[contains(.,'#{activity_name}') and contains(.,'Activity')]") do
+    step "I follow \"#{link}\""
+  end
 end

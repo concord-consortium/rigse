@@ -15,10 +15,11 @@ Feature: Teacher can search and filter instructional materials
     And I am on the search instructional materials page"
     And the project settings enables use of Grade Span Expectation
     
+    
   @javascript
   Scenario: Teacher should be able to filter the search results on the basis of domains
-    When the project settings enables use of Grade Span Expectation
-    And I check "Biological Science"
+    When I check "Biological Science"
+    And I should wait 2 seconds
     Then I should see "Digestive System"
     
     
@@ -33,6 +34,7 @@ Feature: Teacher can search and filter instructional materials
   @javascript
   Scenario: Teacher views all investigations and activities for all grades
     When I check "All Grades"
+    And I should wait 2 seconds
     Then I should see "Digestive System"
     And I should see "Bile Juice"
     
@@ -44,6 +46,7 @@ Feature: Teacher can search and filter instructional materials
     And I should see "A Weather Underground"
     And I should see "A heat spontaneously"
     And I uncheck "Temperature"
+    And I should wait 2 seconds
     And I check "UVA Intensity"
     And I should wait 2 seconds
     Then I should not see "A Weather Underground"
@@ -65,12 +68,15 @@ Feature: Teacher can search and filter instructional materials
   @javascript
   Scenario: Teacher views  investigations and activities without probes
     When I check "No Probes Required"
+    And I should wait 2 seconds
     Then I should not see "A Weather Underground"
     And I should not see "A heat spontaneously"
-    And  I follow "none"
+    And I follow "none"
     And I should wait 2 seconds
     And I should not see "A Weather Underground"
     And I should not see "A heat spontaneously"
+    
+  Scenario: The project settings for Grade Span Expection is restored
     And the project setting for Grade Span Expectation is restored
     
     
