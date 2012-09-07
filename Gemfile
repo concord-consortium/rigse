@@ -72,6 +72,7 @@ source "http://rubygems.org"
   # to support hosting paperclip attachments on S3:
   gem "aws-s3",               :require => "aws/s3"
   gem "newrelic_rpm"
+  gem "tinymce-rails",        "~>3.5.6"
 
 # Ideally we pre-compile all asetts and then run production
 # with out the asset compiling requirements. But We have dynamic assets
