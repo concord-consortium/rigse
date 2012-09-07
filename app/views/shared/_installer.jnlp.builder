@@ -32,7 +32,7 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostna
     xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
     # do not use version attributes so we can totally avoid all the jnlp jar versioning issues
     xml.jar :href=> "org/concord/utilities/response-cache/response-cache-0.1.0-20110101.051026-218.jar"
-    xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell-1.0-20120516.210342-439.jar", :main =>"true"
+    xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell-1.0-20120907.030115-441.jar", :main =>"true"
     system_properties(local_assigns).each do |property|
       xml.property(:name => property[0], :value => property[1])
     end
