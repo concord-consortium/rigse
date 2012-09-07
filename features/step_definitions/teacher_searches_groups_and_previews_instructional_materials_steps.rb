@@ -17,6 +17,7 @@ end
 When /^(?:|I )enter search text "(.+)" on the search instructional materials page$/ do |search_text|
   step_text = "I fill in \"search_term\" with \"#{search_text}\""
   step step_text
+  step 'I should wait 2 seconds'
 end
 
 When /^(?:|I )should see search suggestions for "(.+)" on the search instructional materials page$/ do |search_text|
@@ -65,6 +66,7 @@ Then /^the search results should be paginated on the search instructional materi
   end
   
   #pagination for activity
+  step 'I am on the search instructional materials page'
   within(:xpath, "//div[@class = 'results_container']/div[@class = 'materials_container'][2]") do
     if page.respond_to? :should
       page.should have_link("Next")
