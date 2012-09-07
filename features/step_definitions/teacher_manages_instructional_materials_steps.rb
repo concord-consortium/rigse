@@ -8,7 +8,7 @@ Then /^A report window opens of offering "(.+)"$/ do |offering|
   end
 end
 
-And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
+And /^(?:|I )click the tab of Instructional Materials with text "(.+)"$/ do |text|
   script_text = "
     var arrTabs = $$('#oTabcontainer div.tab');
     arrTabs = arrTabs.concat( $$('#oTabcontainer div.selected_tab') );
@@ -30,7 +30,7 @@ And /^I click the tab of Instructional Materials with text "(.+)"$/ do |text|
   
 end
 
-And /^I should see progress bars for the students$/ do
+And /^(?:|I )should see progress bars for the students$/ do
   result = page.execute_script("
     var arrProgressBars = $$('div.progress');
     var bProgressBarWidthIncreased = false;
@@ -51,13 +51,13 @@ And /^I should see progress bars for the students$/ do
   
 end
 
-When /^I follow "(.+)" for the investigation "(.+)"$/ do |link, investigation_name|
+When /^(?:|I )follow "(.+)" for the investigation "(.+)"$/ do |link, investigation_name|
   within(:xpath, "//tr[contains(.,'#{investigation_name}') and contains(.,'Investigation:')]") do
     step "I follow \"#{link}\""
   end
 end
 
-When /^I follow "(.+)" for the activity "(.+)"$/ do |link, activity_name|
+When /^(?:|I )follow "(.+)" for the activity "(.+)"$/ do |link, activity_name|
   within(:xpath, "//tr[contains(.,'#{activity_name}') and contains(.,'Activity')]") do
     step "I follow \"#{link}\""
   end
