@@ -62,7 +62,9 @@ class SearchController < ApplicationController
   end
   
   def get_searchoptions
-    @search_term = params[:search_term]
+    unless params[:search_term].nil?
+      @search_term = params[:search_term].strip
+    end
     @sort_order = param_find(:sort_order, (params[:method] == :get)) || 'name ASC'
     @domain_id = param_find(:domain_id, (params[:method] == :get)) || []
     @grade_span = param_find(:grade_span, (params[:method] == :get)) || ""
