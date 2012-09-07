@@ -1,8 +1,8 @@
-Feature: Teacher can search and filter instructional materials
+Feature: Teacher can search and assign instructional materials to a class
 
   As a teacher
-  I should be able to search and filter instructional materials
-  In order to find suitable study materials for the class
+  I should be able to search and assign materials to a class
+  In order to provide study materials to the students from the class 
   
   Background:
     Given The default project and jnlp resources exist using factories
@@ -16,7 +16,7 @@ Feature: Teacher can search and filter instructional materials
       | name                   | user   | publication_status | description                                     |
       | Mechanics              | author | published          | Mechanics is a great subject                    |
       | Geometry               | author | published          | Triangle is a great subject                     |
-      | differential calculus  | author | published          | differential calculus decay is a great subject  |
+      | differential calculus  | author | published          | differential calculus is a great subject        |
     And the following activities for the above investigations exist:
       | name                        | investigation | user    | publication_status | description                            |
       | Fluid Mechanics             | Mechanics     | author  | published          | Fluid Mechanics is a great material    |
@@ -27,7 +27,7 @@ Feature: Teacher can search and filter instructional materials
       | Mathematics | teacher    | math       |
       | Geography   | teacher    | geo        |
     And I login with username: teacher password: teacher
-    And I am on the search instructional materials page"
+    And I am on the search instructional materials page
     
     
 Scenario: Anonymous user can not assign instructional materials to the class
@@ -35,16 +35,20 @@ Scenario: Anonymous user can not assign instructional materials to the class
     And I go to the search instructional materials page
     And I follow assign to a class link for investigation "Geometry"
     Then I should be on the home page
-    And I go to the search instructional materials page
+    When I go to the search instructional materials page
     And I follow assign to a class link for activity "Fluid Mechanics"
+    Then I should be on the home page
     
     
   @dialog
   @javascript
   Scenario: Teacher can assign investigations to a class
     When I follow assign to a class link for investigation "Geometry"
-    And I check "Mathematics"
+    Then I should see "Investigation:"
+    And I should see "Geometry"
+    When I check "Mathematics"
     And I follow "Save"
+    And I should wait 2 seconds
     And accept the dialog
     And I go to the class page for "Mathematics"
     Then I should see "Geometry"
@@ -58,9 +62,12 @@ Scenario: Anonymous user can not assign instructional materials to the class
     And I check "Activity"
     And I should wait 2 seconds
     And I follow assign to a class link for activity "Fluid Mechanics"
+    Then I should see "Activity:"
+    And I should see "Fluid Mechanics"
     And "Mechanics" should appear before "Fluid Mechanics"
-    And I check "Physics"
+    When I check "Physics"
     And I follow "Save"
+    And I should wait 2 seconds
     And accept the dialog
     And I go to the class page for "Physics"
     And I should see "Fluid Mechanics"
@@ -76,11 +83,11 @@ Scenario: Anonymous user can not assign instructional materials to the class
     
     
   @javascript
-  Scenario: Teacher can see number classes to which investigations are assigned
+  Scenario: Teacher can see number classes to which activities are assigned
     When the Activity "Geometry" is assigned to the class "Physics"
     And the Activity "Geometry" is assigned to the class "Geography"
     And the Activity "Geometry" is assigned to the class "Mathematics"
-    And I am on the search instructional materials page'
+    And I am on the search instructional materials page
     Then I should see "Used in 3 classes."
     
     

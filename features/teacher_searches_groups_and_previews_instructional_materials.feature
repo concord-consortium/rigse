@@ -1,7 +1,8 @@
-  Feature: Teacher searches sorts groups and previews search the offerings
-  So my class can perform a task
+Feature: Teacher can search instructional materials grouped by material type, sort and preview them.
+
   As a teacher
-  I want to search sort group and preview offerings
+  I want to search instructional materials grouped by material type, sort and preview materials
+  In order to find suitable study materials for the class
   
   Background:
     Given The default project and jnlp resources exist using factories
@@ -14,20 +15,20 @@
     And the following simple investigations exist:
       | name                   | user   | publication_status | description                                     |
       | Radioactivity          | author | published          | Nuclear Energy is a great subject               |
-      | Set Theory             | author | published          | Set Theory decay is a great subject             |
+      | Set Theory             | author | published          | Set Theory is a great subject                   |
       | Mechanics              | author | published          | Mechanics is a great subject                    |
       | Geometry               | author | published          | Triangle is a great subject                     |
-      | integration calculus   | author | published          | integration calculus is a great subject         |
-      | differential calculus  | author | published          | differential calculus decay is a great subject  |
+      | integral calculus      | author | published          | integral calculus is a great subject            |
+      | differential calculus  | author | published          | differential calculus is a great subject        |
       | differential equations | author | published          | differential equations is a great subject       |
-      | organic chemistry      | author | published          | organic chemistry decay is a great subject      |
-      | inorganic chemistry    | author | published          | inorganic chemistry decay is a great subject    |
+      | organic chemistry      | author | published          | organic chemistry is a great subject            |
+      | inorganic chemistry    | author | published          | inorganic chemistry is a great subject          |
       | graph theory           | author | published          | graph theory is a great subject                 |
       | radar theory           | author | published          | radar theory is a great subject                 |
     And the following activities for the above investigations exist:
       | name                        | investigation | user    | publication_status | description                            |
       | Radioactive decay           | Radioactivity | author  | published          | Nuclear Energy is a great material     |
-      | Gama Rays                   | Radioactivity | author  | published          | Gama Rays is a great material          |
+      | Gamma Rays                  | Radioactivity | author  | published          | Gamma Rays is a great material         |
       | Venn Diagram                | Set Theory    | author  | published          | Venn Diagram is a great material       |
       | operations on sets          | Set Theory    | author  | published          | operations on sets is a great material |
       | Fluid Mechanics             | Mechanics     | author  | published          | Fluid Mechanics is a great material    |
@@ -46,19 +47,19 @@
       | Biology     | teacher    | bio        |
       | Geography   | teacher    | geo        |
     And I login with username: teacher password: teacher
-    And I am on the search instructional materials page"
+    And I am on the search instructional materials page
     
     
   Scenario: Anonymous user can preview investigation
     When I log out
     And I go to the search instructional materials page
-    And I should preview investigation "Geometry" on the search instructional materials page
+    Then I should preview investigation "Geometry" on the search instructional materials page
     
     
   Scenario: Anonymous user can preview activity
     When I log out
     And I go to the search instructional materials page
-    And I should preview activity "differential calculus" on the search instructional materials page
+    Then I should preview activity "differential calculus" on the search instructional materials page
     
     
   Scenario: Teacher can preview investigation
@@ -66,7 +67,7 @@
     
     
  Scenario: Teacher can preview activity
-    And I should preview activity "differential calculus" on the search instructional materials page
+    Then I should preview activity "differential calculus" on the search instructional materials page
     
     
   @javascript
@@ -93,20 +94,20 @@
     And I press "GO"
     And I should wait 2 seconds
     And I follow "Alphabetical" in Sort By on the search instructional materials page
-    Then "differential calculus" should appear before "integration calculus"
+    Then "differential calculus" should appear before "integral calculus"
     
     
   @javascript
   Scenario: Teacher can sort search results for investigations on the basis of creation date
-    When I create investigations "differential calculus" before "integration calculus" by date
+    When I create investigations "differential calculus" before "integral calculus" by date
     And I enter search text "calculus" on the search instructional materials page
     And I press "GO"
     And I follow "Oldest" in Sort By on the search instructional materials page
     And I should wait 2 seconds
-    Then "integration calculus" should appear before "differential calculus"
+    Then "integral calculus" should appear before "differential calculus"
     And I follow "Newest" in Sort By on the search instructional materials page
     And I should wait 2 seconds
-    And "differential calculus" should appear before "integration calculus"
+    And "differential calculus" should appear before "integral calculus"
     
     
   @javascript
@@ -127,11 +128,11 @@
     When the Investigation "differential calculus" is assigned to the class "Physics"
     And the Investigation "differential calculus" is assigned to the class "Geography"
     And the Investigation "differential calculus" is assigned to the class "Mathematics"
-    And the Investigation "integration calculus" is assigned to the class "Mathematics"
-    And the Investigation "integration calculus" is assigned to the class "Geography"
+    And the Investigation "integral calculus" is assigned to the class "Mathematics"
+    And the Investigation "integral calculus" is assigned to the class "Geography"
     And I follow "Popularity" in Sort By on the search instructional materials page
     And I should wait 2 seconds
-    Then "differential calculus" should appear before "integration calculus"
+    Then "differential calculus" should appear before "integral calculus"
     
     
   @javascript
@@ -147,20 +148,22 @@
     
     
   @javascript
-  Scenario: Teacher should be able to see grouped search results on the basis of activities and investigations
-    When I fill in "search_term" with "Geometry"
+  Scenario: Teacher should be able to see grouped search results on the basis of material type
+    When I enter search text "Geometry" on the search instructional materials page
     And I uncheck "Investigation"
     And I check "Activity"
     And I press "GO"
+    And I should wait 2 seconds
     And I should see "Geometry"
     And I should see "Triangle is a great subject"
     And I should see "Triangle is a great material"
     And I should not see "Radioactivity"
-    And I fill in "search_term" with "Radioactivity"
+    When I enter search text "Radioactivity" on the search instructional materials page
     And I check "Investigation"
     And I uncheck "Activity"
     And I press "GO"
-    And I should see "Radioactivity"
+    And I should wait 2 seconds
+    Then I should see "Radioactivity"
     And I should see "Nuclear Energy is a great subject"
     And I should not see "Nuclear Energy is a great material"
     And I should not see "Geometry"
@@ -168,7 +171,9 @@
     
   @javascript
   Scenario: Search results should be paginated
-    When the count of a search result is greater than the page size on the search instructional materials page
+    When I enter search text "is a great material" on the search instructional materials page
+    And I press "GO"
+    And I should wait 2 seconds
     Then the search results should be paginated on the search instructional materials page
     
     

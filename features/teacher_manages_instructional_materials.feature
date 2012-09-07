@@ -112,9 +112,9 @@ Feature: Teacher manages instructional materials of a class
     
   @javascript
   Scenario: Teacher should be able to run the report
+    When I click the tab of Instructional Materials with text "Radioactivity"
     When I follow "Run Report"
     Then A report window opens of offering "Radioactivity"
-    And I should see "Radioactivity"
         
   Scenario: Teacher should be able to see all students assigned to the class
     Then I should see "Doe, Dave"
@@ -138,15 +138,15 @@ Feature: Teacher manages instructional materials of a class
     
     
   Scenario: Teacher should be able to run investigation as teacher
-    When I follow "Run as Teacher"
+    When I follow "Run as Teacher" for the investigation "Aerodynamics"
     Then I receive a file for download with a filename like "_investigation_"
     
   Scenario: Teacher should be able to run investigation as student
-    When I follow "Run as Student"
+    When I follow "Run as Student" for the investigation "Aerodynamics"
     Then I receive a file for download with a filename like "_investigation_"
     
   Scenario: Teacher should be able to run the activity
-    When I follow "Run Activity"
+    When I follow "Run Activity" for the activity "Air activity"
     Then I receive a file for download with a filename like "_activity_"
   
   @javascript
