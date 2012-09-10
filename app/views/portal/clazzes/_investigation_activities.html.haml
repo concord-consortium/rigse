@@ -11,9 +11,10 @@
             %td{:width=>"100px"}
               %div
                 = link_to "Run Activity", run_url_for(activity,{}), :class=>"button pie"
-            %td{:style=>"font-weight:bold"} 
+            %td{:style=>"font-weight:bold"}
+              - activity_name = (!activity.name.nil? && activity.name.length > 0)? activity.name : "-"
               Activity #{counter}: 
-              = activity.name
+              = activity_name
               - if activity.teacher_only
                 %span.messagetext{:style=>"font-weight:normal"} 
                   (teacher only)
