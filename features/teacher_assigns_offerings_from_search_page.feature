@@ -58,8 +58,8 @@ Feature: Teacher can search and assign instructional materials to a class
   @javascript
   Scenario: Teacher can assign investigations to a class
     When I open the "Assign to a class" popup for the investigation "Geometry"
-    Then I should see "Investigation:"
-    And I should see "Geometry"
+    Then I should see "Investigation:" within the assign materials popup on the search page
+    And I should see "Geometry" within the assign materials popup on the search page
     When I check "Mathematics"
     And I follow "Save"
     And I should wait 2 seconds
@@ -76,8 +76,8 @@ Feature: Teacher can search and assign instructional materials to a class
     And I check "Activity"
     And I should wait 2 seconds
     And I open the "Assign to a class" popup for the activity "Fluid Mechanics"
-    Then I should see "Activity:"
-    And I should see "Fluid Mechanics"
+    Then I should see "Activity:" within the assign materials popup on the search page
+    And I should see "Fluid Mechanics" within the assign materials popup on the search page
     And "Mechanics" should appear before "Fluid Mechanics"
     When I check "Physics"
     And I follow "Save"
