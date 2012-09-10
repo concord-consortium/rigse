@@ -908,4 +908,6 @@ describe Portal::ClazzesController do
       assert_template :partial => "portal/students/_form"
     end
   end
+      stub_current_user :authorized_teacher_user
+
 end

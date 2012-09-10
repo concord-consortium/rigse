@@ -388,6 +388,9 @@ class Portal::ClazzesController < ApplicationController
         #page.visual_effect :highlight, 'teachers_listing'
         page.replace_html  'div_teacher_list',replace_html
         page.replace 'teacher_add_dropdown', teacher_add_dropdown(@portal_clazz)
+        if @teacher
+          page.replace_html  'flash',''
+        end
       end
     rescue
       render :update do |page|

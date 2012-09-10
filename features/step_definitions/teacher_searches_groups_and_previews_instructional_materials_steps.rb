@@ -55,7 +55,6 @@ Then /^the search results should be paginated on the search instructional materi
     page.should have_content("Previous")
     
     step 'I follow "Next"'
-    step 'I should wait 2 seconds'
     if page.respond_to? :should
       page.should have_link("Previous")
     else
@@ -77,7 +76,6 @@ Then /^the search results should be paginated on the search instructional materi
     page.should have_content("Previous")
     
     step 'I follow "Next"'
-    step 'I should wait 2 seconds'
     if page.respond_to? :should
       page.should have_link("Previous")
     else

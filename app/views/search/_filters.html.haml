@@ -60,10 +60,10 @@
         %td.probescolumn
           - no_probes_req_selected = @probe_type.include?("0")
           .filterheader
-            Probes
+            Sensors
           .noprobesrequired
             = check_box_tag 'probe[]', '0', no_probes_req_selected, :id=>'probe_0', :class=>'probe_no_check', :onclick=>'uncheckedallprobes(false);'
-            = label_tag "probe_0","No Probes Required",:class=>"probes_label"
+            = label_tag "probe_0","No Sensors Required",:class=>"probes_label"
           .probes_container.webkit_scrollbars
             
             %div
