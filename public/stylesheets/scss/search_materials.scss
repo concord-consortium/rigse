@@ -247,8 +247,8 @@ vertical-align: middle;
 .material_detail td.check_box{width:20px;;padding:7px 0px 0px 5px}
 .material_detail label.clazz_name{text-transform: none;} 
 .assign_class_header{font-weight:bold;padding-left:5px;}
-.already_assign_class_header{font-weight:bold;padding-left:5px;padding-bottom:2px;}
-.assigned_material_detail td{font-weight:normal;padding:0px 5px 5px 5px;vertical-align:top;text-align:left}
+.already_assign_class_header{font-weight:bold;padding-left:5px;padding-bottom:0px;}
+.assigned_material_detail td{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
 .messagetext{font-style:italic}
 .assigned_material_detail{margin:0;padding:0;text-transform: none;}
 .assigned_material_detail td.title{font-weight:normal;padding:0px 5px 5px 5px;vertical-align:top;text-align:left}
@@ -277,7 +277,7 @@ vertical-align: middle;
 
 .material_list_item a{text-transform: none;}
 .unassigned_classes_container{max-height:150px;overflow-y:auto;}
-.assigned_classes_container{padding:5px;max-height:150px;overflow-y:auto;}
+.assigned_classes_container{padding:5px;padding-top:0px;max-height:150px;overflow-y:auto;}
 .unassigned_classes_container input[type='checkbox']
 {
   margin:0;padding:0;
