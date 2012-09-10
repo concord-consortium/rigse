@@ -36,6 +36,8 @@
       %tr
         %td{:colspan=>3}
           - unless current_user.anonymous?
+            - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
+            - offerings = offerings.sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
             - offering_clazz_names = offerings.map{|o| o.clazz.name}
             - if(offerings.length>0)
               %span.assignedTo
