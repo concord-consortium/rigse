@@ -337,8 +337,12 @@ module OtmlHelper
   end
     
   def otml_css_path(name="otml")
-    # TODO: test that this is working with themes..
-    return asset_path "#{name}.css"
+    theme = APP_CONFIG[:theme]
+    if theme  
+      theme_stylesheet_path(name)
+    else
+      stylesheet_path(name)
+    end
   end
 
   def otml_project_css_path
