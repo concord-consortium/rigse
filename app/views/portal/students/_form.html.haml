@@ -45,12 +45,12 @@
       %td
       %td
         %table{:style=>"margin:0"}
-          %tr
+          %tr{:style=>"vertical-align: middle;"}
             - if signup
               %td= f.submit 'Submit'
             - else
               %td
                 %input{:type=>"button", :value=>"Submit", :onclick=>"add_New_Student_To_Class();", :class=>"pie"}
-              %td{:style=>"padding-top:12px"}
+              %td
                 = link_to "Cancel", "#",:onclick=>"close_popup()"
 
