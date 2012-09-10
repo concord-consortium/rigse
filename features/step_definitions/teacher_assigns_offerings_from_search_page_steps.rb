@@ -9,31 +9,17 @@ When /^the following activities for the above investigations exist:$/ do |activi
 end
 end
 
-Then /^(?:|I )follow assign to a class link for investigation "(.+)"$/ do |investigation_name|
 
-  within(:xpath,"//div[@class='material_list_item' and contains(., '#{investigation_name}')]") do
-    step 'I follow "Assign to a Class"'
+And /^(?:|I )open the "Assign to a class" popup for the (investigation|activity) "(.+)"$/ do |material_type, material_name|
+  material_id = nil
+  case material_type
+    when "investigation"
+      material_id = Investigation.find_by_name(material_name).id
+    when "activity"
+      material_id = Activity.find_by_name(material_name).id
   end
-end
-
-Then /^(?:|I )follow assign to a class link for activity "(.+)"$/ do |activity_name|
-
-  within(:xpath,"//div[@class='material_list_item' and contains(., '#{activity_name}')]") do
-    step 'I follow "Assign to a Class"'
-  end
-end
-
-And /^(?:|I )follow assing to a class link for investigation "(.+)"$/ do|investigation_name|
-  investigation_id = Investigation.find_by_name('#{investigation_name}').id
-  within(:xpath,"//div[@id = 'search_investigation_#{investigation_id}']") do
-    step 'I follow "Assign to a Class"'
-  end
-end
-
-And /^(?:|I )follow assing to a class link for activity "(.+)"$/ do|activity_name|
-
-  activity_id = Activity.find_by_name('#{activity_name}').id
-  within(:xpath,"//div[@id = 'search_activity_#{activity_id}']") do
+  
+  within(:xpath,"//div[@id = 'search_#{material_type}_#{material_id}']") do
     step 'I follow "Assign to a Class"'
   end
 end
