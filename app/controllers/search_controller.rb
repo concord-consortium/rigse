@@ -125,6 +125,7 @@ class SearchController < ApplicationController
     unassigned_teacher_clazzes = teacher_clazzes.select{|item| assigned_clazz_ids.index(item.clazz_id).nil?}
     @unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
     @assigned_clazzes = Portal::Clazz.where(:id=>assigned_clazz_ids)
+    @teacher_active_clazzes_count = (teacher_clazzes)? teacher_clazzes.length : 0
     render :partial => 'material_unassigned_clazzes'
   end
   
