@@ -44,7 +44,7 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
     oPopUpWindow = new UI.Window({ theme: "lightbox",
         shadow: true,
         width:  500,
-        height: 250}).setContent(oInnerHtml).show(true).center();
+        height: 270}).setContent(oInnerHtml).show(true).center();
     oPopUpWindow.setHeader("Copy Class");
     oPopUpWindow.activate();
     
