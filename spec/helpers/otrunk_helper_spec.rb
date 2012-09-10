@@ -28,12 +28,12 @@ describe OtmlHelper do
       end
       
       it "should return the default otml.css path" do
-        otml_css_path.should eql("/stylesheets/otml.css")
+        otml_css_path.should eql("/assets/otml.css")
       end
 
     end
     
-    describe "without a theme" do
+    describe "with a theme" do
       before(:all) do
         @theme_name = "fakeo"
         @theme = APP_CONFIG[:theme]
@@ -46,12 +46,20 @@ describe OtmlHelper do
       end
       
       it "should return the themed otml.css path" do
-        otml_css_path.should eql("/stylesheets/themes/#{@theme_name}/otml.css")
+        otml_css_path.should eql("/assets/#{@theme_name}/stylesheets/otml.css")
       end
 
     end
   end
 
+  # this is *not* an asset URL. There is a named route in routes.rb
+  # this test is just here as documentation
+  describe "otml_project_css_path" do
+    it "should return /stylesheets/project.css (always)" do
+      otml_project_css_path.should eql("/stylesheets/project.css")
+    end
+
+  end
 end
 
 
