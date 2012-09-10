@@ -336,16 +336,20 @@ module OtmlHelper
     end 
   end
     
-  def otml_css_path(base="stylesheets",name="otml")
+  def otml_css_path(name="otml")
     theme = APP_CONFIG[:theme]
-    file = "#{name}.css"
-    default_path = File.join(base,file)
-    if theme
-      themed_path = File.join(base,'themes', theme, file)
-      if File.exists? File.join(::Rails.root.to_s,'public',themed_path)
-        return "/#{themed_path}"
-      end
+    if theme  
+      theme_stylesheet_path(name)
+    else
+      stylesheet_path(name)
     end
-    return "/#{default_path}"
   end
+
+  def otml_project_css_path
+    # this is a weird hard-wired route
+    # its here because I think its only used for the 
+    # match '/stylesheets/project.css' => 'home#project_css', :as => :project_css
+    "/stylesheets/project.css"
+  end
+
 end

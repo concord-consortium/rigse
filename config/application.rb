@@ -4,8 +4,10 @@ require 'rails/all'
 
 module RailsPortal
   class Application < Rails::Application
-    
-    Bundler.require(:default, Rails.env) if defined?(Bundler)
+    config.assets.enabled = true
+    # Bundler.require(:default, Rails.env) if defined?(Bundler)
+    # Fixes a Compass bug, per http://stackoverflow.com/questions/6005361/sass-import-error-in-rails-3-app-file-to-import-not-found-or-unreadable-comp?rq=1
+    Bundler.require(*Rails.groups(:assets => %w(development test))) if defined?(Bundler)
   
     config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
     config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories

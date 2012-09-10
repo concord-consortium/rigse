@@ -20,4 +20,4 @@
       %cssBlocks
         %OTCssText{ :local_id => ot_local_id_for('otml_css'), :src => otml_css_path }/
         - if current_project.using_custom_css?
-          %OTCssText{ :local_id => ot_local_id_for('project_css'), :src => otml_css_path("stylesheets","project") }/
+          %OTCssText{ :local_id => ot_local_id_for('project_css'), :src => otml_project_css_path }/

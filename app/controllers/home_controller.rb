@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   caches_page   :project_css
+  theme "rites"
   
   def index
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
