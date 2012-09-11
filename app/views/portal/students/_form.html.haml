@@ -43,8 +43,14 @@
             = render :partial => "shared/consent/ask_for_consent"
     %tr
       %td
-      - if signup
-        %td= f.submit 'Submit'
-      - else
-        %td
-          %input{:type=>"button", :value=>"Submit", :onclick=>"add_New_Student_To_Class();", :class=>"pie"}
+      %td
+        %table{:style=>"margin:0"}
+          %tr{:style=>"vertical-align: middle;"}
+            - if signup
+              %td= f.submit 'Submit'
+            - else
+              %td
+                %input{:type=>"button", :value=>"Submit", :onclick=>"add_New_Student_To_Class();", :class=>"pie"}
+              %td
+                = link_to "Cancel", "#",:onclick=>"close_popup()"
+

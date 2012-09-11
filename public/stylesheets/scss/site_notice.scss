@@ -16,6 +16,11 @@
   padding-left:5px;
 }
 
+.notice_text p
+{
+  margin: 0px;
+}
+
 .table_row {
   text-align: center;
 }
@@ -89,8 +94,10 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
   margin-left: 50px;
 }
 
-.submit{
+.submit_button_container{
   float:right;
+  padding-right: 10px;
+  padding-top: 1px;
 }
 
 .notice_container{
@@ -158,17 +165,3 @@ a.notice_expand_collapse, a.notice_expand_collapse:visited, a.notice_expand_coll
 .notice_list{border-right:solid 1px #999;border-bottom:solid 1px #999;}
 .notice_list th{border-left:solid 1px #999;border-top:solid 1px #999;}
 .notice_list td{border-left:solid 1px #999;border-top:solid 1px #999;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-

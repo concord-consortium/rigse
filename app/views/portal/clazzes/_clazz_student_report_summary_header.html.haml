@@ -34,7 +34,7 @@
       / use an empty header when it is not an investigation
       %th
     - activity_columns << capture do
-      %th.expand_collapse_text
+      %th.expand_collapse_text{:id=>"activity_header_text#{offering.runnable_id}", :title => offering.name}
         %div.progressbar_container= offering.name
 
 - if show_investigation_row
