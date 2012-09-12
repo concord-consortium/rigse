@@ -95,6 +95,7 @@ Feature: Users can view notices created by project staff
     When I am logged in with the username mymanager
     And am on the my home page
     And I follow "Hide Notices"
+    And I should wait 2 seconds
     Then I should see "Show Notices"
     When I log out
     And I am logged in with the username mymanager
