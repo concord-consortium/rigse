@@ -11,6 +11,7 @@ Feature: Teacher edits and saves class information
       | teacher | teacher  | John       | Nash      |
       | albert  | teacher  | Albert     | Einstien  |
       | jonson  | teacher  | Jonson     | Jackson   |
+      | john    | john     | john       | gaurav    |
     And  the teachers "teacher , albert , jonson" are in a school named "VJTI"
     And the following semesters exist:
       | name     | start_time          | end_time            |
@@ -19,11 +20,13 @@ Feature: Teacher edits and saves class information
     And the following classes exist:
       | name     |
       | My Class |
+      | Physics  |
     And the classes "My Class" are in a school named "VJTI"
     And the following teacher and class mapping exists:
       | class_name | teacher |
       | My Class   | teacher |
       | My Class   | jonson  |
+      | Physics    | john    |
     And the following offerings exist
       | name                       |
       | Lumped circuit abstraction |
@@ -70,5 +73,11 @@ Feature: Teacher edits and saves class information
     And I move investigation named "Non Linear Devices" to the top of the list
     And I press "Save"
     Then new data for the class should be saved
+    
+    
+  Scenario: Teacher can see message if no materials are in the class
+    When I am logged in with the username john
+    And I am on "the class edit page for "Physics""
+    Then I should see "No materials available."
     
     

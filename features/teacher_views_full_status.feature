@@ -9,9 +9,11 @@ Feature: Teacher can see full status
     And the following teachers exist:
       | login    | password | first_name   | last_name |
       | teacher  | teacher  | John         | Nash      |
+      | john     | john     | john         | gaurav    |
     And the following classes exist:
       | name        | teacher |
       | My Class    | teacher |
+      | Physics     | john    |
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |
@@ -99,5 +101,10 @@ Feature: Teacher can see full status
     When I am an anonymous user
     And I go to the full status page for "My Class"
     Then I should be on "my home page"
+    
+  Scenario: Teacher can see a message if no materials are in the class
+    When I login with username: john password: john
+    And I am on the full status page for "Physics"
+    Then I should see "No materials present."
     
     
