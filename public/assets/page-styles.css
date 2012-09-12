@@ -1,0 +1,16 @@
+/* Page style options for Lightweight-MW activities */
+
+/* This is the stack-left option, which just floats the questions in a stack
+to the left rather than a stack to the right. */
+.content.stack-left .text {
+    float: left;
+    padding: 1% 1% 1% 0;
+}
+
+/* Technically we could put these styles for the widget-left option in the
+block with the stack-left, but it's easier to keep the namespaces
+distinct. */
+.content.widget-left .text {
+    float: left;
+    padding: 1% 1% 1% 0;
+}
