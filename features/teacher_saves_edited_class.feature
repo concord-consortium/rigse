@@ -7,10 +7,11 @@ Feature: Teacher edits and saves class information
   Background:
     Given The default project and jnlp resources exist using factories
     And the following teachers exist:
-      | login   | password | first_name | last_name |
-      | teacher | teacher  | John       | Nash      |
-      | albert  | teacher  | Albert     | Einstien  |
-      | jonson  | teacher  | Jonson     | Jackson   |
+      | login    | password | first_name | last_name |
+      | teacher  | teacher  | John       | Nash      |
+      | albert   | teacher  | Albert     | Einstien  |
+      | jonson   | teacher  | Jonson     | Jackson   |
+      | peterson | teacher  | peterson   | gaurav    |
     And  the teachers "teacher , albert , jonson" are in a school named "VJTI"
     And the following semesters exist:
       | name     | start_time          | end_time            |
@@ -19,11 +20,13 @@ Feature: Teacher edits and saves class information
     And the following classes exist:
       | name     |
       | My Class |
+      | Physics  |
     And the classes "My Class" are in a school named "VJTI"
     And the following teacher and class mapping exists:
-      | class_name | teacher |
-      | My Class   | teacher |
-      | My Class   | jonson  |
+      | class_name | teacher  |
+      | My Class   | teacher  |
+      | My Class   | jonson   |
+      | Physics    | peterson |
     And the following offerings exist
       | name                       |
       | Lumped circuit abstraction |
@@ -69,6 +72,13 @@ Feature: Teacher edits and saves class information
     And I uncheck investigation with label "Lumped circuit abstraction"
     And I move investigation named "Non Linear Devices" to the top of the list
     And I press "Save"
-    Then new data for the class should be saved
+    Then I should be on Instructional Materials page for "Basic Electronics"
+    And I should see "Class was successfully updated."
+    
+    
+  Scenario: Teacher can see message if no materials are in the class
+    When I am logged in with the username peterson
+    And I am on "the class edit page for "Physics""
+    Then I should see "No materials assigned to this class."
     
     
