@@ -109,6 +109,6 @@ Feature: Teacher can see full status
   Scenario: Teacher can see a message if no materials are in the class
     When I login with username: peterson password: teacher
     And I am on the full status page for "Physics"
-    Then I should see "No materials present."
+    Then I should see "No materials assigned to this class."
     
     
