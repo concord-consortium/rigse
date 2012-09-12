@@ -7,11 +7,11 @@ Feature: Teacher edits and saves class information
   Background:
     Given The default project and jnlp resources exist using factories
     And the following teachers exist:
-      | login   | password | first_name | last_name |
-      | teacher | teacher  | John       | Nash      |
-      | albert  | teacher  | Albert     | Einstien  |
-      | jonson  | teacher  | Jonson     | Jackson   |
-      | john    | john     | john       | gaurav    |
+      | login    | password | first_name | last_name |
+      | teacher  | teacher  | John       | Nash      |
+      | albert   | teacher  | Albert     | Einstien  |
+      | jonson   | teacher  | Jonson     | Jackson   |
+      | peterson | teacher  | peterson   | gaurav    |
     And  the teachers "teacher , albert , jonson" are in a school named "VJTI"
     And the following semesters exist:
       | name     | start_time          | end_time            |
@@ -23,10 +23,10 @@ Feature: Teacher edits and saves class information
       | Physics  |
     And the classes "My Class" are in a school named "VJTI"
     And the following teacher and class mapping exists:
-      | class_name | teacher |
-      | My Class   | teacher |
-      | My Class   | jonson  |
-      | Physics    | john    |
+      | class_name | teacher  |
+      | My Class   | teacher  |
+      | My Class   | jonson   |
+      | Physics    | peterson |
     And the following offerings exist
       | name                       |
       | Lumped circuit abstraction |
@@ -76,7 +76,7 @@ Feature: Teacher edits and saves class information
     
     
   Scenario: Teacher can see message if no materials are in the class
-    When I am logged in with the username john
+    When I am logged in with the username peterson
     And I am on "the class edit page for "Physics""
     Then I should see "No materials available."
     
