@@ -6,9 +6,10 @@
         %li=link_to("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true),:popup => true )
         %hr
         .tiny
-          - offering.runnable.print_listing.each do |listing|
-            - listing.each_key do |key|
-              %li= link_to("print #{key}", section_url(listing[key],:print=>true),:popup => true )
+          %ul
+            - offering.runnable.print_listing.each do |listing|
+              - listing.each_key do |key|
+                %li= link_to("print #{key}", section_url(listing[key],:print=>true),:popup => true )
 
   .dropdown{:id => dom_id_for(offering.runnable,"run_dropdown")}
     .container
