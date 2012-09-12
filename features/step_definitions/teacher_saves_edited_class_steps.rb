@@ -46,11 +46,6 @@ And /^I move investigation named "(.+)" to the top of the list$/ do |investigati
  
 end
 
-Then /^new data for the class should be saved$/ do
-  page.should have_content('Class was successfully updated.')
-end
-
-
 And /^the following offerings exist$/ do |offering_table|
     offering_table.hashes.each do |hash|
       investigation = Factory(:investigation)
