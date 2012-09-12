@@ -87,7 +87,7 @@ Feature: Teacher manages instructional materials of a class
     Then I should be on the class edit page for "My Class"
     
   Scenario: Teacher can click button to Add new materials
-    When I follow "Add new Materials to this class"
+    When I follow "Assign Materials"
     Then I should be on the search instructional materials page
     
   Scenario: Teacher should see investigation tabs with the first tab selected
@@ -130,9 +130,9 @@ Feature: Teacher manages instructional materials of a class
     And I click the tab of Instructional Materials with text "Plant reproduction"
     Then I should see progress bars for the students
         
-  Scenario: Teacher should see a message if no offerings are present
+  Scenario: Teacher should see a message if no materials are present
     When I go to Instructional Materials page for "Chemistry"
-    Then I should see "No offerings present"
+    Then I should see "No materials present"
     
   Scenario: Teacher should not get an error if no activities are present
     When I go to Instructional Materials page for "Mathematics"

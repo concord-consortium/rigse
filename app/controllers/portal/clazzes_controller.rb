@@ -149,7 +149,7 @@ class Portal::ClazzesController < ApplicationController
     respond_to do |format|
       if okToCreate && @portal_clazz.save
         flash[:notice] = 'Class was successfully created.'
-        format.html { redirect_to(@portal_clazz) }
+        format.html { redirect_to(url_for([:materials, @portal_clazz])) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
       else
         format.html { render :action => "new" }
@@ -218,7 +218,7 @@ class Portal::ClazzesController < ApplicationController
 
         if okToUpdate && @portal_clazz.update_attributes(object_params)
           flash[:notice] = 'Class was successfully updated.'
-          format.html { redirect_to(@portal_clazz) }
+          format.html { redirect_to(url_for([:materials, @portal_clazz])) }
           format.xml  { head :ok }
         else
           format.html { render :action => "edit" }
