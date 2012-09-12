@@ -69,7 +69,9 @@ Feature: Users can view notices created by project staff
     And am on the my home page
     And I follow "x"
     And accept the dialog
+    And I should not see "Notice for all users"
     And am on the my home page
+    # Notice should not be visible on revisiting the home page
     Then I should not see "Notice for all users"
     And I login as an admin
     And am on the my home page
@@ -81,8 +83,10 @@ Feature: Users can view notices created by project staff
     When I am logged in with the username mymanager
     And am on the my home page
     And I follow "Hide Notices"
+    And I should wait 2 seconds
     Then I should see "Show Notices"
     When I follow "Show Notices"
+    And I should wait 2 seconds
     Then I should see "Hide Notices"
     
     
@@ -97,6 +101,7 @@ Feature: Users can view notices created by project staff
     And am on the my home page
     Then I should see "Show Notices"
     When I follow "Show Notices"
+    And I should wait 2 seconds
     Then I should see "Hide Notices"
     When I log out
     And I am logged in with the username mymanager
