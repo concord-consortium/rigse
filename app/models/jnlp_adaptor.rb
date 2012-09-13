@@ -78,6 +78,10 @@ class JnlpAdaptor
 
     default_version_str = JnlpAdaptor.jnlp_version_str
     jnlp_url = @jnlp_family.versioned_jnlp_urls.find_by_version_str(default_version_str)
+    if jnlp_url.nil?
+      raise "Can't find JNLP URL for family: #{@jnlp_family} version: #{default_version_str}"
+    end
+
     @jnlp = jnlp_url.versioned_jnlp
 
     otrunk_nlogo_jars = @jnlp.jars.select { |j2| j2.name[/otrunk-nlogo.*?/] }
