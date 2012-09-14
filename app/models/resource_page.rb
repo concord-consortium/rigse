@@ -189,4 +189,16 @@ class ResourcePage < ActiveRecord::Base
   def run_format
     nil
   end
+
+  # if a user has created a resource_page they are now an author so they should see
+  # authoring affordances. This approach seems confusing, but it is the same approach is used
+  # by investigations.
+  after_save :add_author_role_to_user
+
+  def add_author_role_to_user
+    if self.user
+      self.user.add_role('author')
+    end
+  end
+
 end
