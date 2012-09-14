@@ -10,5 +10,5 @@
 - if role_partials.delete("author")
   - role_partials << "author"
 
-- current_user.roles.each do |role|
-  = render :partial => role.title
+- role_partials.each do |role|
+  = render :partial => role
