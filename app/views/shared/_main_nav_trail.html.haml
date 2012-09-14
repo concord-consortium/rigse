@@ -4,4 +4,5 @@
   %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
 - if current_user.has_role?('admin')
   %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
-%li.trail= link_to 'Browse Instructional Materials' , search_path
+- unless current_user.only_a_student?
+  %li.trail= link_to 'Browse Instructional Materials' , search_path

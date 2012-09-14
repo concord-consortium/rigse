@@ -322,6 +322,10 @@ class User < ActiveRecord::Base
     updating_password
   end
 
+  def only_a_student?
+    portal_student and !has_role?('admin', 'manager', 'researcher', 'author') and portal_teacher.nil?
+  end
+
   protected
   def make_activation_code
     self.deleted_at = nil
