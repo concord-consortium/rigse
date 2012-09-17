@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/concord-consortium/calpicker
+  revision: 5a887c19f1952d99d121116f34cbc9e0e6ca11a1
+  specs:
+    calpicker (0.0.1)
+      prototype-rails
+      rails (~> 3.2.0)
+
+GIT
   remote: git://github.com/concord-consortium/haml.git
   revision: 4987b10743d59f3e50d444f10708394ce8b21aac
   branch: xml-mime-type-and-ie8-keycode-fix
@@ -11,12 +19,6 @@ GIT
   specs:
     rush (0.6.8)
       session
-
-GIT
-  remote: git://github.com/courtland/calendar_date_select
-  revision: 53947edba07101e2391ca00c5d1dbe6a75cf53d1
-  specs:
-    calendar_date_select (1.16.3)
 
 GIT
   remote: git://github.com/willbryant/prototype_legacy_helper.git
@@ -148,6 +150,7 @@ GEM
     fakeweb (1.3.0)
     fattr (2.2.1)
     ffi (1.1.5)
+    ffi (1.1.5-x86-mingw32)
     fssm (0.2.9)
     gherkin (2.9.3)
       json (>= 1.4.6)
@@ -340,7 +343,7 @@ DEPENDENCIES
   arrayfields
   awesome_print
   aws-s3
-  calendar_date_select!
+  calpicker!
   capistrano-ext
   capybara (~> 1.1.2)
   ci_reporter (~> 1.7.0)
