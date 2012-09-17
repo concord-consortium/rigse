@@ -14,7 +14,7 @@
     != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     != stylesheet_link_tag 'print', {'media' => 'print'}
     != javascript_include_tag 'application'
-    = calendar_date_select_includes "silver"
+    = calpicker_includes "silver"
     
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string

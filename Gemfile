@@ -64,7 +64,8 @@ source "http://rubygems.org"
   gem 'json',                 "~> 1.6.3"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
   # this is because of the removed RAILS_ROOT constant
-  gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
+  # gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
+  gem 'calpicker', :git => 'git://github.com/concord-consortium/calpicker'
   gem 'delayed_job',          "~> 3.0.1"
   gem 'delayed_job_active_record', "~> 0.3.2"
   gem 'daemons',              "~> 1.1.8"

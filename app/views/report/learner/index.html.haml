@@ -27,12 +27,12 @@
         %td
           %label Start Date:
         %td
-          = calendar_date_select_tag "start_date", @start_date
+          = calpicker_tag "start_date", @start_date
       %tr
         %td
           %label End Date:
         %td
-          = calendar_date_select_tag "end_date", @end_date
+          = calpicker_tag "end_date", @end_date
 
     = submit_tag @button_texts[:apply]
     = submit_tag @button_texts[:usage]
