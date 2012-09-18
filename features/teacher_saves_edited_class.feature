@@ -82,3 +82,9 @@ Feature: Teacher edits and saves class information
     Then I should see "No materials assigned to this class."
     
     
+  Scenario: Teacher can see message if no materials are in the class
+    When I am logged in with the username peterson
+    And I am on "the class edit page for "Physics""
+    Then I should see "No materials assigned to this class."
+    
+    
