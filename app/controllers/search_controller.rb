@@ -75,6 +75,14 @@ class SearchController < ApplicationController
     @activity_page = params[:activity_page] || 1
     @material_type = param_find(:material, (params[:method] == :get)) || ['investigation','activity']
     @probe_type = param_find(:probe, (params[:method] == :get)) || []
+    
+    # from cookies, this comes back as as single string sometimes.
+    # see features/teacher_filters_instructional_materials.feature:80
+    # TODO: this should all be simplified and cleaned up.
+    if @probe_type.class == String
+      @probe_type = [@probe_type]
+    end
+    
     search_options = {
       :name => @search_term || '',
       :sort_order => @sort_order,
