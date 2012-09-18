@@ -72,7 +72,14 @@ Feature: Teacher edits and saves class information
     And I uncheck investigation with label "Lumped circuit abstraction"
     And I move investigation named "Non Linear Devices" to the top of the list
     And I press "Save"
-    Then new data for the class should be saved
+    Then I should be on Instructional Materials page for "Basic Electronics"
+    And I should see "Class was successfully updated."
+    
+    
+  Scenario: Teacher can see message if no materials are in the class
+    When I am logged in with the username peterson
+    And I am on "the class edit page for "Physics""
+    Then I should see "No materials assigned to this class."
     
     
   Scenario: Teacher can see message if no materials are in the class

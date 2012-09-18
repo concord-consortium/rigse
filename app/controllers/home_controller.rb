@@ -29,6 +29,9 @@ class HomeController < ApplicationController
   def requirements
   end
 
+  def authoring
+  end
+
   # view_context is a reference to the View template object
   def name_for_clipboard_data
     render :text=> view_context.clipboard_object_name(params)

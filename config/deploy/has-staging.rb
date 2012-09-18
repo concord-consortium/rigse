@@ -2,14 +2,14 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/staging/has"
-set :branch, "has-staging"
+set :deploy_to, "/web/portal"
+set :branch, "master"
 
 #############################################################
 #  Servers
 #############################################################
 
-set :domain, "seymour.concord.org"
+set :domain, "has.staging.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
 
