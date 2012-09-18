@@ -130,9 +130,9 @@ Feature: Teacher manages instructional materials of a class
     And I click the tab of Instructional Materials with text "Plant reproduction"
     Then I should see progress bars for the students
         
-  Scenario: Teacher should see a message if no materials are present
+  Scenario: Teacher should see a message if no materials are assigned to this class.
     When I go to Instructional Materials page for "Chemistry"
-    Then I should see "No materials present"
+    Then I should see "No materials assigned to this class."
     
   Scenario: Teacher should not get an error if no activities are present
     When I go to Instructional Materials page for "Mathematics"
