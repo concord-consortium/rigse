@@ -1,5 +1,5 @@
 require File.expand_path('../../spec_helper', __FILE__)
-require 'lib/wordpress'
+require File.expand_path('../../../lib/wordpress',__FILE__)
 
 describe Wordpress do
 
@@ -30,6 +30,12 @@ describe Wordpress do
     @http_post_mock_1 = mock(Net::HTTP::Post)
     @http_post_mock_2 = mock(Net::HTTP::Post)
     @http_post_mock_3 = mock(Net::HTTP::Post)
+
+    @cust_pages_mocks = [
+      mock(Net::HTTP::Post),
+      mock(Net::HTTP::Post),
+      mock(Net::HTTP::Post)
+    ]
 
     @user_id_response          = mock(Net::HTTPOK, :code => 200, :body => "<string>200</string>")
     @user_id_error_response    = mock(Net::HTTPOK, :code => 200, :body => "<string></string>")
@@ -72,21 +78,15 @@ describe Wordpress do
       <value>
 <struct>
  <member>
-  <name>post_author</name>
-<value>
- <string>200</string>
-</value>
- </member>
- <member>
   <name>post_title</name>
 <value>
  <string>my title</string>
 </value>
  </member>
  <member>
-  <name>tags_input</name>
+  <name>post_content</name>
 <value>
- <string>tag1,tag2,tag3</string>
+ <string>my content</string>
 </value>
  </member>
  <member>
@@ -96,9 +96,15 @@ describe Wordpress do
 </value>
  </member>
  <member>
-  <name>post_content</name>
+  <name>post_author</name>
 <value>
- <string>my content</string>
+ <string>200</string>
+</value>
+ </member>
+ <member>
+  <name>tags_input</name>
+<value>
+ <string>tag1,tag2,tag3</string>
 </value>
  </member>
 </struct>
@@ -116,9 +122,9 @@ describe Wordpress do
   end
 
   it 'should create the right xml for blog creation' do
-    Net::HTTP.should_receive(:new).twice.and_return(@http_mock)
-    @http_mock.should_receive(:start).twice.and_yield(@http_mock)
-    Net::HTTP::Post.should_receive(:new).twice.and_return(@http_post_mock_1, @http_post_mock_2)
+    Net::HTTP.should_receive(:new).exactly(5).times.and_return(@http_mock)
+    @http_mock.should_receive(:start).exactly(5).times.and_yield(@http_mock)
+    Net::HTTP::Post.should_receive(:new).exactly(5).times.and_return(@http_post_mock_1, @http_post_mock_2, @cust_pages_mocks[0], @cust_pages_mocks[1], @cust_pages_mocks[2])
     @http_post_mock_1.should_receive(:body=).once
     @http_post_mock_2.should_receive(:body=).once.with(%!<?xml version="1.0" encoding="UTF-8"?>
 <methodCall>
@@ -138,15 +144,21 @@ describe Wordpress do
    <value>
 <struct>
  <member>
-  <name>title</name>
-<value>
- <string>joe user's Class name Class</string>
-</value>
- </member>
- <member>
   <name>domain</name>
 <value>
  <string>example.com</string>
+</value>
+ </member>
+ <member>
+  <name>path</name>
+<value>
+ <string>class_word</string>
+</value>
+ </member>
+ <member>
+  <name>title</name>
+<value>
+ <string>joe user's Class name Class</string>
 </value>
  </member>
  <member>
@@ -155,21 +167,77 @@ describe Wordpress do
  <string>200</string>
 </value>
  </member>
- <member>
-  <name>path</name>
-<value>
- <string>class word</string>
-</value>
- </member>
 </struct>
    </value>
   </param>
  </params>
 </methodCall>
 !)
-    @http_mock.should_receive(:request).twice.and_return(@user_id_response, @blog_create_post_response)
+    Wordpress::TITLES.keys.each_with_index do |k, i|
+      title = Wordpress::TITLES[k]
+      content = Wordpress::SHORTCODES[k]
+      @cust_pages_mocks[i].should_receive(:body=).once.with(%!<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+ <methodName>extapi.callWpMethod</methodName>
+ <params>
+  <param>
+   <value>
+    <string>login</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>password</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>wp_insert_post</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <array>
+     <data>
+      <value>
+<struct>
+ <member>
+  <name>post_title</name>
+<value>
+ <string>#{title}</string>
+</value>
+ </member>
+ <member>
+  <name>post_content</name>
+<value>
+ <string>#{content}</string>
+</value>
+ </member>
+ <member>
+  <name>post_type</name>
+<value>
+ <string>page</string>
+</value>
+ </member>
+ <member>
+  <name>post_status</name>
+<value>
+ <string>publish</string>
+</value>
+ </member>
+</struct>
+      </value>
+     </data>
+    </array>
+   </value>
+  </param>
+ </params>
+</methodCall>
+!)
+    end
+    @http_mock.should_receive(:request).exactly(5).times.and_return(@user_id_response, @blog_create_post_response)
 
-    @wp.create_class_blog("class word", @authorized_teacher, "class name")
+    @wp.create_class_blog("class_word", @authorized_teacher, "class name")
   end
 
   it 'should create the right xml for user creation' do
@@ -209,15 +277,15 @@ describe Wordpress do
 </value>
  </member>
  <member>
-  <name>last_name</name>
+  <name>first_name</name>
 <value>
- <string>last</string>
+ <string>first</string>
 </value>
  </member>
  <member>
-  <name>user_pass</name>
+  <name>last_name</name>
 <value>
- <string>newpass</string>
+ <string>last</string>
 </value>
  </member>
  <member>
@@ -227,9 +295,9 @@ describe Wordpress do
 </value>
  </member>
  <member>
-  <name>first_name</name>
+  <name>user_pass</name>
 <value>
- <string>first</string>
+ <string>newpass</string>
 </value>
  </member>
 </struct>
@@ -284,9 +352,9 @@ describe Wordpress do
 </value>
  </member>
  <member>
-  <name>ID</name>
+  <name>first_name</name>
 <value>
- <string>200</string>
+ <string>newFirst</string>
 </value>
  </member>
  <member>
@@ -296,21 +364,21 @@ describe Wordpress do
 </value>
  </member>
  <member>
-  <name>user_pass</name>
-<value>
- <string>newpass</string>
-</value>
- </member>
- <member>
   <name>user_email</name>
 <value>
  <string>normal_user@concord.org</string>
 </value>
  </member>
  <member>
-  <name>first_name</name>
+  <name>user_pass</name>
 <value>
- <string>newFirst</string>
+ <string>newpass</string>
+</value>
+ </member>
+ <member>
+  <name>ID</name>
+<value>
+ <string>200</string>
 </value>
  </member>
 </struct>

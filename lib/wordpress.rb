@@ -4,6 +4,17 @@ require 'uri'
 require 'uuidtools'
 
 class Wordpress
+  TITLES = {
+    :latest_posts => "Latest Posts",
+    :latest_comments => "Latest Comments",
+    :top_rated => "Top Rated"
+  }
+
+  SHORTCODES = {
+    :latest_posts => "[cc-recent-posts]",
+    :latest_comments => "[cc-recent-comments]",
+    :top_rated => "[starrating template_id=4 select='post|experimental-claim' min_votes=0 min_count=0 source='thumbs']"
+  }
 
   def initialize()
     project = Admin::Project.default_project
@@ -36,7 +47,20 @@ class Wordpress
     elsif result.body  =~ /fault/ || !(result.body  =~ /<int>([0-9]+?)<\/int>/)
       raise "Error creating class blog"
     else
-      return $1
+      # create the default custom pages
+      blog_id = $1
+      create_custom_page(class_word, TITLES[:latest_posts],    SHORTCODES[:latest_posts])
+      create_custom_page(class_word, TITLES[:latest_comments], SHORTCODES[:latest_comments])
+      create_custom_page(class_word, TITLES[:top_rated],       SHORTCODES[:top_rated])
+      return blog_id
+    end
+  end
+
+  def create_custom_page(class_word, title, shortcode)
+    content = _create_custom_page_xml(title, shortcode)
+    result = _post(content, class_word)
+    if result.body =~ /fault/
+      raise "Error creating custom page in class blog. b: #{class_word}, t: #{title}, sc: #{shortcode}"
     end
   end
 
@@ -94,7 +118,12 @@ class Wordpress
   end
 
   def _post(content, blog = "", action = "/xmlrpc.php")
-    uri = URI.parse(@url + blog + action)
+    url = @url
+    url += '/' unless url.end_with? '/'
+    url += blog
+    url = url.chop if url.end_with? '/'
+    url += action
+    uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
     if uri.port == 443
       http.use_ssl = true
@@ -191,6 +220,17 @@ class Wordpress
     # wp_insert_user only accepts plaintext passwords on creation.
     method = update ? "wp_update_user" : "wp_insert_user"
     return _create_xml(method, true, [data])
+  end
+
+  def _create_custom_page_xml(title, shortcode)
+    data = {
+      "post_title" => title,
+      "post_content" => shortcode,
+      "post_type" => "page",
+      "post_status" => "publish"
+    }
+
+    return _create_xml("wp_insert_post", true, [data])
   end
 
   # data must be an array
