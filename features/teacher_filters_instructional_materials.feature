@@ -71,10 +71,12 @@ Feature: Teacher can search and filter instructional materials
     And I should wait 2 seconds
     Then I should not see "A Weather Underground"
     And I should not see "A heat spontaneously"
+    When I uncheck "No Sensors Required"
+    And I should wait 2 seconds
     And I follow "none"
     And I should wait 2 seconds
-    And I should not see "A Weather Underground"
-    And I should not see "A heat spontaneously"
+    And I should see "A Weather Underground"
+    And I should see "A heat spontaneously"
     
   Scenario: The project settings for Grade Span Expection is restored
     And the project setting for Grade Span Expectation is restored
