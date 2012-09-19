@@ -1,5 +1,6 @@
 # require File.expand_path('../../../spec_helper', __FILE__)
 require 'rack'
+require 'active_support/core_ext/object/blank'  # needed for blank? check
 require File.expand_path("../../../../lib/rack/config_session_cookies", __FILE__)
 
 describe Rack::ConfigSessionCookies do
@@ -21,15 +22,25 @@ describe Rack::ConfigSessionCookies do
     env
   end
   
-  it "should set the cookie if there is a correct query string" do
-    session_param = "_fake_session_key=1234"
-    env = make_env(:query => session_param)
-    @tester.call(env)
-    env['HTTP_COOKIE'].should eql(session_param)
-    
-    env = make_env(:path => "blah.jnlp", :query => session_param)
-    @tester.call(env)
-    env['HTTP_COOKIE'].should eql(session_param)
+  describe "setting the cookie from query strings" do
+    describe "with the correct session parameter name" do
+      it "should set the cookie for allowed paths" do
+        %w[blah.jnlp blah.config blah.dynamic_otml].each do |path|
+          session_param = "_fake_session_key=1234#{path}1234"
+          env = make_env(:path => path, :query => session_param)
+          @tester.call(env)
+          env['HTTP_COOKIE'].should eql(session_param)
+        end
+      end
+      it "should not set cookies for disallowed paths" do
+          %w[blah.html blah.css blah.otml blah blah.jpg].each do |path|
+          session_param = "_fake_session_key=1234#{path}1234"
+          env = make_env(:path => path, :query => session_param)
+          @tester.call(env)
+          env['HTTP_COOKIE'].should_not eql(session_param)
+        end
+      end
+    end
   end
 
   it "should change the session in the cookie if there is a correct query string" do
