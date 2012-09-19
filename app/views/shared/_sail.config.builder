@@ -38,8 +38,12 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
   xml.object("class" => "net.sf.sail.emf.launch.HttpCookieServiceImpl") {
     xml.void("property" => "cookieProperties") {
       xml.object("class" => "java.util.Properties") {
+        # xml.void("method" => "setProperty") {
+        #   xml.string("*.concord.org")
+        #   xml.string("#{Rails.application.config.session_options[:key]}=#{session_options[:id]}; path=#{session_options[:path]}")
+        # }
         xml.void("method" => "setProperty") {
-          xml.string("*.concord.org")
+          xml.string(request.host)
           xml.string("#{Rails.application.config.session_options[:key]}=#{session_options[:id]}; path=#{session_options[:path]}")
         }
       }
