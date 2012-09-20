@@ -42,16 +42,161 @@ describe Wordpress do
     @content_post_response     = mock(Net::HTTPOK, :code => 200, :body => "<string>384</string>")
     @blog_create_post_response = mock(Net::HTTPOK, :code => 200, :body => "<int>600</int>")
     @blog_id_response          = mock(Net::HTTPOK, :code => 200, :body => "<string>213</string>")
+    @blog_public_response      = mock(Net::HTTPOK, :code => 200, :body => "<string>false</string>")
+    @blog_private_response     = mock(Net::HTTPOK, :code => 200, :body => "<string>true</string>")
 
     @wp = Wordpress.new
   end
 
-  it 'should create the right xml for blog posting' do
-    Net::HTTP.should_receive(:new).twice.and_return(@http_mock)
-    @http_mock.should_receive(:start).twice.and_yield(@http_mock)
-    Net::HTTP::Post.should_receive(:new).twice.and_return(@http_post_mock_1, @http_post_mock_2)
+  it 'should create the right xml for blog posting (private)' do
+    Net::HTTP.should_receive(:new).exactly(3).times.and_return(@http_mock)
+    @http_mock.should_receive(:start).exactly(3).times.and_yield(@http_mock)
+    Net::HTTP::Post.should_receive(:new).exactly(3).times.and_return(@http_post_mock_1, @http_post_mock_2, @http_post_mock_3)
     @http_post_mock_1.should_receive(:body=).once
     @http_post_mock_2.should_receive(:body=).once.with(
+%!<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+ <methodName>extapi.callWpMethod</methodName>
+ <params>
+  <param>
+   <value>
+    <string>login</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>password</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>get_option</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <array>
+     <data>
+<value>
+ <string>cc_post_private_js</string>
+</value>
+     </data>
+    </array>
+   </value>
+  </param>
+ </params>
+</methodCall>
+!)
+    @http_post_mock_3.should_receive(:body=).once.with(
+%!<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+ <methodName>extapi.callWpMethod</methodName>
+ <params>
+  <param>
+   <value>
+    <string>login</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>password</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>wp_insert_post</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <array>
+     <data>
+      <value>
+<struct>
+ <member>
+  <name>post_title</name>
+<value>
+ <string>my title</string>
+</value>
+ </member>
+ <member>
+  <name>post_content</name>
+<value>
+ <string>my content</string>
+</value>
+ </member>
+ <member>
+  <name>post_status</name>
+<value>
+ <string>private</string>
+</value>
+ </member>
+ <member>
+  <name>post_author</name>
+<value>
+ <string>200</string>
+</value>
+ </member>
+ <member>
+  <name>tags_input</name>
+<value>
+ <string>tag1,tag2,tag3</string>
+</value>
+ </member>
+</struct>
+      </value>
+     </data>
+    </array>
+   </value>
+  </param>
+ </params>
+</methodCall>
+!)
+    @http_mock.should_receive(:request).exactly(3).times.and_return(@user_id_response, @blog_private_response, @content_post_response)
+
+    @wp.post_blog("blog", @normal_user, "my title", "my content", "tag1,tag2,tag3");
+  end
+
+  it 'should create the right xml for blog posting (public)' do
+    Net::HTTP.should_receive(:new).exactly(3).times.and_return(@http_mock)
+    @http_mock.should_receive(:start).exactly(3).times.and_yield(@http_mock)
+    Net::HTTP::Post.should_receive(:new).exactly(3).times.and_return(@http_post_mock_1, @http_post_mock_2, @http_post_mock_3)
+    @http_post_mock_1.should_receive(:body=).once
+    @http_post_mock_2.should_receive(:body=).once.with(
+%!<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+ <methodName>extapi.callWpMethod</methodName>
+ <params>
+  <param>
+   <value>
+    <string>login</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>password</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>get_option</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <array>
+     <data>
+<value>
+ <string>cc_post_private_js</string>
+</value>
+     </data>
+    </array>
+   </value>
+  </param>
+ </params>
+</methodCall>
+!)
+    @http_post_mock_3.should_receive(:body=).once.with(
 %!<?xml version="1.0" encoding="UTF-8"?>
 <methodCall>
  <methodName>extapi.callWpMethod</methodName>
@@ -116,7 +261,7 @@ describe Wordpress do
  </params>
 </methodCall>
 !)
-    @http_mock.should_receive(:request).twice.and_return(@user_id_response, @content_post_response)
+    @http_mock.should_receive(:request).exactly(3).times.and_return(@user_id_response, @blog_public_response, @content_post_response)
 
     @wp.post_blog("blog", @normal_user, "my title", "my content", "tag1,tag2,tag3");
   end
