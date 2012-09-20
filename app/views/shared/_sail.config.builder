@@ -39,7 +39,8 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
     xml.void("property" => "cookieProperties") {
       xml.object("class" => "java.util.Properties") {
         xml.void("method" => "setProperty") {
-          xml.string("*.concord.org")
+          # this seems to even work for localhost...
+          xml.string(request.host.split(".")[1..-1].insert(0,"*").join("."))
           xml.string("#{Rails.application.config.session_options[:key]}=#{session_options[:id]}; path=#{session_options[:path]}")
         }
       }
