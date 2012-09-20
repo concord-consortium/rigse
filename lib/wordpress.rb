@@ -29,9 +29,10 @@ class Wordpress
 
   def post_blog(blog, user, post_title, post_content, post_tags = "")
     user_id = _get_user_id(user.login)
+    is_private = _is_class_blog_private?(blog)
 
     # render the content template
-    content = _create_blog_post_xml(post_title, post_content, user_id, post_tags)
+    content = _create_blog_post_xml(post_title, post_content, user_id, post_tags, is_private)
 
     # URI.parse("#{overlay_root}/#{runnable_id}")
     result = _post(content, blog)
@@ -161,6 +162,19 @@ class Wordpress
     end
   end
 
+  def _is_class_blog_private?(blog)
+    xml = _create_xml("get_option", true, ["cc_post_private_js"])
+    result = _post(xml, blog)
+    if result.body =~ /<string>(.*?)<\/string>/
+      setting = $1
+      if setting =~ /true/
+        return true
+      end
+    end
+    # raise "Couldn't find blog's private setting"
+    return false
+  end
+
   def _create_remove_user_from_blog_xml(user, clazz)
     uri = URI.parse(@url)
     domain = uri.host
@@ -183,11 +197,11 @@ class Wordpress
     return _create_xml("add_user_to_blog", true, [blog_id, user_id, role])
   end
 
-  def _create_blog_post_xml(post_title, post_content, user_id, post_tags)
+  def _create_blog_post_xml(post_title, post_content, user_id, post_tags, is_private = false)
     data = {
       "post_title" => post_title,
       "post_content" => post_content,
-      "post_status" => "publish",
+      "post_status" => (is_private ? "private" : "publish"),
       "post_author" => user_id
     }
     data["tags_input"] = post_tags if !post_tags.nil? && post_tags.length > 0
