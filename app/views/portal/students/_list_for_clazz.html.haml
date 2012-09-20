@@ -11,7 +11,9 @@
         = link_to "Print", class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
     - if portal_clazz.changeable?(current_user)
       %br
-      = student_add_dropdown(portal_clazz)
+      / take out adding existing students, in the master branch this is done in the student roster
+      / and is conditional on wether the default class is enabled.
+      To add a student that already has an account, ask the student to enter the Class Word above
       %br
       = link_to "Register and add a new student", new_portal_student_path(:clazz_id => portal_clazz.id), :title => "add a student to #{portal_clazz.name}"
 
