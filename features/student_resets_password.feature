@@ -14,7 +14,7 @@ Feature: Student resets password
       | student | student  |
     And the student "student" has security questions set
     And I am on the forgot password page
-    When I fill in "login" with "student"
+    When I fill in "login" with "student" within content box in change password page
     And I press "Submit"
     Then I should see "Security Questions"
     When I fill in "security_questions[question0][answer]" with "red"
