@@ -12,7 +12,7 @@ Feature: Teacher can search and filter instructional materials
     And the investigation "Digestive System" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
     And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
     And I login with username: teacher password: teacher
-    And I am on the search instructional materials page"
+    And I am on the search instructional materials page
     And the project settings enables use of Grade Span Expectation
     
     
@@ -71,11 +71,25 @@ Feature: Teacher can search and filter instructional materials
     And I should wait 2 seconds
     Then I should not see "A Weather Underground"
     And I should not see "A heat spontaneously"
+    When I uncheck "No Sensors Required"
+    And I should wait 2 seconds
     And I follow "none"
     And I should wait 2 seconds
-    And I should not see "A Weather Underground"
-    And I should not see "A heat spontaneously"
+    And I should see "A Weather Underground"
+    And I should see "A heat spontaneously"
     
+  @javascript
+  Scenario: I log out and log back in again, and my sensor choice is remembered
+    When I login with username: teacher password: teacher
+    And I am on the search instructional materials page
+    And I check "Temperature"
+    And I should wait 2 seconds
+    And I should see "A Weather Underground"
+    Then I log out
+    And I login with username: teacher password: teacher
+    And I am on the search instructional materials page
+    Then the "Temperature" checkbox should be checked
+
   Scenario: The project settings for Grade Span Expection is restored
     And the project setting for Grade Span Expectation is restored
     

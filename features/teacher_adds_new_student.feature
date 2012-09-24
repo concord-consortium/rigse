@@ -70,5 +70,12 @@ Feature: Teacher adds a new student
     And I should see "You have successfully registered John Albert with the username jalbert." within the popup
     And I press "Add Another" within the popup
     Then I should see "First Name:"
-    
-    
+
+  @javascript
+  Scenario: With the default class enabled, teachers cannot directly add existing students
+    Given the option to allow default classes is enabled
+    When the student "student" belongs to class "My Class 2"
+    When I login with username: teacher password: teacher
+    And I am on "Student Roster" page for "My Class"
+    Then I should see "If a student already has an account, ask the student to enter the Class Word above"
+    And I should not see "Search for registered student"

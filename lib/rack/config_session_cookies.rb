@@ -7,6 +7,7 @@ module Rack
     SEMI_COLON = ';'
     CONFIG_REGEX = /.*\.config$/
     JNLP_REGEX = /.*\.jnlp$/
+    DYN_OTML_REGEX = /.*\.dynamic_otml$/
     
     def initialize(app)
       @app = app
@@ -25,7 +26,7 @@ module Rack
     #   Or create an HTTP_COOKIE header with the contents of the QUERY_STRING header
     def call(env)
       path_info = env[PATH_INFO]
-      if path_info[CONFIG_REGEX] || path_info[JNLP_REGEX]
+      if path_info[CONFIG_REGEX] || path_info[JNLP_REGEX] || path_info[DYN_OTML_REGEX]
         if (query_string = env[QUERY_STRING]) && session_param = query_string[/#{session_key}=[^&]*/]
           if (cookie = env[HTTP_COOKIE]).blank?
             env[HTTP_COOKIE] = session_param
