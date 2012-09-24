@@ -169,7 +169,6 @@ body#tinymce {
 #lead {
   border-bottom: 1px solid #a1d2d1;
   clear: both;
-  float: left;
   line-height: 1.833;
   margin-bottom: 1.833em;
   &.project-header {
@@ -1454,3 +1453,45 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 }
 
 #div_teacher_list td {width:auto !important;white-space:nowrap;}
+
+.header-login-box{
+  padding-bottom: 50px;
+  margin-top: -109px;
+  padding-right: 9px;
+  
+  form{
+    padding:0px;
+  }
+  
+  .login-links{
+    float: right;
+    line-height: 1.25em;
+    padding-left: 10px;
+    
+    input[type="submit"]{
+      margin-top: 6px;
+    }
+  }
+  
+  table{
+    float: right;
+    margin: 2px 0px;
+    
+    tr.first-row
+    {
+      td
+      {
+        padding-bottom: 4px;
+      }
+    }
+    
+    tr
+    {
+      td
+      {
+        padding-left: 4px;
+      }
+    }
+  }
+
+}

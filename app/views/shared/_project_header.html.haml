@@ -17,10 +17,31 @@
 #lead.project-header
   %h1{:class => theme_name}
     %a{ :href => "/" }= "#{APP_CONFIG[:site_name]}"
-
+- if current_user.anonymous?
+  .header-login-box
+    %div
+      = form_tag session_path, :id=>"header-project-signin" do
+        .login-links
+          =link_to 'Forgot your user name or password?', forgot_password_path
+          %br
+          =link_to 'Sign up for an account', pick_signup_path
+          %br
+          %input{:type=>"submit", :value=>"GO"}
+        %table{:cellpadding=>"0", :cellspacing=>"0", :border=>"0"}
+          %tbody
+            %tr.first-row
+              %td
+                %label{:for=>"login_header"}Username
+              %td
+                %input{:type=>"text", :id=>"login_header", :value=> @login, :name=>"login"}
+            %tr
+              %td
+                %label{:for=>"password_header"}Password
+              %td
+                %input{:type=>"password", :id=>"password_header", :class=>"text", :name=>"password"}
+        .clear_both
 #nav_top
   %span.hidden.doNotPrint
     Navigation:
   %ul.menu_h
     = render :partial => 'shared/main_nav_trail'
-
