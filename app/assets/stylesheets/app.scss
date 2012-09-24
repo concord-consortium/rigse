@@ -1457,7 +1457,7 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 .header-login-box{
   padding-bottom: 50px;
   margin-top: -109px;
-  padding-right: 9px;
+  padding-right: 5px;
   
   form{
     padding:0px;
@@ -1467,9 +1467,11 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
     float: right;
     line-height: 1.25em;
     padding-left: 10px;
+    margin-top: -2px;
     
     input[type="submit"]{
       margin-top: 6px;
+      margin-left: 1px;
     }
   }
   
