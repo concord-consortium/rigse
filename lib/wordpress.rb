@@ -24,6 +24,10 @@ class Wordpress
     @rpc_admin = project.rpc_admin_login
     @rpc_email = project.rpc_admin_email
     @rpc_password = project.rpc_admin_password
+    @admin_accounts = []
+    if project.admin_accounts && !project.admin_accounts.empty?
+      @admin_accounts = project.admin_accounts.split(/\s*,\s*/)
+    end
     raise "Can't talk to wordpress: No WP settings" if !has_valid_wp_settings?
   end
 
@@ -50,11 +54,18 @@ class Wordpress
     elsif result.body  =~ /fault/ || !(result.body  =~ /<int>([0-9]+?)<\/int>/)
       raise "Error creating class blog"
     else
-      # create the default custom pages
       blog_id = $1
+
+      # create the default custom pages
       create_custom_page(class_word, TITLES[:latest_posts],    SHORTCODES[:latest_posts])
       create_custom_page(class_word, TITLES[:latest_comments], SHORTCODES[:latest_comments])
       create_custom_page(class_word, TITLES[:top_rated],       SHORTCODES[:top_rated])
+
+      # add additional admins to the class blog
+      @admin_accounts.each do |username|
+        add_user_to_blog(username, class_word, "administrator")
+      end
+
       return blog_id
     end
   end
@@ -99,7 +110,11 @@ class Wordpress
   end
 
   def add_user_to_clazz(user, clazz, role = "author")
-    content = _create_add_user_to_blog_xml(user, clazz, role)
+    return add_user_to_blog(user.login, clazz.class_word, role)
+  end
+
+  def add_user_to_blog(username, classname, role = "author")
+    content = _create_add_user_to_blog_xml(username, classname, role)
     result = _post(content)
     return result
   end
@@ -186,13 +201,13 @@ class Wordpress
     return _create_xml("remove_user_from_blog", true, [user_id, blog_id])
   end
 
-  def _create_add_user_to_blog_xml(user, clazz, role)
+  def _create_add_user_to_blog_xml(user_login, class_word, role)
     uri = URI.parse(@url)
     domain = uri.host
-    path = uri.path + clazz.class_word
+    path = uri.path + class_word
 
     blog_id = _get_blog_id(domain, path)
-    user_id = _get_user_id(user.login)
+    user_id = _get_user_id(user_login)
 
     return _create_xml("add_user_to_blog", true, [blog_id, user_id, role])
   end

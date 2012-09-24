@@ -12,7 +12,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120830195146) do
+ActiveRecord::Schema.define(:version => 20120924164106) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20120830195146) do
     t.text     "rpc_admin_password"
     t.text     "word_press_url"
     t.boolean  "active"
+    t.string   "admin_accounts"
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|
