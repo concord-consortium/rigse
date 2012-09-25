@@ -15,7 +15,7 @@ describe RunnablesHelper do
     it "should render a run button for a specified component" do
       helper.run_button_for(@resource_page).should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
                                                                 "run_link rollover",
-                                                                "/images/run.png")
+                                                                asset_path("run.png"))
     end
   end
 
@@ -23,7 +23,7 @@ describe RunnablesHelper do
     it "should render a preview button for a specified component" do
       helper.preview_button_for(@resource_page).should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
                                                                     "run_link rollover",
-                                                                    "/images/preview.png")
+                                                                    asset_path("preview.png"))
     end
   end
 
@@ -31,7 +31,7 @@ describe RunnablesHelper do
     it "should render a preview button in techer mode for a given component" do
       helper.teacher_preview_button_for(@resource_page).should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
                                                                              "run_link rollover",
-                                                                             "/images/teacher_preview.png")
+                                                                             asset_path("teacher_preview.png"))
     end
   end
 
@@ -39,7 +39,7 @@ describe RunnablesHelper do
     it "should render a preview link for a given component" do
       helper.preview_link_for(@resource_page).should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
                                                                   "run_link rollover",
-                                                                  "/images/preview.png",
+                                                                  asset_path("preview.png"),
                                                                   "preview")
     end
 
@@ -50,7 +50,7 @@ describe RunnablesHelper do
                               {:link_text => link_text}).
                               should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
                                                   "run_link rollover",
-                                                  "/images/preview.png",
+                                                  asset_path("preview.png"),
                                                   link_text)
     end
   end
@@ -59,7 +59,7 @@ describe RunnablesHelper do
     it "should render a run link for a given component" do
       helper.run_link_for(@resource_page).should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
                                                               "run_link rollover",
-                                                              "/images/run.png",
+                                                              asset_path("run.png"),
                                                               "run")
     end
 
@@ -70,7 +70,7 @@ describe RunnablesHelper do
                           {:link_text => "run Biscuits"}).
                           should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
                                                "run_link rollover",
-                                               "/images/run.png",
+                                               asset_path("run.png"),
                                                link_text)
     end
 
@@ -85,21 +85,21 @@ describe RunnablesHelper do
       ext_act = stub_model(ExternalActivity, :name => "Fetching Wood")
       helper.run_link_for(ext_act).should be_link_like("http://test.host/external_activities/#{ext_act.id}.run_external_html",
                                                        "run_link rollover",
-                                                       "/images/run.png")
+                                                       asset_path("run.png"))
     end
 
     it "should render a link for a Page as a JNLP launchable" do
       page = stub_model(Page, :name => "Fun With Hippos")
       helper.run_link_for(page).should be_link_like("http://test.host/pages/#{page.id}.jnlp",
                                                     "run_link rollover",
-                                                    "/images/run.png")
+                                                    asset_path("run.png"))
     end
 
     it "should render a link for an Investigation as a JNLP launchable" do
       investigation = stub_model(Investigation, :name => "Searching for Stars")
       helper.run_link_for(investigation).should be_link_like("http://test.host/investigations/#{investigation.id}.jnlp",
                                                              "run_link rollover",
-                                                             "/images/run.png")
+                                                             asset_path("run.png"))
     end
 
     it "should render a link for a Investigation Offering" do
@@ -111,21 +111,21 @@ describe RunnablesHelper do
       offering.stub!(:external_activity?).and_return false
       helper.run_link_for(offering).should be_link_like("http://test.host/users/#{@anonymous_user.id}/portal/offerings/#{offering.id}.jnlp",
                                                              "run_link rollover",
-                                                             "/images/run.png")
+                                                             asset_path("run.png"))
     end
 
     it "should render a link for an Activity as a JNLP launchable" do
       activity = stub_model(Activity, :name => "Fun in the Garden")
       helper.run_link_for(activity).should be_link_like("http://test.host/activities/#{activity.id}.jnlp",
                                                         "run_link rollover",
-                                                        "/images/run.png")
+                                                        asset_path("run.png"))
     end
 
     it "should render a link for a Section as a JNLP launchable" do
       section = stub_model(Section, :name => "Learning About Taxidermy")
       helper.run_link_for(section).should be_link_like("http://test.host/sections/#{section.id}.jnlp",
                                                        "run_link rollover",
-                                                       "/images/run.png")
+                                                       asset_path("run.png"))
     end
   end
 end
