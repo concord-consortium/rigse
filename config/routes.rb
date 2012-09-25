@@ -151,6 +151,7 @@ constraints :id => /\d+/ do
         get :multiple_choice_report
         get :report
         get :bundle_report
+        get :activity_report
       end
     end
 
@@ -175,6 +176,7 @@ constraints :id => /\d+/ do
         post :answers
         post :offering_collapsed_status
         post :get_recent_student_report
+        get :activity_report
       end
     end
 

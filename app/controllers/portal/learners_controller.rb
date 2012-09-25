@@ -5,8 +5,8 @@ class Portal::LearnersController < ApplicationController
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
 
-  before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report]
-  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
+  before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report,:activity_report]
+  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report,:activity_report]
   before_filter :handle_jnlp_session, :only => [:show]
   before_filter :authorize_show, :only => [:show]
   
@@ -74,6 +74,26 @@ class Portal::LearnersController < ApplicationController
     
     respond_to do |format|
       format.html # report.html.haml
+    end
+  end
+  
+  def activity_report
+    portal_learner = Portal::Learner.find(params[:id])
+    @offering = portal_learner.offering
+    @report_embeddable_filter = @offering.report_embeddable_filter
+    @report_embeddable_filter.ignore = true
+    if params[:activity_id]
+      activity = ::Activity.find(params[:activity_id].to_i)
+      unless activity.nil?
+        @report_embeddable_filter.ignore = false
+        @report_embeddable_filter.embeddables = activity.page_elements.map{|pe|pe.embeddable}
+      end
+    end
+    @report_embeddable_filter.save
+    redirect_url = report_portal_learner_url(portal_learner);
+    respond_to do |format|
+      format.html { redirect_to redirect_url }
+      format.xml  { head :ok }
     end
   end
   

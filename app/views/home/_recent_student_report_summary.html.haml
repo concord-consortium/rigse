@@ -27,8 +27,10 @@
             - percentage = student_status.activity_complete_percent(activity)
             %td.student_progress
               %div.progressbar_container
-                .progressbar
-                  - if percentage == 100
-                    .progress.completed{:style=>"width:#{percentage}%"}
-                  - else
-                    .progress{:style=>"width:#{percentage}%"}
+                - learner = learners.find_by_student_id(student_status.student.id)
+                %a{:href=>activity_report_portal_learner_url(learner,:activity_id => activity.id),:target=>"_blank"}
+                  .progressbar
+                    - if percentage == 100
+                      .progress.completed{:style=>"width:#{percentage}%"}
+                    - else
+                      .progress{:style=>"width:#{percentage}%"}
