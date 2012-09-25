@@ -23,5 +23,17 @@ RailsPortal::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+
+  #### Asset Pipeline:  #####
+  
+  # Minify/uglify/compress assets from the pipeline
+  config.assets.compress = false
+
+  # Production servers may compile missing assets. (missed by precompile)
+  # Requires asset helper gems in production bundle
+  config.assets.compile = true
+  
+  # Generate digests for assets' URLs.
+  config.assets.digest = false
 end
 
