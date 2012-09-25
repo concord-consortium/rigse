@@ -7,9 +7,9 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/lightweight-activities-plugin.git
-  revision: 24bd620cb5872fcaecc62bace6a48940d2537202
+  revision: 527ff72ff354ce96a0f352db33e59b35debc1550
   specs:
-    lightweight_activities (0.0.9)
+    lightweight_activities (0.0.10)
       haml (~> 3.1.4)
       rails (~> 3.2.6)
 
