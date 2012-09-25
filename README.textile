@@ -106,15 +106,16 @@ Save a copy of the development database to make subsequent clean starts much qui
 
 bc. bin/rake db:dump
 
-This project uses an asset manager for JS & CSS files. Run the asset packager if any of the following are true:
-* Files included within config/asset_packages.yml have been modified.
-* Files within config/asset_packages.yml have been removed or new files have been added.
-* JS and/or CSS does not seem to be updated in production mode but is updated and working in development mode.
+This project uses the rails "asset pipeline":http://guides.rubyonrails.org/asset_pipeline.html 
+to manage static assets, and JS & CSS files.  There are rake commands for compiling these assets,
+but they should run automatically when on 'cap deploy' because capistrano knows about the asset pipeline.
 
-This task should run automatically when using 'cap deploy'.
-You may also run the asset packager task manually.
+You may also run the asset packing task manually however:
 
-bc. bin/rake asset:packager:build_all
+<pre><code>
+   rake assets:clean       # Remove compiled assets
+   rake assets:precompile  # Compile all the assets named in config.assets.precompile
+</pre></code>
 
 This will build all the assets within the project.
 
