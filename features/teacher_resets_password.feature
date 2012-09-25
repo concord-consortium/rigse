@@ -32,24 +32,25 @@ Feature: Teacher resets password
     When I fill in the following:
       | login    | login    |
       | password | password |
-    And I press "Login"
+    And I press "GO"
     Then I should see "Logged in successfully"
     Given I am an anonymous user
-    And I follow "Forgot Password"
-    When I fill in "login" with "login"
-    And I press "Submit"
+    And I follow "Forgot your user name or password?"
+    When I fill in "login" with "login" within content box in change password page
+    And I press "Submit" within content box in change password page
     Then I should see "A link to change your password has been sent to example@example.com."
     And "example@example.com" should receive an email
     And I open the email with subject "You have requested to change your password"
     When I click the first link in the email
     Then I should see "Please enter a new password and confirm it."
-    And I fill in "password" with "password2"
-    And I fill in "confirm password" with "password2"
-    And I press "Submit"
+    And I fill in "password" with "password2" within content box in change password page
+    And I fill in "confirm password" with "password2" within content box in change password page
+    And I press "Submit" within content box in change password page
     Then I should see "Password for login was successfully updated."
     When I fill in the following:
       | login    | login    |
       | password | password2 |
-    And I press "Login"
+    And I press "GO"
     Then I should see "Logged in successfully"
+    
     

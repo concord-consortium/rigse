@@ -31,7 +31,7 @@ Feature: An author registers to use the portal
     When I fill in the following:
       | login    | login    |
       | password | password |
-    And I press "Login"
+    And I press "GO"
     Then I should see "Logged in successfully"
     And I should not see "Sorry, there was an error creating your account"
 
