@@ -9,6 +9,9 @@ Feature: Teacher manages instructional materials of a class
     And the following teachers exist:
       | login    | password | first_name   | last_name |
       | teacher  | teacher  | John         | Nash      |
+    And the following users exist:
+      | login  | password | roles          |
+      | author | author   | member, author |
     And the teachers "teacher" are in a school named "Harvard School"
     
     And the following semesters exist:
@@ -31,17 +34,21 @@ Feature: Teacher manages instructional materials of a class
       | c      | a,b,c,d | a              |
       | d      | a,b,c,d | a              |
       | e      | a,b,c,d | a              |
+      | f      | a,b,c,d | a              |
     And there is an image question with the prompt "image_q"
     And the following investigations with multiple choices exist:
       | investigation        | activity       | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
       | Radioactivity        | Radio activity | section a | page 1 | a                | image_q         | teacher   | false                 |
       | Plant reproduction   | Plant activity | section b | page 2 | b                | image_q         | teacher   | false                 |
       | Aerodynamics         | Air activity   | section c | page 3 | c                | image_q         | teacher   | false                 |
-      | Electricity          | Electrons      | section c | page 3 | c                | image_q         | teacher   | false                 |
-      | Aerodynamics         | Aeroplane      | section d | page 4 | d                | image_q         | teacher   | true                  |
+      | Electricity          | Electrons      | section d | page 4 | d                | image_q         | teacher   | false                 |
+      | Aerodynamics         | Aeroplane      | section e | page 5 | e                | image_q         | teacher   | true                  |
+    And the following activities for the above investigations exist:
+      | name                 | investigation | user    | publication_status | description                       |
+      | Atmosphere           | Aerodynamics  | author  | published          | Atmosphere is a great material    |
     And the following activities with multiple choices exist:
       | activity | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
-      | Algebra  | section a | page 1 | a                | image_q         | teacher   | false                 |
+      | Algebra  | section a | page 6 | f                | image_q         | teacher   | false                 |
     And the following assignments exist:
       | type          | name                 | class       |
       | investigation | Aerodynamics         | My Class    |
@@ -49,8 +56,8 @@ Feature: Teacher manages instructional materials of a class
       | investigation | Radioactivity        | My Class    |
       | investigation | Electricity          | Physics     |
       | investigation | Plant reproduction   | Physics     |
-      | investigation | Aerodynamics         | Physics     |
       | activity      | Algebra              | Physics     |
+      | investigation | Aerodynamics         | Physics     |
     And the following offerings exist in the classes:
       | name                       | class       |
       | Lumped circuit abstraction | Mathematics |
@@ -65,18 +72,18 @@ Feature: Teacher manages instructional materials of a class
     And the student "gaurav" belongs to class "My Class"
     And the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | dave      | My Class      | Radioactivity       | b               | a      |
+      | dave      | My Class      | Radioactivity       | a               | a      |
       | dave      | My Class      | Radioactivity       | image_q         | Y      |
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | gaurav    | My Class      | Algebra             | a               | y      |
+      | gaurav    | My Class      | Algebra             | f               | y      |
     And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
     
     
   Scenario: Teacher can follow link to Instructional Materials on their Class Page
     Then I should be on Instructional Materials page for "My Class"
-        
+    
   Scenario: Anonymous user can not view instructional materials of a class
     When I log out
     And I go to Instructional Materials page for "My Class"
@@ -98,6 +105,7 @@ Feature: Teacher manages instructional materials of a class
     
   @javascript
   Scenario: Teacher should see activity name in tab
+    And I should see "sfdfghhgfhgf"
     Then I should see "Algebra" within the tab block for Instructional Materials
     
   @javascript
@@ -115,11 +123,11 @@ Feature: Teacher manages instructional materials of a class
     When I click the tab of Instructional Materials with text "Radioactivity"
     And I follow "Run Report"
     Then A report window opens of offering "Radioactivity"
-        
+    
   Scenario: Teacher should be able to see all students assigned to the class
     Then I should see "Doe, Dave"
     And I should see "Smith, Chuck"
-
+    
   @javascript
   Scenario: Teacher should be able to see student attempt progress bars
     When the following student answers:
@@ -129,7 +137,7 @@ Feature: Teacher manages instructional materials of a class
     And I am on Instructional Materials page for "My Class"
     And I click the tab of Instructional Materials with text "Plant reproduction"
     Then I should see progress bars for the students
-        
+    
   Scenario: Teacher should see a message if no materials are assigned to this class.
     When I go to Instructional Materials page for "Chemistry"
     Then I should see "No materials assigned to this class."
@@ -137,7 +145,7 @@ Feature: Teacher manages instructional materials of a class
   Scenario: Teacher should not get an error if no activities are present
     When I go to Instructional Materials page for "Mathematics"
     Then I should see "Investigation: Lumped circuit abstraction"
-
+    
   Scenario: Teacher should see a message if no students are present
     When I go to Instructional Materials page for "Physics"
     Then I should see "No students have registered for this class yet"
@@ -153,15 +161,52 @@ Feature: Teacher manages instructional materials of a class
   Scenario: Teacher should be able to run the activity
     When I follow "Run Activity" for the activity "Air activity"
     Then I receive a file for download with a filename like "_activity_"
-  
+    
   @javascript
   Scenario: Teacher should not see teacher only activity in the activity table
     When I go to Instructional Materials page for "My Class"
     And I click the tab of Instructional Materials with text "Aerodynamics"
     Then I should not see "Aeroplane" within the activity table
-  
+    
   @javascript
   Scenario: Teacher should see teacher only activity
     When I go to Instructional Materials page for "My Class"
     And I click the tab of Instructional Materials with text "Aerodynamics"
     Then I should see "Aeroplane (teacher only)"
+    
+  @javascript
+  Scenario: Teacher should see report for activity
+    When the following student answers:
+      | student   | class          | investigation       | question_prompt | answer |
+      | dave      | My Class       | Aerodynamics        | c               | y      |
+      | chuck     | My Class       | Aerodynamics        | c               | Y      |
+    And I go to Instructional Materials page for "My Class"
+    And I follow "Air activity"
+    Then A report window opens of offering "Aerodynamics"
+    Then Report page should have student name "Dave Doe" in answered section for the question "c"
+    And Report page should have student name "Chuck Smith" in answered section for the question "c"
+    
+  @javascript
+  Scenario: Teacher should see report for student
+    When the following student answers:
+      | student   | class          | investigation       | question_prompt | answer |
+      | dave      | My Class       | Aerodynamics        | c               | y      |
+      | chuck     | My Class       | Aerodynamics        | image_q         | Y      |
+      | chuck     | My Class       | Aerodynamics        | c               | Y      |
+    And I go to Instructional Materials page for "My Class"
+    And I follow "Doe, Dave"
+    Then Report page should have content "Dave Doe"
+    And Report page should not have content "Chuck Smith"
+    
+  @javascript
+  Scenario: Teacher should see report for student and corresponding activity
+    When the following student answers:
+      | student   | class         | investigation       | question_prompt | answer |
+      | dave      | My Class      | Aerodynamics        | c               | y      |
+    And I go to Instructional Materials page for "My Class"
+    And I click progress bar on the instructional materials page for the student "Doe, Dave" and activity "Air activity"
+    Then Report page should have content "Air activity"
+    And Report page should  have content "Dave Doe"
+    And Report page should not have content "Atmosphere"
+    
+    
