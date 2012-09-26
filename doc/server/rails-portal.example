@@ -17,6 +17,6 @@
     sharedscripts
     # Run this script after rotation is completed
     postrotate
-        /usr/sbin/service apache2 restart
+        touch /web/portal/current/tmp/restart.txt
     endscript
 }
