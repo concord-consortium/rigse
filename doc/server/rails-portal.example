@@ -1,7 +1,7 @@
 # logrotate configuration file for Rails logs.
 # To use, copy to /etc/logrotate.d/.
 /web/portal/shared/log/*.log {
-    # Rotate at 500 MB
+    # Rotate at 50 MB
     size 50M
     # No error messages if the logfile is missing
     missingok
