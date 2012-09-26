@@ -23,6 +23,7 @@
 = require 'chosen.proto'
 = require 'pt_event_simulate'
 = require 'prototype-ui/prototype-ui'
+= require 'site_notices'
 = require tinymce
 = require_tree './in_place_rich_editor'
 */
