@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe OtmlHelper do
+  include ThemesForRails::UrlHelpers
+  include ThemesForRails::ActionView
   include OtmlHelper
 
 #   def otml_css_path(base="stylesheets",name="otml")
