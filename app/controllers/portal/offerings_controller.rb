@@ -164,7 +164,6 @@ class Portal::OfferingsController < ApplicationController
 
   def report
     @offering = Portal::Offering.find(params[:id])
-    puts "Embeddableeeeeee => #{session[:activity_report_embeddable_filter]}"
     activity_report_embeddable_filter = session[:activity_report_embeddable_filter]
     unless activity_report_embeddable_filter.nil?
       @offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
