@@ -49,3 +49,11 @@ Feature: User logs in using header login box to use the portal
     Then I should see "Forgot your user name or password?" within header sign in box
     
     
+  Scenario: Anonymous user should land to the pick signup page
+    When I am an anonymous user
+    And I am on the home page
+    And I follow "Sign up for an account"
+    Then I should be on "the pick signup page"
+    
+    
+  
