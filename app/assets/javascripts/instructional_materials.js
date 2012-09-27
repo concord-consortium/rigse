@@ -154,3 +154,15 @@ function setRecentActivityTableHeaders(iDefaultWidth,offering_id)
         oTitle.setStyle({'display':''});
     });
 }
+
+
+function report_Link_Popup(description_text)
+{
+    oPopUpWindow = new UI.Window({ theme: "lightbox",
+        shadow: true,
+        width:  500,
+        height: 180}).setContent("<div id='windowcontent' style='padding:10px;padding-left:20px'>" + description_text + "</div>").show(true).center();
+    oPopUpWindow.setHeader("Message");
+    oPopUpWindow.activate();
+}
+
