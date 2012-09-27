@@ -1,0 +1,26 @@
+#investigations_bookmark
+.materials_container
+  .material_list_header
+    Investigations
+  %p.border_top= page_entries_info materials, :model=>"Investigation"
+  = will_paginate materials, {:param_name => 'investigation_page', :params => {:controller => 'search', :action => 'index', :search_term => @search_term, :activity_page => @activity_page,:type=>"inv"}}
+  
+  %table.result_material{:cellpadding=>0,:cellspacing=>0}
+    %tr
+      - counter = 0
+      -if false
+        %td.material_type
+          .material_thumbnail
+          .material_type
+            = type
+      %td.material_list
+        - materials.each do |investigation|
+          - if investigation==materials.last
+            %div.material_list_item{:id=>"search_investigation_#{investigation.id}",:style=>"border:none"}
+              = render :partial => 'result_item', :locals=>{:material=>investigation}
+          - else
+            %div.material_list_item{:id=>"search_investigation_#{investigation.id}"}
+              = render :partial => 'result_item', :locals=>{:material=>investigation}
+  %br
+  = will_paginate materials, {:param_name => 'investigation_page', :params => {:controller => 'search', :action => 'index', :search_term => @search_term, :activity_page => @activity_page,:type=>"inv"}}
+  

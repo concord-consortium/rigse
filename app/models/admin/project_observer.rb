@@ -1,6 +1,8 @@
 class Admin::ProjectObserver < ActiveRecord::Observer
   def before_update(project)
     if project.custom_css_changed?
+      # this file is created by caching a specific route 
+      # match '/stylesheets/project.css' => 'home#project_css', :as => :project_css
       css_path = "#{ActionController::Base.page_cache_directory}/stylesheets/project.css"
       File.delete(css_path) if File.exists?(css_path)
     end

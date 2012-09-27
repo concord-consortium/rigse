@@ -149,7 +149,7 @@ class Portal::ClazzesController < ApplicationController
     respond_to do |format|
       if okToCreate && @portal_clazz.save
         flash[:notice] = 'Class was successfully created.'
-        format.html { redirect_to(@portal_clazz) }
+        format.html { redirect_to(url_for([:materials, @portal_clazz])) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
       else
         format.html { render :action => "new" }
@@ -218,7 +218,7 @@ class Portal::ClazzesController < ApplicationController
 
         if okToUpdate && @portal_clazz.update_attributes(object_params)
           flash[:notice] = 'Class was successfully updated.'
-          format.html { redirect_to(@portal_clazz) }
+          format.html { redirect_to(url_for([:materials, @portal_clazz])) }
           format.xml  { head :ok }
         else
           format.html { render :action => "edit" }
@@ -388,6 +388,9 @@ class Portal::ClazzesController < ApplicationController
         #page.visual_effect :highlight, 'teachers_listing'
         page.replace_html  'div_teacher_list',replace_html
         page.replace 'teacher_add_dropdown', teacher_add_dropdown(@portal_clazz)
+        if @teacher
+          page.replace_html  'flash',''
+        end
       end
     rescue
       render :update do |page|
@@ -446,7 +449,7 @@ class Portal::ClazzesController < ApplicationController
 
 # GET /portal_clazzes/1/roster
   def roster
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       redirect_to home_url
       return
     end
@@ -474,7 +477,7 @@ class Portal::ClazzesController < ApplicationController
   end
   
   def manage_classes
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       redirect_to home_url
       return
     end
@@ -527,9 +530,9 @@ class Portal::ClazzesController < ApplicationController
       :error_msg => nil
     }
     
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       response_value[:success] = false
-      response_value[:error_msg] = "Anonymous can't copy classes. Please log in and try again."
+      response_value[:error_msg] = "You need to be a teacher to copy classes. Please log in as a teacher and try again."
       render :json => response_value
       return
     end
@@ -575,7 +578,7 @@ class Portal::ClazzesController < ApplicationController
 
   
   def materials
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       redirect_to home_url
       return
     end
@@ -589,12 +592,14 @@ class Portal::ClazzesController < ApplicationController
   
   
   def sort_offerings
-    params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
+    if current_user.portal_teacher
+      params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
+    end
     render :nothing => true
   end
   
   def fullstatus
-    if current_user.anonymous?
+    unless current_user.portal_teacher
       redirect_to home_url
       return
     end

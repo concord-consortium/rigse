@@ -20,11 +20,13 @@ Feature: Teachers can drag-drop offerings to reposition them on the class summar
       | Lumped circuit abstraction |
       | static discipline          |
       | Non Linear Devices         |
-    And I login with username: teacher
     And the student "student" belongs to class "My Class"
+    And I login with username: teacher
     And I am on the class page for "My Class"
+    And I should see "Non Linear Devices"
     And I move the offering named "Non Linear Devices" to the top of the list on the class summary page
-    And I wait 1 second
+    And I should wait 5 seconds
+    And "Non Linear Devices" should appear before "static discipline"
     
   @javascript
   Scenario: Teacher should be able to see the changes on the class summary page

@@ -99,15 +99,31 @@ class Investigation < ActiveRecord::Base
 
   scope :domain, lambda { |domain_id|
     {
-      :conditions => ['ri_gse_knowledge_statements.domain_id = ?', domain_id]
+      :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
     }
   }
 
   scope :grade, lambda { |gs|
     gs = gs.size > 0 ? gs : "%"
     {
-      :conditions => ['ri_gse_grade_span_expectations.grade_span LIKE ?', gs ]
+      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","):gs ]
     }
+  }
+
+  scope :probe_type, {
+    :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
+    }
+    
+  scope :probe, lambda { |pt|
+    pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
+    {
+      :conditions => ['probe_probe_types.id in (?)', pt ]
+    }
+  }
+
+  scope :no_probe,{
+    :select => "investigations.id", 
+    :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
   }
 
   scope :like, lambda { |name|
@@ -115,6 +131,10 @@ class Investigation < ActiveRecord::Base
     {
      :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
     }
+  }
+
+  scope :activity_group, {
+    :group => "#{self.table_name}.id"
   }
 
   scope :ordered_by, lambda { |order| { :order => order } }
@@ -139,20 +159,68 @@ class Investigation < ActiveRecord::Base
     def search_list(options)
       grade_span = options[:grade_span] || ""
       sort_order = options[:sort_order] || "name ASC"
-      domain_id = options[:domain_id].to_i
+      domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
       name = options[:name]
+      probe_type = options[:probe_type] || []
+      
       if APP_CONFIG[:use_gse]
-        if domain_id > 0
-          if (options[:include_drafts])
-            investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+        if domain_id.length > 0
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              if probe_type.include?("0")
+                investigations = Investigation.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              else
+                investigations = Investigation.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              end
+            else
+              if probe_type.include?("0")
+                investigations = Investigation.published.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              else
+                investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i}).uniq
+              end
+            end
           else
-            investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+            if (options[:include_drafts])
+              investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            else
+              investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id.map{|i| i.to_i})
+            end
           end
         elsif (!grade_span.empty?)
-          if (options[:include_drafts])
-            investigations = Investigation.like(name).with_gse.grade(grade_span)
+          if probe_type.length > 0
+            if (options[:include_drafts])
+              if probe_type.include?("0")
+                investigations = Investigation.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe).with_gse.grade(grade_span).uniq
+              else
+                investigations = Investigation.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+              end
+            else
+              if probe_type.include?("0")
+                investigations = Investigation.published.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe).with_gse.grade(grade_span).uniq
+              else
+                investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type).with_gse.grade(grade_span).uniq
+              end
+            end
           else
-            investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+            if (options[:include_drafts])
+              investigations = Investigation.like(name).with_gse.grade(grade_span)
+            else
+              investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+            end
+          end
+        elsif probe_type.length > 0
+          if (options[:include_drafts])
+            if probe_type.include?("0")
+              investigations = Investigation.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe)
+            else
+              investigations = Investigation.like(name).activity_group.probe_type.probe(probe_type)
+            end
+          else
+            if probe_type.include?("0")
+              investigations = Investigation.published.like(name).activity_group.where('investigations.id not in (?)', Investigation.no_probe)
+            else
+              investigations = Investigation.published.like(name).activity_group.probe_type.probe(probe_type)
+            end
           end
         else
           if (options[:include_drafts])

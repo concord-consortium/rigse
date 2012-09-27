@@ -26,8 +26,8 @@
       %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
         %tr
           - activities.each_with_index do |activity, index|
-            - activity_name = (activity.name.nil?)? "Activity #{index}" : activity.name
-            - activity_name_tooltip = (activity.name.nil?)? "Activity #{index}" : activity.name
+            - activity_name = (activity.name.nil?)? "Activity #{index+1}" : activity.name
+            - activity_name_tooltip = (activity.name.nil?)? "Activity #{index+1}" : activity.name
             %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
               %div.progressbar_container 
                 = activity_name

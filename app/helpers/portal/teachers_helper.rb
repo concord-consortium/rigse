@@ -31,7 +31,7 @@ module Portal::TeachersHelper
           <td style="vertical-align:middle;padding-left:0px">#{select_tag('teacher_id',  select_opts ,:id => 'teacher_id_selector', :style => 'width: 358px;')}</td>
           <td style="vertical-align:middle">#{button_to_remote("Add", :url => {:controller => 'portal/clazzes', :action=>'add_teacher', :id => clazz}, :with => "'teacher_id='+$('teacher_id_selector').value")}</td>
           </tr></table>
-          <div class="item">(Note: Make sure new teacher is registered before trying to add them.)</div>
+          <div >(Note: Make sure new teacher is registered before trying to add them.)</div>
           <br>
         </span>
         

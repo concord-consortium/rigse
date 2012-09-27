@@ -1,3 +1,5 @@
+# TODO:  Consider adapting this to lean on the tinymce-rails gem
+# the gem ships with some nice rails helpers.
 module TinyMceHelper
 
   def mce_init_string

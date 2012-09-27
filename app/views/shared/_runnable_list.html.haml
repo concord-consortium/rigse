@@ -2,7 +2,6 @@
 - locals[:hide_drafts_checkbox] = (!APP_CONFIG[:allow_drafts_in_assignments])
 
 = render :partial => 'investigations/search_form', :locals => locals
-.tiny To add assignments to your class, drag the investigations below to your class assignments list above. If there are no investigations listed below, select and/or enter some search options in the form above.
 = observe_form 'investigation_search_form', :url => list_filter_investigation_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();", :update => {:success => 'offering_list'}
 #assignable_list
   = render_top_level_container_list_partial(locals)

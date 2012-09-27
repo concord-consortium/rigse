@@ -17,7 +17,7 @@
         %td.student_name{:title=>"#{student_name}"}
           %div.progressbar_container
             = student_name
-        %td.last_update_date{:title=>"#{report_learner.last_run.strftime('%m/%d/%Y')}"}
+        %td.last_update_date{:title=>"#{(report_learner.last_run.nil?) ? '' : report_learner.last_run.strftime('%m/%d/%Y')}"}
           %div.progressbar_container
-            = report_learner.last_run.strftime('%m/%d')
+            = (report_learner.last_run.nil?) ? '' : report_learner.last_run.strftime('%m/%d')
             

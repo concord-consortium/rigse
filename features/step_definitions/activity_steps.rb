@@ -35,3 +35,14 @@ Given /^the following activities with multiple choices exist:$/ do |activity_tab
     activity.sections << section
   end
 end
+
+When /^(?:|I )create activities "(.+)" before "(.+)" by date$/ do |activities_name1, activities_name2|
+  created_at = Date.today
+  ['activities_name1', 'activities_name2'].each do |activity|
+    act = Activity.find_or_create_by_name(activity)
+    created_at = created_at - 1
+    act.created_at = created_at
+    act.updated_at = created_at
+    act.save!
+  end
+end

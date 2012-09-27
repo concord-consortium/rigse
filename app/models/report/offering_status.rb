@@ -3,15 +3,17 @@ class Report::OfferingStatus
   attr_accessor :students
   attr_accessor :student_statuses
   attr_accessor :student_status_map
+  attr_accessor :requester
 
   # this has an offering
   # and it constructs the statuses for all the students 
-  def initialize(_offering, options = {})
+  def initialize(_offering, _requester=nil)
     self.offering = _offering
+    self.requester = _requester
     self.student_status_map = {}
     self.student_statuses = []
     learners = offering.learners.includes(:report_learner, :learner_activities)
-    
+
     # sort students by full name
     self.students = offering.clazz.students.includes(:user)
     self.students = self.students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
@@ -33,5 +35,31 @@ class Report::OfferingStatus
 
   def activity_complete_percent(student, activity)
     student_status_map[student].activity_complete_percent(activity)
+  end
+
+  def collapsed
+    return @collapsed if @collapsed
+
+    teacher_full_status = offering.teacher_full_status.find_by_teacher_id(requester.portal_teacher.id)
+    @collapsed = teacher_full_status ? teacher_full_status.offering_collapsed : true
+  end
+
+  def activities_display_style
+    collapsed ? "display:none" : ""
+  end
+
+  def offering_display_style
+    collapsed ? "" : "display:none"
+  end
+
+  def student_activities
+    runnable = offering.runnable
+    if runnable.is_a? ::Investigation
+      runnable.activities.student_only
+    elsif runnable.is_a? ::Activity
+      [runnable]
+    else
+      []
+    end
   end
 end

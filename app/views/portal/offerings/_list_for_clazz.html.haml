@@ -1,10 +1,6 @@
 - if portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
   .action_menu
     .action_menu_left
-      %p
-        %strong="Class Assignments:"
-        %br
-        To add assignments, drag items from the search area into the box below.
   %ul#clazz_offerings.drop_target.clazz_offerings_for_class_summary_page
     = render :partial => 'shared/offering_for_teacher', :collection => portal_clazz.offerings.sort{|a,b| a.position <=> b.position}, :as => :offering
     

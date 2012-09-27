@@ -44,11 +44,17 @@
           - when Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS']
             - clazz_url = [:fullstatus, clazz]
           - else
-            - clazz_url = [clazz]
+            - if current_user.portal_teacher
+              - clazz_url = [:materials, clazz]
+            - else
+              - clazz_url = [clazz]
           - clazz_url = url_for(clazz_url)
       - else
-        - clazz_url = [clazz]
-        - clazz_url = url_for(clazz_url)
+        - if current_user.portal_teacher
+          - clazz_url = [:materials, clazz]
+        - else
+          - clazz_url = [clazz]
+        - clazz_url = url_for(clazz_url) 
         
       - if (is_active)
         %li{:id=>dom_id_for(clazz,:nav_item)}
@@ -57,7 +63,7 @@
           -else 
             - link_text = clazz.name
           -if (selects.include? clazz)
-            = link_to link_text, clazz, :class=> 'selected'
+            = link_to link_text, 'javascript: void(0)', :class=> 'selected', :style=>'cursor:default'
             - if top_node.is_a? Portal::Teacher
               = render :partial => 'portal/clazzes/selected_class_submenu', :locals => {:portal_clazz => clazz, :submenu_notselected => true}
           -else

@@ -12,26 +12,35 @@ Feature: Class state should be saved
     And the classes "My Class" are in a school named "VJTI"
     And the classes "Physics" are in a school named "VJTI"
     And I login with username: teacher password: teacher 
-    And I am on "Student Roster" page for "My Class"
+  
+  
+  @javascript
+  Scenario: Teacher should land on instructional materials page
+    When I follow "Physics" within left panel for class navigation
+    Then I should be on the Instructional Materials page for "Physics"
+    And I follow "Physics" within left panel for class navigation
+    And  I should be on the Instructional Materials page for "Physics"
   
   
   @javascript
   Scenario: Teacher's state in the left pane should be maintained when navigating across classes
-    When I follow "Physics" within left panel for class navigation
-    Then I should see "Class Name : Physics"
-    And I should be on "Student Roster" page for "Physics" 
+    When I am on "Student Roster" page for "My Class"
+    And I follow "Physics" within left panel for class navigation
+    Then I should be on "Student Roster" page for "Physics" 
 
   @javascript
   Scenario: Teacher's state in the left pane should be maintained after visiting some other part of the application
-    When I go to the Manage Class Page 
+    When I am on "Student Roster" page for "My Class"
+    And I go to the Manage Class Page 
     And I follow "Physics" within left panel for class navigation
     Then I should see "Class Name : Physics"
     And I should be on "Student Roster" page for "Physics" 
   
   @javascript
   Scenario: Teacher's state in the left pane should be maintained across sessions
-    When I log out
+    When I am on "Student Roster" page for "My Class"
+    And I log out
     And I login with username: teacher password: teacher
     And I follow "Physics" within left panel for class navigation
     Then I should see "Class Name : Physics"
-    Then I should be on "Student Roster" page for "Physics" 
+    And I should be on "Student Roster" page for "Physics" 

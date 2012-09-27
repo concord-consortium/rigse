@@ -16,6 +16,7 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
+  
   gem "rails",                "~> 3.2"
   gem "arrayfields"
   gem "httpclient",           "~> 2.2"
@@ -23,7 +24,7 @@ source "http://rubygems.org"
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
   gem "haml",           :git => "git://github.com/concord-consortium/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
-  gem "sass",                 "~> 3.1.7"
+  
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
   gem "spreadsheet",          "~> 0.7.3"  #see http://spreadsheet.rubyforge.org/
@@ -36,7 +37,6 @@ source "http://rubygems.org"
 
   gem "grit",                 "~> 2.4"
   gem "open4",                "~> 1.0"
-  gem "compass",              "~> 0.11.5"
   gem "jnlp",                 "~> 0.7.3"
   # # use a merge of ghazel and tracksimple ar-extensions forks
   # # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
@@ -53,7 +53,7 @@ source "http://rubygems.org"
   gem "acts_as_list",         "~> 0.1.6"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
-  gem 'themes_for_rails',     "~> 0.5.0.pre"
+  gem 'themes_for_rails',     "~> 0.5.1"
   gem 'default_value_for',    "~> 2.0.1"
   gem 'exception_notification', "~> 2.5.2"
   gem 'prototype-rails'
@@ -64,7 +64,8 @@ source "http://rubygems.org"
   gem 'json',                 "~> 1.6.3"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
   # this is because of the removed RAILS_ROOT constant
-  gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
+  # gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
+  gem 'calpicker', :git => 'git://github.com/concord-consortium/calpicker'
   gem 'delayed_job',          "~> 3.0.1"
   gem 'delayed_job_active_record', "~> 0.3.2"
   gem 'daemons',              "~> 1.1.8"
@@ -72,6 +73,24 @@ source "http://rubygems.org"
   # to support hosting paperclip attachments on S3:
   gem "aws-s3",               :require => "aws/s3"
   gem "newrelic_rpm"
+  gem "tinymce-rails",        "~>3.5.6"
+
+# Ideally we pre-compile all asetts and then run production
+# with out the asset compiling requirements. But We have dynamic assets
+# generated a prototype helper 'calendar_date_picker'
+# group :assets do
+  gem 'sass-rails' # if running rails 3.1 or greater
+  gem "compass-rails"
+  gem 'uglifier'
+  gem 'yui-compressor'
+# end
+
+# see above; for production asset compilation.
+# as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
+# when compressing assets without a javascript runtime:
+group :production do
+  gem 'therubyracer',         "~>0.10.2"
+end
 
 
   gem "lightweight_activities",   :git => "git://github.com/concord-consortium/lightweight-activities-plugin.git", :require => 'lightweight'
