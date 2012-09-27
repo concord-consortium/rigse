@@ -1,4 +1,5 @@
 
+D:\GIT\RIGSE>@git.exe %*
 # encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
@@ -12,7 +13,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121011171438) do
+ActiveRecord::Schema.define(:version => 20120830195146) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -150,15 +151,6 @@ ActiveRecord::Schema.define(:version => 20121011171438) do
 
   add_index "dataservice_bucket_contents", ["bucket_logger_id"], :name => "index_dataservice_bucket_contents_on_bucket_logger_id"
 
-  create_table "dataservice_bucket_log_items", :force => true do |t|
-    t.text     "content"
-    t.integer  "bucket_logger_id"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-  end
-
-  add_index "dataservice_bucket_log_items", ["bucket_logger_id"], :name => "index_dataservice_bucket_log_items_on_bucket_logger_id"
-
   create_table "dataservice_bucket_loggers", :force => true do |t|
     t.integer  "learner_id"
     t.datetime "created_at", :null => false
@@ -229,8 +221,8 @@ ActiveRecord::Schema.define(:version => 20121011171438) do
     t.boolean  "valid_xml"
     t.boolean  "empty"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.boolean  "parts_extracted"
   end
 
@@ -239,8 +231,8 @@ ActiveRecord::Schema.define(:version => 20121011171438) do
   create_table "dataservice_periodic_bundle_loggers", :force => true do |t|
     t.integer  "learner_id"
     t.text     "imports"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "dataservice_periodic_bundle_loggers", ["learner_id"], :name => "learner_index"
@@ -250,17 +242,17 @@ ActiveRecord::Schema.define(:version => 20121011171438) do
     t.boolean  "delta",                                         :default => true
     t.string   "key"
     t.text     "value",                     :limit => 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
   end
 
   add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index"
   add_index "dataservice_periodic_bundle_parts", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
 
   create_table "delayed_jobs", :force => true do |t|
-    t.integer  "priority",   :default => 0
-    t.integer  "attempts",   :default => 0
-    t.text     "handler"
+    t.integer  "priority",                         :default => 0
+    t.integer  "attempts",                         :default => 0
+    t.text     "handler",    :limit => 2147483647
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
@@ -662,6 +654,18 @@ ActiveRecord::Schema.define(:version => 20121011171438) do
     t.datetime "updated_at"
   end
 
+  create_table "equipments", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "equipments", ["created_by"], :name => "created_by_index"
+  add_index "equipments", ["updated_by"], :name => "updated_by_index"
+
   create_table "external_activities", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid"
@@ -733,6 +737,19 @@ ActiveRecord::Schema.define(:version => 20121011171438) do
     t.integer "jar_id"
     t.integer "versioned_jnlp_id"
   end
+
+  create_table "material_equipments", :force => true do |t|
+    t.integer  "material_id"
+    t.string   "material_type"
+    t.integer  "equipment_id"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "material_equipments", ["created_by"], :name => "created_by_index"
+  add_index "material_equipments", ["updated_by"], :name => "updated_by_index"
 
   create_table "maven_jnlp_icons", :force => true do |t|
     t.string   "uuid"
@@ -1978,7 +1995,7 @@ ActiveRecord::Schema.define(:version => 20121011171438) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",          :limit => 16777215
+    t.text     "answers",          :limit => 2147483647
     t.string   "runnable_type"
     t.float    "complete_percent"
   end
@@ -2299,3 +2316,9 @@ ActiveRecord::Schema.define(:version => 20121011171438) do
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
 end
+
+D:\GIT\RIGSE>@set ErrorLevel=%ErrorLevel%
+
+D:\GIT\RIGSE>@rem Restore the original console codepage.
+
+D:\GIT\RIGSE>@chcp %cp_oem% > nul < nul
