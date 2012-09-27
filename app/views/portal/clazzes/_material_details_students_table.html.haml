@@ -1,3 +1,5 @@
+- learners = offering.learners
+- learner_ids = learners.pluck(:id).join(',')
 %div
   - offering_status = Report::OfferingStatus.new(offering)
   - student_statuses = offering_status.student_statuses
@@ -18,10 +20,14 @@
         - student_statuses.each do |student_status|
           - student = student_status.student
           - student_name = student.user.full_name
+          - learner = learners.find_by_student_id(student.id)
           %tr
             %td.student_name{:title=>"#{student_name}"}
               %div.progressbar_container
-                = student_name
+                - if learner.nil?
+                  = link_to "#{student_name}", "#",:class=>"activity_report", :onclick => "alert('no learner');"
+                - else
+                  = link_to( student_name,activity_report_portal_learner_url(learner),{:target=>"_blank",:class=>"activity_report"})
     .progress_div.webkit_scrollbars
       %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
         %tr
@@ -29,8 +35,13 @@
             - activity_name = (activity.name.nil?)? "Activity #{index+1}" : activity.name
             - activity_name_tooltip = (activity.name.nil?)? "Activity #{index+1}" : activity.name
             %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
-              %div.progressbar_container 
-                = activity_name
+              %div.progressbar_container
+                - report_learner_activity = Report::LearnerActivity.where("complete_percent > 0 && activity_id = #{activity.id} && learner_id IN (?)",learner_ids)
+                - unless report_learner_activity.nil?
+                  - if report_learner_activity.length > 0
+                    = link_to( activity_name,activity_report_portal_offering_url(offering,:activity_id => activity.id),{:target=>"_blank",:class=>"activity_report"})
+                  - else
+                    = link_to "#{activity_name}", "#",:class=>"activity_report", :onclick => "alert('no learner');"
         - student_statuses.each do |student_status|
           %tr
             - activities.each do |activity|
@@ -40,11 +51,18 @@
                 - else
                   - percentage = student_status.complete_percent
                 %div.progressbar_container
-                  .progressbar
-                    - if percentage == 100
-                      .progress.completed{:style=>"width:#{percentage}%"}
-                    - else
-                      .progress{:style=>"width:#{percentage}%"}
+                  - if percentage > 0
+                    - learner = learners.find_by_student_id(student_status.student.id)
+                    %a{:href=>activity_report_portal_learner_url(learner,:activity_id => activity.id),:target=>"_blank"}
+                      .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
+                        - if percentage == 100
+                          .progress.completed{:style=>"width:#{percentage}%"}
+                        - else
+                          .progress{:style=>"width:#{percentage}%"}
+                  - else
+                    %a{:href=>"#",:onclick=>"alert('no leraner')"}
+                      .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
+                        .progress{:style=>"width:#{percentage}%"}
     .clearboth{:style=>"height:10px"}
   - else
     %div.item.messagetext 

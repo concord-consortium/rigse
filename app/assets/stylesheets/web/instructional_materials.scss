@@ -320,3 +320,20 @@ th.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
 th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}
 
 .messagetext{font-style:italic;}
+
+.activity_report:hover
+{
+  color:black;
+  text-decoration:underline;
+}
+
+.activity_report:visited
+{
+  color:black;
+  text-decoration:none;
+}
+
+.activity_report
+{
+  color:black;
+}

@@ -80,16 +80,12 @@ class Portal::LearnersController < ApplicationController
   def activity_report
     portal_learner = Portal::Learner.find(params[:id])
     @offering = portal_learner.offering
-    @report_embeddable_filter = @offering.report_embeddable_filter
-    @report_embeddable_filter.ignore = true
     if params[:activity_id]
       activity = ::Activity.find(params[:activity_id].to_i)
       unless activity.nil?
-        @report_embeddable_filter.ignore = false
-        @report_embeddable_filter.embeddables = activity.page_elements.map{|pe|pe.embeddable}
+        session[:activity_report_embeddable_filter] = activity.page_elements.map{|pe|pe.embeddable}
       end
     end
-    @report_embeddable_filter.save
     redirect_url = report_portal_learner_url(portal_learner);
     respond_to do |format|
       format.html { redirect_to redirect_url }
@@ -99,13 +95,16 @@ class Portal::LearnersController < ApplicationController
   
   def report
     @portal_learner = Portal::Learner.find(params[:id])
-    
-    reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
-    
-    @page_elements = reportUtil.page_elements
-    
+    activity_report_embeddable_filter = session[:activity_report_embeddable_filter] 
+    unless activity_report_embeddable_filter.nil?
+      @portal_learner.offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
+      @portal_learner.offering.report_embeddable_filter.ignore = false
+    end
     respond_to do |format|
       format.html # report.html.haml
+        reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
+        session[:activity_report_embeddable_filter] = nil
+        @page_elements = reportUtil.page_elements
     end
   end
 

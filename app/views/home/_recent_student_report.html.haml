@@ -22,9 +22,7 @@
                 - activity_name = (activity.name.nil?)? "Activity #{activity_counter}" : activity.name
                 %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}",:title=>"#{activity.name}"}
                   %div.progressbar_container
-                    -# report_learner_activity= []
-                    - report_learner_activity = Report::LearnerActivity.where("complete_percent > 0 && activity_id = #{activity.id}")
-                    = link_to( activity_name,activity_report_portal_offering_url(:activity_id => activity.id),{:target=>"_blank",:class=>"activity_report"})
+                    = activity_name
           = render :partial => 'home/recent_student_report_summary',
             :locals=> {:offering_status => offering_status, :learners=>learners,:filter_percent=>-1}
   - else
