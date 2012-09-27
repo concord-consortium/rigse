@@ -85,11 +85,7 @@ class Report::Util
 
     @report_embeddable_filter = @offering.report_embeddable_filter
     unless (@report_embeddable_filter)
-      embeddables = []
-      unless session[:activity_report_embeddable_filter].nil?
-        embeddables = session[:activity_report_embeddable_filter]
-      end
-      @report_embeddable_filter = Report::EmbeddableFilter.create(:offering => @offering, :embeddables => embeddables)
+      @report_embeddable_filter = Report::EmbeddableFilter.create(:offering => @offering, :embeddables => [])
       @offering.reload
     end
 
