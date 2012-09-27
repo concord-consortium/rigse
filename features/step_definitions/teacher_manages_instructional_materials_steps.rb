@@ -63,7 +63,7 @@ When /^(?:|I )follow "(.+)" for the activity "(.+)"$/ do |link, activity_name|
   end
 end
 
-And /^(?:|I )click progress bar on the instructional materials page for the student "(.+)" and activity "(.+) "$/ do |student_login, activity_name|
+And /^(?:|I )click progress bar on the instructional materials page for the student "(.+)" and activity "(.+)"$/ do |student_login, activity_name|
   user_id = User.find_by_login(student_login).id
   activity_id = Activity.find_by_name(activity_name).id
   find(:xpath,"//div[@id = 'progressbar_#{user_id}_#{activity_id}']").click

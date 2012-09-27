@@ -105,7 +105,6 @@ Feature: Teacher manages instructional materials of a class
     
   @javascript
   Scenario: Teacher should see activity name in tab
-    And I should see "sfdfghhgfhgf"
     Then I should see "Algebra" within the tab block for Instructional Materials
     
   @javascript
@@ -204,9 +203,9 @@ Feature: Teacher manages instructional materials of a class
       | student   | class         | investigation       | question_prompt | answer |
       | dave      | My Class      | Aerodynamics        | c               | y      |
     And I go to Instructional Materials page for "My Class"
-    And I click progress bar on the instructional materials page for the student "Doe, Dave" and activity "Air activity"
+    And I click progress bar on the instructional materials page for the student "dave" and activity "Air activity"
     Then Report page should have content "Air activity"
-    And Report page should  have content "Dave Doe"
+    And Report page should have content "Dave Doe"
     And Report page should not have content "Atmosphere"
     
     
