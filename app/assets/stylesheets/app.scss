@@ -182,9 +182,16 @@ body#tinymce {
 
 .project-header h1 {
   background: {
-    color: white;
-    image: url(/assets/new/banners/empty.png);
-    repeat: no-repeat; };
+    color: #f9c667; /* Old browsers */
+    image: -moz-linear-gradient(top, #f9c667 0%, #f9c667 18%, #f7d596 54%, #ffffff 100%); /* FF3.6+ */
+    image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9c667), color-stop(18%,#f9c667), color-stop(54%,#f7d596), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+    image: -webkit-linear-gradient(top, #f9c667 0%,#f9c667 18%,#f7d596 54%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+    image: -o-linear-gradient(top, #f9c667 0%,#f9c667 18%,#f7d596 54%,#ffffff 100%); /* Opera 11.10+ */
+    image: -ms-linear-gradient(top, #f9c667 0%,#f9c667 18%,#f7d596 54%,#ffffff 100%); /* IE10+ */
+    image: linear-gradient(to bottom, #f9c667 0%,#f9c667 18%,#f7d596 54%,#ffffff 100%); /* W3C */
+    };
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9c667', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+ 
   height: 172px;
   margin: 0;
   text-indent: -999em;
@@ -1455,45 +1462,82 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 #div_teacher_list td {width:auto !important;white-space:nowrap;}
 
 .header-login-box{
-  padding-bottom: 50px;
-  margin-top: -109px;
-  padding-right: 5px;
+  height: 172px;
+  margin-top: -172px;
+  padding-right: 10px;
+  padding-left: 10px;
+  float: right;
   
   form{
-    padding:0px;
-  }
-  
-  .login-links{
-    float: right;
-    line-height: 1.25em;
-    padding-left: 10px;
-    margin-top: -2px;
+    padding-top: 10px;
+    position: relative;
     
-    input[type="submit"]{
-      margin-top: 6px;
-      margin-left: 1px;
-    }
-  }
-  
-  table{
-    float: right;
-    margin: 2px 0px;
-    
-    tr.first-row
-    {
-      td
+    table{
+      position: relative;
+      margin: 2px 0px;
+      
+      tr.first-row
       {
-        padding-bottom: 4px;
+        td
+        {
+          padding-bottom: 6px;
+        }
+        td.login-box
+        {
+          text-align: right;
+          padding-bottom: 6px;
+          padding-left: 10px;
+          input#header_login{
+            height:15px;
+            width: 140px;
+          }
+        }
+      }
+      tr.second-row{
+        td.password-box{
+          text-align: right;
+          input#header_password{
+            height: 15px;
+            width: 140px;
+          }
+        }
+      }
+      tr.third-row{
+        
+        td{
+          text-align: right;
+          padding-top: 5px;
+          input#LoginSubmitButtonHeader{
+          position: relative;
+        }
+      }
       }
     }
     
-    tr
-    {
-      td
-      {
-        padding-left: 4px;
+    .login-links{
+      position: relative;
+      
+      a#link_forgot_password{
+        position: relative;
+        display: block;
+        padding-top: 16px
       }
     }
   }
+}
 
+.welcome-box{
+  position: relative;
+  float: right;
+  margin-top: -130px;
+  padding-right: 40px;
+  
+  tr{
+    font-size: 15px;
+    
+    td.logout-link{
+      padding-bottom: 8px;
+      padding-left: 20px;
+    }
+  }
 }

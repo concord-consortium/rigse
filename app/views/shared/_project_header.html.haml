@@ -1,19 +1,3 @@
-#userlinks
-  %p
-    Welcome
-    = "#{current_user.name}."
-  %ul
-    - unless current_user.anonymous?
-      %li= link_to 'Preferences', preferences_user_path(current_user)
-      %li.last= link_to 'Logout', logout_path
-    - else
-      %li= link_to 'Login', login_path
-      %li= link_to 'Sign Up', pick_signup_path
-    - if @original_user.has_role?('admin', 'manager')
-      %li.last= link_to 'Switch', switch_user_path(current_user)
-
-      = render :partial => 'shared/activity_trail'
-
 #lead.project-header
   %h1{:class => theme_name}
     %a{ :href => "/" }= "#{APP_CONFIG[:site_name]}"
@@ -21,25 +5,36 @@
   .header-login-box
     %div
       = form_tag session_path, :id=>"header-project-signin" do
-        .login-links
-          =link_to 'Forgot your user name or password?', forgot_password_path
-          %br
-          =link_to 'Sign up for an account', pick_signup_path
-          %br
-          %input{:type=>"submit", :value=>"GO"}
         %table{:cellpadding=>"0", :cellspacing=>"0", :border=>"0"}
           %tbody
             %tr.first-row
               %td
                 %label{:for=>"header_login"}Username
-              %td
+              %td.login-box
                 %input{:type=>"text", :id=>"header_login", :value=> @login, :name=>"login"}
-            %tr
+            %tr.second-row
               %td
                 %label{:for=>"header_password"}Password
-              %td
+              %td.password-box
                 %input{:type=>"password", :id=>"header_password", :class=>"text", :name=>"password"}
+            %tr.third-row
+              %td{:colspan=>"2"}
+                %input{:type=>"submit", :id=>"LoginSubmitButtonHeader",:value=>"GO"}
         .clear_both
+        .login-links
+          =link_to 'Forgot your user name or password?',forgot_password_path, :id=>"link_forgot_password"
+          =link_to 'Sign up for an account', pick_signup_path
+- else
+  .welcome-box
+    %table
+      %tbody
+        %tr
+          %td
+            %b
+              Welcome
+            = "#{current_user.name}."
+          %td.logout-link
+            = link_to 'Logout', logout_path, :class=>"button pie"
 #nav_top
   %span.hidden.doNotPrint
     Navigation:
