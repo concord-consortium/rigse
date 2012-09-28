@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/concord-consortium/calpicker
-  revision: 5a887c19f1952d99d121116f34cbc9e0e6ca11a1
+  revision: 741498eef4b3b4fef9bca179aa1474514f930759
   specs:
     calpicker (0.0.1)
       prototype-rails
