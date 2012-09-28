@@ -160,8 +160,8 @@ function report_Link_Popup(description_text)
 {
     oPopUpWindow = new UI.Window({ theme: "lightbox",
         shadow: true,
-        width:  500,
-        height: 180}).setContent("<div id='windowcontent' style='padding:10px;padding-left:20px'>" + description_text + "</div>").show(true).center();
+        width:  410,
+        height: 125}).setContent("<div id='windowcontent' style='padding:10px;padding-left:15px'>" + description_text + "</div> <div class='msg_popup_ok_button'> <a href=\"javascript:void(0)\" class=\"button\" onclick=\"oPopUpWindow.destroy();\">Ok</button> </div>").show(true).center();
     oPopUpWindow.setHeader("Message");
     oPopUpWindow.activate();
 }
