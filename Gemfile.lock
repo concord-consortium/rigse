@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/concord-consortium/calpicker
-  revision: 5a887c19f1952d99d121116f34cbc9e0e6ca11a1
+  revision: 741498eef4b3b4fef9bca179aa1474514f930759
   specs:
     calpicker (0.0.1)
       prototype-rails
@@ -12,14 +12,6 @@ GIT
   branch: xml-mime-type-and-ie8-keycode-fix
   specs:
     haml (3.1.4)
-
-GIT
-  remote: git://github.com/concord-consortium/lightweight-activities-plugin.git
-  revision: bd3f4bac6a49168ec457655754c4d09e0fda1c77
-  specs:
-    lightweight_activities (0.0.13)
-      haml (~> 3.1.4)
-      rails (~> 3.2.6)
 
 GIT
   remote: git://github.com/concord-consortium/rush
@@ -34,10 +26,17 @@ GIT
   specs:
     prototype_legacy_helper (0.0.0)
 
+PATH
+  remote: /Users/pmorse/Projects/lightweight-activities-plugin
+  specs:
+    lightweight_activities (0.0.13)
+      haml (~> 3.1.4)
+      rails (~> 3.2.6)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    Ascii85 (1.0.1)
+    Ascii85 (1.0.2)
     POpen4 (0.1.4)
       Platform (>= 0.4.0)
       open4
