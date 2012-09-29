@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe OtmlHelper do
-  include ThemesForRails::UrlHelpers
   include ThemesForRails::ActionView
   include OtmlHelper
 
