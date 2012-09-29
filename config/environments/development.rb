@@ -35,5 +35,8 @@ RailsPortal::Application.configure do
   
   # Generate digests for assets' URLs.
   config.assets.digest = false
+
+  # split apart assets to make debugging easier
+  config.assets.debug = true
 end
 
