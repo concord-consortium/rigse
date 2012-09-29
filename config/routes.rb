@@ -1,6 +1,5 @@
 RailsPortal::Application.routes.draw do
   match "search" => 'search#index', :as => :search
-  themes_for_rails
 
   get "search/index"
   match '/search/list/filter' => 'search#show', :as => :list_filter_search, :method => :get
