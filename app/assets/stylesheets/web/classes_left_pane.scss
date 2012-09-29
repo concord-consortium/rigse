@@ -47,18 +47,8 @@ div#classes_selected
 .manage_classes_link
 {
   a.button {
-  border: 0 solid #f3951d;
-  color: white;
-  font: 12px / 1 Arial, Helvetica, sans-serif;
-  /* CSS 3 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
-  _background: #f6f2e2;
-  border-radius: 12px;
-  /* Opera 10.5, IE 9 */
-  -moz-border-radius: 12px;
-  /* FF1+ */
-  -webkit-border-radius: 12px;
-  /* Saf3+, Chrome */ }
+    /* this was the only property not already deifned in a.button */
+    _background: #f6f2e2;
+  }
 }
 
