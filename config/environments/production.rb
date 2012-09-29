@@ -54,6 +54,8 @@ RailsPortal::Application.configure do
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :yui
   config.assets.precompile += %w( print.css otml.css project.css pie/PIE.js calendar_date_select/calendar_date_select.js calendar_date_select/silver.css)
+  # add in all the theme application.css files
+  config.assets.precompile << %r{[^/]*/stylesheets/application\.css}
 
   # Production servers may compile missing assets. (missed by precompile)
   # Requires asset helper gems in production bundle
