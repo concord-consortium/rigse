@@ -24,7 +24,16 @@ class Portal::Student < ActiveRecord::Base
   
   include Changeable
   
- 
+  def sorted_clazzes
+    # don't work on the actual classes list becuase that could change the db model
+    sorted = clazzes.dup
+    index = sorted.index{|c| c.default_class}
+    if index
+      sorted.insert(-1, sorted.delete_at(index))
+    end
+    sorted
+  end
+
   def self.generate_user_email
     hash = UUIDTools::UUID.timestamp_create.to_s
     "no-email-#{hash}@concord.org"
