@@ -1528,16 +1528,21 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 
 .welcome-box{
   position: relative;
+  height: 172px;
   float: right;
-  margin-top: -130px;
+  margin-top: -172px;
   padding-right: 20px;
-  
-  tr{
-    font-size: 15px;
-    
-    td.logout-link{
-      padding-bottom: 6px;
-      padding-left: 20px;
+  padding-left: 10px;
+  table{
+    margin:0px;
+    height:100%;
+    tr{
+      font-size: 15px;
+      
+      td.logout-link{
+        padding-bottom: 6px;
+        padding-left: 20px;
+      }
     }
   }
 }
