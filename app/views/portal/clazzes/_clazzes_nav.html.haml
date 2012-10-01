@@ -8,7 +8,11 @@
     - top_controller ||= top_node.class.name.tableize
     - sub_controller ||= top_node.clazzes[0] ? top_node.clazzes[0].class.name.tableize : nil
     %ul{:id=>top_container_id}
-      - top_node.clazzes.each do |clazz|
+      - if top_node.is_a? Portal::Student
+        - clazzes = top_node.sorted_clazzes
+      - else
+        - clazzes = top_node.clazzes
+      - clazzes.each do |clazz|
         %li{:id=>dom_id_for(clazz,:nav_item)}
           -if clazz.section
             - link_text = "#{clazz.name}(#{clazz.section})"
