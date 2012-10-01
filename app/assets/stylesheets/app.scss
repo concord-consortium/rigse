@@ -1516,11 +1516,11 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
     
     .login-links{
       position: relative;
-      
+      padding-top: 16px;
+      padding-right: 21px;
       a#link_forgot_password{
         position: relative;
         display: block;
-        padding-top: 16px
       }
     }
   }
@@ -1530,13 +1530,13 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
   position: relative;
   float: right;
   margin-top: -130px;
-  padding-right: 40px;
+  padding-right: 20px;
   
   tr{
     font-size: 15px;
     
     td.logout-link{
-      padding-bottom: 8px;
+      padding-bottom: 6px;
       padding-left: 20px;
     }
   }
