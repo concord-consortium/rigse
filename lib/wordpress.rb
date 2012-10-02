@@ -9,13 +9,37 @@ class Wordpress
   TITLES = {
     :latest_posts => "Latest Posts",
     :latest_comments => "Latest Comments",
-    :top_rated => "Top Rated"
+    :top_rated => "Top Rated",
+    :my_entries => "My Entries",
+    :custom_home => "Journal of Drake Genetics Home",
+    :info => "Info Page"
   }
 
   SHORTCODES = {
     :latest_posts => "[cc-recent-posts]",
     :latest_comments => "[cc-recent-comments]",
-    :top_rated => "[starrating template_id=4 select='post|experimental-claim' min_votes=0 min_count=0 source='thumbs']"
+    :top_rated => "[starrating template_id=4 select='post|experimental-claim' min_votes=0 min_count=0 source='thumbs']",
+    :my_entries => "[cc-my-posts]",
+    :custom_home => <<CUSTOM,
+<p>Welcome to the Journal of Drake Genetics!</p>
+<p>What would you like to do?  You can...</p>
+<ul>
+<li>Read all of your Journal entries by clicking "<a href="my-entries">My Entries</a>" above.</li>
+<li>Read all of the entries about a certain challenge by clicking the case name in the “Cases” column to the right.</li>
+<li>Edit entires or add new ones by going to <a href="wp-admin">the dashboard</a>.</li>
+</ul>
+<p>Happy reading!</p>
+<p>&#8212;The Guild Master</p>
+CUSTOM
+    :info => <<SAMPLE
+<p>This is an example of an <strong>Info Page</strong>. You can create Info Pages in your Dashboard. Why would you use Info Pages?</p>
+<ul>
+<li>communicate with students &#8211; make announcements, remind them of what to do on a particular day, etc.</li>
+<li>easy for students to access&#8211; a link automatically appears everyone&#8217;s navigation bar (above)</li>
+<li>you can create as many of these Info Pages as you wish, and re-name them as you wish. For example, &#8220;Day 1&#8243;, &#8220;Jan. 22&#8243;, or &#8220;Case 4&#8243;</li>
+<li>easy to create: go to your Dashboard and click &#8220;Pages&#8221;, and then click the New Page button.</li>
+</ul>
+SAMPLE
   }
 
   def initialize()
@@ -59,7 +83,16 @@ class Wordpress
       # create the default custom pages
       create_custom_page(class_word, TITLES[:latest_posts],    SHORTCODES[:latest_posts])
       create_custom_page(class_word, TITLES[:latest_comments], SHORTCODES[:latest_comments])
+      create_custom_page(class_word, TITLES[:my_entries],      SHORTCODES[:my_entries])
       create_custom_page(class_word, TITLES[:top_rated],       SHORTCODES[:top_rated])
+
+      # change the already-existing sample page title and content
+      create_custom_page(class_word, TITLES[:info],          SHORTCODES[:info], 2)
+
+      home_id = create_custom_page(class_word, TITLES[:custom_home],     SHORTCODES[:custom_home])
+      # set home to be page on front
+      update_option(class_word, {"option" => "page_on_front", "new_value" => home_id.to_s}) if home_id
+      update_option(class_word, {"option" => "show_on_front", "new_value" => home_id.to_s}) if home_id
 
       # add additional admins to the class blog
       @admin_accounts.each do |username|
@@ -70,11 +103,16 @@ class Wordpress
     end
   end
 
-  def create_custom_page(class_word, title, shortcode)
-    content = _create_custom_page_xml(title, shortcode)
+  def create_custom_page(class_word, title, shortcode, id = nil)
+    content = _create_custom_page_xml(title, shortcode, id)
     result = _post(content, class_word)
     if result.body =~ /fault/
       raise "Error creating custom page in class blog. b: #{class_word}, t: #{title}, sc: #{shortcode}"
+    end
+    if result.body =~ /<string>([0-9]+?)<\/string>/
+      return $1
+    else
+      return nil
     end
   end
 
@@ -123,6 +161,11 @@ class Wordpress
     content = _create_remove_user_from_blog_xml(user, clazz)
     result = _post(content)
     return result
+  end
+
+  def update_option(blog, data)
+    content = _create_xml("update_option", true, [data])
+    result = _post(content, blog)
   end
 
   def has_valid_wp_settings?
@@ -253,13 +296,14 @@ class Wordpress
     return _create_xml(method, true, [data])
   end
 
-  def _create_custom_page_xml(title, shortcode)
+  def _create_custom_page_xml(title, shortcode, id = nil)
     data = {
       "post_title" => title,
       "post_content" => shortcode,
       "post_type" => "page",
       "post_status" => "publish"
     }
+    data["id"] = id if id
 
     return _create_xml("wp_insert_post", true, [data])
   end
