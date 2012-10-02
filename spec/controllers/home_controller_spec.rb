@@ -25,6 +25,15 @@ describe HomeController do
     @response.body.should include(content)
   end
 
+  it "should show Lightweight Activities as an option in the Authoring start page" do
+    login_author
+
+    get :authoring
+
+    response.body.should match /<h4>[^<]*<a[^>]href="\/lightweight\/activities">Lightweight Activities<\/a>[^<]*<\/h4>/
+    response.body.should match /<ul>[^<]*<\/ul>/ # List of LightweightActivities, empty
+  end
+
   describe "GET /stylesheets/project.css" do
     describe "when a project is configured to use custom styles" do
       it "should return the custom css" do

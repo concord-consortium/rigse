@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :investigations
   has_many :resource_pages
   has_many :activities
+  has_many :lightweight_activities, :class_name => 'Lightweight::LightweightActivity'
   has_many :sections
   has_many :pages
   has_many :external_activities
