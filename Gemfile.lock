@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/themes_for_rails
-  revision: 26f5a18777bc6ea10451e60a26bfacf5ae46c233
+  revision: eea2c31d181af30f787c5f493c74acdbe0bbf324
   branch: asset-pipeline-only
   specs:
     themes_for_rails (0.5.1)
