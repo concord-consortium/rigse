@@ -17,9 +17,11 @@ class MiscController < ActionController::Base
         :bundle_content => learner.bundle_logger.in_progress_bundle
       )
     end
-    image_folder = File.join(Rails.root, "public","images","new","banners")
-    image_file = File.exists?(theme_file = File.join(image_folder, "#{APP_CONFIG[:theme]}.png")) ? theme_file : File.join(image_folder, "empty.png")
-    send_file(image_file, {:type => 'image/png', :disposition => 'inline'} )
+    asset = get_banner_asset(APP_CONFIG[:theme])
+    if asset.nil?
+      asset = get_banner_asset("empty")
+    end
+    send_file(asset.pathname.to_s, {:type => 'image/png', :disposition => 'inline'} )
   end
 
   def installer_report
@@ -30,4 +32,11 @@ class MiscController < ActionController::Base
       :jnlp_session_id => params[:jnlp_session_id])
     render :xml => "<created/>", :status => :created
   end
+
+  private
+
+  def get_banner_asset(name)
+    ActionController::Base.helpers.asset_paths.asset_for("new/banners/#{name}.png", nil)
+  end
+
 end
