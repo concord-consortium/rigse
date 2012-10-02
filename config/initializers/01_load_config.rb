@@ -2,11 +2,11 @@ include AppSettings
 APP_CONFIG = AppSettings.load_app_settings
 
 # set the defaults
-APP_CONFIG = {
+APP_CONFIG.merge!({
   :use_gse => true,
   :recent_activity_on_login => true,
   :top_level_container_name => 'investigation'
-}.merge(APP_CONFIG)
+})
 
 USING_RITES = APP_CONFIG[:theme] && (APP_CONFIG[:theme] == 'default' || APP_CONFIG[:theme] == 'rites')
 NOT_USING_RITES = !USING_RITES
