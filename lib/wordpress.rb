@@ -23,7 +23,7 @@ class Wordpress
 <p>What would you like to do?  You can...</p>
 <ul>
 <li>Read all of your Journal entries by clicking "<a href="my-entries">My Entries</a>" above.</li>
-<li>Read all of the entries about a certain challenge by clicking the case name in the “Cases” column to the right.</li>
+<li>Read all of the entries about a certain challenge by clicking the case name in the &#8220;Cases&#8221; column to the right.</li>
 <li>Edit entires or add new ones by going to <a href="wp-admin">the dashboard</a>.</li>
 </ul>
 <p>Happy reading!</p>
@@ -85,12 +85,13 @@ SAMPLE
       create_custom_page(class_word, TITLES[:top_rated],       SHORTCODES[:top_rated])
 
       # change the already-existing sample page title and content
-      create_custom_page(class_word, TITLES[:info],          SHORTCODES[:info], 2)
+      create_custom_page(class_word, TITLES[:info],            SHORTCODES[:info])
+      delete_page(class_word, 2)
 
       home_id = create_custom_page(class_word, TITLES[:custom_home],     SHORTCODES[:custom_home])
       # set home to be page on front
-      update_option(class_word, {"option" => "page_on_front", "new_value" => home_id.to_s}) if home_id
-      update_option(class_word, {"option" => "show_on_front", "new_value" => home_id.to_s}) if home_id
+      update_option(class_word, ["page_on_front", home_id.to_i]) if home_id
+      update_option(class_word, ["show_on_front", "page"]) if home_id
 
       # add additional admins to the class blog
       @admin_accounts.each do |username|
@@ -101,16 +102,24 @@ SAMPLE
     end
   end
 
-  def create_custom_page(class_word, title, shortcode, id = nil)
-    content = _create_custom_page_xml(title, shortcode, id)
+  def create_custom_page(class_word, title, shortcode)
+    content = _create_custom_page_xml(title, shortcode)
     result = _post(content, class_word)
     if result.body =~ /fault/
       raise "Error creating custom page in class blog. b: #{class_word}, t: #{title}, sc: #{shortcode}"
     end
-    if result.body =~ /<string>([0-9]+?)<\/string>/
+    if result.body =~ /<int>([0-9]+?)<\/int>/
       return $1
     else
       return nil
+    end
+  end
+
+  def delete_page(class_word, page_id)
+    content = _create_xml("wp_delete_post", true, [page_id.to_i])
+    result = _post(content, class_word)
+    if result.body =~ /fault/
+      raise "Error creating custom page in class blog. b: #{class_word}, t: #{title}, sc: #{shortcode}"
     end
   end
 
@@ -162,7 +171,7 @@ SAMPLE
   end
 
   def update_option(blog, data)
-    content = _create_xml("update_option", true, [data])
+    content = _create_xml("update_option", true, data.is_a?(Array) ? data : [data])
     result = _post(content, blog)
   end
 
@@ -294,14 +303,13 @@ SAMPLE
     return _create_xml(method, true, [data])
   end
 
-  def _create_custom_page_xml(title, shortcode, id = nil)
+  def _create_custom_page_xml(title, shortcode)
     data = {
       "post_title" => title,
       "post_content" => shortcode,
       "post_type" => "page",
       "post_status" => "publish"
     }
-    data["id"] = id if id
 
     return _create_xml("wp_insert_post", true, [data])
   end
