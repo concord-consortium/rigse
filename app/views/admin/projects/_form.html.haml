@@ -70,6 +70,12 @@
               %b
                 RPC Admin password:
               = f.text_field :rpc_admin_password,  :size => 60
+            %li
+              %b
+                Additional admin users:
+              = f.text_field :admin_accounts, :size => 60
+              %br
+              (This will automatically set these users to be admin on newly created class blogs. Specify wordpress usernames in a comma separated list.)
       %p
         = render :partial => "home_page_content_field", :locals => { :admin_project => admin_project, :f => f }
       %p

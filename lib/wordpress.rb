@@ -4,6 +4,41 @@ require 'uri'
 require 'uuidtools'
 
 class Wordpress
+  TITLES = {
+    :latest_posts => "Latest Posts",
+    :latest_comments => "Latest Comments",
+    :top_rated => "Top Rated",
+    :my_entries => "My Entries",
+    :custom_home => "Journal of Drake Genetics Home",
+    :info => "Info Page"
+  }
+
+  SHORTCODES = {
+    :latest_posts => "[cc-recent-posts]",
+    :latest_comments => "[cc-recent-comments]",
+    :top_rated => "[starrating template_id=4 select='post|experimental-claim' min_votes=0 min_count=0 source='thumbs']",
+    :my_entries => "[cc-my-posts]",
+    :custom_home => <<CUSTOM,
+<p>Welcome to the Journal of Drake Genetics!</p>
+<p>What would you like to do?  You can...</p>
+<ul>
+<li>Read all of your Journal entries by clicking "<a href="my-entries">My Entries</a>" above.</li>
+<li>Read all of the entries about a certain challenge by clicking the case name in the &#8220;Cases&#8221; column to the right.</li>
+<li>Edit entires or add new ones by going to <a href="wp-admin">the dashboard</a>.</li>
+</ul>
+<p>Happy reading!</p>
+<p>&#8212;The Guild Master</p>
+CUSTOM
+    :info => <<SAMPLE
+<p>This is an example of an <strong>Info Page</strong>. You can create Info Pages in your Dashboard. Why would you use Info Pages?</p>
+<ul>
+<li>communicate with students &#8211; make announcements, remind them of what to do on a particular day, etc.</li>
+<li>easy for students to access&#8211; a link automatically appears everyone&#8217;s navigation bar (above)</li>
+<li>you can create as many of these Info Pages as you wish, and re-name them as you wish. For example, &#8220;Day 1&#8243;, &#8220;Jan. 22&#8243;, or &#8220;Case 4&#8243;</li>
+<li>easy to create: go to your Dashboard and click &#8220;Pages&#8221;, and then click the New Page button.</li>
+</ul>
+SAMPLE
+  }
 
   def initialize()
     project = Admin::Project.default_project
@@ -11,14 +46,19 @@ class Wordpress
     @rpc_admin = project.rpc_admin_login
     @rpc_email = project.rpc_admin_email
     @rpc_password = project.rpc_admin_password
+    @admin_accounts = []
+    if project.admin_accounts && !project.admin_accounts.empty?
+      @admin_accounts = project.admin_accounts.split(/\s*,\s*/)
+    end
     raise "Can't talk to wordpress: No WP settings" if !has_valid_wp_settings?
   end
 
   def post_blog(blog, user, post_title, post_content, post_tags = "")
     user_id = _get_user_id(user.login)
+    is_private = _is_class_blog_private?(blog)
 
     # render the content template
-    content = _create_blog_post_xml(post_title, post_content, user_id, post_tags)
+    content = _create_blog_post_xml(post_title, post_content, user_id, post_tags, is_private)
 
     # URI.parse("#{overlay_root}/#{runnable_id}")
     result = _post(content, blog)
@@ -36,7 +76,50 @@ class Wordpress
     elsif result.body  =~ /fault/ || !(result.body  =~ /<int>([0-9]+?)<\/int>/)
       raise "Error creating class blog"
     else
+      blog_id = $1
+
+      # create the default custom pages
+      create_custom_page(class_word, TITLES[:latest_posts],    SHORTCODES[:latest_posts])
+      create_custom_page(class_word, TITLES[:latest_comments], SHORTCODES[:latest_comments])
+      create_custom_page(class_word, TITLES[:my_entries],      SHORTCODES[:my_entries])
+      create_custom_page(class_word, TITLES[:top_rated],       SHORTCODES[:top_rated])
+
+      # change the already-existing sample page title and content
+      create_custom_page(class_word, TITLES[:info],            SHORTCODES[:info])
+      delete_page(class_word, 2)
+
+      home_id = create_custom_page(class_word, TITLES[:custom_home],     SHORTCODES[:custom_home])
+      # set home to be page on front
+      update_option(class_word, ["page_on_front", home_id.to_i]) if home_id
+      update_option(class_word, ["show_on_front", "page"]) if home_id
+
+      # add additional admins to the class blog
+      @admin_accounts.each do |username|
+        add_user_to_blog(username, class_word, "administrator")
+      end
+
+      return blog_id
+    end
+  end
+
+  def create_custom_page(class_word, title, shortcode)
+    content = _create_custom_page_xml(title, shortcode)
+    result = _post(content, class_word)
+    if result.body =~ /fault/
+      raise "Error creating custom page in class blog. b: #{class_word}, t: #{title}, sc: #{shortcode}"
+    end
+    if result.body =~ /<int>([0-9]+?)<\/int>/
       return $1
+    else
+      return nil
+    end
+  end
+
+  def delete_page(class_word, page_id)
+    content = _create_xml("wp_delete_post", true, [page_id.to_i])
+    result = _post(content, class_word)
+    if result.body =~ /fault/
+      raise "Error creating custom page in class blog. b: #{class_word}, t: #{title}, sc: #{shortcode}"
     end
   end
 
@@ -72,7 +155,11 @@ class Wordpress
   end
 
   def add_user_to_clazz(user, clazz, role = "author")
-    content = _create_add_user_to_blog_xml(user, clazz, role)
+    return add_user_to_blog(user.login, clazz.class_word, role)
+  end
+
+  def add_user_to_blog(username, classname, role = "author")
+    content = _create_add_user_to_blog_xml(username, classname, role)
     result = _post(content)
     return result
   end
@@ -81,6 +168,11 @@ class Wordpress
     content = _create_remove_user_from_blog_xml(user, clazz)
     result = _post(content)
     return result
+  end
+
+  def update_option(blog, data)
+    content = _create_xml("update_option", true, data.is_a?(Array) ? data : [data])
+    result = _post(content, blog)
   end
 
   def has_valid_wp_settings?
@@ -94,7 +186,12 @@ class Wordpress
   end
 
   def _post(content, blog = "", action = "/xmlrpc.php")
-    uri = URI.parse(@url + blog + action)
+    url = @url
+    url += '/' unless url.end_with? '/'
+    url += blog
+    url = url.chop if url.end_with? '/'
+    url += action
+    uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
     if uri.port == 443
       http.use_ssl = true
@@ -130,6 +227,19 @@ class Wordpress
     end
   end
 
+  def _is_class_blog_private?(blog)
+    xml = _create_xml("get_option", true, ["cc_post_private_js"])
+    result = _post(xml, blog)
+    if result.body =~ /<string>(.*?)<\/string>/
+      setting = $1
+      if setting =~ /true/
+        return true
+      end
+    end
+    # raise "Couldn't find blog's private setting"
+    return false
+  end
+
   def _create_remove_user_from_blog_xml(user, clazz)
     uri = URI.parse(@url)
     domain = uri.host
@@ -141,22 +251,22 @@ class Wordpress
     return _create_xml("remove_user_from_blog", true, [user_id, blog_id])
   end
 
-  def _create_add_user_to_blog_xml(user, clazz, role)
+  def _create_add_user_to_blog_xml(user_login, class_word, role)
     uri = URI.parse(@url)
     domain = uri.host
-    path = uri.path + clazz.class_word
+    path = uri.path + class_word
 
     blog_id = _get_blog_id(domain, path)
-    user_id = _get_user_id(user.login)
+    user_id = _get_user_id(user_login)
 
     return _create_xml("add_user_to_blog", true, [blog_id, user_id, role])
   end
 
-  def _create_blog_post_xml(post_title, post_content, user_id, post_tags)
+  def _create_blog_post_xml(post_title, post_content, user_id, post_tags, is_private = false)
     data = {
       "post_title" => post_title,
       "post_content" => post_content,
-      "post_status" => "publish",
+      "post_status" => (is_private ? "private" : "publish"),
       "post_author" => user_id
     }
     data["tags_input"] = post_tags if !post_tags.nil? && post_tags.length > 0
@@ -191,6 +301,17 @@ class Wordpress
     # wp_insert_user only accepts plaintext passwords on creation.
     method = update ? "wp_update_user" : "wp_insert_user"
     return _create_xml(method, true, [data])
+  end
+
+  def _create_custom_page_xml(title, shortcode)
+    data = {
+      "post_title" => title,
+      "post_content" => shortcode,
+      "post_type" => "page",
+      "post_status" => "publish"
+    }
+
+    return _create_xml("wp_insert_post", true, [data])
   end
 
   # data must be an array
