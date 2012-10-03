@@ -1,34 +1,39 @@
-%div{ :id => dom_id_for(user, :item), :class => 'item' }
-  %div.action_menu
-    %div.action_menu_header_left   
-      =link_to name_for_component(user), user
-    %div.action_menu_header_right   
-      %ul.menu
-        - if (user.changeable?(current_user))
-          - if user.portal_teacher
-            %li.menu=link_to 'Teacher Page', portal_teacher_path(user.portal_teacher)
-          - if portal_student = user.portal_student
-            %li.menu=link_to 'Student Page', portal_student_path(portal_student)
-          %li.menu=link_to 'edit', edit_user_path(user)
-          %li.menu=link_to 'Reset Password', reset_password_user_path(user)
+%div{:id=>"action_menu_wrapper"}
+  %div{ :id => dom_id_for(user, :item), :class => 'item' }
+    %div.action_menu
+      %div.action_menu_header_left   
+        =link_to name_for_component(user), user
+      %div.action_menu_header_right
+        %ul.menu
+          - if (user.changeable?(current_user))
+            - if user.portal_teacher
+              %li.menu=link_to 'Teacher Page', portal_teacher_path(user.portal_teacher)
+            - if portal_student = user.portal_student
+              %li.menu=link_to 'Student Page', portal_student_path(portal_student)
+            %li.menu=link_to 'edit', edit_user_path(user)
+            %li.menu=link_to 'Reset Password', reset_password_user_path(user)
           - if user.state == 'pending'
             %li.menu=link_to 'Activate', activate_path(:activation_code => user.activation_code)
-  %div{:id => dom_id_for(user, :details), :class => 'tiny'}
-    %ul.menu_h
-      %li
-        login:
-        = user.login
-      %li
-        email:
-        = user.email
-      %li
-        Roles: 
-        = user.roles.map{|r| r.title.capitalize}.join(', ')
-      - if user.portal_teacher
+            %li.menu
+              = form_for user, :url => switch_user_path(user), :html => { :method => :put, :style=>"display: inline" }  do |form|
+                = hidden_field_tag 'user[id]', user.id
+                = submit_tag 'Switch'
+    %div{:id => dom_id_for(user, :details), :class => 'tiny'}
+      %ul.menu_h
         %li
-          Cohorts: 
-        - user.portal_teacher.cohort_list.each do |c| 
+          login:
+          = user.login
+        %li
+          email:
+          = user.email
+        %li
+          Roles: 
+          = user.roles.map{|r| r.title.capitalize}.join(', ')
+        - if user.portal_teacher
           %li
-            = c
+            Cohorts: 
+          - user.portal_teacher.cohort_list.each do |c| 
+            %li
+              = c
       %li
         Status: #{user.state}
