@@ -1534,14 +1534,16 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
   padding-right: 20px;
   padding-left: 10px;
   table{
-    margin:0px;
-    height:100%;
+    margin-top:25px;
     tr{
-      font-size: 15px;
-      
-      td.logout-link{
-        padding-bottom: 6px;
+        font-size: 15px;
+        td.logout-link{
         padding-left: 20px;
+      }
+    }
+    tr{
+      td{
+          text-align: right;
       }
     }
   }
