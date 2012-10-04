@@ -70,7 +70,7 @@ Feature: The Project administrator disables certain vendor interfaces
       | vernier usb      |
 
     When I login with username: student_login
-    When I follow "Preferences"
+    When I follow "My Preferences"
     Then I should see "User Preferences"
     And I should see "Probeware Interface"
     Then I should have the following selection options:

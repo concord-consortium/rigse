@@ -43,10 +43,10 @@ Feature: User logs in using header login box to use the portal
     And I should not see "Forgot your user name or password?"
     
     
-  Scenario: Anonymous user cannot see the full status page
+  Scenario: Anonymous user should see header login box
     When I am an anonymous user
     And I am on the home page
-    Then I should see "Forgot your user name or password?" within header sign in box
+    Then I should see "Forgot your username or password?" within header login box
     
     
   Scenario: Anonymous user should land to the pick signup page
@@ -56,4 +56,3 @@ Feature: User logs in using header login box to use the portal
     Then I should be on "the pick signup page"
     
     
-  

@@ -9,5 +9,5 @@ Feature: Admin switches to a different user
     And the following users exist:
      | login     | password  | roles   | first_name | last_name |
      | student   | student   | member  | Joe        | Student   |
-    And I switch to "student"
+    And I switch to "Joe Student"
     Then I should see "Welcome Joe Student"
