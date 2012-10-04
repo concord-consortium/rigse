@@ -1555,4 +1555,11 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
   .action_menu_header_left{
     width: 39% !important;
   }
+  .action_menu_header_right{
+    form{
+      input[type="submit"]{
+        font-size: 13px;
+      }
+    }
+  }
 }
