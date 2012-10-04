@@ -129,11 +129,11 @@ SAMPLE
     args = []
     args << "log=#{_escape(user_login)}"
     args << "pwd=#{_escape(password)}"
-    args << "wp-submit=#{_escape("Login »")}"
+    args << "wp-submit=#{_escape("Log In")}"
     args << "sidebarlogin_posted=1"
     args << "testcookie=1"
 
-    result = _post(args.join("&"), "", "/?_login=4838e49368")
+    result = _post(args.join("&"), "", "/wp-login.php?_login=4838e49368")
 
     return result
   end
