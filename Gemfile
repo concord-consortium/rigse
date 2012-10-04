@@ -93,18 +93,18 @@ group :production do
 end
 
 
-  # gem "lightweight_activities",   :git => "git://github.com/concord-consortium/lightweight-activities-plugin.git", :require => 'lightweight'
-  gem "lightweight_activities", :path => "/Users/pmorse/Projects/lightweight-activities-plugin", :require => 'lightweight'
+  gem "lightweight_activities",   :git => "git://github.com/concord-consortium/lightweight-activities-plugin.git", :require => 'lightweight'
+  # gem "lightweight_activities", :path => "/Users/pmorse/Projects/lightweight-activities-plugin", :require => 'lightweight'
 
 group :development do
   gem "rake",                 "~> 0.9.2"
-  gem "highline"
+  gem "highline"              "~> 1.6.13"
   gem "wirble"
   gem "what_methods"
-  gem "hirb"
+  gem "hirb"                  "~> 0.6.2"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
   gem "debugger", :platforms => [:mri_19]
-  gem "awesome_print"
+  gem "awesome_print"         "~> 1.0"
   gem "interactive_editor"
   gem "pry"
 end
