@@ -26,8 +26,7 @@ Spork.prefork do
   
   # Increase default wait time for asynchronous JavaScript requests from 2 to 5s
   # see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
-  Capybara.default_wait_time = 100
-  Capybara.server_boot_timeout = 200
+  Capybara.default_wait_time = 5
  
 
 end
