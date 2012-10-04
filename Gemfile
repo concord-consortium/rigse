@@ -98,13 +98,13 @@ end
 
 group :development do
   gem "rake",                 "~> 0.9.2"
-  gem "highline"              "~> 1.6.13"
+  gem "highline"
   gem "wirble"
   gem "what_methods"
-  gem "hirb"                  "~> 0.6.2"
+  gem "hirb"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
   gem "debugger", :platforms => [:mri_19]
-  gem "awesome_print"         "~> 1.0"
+  gem "awesome_print"
   gem "interactive_editor"
   gem "pry"
 end
