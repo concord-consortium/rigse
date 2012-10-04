@@ -1542,8 +1542,9 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
       }
     }
     tr{
-      td{
+      td.my-preferences-link{
           text-align: right;
+          font-size: 12px;
       }
     }
   }
