@@ -96,7 +96,7 @@ group :production do
 end
 
 
-  gem "lightweight_activities",   :git => "git://github.com/concord-consortium/lightweight-activities-plugin.git", :require => 'lightweight'
+  gem "lightweight_activities",   :git => "git://github.com/concord-consortium/lightweight-activities-plugin.git", :require => 'lightweight', :branch => 'authoring'
   # gem "lightweight_activities", :path => "/Users/pmorse/Projects/lightweight-activities-plugin", :require => 'lightweight'
 
 group :development do
