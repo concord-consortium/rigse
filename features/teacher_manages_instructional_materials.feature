@@ -80,7 +80,7 @@ Feature: Teacher manages instructional materials of a class
     And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
     
-    
+  @javascript
   Scenario: Teacher can follow link to Instructional Materials on their Class Page
     Then I should be on Instructional Materials page for "My Class"
     
@@ -174,42 +174,7 @@ Feature: Teacher manages instructional materials of a class
     Then I should see "Aeroplane (teacher only)"
     
   @javascript
-  Scenario: Teacher should see report for activity
-    When the following student answers:
-      | student   | class          | investigation       | question_prompt | answer |
-      | dave      | My Class       | Aerodynamics        | c               | y      |
-      | chuck     | My Class       | Aerodynamics        | c               | Y      |
-    And I go to Instructional Materials page for "My Class"
-    And I follow "Air activity"
-    Then A report window opens of offering "Aerodynamics"
-    Then Report page should have student name "Dave Doe" in answered section for the question "c"
-    And Report page should have student name "Chuck Smith" in answered section for the question "c"
-    
-  @javascript
-  Scenario: Teacher should see report for student
-    When the following student answers:
-      | student   | class          | investigation       | question_prompt | answer |
-      | dave      | My Class       | Aerodynamics        | c               | y      |
-      | chuck     | My Class       | Aerodynamics        | image_q         | Y      |
-      | chuck     | My Class       | Aerodynamics        | c               | Y      |
-    And I go to Instructional Materials page for "My Class"
-    And I follow "Doe, Dave"
-    Then Report page should have content "Dave Doe"
-    And Report page should not have content "Chuck Smith"
-    
-  @javascript
-  Scenario: Teacher should see report for student and corresponding activity
-    When the following student answers:
-      | student   | class         | investigation       | question_prompt | answer |
-      | dave      | My Class      | Aerodynamics        | c               | y      |
-    And I go to Instructional Materials page for "My Class"
-    And I click progress bar on the instructional materials page for the student "dave" and activity "Air activity"
-    Then Report page should have content "Air activity"
-    And Report page should have content "Dave Doe"
-    And Report page should not have content "Atmosphere"
-    
-  @javascript
-  Scenario:   Teacher should sees a message if activity has not been attempted by any student
+  Scenario: Teacher should see a message if activity has not been attempted by any student
     And I follow "Air activity"
     Then I should see "Reporting is unavailable until at least one student has started this activity" within the no report popup on the instructional materials page
     
