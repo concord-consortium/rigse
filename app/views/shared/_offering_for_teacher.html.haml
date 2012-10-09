@@ -30,4 +30,4 @@
             %p= updated_time_text(offering.runnable)
             %p= pluralize(offering.learners.length, "student response")
             = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
-    = sortable_element 'clazz_offerings',:url => { :action => "sort_offerings" }
+    = sortable_element 'clazz_offerings',:url => { :action => "sort_offerings" }, :handle => 'offering'

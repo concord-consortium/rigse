@@ -5,4 +5,4 @@
     %td.title=label_tag :name, 'Semester ', :class => "left"
     %td=label_tag :name, (portal_clazz.semester.nil?) ? '' : portal_clazz.semester.name , :class => 'labelvalue'
     %td.title=label_tag :name, 'Class Word ', :class => 'left'
-    %td=label_tag :name, portal_clazz.class_word, :class => 'labelvalue'
+    %td=label_tag :name, portal_clazz.class_word.truncate(25), :class => 'labelvalue',:title=>"#{portal_clazz.class_word}"

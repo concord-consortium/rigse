@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe OtmlHelper do
-  include OtmlHelper
-
 #   def otml_css_path(base="stylesheets",name="otml")
 #    theme = APP_CONFIG[:theme]
 #    file = "#{name}.css"
@@ -28,30 +26,42 @@ describe OtmlHelper do
       end
       
       it "should return the default otml.css path" do
-        otml_css_path.should eql("/stylesheets/otml.css")
+        otml_css_path.should eql("/assets/otml.css")
       end
 
     end
     
-    describe "without a theme" do
+    describe "with a theme" do
       before(:all) do
         @theme_name = "fakeo"
         @theme = APP_CONFIG[:theme]
         APP_CONFIG[:theme] = @theme_name
-        File.stub!(:exists? => true)
       end
 
       after(:all) do
         APP_CONFIG[:theme] = @theme
       end
-      
-      it "should return the themed otml.css path" do
-        otml_css_path.should eql("/stylesheets/themes/#{@theme_name}/otml.css")
+
+      it "should call theme_stylesheet_path when there is a theme" do
+        helper.stub!(:theme_stylesheet_path => '/fakeo-path')
+        helper.otml_css_path.should eql("/fakeo-path")
       end
 
+      it "should return the default otml stylesheet if it can't find a themed one" do
+        # note this might start failing if the asset configuration is changed for the test environment
+        helper.otml_css_path.should eql("/assets/otml.css")
+      end
     end
   end
 
+  # this is *not* an asset URL. There is a named route in routes.rb
+  # this test is just here as documentation
+  describe "otml_project_css_path" do
+    it "should return /stylesheets/project.css (always)" do
+      otml_project_css_path.should eql("/stylesheets/project.css")
+    end
+
+  end
 end
 
 

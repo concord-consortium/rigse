@@ -1,0 +1,22 @@
+# logrotate configuration file for Rails logs.
+# To use, copy to /etc/logrotate.d/.
+/web/portal/shared/log/*.log {
+    # Rotate at 50 MB
+    size 50M
+    # No error messages if the logfile is missing
+    missingok
+    # Keep two old copies
+    rotate 2
+    # gzip rotated logs
+    compress
+    # Don't bother rotating an empty logfile
+    notifempty
+    # Create the new log file (don't wait for Rails to do it)
+    create
+    # Run scripts only once, no matter how many files match this script
+    sharedscripts
+    # Run this script after rotation is completed
+    postrotate
+        touch /web/portal/current/tmp/restart.txt
+    endscript
+}

@@ -65,7 +65,7 @@ Feature: Teacher manages instructional materials of a class
     And the student "gaurav" belongs to class "My Class"
     And the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | dave      | My Class      | Radioactivity       | a               | a      |
+      | dave      | My Class      | Radioactivity       | b               | a      |
       | dave      | My Class      | Radioactivity       | image_q         | Y      |
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
@@ -87,7 +87,7 @@ Feature: Teacher manages instructional materials of a class
     Then I should be on the class edit page for "My Class"
     
   Scenario: Teacher can click button to Add new materials
-    When I follow "Add new Materials to this class"
+    When I follow "Assign Materials"
     Then I should be on the search instructional materials page
     
   Scenario: Teacher should see investigation tabs with the first tab selected
@@ -112,9 +112,9 @@ Feature: Teacher manages instructional materials of a class
     
   @javascript
   Scenario: Teacher should be able to run the report
-    When I follow "Run Report"
+    When I click the tab of Instructional Materials with text "Radioactivity"
+    And I follow "Run Report"
     Then A report window opens of offering "Radioactivity"
-    And I should see "Radioactivity"
         
   Scenario: Teacher should be able to see all students assigned to the class
     Then I should see "Doe, Dave"
@@ -122,11 +122,17 @@ Feature: Teacher manages instructional materials of a class
 
   @javascript
   Scenario: Teacher should be able to see student attempt progress bars
+    When the following student answers:
+      | student   | class         | investigation            | question_prompt | answer |
+      | dave      | My Class      | Plant reproduction       | b               | a      |
+      | dave      | My Class      | Plant reproduction       | image_q         | Y      |
+    And I am on Instructional Materials page for "My Class"
+    And I click the tab of Instructional Materials with text "Plant reproduction"
     Then I should see progress bars for the students
         
-  Scenario: Teacher should see a message if no offerings are present
+  Scenario: Teacher should see a message if no materials are assigned to this class.
     When I go to Instructional Materials page for "Chemistry"
-    Then I should see "No offerings present"
+    Then I should see "No materials assigned to this class."
     
   Scenario: Teacher should not get an error if no activities are present
     When I go to Instructional Materials page for "Mathematics"
@@ -136,17 +142,16 @@ Feature: Teacher manages instructional materials of a class
     When I go to Instructional Materials page for "Physics"
     Then I should see "No students have registered for this class yet"
     
-    
   Scenario: Teacher should be able to run investigation as teacher
-    When I follow "Run as Teacher"
+    When I follow "Run as Teacher" for the investigation "Aerodynamics"
     Then I receive a file for download with a filename like "_investigation_"
     
   Scenario: Teacher should be able to run investigation as student
-    When I follow "Run as Student"
+    When I follow "Run as Student" for the investigation "Aerodynamics"
     Then I receive a file for download with a filename like "_investigation_"
     
   Scenario: Teacher should be able to run the activity
-    When I follow "Run Activity"
+    When I follow "Run Activity" for the activity "Air activity"
     Then I receive a file for download with a filename like "_activity_"
   
   @javascript

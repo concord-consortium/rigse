@@ -12,7 +12,7 @@ if local_assigns[:jnlp_session]
   installer_report_options[:jnlp_session_id] = jnlp_session.id
 else
   # we should really stop putting the session in the jnlp
-  config_url_options[Rails.application.config.session_options[:key]] = request.env["rack.session.options"]
+  config_url_options[Rails.application.config.session_options[:key]] = request.env["rack.session.options"][:id]
 end
 
 if(local_assigns[:learner])

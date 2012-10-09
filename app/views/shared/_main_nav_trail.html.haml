@@ -1,7 +1,7 @@
 %li#home.trail= link_to 'Home', home_path
 %li.trail= link_to 'About', about_path
-- if current_user.portal_teacher
-  %li.trail= link_to 'Browse Instructional Materials' , "/search"
-- if current_user.has_role?('guest')
-  %li.trail= link_to "Unit Previews", preview_list_link
-  %li.trail= link_to 'Browse Instructional Materials' , "/search"
+= render :partial => 'shared/extra_nav'
+- if current_user.has_role?('admin', 'manager', 'researcher', 'author')
+  %li.trail=link_to('Authoring', authoring_path)
+- unless current_user.only_a_student?
+  %li.trail= link_to 'Browse Instructional Materials' , search_path

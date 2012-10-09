@@ -2,17 +2,18 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/production/has"
-set :branch, "has-production"
+set :deploy_to, "/web/portal"
+set :branch, "master"
 
 #############################################################
 #  Servers
 #############################################################
 
-set :domain, "seymour.concord.org"
+set :domain, "has.portal.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
 
+# this currently isn't used, instead the files are proxied back to seymour
 namespace :deploy do
   desc "link in the has resources folder"
   task :has_resource_symlink do

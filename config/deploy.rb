@@ -7,7 +7,7 @@ set :stages, %w(
   rites-staging rites-production
   itsisu-dev itsisu-staging itsisu-production
   smartgraphs-dev smartgraphs-staging smartgraphs-production smartgraphs-aws1
-  has-dev has-staging has-production
+  has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
   genigames-baseline-production genigames-ungamed-production
   assessment-dev assessment-staging assessment-production
@@ -277,11 +277,12 @@ namespace :deploy do
     # sudo "chmod -R g+rw #{shared_path}/system/attachments"
   end
 
-  desc "Create asset packages for production"
-  task :create_asset_packages, :roles => :app do
-    run "cd #{deploy_to}/current && bundle exec compass compile --sass-dir public/stylesheets/scss/ --css-dir public/stylesheets/ -s compact --force"
-    run "cd #{deploy_to}/current && bundle exec rake asset:packager:build_all --trace"
-  end
+  # asset compilation included in Capfile load 'deploy/assets' 
+  # desc "Create asset packages for production"
+  # task :create_asset_packages, :roles => :app do
+  #   # run "cd #{deploy_to}/current && bundle exec compass compile --sass-dir public/stylesheets/scss/ --css-dir public/stylesheets/ -s compact --force"
+  #   run "cd #{deploy_to}/current && bundle exec rake assets:precompile --trace"
+  # end
 
 end
 
@@ -665,6 +666,7 @@ namespace 'account_data' do
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
-after 'deploy:symlink', 'deploy:create_asset_packages'
-after 'deploy:create_asset_packages', 'deploy:cleanup'
+# see load 'deploy/assets' in Capfile
+# after 'deploy:create_symlink', 'deploy:create_asset_packages'
+# after 'deploy:create_asset_packages', 'deploy:cleanup'
 after 'installer:create', 'deploy:restart'

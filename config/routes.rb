@@ -1,4 +1,6 @@
 RailsPortal::Application.routes.draw do
+  match "search" => 'search#index', :as => :search
+
   get "search/index"
   match '/search/list/filter' => 'search#show', :as => :list_filter_search, :method => :get
   post '/search/get_current_material_unassigned_clazzes'
@@ -550,6 +552,7 @@ constraints :id => /\d+/ do
   match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
   match '/banner' => 'misc#banner', :as => :banner
   post  '/installer_report' => 'misc#installer_report', :as => :installer_report
+  match 'authoring' => 'home#authoring', :as => :authoring
   match '/:controller(/:action(/:id))'
 
   root :to => 'home#index'

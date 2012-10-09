@@ -9,10 +9,6 @@ class Report::OfferingStudentStatus
     if learner
        # check if this is a reportable thing, if not then base the percent on the existance of the learner
        if offering.individual_reportable?
-        if learner.report_learner.nil?
-          learner.report_learner = Report::Learner.for_learner(learner)
-        end
-
         learner.report_learner.complete_percent
       else
         # return 99.99 because all we can tell is whether it is in progress
@@ -41,7 +37,7 @@ class Report::OfferingStudentStatus
   end
 
   def last_run
-    if learner && learner.report_learner
+    if learner
       learner.report_learner.last_run
     end
   end

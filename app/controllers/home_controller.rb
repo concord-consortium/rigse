@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   caches_page   :project_css
+  theme "rites"
   
   def index
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
@@ -27,6 +28,9 @@ class HomeController < ApplicationController
   end
   
   def requirements
+  end
+
+  def authoring
   end
 
   # view_context is a reference to the View template object

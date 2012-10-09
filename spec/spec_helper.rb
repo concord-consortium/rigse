@@ -50,6 +50,8 @@ Spork.prefork do
     config.use_transactional_fixtures = true
 
     config.include FailsInThemes
+    config.include Sprockets::Helpers::RailsHelper
+
   end
 end
 

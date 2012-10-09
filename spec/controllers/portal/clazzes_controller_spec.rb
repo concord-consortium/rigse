@@ -912,4 +912,5 @@ describe Portal::ClazzesController do
       assert_template :partial => "portal/students/_form"
     end
   end
+
 end

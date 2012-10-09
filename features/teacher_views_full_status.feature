@@ -7,11 +7,13 @@ Feature: Teacher can see full status
   Background:
     Given The default project and jnlp resources exist using factories
     And the following teachers exist:
-      | login    | password | first_name   | last_name |
-      | teacher  | teacher  | John         | Nash      |
+      | login     | password | first_name   | last_name |
+      | teacher   | teacher  | John         | Nash      |
+      | peterson  | teacher  | peterson     | gaurav    |
     And the following classes exist:
-      | name        | teacher |
-      | My Class    | teacher |
+      | name        | teacher  |
+      | My Class    | teacher  |
+      | Physics     | peterson |
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |
@@ -38,8 +40,10 @@ Feature: Teacher can see full status
       | login     | password  | first_name | last_name |
       | dave      | student   | Dave       | Doe       |
       | chuck     | student   | Chuck      | Smith     |
+      | Mache     | student   | Mache      | Smith     |
     And the student "dave" belongs to class "My Class"
     And the student "chuck" belongs to class "My Class"
+    And the student "Mache" belongs to class "Physics"
     And the following student answers:
       | student   | class    | investigation      | question_prompt | answer |
       | dave      | My Class | Radioactivity      | a               | y      |
@@ -60,6 +64,7 @@ Feature: Teacher can see full status
   Scenario: Teacher can see all the students assigned to the class
     Then I should see "Doe, Dave"
     And I should see "Smith, Chuck"
+    
     
   Scenario: Teacher can see all the activities when an offering is expanded except teacher only activity
     When I expand the column "Radioactivity" on the Full Status page
@@ -99,5 +104,11 @@ Feature: Teacher can see full status
     When I am an anonymous user
     And I go to the full status page for "My Class"
     Then I should be on "my home page"
+    
+    
+  Scenario: Teacher can see a message if no materials are in the class
+    When I login with username: peterson password: teacher
+    And I am on the full status page for "Physics"
+    Then I should see "No materials assigned to this class."
     
     

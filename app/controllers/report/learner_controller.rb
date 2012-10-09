@@ -11,7 +11,7 @@ class Report::LearnerController < ApplicationController
   def update_learners
     # this should be removed eventually,
     # force loading report-learner data
-    Portal::Learner.all.each { |l| Report::Learner.for_learner(l).update_fields }
+    Portal::Learner.all.each { |l| l.report_learner.update_fields }
   end
 
 

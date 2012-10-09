@@ -71,7 +71,8 @@ stylesheets:
   - classes_left_pane
   - instructional_materials
   - site_notice
-
+  - search_materials
+  
 - investigations:
   - themes/investigations/investigations
   - themes/investigations/action_menu_tab
@@ -137,29 +138,37 @@ stylesheets:
   - window/rites
   - window/lightbox
   - live_validation
-  - accordion
-  - notes
   - action_menu_tab
-  - drop_down
-  - data_table
-  - reports
-  - chosen
-  - classes_left_pane
-  - instructional_materials
-
-- has:
-  - app
-  - accordion
-  - please_wait
-  - live_validation
-  - accordion
   - notes
-  - action_menu_tab
   - drop_down
   - data_table
   - reports
   - workgroup
   - chosen
+  - classes_left_pane
+  - instructional_materials
+  - site_notice
+  - search_materials
+
+- has:
+  - app
+  - accordion
+  - please_wait
+  - window/window
+  - window/rites
+  - window/lightbox
+  - live_validation
+  - action_menu_tab
+  - notes
+  - drop_down
+  - data_table
+  - reports
+  - workgroup
+  - chosen
+  - classes_left_pane
+  - instructional_materials
+  - site_notice
+  - search_materials
 
 - xproject:
   - app
@@ -246,4 +255,5 @@ stylesheets:
   - classes_left_pane
   - instructional_materials
   - site_notice
+  - search_materials
 

@@ -23,5 +23,13 @@ RailsPortal::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+
+  #### Asset Pipeline:  #####
+
+  # Minify/uglify/compress assets from the pipeline
+  config.assets.compress = false
+
+  # split apart assets to make debugging easier
+  # config.assets.debug = true
 end
 

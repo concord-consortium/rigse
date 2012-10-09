@@ -96,3 +96,6 @@ public/system/fragments
 public/system/images
 config/paperclip.yml
 config/google_analytics.yml
+chromedriver.log
+public/assets/
+public/*/calendar_date_select

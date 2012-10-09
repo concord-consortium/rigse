@@ -47,9 +47,12 @@ describe Dataservice::BundleContent do
       blogger = Dataservice::BundleLogger.create!()
       student = Portal::Student.create!()
       offering = Portal::Offering.create!()
+      offering.runnable = Investigation.create!(:name => "Test Investigation")
+      offering.save
+      # mock_rep_learner = mock(Report::Learner, :update_fields => true)
+      # Portal::Learner.should_receive(:create_report_learner).and_return(mock_rep_learner)
       learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)
-      mock_rep_learner = mock(Report::Learner, :update_fields => true)
-      Report::Learner.should_receive(:for_learner).exactly(4).times.with(learner).and_return(mock_rep_learner,mock_rep_learner,mock_rep_learner,mock_rep_learner)
+      # learner.should_receive(:report_learner).and_return(mock_rep_learner)
       learner.bundle_logger = blogger
       learner.save!
       blogger.reload
@@ -140,9 +143,9 @@ describe Dataservice::BundleContent do
       blogger = Dataservice::BundleLogger.create!()
       student = Portal::Student.create!()
       offering = Portal::Offering.create!()
+      offering.runnable = Investigation.create!(:name => "Test Investigation")
+      offering.save
       learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)
-      mock_rep_learner = mock(Report::Learner, :update_fields => true)
-      Report::Learner.should_receive(:for_learner).exactly(4).times.with(learner).and_return(mock_rep_learner,mock_rep_learner,mock_rep_learner,mock_rep_learner)
       learner.bundle_logger = blogger
       learner.save!
       blogger.reload
