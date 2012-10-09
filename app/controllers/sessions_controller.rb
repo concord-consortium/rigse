@@ -41,13 +41,22 @@ class SessionsController < ApplicationController
       login = token.split(CCCookieAuth.token_separator).first
       raise 'token parse error' unless login
       user = User.find_by_login(login)
-      riase 'bogus user' unless user
+      raise 'bogus user' unless user
       values = {:login => login, :first => user.first_name, :last => user.last_name}
       student = user.portal_student
       teacher = user.portal_teacher
       if student
         values[:class_words] = student.clazzes.map{ |c| c.class_word }
         values[:teacher] = false
+        values[:classes] = student.clazzes.map{|c|
+          val = {:teacher => c.teacher.name, :word => c.class_word, :name => c.name}
+          offering = c.offerings.select{|o| o.runnable.is_a?(ExternalActivity)}.select{|o| o.runnable.url.gsub(/\/\s*$/,'') == request.referrer.gsub(/\/\s*$/,'') }.first
+          if offering # what do we do if somehow multiple external activities with the same url are assigned to the same class??
+            learner = offering.find_or_create_learner(student)
+            val[:learner] = learner.id if learner
+          end
+          val
+        }
       end
       if teacher
         values[:class_words] = teacher.clazzes.map{ |c| c.class_word }
