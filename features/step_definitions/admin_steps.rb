@@ -77,10 +77,13 @@ When /^I create a new project with the description "([^"]*)"$/ do |description|
   page.should have_no_button("Save")
 end
 
-Then /^I switch to "([^"]*)"$/ do |fullname|
+Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fullname, search|
   visit path_to("user list")
+  step 'I should see "Account Report"'
+  fill_in("search", :with => search)
+  click_button('Search')
   within(:xpath,"//div[@class='action_menu' and contains(.,'#{fullname}')]") do
-  click_button('Switch')
+    click_button('Switch')
   end
 end
 
