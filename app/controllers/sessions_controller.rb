@@ -40,7 +40,7 @@ class SessionsController < ApplicationController
       @login = params[:login]
       @remember_me = params[:remember_me]
       self.current_user = User.anonymous
-      render :action => :new
+      redirect_to :home
     end
   end
   
