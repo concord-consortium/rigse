@@ -53,7 +53,17 @@ RailsPortal::Application.configure do
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :yui
-  config.assets.precompile += %w( print.css otml.css project.css pie/PIE.js calendar_date_select/calendar_date_select.js calendar_date_select/silver.css)
+  config.assets.precompile += %w(
+    print.css
+    otml.css
+    project.css
+    pie/PIE.js
+    calendar_date_select/calendar_date_select.js
+    calendar_date_select/silver.css
+    contentflow_configured.css
+    contentflow_configured.js
+    )
+
   # add in all the theme application.css files
   config.assets.precompile << %r{[^/]*/stylesheets/application\.css}
 

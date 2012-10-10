@@ -77,6 +77,8 @@ source "http://rubygems.org"
   gem "aws-s3",               :require => "aws/s3"
   gem "newrelic_rpm"
   gem "tinymce-rails",        "~>3.5.6"
+  gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
+    :branch => "remove-addon-support"
 
 # Ideally we pre-compile all asetts and then run production
 # with out the asset compiling requirements. But We have dynamic assets
@@ -114,8 +116,8 @@ group :test do
   gem "cucumber-rails",    "~> 1.3.0", :require => false
   gem "database_cleaner",  "~> 0.7.2"
   gem "capybara",          "~> 1.1.2"
-  gem "rspec",             "~> 2.9.0"
-  gem "rspec-rails",       "~> 2.9.0"
+  gem "rspec",             "~> 2.11.0"
+  gem "rspec-rails",       "~> 2.11.0"
   gem "email_spec",        "~> 1.2.1"
   gem "fakeweb",           "~> 1.3", :require => false
   gem "ci_reporter",       "~> 1.7.0"
