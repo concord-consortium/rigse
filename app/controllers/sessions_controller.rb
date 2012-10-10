@@ -50,7 +50,7 @@ class SessionsController < ApplicationController
         values[:teacher] = false
         values[:classes] = student.clazzes.map{|c|
           val = {:teacher => c.teacher.name, :word => c.class_word, :name => c.name}
-          offering = c.offerings.select{|o| o.runnable.is_a?(ExternalActivity)}.select{|o| o.runnable.url.gsub(/\/\s*$/,'') == request.referrer.gsub(/\/\s*$/,'') }.first
+          offering = c.offerings.select{|o| o.active && o.runnable.is_a?(ExternalActivity)}.select{|o| o.runnable.url.gsub(/\/\s*$/,'') == request.referrer.gsub(/\/\s*$/,'') }.first
           if offering # what do we do if somehow multiple external activities with the same url are assigned to the same class??
             learner = offering.find_or_create_learner(student)
             val[:learner] = learner.id if learner
