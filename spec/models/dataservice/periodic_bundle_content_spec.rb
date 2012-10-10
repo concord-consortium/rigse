@@ -106,7 +106,7 @@ PART
 
   # this has to be called after the blob extraction has happened, so we know what url to look for
   def setup_expected(blob)
-    blob_content = blob.is_a?(Dataservice::Blob) ? "http://#{URI.parse(APP_CONFIG[:site_url]).host}/dataservice/blobs/#{blob.id}.blob/#{blob.token}" : blob
+    blob_content = blob.is_a?(Dataservice::Blob) ? "/dataservice/blobs/#{blob.id}.blob/#{blob.token}" : blob
     @expected_body =   '<?xml version="1.0" encoding="UTF-8"?>
       <otrunk id="04dc61c3-6ff0-11df-a23f-6dcecc6a5613">
         <imports>
