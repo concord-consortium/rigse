@@ -49,8 +49,8 @@ module ApplicationHelper
   end
 
   def display_system_info
-    commit = git_repo_info
-    jnlp = maven_jnlp_info
+    commit = git_repo_info rescue {:branch => "<b>Error loading git info!</b>"}
+    jnlp = maven_jnlp_info rescue {:name => "<b>Error loading JNLP info!</b>"}
     info = <<-HEREDOC
 <ul class="tiny menu_h">
   <li>#{commit[:branch]}</li>
