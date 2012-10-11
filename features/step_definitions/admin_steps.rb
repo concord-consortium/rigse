@@ -83,7 +83,7 @@ Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fulln
   fill_in("search", :with => search)
   click_button('Search')
   within(:xpath,"//div[@class='action_menu' and contains(.,'#{fullname}')]") do
-    click_button('Switch')
+    click_link('Switch')
   end
 end
 
