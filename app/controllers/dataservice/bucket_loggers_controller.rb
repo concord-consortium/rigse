@@ -56,4 +56,24 @@ class Dataservice::BucketLoggersController < ApplicationController
       }
     end
   end
+
+  def show_log_items_by_learner
+    learner = Portal::Learner.find(params[:id]) rescue nil
+    raise ActionController::RoutingError.new('Not Found') unless learner
+
+    @dataservice_bucket_logger = Dataservice::BucketLogger.find_or_create_by_learner_id(learner.id)
+    bundle = "[" + @dataservice_bucket_logger.bucket_log_items.map{|li| li.content }.join(",") + "]"
+
+    respond_to do |format|
+      # format.html # show.html.erb
+      format.bundle {
+        send_data(
+          bundle,
+          :type => 'application/octet-stream',
+          :filename => "data-logs-#{@dataservice_bucket_logger.id}.dat",
+          :disposition => 'inline'
+        )
+      }
+    end
+  end
 end

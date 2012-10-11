@@ -12,7 +12,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120830195146) do
+ActiveRecord::Schema.define(:version => 20121011171438) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -149,6 +149,15 @@ ActiveRecord::Schema.define(:version => 20120830195146) do
   end
 
   add_index "dataservice_bucket_contents", ["bucket_logger_id"], :name => "index_dataservice_bucket_contents_on_bucket_logger_id"
+
+  create_table "dataservice_bucket_log_items", :force => true do |t|
+    t.text     "content"
+    t.integer  "bucket_logger_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "dataservice_bucket_log_items", ["bucket_logger_id"], :name => "index_dataservice_bucket_log_items_on_bucket_logger_id"
 
   create_table "dataservice_bucket_loggers", :force => true do |t|
     t.integer  "learner_id"

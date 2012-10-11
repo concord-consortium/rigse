@@ -281,9 +281,15 @@ constraints :id => /\d+/ do
   post '/dataservice/periodic_bundle_loggers/:id/periodic_bundle_contents.bundle' => 'dataservice/periodic_bundle_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_periodic_bundle_contents'
   post '/dataservice/periodic_bundle_loggers/:id/session_end_notification.bundle' => 'dataservice/periodic_bundle_loggers_metal#session_end_notification', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_session_end_notification'
 
+  # bucket contents routes
   post '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents_by_learner'
   get  '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_loggers#show_by_learner',   :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_by_learner'
   post '/dataservice/bucket_loggers/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents'
+
+  # bucket log items routes
+  post '/dataservice/bucket_loggers/:id/bucket_log_items(.:format)'         => 'dataservice/bucket_log_items_metal#create',            :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items'
+  post '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_learner'
+  get  '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_learner'
 
   # A prettier version of the blob w/ token url
   match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
