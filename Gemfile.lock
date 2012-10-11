@@ -7,6 +7,15 @@ GIT
       rails (~> 3.2.0)
 
 GIT
+  remote: git://github.com/concord-consortium/contentflow
+  revision: 03b18e3c81abead40614f4a748878c63b6381eac
+  branch: remove-addon-support
+  specs:
+    contentflow (0.0.3)
+      railties (>= 3.0)
+      sass (>= 3.2)
+
+GIT
   remote: git://github.com/concord-consortium/haml.git
   revision: 4987b10743d59f3e50d444f10708394ce8b21aac
   branch: xml-mime-type-and-ie8-keycode-fix
@@ -86,7 +95,7 @@ GEM
       builder
       mime-types
       xml-simple
-    builder (3.0.0)
+    builder (3.0.3)
     capistrano (2.12.0)
       highline
       net-scp (>= 1.0.0)
@@ -239,7 +248,7 @@ GEM
       rack (>= 0.4)
     rack-ssl (1.3.2)
       rack
-    rack-test (0.6.1)
+    rack-test (0.6.2)
       rack (>= 1.0)
     rails (3.2.8)
       actionmailer (= 3.2.8)
@@ -265,19 +274,19 @@ GEM
     remarkable_activerecord (3.1.13)
       remarkable (~> 3.1.13)
       rspec (>= 1.2.0)
-    rspec (2.9.0)
-      rspec-core (~> 2.9.0)
-      rspec-expectations (~> 2.9.0)
-      rspec-mocks (~> 2.9.0)
-    rspec-core (2.9.0)
-    rspec-expectations (2.9.1)
+    rspec (2.11.0)
+      rspec-core (~> 2.11.0)
+      rspec-expectations (~> 2.11.0)
+      rspec-mocks (~> 2.11.0)
+    rspec-core (2.11.1)
+    rspec-expectations (2.11.3)
       diff-lcs (~> 1.1.3)
-    rspec-mocks (2.9.0)
-    rspec-rails (2.9.0)
+    rspec-mocks (2.11.3)
+    rspec-rails (2.11.0)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
-      rspec (~> 2.9.0)
+      rspec (~> 2.11.0)
     ruby-debug (0.10.4)
       columnize (>= 0.1)
       ruby-debug-base (~> 0.10.4.0)
@@ -286,7 +295,7 @@ GEM
     ruby-ole (1.2.11.3)
     ruby-rc4 (0.1.5)
     rubyzip (0.9.9)
-    sass (3.1.20)
+    sass (3.2.1)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -354,6 +363,7 @@ DEPENDENCIES
   capybara (~> 1.1.2)
   ci_reporter (~> 1.7.0)
   compass-rails
+  contentflow!
   cucumber (~> 1.1.9)
   cucumber-rails (~> 1.3.0)
   daemons (~> 1.1.8)
@@ -396,8 +406,8 @@ DEPENDENCIES
   rdoc (~> 3.9.4)
   redcarpet (~> 2.1.1)
   remarkable_activerecord (~> 3.1.13)
-  rspec (~> 2.9.0)
-  rspec-rails (~> 2.9.0)
+  rspec (~> 2.11.0)
+  rspec-rails (~> 2.11.0)
   ruby-debug
   ruby-ole (~> 1.2.11.2)
   rush!

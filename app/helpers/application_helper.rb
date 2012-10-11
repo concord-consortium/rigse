@@ -1227,7 +1227,7 @@ module ApplicationHelper
   end
 
   def use_contentflow
-    javascript_include_tag("contentflow/contentflow.js").sub(/></, " load='white' ><")
+    javascript_include_tag("contentflow_configured") + stylesheet_link_tag("contentflow_configured")
   end
 
   def contentflow(name, opts = {})

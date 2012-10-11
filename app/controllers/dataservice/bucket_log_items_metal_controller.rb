@@ -1,4 +1,4 @@
-class Dataservice::BucketContentsMetalController < ActionController::Metal
+class Dataservice::BucketLogItemsMetalController < ActionController::Metal
 
   def create
     create_with_logger(Dataservice::BucketLogger.find(params[:id]))
@@ -17,11 +17,9 @@ class Dataservice::BucketContentsMetalController < ActionController::Metal
     if bucket_logger
       body = request.body.read
       # also set processed and empty for now
-      bucket_content = Dataservice::BucketContent.create(
+      bucket_content = Dataservice::BucketLogItem.create(
         :bucket_logger_id => bucket_logger.id,
-        :body => body,
-        :processed => true,
-        :empty => (body.nil? || body.empty?)
+        :content => body
       )
     end
     if bucket_content
