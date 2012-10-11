@@ -5,7 +5,8 @@ class Dataservice::BucketContentsMetalController < ActionController::Metal
   end
 
   def create_by_learner
-    bucket_logger = Dataservice::BucketLogger.find_or_create_by_learner_id(params[:id])
+    learner = Portal::Learner.find(params[:id]) rescue nil
+    bucket_logger = learner ? Dataservice::BucketLogger.find_or_create_by_learner_id(learner.id) : nil
     create_with_logger(bucket_logger)
   end
 
