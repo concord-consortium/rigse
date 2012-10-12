@@ -83,7 +83,7 @@ describe Portal::StudentsController do
       stub_user_with_params
       post :create, @params_for_creation
       assert_select "*#clazzes_nav", false
-      assert_select "input#login"
+      assert_select "input#header_login"
     end
 
     it "does not create a user or a student when given incorrect password_confirmation" do
