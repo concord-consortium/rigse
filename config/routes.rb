@@ -218,7 +218,7 @@ constraints :id => /\d+/ do
   end
   match '/portal/school_selector/update' => 'portal/school_selector#update', :as => :school_selector_update
   match '/logout' => 'sessions#destroy', :as => :logout
-  match '/login' => 'sessions#new', :as => :login
+  match '/login' => 'home#index', :as => :login
   match '/register' => 'users#create', :as => :register
   match '/signup' => 'users#new', :as => :signup
   match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => nil
