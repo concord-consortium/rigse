@@ -169,7 +169,6 @@ body#tinymce {
 #lead {
   border-bottom: 1px solid #a1d2d1;
   clear: both;
-  float: left;
   line-height: 1.833;
   margin-bottom: 1.833em;
   &.project-header {
@@ -183,9 +182,15 @@ body#tinymce {
 
 .project-header h1 {
   background: {
-    color: white;
-    image: url(/assets/new/banners/empty.png);
-    repeat: no-repeat; };
+    color: #f9c667; /* Old browsers */
+    image: -moz-linear-gradient(top, #f9c667 0%, #f9c667 18%, #f7d596 54%, #ffffff 100%); /* FF3.6+ */
+    image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9c667), color-stop(18%,#f9c667), color-stop(54%,#f7d596), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+    image: -webkit-linear-gradient(top, #f9c667 0%,#f9c667 18%,#f7d596 54%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+    image: -o-linear-gradient(top, #f9c667 0%,#f9c667 18%,#f7d596 54%,#ffffff 100%); /* Opera 11.10+ */
+    image: -ms-linear-gradient(top, #f9c667 0%,#f9c667 18%,#f7d596 54%,#ffffff 100%); /* IE10+ */
+    image: linear-gradient(to bottom, #f9c667 0%,#f9c667 18%,#f7d596 54%,#ffffff 100%); /* W3C */
+    };
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9c667', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
   height: 172px;
   margin: 0;
   text-indent: -999em;
@@ -1446,3 +1451,109 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
   font-style: italic;
   text-align: center;
 }
+
+.header-login-box{
+  height: 172px;
+  margin-top: -172px;
+  padding-right: 10px;
+  padding-left: 10px;
+  float: right;
+  
+  form{
+    padding-top: 10px;
+    position: relative;
+    
+    table{
+      position: relative;
+      margin: 2px 0px;
+      
+      tr.first-row
+      {
+        td
+        {
+          padding-bottom: 6px;
+        }
+        td.login-box
+        {
+          text-align: right;
+          padding-bottom: 6px;
+          padding-left: 10px;
+          input#header_login{
+            height:15px;
+            width: 140px;
+          }
+        }
+      }
+      tr.second-row{
+        td.password-box{
+          text-align: right;
+          input#header_password{
+            height: 15px;
+            width: 140px;
+          }
+        }
+      }
+      tr.third-row{
+        
+        td{
+          text-align: right;
+          padding-top: 5px;
+          input#LoginSubmitButtonHeader{
+          position: relative;
+        }
+      }
+      }
+    }
+    
+    .login-links{
+      position: relative;
+      padding-top: 16px;
+      padding-right: 21px;
+      a#link_forgot_password{
+        position: relative;
+        display: block;
+      }
+    }
+  }
+}
+
+.welcome-box{
+  position: relative;
+  height: 172px;
+  float: right;
+  margin-top: -172px;
+  padding-right: 20px;
+  padding-left: 10px;
+  table{
+    margin-top:25%;
+    tr{
+        font-size: 15px;
+        td.logout-link{
+        padding-left: 20px;
+      }
+    }
+    tr{
+      td.my-preferences-link{
+          text-align: right;
+          font-size: 12px;
+      }
+    }
+  }
+}
+
+
+#action_menu_wrapper{
+  .action_menu_header_left{
+    width: 39% !important;
+  }
+  .action_menu_header_right{
+    form{
+      padding: 0px;
+      input[type="submit"]{
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+
