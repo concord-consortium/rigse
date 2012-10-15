@@ -155,10 +155,11 @@ function setRecentActivityTableHeaders(iDefaultWidth,offering_id)
     });
 }
 
+var g_reportLinkPopup = null;
 
 function openReportLinkPopup(descriptionText)
 {
-    var oPopUpWindow = new UI.Window({ theme: "lightbox",
+    g_reportLinkPopup = new UI.Window({ theme: "lightbox",
         shadow: true,
         width:  410,
         height: 125});
@@ -166,10 +167,11 @@ function openReportLinkPopup(descriptionText)
                     descriptionText +
                     "</div>" +
                     "<div class='msg_popup_ok_button'>" +
-                    "<a href=\"javascript:void(0)\" class=\"button\" onclick=\"oPopUpWindow.destroy();\">Ok</a>" +
+                    "<a href=\"javascript:void(0)\" class=\"button\" onclick=\"g_reportLinkPopup.destroy();\">Ok</a>" +
                     "</div>";
-    oPopUpWindow.setContent(popupHtml).show(true).center();
-    oPopUpWindow.setHeader("Message");
-    oPopUpWindow.activate();
+    g_reportLinkPopup.setContent(popupHtml).show(true).center();
+    g_reportLinkPopup.setHeader("Message");
+    g_reportLinkPopup.activate();
+    return;
 }
 
