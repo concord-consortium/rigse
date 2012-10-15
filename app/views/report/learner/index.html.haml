@@ -10,11 +10,6 @@
     %table{:clas => 'form', :style=>"width: 90%;"}
       %tr
         %td
-          %label schools:
-        %td
-          = select_tag('schools', options_for_select(@all_schools.map {|s| [s.name, s.id]}, @select_schools.map {|s| s.id}), { :multiple => true })
-      %tr
-        %td
           %label teachers:
         %td
           = select_tag('teachers', options_for_select(@all_teachers.map {|s| [s.name, s.id]}, @select_teachers.map {|s| s.id}), { :multiple => true })
@@ -43,6 +38,5 @@
       = submit_tag 'bundle report'
 
 :javascript
-  new Chosen($('schools'));
   new Chosen($('runnables'));
   new Chosen($('teachers'));
