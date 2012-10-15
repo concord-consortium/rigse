@@ -23,12 +23,12 @@ function highlightlabel(e) {
     e.addClassName('highlightoption');
 }
 
-function searchsuggestions(e, oElement) {
+function searchsuggestions(e, oElement,bSubmit_form) {
     var enter_key_code = 13;
     var downArrow_key_code = 40;
     var upArrow_key_code = 38;
     var escape_key_code = 27;
-    
+    if (bSubmit_form == undefined) bSubmit_form = false;
     if(e.keyCode == enter_key_code || e.keyCode == downArrow_key_code || e.keyCode == upArrow_key_code || e.keyCode == escape_key_code) {
         return false;
     }
@@ -36,6 +36,7 @@ function searchsuggestions(e, oElement) {
     ajaxRequest = new Ajax.Request('/search/get_search_suggestions', {
         parameters : {
             search_term : oElement.value,
+            submit_form : bSubmit_form,
             ajaxRequestCounter:ajaxRequestCounter
         },
         method : 'get'
@@ -359,6 +360,21 @@ function uncheckednoprobe(probeObj)
     if($(probeObj).checked){
         $('probe_0').checked= false;
     }
+}
+
+function submit_suggestion(search_box){
+    var strSuggestiontext;
+    try{
+        strSuggestiontext = fulltrim(search_box.textContent);
+    }
+    catch(e){
+        strSuggestiontext = fulltrim(search_box.innerText);
+    }
+    $('search_term').value = strSuggestiontext;
+    $('suggestions').remove();
+    //$('show_suggestion').writeAttribute('name','no_suggestion');
+    suggestioncount = -1;
+    document.getElementsByName('GO')[0].click();
 }
 
 document.observe("dom:loaded", function() {

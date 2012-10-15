@@ -1,3 +1,4 @@
+= javascript_include_tag "search_materials.js"
 - content_for :top_menu_items do
   =link_to(TOP_LEVEL_CONTAINER_NAME_PLURAL, investigations_path)
 
@@ -6,9 +7,10 @@
   %pre 
     bin/rake app:setup:new_app
 - else
-  .padded_content
-    - unless current_project.home_page_content.blank?
-      = current_project.home_page_content.html_safe
-    - else
-      - render_project_info
-      = content_for :project_info
+  %div{:style=>"background-color:white"}
+    .padded_content
+      - unless current_project.home_page_content.blank?
+        = current_project.home_page_content.html_safe
+      - else
+        - render_project_info
+        = content_for :project_info

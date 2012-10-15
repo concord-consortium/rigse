@@ -9,7 +9,9 @@ class HomeController < ApplicationController
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
-   
+   if current_user.anonymous?
+    @wide_content_layout = true
+   end
   end
   
   def readme

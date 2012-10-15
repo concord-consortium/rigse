@@ -102,6 +102,7 @@ class SearchController < ApplicationController
   def get_search_suggestions
     @search_term = params[:search_term]
     ajaxResponseCounter = params[:ajaxRequestCounter]
+    submitform = params[:submit_form]
     search_options = {
       :name => @search_term,
       :sort_order => 'name ASC'
@@ -114,7 +115,7 @@ class SearchController < ApplicationController
     if request.xhr?
        render :update do |page|
          page << "if (ajaxRequestCounter == #{ajaxResponseCounter}) {"
-         page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@search_term.length,:investigations=>investigations,:activities=>activities}}
+         page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@search_term.length,:investigations=>investigations,:activities=>activities,:submit_form=>submitform}}
          page << '}'
        end
     end

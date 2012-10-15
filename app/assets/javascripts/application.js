@@ -26,4 +26,5 @@
 = require 'site_notices'
 = require tinymce
 = require_tree './in_place_rich_editor'
+= require 'jquery/jquery'
 */
