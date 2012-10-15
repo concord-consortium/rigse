@@ -65,9 +65,9 @@ namespace :app do
     desc "Regenerate all of the Report::Learner objects"
     task :update_report_learners, [:force] => :environment do |t, args|
       args.with_defaults(:force => false)
-      learners = Portal::Learner.all
-      puts "#{learners.size} learners to process...\n"
-      learners.each_with_index do |l,i|
+      puts "#{Portal::Learner.count} learners to process...\n"
+      i = 0
+      Portal::Learner.find_each do |l|
         print ("\n%5d: " % i) if (i % 250 == 0)
         if l.offering
           rl = l.report_learner
@@ -76,6 +76,7 @@ namespace :app do
           end
         end
         print '.' if (i % 5 == 4)
+        i += 1
       end
       puts " done."
     end
