@@ -45,15 +45,16 @@ namespace :app do
     desc "Regenerate all of the Report::Learner objects"
     task :update_report_learners, [:force] => :environment do |t, args|
       args.with_defaults(:force => false)
-      learners = Portal::Learner.all
-      puts "#{learners.size} learners to process...\n"
-      learners.each_with_index do |l,i|
+      puts "#{Portal::Learner.count} learners to process...\n"
+      i = 0
+      Portal::Learner.find_each do |l|
         print ("\n%5d: " % i) if (i % 250 == 0)
         rl = Report::Learner.for_learner(l)
         if args[:force] || (l.bundle_logger.last_non_empty_bundle_content && l.bundle_logger.last_non_empty_bundle_content.updated_at != rl.last_run)
           rl.update_fields
         end
         print '.' if (i % 5 == 4)
+        i += 1
       end
       puts " done."
     end
