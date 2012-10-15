@@ -156,12 +156,19 @@ function setRecentActivityTableHeaders(iDefaultWidth,offering_id)
 }
 
 
-function report_Link_Popup(description_text)
+function openReportLinkPopup(descriptionText)
 {
-    oPopUpWindow = new UI.Window({ theme: "lightbox",
+    var oPopUpWindow = new UI.Window({ theme: "lightbox",
         shadow: true,
         width:  410,
-        height: 125}).setContent("<div id='windowcontent' style='padding:10px;padding-left:15px'>" + description_text + "</div> <div class='msg_popup_ok_button'> <a href=\"javascript:void(0)\" class=\"button\" onclick=\"oPopUpWindow.destroy();\">Ok</button> </div>").show(true).center();
+        height: 125});
+    var popupHtml = "<div id='windowcontent' style='padding:10px;padding-left:15px'>" +
+                    descriptionText +
+                    "</div>" +
+                    "<div class='msg_popup_ok_button'>" +
+                    "<a href=\"javascript:void(0)\" class=\"button\" onclick=\"oPopUpWindow.destroy();\">Ok</a>" +
+                    "</div>";
+    oPopUpWindow.setContent(popupHtml).show(true).center();
     oPopUpWindow.setHeader("Message");
     oPopUpWindow.activate();
 }

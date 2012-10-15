@@ -29,7 +29,7 @@
               %div.progressbar_container
                 - if learner.nil?
                   - description_text = "Reporting is unavailable until at least one activity is started by this student"
-                  = link_to "#{student_name}", "#",:class=>"activity_report", :onclick => "report_Link_Popup('#{description_text}')"
+                  = link_to "#{student_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
                 - else
                   = link_to( student_name,activity_report_portal_learner_url(learner),{:target=>"_blank",:class=>"activity_report"})
     .progress_div.webkit_scrollbars
@@ -48,7 +48,7 @@
                     = link_to( activity_name,activity_report_portal_offering_url(offering,:activity_id => activity.id),{:target=>"_blank",:class=>"activity_report"})
                   - else
                     - description_text = "Reporting is unavailable until at least one student has started this activity"
-                    = link_to "#{activity_name}", "#",:class=>"activity_report", :onclick => "report_Link_Popup('#{description_text}')"
+                    = link_to "#{activity_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
         - student_statuses.each do |student_status|
           %tr
             - activities.each do |activity|
@@ -68,7 +68,7 @@
                           .progress{:style=>"width:#{percentage}%"}
                   - else
                     - description_text = "Reporting is unavailable until the selected activity is started by this student"
-                    %a{:href=>"#",:onclick=>"report_Link_Popup('#{description_text}')"}
+                    %a{:href=>"#",:onclick=>"openReportLinkPopup('#{description_text}')"}
                       .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
                         .progress{:style=>"width:#{percentage}%"}
     .clearboth{:style=>"height:10px"}
