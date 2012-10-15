@@ -4,4 +4,7 @@
 (This is the text that gets displayed on the front page of the project, before a user has logged in.
 %br
 Clear everything from this editor and save the project to reset the content to default.)
-= f.text_area :home_page_content, :id => dom_id_for(admin_project, :item, :textarea), :class => 'tinymce_textarea'
+- home_page_text_area_id = dom_id_for(admin_project, :home_page_content, :textarea)
+= f.text_area :home_page_content, :id => home_page_text_area_id, :class => 'mceNoEditor'
+%br
+= link_to "Preview Home Page", "javascript: void(0)", :onclick=>"preview_home_page('#{home_page_text_area_id}');", :class=>"button pie"

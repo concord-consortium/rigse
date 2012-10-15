@@ -9,6 +9,9 @@
 - else
   %div{:style=>"background-color:white"}
     .padded_content
+    - if defined? home_page_preview_content
+      = home_page_preview_content.html_safe
+    - else
       - unless current_project.home_page_content.blank?
         = current_project.home_page_content.html_safe
       - else

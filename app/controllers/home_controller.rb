@@ -171,4 +171,17 @@ class HomeController < ApplicationController
     
   end
   
+  def preview_home_page
+    @preview_home_page_content = true
+    @home_page_preview_content = params[:home_page_preview_content]
+  end
+  
+  def current_user #override to preview home page content
+      if @preview_home_page_content
+        @anonymous_user = User.find_by_login('anonymous')
+        @anonymous_user
+      else
+        super
+      end
+  end
 end
