@@ -9,11 +9,12 @@
         = link_to_container(inv)
 
 %h4= link_to "#{Lightweight::LightweightActivity.display_name.pluralize}", lightweight.activities_path
-= field_set_tag "#{Lightweight::LightweightActivity.display_name.pluralize} you've authored" do
-  %ul
-    - current_user.lightweight_activities.each do |lwa|
-      %li
-        = link_to_container(lwa)
+- if current_user.lightweight_activities.length > 0
+  = field_set_tag "#{Lightweight::LightweightActivity.display_name.pluralize} you've authored" do
+    %ul
+      - current_user.lightweight_activities.each do |lwa|
+        %li
+          = link_to_container(lwa)
 
 - if current_user.has_role?('admin') || current_user.resource_pages.present?
   %h4= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
