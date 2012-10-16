@@ -100,7 +100,7 @@ Feature: Admin configures project settings
     Then I should see "test project"
     
   @javascript
-  Scenario: Admin should Help page from admin projects page
+  Scenario: Admin should preview Help page from admin projects page
     When I login as an admin
     And am on the admin projects page
     And I follow "edit project"
