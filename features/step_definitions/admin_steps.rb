@@ -87,11 +87,6 @@ Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fulln
   end
 end
 
-When /^(?:|I )fill in (HTML|Help) textarea with "(.+)" on the admin projects page$/ do|page, text|
-  case text
-    when "HTML"
-    fill_in("admin_project[home_page_content]", :with => text)
-    when "HTML"
-    fill_in("admin_project[help_page_content]", :with => text)
-  end
+When /^(?:|I )fill in HTML textarea with "(.+)" on the admin projects page$/ do|text|
+  fill_in("admin_project[home_page_content]", :with => text)
 end
