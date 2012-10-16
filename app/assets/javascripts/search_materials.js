@@ -200,9 +200,11 @@ function enableForm(){
 }
 
 function abortAjaxRequest() {
-    
     if(ajaxRequestSend) {
-        ajaxRequest.transport.abort();
+        if(ajaxRequest.transport.readyState==4)
+        {
+            ajaxRequest.transport.abort();
+        }
         ajaxRequestSend = 0;
         $('search_suggestions').hide();
         if($('suggestions')) {
