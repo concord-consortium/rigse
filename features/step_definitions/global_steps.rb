@@ -191,3 +191,15 @@ When /^the project settings (enables|disables) use of Grade Span Expectation$/ d
     APP_CONFIG[:use_gse] = false
   end
 end
+
+When /^the newly opened window (should|should not) have content "(.*)"$/ do |present, content|
+  step 'I wait 2 seconds'
+  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+    case present
+      when "should"
+      page.should have_content(content)
+      when "should not"
+      page.should have_no_content(content)
+    end
+  end
+end

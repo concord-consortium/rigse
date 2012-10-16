@@ -98,5 +98,15 @@ Feature: Admin configures project settings
     And am on the admin projects page
     When I create a new project with the description "test project"
     Then I should see "test project"
-
-
+    
+  @javascript
+  Scenario: Admin should Help page from admin projects page
+    When I login as an admin
+    And am on the admin projects page
+    And I follow "edit project"
+    And I fill "custom_help_page_html_textarea" with "Creating Help Page"
+    And I press "Save"
+    And am on the admin projects page
+    And I follow "Preview Help Page"
+    Then the newly opened window should have content "Creating Help Page"
+    
