@@ -177,7 +177,7 @@ class HomeController < ApplicationController
   end
   
   def current_user #override to preview home page content
-      if @preview_home_page_content
+      if defined? @preview_home_page_content
         @anonymous_user = User.find_by_login('anonymous')
         @anonymous_user
       else
