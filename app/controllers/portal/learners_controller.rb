@@ -95,6 +95,7 @@ class Portal::LearnersController < ApplicationController
   
   def report
     @portal_learner = Portal::Learner.find(params[:id])
+    @report_embeddable_filter = @portal_learner.offering.report_embeddable_filter.embeddables
     activity_report_embeddable_filter = session[:activity_report_embeddable_filter] 
     unless activity_report_embeddable_filter.nil?
       @portal_learner.offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
