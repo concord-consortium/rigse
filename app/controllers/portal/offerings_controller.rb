@@ -164,6 +164,7 @@ class Portal::OfferingsController < ApplicationController
 
   def report
     @offering = Portal::Offering.find(params[:id])
+    @report_embeddable_filter = @offering.report_embeddable_filter.embeddables
     activity_report_embeddable_filter = session[:activity_report_embeddable_filter]
     unless activity_report_embeddable_filter.nil?
       @offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
@@ -229,7 +230,7 @@ class Portal::OfferingsController < ApplicationController
   def report_embeddable_filter
     @offering = Portal::Offering.find(params[:id])
     @report_embeddable_filter = @offering.report_embeddable_filter
-
+    @filtered = true
     if params[:commit] == "Show all"
       @report_embeddable_filter.ignore = true
     else
