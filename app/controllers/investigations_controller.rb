@@ -7,6 +7,7 @@ class InvestigationsController < AuthoringController
   # cache_sweeper :investigation_sweeper, :only => [ :update ]
 
   include RestrictedController
+  include ControllerParamUtils
   #access_rule 'researcher', :only => [:usage_report, :details_report]
 
   before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
@@ -182,7 +183,7 @@ class InvestigationsController < AuthoringController
   # GET /investigations/1.otml
   def show
     # display for teachers? Later we can determin via roles?
-    @teacher_mode = params[:teacher_mode]
+    @teacher_mode = boolean_param(:teacher_mode)
     respond_to do |format|
       format.run_html   { render :show, :layout => "layouts/run" }
       format.html {
