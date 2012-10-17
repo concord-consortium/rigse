@@ -15,10 +15,10 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/lightweight-activities-plugin.git
-  revision: 576919f74265014ea65bb8a56068195fc7211750
+  revision: ff247f9461f38f1c9f456b4109eecb3d8f721fda
   branch: simple-authoring
   specs:
-    lightweight_activities (0.0.17)
+    lightweight_activities (0.0.18)
       dynamic_form (~> 1.1.4)
       haml (~> 3.1.4)
       rails (~> 3.2.6)
@@ -96,7 +96,7 @@ GEM
       builder
       mime-types
       xml-simple
-    builder (3.0.3)
+    builder (3.0.4)
     capistrano (2.13.4)
       highline
       net-scp (>= 1.0.0)
