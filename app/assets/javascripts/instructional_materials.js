@@ -167,7 +167,7 @@ function openReportLinkPopup(descriptionText)
                     descriptionText +
                     "</div>" +
                     "<div class='msg_popup_ok_button'>" +
-                    "<a href=\"javascript:void(0)\" class=\"button\" onclick=\"g_reportLinkPopup.destroy();\">Ok</a>" +
+                    "<a href=\"javascript:void(0)\" class=\"button\" onclick=\"g_reportLinkPopup.destroy();\">OK</a>" +
                     "</div>";
     g_reportLinkPopup.setContent(popupHtml).show(true).center();
     g_reportLinkPopup.setHeader("Message");
