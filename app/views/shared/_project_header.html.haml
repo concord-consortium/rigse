@@ -17,6 +17,13 @@
         %tr
           %td.my-preferences-link
             = link_to 'My Preferences', preferences_user_path(current_user)
+            - if @original_user != current_user
+              |
+              - switch_user_form_id = "switch_user_id_#{@original_user.id}"
+              = link_to 'Switch back','javascript: void(0);',:onclick => "$('#{switch_user_form_id}').submit();"
+              = form_for @original_user, :url => switch_user_path(@original_user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
+                = hidden_field_tag 'user[id]', @original_user.id
+                = hidden_field_tag 'commit', 'Switch'
 #nav_top
   %span.hidden.doNotPrint
     Navigation:
