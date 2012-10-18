@@ -335,6 +335,8 @@ class Portal::OfferingsController < ApplicationController
           # create saveable
           create_saveable(embeddable, @offering, learner, value) if embeddable
         end
+        learner.report_learner.last_run = DateTime.now
+        learner.report_learner.update_fields
       end
       flash[:notice] = "Your answers have been saved."
       redirect_to :home
