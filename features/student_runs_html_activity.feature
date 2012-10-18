@@ -31,5 +31,10 @@ Feature: Student runs html activity
     And I press "Submit"
     And I login with username: teacher
     And I follow "Recent Activity"
-    And I debug
+    # And I debug
+
+  # Ideally we should try using hooks and tags, but I couldn't
+  # get that to owrk around the background
+  Scenario: I clean things up after these tests run...
+    Then use jnlps is reset to the original setting
 
