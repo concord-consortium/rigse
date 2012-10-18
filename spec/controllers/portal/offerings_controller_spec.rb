@@ -92,7 +92,14 @@ describe Portal::OfferingsController do
       @offering = mock_model(Portal::Offering, :id => 45, :runnable => @runnable, :clazz => @clazz)
       @user = Factory(:user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
-      @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
+      @report_learner = mock_model(Report::Learner,
+        :last_run=     => nil,
+        :update_fields => nil)
+      @learner = mock_model(Portal::Learner, 
+        :id => 34, 
+        :offering => @offering, 
+        :student  => @portal_student, 
+        :report_learner => @report_learner)
       controller.stub!(:setup_portal_student).and_return(@learner)
       Portal::Offering.stub!(:find).and_return(@offering)
       stub_current_user :user
