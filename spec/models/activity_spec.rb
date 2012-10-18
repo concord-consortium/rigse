@@ -17,6 +17,14 @@ describe Activity do
     act.destroy
   end
 
+  it 'has_many for all BASE_EMBEDDABLES' do
+    BASE_EMBEDDABLES.length.should be > 0
+    act = Activity.create!(@valid_attributes)
+    BASE_EMBEDDABLES.each do |e|
+      act.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize).should be(true)
+    end
+  end
+
   describe "should be publishable" do
     before(:each) do
       @activity = Activity.create!(@valid_attributes)
