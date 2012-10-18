@@ -136,7 +136,7 @@ This task will:
           Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
         end
         Rake::Task['app:convert:assign_vernier_golink_to_users'].invoke
-        if USING_JNLPS
+        if APP_CONFIG[:use_jnlps]
           Rake::Task['app:jnlp:generate_maven_jnlp_resources'].invoke
         end
         if APP_CONFIG[:include_otrunk_examples]
