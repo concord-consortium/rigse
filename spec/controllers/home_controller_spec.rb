@@ -43,4 +43,18 @@ describe HomeController do
       end
     end
   end
+  describe "Post preview_home_page" do
+    it "should set variables to preview home page" do
+      anonymous_user = Factory.next(:anonymous_user)
+      @post_params = {
+        :home_page_preview_content =>"<b>Home page content.</b>",
+      }
+      post :preview_home_page, @post_params
+      assert_response :success
+      assert_template 'preview_home_page'
+      assert_not_nil assigns[:home_page_preview_content]
+      assert_equal assigns[:home_page_preview_content], @post_params[:home_page_preview_content]
+      assert_equal assigns[:preview_home_page_content], true
+    end
+  end
 end
