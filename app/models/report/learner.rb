@@ -42,14 +42,14 @@ class Report::Learner < ActiveRecord::Base
       pub_time =pub_logger.periodic_bundle_contents.last.updated_at
     end
     
-    time = bundle_time
     if pub_time && bundle_time
-      time = pub_time > bundle_time ? pub_time : bundle_time
+      self.last_run  = pub_time > bundle_time ? pub_time : bundle_time
     elsif pub_time
-      time = pub_time
+      self.last_run  = pub_time
+    elsif bundle_time
+      self.last_run  = bundle_time
     end
 
-    self.last_run = time if time
   end
 
   def update_answers
