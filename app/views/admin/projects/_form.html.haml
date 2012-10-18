@@ -1,4 +1,3 @@
-= javascript_include_tag 'project_form'
 - if @manager_role
   = render :partial => "form_for_managers", :locals => { :admin_project => admin_project, :f => f  }
 - else
