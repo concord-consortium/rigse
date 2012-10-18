@@ -28,6 +28,14 @@ describe Investigation do
     Investigation.create!(@valid_attributes)
   end
   
+  it 'has_many for all BASE_EMBEDDABLES' do
+    BASE_EMBEDDABLES.length.should be > 0
+    @investigation = Investigation.create!(@valid_attributes)
+    BASE_EMBEDDABLES.each do |e|
+      @investigation.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize).should be(true)
+    end
+  end
+
   describe "should be publishable" do
     before(:each) do
       @investigation = Investigation.create!(@valid_attributes)

@@ -18,33 +18,11 @@ class Investigation < ActiveRecord::Base
 
   has_many :external_activities, :as => :template
 
-  @@embeddable_klasses = [
-    Embeddable::Xhtml,
-    Embeddable::OpenResponse,
-    Embeddable::MultipleChoice,
-    Embeddable::DataTable,
-    Embeddable::DrawingTool,
-    Embeddable::DataCollector,
-    Embeddable::LabBookSnapshot,
-    Embeddable::InnerPage,
-    Embeddable::MwModelerPage,
-    Embeddable::NLogoModel,
-    Embeddable::RawOtml,
-    Embeddable::Biologica::World,
-    Embeddable::Biologica::Organism,
-    Embeddable::Biologica::StaticOrganism,
-    Embeddable::Biologica::Chromosome,
-    Embeddable::Biologica::ChromosomeZoom,
-    Embeddable::Biologica::BreedOffspring,
-    Embeddable::Biologica::Pedigree,
-    Embeddable::Biologica::MultipleOrganism,
-    Embeddable::Biologica::MeiosisView,
-    Embeddable::Smartgraph::RangeQuestion ]
-
-  @@embeddable_klasses.each do |klass|
-    eval %!has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
-      :finder_sql => proc { "SELECT #{klass.table_name}.* FROM #{klass.table_name}
-      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass.to_s}'
+  # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
+  BASE_EMBEDDABLES.each do |klass|
+    eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
+      :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
+      INNER JOIN page_elements ON #{klass.constantize.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass}'
       INNER JOIN pages ON page_elements.page_id = pages.id
       INNER JOIN sections ON pages.section_id = sections.id
       INNER JOIN activities ON sections.activity_id = activities.id
