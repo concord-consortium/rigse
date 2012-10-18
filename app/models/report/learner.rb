@@ -49,7 +49,7 @@ class Report::Learner < ActiveRecord::Base
       time = pub_time
     end
 
-    self.last_run = time
+    self.last_run = time if time
   end
 
   def update_answers

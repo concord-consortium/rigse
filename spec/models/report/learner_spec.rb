@@ -53,6 +53,27 @@ describe Report::Learner do
     @report = Report::Learner.create(:learner => @learner)
   end
 
+  describe "with no bundle_loggers" do
+    before(:each) do
+      @learner.stub!(:periodic_bundle_logger => nil)
+      @bunlde_logger.stub!(:last_non_empty_bundle_content => nil)
+    end
+
+    it "the last_run time should be nil" do
+      report = Report::Learner.create(:learner => @learner)
+      report.last_run.should be_nil
+    end
+
+    it "the last_run time should be preserved" do
+      report = Report::Learner.create(:learner => @learner)
+      report.last_run.should be_nil
+      now = DateTime.now
+      report.last_run = now
+      report.calculate_last_run
+      report.last_run.should == now
+    end
+  end
+
   describe "with only old type bundle loggers" do
     before(:each) do
       @learner.stub!(:periodic_bundle_logger => nil)
