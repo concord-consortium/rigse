@@ -1,3 +1,4 @@
+= javascript_include_tag 'project_form'
 - if @manager_role
   = render :partial => "form_for_managers", :locals => { :admin_project => admin_project, :f => f  }
 - else
@@ -76,6 +77,8 @@
         = f.text_area :description, :id => dom_id_for(admin_project, :item, :textarea), :class => 'tinymce_textarea'
       %p
         = render :partial => "home_page_content_field", :locals => { :admin_project => admin_project, :f => f }
+      %p
+        = render :partial => "help_page_item", :locals => { :admin_project => admin_project, :f => f }
       %p
         = render :partial => "custom_css_field", :locals => { :admin_project => admin_project, :f => f }
       = field_set_tag '<b>Vendor Interfaces</b>' do

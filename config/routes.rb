@@ -7,7 +7,8 @@ RailsPortal::Application.routes.draw do
   post '/search/add_material_to_clazzes'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
 
-
+  post "help/preview_help_page"
+  
 constraints :id => /\d+/ do
   namespace :saveable do
     namespace :sparks do
@@ -560,6 +561,7 @@ constraints :id => /\d+/ do
   match '/:controller(/:action(/:id))'
 
   root :to => 'home#index'
-
+  
+  
 end
 end

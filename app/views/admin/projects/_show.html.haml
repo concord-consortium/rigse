@@ -111,4 +111,13 @@
               %p= admin_project.description.html_safe
             = field_set_tag 'Home Page Content' do
               %p= admin_project.home_page_content.html_safe unless admin_project.home_page_content.nil?
+            %br
+            - if admin_project.help_type == 'external url'
+              - external_url = admin_project.external_url
+              %input{:type=>"button", :value=>"Preview help external url", :onclick=>"window.open('#{external_url}','HelpPage','fullscreen=yes')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
+            - if admin_project.help_type == 'help custom html'
+              - custom_html = admin_project.custom_help_page_html
+              %input{:type=>"button", :value=>"Preview help custom page", :onclick=>"open_preview_help_page(false,'',false,'#{custom_html}')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
+            %br
+            %br
             = render :partial => 'custom_css', :locals => { :admin_project => admin_project }
