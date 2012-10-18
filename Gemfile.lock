@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/haml.git
-  revision: 4987b10743d59f3e50d444f10708394ce8b21aac
+  revision: e428066e86e19f71bf9230e1fdc1a3ecf7c61447
   branch: xml-mime-type-and-ie8-keycode-fix
   specs:
     haml (3.1.4)
