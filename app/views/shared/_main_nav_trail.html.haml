@@ -14,3 +14,5 @@
   %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('#{external_url}','help_page','fullscreen=yes')"
 - if current_project.help_type == 'help custom html'
   %li.trail=link_to'Help', '/help/index', :id=>'help'
+- if current_project.help_type == 'no help'
+  %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help', :style=>"display: none"

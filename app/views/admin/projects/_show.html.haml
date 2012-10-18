@@ -1,3 +1,23 @@
+- if admin_project.help_type == 'external url'
+  - external_url = admin_project.external_url
+  - if(!(/^http/.match(external_url)))
+    - external_url = 'http://' + external_url
+    %script
+      helpLink = document.getElementById('help')
+      helpLink.href = "javascript: void(0)"
+      helpLink.onclick = function(){window.open('#{external_url}','help_page','fullscreen=yes')}
+      helpLink.style.display = ""
+- elsif admin_project.help_type == 'help custom html'
+  - href = "/help/index"
+  %script
+    helpLink = document.getElementById('help')
+    helpLink.href = "#{href}"
+    helpLink.onclick = null
+    helpLink.style.display = ""
+- elsif admin_project.help_type == 'no help'
+  %script
+    helpLink = document.getElementById('help')
+    helpLink.style.display = "none"
 - if @manager_role
   = render :partial => 'show_for_managers', :locals => { :admin_project => admin_project }
 - else
