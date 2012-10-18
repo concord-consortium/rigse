@@ -114,6 +114,8 @@
             %br
             - if admin_project.help_type == 'external url'
               - external_url = admin_project.external_url
+              - if(!(/^http/.match(external_url)))
+                - external_url = 'http://' + external_url
               %input{:type=>"button", :value=>"Preview help external url", :onclick=>"window.open('#{external_url}','HelpPage','fullscreen=yes')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
             - if admin_project.help_type == 'help custom html'
               - custom_html = admin_project.custom_help_page_html
