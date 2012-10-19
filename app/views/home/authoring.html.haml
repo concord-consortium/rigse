@@ -22,4 +22,4 @@
     %ul
       - current_user.external_activities.each do |item|
         %li
-          = link_to item.display_name, item
+          = link_to item.name, item
