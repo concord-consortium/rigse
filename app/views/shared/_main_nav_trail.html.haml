@@ -5,3 +5,5 @@
   %li.trail=link_to('Authoring', authoring_path)
 - unless current_user.only_a_student?
   %li.trail= link_to 'Browse Instructional Materials' , search_path
+- if current_user.has_role?('admin', 'manager','researcher')
+  %li.trail= link_to 'Admin', admin_path

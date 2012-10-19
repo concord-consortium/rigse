@@ -550,6 +550,7 @@ constraints :id => /\d+/ do
   match '/requirements' => 'home#requirements', :as => :requirements
   match '/stylesheets/project.css' => 'home#project_css', :as => :project_css
   match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
+  match '/admin' => 'home#admin', :as => :admin
   match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
   match '/banner' => 'misc#banner', :as => :banner
   post  '/installer_report' => 'misc#installer_report', :as => :installer_report

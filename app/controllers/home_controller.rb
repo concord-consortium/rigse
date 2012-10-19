@@ -1,4 +1,7 @@
 class HomeController < ApplicationController
+  include RestrictedController
+  before_filter :manager_or_researcher, :only => ['admin']
+
   caches_page   :project_css
   theme "rites"
   
@@ -28,6 +31,9 @@ class HomeController < ApplicationController
   end
   
   def requirements
+  end
+
+  def admin
   end
 
   def authoring
