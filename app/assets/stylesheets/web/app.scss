@@ -468,6 +468,12 @@ p.note {
 .item_selectable .container_element .action_menu, .item_selected .container_element .action_menu {
   border-bottom: none; }
 
+table.multiple_choice_item {
+  td {
+    padding-left: 1em;
+  }
+}
+
 #wrapper.run_html {
   background: white;
 }
