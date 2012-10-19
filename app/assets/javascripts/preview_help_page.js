@@ -12,13 +12,13 @@ function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, idDomId, pr
             }
             else if(!externalUrl.match(httpPattern)){
                 externalUrl = 'http://' + externalUrl;
-                window.open(externalUrl,'HelpPage','fullscreen=yes');
+                window.open(externalUrl,'HelpPage');
             }
         }
         else{
             customHtml = document.getElementById(urlOrHtmlContainerId).value;
-            previewWindow = window.open('','help_page','fullscreen=yes');
-            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content">'+customHtml+'</textarea></form>';
+            previewWindow = window.open('','help_page');
+            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content" style="opacity:0;">'+customHtml+'</textarea></form>';
             previewWindow.document.write(formString);
             previewWindow.document.getElementById('preview_help_page').submit();
             
@@ -26,8 +26,8 @@ function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, idDomId, pr
       }
       else{
           customHtml = previewCustomHtml;
-          previewWindow = window.open('','help_page','fullscreen=yes');
-          formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content">'+customHtml+'</textarea></form>';
+          previewWindow = window.open('','help_page');
+          formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content" style="opacity:0;">'+customHtml+'</textarea></form>';
           previewWindow.document.write(formString);
           previewWindow.document.getElementById('preview_help_page').submit();
       }

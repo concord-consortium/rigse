@@ -4,7 +4,7 @@
 (Select no help option to remove help page link)
 %br
   - no_help_id = "no_help_for_project_#{admin_project.id}"
-  = f.radio_button :help_type,"no help",:id=> "#{no_help_id}",:style=>"margin-top:10px"
+  = f.radio_button :help_type,"no help", :checked => (@admin_project.help_type.nil?) || (@admin_project.help_type == 'no help'),:id=> "#{no_help_id}",:style=>"margin-top:10px"
   %label{:for=>"#{no_help_id}", :style=>"margin-left : 10px"}
     Use no help
 %br
@@ -16,7 +16,7 @@
     Use external help URL
   - external_url_textbox_id = "external_url_textbox_for_project#{admin_project.id}"
   = f.text_field :external_url, :id=> "#{external_url_textbox_id}",:size => 60, :style=>"display: block"
-  %input{:type=>"button", :value=>"Preview help external url", :onclick=>"open_preview_help_page(true, '#{external_url_textbox_id}', true, '')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
+  %input{:type=>"button", :value=>"Preview help external URL", :onclick=>"open_preview_help_page(true, '#{external_url_textbox_id}', true, '')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
 %br
 (This is the text that gets displayed on the help page of the project)
 %br

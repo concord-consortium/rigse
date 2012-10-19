@@ -1,20 +1,24 @@
-- if admin_project.help_type == 'external url'
-  - external_url = admin_project.external_url
+- current_active_project = Admin::Project.find_by_active(true)
+- if ! current_active_project
+  - current_active_project = Admin::Project.first
+- current_active_project.reload
+- if current_active_project.help_type == 'external url'
+  - external_url = current_active_project.external_url
   - if(!(/^http/.match(external_url)))
     - external_url = 'http://' + external_url
-    %script
-      helpLink = document.getElementById('help')
-      helpLink.href = "javascript: void(0)"
-      helpLink.onclick = function(){window.open('#{external_url}','help_page','fullscreen=yes')}
-      helpLink.style.display = ""
-- elsif admin_project.help_type == 'help custom html'
+  %script
+    helpLink = document.getElementById('help')
+    helpLink.href = "javascript: void(0)"
+    helpLink.onclick = function(){window.open('#{external_url}','help_page','fullscreen=yes')}
+    helpLink.style.display = ""
+- elsif current_active_project.help_type == 'help custom html'
   - href = "/help/index"
   %script
     helpLink = document.getElementById('help')
     helpLink.href = "#{href}"
     helpLink.onclick = null
     helpLink.style.display = ""
-- elsif admin_project.help_type == 'no help'
+- elsif current_active_project.help_type == 'no help'
   %script
     helpLink = document.getElementById('help')
     helpLink.style.display = "none"
@@ -136,7 +140,7 @@
               - external_url = admin_project.external_url
               - if(!(/^http/.match(external_url)))
                 - external_url = 'http://' + external_url
-              %input{:type=>"button", :value=>"Preview help external url", :onclick=>"window.open('#{external_url}','HelpPage','fullscreen=yes')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
+              %input{:type=>"button", :value=>"Preview help external URL", :onclick=>"window.open('#{external_url}','HelpPage','fullscreen=yes')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
             - if admin_project.help_type == 'help custom html'
               - custom_html = admin_project.custom_help_page_html
               %input{:type=>"button", :value=>"Preview help custom page", :onclick=>"open_preview_help_page(false,'',false,'#{custom_html}')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}

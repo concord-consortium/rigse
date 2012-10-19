@@ -16,7 +16,7 @@ function validate_project_form_help_page_settings(oForm){
     else if(selectedOption.value == 'external url'){
         var externalUrl = $(oForm).select('input[name=admin_project[external_url]]')[0].value;
         if (!(/\S/.test(externalUrl))){
-             popupContent="<div style='padding:18px'>External url cannot be blank if selected for help page.</div>";
+             popupContent="<div style='padding:18px'>External URL cannot be blank if selected for help page.</div>";
              showpopup(popupContent);
             return false;
         }
