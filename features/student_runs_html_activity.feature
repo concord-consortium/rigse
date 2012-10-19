@@ -5,7 +5,6 @@ Feature: Student runs html activity
 
   Background:
     Given the most basic default project
-    Given use jnlps are disabled
     And the following students exist:
       | login     | password  |
       | student   | student   |
@@ -18,14 +17,16 @@ Feature: Student runs html activity
     And a simple activity with a multiple choice exists
     And the student "student" belongs to class "My Class"
     And the activity "simple activity" is assigned to the class "My Class"
-    And I login with username: student
-
+  
+  @lightweight
   Scenario: Student runs html
+    And I login with username: student
     When I follow "run simple activity"
     And I press "Submit"
 
-  @javascript
+  @javascript @lightweight
   Scenario: Student runs html and teacher sees recent activity
+    And I login with username: student
     When I follow "run simple activity"
     And I choose "Choice 1"
     And I press "Submit"

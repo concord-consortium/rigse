@@ -73,19 +73,7 @@ Then /^adhoc workgroups are set based on settings.yml$/ do
   APP_CONFIG[:use_adhoc_workgroups] = settings[:use_adhoc_workgroups]
 end
 
-Given /^use jnlps are disabled$/ do
-  # note this will disable them globally so this isn't isolated to this test
-  # so for the time being it is best to call the clean up step below
-  # @default_use_jnlps = APP_CONFIG[:use_jnlps]
-  # APP_CONFIG[:use_jnlps] = false
-  # this is still breaking things
-  pending
-end
 
-Then /^use jnlps is reset to the original setting$/ do
-  # APP_CONFIG[:use_jnlps] = @default_use_jnlps
-  pending
-end
 
 Then /^I should see the default district$/ do
   page.should have_xpath('//*', :text => APP_CONFIG[:site_district])
