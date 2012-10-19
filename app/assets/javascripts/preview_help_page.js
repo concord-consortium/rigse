@@ -1,27 +1,47 @@
 function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, idDomId, previewCustomHtml){
-      var httpPattern = /http/g
+      var httpPattern = /http/g;
+      var customHtml;
+      var previewWindow;
+      var formString;
       if(idDomId){
         if (isExternalUrl){
-            var externalUrl = document.getElementById(urlOrHtmlContainerId).value
-            if(!externalUrl.match(httpPattern)){
-                externalUrl = 'http://' + externalUrl;
+            var externalUrl = document.getElementById(urlOrHtmlContainerId).value;
+            if (!(/\S/.test(externalUrl))){
+                popupContent="<div style='padding:18px'>Please enter a valid external URL.</div>";
+                showpopup(popupContent);
             }
-            window.open(externalUrl,'HelpPage','fullscreen=yes')
+            else if(!externalUrl.match(httpPattern)){
+                externalUrl = 'http://' + externalUrl;
+                window.open(externalUrl,'HelpPage','fullscreen=yes');
+            }
         }
         else{
-            var customHtml = document.getElementById(urlOrHtmlContainerId).value
-            var previewWindow = window.open('','help_page','fullscreen=yes')
-            var formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content">'+customHtml+'</textarea></form>'
+            customHtml = document.getElementById(urlOrHtmlContainerId).value;
+            previewWindow = window.open('','help_page','fullscreen=yes');
+            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content">'+customHtml+'</textarea></form>';
             previewWindow.document.write(formString);
             previewWindow.document.getElementById('preview_help_page').submit();
             
         }
       }
       else{
-          var customHtml = previewCustomHtml
-          var previewWindow = window.open('','help_page','fullscreen=yes')
-          var formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content">'+customHtml+'</textarea></form>'
+          customHtml = previewCustomHtml;
+          previewWindow = window.open('','help_page','fullscreen=yes');
+          formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content">'+customHtml+'</textarea></form>';
           previewWindow.document.write(formString);
           previewWindow.document.getElementById('preview_help_page').submit();
       }
+}
+function showpopup(content)
+{
+    var okayButton='<div style="text-align:center"><a href="javascript: void(0);" class="button" onclick="close_popup()">Ok</a></div>';
+    list_modal = new UI.Window({ theme:"lightbox", height:150, width:350});
+    list_modal.setContent(content + okayButton).show(true).focus().center();
+    list_modal.setHeader("Error");
+}
+
+function close_popup()
+{
+    list_modal.destroy();
+    list_modal = null;
 }
