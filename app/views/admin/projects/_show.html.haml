@@ -9,19 +9,19 @@
   %script
     helpLink = document.getElementById('help')
     helpLink.href = "javascript: void(0)"
-    helpLink.onclick = function(){window.open('#{external_url}','help_page','fullscreen=yes')}
-    helpLink.style.display = ""
+    helpLink.onclick = function(){window.open('#{external_url}','help_page','height = 700 width = 800')}
+    helpLink.parentNode.style.display = ""
 - elsif current_active_project.help_type == 'help custom html'
   - href = "/help/index"
   %script
     helpLink = document.getElementById('help')
     helpLink.href = "#{href}"
     helpLink.onclick = null
-    helpLink.style.display = ""
+    helpLink.parentNode.style.display = ""
 - elsif current_active_project.help_type == 'no help'
   %script
     helpLink = document.getElementById('help')
-    helpLink.style.display = "none"
+    helpLink.parentNode.style.display = "none"
 - if @manager_role
   = render :partial => 'show_for_managers', :locals => { :admin_project => admin_project }
 - else
