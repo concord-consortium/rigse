@@ -127,7 +127,11 @@ class Activity < ActiveRecord::Base
 
     def search_list(options)
       name = options[:name]
-      activities = Activity.unarchived.like(name)
+      if options[:include_drafts]
+        activities = Activity.unarchived.like(name)
+      else
+        activities = Activity.unarchived.published.like(name)
+      end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
       if portal_clazz
