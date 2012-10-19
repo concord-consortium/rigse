@@ -203,3 +203,7 @@ When /^the newly opened window (should|should not) have content "(.*)"$/ do |pre
     end
   end
 end
+
+When /^Help link should not appear in the top navigation bar$/ do
+  find('#help').should_not be_visible
+end

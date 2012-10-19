@@ -34,6 +34,8 @@ module HtmlSelectorsHelpers
       "div.ui-window.lightbox.draggable.resizable.lightbox_focused"
     when "the no report popup on the instructional materials page"
       "div.ui-window.lightbox.draggable.resizable.lightbox_focused"
+    when "the top navigation bar"
+      "div#nav_top"
     when "header login box"
       "form#header-project-signin"
     when "content box in change password page"

@@ -101,12 +101,22 @@ Feature: Admin configures project settings
     
   @javascript
   Scenario: Admin should preview Help page from admin projects page
+    Given The default project and jnlp resources exist using factories
     When I login as an admin
     And am on the admin projects page
     And I follow "edit project"
-    And I fill "custom_help_page_html_textarea" with "Creating Help Page"
+    And I choose "Use custom help page HTML"
+    And I fill in "admin_project[custom_help_page_html]" with "Creating Help Page"
     And I press "Save"
     And am on the admin projects page
-    And I follow "Preview Help Page"
+    And I press "Preview help custom page"
     Then the newly opened window should have content "Creating Help Page"
+    When am on the admin projects page
+    And I follow "edit project"
+    And I choose "Use external help URL"
+    And I fill in "admin_project[external_url]" with "www.google.com"
+    And I press "Save"
+    And am on the admin projects page
+    And I press "Preview help external URL"
+    Then the newly opened window should have content "google"
     
