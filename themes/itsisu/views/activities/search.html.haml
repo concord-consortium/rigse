@@ -1,4 +1,28 @@
-= render :partial => 'shared/collection_menu', :locals => { :collection => @activities, :collection_class => Activity }
+.action_menu
+  #search_title
+    ="Search activities"
 
-- @activities.each do |runnable|
-  = render :partial => 'list_item', :locals => {:runnable => runnable}
+- form_tag url_for(:action => "search"), :method => 'get' do
+  = hidden_field_tag 'page', (params[:page] || 1)
+  %table
+    %tr
+      %td{:style=>"padding: 0.5em;"}
+        = label_tag :filter, 'matching: ', :class=>"right"
+        = text_field_tag :name, @filter_params[:name], :size => 60
+        %br
+        - if current_user.has_role? 'manager', 'admin', 'researcher'
+          = label_tag :filter, 'include draft activities: ', :class=>"right"
+          = check_box_tag 'include_drafts', 'include drafts', @filter_params[:include_drafts]
+      %td{:style=>"padding: 0.5em;"}
+        %input{ :type => "submit", :value => "Search"}
+
+#activities
+  .action_menu
+    .action_menu_header
+      .action_menu_header_left
+        %p= page_entries_info @activities, :entry_name => Activity.display_name
+        %p.paginator
+          = will_paginate @activities, :params => @filter_params
+
+  - @activities.each do |activity|
+    = render(:partial => 'list_item', :locals => {:runnable => activity})

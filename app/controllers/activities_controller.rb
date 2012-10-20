@@ -12,7 +12,7 @@ class ActivitiesController < ApplicationController
   before_filter :setup_object, :except => [:index,:browse]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:browse  ,:show,:print,:create,:new,:duplicate,:export] 
+  before_filter :can_edit, :except => [:index,:search,:browse  ,:show,:print,:create,:new,:duplicate,:export]
   before_filter :can_create, :only => [:new, :create,:duplicate]
 
   in_place_edit_for :activity, :name
@@ -72,40 +72,28 @@ class ActivitiesController < ApplicationController
   public
 
   def index
+    # all the logic here is currently handled through the activities/_runnable_list which hands it off to
+    # to tag_defaults#list_bins
+  end
+
+  def search
     @include_drafts = params[:include_drafts]
-    @name = param_find(:search)
+    @name = params[:name]
     pagenation = params[:page]
-    if (pagenation)
-      @include_drafts = param_find(:include_drafts)
-    else
-      @include_drafts = param_find(:include_drafts,true)
-    end
     @activities = Activity.search_list({
       :name => @name,
+      :include_drafts => @include_drafts,
       :paginate => true,
       :page => pagenation
     })
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_user.id }
     end
-    @paginated_objects = @activities
 
-    if request.xhr?
-      render :partial => 'activities/runnable_list', :locals => {:activities => @activities, :paginated_objects =>@activities}
-    else
-      respond_to do |format|
-        format.html do
-          if params[:search]
-            render 'search'
-          else
-            render 'index'
-          end
-        end
-        format.js
-      end
-    end
+    @filter_params = {:include_drafts => @include_drafts, :name => @name}
+
   end
-  
+
   def browse
     # @activities = Activity.find(:all)
     subjects = Activity.tag_counts_on(:subject_areas).map { |tc| tc.name }

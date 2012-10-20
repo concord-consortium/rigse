@@ -1,5 +1,9 @@
 class HomeController < ApplicationController
+  include RestrictedController
+
   caches_page   :project_css
+  before_filter :manager_or_researcher, :only => ['admin']
+
   def readme
     @document = FormattedDoc.new('README.textile')
     render :action => "formatted_doc", :layout => "technical_doc"
@@ -19,6 +23,9 @@ class HomeController < ApplicationController
   end
   
   def requirements
+  end
+
+  def admin
   end
 
   # @template is a reference to the View template object
