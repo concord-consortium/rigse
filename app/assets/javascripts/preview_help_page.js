@@ -37,7 +37,7 @@ function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, idDomId, pr
 }
 function showpopup(content)
 {
-    var okayButton='<div style="text-align:center"><a href="javascript: void(0);" class="button" onclick="close_popup()">Ok</a></div>';
+    var okayButton='<div style="text-align:center"><a href="javascript: void(0);" class="button" onclick="close_popup()">OK</a></div>';
     list_modal = new UI.Window({ theme:"lightbox", height:150, width:350});
     list_modal.setContent(content + okayButton).show(true).focus().center();
     list_modal.setHeader("Error");
