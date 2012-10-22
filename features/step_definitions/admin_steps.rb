@@ -87,6 +87,7 @@ Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fulln
   end
 end
 
-When /^(?:|I )fill in HTML textarea with "(.+)" on the admin projects page$/ do|text|
-  fill_in("admin_project[home_page_content]", :with => text)
+Then /^(?:|I )should see "([^"]*)" in the input box of external URL for help page on projects page$/ do |url|
+  step_text = "I should see the xpath \"//input[@name='admin_project[external_url]' and @value = '#{url}']\""
+  step step_text
 end

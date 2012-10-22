@@ -23,6 +23,8 @@ Feature: Admin configures project help page
     And I check "Mark this project as active:"
     And I fill in "admin_project[external_url]" with "www.google.com"
     And I press "Save"
+    And I follow "edit project"
+    And I should see "http://www.google.com" in the input box of external URL for help page on projects page
     And I should wait 2 seconds
     And I follow "Help" within the top navigation bar
     Then the newly opened window should have content "Google"
