@@ -1,0 +1,78 @@
+= javascript_include_tag "search_materials"
+%style{:type => "text/css"}
+  :sass
+    #content
+      padding-top: 0px
+      padding-right: 0px
+- if material.class == ::Investigation
+  - inst_material = material
+  - material_title = inst_material.name
+  - material_description = inst_material.description
+  - btn_text = "Assign Investigation"
+  - icon_image = image_tag("search/investigation.gif",:size=>"100x100")
+  - activitites = inst_material.activities
+- elsif material.class == ::Activity
+  - inst_material = material.parent
+  - btn_text = "Assign individual activities"
+  - icon_image = image_tag("search/investigation.gif",:size=>"100x100")
+  - if inst_material.nil?
+    - inst_material = material
+    - btn_text = "Assign Activity"
+    - icon_image = image_tag("search/activity.gif",:size=>"100x100")
+    - activitites = nil
+  - else
+    - activitites = inst_material.activities
+
+  - material_title = inst_material.name
+  - material_description = inst_material.description
+  
+  
+= hidden_field_tag "investigation_id", inst_material.id
+= hidden_field_tag "material_id", material.id
+= hidden_field_tag "assign_material_type", material.class.to_s
+%div
+  - unless @back_url.nil?
+    = link_to "&larr; return to search".html_safe, @back_url,:class=>"return_link"
+    %br
+    %br
+
+.browse_material_other_data
+  .icon_image
+    = icon_image
+  %br
+  %div
+    = render :partial => '/browse/investigation_other_data', :locals => {:investigation=>inst_material}
+.browse_material_data
+  %table.browse_material_header
+    %tr
+      %td
+        .title 
+          = material_title
+        .material_type 
+          = inst_material.class.to_s
+      %td
+        = link_to "Preview",run_url_for(inst_material,{}),:class=>"button"
+      %td
+        - if current_user.portal_teacher
+          = link_to btn_text,'javascript:void(0)',:class=>"button", :onclick=>"getDataForAssignToClassPopup()",:id=>"btn_Assign"
+        - else
+          = link_to btn_text, url_for({ :controller => '/search', :action => 'unauthorized_user' }),:id=>"btn_Assign", :class=>"button"
+      %td{:class=>"share"}
+        %a{:class=>"button"}
+          Share
+  %br
+  .description
+    = material_description
+    %span.clazz_count
+      - if(inst_material.offerings.count == 0)
+        Not used in any class.
+      - elsif(inst_material.offerings.count == 1)
+        Used in 1 class.
+      - else
+        Used in #{inst_material.offerings.count} classes.
+  %br
+  %br
+  - unless activitites.nil?
+    %div
+      = render :partial => '/browse/investigation_activity_list', :locals => {:material => material,:investigation=>inst_material}
+.clearboth

@@ -302,7 +302,6 @@ function materialCheckOnClick(ObjId)
     if(!$('investigation').checked &&  !$('activity').checked ){
         $(ObjId).checked="checked";
     }
-
 }
 
 var g_saveAssignToClassInProgress = false;
@@ -393,3 +392,67 @@ document.observe("dom:loaded", function() {
         }
     }
 });
+
+function checkActivityToAssign(chk_box)
+{
+    var total_checkbox_elements = $$('input[type="checkbox"][name="'+chk_box.name+'"]');
+    var checked_elements = $$('input:checked[type="checkbox"][name="'+chk_box.name+'"]');
+    var btn_Assign = $("btn_Assign");
+    if(total_checkbox_elements.length == checked_elements.length){
+        btn_Assign.innerHTML = "Assign Investigation";
+        $("material_id").setValue($("investigation_id").getValue());
+        $("assign_material_type").setValue("Investigation");
+    }
+    else{
+        btn_Assign.innerHTML = "Assign individual activities";
+        if(checked_elements.length > 0){
+            $("material_id").setValue(checked_elements.pluck("value").join(","));
+            $("assign_material_type").setValue("Activity");
+        }
+        else{
+            $("material_id").setValue("");
+            $("assign_material_type").setValue("");
+        }
+        
+    }
+}
+
+function browseMaterial(form_action)
+{
+    var form = document.getElementById("search_result_form");
+    form.action = form_action;
+    form.submit(); 
+}
+
+function getDataForAssignToClassPopup()
+{
+    alert("Work in progress");
+}
+
+var message_modal = null;
+function close_message_popup()
+{
+    message_modal.destroy();
+    message_modal = null;
+}
+function getMessagePopup(message)
+{
+    message_modal = message_modal || null;
+    if(message_modal !== null)
+    {
+        close_message_popup();
+    }
+    message_modal = new UI.Window({ theme:"lightbox", width:350, height:150});
+    var content = "<div style='padding:10px'>"+message+"</div><br/><div style='text-align:center'><input type='button' class='button' onclick='close_message_popup()' value='OK'/></div>";
+    message_modal.setContent(content).show(true).focus().center();
+    message_modal.setHeader("Message");
+}
+
+function setPopupHeight()
+{
+    var contentheight=$('windowcontent').getHeight();
+    var contentoffset=40;
+    list_modal.setSize(500,contentheight+contentoffset);
+    list_modal.center();
+}
+

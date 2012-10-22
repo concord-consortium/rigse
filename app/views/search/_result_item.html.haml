@@ -1,8 +1,10 @@
 .material_icon
   .icon_image
     -if(material.class.to_s=="Investigation")
+      - link_url = browse_investigation_url(material)
       =image_tag("search/investigation.gif",:size=>"100x100")
     -else
+      - link_url = browse_activity_url(material)
       =image_tag("search/activity.gif",:size=>"100x100")
 %div
   - unless current_user.anonymous?
@@ -15,7 +17,7 @@
         %td
         %td
           %span.material_header
-            = material.name
+            = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
           - if material.parent
             %span
               from investigation
@@ -29,10 +31,7 @@
             = link_to "Preview",run_url_for(material,{}),:class=>"button"
         %td{:width=>"130px"}
           %div{:style=>'float:right'}
-            - if current_user.portal_teacher
-              = link_to 'Assign to a Class','#',:class=>"button", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')"
-            - else
-              = link_to 'Assign to a Class', url_for({ :controller => 'search', :action => 'unauthorized_user' }), :class=>"button"
+            = link_to "Assign to a Class","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')", :class=>"button"
       %tr
         %td{:colspan=>3}
           - unless current_user.anonymous?

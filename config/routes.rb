@@ -104,6 +104,19 @@ constraints :id => /\d+/ do
     resources :range_questions
   end
 
+  namespace :browse do
+    resources :investigations do
+      member do
+        post :show
+      end
+    end
+    resources :activities do
+      member do
+        post :show
+      end
+    end
+  end
+
   namespace :portal do
 
     resources :clazzes, :path => :classes do
