@@ -135,7 +135,7 @@
               %p= admin_project.description.html_safe
             - home_page_content = admin_project.home_page_content
             - unless home_page_content.nil?
-              %input{:type=>"button", :value=>"Preview Home Page", :onclick=>"preview_home_page(null, '#{home_page_content}');", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
+              %input{:type=>"button", :value=>"Preview Home Page", :onclick=>"preview_home_page(null, '#{ERB::Util.url_encode(home_page_content)}');", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
             %br
             - if admin_project.help_type == 'external url'
               - external_url = admin_project.external_url

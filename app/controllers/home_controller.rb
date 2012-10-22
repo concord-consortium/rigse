@@ -1,3 +1,5 @@
+require 'iconv'
+
 class HomeController < ApplicationController
   include RestrictedController
   before_filter :manager_or_researcher, :only => ['admin']
@@ -174,7 +176,16 @@ class HomeController < ApplicationController
   def preview_home_page
     @preview_home_page_content = true
     @wide_content_layout = true
+    
     @home_page_preview_content = params[:home_page_preview_content]
+    
+    # Turn untrusted string to UTF-8. We need to do this
+    # because for some reason the code being taken is an ascii
+    # string being treated as UTF-8.
+    # Code taken from http://stackoverflow.com/a/968618
+    ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
+    @home_page_preview_content = ic.iconv(@home_page_preview_content + ' ')[0..-2]
+    
   end
   
   def current_user #override to preview home page content
