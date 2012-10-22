@@ -173,6 +173,7 @@ class HomeController < ApplicationController
   
   def preview_home_page
     @preview_home_page_content = true
+    @wide_content_layout = true
     @home_page_preview_content = params[:home_page_preview_content]
   end
   
