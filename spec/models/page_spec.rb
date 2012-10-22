@@ -13,6 +13,24 @@ describe Page do
     Page.create!(@valid_attributes)
   end
 
+  it 'has an ordered list of embeddables' do
+    Page.class_variables.include?(:@@element_types) &&
+    Page.class_eval("@@element_types").first.kind_of?(String) &&
+    Page.class_eval("@@element_types").first.match(/Embeddable/)
+  end
+
+  it 'has_many for all ALL_EMBEDDABLES' do
+    ALL_EMBEDDABLES.length.should be > 0
+    p = Page.create!(@valid_attributes)
+    ALL_EMBEDDABLES.each do |e|
+      p.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize).should be(true)
+    end
+  end
+
+  it 'returns a list of embeddable class names' do
+    Page.element_types.first.kind_of?(Class)
+  end
+
   # at one point page had a default value set for :position
   # but that messes up acts_as_list
   describe "ordering" do
