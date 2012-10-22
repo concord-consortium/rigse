@@ -426,7 +426,15 @@ function browseMaterial(form_action)
 
 function getDataForAssignToClassPopup()
 {
-    alert("Work in progress");
+    var material_id = $("material_id").getValue("");
+    var material_type = $("assign_material_type").getValue("");
+    if(material_id.length <= 0)
+    {
+        var message = "Please select atleast one activity to assign to a class.";
+        getMessagePopup(message);
+        return;
+    }
+    get_Assign_To_Class_Popup(material_id,material_type);
 }
 
 var message_modal = null;
