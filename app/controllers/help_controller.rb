@@ -15,6 +15,7 @@ class HelpController < ApplicationController
   end
   
   def preview_help_page
+    response.headers["X-XSS-Protection"] = "0"
     @help_page_preview_content = params[:preview_help_page_content]
     # Turn untrusted string to UTF-8. We need to do this
     # because for some reason the code being taken is an ascii
