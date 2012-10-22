@@ -177,6 +177,8 @@ class HomeController < ApplicationController
     @preview_home_page_content = true
     @wide_content_layout = true
     
+    response.headers["X-XSS-Protection"] = "0"
+    
     @home_page_preview_content = params[:home_page_preview_content]
     
     # Turn untrusted string to UTF-8. We need to do this
