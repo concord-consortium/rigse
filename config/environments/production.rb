@@ -57,6 +57,7 @@ RailsPortal::Application.configure do
     print.css
     otml.css
     project.css
+    jquery/jquery.js
     pie/PIE.js
     calendar_date_select/calendar_date_select.js
     calendar_date_select/silver.css
