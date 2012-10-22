@@ -140,10 +140,10 @@
               - external_url = admin_project.external_url
               - if(!(/^http/.match(external_url)))
                 - external_url = 'http://' + external_url
-              %input{:type=>"button", :value=>"Preview help external URL", :onclick=>"window.open('#{external_url}','HelpPage','fullscreen=yes')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
+              %input{:type=>"button", :value=>"Preview help external URL" ,:onclick =>"window.open('#{external_url}','HelpPage','height = 700 width = 800, resizable = yes, scrollbars = yes')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
             - if admin_project.help_type == 'help custom html'
               - custom_html = admin_project.custom_help_page_html
-              %input{:type=>"button", :value=>"Preview help custom page", :onclick=>"open_preview_help_page(false,'',false,'#{custom_html}')", :class=>"button pie", :style=>"margin-top: 10px; font-size: 13px"}
+              %input{:type=>"button", :value=>"Preview help custom page" ,:onclick =>"open_preview_help_page(false,'',false,'#{custom_html}')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
             %br
             %br
             = render :partial => 'custom_css', :locals => { :admin_project => admin_project }
