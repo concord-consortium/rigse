@@ -1,3 +1,5 @@
+- require 'iconv'
+
 = javascript_include_tag "search_materials.js"
 - content_for :top_menu_items do
   =link_to(TOP_LEVEL_CONTAINER_NAME_PLURAL, investigations_path)
@@ -17,7 +19,14 @@
         = home_page_preview_content.html_safe
     - else
       - unless current_project.home_page_content.blank?
-        = current_project.home_page_content.html_safe
+        - home_page_content = current_project.home_page_content
+        -# Turn untrusted string to UTF-8. We need to do this
+        -# because for some reason the code being taken is an ascii
+        -# string being treated as UTF-8.
+        -# Code taken from http://stackoverflow.com/a/968618
+        - ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
+        - home_page_content = ic.iconv(home_page_content + ' ')[0..-2]
+        = home_page_content.html_safe
       - else
         - render_project_info
         = content_for :project_info
