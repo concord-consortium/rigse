@@ -14,7 +14,7 @@
     %ul
       - current_user.lightweight_activities.each do |lwa|
         %li
-          = link_to_container(lwa)
+          = link_to lwa.name, lightweight.activity_path(lwa)
 
 - if current_user.has_role?('admin') || current_user.resource_pages.present?
   %h4= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
