@@ -1,5 +1,6 @@
 = javascript_include_tag('preview_help_page.js')
+= javascript_include_tag 'project_form'
 %h1 New admin_project
 
-= form_for(@admin_project, :before => "tinyMCE.triggerSave(true,true)") do |f|
+= form_for(@admin_project,:html=>{:onsubmit=>"if(validate_project_form_help_page_settings(this)){tinyMCE.triggerSave(true,true)}else return false"}) do |f|
   = render :partial => 'form', :locals => { :admin_project => @admin_project, :f => f }
