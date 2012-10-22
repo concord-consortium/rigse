@@ -23,13 +23,12 @@ function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, isDomId, pr
           }
       }
       else {
-          customHtml = ((isDomId) ? document.getElementById(urlOrHtmlContainerId).value : previewCustomHtml) || false;
+          customHtml = ((isDomId) ? document.getElementById(urlOrHtmlContainerId).value : decodeURIComponent(previewCustomHtml)) || false;
           
           if (!customHtml)
           {
               return;
           }
-          
       }
       
       previewWindow = window.open(windowUrl, 'HelpPagePreview', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
