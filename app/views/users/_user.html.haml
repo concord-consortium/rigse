@@ -11,6 +11,8 @@
             %li.menu=link_to 'Student Page', portal_student_path(portal_student)
           %li.menu=link_to 'edit', edit_user_path(user)
           %li.menu=link_to 'Reset Password', reset_password_user_path(user)
+          - if user.state == 'pending'
+            %li.menu=link_to 'Activate', activate_path(:activation_code => user.activation_code)
   %div{:id => dom_id_for(user, :details), :class => 'tiny'}
     %ul.menu_h
       %li
@@ -21,12 +23,12 @@
         = user.email
       %li
         Roles: 
-      - user.roles.each do |r| 
-        %li
-          = r.title.capitalize
+        = user.roles.map{|r| r.title.capitalize}.join(', ')
       - if user.portal_teacher
         %li
           Cohorts: 
         - user.portal_teacher.cohort_list.each do |c| 
           %li
             = c
+      %li
+        Status: #{user.state}

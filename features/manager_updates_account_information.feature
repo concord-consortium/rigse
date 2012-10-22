@@ -66,3 +66,15 @@ Feature: A manager updates account information for another user
       | joe user | student   | foobarbaz    |
       | joe user | teacher   | buzbixbez    |
 
+  Scenario: Managers can activate users
+    Given the following users exist:
+      | login     | password   | roles           |
+      | mymanager | mymanager  | manager         |
+    And there is an unactivated user named "justsignedup"
+
+    When I am logged in with the username mymanager
+    And I am on the user list page
+    And I should see "justsignedup"
+    And I follow "Activate"
+    Then I should be on the user list page
+    And I see the activation is complete
