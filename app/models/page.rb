@@ -21,38 +21,13 @@ class Page < ActiveRecord::Base
   has_many :inner_page_pages, :class_name => 'Embeddable::InnerPagePage'
   has_many :inner_pages, :class_name => 'Embeddable::InnerPage', :through => :inner_page_pages
 
+  # The array of embeddables is defined in conf/initializers/embeddables.rb
   # The order of this array determines the order they show up in the Add menu
-  # When adding new elements to the array, please place them alphebetically in the group.
-  # The Biologica embeddables should all be grouped at the end of the list
-  @@element_types = [
-    Embeddable::DataTable,
-    Embeddable::DrawingTool,
-    Embeddable::DataCollector,
-    Embeddable::ImageQuestion,
-    Embeddable::InnerPage,
-    Embeddable::MwModelerPage,
-    Embeddable::MultipleChoice,
-    Embeddable::NLogoModel,
-    Embeddable::OpenResponse,
-    Embeddable::Smartgraph::RangeQuestion,
-    Embeddable::LabBookSnapshot, #displays as "Snapshot"
-    Embeddable::SoundGrapher,
-    Embeddable::Xhtml, #displays as "Text"
-    Embeddable::VideoPlayer,
-    Embeddable::Biologica::BreedOffspring,
-    Embeddable::Biologica::Chromosome,
-    Embeddable::Biologica::ChromosomeZoom,
-    Embeddable::Biologica::MeiosisView,
-    Embeddable::Biologica::MultipleOrganism,
-    Embeddable::Biologica::Organism,
-    Embeddable::Biologica::Pedigree,
-    Embeddable::Biologica::StaticOrganism,
-    Embeddable::Biologica::World,
-    # BiologicaDna,
-  ]
+  @@element_types = ALL_EMBEDDABLES
 
-  if APP_CONFIG[:include_otrunk_examples]
-    @@element_types << Embeddable::RawOtml
+  if !APP_CONFIG[:include_otrunk_examples]
+    # Strip this embeddable type if the app isn't configured to support it
+    @@element_types.reject! { |e| e == "Embeddable::RawOtml" }
   end
   
   # @@element_types.each do |type|
@@ -63,9 +38,9 @@ class Page < ActiveRecord::Base
 
   @@element_types.each do |klass|
     unless defined? klass.dont_make_associations
-      eval %!has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
-      :finder_sql => proc { "SELECT #{klass.table_name}.* FROM #{klass.table_name}
-      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass.to_s}'
+      eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
+      :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
+      INNER JOIN page_elements ON #{klass.constantize.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass}'
       WHERE page_elements.page_id = \#\{id\}" }!
     end
   end
@@ -120,8 +95,9 @@ class Page < ActiveRecord::Base
       element_types.map {|t| t.name.underscore.clipboardify}
     end
 
+    # Returns the embeddables list as constants (classes) rather than strings
     def element_types
-      @@element_types
+      @@element_types.map { |e| e.constantize }
     end
 
 
