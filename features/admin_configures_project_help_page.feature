@@ -50,7 +50,6 @@ Feature: Admin configures project help page
     And I follow "Help"
     Then I should see "Creating Help Page"
     
-    
   @javascript
   Scenario: Admin should see errors if text boxes are blank
     When I fill in "admin_project[custom_help_page_html]" with ""
@@ -66,7 +65,7 @@ Feature: Admin configures project help page
     
  @javascript
   Scenario: Admin should be allowed to remove help page link
-    When I choose "Use no help"
+    When I choose "No help link"
     And I press "Save"
     And I go to the search instructional materials page
     Then Help link should not appear in the top navigation bar
