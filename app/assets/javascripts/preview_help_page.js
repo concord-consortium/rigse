@@ -1,38 +1,50 @@
-function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, idDomId, previewCustomHtml){
-      var httpPattern = /http/g;
-      var customHtml;
-      var previewWindow;
-      var formString;
-      if(idDomId){
-        if (isExternalUrl){
-            var externalUrl = document.getElementById(urlOrHtmlContainerId).value;
-            if (!(/\S/.test(externalUrl))){
-                popupContent="<div style='padding:18px'>Please enter a valid external URL.</div>";
-                showpopup(popupContent);
-            }
-            else if(!externalUrl.match(httpPattern)){
-                externalUrl = 'http://' + externalUrl;
-                window.open(externalUrl,'HelpPage', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
-            }
-        }
-        else{
-            customHtml = document.getElementById(urlOrHtmlContainerId).value;
-            customHtml = customHtml + "<script>var logoutLinkParent = document.getElementsByClassName('logout-link');";
-            customHtml = customHtml + "var logoutLink = logoutLinkParent[0].getElementsByTagName('a')[0];";
-            customHtml = customHtml + "logoutLink.href = 'javascript: void(0)';</script>";
-            previewWindow = window.open('','help_page', 'height = 700 width = 800, resizable = 1, scrollbars = 1');
-            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content" style="opacity:0;">'+customHtml+'</textarea></form>';
-            previewWindow.document.write(formString);
-            previewWindow.document.getElementById('preview_help_page').submit();
-            
-        }
+function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, isDomId, previewCustomHtml){
+      var linkPattern = /(^((http|https|ftp):\/\/){0,1}[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ig;
+      var protocolPattern = /(^(http|https|ftp):\/\/)/ig;
+      var customHtml = null;
+      var previewWindow = null;
+      var formString = null;
+      
+      var windowUrl = '';
+      var previewWindowDocument = null;
+      
+      
+      if (isExternalUrl)
+      {
+          windowUrl = document.getElementById(urlOrHtmlContainerId).value;
+          if (!(linkPattern.test(windowUrl))){
+            var popupContent="<div style='padding:18px'>Please enter a valid external URL.</div>";
+            showpopup(popupContent);
+            return;
+          }
+          
+          if(!protocolPattern.test(windowUrl)){
+              windowUrl = 'http://' + windowUrl;
+          }
       }
-      else{
-          customHtml = previewCustomHtml;
-          previewWindow = window.open('','help_page', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
+      else {
+          customHtml = ((isDomId) ? document.getElementById(urlOrHtmlContainerId).value : previewCustomHtml) || false;
+          
+          if (!customHtml)
+          {
+              return;
+          }
+          
+      }
+      
+      previewWindow = window.open(windowUrl, 'HelpPagePreview', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
+      
+      if (!isExternalUrl)
+      {
           formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content" style="opacity:0;">'+customHtml+'</textarea></form>';
-          previewWindow.document.write(formString);
-          previewWindow.document.getElementById('preview_help_page').submit();
+          
+          previewWindowDocument = previewWindow.document;
+          
+          previewWindowDocument.open();
+          previewWindowDocument.write(formString);
+          previewWindowDocument.close();
+          
+          previewWindowDocument.getElementById('preview_help_page').submit();
       }
 }
 function showpopup(content)

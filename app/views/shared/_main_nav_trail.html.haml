@@ -9,8 +9,6 @@
   %li.trail= link_to 'Admin', admin_path
 - if current_project.help_type == 'external url'
   - external_url = current_project.external_url
-  - if(!(/^http/.match(external_url)))
-    - external_url = 'http://' + external_url
   %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('#{external_url}','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes')"
 - if current_project.help_type == 'help custom html'
   %li.trail=link_to'Help', '/help/index', :id=>'help'
