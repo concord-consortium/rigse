@@ -9,7 +9,7 @@
   %pre 
     bin/rake app:setup:new_app
 - else
-  %div{:style=>"background-color:white"}
+  %div
     .padded_content
     - if defined? home_page_preview_content
       - if home_page_preview_content.blank?

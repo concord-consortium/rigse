@@ -315,7 +315,13 @@ body#tinymce {
 
 #primary.wide {
   margin: 0 0 0 0;
-  width: 100%; }
+  width: 100%;
+  
+  #content
+  {
+    padding-right: 0;
+  }
+}
 
 /* login and sign up forms */
 
