@@ -4,11 +4,11 @@ function preview_home_page(homePageContentId, homePageContent){
     if(homePageContentId){
         previewContent = document.getElementById(homePageContentId).value;
     }
-    else if (homePageContent){
+    else if (homePageContent == "" || homePageContent){
         previewContent = decodeURIComponent(homePageContent);
     }
     
-    if (!previewContent)
+    if (previewContent != "" && !previewContent)
     {
         return;
     }
