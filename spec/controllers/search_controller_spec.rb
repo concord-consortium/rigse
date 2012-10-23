@@ -170,6 +170,44 @@ describe SearchController do
       post :show, @post_params
       assert_template "index"
     end
+
+    it "should wrap domain_id params into an array" do
+      @post_params = {
+        :search_term => @physics_investigation.name,
+        :activity => nil,
+        :domain_id => "1",
+        :investigation => 'true'
+      }
+      xhr :post, :show, @post_params
+      assert assigns[:domain_id].kind_of? Enumerable
+
+      @post_params = {
+        :search_term => @physics_investigation.name,
+        :activity => nil,
+        :domain_id => 1,
+        :investigation => 'true'
+      }
+      xhr :post, :show, @post_params
+      assert assigns[:domain_id].kind_of? Enumerable
+
+      @post_params = {
+        :search_term => @physics_investigation.name,
+        :activity => nil,
+        :domain_id => ["1","2"],
+        :investigation => 'true'
+      }
+      xhr :post, :show, @post_params
+      assert assigns[:domain_id].kind_of? Enumerable
+
+      @post_params = {
+        :search_term => @physics_investigation.name,
+        :activity => nil,
+        :domain_id => [1,2],
+        :investigation => 'true'
+      }
+      xhr :post, :show, @post_params
+      assert assigns[:domain_id].kind_of? Enumerable
+    end
   end
   
   describe "Post get_current_material_unassigned_clazzes" do
