@@ -16,6 +16,7 @@ class UsersController < ApplicationController
       :index,
       :account_report
     ]
+  after_filter :store_location, :only => [:index]
 
   def changeable_filter
     @user = User.find(params[:id])
@@ -186,18 +187,26 @@ class UsersController < ApplicationController
 
 
   def activate
-    logout_keeping_session!
     user = User.find_by_activation_code(params[:activation_code]) unless params[:activation_code].blank?
     case
     when (!params[:activation_code].blank?) && user && !user.active?
       user.activate!
       user.make_user_a_member
-      flash[:notice] = "Signup complete! Please sign in to continue."
-      redirect_to login_path
+      if current_user && current_user.has_role?('admin', 'manager')
+        # assume this type of user just activated someone from somewhere else in the app
+        flash[:notice] = "Activation of #{user.name_and_login} complete."
+        redirect_to(session[:return_to] || root_path)
+      else
+        logout_keeping_session!
+        flash[:notice] = "Signup complete! Please sign in to continue."
+        redirect_to login_path
+      end
     when params[:activation_code].blank?
+      logout_keeping_session!
       flash[:error] = "The activation code was missing.  Please follow the URL from your email."
       redirect_back_or_default(root_path)
     else
+      logout_keeping_session!
       flash[:error]  = "We couldn't find a user with that activation code -- check your email? Or maybe you've already activated -- try signing in."
       redirect_back_or_default(root_path)
     end
