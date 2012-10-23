@@ -1,9 +1,8 @@
 .investigation_other_data
-  - unless investigation.domain.name.nil?
+  - unless investigation.grade_span_expectation.nil?
     .data_header Scientific Domain
     .data_value 
       = investigation.domain.name
-  - unless investigation.grade_span.nil?
     .data_header Grade
     .data_value 
       = investigation.grade_span
