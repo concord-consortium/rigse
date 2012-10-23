@@ -23,6 +23,12 @@ GIT
     haml (3.1.4)
 
 GIT
+  remote: git://github.com/concord-consortium/in_place_editing.git
+  revision: a71d7348bbc30950283177b5b77a36534e80f269
+  specs:
+    in_place_editing (1.2.0)
+
+GIT
   remote: git://github.com/concord-consortium/rush
   revision: 10d9715697d7cc5ce069c32093289b809dea8bd3
   specs:
@@ -182,7 +188,6 @@ GEM
     hirb (0.6.2)
     httpclient (2.2.5)
     i18n (0.6.1)
-    in_place_editing (1.2.0)
     interactive_editor (0.0.10)
       spoon (>= 0.0.1)
     jnlp (0.7.3)
@@ -384,7 +389,7 @@ DEPENDENCIES
   highline
   hirb
   httpclient (~> 2.2)
-  in_place_editing (~> 1.2.0)
+  in_place_editing!
   interactive_editor
   jnlp (~> 0.7.3)
   jruby-openssl (~> 0.7.4)
