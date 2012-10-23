@@ -9,7 +9,7 @@ Feature: Teacher manages a mix instructional materials of a class
     And the following teachers exist:
       | login    | password | first_name   | last_name |
       | teacher  | teacher  | John         | Nash      |
-    And the teachers "teacher" are in a school named "Harvard School"  
+    And the teachers "teacher" are in a school named "Harvard School"
     And the following students exist:
        | login     | password  | first_name | last_name |
        | student   | password  | Student    | Doe       |
@@ -23,4 +23,5 @@ Feature: Teacher manages a mix instructional materials of a class
   @javascript
   Scenario: Teacher can run a report for each material
     When I go to the Instructional Materials page for "Mixed Runnable Types"
-	  Then I can view a report for materials in the mixed runnable type class
+    Then I can view a report for materials in the mixed runnable type class
+    
