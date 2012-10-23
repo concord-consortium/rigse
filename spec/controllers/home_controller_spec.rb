@@ -56,6 +56,7 @@ describe HomeController do
       assert_not_nil assigns[:home_page_preview_content]
       assert_equal assigns[:home_page_preview_content], @post_params[:home_page_preview_content]
       assert_equal assigns[:preview_home_page_content], true
+      assert_equal assigns[:wide_content_layout], true
     end
   end
 end
