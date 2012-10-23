@@ -111,7 +111,9 @@ class Activity < ActiveRecord::Base
 
     def search_list(options)
       grade_span = options[:grade_span] || ""
-      domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
+      domain_id = []
+      # we expect domain_id into always be represented as an array:
+      domain_id = [options[:domain_id]].flatten.uniq.compact unless options[:domain_id].blank?
       name = options[:name]
       sort_order = options[:sort_order] || "name ASC"
       probe_type = options[:probe_type] || []

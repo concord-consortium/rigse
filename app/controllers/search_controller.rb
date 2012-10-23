@@ -66,7 +66,10 @@ class SearchController < ApplicationController
       @search_term = params[:search_term].strip
     end
     @sort_order = param_find(:sort_order, (params[:method] == :get)) || 'name ASC'
-    @domain_id = param_find(:domain_id, (params[:method] == :get)) || []
+
+    # we expect this to always return an array in our view
+    @domain_id  = [param_find(:domain_id, (params[:method] == :get)) || []].flatten.uniq.compact
+
     @grade_span = param_find(:grade_span, (params[:method] == :get)) || ""
     if (@grade_span).class == String && @grade_span.length>0 
       @grade_span= @grade_span.split('&')
