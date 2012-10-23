@@ -7,6 +7,7 @@ describe HomeController do
     Admin::Project.stub(:default_project).and_return(@test_project)
     @test_project.stub!(:use_student_security_questions).and_return(false)
     @test_project.stub!(:require_user_consent?).and_return(false)
+    @test_project.stub!(:help_type).and_return('no help')
     controller.stub(:before_render) {
       response.template.stub(:current_project).and_return(@test_project)
     }
