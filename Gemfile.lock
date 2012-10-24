@@ -30,10 +30,10 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/lightweight-activities-plugin.git
-  revision: 6c040f02942c54dec13a11b67dd1f004b70d0542
+  revision: dc33a76b29ccf9bffe7cfcec7e330eff12588183
   branch: simple-authoring
   specs:
-    lightweight_activities (0.0.19)
+    lightweight_activities (0.0.20)
       best_in_place (~> 1.1.2)
       dynamic_form (~> 1.1.4)
       haml (~> 3.1.4)
