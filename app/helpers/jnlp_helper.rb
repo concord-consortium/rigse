@@ -235,14 +235,37 @@ module JnlpHelper
   
   def jnlp_mac_java_config(xml)
     jnlp = jnlp_adaptor.jnlp
-    # Force Mac OS X to use Java 1.5 so that sensors are ensured to work
+    # If possible Force Mac OS X to use a 32bit Java 1.5 so that sensors are ensured to work
+    # this bit of xml is actually parsed by the binary javaws program on OS X. The way javaws
+    # evaulates this xml has changed over time. For example at one point it wasn't using a known arch for
+    # which is why there is a non-arch resources element.
+    # in recent versions of javaws, at least, I've found that it only does an order of precedence within a single
+    # resources element. So for example
+    #
+    # <resources os="Mac OS X" arch="x86_64">
+    #   <j2se version="1.7">
+    # </resources>
+    # <resources os="Mac OS X" arch="x86_64">
+    #   <j2se version="1.6" java-vm-args="-d32">
+    # </resources>
+    #
+    # for some reason it will always pass -d32 to the vm. If instead the xml is:
+    #
+    # <resources os="Mac OS X" arch="x86_64">
+    #   <j2se version="1.7">
+    #   <j2se version="1.6" java-vm-args="-d32">
+    # </resources>
+    #
+    # then it will not pass the -d32 option
     xml.resources(:os => "Mac OS X", :arch => "ppc i386") {
       xml.j2se :version => "1.5", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m"
     }
     xml.resources(:os => "Mac OS X", :arch => "x86_64") {
+      xml.j2se :version => "1.7", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m"
       xml.j2se :version => "1.5", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
-    } 
+    }
     xml.resources(:os => "Mac OS X") {
+      xml.j2se :version => "1.7", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m"
       xml.j2se :version => "1.6", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
     }
   end
