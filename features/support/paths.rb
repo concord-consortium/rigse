@@ -17,6 +17,8 @@ module NavigationHelpers
       "/users/#{User.find_by_login(@cuke_current_username).id}/preferences"
     when /user list/
       '/users'
+    when /the districts page/
+      portal_districts_path
     when /the pick signup page/
       '/pick_signup'
     when /the student signup page/
