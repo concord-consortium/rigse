@@ -370,6 +370,7 @@ DEPENDENCIES
   arrayfields
   awesome_print
   aws-s3
+  best_in_place (~> 1.1.2)
   calpicker!
   capistrano-ext
   capybara (~> 1.1.2)

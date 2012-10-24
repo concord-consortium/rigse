@@ -77,6 +77,7 @@ source "http://rubygems.org"
   gem "aws-s3",               :require => "aws/s3"
   gem "newrelic_rpm"
   gem "tinymce-rails",        "~>3.5.6"
+  gem "best_in_place",        "~> 1.1.2"
 
 # Ideally we pre-compile all asetts and then run production
 # with out the asset compiling requirements. But We have dynamic assets
