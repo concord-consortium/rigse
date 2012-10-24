@@ -3,7 +3,7 @@ class DefaultRunnable
   class <<self
 
     def create_default_runnable_for_user(user, name="simple default #{TOP_LEVEL_CONTAINER_NAME}", logging=false)
-      if USING_JNLPS && TOP_LEVEL_CONTAINER_NAME == 'investigation'
+      if APP_CONFIG[:use_jnlps] && TOP_LEVEL_CONTAINER_NAME == 'investigation'
         runnable = create_default_investigation_for_user(user, name, logging)
       else
         unless runnable = user.send(TOP_LEVEL_CONTAINER_NAME_PLURAL).find_by_name(name)

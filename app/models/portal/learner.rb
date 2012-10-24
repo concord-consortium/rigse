@@ -38,6 +38,13 @@ class Portal::Learner < ActiveRecord::Base
   
   has_one :report_learner, :class_name => "Report::Learner", :foreign_key => "learner_id"
 
+  # automatically make the report learner if it doesn't exist yet
+  def report_learner
+    # I'm using the ! here so we can track down errors faster if there is an issue making
+    # the report_learner
+    super || create_report_learner!
+  end
+
   def sessions
     self.bundle_logger.bundle_contents.length
   end
@@ -49,9 +56,12 @@ class Portal::Learner < ActiveRecord::Base
     learner.create_bundle_logger
   end
 
-  # have to create this after so that the learner id can be stored in the new bundle logger
   after_create do |learner|
+    # have to create this after so that the learner id can be stored in the new bundle logger
     learner.create_periodic_bundle_logger
+    # make the report learner now, so two parts of the code aren't trying to create it at the
+    # same time later
+    learner.report_learner.update_fields
   end
 
   def valid_loggers?

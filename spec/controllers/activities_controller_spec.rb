@@ -1,6 +1,6 @@
 require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelper
 
-describe InvestigationsController do
+describe ActivitiesController do
   before(:each) do
     @current_project = mock(
       :name => "test project",
@@ -19,54 +19,18 @@ describe InvestigationsController do
 
     stub_current_user :admin_user
     
-    @investigation = Factory.create(:investigation, {
-      :name => "test investigation",
+    @activity = Factory.create(:activity, {
+      :name => "test activity",
       :description => "new decription",
       :publication_status => "published"
     })
-  end
-
-  it "should handle the show method without error" do
-    get :show, :id => @investigation.id
-  end
-  
-  it "should handle the duplicate metod without error" do
-    get :duplicate, :id => @investigation.id
-  end
-  
-  describe "Researcher Reports" do
-    before(:each) do
-      controller.should_receive(:send_data) { | data, options | 
-        options[:type].should == "application/vnd.ms.excel"
-      }
-      # this is needed to prevent a missing template call, the real send_data method
-      # keeps rails from doing an implicit render, but since we are stubing send_data here
-      # the implicit render isn't stopped
-      controller.stub!(:render)
-    end
-    
-    it 'should return an XLS file for the global Usage Report' do
-      get :usage_report
-    end
-
-    it 'should return an XLS file for the global Details Report' do
-      get :details_report
-    end
-
-    it 'should return an XLS file for the specific Usage Report' do
-      get :usage_report, :id => @investigation.id
-    end
-
-    it 'should return an XLS file for the specific Details Report' do
-      get :details_report, :id => @investigation.id
-    end
   end
 
   describe "#show" do
     describe "with teacher mode='true'" do
       before(:each) do
         controller.stub!(:render)
-        get :show, :id => @investigation.id, :teacher_mode => "true"
+        get :show, :id => @activity.id, :teacher_mode => "true"
       end
       it "should assign true to teacher_mode instance var" do
         assert (assigns(:teacher_mode) == true)
@@ -75,7 +39,7 @@ describe InvestigationsController do
     describe "with teacher mode='false'" do
       before(:each) do
         controller.stub!(:render)
-        get :show, :id => @investigation.id, :teacher_mode => "false"
+        get :show, :id => @activity.id, :teacher_mode => "false"
       end
       it "should assign true to teacher_mode instance var" do
         assert (assigns(:teacher_mode) == false)

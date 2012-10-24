@@ -62,7 +62,9 @@ source "http://rubygems.org"
   gem 'prototype-rails'
   # switch to willbryant inorder to pick up some 3.1 necessary changes
   gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/willbryant/prototype_legacy_helper.git'
-  gem "in_place_editing",     "~> 1.2.0"
+  # gem "in_place_editing",     "~> 1.2.0"
+  gem 'in_place_editing',      :git => 'git://github.com/concord-consortium/in_place_editing.git'
+  
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
@@ -78,6 +80,8 @@ source "http://rubygems.org"
   gem "newrelic_rpm"
   gem "tinymce-rails",        "~>3.5.6"
   gem "best_in_place",        "~> 1.1.2"
+  gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
+    :branch => "remove-addon-support"
 
 # Ideally we pre-compile all asetts and then run production
 # with out the asset compiling requirements. But We have dynamic assets
@@ -119,8 +123,8 @@ group :test do
   gem "cucumber-rails",    "~> 1.3.0", :require => false
   gem "database_cleaner",  "~> 0.7.2"
   gem "capybara",          "~> 1.1.2"
-  gem "rspec",             "~> 2.9.0"
-  gem "rspec-rails",       "~> 2.9.0"
+  gem "rspec",             "~> 2.11.0"
+  gem "rspec-rails",       "~> 2.11.0"
   gem "email_spec",        "~> 1.2.1"
   gem "fakeweb",           "~> 1.3", :require => false
   gem "ci_reporter",       "~> 1.7.0"

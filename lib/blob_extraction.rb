@@ -3,12 +3,12 @@ require 'b64_gzip'
 module BlobExtraction
   URL_RESOLVER = URLResolver.new
   BLOB_CONTENT_REGEXP = /\s*gzb64:([^<]+)/m
-  BLOB_URL_REGEXP = /(?:http.*?\/dataservice|\.\.)\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
+  # the host is optional and apparently originally the url started with ..
+  BLOB_URL_REGEXP = /(?:(?:http.*?)?\/dataservice|\.\.)\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
 
   def extract_blobs(host = nil)
     return false if ! self.otml
     changed = false
-
     if ! host
       address = URI.parse(APP_CONFIG[:site_url])
       host = address.host
@@ -20,7 +20,7 @@ module BlobExtraction
     begin
       text.gsub!(BLOB_URL_REGEXP) {|match|
         changed = true
-        match = URL_RESOLVER.getUrl("dataservice_blob_raw_url", {:id => $1, :token => $2, :host => host, :format => "blob", :only_path => false})
+        match = URL_RESOLVER.getUrl("dataservice_blob_raw_url", {:id => $1, :token => $2,:format => "blob", :only_path => true})
         match
       }
     rescue Exception => e
@@ -39,7 +39,8 @@ module BlobExtraction
         # sometimes we don't have a valid id, but thats OK, we build our list here:
         blob = Dataservice::Blob.create(:content => _content)
         self.blobs << blob
-        match = URL_RESOLVER.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
+        match = URL_RESOLVER.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token,
+          :format => "blob",  :only_path => true})
         match
       }
     rescue Exception => e

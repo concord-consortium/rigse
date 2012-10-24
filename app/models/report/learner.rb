@@ -20,15 +20,6 @@ class Report::Learner < ActiveRecord::Base
   after_create :update_fields
   before_save :ensure_no_nils
 
-  def self.for_learner(learner)
-    found = Report::Learner.find_by_learner_id(learner.id) 
-    unless found
-      found = Report::Learner.create(:learner => learner)
-      learner.reload
-    end
-    found
-  end
-
   def ensure_no_nils
     %w{offering_name teachers_name student_name class_name school_name runnable_name}.each do |attr|
       cur_val = self.send(attr)
@@ -38,11 +29,27 @@ class Report::Learner < ActiveRecord::Base
   end
 
   def calculate_last_run
-    begin
-      self.last_run = self.learner.bundle_logger.last_non_empty_bundle_content.updated_at
-    rescue
-      Rails.logger.warn("could not load last bundle content. #{$!}!")
+    bundle_logger = self.learner.bundle_logger
+    pub_logger = self.learner.periodic_bundle_logger
+    bundle_time = nil
+    pub_time = nil
+
+    if bundle_logger && bundle_logger.last_non_empty_bundle_content
+      bundle_time = bundle_logger.last_non_empty_bundle_content.updated_at
     end
+    
+    if pub_logger && pub_logger.periodic_bundle_contents.last
+      pub_time =pub_logger.periodic_bundle_contents.last.updated_at
+    end
+    
+    if pub_time && bundle_time
+      self.last_run  = pub_time > bundle_time ? pub_time : bundle_time
+    elsif pub_time
+      self.last_run  = pub_time
+    elsif bundle_time
+      self.last_run  = bundle_time
+    end
+
   end
 
   def update_answers
@@ -118,8 +125,12 @@ class Report::Learner < ActiveRecord::Base
     update_field("offering.clazz.teachers", "teachers_name") do |ts|
       ts.map { |t| t.user.name}.join(", ")
     end
-    calculate_last_run
-    update_answers
+
+    # check to see if we can obtain the last run info
+    if self.learner.offering.internal_report?
+      calculate_last_run
+      update_answers
+    end
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
   end

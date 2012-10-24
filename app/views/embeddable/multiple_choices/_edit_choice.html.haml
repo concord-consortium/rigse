@@ -1,13 +1,13 @@
-%div{:id => dom_id_for(form), :class =>"item"}
-  %ul.menu_h
-    %li
+%table{:id => dom_id_for(form), :class =>"multiple_choice_item"}
+  %tr
+    %td
       %span
         = form.label :choice, "choice:"
         = form.text_field :choice
-    %li
+    %td
       %span
         = form.label :is_correct, "Correct:"
         = form.check_box :is_correct
-    %li
+    %td
       %span.delete_link
         = remove_link(form)

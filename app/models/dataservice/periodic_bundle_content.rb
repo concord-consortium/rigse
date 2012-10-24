@@ -59,7 +59,7 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     extract_everything(extractor)
 
     # Also create/update a Report::Learner object for reporting
-    Report::Learner.for_learner(self.learner).update_fields if self.learner
+    self.learner.report_learner.update_fields if self.learner
   end
   handle_asynchronously :extract_saveables
 
