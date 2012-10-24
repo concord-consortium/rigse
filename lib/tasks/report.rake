@@ -58,5 +58,29 @@ namespace :app do
       end
       puts " done."
     end
+
+    desc "Update last_run times for lightweight pages"
+    task :update_page_last_run => :environment do |t, args|
+      puts "#{Portal::Learner.count} learners to process...\n"
+      i = 0
+      Portal::Learner.find_each do |l|
+        print ("\n%5d: " % i) if (i % 250 == 0)
+        if l.offering && l.offering.runnable_type == 'Page'
+          rl = l.report_learner
+          if rl.last_run.nil?
+            report_util = Report::Util.new(l, false, true)
+            last_run = report_util.saveables.map{|s| s.updated_at}.sort.last
+            if last_run
+              rl.last_run = last_run
+              rl.save
+            end
+          end
+        end
+        print '.' if (i % 5 == 4)
+        i += 1
+      end
+      puts " done."
+    end
+
   end
 end
