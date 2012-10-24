@@ -1235,7 +1235,7 @@ module ApplicationHelper
     opts.merge!(defaults){|k,o,n| o}
 
     capture_haml do
-      haml_concat javascript_tag "var myNewFlow = new ContentFlow('#{name}', { reflectionHeight: 0, circularFlow: false, startItem: 'first' } );"
+      haml_concat javascript_tag "var myNewFlow = new ContentFlow('#{name}', { reflectionHeight: 0, circularFlow: false,  scaleFactorPortrait: 'max', startItem: 'first', maxItemHeight: '300', visibleItems: 1} );"
       haml_tag :div, :class => 'ContentFlow', :id => name do
         if opts[:load_indicator]
           haml_tag :div, :class => 'loadIndicator' do
