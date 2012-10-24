@@ -6,3 +6,5 @@
   %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
 - if current_user.has_role?('guest')
   %li.trail= link_to "Unit Previews", investigation_preview_list_path
+- if current_user.has_role?('admin', 'manager','researcher')
+  %li.trail= link_to 'Admin', admin_path

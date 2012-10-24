@@ -428,9 +428,10 @@ ActionController::Routing::Routes.draw do |map|
     :export => :get,
     :destroy => :post,
     :template_edit => :get
+  }, :collection => {
+    :search => [:post, :get]
   }
   map.browse_activities '/activity/browse', :controller=>'activities', :action => 'browse'
-  map.list_filter_activity '/activity/list/filter', :controller => 'activities', :action => 'index', :method => :post
   #map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   #map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
 
@@ -481,6 +482,7 @@ ActionController::Routing::Routes.draw do |map|
   map.help '/help', :controller => 'home', :action => 'help'
   map.project_css '/stylesheets/project.css', :controller => 'home', :action => 'project_css'
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
+  map.admin '/admin', :controller => 'home', :action => 'admin'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
   map.banner '/banner', :controller => 'misc', :action => 'banner'
   # map. ':controller/:action/:id.:format'

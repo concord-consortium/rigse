@@ -252,6 +252,7 @@ class Portal::OfferingsController < ApplicationController
     if portal_student = current_user.portal_student
       # create a learner for the user if one doesnt' exist
       learner = @offering.find_or_create_learner(portal_student)
+      Report::Learner.for_learner(learner)
     end
     learner
   end
@@ -351,6 +352,9 @@ class Portal::OfferingsController < ApplicationController
           # create saveable
           create_saveable(embeddable, @offering, learner, value) if embeddable
         end
+        report_learner = Report::Learner.for_learner(learner)
+        report_learner.last_run = DateTime.now
+        report_learner.update_fields
       end
       flash[:notice] = "Your answers have been saved."
       redirect_to :home
