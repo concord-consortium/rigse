@@ -1,4 +1,6 @@
+= javascript_include_tag "http://s7.addthis.com/js/300/addthis_widget.js#username=USERNAME"
 = javascript_include_tag "search_materials"
+
 %style{:type => "text/css"}
   :sass
     #content
@@ -11,6 +13,7 @@
   - btn_text = "Assign Investigation"
   - icon_image = image_tag("search/investigation.gif",:size=>"100x100")
   - activitites = inst_material.activities
+  - link_url = browse_investigation_url(material)
 - elsif material.class == ::Activity
   - inst_material = material.parent
   - btn_text = "Assign individual activities"
@@ -20,8 +23,10 @@
     - btn_text = "Assign Activity"
     - icon_image = image_tag("search/activity.gif",:size=>"100x100")
     - activitites = nil
+    - link_url = browse_activity_url(material)
   - else
     - activitites = inst_material.activities
+    - link_url = browse_activity_url(inst_material)
 
   - material_title = inst_material.name
   - material_description = inst_material.description
@@ -58,7 +63,7 @@
         - else
           = link_to btn_text, url_for({ :controller => '/search', :action => 'unauthorized_user' }),:id=>"btn_Assign", :class=>"button"
       %td{:class=>"share"}
-        %a{:class=>"button"}
+        %a{:class=>"addthis_button button",:style=>"text-decoration:none;",:'addthis:url'=>link_url}
           Share
   %br
   .description
@@ -72,6 +77,7 @@
         Used in #{inst_material.offerings.count} classes.
   %br
   %br
+  
   - unless activitites.nil?
     %div
       = render :partial => '/browse/investigation_activity_list', :locals => {:material => material,:investigation=>inst_material}
