@@ -153,6 +153,7 @@ class Portal::OfferingsController < ApplicationController
       activity = ::Activity.find(params[:activity_id].to_i)
       unless activity.nil?
         session[:activity_report_embeddable_filter] = activity.page_elements.map{|pe|pe.embeddable}
+        session[:activity_report_id] = activity.id
       end
     end
     redirect_url = report_portal_offering_url(@offering)
@@ -164,6 +165,7 @@ class Portal::OfferingsController < ApplicationController
 
   def report
     @offering = Portal::Offering.find(params[:id])
+    @activity_report_id = nil
     @report_embeddable_filter = []
     unless @offering.report_embeddable_filter.nil? || @offering.report_embeddable_filter.embeddables.nil?
       @report_embeddable_filter = @offering.report_embeddable_filter.embeddables
@@ -172,11 +174,13 @@ class Portal::OfferingsController < ApplicationController
     unless activity_report_embeddable_filter.nil?
       @offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
       @offering.report_embeddable_filter.ignore = false
+      @activity_report_id = session[:activity_report_id]
     end
     respond_to do |format|
       format.html { 
         reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
         session[:activity_report_embeddable_filter] = nil
+
         @learners = reportUtil.learners
 
         @page_elements = reportUtil.page_elements
