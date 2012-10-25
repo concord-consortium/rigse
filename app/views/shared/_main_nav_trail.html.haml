@@ -7,10 +7,12 @@
   %li.trail= link_to 'Browse Instructional Materials' , search_path
 - if current_user.has_role?('admin', 'manager','researcher')
   %li.trail= link_to 'Admin', admin_path
-- if current_project.help_type == 'external url'
-  - external_url = current_project.external_url
-  %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('#{external_url}','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes')"
-- if current_project.help_type == 'help custom html'
-  %li.trail=link_to'Help', '/help/index', :id=>'help'
-- if current_project.help_type == 'no help'
-  %li.trail{:style=>"display:none"}=link_to'Help', 'javascript: void(0)', :id=>'help'
+- #A developer can load home page without initializing data in database
+- if current_project
+  - if current_project.help_type == 'external url'
+    - external_url = current_project.external_url
+    %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('#{external_url}','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
+  - elsif current_project.help_type == 'help custom html'
+    %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help/index','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
+  - elsif current_project.help_type == 'no help'
+    %li.trail{:style=>"display:none"}=link_to'Help', 'javascript: void(0)', :id=>'help'
