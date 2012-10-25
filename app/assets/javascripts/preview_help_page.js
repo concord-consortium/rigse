@@ -21,6 +21,7 @@ function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, isDomId, pr
           if(!protocolPattern.test(windowUrl)){
               windowUrl = 'http://' + windowUrl;
           }
+          previewWindow = window.open(windowUrl, 'HelpPagePreviewExternalUrl', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
       }
       else {
           customHtml = ((isDomId) ? document.getElementById(urlOrHtmlContainerId).value : decodeURIComponent(previewCustomHtml)) || false;
@@ -31,12 +32,17 @@ function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, isDomId, pr
           }
       }
       
-      previewWindow = window.open(windowUrl, 'HelpPagePreview', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
       
       if (!isExternalUrl)
       {
-          formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_content" style="opacity:0;">'+customHtml+'</textarea></form>';
+          previewWindow = window.open(windowUrl, 'HelpPagePreviewCustomHtml', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
           
+          if(isDomId){
+            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_edit" style="opacity:0;">'+customHtml+'</textarea></form>';
+          }
+          else{
+            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_summary" style="opacity:0;">'+customHtml+'</textarea></form>';
+          }
           previewWindowDocument = previewWindow.document;
           
           previewWindowDocument.open();
