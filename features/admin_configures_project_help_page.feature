@@ -47,10 +47,10 @@ Feature: Admin configures project help page
     And I press "Save"
     And I should wait 2 seconds
     And I follow "Help"
-    Then I should see "Creating Help Page"
+    Then the newly opened window should have content "Creating Help Page"
     And I am on the search instructional materials page
     And I follow "Help"
-    Then I should see "Creating Help Page"
+    Then the newly opened window should have content "Creating Help Page"
     
   @javascript
   Scenario: Admin should see errors if text boxes are blank
@@ -63,12 +63,13 @@ Feature: Admin configures project help page
     And I fill in "admin_project[external_url]" with ""
     And I choose "Use external help URL"
     And I press "Save"
-    Then I should see "External URL cannot be blank if selected for help page." within the message popup on the admin projects page
+    Then I should see "Please enter a valid external URL" within the message popup on the admin projects page
     
  @javascript
   Scenario: Admin should be allowed to remove help page link
     When I choose "No help link"
     And I press "Save"
+    Then I should see "No Help Page"
     And I go to the search instructional materials page
     Then Help link should not appear in the top navigation bar
     
