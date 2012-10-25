@@ -63,7 +63,7 @@ Feature: Admin configures project help page
     And I fill in "admin_project[external_url]" with ""
     And I choose "Use external help URL"
     And I press "Save"
-    Then I should see "Please enter a valid external URL" within the message popup on the admin projects page
+    Then I should see "Please enter a valid external help URL" within the message popup on the admin projects page
     
  @javascript
   Scenario: Admin should be allowed to remove help page link
