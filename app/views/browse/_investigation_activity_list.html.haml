@@ -29,5 +29,5 @@
             %td.preview
               = link_to "Preview",run_url_for(activity,{}),:class=>"button"
             %td.share
-              %a{:class=>"addthis_button button",:style=>"text-decoration:none;",:'addthis:url'=>browse_activity_url(activity)}
+              %a{:class=>"addthis_button button",:style=>"text-decoration:none;",:'addthis:url'=>browse_activity_url(activity),:'addthis:title'=>activity.name}
                 Share

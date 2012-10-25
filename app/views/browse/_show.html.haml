@@ -63,7 +63,7 @@
         - else
           = link_to btn_text, url_for({ :controller => '/search', :action => 'unauthorized_user' }),:id=>"btn_Assign", :class=>"button"
       %td{:class=>"share"}
-        %a{:class=>"addthis_button button",:style=>"text-decoration:none;",:'addthis:url'=>link_url}
+        %a{:class=>"addthis_button button",:style=>"text-decoration:none;",:'addthis:url'=>link_url,:'addthis:title'=>material_title}
           Share
   %br
   .description
