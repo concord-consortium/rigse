@@ -24,7 +24,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/in_place_editing.git
-  revision: a71d7348bbc30950283177b5b77a36534e80f269
+  revision: 2d6b856ca0a3d9eccb9c85bb48725537870ed32c
   specs:
     in_place_editing (1.2.0)
 
