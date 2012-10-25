@@ -1,3 +1,14 @@
+When /^the following activities for the above investigations exist:$/ do |activity_table|
+  #the search data exists
+  activity_table.hashes.each do |hash|
+    investigation_name = hash.delete('investigation')
+    investigation = Investigation.find_by_name(investigation_name)
+    hash[:investigation_id] = investigation.id
+    hash[:user] = User.find_by_login(hash[:user])
+    activity = Activity.create(hash)
+end
+end
+
 Then /^(?:|I )should preview investigation "(.+)" on the search instructional materials page$/ do |investigation_name|
     investigation_id = Investigation.find_by_name(investigation_name).id
     within(:xpath,"//div[@id = 'search_investigation_#{investigation_id}']") do
@@ -45,7 +56,7 @@ end
 
 Then /^the search results should be paginated on the search instructional materials page$/ do
   #pagination for investigations
-  within(:xpath, "//div[@class = 'results_container']/div[@class = 'materials_container'][1]") do
+  within(:xpath, "//div[@class = 'results_container']//div[@class = 'materials_container'][1]") do
     if page.respond_to? :should
       page.should have_link("Next")
     else
@@ -66,7 +77,7 @@ Then /^the search results should be paginated on the search instructional materi
   
   #pagination for activity
   step 'I am on the search instructional materials page'
-  within(:xpath, "//div[@class = 'results_container']/div[@class = 'materials_container'][2]") do
+  within(:xpath, "//div[@class = 'results_container']//div[@class = 'materials_container'][2]") do
     if page.respond_to? :should
       page.should have_link("Next")
     else
@@ -83,5 +94,35 @@ Then /^the search results should be paginated on the search instructional materi
     end
     
     page.should have_content("Next")
+  end
+end
+
+And /^(?:|I )follow the "Assign to a class" popup for the (investigation|activity) "(.+)"$/ do |material_type, material_name|
+  material_id = nil
+  case material_type
+    when "investigation"
+      material_id = Investigation.find_by_name(material_name).id
+    when "activity"
+      material_id = Activity.find_by_name(material_name).id
+  end
+  
+  within(:xpath,"//div[@id = 'search_#{material_type}_#{material_id}']") do
+    step 'I follow "Assign to a Class"'
+  end
+end
+
+And /^(?:|I )follow (investigation|activity) link "(.+)" on the search instructional materials page$/ do |material_type, material_name|
+  material_id = nil
+  case material_type
+    when "investigation"
+      material_id = Investigation.find_by_name(material_name).id
+      within(:xpath,"//div[@id = 'search_#{material_type}_#{material_id}']") do
+        click_link(material_name)
+      end
+    when "activity"
+      material_id = Activity.find_by_name(material_name).id
+      within(:xpath,"//div[@id = 'search_#{material_type}_#{material_id}']") do
+        click_link(material_name)
+      end
   end
 end

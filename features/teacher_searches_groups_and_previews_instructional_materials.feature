@@ -50,6 +50,56 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I am on the search instructional materials page
     
     
+  @javascript
+  Scenario: Teacher should be on materials preview page to preview or assign materials
+    When I follow the "Assign to a class" popup for the investigation "differential calculus"
+    Then I should be on the preview investigation page for the investigation "differential calculus"
+    And I am on the search instructional materials page
+    And I follow the "Assign to a class" popup for the activity "differential calculus"
+    Then I should be on the preview activity page for the activity "differential calculus"
+    And I am on the search instructional materials page
+    And I follow investigation link "differential calculus" on the search instructional materials page
+    Then I should be on the preview investigation page for the investigation "differential calculus"
+    And I am on the search instructional materials page
+    And I follow activity link "differential calculus" on the search instructional materials page
+    Then I should be on the preview activity page for the activity "differential calculus"
+    
+    
+  @javascript
+  Scenario: Teacher can see classes in which materials are assigned on the search page
+    When the Investigation "differential calculus" is assigned to the class "Physics"
+    And I search study material "differential calculus" on the search instructional materials page
+    Then I should see "(Assigned to Physics)"
+    And the Activity "Fluid Mechanics" is assigned to the class "Physics"
+    And I search study material "Fluid Mechanics" on the search instructional materials page
+    Then I should see "(Assigned to Physics)"
+    
+    
+  @javascript
+  Scenario: Teacher can see number classes to which investigations are assigned on the search page
+    When the Investigation "differential calculus" is assigned to the class "Physics"
+    And the Investigation "differential calculus" is assigned to the class "Geography"
+    And the Investigation "differential calculus" is assigned to the class "Mathematics"
+    And I am on the search instructional materials page
+    Then I should see "Used in 3 classes."
+    And I am on the the preview investigation page for the investigation "differential calculus"
+    Then I should see "Used in 3 classes."
+    
+    
+  @javascript
+  Scenario: Teacher can see number classes to which activities are assigned on the search page
+    When the Activity "parallel lines" is assigned to the class "Physics"
+    And the Activity "parallel lines" is assigned to the class "Geography"
+    And the Activity "parallel lines" is assigned to the class "Mathematics"
+    And I am on the search instructional materials page
+    And I enter search text "parallel lines" on the search instructional materials page
+    And I press "GO"
+    And I should wait 2 seconds
+    Then I should see "Used in 3 classes."
+    And I am on the the preview activity page for the activity "parallel lines"
+    Then I should see "Used in 3 classes."
+    
+    
   Scenario: Anonymous user can preview investigation
     When I log out
     And I go to the search instructional materials page

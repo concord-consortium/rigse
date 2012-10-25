@@ -112,6 +112,12 @@ module NavigationHelpers
       investigation = Investigation.find_by_name($1)
       offering = Portal::Offering.find_by_runnable_id investigation.id
       "/portal/offerings/#{offering.id}/report"
+    when /the preview investigation page for the investigation "(.*)"/
+      investigation_id = Investigation.find_by_name($1).id
+      "/browse/investigations/#{investigation_id}"
+    when /the preview activity page for the activity "(.*)"/
+      activity_id = Activity.find_by_name($1).id
+      "/browse/activities/#{activity_id}"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
