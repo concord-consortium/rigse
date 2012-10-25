@@ -19,12 +19,12 @@
                 = activity.name
               .activity_description
                 = activity.description
-                %span.clazz_count
-                  -if(activity.offerings.count == 0)
+                %span.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
+                  - if(activity.offerings.count == 0)
                     Not used in any class.
-                  -elsif(activity.offerings.count == 1)
+                  - elsif(activity.offerings.count == 1)
                     Used in 1 class.
-                  -else
+                  - else
                     Used in #{activity.offerings.count} classes.
             %td.preview
               = link_to "Preview",run_url_for(activity,{}),:class=>"button"

@@ -187,12 +187,14 @@ class SearchController < ApplicationController
     if request.xhr?
       render :update do |page|
         if runnable_ids.length == 1
+          material_parent = nil
           if runnable_type == "Investigation"
             material = ::Investigation.find(params[:material_id])
             used_in_clazz_count = material.offerings.count
           elsif runnable_type == "Activity"
             material = ::Activity.find(params[:material_id])
-            used_in_clazz_count = (material.parent)? material.parent.offerings.count : material.offerings.count
+            material_parent = material.parent
+            used_in_clazz_count = (material_parent)? material_parent.offerings.count : material.offerings.count
           end
           
           if(used_in_clazz_count == 0)
@@ -206,12 +208,38 @@ class SearchController < ApplicationController
           if clazz_ids.count > 0
             page << "alert('#{runnable_type} is assigned to the selected class(es) successfully.')"
             page << "close_popup()"
-            page.replace_html "clazz_count", class_count_desc
+            page.replace_html "material_clazz_count", class_count_desc
+            if !material_parent.nil? && runnable_type == "Activity"
+              used_in_clazz_count = material.offerings.count
+              
+              if(used_in_clazz_count == 0)
+                class_count_desc = "Not used in any class."
+              elsif(used_in_clazz_count == 1)
+                class_count_desc = "Used in 1 class."
+              else
+                class_count_desc = "Used in #{used_in_clazz_count} classes."
+              end
+              page.replace_html "activity_clazz_count_#{runnable_ids[0]}", class_count_desc
+            end
             #page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
           else
             page << "alert('Select atleast one class to assign this #{runnable_type}.')"
           end
         else
+          runnable_ids.each do|runnable_id|
+            material = ::Activity.find(params[:material_id])
+            used_in_clazz_count = material.offerings.count
+            
+            if(used_in_clazz_count == 0)
+              class_count_desc = "Not used in any class."
+            elsif(used_in_clazz_count == 1)
+              class_count_desc = "Used in 1 class."
+            else
+              class_count_desc = "Used in #{used_in_clazz_count} classes."
+            end
+            page.replace_html "activity_clazz_count_#{runnable_id}", class_count_desc
+            
+          end
           page.replace_html "clazz_summary_data", {:partial => 'material_assign_summary', :locals=>{:summary_data=>assign_summary_data}}
           page << "setPopupHeight()"
         end

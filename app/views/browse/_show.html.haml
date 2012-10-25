@@ -27,6 +27,7 @@
   - else
     - activitites = inst_material.activities
     - link_url = browse_activity_url(inst_material)
+    - btn_text = (activitites.length == 1)? "Assign Investigation" : btn_text
 
   - material_title = inst_material.name
   - material_description = inst_material.description
@@ -68,7 +69,7 @@
   %br
   .description
     = material_description
-    %span.clazz_count
+    %span.clazz_count{:id=>"material_clazz_count"}
       - if(inst_material.offerings.count == 0)
         Not used in any class.
       - elsif(inst_material.offerings.count == 1)
