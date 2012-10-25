@@ -10,16 +10,17 @@
     %table.activity_list
       - activities.each do|activity|
         - checkbox_checked = (material.class == ::Investigation)? true : (activity.id == material.id)? true : false
-        %tr
-          %td.check_box
-            = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
-          %td
-            .activity_name
-              = activity.name
-            .activity_description
-              = activity.description
-          %td.preview
-            = link_to "Preview",run_url_for(activity,{}),:class=>"button"
-          %td.share
-            %a{:class=>"button"}
-              Share
+        %tbody
+          %tr
+            %td.check_box
+              = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
+            %td
+              .activity_name
+                = activity.name
+              .activity_description
+                = activity.description
+            %td.preview
+              = link_to "Preview",run_url_for(activity,{}),:class=>"button"
+            %td.share
+              %a{:class=>"button"}
+                Share
