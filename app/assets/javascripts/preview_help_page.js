@@ -1,4 +1,4 @@
-function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, isDomId, previewCustomHtml){
+function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId){
       var linkPattern = /(^((http|https|ftp):\/\/){0,1}[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ig;
       var protocolPattern = /(^(http|https|ftp):\/\/)/ig;
       var customHtml = null;
@@ -13,7 +13,7 @@ function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, isDomId, pr
       {
           windowUrl = document.getElementById(urlOrHtmlContainerId).value;
           if (!(linkPattern.test(windowUrl))){
-            var popupContent="<div style='padding:18px'>Please enter a valid external URL.</div>";
+            var popupContent="<div style='padding:18px'>Please enter a valid external help URL.</div>";
             showpopup(popupContent);
             return;
           }
@@ -24,32 +24,26 @@ function open_preview_help_page(isExternalUrl, urlOrHtmlContainerId, isDomId, pr
           previewWindow = window.open(windowUrl, 'HelpPagePreviewExternalUrl', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
       }
       else {
-          customHtml = ((isDomId) ? document.getElementById(urlOrHtmlContainerId).value : decodeURIComponent(previewCustomHtml)) || false;
+          customHtml = document.getElementById(urlOrHtmlContainerId).value || false;
           
           if (!customHtml)
           {
               return;
           }
-      }
-      
-      
-      if (!isExternalUrl)
-      {
-          previewWindow = window.open(windowUrl, 'HelpPagePreviewCustomHtml', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
-          
+            
           if(isDomId){
+            previewWindow = window.open(windowUrl, 'HelpPagePreviewCustomHtml', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
             formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_edit" style="opacity:0;">'+customHtml+'</textarea></form>';
+            previewWindowDocument = previewWindow.document;
+            previewWindowDocument.open();
+            previewWindowDocument.write(formString);
+            previewWindowDocument.close();
+            previewWindowDocument.getElementById('preview_help_page').submit();
           }
           else{
-            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_summary" style="opacity:0;">'+customHtml+'</textarea></form>';
+            window.open('/help/preview_help_page', 'HelpPagePreviewCustomHtml', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
           }
-          previewWindowDocument = previewWindow.document;
           
-          previewWindowDocument.open();
-          previewWindowDocument.write(formString);
-          previewWindowDocument.close();
-          
-          previewWindowDocument.getElementById('preview_help_page').submit();
       }
 }
 function showpopup(content)

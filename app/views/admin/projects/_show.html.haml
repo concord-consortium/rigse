@@ -3,11 +3,10 @@
   - current_active_project = Admin::Project.first
 - current_active_project.reload
 - if current_active_project.help_type == 'external url'
-  - external_url = current_active_project.external_url
   %script
     helpLink = document.getElementById('help')
     helpLink.href = "javascript: void(0)"
-    helpLink.onclick = function(){window.open('#{external_url}','help_page','height = 700 width = 800')}
+    helpLink.onclick = function(){window.open('/help/index','help_page','height = 700 width = 800')}
     helpLink.parentNode.style.display = ""
 - elsif current_active_project.help_type == 'help custom html'
   %script
@@ -136,10 +135,9 @@
             %br
             - if admin_project.help_type == 'external url'
               - external_url = admin_project.external_url
-              %input{:type=>"button", :value=>"Preview help external URL" ,:onclick =>"window.open('#{external_url}','HelpPage','height = 700 width = 800, resizable = yes, scrollbars = yes')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+              %input{:type=>"button", :value=>"Preview External Help URL" ,:onclick =>"window.open('#{external_url}','HelpPage','height = 700 width = 800, resizable = yes, scrollbars = yes')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
             - elsif admin_project.help_type == 'help custom html'
-              - custom_html = admin_project.custom_help_page_html
-              %input{:type=>"button", :value=>"Preview help custom page" ,:onclick =>"open_preview_help_page(false,'',false,'#{ERB::Util.url_encode(custom_html)}')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+              %input{:type=>"button", :value=>"Preview Custom Help Page" ,:onclick =>"openPreviewHelpPage(false,'',false)" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
             - elsif admin_project.help_type == 'no help'
               %br
               No Help Page

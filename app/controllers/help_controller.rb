@@ -32,7 +32,7 @@ class HelpController < ApplicationController
       # Code taken from http://stackoverflow.com/a/968618
       ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
       @help_page_preview_content = ic.iconv(@help_page_preview_content + ' ')[0..-2]
-    elsif(params[:preview_help_page_from_summary])
+    else
       case current_project.help_type
       when 'no help'
         redirect_to :root
