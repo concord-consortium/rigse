@@ -351,7 +351,7 @@ filter: alpha(opacity=40);
 .activity_list td.check_box input{border:0;}
 .activity_list td.preview{width:80px;}
 .activity_list td.share{width:70px;}
-.activity_description{padding-top:6px;padding-bottom:3px;}
+.activity_description{padding-bottom:6px;}
 .activity_name{font-weight:bold;}
 span.clazz_count{padding-left:5px;font-style:italic;}
 
@@ -364,3 +364,5 @@ span.clazz_count{padding-left:5px;font-style:italic;}
 .activity_list td.check_box{display:none;}
 .browse_material_header #btn_Assign{display:none}
 .activity_list .preview{padding-right: 50px;}
+.include_Checkbox{display:none;}
+.activity_list_header{padding-bottom:10px;}
