@@ -52,10 +52,10 @@ Feature: Teacher can search instructional materials grouped by material type, so
     
   @javascript
   Scenario: Teacher should be on materials preview page to preview or assign materials
-    When I follow the "Assign to a class" popup for the investigation "differential calculus"
+    When I follow the "Assign to a class" link for the investigation "differential calculus"
     Then I should be on the preview investigation page for the investigation "differential calculus"
     And I am on the search instructional materials page
-    And I follow the "Assign to a class" popup for the activity "differential calculus"
+    And I follow the "Assign to a class" link for the activity "differential calculus"
     Then I should be on the preview activity page for the activity "differential calculus"
     And I am on the search instructional materials page
     And I follow investigation link "differential calculus" on the search instructional materials page

@@ -126,7 +126,7 @@ Feature: Teacher can search and assign instructional materials to a class
     When the Investigation "differential calculus" is assigned to the class "Physics"
     And I am on the the preview investigation page for the investigation "differential calculus"
     And I follow "Asign Investigation"
-    And I open the "Assign to a class" popup for the investigation "differential calculus"
+    And I open the "Assign to a class" link for the investigation "differential calculus"
     Then I should see "Already assigned to the following class(es)" within the assign materials popup on the search page
     And I should see "Physics" within the assign materials popup on the search page
     
@@ -180,10 +180,10 @@ Feature: Teacher can search and assign instructional materials to a class
     And I uncheck "teacher_clazz[]"
     And I should wait 2 seconds
     And I am on the search instructional materials page
-    And I open the "Assign to a class" popup for the investigation "differential calculus"
+    And I open the "Assign to a class" link for the investigation "differential calculus"
     Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the search page
     And I am on the search instructional materials page
-    And I open the "Assign to a class" popup for the activity "Fluid Mechanics"
+    And I open the "Assign to a class" link for the activity "Fluid Mechanics"
     Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the search page
     
     

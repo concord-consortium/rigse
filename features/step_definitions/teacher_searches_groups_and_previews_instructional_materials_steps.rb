@@ -97,7 +97,7 @@ Then /^the search results should be paginated on the search instructional materi
   end
 end
 
-And /^(?:|I )follow the "Assign to a class" popup for the (investigation|activity) "(.+)"$/ do |material_type, material_name|
+And /^(?:|I )follow the "Assign to a class" link for the (investigation|activity) "(.+)"$/ do |material_type, material_name|
   material_id = nil
   case material_type
     when "investigation"
