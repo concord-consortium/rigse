@@ -207,3 +207,9 @@ end
 When /^Help link should not appear in the top navigation bar$/ do
   find('#help').should_not be_visible
 end
+
+When /^(?:|I )close the newly opened window$/ do
+  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+    page.execute_script "window.close();"
+  end
+end

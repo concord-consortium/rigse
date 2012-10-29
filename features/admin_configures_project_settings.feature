@@ -112,6 +112,7 @@ Feature: Admin configures project settings
     And am on the admin projects page
     And I press "Preview Custom Help Page"
     Then the newly opened window should have content "Creating Help Page"
+    And I close the newly opened window
     When am on the admin projects page
     And I follow "edit project"
     And I choose "Use external help URL"
@@ -120,6 +121,7 @@ Feature: Admin configures project settings
     And am on the admin projects page
     And I press "Preview External Help URL"
     Then the newly opened window should have content "google"
+    And I close the newly opened window
     
   @javascript
   Scenario: Admin edits the home page HTML
@@ -145,6 +147,7 @@ Feature: Admin configures project settings
     Then the newly opened window should have content "Creating Home Page"
     And the newly opened window should have content "Username"
     And the newly opened window should have content "Password"
+    And I close the newly opened window
     
   @javascript
   Scenario: Admin can preview the home page from admin projects page
@@ -157,5 +160,5 @@ Feature: Admin configures project settings
     And am on the admin projects page
     And I press "Preview Home Page"
     Then the newly opened window should have content "Creating Home Page"
-    
+    And I close the newly opened window
     

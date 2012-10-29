@@ -54,7 +54,9 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Teacher should be on materials preview page to preview or assign materials
     When I follow the "Assign to a class" link for the investigation "differential calculus"
     Then I should be on the preview investigation page for the investigation "differential calculus"
+    And I should see "differential calculus"
     And I am on the search instructional materials page
+    And I should see "Instructional Materials"
     And I follow the "Assign to a class" link for the activity "differential calculus"
     Then I should be on the preview activity page for the activity "differential calculus"
     And I am on the search instructional materials page

@@ -16,7 +16,8 @@ Feature: Admin configures project help page
     And I press "Preview Custom Help Page"
     And I wait 2 seconds
     Then the newly opened window should have content "Creating Help Page"
-  
+    And I close the newly opened window
+    
   @javascript
   Scenario: Admin can add an external URL for the help page
     When I choose "Use external help URL"
@@ -28,9 +29,11 @@ Feature: Admin configures project help page
     And I should wait 2 seconds
     And I follow "Help" within the top navigation bar
     Then the newly opened window should have content "Google"
+    And I close the newly opened window
     And I am on the search instructional materials page
     And I follow "Help" within the top navigation bar
     Then the newly opened window should have content "Google"
+    And I close the newly opened window
     
   @javascript
   Scenario: Admin can add custom HTML for the help page
@@ -41,9 +44,11 @@ Feature: Admin configures project help page
     And I should wait 2 seconds
     And I follow "Help"
     Then the newly opened window should have content "Creating Help Page"
+    And I close the newly opened window
     And I am on the search instructional materials page
     And I follow "Help"
     Then the newly opened window should have content "Creating Help Page"
+    And I close the newly opened window
     
   @javascript
   Scenario: Admin can preview the help page if it is an external URL
@@ -51,6 +56,7 @@ Feature: Admin configures project help page
     And I press "Preview External Help URL"
     And I wait 2 seconds
     Then the newly opened window should have content "Google"
+    And I close the newly opened window
     
   @javascript
   Scenario: Admin should see errors on saving the project settings if text boxes are blank
