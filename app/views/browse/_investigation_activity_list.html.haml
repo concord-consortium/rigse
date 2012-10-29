@@ -10,8 +10,13 @@
     %table.activity_list
       - activities.each do|activity|
         - checkbox_checked = (material.class == ::Investigation)? true : (activity.id == material.id)? true : false
+        - clicked_from_activity = (material.class == ::Activity && activity.id == material.id)? true : false
         %tbody
           %tr
+            %td
+              - if clicked_from_activity
+                %span{:style=>"font-size:13px;font-weight:bold"}
+                  &gt;&gt;
             %td.check_box
               = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
             %td
