@@ -70,6 +70,8 @@ Feature: Admin configures project help page
     When I choose "No help link"
     And I press "Save"
     Then I should see "No Help Page"
+    And am on the Project Help Page
+    Then I should see "There is no help available for this site."
     And I go to the search instructional materials page
     Then Help link should not appear in the top navigation bar
     
