@@ -97,6 +97,7 @@ Feature: Teacher views report from the instructional materials page of a class
     Then Report page should have content "image_q"
     
     
+  @wip
   @javascript
   Scenario: Report filtered state should be maintained if filter is applied at activity level,student level and student's activity level
     When the following student answers:

@@ -36,7 +36,6 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I receive a file for download with a filename like "_investigation_"
     
     
-  @javascript
   Scenario: Teacher should be able to preview activity
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I click link "Preview" for activity "Fluid Mechanics" on the materials preview page
