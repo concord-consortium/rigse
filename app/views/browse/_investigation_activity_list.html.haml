@@ -13,7 +13,7 @@
         - clicked_from_activity = (material.class == ::Activity && activity.id == material.id)? true : false
         %tbody
           %tr
-            %td
+            %td{:style=>"text-align:right;width:18px;"}
               - if clicked_from_activity
                 %span{:style=>"font-size:13px;font-weight:bold"}
                   &gt;&gt;
