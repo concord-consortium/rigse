@@ -28,9 +28,11 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
             
           if(isDomId){
             customHtml = document.getElementById(urlOrHtmlContainerId).value || false;
-          
+            
             if (!customHtml)
             {
+                var popupContent = "<div style='padding:18px'>Please enter some custom help HTML to preview.</div>";
+                showpopup(popupContent);
                 return;
             }
             previewWindow = window.open(windowUrl, 'HelpPagePreviewCustomHtml', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
@@ -64,7 +66,7 @@ function showpopup(content)
     var okayButton='<div style="text-align:center"><a href="javascript: void(0);" class="button" onclick="close_popup()">OK</a></div>';
     list_modal = new UI.Window({ theme:"lightbox", height:150, width:350});
     list_modal.setContent(content + okayButton).show(true).focus().center();
-    list_modal.setHeader("Error");
+    list_modal.setHeader("Message");
 }
 
 function close_popup()
