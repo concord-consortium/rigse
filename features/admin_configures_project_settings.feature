@@ -110,7 +110,7 @@ Feature: Admin configures project settings
     And I fill in "admin_project[custom_help_page_html]" with "Creating Help Page"
     And I press "Save"
     And am on the admin projects page
-    And I press "Preview help custom page"
+    And I press "Preview Custom Help Page"
     Then the newly opened window should have content "Creating Help Page"
     When am on the admin projects page
     And I follow "edit project"
@@ -118,7 +118,7 @@ Feature: Admin configures project settings
     And I fill in "admin_project[external_url]" with "www.google.com"
     And I press "Save"
     And am on the admin projects page
-    And I press "Preview help external URL"
+    And I press "Preview External Help URL"
     Then the newly opened window should have content "google"
     
   @javascript
