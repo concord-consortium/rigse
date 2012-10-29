@@ -7,7 +7,7 @@ class HelpController < ApplicationController
   def index
     case current_project.help_type
     when 'no help'
-      redirect_to :root
+      render :template => "help/no_help_page"
     when 'external url'
       external_url = current_project.external_url
       redirect_to "#{external_url}"
@@ -33,14 +33,17 @@ class HelpController < ApplicationController
       ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
       @help_page_preview_content = ic.iconv(@help_page_preview_content + ' ')[0..-2]
     else
-      case current_project.help_type
+      @preview_help_project_id = params[:preview_help_page_from_summary_page] || @preview_help_project_id
+      @preview_help_project_id = @preview_help_project_id.to_i
+      preview_project = Admin::Project.find_by_id(@preview_help_project_id)
+      case preview_project.help_type
       when 'no help'
-        redirect_to :root
+        render :template => "help/no_help_page"
       when 'external url'
-        external_url = current_project.external_url
+        external_url = preview_project.external_url
         redirect_to "#{external_url}"
       when 'help custom html'
-        @help_page_preview_content = current_project.custom_help_page_html
+        @help_page_preview_content = preview_project.custom_help_page_html
         # Turn untrusted string to UTF-8. We need to do this
         # because for some reason the code being taken is an ascii
         # string being treated as UTF-8.

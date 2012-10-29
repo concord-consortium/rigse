@@ -137,10 +137,13 @@
               - external_url = admin_project.external_url
               %input{:type=>"button", :value=>"Preview External Help URL" ,:onclick =>"window.open('#{external_url}','HelpPage','height = 700 width = 800, resizable = yes, scrollbars = yes')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
             - elsif admin_project.help_type == 'help custom html'
-              %input{:type=>"button", :value=>"Preview Custom Help Page" ,:onclick =>"openPreviewHelpPage(false,'',false)" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+              - project_id = admin_project.id
+              - project_id =  project_id.to_s
+              %input{:type=>"button", :value=>"Preview Custom Help Page" ,:onclick =>"openPreviewHelpPage(false,'',false,'#{project_id}')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
             - elsif admin_project.help_type == 'no help'
               %br
-              No Help Page
+              %b
+                No Help Page
             %br
             %br
             = render :partial => 'custom_css', :locals => { :admin_project => admin_project }

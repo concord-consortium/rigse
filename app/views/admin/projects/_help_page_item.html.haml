@@ -6,26 +6,26 @@
   = f.radio_button :help_type,"no help", :checked => (@admin_project.help_type.nil?) || (@admin_project.help_type == 'no help'),:id=> "#{no_help_id}",:style=>"margin-top:10px"
   %label{:for=>"#{no_help_id}", :style=>"margin-left : 10px"}
     No help link
-  %div
-    (This option will remove the help link from the menu.)
-
+  %br
+  (This option will remove the help link from the menu.)
+%br  
   - help_external_url_id = "help_external_url_for_project_#{admin_project.id}"
   = f.radio_button :help_type,"external url",:id=> "#{help_external_url_id}",:style=>"margin-top:10px"
   %label{:for=>"#{help_external_url_id}", :style=>"margin-left : 10px"}
     Use external help URL
-  %div
-    (This option will take users to an external help URL.)
+  %br
+  (This option will take users to an external help URL.)
   - external_url_textbox_id = "external_url_textbox_for_project#{admin_project.id}"
   = f.text_field :external_url, :id=> "#{external_url_textbox_id}",:size => 60, :style=>"display: block"
-  %input{:type=>"button", :value=>" Preview External Help URL", :onclick=>"openPreviewHelpPage(true, '#{external_url_textbox_id}', true)", :class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
-
+  %input{:type=>"button", :value=>"Preview External Help URL", :onclick=>"openPreviewHelpPage(true, '#{external_url_textbox_id}', true, '')", :class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+%br
   - help_custom_html_id = "help_custom_html_for_project_#{admin_project.id}"
   = f.radio_button :help_type,"help custom html",:id=> "#{help_custom_html_id}",:style=>"margin-top:10px"
   %label{:for=>"#{help_custom_html_id}", :style=>"margin-left : 10px"}
     Use custom help page HTML
-  %div
-    (This option will display a custom help page to users. Enter the custom HTML for the help page below.)
+  %br
+  (This option will display a custom help page to users. Enter the custom HTML for the help page below.)
   - custom_help_page_html_textarea_id = "custom_help_page_html_textarea_for_project#{admin_project.id}"
   = f.text_area :custom_help_page_html, :id => "#{custom_help_page_html_textarea_id}", :class => 'mceNoEditor'
-  %input{:type=>"button", :value=>" Preview Custom Help Page", :onclick=>"openPreviewHelpPage(false, '#{custom_help_page_html_textarea_id}', true)", :class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+  %input{:type=>"button", :value=>"Preview Custom Help Page", :onclick=>"openPreviewHelpPage(false, '#{custom_help_page_html_textarea_id}', true, '')", :class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
   

@@ -1,4 +1,4 @@
-function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId){
+function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, project_id){
       var linkPattern = /(^((http|https|ftp):\/\/){0,1}[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ig;
       var protocolPattern = /(^(http|https|ftp):\/\/)/ig;
       var customHtml = null;
@@ -24,15 +24,19 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId){
           previewWindow = window.open(windowUrl, 'HelpPagePreviewExternalUrl', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
       }
       else {
-          customHtml = document.getElementById(urlOrHtmlContainerId).value || false;
           
-          if (!customHtml)
-          {
-              return;
-          }
             
           if(isDomId){
+            customHtml = document.getElementById(urlOrHtmlContainerId).value || false;
+          
+            if (!customHtml)
+            {
+                return;
+            }
             previewWindow = window.open(windowUrl, 'HelpPagePreviewCustomHtml', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
+            if(!previewWindow){
+                return;
+            }
             formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_edit" style="opacity:0;">'+customHtml+'</textarea></form>';
             previewWindowDocument = previewWindow.document;
             previewWindowDocument.open();
@@ -41,7 +45,16 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId){
             previewWindowDocument.getElementById('preview_help_page').submit();
           }
           else{
-            window.open('/help/preview_help_page', 'HelpPagePreviewCustomHtml', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
+            previewWindow = window.open(windowUrl, 'HelpPagePreviewCustomHtml', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
+            if(!previewWindow){
+                return;
+            }
+            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_summary_page" style="opacity:0;">'+project_id+'</textarea></form>';
+            previewWindowDocument = previewWindow.document;
+            previewWindowDocument.open();
+            previewWindowDocument.write(formString);
+            previewWindowDocument.close();
+            previewWindowDocument.getElementById('preview_help_page').submit();
           }
           
       }
