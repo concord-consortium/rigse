@@ -31,7 +31,10 @@
             = link_to "Preview",run_url_for(material,{}),:class=>"button"
         %td{:width=>"130px"}
           %div{:style=>'float:right'}
-            = link_to "Assign to a Class","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')", :class=>"button"
+            - if current_user.portal_teacher
+              = link_to "Assign to a Class","javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')", :class=>"button"
+            - else
+              = link_to "Assign to a Class", url_for({ :controller => '/search', :action => 'unauthorized_user' }), :class=>"button"
       %tr
         %td{:colspan=>3}
           - unless current_user.anonymous?
