@@ -10,3 +10,32 @@ And /^(?:|I )click link "(.+)" for (investigation|activity) "(.+)" on the materi
       end
   end
 end
+
+When /^(?:|I )uncheck "(.+)" from the investigation preview page$/ do |activity_name|
+  within(:xpath,"//table[@class = 'activity_list']/tbody/tr[contains(.,'#{activity_name}')]") do
+    check("activity_id[]")
+  end
+end
+
+When /^the check box for the activity "(.+)" (should|should not) be checked$/ do |activity_name, checkbox_checked|
+  case checkbox_checked
+    when "should"
+      within(:xpath,"//table[@class = 'activity_list']/tbody/tr[contains(.,'#{activity_name}')]") do
+        field_checked = find_field("activity_id[]")['checked']
+        field_checked.should be_true
+      end
+    when "should not"
+      within(:xpath,"//table[@class = 'activity_list']/tbody/tr[contains(.,'#{activity_name}')]") do
+        field_checked = find_field("activity_id[]")['checked']
+        field_checked.should be_false
+      end
+  end
+end
+
+When /^the share popup should have content "(.+)"$/ do |text|
+  within_frame('at3winshare-iframe') do
+    within(:xpath,"//div[@id = 'main']") do
+      page.should have_content(text)
+    end
+  end
+end

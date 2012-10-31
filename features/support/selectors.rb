@@ -28,7 +28,7 @@ module HtmlSelectorsHelpers
       "div.results_container"
     when "the student list on the student roster page" 
       "div#students_listing"
-    when "the assign materials popup on the search page"
+    when "the assign materials popup on the preview materials page"
       "div.ui-window.lightbox.draggable.resizable.lightbox_focused"
     when "the message popup on the admin projects page"
       "div.ui-window.lightbox.draggable.resizable.lightbox_focused"

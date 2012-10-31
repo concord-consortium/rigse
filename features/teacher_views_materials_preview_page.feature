@@ -42,148 +42,156 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I receive a file for download with a filename like "_activity_"
     
     
-  @wip
+  Scenario: Teacher should be able to see different properties of materials
+    And the investigation "Digestive System" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
+    And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
+    And the project settings enables use of Grade Span Expectation
+    And I am on the the preview investigation page for the investigation "Digestive System"
+    Then I should see "Biological Science"
+    And I should see "10-11"
+    And I am on the the preview investigation page for the investigation "A Weather Underground"
+    And I should see "Temperature"
+    And the project setting for Grade Span Expectation is restored
+    
+    
   @javascript
   Scenario: Teacher should be able to share investigation
     When I am on the the preview investigation page for the investigation "Mechanics"
+    And I should see "Mechanics is a great subject"
     And I click link "Share" for investigation "Mechanics" on the materials preview page
-    Then I should see "Social sharing popup"
+    Then the share popup should have content "Facebook"
+    And the share popup should have content "Twitter"
+    And the share popup should have content "Email"
+    And the share popup should have content "LinkedIn"
+    And the share popup should have content "Google+"
     
     
-  @wip
   @javascript
   Scenario: Teacher should be able to share activity
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I click link "Share" for activity "Fluid Mechanics" on the materials preview page
-    Then I should see "Social sharing popup"
+    Then the share popup should have content "Facebook"
+    And the share popup should have content "Twitter"
+    And the share popup should have content "Email"
+    And the share popup should have content "LinkedIn"
+    And the share popup should have content "Google+"
     
     
   @javascript
   Scenario: Teacher should be able return on search page
     When I am on the search instructional materials page
     And I follow investigation link "Mechanics" on the search instructional materials page
+    And the check box for the activity "Mechanics" should be checked
+    And the check box for the activity "Fluid Mechanics" should be checked
     And I follow "← return to search"
     Then I should be on the search instructional materials page
     And I follow activity link "Fluid Mechanics" on the search instructional materials page
+    And the check box for the activity "Fluid Mechanics" should be checked
+    And the check box for the activity "Mechanics" should not be checked
     And I follow "← return to search"
     Then I should be on the search instructional materials page
     
     
-  @wip
   Scenario: Anonymous user can not assign instructional materials to the class
     When I log out
     And I am on the the preview investigation page for the investigation "differential calculus"
-    And I follow "Asign Investigation"
+    And I follow "Assign Investigation"
     Then I should be on the home page
     
     
-  @wip
   @dialog
   @javascript
   Scenario: Teacher can assign investigations to a class
     When I am on the the preview investigation page for the investigation "Mechanics"
-    And I follow "Asign Investigation"
-    Then I should see "Investigation:" within the assign materials popup on the search page
-    And I should see "Geometry" within the assign materials popup on the search page
-    When I check "Mathematics"
+    And I follow "Assign Investigation"
+    And I check "Mathematics"
     And I follow "Save"
-    And I should wait 2 seconds
-    And accept the dialog
-    And I go to the class page for "Mathematics"
+    And I accept the dialog
+    And I go to Instructional Materials page for "Mathematics"
     Then I should see "Mechanics"
     
     
-  @wip
   @dialog
   @javascript
   Scenario: Teacher can assign activities to a class from the preview investigation page 
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I uncheck "Mechanics" from the investigation preview page
-    And I follow "Asign Investigation"
-    Then I should see "Activity:" within the assign materials popup on the search page
-    And I should see "Fluid Mechanics" within the assign materials popup on the search page
+    And I follow "Assign Investigation"
     And "Mechanics" should appear before "Fluid Mechanics"
     When I check "Physics"
     And I follow "Save"
-    And I should wait 2 seconds
-    And accept the dialog
-    And I go to the class page for "Physics"
+    And I accept the dialog
+    And I go to Instructional Materials page for "Physics"
     Then I should see "Fluid Mechanics"
     
     
-  @wip
   @javascript
-  Scenario: Teacher can see a message in the popup of assign activity if only investigation is assigned to any class
-    When the Investigation "differential calculus" is assigned to the class "Physics"
-    And I am on the the preview investigation page for the investigation "differential calculus"
-    And I follow "Asign Investigation"
-    Then I should see /(Already assigned as part of "differential calculus")/ within the assign materials popup on the search page
+  Scenario: Teacher can see a message in the popup of assign activity if  activity is already as part of investigation
+    When the Investigation "Mechanics" is assigned to the class "Physics"
+    And I am on the the preview activity page for the activity "Fluid Mechanics"
+    And I follow "Assign Individual Activities"
+    Then I should see /(Already assigned as part of "Mechanics")/ within the assign materials popup on the preview materials page
     
     
-  @wip
   @javascript
   Scenario: Teacher can see a message in the popup if investigation is assigned to any class
     When the Investigation "differential calculus" is assigned to the class "Physics"
     And I am on the the preview investigation page for the investigation "differential calculus"
-    And I follow "Asign Investigation"
-    And I open the "Assign to a class" link for the investigation "differential calculus"
-    Then I should see "Already assigned to the following class(es)" within the assign materials popup on the search page
-    And I should see "Physics" within the assign materials popup on the search page
+    And I follow "Assign Investigation"
+    Then I should see "Already assigned to the following class(es)" within the assign materials popup on the preview materials page
+    And I should see "Physics" within the assign materials popup on the preview materials page
     
     
-  @wip
   @javascript
   Scenario: Teacher can see a message in the popup if activity is assigned to any class
     When the Activity "Fluid Mechanics" is assigned to the class "Mathematics"
     And I am on the the preview activity page for the activity "Fluid Mechanics"
-    And I follow "Asign Investigation"
-    Then I should see "Already assigned to the following class(es)" within the assign materials popup on the search page
-    And I should see "Mathematics" within the assign materials popup on the search page
+    And I follow "Assign Individual Activities"
+    Then I should see "Already assigned to the following class(es)" within the assign materials popup on the preview materials page
+    And I should see "Mathematics" within the assign materials popup on the preview materials page
     
     
-  @wip
+  @dialog
   @javascript
   Scenario: Teacher can see a message in the popup if the investigation is assigned to all the classes
     When I login with username: albert password: albert
     And I am on the the preview investigation page for the investigation "differential calculus"
-    And I follow "Asign Investigation"
+    And I follow "Assign Investigation"
     And I check "clazz_id[]"
     And I follow "Save"
     And I should wait 2 seconds
     And accept the dialog
     And I am on the the preview investigation page for the investigation "differential calculus"
-    And I follow "Asign Investigation
-    Then I should see "This material is assigned to all the classes." within the assign materials popup on the search page
+    And I follow "Assign Investigation"
+    Then I should see "This material is assigned to all the classes." within the assign materials popup on the preview materials page
     
     
-  @wip
   @dialog
   @javascript
   Scenario: Teacher can see a message in the popup if the activity is assigned to all the classes
     When I login with username: albert password: albert
     And I am on the the preview activity page for the activity "Fluid Mechanics"
-    And I follow "Asign Investigation"
+    And I follow "Assign Individual Activities"
     And I check "clazz_id[]"
     And I follow "Save"
     And I should wait 2 seconds
     And accept the dialog
     And I am on the the preview activity page for the activity "Fluid Mechanics"
-    And I follow "Asign Investigation"
-    Then I should see "This material is assigned to all the classes." within the assign materials popup on the search page
+    And I follow "Assign Individual Activities"
+    Then I should see "This material is assigned to all the classes." within the assign materials popup on the preview materials page
     
     
-  @wip
   @javascript
-  Scenario: Teacher can see a message  if assign to a class popup is opened without creating any class
+  Scenario: Teacher can see a message if assign to a class popup is opened without creating any class
     When I login with username: albert password: albert
     And I go to the Manage Class Page
     And I uncheck "teacher_clazz[]"
     And I should wait 2 seconds
-    And I am on the search instructional materials page
-    And I open the "Assign to a class" link for the investigation "differential calculus"
-    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the search page
-    And I am on the search instructional materials page
-    And I open the "Assign to a class" link for the activity "Fluid Mechanics"
-    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the search page
+    And I am on the the preview investigation page for the investigation "Mechanics"
+    And I follow "Assign Investigation"
+    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the preview materials page
+    And I am on the the preview activity page for the activity "Fluid Mechanics"
+    And I follow "Assign Individual Activities"
+    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the preview materials page
     
     
