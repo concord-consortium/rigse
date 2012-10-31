@@ -91,6 +91,8 @@ source "http://rubygems.org"
   gem "compass-rails"
   gem 'uglifier'
   gem 'yui-compressor'
+  # The lightweight engine requires this, but assets don't precompile unless it's here as well.
+  gem 'jquery-rails'
 # end
 
 # see above; for production asset compilation.
