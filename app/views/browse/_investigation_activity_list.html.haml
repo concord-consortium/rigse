@@ -20,8 +20,12 @@
             %td.check_box
               = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
             %td
-              .activity_name
-                = activity.name
+              - if clicked_from_activity
+                .activity_name{:style=>"background-color:yellow"}
+                  = activity.name
+              - else
+                .activity_name
+                  = activity.name
               .activity_description
                 = activity.description
                 %span.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
