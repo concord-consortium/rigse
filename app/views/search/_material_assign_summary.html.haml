@@ -23,8 +23,8 @@
             .assign_material_list
               = summary_item[2].join(', ')
 %br
-%table.classdata
+%table
   %tr
     %td
-      = link_to "Cancel", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()"
+      = link_to "OK", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()",:class=>"button",:style=>"margin-left: 205px;"
 %div{:style=>"clear:both"}
