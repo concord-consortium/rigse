@@ -33,6 +33,41 @@ class MiscController < ActionController::Base
     render :xml => "<created/>", :status => :created
   end
 
+  def stats
+    stats = {}
+    stats[:teachers] = Portal::Teacher.count
+    stats[:students] = Portal::Student.count
+    stats[:classes] = Portal::Clazz.count
+    stats[:users] = User.count
+    stats[:learners] = Portal::Learner.count
+    stats[:offerings] = Portal::Offering.count
+    stats[:bundle_loggers] = Dataservice::BundleLogger.count
+    stats[:bundle_contents] = Dataservice::BundleContent.count
+
+    # this sql was created because using the active record query language didn't generate the correct distinct ordering
+    # additionally it allows us to get all the 'active' stats in one shot
+    result = ActiveRecord::Base.connection.select_one(
+      "SELECT COUNT(DISTINCT portal_clazzes.id) AS active_classes, " +
+      "COUNT(DISTINCT portal_learners.id) AS active_learners, " +
+      "COUNT(DISTINCT portal_learners.student_id) AS active_students, " +
+      "COUNT(DISTINCT portal_teachers.id) AS active_teachers " +
+      "FROM portal_teachers " +
+      "INNER JOIN portal_teacher_clazzes ON portal_teacher_clazzes.teacher_id = portal_teachers.id " +
+      "INNER JOIN portal_clazzes ON portal_clazzes.id = portal_teacher_clazzes.clazz_id " +
+      "INNER JOIN portal_offerings ON portal_offerings.clazz_id = portal_clazzes.id " +
+      "INNER JOIN portal_learners ON portal_learners.offering_id = portal_offerings.id " +
+      "INNER JOIN dataservice_bundle_loggers ON dataservice_bundle_loggers.id = portal_learners.bundle_logger_id " +
+      "INNER JOIN dataservice_bundle_contents ON dataservice_bundle_contents.bundle_logger_id = dataservice_bundle_loggers.id"
+      )
+    stats.merge!(result)
+
+    respond_to do |format|
+      format.json do
+        render :json => stats
+      end
+    end
+  end
+
   private
 
   def get_banner_asset(name)
