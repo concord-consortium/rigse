@@ -485,6 +485,7 @@ ActionController::Routing::Routes.draw do |map|
   map.admin '/admin', :controller => 'home', :action => 'admin'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
   map.banner '/banner', :controller => 'misc', :action => 'banner'
+  map.stats '/misc/stats.json', :controller => 'misc', :action => 'stats', :format => 'json'
   # map. ':controller/:action/:id.:format'
 
   # Install the default routes as the lowest priority.
