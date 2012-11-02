@@ -43,3 +43,18 @@ Then /^(?:|I )should see question "(.*)" checked when all question is displayed 
     end
   end
 end
+
+Then /^(?:|I )click "(.*)" button on report page$/ do |button_name|
+  step 'I wait 2 seconds'
+  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+    step_text = "I press \"#{button_name}\""
+    step step_text
+  end
+end
+
+Then /^(?:|I )should see "(.+)" message on the report page$/ do |message_text|
+  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+    step_text = "I should see \"#{message_text}\" within the message box in report page"
+    step step_text
+  end
+end
