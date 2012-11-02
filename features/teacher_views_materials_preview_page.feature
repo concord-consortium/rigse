@@ -130,7 +130,7 @@ Feature: Teacher can search and assign instructional materials to a class
     When the Investigation "Mechanics" is assigned to the class "Physics"
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
-    Then I should see /(Already assigned as part of "Mechanics")/ within the assign materials popup on the preview materials page
+    Then I should see /(Already assigned as part of "Mechanics")/ within the lightbox in focus
     
     
   @javascript
@@ -138,8 +138,8 @@ Feature: Teacher can search and assign instructional materials to a class
     When the Investigation "differential calculus" is assigned to the class "Physics"
     And I am on the the preview investigation page for the investigation "differential calculus"
     And I follow "Assign Investigation"
-    Then I should see "Already assigned to the following class(es)" within the assign materials popup on the preview materials page
-    And I should see "Physics" within the assign materials popup on the preview materials page
+    Then I should see "Already assigned to the following class(es)" within the lightbox in focus
+    And I should see "Physics" within the lightbox in focus
     
     
   @javascript
@@ -147,8 +147,8 @@ Feature: Teacher can search and assign instructional materials to a class
     When the Activity "Fluid Mechanics" is assigned to the class "Mathematics"
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
-    Then I should see "Already assigned to the following class(es)" within the assign materials popup on the preview materials page
-    And I should see "Mathematics" within the assign materials popup on the preview materials page
+    Then I should see "Already assigned to the following class(es)" within the lightbox in focus
+    And I should see "Mathematics" within the lightbox in focus
     
     
   @dialog
@@ -163,7 +163,7 @@ Feature: Teacher can search and assign instructional materials to a class
     And accept the dialog
     And I am on the the preview investigation page for the investigation "differential calculus"
     And I follow "Assign Investigation"
-    Then I should see "This material is assigned to all the classes." within the assign materials popup on the preview materials page
+    Then I should see "This material is assigned to all the classes." within the lightbox in focus
     
     
   @dialog
@@ -178,7 +178,7 @@ Feature: Teacher can search and assign instructional materials to a class
     And accept the dialog
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
-    Then I should see "This material is assigned to all the classes." within the assign materials popup on the preview materials page
+    Then I should see "This material is assigned to all the classes." within the lightbox in focus
     
     
   @javascript
@@ -189,9 +189,9 @@ Feature: Teacher can search and assign instructional materials to a class
     And I should wait 2 seconds
     And I am on the the preview investigation page for the investigation "Mechanics"
     And I follow "Assign Investigation"
-    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the preview materials page
+    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the lightbox in focus
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
-    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the preview materials page
+    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the lightbox in focus
     
     

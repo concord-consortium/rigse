@@ -54,7 +54,7 @@ end
 
 Then /^(?:|I )should see "(.+)" message on the report page$/ do |message_text|
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
-    step_text = "I should see \"#{message_text}\" within the message box in report page"
+    step_text = "I should see \"#{message_text}\" within the lightbox in focus"
     step step_text
   end
 end
