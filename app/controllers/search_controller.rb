@@ -211,8 +211,8 @@ class SearchController < ApplicationController
           end
         
           if clazz_ids.count > 0
-            page << "getMessagePopup('#{runnable_type} is assigned to the selected class(es) successfully.')"
             page << "close_popup()"
+            page << "getMessagePopup('#{runnable_type} is assigned to the selected class(es) successfully.')"
             page.replace_html "material_clazz_count", class_count_desc
             if !material_parent.nil? && runnable_type == "Activity"
               used_in_clazz_count = material.offerings.count
