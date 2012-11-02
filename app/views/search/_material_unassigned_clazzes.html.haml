@@ -73,5 +73,7 @@
         - if @unassigned_clazzes.length > 0
           = link_to_remote "Save", :condition => 'validateSaveAssignToClass()', :before => 'setSaveAssignToClassInProgress(true)', :complete => 'setSaveAssignToClassInProgress(false)', :url => {:action=>'add_material_to_clazzes', :material_id => @material.collect{|a| a.id}.join(','),:material_type => @material[0].class.to_s}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
           &nbsp;&nbsp;
-        = link_to "Cancel", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()"
+          = link_to "Cancel", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()"
+        - else
+          = link_to "Okay", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()",:class=>"button",:style=>"margin-right: 204px;"
   %div{:style=>"clear:both"}
