@@ -147,22 +147,6 @@ class Portal::OfferingsController < ApplicationController
     redirect_to :back
   end
 
-  def activity_report
-    @offering = Portal::Offering.find(params[:id])
-    unless params[:activity_id].nil?
-      activity = ::Activity.find(params[:activity_id].to_i)
-      unless activity.nil?
-        session[:activity_report_embeddable_filter] = activity.page_elements.map{|pe|pe.embeddable}
-        session[:activity_report_id] = activity.id
-      end
-    end
-    redirect_url = report_portal_offering_url(@offering)
-    respond_to do |format|
-      format.html { redirect_to redirect_url }
-      format.xml  { head :ok }
-    end
-  end
-
   def report
     @offering = Portal::Offering.find(params[:id])
     @activity_report_id = nil
@@ -170,19 +154,29 @@ class Portal::OfferingsController < ApplicationController
     unless @offering.report_embeddable_filter.nil? || @offering.report_embeddable_filter.embeddables.nil?
       @report_embeddable_filter = @offering.report_embeddable_filter.embeddables
     end
+    unless params[:activity_id].nil?
+      activity = ::Activity.find(params[:activity_id].to_i)
+      unless activity.nil?
+        @offering.report_embeddable_filter.embeddables = activity.page_elements.map{|pe|pe.embeddable}
+        @offering.report_embeddable_filter.ignore = false
+        @activity_report_id = activity.id
+      end
+    end
     activity_report_embeddable_filter = session[:activity_report_embeddable_filter]
     unless activity_report_embeddable_filter.nil?
-      @offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
-      @offering.report_embeddable_filter.ignore = false
-      @activity_report_id = session[:activity_report_id]
+      unless activity.nil?
+        @offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
+        @offering.report_embeddable_filter.ignore = false
+        @activity_report_id = session[:activity_report_id]
+      end
     end
+
     respond_to do |format|
-      format.html { 
+      format.html {
         reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
-        session[:activity_report_embeddable_filter] = nil
-
+        session[:activity_report_id]= nil ;
+        session[:activity_report_embeddable_filter] = nil;
         @learners = reportUtil.learners
-
         @page_elements = reportUtil.page_elements
         
         render :layout => 'report' # report.html.haml
@@ -192,7 +186,6 @@ class Portal::OfferingsController < ApplicationController
         @learners = @offering.clazz.students.map do |l|
           "name: '#{l.name}', id: #{l.id}"
         end
-        
         cookies[:activity_name] = @offering.runnable.url
         cookies[:class] = @offering.clazz.id
         cookies[:class_students] = "[{" + @learners.join("},{") + "}]" # formatted for JSON parsing
@@ -238,12 +231,12 @@ class Portal::OfferingsController < ApplicationController
     @offering = Portal::Offering.find(params[:id])
     @report_embeddable_filter = @offering.report_embeddable_filter
     @filtered = true
+    activity_report_id = params[:activity_id]
     if params[:commit] == "Show all"
       @report_embeddable_filter.ignore = true
     else
       @report_embeddable_filter.ignore = false
     end
-
     if params[:filter]
       embeddables = params[:filter].collect{|type, ids|
         logger.info "processing #{type}: #{ids.inspect}"
@@ -256,17 +249,31 @@ class Portal::OfferingsController < ApplicationController
       embeddables = []
     end
     @report_embeddable_filter.embeddables = embeddables
+    if activity_report_id != nil
+      activity = ::Activity.find(activity_report_id.to_i)
+      if params[:commit] == "Show all"
+        session[:activity_report_embeddable_filter] = activity.page_elements.map{|pe|pe.embeddable}
+      else
+        session[:activity_report_embeddable_filter] = embeddables
+      end
+      session[:activity_report_id] = activity.id
+    end
 
     redirect_url = report_portal_offering_url(@offering)
     respond_to do |format|
-      if @report_embeddable_filter.save
+      if activity_report_id != nil
         flash[:notice] = 'Report filter was successfully updated.'
         format.html { redirect_to :back }
         format.xml  { head :ok }
+      elsif @report_embeddable_filter.save
+          flash[:notice] = 'Report filter was successfully updated.'
+          format.html { redirect_to :back }
+          format.xml  { head :ok }
       else
         format.html { redirect_to :back }
         format.xml  { render :xml => @report_embeddable_filter.errors, :status => :unprocessable_entity }
       end
+      
     end
   end
 

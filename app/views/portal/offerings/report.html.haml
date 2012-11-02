@@ -1,13 +1,11 @@
+= javascript_include_tag "light_box.js"
 - report_title = capture do
   - section = (@offering.clazz.section && @offering.clazz.section.length > 0) ? @offering.clazz.section : nil
   - section = (section ? "(#{section})" : "")
   = "Report for: #{@offering.clazz.name} #{section}"
-- if @activity_report_id == nil
-  - report_summary = capture do
-    = offering_report_summary(@offering)
-- else
-  - report_summary = capture do
-    = offering_report_summary(@offering,{:show_selection_controls => false})
+
+- report_summary = capture do
+  = offering_report_summary(@offering)
 != use_contentflow
 = render :partial => '/portal/reports/report', :locals => {:report_context => @offering, 
     :offering => @offering, :learners => @learners, :page_elements => @page_elements,

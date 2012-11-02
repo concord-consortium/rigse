@@ -277,6 +277,7 @@ describe Portal::OfferingsController do
       assert_equal assigns[:offering].clazz, @physics_clazz
       
       assert_not_nil session[:activity_report_embeddable_filter]
+      assert_equal session[:activity_report_id],@laws_of_motion_activity.id
       assert_equal session[:activity_report_embeddable_filter].count, 1
       assert_equal session[:activity_report_embeddable_filter][0], @embeddable
       

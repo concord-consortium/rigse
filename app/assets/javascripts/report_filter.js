@@ -61,3 +61,58 @@ function saveChangesAndPrint(parentId, formId) {
 Event.observe(window, 'load', function() {
   window.setTimeout("autoPrint();", 3000);
 });
+function onShowSelected(Event)
+{
+    var g_showSelected = false;
+    $$(".filter_checkbox").each(function(obj){ g_showSelected = g_showSelected || obj.checked;})
+
+    if(!g_showSelected)
+    {
+        try
+        {
+            Event.preventDefault();
+        }
+        catch(e){
+            Event.cancelBubble=true;
+        }
+        
+        var description_text = "No questions have been selected."
+        showMessagePopup(description_text);
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+
+}
+
+
+var g_messagePopup = null;
+
+function showMessagePopup(descriptionText)
+{
+    g_messagePopup = g_messagePopup || null;
+    if(g_messagePopup !== null)
+    {
+        close_popup();
+    }
+    //alert(descriptionText);
+    g_messagePopup = new UI.Window({ resizable: false,theme:"lightbox",width:300,height:125});
+    
+    var popupHtml = "<div style='padding:10px;padding-left:15px'>" +
+                    descriptionText +
+                    "</div>" +
+                    "<div style = 'margin-left:125px;margin-top:10px' class='msg_popup_ok_button'>" +
+                    "<a href=\"javascript:void(0)\" class=\"button\" onclick=\"close_popup()\">OK</a>" +
+                    "</div>";
+    g_messagePopup.setContent(popupHtml).show(true).focus().center();
+    g_messagePopup.setHeader("Message");
+    //g_reportLinkPopup.activate();*/
+}
+
+function close_popup()
+{
+    g_messagePopup.destroy();
+    g_messagePopup = null;
+}
