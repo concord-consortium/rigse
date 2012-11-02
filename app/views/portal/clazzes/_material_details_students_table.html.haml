@@ -31,7 +31,7 @@
                   - description_text = "Reporting is unavailable until at least one activity is started by this student."
                   = link_to "#{student_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
                 - else
-                  = link_to( student_name,activity_report_portal_learner_url(learner),{:target=>"_blank",:class=>"activity_report"})
+                  = link_to( student_name,report_portal_learner_url(learner),{:target=>"_blank",:class=>"activity_report"})
     .progress_div.webkit_scrollbars
       %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
         %tr
