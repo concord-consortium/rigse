@@ -17,10 +17,10 @@
     .assigned_classes_container.webkit_scrollbars
       %ul
         - already_assigned_clazzes.each do|summary_item|
-          %li
+          %li{:style=>"padding-top:8px;"}
             .class_name
               = summary_item[0]
-            .assign_material_list
+            .assign_material_list{:style=>"font-weight:normal"}
               = summary_item[2].join(', ')
 %br
 %table
