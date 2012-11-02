@@ -1,0 +1,24 @@
+2 parts of EAS split:
+- authoring
+- learner data
+
+Authoring:
+- useful for better SG integration
+- pretty simple interface:
+-- rest api to set and update activities descriptions, and activity representations
+-- add "edit logic" to external activity model (requires external activity configuration)
+-- add "copying logic" to external activities
+-- use portal as login provider for Authoring system (either SG, ITSI-SU, or LightWeight)
+- for migration will need a way to link existing authoring users to portal users
+
+Migrations
+SG can use this without any extra features. The smartgraphs connector is mainly for handling learner data, so that could stay as is, and just the authoring connection would be generalized and added to the portal code, and the hobo authoring app would be updated to share users.
+NextGen MW needs some form of launching support for this to work for them, it could be prototyped with 2 portals: the main portal, and a NG authoring enabled portal
+ITSI-SU can't do this until running is supported as well, it could be prototype similar to the NextGen MW approach above.
+
+Roles:
+- when the external authoring system interacts with the portal, it should "pretend" to be that user in the portal, this way that users roles will automatically be picked up. 
+- the external system will have its own permissions for editing and creating activities
+- the external system will notify the portal when the activity description changes. The portal then updates its description. This happens regardless of the users permissions in the portal. The idea is that the activity description is a cache or summary of the activity.
+- this means that admins and users in the authoring system need to be trusted, to be safe the portal admins should copy and maintain ownership of critical activities.
+- also the portal needs to be able to query the authoring system to find out if the current user can edit the activity this is inorder to show the edit buttons correctly.
