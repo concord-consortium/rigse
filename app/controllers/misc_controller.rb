@@ -40,6 +40,12 @@ class MiscController < ActionController::Base
     stats[:offerings] = Portal::Offering.count
     stats[:bundle_loggers] = Dataservice::BundleLogger.count
     stats[:bundle_contents] = Dataservice::BundleContent.count
+    stats[:investigations] = Investigation.count
+    stats[:activities] = Activity.count
+    stats[:sections] = Section.count
+    stats[:pages] = Page.count
+    stats[:external_activities] = ExternalActivity.count
+    stats[:resource_pages] = ResourcePage.count
 
     # this sql was created because using the active record query language didn't generate the correct distinct ordering
     # additionally it allows us to get all the 'active' stats in one shot
@@ -47,6 +53,7 @@ class MiscController < ActionController::Base
       "SELECT COUNT(DISTINCT portal_clazzes.id) AS active_classes, " +
       "COUNT(DISTINCT portal_learners.id) AS active_learners, " +
       "COUNT(DISTINCT portal_learners.student_id) AS active_students, " +
+      "COUNT(DISTINCT portal_offerings.runnable_id, portal_offerings.runnable_type) AS active_runnables, " +
       "COUNT(DISTINCT portal_teachers.id) AS active_teachers " +
       "FROM portal_teachers " +
       "INNER JOIN portal_teacher_clazzes ON portal_teacher_clazzes.teacher_id = portal_teachers.id " +
