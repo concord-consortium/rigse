@@ -1,5 +1,3 @@
-
-D:\GIT\rigse_2>@git.exe %*
 var expandedShareButtonid;
 function expandcollapseoptions(id,material_type,btn_type){
     if (animating)
@@ -68,8 +66,3 @@ document.observe("click",function(obj){
     }
 });
 
-D:\GIT\rigse_2>@set ErrorLevel=%ErrorLevel%
-
-D:\GIT\rigse_2>@rem Restore the original console codepage.
-
-D:\GIT\rigse_2>@chcp %cp_oem% > nul < nul
