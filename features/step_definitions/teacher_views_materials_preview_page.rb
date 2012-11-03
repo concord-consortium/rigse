@@ -32,10 +32,27 @@ When /^the check box for the activity "(.+)" (should|should not) be checked$/ do
   end
 end
 
-When /^the share popup should have content "(.+)"$/ do |text|
-  within_frame('at3winshare-iframe') do
-    within(:xpath,"//div[@id = 'main']") do
-      page.should have_content(text)
+When /^(?:|I )should be able to share (investigation|activity) "(.+)"$/ do |material, material_name|
+    case material
+      when "investigation"
+        material_id = Investigation.find_by_name(material_name).id
+        element = page.find(:xpath, "//div[@id='share_Inv#{material_id}']/div[@class='ss-fb sharelink']")
+        element.should be_visible
+        element = page.find(:xpath, "//div[@id='share_Inv#{material_id}']/div[@class='ss-tw sharelink']")
+        element.should be_visible
+        element = page.find(:xpath, "//div[@id='share_Inv#{material_id}']/div[@class='ss-li sharelink']")
+        element.should be_visible
+        element = page.find(:xpath, "//div[@id='share_Inv#{material_id}']/div[@class='ss-po sharelink']")
+        element.should be_visible
+      when "activity"
+        material_id = Activity.find_by_name(material_name).id
+        element = page.find(:xpath, "//div[@id='share_Act#{material_id}']/div[@class='ss-fb sharelink']")
+        element.should be_visible
+        element = page.find(:xpath, "//div[@id='share_Act#{material_id}']/div[@class='ss-tw sharelink']")
+        element.should be_visible
+        element = page.find(:xpath, "//div[@id='share_Act#{material_id}']/div[@class='ss-li sharelink']")
+        element.should be_visible
+        element = page.find(:xpath, "//div[@id='share_Act#{material_id}']/div[@class='ss-po sharelink']")
+        element.should be_visible
     end
-  end
 end

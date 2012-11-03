@@ -60,22 +60,14 @@ Feature: Teacher can search and assign instructional materials to a class
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I should see "Mechanics is a great subject"
     And I click link "Share" for investigation "Mechanics" on the materials preview page
-    Then the share popup should have content "Facebook"
-    And the share popup should have content "Twitter"
-    And the share popup should have content "Email"
-    And the share popup should have content "LinkedIn"
-    And the share popup should have content "Google+"
+    Then I should be able to share investigation "Mechanics"
     
     
   @javascript
   Scenario: Teacher should be able to share activity
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I click link "Share" for activity "Fluid Mechanics" on the materials preview page
-    Then the share popup should have content "Facebook"
-    And the share popup should have content "Twitter"
-    And the share popup should have content "Email"
-    And the share popup should have content "LinkedIn"
-    And the share popup should have content "Google+"
+    Then I should be able to share activity "Fluid Mechanics"
     
     
   @javascript
