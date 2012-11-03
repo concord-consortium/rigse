@@ -37,6 +37,7 @@
 #clazz_summary_data
   - if @teacher_active_clazzes_count > 0
     - if @unassigned_clazzes.length > 0
+      %div{:id=> "error_message",:style=>"display:none;padding-left: 5px;color:red;font-size:14px"}
       %div.assign_class_header Select Class(es)
       %form{:id=>"add_material_form"}
         .unassigned_classes_container.webkit_scrollbars
@@ -44,7 +45,7 @@
             - @unassigned_clazzes.each do|clazz|
               %tr
                 %td.check_box
-                  = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s
+                  = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s,:class =>"unassigned_activity_class"
                   
                 %td 
                   = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"

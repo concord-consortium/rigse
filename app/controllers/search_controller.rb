@@ -228,25 +228,30 @@ class SearchController < ApplicationController
             end
             #page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
           else
-            page << "alert('Select atleast one class to assign this #{runnable_type}.')"
+            page << "$('error_message').update('Select atleast one class to assign this Investigation');$('error_message').show()"
           end
         else
-          runnable_ids.each do|runnable_id|
-            material = ::Activity.find(params[:material_id])
-            used_in_clazz_count = material.offerings.count
-            
-            if(used_in_clazz_count == 0)
-              class_count_desc = "Not used in any class."
-            elsif(used_in_clazz_count == 1)
-              class_count_desc = "Used in 1 class."
-            else
-              class_count_desc = "Used in #{used_in_clazz_count} classes."
+          if clazz_ids.count > 0
+            runnable_ids.each do|runnable_id|
+              material = ::Activity.find(params[:material_id])
+              used_in_clazz_count = material.offerings.count
+              
+              if(used_in_clazz_count == 0)
+                class_count_desc = "Not used in any class."
+              elsif(used_in_clazz_count == 1)
+                class_count_desc = "Used in 1 class."
+              else
+                class_count_desc = "Used in #{used_in_clazz_count} classes."
+              end
+              page.replace_html "activity_clazz_count_#{runnable_id}", class_count_desc
+              
             end
-            page.replace_html "activity_clazz_count_#{runnable_id}", class_count_desc
-            
-          end
-          page.replace_html "clazz_summary_data", {:partial => 'material_assign_summary', :locals=>{:summary_data=>assign_summary_data}}
-          page << "setPopupHeight()"
+            page.replace_html "clazz_summary_data", {:partial => 'material_assign_summary', :locals=>{:summary_data=>assign_summary_data}}
+            page << "setPopupHeight()"
+          else
+            page << "$('error_message').update('Select atleast one class to assign this Activity');$('error_message').show()"
+          end  
+          
         end
       end
     end

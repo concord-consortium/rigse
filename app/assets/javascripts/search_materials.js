@@ -290,7 +290,7 @@ function get_Assign_To_Class_Popup(material_id,material_type)
             list_modal.setContent("<div id='windowcontent' style='padding:10px'>" + text + "</div>");
             var contentheight=$('windowcontent').getHeight();
             var contentoffset=40;
-            list_modal.setSize(500,contentheight+contentoffset);
+            list_modal.setSize(500,contentheight+contentoffset+20);
             list_modal.center();
         }
     };
@@ -309,11 +309,18 @@ var g_saveAssignToClassInProgress = false;
 function validateSaveAssignToClass()
 {
     var returnValue = false;
+    var g_showSelected = false;
+    $$(".unassigned_activity_class").each(function(obj){ g_showSelected = g_showSelected || obj.checked;})
+
+    if(!g_showSelected)
+    {
+        var description_text = "No check boxes have been selected."
+        setSaveAssignToClassInProgress(false);
+    }
     if (g_saveAssignToClassInProgress)
     {
         return returnValue;
     }
-    
     returnValue = true;
     return returnValue;
 }
