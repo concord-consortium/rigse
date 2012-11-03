@@ -35,7 +35,7 @@ Feature: Teacher resets password
     And I press "GO"
     Then I should see "Logged in successfully"
     Given I am an anonymous user
-    And I follow "Forgot your user name or password?"
+    And I follow "Forgot your username or password?"
     When I fill in "login" with "login" within content box in change password page
     And I press "Submit" within content box in change password page
     Then I should see "A link to change your password has been sent to example@example.com."

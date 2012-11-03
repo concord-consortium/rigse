@@ -77,9 +77,10 @@ When /^I create a new project with the description "([^"]*)"$/ do |description|
   page.should have_no_button("Save")
 end
 
-Then /^I switch to "([^"]*)"$/ do |username|
-  visit path_to("the switch page")
-  select(username, :from => 'user_id')
+Then /^I switch to "([^"]*)"$/ do |fullname|
+  visit path_to("user list")
+  within(:xpath,"//div[@class='action_menu' and contains(.,'#{fullname}')]") do
   click_button('Switch')
+  end
 end
 
