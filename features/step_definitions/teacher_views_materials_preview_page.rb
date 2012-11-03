@@ -13,7 +13,7 @@ end
 
 When /^(?:|I )uncheck "(.+)" from the investigation preview page$/ do |activity_name|
   within(:xpath,"//table[@class = 'activity_list']/tbody/tr[contains(.,'#{activity_name}')]") do
-    check("activity_id[]")
+    uncheck("activity_id[]")
   end
 end
 

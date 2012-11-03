@@ -19,9 +19,10 @@ Feature: Teacher can search and assign instructional materials to a class
       | Geometry               | author | published          | Triangle is a great subject                     |
       | differential calculus  | author | published          | differential calculus is a great subject        |
     And the following activities for the above investigations exist:
-      | name                        | investigation | user    | publication_status | description                            |
-      | Fluid Mechanics             | Mechanics     | author  | published          | Fluid Mechanics is a great material    |
-      | Geometry                    | Geometry      | author  | published          | Triangle is a great material           |
+      | name                    | investigation | user    | publication_status | description                            |
+      | Fluid Mechanics         | Mechanics     | author  | published          | Fluid Mechanics is a great material    |
+      | Quantum Mechanics       | Mechanics     | author  | published          | Quantum Mechanics is a great material  |
+      | Geometry                | Geometry      | author  | published          | Triangle is a great material           |
     And the following classes exist:
       | name        | teacher    | class_word |
       | Physics     | teacher    | phy        |
@@ -99,30 +100,52 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I should be on the home page
     
     
-  @dialog
   @javascript
   Scenario: Teacher can assign investigations to a class
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I follow "Assign Investigation"
     And I check "Mathematics"
     And I follow "Save"
-    And I accept the dialog
+    And I should see "Investigation is assigned to the selected class(es) successfully." within the lightbox in focus
     And I go to Instructional Materials page for "Mathematics"
     Then I should see "Mechanics"
     
     
-  @dialog
   @javascript
-  Scenario: Teacher can assign activities to a class from the preview investigation page 
+  Scenario: Teacher can assign activities to a class from the preview investigation page
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I uncheck "Mechanics" from the investigation preview page
-    And I follow "Assign Investigation"
+    And I uncheck "Quantum Mechanics" from the investigation preview page
+    And I follow "Assign Individual Activities"
     And "Mechanics" should appear before "Fluid Mechanics"
     When I check "Physics"
     And I follow "Save"
-    And I accept the dialog
+    And I should see "Activity is assigned to the selected class(es) successfully." within the lightbox in focus
     And I go to Instructional Materials page for "Physics"
     Then I should see "Fluid Mechanics"
+    
+    
+  @javascript
+  Scenario: Teacher should see message if assignment of activities is done without checking the activity
+    When I am on the the preview investigation page for the investigation "Mechanics"
+    And I uncheck "Mechanics" from the investigation preview page
+    And I uncheck "Fluid Mechanics" from the investigation preview page
+    And I uncheck "Quantum Mechanics" from the investigation preview page
+    And I follow "Assign Individual Activities"
+    Then I should see "Please select atleast one activity to assign to a class" within the lightbox in focus
+    
+    
+  @javascript
+  Scenario: Teacher should see message the class name in which activities are assigned
+    When I am on the the preview investigation page for the investigation "Mechanics"
+    And I uncheck "Mechanics" from the investigation preview page
+    And I follow "Assign Individual Activities"
+    And "Mechanics" should appear before "Fluid Mechanics"
+    When I check "Physics"
+    And I follow "Save"
+    Then I should see "Assigned successfully" within the lightbox in focus
+    And I should see "Physics" within the lightbox in focus
+    And I should see "Fluid Mechanics, Quantum Mechanics" within the lightbox in focus
     
     
   @javascript
@@ -151,7 +174,6 @@ Feature: Teacher can search and assign instructional materials to a class
     And I should see "Mathematics" within the lightbox in focus
     
     
-  @dialog
   @javascript
   Scenario: Teacher can see a message in the popup if the investigation is assigned to all the classes
     When I login with username: albert password: albert
@@ -160,13 +182,11 @@ Feature: Teacher can search and assign instructional materials to a class
     And I check "clazz_id[]"
     And I follow "Save"
     And I should wait 2 seconds
-    And accept the dialog
     And I am on the the preview investigation page for the investigation "differential calculus"
     And I follow "Assign Investigation"
     Then I should see "This material is assigned to all the classes." within the lightbox in focus
     
     
-  @dialog
   @javascript
   Scenario: Teacher can see a message in the popup if the activity is assigned to all the classes
     When I login with username: albert password: albert
@@ -175,7 +195,6 @@ Feature: Teacher can search and assign instructional materials to a class
     And I check "clazz_id[]"
     And I follow "Save"
     And I should wait 2 seconds
-    And accept the dialog
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
     Then I should see "This material is assigned to all the classes." within the lightbox in focus
