@@ -16,7 +16,7 @@
               = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
             %td
               .activity_name
-                = activity.name
+                = label_tag 'activity_' + activity.id.to_s , activity.name, :style=>"cursor:pointer"
               .activity_description
                 = activity.description
                 %span.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
