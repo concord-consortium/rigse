@@ -166,6 +166,19 @@ Feature: Teacher can search and assign instructional materials to a class
     And I should see "Mathematics" within the lightbox in focus
     
     
+ @javascript
+  Scenario: Teacher should see a message if save button is clicked without selecting any class in assign popup
+    When I am on the the preview investigation page for the investigation "Mechanics"
+    And I follow "Assign Investigation"
+    And I follow "Save" within the lightbox in focus
+    Then I should see "Select atleast one class to assign this Investigation" within the lightbox in focus
+    And I am on the the preview investigation page for the investigation "Mechanics"
+    And I uncheck "Mechanics" from the investigation preview page
+    And I follow "Assign Individual Activities"
+    And I follow "Save" within the lightbox in focus
+    Then I should see "Select atleast one class to assign this Activity" within the lightbox in focus
+    
+    
   @javascript
   Scenario: Teacher can see a message in the popup if the investigation is assigned to all the classes
     When I login with username: albert password: albert
