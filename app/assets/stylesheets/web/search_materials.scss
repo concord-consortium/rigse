@@ -278,6 +278,7 @@ vertical-align: middle;
 .material_list_item a{text-transform: none;}
 .unassigned_classes_container{max-height:150px;overflow-y:auto;}
 .assigned_classes_container{padding:5px;padding-top:0px;max-height:150px;overflow-y:auto;}
+.assigned_classes_container .assign_material_list{font-weight:normal;}
 .unassigned_classes_container input[type='checkbox']
 {
   margin:0;padding:0;

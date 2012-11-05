@@ -20,11 +20,11 @@
           %li{:style=>"padding-top:8px;"}
             .class_name
               = summary_item[0]
-            .assign_material_list{:style=>"font-weight:normal"}
+            .assign_material_list
               = summary_item[2].join(', ')
 %br
-%table
+%table{:style=>"width:100%"}
   %tr
-    %td
-      = link_to "OK", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()",:class=>"button",:style=>"margin-left: 205px;"
+    %td{:style=>"text-align: center;"}
+      = link_to "OK", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()",:class=>"button"
 %div{:style=>"clear:both"}
