@@ -5,7 +5,7 @@ class SearchController < ApplicationController
   protected
   
   def teacher_only
-    if current_user.has_role?('student')
+    if current_user.portal_student
       redirect_to(:root)
     end
   end
