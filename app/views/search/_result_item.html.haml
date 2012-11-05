@@ -7,7 +7,7 @@
       - link_url = browse_activity_url(material)
       =image_tag("search/activity.gif",:size=>"100x100")
 %div
-  - unless current_user.anonymous?
+  - if current_user.portal_teacher
     - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
     - offerings=Portal::Offering.where(:runnable_id=>material.id, :runnable_type=>"#{material.class.to_s}", :clazz_id=>teacher_clazz_ids)
   
@@ -37,7 +37,7 @@
               = link_to "Assign to a Class", url_for({ :controller => '/search', :action => 'unauthorized_user' }), :class=>"button"
       %tr
         %td{:colspan=>3}
-          - unless current_user.anonymous?
+          - if current_user.portal_teacher
             - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
             - offerings = offerings.sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
             - offering_clazz_names = offerings.map{|o| o.clazz.name}
