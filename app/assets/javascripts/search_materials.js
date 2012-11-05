@@ -437,7 +437,7 @@ function getDataForAssignToClassPopup()
     var material_type = $("assign_material_type").getValue("");
     if(material_id.length <= 0)
     {
-        var message = "Please select atleast one activity to assign to a class.";
+        var message = "<div class='feedback_message'>Please select atleast one activity to assign to a class.</div>";
         getMessagePopup(message);
         return;
     }
