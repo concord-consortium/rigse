@@ -63,6 +63,7 @@ RailsPortal::Application.configure do
     calendar_date_select/silver.css
     contentflow_configured.css
     contentflow_configured.js
+    web/search_materials.css
     )
 
   # add in all the theme application.css files
