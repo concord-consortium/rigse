@@ -28,7 +28,7 @@ function searchsuggestions(e, oElement,bSubmit_form) {
     var downArrow_key_code = 40;
     var upArrow_key_code = 38;
     var escape_key_code = 27;
-    if (bSubmit_form == undefined) bSubmit_form = false;
+    if (bSubmit_form === undefined) bSubmit_form = false;
     if(e.keyCode == enter_key_code || e.keyCode == downArrow_key_code || e.keyCode == upArrow_key_code || e.keyCode == escape_key_code) {
         return false;
     }
@@ -310,11 +310,11 @@ function validateSaveAssignToClass()
 {
     var returnValue = false;
     var g_showSelected = false;
-    $$(".unassigned_activity_class").each(function(obj){ g_showSelected = g_showSelected || obj.checked;})
+    $$(".unassigned_activity_class").each(function(obj){ g_showSelected = g_showSelected || obj.checked;});
 
     if(!g_showSelected)
     {
-        var description_text = "No check boxes have been selected."
+        var description_text = "No check boxes have been selected.";
         setSaveAssignToClassInProgress(false);
     }
     if (g_saveAssignToClassInProgress)
