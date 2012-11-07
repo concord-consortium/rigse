@@ -36,23 +36,23 @@ When /^(?:|I )should be able to share (investigation|activity) "(.+)"$/ do |mate
     case material
       when "investigation"
         material_id = Investigation.find_by_name(material_name).id
-        element = page.find(:xpath, "//div[@id='share_Inv#{material_id}']/div[@class='ss-fb sharelink']")
+        element = page.find(:xpath, "//div[@id='Inv#{material_id}Share']/div[@class='ss-fb sharelink']")
         element.should be_visible
-        element = page.find(:xpath, "//div[@id='share_Inv#{material_id}']/div[@class='ss-tw sharelink']")
+        element = page.find(:xpath, "//div[@id='Inv#{material_id}Share']/div[@class='ss-tw sharelink']")
         element.should be_visible
-        element = page.find(:xpath, "//div[@id='share_Inv#{material_id}']/div[@class='ss-li sharelink']")
+        element = page.find(:xpath, "//div[@id='Inv#{material_id}Share']/div[@class='ss-li sharelink']")
         element.should be_visible
-        element = page.find(:xpath, "//div[@id='share_Inv#{material_id}']/div[@class='ss-po sharelink']")
+        element = page.find(:xpath, "//div[@id='Inv#{material_id}Share']/div[@class='ss-po sharelink']")
         element.should be_visible
       when "activity"
         material_id = Activity.find_by_name(material_name).id
-        element = page.find(:xpath, "//div[@id='share_Act#{material_id}']/div[@class='ss-fb sharelink']")
+        element = page.find(:xpath, "//div[@id='Act#{material_id}Share']/div[@class='ss-fb sharelink']")
         element.should be_visible
-        element = page.find(:xpath, "//div[@id='share_Act#{material_id}']/div[@class='ss-tw sharelink']")
+        element = page.find(:xpath, "//div[@id='Act#{material_id}Share']/div[@class='ss-tw sharelink']")
         element.should be_visible
-        element = page.find(:xpath, "//div[@id='share_Act#{material_id}']/div[@class='ss-li sharelink']")
+        element = page.find(:xpath, "//div[@id='Act#{material_id}Share']/div[@class='ss-li sharelink']")
         element.should be_visible
-        element = page.find(:xpath, "//div[@id='share_Act#{material_id}']/div[@class='ss-po sharelink']")
+        element = page.find(:xpath, "//div[@id='Act#{material_id}Share']/div[@class='ss-po sharelink']")
         element.should be_visible
     end
 end

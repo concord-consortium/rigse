@@ -31,14 +31,27 @@ Feature: Teacher can search and assign instructional materials to a class
     And I login with username: teacher password: teacher
     
     
-  Scenario: Teacher should be able to preview investigation
+  @javascript
+  Scenario: Teacher should be able to preview materials activity as teacher and as a student
     When I am on the the preview investigation page for the investigation "Mechanics"
+    And I click link "Preview" for investigation "Mechanics" on the materials preview page
+    Then I should see "As Teacher"
+    Then I should see "As Student"
+    And I click link "Preview" for activity "Fluid Mechanics" on the materials preview page
+    Then I should see "As Teacher"
+    Then I should see "As Student"
+    
+    
+  Scenario: Anonymous user should be able to preview investigation
+    When I log out
+    And I am on the the preview investigation page for the investigation "Mechanics"
     And I click link "Preview" for investigation "Mechanics" on the materials preview page
     Then I receive a file for download with a filename like "_investigation_"
     
     
-  Scenario: Teacher should be able to preview activity
-    When I am on the the preview investigation page for the investigation "Mechanics"
+  Scenario: Anonymous user should be able to preview activity
+    When I log out
+    And I am on the the preview investigation page for the investigation "Mechanics"
     And I click link "Preview" for activity "Fluid Mechanics" on the materials preview page
     Then I receive a file for download with a filename like "_activity_"
     
@@ -140,7 +153,8 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher should see message the class name in which activities are assigned
-    When I am on the the preview investigation page for the investigation "Mechanics"
+    When the Activity "Fluid Mechanics" is assigned to the class "Mathematics"
+    And I am on the the preview investigation page for the investigation "Mechanics"
     And I uncheck "Mechanics" from the investigation preview page
     And I follow "Assign Individual Activities"
     And "Mechanics" should appear before "Fluid Mechanics"
@@ -149,6 +163,12 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I should see "Assigned successfully" within the lightbox in focus
     And I should see "Physics" within the lightbox in focus
     And I should see "Fluid Mechanics, Quantum Mechanics" within the lightbox in focus
+    And I am on the the preview investigation page for the investigation "Mechanics"
+    And I uncheck "Mechanics" from the investigation preview page
+    And I follow "Assign Individual Activities"
+    And I check "Mathematics"
+    And I follow "Save"
+    Then I should see "Previously Assigned - not re-assigned" within the lightbox in focus
     
     
   @javascript
@@ -161,8 +181,8 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message in the popup if investigation is assigned to any class
-    When the Investigation "differential calculus" is assigned to the class "Physics"
-    And I am on the the preview investigation page for the investigation "differential calculus"
+    When the Investigation "Mechanics" is assigned to the class "Physics"
+    And I am on the the preview investigation page for the investigation "Mechanics"
     And I follow "Assign Investigation"
     Then I should see "Already assigned to the following class(es)" within the lightbox in focus
     And I should see "Physics" within the lightbox in focus
