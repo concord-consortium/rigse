@@ -36,7 +36,9 @@
     
   - material_title = inst_material.name
   - material_description = inst_material.description
-    
+  - material_type ="Inv"
+  - if activitites == nil
+    - material_type ="Act"
 = hidden_field_tag "investigation_id", inst_material.id
 = hidden_field_tag "material_id", material.id
 = hidden_field_tag "assign_material_type", material.class.to_s
