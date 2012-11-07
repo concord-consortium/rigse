@@ -156,26 +156,21 @@ class Portal::OfferingsController < ApplicationController
     end
     unless params[:activity_id].nil?
       activity = ::Activity.find(params[:activity_id].to_i)
+      @activity_report_id = params[:activity_id].to_i
       unless activity.nil?
-        @offering.report_embeddable_filter.embeddables = activity.page_elements.map{|pe|pe.embeddable}
+        activity_embeddables = activity.page_elements.map{|pe|pe.embeddable}
+        if @offering.report_embeddable_filter.ignore
+          @offering.report_embeddable_filter.embeddables = activity_embeddables
+        else
+          @offering.report_embeddable_filter.embeddables = @offering.report_embeddable_filter.embeddables & activity_embeddables
+        end
         @offering.report_embeddable_filter.ignore = false
-        @activity_report_id = activity.id
-      end
-    end
-    activity_report_embeddable_filter = session[:activity_report_embeddable_filter]
-    unless activity_report_embeddable_filter.nil?
-      unless activity.nil?
-        @offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
-        @offering.report_embeddable_filter.ignore = false
-        @activity_report_id = session[:activity_report_id]
       end
     end
 
     respond_to do |format|
       format.html {
         reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
-        session[:activity_report_id]= nil ;
-        session[:activity_report_embeddable_filter] = nil;
         @learners = reportUtil.learners
         @page_elements = reportUtil.page_elements
         
@@ -248,24 +243,19 @@ class Portal::OfferingsController < ApplicationController
     else
       embeddables = []
     end
-    @report_embeddable_filter.embeddables = embeddables
-    if activity_report_id != nil
+    
+    if activity_report_id
       activity = ::Activity.find(activity_report_id.to_i)
-      if params[:commit] == "Show all"
-        session[:activity_report_embeddable_filter] = activity.page_elements.map{|pe|pe.embeddable}
-      else
-        session[:activity_report_embeddable_filter] = embeddables
-      end
-      session[:activity_report_id] = activity.id
+      activity_embeddables = activity.page_elements.map{|pe|pe.embeddable}
+      @report_embeddable_filter.embeddables = (@report_embeddable_filter.embeddables - activity_embeddables) | embeddables
+    else
+      @report_embeddable_filter.embeddables = embeddables
     end
+    
 
     redirect_url = report_portal_offering_url(@offering)
     respond_to do |format|
-      if activity_report_id != nil
-        flash[:notice] = 'Report filter was successfully updated.'
-        format.html { redirect_to :back }
-        format.xml  { head :ok }
-      elsif @report_embeddable_filter.save
+      if @report_embeddable_filter.save
           flash[:notice] = 'Report filter was successfully updated.'
           format.html { redirect_to :back }
           format.xml  { head :ok }
