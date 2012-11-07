@@ -53,12 +53,12 @@ Feature: Teacher can search instructional materials grouped by material type, so
   @wip
   @javascript
   Scenario: Teacher should be on materials preview page to preview or assign materials
-    When I follow the "Assign to a class" link for the investigation "differential calculus"
+    When I follow the "Assign to a Class" link for the investigation "differential calculus"
     Then I should be on the preview investigation page for the investigation "differential calculus"
     And I should see "differential calculus"
     And I am on the search instructional materials page
     And I should see "Instructional Materials"
-    And I follow the "Assign to a class" link for the activity "differential calculus"
+    And I follow the "Assign to a Class" link for the activity "differential calculus"
     Then I should be on the preview activity page for the activity "differential calculus"
     And I am on the search instructional materials page
     And I should see "Instructional Materials"
@@ -68,6 +68,14 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I am on the search instructional materials page
     And I should see "Instructional Materials"
     And I follow activity link "differential calculus" on the search instructional materials page
+    Then I should be on the preview activity page for the activity "differential calculus"
+    And I should see "differential calculus"
+    And I am on the search instructional materials page
+    When I follow the "Show more details..." link for the investigation "differential calculus"
+    Then I should be on the preview investigation page for the investigation "differential calculus"
+    And I should see "differential calculus"
+    And I am on the search instructional materials page
+    And I follow the "Show more details..." link for the activity "differential calculus"
     Then I should be on the preview activity page for the activity "differential calculus"
     And I should see "differential calculus"
     
@@ -95,6 +103,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     
   @javascript
   Scenario: Teacher can see number classes to which activities are assigned on the search page
+    When the Investigation "Geometry" is assigned to the class "Physics"
     When the Activity "parallel lines" is assigned to the class "Physics"
     And the Activity "parallel lines" is assigned to the class "Geography"
     And the Activity "parallel lines" is assigned to the class "Mathematics"
@@ -102,9 +111,9 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I enter search text "parallel lines" on the search instructional materials page
     And I press "GO"
     And I should wait 2 seconds
-    Then I should see "Used in 3 classes."
+    Then I should see "Used in 4 classes."
     And I am on the the preview activity page for the activity "parallel lines"
-    Then I should see "Used in 3 classes."
+    Then I should see "Used in 4 classes."
     
     
   Scenario: Anonymous user can preview investigation
