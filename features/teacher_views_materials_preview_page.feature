@@ -85,11 +85,22 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I should be on the search instructional materials page
     
     
+  @javascript
   Scenario: Anonymous user can not assign instructional materials to the class
     When I log out
-    And I am on the the preview investigation page for the investigation "differential calculus"
+    And I am on the the preview investigation page for the investigation "Mechanics"
     And I follow "Assign Investigation"
-    Then I should be on the home page
+    Then I should see "Please log-in" within the lightbox in focus
+    And I should see "as a teacher to assign this Investigation." within the lightbox in focus
+    And I follow "register" within the lightbox in focus
+    Then I should be on the pick signup page
+    And I am on the the preview investigation page for the investigation "Mechanics"
+    And I uncheck "Fluid Mechanics" from the investigation preview page
+    And I follow "Assign Individual Activities"
+    Then I should see "Please log-in" within the lightbox in focus
+    And I should see "as a teacher to assign this Activity." within the lightbox in focus
+    And I follow "register" within the lightbox in focus
+    Then I should be on the pick signup page
     
     
   @javascript
