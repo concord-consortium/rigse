@@ -471,3 +471,8 @@ function setPopupHeight()
     list_modal.center();
 }
 
+function msgPopupDescriptionText(){
+    var popup_message = "Please log-in or <a href='/pick_signup'> register </a> as a teacher to assign this " + $('assign_material_type').value+ "."
+
+    getMessagePopup(popup_message)
+}
