@@ -10,6 +10,9 @@
     %table.activity_list
       %tbody
         - activities.each do|activity|
+          - activity_count = activity.offerings.count
+          - if activity.parent
+            - activity_count = activity_count + activity.parent.offerings.count
           - if !(activity.teacher_only? && current_user.anonymous?)
             - checkbox_checked = (material.class == ::Investigation)? true : (activity.id == material.id)? true : false
             %tr
@@ -24,12 +27,12 @@
                 .activity_description
                   = activity.description
                   %span.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
-                    - if(activity.offerings.count == 0)
+                    - if(activity_count == 0)
                       Not used in any class.
-                    - elsif(activity.offerings.count == 1)
+                    - elsif(activity_count == 1)
                       Used in 1 class.
                     - else
-                      Used in #{activity.offerings.count} classes.
+                      Used in #{activity_count} classes.
               %td.preview
                 - unless current_user.anonymous?
                   - unless activity.teacher_only?
