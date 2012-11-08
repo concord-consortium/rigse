@@ -50,8 +50,8 @@ Feature: Teacher views report from the instructional materials page of a class
     And I go to Instructional Materials page for "My Class"
     And I follow "Air activity"
     Then A report window opens of offering "Aerodynamics"
-    Then Report page should have student name "Dave Doe" in answered section for the question "c"
-    And Report page should have student name "Chuck Smith" in answered section for the question "c"
+    Then Report page should have student name "Dave Doe" in answered section for the question "a"
+    And Report page should have student name "Chuck Smith" in answered section for the question "a"
     And I close the newly opened window
     
     
@@ -97,10 +97,10 @@ Feature: Teacher views report from the instructional materials page of a class
     Then Report page should not have content "image_q"
     And I close the newly opened window
     And I follow "Air activity"
-    Then Report page should have content "image_q"
+    Then Report page should not have content "image_q"
     And I close the newly opened window
     And I click progress bar on the instructional materials page for the student "dave" and activity "Air activity"
-    Then Report page should have content "image_q"
+    Then Report page should not have content "image_q"
     And I close the newly opened window
     
     
@@ -112,7 +112,7 @@ Feature: Teacher views report from the instructional materials page of a class
       | dave      | My Class       | Aerodynamics        | image_q         | Y      |
     And I go to Instructional Materials page for "My Class"
     And I follow "Doe, Dave"
-    And I apply filter for the question "c" in the report page
+    And I apply filter for the question "a" in the report page
     And I close the newly opened window
     And I go to Instructional Materials page for "My Class"
     And I follow "Run Report"
@@ -120,7 +120,7 @@ Feature: Teacher views report from the instructional materials page of a class
     And I close the newly opened window
     And I go to Instructional Materials page for "My Class"
     And I follow "Air activity"
-    And I apply filter for the question "c" in the report page
+    And I apply filter for the question "a" in the report page
     And I close the newly opened window
     And I go to Instructional Materials page for "My Class"
     And I follow "Run Report"
@@ -128,7 +128,7 @@ Feature: Teacher views report from the instructional materials page of a class
     And I close the newly opened window
     And I go to Instructional Materials page for "My Class"
     And I click progress bar on the instructional materials page for the student "dave" and activity "Air activity"
-    And I apply filter for the question "c" in the report page
+    And I apply filter for the question "a" in the report page
     And I close the newly opened window
     And I go to Instructional Materials page for "My Class"
     And I follow "Run Report"
@@ -137,17 +137,33 @@ Feature: Teacher views report from the instructional materials page of a class
     
     
   @javascript
-  Scenario: Filtering the activity report should not effect main report
+  Scenario: Filtering the activity report should effect main report
     When the following student answers:
       | student   | class          | investigation       | question_prompt | answer |
       | dave      | My Class       | Aerodynamics        | a               | y      |
       | dave      | My Class       | Aerodynamics        | image_q         | Y      |
     And I go to Instructional Materials page for "My Class"
     And I follow "Air activity"
-    And I apply filter for the question "c" in the report page
+    And I apply filter for the question "a" in the report page
     And I close the newly opened window
     And I go to Instructional Materials page for "My Class"
     And I follow "Run Report"
+    Then Report page should not have content "imadge_q"
+    And I close the newly opened window
+    
+    
+  @javascript
+  Scenario: Filtering the main report should effect activity
+    When the following student answers:
+      | student   | class          | investigation       | question_prompt | answer |
+      | dave      | My Class       | Aerodynamics        | a               | y      |
+      | dave      | My Class       | Aerodynamics        | image_q         | Y      |
+    And I go to Instructional Materials page for "My Class"
+    And I follow "Run Report"
+    And I apply filter for the question "a" in the report page
+    And I close the newly opened window
+    And I go to Instructional Materials page for "My Class"
+    And I follow "Air activity"
     Then Report page should not have content "imadge_q"
     And I close the newly opened window
     
