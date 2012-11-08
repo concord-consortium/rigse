@@ -215,7 +215,7 @@ class SearchController < ApplicationController
             page << "getMessagePopup('<div class=\"feedback_message\">#{runnable_type} is assigned to the selected class(es) successfully.</div>')"
             page.replace_html "material_clazz_count", class_count_desc
             if !material_parent.nil? && runnable_type == "Activity"
-              used_in_clazz_count = material.offerings.count
+              used_in_clazz_count = material.offerings.count + material.parent.offerings.count
               
               if(used_in_clazz_count == 0)
                 class_count_desc = "Not used in any class."
@@ -226,6 +226,22 @@ class SearchController < ApplicationController
               end
               page.replace_html "activity_clazz_count_#{runnable_ids[0]}", class_count_desc
             end
+            
+            if runnable_type == "Investigation"
+              material.activities.each do|activity|
+                used_in_clazz_count = activity.offerings.count + material.offerings.count
+                
+                if(used_in_clazz_count == 0)
+                  class_count_desc = "Not used in any class."
+                elsif(used_in_clazz_count == 1)
+                  class_count_desc = "Used in 1 class."
+                else
+                  class_count_desc = "Used in #{used_in_clazz_count} classes."
+                end
+                page.replace_html "activity_clazz_count_#{activity.id}", class_count_desc
+                
+              end
+            end
             #page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
           else
             page << "$('error_message').update('Select atleast one class to assign this #{runnable_type}');$('error_message').show()"
@@ -234,7 +250,7 @@ class SearchController < ApplicationController
           if clazz_ids.count > 0
             runnable_ids.each do|runnable_id|
               material = ::Activity.find(params[:material_id])
-              used_in_clazz_count = material.offerings.count
+              used_in_clazz_count = material.offerings.count + material.parent.offerings.count
               
               if(used_in_clazz_count == 0)
                 class_count_desc = "Not used in any class."
