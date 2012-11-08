@@ -9,9 +9,10 @@
   %li.trail= link_to 'Admin', admin_path
 - #A developer can load home page without initializing data in database
 - if current_project
-  - if current_project.help_type == 'external url'
+  - case current_project.help_type
+  - when 'external url'
     %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
-  - elsif current_project.help_type == 'help custom html'
+  - when 'help custom html'
     %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
-  - elsif current_project.help_type == 'no help'
+  - when 'no help'
     %li.trail{:style=>"display:none"}=link_to'Help', 'javascript: void(0)', :id=>'help'
