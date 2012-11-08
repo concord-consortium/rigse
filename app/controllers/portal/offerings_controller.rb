@@ -162,7 +162,9 @@ class Portal::OfferingsController < ApplicationController
         if @offering.report_embeddable_filter.ignore
           @offering.report_embeddable_filter.embeddables = activity_embeddables
         else
-          @offering.report_embeddable_filter.embeddables = @offering.report_embeddable_filter.embeddables & activity_embeddables
+           filtered_embeddables = @offering.report_embeddable_filter.embeddables & activity_embeddables
+           filtered_embeddables = (filtered_embeddables.length == 0)? activity_embeddables : filtered_embeddables
+           @offering.report_embeddable_filter.embeddables = filtered_embeddables
         end
         @offering.report_embeddable_filter.ignore = false
       end

@@ -93,7 +93,9 @@ class Portal::LearnersController < ApplicationController
         if offering.report_embeddable_filter.ignore
           @portal_learner.offering.report_embeddable_filter.embeddables = activity_embeddables
         else
-          @portal_learner.offering.report_embeddable_filter.embeddables = offering.report_embeddable_filter.embeddables & activity_embeddables
+          filtered_embeddables = offering.report_embeddable_filter.embeddables & activity_embeddables
+          filtered_embeddables = (filtered_embeddables.length == 0)? activity_embeddables : filtered_embeddables
+          @portal_learner.offering.report_embeddable_filter.embeddables = filtered_embeddables 
         end
         @portal_learner.offering.report_embeddable_filter.ignore = false
       end
