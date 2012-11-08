@@ -8,7 +8,7 @@
     #content
       padding-top: 0px
       padding-right: 0px
-- if material.class == ::Investigation
+- if material.is_a? ::Investigation
   - inst_material = material
   - material_title = inst_material.name
   - material_description = inst_material.description
@@ -17,7 +17,7 @@
   - activitites = inst_material.activities
   - link_url = browse_investigation_url(material)
   - material_url = link_url
-- elsif material.class == ::Activity
+- elsif material.is_a? ::Activity
   - inst_material = material.parent
   - btn_text = "Assign Individual Activities"
   - icon_image = image_tag("search/investigation.gif",:size=>"100x100")

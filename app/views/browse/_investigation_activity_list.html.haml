@@ -7,36 +7,51 @@
   .include_Checkbox 
     Include
   %div
+    - clicked_from_activity = (material.is_a? ::Activity && activity.id == material.id)? true : false
     %table.activity_list
-      - activities.each do|activity|
-        - checkbox_checked = (material.class == ::Investigation)? true : (activity.id == material.id)? true : false
-        - clicked_from_activity = (material.class == ::Activity && activity.id == material.id)? true : false
-        %tbody
-          %tr
-            %td{:style=>"text-align:right;width:18px;"}
-              - if clicked_from_activity
-                %span{:style=>"font-size:13px;font-weight:bold"}
-                  &gt;&gt;
-            %td.check_box
-              = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
-            %td
-              - if clicked_from_activity
-                .activity_name{:style=>"background-color:yellow"}
-                  = activity.name
-              - else
-                .activity_name
-                  = activity.name
-              .activity_description
-                = activity.description
-                %span.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
-                  - if(activity.offerings.count == 0)
-                    Not used in any class.
-                  - elsif(activity.offerings.count == 1)
-                    Used in 1 class.
+      %tbody
+        - activities.each do|activity|
+          - activity_count = activity.offerings.count
+          - if activity.parent
+            - activity_count = activity_count + activity.parent.offerings.count
+          - if !(activity.teacher_only? && current_user.anonymous?)
+            - checkbox_checked = (material.is_a?  ::Investigation)? true : (activity.id == material.id)? true : false
+            %tr
+              %td{:style=>"text-align:right;width:18px;"}
+                - if clicked_from_activity
+                  %span{:style=>"font-size:13px;font-weight:bold"}
+                    &gt;&gt;
+              %td.check_box
+                = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
+              %td
+                - activity_name_style = ''
+                - if clicked_from_activity
+                  - activity_name_style = background-color:yellow
+                .activity_name{:style=>activity_name_style}
+                  = label_tag 'activity_' + activity.id.to_s , activity.name, :style=>"cursor:pointer"
+                  - if activity.teacher_only
+                    %span.messagetext{:style=>"font-weight:normal"} 
+                      (teacher only)
+                .activity_description
+                  = activity.description
+                  %span.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
+                    - if(activity_count == 0)
+                      Not used in any class.
+                    - elsif(activity_count == 1)
+                      Used in 1 class.
+                    - else
+                      Used in #{activity_count} classes.
+              %td.preview
+                - unless current_user.anonymous?
+                  - unless activity.teacher_only?
+                    %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_Act#{activity.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{activity.id},'Act','Preview')"}Preview &#9660;
+                    .Expand_Collapse{:id=>"Act#{activity.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                      = render :partial => '/browse/preview', :locals => {:material => activity}
                   - else
-                    Used in #{activity.offerings.count} classes.
-            %td.preview
-              = link_to "Preview",run_url_for(activity,{}),:class=>"button"
-            %td.share
-              %a{:class=>"addthis_button button",:style=>"text-decoration:none;",:'addthis:url'=>browse_activity_url(activity),:'addthis:title'=>activity.name}
-                Share
+                    = link_to "Preview",run_url_for(activity,{:teacher_mode => true}),:class=>"button",:style=>"width:58px;text-align:center"
+                - else
+                  = link_to "Preview",run_url_for(activity,{}),:class=>"button"
+              %td.share_activity
+                %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_Act#{activity.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{activity.id},'Act','Share')"}Share &#9660;
+                .Expand_Collapse{:id=>"Act#{activity.id}Share",:style=>"display:none",:class=>"Expand_Collapse_share"}
+                  = render :partial => '/browse/share', :locals => {:material_url => browse_activity_url(activity),:material_title=>activity.name}

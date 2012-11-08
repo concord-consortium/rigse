@@ -1,6 +1,6 @@
 .material_icon
   .icon_image
-    -if(material.class.to_s=="Investigation")
+    -if(material.is_a? Investigation)
       - link_url = browse_investigation_url(material)
       =image_tag("search/investigation.gif",:size=>"100x100")
     -else

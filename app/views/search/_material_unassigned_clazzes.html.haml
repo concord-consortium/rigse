@@ -1,10 +1,10 @@
 - if @material.length == 1
   - material = @material[0]
-  - if material.class == ::Investigation
+  - if material.is_a? ::Investigation
     - investigation_name = material.name
     - activity_name = ""
     - portal_offerings = nil
-  - elsif material.class == ::Activity
+  - elsif material.is_a? ::Activity
     - investigation_name = ""
     - parent_name = (material.parent)? material.parent.name : ""
     - activity_name = material.name
