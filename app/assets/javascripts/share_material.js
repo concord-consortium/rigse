@@ -41,13 +41,17 @@ function expandcollapseoptions(id,material_type,btn_type){
 }
 
 function hideSharelinks(){
-    if (animating)
-    {   
-        return false;
-    }
+    
     $$(".Expand_Collapse").each(function(shareContainer){
-        Effect.BlindUp(shareContainer, { duration: 0.2});
-        shareContainer.removeClassName('visible');
+            if (animating)
+             {   
+                return false;
+             }
+            if (shareContainer.hasClassName('visible'))
+            {
+                Effect.BlindUp(shareContainer, { duration: 0.2});
+                shareContainer.removeClassName('visible');
+            }
         });
     $$(".Expand_Collapse_Link").each(function(sharebtn){
             if (sharebtn.hasClassName('preview_Button'))
@@ -62,6 +66,6 @@ function hideSharelinks(){
 document.observe("click",function(obj){
     if(obj.srcElement.hasClassName("Expand_Collapse_Link")===false)
     {
-      //  hideSharelinks();
+        hideSharelinks();
     }
 });
