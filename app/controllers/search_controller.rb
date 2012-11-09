@@ -85,6 +85,9 @@ class SearchController < ApplicationController
     if @probe_type.class == String
       @probe_type = [@probe_type]
     end
+    if current_user.anonymous?
+      @without_teacher_only=true
+    end
     
     search_options = {
       :name => @search_term || '',
@@ -92,7 +95,8 @@ class SearchController < ApplicationController
       :domain_id => @domain_id || [],
       :grade_span => @grade_span|| [],
       :paginate => false,
-      :probe_type => @probe_type
+      :probe_type => @probe_type,
+      :without_teacher_only =>@without_teacher_only || false
       #:page => params[:investigation_page] ? params[:investigation_page] : 1,
       #:per_page => 10
     }
@@ -101,15 +105,35 @@ class SearchController < ApplicationController
   
   def get_search_suggestions
     @search_term = params[:search_term]
+    @domain_id  = [param_find(:domain_id, (params[:method] == :get)) || []].flatten.uniq.compact
+    @grade_span = param_find(:grade_span, (params[:method] == :get)) || ""
+    if (@grade_span).class == String && @grade_span.length>0 
+      @grade_span= @grade_span.split('&')
+    end
+    @probe_type = param_find(:probe, (params[:method] == :get)) || []
+    @material_type = param_find(:material, (params[:method] == :get)) || ['investigation','activity']
+    investigations=[]
+    activities=[]
     ajaxResponseCounter = params[:ajaxRequestCounter]
     submitform = params[:submit_form]
+    if current_user.anonymous?
+      @without_teacher_only=true
+    end
     search_options = {
       :name => @search_term,
-      :sort_order => 'name ASC'
+      :sort_order => 'name ASC',
+      :domain_id => @domain_id || [],
+      :grade_span => @grade_span|| [],
+      :probe_type => @probe_type,
+      :without_teacher_only =>@without_teacher_only || false
     }
     
-    investigations = Investigation.search_list(search_options)
-    activities = Activity.search_list(search_options)
+    if @material_type.include?('investigation')
+      investigations = Investigation.search_list(search_options)
+    end
+    if @material_type.include?('activity')
+      activities = Activity.search_list(search_options)
+    end
     @suggestions= [];
     @suggestions = investigations + activities
     if request.xhr?

@@ -51,7 +51,11 @@ class Activity < ActiveRecord::Base
   scope :with_gse, {
     :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
   }
-
+  
+  scope :without_teacher_only,{
+    :conditions =>['activities.teacher_only = 0']
+  }
+  
   scope :domain, lambda { |domain_id|
     {
       :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
@@ -117,7 +121,6 @@ class Activity < ActiveRecord::Base
       name = options[:name]
       sort_order = options[:sort_order] || "name ASC"
       probe_type = options[:probe_type] || []
-      
       if APP_CONFIG[:use_gse]
         if domain_id.length > 0
           if probe_type.length > 0
@@ -203,6 +206,10 @@ class Activity < ActiveRecord::Base
         end
       end
 
+      if options[:without_teacher_only]
+        activities = activities.without_teacher_only
+      end
+
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
       if portal_clazz
         activities = activities - portal_clazz.offerings.map { |o| o.runnable }
@@ -215,6 +222,7 @@ class Activity < ActiveRecord::Base
       else
         activities
       end
+      
     end
 
   end
