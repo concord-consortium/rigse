@@ -16,6 +16,7 @@
   - parent_name = (@material[0].parent)? @material[0].parent.name : ""
   - activity_name = @material.collect{|item| item.name}.join('<br/>')
 
+- activity_name = activity_name || ""
 - if investigation_name.length > 0
   %div
     %table.material_detail

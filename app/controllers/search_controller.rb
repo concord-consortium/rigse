@@ -228,6 +228,7 @@ class SearchController < ApplicationController
             end
             
             if runnable_type == "Investigation"
+              material.reload!
               material.activities.each do|activity|
                 used_in_clazz_count = activity.offerings.count + material.offerings.count
                 
@@ -238,6 +239,7 @@ class SearchController < ApplicationController
                 else
                   class_count_desc = "Used in #{used_in_clazz_count} classes."
                 end
+                
                 page.replace_html "activity_clazz_count_#{activity.id}", class_count_desc
                 
               end
@@ -249,7 +251,7 @@ class SearchController < ApplicationController
         else
           if clazz_ids.count > 0
             runnable_ids.each do|runnable_id|
-              material = ::Activity.find(params[:material_id])
+              material = ::Activity.find(runnable_id)
               used_in_clazz_count = material.offerings.count + material.parent.offerings.count
               
               if(used_in_clazz_count == 0)
