@@ -5,6 +5,8 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
       var previewWindow = null;
       var formString = null;
       
+      var popupContent = null;
+      
       var windowUrl = '';
       var previewWindowDocument = null;
       
@@ -13,7 +15,7 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
       {
           windowUrl = $(urlOrHtmlContainerId).value;
           if (!(linkPattern.test(windowUrl))){
-            var popupContent="<div style='padding:18px'>Please enter a valid external help URL.</div>";
+            popupContent="<div style='padding:18px'>Please enter a valid external help URL.</div>";
             showpopup(popupContent);
             return;
           }
@@ -31,7 +33,7 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
             
             if (!customHtml)
             {
-                var popupContent = "<div style='padding:18px'>Please enter some custom help HTML to preview.</div>";
+                popupContent = "<div style='padding:18px'>Please enter some custom help HTML to preview.</div>";
                 showpopup(popupContent);
                 return;
             }
