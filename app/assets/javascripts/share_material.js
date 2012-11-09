@@ -62,6 +62,6 @@ function hideSharelinks(){
 document.observe("click",function(obj){
     if(obj.srcElement.hasClassName("Expand_Collapse_Link")===false)
     {
-        hideSharelinks();
+      //  hideSharelinks();
     }
 });
