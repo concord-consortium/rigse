@@ -36,7 +36,7 @@ describe HelpController do
           :preview_help_page_from_edit => '<b>help page<b>'
         }
       post :preview_help_page, @post_params
-      assert_equal assigns[:help_page_preview_content], @post_params[:preview_help_page_from_edit]
+      assert_equal assigns[:help_page_content], @post_params[:preview_help_page_from_edit]
       assert_template 'preview_help_page'
     end
     
@@ -72,7 +72,7 @@ describe HelpController do
           :preview_help_page_from_summary_page => "#{@test_project.id}"
         }
       get :preview_help_page, @post_params
-      assert_equal assigns[:help_page_preview_content], '<b>Help page</b>'
+      assert_equal assigns[:help_page_content], '<b>Help page</b>'
       assert_template 'preview_help_page'
     end
     
