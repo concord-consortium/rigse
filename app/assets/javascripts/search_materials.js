@@ -402,32 +402,40 @@ document.observe("dom:loaded", function() {
 
 function checkActivityToAssign(chk_box)
 {
-    var total_checkbox_elements = $$('input[type="checkbox"][name="'+chk_box.name+'"]');
-    var checked_elements = $$('input:checked[type="checkbox"][name="'+chk_box.name+'"]');
-    var btn_Assign = $("btn_Assign");
-    if(total_checkbox_elements.length == checked_elements.length){
-        btn_Assign.innerHTML = "Assign Investigation";
-        $("material_id").setValue($("investigation_id").getValue());
-        $("assign_material_type").setValue("Investigation");
-    }
-    else{
-        btn_Assign.innerHTML = "Assign Individual Activities";
-        if(checked_elements.length > 0){
-            $("material_id").setValue(checked_elements.pluck("value").join(","));
-            $("assign_material_type").setValue("Activity");
+    var allCheckboxElements = $$('input[type="checkbox"][name="'+chk_box.name+'"]');
+    var checkedElements = [];
+    
+    allCheckboxElements.each(function (element) {
+        if (element.checked) {
+            checkedElements.push(element);
         }
-        else{
-            $("material_id").setValue("");
-            $("assign_material_type").setValue("");
-        }
-        
+    });
+    
+    var btnAssign = $("btn_Assign");
+    var materialId = '';
+    var assignMaterialType = '';
+    
+    if(allCheckboxElements.length == checkedElements.length){
+        btnAssign.innerHTML = "Assign Investigation";
+        materialId = $("investigation_id").getValue();
+        assignMaterialType = "Investigation";
     }
+    else if(checkedElements.length > 0) {
+        btnAssign.innerHTML = "Assign Individual Activities";
+        materialId = checkedElements.pluck("value").join(",");
+        assignMaterialType = "Activity";
+    }
+    
+    $("material_id").setValue(materialId);
+    $("assign_material_type").setValue(assignMaterialType);
+    
+    return;
 }
 
-function browseMaterial(form_action)
+function browseMaterial(formAction)
 {
-    var form = document.getElementById("search_result_form");
-    form.action = form_action;
+    var form = $("search_result_form");
+    form.action = formAction;
     form.submit(); 
 }
 
@@ -444,23 +452,30 @@ function getDataForAssignToClassPopup()
     get_Assign_To_Class_Popup(material_id,material_type);
 }
 
-var message_modal = null;
-function close_message_popup()
-{
-    message_modal.destroy();
-    message_modal = null;
-}
+var g_messageModal = null;
+
 function getMessagePopup(message)
 {
-    message_modal = message_modal || null;
-    if(message_modal !== null)
+    g_messageModal = g_messageModal || null;
+    if(g_messageModal !== null)
     {
-        close_message_popup();
+        g_messageModal.close();
     }
-    message_modal = new UI.Window({ theme:"lightbox", width:350, height:150});
-    var content = "<div style='padding:10px'>"+message+"</div><br/><div style='text-align:center'><input type='button' class='button' onclick='close_message_popup()' value='OK'/></div>";
-    message_modal.setContent(content).show(true).focus().center();
-    message_modal.setHeader("Message");
+    
+    var content = "<div style='padding:10px'>" +
+                  message +
+                  "</div>";
+                  
+    var lightboxConfig = {
+        width: 350,
+        height: 150,
+        closeOnNextPopup: true,
+        type: Lightbox.type.ALERT,
+        content: content
+    };
+    
+    g_messageModal = new Lightbox(lightboxConfig);
+    
 }
 
 function setPopupHeight()
@@ -472,7 +487,9 @@ function setPopupHeight()
 }
 
 function msgPopupDescriptionText(){
-    var popup_message = "Please log-in or <a href='/pick_signup'> register </a> as a teacher to assign this " + $('assign_material_type').value+ "."
+    var popupMessage = "Please log-in or <a href='/pick_signup'>register</a> as a teacher to assign this " +
+                       $('assign_material_type').value +
+                       ".";
 
-    getMessagePopup(popup_message)
+    getMessagePopup(popupMessage);
 }

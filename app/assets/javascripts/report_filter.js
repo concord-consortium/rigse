@@ -61,58 +61,47 @@ function saveChangesAndPrint(parentId, formId) {
 Event.observe(window, 'load', function() {
   window.setTimeout("autoPrint();", 3000);
 });
+
 function onShowSelected(Event)
 {
-    var g_showSelected = false;
-    $$(".filter_checkbox").each(function(obj){ g_showSelected = g_showSelected || obj.checked;})
+    var showSelected = false;
+    $$(".filter_checkbox").each(function(obj){ showSelected = showSelected || obj.checked;})
 
-    if(!g_showSelected)
-    {
-        try
-        {
-            Event.preventDefault();
-        }
-        catch(e){
-            Event.cancelBubble=true;
-        }
-        
-        var description_text = "No questions have been selected."
-        showMessagePopup(description_text);
-        return false;
-    }
-    else
+    if (showSelected)
     {
         return true;
     }
-
-}
-
-
-var g_messagePopup = null;
-
-function showMessagePopup(descriptionText)
-{
-    g_messagePopup = g_messagePopup || null;
-    if(g_messagePopup !== null)
-    {
-        close_popup();
-    }
-    //alert(descriptionText);
-    g_messagePopup = new UI.Window({ resizable: false,theme:"lightbox",width:300,height:125});
     
-    var popupHtml = "<div style='padding:10px;padding-left:15px'>" +
-                    descriptionText +
-                    "</div>" +
-                    "<div style = 'margin-left:125px;margin-top:10px' class='msg_popup_ok_button'>" +
-                    "<a href=\"javascript:void(0)\" class=\"button\" onclick=\"close_popup()\">OK</a>" +
-                    "</div>";
-    g_messagePopup.setContent(popupHtml).show(true).focus().center();
-    g_messagePopup.setHeader("Message");
-    //g_reportLinkPopup.activate();*/
+    try
+    {
+        Event.preventDefault();
+    }
+    catch(e){
+        Event.cancelBubble=true;
+    }
+    
+    var messageText = "No questions have been selected."
+    showMessagePopup(messageText);
+    return false;
 }
 
-function close_popup()
+
+function showMessagePopup(messageText)
 {
-    g_messagePopup.destroy();
-    g_messagePopup = null;
+    var popupHtml = "<div style='padding:10px;padding-left:15px'>" +
+                    messageText +
+                    "</div>";
+    
+    var lightboxConfig = {
+        width:300,
+        height:125,
+        closeOnNextPopup: true,
+        type: Lightbox.type.ALERT,
+        content: popupHtml
+    };
+    
+    var messagePopup = new Lightbox(lightboxConfig);
+    
+    return;
 }
+
