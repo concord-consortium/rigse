@@ -252,7 +252,6 @@ class SearchController < ApplicationController
             end
             
             if runnable_type == "Investigation"
-              material.reload!
               material.activities.each do|activity|
                 used_in_clazz_count = activity.offerings.count + material.offerings.count
                 
