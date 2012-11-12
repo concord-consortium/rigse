@@ -9,6 +9,7 @@
   %div
     %table.activity_list
       %tbody
+        - activities_length = activities.length
         - activities.each do|activity|
           - activity_count = activity.offerings.count
           - if activity.parent
@@ -17,10 +18,16 @@
             - checkbox_checked = (material.is_a?  ::Investigation)? true : (activity.id == material.id)? true : false
             %tr
               %td.check_box
-                = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
+                - if activities_length == 1
+                  = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)",:disabled=>"disabled"
+                - else
+                  = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
               %td
                 .activity_name
-                  = label_tag 'activity_' + activity.id.to_s , activity.name, :style=>"cursor:pointer"
+                  - if activities_length == 1
+                    = label_tag 'activity_' + activity.id.to_s , activity.name
+                  - else
+                    = label_tag 'activity_' + activity.id.to_s , activity.name, :style=>"cursor:pointer"
                   - if activity.teacher_only
                     %span.messagetext{:style=>"font-weight:normal"} 
                       (teacher only)
