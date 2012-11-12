@@ -15,6 +15,8 @@ describe SearchController do
     @manager_user = Factory.next(:manager_user)
     @researcher_user = Factory.next(:researcher_user)
     @student_user = Factory.create(:user, :login => "authorized_student")
+    @student = Factory.create(:portal_student, :user_id => @student_user.id)
+    
     
     @physics_investigation = Factory.create(:investigation, :name => 'physics_inv', :user => @author_user, :publication_status => 'published')
     @chemistry_investigation = Factory.create(:investigation, :name => 'chemistry_inv', :user => @author_user, :publication_status => 'published')
@@ -34,17 +36,15 @@ describe SearchController do
   end
 
   describe "GET index" do
-    it "should redirect to root for all the users other than teacher" do
-      [@admin_user, @author_user, @manager_user, @researcher_user, @student_user].each do |user_other_than_teacher|
-        controller.stub!(:current_user).and_return(user_other_than_teacher)
-        @post_params = {
-          :search_term => @laws_of_motion_activity.name,
-          :activity => 'true',
-          :investigation => nil
-        }
-        post :index
-        response.should redirect_to("/")
-      end
+    it "should redirect to root for students" do
+      controller.stub!(:current_user).and_return(@student_user)
+      @post_params = {
+        :search_term => @laws_of_motion_activity.name,
+        :activity => 'true',
+        :investigation => nil
+      }
+      post :index
+      response.should redirect_to("/")
     end
     it "should show all study materials materials" do
       post :index
@@ -107,19 +107,18 @@ describe SearchController do
 
   describe "POST show" do
     it "should redirect to root for all the users other than teacher" do
-      [@admin_user, @author_user, @manager_user, @researcher_user, @student_user].each do |user_other_than_teacher|
-        controller.stub!(:current_user).and_return(user_other_than_teacher)
-        @post_params = {
-          :search_term => @laws_of_motion_activity.name,
-          :activity => 'true',
-          :investigation => nil
-        }
-        xhr :post, :show, @post_params
-        response.should redirect_to(:root)
-        
-        post :show, @post_params
-        response.should redirect_to(:root)
-      end
+      controller.stub!(:current_user).and_return(@student_user)
+      @post_params = {
+        :search_term => @laws_of_motion_activity.name,
+        :activity => 'true',
+        :investigation => nil
+      }
+      xhr :post, :show, @post_params
+      response.should redirect_to(:root)
+      
+      post :show, @post_params
+      response.should redirect_to(:root)
+      
     end
     it "should search all study materials materials matching the search term" do
       @post_params = {
