@@ -1,4 +1,4 @@
-var expandedShareButtonid;
+var expandedShareButtonid="";
 function expandcollapseoptions(id,material_type,btn_type){
     if((material_type+id+btn_type)!=expandedShareButtonid)
     {
@@ -52,6 +52,16 @@ function hideSharelinks(){
 
 document.observe("click",function(obj){
     var oElem= obj.srcElement || obj.target;
+    if (expandedShareButtonid!=="")
+    {
+        if ($(expandedShareButtonid).hasClassName("visible"))
+        {
+             if(oElem.descendantOf(expandedShareButtonid) && $(expandedShareButtonid).hasClassName("Expand_Collapse_share"))
+            {
+                return false;
+            }
+        }
+    }
     if(oElem.hasClassName("Expand_Collapse_Link")===false)
     {
         hideSharelinks();
