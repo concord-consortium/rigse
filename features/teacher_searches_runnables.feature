@@ -60,6 +60,7 @@ Feature: Investigations can be searched
     Then  "x Good a" should be displayed in the investigations list
     And I should be on the class page for "My Class"
 
+  @wip
   @javascript
   Scenario:  searching through the list of runnable investigations
     When I go to the class page for "My Class"
