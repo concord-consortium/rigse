@@ -245,7 +245,7 @@ describe Portal::OfferingsController do
     end
   end
   
-  describe "GET activity_report" do 
+  describe "GET report" do 
     before(:each) do
       @mock_semester = Factory.create(:portal_semester, :name => "Fall")
       @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
@@ -266,23 +266,71 @@ describe Portal::OfferingsController do
       @page.add_embeddable(@embeddable)
       stub_current_user :teacher_user
     end
-    it "should open report of particular activity for coresponding learners" do
+    
+    it "should show report when no filter is set" do
+      @post_params = {
+        :id => @offering.id,
+      }
+      get :report, @post_params
+      assert_equal assigns[:offering], @offering
+      assert_equal assigns[:report_embeddable_filter], []
+      response.should render_template 'layouts/report'
+    end
+    
+    it "should show report when filter is set" do
+      #creating report embeddable filter
+      report_embeddable=Factory.create(:open_response,:user_id=>@teacher_user.id)
+      @offering.report_embeddable_filter.embeddables = [report_embeddable]
+      @offering.report_embeddable_filter.save!
+      @post_params = {
+        :id => @offering.id
+      }
+      get :report, @post_params
+      assert_equal assigns[:offering], @offering
+      assert_equal assigns[:report_embeddable_filter], @offering.report_embeddable_filter.embeddables
+      response.should render_template 'layouts/report'
+    end
+    
+    it "should show report for an activity when filter is set and ignore is set to false for report embeddable filter" do
+      #creating report embeddable filter
+      report_embeddable=Factory.create(:open_response,:user_id=>@teacher_user.id)
+      @offering.report_embeddable_filter.embeddables = [report_embeddable]
+      @offering.report_embeddable_filter.ignore = false
+      @offering.report_embeddable_filter.save!
       @post_params = {
         :id => @offering.id,
         :activity_id => @laws_of_motion_activity.id
       }
-      get :activity_report, @post_params
-      
-      assert_not_nil assigns[:offering]
-      assert_equal assigns[:offering].clazz, @physics_clazz
-      
-      assert_not_nil session[:activity_report_embeddable_filter]
-      assert_equal session[:activity_report_id],@laws_of_motion_activity.id
-      assert_equal session[:activity_report_embeddable_filter].count, 1
-      assert_equal session[:activity_report_embeddable_filter][0], @embeddable
-      
-      assert_response :redirect
-      response.should redirect_to(report_portal_offering_url(@offering))
+      get :report, @post_params
+      assert_equal assigns[:offering], @offering
+      assert_equal assigns[:report_embeddable_filter], @offering.report_embeddable_filter.embeddables
+      assert_equal assigns[:activity_report_id], @post_params[:activity_id].to_i
+      @portal_learner.reload
+      @offering.reload
+      assert_equal assigns[:offering].report_embeddable_filter.embeddables, [@embeddable]
+      assert_equal assigns[:offering].report_embeddable_filter.ignore, false
+      response.should render_template 'layouts/report'
+    end
+    
+    it "should show report for an activity when filter is set and ignore is set to true for report embeddable filter" do
+      #creating report embeddable filter
+      report_embeddable=Factory.create(:open_response,:user_id=>@teacher_user.id)
+      @offering.report_embeddable_filter.embeddables = [report_embeddable]
+      @offering.report_embeddable_filter.ignore = true
+      @offering.report_embeddable_filter.save!
+      @post_params = {
+        :id => @offering.id,
+        :activity_id => @laws_of_motion_activity.id
+      }
+      get :report, @post_params
+      assert_equal assigns[:offering], @offering
+      assert_equal assigns[:report_embeddable_filter], @offering.report_embeddable_filter.embeddables
+      assert_equal assigns[:activity_report_id], @post_params[:activity_id].to_i
+      @portal_learner.reload
+      @offering.reload
+      assert_equal assigns[:offering].report_embeddable_filter.embeddables, [@embeddable]
+      assert_equal assigns[:offering].report_embeddable_filter.ignore, false
+      response.should render_template 'layouts/report'
     end
   end
 end
