@@ -51,14 +51,15 @@
 .material_body
   -unless material.description.nil? || material.description.blank?
     = material.description.html_safe
-  %i
-    -if(material_count == 0)
-      Not used in any class.
-    -elsif(material_count == 1)
-      Used in 1 class.
-    -else
-      Used in #{material_count} classes.
     = link_to 'show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
+  %div
+    %i
+      -if(material_count == 0)
+        Not used in any class.
+      -elsif(material_count == 1)
+        Used in 1 class.
+      -else
+        Used in #{material_count} classes.
   - required_equipments = probe_types(material).map { |p| p.name }.join(", ") 
   - unless required_equipments == ""
     #required_equipment_container
