@@ -1,4 +1,4 @@
 .preview_link
-  = run_link_for(material, nil, :teacher_mode => true, :link_text => "As Teacher")
+  = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
 .preview_link{:style=>"padding-top:0px"}
-  = preview_link_for(material, nil, :link_text => "As Student")
+  = link_to "As Student", run_url_for(material, {})
