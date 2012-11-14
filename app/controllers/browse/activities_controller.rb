@@ -8,8 +8,8 @@ class Browse::ActivitiesController < ApplicationController
     end
     
     @material = ::Activity.find(params[:id])
-    if @material.teacher_only? && current_user.anonymous?
-      flash[:notice] = 'Please log in as a teacher to see this content.'
+    if @material.teacher_only && current_user.anonymous?
+      flash.now[:notice] = 'Please log in as a teacher to see this content.'
     end
     
     @wide_content_layout = true
