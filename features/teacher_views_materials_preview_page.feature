@@ -13,6 +13,13 @@ Feature: Teacher can search and assign instructional materials to a class
     And the following users exist:
       | login  | password | roles          |
       | author | author   | member, author |
+    And the following multiple choice questions exists:
+      | prompt | answers | correct_answer |
+      | a      | a,b,c,d | a              |
+    And there is an image question with the prompt "image_q"
+    And the following investigations with multiple choices exist:
+      | investigation        | activity       | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
+      | Radioactivity        | Radio activity | section a | page 1 | a                | image_q         | teacher   | true                 |
     And the following simple investigations exist:
       | name                   | user   | publication_status | description                                     |
       | Mechanics              | author | published          | Mechanics is a great subject                    |
@@ -40,6 +47,12 @@ Feature: Teacher can search and assign instructional materials to a class
     And I click link "Preview" for activity "Fluid Mechanics" on the materials preview page
     Then I should see "As Teacher"
     Then I should see "As Student"
+    
+    
+  Scenario: Anonymous user should see message for teacher only activity
+    When I log out
+    And I am on the the preview activity page for the activity "Radio activity"
+    Then I should see "Please log in as a teacher to see this content."
     
     
   Scenario: Anonymous user should be able to preview investigation
@@ -168,7 +181,10 @@ Feature: Teacher can search and assign instructional materials to a class
     And I follow "Assign Individual Activities"
     And I check "Mathematics"
     And I follow "Save"
-    Then I should see "Previously Assigned - not re-assigned" within the lightbox in focus
+    Then I should see "Please note that some of the activities were already assigned and were not re-assigned." within the lightbox in focus
+    And I follow "More Information" within the lightbox in focus
+    Then I should see "Mechanics"
+    And I should see "Fluid Mechanics"
     
     
   @javascript
