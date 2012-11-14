@@ -15,7 +15,7 @@
       .action_menu_header_left
         %p= page_entries_info investigations, :model=>"Investigation"
         %p.paginator
-          = will_paginate investigations
+          = will_paginate investigations, :params => {:include_drafts => ((@include_drafts) ? true : nil), :include_usage_count => ((@include_usage_count) ? true : nil)}
       .action_menu_header_right
         %ul.menu
           - unless local_assigns[:hide_print]
