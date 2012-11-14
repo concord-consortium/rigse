@@ -65,7 +65,7 @@ Event.observe(window, 'load', function() {
 function onShowSelected(Event)
 {
     var showSelected = false;
-    $$(".filter_checkbox").each(function(obj){ showSelected = showSelected || obj.checked;})
+    $$(".filter_checkbox").each(function(obj){ showSelected = showSelected || obj.checked;});
 
     if (showSelected)
     {
@@ -80,7 +80,7 @@ function onShowSelected(Event)
         Event.cancelBubble=true;
     }
     
-    var messageText = "No questions have been selected."
+    var messageText = "No questions have been selected.";
     showMessagePopup(messageText);
     return false;
 }
