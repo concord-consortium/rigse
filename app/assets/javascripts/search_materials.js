@@ -462,12 +462,12 @@ function getMessagePopup(message)
         g_messageModal.close();
     }
     
-    var content = "<div style='padding:10px'>" +
+    var content = "<div style='padding:10px 15px;'>" +
                   message +
                   "</div>";
                   
     var lightboxConfig = {
-        width: 350,
+        width: 375,
         height: 150,
         closeOnNextPopup: true,
         type: Lightbox.type.ALERT,
