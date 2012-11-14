@@ -13,8 +13,9 @@
               = summary_item[1].join(', ')
 - if already_assigned_clazzes.length > 0
   .assign_class_header
-    Previously Assigned - not re-assigned
-    .assigned_classes_container.webkit_scrollbars
+    Please note that some of the activities were already assigned and were not re-assigned.
+    = link_to "More Information","javascript:void(0)",:onclick=>"$('prev_assigned_classes_div').toggle();setPopupHeight()"
+    .assigned_classes_container.webkit_scrollbars{:id=>"prev_assigned_classes_div",:style=>"display:none"}
       %ul
         - already_assigned_clazzes.each do|summary_item|
           %li{:style=>"padding-top:8px;"}
