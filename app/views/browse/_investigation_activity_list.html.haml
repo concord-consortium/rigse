@@ -35,13 +35,14 @@
                       (teacher only)
                 .activity_description
                   = activity.description
-                  %span.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
-                    - if(activity_count == 0)
-                      Not used in any class.
-                    - elsif(activity_count == 1)
-                      Used in 1 class.
-                    - else
-                      Used in #{activity_count} classes.
+                  %div.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
+                    %i
+                      - if(activity_count == 0)
+                        Not used in any class.
+                      - elsif(activity_count == 1)
+                        Used in 1 class.
+                      - else
+                        Used in #{activity_count} classes.
               %td.preview
                 - unless current_user.anonymous?
                   - unless activity.teacher_only?
