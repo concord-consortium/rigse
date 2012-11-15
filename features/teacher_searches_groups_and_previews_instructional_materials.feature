@@ -50,6 +50,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I am on the search instructional materials page
     
     
+  @wip
   @javascript
   Scenario: Teacher should be on materials preview page to preview or assign materials
     When I follow the "Assign to a class" link for the investigation "differential calculus"
