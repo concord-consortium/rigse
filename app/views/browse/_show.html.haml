@@ -66,12 +66,7 @@
         .material_type 
           = inst_material.class.to_s
       %td
-        - unless current_user.anonymous?
-          %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{inst_material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{inst_material.id},'#{material_type}','Preview')"}Preview &#9660;
-          .Expand_Collapse{:id=>"#{material_type}#{inst_material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
-            = render :partial => '/browse/preview', :locals => {:material => inst_material}
-        - else
-          = link_to "Preview",run_url_for(inst_material,{}),:class=>"button"
+        = link_to "Preview",run_url_for(inst_material,{}),:class=>"button"
       %td
         - if current_user.portal_teacher
           = link_to btn_text,'javascript:void(0)',:class=>"button", :onclick=>"getDataForAssignToClassPopup()",:id=>"btn_Assign"
