@@ -1,5 +1,4 @@
 var suggestioncount = -1;
-var addthis_config = { services_expanded : 'facebook,twitter,linkedin,google_plusone_share,email'};
 var ajaxRequest;
 var ajaxRequestSend = 0;
 var goButttondisabled=false;
