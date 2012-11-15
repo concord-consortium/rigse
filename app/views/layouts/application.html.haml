@@ -35,11 +35,7 @@
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
     - if protect_against_forgery?
-      = javascript_t
-    - if @meta_title
-      %meta{ :name => 'title', :content => @meta_title }
-    - if @meta_description
-      %meta{ :name => 'description', :content => @meta_description }ag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
+      = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
     - if @container_id
       = javascript_tag "var container_id = #{@container_id};"
     - if @container_type
@@ -75,8 +71,7 @@
             #flash
               .padded_contents
                 - flash.each do |key, message|
-                  %script{:type => 'text/javascript'}
-                    = "document.whenReady(function() { Lightbox.flash(decodeURIComponent(\"#{URI::encode(key.to_s)}\"), decodeURIComponent(\"#{URI::encode(message)}\")); });".html_safe
+                  = javascript_tag "document.whenReady(function() { Lightbox.flash(decodeURIComponent(\"#{URI::encode(key.to_s)}\"), decodeURIComponent(\"#{URI::encode(message)}\")); });"
           = content_for :layout
 
 
