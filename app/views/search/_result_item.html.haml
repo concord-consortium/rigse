@@ -51,7 +51,7 @@
 .material_body
   -unless material.description.nil? || material.description.blank?
     = material.description.html_safe
-    = link_to 'show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
+    = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
   %div
     %i
       -if(material_count == 0)
