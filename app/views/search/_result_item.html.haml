@@ -3,7 +3,7 @@
     -if(material.is_a? Investigation)
       - link_url = browse_investigation_url(material)
       =image_tag("search/investigation.gif",:size=>"100x100")
-    -else
+    -elsif(material.is_a? Activity)
       - link_url = browse_activity_url(material)
       =image_tag("search/activity.gif",:size=>"100x100")
 %div
