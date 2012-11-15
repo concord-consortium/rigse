@@ -121,6 +121,15 @@ class SearchController < ApplicationController
     end
   end
   
+  def find_material(type, id)
+    material = nil
+    if ["Investigation", "Activity", "Page", "ExternalActivity", "ResourcePage"].include?(type)  # this is for safety
+      material = type.constantize.find(id)
+    end
+    
+    return material
+  end
+  
   def get_current_material_unassigned_clazzes
     material_type = params[:material_type]
     material_ids = params[:material_id]
@@ -131,11 +140,7 @@ class SearchController < ApplicationController
     teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
     
     if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation 
-      if material_type == "Investigation"
-        @material = [::Investigation.find(params[:material_id])]
-      elsif material_type == "Activity"
-        @material = [::Activity.find(params[:material_id])]
-      end
+      @material = [find_material(material_type, params[:material_id])]
       
       teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
       assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
