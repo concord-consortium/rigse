@@ -49,6 +49,7 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I should see "As Student"
     
     
+  @javascript
   Scenario: Anonymous user should see message for teacher only activity
     When I log out
     And I am on the the preview activity page for the activity "Radio activity"
