@@ -5,7 +5,7 @@
         - if local_assigns[:paginated_objects]
           %p= page_entries_info paginated_objects, :model => ResourcePage.display_name
           %p.paginator
-            = will_paginate paginated_objects
+            = will_paginate paginated_objects, :params => {:include_drafts => ((@include_drafts) ? true : nil), :include_usage_count => ((@include_usage_count) ? true : nil)}
       .action_menu_header_right
         %ul.menu
           - unless local_assigns[:hide_print]

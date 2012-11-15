@@ -2,9 +2,12 @@
   - section = (@offering.clazz.section && @offering.clazz.section.length > 0) ? @offering.clazz.section : nil
   - section = (section ? "(#{section})" : "")
   = "Report for: #{@offering.clazz.name} #{section}"
-- report_summary = capture do
-  = offering_report_summary(@offering)
-
+- if @activity_report_id == nil
+  - report_summary = capture do
+    = offering_report_summary(@offering)
+- else
+  - report_summary = capture do
+    = offering_report_summary(@offering,{:show_selection_controls => false})
 != use_contentflow
 = render :partial => '/portal/reports/report', :locals => {:report_context => @offering, 
     :offering => @offering, :learners => @learners, :page_elements => @page_elements,

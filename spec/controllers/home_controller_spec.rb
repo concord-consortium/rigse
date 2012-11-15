@@ -7,6 +7,7 @@ describe HomeController do
     Admin::Project.stub(:default_project).and_return(@test_project)
     @test_project.stub!(:use_student_security_questions).and_return(false)
     @test_project.stub!(:require_user_consent?).and_return(false)
+    @test_project.stub!(:help_type).and_return('no help')
     controller.stub(:before_render) {
       response.template.stub(:current_project).and_return(@test_project)
     }
@@ -41,6 +42,21 @@ describe HomeController do
         get :project_css
         response.should_not be_success
       end
+    end
+  end
+  describe "Post preview_home_page" do
+    it "should set variables to preview home page" do
+      anonymous_user = Factory.next(:anonymous_user)
+      @post_params = {
+        :home_page_preview_content =>"<b>Home page content.</b>",
+      }
+      post :preview_home_page, @post_params
+      assert_response :success
+      assert_template 'preview_home_page'
+      assert_not_nil assigns[:home_page_preview_content]
+      assert_equal assigns[:home_page_preview_content], @post_params[:home_page_preview_content]
+      assert_equal assigns[:preview_home_page_content], true
+      assert_equal assigns[:wide_content_layout], true
     end
   end
 end

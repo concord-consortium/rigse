@@ -28,6 +28,7 @@ Factory.define :admin_project_no_jnlps, :class => Admin::Project do |f|
   f.user  { |p| Factory.next(:admin_user) }
   f.active true
   f.opportunistic_installer true
+  f.help_type "no help"
 end
 
 Factory.define :admin_project, :parent => :admin_project_no_jnlps do |f|

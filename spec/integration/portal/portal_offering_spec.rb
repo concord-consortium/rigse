@@ -11,10 +11,10 @@ describe "Portal::Offering" do
     
     # log in as this learner
     visit "/"
-    within("#project-signin") do
-      fill_in("login", :with => user.login)
-      fill_in("password", :with => 'password')
-      click_button("Login")
+    within("#header-project-signin") do
+      fill_in("Username", :with => user.login)
+      fill_in("Password", :with => 'password')
+      click_button("GO")
     end
     
     visit portal_offering_path(:id => learner.offering.id, :format => :jnlp)

@@ -77,9 +77,17 @@ When /^I create a new project with the description "([^"]*)"$/ do |description|
   page.should have_no_button("Save")
 end
 
-Then /^I switch to "([^"]*)"$/ do |username|
-  visit path_to("the switch page")
-  select(username, :from => 'user_id')
-  click_button('Switch')
+Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fullname, search|
+  visit path_to("user list")
+  step 'I should see "Account Report"'
+  fill_in("search", :with => search)
+  click_button('Search')
+  within(:xpath,"//div[@class='action_menu' and contains(.,'#{fullname}')]") do
+    click_link('Switch')
+  end
 end
 
+Then /^(?:|I )should see "([^"]*)" in the input box of external URL for help page on projects page$/ do |url|
+  step_text = "I should see the xpath \"//input[@name='admin_project[external_url]' and @value = '#{url}']\""
+  step step_text
+end

@@ -6,9 +6,10 @@
     %h3{:class => 'inline_block'}
       %span= report_title
     - if show_selection_controls
-      %div{:class => 'inline_block', :style => 'position: relative; top: -3px; left: 15px;'}
-        = filter_form.submit "Show all", :class => 'filter_selection_control'
-        = filter_form.submit "Show selected", :class => 'filter_selection_control'
+      - if @activity_report_id == nil
+        %div{:class => 'inline_block', :style => 'position: relative; top: -3px; left: 15px;'}
+          = filter_form.submit "Show all", :class => 'filter_selection_control'
+          = filter_form.submit "Show selected", :class => 'filter_selection_control'
     - if show_print_controls
       %div{:style => 'float: right;', :class => 'print_control'}
         %a{:href => "javascript:saveChangesAndPrint('##{dom_id_for(offering, :details)}', '#{dom_id_for(offering, :form)}');", :style => 'font-size: 1em;'}= 'print this'

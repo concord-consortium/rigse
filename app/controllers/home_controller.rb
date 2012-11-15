@@ -9,7 +9,9 @@ class HomeController < ApplicationController
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
-   
+   if current_user.anonymous?
+    @wide_content_layout = true
+   end
   end
   
   def readme
@@ -169,4 +171,21 @@ class HomeController < ApplicationController
     
   end
   
+  def preview_home_page
+    @preview_home_page_content = true
+    @wide_content_layout = true
+    
+    response.headers["X-XSS-Protection"] = "0"
+    
+    @home_page_preview_content = params[:home_page_preview_content]
+  end
+  
+  def current_user #override to preview home page content
+      if defined? @preview_home_page_content
+        @anonymous_user = User.find_by_login('anonymous')
+        @anonymous_user
+      else
+        super
+      end
+  end
 end

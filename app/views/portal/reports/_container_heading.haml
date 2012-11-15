@@ -5,7 +5,8 @@
       %div
         %span{:style => 'font-weight: bold;'}= container.class.to_s
         - if show_selection_controls
-          = selectAllNone(dom_id_for(container))
+          - if @activity_report_id == nil
+            = selectAllNone(dom_id_for(container))
         &ndash;
         = "#{container.name}"
       - children = map[container]

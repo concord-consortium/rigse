@@ -31,7 +31,7 @@ describe SessionsController do
     User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
     controller.stub!(:cookies).and_return(@login_params)
   end
-  
+
   describe "on successful login," do
     [ [:nil,       nil,            nil],
     [:expired,   'valid_token',  15.minutes.ago],
@@ -228,7 +228,7 @@ describe SessionsController do
       end
     end
   end
-  
+
   describe "on failed login" do
     before do
       User.should_receive(:authenticate).with(anything(), anything()).and_return(nil)
@@ -246,7 +246,7 @@ describe SessionsController do
 
     it 'renders the log in page'    do
       do_create
-      response.should render_template('new')
+      response.should redirect_to("/home")
     end
 
     it "doesn't log me in"          do
@@ -288,7 +288,7 @@ end
 describe SessionsController do
   describe "route generation" do
     it "should route the new sessions action correctly" do
-      { :get => login_path }.should route_to(:controller => "sessions", :action => "new")
+      { :get => login_path }.should route_to(:controller => "home", :action => "index")
     end
     it "should route the create sessions correctly" do
       { :post => "/session" }.should route_to(:controller => "sessions", :action => "create")
@@ -300,7 +300,7 @@ describe SessionsController do
   
   describe "route recognition" do
     it "should generate params from GET /login correctly" do
-      { :get => "/login" }.should route_to(:controller => "sessions", :action => "new")
+      { :get => "/login" }.should route_to(:controller => "home", :action => "index")
     end
     it "should generate params from POST /session correctly" do
       { :post => "/session" }.should route_to(:controller => "sessions", :action => "create")
@@ -312,7 +312,7 @@ describe SessionsController do
   
   describe "named routing" do
     it "should route login_path() correctly" do
-      { :get => login_path }.should route_to(:controller => "sessions", :action => "new")
+      { :get => login_path }.should route_to(:controller => "home", :action => "index")
     end
     it "should route logout_path() correctly" do
       { :get => logout_path }.should route_to(:controller => "sessions", :action => "destroy")

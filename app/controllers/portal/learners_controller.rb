@@ -5,8 +5,8 @@ class Portal::LearnersController < ApplicationController
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
 
-  before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report]
-  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
+  before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report,:activity_report]
+  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report,:activity_report]
   before_filter :handle_jnlp_session, :only => [:show]
   before_filter :authorize_show, :only => [:show]
   
@@ -77,15 +77,42 @@ class Portal::LearnersController < ApplicationController
     end
   end
   
+  def activity_report
+    portal_learner = Portal::Learner.find(params[:id])
+    @offering = portal_learner.offering
+    if params[:activity_id]
+      activity = ::Activity.find(params[:activity_id].to_i)
+      unless activity.nil?
+        session[:activity_report_embeddable_filter] = activity.page_elements.map{|pe|pe.embeddable}
+        session[:activity_report_id] = activity.id
+      end
+    end
+    redirect_url = report_portal_learner_url(portal_learner);
+    respond_to do |format|
+      format.html { redirect_to redirect_url }
+      format.xml  { head :ok }
+    end
+  end
+  
   def report
     @portal_learner = Portal::Learner.find(params[:id])
-    
-    reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
-    
-    @page_elements = reportUtil.page_elements
-    
+    @activity_report_id = nil
+    offering = @portal_learner.offering
+    unless offering.report_embeddable_filter.nil? || offering.report_embeddable_filter.embeddables.nil?
+      @report_embeddable_filter = offering.report_embeddable_filter.embeddables
+    end
+    activity_report_embeddable_filter = session[:activity_report_embeddable_filter] 
+    unless activity_report_embeddable_filter.nil?
+      @portal_learner.offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
+      @portal_learner.offering.report_embeddable_filter.ignore = false
+      @activity_report_id = session[:activity_report_id]
+    end
     respond_to do |format|
       format.html # report.html.haml
+        reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
+        session[:activity_report_embeddable_filter] = nil
+
+        @page_elements = reportUtil.page_elements
     end
   end
 
