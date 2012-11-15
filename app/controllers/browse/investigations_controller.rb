@@ -8,6 +8,13 @@ class Browse::InvestigationsController < ApplicationController
     end
     @material = ::Investigation.find(params[:id])
     @wide_content_layout = true
+    @page_title = @material.name
+    @meta_title = @material.name
+    if @material.description==""
+      @meta_description = "Check out this great investigation from the Concord Consortium."
+    else
+      @meta_description = @material.description
+    end
   end
 
 end
