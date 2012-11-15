@@ -87,6 +87,20 @@
         return;
     };
     
+    Lightbox.flash = function (key, message) {
+        var title = '<span style="text-transform: capitalize;">' + key + '</span>';
+        var content = '<div style="padding: 5px 15px;">' +
+                      message +
+                      '</div>';
+        
+        var lightboxConfig = {
+            type: Lightbox.type.ALERT,
+            title: title,
+            content: content
+        };
+        var lightbox = new Lightbox(lightboxConfig);
+        return lightbox;
+    };
     
     
     Lightbox.prototype.id = null;

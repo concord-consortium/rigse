@@ -75,7 +75,8 @@
             #flash
               .padded_contents
                 - flash.each do |key, message|
-                  %div{:class=>"flash flash_#{key}"}= message
+                  %script{:type => 'text/javascript'}
+                    = "document.whenReady(function() { Lightbox.flash(decodeURIComponent(\"#{URI::encode(key.to_s)}\"), decodeURIComponent(\"#{URI::encode(message)}\")); });".html_safe
           = content_for :layout
 
 
