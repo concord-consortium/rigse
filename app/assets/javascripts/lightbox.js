@@ -152,8 +152,10 @@
         }
         
         if (config.closeOnNextPopup) {
-            Lightbox.popupToCloseOnNextPopup = this;
+            popupToCloseOnNextPopup = this;
         }
+        
+        Lightbox.popupToCloseOnNextPopup = popupToCloseOnNextPopup;
         
         var lightboxConfig = {
             theme: config.theme,
