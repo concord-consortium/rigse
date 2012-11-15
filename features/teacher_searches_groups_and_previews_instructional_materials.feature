@@ -71,11 +71,11 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should be on the preview activity page for the activity "differential calculus"
     And I should see "differential calculus"
     And I am on the search instructional materials page
-    When I follow the "show more details..." link for the investigation "differential calculus"
+    When I follow the "Show more details..." link for the investigation "differential calculus"
     Then I should be on the preview investigation page for the investigation "differential calculus"
     And I should see "differential calculus"
     And I am on the search instructional materials page
-    And I follow the "show more details..." link for the activity "differential calculus"
+    And I follow the "Show more details..." link for the activity "differential calculus"
     Then I should be on the preview activity page for the activity "differential calculus"
     And I should see "differential calculus"
     
