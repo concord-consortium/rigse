@@ -67,11 +67,12 @@
           #content_header.main_content_colors
             = content_for :content_header
           #js_flash{:style=>"display: none;"}
-          #main_flash_message_div
-            #flash
-              .padded_contents
-                - flash.each do |key, message|
-                  = javascript_tag "document.whenReady(function() { Lightbox.flash(decodeURIComponent(\"#{URI::encode(key.to_s)}\"), decodeURIComponent(\"#{URI::encode(message)}\")); });"
+          %script
+            = 'document.whenReady( function() {'.html_safe
+            - flash.each do |key, message|
+              = "Lightbox.flash(decodeURIComponent(\"#{URI::encode(key.to_s)}\"), decodeURIComponent(\"#{URI::encode(message)}\"));".html_safe
+            = '});'.html_safe
+            
           = content_for :layout
 
 
