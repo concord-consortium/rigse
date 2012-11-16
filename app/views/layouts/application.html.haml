@@ -1,5 +1,5 @@
 !!! Strict
-%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml", :prefix => "og: http://ogp.me/ns#" }
   %head
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
     - page_title = (@page_title) ? "#{@page_title} | #{APP_CONFIG[:site_name]}" : APP_CONFIG[:site_name] 
@@ -15,6 +15,14 @@
       %meta{ :name => 'title', :content => @meta_title }
     - if @meta_description
       %meta{ :name => 'description', :content => @meta_description }
+    
+    / Open graph tags
+    - if @og_title
+      %meta{ :property => 'og:title', :content => @og_title }
+    - if @og_type
+      %meta{ :property => 'og:type', :content => @og_type }
+    - if @og_description
+      %meta{ :property => 'og:description', :content => @og_description }
 
     != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     / TODO: if themes need their own print CSS make a themed link here:

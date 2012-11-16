@@ -9,12 +9,17 @@ class Browse::InvestigationsController < ApplicationController
     @material = ::Investigation.find(params[:id])
     @wide_content_layout = true
     @page_title = @material.name
-    @meta_title = @material.name
-    if @material.description==""
+    @meta_title = @page_title
+    @og_title = @page_title
+    
+    if @material.description.nil? || @material.description.blank?
       @meta_description = "Check out this great investigation from the Concord Consortium."
     else
       @meta_description = @material.description
     end
+    
+    @og_description = @meta_description
+    @og_type = 'website'
   end
 
 end

@@ -18,12 +18,17 @@ class Browse::ActivitiesController < ApplicationController
       activity_title=@material.name
     end
     @page_title = activity_title
-    @meta_title = activity_title
-    if @material.description==""
+    @meta_title = @page_title
+    @og_title = @page_title
+    
+    if @material.description.nil? || @material.description.blank?
       @meta_description = "Check out this great activity from the Concord Consortium."
     else
       @meta_description = @material.description
     end
+    
+    @og_description = @meta_description
+    @og_type = 'website'
   end
 
 end
