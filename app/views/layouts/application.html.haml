@@ -70,7 +70,8 @@
           %script
             = 'document.whenReady( function() {'.html_safe
             - flash.each do |key, message|
-              = "Lightbox.flash(decodeURIComponent(\"#{URI::encode(key.to_s)}\"), decodeURIComponent(\"#{URI::encode(message)}\"));".html_safe
+              - unless message.nil? || message.blank?
+                = "Lightbox.flash(decodeURIComponent(\"#{URI::encode(key.to_s)}\"), decodeURIComponent(\"#{URI::encode(message)}\"));".html_safe
             = '});'.html_safe
             
           = content_for :layout
