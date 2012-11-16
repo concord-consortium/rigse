@@ -35,7 +35,6 @@ Feature: A manager updates account information for another user
       | student  | test1@mailintator.com  |
       | teacher  | test2@mailintator.com  |
 
-  @javascript
   Scenario Outline: Managers can change a users password
     Given the following teachers exist:
       | login   | password     | email               |
@@ -59,7 +58,8 @@ Feature: A manager updates account information for another user
     Then the location should be "http://www.example.com/users"
     When I log out
     And I login with username: <userlogin> password: <new_password>
-    Then I should see "Logged in successfully"
+    Then I should see "Welcome"
+    And I should see "My Preferences"
 
     Examples:
       | username | userlogin | new_password |
