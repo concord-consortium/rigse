@@ -35,7 +35,7 @@ Feature: A manager updates account information for another user
       | student  | test1@mailintator.com  |
       | teacher  | test2@mailintator.com  |
 
-  # @javascript
+  @javascript
   Scenario Outline: Managers can change a users password
     Given the following teachers exist:
       | login   | password     | email               |

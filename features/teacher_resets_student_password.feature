@@ -12,6 +12,7 @@ Feature: Teacher can reset a students password
       | name     | teacher |
       | My Class | teacher |
 
+  @javascript
   Scenario: Teacher can reset their students passwords
     Given the default class is created
     And the following students exist:

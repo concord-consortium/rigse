@@ -19,18 +19,21 @@ Feature: User logs in using header login box to use the portal
       | manager | manager  | manager        |
       
       
+  @javascript
   Scenario: Teacher should be logged in
     When I login with username: teacher password: teacher
     Then I should see "Logged in successfully"
     And I should not see "Forgot your user name or password?"
     
     
+  @javascript
   Scenario: Student should be logged in
     When I login with username: student password: student
     Then I should see "Logged in successfully"
     And I should not see "Forgot your user name or password?"
     
     
+  @javascript
   Scenario: Other user with different roles should be logged in
     When I login with username: author password: author
     Then I should see "Logged in successfully"
