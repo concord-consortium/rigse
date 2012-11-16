@@ -44,7 +44,9 @@
           = 'document.whenReady( function() {'.html_safe
           - flash.each do |key, message|
             - unless message.nil? || message.blank?
-                = "Lightbox.flash(decodeURIComponent(\"#{URI::encode(key.to_s)}\"), decodeURIComponent(\"#{URI::encode(message)}\"));".html_safe
+              - encoded_key = URI::encode("#{key}")
+              - encoded_msg = URI::encode("#{message}")
+              = "Lightbox.flash(decodeURIComponent(\"#{encoded_key}\"), decodeURIComponent(\"#{encoded_msg}\"));".html_safe
           = '});'.html_safe
           
         = content_for :layout
