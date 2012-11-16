@@ -7,14 +7,25 @@
     -unless investigations.nil?
       - if investigations.length > 0
         - investigations.take(3).each do |investigation|
-          %a.suggestion_link{:onclick=>'select_suggestion(this)'}
-            .suggestion
-              = investigation.name
+          - if submit_form == 'true'
+            %a.suggestion_link{:onclick=>'submit_suggestion(this)'}
+              .suggestion
+                = investigation.name
+          - else
+            %a.suggestion_link{:onclick=>'select_suggestion(this)'}
+              .suggestion
+                = investigation.name
     -unless activities.nil?
       - if activities.length > 0
         - activities.take(3).each do |activity|
-          %a.suggestion_link{:onclick=>'select_suggestion(this)'}
-            .suggestion
-              = activity.name
+          - if submit_form == 'true'
+            %a.suggestion_link{:onclick=>'submit_suggestion(this)'}
+              .suggestion
+                = activity.name
+          - else
+            %a.suggestion_link{:onclick=>'select_suggestion(this)'}
+              .suggestion
+                = activity.name
+            
 -else
   %div

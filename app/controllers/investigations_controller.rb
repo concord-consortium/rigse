@@ -97,7 +97,6 @@ class InvestigationsController < AuthoringController
     pagination = params[:page] == "" ? 1 : params[:page]
     if (params[:method] == :get)
       @include_drafts = param_find(:include_drafts,true)
-      pagination = params[:page] = 1
     else
       @include_drafts = param_find(:include_drafts)
     end
@@ -115,6 +114,8 @@ class InvestigationsController < AuthoringController
       session[:include_usage_count] = false
       @include_drafts = false
     end
+    @include_usage_count = session[:include_usage_count]
+    
     search_options = {
       :name => @name,
       :portal_clazz_id => @portal_clazz_id,

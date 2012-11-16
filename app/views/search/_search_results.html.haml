@@ -24,9 +24,13 @@
     No Results Found
 
 .results_container
-  -unless investigations.nil?
-    - if investigations.length>0
-      = render :partial=>'search/result_material',:locals=>{:materials=>investigations,:type=>'Investigations'}
-  -unless activities.nil?
-    - if activities.length>0
-      = render :partial=>'search/result_activity',:locals=>{:materials=>activities,:type=>'Activities'}
+  %form{:method => :post, :id => "search_result_form"}
+    = hidden_field_tag "search_term", @search_term
+    = hidden_field_tag "investigation_page", @investigation_page
+    = hidden_field_tag "activity_page", @activity_page
+    -unless investigations.nil?
+      - if investigations.length>0
+        = render :partial=>'search/result_material',:locals=>{:materials=>investigations,:type=>'Investigations'}
+    -unless activities.nil?
+      - if activities.length>0
+        = render :partial=>'search/result_activity',:locals=>{:materials=>activities,:type=>'Activities'}

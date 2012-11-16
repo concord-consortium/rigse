@@ -24,7 +24,7 @@
                   %div.progressbar_container
                     = activity_name
           = render :partial => 'home/recent_student_report_summary',
-            :locals=> {:offering_status => offering_status,:filter_percent=>-1}
+            :locals=> {:offering_status => offering_status, :learners=>learners,:filter_percent=>-1}
   - else
     %table.messagetable
       %tr

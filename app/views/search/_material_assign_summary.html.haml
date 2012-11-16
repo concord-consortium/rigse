@@ -1,0 +1,30 @@
+- assigned_successful_clazzes = summary_data.select{|item| item[1].length > 0}
+- already_assigned_clazzes = summary_data.select{|item| item[2].length > 0}
+- if assigned_successful_clazzes.length > 0
+  .assign_class_header
+    Assigned successfully
+    .assigned_classes_container.webkit_scrollbars
+      %ul
+        - assigned_successful_clazzes.each do|summary_item|
+          %li
+            .class_name
+              = summary_item[0]
+            .assign_material_list
+              = summary_item[1].join(', ')
+- if already_assigned_clazzes.length > 0
+  .assign_class_header
+    Already assigned
+    .assigned_classes_container.webkit_scrollbars
+      %ul
+        - already_assigned_clazzes.each do|summary_item|
+          %li
+            .class_name
+              = summary_item[0]
+            .assign_material_list
+              = summary_item[2].join(', ')
+%br
+%table.classdata
+  %tr
+    %td
+      = link_to "Cancel", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()"
+%div{:style=>"clear:both"}
