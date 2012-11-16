@@ -23,6 +23,8 @@
       %meta{ :property => 'og:type', :content => @og_type }
     - if @og_description
       %meta{ :property => 'og:description', :content => @og_description }
+    - if @og_url
+      %meta{ :property => 'og:url', :content => @og_url }
 
     != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     / TODO: if themes need their own print CSS make a themed link here:

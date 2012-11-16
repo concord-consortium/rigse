@@ -29,6 +29,7 @@ class Browse::ActivitiesController < ApplicationController
     
     @og_description = @meta_description
     @og_type = 'website'
+    @og_url = request.url
   end
 
 end
