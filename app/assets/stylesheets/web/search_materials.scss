@@ -4,8 +4,11 @@
   text-align:left;
 }
 #material_search_form{
-  padding-bottom:0px;
-}
+  padding-bottom: 0;
+	#material_search_form input[type=submit] {
+		padding: 6px 14px;
+		}}
+
 
 .result_material tr
 {

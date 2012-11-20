@@ -14,9 +14,11 @@
             %td.password-box
               %input{:type=>"password", :id=>"header_password", :class=>"text", :name=>"password"}
           %tr.third-row
-            %td{:colspan=>"2"}
+            %td
+            %td
+              =link_to 'Forgot login?',forgot_password_path, :id=>"link_forgot_password"
+              | 
+              =link_to 'Register', pick_signup_path
               %input{:type=>"submit", :id=>"LoginSubmitButtonHeader",:value=>"GO"}
       .clear_both
-      .login-links
-        =link_to 'Forgot your username or password?',forgot_password_path, :id=>"link_forgot_password"
-        =link_to 'Sign up for an account', pick_signup_path
+        

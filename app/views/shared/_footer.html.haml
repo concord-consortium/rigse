@@ -1,17 +1,19 @@
 #footer
   .footer-inner
-    %p.legal
+    %p
       Copyright
       %span.copyright
         &copy;
       - now = DateTime.now
       - copyright_year = now.year
       = copyright_year
-      Concord Consortium. All rights reserved.
-
-    %p#footer_left
+      #{link_to 'Concord Consortium','http://concord.org', :id=>"footer_cc_link"}.
+      All rights reserved.
+      %br
       Questions/Feedback:
       = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "#{APP_CONFIG[:theme].upcase} question", :encode => "javascript")
-    %p#footer_right
-
+      %br
+      - if current_user.has_role?('admin')
+        %span#under_footer
+          = display_system_info.html_safe
 =workgroup_javascript
