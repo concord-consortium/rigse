@@ -404,7 +404,7 @@ function checkActivityToAssign(chk_box)
         $("assign_material_type").setValue("Investigation");
     }
     else{
-        btn_Assign.innerHTML = "Assign individual activities";
+        btn_Assign.innerHTML = "Assign Individual Activities";
         if(checked_elements.length > 0){
             $("material_id").setValue(checked_elements.pluck("value").join(","));
             $("assign_material_type").setValue("Activity");
