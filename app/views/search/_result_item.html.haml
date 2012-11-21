@@ -1,3 +1,6 @@
+-material_count = material.offerings.count
+- if material.parent
+  - material_count = material_count + material.parent.offerings.count
 .material_icon
   .icon_image
     -if(material.is_a? Investigation)
@@ -50,12 +53,12 @@
     = material.description.html_safe
     = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
   %i
-    -if(material.offerings.count == 0)
+    -if(material_count == 0)
       Not used in any class.
-    -elsif(material.offerings.count == 1)
+    -elsif(material_count == 1)
       Used in 1 class.
     -else
-      Used in #{material.offerings.count} classes.
+      Used in #{material_count} classes.
   - required_equipments = probe_types(material).map { |p| p.name }.join(", ") 
   - unless required_equipments == ""
     #required_equipment_container
