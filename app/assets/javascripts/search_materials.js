@@ -487,10 +487,6 @@ function setPopupHeight()
 }
 
 function msgPopupDescriptionText() {
-    var materialType = $('assign_material_type').value || 'material';
-    var popupMessage = "Please log-in or <a href='/pick_signup'>register</a> as a teacher to assign this " +
-                       materialType +
-                       ".";
-    
+    var popupMessage = "Please log-in or <a href='/pick_signup'>register</a> as a teacher to assign this material.";
     getMessagePopup(popupMessage);
 }
