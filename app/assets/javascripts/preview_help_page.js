@@ -75,16 +75,15 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
           
       }
 }
+
 function showpopup(content)
 {
-    var okayButton='<div style="text-align:center"><a href="javascript: void(0);" class="button" onclick="close_popup()">OK</a></div>';
-    list_modal = new UI.Window({ theme:"lightbox", height:150, width:350});
-    list_modal.setContent(content + okayButton).show(true).focus().center();
-    list_modal.setHeader("Message");
+    var lightboxConfig={
+        content:content,
+        title:"Message",
+        width:350,
+        type:2
+    };
+    var lightbox = new Lightbox(lightboxConfig);
 }
 
-function close_popup()
-{
-    list_modal.destroy();
-    list_modal = null;
-}

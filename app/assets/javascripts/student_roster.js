@@ -2,7 +2,7 @@ var student_list_modal = null;
 
 function close_popup()
 {
-    student_list_modal.hide();
+    student_list_modal.handle.hide();
     student_list_modal = null;
 }
 
@@ -13,16 +13,20 @@ function get_Add_Register_Student_Popup(strURL)
     {
         close_popup();
     }
-    student_list_modal = new UI.Window({ theme:"lightbox", width:400, height:350});
-    student_list_modal.setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
-    student_list_modal.setHeader("Register and Add New Student");
+    var lightboxconfig={
+        content:"<div style='padding:10px'>Loading...Please Wait.</div>",
+        title:"Register and Add New Student",
+        width:400,
+        height:350
+    };
+    student_list_modal = new Lightbox(lightboxconfig);
     var clazz_id = $("portal_clazz_id").value;
     var options = {
         method: 'post',
         onSuccess: function(transport) {
             var text = transport.responseText;
             text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold;margin-left: 7px;'></div>"+ text;
-            student_list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
+            student_list_modal.handle.setContent("<div style='padding:10px'>" + text + "</div>");
         }
     };
     var target_url = "/portal/classes/"+clazz_id+"/add_new_student_popup";

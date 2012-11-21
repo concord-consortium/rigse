@@ -266,37 +266,34 @@ var list_modal = null;
 
 function close_popup()
 {
-    list_modal.destroy();
-    list_modal = null;
+    list_lightbox.handle.destroy();
+    list_lightbox = null;
 }
 
 function get_Assign_To_Class_Popup(material_id,material_type)
 {
-    list_modal = list_modal || null;
-    if(list_modal !== null)
-    {
-        close_popup();
-    }
-    list_modal = new UI.Window({ theme:"lightbox", width:500});
-    list_modal.setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
-    list_modal.setHeader("Assign Materials to a Class");
-    
-    var options = {
+    var lightboxConfig = {
+        content:"<div style='padding:10px'>Loading...Please Wait testing.</div>",
+        title:"Assign Materials to a Class"
+    };
+    list_lightbox=new Lightbox(lightboxConfig);
+    var target_url = "/search/get_current_material_unassigned_clazzes";
+     var options = {
         method: 'post',
         parameters : {'material_type':material_type,'material_id':material_id},
         onSuccess: function(transport) {
             var text = transport.responseText;
             text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
-            list_modal.setContent("<div id='windowcontent' style='padding:10px'>" + text + "</div>");
+            list_lightbox.handle.setContent("<div id='windowcontent' style='padding:10px'>" + text + "</div>");
             var contentheight=$('windowcontent').getHeight();
             var contentoffset=40;
-            list_modal.setSize(500,contentheight+contentoffset+20);
-            list_modal.center();
+            list_lightbox.handle.setSize(500,contentheight+contentoffset+20);
+            list_lightbox.handle.center();
         }
     };
-    var target_url = "/search/get_current_material_unassigned_clazzes";
     new Ajax.Request(target_url, options);
 }
+
 function materialCheckOnClick(ObjId)
 {
     if(!$('investigation').checked &&  !$('activity').checked ){
@@ -476,14 +473,6 @@ function getMessagePopup(message)
     
     g_messageModal = new Lightbox(lightboxConfig);
     
-}
-
-function setPopupHeight()
-{
-    var contentheight=$('windowcontent').getHeight();
-    var contentoffset=40;
-    list_modal.setSize(500,contentheight+contentoffset);
-    list_modal.center();
 }
 
 function msgPopupDescriptionText() {
