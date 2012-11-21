@@ -273,7 +273,7 @@ function close_popup()
 function get_Assign_To_Class_Popup(material_id,material_type)
 {
     var lightboxConfig = {
-        content:"<div style='padding:10px'>Loading...Please Wait testing.</div>",
+        content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         title:"Assign Materials to a Class"
     };
     list_lightbox=new Lightbox(lightboxConfig);
@@ -474,6 +474,15 @@ function getMessagePopup(message)
     g_messageModal = new Lightbox(lightboxConfig);
     
 }
+
+function setPopupHeight()
+{
+    var contentheight=$('windowcontent').getHeight();
+    var contentoffset=40;
+    list_lightbox.handle.setSize(500,contentheight+contentoffset);
+    list_lightbox.handle.center();
+}
+
 
 function msgPopupDescriptionText() {
     var popupMessage = "Please log-in or <a href='/pick_signup'>register</a> as a teacher to assign this material.";
