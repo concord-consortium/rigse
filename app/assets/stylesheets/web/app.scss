@@ -309,11 +309,12 @@ body#tinymce {
   padding: 0;
   width: 730px;
   div.right {
-  	background: #fff;
   	margin: 0;
   	padding: 10px 5px;
   	}
-  div.right:nth-child(2n), div.right.even {
+  .recent_activity_container div.right { background: #fff; }
+  .recent_activity_container div.right:nth-child(2n), 
+  .recent_activity_container div.right.even {
   	background: rgb(251, 244, 219) !important;
   	}}
 
@@ -604,14 +605,10 @@ li.item_selectable {
 
 #secondary {
   background: #fbf4db;
-  display: block;
-  float: none;
-	left: 50%;
-  margin-top: 0;
-  margin-left: -480px;
+  float: left;
+  height: auto;
+  margin: 20px 0 0 -945px;
   padding: 10px 0 30px;
-	position: fixed;
-	top: 145px;
   width: 200px;
 	-moz-border-radius: 12px;
 	-webkit-border-radius: 12px;
@@ -647,7 +644,7 @@ li.item_selectable {
     a:active { background: #fee9aa; }
     a.selected {
       background: #fee9aa;
-      color: #000000;
+      color: #000;
       font-weight: bold; } }
   ul.create {
     border-top: none; }
@@ -1126,13 +1123,17 @@ ul.quiet_list {
   color: #3f3f3f;
   height: 200px;
 	padding-top: 20px;
+	position: relative;
 	width: 100%;
 	a { border-bottom: dotted 1px #479492; }
   .footer-inner {
     background: transparent url(/assets/styles/bg-footer.png) no-repeat center bottom;
-  	height: 200px;
-    margin: 0 auto;
-    width: 960px; 
+	  height: 200px;
+	  left: 50%;
+    margin: 0 0 0 -480px;
+    position: absolute;
+    width: 960px;
+    z-index: 5;
     p {
       font: 0.9em arial, helvetica, sans-serif;
     	padding: 152px 0 0 235px;}}
