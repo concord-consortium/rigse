@@ -4,11 +4,8 @@
   text-align:left;
 }
 #material_search_form{
-  padding-bottom: 0;
-	#material_search_form input[type=submit] {
-		padding: 6px 14px;
-		}}
-
+  padding-bottom:0px;
+}
 
 .result_material tr
 {
@@ -382,13 +379,3 @@ span.clazz_count{padding-left:5px;font-style:italic;}
 .ss-po{padding-top:2px;padding-bottom:4px;}
 
 
-.share{display:none;}
-.activity_list td.check_box{display:none;}
-.browse_material_header #btn_Assign{display:none}
-.activity_list .preview{padding-right: 50px;}
-.include_Checkbox{display:none;}
-.activity_list_header{padding-bottom:10px;}
-
-.share_activity{width: 80px;}
-.sharing{position:absolute;width:74px;background-color: white;border: 1px solid #416962;margin-top:2px;border-radius: 10px;text-align: center;}
-.sharelink{padding:2px;}
