@@ -14,36 +14,48 @@
   - material_description = inst_material.description
   - btn_text = "Assign Investigation"
   - icon_image = image_tag("search/investigation.gif",:size=>"100x100")
-  - activitites = inst_material.activities
+  - activities = inst_material.activities
+  - if current_user.anonymous?
+    - activities = activities.select{|activity| !(activity.teacher_only)}
   - link_url = browse_investigation_url(material)
   - material_url = link_url
+  - material_id = material.id
+  - material_type = material.class.to_s
 - elsif material.is_a? ::Activity
   - inst_material = material.parent
   - btn_text = "Assign Individual Activities"
   - icon_image = image_tag("search/investigation.gif",:size=>"100x100")
+  
+  - material_id = material.id
+  - material_type = material.class.to_s
+  
   - if inst_material.nil?
     - inst_material = material
     - btn_text = "Assign Activity"
     - icon_image = image_tag("search/activity.gif",:size=>"100x100")
-    - activitites = nil
+    - activities = nil
     - link_url = browse_activity_url(material)
-    - material_url =  link_url 
+    - material_url =  link_url
   - else
-    - activitites = inst_material.activities
+    - activities = inst_material.activities
+    - if current_user.anonymous?
+      - activities = activities.select{|activity| !(activity.teacher_only)}
     - link_url = browse_activity_url(inst_material)
-    - btn_text = (activitites.length == 1)? "Assign Investigation" : btn_text
+    - if (activities.length == 1)
+      - btn_text = "Assign Investigation"
+      - material_id = inst_material.id
+      - material_type = inst_material.class.to_s
+    
     - material_url = browse_investigation_url(inst_material)
     
   - material_title = inst_material.name
   - material_description = inst_material.description
-  - material_type ="Inv"
-  - if activitites == nil
-    - material_type ="Act"
+    
 = hidden_field_tag "investigation_id", inst_material.id
-= hidden_field_tag "material_id", material.id
-= hidden_field_tag "assign_material_type", material.class.to_s
+= hidden_field_tag "material_id", material_id
+= hidden_field_tag "assign_material_type", material_type
 - material_type ="Inv"
-- if activitites == nil
+- if activities == nil
   - material_type ="Act"
 %div
   - unless @back_url.nil?
@@ -66,7 +78,12 @@
         .material_type 
           = inst_material.class.to_s
       %td
-        = link_to "Preview",run_url_for(inst_material,{}),:class=>"button"
+        - unless current_user.anonymous?
+          %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{inst_material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{inst_material.id},'#{material_type}','Preview')"}Preview &#9660;
+          .Expand_Collapse{:id=>"#{material_type}#{inst_material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+            = render :partial => '/browse/preview', :locals => {:material => inst_material}
+        - else
+          = link_to "Preview",run_url_for(inst_material,{}),:class=>"button"
       %td
         - if current_user.portal_teacher
           = link_to btn_text,'javascript:void(0)',:class=>"button", :onclick=>"getDataForAssignToClassPopup()",:id=>"btn_Assign"
@@ -79,17 +96,18 @@
   %br
   .description
     = material_description
-    %span.clazz_count{:id=>"material_clazz_count"}
-      - if(material_count == 0)
-        Not used in any class.
-      - elsif(material_count == 1)
-        Used in 1 class.
-      - else
-        Used in #{material_count} classes.
+    %div.clazz_count{:id=>"material_clazz_count"}
+      %i
+        - if(material_count == 0)
+          Not used in any class.
+        - elsif(material_count == 1)
+          Used in 1 class.
+        - else
+          Used in #{material_count} classes.
   %br
   %br
   
-  - unless activitites.nil?
+  - unless activities.nil?
     %div
       %script{:src=>"//platform.linkedin.com/in.js",:type=>"text/javascript"}
       = render :partial => '/browse/investigation_activity_list', :locals => {:material => material,:investigation=>inst_material}
