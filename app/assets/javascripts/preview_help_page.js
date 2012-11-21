@@ -50,7 +50,7 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
                                '</textarea>' +
                              '</form>' +
                            '</body>' +
-                         '</html>'
+                         '</html>' +
                          '';
             previewWindowDocument = previewWindow.document;
             previewWindowDocument.open();
