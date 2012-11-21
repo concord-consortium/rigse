@@ -1,4 +1,6 @@
 - activities = investigation.activities
+- if current_user.anonymous?
+  - activities = activities.select{|activity| !(activity.teacher_only)}
 .activities_container
   .activity_list_header 
     %span.investigation_name
