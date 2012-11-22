@@ -40,8 +40,8 @@ Feature: Teacher can search and assign instructional materials to a class
     And I search study material "Fluid Mechanics" on the search instructional materials page
     Then I should see "(Assigned to Physics)"
     And I open the "Assign to a class" popup for the activity "Fluid Mechanics"
-    Then I should see /Part Of:/ within the assign materials popup on the search page
-    And I should see "Mechanics" within the assign materials popup on the search page
+    Then I should see /Part Of:/ within the popup
+    And I should see "Mechanics" within the popup
     
     
   Scenario: Anonymous user can not assign instructional materials to the class
@@ -54,21 +54,19 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I should be on the home page
     
     
-  @dialog
   @javascript
   Scenario: Teacher can assign investigations to a class
     When I open the "Assign to a class" popup for the investigation "Geometry"
-    Then I should see "Investigation:" within the assign materials popup on the search page
-    And I should see "Geometry" within the assign materials popup on the search page
+    Then I should see "Investigation:" within the popup
+    And I should see "Geometry" within the popup
     When I check "Mathematics"
     And I follow "Save"
     And I should wait 2 seconds
-    And accept the dialog
+    And I press "OK"
     And I go to the class page for "Mathematics"
     Then I should see "Geometry"
     
     
-  @dialog
   @javascript
   Scenario: Teacher can assign activities to a class
     When I uncheck "Investigation"
@@ -76,13 +74,13 @@ Feature: Teacher can search and assign instructional materials to a class
     And I check "Activity"
     And I should wait 2 seconds
     And I open the "Assign to a class" popup for the activity "Fluid Mechanics"
-    Then I should see "Activity:" within the assign materials popup on the search page
-    And I should see "Fluid Mechanics" within the assign materials popup on the search page
+    Then I should see "Activity:" within the popup
+    And I should see "Fluid Mechanics" within the popup
     And "Mechanics" should appear before "Fluid Mechanics"
     When I check "Physics"
     And I follow "Save"
     And I should wait 2 seconds
-    And accept the dialog
+    And I press "OK"
     And I go to the class page for "Physics"
     Then I should see "Fluid Mechanics"
     
@@ -92,7 +90,7 @@ Feature: Teacher can search and assign instructional materials to a class
     When the Investigation "differential calculus" is assigned to the class "Physics"
     And I am on the search instructional materials page
     And I open the "Assign to a class" popup for the activity "differential calculus"
-    Then I should see /(Already assigned as part of "differential calculus")/ within the assign materials popup on the search page
+    Then I should see /(Already assigned as part of "differential calculus")/ within the popup
     
     
   @javascript
@@ -100,8 +98,8 @@ Feature: Teacher can search and assign instructional materials to a class
     When the Investigation "differential calculus" is assigned to the class "Physics"
     And I am on the search instructional materials page
     And I open the "Assign to a class" popup for the investigation "differential calculus"
-    Then I should see "Already assigned to the following class(es)" within the assign materials popup on the search page
-    And I should see "Physics" within the assign materials popup on the search page
+    Then I should see "Already assigned to the following class(es)" within the popup
+    And I should see "Physics" within the popup
     
     
   @javascript
@@ -109,8 +107,8 @@ Feature: Teacher can search and assign instructional materials to a class
     When the Activity "Geometry" is assigned to the class "Mathematics"
     And I am on the search instructional materials page
     And I open the "Assign to a class" popup for the activity "Geometry"
-    Then I should see "Already assigned to the following class(es)" within the assign materials popup on the search page
-    And I should see "Physics" within the assign materials popup on the search page
+    Then I should see "Already assigned to the following class(es)" within the popup
+    And I should see "Physics" within the popup
     
     
   @javascript
@@ -121,13 +119,12 @@ Feature: Teacher can search and assign instructional materials to a class
     And  I check "clazz_id[]"
     And I follow "Save"
     And I should wait 2 seconds
-    And accept the dialog
+    And I press "OK"
     And I am on the search instructional materials page
     And I open the "Assign to a class" popup for the investigation "differential calculus"
-    Then I should see "This material is assigned to all the classes." within the assign materials popup on the search page
+    Then I should see "This material is assigned to all the classes." within the popup
     
     
-  @dialog
   @javascript
   Scenario: Teacher can see a message in the popup if the activity is assigned to all the classes
     When I login with username: albert password: albert
@@ -136,10 +133,10 @@ Feature: Teacher can search and assign instructional materials to a class
     And  I check "clazz_id[]"
     And I follow "Save"
     And I should wait 2 seconds
-    And accept the dialog
+    And I press "OK"
     And I am on the search instructional materials page
     And I open the "Assign to a class" popup for the activity "Fluid Mechanics"
-    Then I should see "This material is assigned to all the classes." within the assign materials popup on the search page
+    Then I should see "This material is assigned to all the classes." within the popup
     
     
   @javascript
@@ -150,10 +147,10 @@ Feature: Teacher can search and assign instructional materials to a class
     And I should wait 2 seconds
     And I am on the search instructional materials page
     And I open the "Assign to a class" popup for the investigation "differential calculus"
-    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the search page
+    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the popup
     And I am on the search instructional materials page
     And I open the "Assign to a class" popup for the activity "Fluid Mechanics"
-    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the assign materials popup on the search page
+    Then I should see "You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them." within the popup
     
     
   @javascript
