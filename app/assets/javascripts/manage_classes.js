@@ -45,9 +45,6 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
     '</div>'+
     '</div>'+
     '</div>';
-    //'<script>'+
-    //'document.getElementById("copyClass_name").focus();'+
-    //'</script>';
     
     popupConfig.content = popupHtml;
     
@@ -114,6 +111,7 @@ function copyClass(btnSave)
         onSuccess: function(transport) {
             var text = transport.responseText;
             var response = text.evalJSON(true);
+            debugger;
             if (response.success)
             {
                 window.location.href = window.location.href;
