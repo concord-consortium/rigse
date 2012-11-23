@@ -111,7 +111,6 @@ function copyClass(btnSave)
         onSuccess: function(transport) {
             var text = transport.responseText;
             var response = text.evalJSON(true);
-            debugger;
             if (response.success)
             {
                 window.location.href = window.location.href;
