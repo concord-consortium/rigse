@@ -4,11 +4,19 @@
 
 function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_description)
 {
-    teacher_clazz_name = decodeURIComponent(clazz_name);
+    var teacher_clazz_name = decodeURIComponent(clazz_name);
     class_word = decodeURIComponent(class_word);
     class_description = decodeURIComponent(class_description);
     
-    var oInnerHtml = '<div class="popup_content">'+
+    var popupConfig = {
+        id: 'CopyClass',
+        width:  500,
+        height: 270,
+        title:"Copy Class",
+        content: null
+    };
+    
+    var popupHtml = '<div class="popup_content">'+
     '<input type="hidden" id="copyClass_copy_class_id" name="copyClass_copy_class_id" value="'+copy_clazz_id+'" />'+
     '<div id="class_form_fill_error_text" name="copy_class_error_text" class="bold"></div>'+
     '<table cellspacing="0" cellpadding="0" border="0">'+
@@ -31,28 +39,23 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
     '<div class="right_float">'+
     '<label id="submit_text" style="display : none; font-color: #ff0000"  > Submitting Data......</label>'+
     '<button class="pie" onclick="copyClass(this)">Save</button>&nbsp;&nbsp;'+
-    '<a href="javascript:void(0)" onclick="destroyIt()">Cancel</a>'+
+    '<a href="javascript:void(0)" onclick="Lightbox.findById(\'' + popupConfig.id + '\').close();">Cancel</a>'+
     '</div>'+
     '<div class="clear_both">'+
     '</div>'+
     '</div>'+
-    '</div>'+
-    '<script>'+
-    'document.getElementById("copyClass_name").focus();'+
-    '</script>';
+    '</div>';
+    //'<script>'+
+    //'document.getElementById("copyClass_name").focus();'+
+    //'</script>';
     
-    oPopUpWindow = new UI.Window({ theme: "lightbox",
-        shadow: true,
-        width:  500,
-        height: 270}).setContent(oInnerHtml).show(true).center();
-    oPopUpWindow.setHeader("Copy Class");
-    oPopUpWindow.activate();
+    popupConfig.content = popupHtml;
     
-}
-
-function destroyIt()
-{
-    oPopUpWindow.destroy();
+    var popup = new Lightbox(popupConfig);
+    
+    $("copyClass_name").focus();
+    
+    return;
 }
 
 function ClassActiveCheckBoxChanged()
