@@ -65,4 +65,25 @@ describe InvestigationsController do
       get :details_report, :id => @investigation.id
     end
   end
+
+  describe "#show" do
+    describe "with teacher mode='true'" do
+      before(:each) do
+        controller.stub!(:render)
+        get :show, :id => @investigation.id, :teacher_mode => "true"
+      end
+      it "should assign true to teacher_mode instance var" do
+        assert (assigns(:teacher_mode) == true)
+      end
+    end
+    describe "with teacher mode='false'" do
+      before(:each) do
+        controller.stub!(:render)
+        get :show, :id => @investigation.id, :teacher_mode => "false"
+      end
+      it "should assign true to teacher_mode instance var" do
+        assert (assigns(:teacher_mode) == false)
+      end
+    end
+  end
 end

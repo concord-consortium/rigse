@@ -1,6 +1,5 @@
--skip_wait = NOT_USING_JNLPS ? "true" : "false"
 :javascript
-  var skipShowWait = #{skip_wait};
+  var skipShowWait = #{!APP_CONFIG[:use_jnlps]};
 
 #please_wait{ :style => "display: none;" }
   #please_wait_inside

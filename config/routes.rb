@@ -7,7 +7,8 @@ RailsPortal::Application.routes.draw do
   post '/search/add_material_to_clazzes'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
 
-
+  post "help/preview_help_page"
+  
 constraints :id => /\d+/ do
   namespace :saveable do
     namespace :sparks do
@@ -103,6 +104,19 @@ constraints :id => /\d+/ do
     resources :range_questions
   end
 
+  namespace :browse do
+    resources :investigations do
+      member do
+        post :show
+      end
+    end
+    resources :activities do
+      member do
+        post :show
+      end
+    end
+  end
+
   namespace :portal do
 
     resources :clazzes, :path => :classes do
@@ -151,6 +165,7 @@ constraints :id => /\d+/ do
         get :multiple_choice_report
         get :report
         get :bundle_report
+        get :activity_report
       end
     end
 
@@ -175,6 +190,7 @@ constraints :id => /\d+/ do
         post :answers
         post :offering_collapsed_status
         post :get_recent_student_report
+        get :activity_report
       end
     end
 
@@ -218,7 +234,7 @@ constraints :id => /\d+/ do
   end
   match '/portal/school_selector/update' => 'portal/school_selector#update', :as => :school_selector_update
   match '/logout' => 'sessions#destroy', :as => :logout
-  match '/login' => 'sessions#new', :as => :login
+  match '/login' => 'home#index', :as => :login
   match '/register' => 'users#create', :as => :register
   match '/signup' => 'users#new', :as => :signup
   match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => nil
@@ -555,6 +571,7 @@ constraints :id => /\d+/ do
   match '/requirements' => 'home#requirements', :as => :requirements
   match '/stylesheets/project.css' => 'home#project_css', :as => :project_css
   match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
+  match '/admin' => 'home#admin', :as => :admin
   match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
   match '/banner' => 'misc#banner', :as => :banner
   post  '/installer_report' => 'misc#installer_report', :as => :installer_report
@@ -562,6 +579,7 @@ constraints :id => /\d+/ do
   match '/:controller(/:action(/:id))'
 
   root :to => 'home#index'
-
+  
+  
 end
 end

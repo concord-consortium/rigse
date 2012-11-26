@@ -8,6 +8,10 @@ body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt, blockquote, button
 html, input, textarea, select {
   font-size: 100%; }
 
+html, body {
+  height: 100%;
+  }
+
 /*keep ie happy */
 
 body {
@@ -95,8 +99,8 @@ table {
   }
 body {
   background: {
-    color: #fee9aa;
-    image: url(/assets/new/bg-body.png);
+    color: #fff;
+    image: url(/assets/styles/bg-body.png);
     repeat: repeat-x; };
   color: #3f3f3f; }
 
@@ -111,12 +115,13 @@ body#tinymce {
   min-width: 860px; }
 
 #wrapper {
-  background: #f3f2ed url(/assets/new/bg-content.gif) 0 0 repeat-y;
-  height: auto;
-  margin: 0 auto;
-  min-height: 600px;
+  clear: both;
+	min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -200px;
   position: relative;
-  width: 860px; }
+  width: 960px; }
 
 /* HEADER */
 #header {
@@ -169,46 +174,42 @@ body#tinymce {
 #lead {
   border-bottom: 1px solid #a1d2d1;
   clear: both;
-  float: left;
   line-height: 1.833;
   margin-bottom: 1.833em;
   &.project-header {
     border: none;
     margin: 0;
-    padding: 0;
-    width: 860px; } }
+    padding: 0; } }
 
 #_toggle_portal__offering_1 {
   margin: 2px 2px 0 0; }
 
 .project-header h1 {
-  background: {
-    color: white;
-    image: url(/assets/new/banners/empty.png);
-    repeat: no-repeat; };
-  height: 172px;
+  height: 100px;
   margin: 0;
   text-indent: -999em;
   &.itsisu {
-    background: white url(/assets/new/banners/itsisu.png) 0 0 no-repeat; }
+    background: transparent url(/assets/banners/itsisu.png) 0 0 no-repeat }
   &.geniverse {
     background: white url(/assets/new/banners/geniverse.png) 0 0 no-repeat; }
   &.has {
-    background: white url(/assets/new/banners/has.png) 0 0 no-repeat; }
+    background: transparent url(/assets/banners/has.png) 0 0 no-repeat; }
+  &.interactions {
+    background: transparent url(/assets/banners/interactions.png) 0 0 no-repeat; }
   &.loops {
     background: white url(/assets/new/banners/loops.png) 0 0 no-repeat; }
   &.smartgraphs {
-    background: white url(/assets/new/banners/smartgraphs.png) 0 0 no-repeat; }
+    background: transparent url(/assets/banners/smartgraphs.png) 0 0 no-repeat; }
   &.rites {
-    background: white url(/assets/new/banners/rites.png) 0 0 no-repeat; }
+    background: transparent url(/assets/banners/rites.png) 0 0 no-repeat; }
   &.sparks {
-    background: white url(/assets/new/banners/sparks.png) 0 0 no-repeat; }
+    background: transparent url(/assets/banners/sparks.png) 0 0 no-repeat; }
   &.visual {
     background: white url(/assets/new/banners/visual.png) 0 0 no-repeat; }
   a {
     background: transparent;
     display: block;
-    height: 172px;
+    height: 100px;
     width: 100%; } }
 
 /* HORIZONTAL NAVIGATION */
@@ -304,13 +305,29 @@ body#tinymce {
   display: inline;
   float: left;
   margin: 0 0 0 215px;
-  min-height: 350px;
+  min-height: 400px;
   padding: 0;
-  width: 645px; }
+  width: 730px;
+  div.right {
+  	margin: 0;
+  	padding: 10px 5px;
+  	}
+  .recent_activity_container div.right { background: #fff; }
+  .recent_activity_container div.right:nth-child(2n), 
+  .recent_activity_container div.right.even {
+  	background: rgb(251, 244, 219) !important;
+  	}}
 
 #primary.wide {
-  margin: 0 0 0 0;
-  width: 100%; }
+  margin: 0;
+	padding: 0;
+  width: 960px;
+  
+  #content
+  {
+    padding-right: 0;
+  }
+}
 
 /* login and sign up forms */
 
@@ -468,6 +485,12 @@ p.note {
 .item_selectable .container_element .action_menu, .item_selected .container_element .action_menu {
   border-bottom: none; }
 
+table.multiple_choice_item {
+  td {
+    padding-left: 1em;
+  }
+}
+
 #wrapper.run_html {
   background: white;
 }
@@ -582,25 +605,27 @@ li.item_selectable {
 
 #secondary {
   background: #fbf4db;
-  display: inline;
   float: left;
-  margin-top: -10px;
-  margin-left: -860px;
-  padding-top: 10px;
+  height: auto;
+  margin: 20px 0 0 -945px;
+  padding: 10px 0 30px;
   width: 200px;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	border-radius: 12px;
   h2 {
     color: #555555;
     font: bold 1.3em Arial, Helvetica, sans-serif !important;
     margin: 10px 0 10px 20px; }
   ul {
-    border-top: 1px solid #A1D3D0;
+    border-top: 1px dotted #ded1ac;
     list-style: none;
     margin: 0;
     padding: 0; }
   li {
-    border-bottom: 1px solid #A1D3D0;
+    border-bottom: 1px dotted #ded1ac;
     color: #ee864e;
-    font-size: 1.4em;
+    font-size: 1em;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -609,21 +634,23 @@ li.item_selectable {
       font-weight: normal;
       padding: 5px 20px; }
     a {
-      color: #8c878b;
-
+      color: #4f4f2f;
       display: block;
       margin: 0;
       padding: 5px 20px; }
+    a:link { background: transparent; }
+    a:visited { background: transparent; }
+    a:hover { background: #fee9aa; }
+    a:active { background: #fee9aa; }
     a.selected {
-      background: white;
-      color: #000000;
+      background: #fee9aa;
+      color: #000;
       font-weight: bold; } }
   ul.create {
     border-top: none; }
   .create_link,
   .manage_classes_link {
-    text-align: center;
-    margin: 10px 0 0 0px; } }
+    margin: 10px 0 0 20px; } }
 
 .user-info-box {
   background: white;
@@ -1091,23 +1118,25 @@ ul.quiet_list {
 
 /* FOOTER */
 #footer {
-  background: transparent url(/assets/new/bg-footer.png) center bottom no-repeat;
-  clear: both;
-  height: 235px;
-  min-height: 235px;
-  position: relative;
-  p {
-    color: #a0a0a0;
-    font: 0.9em georgia, times, serif;
-    margin-bottom: 0;
-    margin-left: 300px; }
+  background: transparent url(/assets/styles/bg-footer-gradient.png) repeat-x left bottom;
+	clear: both;
+  color: #3f3f3f;
+  height: 200px;
+	padding-top: 20px;
+	position: relative;
+	width: 100%;
+	a { border-bottom: dotted 1px #479492; }
   .footer-inner {
-    bottom: 17px;
-    display: block;
-    left: -40px;
-    margin: 0;
+    background: transparent url(/assets/styles/bg-footer.png) no-repeat center bottom;
+	  height: 200px;
+	  left: 50%;
+    margin: 0 0 0 -480px;
     position: absolute;
-    width: 800px; }
+    width: 960px;
+    z-index: 5;
+    p {
+      font: 0.9em arial, helvetica, sans-serif;
+    	padding: 152px 0 0 235px;}}
   #share-it {
     float: right;
     margin: -26px 123px 0 0;
@@ -1125,7 +1154,6 @@ ul.quiet_list {
   padding: 5px; }
 
 .button {
-  text-transform: capitalize;
   background: transparent;
   a, a:visited, a:active {
     font-weight: normal;
@@ -1440,3 +1468,125 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
   font-style: italic;
   text-align: center;
 }
+
+div.atm
+{
+ display:none; 
+}
+
+.no_help_message{
+  font-style: italic;
+  padding-top: 20px;
+  padding-left: 50px
+}
+
+.header-login-box{
+  float: right;
+	font-size: .9em;
+  height: 70px;
+  margin-top: -110px;
+  padding: 20px 0 20px 20px;
+	width: 215px;
+  
+  form{
+    margin: 0;
+  	padding: 0;
+    position: relative;
+    
+    table{
+      margin: 0;
+      position: relative;
+    	text-align: right;
+      
+      tr.first-row
+      {
+        td
+        {
+          padding-bottom: 6px;
+        }
+        td.login-box
+        {
+          text-align: right;
+          padding-bottom: 6px;
+          padding-left: 10px;
+          input#header_login{
+            height:15px;
+            width: 140px;
+          }
+        }
+      }
+      tr.second-row{
+        td.password-box{
+          text-align: right;
+          input#header_password{
+            height: 15px;
+            width: 140px;
+          }
+        }
+      }
+      tr.third-row{
+        
+        td{
+          text-align: right;
+          padding-top: 5px;
+          input#LoginSubmitButtonHeader{
+          position: relative;
+        }
+      }
+      }
+    }
+    
+    .login-links{
+      position: relative;
+      padding-top: 5px;
+    	text-align: right;
+      a#link_forgot_password{
+        position: relative;
+      }
+    }
+  }
+}
+
+.welcome-box{
+  float: right;
+	font-size: 1em;
+  height: 90px;
+  margin: -120px 20px 0 0;
+  padding: 20px 0 0;
+  position: relative;
+	text-align: right;
+	width: 215px;
+  table{
+    height: 90px;
+  	margin: 0;
+  	padding: 0;
+    tr{
+        td.logout-link{
+        padding-left: 20px;
+      }
+    }
+    tr{
+      td.my-preferences-link{
+          text-align: right;
+          font-size: 12px;
+      }
+    }
+  }
+}
+
+
+#action_menu_wrapper{
+  .action_menu_header_left{
+    width: 39% !important;
+  }
+  .action_menu_header_right{
+    form{
+      padding: 0px;
+      input[type="submit"]{
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+

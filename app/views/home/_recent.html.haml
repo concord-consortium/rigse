@@ -3,7 +3,7 @@
 - if clazz_offering.clazz.students.length > 0 && (clazz_offering.inprogress_students_count > 0 || clazz_offering.completed_students_count > 0)
   - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
   %div
-    .right
+    %div{:class => cycle('right', 'right even')}
       - clazz = clazz_offering.clazz
       - runnable = clazz_offering.runnable 
       %div
@@ -36,5 +36,3 @@
           %tr.legend_data
             %td.expand_collapse_activities{:id=>"DivHideShowDetail#{clazz_offering.id}", :class=>"DivHideShowDetail#{clazz_offering.id}",:style=>"display:none;", :colspan=>"2"}
               Loading...
-  %br
-  %br

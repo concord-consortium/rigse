@@ -10,7 +10,7 @@ class ActivitiesController < ApplicationController
 
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
-
+  include ControllerParamUtils
 
   protected
 
@@ -97,7 +97,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/1
   # GET /pages/1.xml
   def show
-    @teacher_mode = params[:teacher_mode] || @activity.teacher_only
+    @teacher_mode = boolean_param(:teacher_mode) || @activity.teacher_only
     respond_to do |format|
       format.html {
         if params['print']

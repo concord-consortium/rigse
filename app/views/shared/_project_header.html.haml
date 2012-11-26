@@ -1,28 +1,30 @@
-#userlinks
-  %p
-    Welcome
-    = "#{current_user.name}."
-  %ul
-    - unless current_user.anonymous?
-      %li= link_to 'Preferences', preferences_user_path(current_user)
-      %li.last= link_to 'Logout', logout_path
-    - else
-      %li= link_to 'Login', login_path
-      %li= link_to 'Sign Up', pick_signup_path
-    - if @original_user.has_role?('admin', 'manager')
-      %li.last= link_to 'Switch', switch_user_path(current_user)
-
-      = render :partial => 'shared/activity_trail'
-
 #lead.project-header
   %h1{:class => theme_name}
     %a{ :href => "/" }= "#{APP_CONFIG[:site_name]}"
-
+- if current_user.anonymous?
+  = render :partial => "shared/header_login_box"
+- else
+  .welcome-box
+    %table{ :width => "100%" }
+      %tbody
+        %tr
+          %td
+            %b
+              Welcome
+              = "#{current_user.name}"
+            %br
+            = link_to 'My Preferences', preferences_user_path(current_user)
+            - if @original_user != current_user
+              |
+              - switch_user_form_id = "switch_user_id_#{@original_user.id}"
+              = link_to 'Switch Back','javascript: void(0);',:onclick => "$('#{switch_user_form_id}').submit();"
+              = form_for @original_user, :url => switch_user_path(@original_user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
+                = hidden_field_tag 'user[id]', @original_user.id
+                = hidden_field_tag 'commit', 'Switch'
+            |
+            = link_to 'Log Out', logout_path           
 #nav_top
   %span.hidden.doNotPrint
     Navigation:
   %ul.menu_h
     = render :partial => 'shared/main_nav_trail'
-  %ul.menu_h_right
-    = render :partial => 'shared/admin_nav_trail'
-

@@ -33,7 +33,7 @@ suppress_warnings { REST_AUTH_SITE_KEY = 'sitekeyforrunningtests' }
 # Factory Generators
 #
 def generate_default_project_and_jnlps_with_factories
-  # if USING_JNLPS
+  # if APP_CONFIG[:use_jnlps]
   #   @versioned_jnlp = Factory.create(:maven_jnlp_versioned_jnlp)
   #   @versioned_jnlp_url = @versioned_jnlp.versioned_jnlp_url
   #   @maven_jnlp_family = @versioned_jnlp_url.maven_jnlp_family
@@ -41,7 +41,7 @@ def generate_default_project_and_jnlps_with_factories
   #   APP_CONFIG[:default_maven_jnlp][:version] = @maven_jnlp_family.snapshot_version
   #   @maven_jnlp_family.stub!(:newest_snapshot_version).and_return(@maven_jnlp_family.snapshot_version)
   # end
-  if USING_JNLPS
+  if APP_CONFIG[:use_jnlps]
     server, family, version = JnlpAdaptor.default_jnlp_info
     @maven_jnlp_server = Factory.next(:default_maven_jnlp_maven_jnlp_server)
     @maven_jnlp_family = @maven_jnlp_server.maven_jnlp_families.find_by_name(family)

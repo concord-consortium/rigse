@@ -3,7 +3,7 @@ class Portal::OfferingsController < ApplicationController
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
   
-  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
+  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter,:activity_report]
   before_filter :student_teacher_admin_or_config, :only => [:answers]
 
   def current_clazz
@@ -147,12 +147,40 @@ class Portal::OfferingsController < ApplicationController
     redirect_to :back
   end
 
+  def activity_report
+    @offering = Portal::Offering.find(params[:id])
+    unless params[:activity_id].nil?
+      activity = ::Activity.find(params[:activity_id].to_i)
+      unless activity.nil?
+        session[:activity_report_embeddable_filter] = activity.page_elements.map{|pe|pe.embeddable}
+        session[:activity_report_id] = activity.id
+      end
+    end
+    redirect_url = report_portal_offering_url(@offering)
+    respond_to do |format|
+      format.html { redirect_to redirect_url }
+      format.xml  { head :ok }
+    end
+  end
+
   def report
     @offering = Portal::Offering.find(params[:id])
-    
+    @activity_report_id = nil
+    @report_embeddable_filter = []
+    unless @offering.report_embeddable_filter.nil? || @offering.report_embeddable_filter.embeddables.nil?
+      @report_embeddable_filter = @offering.report_embeddable_filter.embeddables
+    end
+    activity_report_embeddable_filter = session[:activity_report_embeddable_filter]
+    unless activity_report_embeddable_filter.nil?
+      @offering.report_embeddable_filter.embeddables = activity_report_embeddable_filter
+      @offering.report_embeddable_filter.ignore = false
+      @activity_report_id = session[:activity_report_id]
+    end
     respond_to do |format|
       format.html { 
         reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
+        session[:activity_report_embeddable_filter] = nil
+
         @learners = reportUtil.learners
 
         @page_elements = reportUtil.page_elements
@@ -168,6 +196,7 @@ class Portal::OfferingsController < ApplicationController
         cookies[:activity_name] = @offering.runnable.url
         cookies[:class] = @offering.clazz.id
         cookies[:class_students] = "[{" + @learners.join("},{") + "}]" # formatted for JSON parsing
+        
         redirect_to(@offering.runnable.report_url, 'popup' => true)
        }
     end
@@ -208,7 +237,7 @@ class Portal::OfferingsController < ApplicationController
   def report_embeddable_filter
     @offering = Portal::Offering.find(params[:id])
     @report_embeddable_filter = @offering.report_embeddable_filter
-
+    @filtered = true
     if params[:commit] == "Show all"
       @report_embeddable_filter.ignore = true
     else
@@ -335,6 +364,8 @@ class Portal::OfferingsController < ApplicationController
           # create saveable
           create_saveable(embeddable, @offering, learner, value) if embeddable
         end
+        learner.report_learner.last_run = DateTime.now
+        learner.report_learner.update_fields
       end
       flash[:notice] = "Your answers have been saved."
       redirect_to :home

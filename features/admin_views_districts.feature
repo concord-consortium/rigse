@@ -7,24 +7,24 @@ Feature: Admin views districts
   Background:
     Given The default project and jnlp resources exist using factories
     And I login as an admin
-    And I go to my home page
 
   Scenario: admin see a list of districts
-    When follow "Districts"
+    When I am on the districts page
     Then I should see the default district
     And I should see "create District"
     
   Scenario: admin creates a new district
-    When follow "Districts"
-    When I follow "create District"    
+    When I am on the districts page
+    And I follow "create District"
     And I fill in "portal_district_name" with "Test District"
     And I select "WY" from "portal_district[state]"
     And press "Save"
+    And I follow "Admin"
     And I follow "Districts"
     Then I should see "Test District"
 
   Scenario: admin does not see the classes inside the district because doing that clobbers the server
     Given there is an active class named "sample class" with a district
-    When I follow "Districts"
+    When I am on the districts page
     Then I should not see "sample class"
     And I should not see "active classes"

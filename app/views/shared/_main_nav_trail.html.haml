@@ -5,3 +5,14 @@
   %li.trail=link_to('Authoring', authoring_path)
 - unless current_user.only_a_student?
   %li.trail= link_to 'Browse Instructional Materials' , search_path
+- if current_user.has_role?('admin', 'manager','researcher')
+  %li.trail= link_to 'Admin', admin_path
+- #A developer can load home page without initializing data in database
+- if current_project
+  - case current_project.help_type
+  - when 'external url'
+    %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
+  - when 'help custom html'
+    %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
+  - when 'no help'
+    %li.trail{:style=>"display:none"}=link_to'Help', 'javascript: void(0)', :id=>'help'

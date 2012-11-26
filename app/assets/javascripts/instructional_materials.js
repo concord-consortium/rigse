@@ -154,3 +154,24 @@ function setRecentActivityTableHeaders(iDefaultWidth,offering_id)
         oTitle.setStyle({'display':''});
     });
 }
+
+var g_reportLinkPopup = null;
+
+function openReportLinkPopup(descriptionText)
+{
+    g_reportLinkPopup = new UI.Window({ theme: "lightbox",
+        shadow: true,
+        width:  410,
+        height: 125});
+    var popupHtml = "<div id='windowcontent' style='padding:10px;padding-left:15px'>" +
+                    descriptionText +
+                    "</div>" +
+                    "<div class='msg_popup_ok_button'>" +
+                    "<a href=\"javascript:void(0)\" class=\"button\" onclick=\"g_reportLinkPopup.destroy();\">OK</a>" +
+                    "</div>";
+    g_reportLinkPopup.setContent(popupHtml).show(true).center();
+    g_reportLinkPopup.setHeader("Message");
+    g_reportLinkPopup.activate();
+    return;
+}
+

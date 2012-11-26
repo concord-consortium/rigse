@@ -17,6 +17,8 @@ module NavigationHelpers
       "/users/#{User.find_by_login(@cuke_current_username).id}/preferences"
     when /user list/
       '/users'
+    when /the districts page/
+      portal_districts_path
     when /the pick signup page/
       '/pick_signup'
     when /the student signup page/
@@ -110,6 +112,14 @@ module NavigationHelpers
       investigation = Investigation.find_by_name($1)
       offering = Portal::Offering.find_by_runnable_id investigation.id
       "/portal/offerings/#{offering.id}/report"
+    when /the Project Help Page/
+      "/help"
+    when /the preview investigation page for the investigation "(.*)"/
+      investigation_id = Investigation.find_by_name($1).id
+      "/browse/investigations/#{investigation_id}"
+    when /the preview activity page for the activity "(.*)"/
+      activity_id = Activity.find_by_name($1).id
+      "/browse/activities/#{activity_id}"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

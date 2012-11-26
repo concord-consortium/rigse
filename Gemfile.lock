@@ -17,10 +17,16 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/haml.git
-  revision: 4987b10743d59f3e50d444f10708394ce8b21aac
+  revision: e428066e86e19f71bf9230e1fdc1a3ecf7c61447
   branch: xml-mime-type-and-ie8-keycode-fix
   specs:
     haml (3.1.4)
+
+GIT
+  remote: git://github.com/concord-consortium/in_place_editing.git
+  revision: 2d6b856ca0a3d9eccb9c85bb48725537870ed32c
+  specs:
+    in_place_editing (1.2.0)
 
 GIT
   remote: git://github.com/concord-consortium/rush
@@ -182,7 +188,6 @@ GEM
     hirb (0.6.2)
     httpclient (2.2.5)
     i18n (0.6.1)
-    in_place_editing (1.2.0)
     interactive_editor (0.0.10)
       spoon (>= 0.0.1)
     jnlp (0.7.3)
@@ -384,7 +389,7 @@ DEPENDENCIES
   highline
   hirb
   httpclient (~> 2.2)
-  in_place_editing (~> 1.2.0)
+  in_place_editing!
   interactive_editor
   jnlp (~> 0.7.3)
   jruby-openssl (~> 0.7.4)

@@ -52,17 +52,16 @@ module ApplicationHelper
     commit = git_repo_info rescue {:branch => "<b>Error loading git info!</b>"}
     jnlp = maven_jnlp_info rescue {:name => "<b>Error loading JNLP info!</b>"}
     info = <<-HEREDOC
-<ul class="tiny menu_h">
-  <li>#{commit[:branch]}</li>
-  <li><a href="#{commit[:href]}">#{commit[:short_id]}</a></li>
-  <li>#{commit[:author]}</li>
-  <li>#{commit[:date]}</li>
-  <li>#{commit[:short_message]}</li>
-  <li>|</li>
-  <li>#{jnlp[:name]}</li>
-  <li><a href="#{jnlp[:href]}">#{jnlp[:version]}</a></li>
-  <li>#{jnlp[:snapshot]}</li>
-</ul>
+<span class="tiny menu_h">
+  #{commit[:branch]} 
+  | <a href="#{commit[:href]}">#{commit[:short_id]}</a> 
+  | #{commit[:author]} 
+  | #{commit[:date]} 
+  | #{commit[:short_message]} 
+  | #{jnlp[:name]} 
+  | <a href="#{jnlp[:href]}">#{jnlp[:version]}</a> 
+  | #{jnlp[:snapshot]}
+</span>
     HEREDOC
     info.html_safe
   end
@@ -1235,7 +1234,7 @@ module ApplicationHelper
     opts.merge!(defaults){|k,o,n| o}
 
     capture_haml do
-      haml_concat javascript_tag "var myNewFlow = new ContentFlow('#{name}', { reflectionHeight: 0, circularFlow: false, startItem: 'first' } );"
+      haml_concat javascript_tag "var myNewFlow = new ContentFlow('#{name}', { reflectionHeight: 0, circularFlow: false,  scaleFactorPortrait: 'max', startItem: 'first', maxItemHeight: '300', visibleItems: 1} );"
       haml_tag :div, :class => 'ContentFlow', :id => name do
         if opts[:load_indicator]
           haml_tag :div, :class => 'loadIndicator' do

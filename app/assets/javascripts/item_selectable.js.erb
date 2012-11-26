@@ -83,7 +83,7 @@ var item_deselect = function() {
 var update_links = function() {
   if(rites_document && $('copy_link')) {
     if(rites_document.selected_type !== null) {
-      var template = new Template('<a href="#" class="rollover"><img src="/images/paste-in.png"></a><a href="#">copy #{name}</a>');
+      var template = new Template('<a href="#" class="rollover"><img src="<%= asset_path('paste-in.png') %>"></a><a href="#">copy #{name}</a>');
       // var template = new Template('<a>copy #{type}:#{id}</a>');
       $('copy_link').addClassName('copy_paste_enabled');
       $('copy_link').removeClassName('copy_paste_disabled');

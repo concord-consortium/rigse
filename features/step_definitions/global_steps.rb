@@ -16,10 +16,10 @@ end
 
 def login_with_ui_as(username, password)
   visit "/login"
-  within("#project-signin") do
+  within("#header-project-signin") do
     fill_in("login", :with => username)
     fill_in("password", :with => password)
-    click_button("Login")
+    click_button("GO")
     @cuke_current_username = username
   end
 end
@@ -59,6 +59,7 @@ Given /the following users[(?exist):\s]*$/i do |users_table|
 end
 
 Given /^(?:|I )login as an admin$/ do
+  step 'I log out'
   admin = Factory.next(:admin_user)
   login_as(admin.login)
 end
@@ -67,15 +68,18 @@ end
 # the quote in the pattern is to prevent this from matching other rules
 # and hopefully there is no need for quotes in a usernames
 Given /^I am logged in with the username ([^"]*)$/ do |username|
+  step 'I log out'
   login_as(username)
 end
 
 Given /^(?:|I )login with username[\s=:,]*(\S+)$/ do |username|
+  step 'I log out'
   login_as(username)
   visit "/"
 end
 
 Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
+  step 'I log out'
   login_with_ui_as(username, password)
 end
 
@@ -184,5 +188,27 @@ When /^the project settings (enables|disables) use of Grade Span Expectation$/ d
     APP_CONFIG[:use_gse] = true
   else
     APP_CONFIG[:use_gse] = false
+  end
+end
+
+When /^the newly opened window (should|should not) have content "(.*)"$/ do |present, content|
+  step 'I wait 2 seconds'
+  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+    case present
+      when "should"
+      page.should have_content(content)
+      when "should not"
+      page.should have_no_content(content)
+    end
+  end
+end
+
+When /^Help link should not appear in the top navigation bar$/ do
+  find('#help').should_not be_visible
+end
+
+When /^(?:|I )close the newly opened window$/ do
+  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+    page.execute_script "window.close();"
   end
 end
