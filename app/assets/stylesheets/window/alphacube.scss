@@ -1,17 +1,17 @@
 .alphacube .nw {
-	background:transparent url(alphacube/corners_top.gif) no-repeat scroll 0 -25px;
+	background:transparent image-url("window/alphacube/corners_top.gif") no-repeat scroll 0 -25px;
 	height:25px;
 	padding-left:10px;
 }
 
 .alphacube .ne {
-	background:transparent url(alphacube/corners_top.gif) no-repeat scroll right 0;
+	background:transparent image-url("window/alphacube/corners_top.gif") no-repeat scroll right 0;
 	height:25px;
 	padding-right:10px;
 }
 
 .alphacube .n {
-	background:transparent url(alphacube/corners_top.gif) repeat-x scroll 0 -50px;
+	background:transparent image-url("window/alphacube/corners_top.gif") repeat-x scroll 0 -50px;
 	color:#123456;
 	font:bold 14px/25px Tahoma, Arial, sans-serif;
 	height:25px;
@@ -40,28 +40,28 @@
 }
 
 .alphacube .sw {
-	background:transparent url(alphacube/corners_bottom.gif) no-repeat scroll 0 -12px;
+	background:transparent image-url("window/alphacube/corners_bottom.gif") no-repeat scroll 0 -12px;
 	font-size:2px;
 	height:12px;
 	padding-left:6px;
 }
 
 .alphacube .se {
-	background:transparent url(alphacube/corners_bottom.gif) no-repeat scroll right 0;
+	background:transparent image-url("window/alphacube/corners_bottom.gif") no-repeat scroll right 0;
 	font-size:2px;
 	height:12px;
 	padding-right:6px;
 }
 
 .alphacube .s {
-	background:transparent url(alphacube/corners_bottom.gif) repeat-x scroll 0 -24px;
+	background:transparent image-url("window/alphacube/corners_bottom.gif") repeat-x scroll 0 -24px;
 	font-size:11px;
 	height:12px;  
 	overflow:hidden;
 } 
 
 .alphacube .se_resize_handle {
-	background:transparent url(alphacube/sizer.gif) no-repeat scroll right 0;
+	background:transparent image-url("window/alphacube/sizer.gif") no-repeat scroll right 0;
 	font-size:2px;
 	height:12px;
 	padding-right:12px;
@@ -80,7 +80,7 @@
 }                
 
 .alphacube .buttons a.close {
-	background:transparent url(alphacube/buttons.gif) no-repeat 0 0;
+	background:transparent image-url("window/alphacube/buttons.gif") no-repeat 0 0;
 	display:block;
 	height:18px;
 	float:left;
@@ -90,11 +90,11 @@
 }
 
 .alphacube .buttons a:hover.close {
-	background:transparent url(alphacube/buttons.gif) no-repeat 0 -18px;
+	background:transparent image-url("window/alphacube/buttons.gif") no-repeat 0 -18px;
 }
 
 .alphacube .buttons a.maximize {
-	background:transparent url(alphacube/buttons.gif) no-repeat 0 -36px;
+	background:transparent image-url("window/alphacube/buttons.gif") no-repeat 0 -36px;
 	display:block;
 	height:18px;
 	float:left;
@@ -103,11 +103,11 @@
 	padding-top:1px; /* padding-top = buttons order, it will be reset to 0, do not use padding, use margin*/       
 }
 .alphacube .buttons a:hover.maximize {
-	background:transparent url(alphacube/buttons.gif) no-repeat 0 -54px;
+	background:transparent image-url("window/alphacube/buttons.gif") no-repeat 0 -54px;
 }
 
 .alphacube .buttons a.minimize {
-	background:transparent url(alphacube/buttons.gif) no-repeat 0 -72px;
+	background:transparent image-url("window/alphacube/buttons.gif") no-repeat 0 -72px;
 	display:block;
 	height:18px;
 	float:left;
@@ -117,11 +117,11 @@
 }                            
 
 .alphacube .buttons a:hover.minimize {
-	background:transparent url(alphacube/buttons.gif) no-repeat 0 -90px;
+	background:transparent image-url("window/alphacube/buttons.gif") no-repeat 0 -90px;
 }      
 
 .alphacube .buttons a.minimize.disabled, .alphacube .buttons.over a.minimize.disabled  {
-	background:transparent url(alphacube/buttons.gif) no-repeat 0 -108px !important; 
+	background:transparent image-url("window/alphacube/buttons.gif") no-repeat 0 -108px !important; 
 }
 
 

@@ -1,25 +1,25 @@
 .leopard .nw {
-	background:transparent url(leopard/top_unactive.gif) no-repeat scroll 0px 0px;
+	background:transparent image-url("window/leopard/top_unactive.gif") no-repeat scroll 0px 0px;
 	height:22px;
 	padding-left:10px;
 }      
 
 .leopard_focused .nw {
-	background:transparent url(leopard/top.gif) no-repeat scroll 0px 0px !important;
+	background:transparent image-url("window/leopard/top.gif") no-repeat scroll 0px 0px !important;
 }       
 
 .leopard .ne {
-	background:transparent url(leopard/top_unactive.gif) no-repeat scroll right -44px;
+	background:transparent image-url("window/leopard/top_unactive.gif") no-repeat scroll right -44px;
 	height:22px;
 	padding-right:10px;
 }
 
 .leopard_focused .ne {
-	background:transparent url(leopard/top.gif) no-repeat scroll right -44px !important;
+	background:transparent image-url("window/leopard/top.gif") no-repeat scroll right -44px !important;
 }
 
 .leopard .n {
-	background:transparent url(leopard/top_unactive.gif) repeat-x scroll right -22px;
+	background:transparent image-url("window/leopard/top_unactive.gif") repeat-x scroll right -22px;
 	color:#17385B;
 	font:normal 14px/26px Arial, sans-serif;
 	height:22px;
@@ -33,7 +33,7 @@
 }
 
 .leopard_focused .n {
-	background:transparent url(leopard/top.gif) repeat-x scroll right -22px !important;
+	background:transparent image-url("window/leopard/top.gif") repeat-x scroll right -22px !important;
 }
 
 .leopard .content {
@@ -54,40 +54,40 @@
 }
 
 .leopard .sw {
-	background:transparent url(leopard/bottom_unactive.gif) no-repeat scroll 0 0px;
+	background:transparent image-url("window/leopard/bottom_unactive.gif") no-repeat scroll 0 0px;
 	font-size:2px;
 	height:22px;
 	padding-left:25px;
 }
 
 .leopard_focused .sw {
-	background:transparent url(leopard/bottom.gif) no-repeat scroll 0 0px !important;
+	background:transparent image-url("window/leopard/bottom.gif") no-repeat scroll 0 0px !important;
 }
 
 .leopard .se {
-	background:transparent url(leopard/bottom_unactive.gif) no-repeat scroll right -44px;
+	background:transparent image-url("window/leopard/bottom_unactive.gif") no-repeat scroll right -44px;
 	font-size:2px;
 	height:22px;
 	padding-right:25px;
 }
 
 .leopard_focused .se {
-	background:transparent url(leopard/bottom.gif) no-repeat scroll right -44px !important;
+	background:transparent image-url("window/leopard/bottom.gif") no-repeat scroll right -44px !important;
 }
 
 .leopard .se_resize_handle {
-	background:transparent url(leopard/bottom_unactive.gif) no-repeat scroll right -66px;
+	background:transparent image-url("window/leopard/bottom_unactive.gif") no-repeat scroll right -66px;
 	font-size:2px;
 	height:22px;
 	padding-right:25px;
 }
       
 .leopard_focused .se_resize_handle {
-	background:transparent url(leopard/bottom.gif) no-repeat scroll right -66px !important;
+	background:transparent image-url("window/leopard/bottom.gif") no-repeat scroll right -66px !important;
 }
 
 .leopard .s {
-	background:transparent url(leopard/bottom_unactive.gif) repeat-x scroll 0 -22px;
+	background:transparent image-url("window/leopard/bottom_unactive.gif") repeat-x scroll 0 -22px;
 	font-size:12px;
 	line-height: 22px;
 	height:22px;
@@ -100,7 +100,7 @@
 }          
 
 .leopard_focused .s {
-	background:transparent url(leopard/bottom.gif) repeat-x scroll 0 -22px !important;
+	background:transparent image-url("window/leopard/bottom.gif") repeat-x scroll 0 -22px !important;
 }
 
 .leopard .buttons {
@@ -112,7 +112,7 @@
 
 .leopard .buttons a.close {
   float:left;
-	background:transparent url(leopard/button_unactive.gif) no-repeat 0 0;
+	background:transparent image-url("window/leopard/button_unactive.gif") no-repeat 0 0;
 	height:15px;
 	width:14px;
 	margin: 2px 7px 0 0px;  
@@ -121,16 +121,16 @@
 }
   
 .leopard_focused .buttons a.close {
-	background:transparent url(leopard/buttons.gif) no-repeat 0 0 !important;    
+	background:transparent image-url("window/leopard/buttons.gif") no-repeat 0 0 !important;    
 }
 
 .leopard .buttons.over a.close {
-	background:transparent url(leopard/buttons_over.gif) no-repeat 0 0px !important; 
+	background:transparent image-url("window/leopard/buttons_over.gif") no-repeat 0 0px !important; 
 }
 
 .leopard .buttons a.maximize {
   float:left;
-	background:transparent url(leopard/button_unactive.gif) no-repeat 0 0;
+	background:transparent image-url("window/leopard/button_unactive.gif") no-repeat 0 0;
 	height:15px;
 	width:14px;
 	margin: 2px 7px 0 0;
@@ -139,16 +139,16 @@
 }
   
 .leopard_focused .buttons a.maximize {
-	background:transparent url(leopard/buttons.gif) no-repeat 0 -30px !important;
+	background:transparent image-url("window/leopard/buttons.gif") no-repeat 0 -30px !important;
 }
 
 .leopard .buttons.over a.maximize {
-	background:transparent url(leopard/buttons_over.gif) no-repeat 0 -30px !important;  
+	background:transparent image-url("window/leopard/buttons_over.gif") no-repeat 0 -30px !important;  
 }
 
 .leopard .buttons a.minimize {
   float:left;
-	background:transparent url(leopard/button_unactive.gif) no-repeat 0 0;
+	background:transparent image-url("window/leopard/button_unactive.gif") no-repeat 0 0;
 	height:15px;
 	width:14px;
 	margin: 2px 7px 0 0;
@@ -157,15 +157,15 @@
 }  
 
 .leopard_focused .buttons a.minimize {
-	background:transparent url(leopard/buttons.gif) no-repeat 0 -15px !important;
+	background:transparent image-url("window/leopard/buttons.gif") no-repeat 0 -15px !important;
 }
 
 .leopard .buttons.over a.minimize {
-	background:transparent url(leopard/buttons_over.gif) no-repeat 0 -15px !important;
+	background:transparent image-url("window/leopard/buttons_over.gif") no-repeat 0 -15px !important;
 }
 
 .leopard .buttons a.minimize.disabled, .leopard .buttons.over a.minimize_disabled  {
-	background:transparent url(leopard/button_unactive.gif) no-repeat 0 0  !important; 
+	background:transparent image-url("window/leopard/button_unactive.gif") no-repeat 0 0  !important; 
 }
 
 .leopard_overlay {

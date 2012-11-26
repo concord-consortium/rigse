@@ -96,7 +96,7 @@ table {
 body {
   background: {
     color: #fee9aa;
-    image: url(/assets/new/bg-body.png);
+    image: image-url("new/bg-body.png");
     repeat: repeat-x; };
   color: #3f3f3f; }
 
@@ -111,7 +111,7 @@ body#tinymce {
   min-width: 860px; }
 
 #wrapper {
-  background: #f3f2ed url(/assets/new/bg-content.gif) 0 0 repeat-y;
+  background: #f3f2ed image-url("new/bg-content.gif") 0 0 repeat-y;
   height: auto;
   margin: 0 auto;
   min-height: 600px;
@@ -125,7 +125,7 @@ body#tinymce {
   margin: 0; }
 
 #userlinks {
-  background: url(/assets/new/bg-userlinks.png) repeat-y right top;
+  background: image-url("new/bg-userlinks.png") repeat-y right top;
   max-height: 40px;
   min-height: 24px;
   padding-left: 100px;
@@ -196,21 +196,21 @@ body#tinymce {
   margin: 0;
   text-indent: -999em;
   &.itsisu {
-    background: white url(/assets/new/banners/itsisu.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/itsisu.png") 0 0 no-repeat; }
   &.geniverse {
-    background: white url(/assets/new/banners/geniverse.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/geniverse.png") 0 0 no-repeat; }
   &.has {
-    background: white url(/assets/new/banners/has.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/has.png") 0 0 no-repeat; }
   &.loops {
-    background: white url(/assets/new/banners/loops.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/loops.png") 0 0 no-repeat; }
   &.smartgraphs {
-    background: white url(/assets/new/banners/smartgraphs.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/smartgraphs.png") 0 0 no-repeat; }
   &.rites {
-    background: white url(/assets/new/banners/rites.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/rites.png") 0 0 no-repeat; }
   &.sparks {
-    background: white url(/assets/new/banners/sparks.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/sparks.png") 0 0 no-repeat; }
   &.visual {
-    background: white url(/assets/new/banners/visual.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/visual.png") 0 0 no-repeat; }
   a {
     background: transparent;
     display: block;
@@ -271,7 +271,7 @@ body#tinymce {
   margin-right: 21px; }
 
 .page-utility a {
-  background: transparent url(/assets/new/bg-sprite-btns.png) 0 0 no-repeat;
+  background: transparent image-url("new/bg-sprite-btns.png") 0 0 no-repeat;
   display: block;
   height: 16px;
   overflow: hidden;
@@ -346,7 +346,7 @@ body#tinymce {
   ul.graphic-input {
     margin-bottom: 6px; }
   h2 {
-    background: transparent url(/assets/new/headers-sprite.png) 0 -75px no-repeat;
+    background: transparent image-url("new/headers-sprite.png") 0 -75px no-repeat;
     overflow: hidden;
     height: 13px;
     text-indent: -9999px;
@@ -358,7 +358,7 @@ body#tinymce {
     padding: 0; }
   input[type='submit'], button, ul.menu li a#printable-view {
     &.button {
-      background: transparent url(/assets/new/bg-sprite-btns.png) -130px -69px no-repeat;
+      background: transparent image-url("new/bg-sprite-btns.png") -130px -69px no-repeat;
       float: left;
       height: 26px;
       margin-left: -6px;
@@ -379,7 +379,7 @@ body#tinymce {
     border: none;
     font-weight: bold;
     ul.graphic-input li input {
-      background: transparent url(/assets/new/bg-sprite-btns.png) -32px -39px no-repeat !important;
+      background: transparent image-url("new/bg-sprite-btns.png") -32px -39px no-repeat !important;
       border: none !important;
       color: #888888;
       font: 11px arial, helvetica, sans-serif;
@@ -703,7 +703,7 @@ table {
       color: #555555;
       padding: 5px; } }
   &.tablesorter th, &.yui-dt-table th, &.roster-table th {
-    background: #a0d1d0 url(/assets/new/bg-thead.png) left bottom repeat-x !important;
+    background: #a0d1d0 image-url("new/bg-thead.png") left bottom repeat-x !important;
     border-bottom: 1px solid #b9dedd !important;
     color: #222222;
     font-size: 1em;
@@ -877,7 +877,7 @@ p select {
   margin: 0 2px; }
 
 a.more, ul.more a {
-  background: transparent url(/assets/new/icon-arrow-more.gif) right center no-repeat;
+  background: transparent image-url("new/icon-arrow-more.gif") right center no-repeat;
   padding-right: 10px; }
 
 h1 {
@@ -940,7 +940,7 @@ h2, h3 {
   display: block; }
 
 .graphic-input li {
-  background: url(/assets/new/bg-sprite-btns.png) right -39px no-repeat;
+  background: image-url("new/bg-sprite-btns.png") right -39px no-repeat;
   position: relative; }
 
 .graphic-input li.remember {
@@ -956,12 +956,12 @@ h2, h3 {
 
 #page {
   #header li.graphic-input {
-    background: url(/assets/new/bg-sprite-btns.png) right -39px no-repeat;
+    background: image-url("new/bg-sprite-btns.png") right -39px no-repeat;
     display: block;
     padding-right: 8px;
     width: 153px; }
   #wrapper #secondary .graphic-input {
-    background: url(/assets/new/bg-sprite-btns.png) right -39px no-repeat;
+    background: image-url("new/bg-sprite-btns.png") right -39px no-repeat;
     margin-left: 3px;
     width: 166px; } }
 
@@ -1097,7 +1097,7 @@ ul.quiet_list {
 
 /* FOOTER */
 #footer {
-  background: transparent url(/assets/new/bg-footer.png) center bottom no-repeat;
+  background: transparent image-url("new/bg-footer.png") center bottom no-repeat;
   clear: both;
   height: 235px;
   min-height: 235px;

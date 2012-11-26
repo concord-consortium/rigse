@@ -117,18 +117,18 @@ a.rollover:hover {
       margin-top: 3px; }
     li.tab {
       float: left;
-      background: url("tabs/left.gif") no-repeat left top;
+      background: image-url("tabs/left.gif") no-repeat left top;
       padding: 0px 8px 0px 8px;
       text-align: center; }
     li.active {
-      background: url("tabs/left_on.gif") no-repeat left top !important; }
+      background: image-url("tabs/left_on.gif") no-repeat left top !important; }
     a {
       float: none;
       display: block;
-      background: url("tabs/right.gif") no-repeat right top;
+      background: image-url("tabs/right.gif") no-repeat right top;
       padding: 0px 8px 0px 2px; }
     a.active {
-      background: url("tabs/right_on.gif") no-repeat right top !important; }
+      background: image-url("tabs/right_on.gif") no-repeat right top !important; }
     a:hover {
       text-decoration: underline !important;
       color: $itsi_brown !important; } } }
