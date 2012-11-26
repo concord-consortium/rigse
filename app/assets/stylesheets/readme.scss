@@ -1,7 +1,7 @@
 body {
   padding: 5px 20px 5px 20px;
   background: {
-    image: url(/assets/rites-bg.jpg);
+    image: image-url("rites-bg.jpg");
     repeat: repeat; };
   margin: 10px {
     bottom: 0px; }; }

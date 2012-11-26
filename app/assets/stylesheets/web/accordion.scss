@@ -37,19 +37,19 @@
   background-position: right top; }
 
 .accordion_toggle_closed {
-  background-image: url(/assets/plus-minus-sprite.png);
+  background-image: image-url("plus-minus-sprite.png");
   height: 12px;
   padding-right: 5px;
   &:hover {
-    background-image: url(/assets/plus-minus-sprite.png); } }
+    background-image: image-url("plus-minus-sprite.png"); } }
 
 .accordion_toggle_open {
-  background-image: url(/assets/plus-minus-sprite.png);
+  background-image: image-url("plus-minus-sprite.png");
   background-position: right -11px;
   height: 8px;
   padding-right: 5px;
   &:hover {
-    background-image: url(/assets/plus-minus-sprite.png);
+    background-image: image-url("plus-minus-sprite.png");
     background-position: right -11px; } }
 
 .accordion_count {
@@ -105,11 +105,11 @@
       height: auto;
       cursor: move;
       background-color: $almost_white;
-      background-image: url(/assets/red_dot.png);
+      background-image: image-url("red_dot.png");
       background-position: 98% 50%;
       background-repeat: no-repeat;
       &:hover {
-        background-image: url(/assets/red_dot.png);
+        background-image: image-url("red_dot.png");
         background-position: 98% 50%;
         background-repeat: no-repeat;
         color: $very_dark !important;
