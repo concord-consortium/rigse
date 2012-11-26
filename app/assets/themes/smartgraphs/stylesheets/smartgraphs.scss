@@ -23,7 +23,7 @@ body {
   margin: 10px {
     bottom: 0px; };
   background-position: right top;
-  background-image: url("/assets/cc_corner_logo_white.png");
+  background-image: image-url("cc_corner_logo_white.png");
   background-repeat: no-repeat; }
 
 h1,h2,h3,h4,h5 {
@@ -94,7 +94,7 @@ pre {
   padding: 0px;
   margin: 0px;
   height: 173px;
-  background: url(../../../images/banner.png) no-repeat;
+  background: image-url("banners/smartgraphs.png") no-repeat;
   position: relative;
   color: white;
   a {
@@ -116,7 +116,7 @@ pre {
       clear: none; } }
   .right_content {
     @include column(24, true);
-    background: transparent url(../../../images/bg-right-content.png) repeat-y right top;
+    background: transparent image-url("bg-right-content.png") repeat-y right top;
     bottom: -5px;
     padding: 7px;
     position: absolute;
@@ -199,7 +199,7 @@ pre {
 #footer {
   @include column(24, true);
   @include bottom_nav_colors;
-  background: url(../../../images/cc-footer.png) no-repeat left bottom;
+  background: image-url("cc-footer.png") no-repeat left bottom;
   height: 200px;
   padding: 0.5em 0;
   position: relative;

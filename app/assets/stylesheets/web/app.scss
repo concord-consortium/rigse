@@ -100,7 +100,7 @@ table {
 body {
   background: {
     color: #fff;
-    image: url(/assets/styles/bg-body.png);
+    image: image-url("styles/bg-body.png");
     repeat: repeat-x; };
   color: #3f3f3f; }
 
@@ -130,7 +130,7 @@ body#tinymce {
   margin: 0; }
 
 #userlinks {
-  background: url(/assets/new/bg-userlinks.png) repeat-y right top;
+  background: image-url("new/bg-userlinks.png") repeat-y right top;
   max-height: 40px;
   min-height: 24px;
   padding-left: 100px;
@@ -189,9 +189,9 @@ body#tinymce {
   margin: 0;
   text-indent: -999em;
   &.itsisu {
-    background: transparent url(/assets/banners/itsisu.png) 0 0 no-repeat }
+    background: transparent image-url("banners/itsisu.png") 0 0 no-repeat }
   &.geniverse {
-    background: white url(/assets/new/banners/geniverse.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/geniverse.png") 0 0 no-repeat; }
   &.genigames {
     a {
       padding-top: 25px;
@@ -199,19 +199,19 @@ body#tinymce {
     text-indent: 0px;
     background: white image-url("new/banners/empty.png") top right no-repeat; }
   &.has {
-    background: transparent url(/assets/banners/has.png) 0 0 no-repeat; }
+    background: transparent image-url("banners/has.png") 0 0 no-repeat; }
   &.interactions {
-    background: transparent url(/assets/banners/interactions.png) 0 0 no-repeat; }
+    background: transparent image-url("banners/interactions.png") 0 0 no-repeat; }
   &.loops {
-    background: white url(/assets/new/banners/loops.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/loops.png") 0 0 no-repeat; }
   &.smartgraphs {
-    background: transparent url(/assets/banners/smartgraphs.png) 0 0 no-repeat; }
+    background: transparent image-url("banners/smartgraphs.png") 0 0 no-repeat; }
   &.rites {
-    background: transparent url(/assets/banners/rites.png) 0 0 no-repeat; }
+    background: transparent image-url("banners/rites.png") 0 0 no-repeat; }
   &.sparks {
-    background: transparent url(/assets/banners/sparks.png) 0 0 no-repeat; }
+    background: transparent image-url("banners/sparks.png") 0 0 no-repeat; }
   &.visual {
-    background: white url(/assets/new/banners/visual.png) 0 0 no-repeat; }
+    background: white image-url("new/banners/visual.png") 0 0 no-repeat; }
   a {
     background: transparent;
     display: block;
@@ -272,7 +272,7 @@ body#tinymce {
   margin-right: 21px; }
 
 .page-utility a {
-  background: transparent url(/assets/new/bg-sprite-btns.png) 0 0 no-repeat;
+  background: transparent image-url("new/bg-sprite-btns.png") 0 0 no-repeat;
   display: block;
   height: 16px;
   overflow: hidden;
@@ -363,7 +363,7 @@ body#tinymce {
   ul.graphic-input {
     margin-bottom: 6px; }
   h2 {
-    background: transparent url(/assets/new/headers-sprite.png) 0 -75px no-repeat;
+    background: transparent image-url("new/headers-sprite.png") 0 -75px no-repeat;
     overflow: hidden;
     height: 13px;
     text-indent: -9999px;
@@ -375,7 +375,7 @@ body#tinymce {
     padding: 0; }
   input[type='submit'], button, ul.menu li a#printable-view {
     &.button {
-      background: transparent url(/assets/new/bg-sprite-btns.png) -130px -69px no-repeat;
+      background: transparent image-url("new/bg-sprite-btns.png") -130px -69px no-repeat;
       float: left;
       height: 26px;
       margin-left: -6px;
@@ -396,7 +396,7 @@ body#tinymce {
     border: none;
     font-weight: bold;
     ul.graphic-input li input {
-      background: transparent url(/assets/new/bg-sprite-btns.png) -32px -39px no-repeat !important;
+      background: transparent image-url("new/bg-sprite-btns.png") -32px -39px no-repeat !important;
       border: none !important;
       color: #888888;
       font: 11px arial, helvetica, sans-serif;
@@ -730,7 +730,7 @@ table {
       color: #555555;
       padding: 5px; } }
   &.tablesorter th, &.yui-dt-table th, &.roster-table th {
-    background: #a0d1d0 url(/assets/new/bg-thead.png) left bottom repeat-x !important;
+    background: #a0d1d0 image-url("new/bg-thead.png") left bottom repeat-x !important;
     border-bottom: 1px solid #b9dedd !important;
     color: #222222;
     font-size: 1em;
@@ -904,7 +904,7 @@ p select {
   margin: 0 2px; }
 
 a.more, ul.more a {
-  background: transparent url(/assets/new/icon-arrow-more.gif) right center no-repeat;
+  background: transparent image-url("new/icon-arrow-more.gif") right center no-repeat;
   padding-right: 10px; }
 
 h1 {
@@ -967,7 +967,7 @@ h2, h3 {
   display: block; }
 
 .graphic-input li {
-  background: url(/assets/new/bg-sprite-btns.png) right -39px no-repeat;
+  background: image-url("new/bg-sprite-btns.png") right -39px no-repeat;
   position: relative; }
 
 .graphic-input li.remember {
@@ -983,12 +983,12 @@ h2, h3 {
 
 #page {
   #header li.graphic-input {
-    background: url(/assets/new/bg-sprite-btns.png) right -39px no-repeat;
+    background: image-url("new/bg-sprite-btns.png") right -39px no-repeat;
     display: block;
     padding-right: 8px;
     width: 153px; }
   #wrapper #secondary .graphic-input {
-    background: url(/assets/new/bg-sprite-btns.png) right -39px no-repeat;
+    background: image-url("new/bg-sprite-btns.png") right -39px no-repeat;
     margin-left: 3px;
     width: 166px; } }
 
@@ -1124,7 +1124,7 @@ ul.quiet_list {
 
 /* FOOTER */
 #footer {
-  background: transparent url(/assets/styles/bg-footer-gradient.png) repeat-x left bottom;
+  background: transparent image-url("styles/bg-footer-gradient.png") repeat-x left bottom;
 	clear: both;
   color: #3f3f3f;
   height: 200px;
@@ -1133,7 +1133,7 @@ ul.quiet_list {
 	width: 100%;
 	a { border-bottom: dotted 1px #479492; }
   .footer-inner {
-    background: transparent url(/assets/styles/bg-footer.png) no-repeat center bottom;
+    background: transparent image-url("styles/bg-footer.png") no-repeat center bottom;
 	  height: 200px;
 	  left: 50%;
     margin: 0 0 0 -480px;

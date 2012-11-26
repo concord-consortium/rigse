@@ -21,7 +21,7 @@
 
     /* ----- styling of items ----- */
         .ContentFlow .flow .item .caption {
-            background: url(contentflow/1x1_0.5_white.png);
+            background: image-url("contentflow/1x1_0.5_white.png");
         }
         * html .ContentFlow .flow .item .caption {
             background-image: none;
@@ -36,11 +36,11 @@
             }
     /* ----- scrollbar ----- */
     .ContentFlow .scrollbar {
-        background: url(contentflow/scrollbar_black.png) left center repeat-x;
+        background: image-url("contentflow/scrollbar_black.png") left center repeat-x;
     }
 
         .ContentFlow .scrollbar .slider {
-            background: url(contentflow/slider_black.png) center center no-repeat;
+            background: image-url("contentflow/slider_black.png") center center no-repeat;
         }
         
         /* only for IE <= 6 and a alphatransparent slider image */
@@ -67,14 +67,14 @@
 
     /* ----- load indicator ----- */
     .ContentFlow .loadIndicator {
-        background: url(contentflow/1x1_0.5_white.png);
+        background: image-url("contentflow/1x1_0.5_white.png");
     }
     * html .ContentFlow .loadIndicator {
         background-image: none;
         filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='contentflow/1x1_0.5_white.png');
     }
         .ContentFlow .loadIndicator .indicator {
-            background: url(contentflow/loader_white.gif) center center no-repeat;
+            background: image-url("contentflow/loader_white.gif") center center no-repeat;
         }
 
 /* ================================= */

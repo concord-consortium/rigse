@@ -1,6 +1,6 @@
 /*Nord*/
 .black_hud .n {
-	background:transparent url(black_hud/top.png) repeat-x scroll right -19px;
+	background:transparent image-url("window/black_hud/top.png") repeat-x scroll right -19px;
 	color:#17385B;
 	font:bold 12px/26px Arial;
 	height:19px;
@@ -14,33 +14,33 @@
 }
 
 .black_hud_focused .n {
-	background:transparent url(black_hud/top.png) repeat-x scroll right -76px !important;
+	background:transparent image-url("window/black_hud/top.png") repeat-x scroll right -76px !important;
 }
 
 .black_hud .ne {
-	background:transparent url(black_hud/top.png) no-repeat scroll right 0;
+	background:transparent image-url("window/black_hud/top.png") no-repeat scroll right 0;
 	height:19px;
 	padding-right:7px;
 }
 
 .black_hud_focused .ne {
-	background:transparent url(black_hud/top.png) no-repeat scroll right -57px !important;
+	background:transparent image-url("window/black_hud/top.png") no-repeat scroll right -57px !important;
 }
 
 .black_hud .nw {
-	background:transparent url(black_hud/top.png) no-repeat scroll left -38px;
+	background:transparent image-url("window/black_hud/top.png") no-repeat scroll left -38px;
 	height:19px;
 	padding-left:7px;
 }
 
 .black_hud_focused .nw {
-	background:transparent url(black_hud/top.png) no-repeat scroll 0px -95px !important;
+	background:transparent image-url("window/black_hud/top.png") no-repeat scroll 0px -95px !important;
 }
 
 /*Sud*/
 
 .black_hud .s {
-	background:transparent url(black_hud/bottom.png) repeat-x scroll 0 -22px;
+	background:transparent image-url("window/black_hud/bottom.png") repeat-x scroll 0 -22px;
 	font-size:12px;
 	line-height: 22px;
 	height:22px;
@@ -48,14 +48,14 @@
 }
 
 .black_hud .se {
-	background:transparent url(black_hud/bottom.png) no-repeat scroll right -44px;
+	background:transparent image-url("window/black_hud/bottom.png") no-repeat scroll right -44px;
 	font-size:2px;
 	height:22px;
 	padding-right:25px;
 }
 
 .black_hud .sw {
-	background:transparent url(black_hud/bottom.png) no-repeat scroll 0 0px;
+	background:transparent image-url("window/black_hud/bottom.png") no-repeat scroll 0 0px;
 	font-size:2px;
 	height:22px;
 	padding-left:25px;
@@ -64,7 +64,7 @@
 /*Centre*/
 
 .black_hud .content {
-	background:url(black_hud/content.png);
+	background:image-url("window/black_hud/content.png");
 	color:white;
 	font:normal 11px/1em Verdana, Arial, sans-serif;
 	overflow:auto;	
@@ -81,7 +81,7 @@
 
 .black_hud .buttons a.close {
   float:left;
-	background:transparent url(black_hud/button_unactive.png) no-repeat 0 0;
+	background:transparent image-url("window/black_hud/button_unactive.png") no-repeat 0 0;
   height:15px;
 	width:14px;
 	margin: 3px 7px 0 0px;  
@@ -91,7 +91,7 @@
 
 /* Bad behavior, must use http://www.xs4all.nl/~peterned/csshover.html or better do them in gif !!! */
 .black_hud .buttons a:hover.close {
-	background:transparent url(black_hud/button_over.png) no-repeat 0 0px !important; 
+	background:transparent image-url("window/black_hud/button_over.png") no-repeat 0 0px !important; 
 }    
 
 .black_hud .buttons a.minimize {

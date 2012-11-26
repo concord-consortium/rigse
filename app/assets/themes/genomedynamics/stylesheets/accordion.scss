@@ -26,23 +26,23 @@
   width: 14px;
   height: 16px;
   float: right;
-  background-image: url(/assets/expand.png);
+  background-image: image-url("expand.png");
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
   &:hover {
-    background-image: url(/assets/expand_hover.png); } }
+    background-image: image-url("expand_hover.png"); } }
 
 .accordion_toggle_active {
   display: block;
   width: 14px;
   height: 16px;
   float: right;
-  background-image: url(/assets/collapse.png);
+  background-image: image-url("collapse.png");
   background-repeat: no-repeat;
   background-position: center;
   &:hover {
-    background-image: url(/assets/collapse_hover.png); } }
+    background-image: image-url("collapse_hover.png"); } }
 
 .accordion_container {
   display: block;
@@ -90,11 +90,11 @@
       height: auto;
       cursor: move;
       background-color: $almost_white;
-      background-image: url(/assets/red_dot.png);
+      background-image: image-url("red_dot.png");
       background-position: 98% 50%;
       background-repeat: no-repeat;
       &:hover {
-        background-image: url(/assets/red_dot.png);
+        background-image: image-url("red_dot.png");
         background-position: 98% 50%;
         background-repeat: no-repeat;
         color: $very_dark !important;

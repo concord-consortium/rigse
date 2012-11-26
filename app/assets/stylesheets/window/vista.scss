@@ -1,17 +1,17 @@
 .vista .nw {
-	background:transparent url(vista/top.gif) no-repeat scroll 0 -27px;
+	background:transparent image-url("window/vista/top.gif") no-repeat scroll 0 -27px;
 	height:27px;
 	padding-left:4px;
 }
 
 .vista .ne {
-	background:transparent url(vista/top.gif) no-repeat scroll right 0;
+	background:transparent image-url("window/vista/top.gif") no-repeat scroll right 0;
 	height:27px;
 	padding-right:4px;
 }
 
 .vista .n {
-	background:transparent url(vista/t.png) repeat-x scroll 0 0px;
+	background:transparent image-url("window/vista/t.png") repeat-x scroll 0 0px;
 	color:#123456;
 	font:bold 14px/25px Tahoma, Arial, sans-serif;
 	height:27px;
@@ -36,33 +36,33 @@
 }
 
 .vista .w {
-	background:transparent url(vista/border.gif) repeat-y scroll 0px 0px;
+	background:transparent image-url("window/vista/border.gif") repeat-y scroll 0px 0px;
 	font-size:2px;
 	padding-left:4px;
 }
 
 .vista .e {
-	background:transparent url(vista/border.gif) repeat-y scroll right 0;
+	background:transparent image-url("window/vista/border.gif") repeat-y scroll right 0;
 	font-size:2px;
 	padding-right:4px;
 }
 
 .vista .sw {
-	background:transparent url(vista/bottom.gif) no-repeat scroll 0 -52px;
+	background:transparent image-url("window/vista/bottom.gif") no-repeat scroll 0 -52px;
 	font-size:2px;
 	height:26px;
 	padding-left:22px;
 }
 
 .vista .se {
-	background:transparent url(vista/bottom.gif) no-repeat scroll right 0;
+	background:transparent image-url("window/vista/bottom.gif") no-repeat scroll right 0;
 	font-size:2px;
 	height:26px;
 	padding-right:22px;
 }
 
 .vista .s {
-	background:transparent url(vista/bottom.gif) repeat-x scroll 0 -26px;
+	background:transparent image-url("window/vista/bottom.gif") repeat-x scroll 0 -26px;
 	font-size:14px;
 	line-height: 26px;
 	height:26px;
@@ -70,7 +70,7 @@
 } 
 
 .vista .se_resize_handle {
-	background:transparent url(vista/bottom.gif) no-repeat scroll right 0;
+	background:transparent image-url("window/vista/bottom.gif") no-repeat scroll right 0;
 	font-size:2px;
 	height:26px;
 	padding-right:22px;
@@ -89,7 +89,7 @@
 }                
 
 .vista .buttons a.close {
-	background:transparent url(vista/buttons.gif) no-repeat 0 -51px;
+	background:transparent image-url("window/vista/buttons.gif") no-repeat 0 -51px;
 	display:block;
 	height:17px;
 	float:left;
@@ -99,11 +99,11 @@
 }
 
 .vista_focused .buttons a.close {
-	background:transparent url(vista/buttons.gif) no-repeat 0 0px;
+	background:transparent image-url("window/vista/buttons.gif") no-repeat 0 0px;
 }
 
 .vista .buttons a.maximize {
-	background:transparent url(vista/buttons.gif) no-repeat 0 -68px;
+	background:transparent image-url("window/vista/buttons.gif") no-repeat 0 -68px;
 	display:block;
 	height:17px;
 	float:left;
@@ -113,11 +113,11 @@
 }   
 
 .vista_focused .buttons a.maximize {
-	background:transparent url(vista/buttons.gif) no-repeat 0 -17px;
+	background:transparent image-url("window/vista/buttons.gif") no-repeat 0 -17px;
 }
 
 .vista .buttons a.minimize {
-	background:transparent url(vista/buttons.gif) no-repeat 0 -85px;
+	background:transparent image-url("window/vista/buttons.gif") no-repeat 0 -85px;
 	display:block;
 	height:17px;
 	float:left;
@@ -127,7 +127,7 @@
 }                            
 
 .vista_focused .buttons a.minimize {
-	background:transparent url(vista/buttons.gif) no-repeat 0 -34px;
+	background:transparent image-url("window/vista/buttons.gif") no-repeat 0 -34px;
 }
 
 .vista .buttons a.minimize.disabled, .vista .buttons.over a.minimize.disabled  {
