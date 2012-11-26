@@ -192,6 +192,12 @@ body#tinymce {
     background: transparent url(/assets/banners/itsisu.png) 0 0 no-repeat }
   &.geniverse {
     background: white url(/assets/new/banners/geniverse.png) 0 0 no-repeat; }
+  &.genigames {
+    a {
+      padding-top: 25px;
+    }
+    text-indent: 0px;
+    background: white url(/assets/new/banners/empty.png) top right no-repeat; }
   &.has {
     background: transparent url(/assets/banners/has.png) 0 0 no-repeat; }
   &.interactions {
