@@ -36,12 +36,23 @@
         %td{:width=>"90px"}
           %div{:style=>'float:right'}
             - unless current_user.anonymous?
-              %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material_type}','Preview')"}Preview &#9660;
-              .Expand_Collapse{:id=>"#{material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
-                .preview_link
-                  = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
-                .preview_link{:style=>"padding-top:0px"}
-                  = link_to "As Student", run_url_for(material, {})
+              - if(material.is_a? Investigation)
+                %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material_type}','Preview')"}Preview &#9660;
+                .Expand_Collapse{:id=>"#{material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                  .preview_link
+                    = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
+                  .preview_link{:style=>"padding-top:0px"}
+                    = link_to "As Student", run_url_for(material, {})
+              - elsif(material.is_a? Activity)
+                - unless material.teacher_only?
+                  %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_Act#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'Act','Preview')"}Preview &#9660;
+                  .Expand_Collapse{:id=>"Act#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                    .preview_link
+                      = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
+                    .preview_link{:style=>"padding-top:0px"}
+                      = link_to "As Student", run_url_for(material, {})
+                - else
+                  = link_to "Preview",run_url_for(material,{:teacher_mode => true}),:class=>"button",:style=>"width:58px;text-align:center"
             - else
               = link_to "Preview",run_url_for(material,{}),:class=>"button"
         %td{:width=>"130px"}

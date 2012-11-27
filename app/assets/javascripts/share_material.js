@@ -65,5 +65,6 @@ document.observe("click",function(obj){
     if(oElem.hasClassName("Expand_Collapse_Link")===false)
     {
         hideSharelinks();
+        expandedShareButtonid="";
     }
 });
