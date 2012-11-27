@@ -4,11 +4,15 @@
 .material_icon
   .icon_image
     -if(material.is_a? Investigation)
+      - material_type = "Inv"
       - link_url = browse_investigation_url(material)
       =image_tag("search/investigation.gif",:size=>"100x100")
     -elsif(material.is_a? Activity)
+      - material_type = "Act"
       - link_url = browse_activity_url(material)
       =image_tag("search/activity.gif",:size=>"100x100")
+- else
+  - material_type = material.class.to_s
 %div
   - if current_user.portal_teacher
     - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
@@ -29,9 +33,17 @@
             %div
               %span{:style=>"font-weight:bold"}
                 ="By #{material.user.name}"
-        %td{:width=>"75px"}
+        %td{:width=>"90px"}
           %div{:style=>'float:right'}
-            = link_to "Preview",run_url_for(material,{}),:class=>"button"
+            - unless current_user.anonymous?
+              %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material_type}','Preview')"}Preview &#9660;
+              .Expand_Collapse{:id=>"#{material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                .preview_link
+                  = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
+                .preview_link{:style=>"padding-top:0px"}
+                  = link_to "As Student", run_url_for(material, {})
+            - else
+              = link_to "Preview",run_url_for(material,{}),:class=>"button"
         %td{:width=>"130px"}
           %div{:style=>'float:right'}
             - if current_user.portal_teacher
