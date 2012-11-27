@@ -123,7 +123,7 @@
         
         switch (config.type) {
             case Lightbox.type.ALERT:
-                config.title = config.title || 'Message';
+                config.title = (typeof config.title === "string") ? config.title : 'Message';
                 btnHtml = '<div class="buttons_container">' +
                           '<input type="button" class="button" onclick="' + moduleName + '.close(\'' + this.config.id.replace("'", "\\'") + '\')" value="OK" />' +
                           '</div>';
@@ -131,7 +131,7 @@
                 break;
                 
             case Lightbox.type.CONFIRM:
-                config.title = config.title || 'Confirmation';
+                config.title = (typeof config.title === "string") ? config.title : 'Confirmation';
                 btnHtml = '<div class="buttons_container">' +
                           '<input type="button" class="button" onclick="' + moduleName + '.close(\'' + this.config.id.replace("'", "\\'") + '\', true)" value="OK" />' +
                           '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
@@ -171,15 +171,20 @@
         Lightbox.add(this);
         
         lightbox.setContent(config.content);
-        lightbox.setHeader(config.title);
-        lightbox.show(config.show);
-        
-        if (config.focus) {
-            lightbox.focus();
+        if (typeof config.title === "string") {
+            lightbox.setHeader(config.title);
         }
         
-        if (config.center) {
-            lightbox.center();
+        lightbox.show(config.show);
+        
+        if (config.show) {
+            if (config.focus) {
+                lightbox.focus();
+            }
+            
+            if (config.center) {
+                lightbox.center();
+            }
         }
         
         return;
@@ -188,12 +193,16 @@
     Lightbox.prototype.close = function (callbackData) {
         
         callbackData = callbackData || null;
+        if (!(callbackData instanceof Array)) {
+            callbackData = [callbackData];
+        }
         
         this.handle.destroy();
         Lightbox.remove(this);
         
         if (typeof(this.config.callback) === "function") {
-            this.config.callback(callbackData);
+            var callbackContext = this.config.callbackContext || window;
+            this.config.callback.apply(callbackContext, callbackData);
         }
         return;
     };
