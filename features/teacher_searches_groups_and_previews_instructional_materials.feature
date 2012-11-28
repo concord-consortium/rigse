@@ -50,9 +50,8 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I am on the search instructional materials page
     
     
-  @wip
   @javascript
-  Scenario: Teacher should be on materials preview page to preview or assign materials
+  Scenario: Teacher should be on materials preview page to assign materials
     When I follow the "Assign to a Class" link for the investigation "differential calculus"
     Then I should be on the preview investigation page for the investigation "differential calculus"
     And I should see "differential calculus"
@@ -78,6 +77,18 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I follow the "Show more details..." link for the activity "differential calculus"
     Then I should be on the preview activity page for the activity "differential calculus"
     And I should see "differential calculus"
+    
+    
+  @javascript
+  Scenario: Teacher should be on materials preview page to preview materials
+    When I follow the "Preview" link for the investigation "differential calculus"
+    Then I should see "As Teacher"
+    And I should see "As Student"
+    And I am on the search instructional materials page
+    And I should see "Instructional Materials"
+    And I follow the "Preview" link for the activity "differential calculus"
+    Then I should see "As Teacher"
+    And I should see "As Student"
     
     
   @javascript
@@ -125,14 +136,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Anonymous user can preview activity
     When I log out
     And I go to the search instructional materials page
-    Then I should preview activity "differential calculus" on the search instructional materials page
-    
-    
-  Scenario: Teacher can preview investigation
-    Then I should preview investigation "Geometry" on the search instructional materials page
-    
-    
-  Scenario: Teacher can preview activity
     Then I should preview activity "differential calculus" on the search instructional materials page
     
     
