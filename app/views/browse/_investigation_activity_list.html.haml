@@ -1,10 +1,8 @@
-- activities = investigation.activities
-- if current_user.anonymous?
-  - activities = activities.select{|activity| !(activity.teacher_only)}
+- activities = search_material.activities
 .activities_container
   .activity_list_header 
     %span.investigation_name
-      = investigation.name + " - " 
+      = search_material.activity_list_title + " - "
     Activities
   .include_Checkbox 
     Include
@@ -17,19 +15,19 @@
           - if activity.parent
             - activity_count = activity_count + activity.parent.offerings.count
           - if !(activity.teacher_only? && current_user.anonymous?)
-            - checkbox_checked = (material.is_a?  ::Investigation)? true : (activity.id == material.id)? true : false
+            - checkbox_checked = (search_material.selected_activities.include?(activity.id)) ? true : false
             %tr
               %td.check_box
                 - if activities_length == 1
-                  = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)",:disabled=>"disabled"
+                  = check_box_tag 'activity_id[]', activity.id, checkbox_checked, :id => "activity_#{activity.id}", :onclick => "checkActivityToAssign(this)", :disabled => "disabled"
                 - else
-                  = check_box_tag 'activity_id[]',activity.id,checkbox_checked, :id => 'activity_' + activity.id.to_s, :onclick=>"checkActivityToAssign(this)"
+                  = check_box_tag 'activity_id[]', activity.id, checkbox_checked, :id => "activity_#{activity.id}", :onclick=>"checkActivityToAssign(this)"
               %td
                 .activity_name
                   - if activities_length == 1
-                    = label_tag 'activity_' + activity.id.to_s , activity.name
+                    = label_tag "activity_#{activity.id}", activity.name
                   - else
-                    = label_tag 'activity_' + activity.id.to_s , activity.name, :style=>"cursor:pointer"
+                    = label_tag "activity_#{activity.id}", activity.name, :style=>"cursor:pointer"
                   - if activity.teacher_only
                     %span.messagetext{:style=>"font-weight:normal"} 
                       (teacher only)
@@ -52,7 +50,7 @@
                   - else
                     = link_to "Preview",run_url_for(activity,{:teacher_mode => true}),:class=>"button",:style=>"width:58px;text-align:center"
                 - else
-                  = link_to "Preview",run_url_for(activity,{}),:class=>"button"
+                  = link_to "Preview",run_url_for(activity, {}),:class=>"button"
               %td.share_activity
                 %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_Act#{activity.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{activity.id},'Act','Share')"}Share &#9660;
                 .Expand_Collapse{:id=>"Act#{activity.id}Share",:style=>"display:none",:class=>"Expand_Collapse_share"}

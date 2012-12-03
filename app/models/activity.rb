@@ -347,4 +347,12 @@ class Activity < ActiveRecord::Base
     listing
   end
 
+  def full_title
+    full_title = self.name
+    unless self.parent.nil?
+      full_title = "#{full_title} | #{self.parent.name}"
+    end
+    
+    return full_title
+  end
 end

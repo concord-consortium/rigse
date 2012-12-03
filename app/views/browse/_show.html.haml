@@ -1,62 +1,21 @@
--material_count = material.offerings.count
-- if material.parent
-  - material_count = material_count + material.parent.offerings.count
 = javascript_include_tag "share_material"
+
+- parent_material = search_material.parent_material
+
+-material_count = parent_material.material.offerings.count
+
 
 %style{:type => "text/css"}
   :sass
     #content
       padding-top: 0px
       padding-right: 0px
-- if material.is_a? ::Investigation
-  - inst_material = material
-  - material_title = inst_material.name
-  - material_description = inst_material.description
-  - btn_text = "Assign Investigation"
-  - icon_image = image_tag("search/investigation.gif",:size=>"100x100")
-  - activities = inst_material.activities
-  - if current_user.anonymous?
-    - activities = activities.select{|activity| !(activity.teacher_only)}
-  - link_url = browse_investigation_url(material)
-  - material_url = link_url
-  - material_id = material.id
-  - material_type = material.class.to_s
-- elsif material.is_a? ::Activity
-  - inst_material = material.parent
-  - btn_text = "Assign Individual Activities"
-  - icon_image = image_tag("search/investigation.gif",:size=>"100x100")
-  
-  - material_id = material.id
-  - material_type = material.class.to_s
-  
-  - if inst_material.nil?
-    - inst_material = material
-    - btn_text = "Assign Activity"
-    - icon_image = image_tag("search/activity.gif",:size=>"100x100")
-    - activities = nil
-    - link_url = browse_activity_url(material)
-    - material_url =  link_url
-  - else
-    - activities = inst_material.activities
-    - if current_user.anonymous?
-      - activities = activities.select{|activity| !(activity.teacher_only)}
-    - link_url = browse_activity_url(inst_material)
-    - if (activities.length == 1)
-      - btn_text = "Assign Investigation"
-      - material_id = inst_material.id
-      - material_type = inst_material.class.to_s
-    
-    - material_url = browse_investigation_url(inst_material)
-    
-  - material_title = inst_material.name
-  - material_description = inst_material.description
-    
-= hidden_field_tag "investigation_id", inst_material.id
-= hidden_field_tag "material_id", material_id
-= hidden_field_tag "assign_material_type", material_type
-- material_type ="Inv"
-- if activities == nil
-  - material_type ="Act"
+
+
+= hidden_field_tag "investigation_id", parent_material.id
+= hidden_field_tag "material_id", search_material.id
+= hidden_field_tag "assign_material_type", search_material.model_name
+
 %div
   - unless @back_url.nil?
     = link_to "&larr; return to search".html_safe, @back_url,:class=>"return_link"
@@ -65,37 +24,37 @@
 
 .browse_material_other_data
   .icon_image
-    = icon_image
+    = image_tag(parent_material.icon_image_url, :size=>'100x100')
   %br
   %div
-    = render :partial => '/browse/investigation_other_data', :locals => {:investigation=>inst_material}
+    = render :partial => '/browse/investigation_other_data', :locals => {:material_other_data => parent_material.other_data}
 .browse_material_data
   %table.browse_material_header
     %tr
       %td
         .title 
-          = material_title
+          = parent_material.title
         .material_type 
-          = inst_material.class.to_s
+          = parent_material.model_name
       %td
         - unless current_user.anonymous?
-          %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{inst_material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{inst_material.id},'#{material_type}','Preview')"}Preview &#9660;
-          .Expand_Collapse{:id=>"#{material_type}#{inst_material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
-            = render :partial => '/browse/preview', :locals => {:material => inst_material}
+          %a{:class => "button preview_Button Expand_Collapse_Link", :id => "ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Preview", :href=>"javascript:void(0)", :onclick=>"expandcollapseoptions(#{parent_material.id},'#{parent_material.model_name}','Preview')"}Preview &#9660;
+          .Expand_Collapse{:id=>"#{parent_material.model_name}#{parent_material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+            = render :partial => '/browse/preview', :locals => {:material => parent_material.material}
         - else
-          = link_to "Preview",run_url_for(inst_material,{}),:class=>"button"
+          = link_to "Preview", run_url_for(parent_material.material, {}), :class => "button"
       %td
         - if current_user.portal_teacher
-          = link_to btn_text,'javascript:void(0)',:class=>"button", :onclick=>"getDataForAssignToClassPopup()",:id=>"btn_Assign"
+          = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup()", :id=>"btn_Assign"
         - else
-          = link_to btn_text, 'javascript:void(0)',:onclick=>"msgPopupDescriptionText()",:id=>"btn_Assign", :class=>"button"
+          = link_to parent_material.assign_btn_text, 'javascript:void(0)',:onclick=>"msgPopupDescriptionText()", :id=>"btn_Assign", :class=>"button"
       %td{:class=>"share"}
-        %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{inst_material.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{inst_material.id},'#{material_type}','Share')"}Share &#9660;
-        .Expand_Collapse{:id=>"#{material_type}#{inst_material.id}Share",:style=>"display:none",:class=>"Expand_Collapse_share"}
-          = render :partial => '/browse/share', :locals => {:material_url => material_url,:material_title=>material_title}
+        %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{parent_material.id},'#{parent_material.model_name}','Share')"}Share &#9660;
+        .Expand_Collapse{:id=>"#{parent_material.model_name}#{parent_material.id}Share", :style=>"display:none", :class=>"Expand_Collapse_share" }
+          = render :partial => '/browse/share', :locals => {:material_url => url_for(parent_material.url),:material_title=>parent_material.title}
   %br
   .description
-    = material_description
+    = parent_material.description
     %div.clazz_count{:id=>"material_clazz_count"}
       %i
         - if(material_count == 0)
@@ -107,8 +66,8 @@
   %br
   %br
   
-  - unless activities.nil?
+  - unless parent_material.activities.nil?
     %div
       %script{:src=>"//platform.linkedin.com/in.js",:type=>"text/javascript"}
-      = render :partial => '/browse/investigation_activity_list', :locals => {:material => material,:investigation=>inst_material}
+      = render :partial => '/browse/investigation_activity_list', :locals => {:search_material => parent_material}
 .clearboth
