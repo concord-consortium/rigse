@@ -1,11 +1,8 @@
-- share_title = material_title
-- if defined?(material) && material.is_a?(::Activity) && material.parent
-  - share_title = "#{material_title} | #{material.parent.name}"
 .ss-fb.sharelink
   %a{:href => "http://www.facebook.com/share.php?u=#{material_url}",:target=>"_blank"}
     %img{:alt => "Share on Facebook", :height => "20", :src => "http://concord.org/sites/all/themes/cc/img/icons/fb-button.png", :title => "Share on Facebook", :width => "46"}/
 .ss-tw.sharelink
-  %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button" ,:"data-url"=>"#{material_url}" ,:"data-text"=>"#{share_title}" ,:"data-count"=>"none"}Tweet
+  %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button" ,:"data-url"=>"#{material_url}" ,:"data-text"=>"#{material_title}" ,:"data-count"=>"none"}Tweet
   %script
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
 .ss-li.sharelink

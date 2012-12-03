@@ -54,4 +54,4 @@
               %td.share_activity
                 %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_Act#{activity.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{activity.id},'Act','Share')"}Share &#9660;
                 .Expand_Collapse{:id=>"Act#{activity.id}Share",:style=>"display:none",:class=>"Expand_Collapse_share"}
-                  = render :partial => '/browse/share', :locals => {:material_url => browse_activity_url(activity),:material_title=>activity.name,:material=>activity}
+                  = render :partial => '/browse/share', :locals => {:material_url => browse_activity_url(activity),:material_title=>activity.full_title}
