@@ -16,7 +16,7 @@ class Browse::InvestigationsController < ApplicationController
     @og_url = request.url
     @og_image_url = url_for('/assets/search/investigation.gif')
     
-    if @material.description.nil? || @material.description.blank?
+    if @material.description.blank?
       @meta_description = "Check out this great investigation from the Concord Consortium."
     else
       @meta_description = @material.description

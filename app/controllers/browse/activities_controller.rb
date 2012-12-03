@@ -25,7 +25,7 @@ class Browse::ActivitiesController < ApplicationController
     @og_url = request.url
     @og_image_url = url_for('/assets/search/activity.gif')
     
-    if @material.description.nil? || @material.description.blank?
+    if @material.description.blank?
       @meta_description = "Check out this great activity from the Concord Consortium."
     else
       @meta_description = @material.description
