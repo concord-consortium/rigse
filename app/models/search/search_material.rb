@@ -61,6 +61,8 @@ class Search::SearchMaterial
     
     self.activity_list_title = self.title
     
+    self.other_data[:probe_types] = self.probe_types(material)
+    self.other_data[:required_equipments] = self.other_data[:probe_types].map { |p| p.name }.join(", ")
     
     if material.is_a? ::Investigation
       
@@ -71,8 +73,6 @@ class Search::SearchMaterial
         self.other_data[:grade_span] = material.grade_span
       end
       self.other_data[:domain_name] = material.domain.name
-      self.other_data[:probe_types] = self.probe_types(material)
-      self.other_data[:required_equipments] = self.other_data[:probe_types].map { |p| p.name }.join(", ")
       
     elsif material.is_a? ::Activity
       
