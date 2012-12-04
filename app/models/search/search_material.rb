@@ -67,7 +67,9 @@ class Search::SearchMaterial
       self.url = {:only_path => false, :controller => 'investigations', :action => 'show', :id => self.id}
       
       self.other_data[:grade_span_expectation] = material.grade_span_expectation
-      self.other_data[:grade_span] = material.grade_span
+      if self.other_data[:grade_span_expectation]
+        self.other_data[:grade_span] = material.grade_span
+      end
       self.other_data[:domain_name] = material.domain.name
       self.other_data[:probe_types] = self.probe_types(material)
       self.other_data[:required_equipments] = self.other_data[:probe_types].map { |p| p.name }.join(", ")
