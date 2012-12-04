@@ -71,8 +71,8 @@ class Search::SearchMaterial
       self.other_data[:grade_span_expectation] = material.grade_span_expectation
       if self.other_data[:grade_span_expectation]
         self.other_data[:grade_span] = material.grade_span
+        self.other_data[:domain_name] = material.domain.name
       end
-      self.other_data[:domain_name] = material.domain.name
       
     elsif material.is_a? ::Activity
       
