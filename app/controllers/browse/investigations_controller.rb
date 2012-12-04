@@ -1,5 +1,5 @@
 class Browse::InvestigationsController < ApplicationController
- 
+  
   # GET /browse/investigations/1
   def show
     @back_url = nil
@@ -12,21 +12,13 @@ class Browse::InvestigationsController < ApplicationController
     material = ::Investigation.find(params[:id])
     
     @search_material = Search::SearchMaterial.new(material, current_user)
+    @search_material.url = url_for(@search_material.url)
+    @search_material.parent_material.url = url_for(@search_material.parent_material.url)
     
-    @page_title = @search_material.title
-    @meta_title = @page_title
-    
-    @meta_description = @search_material.description
-    if @meta_description.blank?
-      @meta_description = "Check out this great investigation from the Concord Consortium."
-    end
-    
-    @og_title = @meta_title
-    @og_type = 'website'
-    @og_url = @search_material.url
-    @og_image_url = url_for("/assets/#{@search_material.icon_image_url}")
-    @og_description = @meta_description
-    
+    page_meta = @search_material.get_page_title_and_meta_tags
+    @page_title = page_meta[:title]
+    @meta_tags = page_meta[:meta_tags]
+    @open_graph = page_meta[:open_graph]
     
   end
 

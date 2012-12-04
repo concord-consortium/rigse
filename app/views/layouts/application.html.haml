@@ -11,24 +11,16 @@
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     %link{ :href => asset_path("favicon.ico"), :rel => "shortcut icon"}/
     
-    - if @meta_title
-      %meta{ :name => 'title', :content => @meta_title }
-    - if @meta_description
-      %meta{ :name => 'description', :content => @meta_description }
+    - @meta_tags = @meta_tags || {}
+    - @meta_tags.each_pair do |key, value|
+      %meta{ :name => key, :content => value }
     
     / Open graph tags
-    %meta{ :property => 'og:site_name', :content => APP_CONFIG[:site_name] }
-    - if @og_title
-      %meta{ :property => 'og:title', :content => @og_title }
-    - if @og_type
-      %meta{ :property => 'og:type', :content => @og_type }
-    - if @og_url
-      %meta{ :property => 'og:url', :content => @og_url }
-    - if @og_image_url
-      %meta{ :property => 'og:image', :content => @og_image_url }
-    - if @og_description
-      %meta{ :property => 'og:description', :content => @og_description }
-
+    - @open_graph = @open_graph || {}
+    - @open_graph[:site_name] = @open_graph[:site_name] || APP_CONFIG[:site_name]
+    - @open_graph.each_pair do |key, value|
+      %meta{ :property => "og:#{key}", :content => value }
+    
     != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     / TODO: if themes need their own print CSS make a themed link here:
     != stylesheet_link_tag 'print', {'media' => 'print'}

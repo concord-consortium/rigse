@@ -1,5 +1,7 @@
 class Search::SearchMaterial
   
+  include ProbeTypesHelper
+  
   attr_accessor :material
   attr_accessor :parent_material
   attr_accessor :user
@@ -34,11 +36,10 @@ class Search::SearchMaterial
     self.populateMaterialData
   end
   
-  include ProbeTypesHelper
-  
   def populateMaterialData
     material = self.material
     user = self.user
+    
     
     self.id = material.id
     self.model_name = material.class.name
@@ -92,20 +93,33 @@ class Search::SearchMaterial
   end
   
   
-  def set_page_title_and_meta_tags
-    @page_title = self.title
-    @meta_title = @page_title
+  def get_page_title_and_meta_tags
     
-    @meta_description = self.description
-    if @meta_description.blank?
-      @meta_description = "Check out this great #{self.model_name.downcase} from the Concord Consortium."
+    page_meta = {
+      :title => nil,
+      :meta_tags => {},
+      :open_graph => {}
+    }
+    
+    page_meta[:title] = self.title
+    
+    meta_tags = page_meta[:meta_tags]
+    
+    meta_tags[:title] = page_meta[:title]
+    meta_tags[:description] = self.description
+    if meta_tags[:description].blank?
+      meta_tags[:description] = "Check out this great #{self.model_name.downcase} from the Concord Consortium."
     end
     
-    @og_title = @meta_title
-    @og_type = 'website'
-    @og_url = self.url
-    @og_image_url = ActionController::Base.new.url_for("/assets/#{self.icon_image_url}")
-    @og_description = @meta_description
+    open_graph = page_meta[:open_graph]
+    
+    open_graph[:title] = meta_tags[:title]
+    open_graph[:description] = meta_tags[:description]
+    open_graph[:type] = 'website'
+    open_graph[:url] = self.url
+    open_graph[:image_url] = "/assets/#{self.icon_image_url}"
+    
+    return page_meta
   end
   
 end

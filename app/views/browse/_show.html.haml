@@ -51,7 +51,7 @@
       %td{:class=>"share"}
         %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{parent_material.id},'#{parent_material.model_name}','Share')"}Share &#9660;
         .Expand_Collapse{:id=>"#{parent_material.model_name}#{parent_material.id}Share", :style=>"display:none", :class=>"Expand_Collapse_share" }
-          = render :partial => '/browse/share', :locals => {:material_url => url_for(parent_material.url),:material_title=>parent_material.title}
+          = render :partial => '/browse/share', :locals => {:material_url => parent_material.url,:material_title=>parent_material.title}
   %br
   .description
     = parent_material.description
