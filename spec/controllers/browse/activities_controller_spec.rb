@@ -20,9 +20,13 @@ describe Browse::ActivitiesController do
           :id=>@laws_of_motion_activity.id
         }
         post :show,@post_params
+        
+        assert_equal assigns[:wide_content_layout], true
+        
         assert_equal assigns[:back_url],"#{request.url}search?activity_page=1&investigation_page=1&search_term=#{@laws_of_motion_activity.name}&type=act"
-        assert_equal assigns[:material], @laws_of_motion_activity
-        assert_equal assigns[:wide_content_layout],true
+        assert_not_nil assigns[:search_material]
+        assert_equal assigns[:search_material].material, @laws_of_motion_activity
+        
       end
     end
 
