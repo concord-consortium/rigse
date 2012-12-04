@@ -117,7 +117,7 @@ class Search::SearchMaterial
     open_graph[:description] = meta_tags[:description]
     open_graph[:type] = 'website'
     open_graph[:url] = self.url
-    open_graph[:image_url] = "/assets/#{self.icon_image_url}"
+    open_graph[:image] = "/assets/#{self.icon_image_url}"
     
     return page_meta
   end
