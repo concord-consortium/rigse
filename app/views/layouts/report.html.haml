@@ -40,10 +40,15 @@
         = content_for :content_header
         #js_flash{:style=>"display: none;"}
 
-        #flash
-          .padded_contents
-            - flash.each do |key, message|
-              %div{:class=>"flash flash_#{key}"}= message 
+        %script
+          = 'document.whenReady( function() {'.html_safe
+          - flash.each do |key, message|
+            - unless message.nil? || message.blank?
+              - encoded_key = URI::encode("#{key}")
+              - encoded_msg = URI::encode("#{message}")
+              = "Lightbox.flash(decodeURIComponent(\"#{encoded_key}\"), decodeURIComponent(\"#{encoded_msg}\"));".html_safe
+          = '});'.html_safe
+          
         = content_for :layout
       = render :partial => 'shared/footer'
       #under_footer

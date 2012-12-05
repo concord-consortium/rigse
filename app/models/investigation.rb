@@ -384,4 +384,11 @@ class Investigation < ActiveRecord::Base
     end
   end
 
+
+  def full_title
+    full_title = self.name
+    
+    return full_title
+  end
+  
 end

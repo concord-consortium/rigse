@@ -5,6 +5,8 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
       var previewWindow = null;
       var formString = null;
       
+      var popupContent = null;
+      
       var windowUrl = '';
       var previewWindowDocument = null;
       
@@ -13,7 +15,7 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
       {
           windowUrl = $(urlOrHtmlContainerId).value;
           if (!(linkPattern.test(windowUrl))){
-            var popupContent="<div style='padding:18px'>Please enter a valid external help URL.</div>";
+            popupContent="<div style='padding:18px'>Please enter a valid external help URL.</div>";
             showpopup(popupContent);
             return;
           }
@@ -31,7 +33,7 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
             
             if (!customHtml)
             {
-                var popupContent = "<div style='padding:18px'>Please enter some custom help HTML to preview.</div>";
+                popupContent = "<div style='padding:18px'>Please enter some custom help HTML to preview.</div>";
                 showpopup(popupContent);
                 return;
             }
@@ -50,7 +52,7 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
                                '</textarea>' +
                              '</form>' +
                            '</body>' +
-                         '</html>'
+                         '</html>' +
                          '';
             previewWindowDocument = previewWindow.document;
             previewWindowDocument.open();
@@ -73,16 +75,15 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
           
       }
 }
+
 function showpopup(content)
 {
-    var okayButton='<div style="text-align:center"><a href="javascript: void(0);" class="button" onclick="close_popup()">OK</a></div>';
-    list_modal = new UI.Window({ theme:"lightbox", height:150, width:350});
-    list_modal.setContent(content + okayButton).show(true).focus().center();
-    list_modal.setHeader("Message");
+    var lightboxConfig={
+        content:content,
+        title:"Message",
+        width:350,
+        type:2
+    };
+    var lightbox = new Lightbox(lightboxConfig);
 }
 
-function close_popup()
-{
-    list_modal.destroy();
-    list_modal = null;
-}

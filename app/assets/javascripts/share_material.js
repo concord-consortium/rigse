@@ -1,9 +1,5 @@
-var expandedShareButtonid;
+var expandedShareButtonid="";
 function expandcollapseoptions(id,material_type,btn_type){
-    if (animating)
-    {
-        return false;
-    }
     if((material_type+id+btn_type)!=expandedShareButtonid)
     {
         $$(".Expand_Collapse").each(function(shareContainer){shareContainer.hide();shareContainer.removeClassName('visible');});
@@ -17,37 +13,32 @@ function expandcollapseoptions(id,material_type,btn_type){
                 });
     }
     var shareContainer=$(material_type+id+btn_type);
-    var afterFinishCallback = function(){
-        animating = false;
-        $('ExpandCollapse_'+material_type+id+btn_type).update(expandCollapseText);
-    };
-    
     if (shareContainer.hasClassName('visible'))
     {
-        Effect.BlindUp(shareContainer, { duration: 0.2, afterFinish: afterFinishCallback });
+        shareContainer.hide();
         shareContainer.removeClassName('visible');
         expandCollapseText = btn_type + " &#9660;";
-        animating = true;
+        $('ExpandCollapse_'+material_type+id+btn_type).update(expandCollapseText);
     }
     else
     {
-        Effect.BlindDown(shareContainer, { duration: 0.2, afterFinish: afterFinishCallback });
+        shareContainer.show();
         shareContainer.addClassName('visible');
         expandCollapseText = btn_type + " &#9650;";
         expandedShareButtonid=material_type+id+btn_type;
-        animating = true;
+        $('ExpandCollapse_'+material_type+id+btn_type).update(expandCollapseText);
     }
     return true;
 }
 
 function hideSharelinks(){
-    if (animating)
-    {   
-        return false;
-    }
+    
     $$(".Expand_Collapse").each(function(shareContainer){
-        Effect.BlindUp(shareContainer, { duration: 0.2});
-        shareContainer.removeClassName('visible');
+            if (shareContainer.hasClassName('visible'))
+            {
+                shareContainer.hide();
+                shareContainer.removeClassName('visible');
+            }
         });
     $$(".Expand_Collapse_Link").each(function(sharebtn){
             if (sharebtn.hasClassName('preview_Button'))
@@ -59,12 +50,21 @@ function hideSharelinks(){
             });
 }
 
-/*
 document.observe("click",function(obj){
-    if(obj.srcElement.hasClassName("Expand_Collapse_Link")===false)
+    var oElem= obj.srcElement || obj.target;
+    if (expandedShareButtonid!=="")
+    {
+        if ($(expandedShareButtonid).hasClassName("visible"))
+        {
+             if(oElem.descendantOf(expandedShareButtonid) && $(expandedShareButtonid).hasClassName("Expand_Collapse_share"))
+            {
+                return false;
+            }
+        }
+    }
+    if(oElem.hasClassName("Expand_Collapse_Link")===false)
     {
         hideSharelinks();
+        expandedShareButtonid="";
     }
 });
-*/
-

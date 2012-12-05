@@ -4,11 +4,8 @@
   text-align:left;
 }
 #material_search_form{
-  padding-bottom: 0;
-	#material_search_form input[type=submit] {
-		padding: 6px 14px;
-		}}
-
+  padding-bottom:0px;
+}
 
 .result_material tr
 {
@@ -281,6 +278,8 @@ vertical-align: middle;
 .material_list_item a{text-transform: none;}
 .unassigned_classes_container{max-height:150px;overflow-y:auto;}
 .assigned_classes_container{padding:5px;padding-top:0px;max-height:150px;overflow-y:auto;}
+.assigned_classes_container .assign_material_list{font-weight:normal;}
+.feedback_message{padding-left:5px;}
 .unassigned_classes_container input[type='checkbox']
 {
   margin:0;padding:0;
@@ -341,7 +340,7 @@ filter: alpha(opacity=40);
 .browse_material_header td{padding:3px 3px 3px 3px;text-align:left;vertical-align:top;}
 .browse_material_header .title{font-size:18px;font-weight:bold;color:#3A878B;padding-right:10px;}
 .browse_material_header a.button{white-space:nowrap;margin-top:5px;}
-.browse_material_header td.share{width:70px;}
+.browse_material_header td.share{width:80px;}
 
 .activity_list_header{font-size:16px;font-weight:bold;color:#222;}
 .activity_list_header span.investigation_name{text-transform:uppercase;}
@@ -353,9 +352,9 @@ filter: alpha(opacity=40);
 .activity_list td.check_box{width:30px;text-align:center;}
 .activity_list td.check_box input{border:0;}
 .activity_list td.preview{width:90px;}
-.activity_list td.share{width:70px;}
 .activity_description{padding-bottom:6px;}
 .activity_name{font-weight:bold;}
+.activity_name label{display:inline;}
 span.clazz_count{padding-left:5px;font-style:italic;}
 
 .investigation_other_data .data_header{font-weight:bold;color:#EB8723;}
@@ -374,21 +373,11 @@ span.clazz_count{padding-left:5px;font-style:italic;}
   z-index: 10;
   }
 .Expand_Collapse_share{width:74px;}
-.Expand_Collapse_preview{width:98px;font-size:10px;padding:4px;margin-left: -10px;}
-.preview_link{padding:3px;}
+.Expand_Collapse_preview{width:98px;margin-left: -8px;}
+.preview_link{padding:6px;}
 .ss-fb{padding-top:8px;}
 .ss-tw{padding-top:7px;}
 .ss-li{padding-top:2px;}
 .ss-po{padding-top:2px;padding-bottom:4px;}
 
 
-.share{display:none;}
-.activity_list td.check_box{display:none;}
-.browse_material_header #btn_Assign{display:none}
-.activity_list .preview{padding-right: 50px;}
-.include_Checkbox{display:none;}
-.activity_list_header{padding-bottom:10px;}
-
-.share_activity{width: 80px;}
-.sharing{position:absolute;width:74px;background-color: white;border: 1px solid #416962;margin-top:2px;border-radius: 10px;text-align: center;}
-.sharelink{padding:2px;}
