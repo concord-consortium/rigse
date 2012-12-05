@@ -5,7 +5,7 @@ class SearchController < ApplicationController
   protected
   
   def teacher_only
-    unless current_user.portal_teacher || current_user.anonymous?
+    if current_user.portal_student
       redirect_to(:root)
     end
   end
@@ -85,6 +85,9 @@ class SearchController < ApplicationController
     if @probe_type.class == String
       @probe_type = [@probe_type]
     end
+    if current_user.anonymous?
+      @without_teacher_only=true
+    end
     
     search_options = {
       :name => @search_term || '',
@@ -92,7 +95,8 @@ class SearchController < ApplicationController
       :domain_id => @domain_id || [],
       :grade_span => @grade_span|| [],
       :paginate => false,
-      :probe_type => @probe_type
+      :probe_type => @probe_type,
+      :without_teacher_only =>@without_teacher_only || false
       #:page => params[:investigation_page] ? params[:investigation_page] : 1,
       #:per_page => 10
     }
@@ -101,15 +105,35 @@ class SearchController < ApplicationController
   
   def get_search_suggestions
     @search_term = params[:search_term]
+    @domain_id  = [param_find(:domain_id, (params[:method] == :get)) || []].flatten.uniq.compact
+    @grade_span = param_find(:grade_span, (params[:method] == :get)) || ""
+    if (@grade_span).class == String && @grade_span.length>0 
+      @grade_span= @grade_span.split('&')
+    end
+    @probe_type = param_find(:probe, (params[:method] == :get)) || []
+    @material_type = param_find(:material, (params[:method] == :get)) || ['investigation','activity']
+    investigations=[]
+    activities=[]
     ajaxResponseCounter = params[:ajaxRequestCounter]
     submitform = params[:submit_form]
+    if current_user.anonymous?
+      @without_teacher_only=true
+    end
     search_options = {
       :name => @search_term,
-      :sort_order => 'name ASC'
+      :sort_order => 'name ASC',
+      :domain_id => @domain_id || [],
+      :grade_span => @grade_span|| [],
+      :probe_type => @probe_type,
+      :without_teacher_only =>@without_teacher_only || false
     }
     
-    investigations = Investigation.search_list(search_options)
-    activities = Activity.search_list(search_options)
+    if @material_type.include?('investigation')
+      investigations = Investigation.search_list(search_options)
+    end
+    if @material_type.include?('activity')
+      activities = Activity.search_list(search_options)
+    end
     @suggestions= [];
     @suggestions = investigations + activities
     if request.xhr?
@@ -211,11 +235,11 @@ class SearchController < ApplicationController
           end
         
           if clazz_ids.count > 0
-            page << "alert('#{runnable_type} is assigned to the selected class(es) successfully.')"
             page << "close_popup()"
+            page << "getMessagePopup('<div class=\"feedback_message\">#{runnable_type} is assigned to the selected class(es) successfully.</div>')"
             page.replace_html "material_clazz_count", class_count_desc
             if !material_parent.nil? && runnable_type == "Activity"
-              used_in_clazz_count = material.offerings.count
+              used_in_clazz_count = material.offerings.count + material.parent.offerings.count
               
               if(used_in_clazz_count == 0)
                 class_count_desc = "Not used in any class."
@@ -226,27 +250,49 @@ class SearchController < ApplicationController
               end
               page.replace_html "activity_clazz_count_#{runnable_ids[0]}", class_count_desc
             end
+            
+            if runnable_type == "Investigation"
+              material.activities.each do|activity|
+                used_in_clazz_count = activity.offerings.count + material.offerings.count
+                
+                if(used_in_clazz_count == 0)
+                  class_count_desc = "Not used in any class."
+                elsif(used_in_clazz_count == 1)
+                  class_count_desc = "Used in 1 class."
+                else
+                  class_count_desc = "Used in #{used_in_clazz_count} classes."
+                end
+                
+                page.replace_html "activity_clazz_count_#{activity.id}", class_count_desc
+                
+              end
+            end
             #page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
           else
-            page << "alert('Select atleast one class to assign this #{runnable_type}.')"
+            page << "$('error_message').update('Select atleast one class to assign this #{runnable_type}');$('error_message').show()"
           end
         else
-          runnable_ids.each do|runnable_id|
-            material = ::Activity.find(params[:material_id])
-            used_in_clazz_count = material.offerings.count
-            
-            if(used_in_clazz_count == 0)
-              class_count_desc = "Not used in any class."
-            elsif(used_in_clazz_count == 1)
-              class_count_desc = "Used in 1 class."
-            else
-              class_count_desc = "Used in #{used_in_clazz_count} classes."
+          if clazz_ids.count > 0
+            runnable_ids.each do|runnable_id|
+              material = ::Activity.find(runnable_id)
+              used_in_clazz_count = material.offerings.count + material.parent.offerings.count
+              
+              if(used_in_clazz_count == 0)
+                class_count_desc = "Not used in any class."
+              elsif(used_in_clazz_count == 1)
+                class_count_desc = "Used in 1 class."
+              else
+                class_count_desc = "Used in #{used_in_clazz_count} classes."
+              end
+              page.replace_html "activity_clazz_count_#{runnable_id}", class_count_desc
+              
             end
-            page.replace_html "activity_clazz_count_#{runnable_id}", class_count_desc
-            
-          end
-          page.replace_html "clazz_summary_data", {:partial => 'material_assign_summary', :locals=>{:summary_data=>assign_summary_data}}
-          page << "setPopupHeight()"
+            page.replace_html "clazz_summary_data", {:partial => 'material_assign_summary', :locals=>{:summary_data=>assign_summary_data}}
+            page << "setPopupHeight()"
+          else
+            page << "$('error_message').update('Select atleast one class to assign this #{runnable_type}');$('error_message').show()"
+          end  
+          
         end
       end
     end

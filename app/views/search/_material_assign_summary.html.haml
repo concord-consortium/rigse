@@ -13,18 +13,19 @@
               = summary_item[1].join(', ')
 - if already_assigned_clazzes.length > 0
   .assign_class_header
-    Already assigned
-    .assigned_classes_container.webkit_scrollbars
+    Please note that some of the activities were already assigned and were not re-assigned.
+    = link_to "More Information","javascript:void(0)",:onclick=>"$('prev_assigned_classes_div').toggle();setPopupHeight()"
+    .assigned_classes_container.webkit_scrollbars{:id=>"prev_assigned_classes_div",:style=>"display:none"}
       %ul
         - already_assigned_clazzes.each do|summary_item|
-          %li
+          %li{:style=>"padding-top:8px;"}
             .class_name
               = summary_item[0]
             .assign_material_list
               = summary_item[2].join(', ')
 %br
-%table.classdata
+%table{:style=>"width:100%"}
   %tr
-    %td
-      = link_to "Cancel", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()"
+    %td{:style=>"text-align: center;"}
+      = link_to "OK", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()",:class=>"button"
 %div{:style=>"clear:both"}

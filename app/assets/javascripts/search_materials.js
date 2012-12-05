@@ -28,7 +28,7 @@ function searchsuggestions(e, oElement,bSubmit_form) {
     var downArrow_key_code = 40;
     var upArrow_key_code = 38;
     var escape_key_code = 27;
-    if (bSubmit_form == undefined) bSubmit_form = false;
+    if (bSubmit_form === undefined) bSubmit_form = false;
     if(e.keyCode == enter_key_code || e.keyCode == downArrow_key_code || e.keyCode == upArrow_key_code || e.keyCode == escape_key_code) {
         return false;
     }
@@ -266,37 +266,34 @@ var list_modal = null;
 
 function close_popup()
 {
-    list_modal.destroy();
-    list_modal = null;
+    list_lightbox.handle.destroy();
+    list_lightbox = null;
 }
 
 function get_Assign_To_Class_Popup(material_id,material_type)
 {
-    list_modal = list_modal || null;
-    if(list_modal !== null)
-    {
-        close_popup();
-    }
-    list_modal = new UI.Window({ theme:"lightbox", width:500});
-    list_modal.setContent("<div style='padding:10px'>Loading...Please Wait.</div>").show(true).focus().center();
-    list_modal.setHeader("Assign Materials to a Class");
-    
-    var options = {
+    var lightboxConfig = {
+        content:"<div style='padding:10px'>Loading...Please Wait.</div>",
+        title:"Assign Materials to a Class"
+    };
+    list_lightbox=new Lightbox(lightboxConfig);
+    var target_url = "/search/get_current_material_unassigned_clazzes";
+     var options = {
         method: 'post',
         parameters : {'material_type':material_type,'material_id':material_id},
         onSuccess: function(transport) {
             var text = transport.responseText;
             text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
-            list_modal.setContent("<div id='windowcontent' style='padding:10px'>" + text + "</div>");
+            list_lightbox.handle.setContent("<div id='windowcontent' style='padding:10px'>" + text + "</div>");
             var contentheight=$('windowcontent').getHeight();
             var contentoffset=40;
-            list_modal.setSize(500,contentheight+contentoffset);
-            list_modal.center();
+            list_lightbox.handle.setSize(500,contentheight+contentoffset+20);
+            list_lightbox.handle.center();
         }
     };
-    var target_url = "/search/get_current_material_unassigned_clazzes";
     new Ajax.Request(target_url, options);
 }
+
 function materialCheckOnClick(ObjId)
 {
     if(!$('investigation').checked &&  !$('activity').checked ){
@@ -309,11 +306,18 @@ var g_saveAssignToClassInProgress = false;
 function validateSaveAssignToClass()
 {
     var returnValue = false;
+    var g_showSelected = false;
+    $$(".unassigned_activity_class").each(function(obj){ g_showSelected = g_showSelected || obj.checked;});
+
+    if(!g_showSelected)
+    {
+        var description_text = "No check boxes have been selected.";
+        setSaveAssignToClassInProgress(false);
+    }
     if (g_saveAssignToClassInProgress)
     {
         return returnValue;
     }
-    
     returnValue = true;
     return returnValue;
 }
@@ -395,32 +399,40 @@ document.observe("dom:loaded", function() {
 
 function checkActivityToAssign(chk_box)
 {
-    var total_checkbox_elements = $$('input[type="checkbox"][name="'+chk_box.name+'"]');
-    var checked_elements = $$('input:checked[type="checkbox"][name="'+chk_box.name+'"]');
-    var btn_Assign = $("btn_Assign");
-    if(total_checkbox_elements.length == checked_elements.length){
-        btn_Assign.innerHTML = "Assign Investigation";
-        $("material_id").setValue($("investigation_id").getValue());
-        $("assign_material_type").setValue("Investigation");
-    }
-    else{
-        btn_Assign.innerHTML = "Assign individual activities";
-        if(checked_elements.length > 0){
-            $("material_id").setValue(checked_elements.pluck("value").join(","));
-            $("assign_material_type").setValue("Activity");
+    var allCheckboxElements = $$('input[type="checkbox"][name="'+chk_box.name+'"]');
+    var checkedElements = [];
+    
+    allCheckboxElements.each(function (element) {
+        if (element.checked) {
+            checkedElements.push(element);
         }
-        else{
-            $("material_id").setValue("");
-            $("assign_material_type").setValue("");
-        }
-        
+    });
+    
+    var btnAssign = $("btn_Assign");
+    var materialId = '';
+    var assignMaterialType = '';
+    
+    if(allCheckboxElements.length == checkedElements.length){
+        btnAssign.innerHTML = "Assign Investigation";
+        materialId = $("investigation_id").getValue();
+        assignMaterialType = "Investigation";
     }
+    else if(checkedElements.length > 0) {
+        btnAssign.innerHTML = "Assign Individual Activities";
+        materialId = checkedElements.pluck("value").join(",");
+        assignMaterialType = "Activity";
+    }
+    
+    $("material_id").setValue(materialId);
+    $("assign_material_type").setValue(assignMaterialType);
+    
+    return;
 }
 
-function browseMaterial(form_action)
+function browseMaterial(formAction)
 {
-    var form = document.getElementById("search_result_form");
-    form.action = form_action;
+    var form = $("search_result_form");
+    form.action = formAction;
     form.submit(); 
 }
 
@@ -430,37 +442,49 @@ function getDataForAssignToClassPopup()
     var material_type = $("assign_material_type").getValue("");
     if(material_id.length <= 0)
     {
-        var message = "Please select atleast one activity to assign to a class.";
+        var message = "<div class='feedback_message'>Please select atleast one activity to assign to a class.</div>";
         getMessagePopup(message);
         return;
     }
     get_Assign_To_Class_Popup(material_id,material_type);
 }
 
-var message_modal = null;
-function close_message_popup()
-{
-    message_modal.destroy();
-    message_modal = null;
-}
+var g_messageModal = null;
+
 function getMessagePopup(message)
 {
-    message_modal = message_modal || null;
-    if(message_modal !== null)
+    g_messageModal = g_messageModal || null;
+    if(g_messageModal !== null)
     {
-        close_message_popup();
+        g_messageModal.close();
     }
-    message_modal = new UI.Window({ theme:"lightbox", width:350, height:150});
-    var content = "<div style='padding:10px'>"+message+"</div><br/><div style='text-align:center'><input type='button' class='button' onclick='close_message_popup()' value='OK'/></div>";
-    message_modal.setContent(content).show(true).focus().center();
-    message_modal.setHeader("Message");
+    
+    var content = "<div style='padding:10px 15px;'>" +
+                  message +
+                  "</div>";
+                  
+    var lightboxConfig = {
+        width: 375,
+        height: 150,
+        closeOnNextPopup: true,
+        type: Lightbox.type.ALERT,
+        content: content
+    };
+    
+    g_messageModal = new Lightbox(lightboxConfig);
+    
 }
 
 function setPopupHeight()
 {
     var contentheight=$('windowcontent').getHeight();
     var contentoffset=40;
-    list_modal.setSize(500,contentheight+contentoffset);
-    list_modal.center();
+    list_lightbox.handle.setSize(500,contentheight+contentoffset);
+    list_lightbox.handle.center();
 }
 
+
+function msgPopupDescriptionText() {
+    var popupMessage = "Please log-in or <a href='/pick_signup'>register</a> as a teacher to assign this material.";
+    getMessagePopup(popupMessage);
+}

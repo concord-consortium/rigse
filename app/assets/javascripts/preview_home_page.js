@@ -4,11 +4,11 @@ function preview_home_page(homePageContentId, homePageContent){
     if(homePageContentId){
         previewContent = $(homePageContentId).value;
     }
-    else if (homePageContent == "" || homePageContent){
+    else if (homePageContent === "" || homePageContent){
         previewContent = decodeURIComponent(homePageContent);
     }
     
-    if (previewContent != "" && !previewContent)
+    if (previewContent !== "" && !previewContent)
     {
         return;
     }

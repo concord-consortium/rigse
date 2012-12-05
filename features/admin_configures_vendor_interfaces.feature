@@ -6,6 +6,7 @@ Feature: The Project administrator disables certain vendor interfaces
   Background:
     Given The default project and jnlp resources exist using factories
 
+  @javascript
   Scenario: The project administrator removes some probe interfaces
     Given the following users exist:
       | login        | password            | roles                |

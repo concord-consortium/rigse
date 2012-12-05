@@ -19,9 +19,12 @@ describe Browse::InvestigationsController do
           :id=>@physics_investigation.id
         }
         post :show,@post_params
+        
+        assert_equal assigns[:wide_content_layout], true
+        
         assert_equal assigns[:back_url],"#{request.url}search?activity_page=1&investigation_page=1&search_term=#{@physics_investigation.name}&type=inv"
-        assert_equal assigns[:material], @physics_investigation
-        assert_equal assigns[:wide_content_layout],true
+        assert_not_nil assigns[:search_material]
+        assert_equal assigns[:search_material].material, @physics_investigation
       end
     end
 

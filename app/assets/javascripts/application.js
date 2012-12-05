@@ -24,6 +24,7 @@
 = require 'pt_event_simulate'
 = require 'prototype-ui/prototype-ui'
 = require 'site_notices'
+= require 'lightbox'
 = require tinymce
 = require_tree './in_place_rich_editor'
 = require 'jquery/jquery'
