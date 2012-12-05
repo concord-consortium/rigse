@@ -1,5 +1,4 @@
 - learners = offering.learners
--# learner_ids = learners.pluck(:id).join(',')
 - learner_ids = []
 %div
   - offering_status = Report::OfferingStatus.new(offering)
@@ -21,9 +20,9 @@
         - student_statuses.each do |student_status|
           - student = student_status.student
           - student_name = student.user.full_name
-          - learner = learners.find_by_student_id(student.id)
-          - unless learner.nil?
-            - learner_ids << learner
+          - learner = student_status.learner
+          - if learner
+            - learner_ids << learner.id
           %tr
             %td.student_name{:title=>"#{student_name}"}
               %div.progressbar_container
@@ -40,10 +39,8 @@
             - activity_name_tooltip = (activity.name.nil?)? "Activity #{index+1}" : activity.name
             %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
               %div.progressbar_container
-                - unless learner_ids.nil?
-                  - learner_ids_for_this_activity = learner_ids.collect{|item| item.id}.join(',')
-                  - report_learner_activity = Report::LearnerActivity.where("complete_percent > 0 && activity_id = #{activity.id} && learner_id IN (?)",learner_ids_for_this_activity)
-                - unless report_learner_activity.nil?
+                - report_learner_activity = Report::LearnerActivity.where("complete_percent > 0 && activity_id = #{activity.id} && learner_id IN (?)",learner_ids)
+                - if report_learner_activity
                   - if report_learner_activity.length > 0
                     = link_to( activity_name,activity_report_portal_offering_url(offering,:activity_id => activity.id),{:target=>"_blank",:class=>"activity_report"})
                   - else
