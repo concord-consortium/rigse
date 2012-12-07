@@ -70,7 +70,7 @@ class SessionsController < ApplicationController
   
   # verify a remote login attempt
   def remote_login
-    delete_blog_cookies   # first delete any remaining blog cookies
+    delete_blog_cookie   # first delete any remaining blog cookies
     user = User.authenticate(params[:login], params[:password])
     if user
       self.current_user = user
@@ -114,7 +114,7 @@ class SessionsController < ApplicationController
   end
   
   def successful_login
-    delete_blog_cookies   # first delete any remaining blog cookies
+    delete_blog_cookie   # first delete any remaining blog cookies
     new_cookie_flag = (params[:remember_me] == "1")
     handle_remember_cookie! new_cookie_flag
     save_cc_cookie
