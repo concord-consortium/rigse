@@ -10,6 +10,7 @@ set :stages, %w(
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
   genigames-baseline-production genigames-ungamed-production
+  genigames-dev genigames-staging genigames-production
   assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
   interactions-aws-staging interactions-aws-production
