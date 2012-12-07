@@ -667,5 +667,5 @@ before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
 # see load 'deploy/assets' in Capfile
 # after 'deploy:create_symlink', 'deploy:create_asset_packages'
-# after 'deploy:create_asset_packages', 'deploy:cleanup'
+after 'deploy:shared_symlinks', 'deploy:cleanup'
 after 'installer:create', 'deploy:restart'
