@@ -9,6 +9,7 @@ set :stages, %w(
   smartgraphs-dev smartgraphs-staging smartgraphs-production smartgraphs-aws1
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
+  genigames-dev genigames-staging genigames-production
   assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
   interactions-aws-staging interactions-aws-production
