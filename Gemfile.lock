@@ -397,7 +397,7 @@ DEPENDENCIES
   launchy (~> 2.0.5)
   mysql2 (~> 0.3)
   net-sftp (~> 2.0)
-  newrelic_rpm
+  newrelic_rpm (~> 3.5.3.25)
   nokogiri (~> 1.5.0)
   open4 (~> 1.0)
   paperclip (~> 2.4.0)
