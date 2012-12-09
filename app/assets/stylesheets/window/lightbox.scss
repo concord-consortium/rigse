@@ -107,7 +107,7 @@ div.buttons{
 
 .lightbox .buttons a.close {
     float:right;
-    background:transparent url(/stylesheets/window/lightbox/buttons.png) no-repeat 0 0; 
+    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0; 
     background-repeat: no-repeat;
     height:29px;
     width:29px;
@@ -117,13 +117,13 @@ div.buttons{
 }
   
 .lightbox_focused .buttons a.close {
-    background:transparent url(/stylesheets/window/lightbox/buttons.png) no-repeat 0 0; 
+    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0; 
     background-repeat: no-repeat;
     float:right;
 }
 
 .lightbox .buttons.over a.close {
-    background:transparent url(/stylesheets/window/lightbox/buttons.png) no-repeat 0 0; 
+    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0; 
     float:right;
 }
 

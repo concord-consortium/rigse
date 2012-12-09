@@ -9,6 +9,7 @@ set :stages, %w(
   smartgraphs-dev smartgraphs-staging smartgraphs-production smartgraphs-aws1
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
+  genigames-dev genigames-staging genigames-production
   assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
   interactions-aws-staging interactions-aws-production
@@ -667,5 +668,5 @@ before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
 # see load 'deploy/assets' in Capfile
 # after 'deploy:create_symlink', 'deploy:create_asset_packages'
-# after 'deploy:create_asset_packages', 'deploy:cleanup'
+after 'deploy:shared_symlinks', 'deploy:cleanup'
 after 'installer:create', 'deploy:restart'
