@@ -61,7 +61,7 @@ class Activity < ActiveRecord::Base
   scope :grade, lambda { |gs|
     gs = gs.size > 0 ? gs : "%"
     {
-      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","):gs ]
+      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(",") : gs ]
     }
   }
 
@@ -118,10 +118,12 @@ class Activity < ActiveRecord::Base
       sort_order = options[:sort_order] || "name ASC"
       probe_type = options[:probe_type] || []
 
-      activities = Activity.like(name)
+      # the investigation tacked on here is because some of the sql in other scopes assumes the parent
+      # investigation is available
+      activities = Activity.like(name).investigation
 
       unless options[:include_drafts]
-        activities = activities.published.investigation
+        activities = activities.published
       end
 
       if probe_type.length > 0
@@ -138,7 +140,7 @@ class Activity < ActiveRecord::Base
         end
 
         if (!grade_span.empty?)
-          activites = activities.with_gse.grade(grade_span)
+          activities = activities.with_gse.grade(grade_span)
         end
       end
 
