@@ -55,6 +55,9 @@ class JnlpAdaptor
     if jnlp_version == 'snapshot'
       # return the most recent snapshot_version that is in the database
       # don't do any network look ups here
+      # FIXME: figure out how to identify the below error and either automatically handle it or print a better error
+      # if maven_jnlp_family is nil here on a new server run this:
+      #   rake app:jnlp:generate_maven_jnlp_resources
       maven_jnlp_family.snapshot_version
     else
       jnlp_version
