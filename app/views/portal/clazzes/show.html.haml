@@ -1,3 +1,4 @@
+= javascript_include_tag "full_status.js"
 - if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
   = render_portal_clazz_partial 'portal/clazzes/show'
   = render_portal_clazz_partial 'portal/offerings/list_for_clazz'
@@ -10,6 +11,4 @@
   = render :partial => 'shared/offering_for_teacher', :collection => @portal_clazz.offerings, :as => :offering
 - else
   = render_portal_clazz_partial 'portal/clazzes/show'
-  - # Added to show investigations to students in class view. -- Cantina-CMH 6/21/10
-  %h4 #{top_level_container_name.capitalize.pluralize}:
   = render :partial => 'shared/offerings_for_student', :locals => { :offerings => @offerings }

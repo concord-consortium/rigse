@@ -1285,6 +1285,50 @@ ul.quiet_list {
     #sortable { list-style-type: none; margin: 0; padding: 0;width:auto; }
 }
 
+
+.portal_class_attribute {
+  font-size: 1.2em;
+  .label {}
+  .value {
+    font-weight:bold;
+  }
+  margin-right: 1em;
+}
+
+.offering_for_student {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border-bottom: 3px solid #cccccc;
+  line-height: 1.5em;
+  .type {
+    font-size: 1.15em;
+    font-weight: bold;
+  }
+  .name {
+    text-transform:uppercase;
+    font-weight:bold;
+    font-size: 1.3em;
+    color: #479492;
+  }
+  .last_run    {
+    color: gray;
+  }
+  p {margin-top: 0.5em; margin-bottom: 0.5em}
+  .run_buttons {
+    .button {
+      margin: 1em;
+    }
+  }
+  .not_run {
+    font-weight: bold;
+    font-style: italic;
+  }
+  .lightbox_report_link{
+    margin-bottom: 1em;
+    margin-top: 1em;
+  }
+}
+
 .right_float
 {
   float: right;

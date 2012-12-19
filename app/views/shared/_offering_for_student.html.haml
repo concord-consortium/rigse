@@ -1,15 +1,25 @@
-.item
-  %ul.quiet_list
-    %li
-      = run_link_for(offering)
-      - if current_user.has_role?("admin") && @portal_student
-        |
-        - learner = @portal_student.learners.find_by_offering_id(offering.id)
-        - if learner
-          = report_link_for(@portal_student.learners.find_by_offering_id(offering.id), 'bundle_report', 'Bundles ')
-        - else
-          No bundles
-    %li
-      .tiny= offering.description
-
--#%li= link_to "View #{offering.name}", offering.runnable, :target => '_blank'
+- offering_status = Report::OfferingStatus.new(offering)
+- offering_statuses = [offering_status]
+- student_status = offering_status.student_status_for(@portal_student)
+/ TODO move the above outside of the view.
+.offering_for_student
+  %p
+    %span.type= runnable_type_label(offering) + ":"
+    %span.name= offering.name
+    %span.last_run some fake launch time
+  %p.description= offering.description
+  .run_buttons
+    %input.button{:type => "button", :value => "Run by Myself"  }
+    %input.button{:type => "button", :value => "Run with Other Students"}
+  .progress_div.webkit_scrollbars
+    %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
+      - if student_status.never_run
+        .not_run
+          You haven't started this yet.
+      - else
+        = render :partial => 'clazz_student_report_summary_header',
+          :locals=> {:offering_statuses => offering_statuses, :show_investigation_row => false}
+        = render :partial => 'clazz_student_report_learner_progress',
+          :locals=> {:offering_statuses => offering_statuses, :student => @portal_student}
+  .lightbox_report_link
+    =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
