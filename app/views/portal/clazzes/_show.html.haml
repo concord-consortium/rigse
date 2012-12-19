@@ -1,41 +1,21 @@
-- options = {}
-%h1="#{portal_clazz.name}"
-.clazz_info{:id => dom_id_for(portal_clazz,:item)}
-  .clazz_details{:id => dom_id_for(portal_clazz, :details)}
-    
-    .action_menu
-      #setup_flash_message_div{:style=>"display:none"}
-        #flash
-          .padded_contents
-          - flash.each do |key, message|
-            %div{:class=>"flash flash_#{key}"}= message
-            %br
-      - if request.url == portal_clazz_url(portal_clazz)
-        %script $("main_flash_message_div").hide();$("setup_flash_message_div").show();
-      .action_menu_header_left
-      .action_menu_header_right
-        -if portal_clazz.changeable? current_user
-          = link_to "edit class information", edit_portal_clazz_url(portal_clazz)
-      .block_list
-        %ul
-          %li
-            = (portal_clazz.teachers.size == 1) ? "Teacher:" : "Teachers:"
-            %strong
-              = (portal_clazz.teachers.size > 0) ? portal_clazz.teachers.collect { |t| t.name }.join(", ") : "no teachers"
-          - if portal_clazz.semester
-            %li
-              Semester:
-              %strong
-                = portal_clazz.semester.name
-            %li
-              Class Added:
-              %strong
-                = portal_clazz.created_at.strftime("%A, %B %-d, %Y")
-            %li
-              Class Word:
-              %strong
-                = portal_clazz.class_word
-          - if portal_clazz.description
-            %li
-              %strong
-                = portal_clazz.description
+%div.clearboth
+  %div{:style => "float: right;"}
+    = render :partial => 'progress_bar_legend'
+%h1= portal_clazz.name
+%p
+  %span.portal_class_attribute
+    %span.label
+      = portal_clazz.teachers_label + ":"
+    %span.value
+      = portal_clazz.teachers_listing
+  - if portal_clazz.semester
+    %span.portal_class_attribute
+      %span.label
+        Semester:
+      %span.value
+        = portal_clazz.semester.name
+  %span.portal_class_attribute
+    %span.label
+      Class Word:
+    %span.value
+      = portal_clazz.class_word
