@@ -42,4 +42,8 @@ class Report::OfferingStudentStatus
     end
   end
 
+  def never_run
+    return learner ? false : true
+  end
+
 end
