@@ -12,18 +12,24 @@ var showWait = (function() {
   var weAreWiating = function() {
     $('please_wait_message').addClassName('waiting');
     $('please_wait_message').removeClassName('ready');
+    $('please_wait_image').show();
+    $('please_wait_instructions').hide();
+    $('please_wait_report').hide();
   };
 
   var weAreReady = function() {
     $('please_wait_message').addClassName('ready');
     $('please_wait_message').removeClassName('waiting');
+    $('please_wait_image').hide();
+    $('please_wait_instructions').show();
+    $('please_wait_report').show();
   };
 
   var updateStatus = function(message) { $('please_wait_message').update(message); };
 
   var hideWait     = function() { 
     updateStatus('completed');
-    $('please_wait').hide(); 
+    $('please_wait').hide();
   };
 
   var showWait     = function() { $('please_wait').show(); };
