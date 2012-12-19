@@ -1,6 +1,11 @@
 module RunnablesHelper
+  def runnable_type_label(component)
+    type = component.is_a?(Portal::Offering) ? component.runnable.class : component.class
+    return type.display_name
+  end
+
   def title_text(component, verb, run_as)
-    text = "#{verb.capitalize} the #{component.class.display_name}: '#{component.name}' as a #{run_as}."
+    text = "#{verb.capitalize} the #{runnable_type_label(component)}: '#{component.name}' as a #{run_as}."
     if component.is_a?(JnlpLaunchable) && APP_CONFIG[:use_jnlps]
       text << " The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
     end
