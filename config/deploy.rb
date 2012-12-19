@@ -12,7 +12,6 @@ set :stages, %w(
   genigames-dev genigames-staging genigames-production
   assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
-  interactions-aws-staging interactions-aws-production
   xproject-dev
   lightweight-mw
   genomedynamics-dev genomedynamics-staging genomedynamics-production
