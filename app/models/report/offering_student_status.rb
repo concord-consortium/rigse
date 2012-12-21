@@ -7,8 +7,8 @@ class Report::OfferingStudentStatus
   # students that don't have learners for the offering
   def complete_percent
     if learner
-       # check if this is a reportable thing, if not then base the percent on the existance of the learner
-       if offering.individual_reportable?
+      # check if this is a reportable thing, if not then base the percent on the existance of the learner
+      if offering.individual_reportable?
         learner.report_learner.complete_percent
       else
         # return 99.99 because all we can tell is whether it is in progress
@@ -44,6 +44,17 @@ class Report::OfferingStudentStatus
 
   def never_run
     return learner ? false : true
+  end
+
+  def last_run_string(opts={})
+    not_run_str = "not yet started" || opts[:not_run]
+    prefix      = "Last run"        || opts[:prefix]
+    format      = "%b %d, %Y"       || opts[:format]
+
+    return not_run_str if never_run 
+    run = last_run
+    return not_run_str unless run
+    return "#{prefix} #{run.strftime(format)}"
   end
 
 end
