@@ -1,39 +1,35 @@
-
 # Decorate the links with the class correct class names.
 # hide and show the report view.
 # handle the escape key button presses.
 
 class LightboxReport
 
-  constructor: (@offering_id) ->
-    @lightbox_dom = 'please_wait'
-    @report_dom   = 'please_wait_report'
-    @report_url   = '/portal/offerings/' + @offering_id +'/student_report.html'
+  constructor: (@link_elm) ->
+    @parseOfferingUrl(@link_elm.href);
+    @lightbox_elm = $('lightbox_wrapper')
+    @report_dom   = 'lightbox_report'
+    @report_elm   = @report_dom
+
+    @link_elm.observe "click", (evt) =>
+      evt.preventDefault()
+      @showLightBox()
+      @updateReport()
+
 
   updateReport: ->
-    @showLightBox()
     new Ajax.Updater(@report_dom, @report_url);
 
   showLightBox: ->
-    $(@lightbox_dom).show()
+    @lightbox_elm.show()
 
   hideLightBox: ->
-    $(@lightbox_dom).hide()
+    @lightbox_elm.hide()
 
   parseOfferingUrl: (url) ->
-    if (url.match(/portal\/offerings\/\d+\.jnlp/gi))
-      @offering_id = url.match(/\d+\.jnlp/gi).first();
-      @offering_id = offering_id.match(/\d+/gi).first();
+    @report_url = url.match(/\/portal\/offerings\/\d+\/student_report/gi).first();
+    if jnlp_url?
+      @offering_id = @report_url.match(/\d+/gi).first();
     
 document.observe "dom:loaded", ->
-  $$(".lightbox_report_link").each(function(item) {
-    if(item.hasClassName('offering')){
-      var offering_id = ParseOfferingUrl(item.href);
-      item.observe("click", function(e){
-        showWait(offering_id);
-      });
-    } else {
-      item.observe("click", showWait);
-    }
-  });
-});
+  $$(".lightbox_report_link>a").each (item) ->
+    reporter = new LightboxReport(item)

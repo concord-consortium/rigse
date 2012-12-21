@@ -1,4 +1,8 @@
-= javascript_include_tag "full_status.js"
+/ = javascript_include_tag "full_status"
+= javascript_include_tag "student_lightbox_report"
+- content_for :lightboxes do
+  = render :partial => 'shared/lightbox_report'
+
 - if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
   = render_portal_clazz_partial 'portal/clazzes/show'
   = render_portal_clazz_partial 'portal/offerings/list_for_clazz'
