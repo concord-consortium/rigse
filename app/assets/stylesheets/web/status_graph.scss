@@ -21,50 +21,28 @@
 // #recent_activity_inprogress th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-top:0px;}  
 
 
-@mixin label {
-  margin-left: 20px;
-  display: inline-block;
-  *display: inline;
-  clear: none;
-  vertical-align: middle;
-}
 
-@mixin graph {
-  display: inline-block;
-  *display: inline;
-  clear: none;
-  width: 200px;
-  vertical-align: middle;
-}
-
-.status_graphs {
-  .disclsure_widget {
-    display: inline-block;
-    clear: none;
-    vertical-align: middle;
-    width: 40px;
-    margin: 0px;
-    padding:0px;
+table.status_graphs {
+  border: none;
+  tr.summary {}
+  td {
+    padding: 2px;
   }
-  .summary {
-    margin:  0px;
-    padding: 0px;
-    .graph {
-      @include graph
-    }
-    .label {
-      @include label
-    }
+  td.disclosure_widget {
+    width:  20px;
+    cursor: pointer;
+    color:  #479492;
   }
-  .details {
-    margin: 0px;
-    padding: 0px;
-    margin-left: 30px;
-    .graph {
-      @include graph
-    }
-    .label {
-      @include label
-    }
+  td.disclosure_widget:hover {
+    background-color: #FBF4DB;
+  }
+  td.graph {}
+  .progressbar_container {
+    display: block;
+    width: 200px;
+  }
+  
+  td.label {
+    padding-left: 10px;
   }
 }

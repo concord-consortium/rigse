@@ -6,7 +6,7 @@
   %p
     %span.type= runnable_type_label(offering) + ":"
     %span.name= offering.name
-    %span.last_run some fake launch time
+    %span.last_run= student_status.last_run_string
   %p.description= offering.description
   .run_buttons
     %input.button{:type => "button", :value => "Run by Myself"  }
@@ -19,24 +19,26 @@
       - offering = offering_status.offering
       - percentage = offering_status.complete_percent(@portal_student)
 
-      
-      .disclsure_widget
-        ▶
-      .summary
-        .graph
-          = bar_graph(percentage)
-        .label
-          completion
-
-      .details
-        - activities = offering_status.student_activities
-        - if offering_status.student_activities && offering_status.student_activities.length > 1
-          - activities.each do |activity|
-            - percentage = offering_status.activity_complete_percent(@portal_student, activity)
+      %table.status_graphs
+        %tr.summary
+          %td.disclosure_widget
+            ▶
+          %td.summary
             .graph
               = bar_graph(percentage)
-            .label fake
-            %br
+          %td.label
+            completion
+
+      
+        - activities = offering_status.student_activities
+        - if offering_status.student_activities && offering_status.student_activities.length > 0
+          - activities.each do |activity|
+            - percentage = offering_status.activity_complete_percent(@portal_student, activity)
+            %tr.details
+              %td
+              %td.graph
+                = bar_graph(percentage)
+              %td.label= activity.name
   
   .lightbox_report_link
     =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
