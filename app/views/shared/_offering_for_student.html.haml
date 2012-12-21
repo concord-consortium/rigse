@@ -11,15 +11,32 @@
   .run_buttons
     %input.button{:type => "button", :value => "Run by Myself"  }
     %input.button{:type => "button", :value => "Run with Other Students"}
-  .progress_div.webkit_scrollbars
-    %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
-      - if student_status.never_run
-        .not_run
-          You haven't started this yet.
-      - else
-        = render :partial => 'clazz_student_report_summary_header',
-          :locals=> {:offering_statuses => offering_statuses, :show_investigation_row => false}
-        = render :partial => 'clazz_student_report_learner_progress',
-          :locals=> {:offering_statuses => offering_statuses, :student => @portal_student}
+  .status_graphs
+    - if student_status.never_run
+      .not_run
+        You haven't started this yet. 
+    - else
+      - offering = offering_status.offering
+      - percentage = offering_status.complete_percent(@portal_student)
+
+      
+      .disclsure_widget
+        ▶
+      .summary
+        .graph
+          = bar_graph(percentage)
+        .label
+          completion
+
+      .details
+        - activities = offering_status.student_activities
+        - if offering_status.student_activities && offering_status.student_activities.length > 1
+          - activities.each do |activity|
+            - percentage = offering_status.activity_complete_percent(@portal_student, activity)
+            .graph
+              = bar_graph(percentage)
+            .label fake
+            %br
+  
   .lightbox_report_link
     =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
