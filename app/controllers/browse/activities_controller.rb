@@ -11,7 +11,7 @@ class Browse::ActivitiesController < ApplicationController
     
     material = ::Activity.find(params[:id])
     if material.teacher_only && current_user.anonymous?
-      flash.now[:notice] = 'Please log in as a teacher to see this content.'
+      flash.now[:important] = 'Please log in as a teacher to see this content.'
     end
     
     @search_material = Search::SearchMaterial.new(material, current_user)
