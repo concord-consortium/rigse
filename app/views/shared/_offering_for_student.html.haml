@@ -9,14 +9,25 @@
     %span.last_run= student_status.last_run_string
   %p.description= offering.description
   .run_buttons
-    %input.button{:type => "button", :value => "Run by Myself"  }
-    %input.button{:type => "button", :value => "Run with Other Students"}
+    %a.button.run.solo{:href => run_url_for(offering) }
+      Run by Myself
+    %a.button.run.in_group{:href => run_url_for(offering) }
+      Run with Other Students
+  / displayed when the student is already running the activity.
+  .run_in_progress{:style => "display: none;"}
+    .status
+      %span.wait_image
+        =image_tag('wait16.gif')
+      .message.waiting
+        Please wait while your activity loads
+        %span.wait_counter
+      %a.button.stop_button
+        Cancel
   .status_graphs
     - if student_status.never_run
       .not_run
         You haven't started this yet. 
     - else
-      - offering = offering_status.offering
       - percentage = offering_status.complete_percent(@portal_student)
 
       %table.status_graphs
