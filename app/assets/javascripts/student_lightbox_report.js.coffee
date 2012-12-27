@@ -27,7 +27,7 @@ class LightboxReport
 
   parseOfferingUrl: (url) ->
     @report_url = url.match(/\/portal\/offerings\/\d+\/student_report/gi).first();
-    if jnlp_url?
+    if @report_url?
       @offering_id = @report_url.match(/\d+/gi).first();
     
 document.observe "dom:loaded", ->
