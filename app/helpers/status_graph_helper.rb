@@ -3,7 +3,7 @@ module StatusGraphHelper
   def bar_graph(percentage, activity = false, _classes = nil) 
     classes = _classes || ['progress']
     classes << 'activity' if activity
-    classes << 'complete' if (percentage == 100)
+    classes << 'completed' if (percentage > 99)
     
     classes_str = classes.join(' ')
     
