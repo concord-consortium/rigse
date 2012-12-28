@@ -6,6 +6,9 @@
     -elsif(material.is_a? Activity)
       - link_url = browse_activity_url(material)
       =image_tag("search/activity.gif",:size=>"100x100")
+    -elsif(material.is_a? ExternalActivity)
+      - link_url = nil
+      =image_tag("search/activity.gif",:size=>"100x100")
 %div
   - unless current_user.anonymous?
     - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
@@ -17,8 +20,11 @@
         %td
         %td
           %span.material_header
-            = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
-          - if material.parent
+            - if link_url.nil?
+              = material.name
+            - else
+              = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
+          - if material.respond_to?('parent') && material.parent
             %span
               from investigation
               ="\"#{material.parent.name}\""
