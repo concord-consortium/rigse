@@ -29,27 +29,37 @@
         You haven't started this yet. 
     - else
       - percentage = offering_status.complete_percent(@portal_student)
-
+      - activities = offering_status.student_activities
+      - has_activities = offering_status.student_activities && offering_status.student_activities.length > 1
+      - single = !has_activities
       %table.status_graphs
-        %tr.summary
-          %td.disclosure_widget
-            ▶
-          %td.summary
-            .graph
-              = bar_graph(percentage)
-          %td.label
-            completion
+        - if single
+          %tr.summary
+            %td
+            %td.summary
+              .graph
+                = bar_graph(percentage)
+            %td.label
+              = offering.name
 
-      
-        - activities = offering_status.student_activities
-        - if offering_status.student_activities && offering_status.student_activities.length > 0
-          - activities.each do |activity|
+        - else
+          %tr.summary
+            %td.disclosure_widget
+              ▶
+            %td.summary
+              .graph
+                = bar_graph(percentage)
+            %td.label
+              completion
+          - activities.each_with_index do |activity,i|
+            - css_classes = "graph"
+            - css_classes << ' top_border' if i == 0
             - percentage = offering_status.activity_complete_percent(@portal_student, activity)
             %tr.details
               %td
-              %td.graph
+              %td{:class => css_classes}
                 = bar_graph(percentage)
-              %td.label= activity.name
+              %td{:class => css_classes}= activity.name
   
   .lightbox_report_link
     =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
