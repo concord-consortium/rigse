@@ -91,4 +91,11 @@ class RunStatus
 
 document.observe "dom:loaded", ->
   $$("a.button.run.solo").each (item) ->
-    reporter = new RunStatus(item)
+    runstatus = new RunStatus(item)
+  $$("a.button.run.in_group").each (item) ->
+    callback = (arg) ->
+      runstatus = new RunStatus(item)
+      runstatus.toggleRunStatusView()
+      runstatus.trigger_status_updates()
+    EnableWorkgroup(item,callback)
+
