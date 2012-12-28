@@ -41,7 +41,9 @@ table.status_graphs {
     display: block;
     width: 200px;
   }
-  
+  td.top_border {
+    border-top: 1px solid gray;
+  }
   td.label {
     padding-left: 10px;
   }
