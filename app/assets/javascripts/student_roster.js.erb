@@ -1,4 +1,5 @@
 var student_list_modal = null;
+var student_popup_base_url = "<%= RailsPortal::Application.routes.url_helpers.add_new_student_popup_portal_clazz_path(999) %>";
 
 function close_popup()
 {
@@ -25,7 +26,7 @@ function get_Add_Register_Student_Popup(strURL)
             student_list_modal.setContent("<div style='padding:10px'>" + text + "</div>");
         }
     };
-    var target_url = "/portal/classes/"+clazz_id+"/add_new_student_popup";
+    var target_url = student_popup_base_url.replace(/999/,clazz_id);
     new Ajax.Request(target_url, options);
 }
 

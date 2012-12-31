@@ -38,13 +38,14 @@ var showCountdownWait = function() {
   $(wait_dom).show();
 };
 
+var launch_status_base_url = "<%= RailsPortal::Application.routes.url_helpers.portal_launch_status_path(:id => 999, :format => :json) %>";
 var showSmartWait = function(offering) {
   var timer_dom = 'counter';
   var wait_dom = 'please_wait';
   var status_id = null;
 
   var update_status = function() {
-    new Ajax.Request('/portal/offerings/' + offering + '/launch_status.json', {
+    new Ajax.Request(launch_status_base_url.replace(/999/, offering), {
       method: 'get',
       onSuccess: function(transport) {
         status_event = transport.responseJSON;

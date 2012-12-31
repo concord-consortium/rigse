@@ -31,6 +31,9 @@ var Workgroup = function(_offering,_launch_url) {
   var lightbox_content   = null;
   var launch_url         = _launch_url;
   var learner_id_for = function(learner) { return "_LEARNER_" + learner.id; };
+  var offering_start_base_url      = "<%= RailsPortal::Application.routes.url_helpers.start_portal_offering_path(:id => 999, :format => :json) %>";
+  var offering_learners_base_url   = "<%= RailsPortal::Application.routes.url_helpers.learners_portal_offering_path(:id => 999, :format => :json) %>";
+  var offering_check_auth_base_url = "<%= RailsPortal::Application.routes.url_helpers.check_learner_auth_portal_offering_path(:id => 999) %>";
 
   var load_dom_elems = function() {
     if (learners_list === null) {
@@ -84,7 +87,7 @@ var Workgroup = function(_offering,_launch_url) {
     showWait(offering);
     // Make this request synchronously, so we can be sure it finishes before
     // the normal link click handling happens.
-    new Ajax.Request('/portal/offerings/' + offering + '/start.json', {
+    new Ajax.Request(offering_start_base_url.replace(/999/, offering), {
       parameters: { students: collaborators.map(function(l){return l.id;}).join(',')  },
       asynchronous: false,
       onSuccess: function() {
@@ -191,7 +194,7 @@ var Workgroup = function(_offering,_launch_url) {
     loading_learners = true;
     update_ui();
     pending_requests = pending_requests + 1;
-    new Ajax.Request('/portal/offerings/' + offering + '/learners.json', {
+    new Ajax.Request(offering_learners_base_url.replace(/999/,offering), {
       method: 'get',
       onSuccess: function(transport) {
         learners = transport.responseJSON;
@@ -328,7 +331,7 @@ var Workgroup = function(_offering,_launch_url) {
 
   var check_password = function(learner,passwd,succ,fail) {
     pending_requests = pending_requests + 1;
-    new Ajax.Request('/portal/offerings/' + offering + '/check_learner_auth', {
+    new Ajax.Request(offering_check_auth_base_url.replace(/999/, offering), {
       parameters: {'learner_id': learner.id, 'pw': passwd},
       onSuccess: function(transport) {
         pending_requests = pending_requests - 1;

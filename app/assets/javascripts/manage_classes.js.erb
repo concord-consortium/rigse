@@ -88,6 +88,7 @@ function ClassDragComplete()
     SaveManageClassListState();
 }
 
+var copy_clazz_base_url = "<%= RailsPortal::Application.routes.url_helpers.copy_class_portal_clazz_path(999) %>";
 function copyClass(btnSave)
 {
     btnSave.disabled = true;
@@ -141,7 +142,7 @@ function copyClass(btnSave)
         }
     };
     
-    var target_url = "/portal/classes/"+copy_clazz_id+"/copy_class";
+    var target_url = copy_clazz_base_url.replace(/999/,copy_clazz_id);
     new Ajax.Request(target_url, options);
     oSubmitText.style.display = "inline";
     return;
