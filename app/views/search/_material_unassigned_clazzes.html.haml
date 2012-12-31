@@ -3,9 +3,11 @@
   - if material.is_a? ::Investigation
     - investigation_name = material.name
     - activity_name = ""
+    - external_activity_name = ""
     - portal_offerings = nil
   - elsif material.is_a? ::Activity
     - investigation_name = ""
+    - external_activity_name = ""
     - parent_name = (material.parent)? material.parent.name : ""
     - activity_name = material.name
     - portal_offerings = []
