@@ -63,7 +63,7 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
             if(!previewWindow){
                 return;
             }
-            formString = '<form id="preview_help_page" name="preview_help_page" action="<%= RailsPortal::Application.routes.url_helper.help_preview_help_page_path %>" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_summary_page" style="opacity:0;">'+project_id+'</textarea></form>';
+            formString = '<form id="preview_help_page" name="preview_help_page" action="<%= RailsPortal::Application.routes.url_helpers.help_preview_help_page_path %>" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_summary_page" style="opacity:0;">'+project_id+'</textarea></form>';
             previewWindowDocument = previewWindow.document;
             previewWindowDocument.open();
             previewWindowDocument.write(formString);
