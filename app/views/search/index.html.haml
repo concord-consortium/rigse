@@ -25,4 +25,4 @@
       = image_tag "ajax-loader.gif"
       ( Searching ... )
     #offering_list
-      = render :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities}
+      = render :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities,:external_activities=>@external_activities}

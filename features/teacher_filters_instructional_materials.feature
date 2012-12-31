@@ -13,17 +13,16 @@ Feature: Teacher can search and filter instructional materials
     And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
     And I login with username: teacher password: teacher
     And I am on the search instructional materials page
-    And the project settings enables use of Grade Span Expectation
     
     
-  @javascript
+  @javascript @use_gse
   Scenario: Teacher should be able to filter the search results on the basis of domains
     When I check "Biological Science"
     And I should wait 2 seconds
     Then I should see "Digestive System"
     
     
-  @javascript
+  @javascript @use_gse
   Scenario: Teacher should be able to filter the search results on the basis of grades
     When I check "10-11"
     And I should wait 2 seconds
@@ -31,7 +30,7 @@ Feature: Teacher can search and filter instructional materials
     And I should see "Bile Juice"
     
     
-  @javascript
+  @javascript @use_gse
   Scenario: Teacher views all investigations and activities for all grades
     When I check "All Grades"
     And I should wait 2 seconds
@@ -89,8 +88,5 @@ Feature: Teacher can search and filter instructional materials
     And I login with username: teacher password: teacher
     And I am on the search instructional materials page
     Then the "Temperature" checkbox should be checked
-
-  Scenario: The project settings for Grade Span Expection is restored
-    And the project setting for Grade Span Expectation is restored
     
     

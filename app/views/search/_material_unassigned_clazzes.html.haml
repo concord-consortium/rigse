@@ -11,6 +11,11 @@
     - portal_offerings = []
     - if material.parent
       - portal_offerings = Portal::Offering.where(:runnable_id=>material.parent.id,:runnable_type=>"Investigation")
+  - elsif material.is_a? ::ExternalActivity
+    - investigation_name = ""
+    - activity_name = ""
+    - external_activity_name = material.name
+    - portal_offerings = Portal::Offering.where(:runnable_id=>material.id,:runnable_type=>"ExternalActivity")
 - else
   - investigation_name = ""
   - parent_name = (@material[0].parent)? @material[0].parent.name : ""
@@ -33,6 +38,13 @@
       %td.title Part&nbsp;Of: 
       %td 
         = parent_name
+- if external_activity_name.length > 0
+  %div
+    %table.material_detail
+      %tr
+        %td.title External Activity: 
+        %td 
+          = external_activity_name
 %br
 #clazz_summary_data
   - if @teacher_active_clazzes_count > 0

@@ -67,6 +67,12 @@
             %br
             (This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
           %li
+            %b
+            = f.label :include_external_activities, "Include External Activities in class materials search:", :style => "display:inline;"
+            = f.check_box :include_external_activities
+            %br
+            (This option changes whether or not External Activities will appear in the class materials search)
+          %li
             Jnlp CDN Hostname:
             = f.text_field :jnlp_cdn_hostname, :size => 60
 

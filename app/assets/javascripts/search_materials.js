@@ -299,7 +299,7 @@ function get_Assign_To_Class_Popup(material_id,material_type)
 }
 function materialCheckOnClick(ObjId)
 {
-    if(!$('investigation').checked &&  !$('activity').checked ){
+    if(!$('investigation').checked && !$('activity').checked && !$('external_activity').checked ){
         $(ObjId).checked="checked";
     }
 }
