@@ -33,7 +33,7 @@ function searchsuggestions(e, oElement,bSubmit_form) {
         return false;
     }
     ajaxRequestCounter ++;
-    ajaxRequest = new Ajax.Request('<%= RailsPortal::Application.routes.url_helpers.search_get_search_suggestions_path %>', {
+    ajaxRequest = new Ajax.Request('<%= URLResolver.getUrl("search_get_search_suggestions_path") %>', {
         parameters : {
             search_term : oElement.value,
             submit_form : bSubmit_form,
@@ -294,7 +294,7 @@ function get_Assign_To_Class_Popup(material_id,material_type)
             list_modal.center();
         }
     };
-    var target_url = "<%= RailsPortal::Application.routes.url_helpers.search_get_current_material_unassigned_clazzes_path %>";
+    var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_clazzes_path') %>";
     new Ajax.Request(target_url, options);
 }
 function materialCheckOnClick(ObjId)
