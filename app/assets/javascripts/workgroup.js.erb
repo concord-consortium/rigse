@@ -31,9 +31,9 @@ var Workgroup = function(_offering,_launch_url) {
   var lightbox_content   = null;
   var launch_url         = _launch_url;
   var learner_id_for = function(learner) { return "_LEARNER_" + learner.id; };
-  var offering_start_base_url      = "<%= RailsPortal::Application.routes.url_helpers.start_portal_offering_path(:id => 999, :format => :json) %>";
-  var offering_learners_base_url   = "<%= RailsPortal::Application.routes.url_helpers.learners_portal_offering_path(:id => 999, :format => :json) %>";
-  var offering_check_auth_base_url = "<%= RailsPortal::Application.routes.url_helpers.check_learner_auth_portal_offering_path(:id => 999) %>";
+  var offering_start_base_url      = "<%= URLResolver.getUrl('start_portal_offering_path', :id => 999, :format => :json) %>";
+  var offering_learners_base_url   = "<%= URLResolver.getUrl('learners_portal_offering_path', :id => 999, :format => :json) %>";
+  var offering_check_auth_base_url = "<%= URLResolver.getUrl('check_learner_auth_portal_offering_path', :id => 999) %>";
 
   var load_dom_elems = function() {
     if (learners_list === null) {

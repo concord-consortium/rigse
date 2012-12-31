@@ -88,7 +88,7 @@ function ClassDragComplete()
     SaveManageClassListState();
 }
 
-var copy_clazz_base_url = "<%= RailsPortal::Application.routes.url_helpers.copy_class_portal_clazz_path(999) %>";
+var copy_clazz_base_url = "<%= URLResolver.getUrl('copy_class_portal_clazz_path', :id => 999) %>";
 function copyClass(btnSave)
 {
     btnSave.disabled = true;

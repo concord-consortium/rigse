@@ -1,5 +1,5 @@
 var student_list_modal = null;
-var student_popup_base_url = "<%= RailsPortal::Application.routes.url_helpers.add_new_student_popup_portal_clazz_path(999) %>";
+var student_popup_base_url = "<%= URLResolver.getUrl("add_new_student_popup_portal_clazz_path", {:id => 999}) %>";
 
 function close_popup()
 {
