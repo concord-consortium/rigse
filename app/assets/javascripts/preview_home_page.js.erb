@@ -25,7 +25,7 @@ function preview_home_page(homePageContentId, homePageContent){
                          '<meta http-equiv="Content-type" value="text/html; charset=UTF-8" />' +
                        '</head>' +
                        '<body>' +
-                         '<form id="preview_project_form" action="/home/preview_home_page" method="post" style="display: none;" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">' +
+                         '<form id="preview_project_form" action="<%= RailsPortal::Application.routes.url_helpers.home_preview_home_page_path %>" method="post" style="display: none;" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">' +
                            '<textarea id="preview_content_container" name="home_page_preview_content" style="opacity:0;">' +
                              previewContent +
                            '</textarea>' +
