@@ -193,11 +193,10 @@ body#tinymce {
   &.geniverse {
     background: white image-url("new/banners/geniverse.png") 0 0 no-repeat; }
   &.genigames {
+    background: transparent image-url("banners/genigames.png") 0 0 no-repeat }
     a {
       padding-top: 25px;
     }
-    text-indent: 0px;
-    background: white image-url("new/banners/empty.png") top right no-repeat; }
   &.has {
     background: transparent image-url("banners/has.png") 0 0 no-repeat; }
   &.interactions {
