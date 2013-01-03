@@ -1,7 +1,7 @@
 .run_in_progress{
   // border: 1px solid black;
   display: block;
-  margin: 1em; // match .run_buttons in app.scss
+  margin: 0.25em; // match .run_buttons in app.scss
   .status {
     font-weight: bold;  
     span.wait_image { }
