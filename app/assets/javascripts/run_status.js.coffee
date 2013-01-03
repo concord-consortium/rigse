@@ -6,24 +6,13 @@ class RunStatus
     @run_status_elm    = @run_button_elm.next '.run_in_progress'
     @message_elm        = @run_status_elm.down '.message'
     @spinner_elm        = @run_status_elm.down '.wait_image'
-    @cancel_elm         = @run_status_elm.down 'a.stop_button'
     @showing_run_status = false
-    @quit_message =
-    "Your activity is starting up.
-    If you are sure your activity isn't starting click 'Cancel'.
-    Otherewise click 'OK' and quit your activity by closing it's window.
-    "
+
     if @run_button_elm and @run_status_elm
       @buttonElem.observe "click", (evt) =>
         # evt.preventDefault()
         @toggleRunStatusView()
         @trigger_status_updates()
-
-      @cancel_elm.observe "click", (evt) =>
-        result = window.confirm(@quit_message)
-        # TODO record this interaction in GA or elsewhere.
-        # maybe we need an http endpoint for recording these things.
-        @toggleRunStatusView() unless result
 
   toggleRunStatusView: ->
     if @showing_run_status
