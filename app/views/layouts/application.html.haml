@@ -47,11 +47,7 @@
   %body
 
     #note{:style=>"display: none;"}
-    -#= yield :dynamic_js_contents
     = content_for :lightboxes
-    / = render :partial => 'shared/please_wait'
-    / = render :partial => 'shared/workgroup'
-    / = render :partial => 'shared/lightbox_report'
     #page
       / For non-visual user agents:
       #top
