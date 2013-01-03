@@ -28,4 +28,7 @@
 = require_tree './in_place_rich_editor'
 = require 'jquery/jquery'
 = require 'search_materials'
+= require 'student_lightbox_report'
+= require 'progress_disclosure'
+= require 'run_status'
 */
