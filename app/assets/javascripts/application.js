@@ -16,7 +16,6 @@
 = require 'accordion'
 = require 'item_selectable'
 = require 'live_validation'
-= require 'please_wait'
 = require 'report_filter'
 = require 'pagination'
 = require 'workgroup'
