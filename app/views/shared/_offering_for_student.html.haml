@@ -6,13 +6,13 @@
   %p
     %span.type= runnable_type_label(offering) + ":"
     %span.name= offering.name
-    %span.last_run= student_status.last_run_string
   %p.description= offering.description
   .run_buttons
     %a.button.run.solo{:href => run_url_for(offering) }
       Run by Myself
     %a.button.run.in_group{:href => run_url_for(offering) }
       Run with Other Students
+    %span.last_run= student_status.last_run_string
   / displayed when the student is already running the activity.
   .run_in_progress{:style => "display: none;"}
     .status
@@ -25,39 +25,32 @@
     - if student_status.never_run
       .not_run
         You haven't started this yet. 
+        =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
     - else
       - percentage = offering_status.complete_percent(@portal_student)
       - activities = offering_status.student_activities
       - has_activities = offering_status.student_activities && offering_status.student_activities.length > 1
       - single = !has_activities
       %table.status_graphs
-        - if single
-          %tr.summary
+        %tr.summary
+          %td.disclosure_widget
+            ▶
+          %td.summary
+            .graph
+              = bar_graph(percentage)
+          %td.label
+            completion
+        - activities.each_with_index do |activity,i|
+          - css_classes = "graph"
+          - css_classes << ' top_border' if i == 0
+          - percentage = offering_status.activity_complete_percent(@portal_student, activity)
+          %tr.details
             %td
-            %td.summary
-              .graph
-                = bar_graph(percentage)
-            %td.label
-              = offering.name
-
-        - else
-          %tr.summary
-            %td.disclosure_widget
-              ▶
-            %td.summary
-              .graph
-                = bar_graph(percentage)
-            %td.label
-              completion
-          - activities.each_with_index do |activity,i|
-            - css_classes = "graph"
-            - css_classes << ' top_border' if i == 0
-            - percentage = offering_status.activity_complete_percent(@portal_student, activity)
-            %tr.details
-              %td
-              %td{:class => css_classes}
-                = bar_graph(percentage)
-              %td{:class => css_classes}= activity.name
+            %td{:class => css_classes}= bar_graph(percentage)
+            - if (i == 0)
+              %td.label.top_border= activity.name
+            - else
+              %td.label=activity.name
   
-  .lightbox_report_link
-    =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
+      %span.lightbox_report_link
+        =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
