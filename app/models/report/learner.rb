@@ -130,6 +130,12 @@ class Report::Learner < ActiveRecord::Base
     if self.learner.offering.internal_report?
       calculate_last_run
       update_answers
+    else
+      self.num_answerables = 0
+      self.num_answered = 0
+      self.num_correct = 0
+      self.complete_percent = 99.9
+      self.last_run = Time.now
     end
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save

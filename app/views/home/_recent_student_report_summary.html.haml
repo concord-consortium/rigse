@@ -18,8 +18,9 @@
       - if total_complete_percent == 100
         %tr
           %td.student_name= user.full_name
-          %td{:title=>"#{student_status.last_run.strftime('%m/%d/%Y')}"}
-            = student_status.last_run.strftime('%m/%d')
+          - last_run = student_status.last_run
+          %td{:title=>"#{last_run.nil? ? "unknown" : last_run.strftime('%m/%d/%Y')}"}
+            = last_run.nil? ? "unknown" : last_run.strftime('%m/%d')
     - when -1
       - if total_complete_percent > 0 && total_complete_percent < 100
         %tr
