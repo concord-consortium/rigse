@@ -3,13 +3,16 @@ class Report::OfferingStudentStatus
   attr_accessor :student
   attr_accessor :offering
 
+  def offering_reportable?
+    return true if (offering && offering.individual_reportable?)
+  end
   # this is redundant with the Report::Learner object, but that object doesn't handle
   # students that don't have learners for the offering
   def complete_percent
     if learner
       # check if this is a reportable thing, if not then base the percent on the existance of the learner
-      if offering.individual_reportable?
-        learner.report_learner.complete_percent
+      if offering_reportable?
+        learner.report_learner.complete_percent || 0 
       else
         # return 99.99 because all we can tell is whether it is in progress
         # if we return 100 then the progress bar will indicate it is compelete
