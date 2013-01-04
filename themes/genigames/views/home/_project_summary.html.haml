@@ -1,5 +1,6 @@
-%p
-  %strong
-    GeniGames Portal
-%p 
-  GeniGames aims to bring dragons to your doorstep. More fire, more flying, less mess.
+- unless current_project.home_page_content.blank?
+  - home_page_content = current_project.home_page_content
+  = home_page_content.html_safe
+- else
+  - render_project_info
+  = content_for :project_info
