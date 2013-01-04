@@ -25,12 +25,9 @@
     - if student_status.never_run
       .not_run
         You haven't started this yet. 
-        =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
     - else
-      - percentage = offering_status.complete_percent(@portal_student)
-      - activities = offering_status.student_activities
-      - has_activities = offering_status.student_activities && offering_status.student_activities.length > 1
-      - single = !has_activities
+      - percentage = student_status.complete_percent
+      - activities = offering_status.student_activities || []
       %table.status_graphs
         %tr.summary
           %td.disclosure_widget
@@ -43,7 +40,7 @@
         - activities.each_with_index do |activity,i|
           - css_classes = "graph"
           - css_classes << ' top_border' if i == 0
-          - percentage = offering_status.activity_complete_percent(@portal_student, activity)
+          - percentage = student_status.activity_complete_percent(activity)
           %tr.details
             %td
             %td{:class => css_classes}= bar_graph(percentage)
