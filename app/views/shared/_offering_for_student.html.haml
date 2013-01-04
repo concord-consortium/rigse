@@ -24,7 +24,6 @@
         You haven't started this yet. 
     - else
       - percentage = student_status.complete_percent
-      - activities = offering_status.student_activities || []
       %table.status_graphs
         %tr.summary
           %td.disclosure_widget
@@ -34,7 +33,7 @@
               = bar_graph(percentage)
           %td.label
             completion
-        - activities.each_with_index do |activity,i|
+        - student_status.sub_sections.each_with_index do |activity,i|
           - css_classes = "graph"
           - css_classes << ' top_border' if i == 0
           - percentage = student_status.activity_complete_percent(activity)
@@ -47,4 +46,5 @@
               %td.label=activity.name
   
       %span.lightbox_report_link
-        =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
+        - if student_status.dispay_report_link?
+          =link_to "Generate a report of my work", student_report_portal_offering_url(offering)

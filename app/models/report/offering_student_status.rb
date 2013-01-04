@@ -3,9 +3,24 @@ class Report::OfferingStudentStatus
   attr_accessor :student
   attr_accessor :offering
 
-  def offering_reportable?
-    return true if (offering && offering.individual_reportable?)
+  # loosely based on offering_status.rb#student_activities
+  def sub_sections
+    runnable = offering.runnable
+    if runnable.is_a? ::Investigation
+      runnable.activities.student_only
+    else
+      [runnable]
+    end
   end
+
+  def dispay_report_link?
+    offering_reportable?
+  end
+  
+  def offering_reportable?
+    (offering && offering.individual_reportable?)
+  end
+
   # this is redundant with the Report::Learner object, but that object doesn't handle
   # students that don't have learners for the offering
   def complete_percent
@@ -40,13 +55,14 @@ class Report::OfferingStudentStatus
   end
 
   def last_run
-    if learner
-      learner.report_learner.last_run
+    if (learner && learner.report_learner)
+      return learner.report_learner.last_run
     end
+    return nil
   end
 
   def never_run
-    return learner ? false : true
+    return last_run ? false : true
   end
 
   def last_run_string(opts={})
@@ -55,9 +71,7 @@ class Report::OfferingStudentStatus
     format      = "%b %d, %Y"       || opts[:format]
 
     return not_run_str if never_run 
-    run = last_run
-    return not_run_str unless run
-    return "#{prefix} #{run.strftime(format)}"
+    return "#{prefix} #{last_run.strftime(format)}"
   end
 
 end
