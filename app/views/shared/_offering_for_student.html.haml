@@ -8,10 +8,7 @@
     %span.name= offering.name
   %p.description= offering.description
   .run_buttons
-    %a.button.run.solo{:href => run_url_for(offering) }
-      Run by Myself
-    %a.button.run.in_group{:href => run_url_for(offering) }
-      Run with Other Students
+    =student_run_buttons(offering)
     %span.last_run= student_status.last_run_string
   / displayed when the student is already running the activity.
   .run_in_progress{:style => "display: none;"}

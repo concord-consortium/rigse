@@ -1,4 +1,35 @@
 module RunnablesHelper
+  def display_workgroups_run_link?(offering)
+    offering.runnable.is_a?(JnlpLaunchable) && APP_CONFIG[:use_adhoc_workgroups]
+  end
+
+  def display_status_updates?(offering)
+    offering.runnable.is_a? JnlpLaunchable
+  end
+
+  def student_run_buttons(offering,opts={})
+    solo_label       = opts[:solo_text]  || "Run by Myself"
+    group_label      = opts[:group_label]|| "Run with Other Students"
+    solo_css_classes = opts[:css_classes]|| []
+    
+    solo_css_classes  << "button"
+    solo_css_classes  << "run" if display_status_updates?(offering)
+    group_css_classes = solo_css_classes.dup
+    group_css_classes << "in_group"
+    solo_css_classes  << "solo"
+    
+    capture_haml do
+      haml_tag :a, :class => solo_css_classes.join(" "), :href => run_url_for(offering) do
+        haml_concat solo_label
+      end
+      if display_workgroups_run_link?(offering)
+        haml_tag :a, :class => group_css_classes.join(" "), :href => run_url_for(offering)  do
+          haml_concat group_label
+        end
+      end
+    end
+  end
+
   def runnable_type_label(component)
     type = component.is_a?(Portal::Offering) ? component.runnable.class : component.class
     return type.display_name
