@@ -1,16 +1,22 @@
+-material_count = material.offerings.count
+- if material.parent
+  - material_count = material_count + material.parent.offerings.count
 .material_icon
   .icon_image
     -if(material.is_a? Investigation)
+      - material_type = "Inv"
       - link_url = browse_investigation_url(material)
       =image_tag("search/investigation.gif",:size=>"100x100")
     -elsif(material.is_a? Activity)
+      - material_type = "Act"
       - link_url = browse_activity_url(material)
       =image_tag("search/activity.gif",:size=>"100x100")
     -elsif(material.is_a? ExternalActivity)
+      - material_type = material.class.to_s
       - link_url = nil
       =image_tag("search/activity.gif",:size=>"100x100")
 %div
-  - unless current_user.anonymous?
+  - if current_user.portal_teacher
     - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
     - offerings=Portal::Offering.where(:runnable_id=>material.id, :runnable_type=>"#{material.class.to_s}", :clazz_id=>teacher_clazz_ids)
   
@@ -32,18 +38,34 @@
             %div
               %span{:style=>"font-weight:bold"}
                 ="By #{material.user.name}"
-        %td{:width=>"75px"}
+        %td{:width=>"90px"}
           %div{:style=>'float:right'}
-            = link_to "Preview",run_url_for(material,{}),:class=>"button"
+            - unless current_user.anonymous?
+              - unless material.teacher_only?
+                %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material_type}','Preview')"}Preview &#9660;
+                .Expand_Collapse{:id=>"#{material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                  .preview_link
+                    = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
+                  .preview_link{:style=>"padding-top:0px"}
+                    = link_to "As Student", run_url_for(material, {})
+              - else
+                = link_to "Preview",run_url_for(material,{:teacher_mode => true}),:class=>"button",:style=>"width:58px;text-align:center"
+            - else
+              = link_to "Preview",run_url_for(material,{}),:class=>"button"
         %td{:width=>"130px"}
           %div{:style=>'float:right'}
-            - if current_user.portal_teacher
-              = link_to "Assign to a Class","javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')", :class=>"button"
+            - if link_url
+              = link_to "Assign to a Class","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')", :class=>"button"
             - else
-              = link_to "Assign to a Class", url_for({ :controller => '/search', :action => 'unauthorized_user' }), :class=>"button"
+              -# this is to temporarily deal with external activites which don't have a browse page
+              - if current_user.portal_teacher
+                = link_to "Assign to a Class","javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')", :class=>"button"
+              - else
+                = link_to "Assign to a Class", url_for({ :controller => '/search', :action => 'unauthorized_user' }), :class=>"button"
+
       %tr
         %td{:colspan=>3}
-          - unless current_user.anonymous?
+          - if current_user.portal_teacher
             - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
             - offerings = offerings.sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
             - offering_clazz_names = offerings.map{|o| o.clazz.name}
@@ -52,15 +74,17 @@
                 (Assigned to
                 = offering_clazz_names.join(", ")+")"
 .material_body
-  -unless material.description.nil?
-    = material.description.html_safe 
-  %i
-    -if(material.offerings.count == 0)
-      Not used in any class.
-    -elsif(material.offerings.count == 1)
-      Used in 1 class.
-    -else
-      Used in #{material.offerings.count} classes.
+  -unless material.description.nil? || material.description.blank?
+    = material.description.html_safe
+    = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
+  %div
+    %i
+      -if(material_count == 0)
+        Not used in any class.
+      -elsif(material_count == 1)
+        Used in 1 class.
+      -else
+        Used in #{material_count} classes.
   - required_equipments = probe_types(material).map { |p| p.name }.join(", ") 
   - unless required_equipments == ""
     #required_equipment_container

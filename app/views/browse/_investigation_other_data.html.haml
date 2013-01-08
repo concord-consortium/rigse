@@ -1,13 +1,12 @@
 .investigation_other_data
-  - unless investigation.grade_span_expectation.nil?
+  - unless material_other_data[:grade_span_expectation].nil?
     .data_header Scientific Domain
-    .data_value 
-      = investigation.domain.name
+    .data_value
+      = material_other_data[:domain_name]
     .data_header Grade
-    .data_value 
-      = investigation.grade_span
-  - required_equipments = probe_types(investigation).map { |p| p.name }.join(", ") 
-  - unless required_equipments == ""
+    .data_value
+      = material_other_data[:grade_span]
+  - unless material_other_data[:required_equipments].blank?
     .data_header Required sensor(s)
-    .data_value 
-      = required_equipments
+    .data_value
+      = material_other_data[:required_equipments]

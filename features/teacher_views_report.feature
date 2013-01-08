@@ -161,4 +161,25 @@ Feature: Teacher views report
     And I follow "Run Report"
     And I apply filter for the question "a" in the report page
     Then I should see question "a" checked when all question is displayed in the report page
+    And I close the newly opened window
+    
+  @javascript
+  Scenario: A teacher should see a message if show selected is clicked without selecting any question
+    Given the following activities with multiple choices exist:
+        | activity       | section   | page   | multiple_choices | image_questions | user      |
+        | first activity | section 3 | page 3 | a                | image_q         | teacher_a |
+    And the following assignments exist:
+        | type     | name            | class            |
+        | activity | first activity  | Intro to bugs    |
+    And the following student answers:
+        | student   | class         | activity       | question_prompt | answer |
+        | student_a | Intro to bugs | first activity | a               | a      |
+        | student_a | Intro to bugs | first activity | image_q         | Y      |
+        | student_b | Intro to bugs | first activity | a               | b      |
+    When I am logged in with the username teacher_a
+    And I go to Instructional Materials page for "Intro to bugs"
+    And I follow "Run Report"
+    And I click "Show selected" button on report page
+    Then I should see "No questions have been selected." message on the report page
+    And I close the newly opened window
     
