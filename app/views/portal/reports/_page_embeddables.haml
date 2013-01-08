@@ -1,9 +1,8 @@
 - page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
   %div{:id => dom_id_for(embeddable, :content), :style => 'position: relative;', :class => 'report_embeddable'}
     - if show_selection_controls
-      - if @activity_report_id == nil
-        %div{:style => 'position: absolute; left: -20px; top: 4px;'}
-          = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @report_embeddable_filter.include?(embeddable), :class => "filter_checkbox"
+      %div{:style => 'position: absolute; left: -20px; top: 4px;'}
+        = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @report_embeddable_filter.include?(embeddable), :class => "filter_checkbox"
     - report_type = "offerings"
     - locals = {:embeddable => embeddable, :offering => offering }
     - if learners.kind_of?(Array)

@@ -1,15 +1,26 @@
 !!! Strict
-%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml", :prefix => "og: http://ogp.me/ns#" }
   %head
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
-    %title= @page_title || APP_CONFIG[:site_name]
+    - page_title = (@page_title) ? "#{@page_title} | #{APP_CONFIG[:site_name]}" : APP_CONFIG[:site_name] 
+    %title= page_title
     %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
     %meta{ :name => "distribution", :content => "all" }
     %meta{ :name => "robots", :content => "all" }
     %meta{ :name => "resource-type", :content => "document" }
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     %link{ :href => asset_path("favicon.ico"), :rel => "shortcut icon"}/
-
+    
+    - @meta_tags = @meta_tags || {}
+    - @meta_tags.each_pair do |key, value|
+      %meta{ :name => key, :content => value }
+    
+    / Open graph tags
+    - @open_graph = @open_graph || {}
+    - @open_graph[:site_name] = @open_graph[:site_name] || APP_CONFIG[:site_name]
+    - @open_graph.each_pair do |key, value|
+      %meta{ :property => "og:#{key}", :content => value }
+    
     != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     / TODO: if themes need their own print CSS make a themed link here:
     != stylesheet_link_tag 'print', {'media' => 'print'}
@@ -61,11 +72,8 @@
           #content_header.main_content_colors
             = content_for :content_header
           #js_flash{:style=>"display: none;"}
-          #main_flash_message_div
-            #flash
-              .padded_contents
-                - flash.each do |key, message|
-                  %div{:class=>"flash flash_#{key}"}= message
+          = render :partial=>"layouts/flashes"
+
           = content_for :layout
 
 

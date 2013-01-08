@@ -31,7 +31,7 @@
                     - description_text = "Reporting is unavailable until at least one activity is started by this student."
                     = link_to "#{student_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
                   - else
-                    = link_to( student_name,activity_report_portal_learner_url(learner),{:target=>"_blank",:class=>"activity_report"})
+                    = link_to( student_name,report_portal_learner_url(learner),{:target=>"_blank",:class=>"activity_report"})
                 - else
                   = student_name
     .progress_div.webkit_scrollbars
@@ -45,7 +45,7 @@
                 - report_learner_activity = Report::LearnerActivity.where("complete_percent > 0 && activity_id = #{activity.id} && learner_id IN (?)",learner_ids)
                 - if report_learner_activity && offering.reportable?
                   - if report_learner_activity.length > 0
-                    = link_to( activity_name,activity_report_portal_offering_url(offering,:activity_id => activity.id),{:target=>"_blank",:class=>"activity_report"})
+                    = link_to( activity_name,portal_offerings_report_url(offering,activity),{:target=>"_blank",:class=>"activity_report"})
                   - else
                     - description_text = "Reporting is unavailable until at least one student has started this activity."
                     = link_to "#{activity_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
@@ -63,7 +63,7 @@
                   - if offering.individual_reportable?
                     - if percentage > 0
                       - learner = learners.find_by_student_id(student_status.student.id)
-                      %a{:href=>activity_report_portal_learner_url(learner,:activity_id => activity.id),:target=>"_blank"}
+                      %a{:href=>portal_learners_report_url(learner,activity),:target=>"_blank"}
                         .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
                           - if percentage == 100
                             .progress.completed{:style=>"width:#{percentage}%"}
