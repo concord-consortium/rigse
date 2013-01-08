@@ -7,13 +7,14 @@ class LightboxReport
   constructor: (@link_elm) ->
     @parseOfferingUrl(@link_elm.href);
     @lightbox_elm = $('lightbox_wrapper')
+    @last_update_time    = 0
     @report_dom   = 'report'
     @report_elm   = $(@report_dom)
     @close_elm    = $('lightbox_closer')    
     @interval_id  = null
-    @enableEvents()
+    @rebindEvents()
 
-  enableEvents: ->
+  rebindEvents: ->
     # disable any lingering events:
     $(document).stopObserving 'keydown'
     @close_elm.stopObserving  'click'
@@ -36,8 +37,15 @@ class LightboxReport
     @disableUpdates()  # remove old intervals
     @updateReport()
     update_func = =>
-      @updateReport()
-    @interval_id = setInterval(update_func, 10000)
+      @save_scroll_position()
+      new Ajax.Request @updated_at_url,
+        method: "get",
+        onSuccess: (transport) =>
+          if @isItUpdatetime(transport.responseText)
+            @updateReport()
+            @restore_scroll_position()
+    @interval_id = setInterval(update_func, 1000)
+    @rebindEvents()
 
   disableUpdates: ->
     if @interval_id
@@ -48,6 +56,13 @@ class LightboxReport
     @enableUpdates()
     @lightbox_elm.show()
 
+  save_scroll_position: ->
+    @last_scroll_position = document.viewport.getScrollOffsets()
+
+  restore_scroll_position: ->
+    if @last_scroll_position
+      window.scrollTo(@last_scroll_position.left, @last_scroll_position.top)
+
   hideLightBox: ->
     @disableUpdates()
     @lightbox_elm.hide()
@@ -56,6 +71,20 @@ class LightboxReport
     @report_url = url.match(/\/portal\/offerings\/\d+\/student_report/gi).first();
     if @report_url?
       @offering_id = @report_url.match(/\d+/gi).first()
+      # TODO relative routes?
+      @updated_at_url = "/report/learner/updated_at/#{@offering_id}"
+
+  isItUpdatetime: (response) ->
+    should_we_udpate = false
+    if response
+      this_time = parseInt(response)
+      @last_update_time
+      if this_time && this_time > @last_update_time
+        @last_update_time = this_time
+        should_we_udpate = true
+    should_we_udpate
+
+
     
   handleKedown: (e) ->
     if (e.keyCode)    
