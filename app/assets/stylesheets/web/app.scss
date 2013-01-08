@@ -1112,7 +1112,7 @@ ul.quiet_list {
 
 /* FOOTER */
 #footer {
-  background: transparent image-url("styles/bg-footer-gradient.png") repeat-x left bottom;
+  background: transparent image-url("styles/bg-footer-gradient.png") repeat-x left 58px;
 	clear: both;
   color: #3f3f3f;
   height: 200px;
@@ -1130,7 +1130,7 @@ ul.quiet_list {
     z-index: 5;
     p {
       font: 0.9em arial, helvetica, sans-serif;
-    	padding: 152px 0 0 235px;}}
+      padding: 142px 0 0 280px;}}
   #share-it {
     float: right;
     margin: -26px 123px 0 0;
