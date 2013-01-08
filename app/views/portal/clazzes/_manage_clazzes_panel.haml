@@ -2,7 +2,7 @@
   .header Manage Class List
   -if(@teacher.teacher_clazzes.length == 0)
     = 'To get started,' 
-    %a{ :id => "create_class", :href => "/portal/classes/new"} create a class
+    %a{ :id => "create_class", :href => new_portal_clazz_path } create a class
     ='. Once you have created your class(es) you will be able to assign Investigations to your students.'
   -else
     .manage_info Checked classes appear on your home page. To make a class inactive, uncheck its box. All data for inactive classes is preserved. Drag and drop class to reorder it in the list.

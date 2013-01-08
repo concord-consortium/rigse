@@ -17,10 +17,7 @@ class MiscController < ActionController::Base
         :bundle_content => learner.bundle_logger.in_progress_bundle
       )
     end
-    asset = get_banner_asset(APP_CONFIG[:theme])
-    if asset.nil?
-      asset = get_banner_asset("empty")
-    end
+    asset = ActionController::Base.helpers.asset_paths.asset_for("cc_corner_logo.png", nil)
     send_file(asset.pathname.to_s, {:type => 'image/png', :disposition => 'inline'} )
   end
 

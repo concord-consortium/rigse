@@ -11,8 +11,10 @@
       - material_type = "Act"
       - link_url = browse_activity_url(material)
       =image_tag("search/activity.gif",:size=>"100x100")
-- else
-  - material_type = material.class.to_s
+    -elsif(material.is_a? ExternalActivity)
+      - material_type = material.class.to_s
+      - link_url = nil
+      =image_tag("search/activity.gif",:size=>"100x100")
 %div
   - if current_user.portal_teacher
     - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
@@ -24,8 +26,11 @@
         %td
         %td
           %span.material_header
-            = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
-          - if material.parent
+            - if link_url.nil?
+              = material.name
+            - else
+              = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
+          - if material.respond_to?('parent') && material.parent
             %span
               from investigation
               ="\"#{material.parent.name}\""
@@ -49,7 +54,15 @@
               = link_to "Preview",run_url_for(material,{}),:class=>"button"
         %td{:width=>"130px"}
           %div{:style=>'float:right'}
-            = link_to "Assign to a Class","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')", :class=>"button"
+            - if link_url
+              = link_to "Assign to a Class","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')", :class=>"button"
+            - else
+              -# this is to temporarily deal with external activites which don't have a browse page
+              - if current_user.portal_teacher
+                = link_to "Assign to a Class","javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')", :class=>"button"
+              - else
+                = link_to "Assign to a Class", url_for({ :controller => '/search', :action => 'unauthorized_user' }), :class=>"button"
+
       %tr
         %td{:colspan=>3}
           - if current_user.portal_teacher

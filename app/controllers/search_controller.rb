@@ -17,6 +17,7 @@ class SearchController < ApplicationController
     search_options=get_searchoptions()
     @investigations_count=0
     @activities_count=0
+    @external_activities_count=0
     if @material_type.include?('investigation')
       @investigations = Investigation.search_list(search_options)
       @investigations_count = @investigations.length
@@ -26,6 +27,11 @@ class SearchController < ApplicationController
       @activities = Activity.search_list(search_options)
       @activities_count = @activities.length
       @activities = @activities.paginate(:page => @activity_page, :per_page => 10)
+    end
+    if @material_type.include?('external_activity')
+      @external_activities = ExternalActivity.search_list(search_options)
+      @external_activities_count = @external_activities.length
+      @external_activities = @external_activities.paginate(:page => @external_activity_page, :per_page => 10)
     end
   end
   
@@ -37,7 +43,7 @@ class SearchController < ApplicationController
     search_material();
     if request.xhr?
       render :update do |page| 
-        page.replace_html 'offering_list', :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities}
+        page.replace_html 'offering_list', :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities,:external_activities=>@external_activities}
         page << "$('suggestions').remove();"
       end
     else
@@ -61,6 +67,11 @@ class SearchController < ApplicationController
     redirect_to redirect_url
   end
   
+  def setup_material_type
+    @material_type = param_find(:material, (params[:method] == :get)) ||
+      (current_project.include_external_activities? ? ['investigation','activity','external_activity'] : ['investigation','activity'])
+  end
+
   def get_searchoptions
     unless params[:search_term].nil?
       @search_term = params[:search_term].strip
@@ -76,7 +87,8 @@ class SearchController < ApplicationController
     end
     @investigation_page=params[:investigation_page]|| 1
     @activity_page = params[:activity_page] || 1
-    @material_type = param_find(:material, (params[:method] == :get)) || ['investigation','activity']
+    @external_activity_page = params[:external_activity_page] || 1
+    setup_material_type
     @probe_type = param_find(:probe, (params[:method] == :get)) || []
     
     # from cookies, this comes back as as single string sometimes.
@@ -111,9 +123,10 @@ class SearchController < ApplicationController
       @grade_span= @grade_span.split('&')
     end
     @probe_type = param_find(:probe, (params[:method] == :get)) || []
-    @material_type = param_find(:material, (params[:method] == :get)) || ['investigation','activity']
+    setup_material_type
     investigations=[]
     activities=[]
+    external_activities=[]
     ajaxResponseCounter = params[:ajaxRequestCounter]
     submitform = params[:submit_form]
     if current_user.anonymous?
@@ -134,12 +147,16 @@ class SearchController < ApplicationController
     if @material_type.include?('activity')
       activities = Activity.search_list(search_options)
     end
+    if @material_type.include?('external_activity') && current_project.include_external_activities
+      external_activities = ExternalActivity.search_list(search_options)
+    end
+
     @suggestions= [];
-    @suggestions = investigations + activities
+    @suggestions = investigations + activities + external_activities
     if request.xhr?
        render :update do |page|
          page << "if (ajaxRequestCounter == #{ajaxResponseCounter}) {"
-         page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@search_term.length,:investigations=>investigations,:activities=>activities,:submit_form=>submitform}}
+         page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@search_term.length,:investigations=>investigations,:activities=>activities,:external_activities=>external_activities,:submit_form=>submitform}}
          page << '}'
        end
     end
@@ -224,6 +241,9 @@ class SearchController < ApplicationController
             material = ::Activity.find(params[:material_id])
             material_parent = material.parent
             used_in_clazz_count = (material_parent)? material_parent.offerings.count : material.offerings.count
+          elsif runnable_type == "ExternalActivity"
+            material = ::ExternalActivity.find(params[:material_id])
+            used_in_clazz_count = material.offerings.count
           end
           
           if(used_in_clazz_count == 0)

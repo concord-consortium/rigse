@@ -33,7 +33,7 @@ function searchsuggestions(e, oElement,bSubmit_form) {
         return false;
     }
     ajaxRequestCounter ++;
-    ajaxRequest = new Ajax.Request('/search/get_search_suggestions', {
+    ajaxRequest = new Ajax.Request('<%= URLResolver.getUrl("search_get_search_suggestions_path") %>', {
         parameters : {
             search_term : oElement.value,
             submit_form : bSubmit_form,
@@ -277,7 +277,7 @@ function get_Assign_To_Class_Popup(material_id,material_type)
         title:"Assign Materials to a Class"
     };
     list_lightbox=new Lightbox(lightboxConfig);
-    var target_url = "/search/get_current_material_unassigned_clazzes";
+    var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_clazzes_path') %>";
      var options = {
         method: 'post',
         parameters : {'material_type':material_type,'material_id':material_id},
@@ -296,7 +296,7 @@ function get_Assign_To_Class_Popup(material_id,material_type)
 
 function materialCheckOnClick(ObjId)
 {
-    if(!$('investigation').checked &&  !$('activity').checked ){
+    if(!$('investigation').checked && !$('activity').checked && !$('external_activity').checked ){
         $(ObjId).checked="checked";
     }
 }

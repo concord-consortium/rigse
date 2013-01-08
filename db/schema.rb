@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120830195146) do
+ActiveRecord::Schema.define(:version => 20121227113712) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120830195146) do
     t.boolean  "use_periodic_bundle_uploading",                :default => false
     t.string   "jnlp_cdn_hostname"
     t.boolean  "active"
+    t.boolean  "include_external_activities",                  :default => false
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|

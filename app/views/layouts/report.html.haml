@@ -8,7 +8,7 @@
     %meta{ :name => "robots", :content => "all" }
     %meta{ :name => "resource-type", :content => "document" }
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
-    %link{ :href => "/images/favicon.ico", :rel => "shortcut icon"}/
+    %link{ :href => path_to_image('favicon.ico'), :rel => "shortcut icon"}/
     %script{ :src=> "https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js", :type => "text/javascript"}
 
     != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
@@ -24,6 +24,10 @@
       = javascript_tag "var container_id = #{@container_id};"
     - if @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
+
+    - if USING_GOOGLE_ANALYTICS
+      = javascript_tag google_analytics_config
+
   %body
 
     #note{:style=>"display: none;"}

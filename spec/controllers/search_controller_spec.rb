@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe SearchController do
   def setup_for_repeated_tests
+    @admin_project = Factory.create(:admin_project_no_jnlps, :include_external_activities => false)
+
     @controller = SearchController.new
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
@@ -28,7 +30,10 @@ describe SearchController do
     @fluid_mechanics_activity = Factory.create(:activity, :name => 'fluid_mechanics_activity' , :investigation_id => @physics_investigation.id, :user => @author_user)
     @thermodynamics_activity = Factory.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => @physics_investigation.id, :user => @author_user)
     @parallel_lines = Factory.create(:activity, :name => 'parallel_lines' , :investigation_id => @lines.id, :user => @author_user)
-      
+
+    @external_activity1 = Factory.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published')
+    @external_activity2 = Factory.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published')
+
     stub_current_user :teacher_user
   end
   before(:each) do
@@ -65,6 +70,39 @@ describe SearchController do
       retrieved_activities = assigns[:activities]
       retrieved_activities.each do |activity|
         assert(all_activities.include?(activity))
+      end
+      assert_nil assigns[:external_activities]
+      assert_equal assigns[:external_activities_count], 0
+    end
+    it "should show all study materials materials including external activities" do
+      @admin_project.include_external_activities = true
+      @admin_project.save
+      post :index
+      assert_response :success
+      assert_template 'index'
+      assert_not_nil assigns[:investigations]
+      assert_not_nil assigns[:investigations_count]
+      assert_equal assigns[:investigations_count], 5
+      all_investigations = [@physics_investigation, @chemistry_investigation, @biology_investigation, @mathematics_investigation, @lines]
+      retrieved_investigations = assigns[:investigations]
+      retrieved_investigations.each do |investigation|
+        assert(all_investigations.include?(investigation))
+      end
+      assert_not_nil assigns[:activities]
+      assert_not_nil assigns[:activities_count]
+      assert_equal assigns[:activities_count], 4
+      all_activities = [@laws_of_motion_activity, @fluid_mechanics_activity, @thermodynamics_activity, @parallel_lines]
+      retrieved_activities = assigns[:activities]
+      retrieved_activities.each do |activity|
+        assert(all_activities.include?(activity))
+      end
+      assert_not_nil assigns[:external_activities]
+      assert_not_nil assigns[:external_activities_count]
+      assert_equal assigns[:external_activities_count], 2
+      all_external_activities = [@external_activity1, @external_activity2]
+      retrieved_external_activities = assigns[:external_activities]
+      retrieved_external_activities.each do |ext_activity|
+        assert(all_external_activities.include?(ext_activity))
       end
     end
     it "should search investigations" do
@@ -103,6 +141,25 @@ describe SearchController do
         assert(all_activities.include?(activity))
       end
     end
+    it "should search external activities" do
+      @post_params = {
+        :material => ['external_activity']
+      }
+      post :index,@post_params
+      assert_response :success
+      assert_template 'index'
+      assert_nil assigns[:investigations]
+      assert_equal assigns[:investigations_count], 0
+      assert_nil assigns[:activities]
+      assert_equal assigns[:activities_count], 0
+      assert_not_nil assigns[:external_activities]
+      assert_equal assigns[:external_activities_count], 2
+      all_activities = [@external_activity1, @external_activity2]
+      retrieved_activities = assigns[:external_activities]
+      retrieved_activities.each do |activity|
+        assert(all_activities.include?(activity))
+      end
+    end
   end
 
   describe "POST show" do
@@ -123,13 +180,15 @@ describe SearchController do
     it "should search all study materials materials matching the search term" do
       @post_params = {
         :search_term => 'lines',
-        :material => ['activity', 'investigation']
+        :material => ['activity', 'investigation', 'external_activity']
       }
       xhr :post, :show, @post_params
       assert_equal assigns[:investigations_count], 1
       assigns[:investigations] = [@lines]
       assert_equal assigns[:activities_count], 1
       assigns[:activities] = [@parallel_lines]
+      assert_equal assigns[:external_activities_count], 1
+      assigns[:external_activities] = [@external_activity2]
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
     end
@@ -144,6 +203,7 @@ describe SearchController do
       assert_equal assigns(:activities_count), 1
       assigns[:activities] = [@laws_of_motion_activity]
       assert_equal assigns(:investigations_count), 0
+      assert_equal assigns(:external_activities_count), 0
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
       
@@ -163,6 +223,25 @@ describe SearchController do
       assert_equal assigns(:investigations_count), 1
       assigns[:investigations] = [@physics_investigation]
       assert_equal assigns(:activities_count), 0
+      assert_equal assigns(:external_activities_count), 0
+      assert_select_rjs :replace_html, 'offering_list'
+      assert_select 'suggestions' , false
+      
+      post :show, @post_params
+      assert_template "index"
+    end
+
+    it "should search external activities matching the search term" do
+      @post_params = {
+        :search_term => @external_activity1.name,
+        :material => ['external_activity']
+      }
+      
+      xhr :post, :show, @post_params
+      assert_equal assigns(:investigations_count), 0
+      assert_equal assigns(:activities_count), 0
+      assert_equal assigns(:external_activities_count), 1
+      assigns[:external_activities] = [@external_activity1]
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
       

@@ -57,6 +57,11 @@
             = @activity_checkedstatus
             = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
+          - if current_project.include_external_activities?
+            .tablecell
+              = @external_activity_checkedstatus
+              = check_box_tag 'material[]', 'external_activity',@material_type.include?('external_activity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
+              = label_tag 'external_activity','External Activity'
         %td.probescolumn
           - no_probes_req_selected = @probe_type.include?("0")
           .filterheader

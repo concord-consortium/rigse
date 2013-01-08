@@ -26,11 +26,14 @@
           %tr
             %td.student_name{:title=>"#{student_name}"}
               %div.progressbar_container
-                - if learner.nil?
-                  - description_text = "Reporting is unavailable until at least one activity is started by this student."
-                  = link_to "#{student_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
+                - if offering.individual_reportable?
+                  - if learner.nil?
+                    - description_text = "Reporting is unavailable until at least one activity is started by this student."
+                    = link_to "#{student_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
+                  - else
+                    = link_to( student_name,report_portal_learner_url(learner),{:target=>"_blank",:class=>"activity_report"})
                 - else
-                  = link_to( student_name,report_portal_learner_url(learner),{:target=>"_blank",:class=>"activity_report"})
+                  = student_name
     .progress_div.webkit_scrollbars
       %table.reportsummary{:cellspacing=>"0", :cellpadding=>"0", :border=>"0"}
         %tr
@@ -40,12 +43,14 @@
             %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
               %div.progressbar_container
                 - report_learner_activity = Report::LearnerActivity.where("complete_percent > 0 && activity_id = #{activity.id} && learner_id IN (?)",learner_ids)
-                - if report_learner_activity
+                - if report_learner_activity && offering.reportable?
                   - if report_learner_activity.length > 0
                     = link_to( activity_name,portal_offerings_report_url(offering,activity),{:target=>"_blank",:class=>"activity_report"})
                   - else
                     - description_text = "Reporting is unavailable until at least one student has started this activity."
                     = link_to "#{activity_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
+                - else
+                  = activity_name
         - student_statuses.each do |student_status|
           %tr
             - activities.each do |activity|
@@ -55,19 +60,24 @@
                 - else
                   - percentage = student_status.complete_percent
                 %div.progressbar_container
-                  - if percentage > 0
-                    - learner = learners.find_by_student_id(student_status.student.id)
-                    %a{:href=>portal_learners_report_url(learner,activity),:target=>"_blank"}
-                      .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
-                        - if percentage == 100
-                          .progress.completed{:style=>"width:#{percentage}%"}
-                        - else
+                  - if offering.individual_reportable?
+                    - if percentage > 0
+                      - learner = learners.find_by_student_id(student_status.student.id)
+                      %a{:href=>portal_learners_report_url(learner,activity),:target=>"_blank"}
+                        .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
+                          - if percentage == 100
+                            .progress.completed{:style=>"width:#{percentage}%"}
+                          - else
+                            .progress{:style=>"width:#{percentage}%"}
+                    - else
+                      - description_text = "Reporting is unavailable until the selected activity is started by this student."
+                      %a{:href=>"#",:onclick=>"openReportLinkPopup('#{description_text}')"}
+                        .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
                           .progress{:style=>"width:#{percentage}%"}
                   - else
-                    - description_text = "Reporting is unavailable until the selected activity is started by this student."
-                    %a{:href=>"#",:onclick=>"openReportLinkPopup('#{description_text}')"}
-                      .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
-                        .progress{:style=>"width:#{percentage}%"}
+                    .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
+                      .progress{:style=>"width:#{percentage}%"}
+
     .clearboth{:style=>"height:10px"}
   - else
     %div.item.messagetext 

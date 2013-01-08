@@ -26,6 +26,17 @@
             %a.suggestion_link{:onclick=>'select_suggestion(this)'}
               .suggestion
                 = activity.name
+    -unless external_activities.nil?
+      - if external_activities.length > 0
+        - external_activities.take(3).each do |activity|
+          - if submit_form == 'true'
+            %a.suggestion_link{:onclick=>'submit_suggestion(this)'}
+              .suggestion
+                = activity.name
+          - else
+            %a.suggestion_link{:onclick=>'select_suggestion(this)'}
+              .suggestion
+                = activity.name
             
 -else
   %div
