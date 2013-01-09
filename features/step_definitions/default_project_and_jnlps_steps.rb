@@ -72,18 +72,9 @@ Given /^the default project has student consent enabled$/ do
   enable_student_consent(true)
 end
 
-Given /^adhoc workgroups are disabled$/ do
-  # note this will disable them globally so this isn't isolated to this test
-  # so for the time being it is best to call the clean up step below
-  APP_CONFIG[:use_adhoc_workgroups] = false
+Then /^APP_CONFIG\[:([^\]]*)\] should be (true|false)$/ do |setting, value|
+  APP_CONFIG[setting.to_sym].should == (value == 'true')
 end
-
-Then /^adhoc workgroups are set based on settings.yml$/ do
-  settings = AppSettings.load_app_settings
-  APP_CONFIG[:use_adhoc_workgroups] = settings[:use_adhoc_workgroups]
-end
-
-
 
 Then /^I should see the default district$/ do
   page.should have_xpath('//*', :text => APP_CONFIG[:site_district])
