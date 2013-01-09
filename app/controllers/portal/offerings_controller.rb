@@ -273,14 +273,16 @@ class Portal::OfferingsController < ApplicationController
   # report shown to students 
   def student_report
     @offering = Portal::Offering.find(params[:id])
-    @learner = setup_portal_student
-    render :nothing => true unless (@learner && @offering)
-    reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
-    @learners = reportUtil.learners
-    @page_elements = reportUtil.page_elements
-    
-    render :layout => false # student_report.html.haml
-    # will render student_report.html.haml
+    @learner = @offering.learners.find_by_student_id(current_user.portal_student)
+    if (@learner && @offering)
+      reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
+      @learners = reportUtil.learners
+      @page_elements = reportUtil.page_elements
+      render :layout => false # student_report.html.haml
+      # will render student_report.html.haml
+    else
+      render :nothing => true 
+    end
   end
 
   # GET /portal/offerings/data_test(.format)
