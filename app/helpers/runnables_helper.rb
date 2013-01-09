@@ -1,6 +1,15 @@
 module RunnablesHelper
+
+  def use_adhoc_workgroups?
+    return APP_CONFIG[:use_adhoc_workgroups]
+  end
+
+  def use_jnlps?
+    return APP_CONFIG[:use_jnlps]
+  end
+
   def display_workgroups_run_link?(offering)
-    offering.runnable.is_a?(JnlpLaunchable) && APP_CONFIG[:use_adhoc_workgroups]
+    offering.runnable.is_a?(JnlpLaunchable) && use_adhoc_workgroups?
   end
 
   def display_status_updates?(offering)
@@ -9,30 +18,36 @@ module RunnablesHelper
     end
     return false
   end
+
+  # TODO: rename and make more general
+  def student_run_button_css(offering,_classes=[])
+    classes = _classes.dup
+    classes << "button"
+    classes << "run" if display_status_updates?(offering)
+    classes.join(" ")
   end
 
   def student_run_buttons(offering,opts={})
-    solo_label       = opts[:solo_text]  || "Run by Myself"
-    group_label      = opts[:group_label]|| "Run with Other Students"
-    solo_css_classes = opts[:css_classes]|| []
-    
-    solo_css_classes  << "button"
-    solo_css_classes  << "run" if display_status_updates?(offering)
-    group_css_classes = solo_css_classes.dup
-    group_css_classes << "in_group"
-    solo_css_classes  << "solo"
-    
+    solo_label      = opts[:solo_text]  || "Run by Myself"
+    group_label     = opts[:group_label]|| "Run with Other Students"
+    options         = popup_options_for(offering)
+    options[:href]  = run_url_for(offering)
+    options[:class] = student_run_button_css(offering,["solo"])
+
     capture_haml do
-      haml_tag :a, :class => solo_css_classes.join(" "), :href => run_url_for(offering) do
+      haml_tag :a, options do
         haml_concat solo_label
       end
       if display_workgroups_run_link?(offering)
-        haml_tag :a, :class => group_css_classes.join(" "), :href => run_url_for(offering)  do
+        options[:class] = student_run_button_css(offering,["in_group"])
+        haml_tag :a, options do
           haml_concat group_label
         end
       end
     end
+
   end
+
 
   def runnable_type_label(component)
     type = component.is_a?(Portal::Offering) ? component.runnable.class : component.class
@@ -41,7 +56,7 @@ module RunnablesHelper
 
   def title_text(component, verb, run_as)
     text = "#{verb.capitalize} the #{runnable_type_label(component)}: '#{component.name}' as a #{run_as}."
-    if component.is_a?(JnlpLaunchable) && APP_CONFIG[:use_jnlps]
+    if component.is_a?(JnlpLaunchable) && use_jnlps?
       text << " The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
     end
     text
@@ -67,11 +82,21 @@ module RunnablesHelper
     x_button_for(component, "run")
   end
 
+  def popup_options_for(component,_options={})
+    options = _options.dup
+    if component.is_a?(ExternalActivity)
+      options[:target] = '_blank' if component.popup
+    elsif component.is_a?(Portal::Offering) && component.external_activity?
+      options[:target] = '_blank' if component.runnable.popup
+    end
+    return options
+  end
+
   def x_button_for(component, verb, image = verb, params = {}, run_as = nil)
 
     unless run_as
       run_as = case component
-      when JnlpLaunchable   then APP_CONFIG[:use_jnlps] ? "Java Web Start application" : "Browser Activity"
+      when JnlpLaunchable   then use_jnlps? ? "Java Web Start application" : "Browser Activity"
       when ExternalActivity then "External Activity"
       end
     end
@@ -84,38 +109,32 @@ module RunnablesHelper
       :class => classes,
       :title => title_text(component, verb, run_as)
     }
-    if component.is_a?(ExternalActivity)
-      options[:target] = '_blank' if component.popup
-    elsif component.is_a?(Portal::Offering) && component.external_activity?
-      options[:target] = '_blank' if component.runnable.popup
-    end
+    options = popup_options_for(component,options)
     link_button("#{image}.png",  run_url_for(component, params), options)
   end
 
   def x_link_for(component, verb, as_name = nil, params = {})
     link_text = params.delete(:link_text) || "#{verb} "
     url = run_url_for(component, params, params.delete(:format))
-    
+
     run_type = case component
-    when JnlpLaunchable   then APP_CONFIG[:use_jnlps] ? "Java Web Start application" : "Browser Activity"
+    when JnlpLaunchable   then use_jnlps? ? "Java Web Start application" : "Browser Activity"
     when ExternalActivity then "External Activity"
     end
-    
+
     title = title_text(component, verb, run_type)
 
     link_text << " as #{as_name}" if as_name
 
-    html_options={}
+    html_options=popup_options_for(component)
     case component
     when Portal::Offering
       if component.external_activity?
         html_options[:class] = 'run_link'
-        html_options[:target] = '_blank' if component.runnable.popup
       else
         html_options[:class] = 'run_link offering'
       end
     when ExternalActivity
-      html_options[:target] = '_blank' if component.popup
     else
       html_options[:title] = title
     end
