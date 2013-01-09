@@ -4,7 +4,11 @@ module RunnablesHelper
   end
 
   def display_status_updates?(offering)
-    offering.runnable.is_a? JnlpLaunchable
+    if offering.runnable.respond_to? :has_update_status? 
+      return offering.runnable.has_update_status?
+    end
+    return false
+  end
   end
 
   def student_run_buttons(offering,opts={})
