@@ -102,7 +102,7 @@ Feature: Teacher can see full status
     
   Scenario: Anonymous user cannot see the full status page
     When I am an anonymous user
-    And I go to the full status page for "My Class"
+    And I try to go to the full status page for "My Class"
     Then I should be on "my home page"
     
     

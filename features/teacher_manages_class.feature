@@ -48,7 +48,7 @@ Feature: Teacher manages a class
   @javascript
   Scenario: Anonymous user can not manage a class
     Given I am an anonymous user
-    When I go to the Manage Class Page
+    When I try to go to the Manage Class Page
     Then I should be on "my home page"
     
     
