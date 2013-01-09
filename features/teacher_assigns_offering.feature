@@ -54,7 +54,6 @@ Feature: Teacher can assign an offering to a class
   @javascript
   Scenario: Offerings from the default class show learner data in the default class
     Given the default class is created
-    And adhoc workgroups are disabled
     And the following students exist:
       | login     | password  |
       | student   | student   |
@@ -80,7 +79,6 @@ Feature: Teacher can assign an offering to a class
     Then I should see "My Activity"
     And I should see "joe user"
     And the learner count for the external activity "My Activity" in the class "Default Class" should be "1"
-    Then adhoc workgroups are set based on settings.yml
 
   @dialog
   @javascript
