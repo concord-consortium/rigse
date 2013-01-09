@@ -30,7 +30,7 @@
               = material.name
             - else
               = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
-          - if material.respond_to?('parent') && material.parent
+          - if material.parent
             %span
               from investigation
               ="\"#{material.parent.name}\""

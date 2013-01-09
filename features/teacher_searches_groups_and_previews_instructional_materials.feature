@@ -46,10 +46,14 @@ Feature: Teacher can search instructional materials grouped by material type, so
       | Mathematics | teacher    | math       |
       | Biology     | teacher    | bio        |
       | Geography   | teacher    | geo        |
+    Given the default project has include external activities enabled
+    And the following external activities exist:
+      | name        | user    | url               |
+      | Google Home | author  | http://google.com |
     And I login with username: teacher password: teacher
     And I am on the search instructional materials page
-    
-    
+
+
   @javascript
   Scenario: Teacher should be on materials preview page to assign materials
     When I follow the "Assign to a Class" link for the investigation "differential calculus"
