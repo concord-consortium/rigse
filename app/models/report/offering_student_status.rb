@@ -32,7 +32,7 @@ class Report::OfferingStudentStatus
         # return 99.99 because all we can tell is whether it is in progress
         # if we return 100 then the progress bar will indicate it is compelete
         # 99.99 is enough to fill up the progress bar but keep the in_progress color
-        99.9
+        99.99
       end
     else
       0
