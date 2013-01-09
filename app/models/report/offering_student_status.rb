@@ -55,7 +55,7 @@ class Report::OfferingStudentStatus
   end
 
   def last_run
-    if (learner && learner.report_learner)
+    if learner
       return learner.report_learner.last_run
     end
     return nil
