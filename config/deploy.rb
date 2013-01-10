@@ -13,9 +13,8 @@ set :stages, %w(
   assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
   xproject-dev
-  lightweight-mw
-  genomedynamics-dev genomedynamics-staging genomedynamics-production
-  fall2009 jnlp-staging seymour
+  genomedynamics-dev genomedynamics-staging
+  fall2009 jnlp-staging
   sparks-dev sparks-staging sparks-production sparks-aws1
   xproject3-dev xproject32-dev )
 
