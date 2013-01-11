@@ -18,7 +18,7 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
-  gem "rails",                "2.3.12"
+  gem "rails",                "2.3.15"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"
   gem "httpclient",           "~> 2.1.5.2"
