@@ -295,6 +295,9 @@ And /^I receive a file for download with a filename like "(.+)"$/ do |filename|
 end
 
 And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor_id|
+  # make sure the editor is on the page, this also triggers capybara to do its
+  # automatic waiting if it isn't on the page yet
+  page.should have_css("##{editor_id}")
   evaluate_script("tinyMCE.getInstanceById('#{editor_id}').setContent('#{html}');")
 end
 
