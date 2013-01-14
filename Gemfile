@@ -8,7 +8,7 @@ source "http://rubygems.org"
   end
 
   platforms :jruby do
-    gem "rake",                            ">=0.8.7"
+    gem "rake",                            "~>10.0.0"
     gem "activerecord-jdbcmysql-adapter",  ">=0.9.2"
     gem "jruby-openssl",                   ">=0.6"
     gem "ffi-ncurses",                      "~>0.3.3"
