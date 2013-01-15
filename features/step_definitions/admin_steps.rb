@@ -6,7 +6,7 @@ end
 
 When /^an admin sets the jnlp CDN hostname to "([^"]*)"$/ do |cdn_hostname|
   admin = Factory.next(:admin_user)
-  login_as(admin.login)
+  login_as(admin.login, 'password')
   visit admin_projects_path
   click_link "edit project"
   fill_in "admin_project[jnlp_cdn_hostname]", :with => cdn_hostname

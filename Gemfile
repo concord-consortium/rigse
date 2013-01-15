@@ -8,7 +8,7 @@ source "http://rubygems.org"
   end
 
   platforms :jruby do
-    gem "rake",                            ">=0.8.7"
+    gem "rake",                            "~>10.0.0"
     gem "activerecord-jdbcmysql-adapter",  ">=0.9.2"
     gem "jruby-openssl",                   ">=0.6"
     gem "ffi-ncurses",                      "~>0.3.3"
@@ -18,7 +18,7 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
-  gem "rails",                "2.3.12"
+  gem "rails",                "2.3.15"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"
   gem "httpclient",           "~> 2.1.5.2"
