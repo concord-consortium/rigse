@@ -1,5 +1,5 @@
 require "yaml"
-YAML::ENGINE.yamler= "psych"
+YAML::ENGINE.yamler= "psych" if defined?(YAML::ENGINE)
 
 source "http://rubygems.org"
 
