@@ -1,5 +1,5 @@
 %tr{:id => dom_id_for(choice, :multiple_choice)}
   %td
-    %input{:type=>'radio', :id=>"#{dom_id_for(choice)}", :value=>"#{dom_id_for(choice)}", :name => "questions[#{dom_id_for(multiple_choice)}]", :checked => (local_assigns[:selected] ? true : false)}
+    %input{:type=>(multiple_choice.allow_multiple_selection ? 'checkbox' : 'radio'), :id=>"#{dom_id_for(choice)}", :value=>"#{dom_id_for(choice)}", :name => "questions[#{dom_id_for(multiple_choice)}]", :checked => (local_assigns[:selected] ? true : false)}
   %td
     %label{:for=>"#{dom_id_for(choice)}"}= "#{choice.choice.html_safe}"

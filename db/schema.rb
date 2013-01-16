@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121227113712) do
+ActiveRecord::Schema.define(:version => 20130115212158) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -545,6 +545,9 @@ ActiveRecord::Schema.define(:version => 20121227113712) do
     t.text     "prompt"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "enable_rationale",                       :default => false
+    t.text     "rationale_prompt"
+    t.boolean  "allow_multiple_selection",               :default => false
   end
 
   create_table "embeddable_mw_modeler_pages", :force => true do |t|

@@ -24,6 +24,8 @@ Feature: An author adds multiple choice questions
     # this wait is necessary for IE please fixme
     And I wait 1 second
     Then I should see "choices"
+    And I should see "Enable Rationale"
+    And I should see "Multiple Selection"
     And I should see "a"
     And I should see "b"
     And I should see "c"
@@ -46,6 +48,8 @@ Feature: An author adds multiple choice questions
     # this wait is necessary for IE please fixme
     And I wait 1 second
     Then I should see "choices"
+    And I should see "Enable Rationale"
+    And I should see "Multiple Selection"
     And I should see "a"
     And I should see "b"
     And I should see "c"
