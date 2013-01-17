@@ -109,7 +109,7 @@ describe Dataservice::BundleContent do
       end
       learner.multiple_choices.each do |saveable|
         saveable.answers.size.should eql(1)
-        saveable.answers[0].answer.should eql('someChoice')
+        saveable.answers[0].answer.should eql([{:answer => 'someChoice'}])
       end
       learner.image_questions.each do |saveable|
         bundle_content.blobs.include?(saveable.answer[:blob]).should be_true
@@ -134,9 +134,27 @@ describe Dataservice::BundleContent do
             <launchProperties key="sailotrunk.otmlurl" value="http://portal.local/investigations/1007.dynamic_otml?learner_id=9310"/>
           </sessionBundles>'
       }
+
+      @valid_attributes_with_multiple_select_and_rationale = {
+        :bundle_logger_id => 1,
+        :position => 4,
+        :body => '<sessionBundles xmlns:xmi="http://www.omg.org/XMI" xmlns:sailuserdata="sailuserdata" start="2013-01-16T10:05:30.250-0800" stop="2013-01-16T10:08:18.613-0800" curnitUUID="cccccccc-0009-0000-0000-000000000000" sessionUUID="e7a37d7c-07cc-4242-84c8-957c257c81fc" lastModified="2013-01-16T10:08:18.640-0800" timeDifference="-2122" localIP="192.168.56.1">
+            <sockParts podId="dddddddd-0002-0000-0000-000000000000" rimName="ot.learner.data" rimShape="[B">
+              <sockEntries value="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" millisecondsOffset="168389"/>
+            </sockParts>
+            <agents role="RUN_WORKGROUP"/>
+            <sdsReturnAddresses>http://portal.local/dataservice/bundle_loggers/9549/bundle_contents.bundle</sdsReturnAddresses>
+            <launchProperties key="previous.bundle.session.id" value="d85564c7-25b9-4f61-90d6-b50fe6f31dbf"/>
+            <launchProperties key="maven.jnlp.version" value="all-otrunk-snapshot-0.1.0-20130115.211313"/>
+            <launchProperties key="sds_time" value="1358359530250"/>
+            <launchProperties key="sailotrunk.otmlurl" value="http://portal.local/investigations/1007.dynamic_otml?learner_id=9308"/>
+          </sessionBundles>'
+      }
       
+      reset_table_index(Embeddable::MultipleChoice, 3897)
+      reset_table_index(Embeddable::MultipleChoiceChoice, 18145)
       reset_table_index(Embeddable::ImageQuestion, 846)
-      reset_table_index(Dataservice::Blob, 11896)
+      reset_table_index(Dataservice::Blob, 11892)
     end
 
     it "should correctly extract multi-line snapshot notes" do
@@ -189,6 +207,88 @@ Is
 Nine
 Lines
 Long')
+      end
+    end
+
+    it "should correctly extract multiple selection mc questions with rationales" do
+      blogger = Dataservice::BundleLogger.create!()
+      student = Portal::Student.create!()
+      offering = Portal::Offering.create!()
+      offering.runnable = Investigation.create!(:name => "Test Investigation")
+      offering.save
+      learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)
+      learner.bundle_logger = blogger
+      learner.save!
+      blogger.reload
+      learner.reload
+      blogger.learner.should_not be_nil
+      learner.bundle_logger.should_not be_nil
+      @valid_attributes_with_multiple_select_and_rationale[:bundle_logger_id] = blogger.id
+
+      # create multiple_choices with ids = 18145
+      # create image_question with id = 847
+
+      emb = nil
+      begin
+        emb = Embeddable::ImageQuestion.create!(:user_id => 1, :name => 'image question 847', :prompt => "Please choose an image")
+      end until emb.id >= 847
+
+      emb = nil
+      begin
+        emb = Embeddable::MultipleChoice.create!(:user_id => 1, :name => 'mc', :prompt => "mc prompt?", :description => 'mc')
+      end until emb.id >= 3903
+
+      i = 1
+      begin
+        emb = Embeddable::MultipleChoiceChoice.create!(:choice => "someChoice #{i}")
+        i += 1
+      end until emb.id >= 18170
+
+      [{:mc => 3897, :choices => [18145]},
+       {:mc => 3901, :choices => [18157,18158]},
+       {:mc => 3902, :choices => [18162]},
+       {:mc => 3903, :choices => [18165,18170]} ].each do |cfg|
+        choice = Embeddable::MultipleChoice.find(cfg[:mc])
+        cfg[:choices].each do |cid|
+          choice_choice = Embeddable::MultipleChoiceChoice.find(cid)
+          choice_choice.multiple_choice = choice
+          choice_choice.save!
+        end
+      end
+
+      bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_multiple_select_and_rationale)
+
+      # create blob with id = 11892
+      emb = nil
+      begin
+        emb = Dataservice::Blob.create!(:content => 'image', :bundle_content_id => bundle_content.id)
+      end until emb.id >= 11892
+
+      bundle_content.bundle_logger = blogger
+      bundle_content.save!
+      bundle_content.reload
+      blogger.reload
+      bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
+      bundle_content.bundle_logger.learner.id.should eql(learner.id)
+
+      bundle_content.extract_saveables.invoke_job
+
+      learner.multiple_choices.size.should eql(4)
+      learner.multiple_choices.each do |saveable|
+        case saveable.multiple_choice_id
+        when 3897
+          saveable.answer.should eql([{:answer => "someChoice 1"}])
+        when 3901
+          # saveable.answer.should eql("someChoice 13, someChoice 14")
+          saveable.answer.should eql([{:answer => "someChoice 13"},{:answer => "someChoice 14"}])
+        when 3902
+          saveable.answer.should eql([{:answer => "someChoice 18", :rationale => "Soft feels really nice"}])
+        when 3903
+          # saveable.answer.should eql("someChoice 21, someChoice 26")
+          saveable.answer.should eql([{:answer => "someChoice 26", :rationale => "Are yellow"},{:answer => "someChoice 21", :rationale => "It's cold"}])
+        else
+          raise "Unexpected multiple choice saveable!"
+        end
       end
     end
   end
