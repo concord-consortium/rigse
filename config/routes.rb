@@ -7,6 +7,9 @@ RailsPortal::Application.routes.draw do
   post '/search/add_material_to_clazzes'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
   get 'search/get_search_suggestions'
+  match '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report, :method => :get
+  match '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report, :method => :get
+
 
   post "help/preview_help_page"
   post "home/preview_home_page"

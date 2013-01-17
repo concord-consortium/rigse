@@ -126,9 +126,7 @@ class Portal::StudentsController < ApplicationController
                           "<input type='button' class='pie' onclick='close_popup()' value='Close' />" +
                           "</td></tr></table></div>"
             page << "close_popup();"
-            page << "student_list_modal = new UI.Window({ theme:\"lightbox\", width:400, height:350})"
-            page << "student_list_modal.setContent(\"#{success_msg}\").show(true).focus().center();"
-            page << "student_list_modal.setHeader(\"Add and Register New Student\");"
+            page << "student_list_modal = new Lightbox({ theme:\"lightbox\", width:400, height:350,content:\"#{success_msg}\",title:\"Add and Register New Student\"});"
             page << "if ($('students_listing')){"
             page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
             page << "}"

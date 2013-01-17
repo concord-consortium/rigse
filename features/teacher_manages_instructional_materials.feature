@@ -86,7 +86,7 @@ Feature: Teacher manages instructional materials of a class
     
   Scenario: Anonymous user can not view instructional materials of a class
     When I log out
-    And I go to Instructional Materials page for "My Class"
+    And I try to go to Instructional Materials page for "My Class"
     Then I should be on "my home page"
     
   Scenario: Teacher can click button to Manage Materials
@@ -176,15 +176,15 @@ Feature: Teacher manages instructional materials of a class
   @javascript
   Scenario: Teacher should see a message if activity has not been attempted by any student
     And I follow "Air activity"
-    Then I should see "Reporting is unavailable until at least one student has started this activity" within the no report popup on the instructional materials page
+    Then I should see "Reporting is unavailable until at least one student has started this activity" within the lightbox in focus
     
   @javascript
   Scenario: Teacher should see a message if student has not attempted any activity
     And I follow "Doe, Dave"
-    Then I should see "Reporting is unavailable until at least one activity is started by this student" within the no report popup on the instructional materials page
+    Then I should see "Reporting is unavailable until at least one activity is started by this student" within the lightbox in focus
     
   @javascript
   Scenario: Teacher should see a message if student has not attempted corresponding activity
     And I click progress bar on the instructional materials page for the student "dave" and activity "Air activity"
-    Then I should see "Reporting is unavailable until the selected activity is started by this student" within the no report popup on the instructional materials page
+    Then I should see "Reporting is unavailable until the selected activity is started by this student" within the lightbox in focus
     

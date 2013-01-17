@@ -24,7 +24,7 @@ Feature: Student runs html activity
     When I follow "run simple activity"
     And I press "Submit"
 
-  @javascript @lightweight
+  @javascript @lightweight @disable_adhoc_workgroups
   Scenario: Student runs html and teacher sees recent activity
     And I login with username: student
     When I follow "run simple activity"

@@ -48,14 +48,32 @@ When /^(.*) within (.*[^:]):$/ do |step_text, parent, table_or_string|
   with_scope(parent) { step "#{step_text}:", table_or_string }
 end
 
+def verify_current_path(expected_path)
+    # add simple retry support incase there is a redirect here
+  10.times {
+    current_path = URI.parse(current_url).path
+    break if current_path == expected_path
+    sleep(0.05)
+  }
+  current_path.should == expected_path
+end
+
+def verified_visit(path)
+  visit path
+  verify_current_path(path)
+end
+
 Given /^(?:|I )am on (.+)$/ do |page_name|
-  visit path_to(page_name)
+  verified_visit path_to(page_name)
 end
 
 When /^(?:|I )go to (.+)$/ do |page_name|
-  visit path_to(page_name)
+  verified_visit path_to(page_name)
 end
 
+When /^(?:|I )try to go to (.+)$/ do |page_name|
+  visit path_to(page_name)
+end
 
 When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
@@ -226,18 +244,7 @@ Then /^(?:|I )should be on (.+)$/ do |page_name|
     end
   }
 
-
-  # add simple retry support incase there is a redirect here
-  10.times {
-    current_path = URI.parse(current_url).path
-    break if current_path == expected_path
-    sleep(0.05)
-  }
-  if current_path.respond_to? :should
-    current_path.should == path_to(page_name)
-  else
-    assert_equal path_to(page_name), current_path
-  end    
+  verify_current_path(path_to(page_name))
 end
 
 Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
@@ -288,6 +295,9 @@ And /^I receive a file for download with a filename like "(.+)"$/ do |filename|
 end
 
 And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor_id|
+  # make sure the editor is on the page, this also triggers capybara to do its
+  # automatic waiting if it isn't on the page yet
+  page.should have_css("##{editor_id}")
   evaluate_script("tinyMCE.getInstanceById('#{editor_id}').setContent('#{html}');")
 end
 

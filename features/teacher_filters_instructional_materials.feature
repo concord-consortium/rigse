@@ -15,14 +15,14 @@ Feature: Teacher can search and filter instructional materials
     And I am on the search instructional materials page
     
     
-  @javascript @use_gse
+  @javascript
   Scenario: Teacher should be able to filter the search results on the basis of domains
     When I check "Biological Science"
     And I should wait 2 seconds
     Then I should see "Digestive System"
     
     
-  @javascript @use_gse
+  @javascript
   Scenario: Teacher should be able to filter the search results on the basis of grades
     When I check "10-11"
     And I should wait 2 seconds
@@ -30,7 +30,7 @@ Feature: Teacher can search and filter instructional materials
     And I should see "Bile Juice"
     
     
-  @javascript @use_gse
+  @javascript
   Scenario: Teacher views all investigations and activities for all grades
     When I check "All Grades"
     And I should wait 2 seconds

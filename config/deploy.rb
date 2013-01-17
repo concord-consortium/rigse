@@ -6,16 +6,15 @@ require File.expand_path('../../lib/yaml_editor', __FILE__)
 set :stages, %w(
   rites-staging rites-production
   itsisu-dev itsisu-staging itsisu-production
-  smartgraphs-dev smartgraphs-staging smartgraphs-production smartgraphs-aws1
+  smartgraphs-staging smartgraphs-production smartgraphs-aws1
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
   genigames-dev genigames-staging genigames-production
   assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
   xproject-dev
-  lightweight-mw
-  genomedynamics-dev genomedynamics-staging genomedynamics-production
-  fall2009 jnlp-staging seymour
+  genomedynamics-dev genomedynamics-staging
+  fall2009 jnlp-staging
   sparks-dev sparks-staging sparks-production sparks-aws1
   xproject3-dev xproject32-dev )
 
