@@ -95,10 +95,20 @@ $incorrect_color: #ffdddd;
     width: 10px;
     vertical-align: top; }
   .learner_response_content {
-    width: 460px;
+    width: 475px;
     vertical-align: top;
     img {
-      max-width: 460px; } } }
+      max-width: 460px; } }
+  .learner_response_content_part {
+    border-bottom: 1px solid lightgray;
+    &:last-of-type {
+      border-bottom: none; } }
+  .learner_response_answer {
+    width: 200px;
+    vertical-align: top; }
+  .learner_response_rationale {
+    width: 255px;
+    vertical-align: top; } }
 
 .inline_block {
   display: -moz-inline-block;

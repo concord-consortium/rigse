@@ -109,7 +109,7 @@ describe Dataservice::BundleContent do
       end
       learner.multiple_choices.each do |saveable|
         saveable.answers.size.should eql(1)
-        saveable.answers[0].answer.should eql([{:answer => 'someChoice'}])
+        saveable.answers[0].answer.should eql([{:answer => 'someChoice', :correct => nil}])
       end
       learner.image_questions.each do |saveable|
         bundle_content.blobs.include?(saveable.answer[:blob]).should be_true
@@ -277,19 +277,20 @@ Long')
       learner.multiple_choices.each do |saveable|
         case saveable.multiple_choice_id
         when 3897
-          saveable.answer.should eql([{:answer => "someChoice 1"}])
+          saveable.answer.should eql([{:answer => "someChoice 1", :correct => nil}])
         when 3901
           # saveable.answer.should eql("someChoice 13, someChoice 14")
-          saveable.answer.should eql([{:answer => "someChoice 13"},{:answer => "someChoice 14"}])
+          saveable.answer.should eql([{:answer => "someChoice 13", :correct => nil},{:answer => "someChoice 14", :correct => nil}])
         when 3902
-          saveable.answer.should eql([{:answer => "someChoice 18", :rationale => "Soft feels really nice"}])
+          saveable.answer.should eql([{:answer => "someChoice 18", :rationale => "Soft feels really nice", :correct => nil}])
         when 3903
           # saveable.answer.should eql("someChoice 21, someChoice 26")
-          saveable.answer.should eql([{:answer => "someChoice 26", :rationale => "Are yellow"},{:answer => "someChoice 21", :rationale => "It's cold"}])
+          saveable.answer.should eql([{:answer => "someChoice 21", :rationale => "It's cold", :correct => nil},{:answer => "someChoice 26", :rationale => "Are yellow", :correct => nil}])
         else
           raise "Unexpected multiple choice saveable!"
         end
       end
     end
+
   end
 end

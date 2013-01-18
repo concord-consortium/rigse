@@ -738,9 +738,10 @@ module ApplicationHelper
     learners = reportUtil.learners
     learners.each do |learner|
       saveable = reportUtil.saveable(learner, multiple_choice)
-      answer = saveable.answer
-      answer_counts[answer] ||= 0
-      answer_counts[answer] += 1
+      saveable.answer.each do |answer|
+        answer_counts[answer[:answer]] ||= 0
+        answer_counts[answer[:answer]] += 1
+      end
     end
     not_answered_count = answer_counts.has_key?("not answered") ? answer_counts["not answered"].to_i : 0
     all_choices = multiple_choice.choices
