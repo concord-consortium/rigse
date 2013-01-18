@@ -14,7 +14,6 @@ set :stages, %w(
   interactions-staging interactions-production
   xproject-dev
   genomedynamics-dev genomedynamics-staging
-  fall2009 jnlp-staging
   sparks-dev sparks-staging sparks-production sparks-aws1
   xproject3-dev xproject32-dev )
 
