@@ -1,0 +1,22 @@
+.run_in_progress{
+  // border: 1px solid black;
+  display: block;
+  margin: 0.25em; // match .run_buttons in app.scss
+  .status {
+    font-weight: bold;  
+    span.wait_image { }
+
+    .message {
+      display: inline;
+      margin-left: 0.5em;
+      span.wait_counter {
+      }
+    }
+    .ready {
+      color: #0DAD25;
+    }
+    .waiting {
+      color: #a3000b;
+    }
+  }
+}

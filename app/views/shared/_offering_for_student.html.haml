@@ -1,15 +1,50 @@
-.item
-  %ul.quiet_list
-    %li
-      = run_link_for(offering)
-      - if current_user.has_role?("admin") && @portal_student
-        |
-        - learner = @portal_student.learners.find_by_offering_id(offering.id)
-        - if learner
-          = report_link_for(@portal_student.learners.find_by_offering_id(offering.id), 'bundle_report', 'Bundles ')
-        - else
-          No bundles
-    %li
-      .tiny= offering.description
-
--#%li= link_to "View #{offering.name}", offering.runnable, :target => '_blank'
+- offering_status = Report::OfferingStatus.new(offering)
+- offering_statuses = [offering_status]
+- student_status = offering_status.student_status_for(@portal_student)
+/ TODO move the above outside of the view.
+.offering_for_student
+  %p
+    %span.type= runnable_type_label(offering) + ":"
+    %span.name= offering.name
+  %p.description= offering.description
+  .run_buttons
+    =student_run_buttons(offering)
+    %span.last_run= student_status.last_run_string
+  / displayed when the student is already running the activity.
+  .run_in_progress{:style => "display: none;"}
+    .status
+      %span.wait_image
+        =image_tag('wait16.gif')
+      .message.waiting
+        Please wait while your activity loads
+        %span.wait_counter
+  .status_graphs
+    - if student_status.never_run
+      .not_run
+        You haven't started this yet. 
+    - else
+      - percentage = student_status.complete_percent
+      %table.status_graphs
+        %tr.summary
+          %td.disclosure_widget
+            ▶
+          %td.summary
+            .graph
+              = bar_graph(percentage)
+          %td.label
+            completion
+        - student_status.sub_sections.each_with_index do |activity,i|
+          - css_classes = "graph"
+          - css_classes << ' top_border' if i == 0
+          - percentage = student_status.activity_complete_percent(activity)
+          %tr.details
+            %td
+            %td{:class => css_classes}= bar_graph(percentage)
+            - if (i == 0)
+              %td.label.top_border= activity.name
+            - else
+              %td.label=activity.name
+  
+      %span.lightbox_report_link
+        - if student_status.dispay_report_link?
+          =link_to "Generate a report of my work", student_report_portal_offering_url(offering)

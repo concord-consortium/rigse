@@ -87,6 +87,7 @@ source "http://rubygems.org"
 # generated a prototype helper 'calendar_date_picker'
 # group :assets do
   gem 'sass-rails' # if running rails 3.1 or greater
+  gem 'coffee-rails' # if running rails 3.1 or greater
   gem "compass-rails"
   gem 'uglifier'
   gem 'yui-compressor'

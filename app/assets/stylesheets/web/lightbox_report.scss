@@ -24,7 +24,7 @@
   @include opac(1.0);
 }
 
-#please_wait {
+#lightbox_wrapper {
   position: absolute;
   display: block;
   top: 0px;
@@ -34,7 +34,7 @@
   right: 0px;
 }
 
-#please_wait_backdrop {
+#lightbox_report_backdrop {
   position: absolute;
   display: block;
   top: 0px;
@@ -46,35 +46,11 @@
   z-index: 6001;
 }
 
-#please_wait_status {
-  max-width: 400px;
-  top: 40px;
-  @include float;
-  font-weight: bold;
-  text-align: center;
-  div {
-    margin-top:1em;
-  }
-  #please_wait_image { 
-    display: inline;
-    height: 24px;
-    width: 24px;
-    margin: 2px;
-    text-align: center;
-  }
-  #please_wait_message{
-    display: inline;
-    margin-left: 1em;
-  }
-  .ready {
-    color: #0DAD25;
-  }
-  .waiting {
-    color: #a3000b;
-  }
+#lightbox_closer{
+  float: right;
 }
 
-#please_wait_report {
+#lightbox_report{
   min-width: 400px;
   max-width: 800px;
   @include float;
