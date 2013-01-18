@@ -119,13 +119,20 @@ $incorrect_color: #ffdddd;
   font-size: 1.5em;
   margin-top: 5px; }
 
-.item {
-  .chosen_answer {
-    font-weight: bold; }
-  .chosen_answer.correct {
-    background-color: $correct_color; }
-  .chosen_answer.incorrect {
+.item.choice {
+  display: block;
+  &.chosen_answer {
+    font-weight: bold;
+    &.correct {
+      background-color: $correct_color; }
+    &.incorrect {
     background-color: $incorrect_color; } }
+  .option {
+    vertical-align: top;
+    width: 200px; }
+  .rationale {
+    vertical-align: top;
+    width: 255px; } }
 
 .question_container {
   display: block;
