@@ -61,7 +61,9 @@ module SaveableExtraction
       saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, multiple_choice.id)
       if saveable.answers.empty? || # we don't have any answers yet
          saveable.answers.last.answer.size != choice_ids.size || # the number of selected choices differs
-         (saveable.answers.last.rationale_choices.map{|rc| rc.choice_id} - choice_ids).size != 0 # the actual selections differ
+         ((saveable.answers.last.rationale_choices.map{|rc| rc.choice_id} - choice_ids).size != 0) || # the actual selections differ
+         ((saveable.answers.last.rationale_choices.map{|rc| rc.rationale}.compact - rationales.values).size != 0)    # the actual rationales differ
+
         saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => multiple_choice.id)
         choice_ids.each do |choice_id|
           Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice_id, :answer_id => saveable_answer.id, :rationale => rationales[choice_id])
