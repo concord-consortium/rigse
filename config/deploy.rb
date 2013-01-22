@@ -10,12 +10,10 @@ set :stages, %w(
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
   genigames-dev genigames-staging genigames-production
-  assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
-  xproject-dev
   genomedynamics-dev genomedynamics-staging
   sparks-dev sparks-staging sparks-production sparks-aws1
-  xproject3-dev xproject32-dev )
+  xproject-dev )
 
 set :default_stage, "development"
 
