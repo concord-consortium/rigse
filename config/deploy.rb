@@ -10,13 +10,10 @@ set :stages, %w(
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
   genigames-dev genigames-staging genigames-production
-  assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
-  xproject-dev
   genomedynamics-dev genomedynamics-staging
-  fall2009 jnlp-staging
   sparks-dev sparks-staging sparks-production sparks-aws1
-  xproject3-dev xproject32-dev )
+  xproject-dev )
 
 set :default_stage, "development"
 
@@ -209,25 +206,27 @@ namespace :deploy do
 
   desc "setup directory remote directory structure"
   task :make_directory_structure do
-    run "mkdir -p #{deploy_to}/releases"
-    run "mkdir -p #{shared_path}"
-    run "mkdir -p #{shared_path}/config"
-    run "mkdir -p #{shared_path}/log"
-    run "mkdir -p #{shared_path}/sis_import_data"
-    run "mkdir -p #{shared_path}/config/nces_data"
-    run "mkdir -p #{shared_path}/public/otrunk-examples"
-    run "mkdir -p #{shared_path}/public/installers"
-    run "mkdir -p #{shared_path}/config/initializers"
-    run "mkdir -p #{shared_path}/system/attachments" # paperclip file attachment location
-    run "touch #{shared_path}/config/database.yml"
-    run "touch #{shared_path}/config/settings.yml"
-    run "touch #{shared_path}/config/installer.yml"
-    run "touch #{shared_path}/config/sis_import_data.yml"
-    run "touch #{shared_path}/config/mailer.yml"
-    run "touch #{shared_path}/config/initializers/site_keys.rb"
-    run "touch #{shared_path}/config/initializers/subdirectory.rb"
-    run "touch #{shared_path}/config/database.yml"
-    run "touch #{shared_path}/config/google_analytics.yml"
+    run <<-CMD
+      mkdir -p #{deploy_to}/releases &&
+      mkdir -p #{shared_path} &&
+      mkdir -p #{shared_path}/config &&
+      mkdir -p #{shared_path}/log &&
+      mkdir -p #{shared_path}/sis_import_data &&
+      mkdir -p #{shared_path}/config/nces_data &&
+      mkdir -p #{shared_path}/public/otrunk-examples &&
+      mkdir -p #{shared_path}/public/installers &&
+      mkdir -p #{shared_path}/config/initializers &&
+      mkdir -p #{shared_path}/system/attachments &&
+      touch #{shared_path}/config/database.yml &&
+      touch #{shared_path}/config/settings.yml &&
+      touch #{shared_path}/config/installer.yml &&
+      touch #{shared_path}/config/sis_import_data.yml &&
+      touch #{shared_path}/config/mailer.yml &&
+      touch #{shared_path}/config/initializers/site_keys.rb &&
+      touch #{shared_path}/config/initializers/subdirectory.rb &&
+      touch #{shared_path}/config/database.yml &&
+      touch #{shared_path}/config/google_analytics.yml
+    CMD
 
     # support for running a SproutCore app from within the public directory
     run "mkdir -p #{shared_path}/public/static"
@@ -236,21 +235,23 @@ namespace :deploy do
 
   desc "link in some shared resources, such as database.yml"
   task :shared_symlinks do
-    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-    run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
-    run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"
-    run "ln -nfs #{shared_path}/config/paperclip.yml #{release_path}/config/paperclip.yml"
-    run "ln -nfs #{shared_path}/config/aws_s3.yml #{release_path}/config/aws_s3.yml"
-    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
-    run "ln -nfs #{shared_path}/config/sis_import_data.yml #{release_path}/config/sis_import_data.yml"
-    run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
-    run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
-    run "ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb"
-    run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
-    run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
-    run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
-    run "ln -nfs #{shared_path}/sis_import_data #{release_path}/sis_import_data"
-    run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
+    run <<-CMD
+      ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml &&
+      ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml &&
+      ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml &&
+      ln -nfs #{shared_path}/config/paperclip.yml #{release_path}/config/paperclip.yml &&
+      ln -nfs #{shared_path}/config/aws_s3.yml #{release_path}/config/aws_s3.yml &&
+      ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml &&
+      ln -nfs #{shared_path}/config/sis_import_data.yml #{release_path}/config/sis_import_data.yml &&
+      ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml &&
+      ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb &&
+      ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb &&
+      ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples &&
+      ln -nfs #{shared_path}/public/installers #{release_path}/public/installers &&
+      ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data &&
+      ln -nfs #{shared_path}/sis_import_data #{release_path}/sis_import_data &&
+      ln -nfs #{shared_path}/system #{release_path}/public/system
+    CMD
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
     run "ln -nfs #{shared_path}/config/google_analytics.yml #{release_path}/config/google_analytics.yml"
@@ -258,6 +259,8 @@ namespace :deploy do
     # support for running SproutCore app from the public directory
     run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
     run "cd #{release_path}/public; for i in `ls #{shared_path}/public/labels`; do rm $i; ln -s #{shared_path}/public/labels/$i $i; done"
+
+    # by default capistrano creates symlinks for tmp/pids->pids, public/system->system, and log->log
   end
 
   desc "install required gems for application"
