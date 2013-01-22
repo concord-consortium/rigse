@@ -14,7 +14,7 @@
         %label{:for => dom_id_for(multiple_choice, :item, :enable_rationale)}= "Enable Rationale"
       .option
         %label{:for => dom_id_for(multiple_choice, :item, :rationale_prompt)}= "Rationale Prompt: "
-        - size = multiple_choice.rationale_prompt.size + 5
+        - size = (multiple_choice.rationale_prompt ? multiple_choice.rationale_prompt.size : 35) + 5
         - size = 40 if size < 40
         - size = 80 if size > 80
         = f.text_field :rationale_prompt, :size => size, :id => dom_id_for(multiple_choice, :item, :rationale_prompt)
