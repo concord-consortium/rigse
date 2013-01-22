@@ -50,11 +50,12 @@ def add_multichoice_answer(learner,question,answer_text)
     :multiple_choice => question
   ) 
   saveable_answer = Saveable::MultipleChoiceAnswer.create(
-    #:bundle_contents => learner.bundle_contents,
-    #:bundle_logger   => learner.bundle_logger,
-    :choice          => answer
+    :multiple_choice => new_answer
   )
-  new_answer.answers << saveable_answer
+  Saveable::MultipleChoiceRationaleChoice.create(
+    :choice          => answer,
+    :answer          => saveable_answer
+  )
 end
 
 def add_openresponse_answer(learner,question,answer_text)
