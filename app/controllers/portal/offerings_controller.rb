@@ -430,8 +430,9 @@ class Portal::OfferingsController < ApplicationController
       answer = choice ? choice.choice : ""
       if embeddable && choice
         saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(learner.id, offering.id, embeddable.id)
-        if saveable.answers.empty? || saveable.answers.last.answer != answer
-          saveable.answers.create(:bundle_content_id => nil, :choice_id => choice.id)
+        if saveable.answers.empty? || saveable.answers.last.answer.first[:answer] != answer
+          saveable_answer = saveable.answers.create(:bundle_content_id => nil)
+          Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)
         end
       else
         if ! choice
