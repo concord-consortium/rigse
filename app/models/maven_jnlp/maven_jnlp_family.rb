@@ -50,7 +50,6 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
         :path        => jnlp_url.path.gsub(jnlp_url.version_str, newest),
         :url         => jnlp_url.url.gsub(jnlp_url.version_str, newest),
         :version_str => newest)
-      )
       new_jnlp_url.save!
       self.snapshot_version = newest
       self.save!
