@@ -27,4 +27,6 @@ class Dataservice::BundleContentsMetalController < ActionController::Metal
     end
   end
 
+  include ::NewRelic::Agent::Instrumentation::ControllerInstrumentation
+  add_transaction_tracer :create
 end
