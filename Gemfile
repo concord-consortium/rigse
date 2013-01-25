@@ -110,6 +110,7 @@ group :development do
   gem "awesome_print"
   gem "interactive_editor"
   gem "pry"
+  gem "ruby-prof"
 end
 
 group :test do

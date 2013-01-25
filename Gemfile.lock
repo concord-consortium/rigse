@@ -299,6 +299,8 @@ GEM
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
     ruby-ole (1.2.11.4)
+    ruby-prof (0.12.1)
+    ruby-prof (0.12.1-x86-mingw32)
     ruby-rc4 (0.1.5)
     rubyzip (0.9.9)
     sass (3.2.1)
@@ -418,6 +420,7 @@ DEPENDENCIES
   rspec-rails (~> 2.11.0)
   ruby-debug
   ruby-ole (~> 1.2.11.2)
+  ruby-prof
   rush!
   sass-rails
   selenium-webdriver (= 2.27.2)
