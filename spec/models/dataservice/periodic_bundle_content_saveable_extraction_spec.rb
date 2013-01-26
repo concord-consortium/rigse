@@ -69,9 +69,7 @@ describe Dataservice::PeriodicBundleContent do
     blogger.reload
     bundle_content.periodic_bundle_logger_id.should eql(learner.periodic_bundle_logger.id)
     bundle_content.periodic_bundle_logger.learner.id.should eql(learner.id)
-    
-    bundle_content.extract_saveables.invoke_job
-    
+
     # 1 open response, 1 multiple choice, 2 image questions
     learner.open_responses.size.should eql(1)
     learner.multiple_choices.size.should eql(1)
