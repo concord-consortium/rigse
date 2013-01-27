@@ -20,7 +20,7 @@ source "http://rubygems.org"
   gem "rails",                "~> 3.2"
   gem "arrayfields"
   gem "httpclient",           "~> 2.2"
-  gem "capistrano-ext",                 :require => "capistrano"
+  gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
   gem "haml",           :git => "git://github.com/concord-consortium/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
@@ -90,6 +90,7 @@ source "http://rubygems.org"
   gem "compass-rails"
   gem 'uglifier'
   gem 'yui-compressor'
+  gem "turbo-sprockets-rails3", "~> 0.3.6"
 # end
 
 # see above; for production asset compilation.
