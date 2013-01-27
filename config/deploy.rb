@@ -671,3 +671,10 @@ after 'deploy:update_code', 'deploy:shared_symlinks'
 # after 'deploy:create_symlink', 'deploy:create_asset_packages'
 after 'deploy:shared_symlinks', 'deploy:cleanup'
 after 'installer:create', 'deploy:restart'
+
+# start the delayed_job worker
+# use a prefix incase multiple apps are deployed to the same server
+set :delayed_job_args, "--prefix #{Digest::MD5.hexdigest(deploy_to)[0..8]}"
+after "deploy:stop",    "delayed_job:stop"
+after "deploy:start",   "delayed_job:start"
+after "deploy:restart", "delayed_job:restart"
