@@ -674,7 +674,10 @@ after 'installer:create', 'deploy:restart'
 
 # start the delayed_job worker
 # use a prefix incase multiple apps are deployed to the same server
-set :delayed_job_args, "--prefix #{Digest::MD5.hexdigest(deploy_to)[0..8]}"
+require "delayed/recipes"
+
+# need to use the &block syntax so that deploy_to is correctly setup
+set(:delayed_job_args) { "--prefix '#{deploy_to}'" }
 after "deploy:stop",    "delayed_job:stop"
 after "deploy:start",   "delayed_job:start"
 after "deploy:restart", "delayed_job:restart"
