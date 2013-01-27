@@ -66,8 +66,11 @@ RailsPortal::Application.configure do
     web/search_materials.css
     )
 
-  # add in all the theme application.css files
-  config.assets.precompile << %r{[^/]*/stylesheets/application\.css}
+  # add in the current theme's application.css
+  # a proc is used here so the APP_CONFIG is available
+  config.assets.precompile << Proc.new do |path|
+    path == "APP_CONFIG[:theme]/stylesheets/application.css"
+  end
 
   # Production servers may compile missing assets. (missed by precompile)
   # Requires asset helper gems in production bundle
