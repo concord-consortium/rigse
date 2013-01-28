@@ -28,6 +28,10 @@ class Report::OfferingStatus
     }
   end
 
+  def student_status_for(student)
+    student_status_map[student]
+  end
+  
   # it might make more sense for this to return an offering_student_status object
   def complete_percent(student)
     student_status_map[student].complete_percent
@@ -39,7 +43,7 @@ class Report::OfferingStatus
 
   def collapsed
     return @collapsed if @collapsed
-
+    return false unless requester
     teacher_full_status = offering.teacher_full_status.find_by_teacher_id(requester.portal_teacher.id)
     @collapsed = teacher_full_status ? teacher_full_status.offering_collapsed : true
   end
