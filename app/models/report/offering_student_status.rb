@@ -3,13 +3,31 @@ class Report::OfferingStudentStatus
   attr_accessor :student
   attr_accessor :offering
 
+  # loosely based on offering_status.rb#student_activities
+  def sub_sections
+    runnable = offering.runnable
+    if runnable.is_a? ::Investigation
+      runnable.activities.student_only
+    else
+      [runnable]
+    end
+  end
+
+  def dispay_report_link?
+    offering_reportable?
+  end
+  
+  def offering_reportable?
+    (offering && offering.individual_reportable?)
+  end
+
   # this is redundant with the Report::Learner object, but that object doesn't handle
   # students that don't have learners for the offering
   def complete_percent
     if learner
-       # check if this is a reportable thing, if not then base the percent on the existance of the learner
-       if offering.individual_reportable?
-        learner.report_learner.complete_percent
+      # check if this is a reportable thing, if not then base the percent on the existance of the learner
+      if offering_reportable?
+        learner.report_learner.complete_percent || 0 
       else
         # return 99.99 because all we can tell is whether it is in progress
         # if we return 100 then the progress bar will indicate it is compelete
@@ -38,8 +56,22 @@ class Report::OfferingStudentStatus
 
   def last_run
     if learner
-      learner.report_learner.last_run
+      return learner.report_learner.last_run
     end
+    return nil
+  end
+
+  def never_run
+    return last_run ? false : true
+  end
+
+  def last_run_string(opts={})
+    not_run_str = "not yet started" || opts[:not_run]
+    prefix      = "Last run"        || opts[:prefix]
+    format      = "%b %d, %Y"       || opts[:format]
+
+    return not_run_str if never_run 
+    return "#{prefix} #{last_run.strftime(format)}"
   end
 
 end

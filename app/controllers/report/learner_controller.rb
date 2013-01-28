@@ -106,6 +106,24 @@ class Report::LearnerController < ApplicationController
   def index
     # renders views/report/learner/index.html.haml
   end
+  
+  def updated_at
+    learner = Report::Learner.find_by_user_id_and_offering_id(current_user.id,params[:id])
+    if learner
+      modification_time = learner.last_run.strftime("%s")
+      respond_to do |format|
+        format.html do
+          render :text => modification_time
+        end
+        format.json do
+          render :json => {:modification_time => modification_time }
+        end
+      end
+   
+    else 
+      render :nothing => true
+    end
+  end
 
 end
 

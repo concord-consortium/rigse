@@ -11,6 +11,71 @@ describe RunnablesHelper do
     @resource_page = stub_model(ResourcePage, :name => "Foo")
   end
 
+  describe ".display_workgroups_run_link?" do
+    context "with workgroups enabled" do
+      before :each do
+        helper.stub!(:use_adhoc_workgroups?).and_return true
+      end
+
+      context "with a jnlp launchable" do
+        let :offering do
+          runnable = Object.new().extend(JnlpLaunchable)
+          mock(:runnable => runnable)
+        end
+        it "should return true" do
+          helper.display_workgroups_run_link?(offering).should be_true
+        end
+      end
+      context "with non-jlnp launchables" do
+        let :offering do
+          mock(:runnable => Object.new)
+        end
+        it "should return false" do
+          helper.display_workgroups_run_link?(offering).should be_false
+        end
+      end
+    end
+
+    context "with workgroups disabled" do
+      before :each do
+        helper.stub!(:use_adhoc_workgroups?).and_return false
+      end
+
+      context "with a jnlp launchable" do
+        let :offering do
+          mock(:runnable => Object.new().extend(JnlpLaunchable))
+        end
+        it "should return false" do
+          helper.display_workgroups_run_link?(offering).should be_false
+        end
+      end
+    end
+  end
+
+  describe ".display_status_updates?" do
+      context "with an offering that can update statuses" do
+        let :offering do
+          mock(:runnable => mock(:has_update_status? => true))
+        end
+        it "should return true" do
+          helper.display_status_updates?(offering).should be_true
+        end
+      end
+      context "with simpler offering" do
+        let :offering do
+          mock(:runnable => Object.new())
+        end
+        it "should return false" do
+          helper.display_status_updates?(offering).should be_false
+        end
+      end
+
+  end
+
+  describe ".student_run_buttons" do
+
+  end
+
   describe ".run_button_for" do
     it "should render a run button for a specified component" do
       helper.run_button_for(@resource_page).should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
