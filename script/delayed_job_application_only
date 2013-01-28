@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+# this brings in all of rails without initializing, the original script required
+#  config/environment
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'application'))
+
+require 'delayed/command'
+
+# this is overriden to load the full environment after the new process is forked
+# doing this saves about 6 seconds out of 15 seconds on a local machine
+class Delayed::Command
+  old_run = instance_method(:run)
+
+  define_method(:run) do |worker_name = nil|
+    require File.join(Rails.root, 'config', 'environment')
+    old_run.bind(self).(worker_name)
+  end
+end
+
+
+Delayed::Command.new(ARGV).daemonize
