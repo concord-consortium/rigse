@@ -6,6 +6,7 @@ Feature: A teacher creates a resource page
   Background:
     Given The default project and jnlp resources exist using factories
 
+  @javascript
   Scenario: The teacher creates a resource page
     Given the following teachers exist:
       | login         | password        |
@@ -39,7 +40,7 @@ Feature: A teacher creates a resource page
     And I should see "published page B"
     And I should see "private page A"
     And I should not see "private page B"
-    When I go to the resource pages with drafts page
+    When I try to go to the resource pages with drafts page
     Then I should see "draft page A"
     And I should see "draft page B"
 

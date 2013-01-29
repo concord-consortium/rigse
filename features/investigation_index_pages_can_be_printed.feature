@@ -50,7 +50,7 @@ Feature: Investigation index pages can be printed
     And I should see "OldestInv"
 
   Scenario: Teacher prints the listing of a subset of investigations
-    When I am on the investigations like "New" page
+    When I try to go to the investigations like "New" page
     Then I should see "NewestInv"
     And I should not see "MediumInv"
     And I should not see "OldestInv"

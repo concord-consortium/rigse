@@ -231,3 +231,5 @@ else
 end
 
 </code></pre>
+
+Small change to test updated hudson template.

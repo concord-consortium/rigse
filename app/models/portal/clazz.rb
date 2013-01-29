@@ -180,6 +180,15 @@ class Portal::Clazz < ActiveRecord::Base
     "Class: #{name}, Semester: #{semester_name}"
   end
 
+  def teachers_label
+    self.teachers.size > 1 ? "Teachers" : "Teacher"
+  end
+  
+  def teachers_listing
+    return "no teachers" unless self.teachers.size > 0
+    return self.teachers.collect { |t| t.name }.join(", ")
+  end
+
   # for the accordion display
   def children
     # return students

@@ -6,7 +6,9 @@ Feature: Student registers to use the portal
 
   Background:
     Given The default project and jnlp resources exist using factories
-
+    
+    
+  @javascript
   Scenario: Anonymous user signs up as student
     Given I am an anonymous user
     And the option to allow default classes is disabled
@@ -57,7 +59,9 @@ Feature: Student registers to use the portal
 
     And I press "Submit"
     Then I should see "Success!"
-
+    
+    
+  @javascript
   Scenario: Class words are not case sensitive
     Given the following teachers exist:
       | login   | password |
@@ -81,7 +85,9 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     Then I should see "Logged in successfully"
-
+    
+    
+  @javascript
   Scenario: Student registered when default classes are enabled
     Given the option to allow default classes is enabled
     When I go to the pick signup page
@@ -98,7 +104,9 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     And I should see "Logged in successfully"
-
+    
+    
+  @javascript
   Scenario: Student under 18 registered when student consent is enabled
     Given the default project has student consent enabled
     And the following teachers exist:
@@ -123,7 +131,9 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     Then I should see "Logged in successfully"
-
+    
+    
+  @javascript
   Scenario: Student over 18 registers and gives consent
     Given the default project has student consent enabled
     And the following teachers exist:
@@ -149,7 +159,9 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     Then I should see "Logged in successfully"
-
+    
+    
+  @javascript
   Scenario: Student over 18 registered and doesn't give consent
     Given the default project has student consent enabled
     And the following teachers exist:

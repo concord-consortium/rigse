@@ -377,6 +377,9 @@ When /^I duplicate the investigation$/ do
   show_actions_menu
   click_link("duplicate")
   page.execute_script("$('actions_menu').hide()")
+
+  # need to verify that the duplication is complete so there are not lingering database interactions
+  page.should have_content('Copied')
 end
 
 Then /^I cannot duplicate the investigation$/ do

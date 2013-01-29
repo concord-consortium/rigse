@@ -16,7 +16,6 @@
 = require 'accordion'
 = require 'item_selectable'
 = require 'live_validation'
-= require 'please_wait'
 = require 'report_filter'
 = require 'pagination'
 = require 'workgroup'
@@ -24,8 +23,12 @@
 = require 'pt_event_simulate'
 = require 'prototype-ui/prototype-ui'
 = require 'site_notices'
+= require 'lightbox'
 = require tinymce
 = require_tree './in_place_rich_editor'
 = require 'jquery/jquery'
 = require 'search_materials'
+= require 'student_lightbox_report'
+= require 'progress_disclosure'
+= require 'run_status'
 */

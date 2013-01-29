@@ -17,6 +17,8 @@ describe SearchController do
     @manager_user = Factory.next(:manager_user)
     @researcher_user = Factory.next(:researcher_user)
     @student_user = Factory.create(:user, :login => "authorized_student")
+    @student = Factory.create(:portal_student, :user_id => @student_user.id)
+    
     
     @physics_investigation = Factory.create(:investigation, :name => 'physics_inv', :user => @author_user, :publication_status => 'published')
     @chemistry_investigation = Factory.create(:investigation, :name => 'chemistry_inv', :user => @author_user, :publication_status => 'published')
@@ -39,17 +41,15 @@ describe SearchController do
   end
 
   describe "GET index" do
-    it "should redirect to root for all the users other than teacher" do
-      [@admin_user, @author_user, @manager_user, @researcher_user, @student_user].each do |user_other_than_teacher|
-        controller.stub!(:current_user).and_return(user_other_than_teacher)
-        @post_params = {
-          :search_term => @laws_of_motion_activity.name,
-          :activity => 'true',
-          :investigation => nil
-        }
-        post :index
-        response.should redirect_to("/")
-      end
+    it "should redirect to root for students" do
+      controller.stub!(:current_user).and_return(@student_user)
+      @post_params = {
+        :search_term => @laws_of_motion_activity.name,
+        :activity => 'true',
+        :investigation => nil
+      }
+      post :index
+      response.should redirect_to("/")
     end
     it "should show all study materials materials" do
       post :index
@@ -164,19 +164,18 @@ describe SearchController do
 
   describe "POST show" do
     it "should redirect to root for all the users other than teacher" do
-      [@admin_user, @author_user, @manager_user, @researcher_user, @student_user].each do |user_other_than_teacher|
-        controller.stub!(:current_user).and_return(user_other_than_teacher)
-        @post_params = {
-          :search_term => @laws_of_motion_activity.name,
-          :activity => 'true',
-          :investigation => nil
-        }
-        xhr :post, :show, @post_params
-        response.should redirect_to(:root)
-        
-        post :show, @post_params
-        response.should redirect_to(:root)
-      end
+      controller.stub!(:current_user).and_return(@student_user)
+      @post_params = {
+        :search_term => @laws_of_motion_activity.name,
+        :activity => 'true',
+        :investigation => nil
+      }
+      xhr :post, :show, @post_params
+      response.should redirect_to(:root)
+      
+      post :show, @post_params
+      response.should redirect_to(:root)
+      
     end
     it "should search all study materials materials matching the search term" do
       @post_params = {
@@ -290,8 +289,7 @@ describe SearchController do
   end
   
   describe "Post get_current_material_unassigned_clazzes" do
-    pending "Action add_material_to_clazzes is still wip"
-=begin
+    
     before(:each) do
       #remove all the classes assigned to the teacher
       teacher_clazzes = Portal::TeacherClazz.where(:teacher_id => @teacher.id)
@@ -346,16 +344,17 @@ describe SearchController do
       assigns[:assigned_clazzes].should eq []
       assigns[:unassigned_clazzes].should eq [@physics_clazz, @chemistry_clazz, @mathematics_clazz]
     end
-=end
+
   end  
   describe "POST add_material_to_clazzes" do
-    pending "Action add_material_to_clazzes is still wip"
-=begin
+    
     before(:each) do
       @clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])
       @another_clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])
     end
-    it "should assign investigation to the classes" do
+    it "should assign only unassigned investigations to the classes" do
+      already_assigned_offering = Factory.create(:portal_offering, :clazz_id=> @clazz.id, :runnable_id=> @chemistry_investigation.id, :runnable_type => 'Investigation'.classify)
+      
       @post_params = {
         :clazz_id => [@clazz.id, @another_clazz.id],
         :material_id => @chemistry_investigation.id,
@@ -365,31 +364,38 @@ describe SearchController do
       
       runnable_id = @post_params[:material_id]
       runnable_type = @post_params[:material_type].classify
-      offering_for_clazz = Portal::Offering.find_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
-      offering_for_another_clazz = Portal::Offering.find_by_clazz_id_and_runnable_type_and_runnable_id(@another_clazz.id,runnable_type,runnable_id)
+      offering_for_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
+      offering_for_another_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(@another_clazz.id,runnable_type,runnable_id)
       
       assert_not_nil(offering_for_clazz)
+      assert_equal(offering_for_clazz.length, 1)
+      assert_equal(offering_for_clazz[0], already_assigned_offering)
+      
       assert_not_nil(offering_for_another_clazz)
-      assert_select_rjs :replace_html, "search_#{runnable_type.downcase}_#{runnable_id}"
+      assert_equal(offering_for_another_clazz.length, 1)
+      assert_equal(offering_for_another_clazz[0].runnable_id, @chemistry_investigation.id)
+      assert_equal(offering_for_another_clazz[0].clazz_id, @another_clazz.id)
     end
-    it "should assign activity to the classes" do
+    it "should assign activities to the classes" do
+      already_assigned_offering = Factory.create(:portal_offering, :clazz_id=> @clazz.id, :runnable_id=> @laws_of_motion_activity.id, :runnable_type => 'Investigation')
       @post_params = {
         :clazz_id => [@clazz.id, @another_clazz.id],
-        :material_id => @laws_of_motion_activity.id,
+        :material_id => "#{@laws_of_motion_activity.id},#{@fluid_mechanics_activity.id}",
         :material_type => 'Activity'
       }
       xhr :post, :add_material_to_clazzes, @post_params
       
-      runnable_id = @post_params[:material_id]
+      runnable_ids = @post_params[:material_id].split(',')
       runnable_type = @post_params[:material_type].classify
-      offering_for_clazz = Portal::Offering.find_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
-      offering_for_another_clazz = Portal::Offering.find_by_clazz_id_and_runnable_type_and_runnable_id(@another_clazz.id,runnable_type,runnable_id)
-      
-      assert_not_nil(offering_for_clazz)
-      assert_not_nil(offering_for_another_clazz)
-      assert_select_rjs :replace_html, "search_#{runnable_type.downcase}_#{runnable_id}"
+      all_clazzes = @post_params[:clazz_id]
+      all_clazzes.each do |clazz_id|
+        runnable_ids.each do |runnable_id|
+          offering = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(clazz_id,runnable_type,runnable_id)
+          assert_not_nil(offering)
+          assert_equal(offering.length, 1)
+        end
+      end
     end
-=end
   end
 
 end

@@ -63,24 +63,24 @@ Feature: Admin configures project help page
     When I fill in "admin_project[custom_help_page_html]" with ""
     And I choose "Use custom help page HTML"
     And I press "Save"
-    Then I should see "Custom HTML cannot be blank if selected as the help page." within the message popup on the admin projects page
+    Then I should see "Custom HTML cannot be blank if selected as the help page." within the lightbox in focus
     When am on the admin projects page
     And I follow "edit project"
     And I fill in "admin_project[external_url]" with ""
     And I choose "Use external help URL"
     And I press "Save"
-    Then I should see "Please enter a valid external help URL." within the message popup on the admin projects page
+    Then I should see "Please enter a valid external help URL." within the lightbox in focus
     
   @javascript
   Scenario: Admin should see errors on previewing the the help page if text boxes are blank
     When I fill in "admin_project[custom_help_page_html]" with ""
     And I press "Preview Custom Help Page"
-    Then I should see "Please enter some custom help HTML to preview." within the message popup on the admin projects page
+    Then I should see "Please enter some custom help HTML to preview." within the lightbox in focus
     When am on the admin projects page
     And I follow "edit project"
     And I fill in "admin_project[external_url]" with ""
     And I press "Preview External Help URL"
-    Then I should see "Please enter a valid external help URL." within the message popup on the admin projects page
+    Then I should see "Please enter a valid external help URL." within the lightbox in focus
     
  @javascript
   Scenario: Admin should be allowed to remove help page link

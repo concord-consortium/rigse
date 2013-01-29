@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe Admin::TagsController do
 
+  before(:each) do
+    login_admin
+  end
+
   def mock_tags(stubs={})
     @mock_tags ||= mock_model(Admin::Tag, stubs)
   end

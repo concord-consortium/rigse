@@ -23,5 +23,5 @@ Feature: Admin switches to a different user
     When I login with username: myadmin password: myadmin
     And I switch to "Joe Switchuser" in the user list by searching "Switchuser"
     Then I should see "Welcome Joe Switchuser"
-    And I follow "Switch back"
+    And I follow "Switch Back"
     Then I should see "Josef Switchuser"

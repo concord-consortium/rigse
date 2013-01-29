@@ -38,9 +38,7 @@ describe Dataservice::PeriodicBundleContent do
 
   it "should extract each map entry into its own part object" do
     bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)
-    job = bundle_content.extract_parts
-    job.is_a?(Delayed::Backend::ActiveRecord::Job).should be_true
-    job.invoke_job
+    bundle_content.extract_parts
     @bundle_logger.reload
     (parts = @bundle_logger.periodic_bundle_parts).size.should eql(7)
     parts.select{|p| p.delta }.size.should eql(2)
@@ -57,7 +55,7 @@ PART
 
   it "should extract imports into the bundle logger" do
     bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)
-    bundle_content.extract_parts.invoke_job
+    bundle_content.extract_parts
     @bundle_logger.reload
     @bundle_logger.imports.size.should eql(18)
   end
@@ -95,7 +93,7 @@ PART
   xit "should reconstitute the parts into a valid learner data format" do
     @bundle_logger.should_receive(:learner).and_return(mock(Portal::Learner, :uuid => "somefakeid"))
     bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)
-    bundle_content.extract_parts.invoke_job
+    bundle_content.extract_parts
     @bundle_logger.reload
 
     @bundle_logger.otml.should =~ @reconstituted_regex

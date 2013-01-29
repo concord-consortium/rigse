@@ -39,6 +39,11 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     self.processed = true
   end
 
+  def delayed_process_bundle
+    extract_parts
+    extract_saveables
+  end
+
   def extract_parts
     return true if self.parts_extracted
 
@@ -51,7 +56,6 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     self.parts_extracted = true
     self.save
   end
-  handle_asynchronously :extract_parts
 
   def extract_saveables
     raise "PeriodicBundleContent ##{self.id}: body is empty!" if self.empty
@@ -61,7 +65,6 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     # Also create/update a Report::Learner object for reporting
     self.learner.report_learner.update_fields if self.learner
   end
-  handle_asynchronously :extract_saveables
 
   def copy_to_collaborators
     return true unless self.learner && self.learner.offering

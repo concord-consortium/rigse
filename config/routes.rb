@@ -7,6 +7,9 @@ RailsPortal::Application.routes.draw do
   post '/search/add_material_to_clazzes'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
   get 'search/get_search_suggestions'
+  match '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report, :method => :get
+  match '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report, :method => :get
+
 
   post "help/preview_help_page"
   post "home/preview_home_page"
@@ -193,6 +196,8 @@ constraints :id => /\d+/ do
         post :offering_collapsed_status
         post :get_recent_student_report
         get :activity_report
+        get :student_report
+        post :student_report
       end
     end
 
@@ -494,6 +499,7 @@ constraints :id => /\d+/ do
   match '/investigations/reports/usage' => 'investigations#usage_report', :as => :investigation_usage_report, :method => :get
   match '/investigations/reports/details' => 'investigations#details_report', :as => :investigation_details_report, :method => :get
   match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
+  match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get
   resources :activities do
     member do
       get :duplicate

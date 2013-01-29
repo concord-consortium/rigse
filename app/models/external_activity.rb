@@ -117,10 +117,19 @@ class ExternalActivity < ActiveRecord::Base
     []
   end
 
-  # hack so it can mimic an Activity
+  # methods to mimic Activity
   def teacher_only
     false
   end
+
+  def teacher_only?
+    false
+  end
+
+  def parent
+    nil
+  end
+  # end methods to mimic Activity
 
   def left_nav_panel_width
     300

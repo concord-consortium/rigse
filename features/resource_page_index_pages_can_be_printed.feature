@@ -34,7 +34,7 @@ Feature: Resource Page index pages can be printed
     And I should see "OldestResource"
     
   Scenario: Teacher prints the listing of a subset of resource page
-    When I am on the resource pages like "New" page
+    When I try to go to the resource pages like "New" page
     Then I should see "NewestResource"
     And I should not see "MediumResource"
     And I should not see "OldestResource"

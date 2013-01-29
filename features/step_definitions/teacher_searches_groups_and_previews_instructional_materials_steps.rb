@@ -97,7 +97,7 @@ Then /^the search results should be paginated on the search instructional materi
   end
 end
 
-And /^(?:|I )follow the "Assign to a class" link for the (investigation|activity) "(.+)"$/ do |material_type, material_name|
+And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do |link, material_type, material_name|
   material_id = nil
   case material_type
     when "investigation"
@@ -107,7 +107,8 @@ And /^(?:|I )follow the "Assign to a class" link for the (investigation|activity
   end
   
   within(:xpath,"//div[@id = 'search_#{material_type}_#{material_id}']") do
-    step 'I follow "Assign to a Class"'
+    step_text = "I follow \"#{link}\""
+    step step_text
   end
 end
 

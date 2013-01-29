@@ -46,13 +46,14 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
     current = snapshot_version
     newest = newest_snapshot_version
     if current != newest
-      jnlp_url = snapshot_jnlp_url.clone
-      jnlp_url.url = jnlp_url.url.gsub(jnlp_url.version_str, newest)
-      jnlp_url.path = jnlp_url.path.gsub(jnlp_url.version_str, newest)
-      jnlp_url.version_str = newest
-      jnlp_url.save!
+      new_jnlp_url = self.versioned_jnlp_urls.build(
+        :path        => jnlp_url.path.gsub(jnlp_url.version_str, newest),
+        :url         => jnlp_url.url.gsub(jnlp_url.version_str, newest),
+        :version_str => newest)
+      new_jnlp_url.save!
       self.snapshot_version = newest
       self.save!
+      jnlp_url = new_jnlp_url
     end
     jnlp_url
   end

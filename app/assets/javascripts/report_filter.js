@@ -61,3 +61,47 @@ function saveChangesAndPrint(parentId, formId) {
 Event.observe(window, 'load', function() {
   window.setTimeout("autoPrint();", 3000);
 });
+
+function onShowSelected(Event)
+{
+    var showSelected = false;
+    $$(".filter_checkbox").each(function(obj){ showSelected = showSelected || obj.checked;});
+
+    if (showSelected)
+    {
+        return true;
+    }
+    
+    try
+    {
+        Event.preventDefault();
+    }
+    catch(e){
+        Event.cancelBubble=true;
+    }
+    
+    var messageText = "No questions have been selected.";
+    showMessagePopup(messageText);
+    return false;
+}
+
+
+function showMessagePopup(messageText)
+{
+    var popupHtml = "<div style='padding:10px;padding-left:15px'>" +
+                    messageText +
+                    "</div>";
+    
+    var lightboxConfig = {
+        width:300,
+        height:125,
+        closeOnNextPopup: true,
+        type: Lightbox.type.ALERT,
+        content: popupHtml
+    };
+    
+    var messagePopup = new Lightbox(lightboxConfig);
+    
+    return;
+}
+

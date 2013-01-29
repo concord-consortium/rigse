@@ -46,6 +46,12 @@ def enable_student_consent(enable)
   project.save
 end
 
+def enable_include_external_activities(enable)
+  project = get_project
+  project.include_external_activities = enable
+  project.save
+end
+
 Given /^the default project has security questions enabled$/ do
   enable_security_questions(true)
 end
@@ -58,22 +64,17 @@ Given /^the option to allow default classes is disabled$/ do
   enabled_default_class(false)
 end
 
+Given /^the default project has include external activities enabled$/ do
+  enable_include_external_activities(true)
+end
+
 Given /^the default project has student consent enabled$/ do
   enable_student_consent(true)
 end
 
-Given /^adhoc workgroups are disabled$/ do
-  # note this will disable them globally so this isn't isolated to this test
-  # so for the time being it is best to call the clean up step below
-  APP_CONFIG[:use_adhoc_workgroups] = false
+Then /^APP_CONFIG\[:([^\]]*)\] should be (true|false)$/ do |setting, value|
+  APP_CONFIG[setting.to_sym].should == (value == 'true')
 end
-
-Then /^adhoc workgroups are set based on settings.yml$/ do
-  settings = AppSettings.load_app_settings
-  APP_CONFIG[:use_adhoc_workgroups] = settings[:use_adhoc_workgroups]
-end
-
-
 
 Then /^I should see the default district$/ do
   page.should have_xpath('//*', :text => APP_CONFIG[:site_district])

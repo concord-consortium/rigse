@@ -81,6 +81,15 @@
 .lightbox_focused .s {
 }
 
+.lightbox .buttons_container
+{
+    bottom: 0px;
+    padding: 15px 0px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
 .lightbox .buttons {
     position: absolute;
     top:1px;

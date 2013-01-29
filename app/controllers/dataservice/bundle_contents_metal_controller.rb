@@ -10,7 +10,15 @@ class Dataservice::BundleContentsMetalController < ActionController::Metal
           :bundle_content => bundle_logger.in_progress_bundle
         )
       end
-      bundle_logger.end_bundle( { :body => body } )
+
+      # make a time object out of X-Queue-Start header if it exists
+      upload_time = nil
+      x_queue_start = request.headers['X-Queue-Start']
+      if x_queue_start
+        usecs_since_1970 = x_queue_start.match(/t=(\d+)/)[1].to_i
+        upload_time = Time.now - Time.at(usecs_since_1970/1000000)
+      end
+      bundle_logger.end_bundle( { :body => body, :upload_time => upload_time } )
       bundle_content = bundle_logger.bundle_contents.last
       digest = Digest::MD5.hexdigest(body)
 
@@ -27,4 +35,6 @@ class Dataservice::BundleContentsMetalController < ActionController::Metal
     end
   end
 
+  include ::NewRelic::Agent::Instrumentation::ControllerInstrumentation
+  add_transaction_tracer :create
 end

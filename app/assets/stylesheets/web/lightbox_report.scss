@@ -1,0 +1,60 @@
+@mixin rounded($radius: 10px) {
+  border-radius: $radius;
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+}
+
+@mixin opac($v) {
+  filter: alpha(opacity = ($v * 100));
+  -moz-opacity: $v;
+  -khtml-opacity: $v;
+  opacity: $v;
+}
+
+@mixin float() {
+  position: relative;
+  display: block;
+  @include rounded(10px);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5em;
+  z-index: 6002;
+  padding: 20px;
+  background-color: white;
+  @include opac(1.0);
+}
+
+#lightbox_wrapper {
+  position: absolute;
+  display: block;
+  top: 0px;
+  min-height: 900px;
+  margin-bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+#lightbox_report_backdrop {
+  position: absolute;
+  display: block;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: black;
+  @include opac(0.6);
+  z-index: 6001;
+}
+
+#lightbox_closer{
+  float: right;
+}
+
+#lightbox_report{
+  min-width: 400px;
+  max-width: 800px;
+  @include float;
+  #content {
+    height: 1200px;
+  }
+}

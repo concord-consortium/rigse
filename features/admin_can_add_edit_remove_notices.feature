@@ -62,7 +62,7 @@ Feature: Admin can add, edit and remove notices
   @javascript
   Scenario: Anonymous users cannot create notice page
     When I am an anonymous user
-    And I go to the admin create notice page
+    And I try to go to the admin create notice page
     Then I should be on "my home page"
     
     
