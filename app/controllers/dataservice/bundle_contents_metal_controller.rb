@@ -1,7 +1,6 @@
 class Dataservice::BundleContentsMetalController < ActionController::Metal
 
   def create
-    controller_start_time = Time.now
     if bundle_logger = Dataservice::BundleLogger.find(params[:id])
       body = request.body.read
       if bundle_logger.in_progress_bundle
@@ -17,7 +16,7 @@ class Dataservice::BundleContentsMetalController < ActionController::Metal
       x_queue_start = request.headers['X-Queue-Start']
       if x_queue_start
         usecs_since_1970 = x_queue_start.match(/t=(\d+)/)[1].to_i
-        upload_time = controller_start_time - Time.at(usecs_since_1970/1000000)
+        upload_time = Time.now - Time.at(usecs_since_1970/1000000)
       end
       bundle_logger.end_bundle( { :body => body, :upload_time => upload_time } )
       bundle_content = bundle_logger.bundle_contents.last
