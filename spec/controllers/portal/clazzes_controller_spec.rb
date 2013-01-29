@@ -82,38 +82,6 @@ describe Portal::ClazzesController do
       response.should redirect_to("/home")
     end
 
-    it "shows the full class summary, with edit button if current user is authorized" do
-      [:admin_user, :authorized_teacher_user].each do |user|
-        setup_for_repeated_tests
-        stub_current_user user
-
-        get :show, { :id => @mock_clazz.id }
-
-        # All users should see the full class details summary
-        assert_select("div#details_portal__clazz_#{@mock_clazz.id}") do
-          assert_select('div.action_menu') do
-            assert_select('a', :text => 'edit class information')
-          end
-        end
-      end
-    end
-
-    it "shows the list of all teachers assigned to the requested class" do
-      teachers = [@authorized_teacher, @random_teacher]
-      @mock_clazz.teachers = teachers
-
-      get :show, :id => @mock_clazz.id
-
-      assert_select("div.block_list") do
-        assert_select("ul") do
-          teachers.each do |teacher|
-            assert_select("li", :text => /#{teacher.name}/)
-          end
-        end
-      end
-    end
-    
-    
     it "saves the position of the left pane submenu item for an authorized teacher" do
       setup_for_repeated_tests
       stub_current_user :authorized_teacher_user
