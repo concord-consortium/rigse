@@ -584,10 +584,12 @@ constraints :id => /\d+/ do
   match '/banner' => 'misc#banner', :as => :banner
   post  '/installer_report' => 'misc#installer_report', :as => :installer_report
   match 'authoring' => 'home#authoring', :as => :authoring
+
+  mount GenigamesConnector::Engine, :at => 'genigames_connector'
+
   match '/:controller(/:action(/:id))'
 
   root :to => 'home#index'
-  
-  
+
 end
 end

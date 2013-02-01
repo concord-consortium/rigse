@@ -66,7 +66,7 @@ source "http://rubygems.org"
   gem 'in_place_editing',      :git => 'git://github.com/concord-consortium/in_place_editing.git'
   
   gem 'dynamic_form',         "~> 1.1.4"
-  gem 'json',                 "~> 1.6.3"
+  gem 'json',                 "~> 1.7.6"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
   # this is because of the removed RAILS_ROOT constant
   # gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
@@ -81,6 +81,7 @@ source "http://rubygems.org"
   gem "tinymce-rails",        "~>3.5.6"
   gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
     :branch => "remove-addon-support"
+  gem 'genigames_connector',  :git => 'git://github.com/concord-consortium/genigames-connector'
 
 # Ideally we pre-compile all asetts and then run production
 # with out the asset compiling requirements. But We have dynamic assets
