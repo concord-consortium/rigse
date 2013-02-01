@@ -11,15 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130117174756) do
+ActiveRecord::Schema.define(:version => 20130129175554) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "name"
     t.string   "uuid",               :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "name"
     t.text     "description"
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
@@ -40,30 +40,33 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "admin_project_vendor_interfaces", :force => true do |t|
     t.integer  "admin_project_id"
     t.integer  "probe_vendor_interface_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "admin_projects", :force => true do |t|
     t.integer  "user_id"
     t.text     "description"
     t.string   "uuid",                           :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
     t.boolean  "allow_default_class"
     t.boolean  "enable_grade_levels",                          :default => false
     t.text     "custom_css"
     t.boolean  "use_bitmap_snapshots",                         :default => false
-    t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "teachers_can_author",                          :default => true
+    t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "enable_member_registration",                   :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
     t.boolean  "require_user_consent",                         :default => false
     t.boolean  "use_periodic_bundle_uploading",                :default => false
     t.string   "jnlp_cdn_hostname"
     t.boolean  "active"
+    t.string   "external_url"
+    t.text     "custom_help_page_html"
+    t.string   "help_type"
     t.boolean  "include_external_activities",                  :default => false
   end
 
@@ -93,8 +96,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "admin_tags", :force => true do |t|
     t.string   "scope"
     t.string   "tag"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "attached_files", :force => true do |t|
@@ -106,8 +109,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "attachment_content_type"
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "author_notes", :force => true do |t|
@@ -115,24 +118,24 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid",                 :limit => 36
     t.integer  "authored_entity_id"
     t.string   "authored_entity_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.integer  "user_id"
   end
 
   create_table "collaborations", :force => true do |t|
     t.integer  "bundle_content_id"
     t.integer  "student_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "dataservice_blobs", :force => true do |t|
     t.binary   "content",                    :limit => 16777215
     t.string   "token"
     t.integer  "bundle_content_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
     t.integer  "periodic_bundle_content_id"
   end
 
@@ -150,6 +153,15 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
 
   add_index "dataservice_bucket_contents", ["bucket_logger_id"], :name => "index_dataservice_bucket_contents_on_bucket_logger_id"
 
+  create_table "dataservice_bucket_log_items", :force => true do |t|
+    t.text     "content"
+    t.integer  "bucket_logger_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "dataservice_bucket_log_items", ["bucket_logger_id"], :name => "index_dataservice_bucket_log_items_on_bucket_logger_id"
+
   create_table "dataservice_bucket_loggers", :force => true do |t|
     t.integer  "learner_id"
     t.datetime "created_at", :null => false
@@ -161,22 +173,23 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
     t.integer  "position"
-    t.text     "body",             :limit => 2147483647
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "otml",             :limit => 2147483647
+    t.text     "body",             :limit => 16777215
+    t.datetime "created_at",                                              :null => false
+    t.datetime "updated_at",                                              :null => false
+    t.text     "otml",             :limit => 16777215
     t.boolean  "processed"
-    t.boolean  "valid_xml",                              :default => false
-    t.boolean  "empty",                                  :default => true
+    t.boolean  "valid_xml",                            :default => false
+    t.boolean  "empty",                                :default => true
     t.string   "uuid",             :limit => 36
     t.text     "original_body"
+    t.float    "upload_time"
   end
 
   add_index "dataservice_bundle_contents", ["bundle_logger_id"], :name => "index_dataservice_bundle_contents_on_bundle_logger_id"
 
   create_table "dataservice_bundle_loggers", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
     t.integer  "in_progress_bundle_id"
   end
 
@@ -184,13 +197,13 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "console_logger_id"
     t.integer  "position"
     t.text     "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "dataservice_console_loggers", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "dataservice_jnlp_sessions", :force => true do |t|
@@ -207,8 +220,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "event_type"
     t.text     "event_details"
     t.integer  "bundle_content_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   add_index "dataservice_launch_process_events", ["bundle_content_id"], :name => "index_dataservice_launch_process_events_on_bundle_content_id"
@@ -220,9 +233,9 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.boolean  "valid_xml"
     t.boolean  "empty"
     t.string   "uuid"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
-    t.boolean  "parts_extracted"
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+    t.boolean  "parts_extracted",                               :default => false
   end
 
   add_index "dataservice_periodic_bundle_contents", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
@@ -249,17 +262,17 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   add_index "dataservice_periodic_bundle_parts", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
 
   create_table "delayed_jobs", :force => true do |t|
-    t.integer  "priority",                         :default => 0
-    t.integer  "attempts",                         :default => 0
-    t.text     "handler",    :limit => 2147483647
+    t.integer  "priority",                       :default => 0
+    t.integer  "attempts",                       :default => 0
+    t.text     "handler",    :limit => 16777215
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
     t.string   "locked_by"
     t.string   "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
@@ -273,8 +286,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "height"
     t.integer  "mother_organism_id"
     t.integer  "father_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
   end
 
   create_table "embeddable_biologica_chromosome_zooms", :force => true do |t|
@@ -299,8 +312,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.boolean  "image_label_species_text_visible"
     t.integer  "organism_label_type"
     t.integer  "zoom_level"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
   end
 
   create_table "embeddable_biologica_chromosome_zooms_organisms", :id => false, :force => true do |t|
@@ -316,8 +329,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "organism_id"
     t.integer  "width"
     t.integer  "height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "embeddable_biologica_meiosis_views", :force => true do |t|
@@ -334,8 +347,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.boolean  "alignment_control_visible"
     t.integer  "father_organism_id"
     t.integer  "mother_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
   end
 
   create_table "embeddable_biologica_multiple_organisms", :force => true do |t|
@@ -346,8 +359,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "width"
     t.integer  "height"
     t.integer  "organism_image_size"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   create_table "embeddable_biologica_multiple_organisms_organisms", :id => false, :force => true do |t|
@@ -366,8 +379,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "chromosomes_color"
     t.boolean  "fatal_characteristics"
     t.integer  "world_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
   end
 
   create_table "embeddable_biologica_organisms_pedigrees", :id => false, :force => true do |t|
@@ -390,8 +403,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "organism_image_size"
     t.integer  "minimum_number_children"
     t.integer  "maximum_number_children"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
   end
 
   create_table "embeddable_biologica_static_organisms", :force => true do |t|
@@ -400,8 +413,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.text     "description"
     t.integer  "organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "embeddable_biologica_worlds", :force => true do |t|
@@ -410,34 +423,34 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.text     "description"
     t.text     "species_path"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
   create_table "embeddable_data_collectors", :force => true do |t|
     t.string   "name"
     t.text     "description"
+    t.integer  "probe_type_id"
     t.integer  "user_id"
     t.string   "uuid",                       :limit => 36
-    t.integer  "y_axis_min",                               :default => 0
-    t.integer  "y_axis_max",                               :default => 5
-    t.integer  "x_axis_min",                               :default => 0
-    t.integer  "x_axis_max",                               :default => 60
     t.string   "title"
-    t.string   "x_axis_label"
-    t.string   "x_axis_units"
+    t.float    "y_axis_min",                               :default => 0.0
+    t.float    "y_axis_max",                               :default => 5.0
+    t.float    "x_axis_min"
+    t.float    "x_axis_max"
+    t.string   "x_axis_label",                             :default => "Time"
+    t.string   "x_axis_units",                             :default => "s"
     t.string   "y_axis_label"
     t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled"
-    t.boolean  "draw_marks"
-    t.boolean  "connect_points"
-    t.boolean  "autoscale_enabled"
-    t.boolean  "ruler_enabled"
-    t.boolean  "show_tare"
-    t.boolean  "single_value"
-    t.integer  "probe_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.boolean  "multiple_graphable_enabled",               :default => false
+    t.boolean  "draw_marks",                               :default => false
+    t.boolean  "connect_points",                           :default => true
+    t.boolean  "autoscale_enabled",                        :default => false
+    t.boolean  "ruler_enabled",                            :default => false
+    t.boolean  "show_tare",                                :default => false
+    t.boolean  "single_value",                             :default => false
+    t.datetime "created_at",                                                   :null => false
+    t.datetime "updated_at",                                                   :null => false
     t.integer  "graph_type_id"
     t.integer  "prediction_graph_id"
     t.text     "otml_root_content"
@@ -461,8 +474,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "visible_rows"
     t.text     "column_names"
     t.text     "column_data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
     t.integer  "data_collector_id"
     t.integer  "precision",                       :default => 2
     t.integer  "width",                           :default => 1200
@@ -479,8 +492,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.boolean  "is_grid_visible"
     t.integer  "preferred_width"
     t.integer  "preferred_height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
   create_table "embeddable_image_questions", :force => true do |t|
@@ -488,8 +501,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid",       :limit => 36
     t.string   "name"
     t.text     "prompt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   create_table "embeddable_inner_page_pages", :force => true do |t|
@@ -498,8 +511,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "user_id"
     t.string   "uuid",          :limit => 36
     t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
   add_index "embeddable_inner_page_pages", ["inner_page_id"], :name => "index_inner_page_pages_on_inner_page_id"
@@ -511,8 +524,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "static_page_id"
   end
 
@@ -523,15 +536,15 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.text     "description"
     t.text     "target_element_type"
     t.integer  "target_element_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   create_table "embeddable_multiple_choice_choices", :force => true do |t|
     t.text     "choice"
     t.integer  "multiple_choice_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.boolean  "is_correct"
   end
 
@@ -556,8 +569,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.text     "description"
     t.text     "authored_data_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "embeddable_n_logo_models", :force => true do |t|
@@ -568,19 +581,19 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.text     "authored_data_url"
     t.integer  "width"
     t.integer  "height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
     t.string   "uuid",             :limit => 36
+    t.string   "name"
+    t.text     "description"
     t.text     "prompt"
     t.string   "default_response"
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
     t.integer  "rows",                           :default => 5
     t.integer  "columns",                        :default => 32
     t.integer  "font_size",                      :default => 12
@@ -592,8 +605,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.text     "description"
     t.text     "otml_content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
   create_table "embeddable_smartgraph_range_questions", :force => true do |t|
@@ -620,16 +633,16 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.boolean  "second_wrong_highlight"
     t.text     "multiple_wrong_answers_response_text"
     t.boolean  "multiple_wrong_highlight"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
   end
 
   create_table "embeddable_sound_graphers", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",            :limit => 36
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.string   "max_frequency"
     t.string   "max_sample_time"
     t.string   "display_mode"
@@ -642,31 +655,19 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "image_url"
     t.string   "video_url"
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "embeddable_xhtmls", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
     t.string   "uuid",        :limit => 36
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "equipments", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "created_by"
-    t.integer  "updated_by"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.text     "content"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
-
-  add_index "equipments", ["created_by"], :name => "created_by_index"
-  add_index "equipments", ["updated_by"], :name => "updated_by_index"
 
   create_table "external_activities", :force => true do |t|
     t.integer  "user_id"
@@ -675,8 +676,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.text     "description"
     t.text     "url"
     t.string   "publication_status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.integer  "offerings_count",          :default => 0
     t.string   "save_path"
     t.boolean  "append_learner_id_to_url"
@@ -695,8 +696,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.text     "description"
     t.string   "server_url"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "images", :force => true do |t|
@@ -709,16 +710,16 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "height"
     t.string   "description"
     t.string   "uuid",         :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
   create_table "installer_reports", :force => true do |t|
     t.text     "body"
     t.string   "remote_ip"
     t.boolean  "success"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "jnlp_session_id"
   end
 
@@ -727,8 +728,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid",                      :limit => 36
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
     t.integer  "grade_span_expectation_id"
     t.boolean  "teacher_only",                            :default => false
     t.string   "publication_status"
@@ -740,27 +741,14 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer "versioned_jnlp_id"
   end
 
-  create_table "material_equipments", :force => true do |t|
-    t.integer  "material_id"
-    t.string   "material_type"
-    t.integer  "equipment_id"
-    t.integer  "created_by"
-    t.integer  "updated_by"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
-  add_index "material_equipments", ["created_by"], :name => "created_by_index"
-  add_index "material_equipments", ["updated_by"], :name => "updated_by_index"
-
   create_table "maven_jnlp_icons", :force => true do |t|
     t.string   "uuid"
     t.string   "name"
     t.string   "href"
     t.integer  "height"
     t.integer  "width"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "maven_jnlp_jars", :force => true do |t|
@@ -773,8 +761,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "size_pack_gz"
     t.boolean  "signature_verified"
     t.string   "version_str"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "maven_jnlp_maven_jnlp_families", :force => true do |t|
@@ -783,8 +771,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.string   "snapshot_version"
     t.string   "url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
 
   create_table "maven_jnlp_maven_jnlp_servers", :force => true do |t|
@@ -793,8 +781,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "path"
     t.string   "name"
     t.string   "local_cache_dir"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "maven_jnlp_native_libraries", :force => true do |t|
@@ -807,8 +795,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "size_pack_gz"
     t.boolean  "signature_verified"
     t.string   "version_str"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "maven_jnlp_properties", :force => true do |t|
@@ -816,8 +804,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.string   "value"
     t.string   "os"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "maven_jnlp_versioned_jnlp_urls", :force => true do |t|
@@ -853,8 +841,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "vendor"
     t.string   "homepage"
     t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
   create_table "native_libraries_versioned_jnlps", :id => false, :force => true do |t|
@@ -886,8 +874,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "otrunk_example_otml_categories", :force => true do |t|
     t.string   "uuid"
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "otrunk_example_otml_categories", ["name"], :name => "index_otrunk_example_otml_categories_on_name", :unique => true
@@ -898,8 +886,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.string   "path"
     t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   add_index "otrunk_example_otml_files", ["otml_category_id"], :name => "index_otrunk_example_otml_files_on_otml_category_id"
@@ -909,8 +897,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid"
     t.string   "classname"
     t.string   "fq_classname"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "otrunk_example_otrunk_imports", ["fq_classname"], :name => "index_otrunk_example_otrunk_imports_on_fq_classname", :unique => true
@@ -923,19 +911,19 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.boolean  "standard_view"
     t.boolean  "standard_edit_view"
     t.boolean  "edit_view"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "page_id"
-    t.integer  "position"
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
+    t.integer  "position"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "user_id"
   end
 
@@ -944,17 +932,17 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
-    t.integer  "position"
     t.integer  "section_id"
     t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "position"
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -964,8 +952,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "user_id"
     t.string   "reset_code"
     t.datetime "expiration_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "portal_clazzes", :force => true do |t|
@@ -979,13 +967,13 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "course_id"
     t.integer  "semester_id"
     t.integer  "teacher_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
     t.string   "section"
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
@@ -993,8 +981,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.text     "description"
     t.integer  "school_id"
     t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.string   "course_number"
   end
 
@@ -1011,8 +999,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid",             :limit => 36
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "nces_district_id"
     t.string   "state",            :limit => 2
     t.string   "leaid",            :limit => 7
@@ -1025,8 +1013,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid",                  :limit => 36
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.integer  "has_grade_levels_id"
     t.string   "has_grade_levels_type"
     t.integer  "grade_id"
@@ -1043,16 +1031,16 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "position"
     t.string   "uuid"
     t.boolean  "active",      :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   create_table "portal_learners", :force => true do |t|
     t.string   "uuid",              :limit => 36
     t.integer  "student_id"
     t.integer  "offering_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.integer  "bundle_logger_id"
     t.integer  "console_logger_id"
   end
@@ -1751,8 +1739,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "clazz_id"
     t.integer  "runnable_id"
     t.string   "runnable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
     t.boolean  "active",                         :default => true
     t.boolean  "default_offering",               :default => false
     t.integer  "position",                       :default => 0
@@ -1767,8 +1755,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "member_id"
     t.string   "member_type"
     t.integer  "school_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
@@ -1778,8 +1766,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.text     "description"
     t.integer  "district_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "nces_school_id"
     t.string   "state",          :limit => 2
     t.string   "zipcode",        :limit => 5
@@ -1795,8 +1783,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "school_id"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "portal_student_clazzes", :force => true do |t|
@@ -1807,8 +1795,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.datetime "end_time"
     t.integer  "clazz_id"
     t.integer  "student_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   add_index "portal_student_clazzes", ["clazz_id"], :name => "index_portal_student_clazzes_on_clazz_id"
@@ -1818,8 +1806,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid",           :limit => 36
     t.integer  "user_id"
     t.integer  "grade_level_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
   end
 
   add_index "portal_students", ["user_id"], :name => "index_portal_students_on_user_id"
@@ -1829,8 +1817,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.text     "description"
     t.integer  "teacher_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "portal_teacher_clazzes", :force => true do |t|
@@ -1841,8 +1829,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.datetime "end_time"
     t.integer  "clazz_id"
     t.integer  "teacher_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.boolean  "active",                    :default => true
     t.integer  "position",                  :default => 0
   end
@@ -1862,8 +1850,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "portal_teachers", :force => true do |t|
     t.string   "uuid",                   :limit => 36
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
     t.integer  "domain_id"
     t.integer  "offerings_count",                      :default => 0
     t.integer  "left_pane_submenu_item"
@@ -1883,8 +1871,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.float    "k2"
     t.float    "k3"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
     t.integer  "user_id"
   end
 
@@ -1898,8 +1886,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.boolean  "k2_active"
     t.boolean  "k3_active"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   create_table "probe_device_configs", :force => true do |t|
@@ -1907,8 +1895,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "vendor_interface_id"
     t.string   "config_string"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   create_table "probe_physical_units", :force => true do |t|
@@ -1921,8 +1909,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.boolean  "si"
     t.boolean  "base_unit"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "probe_probe_types", :force => true do |t|
@@ -1937,8 +1925,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.float    "max"
     t.float    "period"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "probe_vendor_interfaces", :force => true do |t|
@@ -1950,8 +1938,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "image"
     t.string   "uuid"
     t.integer  "device_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.string   "driver_short_name"
   end
 
@@ -1963,8 +1951,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
     t.text     "embeddables"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.boolean  "ignore"
   end
 
@@ -1997,7 +1985,7 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",          :limit => 2147483647
+    t.text     "answers",          :limit => 16777215
     t.string   "runnable_type"
     t.float    "complete_percent"
   end
@@ -2014,8 +2002,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "name"
     t.text     "description"
     t.string   "publication_status", :default => "draft"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.integer  "offerings_count",    :default => 0
     t.text     "content"
   end
@@ -2031,24 +2019,24 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.text     "description"
     t.string   "grade_span"
     t.string   "uuid",                   :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
   end
 
   create_table "ri_gse_big_ideas", :force => true do |t|
     t.integer  "unifying_theme_id"
     t.text     "description"
     t.string   "uuid",              :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "ri_gse_domains", :force => true do |t|
     t.string   "name"
     t.string   "key"
     t.string   "uuid",       :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   create_table "ri_gse_expectation_indicators", :force => true do |t|
@@ -2056,22 +2044,22 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.text     "description"
     t.string   "ordinal"
     t.string   "uuid",           :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
   end
 
   create_table "ri_gse_expectation_stems", :force => true do |t|
     t.text     "description"
     t.string   "uuid",        :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "ri_gse_expectations", :force => true do |t|
     t.integer  "expectation_stem_id"
     t.string   "uuid",                      :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.integer  "grade_span_expectation_id"
   end
 
@@ -2079,8 +2067,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "assessment_target_id"
     t.string   "grade_span"
     t.string   "uuid",                 :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.string   "gse_key"
   end
 
@@ -2089,16 +2077,16 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "number"
     t.text     "description"
     t.string   "uuid",        :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "ri_gse_unifying_themes", :force => true do |t|
     t.string   "name"
     t.string   "key"
     t.string   "uuid",       :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   create_table "roles", :force => true do |t|
@@ -2120,8 +2108,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "bundle_content_id"
     t.integer  "blob_id"
     t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.text     "note"
   end
 
@@ -2132,8 +2120,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "offering_id"
     t.integer  "image_question_id"
     t.integer  "response_count",    :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
   end
 
   add_index "saveable_image_questions", ["learner_id"], :name => "index_saveable_image_questions_on_learner_id"
@@ -2143,8 +2131,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "multiple_choice_id"
     t.integer  "bundle_content_id"
     t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
@@ -2163,8 +2151,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "saveable_multiple_choices", :force => true do |t|
     t.integer  "learner_id"
     t.integer  "multiple_choice_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.integer  "offering_id"
     t.integer  "response_count",     :default => 0
   end
@@ -2177,8 +2165,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "bundle_content_id"
     t.integer  "position"
     t.text     "answer"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   add_index "saveable_open_response_answers", ["open_response_id", "position"], :name => "o_r_id_and_position_index"
@@ -2186,8 +2174,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "saveable_open_responses", :force => true do |t|
     t.integer  "learner_id"
     t.integer  "open_response_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.integer  "offering_id"
     t.integer  "response_count",   :default => 0
   end
@@ -2197,8 +2185,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
 
   create_table "saveable_sparks_measuring_resistance", :force => true do |t|
     t.integer  "learner_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "offering_id"
   end
 
@@ -2209,19 +2197,19 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.integer  "measuring_resistance_id"
     t.integer  "position"
     t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "sections", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
-    t.integer  "position"
     t.integer  "activity_id"
     t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "position"
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
   end
@@ -2240,8 +2228,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
@@ -2252,8 +2240,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "scope_type"
     t.string   "name"
     t.string   "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
@@ -2292,8 +2280,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.string   "uuid",                 :limit => 36
     t.integer  "authored_entity_id"
     t.string   "authored_entity_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.integer  "user_id"
   end
 
@@ -2311,8 +2299,8 @@ ActiveRecord::Schema.define(:version => 20130117174756) do
     t.datetime "activated_at"
     t.datetime "deleted_at"
     t.string   "uuid",                      :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
     t.integer  "vendor_interface_id"
     t.boolean  "default_user",                             :default => false
     t.boolean  "site_admin",                               :default => false

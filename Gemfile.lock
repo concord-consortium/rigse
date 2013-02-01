@@ -102,14 +102,12 @@ GEM
       mime-types
       xml-simple
     builder (3.0.4)
-    capistrano (2.12.0)
+    capistrano (2.14.1)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
-    capistrano-ext (1.2.1)
-      capistrano (>= 1.0.0)
     capybara (1.1.2)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -125,6 +123,13 @@ GEM
       builder (>= 2.1.2)
     cocaine (0.2.1)
     coderay (1.0.7)
+    coffee-rails (3.2.2)
+      coffee-script (>= 2.2.0)
+      railties (~> 3.2.0)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.4.0)
     columnize (0.3.6)
     compass (0.12.2)
       chunky_png (~> 1.2)
@@ -183,7 +188,7 @@ GEM
       diff-lcs (~> 1.1)
       mime-types (~> 1.15)
       posix-spawn (~> 0.3.6)
-    highline (1.6.13)
+    highline (1.6.15)
     hike (1.2.1)
     hirb (0.6.2)
     httpclient (2.2.5)
@@ -215,7 +220,7 @@ GEM
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
       net-ssh (>= 2.0.9)
-    net-ssh (2.5.2)
+    net-ssh (2.6.3)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
     newrelic_rpm (3.5.3.25)
@@ -299,6 +304,8 @@ GEM
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
     ruby-ole (1.2.11.4)
+    ruby-prof (0.12.1)
+    ruby-prof (0.12.1-x86-mingw32)
     ruby-rc4 (0.1.5)
     rubyzip (0.9.9)
     sass (3.2.1)
@@ -335,6 +342,9 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     ttfunk (1.0.3)
+    turbo-sprockets-rails3 (0.3.6)
+      railties (> 3.2.8, < 4.0.0)
+      sprockets (>= 2.0.0)
     tzinfo (0.3.35)
     uglifier (1.2.7)
       execjs (>= 0.3.0)
@@ -367,9 +377,10 @@ DEPENDENCIES
   awesome_print
   aws-s3
   calpicker!
-  capistrano-ext
+  capistrano (~> 2.14.1)
   capybara (~> 1.1.2)
   ci_reporter (~> 1.7.0)
+  coffee-rails
   compass-rails
   contentflow!
   cucumber (~> 1.1.9)
@@ -418,6 +429,7 @@ DEPENDENCIES
   rspec-rails (~> 2.11.0)
   ruby-debug
   ruby-ole (~> 1.2.11.2)
+  ruby-prof
   rush!
   sass-rails
   selenium-webdriver (= 2.27.2)
@@ -427,6 +439,7 @@ DEPENDENCIES
   themes_for_rails!
   therubyracer (~> 0.10.2)
   tinymce-rails (~> 3.5.6)
+  turbo-sprockets-rails3 (~> 0.3.6)
   uglifier
   uuidtools (~> 2.1.2)
   what_methods

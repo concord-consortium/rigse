@@ -2,13 +2,15 @@
   var skipShowWait = #{!APP_CONFIG[:use_jnlps]};
 
 #please_wait{ :style => "display: none;" }
-  #please_wait_inside
-    .wait_image
+  #please_wait_backdrop
+  #please_wait_status
+    %span#please_wait_image
       =image_tag('wait16.gif')
-    .text
-      Please
-      %strong wait
-      while your activity loads.
-      This may take several minutes.
-      %span#counter
-        counter
+    #please_wait_message
+      Please wait while your activity loads
+      %span#please_wait_counter
+    #please_wait_instructions
+      Saved work will appear below.
+      %input#please_wait_update.button{:type => "button", :value=>"update now"}
+  #please_wait_report
+    The report should go here.

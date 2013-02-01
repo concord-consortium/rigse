@@ -172,6 +172,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
     !self.otml || self.otml.size <= 17
   end
   
+  def delayed_process_bundle
+    extract_saveables
+    copy_to_collaborators
+  end
+
   def extract_saveables
     raise "BundleContent ##{self.id}: otml is empty!" if otml_empty?
     extractor = Otrunk::ObjectExtractor.new(self.otml)
@@ -180,7 +185,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
     # Also create/update a Report::Learner object for reporting
     learner.report_learner.update_fields if learner
   end
-  handle_asynchronously :extract_saveables
   
   def description
     learner_name = teacher_name = runnable_name = school_name = 'not available'
@@ -230,5 +234,4 @@ class Dataservice::BundleContent < ActiveRecord::Base
       new_bundle_logger.reload
     end
   end
-  handle_asynchronously :copy_to_collaborators
 end

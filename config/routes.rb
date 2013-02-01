@@ -196,6 +196,8 @@ constraints :id => /\d+/ do
         post :offering_collapsed_status
         post :get_recent_student_report
         get :activity_report
+        get :student_report
+        post :student_report
       end
     end
 
@@ -492,6 +494,7 @@ constraints :id => /\d+/ do
   match '/investigations/reports/usage' => 'investigations#usage_report', :as => :investigation_usage_report, :method => :get
   match '/investigations/reports/details' => 'investigations#details_report', :as => :investigation_details_report, :method => :get
   match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
+  match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get
   resources :activities do
     member do
       get :duplicate

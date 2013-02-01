@@ -84,7 +84,6 @@ module RailsPortal
     else
         begin
           config.active_record.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"admin/project_observer", :"dataservice/periodic_bundle_content_observer"
-          puts "Started observers"
         rescue
           # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
           puts "Couldn't start observers #{$!} ... but continuing process anyway"

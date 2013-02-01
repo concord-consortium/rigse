@@ -347,5 +347,42 @@ describe Portal::Clazz do
 
   end
 
+  describe "formatting methods" do
+    before :each do
+      @clazz = Factory :portal_clazz
+      @bob   = mock_model(Portal::Teacher, :name => "bob")
+      @joan  = mock_model(Portal::Teacher, :name => "joan")
+    end
+    
+    context "with no teachers" do
+      subject do
+        @clazz.stub! :teachers => []
+        @clazz
+      end
+      its(:teachers_label) {should == "Teacher"      }
+      its(:teachers_listing){should == "no teachers" }
+    end
+
+    context "With one teacher" do
+      subject do
+        @clazz.stub! :teachers => [@joan]
+        @clazz
+      end
+      its(:teachers_label)  {should == "Teacher"         }
+      its(:teachers_listing){should match @joan.name      }
+      its(:teachers_listing){should_not match @bob.name }
+    end
+    
+    context "With two teachers" do
+      subject do
+        @clazz.stub! :teachers => [@bob,@joan]
+        @clazz
+      end
+      its(:teachers_label)  {should == "Teachers"    }
+      its(:teachers_listing){should match @bob.name  }
+      its(:teachers_listing){should match @joan.name }
+    end
+  end
+
 end
 

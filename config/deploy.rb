@@ -4,18 +4,16 @@ require 'haml'
 require File.expand_path('../../lib/yaml_editor', __FILE__)
 
 set :stages, %w(
-  rites-staging rites-production
+  rites-staging rites-production rites-ri-production
   itsisu-dev itsisu-staging itsisu-production
   smartgraphs-staging smartgraphs-production smartgraphs-aws1
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
   genigames-dev genigames-staging genigames-production
-  assessment-dev assessment-staging assessment-production
   interactions-staging interactions-production
-  xproject-dev
   genomedynamics-dev genomedynamics-staging
   sparks-dev sparks-staging sparks-production sparks-aws1
-  xproject3-dev xproject32-dev )
+  xproject-dev )
 
 set :default_stage, "development"
 
@@ -673,3 +671,13 @@ after 'deploy:update_code', 'deploy:shared_symlinks'
 # after 'deploy:create_symlink', 'deploy:create_asset_packages'
 after 'deploy:shared_symlinks', 'deploy:cleanup'
 after 'installer:create', 'deploy:restart'
+
+# start the delayed_job worker
+# use a prefix incase multiple apps are deployed to the same server
+require "delayed/recipes"
+
+# need to use the &block syntax so that deploy_to is correctly setup
+set(:delayed_job_args) { "--prefix '#{deploy_to}'" }
+after "deploy:stop",    "delayed_job:stop"
+after "deploy:start",   "delayed_job:start"
+after "deploy:restart", "delayed_job:restart"

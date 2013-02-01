@@ -87,13 +87,15 @@ PART
     last_bundle = self.learner.bundle_logger.last_non_empty_bundle_content
     # create a "periodic" bundle out of it
     pbc = Dataservice::PeriodicBundleContent.create(:body => last_bundle.otml, :periodic_bundle_logger => self)
-    pbc.extract_parts.invoke_job
+    pbc.extract_parts
     self.reload
   end
 
   def process_non_processed_bundles
-    self.periodic_bundle_contents.where(:parts_extracted => false).each do |bc|
-      bc.extract_parts.invoke_job
+    non_processed_bundles = self.periodic_bundle_contents.where(:empty => false, :parts_extracted => false)
+    non_processed_bundles.each do |bc|
+      bc.extract_parts
     end
+    self.reload if non_processed_bundles.size > 0
   end
 end
