@@ -139,7 +139,7 @@ class Portal::Offering < ActiveRecord::Base
   def inprogress_students_count
     student_ids = self.clazz.students.map{|item| item.id}
     learners = self.learners.select{|item| student_ids.include?(item.student_id)}
-    learners_in_progress = learners.select {|item| !item.report_learner.nil? && item.report_learner.complete_percent > 0 &&  item.report_learner.complete_percent < 100}
+    learners_in_progress = learners.select {|item| !item.report_learner.nil? && !item.report_learner.complete_percent.nil? && item.report_learner.complete_percent > 0 &&  item.report_learner.complete_percent < 100}
     num_in_progress = 0
     num_in_progress = learners_in_progress.length
     num_in_progress  
