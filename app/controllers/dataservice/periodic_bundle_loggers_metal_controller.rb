@@ -20,6 +20,4 @@ class Dataservice::PeriodicBundleLoggersMetalController < ActionController::Meta
     end
   end
 
-  include ::NewRelic::Agent::Instrumentation::ControllerInstrumentation
-  add_transaction_tracer :session_end_notification
 end
