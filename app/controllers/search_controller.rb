@@ -108,6 +108,7 @@ class SearchController < ApplicationController
       :grade_span => @grade_span|| [],
       :paginate => false,
       :probe_type => @probe_type,
+      :user => current_user,
       :without_teacher_only =>@without_teacher_only || false
       #:page => params[:investigation_page] ? params[:investigation_page] : 1,
       #:per_page => 10
@@ -138,6 +139,7 @@ class SearchController < ApplicationController
       :domain_id => @domain_id || [],
       :grade_span => @grade_span|| [],
       :probe_type => @probe_type,
+      :user => current_user,
       :without_teacher_only =>@without_teacher_only || false
     }
     
