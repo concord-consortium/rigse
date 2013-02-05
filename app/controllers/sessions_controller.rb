@@ -50,7 +50,19 @@ class SessionsController < ApplicationController
         values[:teacher] = false
         values[:classes] = student.clazzes.map{|c|
           val = {:teacher => c.teacher.name, :word => c.class_word, :name => c.name}
-          offering = c.offerings.select{|o| o.active && o.runnable.is_a?(ExternalActivity)}.select{|o| o.runnable.url.gsub(/\/\s*$/,'') == request.referrer.gsub(/\/\s*$/,'') }.first
+          offerings = c.offerings
+          offerings = offerings.select{|o| o.active && o.runnable.is_a?(ExternalActivity)}
+          offerings = offerings.select{|o|
+            runnable_url = o.runnable.url.gsub(/\/\s*$/,'')
+            save_path = o.runnable.save_path.gsub(/\/\s*$/,'')
+            referrer = request.referrer.gsub(/\/\s*$/,'')
+            town_level_referrer = referrer.gsub(/(\?task=(?:baseline\/)?\d+)\/\d+$/) {|m| $1 }
+            File.open("log.txt","a") {|f|
+              f.write "ref:'#{request.referrer}',run:'#{runnable_url}',save:'#{save_path}',ref_clean:'#{referrer}',town:'#{town_level_referrer}'\n"
+            }
+            runnable_url == referrer || save_path == referrer || save_path == town_level_referrer
+          }
+          offering = offerings.first
           if offering # what do we do if somehow multiple external activities with the same url are assigned to the same class??
             learner = offering.find_or_create_learner(student)
             val[:learner] = learner.id if learner
@@ -214,7 +226,7 @@ class SessionsController < ApplicationController
           cookies[k.to_sym] = {:value => CGI::unescape(v), :domain => cookie_domain }
         end
       end
-    rescue => e
+    rescue
       # FIXME How do we handle a login failure?
     end
   end
