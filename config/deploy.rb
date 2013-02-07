@@ -245,7 +245,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
-    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
+    run "ln -nfs #{shared_path}/config/google_analytics.yml #{release_path}/config/google_analytics.yml"
 
     # support for running SproutCore app from the public directory
     run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
