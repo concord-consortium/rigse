@@ -16,9 +16,9 @@ source "http://rubygems.org"
     gem "ffi-ncurses",                      "~>0.3.3"
   end
 
-  gem "rails",                "2.3.15"
+  gem "rails",                "2.3.16"
   gem "arrayfields"
-  gem "hpricot",              "0.6.164"
+  gem "hpricot",              "~> 0.6"
   gem "httpclient",           "~> 2.1.5.2"
   gem "capistrano-ext",                   :require => "capistrano"
   gem "aasm",                 "~> 2.0.2"
