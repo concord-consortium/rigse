@@ -65,6 +65,7 @@ group :test do
   gem "database_cleaner",  "~>0.6.6"
   gem "capybara",          "~>0.4"
   gem "rspec",             "~>1.3.0"
+  gem "rspec-core"
   gem "rspec-rails",       "~>1.3.2"
   gem "factory_girl",      "= 1.2.3"
   gem "email_spec",        "= 0.3.5"
