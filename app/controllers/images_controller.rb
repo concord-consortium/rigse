@@ -1,5 +1,5 @@
 class ImagesController < ApplicationController
-  before_filter :teacher_required
+  before_filter :author_required
   before_filter :find_image_and_verify_owner, :only => [:edit, :update, :destroy]
   # scale the text since most images will be displayed at around screen size
 
@@ -125,6 +125,12 @@ class ImagesController < ApplicationController
 
   def teacher_required
     return true if logged_in? && (current_user.portal_teacher || current_user.has_role?("admin"))
+    flash[:error] = "You're not authorized to do this"
+    redirect_to :home
+  end
+
+  def author_required
+    return true if logged_in? && (current_user.has_role?("admin"))
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end
