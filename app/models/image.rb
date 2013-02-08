@@ -4,9 +4,7 @@ class Image < ActiveRecord::Base
   has_attached_file :image,
     :styles => {:thumb => {:geometry => "50x50#"},
     :attributed => {:geometry => "650x400>"}},
-    :processors => [:attributor_append, :thumbnail],
-    :path => ":rails_root/public/system/:attachment/:id/:style/:filename",
-    :url => "/system/:attachment/:id/:style/:filename"
+    :processors => [:attributor_append, :thumbnail]
 
   before_create :check_image_presence
   before_save :check_image_presence
