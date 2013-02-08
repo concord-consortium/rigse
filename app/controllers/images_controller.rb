@@ -72,7 +72,7 @@ class ImagesController < ApplicationController
           responds_to_parent do
             render :update do |page|
               page.insert_html :bottom, "images", :partial => 'images/list_item', :object => @image
-              page.visual_effect :highlight, "image_#{@image.id}" 
+              page.visual_effect :highlight, "image_#{@image.id}"
             end
           end
         end
@@ -130,7 +130,7 @@ class ImagesController < ApplicationController
   end
 
   def author_required
-    return true if logged_in? && (current_user.has_role?("admin"))
+    return true if logged_in? && (current_user.has_role?("author"))
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end
