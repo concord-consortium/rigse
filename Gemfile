@@ -76,7 +76,8 @@ source "http://rubygems.org"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
   # to support hosting paperclip attachments on S3:
-  gem "aws-s3",               :require => "aws/s3"
+  # gem "aws-s3",               :require => "aws/s3" (for paperclip 3.x)
+  gem "aws-sdk",              "~> 1.8.1.2"
   gem "newrelic_rpm",         "~> 3.5.3.25"
   gem "tinymce-rails",        "~>3.5.6"
   gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
