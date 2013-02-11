@@ -146,6 +146,10 @@ class Report::Learner < ActiveRecord::Base
     
     offering = self.learner.offering
     assignable = offering.runnable
+    if assignable.is_a? ::ExternalActivity && assignable.template
+      assignable = assignable.template
+    end
+
     activities = []
     if assignable.is_a? ::Investigation
       activities = assignable.activities
