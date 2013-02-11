@@ -54,10 +54,10 @@ class AttributorOverlay < Paperclip::Processor
     pointsize = (pointsize*@scale).ceil
     pointsize = 10 if pointsize < 10
 
-    watermark_params = %!-background white -fill black -font Arial -border #{border} -bordercolor white -pointsize #{pointsize} -size #{(@width-(2*border)).to_i}x -gravity SouthEast caption:"#{escape(@attribution)}" png:#{tofile(wm_dst)}!
+    watermark_params = %!-background white -fill black -border #{border} -bordercolor white -pointsize #{pointsize} -size #{(@width-(2*border)).to_i}x -gravity SouthEast caption:"#{escape(@attribution)}" png:#{tofile(wm_dst)}!
 
     begin
-      # success = Paperclip.run("convert", watermark_params)
+      success = Paperclip.run("convert", watermark_params)
     rescue Paperclip::Error => e
       raise Paperclip::Error, "There was an error adding attribution to #{@basename}: #{e}" if @whiny
     end
