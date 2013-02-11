@@ -57,9 +57,6 @@ class SessionsController < ApplicationController
             save_path = o.runnable.save_path.gsub(/\/\s*$/,'')
             referrer = request.referrer.gsub(/\/\s*$/,'')
             town_level_referrer = referrer.gsub(/(\?task=(?:baseline\/)?\d+)\/\d+$/) {|m| $1 }
-            File.open("log.txt","a") {|f|
-              f.write "ref:'#{request.referrer}',run:'#{runnable_url}',save:'#{save_path}',ref_clean:'#{referrer}',town:'#{town_level_referrer}'\n"
-            }
             runnable_url == referrer || save_path == referrer || save_path == town_level_referrer
           }
           offering = offerings.first
