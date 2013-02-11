@@ -6,7 +6,7 @@ class Portal::ClazzesController < ApplicationController
   include RestrictedPortalController
 
   before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
-  before_filter :teacher_admin_or_manager, :only => [:new]
+  before_filter :any_teacher_admin_or_manager, :only => [:new]
   before_filter :student_teacher_admin_or_config, :only => [:show]
 
   def current_clazz
@@ -441,4 +441,12 @@ class Portal::ClazzesController < ApplicationController
     end
     offerings
   end
+
+  private
+
+  def any_teacher_admin_or_manager
+    redirect_home unless @portal_teacher || current_user.has_role?('admin', 'manager')
+  end
+
+
 end
