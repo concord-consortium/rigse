@@ -1,4 +1,8 @@
 - runnable = offering_status.offering.runnable
+
+- if runnable.is_a?(::ExternalActivity) && runnable.template
+  - runnable = runnable.template
+
 - activities = []
 - if runnable.is_a? ::Investigation
   - activities = runnable.activities.student_only

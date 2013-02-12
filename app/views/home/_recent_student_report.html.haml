@@ -1,6 +1,10 @@
 %br
 - runnable = offering.runnable
 - offering_status = Report::OfferingStatus.new(offering)
+
+- if runnable.is_a?(::ExternalActivity) && runnable.template
+  - runnable = runnable.template
+
 - activities = []
 - if runnable.is_a? ::Investigation
   - activities = runnable.activities

@@ -58,6 +58,11 @@ class Report::OfferingStatus
 
   def student_activities
     runnable = offering.runnable
+
+    if runnable.is_a?(::ExternalActivity) && runnable.template
+      runnable = runnable.template
+    end
+
     if runnable.is_a? ::Investigation
       runnable.activities.student_only
     elsif runnable.is_a? ::Activity
