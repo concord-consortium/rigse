@@ -4,6 +4,8 @@
   - offering_status = Report::OfferingStatus.new(offering)
   - student_statuses = offering_status.student_statuses
   - assignable = offering.runnable
+  - if assignable.is_a?(::ExternalActivity) && assignable.template
+    - assignable = assignable.template
   - activities = []
   - if assignable.is_a? ::Investigation
     - activities = assignable.activities.student_only

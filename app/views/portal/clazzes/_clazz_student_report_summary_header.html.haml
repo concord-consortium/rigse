@@ -4,7 +4,7 @@
 - offering_statuses.each do |offering_status|
   - offering = offering_status.offering
 
-  - if offering.runnable.is_a? Investigation
+  - if offering.runnable.is_a?(Investigation) || (offering.runnable.is_a?(ExternalActivity) && offering.runnable.template.is_a?(Investigation))
     - activities = offering_status.student_activities
     - if activities.length > 0
       - investigation_columns << capture do
