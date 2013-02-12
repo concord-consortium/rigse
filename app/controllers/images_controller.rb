@@ -1,5 +1,5 @@
 class ImagesController < ApplicationController
-  before_filter :author_required
+  before_filter :author_required, :except => :view
   before_filter :find_image_and_verify_owner, :only => [:edit, :update, :destroy]
   # scale the text since most images will be displayed at around screen size
 
@@ -121,6 +121,13 @@ class ImagesController < ApplicationController
     end
   end
 
+  # get /view/1
+  # for obtaining an image. (redirects to actual images path)
+  def view
+    @image = Image.find(params[:id])
+    redirect_to @image.image.url(:attributed)
+  end
+  
   protected
 
   def teacher_required

@@ -13,8 +13,7 @@
 %p
   %b
     Embedding URL:
-  - emb_url = "#{request.protocol + request.host + (request.port == 80 ? "" : ":#{request.port}") + @image.image.url(:attributed)}"
-  = link_to emb_url, emb_url
+  = link_to view_image_path(@image), view_image_path(@image)
 
 %p
   %b
