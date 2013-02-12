@@ -11,6 +11,10 @@
     Attribution:
   = f.text_area :attribution, :class => 'mceNoEditor', :rows => 5
 %p
+  %label{:for => "license"}
+    License:
+  = f.select :license_code, CommonsLicense.for_select
+%p
   %label{:for => "image"}
     Upload an Image:
   = f.file_field :image

@@ -1,5 +1,10 @@
 class Image < ActiveRecord::Base
   belongs_to :user
+  belongs_to :license,
+    :class_name  => 'CommonsLicense',
+    :primary_key => 'code',
+    :foreign_key => 'license_code'
+
   # resize the attributed version to fit within the default-sized activity window
   has_attached_file :image,
     :styles => {:thumb => {:geometry => "50x50#"},
