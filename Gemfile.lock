@@ -17,9 +17,9 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/genigames-connector
-  revision: e7d905cab335f37a8d54451fec622f9d9af5c6c8
+  revision: 115021619119eb089e079979abd0e13fc8af9ad9
   specs:
-    genigames_connector (0.0.1)
+    genigames_connector (0.0.2)
       haml (~> 3.1.4)
       json (~> 1.7.6)
       rails (~> 3.2.11)
@@ -407,7 +407,7 @@ DEPENDENCIES
   factory_girl (~> 2.0.5)
   fakeweb (~> 1.3)
   ffi-ncurses (~> 0.3.3)
-  genigames_connector!
+  genigames_connector (= 0.0.2)!
   grit (~> 2.4)
   haml!
   highline
