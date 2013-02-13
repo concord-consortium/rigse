@@ -20,16 +20,14 @@
 /     Size:
 /   = @image.image_dimensions
 
-%p
-  %b
-    License:
-  %b
+- license = @image.license
+- if license
+  %p
     .license
-      .image= link_to image_tag(@image.license.image), @image.license.deed
-      .code
-        = link_to @image.license.code, @image.license.deed
-        %span.small= "(#{@image.license.name})"
-      .description= @image.license.description
+      %span.image= link_to image_tag(@image.license.image), @image.license.deed, :target => 'new'
+      %br
+      %span.small= link_to license.name, license.deed, :target => 'new'
+      %span.tiny.description= license.description
 
 - if @image.changeable?(current_user)
   .horizontal_button_panel
