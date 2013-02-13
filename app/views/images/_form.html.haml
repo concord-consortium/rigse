@@ -11,10 +11,6 @@
     Attribution:
   = f.text_area :attribution, :class => 'mceNoEditor', :rows => 5
 %p
-  %label{:for => "license"}
-    License:
-  = f.select :license_code, CommonsLicense.for_select
-%p
   %label{:for => "image"}
     Upload an Image:
   = f.file_field :image
@@ -23,3 +19,7 @@
       OPTIONAL. If left blank, the existing image will be used.<br/><br/>
     Your image will be resized to be at most 650 x 400.<br/>
     For faster uploading, resize the image on your computer before uploading it here.
+%p
+  %label{:for => "license"}
+    All licenses listed here require attribution except for public domain. Please select a license:
+  = f.select :license_code, CommonsLicense.for_select
