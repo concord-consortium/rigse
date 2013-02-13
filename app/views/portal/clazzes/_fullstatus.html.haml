@@ -17,7 +17,7 @@
 
         %div{:id=>"oFullStatusDiv"}      
           - if students.length > 0
-            - show_investigation_row = clazz_offerings.any?{|offering| offering.runnable.is_a? Investigation}
+            - show_investigation_row = clazz_offerings.any?{|offering| offering.runnable.is_a?(Investigation) || (offering.runnable.is_a?(ExternalActivity) && offering.runnable.template.is_a?(Investigation)) }
             - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
             .student_div.floatL
               = render :partial => 'clazz_student_report_learner_list',

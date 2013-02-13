@@ -6,6 +6,11 @@ class Report::OfferingStudentStatus
   # loosely based on offering_status.rb#student_activities
   def sub_sections
     runnable = offering.runnable
+
+    if runnable.is_a?(::ExternalActivity) && runnable.template
+      runnable = runnable.template
+    end
+
     if runnable.is_a? ::Investigation
       runnable.activities.student_only
     else

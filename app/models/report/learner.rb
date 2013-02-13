@@ -31,23 +31,26 @@ class Report::Learner < ActiveRecord::Base
   def calculate_last_run
     bundle_logger = self.learner.bundle_logger
     pub_logger = self.learner.periodic_bundle_logger
+    bucket_logger = self.learner.bucket_logger
     bundle_time = nil
     pub_time = nil
+    bucket_time = nil
 
     if bundle_logger && bundle_logger.last_non_empty_bundle_content
       bundle_time = bundle_logger.last_non_empty_bundle_content.updated_at
     end
-    
+
     if pub_logger && pub_logger.periodic_bundle_contents.last
       pub_time =pub_logger.periodic_bundle_contents.last.updated_at
     end
-    
-    if pub_time && bundle_time
-      self.last_run  = pub_time > bundle_time ? pub_time : bundle_time
-    elsif pub_time
-      self.last_run  = pub_time
-    elsif bundle_time
-      self.last_run  = bundle_time
+
+    if bucket_logger && bucket_logger.bucket_contents.last
+      bucket_time = bucket_logger.bucket_contents.last.updated_at
+    end
+
+    times = [pub_time,bundle_time,bucket_time].compact.sort
+    if times.size > 0
+      self.last_run = times.last
     end
 
   end
@@ -146,6 +149,10 @@ class Report::Learner < ActiveRecord::Base
     
     offering = self.learner.offering
     assignable = offering.runnable
+    if assignable.is_a?(::ExternalActivity) && assignable.template
+      assignable = assignable.template
+    end
+
     activities = []
     if assignable.is_a? ::Investigation
       activities = assignable.activities
