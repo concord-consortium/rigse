@@ -39,11 +39,15 @@ class CommonsLicense < ActiveRecord::Base
     url(license, LegalFormat)
   end
 
-  def self.load_licenses
+  # TODO: CRUD actions and views? Maybe not.
+  def self.load_all_from_yaml!
     defs = YAML::load_file(File.join(Rails.root,"config","licenses.yml"));
-    defs['licenses'].each do |license|
-      CommonsLicense.find_or_create_by_code(license)
+    defs['licenses'].each do |license_hash|
+      license = CommonsLicense.find_or_create_by_code(license_hash)
+      license.update_attributes(license_hash)
+      license.save
     end
   end
-  self.load_licenses
+
+  self.load_all_from_yaml!
 end
