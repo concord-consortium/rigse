@@ -32,8 +32,7 @@
       .description= @image.license.description
 
 - if @image.changeable?(current_user)
-  = link_to 'Edit', edit_image_path(@image)
-  |
-  = link_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
-  |
-= link_to 'List', images_path
+  .horizontal_button_panel
+    = button_to 'Edit', edit_image_path(@image), :method => :get
+    = button_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
+    = button_to 'List', images_path, :method => :get
