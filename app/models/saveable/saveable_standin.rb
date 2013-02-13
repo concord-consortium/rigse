@@ -7,7 +7,11 @@ class Saveable::SaveableStandin
   end
   
   def answer
-    'not answered'
+    if embeddable.is_a? Embeddable::MultipleChoice
+      [{:answer => 'not answered'}]
+    else
+      'not answered'
+    end
   end
   
   def answered_correctly?

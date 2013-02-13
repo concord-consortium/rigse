@@ -16,7 +16,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
     if answered?
       answers.last.answer
     else
-      "not answered"
+      [{:answer => "not answered"}]
     end
   end
   

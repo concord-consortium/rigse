@@ -50,6 +50,7 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   default_value_for :name, "Multiple Choice Question element"
   default_value_for :description, "description ..."
   default_value_for :prompt, "Why do you think ..."
+  default_value_for :rationale_prompt, "Explain your choice. Give specific examples."
   ## this actually creates MultipleChoiceChoice objects at Class eval time, and not at object instantiation time
   ## we'll use an after create filter instead
   # default_value_for :choices, [
@@ -95,5 +96,14 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
 
   def has_correct_answer?
     !(choices.detect{|c| c.is_correct }.nil?)
+  end
+
+  def selection_ui
+    # Radio buttons = 0, check boxes = 1
+    if self.allow_multiple_selection
+      "1"
+    else
+      "0"
+    end
   end
 end
