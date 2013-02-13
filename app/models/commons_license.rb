@@ -9,13 +9,13 @@ class CommonsLicense < ActiveRecord::Base
   DeedFormat  =   "http://#{Site}/licenses/%{code}/3.0/"
   LegalFormat =   "http://#{Site}/licenses/%{code}/3.0/legalcode"
 
-  private
+  default_scope :order => 'number ASC'
+
   def default_paths
     self.deed  ||= CommonsLicense.deed(self)
     self.legal ||= CommonsLicense.legal(self)
     self.image ||= CommonsLicense.image(self)
   end
-
 
   def self.for_select
     self.all.map { |l| [l.name,l.code] }
@@ -42,11 +42,8 @@ class CommonsLicense < ActiveRecord::Base
   def self.load_licenses
     defs = YAML::load_file(File.join(Rails.root,"config","licenses.yml"));
     defs['licenses'].each do |license|
-      code = license['code']
       CommonsLicense.find_or_create_by_code(license)
     end
   end
-
   self.load_licenses
-
 end
