@@ -95,10 +95,20 @@ $incorrect_color: #ffdddd;
     width: 10px;
     vertical-align: top; }
   .learner_response_content {
-    width: 460px;
+    width: 475px;
     vertical-align: top;
     img {
-      max-width: 460px; } } }
+      max-width: 460px; } }
+  .learner_response_content_part {
+    border-bottom: 1px solid lightgray;
+    &:last-of-type {
+      border-bottom: none; } }
+  .learner_response_answer {
+    width: 200px;
+    vertical-align: top; }
+  .learner_response_rationale {
+    width: 255px;
+    vertical-align: top; } }
 
 .inline_block {
   display: -moz-inline-block;
@@ -109,13 +119,20 @@ $incorrect_color: #ffdddd;
   font-size: 1.5em;
   margin-top: 5px; }
 
-.item {
-  .chosen_answer {
-    font-weight: bold; }
-  .chosen_answer.correct {
-    background-color: $correct_color; }
-  .chosen_answer.incorrect {
+.item.choice {
+  display: block;
+  &.chosen_answer {
+    font-weight: bold;
+    &.correct {
+      background-color: $correct_color; }
+    &.incorrect {
     background-color: $incorrect_color; } }
+  .option {
+    vertical-align: top;
+    width: 200px; }
+  .rationale {
+    vertical-align: top;
+    width: 255px; } }
 
 .question_container {
   display: block;

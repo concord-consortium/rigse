@@ -149,7 +149,7 @@ describe Portal::OfferingsController do
 
       mc_saveables = Saveable::MultipleChoice.find(:all)
       mc_saveables.size.should == (mc_saveables_size + 1)
-      mc_saveables.last.answer.should == choice.choice
+      mc_saveables.last.answer.should == [{:answer => choice.choice, :correct => nil}]
     end
 
     it 'should display previous answers when view again' do

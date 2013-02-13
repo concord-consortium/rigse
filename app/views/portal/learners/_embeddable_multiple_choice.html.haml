@@ -9,18 +9,22 @@
       - embeddable.choices.each_with_index do |choice, i|
         - css = choice.is_correct ? 'correct' : 'incorrect'
         - check = (choice.is_correct? ? "&#x2713;" : incorrect_check).html_safe
-        - if saveable && choice.choice == saveable.answer
+        - rationale = ""
+        - if saveable && (answer = saveable.answer.detect{|a| a[:answer] == choice.choice})
           - css << " chosen_answer"
-        .item{:class => css, :style => 'display: block;'}
+          - rationale = answer[:rationale]
+        %div{:class => "item choice #{css}"}
           - if css =~ /chosen_answer/
             .optioncheckmark.inline_block= check
           - else
             .optioncheckmark.inline_block
               &nbsp;
-          .inline_block
+          .option.inline_block
             = "#{i+1}. #{choice.choice}"
-      - if saveable.answer == 'not answered'
-        .item{:style => 'display: block;'}
+          .rationale.inline_block
+            = rationale
+      - if saveable.answer.size == 1 && saveable.answer.first[:answer] == 'not answered'
+        .item.choice
           .optioncheckmark.inline_block
             = incorrect_check
           .inline_block.not_answered{:style => 'font-weight: bold;'}
