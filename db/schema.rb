@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130212205413) do
+ActiveRecord::Schema.define(:version => 20130213191824) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -138,6 +138,7 @@ ActiveRecord::Schema.define(:version => 20130212205413) do
     t.string   "image"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "number"
   end
 
   create_table "dataservice_blobs", :force => true do |t|
@@ -562,12 +563,15 @@ ActiveRecord::Schema.define(:version => 20130212205413) do
 
   create_table "embeddable_multiple_choices", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",                     :limit => 36
     t.string   "name"
     t.text     "description"
     t.text     "prompt"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "enable_rationale",                       :default => false
+    t.text     "rationale_prompt"
+    t.boolean  "allow_multiple_selection",               :default => false
   end
 
   create_table "embeddable_mw_modeler_pages", :force => true do |t|
@@ -719,6 +723,8 @@ ActiveRecord::Schema.define(:version => 20130212205413) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "license_code"
+    t.integer  "width",              :default => 0
+    t.integer  "height",             :default => 0
   end
 
   create_table "installer_reports", :force => true do |t|
@@ -2137,13 +2143,23 @@ ActiveRecord::Schema.define(:version => 20130212205413) do
   create_table "saveable_multiple_choice_answers", :force => true do |t|
     t.integer  "multiple_choice_id"
     t.integer  "bundle_content_id"
-    t.integer  "choice_id"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
+
+  create_table "saveable_multiple_choice_rationale_choices", :force => true do |t|
+    t.integer  "choice_id"
+    t.integer  "answer_id"
+    t.string   "rationale"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "saveable_multiple_choice_rationale_choices", ["answer_id"], :name => "index_saveable_multiple_choice_rationale_choices_on_answer_id"
+  add_index "saveable_multiple_choice_rationale_choices", ["choice_id"], :name => "index_saveable_multiple_choice_rationale_choices_on_choice_id"
 
   create_table "saveable_multiple_choices", :force => true do |t|
     t.integer  "learner_id"

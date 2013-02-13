@@ -14,6 +14,9 @@ class Image < ActiveRecord::Base
   before_create :check_image_presence
   before_save :check_image_presence
   before_image_post_process :clean_image_filename
+  after_post_process :save_image_dimensions
+
+
 
   validates_presence_of :user_id, :name, :publication_status
 
@@ -93,47 +96,27 @@ class Image < ActiveRecord::Base
     self.image.instance_write(:file_name, new_filename)
   end
 
-  class ImageDimension
-    FormatString = "%{width}x%{height} (%{size})"
-
-    def initialize(image, style= :original)
-      @image = image
-      @style = @style
-      width = height = size = 0
-      begin
-        dims   = Paperclip::Geometry.from_file(self.path)
-        width  = dims.width  || 0
-        height = dims.height || 0
-        size   = image.size  || 0
-      rescue ::Error => e
-        Rails.log("Unexpected error in image.rb:  #{e}")
-      end
-      @formatted_string = FormatString % {
-        :width  => width.round,
-        :height => height.round,
-        :size   => size.round
-      }
-    end
-
-    def to_s
-      @formatted_string
-    end
-
-    protected
-    def path
-      self.use_s3? ? @image.url(@style) : @image.path(@style)
-    end
-
-    def use_s3?
-      @image.options[:storage] == :s3
-    end
+  def save_image_dimensions
+    geo = Paperclip::Geometry.from_file(image.queued_for_write[:attributed])
+    self.width  = geo.width.round
+    self.height = geo.height.round
   end
 
+  def dimensions
+    "%{width}x%{height}" % {
+      :width  => self.width,
+      :height => self.height
+    }
+  end
 
-  def image_dimensions(style=:attributed)
-    @dimensions ||= begin
-      ImageDimension.new(self.image,style).to_s
+  def image_size
+    size = 0
+    begin
+        size   = self.image.size || 0
+    rescue ::Error => e
+      Rails.log("Unexpected error sizing image in models/image.rb:  #{e}")
     end
+    size
   end
 
 end

@@ -15,10 +15,15 @@
     Embedding URL:
   = link_to view_image_path(@image), view_image_path(@image)
 
-/ %p
-/   %b
-/     Size:
-/   = @image.image_dimensions
+%p
+  %b
+    Dimensions:
+  = @image.dimensions
+
+%p
+  %b
+    File Size:
+  = number_to_human_size(@image.image_size)
 
 - license = @image.license
 - if license
