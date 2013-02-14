@@ -93,13 +93,8 @@ class ImagesController < ApplicationController
   # PUT /images/1
   # PUT /images/1.xml
   def update
-    pars = params[:image]
-    orig_path = @image.image.path(:original)
-    img_pars = {:image => (pars.delete(:image) || (orig_path ? File.open(orig_path) : nil))}
-
     respond_to do |format|
-      # we're updating the image separately, to avoid having stale attributions being attached to the image
-      if @image.update_attributes(pars) && @image.reload && @image.update_attributes(img_pars)
+      if update_image_attributes
         flash[:notice] = 'Image was successfully updated.'
         format.html { redirect_to(@image) }
         format.xml  { head :ok }
@@ -129,6 +124,24 @@ class ImagesController < ApplicationController
   end
   
   protected
+
+  def update_image_attributes
+    my_params  = params[:image]
+    image      = my_params.delete(:image)
+    img_params = {:image => image}
+    # we're updating the image separately, to avoid having
+    # stale attributions being attached to the image
+    if @image.update_attributes(my_params)
+      if @image.reload
+        if image
+          return @image.update_attributes(img_params)
+        else
+          return true
+        end
+      end
+    end
+    return false
+  end
 
   def teacher_required
     return true if logged_in? && (current_user.portal_teacher || current_user.has_role?("admin"))
