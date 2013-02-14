@@ -82,16 +82,14 @@ module TruncatableXhtml
     "prompt"
   ]
 
-  # DEFAULT_REPLACEABLES=  [
-  #   /\s+style\s?=\s?"(.*?)"/,
-  #   /&nbsp;/
-  # ]
-  # 
-  REPLACEMENT_MAP={
+  DEFAULT_REPLACEABLES= {
     /\s+style\s?=\s?"(.*?)"/ => "",
-    /(&nbsp;)+/ => " "}
-    
-  ## for ITSI carolyn might want everything 
+    /(&nbsp;)+/ => " "
+  }
+
+  REPLACEMENT_MAP=DEFAULT_REPLACEABLES
+
+  ## for ITSI carolyn might want everything
   if (APP_CONFIG[:dont_sanitize_xhtml])
     REPLACEMENT_MAP = {}
   end
