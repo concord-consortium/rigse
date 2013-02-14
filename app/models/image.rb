@@ -1,4 +1,6 @@
 class Image < ActiveRecord::Base
+  UseUploadedByInAttriution = false
+
   belongs_to :user
   belongs_to :license,
     :class_name  => 'CommonsLicense',
@@ -117,6 +119,14 @@ class Image < ActiveRecord::Base
       Rails.log("Unexpected error sizing image in models/image.rb:  #{e}")
     end
     size
+  end
+
+  # NOTE: user_id and user are nil here. (??)
+  def uploaded_by_attribution
+    if (self.user && UseUploadedByInAttriution)
+      return "Uploaded by: #{self.user.login}"
+    end
+    return ""
   end
 
 end
