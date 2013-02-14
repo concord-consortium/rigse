@@ -82,6 +82,42 @@ module MockData
         # assume this user is already created...
       end
     end
+    
+    
+    #following students exist:
+    data = {
+      :student_1 =>{"login" => "student" ,"password" => "student" ,"first_name" => "Alfred" ,"last_name" => "Robert" ,"email" => "student@mailinator.com" },
+      :student_2 =>{"login" => "dave" ,"password" => "student" ,"first_name" => "Dave" ,"last_name" => "Doe" ,"email" => "student@mailinator1.com" },
+      :student_3 =>{"login" => "chuck" ,"password" => "student" ,"first_name" => "Chuck" ,"last_name" => "Smith" ,"email" => "student@mailinator2.com" },
+      :student_4 =>{"login" => "taylor" ,"password" => "student" ,"first_name" => "taylor" ,"last_name" => "Donald" ,"email" => "student@mailinator3.com" },
+      :student_5 =>{"login" => "Mache" ,"password" => "student" ,"first_name" => "Mache" ,"last_name" => "Smith" ,"email" => "student@mailinator4.com" },
+      :student_6 =>{"login" => "shon" ,"password" => "student" ,"first_name" => "shon" ,"last_name" => "done" ,"email" => "student@mailinator5.com" },
+      :student_7 =>{"login" => "ross" ,"password" => "student" ,"first_name" => "ross" ,"last_name" => "taylor" ,"email" => "student@mailinator6.com" },
+      :student_8 =>{"login" => "monty" ,"password" => "student" ,"first_name" => "Monty" ,"last_name" => "Donald" ,"email" => "student@mailinator7.com" },
+      :student_9 =>{"login" => "Switchuser" ,"password" => "Switchuser" ,"first_name" => "Joe" ,"last_name" => "Switchuser" ,"email" => "student@mailinator8.com" },
+    }
+    User.anonymous(true)
+    portal_grade = Factory.create(:portal_grade)
+    portal_grade_level = Factory.create(:portal_grade_level, {:grade => portal_grade})
+    data.each do |student, student_info|
+      begin
+        clazz = Portal::Clazz.find_by_name(student_info.delete('class'))
+        user = Factory(:user, student_info)
+        user.add_role("member")
+        user.register
+        user.activate
+        user.save!
+  
+        portal_student = Factory(:full_portal_student, { :user => user, :grade_level =>  portal_grade_level})
+        portal_student.save!
+        if (clazz)
+          portal_student.add_clazz(clazz)
+        end
+      rescue ActiveRecord::RecordInvalid
+        # assume this user is already created...
+      end
+    end
+    
   end #end of method create_default_users
 
 end # end of MockData
