@@ -26,7 +26,7 @@ describe Dataservice::BundleContent do
         :empty => false,
         :uuid => "value for uuid"
       }
-      
+
       @valid_attributes_with_blob = {
         :bundle_logger_id => 1,
         :position => 2,
@@ -47,7 +47,7 @@ describe Dataservice::BundleContent do
       reset_table_index(Embeddable::ImageQuestion, 25)
       reset_table_index(Dataservice::Blob, 14)
     end
-    
+
     it "should extract saveables into separate model objects" do
       blogger = Dataservice::BundleLogger.create!()
       student = Portal::Student.create!()
@@ -87,22 +87,22 @@ describe Dataservice::BundleContent do
       begin
         emb = Embeddable::ImageQuestion.create!(:user_id => 1, :name => 'image question 25', :prompt => "Please choose an image")
       end until emb.id >= 26
-      
+
       bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
-      
+
       # create blob with id = 14,15
       emb = nil
       begin
         emb = Dataservice::Blob.create!(:content => 'image', :bundle_content_id => bundle_content.id)
       end until emb.id >= 15
-      
+
       bundle_content.bundle_logger = blogger
       bundle_content.save!
       bundle_content.reload
       blogger.reload
       bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
       bundle_content.bundle_logger.learner.id.should eql(learner.id)
-      
+
       # 1 open response, 1 multiple choice, 2 image questions
       learner.open_responses.size.should eql(1)
       learner.multiple_choices.size.should eql(1)
@@ -200,22 +200,22 @@ describe Dataservice::BundleContent do
       begin
         emb = Embeddable::ImageQuestion.create!(:user_id => 1, :name => 'image question 847', :prompt => "Please choose an image")
       end until emb.id >= 847
-      
+
       bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_multiline_snapshot)
-      
+
       # create blob with id = 11897
       emb = nil
       begin
         emb = Dataservice::Blob.create!(:content => 'image', :bundle_content_id => bundle_content.id)
       end until emb.id >= 11897
-      
+
       bundle_content.bundle_logger = blogger
       bundle_content.save!
       bundle_content.reload
       blogger.reload
       bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
       bundle_content.bundle_logger.learner.id.should eql(learner.id)
-      
+
       learner.image_questions.size.should eql(1)
       learner.image_questions.each do |saveable|
         saveable.answer[:note].should eql('One
