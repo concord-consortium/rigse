@@ -291,7 +291,6 @@ Long')
       bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
       bundle_content.bundle_logger.learner.id.should eql(learner.id)
 
-      bundle_content.extract_saveables.invoke_job
 
       learner.multiple_choices.size.should eql(4)
       learner.multiple_choices.each do |saveable|
@@ -374,7 +373,6 @@ Long')
       bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
       bundle_content.bundle_logger.learner.id.should eql(learner.id)
 
-      bundle_content.extract_saveables.invoke_job
 
       bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_multiple_select_and_rationale_updated)
 
@@ -385,7 +383,6 @@ Long')
       bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
       bundle_content.bundle_logger.learner.id.should eql(learner.id)
 
-      bundle_content.extract_saveables.invoke_job
 
       learner.multiple_choices.size.should eql(4)
       learner.multiple_choices.each do |saveable|
