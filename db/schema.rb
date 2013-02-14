@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130214195334) do
+ActiveRecord::Schema.define(:version => 20130214205707) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -130,16 +130,19 @@ ActiveRecord::Schema.define(:version => 20130214195334) do
     t.datetime "updated_at"
   end
 
-  create_table "commons_licenses", :primary_key => "code", :force => true do |t|
+  create_table "commons_licenses", :id => false, :force => true do |t|
+    t.string   "code",        :null => false
     t.string   "name",        :null => false
     t.text     "description"
     t.string   "deed"
     t.string   "legal"
     t.string   "image"
+    t.integer  "number"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.integer  "number"
   end
+
+  add_index "commons_licenses", ["code"], :name => "index_commons_licenses_on_code"
 
   create_table "dataservice_blobs", :force => true do |t|
     t.binary   "content",                    :limit => 16777215
