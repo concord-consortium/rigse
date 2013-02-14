@@ -1,7 +1,7 @@
 class CommonsLicense < ActiveRecord::Base
   set_primary_key  :code
   before_save :default_paths
-  attr_accessible :name, :code, :deed, :legal, :image, :description
+  attr_accessible :name, :code, :deed, :legal, :image, :description, :number
 
   Site = "creativecommons.org"
 
