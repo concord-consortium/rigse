@@ -41,11 +41,16 @@ describe Report::Learner do
       :periodic_bundle_contents => [@periodic_bundle_content]
     )
 
-    @learner  = mock_model(Portal::Learner, 
+    @last_contents   = mock(:updated_at => nil)
+    @bucket_contents = mock(:last => @last_contents)
+    @bucket_logger   = mock(:bucket_contents => @bucket_contents)
+
+    @learner  = mock_model(Portal::Learner,
       :student  => @student,
       :offering => @offering,
       :bundle_logger => @bundle_logger,
       :periodic_bundle_logger => @periodic_bundle_logger,
+      :bucket_logger => @bucket_logger
     )
   end
 
