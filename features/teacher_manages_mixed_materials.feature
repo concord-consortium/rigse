@@ -6,13 +6,7 @@ Feature: Teacher manages a mix instructional materials of a class
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login    | password | first_name   | last_name |
-      | teacher  | teacher  | John         | Nash      |
     And the teachers "teacher" are in a school named "Harvard School"
-    And the following students exist:
-       | login     | password  | first_name | last_name |
-       | student   | password  | Student    | Doe       |
     And the mixed runnable types class exists
     And I am logged in with the username teacher
 

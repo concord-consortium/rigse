@@ -6,9 +6,6 @@ Feature: Teacher can search and filter instructional materials
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login    | password | first_name   | last_name |
-      | teacher  | teacher  | John         | Nash      |
     And the investigation "Digestive System" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
     And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
     And I login with username: teacher password: teacher

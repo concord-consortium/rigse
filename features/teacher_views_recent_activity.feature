@@ -53,15 +53,15 @@ Feature: Teacher can see recent activity
       | dave   | student  | Dave       | Doe       |
       | chuck  | student  | Chuck      | Smith     |
       | shon   | student  | shon       | done      |
-      | ankur  | student  | ankur      | gaurav    |
+      | ross  | student  | ross      | taylor    |
       | monty  | student  | Monty      | Donald    |
-      | gaurav | student  | Gaurav     | Donald    |
+      | taylor | student  | taylor     | Donald    |
     And the student "dave" belongs to class "My Class"
     And the student "chuck" belongs to class "Physics"
     And the student "chuck" belongs to class "Mechanics"
     And the student "shon" belongs to class "Physics"
-    And the student "ankur" belongs to class "Physics"
-    And the student "gaurav" belongs to class "Mathematics"
+    And the student "ross" belongs to class "Physics"
+    And the student "taylor" belongs to class "Mathematics"
     And I login with username: teacher password: teacher
     
     
@@ -98,7 +98,7 @@ Feature: Teacher can see recent activity
     When the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | gaurav    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | a               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     Then I should see "Mathematics: Algebra"
     
@@ -106,7 +106,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher should not see teacher only activity
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ankur     | Physics       | Aerodynamics        | d               | y      |
+      | ross     | Physics       | Aerodynamics        | d               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Air activity"
@@ -120,7 +120,7 @@ Feature: Teacher can see recent activity
     And the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | gaurav    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | a               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     Then "Mathematics" should appear before "Physics"
     
@@ -128,7 +128,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher should view the progress bar for recent investigation
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ankur     | Physics       | Aerodynamics        | c               | y      |
+      | ross     | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
@@ -140,19 +140,19 @@ Feature: Teacher can see recent activity
       | student   | class         | investigation       | question_prompt | answer |
       | chuck     | Mechanics     | Aerodynamics        | image_q         | Y      |
       | chuck     | Mechanics     | Aerodynamics        | c               | Y      |
-      | ankur     | Physics       | Aerodynamics        | c               | y      |
+      | ross     | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
-    Then I should see "gaurav, ankur" in In-progress on the recent activity page
+    Then I should see "taylor, ross" in In-progress on the recent activity page
     And I should see "Completed Smith, Chuck"
     And I should see "Not Yet Started done, shon"
     
   Scenario: Teacher views class size
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ankur     | Physics       | Aerodynamics        | c               | y      |
+      | ross     | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
@@ -163,7 +163,7 @@ Feature: Teacher can see recent activity
     When the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | gaurav    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | a               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Completed No student has completed this investigation yet."
@@ -192,7 +192,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher should be able to run the report
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ankur     | Physics       | Aerodynamics        | c               | y      |
+      | ross     | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation

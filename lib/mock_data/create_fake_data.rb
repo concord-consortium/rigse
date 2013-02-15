@@ -1,5 +1,5 @@
 module MockData
-  
+  require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
   #load all the factories
   Dir[File.dirname(__FILE__) + '/../../factories/*.rb'].each {|file| require file }
   
@@ -23,7 +23,8 @@ module MockData
       :teacher_2 => {"login" => 'albert', "password" => 'albert', "first_name" => 'Albert', "last_name" =>'Fernandez', "email" => 'bademail@noplace2.com'},
       :teacher_3 => {"login" => 'robert', "password" => 'robert', "first_name" => 'Robert', "last_name" =>'Fernandez', "email" => 'bademail@noplace3.com'},
       :teacher_4 => {"login" => 'peterson', "password" => 'teacher', "first_name" => 'peterson', "last_name" =>'taylor', "email" => 'bademail@noplace4.com'},
-      :teacher_5 => {"login" => 'teacher_with_no_class', "password" => 'teacher_with_no_class', "first_name"=> 'teacher_with_no_class', "last_name" =>'teacher_with_no_class', "email" => 'bademail@noplace5.com'}
+      :teacher_5 => {"login" => 'teacher_with_no_class', "password" => 'teacher_with_no_class', "first_name"=> 'teacher_with_no_class', "last_name" =>'teacher_with_no_class', "email" => 'bademail@noplace5.com'},
+      :teacher_6 => {"login" => 'jonson', "password" => 'teacher', "first_name" => 'Jonson', "last_name" =>'Jackson', "email" => 'bademail@noplace6.com'}
     }
     
     semester = Portal::Semester.first

@@ -10,10 +10,7 @@ Feature: Student must give consent for research study
 
   @javascript
   Scenario: Teacher signs up a student, student them must give consent on logging in
-    Given the following teachers exist:
-      | login    | password   | first_name | last_name |
-      | teacher  | teacher    | John       | Nash      |
-    And the teachers "teacher" are in a school named "VJTI"
+    When the teachers "teacher" are in a school named "VJTI"
     And the following classes exist:
           | name       | teacher | semester |
           | My Class   | teacher | Fall     |

@@ -5,13 +5,6 @@ Feature: Teacher reorders materials assigned to the class
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
-    And the following teachers exist:
-      | login    | password   | first_name | last_name  |
-      | teacher  | teacher    | John       | Nash       |
-      | albert   | teacher    | Albert     | Einstien   |
     And  the teachers "teacher , albert" are in a school named "VJTI"
   	And the following semesters exist:
       | name     | start_time          | end_time            |

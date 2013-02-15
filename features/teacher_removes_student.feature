@@ -6,14 +6,7 @@ Feature: Teacher removes a student
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
-    And the following teachers exist:
-      | login    | password   | first_name | last_name  |
-      | teacher  | teacher    | John       | Nash       |
     And the teachers "teacher" are in a school named "VJTI"
-    
     And the following semesters exist:
       | name     | start_time          | end_time            |
       | Fall     | 2012-12-01 00:00:00 | 2012-03-01 23:59:59 |

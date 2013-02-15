@@ -5,12 +5,6 @@ Feature: Student can not see deactivated offerings
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
-    And the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
@@ -28,8 +22,8 @@ Feature: Student can not see deactivated offerings
   Scenario: Student should see activated offerings
     When I log out
     And I login with username: student
-    Then I should see "run Test Investigation" in the content
-    And I should see "View Test Resource" in the content
+    Then I should see "Test Investigation" in the content
+    And I should see "Test Resource" in the content
 
   Scenario: Student should not see deactivated offerings
     When I am on the class page for "My Class"
@@ -38,7 +32,7 @@ Feature: Student can not see deactivated offerings
     And I log out
     And I login with username: student
     Then I should be on the homepage
-    And I should not see "run Test Investigation" in the content
+    And I should not see "Test Investigation" in the content
     And I should not see "View Test Resource" in the content
     And I should see "No offerings available." in the content
 

@@ -6,13 +6,6 @@ Feature: Admin can add, edit and remove notices
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following users exist:
-      | login            | roles      |
-      | student_login    | member     |
-      | manager_login    | manager    |
-      | author_login     | author     |
-      | researcher_login | researcher |
-      | admin_login      | admin      |
     And I login as an admin
     And I create a notice "Notice for admin" for the roles "Admin"
     

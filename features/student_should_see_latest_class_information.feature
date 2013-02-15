@@ -6,13 +6,6 @@ Feature: Student should see latest class information
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
-    And the following teachers exist:
-      | login    | password   | first_name | last_name  |
-      | teacher  | teacher    | John       | Nash       |
-      | albert   | teacher    | Albert     | Einstien   |
     And  the teachers "teacher , albert" are in a school named "VJTI"
     And the following semesters exist:
       | name     | start_time          | end_time            |
@@ -50,7 +43,6 @@ Feature: Student should see latest class information
     And I follow "Basic Electronics"
     Then I should see "Semester: Fall"
     And I should see "Class Word: betrx"
-    And I should see "This is a biology class"
     And I should not see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "static discipline"

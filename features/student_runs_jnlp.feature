@@ -5,12 +5,6 @@ Feature: Student runs a jnlps
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
-    And the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
@@ -22,17 +16,17 @@ Feature: Student runs a jnlps
     And I login with username: student
 
   Scenario: Student runs jnlp
-    When I follow "run Test Investigation"
+    When I follow "Run by Myself"
     Then a jnlp file is downloaded
     And the jnlp file has a configuration for the student and offering
 
   Scenario: Student jnlps are not cached
-    When I follow "run Test Investigation"
+    When I follow "Run by Myself"
     Then the jnlp should not be cached
 
   @pending
   Scenario: Student runs the same jnlp a second time
-    When I follow "run Test Investigation"
+    When I follow "Run by Myself"
     And a jnlp file is downloaded
     Then the jnlp file has a configuration for the student and offering
     And I simulate opening the jnlp a second time

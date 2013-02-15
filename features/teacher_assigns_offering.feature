@@ -5,9 +5,6 @@ Feature: Teacher can assign an offering to a class
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
@@ -54,9 +51,6 @@ Feature: Teacher can assign an offering to a class
   @javascript
   Scenario: Offerings from the default class show learner data in the default class
     Given the default class is created
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
     And the student "student" is in the class "My Class"
     And the following external activity exists:
       | name        | user    | url    |
@@ -84,9 +78,7 @@ Feature: Teacher can assign an offering to a class
   @javascript
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class
     Given the default class is created
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
+
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |

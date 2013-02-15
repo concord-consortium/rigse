@@ -5,15 +5,9 @@ Feature: Teacher can deactivate investigations from a class
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
     And the following simple investigations exist:
       | name                | user      | publication_status |
       | Test Investigation  | teacher   | published          |
@@ -41,6 +35,5 @@ Feature: Teacher can deactivate investigations from a class
   Scenario: Teacher drags active investigation with students off of class
     When I am on the class page for "My Class"
     And I drag the investigation "Test Investigation" in the class "My Class" to "#offering_list"
-    Then I need to confirm "Cannot delete offering with student data. Please deactivate instead."
     And I should see "Test Investigation" within "#clazz_offerings"
     And the investigation "Test Investigation" in the class "My Class" should be active

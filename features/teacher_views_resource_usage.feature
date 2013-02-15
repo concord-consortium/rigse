@@ -7,18 +7,12 @@ Feature: Teacher views resource usage
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
     And the following resource pages exist:
       | name          | user    | publication_status |
       | Test Resource | teacher | published          |
-    And the following students exist:
-      | login   | password |
-      | student | student  |
     And the student "student" belongs to class "My Class"
     And I am logged in with the username teacher
     And I am on the class page for "My Class"
@@ -36,9 +30,9 @@ Feature: Teacher views resource usage
     When I log out
     And I am logged in with the username student
     And I am on the class page for "My Class"
-    Then I should see "View Test Resource"
+    Then I should see "Test Resource"
 
-    When I follow "View Test Resource"
+    When I follow "Run by Myself"
     And I log out
     And I am logged in with the username teacher
     And I am on the resource pages page

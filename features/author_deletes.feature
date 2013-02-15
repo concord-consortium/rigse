@@ -9,9 +9,6 @@ Feature: An author deletes parts of an investigation
   @dialog
   @javascript
   Scenario: The author deletes a page from a section
-    Given the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
     Given the following simple investigations exist:
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |

@@ -6,12 +6,6 @@ Feature: Teacher manages instructional materials of a class
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login    | password | first_name   | last_name |
-      | teacher  | teacher  | John         | Nash      |
-    And the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
     And the teachers "teacher" are in a school named "Harvard School"
     
     And the following semesters exist:
@@ -62,21 +56,16 @@ Feature: Teacher manages instructional materials of a class
       | name                       | class       |
       | Lumped circuit abstraction | Mathematics |
       | Static discipline          | Mathematics |
-    And the following students exist:
-      | login     | password  | first_name | last_name |
-      | dave      | student   | Dave       | Doe       |
-      | chuck     | student   | Chuck      | Smith     |
-      | gaurav    | student   | Gaurav     | Donald    |
     And the student "dave" belongs to class "My Class"
     And the student "chuck" belongs to class "My Class"
-    And the student "gaurav" belongs to class "My Class"
+    And the student "taylor" belongs to class "My Class"
     And the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
       | dave      | My Class      | Radioactivity       | a               | a      |
       | dave      | My Class      | Radioactivity       | image_q         | Y      |
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | gaurav    | My Class      | Algebra             | f               | y      |
+      | taylor    | My Class      | Algebra             | f               | y      |
     And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
     

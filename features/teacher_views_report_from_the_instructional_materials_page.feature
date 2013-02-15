@@ -6,12 +6,6 @@ Feature: Teacher views report from the instructional materials page of a class
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login    | password | first_name   | last_name |
-      | teacher  | teacher  | John         | Nash      |
-    And the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
     And the teachers "teacher" are in a school named "Harvard School"
     And the following semesters exist:
       | name     |
@@ -31,10 +25,6 @@ Feature: Teacher views report from the instructional materials page of a class
     And the following assignments exist:
       | type          | name                 | class       |
       | investigation | Aerodynamics         | My Class    |
-      And the following students exist:
-      | login     | password  | first_name | last_name |
-      | dave      | student   | Dave       | Doe       |
-      | chuck     | student   | Chuck      | Smith     |
     And the student "dave" belongs to class "My Class"
     And the student "chuck" belongs to class "My Class"
     And I am logged in with the username teacher

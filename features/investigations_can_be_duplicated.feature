@@ -6,10 +6,6 @@ Feature: Investigations can be duplicated
   
   Background:
     Given The default project and jnlp resources exist using factories
-    Given the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
-      | member | member   | member         |
     And the following empty investigations exist:
       | name   | user   | offerings_count | created_at                     | publication_status |
       | NewestInv | author | 5               | Wed Jan 26 12:00:00 -0500 2011 | published          |

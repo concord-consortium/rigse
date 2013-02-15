@@ -6,17 +6,6 @@ Feature: User logs in using header login box to use the portal
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login   | password | first_name | last_name |
-      | teacher | teacher  | John       | Nash      |
-    And the following students exist:
-      | login   | password | first_name | last_name |
-      | student | student  | Albert     | Chuck     |
-    And the following users exist:
-      | login   | password | roles          |
-      | author  | author   | member, author |
-      | myadmin | myadmin  | admin          |
-      | manager | manager  | manager        |
       
       
   @javascript
@@ -38,7 +27,7 @@ Feature: User logs in using header login box to use the portal
     When I login with username: author password: author
     Then I should see "Logged in successfully"
     And I should not see "Forgot your user name or password?"
-    When I login with username: myadmin password: myadmin
+    When I login with username: admin password: admin
     Then I should see "Logged in successfully"
     And I should not see "Forgot your user name or password?"
     When I login with username: manager password: manager
