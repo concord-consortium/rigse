@@ -66,13 +66,13 @@ module RunnablesHelper
     format ||= component.run_format
 
     # this is where we pull in extra parameters for the url, like skip_installer
-    params.update(current_user.extra_params)
+    params.update(current_visitor.extra_params)
     params[:format] = format
     if component.kind_of?(Portal::Offering)
       # the user id is added to this url to make the url be unique for each user
       # this ought to prevent jnlps from being cached and shared by users
       # the user id is not actually used to generate the response or authorize it
-      user_portal_offering_url(current_user, component, params)
+      user_portal_offering_url(current_visitor, component, params)
     else
       polymorphic_url(component, params)
     end

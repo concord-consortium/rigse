@@ -24,11 +24,11 @@
 #
 # Create controller paginated model instance variable like this:
 # 
-#    @investigations = Investigation.search(params[:search], params[:page], current_user)
+#    @investigations = Investigation.search(params[:search], params[:page], current_visitor)
 #
 # Optionally add an include parameter to eagerly load asociations:
 #
-#   @investigations = Investigation.search(params[:search], params[:page], current_user, [{:learners => :learner_sessions}])
+#   @investigations = Investigation.search(params[:search], params[:page], current_visitor, [{:learners => :learner_sessions}])
 #
 module SearchableModel
   # see: http://github.com/mislav/will_paginate/wikis/simple-search

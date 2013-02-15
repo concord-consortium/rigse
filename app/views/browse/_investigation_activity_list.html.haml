@@ -14,7 +14,7 @@
           - activity_count = activity.offerings.count
           - if activity.parent
             - activity_count = activity_count + activity.parent.offerings.count
-          - if !(activity.teacher_only? && current_user.anonymous?)
+          - if !(activity.teacher_only? && current_visitor.anonymous?)
             - checkbox_checked = (search_material.selected_activities.include?(activity.id)) ? true : false
             %tr
               %td.check_box
@@ -42,7 +42,7 @@
                       - else
                         Used in #{activity_count} classes.
               %td.preview
-                - unless current_user.anonymous?
+                - unless current_visitor.anonymous?
                   - unless activity.teacher_only?
                     %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_Act#{activity.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{activity.id},'Act','Preview')"}Preview &#9660;
                     .Expand_Collapse{:id=>"Act#{activity.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}

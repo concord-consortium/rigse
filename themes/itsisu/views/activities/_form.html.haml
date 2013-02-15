@@ -12,5 +12,5 @@
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   = field_set_tag 'Tags' do
     %label.right Publication status
-  = f.select :publication_status, @activity.available_states(current_user).map {|s| s.to_s}
+  = f.select :publication_status, @activity.available_states(current_visitor).map {|s| s.to_s}
 = javascript_tag("focus_first_field();");

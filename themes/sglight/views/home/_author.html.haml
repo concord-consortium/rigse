@@ -2,6 +2,6 @@
   - content_for(:authored_pages) do
     = field_set_tag "Pages you've authored" do
       %ul
-        - current_user.pages.each do |page|
+        - current_visitor.pages.each do |page|
           %li
             = link_to_container(page)

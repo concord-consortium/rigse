@@ -6,7 +6,7 @@
       %div.action_menu_header_right   
         %ul.menu
           /%li= run_link_for(page)
-          - if (page.changeable?(current_user))
+          - if (page.changeable?(current_visitor))
             /%li= link_to 'duplicate', duplicate_page_url(page)
             / %li= link_to 'edit', page
             / %li.menu=toggle_more page

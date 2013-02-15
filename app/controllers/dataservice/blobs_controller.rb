@@ -16,7 +16,7 @@ class Dataservice::BlobsController < ApplicationController
   end
   
   def is_admin?
-    return (current_user != nil && current_user.has_role?('admin'))
+    return (current_visitor != nil && current_visitor.has_role?('admin'))
   end
   
   public
@@ -36,7 +36,7 @@ class Dataservice::BlobsController < ApplicationController
   # GET /dataservice_blobs/1.xml
   def show
     @dataservice_blob = Dataservice::Blob.find(params[:id])
-    is_authorized = is_admin? || (@dataservice_blob && @dataservice_blob.token == params[:token]) || current_user.has_role?('researcher')
+    is_authorized = is_admin? || (@dataservice_blob && @dataservice_blob.token == params[:token]) || current_visitor.has_role?('researcher')
     
     respond_to do |format|
       format.html {

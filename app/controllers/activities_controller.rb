@@ -15,7 +15,7 @@ class ActivitiesController < ApplicationController
   protected
 
   def can_create
-    if (current_user.anonymous?)
+    if (current_visitor.anonymous?)
       flash[:error] = "Anonymous users can not create activities"
       redirect_back_or activities_path
     end
@@ -27,8 +27,8 @@ class ActivitiesController < ApplicationController
 
   def can_edit
     if defined? @activity
-      unless @activity.changeable?(current_user)
-        error_message = "you (#{current_user.login}) can not #{action_name.humanize} #{@activity.name}"
+      unless @activity.changeable?(current_visitor)
+        error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@activity.name}"
         flash[:error] = error_message
         if request.xhr?
           render :text => "<div class='flash_error'>#{error_message}</div>"
@@ -78,7 +78,7 @@ class ActivitiesController < ApplicationController
       :page => pagenation
     })
     if params[:mine_only]
-      @activities = @activities.reject { |i| i.user.id != current_user.id }
+      @activities = @activities.reject { |i| i.user.id != current_visitor.id }
     end
     @paginated_objects = @activities
 
@@ -130,7 +130,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/new.xml
   def new
     @activity = Activity.new
-    @activity.user = current_user
+    @activity.user = current_visitor
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @activity }
@@ -149,7 +149,7 @@ class ActivitiesController < ApplicationController
   # POST /pages.xml
   def create
     @activity = Activity.new(params[:activity])
-    @activity.user = current_user
+    @activity.user = current_visitor
     respond_to do |format|
       if @activity.save
         format.js  # render the js file
@@ -209,7 +209,7 @@ class ActivitiesController < ApplicationController
   def add_section
     @section = Section.create
     @section.activity = @activity
-    @section.user = current_user
+    @section.user = current_visitor
     @section.save
     redirect_to @section
   end
@@ -242,7 +242,7 @@ class ActivitiesController < ApplicationController
     @original = Activity.find(params['id'])
     @activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => :pages}
     @activity.name = "copy of #{@activity.name}"
-    @activity.deep_set_user current_user
+    @activity.deep_set_user current_visitor
     @activity.save
     flash[:notice] ="Copied #{@original.name}"
     redirect_to url_for(@activity)
@@ -259,7 +259,7 @@ class ActivitiesController < ApplicationController
   # In an Activities controller, we only accept section clipboard data,
   #
   def paste
-    if @activity.changeable?(current_user)
+    if @activity.changeable?(current_visitor)
       @original = clipboard_object(params)
       if (@original)
         @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => :pages
@@ -267,7 +267,7 @@ class ActivitiesController < ApplicationController
           # @component.original = @original
           @container = params[:container] || 'activity_sections_list'
           @component.name = "copy of #{@component.name}"
-          @component.deep_set_user current_user
+          @component.deep_set_user current_visitor
           @component.activity = @activity
           @component.save
         end

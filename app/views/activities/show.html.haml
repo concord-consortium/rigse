@@ -10,5 +10,5 @@
   %ul#activity_sections_list.menu
     - @activity.sections.each do |section|
       =render :partial => 'section_list_item', :locals => {:section => section}
-      -if (@activity.changeable?(current_user))
+      -if (@activity.changeable?(current_visitor))
         =sortable_element :activity_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:activity_id => @activity.id }}

@@ -10,7 +10,7 @@
     .header.fullstatus Full Status
     %br
     - if clazz_offerings.length > 0 && students.length > 0
-      - offering_statuses = clazz_offerings.map{|offering| Report::OfferingStatus.new(offering, current_user)}
+      - offering_statuses = clazz_offerings.map{|offering| Report::OfferingStatus.new(offering, current_visitor)}
       %div.clearboth
         %div
           = render :partial => 'progress_bar_legend'

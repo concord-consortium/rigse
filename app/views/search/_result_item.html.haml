@@ -16,8 +16,8 @@
       - link_url = nil
       =image_tag("search/activity.gif",:size=>"100x100")
 %div
-  - if current_user.portal_teacher
-    - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
+  - if current_visitor.portal_teacher
+    - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
     - offerings=Portal::Offering.where(:runnable_id=>material.id, :runnable_type=>"#{material.class.to_s}", :clazz_id=>teacher_clazz_ids)
   
   %div{:style=>'overflow:hidden'}
@@ -40,7 +40,7 @@
                 ="By #{material.user.name}"
         %td{:width=>"90px"}
           %div{:style=>'float:right'}
-            - unless current_user.anonymous?
+            - unless current_visitor.anonymous?
               - unless material.teacher_only?
                 %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material_type}','Preview')"}Preview &#9660;
                 .Expand_Collapse{:id=>"#{material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
@@ -58,15 +58,15 @@
               = link_to "Assign to a Class","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')", :class=>"button"
             - else
               -# this is to temporarily deal with external activites which don't have a browse page
-              - if current_user.portal_teacher
+              - if current_visitor.portal_teacher
                 = link_to "Assign to a Class","javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')", :class=>"button"
               - else
                 = link_to "Assign to a Class", url_for({ :controller => '/search', :action => 'unauthorized_user' }), :class=>"button"
 
       %tr
         %td{:colspan=>3}
-          - if current_user.portal_teacher
-            - teacher_clazz_ids = current_user.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
+          - if current_visitor.portal_teacher
+            - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
             - offerings = offerings.sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
             - offering_clazz_names = offerings.map{|o| o.clazz.name}
             - if(offerings.length>0)

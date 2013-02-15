@@ -20,12 +20,12 @@ class UsersController < ApplicationController
 
   def changeable_filter
     @user = User.find(params[:id])
-    redirect_home unless @user.changeable?(current_user)
+    redirect_home unless @user.changeable?(current_visitor)
   end
 
   def index
     if params[:mine_only]
-      @users = User.search(params[:search], params[:page], self.current_user)
+      @users = User.search(params[:search], params[:page], self.current_visitor)
     else
       @users = User.search(params[:search], params[:page], nil)
     end
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     @roles = Role.all
-    unless @user.changeable?(current_user)
+    unless @user.changeable?(current_visitor)
       flash[:warning]  = "You need to be logged in first."
       redirect_to login_url
     end
@@ -69,7 +69,7 @@ class UsersController < ApplicationController
   def preferences
     @user = User.find(params[:id])
     @roles = Role.all
-    unless @user.changeable?(current_user)
+    unless @user.changeable?(current_visitor)
       flash[:warning]  = "You need to be logged in first."
       redirect_to login_url
     end
@@ -84,7 +84,7 @@ class UsersController < ApplicationController
       if request.get?
         @user = User.find(params[:id])
         all_users = User.active.all
-        all_users.delete(current_user)
+        all_users.delete(current_visitor)
         all_users.delete(User.anonymous)
         all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
 
@@ -127,15 +127,15 @@ class UsersController < ApplicationController
         if params[:commit] == "Switch"
           if switch_to_user = User.find(params[:user][:id])
             unless session[:original_user_id]  # session[:original_user_auth_token]
-              session[:original_user_id] = current_user.id
+              session[:original_user_id] = current_visitor.id
             end
             recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
-            recently_switched_from_users.insert(0, current_user.id)
-            self.current_user=(switch_to_user)
+            recently_switched_from_users.insert(0, current_visitor.id)
+            self.current_visitor=(switch_to_user)
             session[:recently_switched_from_users] = recently_switched_from_users.uniq
           end
         elsif params[:commit] =~ /#{@original_user.name}/
-          self.current_user=(@original_user)
+          self.current_visitor=(@original_user)
         end
         redirect_to home_path
       end
@@ -191,7 +191,7 @@ class UsersController < ApplicationController
     when (!params[:activation_code].blank?) && user && !user.active?
       user.activate!
       user.make_user_a_member
-      if current_user && current_user.has_role?('admin', 'manager')
+      if current_visitor && current_visitor.has_role?('admin', 'manager')
         # assume this type of user just activated someone from somewhere else in the app
         flash[:notice] = "Activation of #{user.name_and_login} complete."
         redirect_to(session[:return_to] || root_path)
@@ -222,7 +222,7 @@ class UsersController < ApplicationController
     if request.xhr?
       render :partial => 'interface', :locals => { :vendor_interface => @user.vendor_interface }
     else
-      if !@user.changeable?(current_user)
+      if !@user.changeable?(current_visitor)
         flash[:warning]  = "You need to be logged in first."
         redirect_to login_url
       else
@@ -241,7 +241,7 @@ class UsersController < ApplicationController
               end
             end
           else
-            # @vendor_interface = current_user.vendor_interface
+            # @vendor_interface = current_visitor.vendor_interface
             # @vendor_interfaces = Probe::VendorInterface.all.map { |v| [v.name, v.id] }
             # session[:back_to] = request.env["HTTP_REFERER"]
             # render :action => "interface"
@@ -283,7 +283,7 @@ class UsersController < ApplicationController
       @user.register!
     end
     if @user.errors.empty?
-      self.current_user = User.anonymous
+      self.current_visitor = User.anonymous
       render :action => :thanks
     else
       # will redirect:
@@ -294,9 +294,9 @@ class UsersController < ApplicationController
 
 
   def failed_creation(message = 'Sorry, there was an error creating your account')
-    # force the current_user to anonymous, because we have not successfully created an account yet.
+    # force the current_visitor to anonymous, because we have not successfully created an account yet.
     # edge case, which we might need a more integrated solution for??
-    self.current_user = User.anonymous
+    self.current_visitor = User.anonymous
     flash.now[:error] = message
     render :action => :new
   end

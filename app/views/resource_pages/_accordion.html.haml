@@ -19,7 +19,7 @@
         = resource_page.user.name
     %div.action_menu_header_right
       %ul.menu
-        - if (resource_page.changeable?(current_user))
+        - if (resource_page.changeable?(current_visitor))
           %li.menu= link_to 'view', resource_page
           %li.menu= link_to 'edit', edit_resource_page_url(resource_page)
           %li.menu= link_to 'delete', resource_page, :class => 'delete', :data => { :confirm => "Are you sure you want to delete #{ResourcePage.display_name} #{resource_page.id}" }, :method => :delete
@@ -31,7 +31,7 @@
         - resource_page.attached_files.each do |attached_file|
           %li= link_to attached_file.name, attached_file.attachment.url
 
-    - if current_user.has_role?("admin", "manager")
+    - if current_visitor.has_role?("admin", "manager")
       %p
         %i= "Cohorts: #{resource_page.cohort_list.join(", ")}"
     %p

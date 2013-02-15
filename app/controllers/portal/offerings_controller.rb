@@ -49,7 +49,7 @@ class Portal::OfferingsController < ApplicationController
          if learner = setup_portal_student
            cookies[:save_path] = @offering.runnable.save_path
            cookies[:learner_id] = learner.id
-           cookies[:student_name] = "#{current_user.first_name} #{current_user.last_name}"
+           cookies[:student_name] = "#{current_visitor.first_name} #{current_visitor.last_name}"
            cookies[:activity_name] = @offering.runnable.name
            cookies[:class_id] = learner.offering.clazz.id
            cookies[:student_id] = learner.student.id
@@ -66,7 +66,7 @@ class Portal::OfferingsController < ApplicationController
         if learner = setup_portal_student
           render_learner_jnlp learner
         else
-          # The current_user is a teacher (or another user acting like a teacher)
+          # The current_visitor is a teacher (or another user acting like a teacher)
           render :partial => 'shared/show_or_installer', :locals => { :skip_installer => params.delete(:skip_installer), :runnable => @offering.runnable, :teacher_mode => true }
         end
       }
@@ -272,7 +272,7 @@ class Portal::OfferingsController < ApplicationController
   # report shown to students 
   def student_report
     @offering = Portal::Offering.find(params[:id])
-    @learner = @offering.learners.find_by_student_id(current_user.portal_student)
+    @learner = @offering.learners.find_by_student_id(current_visitor.portal_student)
     if (@learner && @offering)
       reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
       @learners = reportUtil.learners
@@ -288,7 +288,7 @@ class Portal::OfferingsController < ApplicationController
   def data_test
     clazz = Portal::Clazz::data_test_clazz
     @offering = clazz.offerings.first
-    @user = current_user
+    @user = current_visitor
     @student = @user.portal_student
     unless @student
       @student=Portal::Student.create(:user => @user)
@@ -304,7 +304,7 @@ class Portal::OfferingsController < ApplicationController
 
   def setup_portal_student
     learner = nil
-    if portal_student = current_user.portal_student
+    if portal_student = current_visitor.portal_student
       # create a learner for the user if one doesnt' exist
       learner = @offering.find_or_create_learner(portal_student)
     end
@@ -389,12 +389,12 @@ class Portal::OfferingsController < ApplicationController
   end
 
   def offering_collapsed_status
-    if current_user.portal_teacher.nil?
+    if current_visitor.portal_teacher.nil?
       render :nothing=>true
       return
     end
     offering_collapsed = true
-    teacher_id = current_user.portal_teacher.id
+    teacher_id = current_visitor.portal_teacher.id
     portal_teacher_full_status = Portal::TeacherFullStatus.find_or_create_by_offering_id_and_teacher_id(params[:id],teacher_id)
     
     offering_collapsed = (portal_teacher_full_status.offering_collapsed.nil?)? false : !portal_teacher_full_status.offering_collapsed

@@ -7,7 +7,7 @@
         = f.text_field :name
       %li
         %label.right Publication status
-        = f.select :publication_status, investigation.available_states(current_user).map {|s| s.to_s}
+        = f.select :publication_status, investigation.available_states(current_visitor).map {|s| s.to_s}
       %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'

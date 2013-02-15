@@ -1,7 +1,7 @@
 #lead.project-header
   %h1{:class => theme_name}
     %a{ :href => root_path }= "#{APP_CONFIG[:site_name]}"
-- if current_user.anonymous?
+- if current_visitor.anonymous?
   = render :partial => "shared/header_login_box"
 - else
   .welcome-box
@@ -11,10 +11,10 @@
           %td
             %b
               Welcome
-              = "#{current_user.name}"
+              = "#{current_visitor.name}"
             %br
-            = link_to 'My Preferences', preferences_user_path(current_user)
-            - if @original_user != current_user
+            = link_to 'My Preferences', preferences_user_path(current_visitor)
+            - if @original_user != current_visitor
               |
               - switch_user_form_id = "switch_user_id_#{@original_user.id}"
               = link_to 'Switch Back','javascript: void(0);',:onclick => "$('#{switch_user_form_id}').submit();"

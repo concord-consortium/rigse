@@ -15,7 +15,7 @@
         %li
           = f.label :login, 'Login', :class=>"right"
           = f.text_field :login, :live => false, :class => "aligned"
-      - if current_user.portal_student.blank?
+      - if current_visitor.portal_student.blank?
         %li
           = f.label :email, 'Email', :class=>"right"
           = f.text_field :email, :live => false, :class => "aligned"

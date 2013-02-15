@@ -277,15 +277,15 @@ class Portal::StudentsController < ApplicationController
     if request.post?
       @portal_clazz = find_clazz_from_params
       class_word = params[:clazz][:class_word]
-      if @portal_clazz && class_word && ! current_user.anonymous?
-        @student = current_user.portal_student
+      if @portal_clazz && class_word && ! current_visitor.anonymous?
+        @student = current_visitor.portal_student
         if ! @student
           @grade_level = find_grade_level_from_params
-          @student = Portal::Student.create(:user_id => current_user.id, :grade_level_id => @grade_level.id)
+          @student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => @grade_level.id)
         end
         @student.process_class_word(class_word)
       else
-        if current_user.anonymous?
+        if current_visitor.anonymous?
           flash[:error] = "You must be logged in to sign up for a class!"
         else
           flash[:error] = "The class word you provided was not valid! Please check with your teacher to ensure you have the correct word."

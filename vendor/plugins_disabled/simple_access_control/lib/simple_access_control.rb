@@ -10,7 +10,7 @@
 #       * a normal Rails syntax:
 #             access_rule 'admin', :only => :index
 #             access_rule '(moderator || admin)', :only => :new
-#       * error handling for helper methods (permit? bombs out with current_user == nil)
+#       * error handling for helper methods (permit? bombs out with current_visitor == nil)
 #       * one-line parser, easy to replace or alter
 #       * proper before_filter usage, meaning access rules are parsed only when needed
 #       * no overrideable default (which I found counter-intuitive in the end)
@@ -74,7 +74,7 @@ module SimpleAccessControl
   #     has_permission?('role')
   #     has_permission?('admin', other_user)
   def has_permission?(rule, user = nil)
-    user ||= (send(:current_user) if respond_to?(:current_user)) || nil
+    user ||= (send(:current_visitor) if respond_to?(:current_visitor)) || nil
     access_controller.process(rule, user)
   end
   
