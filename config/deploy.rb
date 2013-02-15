@@ -211,6 +211,7 @@ namespace :deploy do
       mkdir -p #{shared_path} &&
       mkdir -p #{shared_path}/config &&
       mkdir -p #{shared_path}/log &&
+      mkdir -p #{shared_path}/pids &&
       mkdir -p #{shared_path}/sis_import_data &&
       mkdir -p #{shared_path}/config/nces_data &&
       mkdir -p #{shared_path}/public/otrunk-examples &&
