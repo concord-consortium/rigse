@@ -81,7 +81,7 @@ class Image < ActiveRecord::Base
   end
 
   def check_image_presence
-    unless self.image_file_name
+    if self.image_file_name.blank?
       self.errors.add(:image, :blank)
       return false
     end
@@ -133,8 +133,8 @@ class Image < ActiveRecord::Base
     size = 0
     begin
         size   = self.image.size || 0
-    rescue ::Error => e
-      Rails.log("Unexpected error sizing image in models/image.rb:  #{e}")
+    rescue ::Exception => e
+      Rails.logger.warn("Unexpected error sizing image in models/image.rb:  #{e}")
     end
     size
   end
