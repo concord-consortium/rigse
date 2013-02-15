@@ -1,59 +1,38 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe ImagesController do
-  describe "route generation" do
-    it "should map #index" do
-      route_for(:controller => "images", :action => "index").should == "/images"
+  describe "routing" do
+    it "should route #index" do
+      expect(:get => "/images").to route_to("images#index")
     end
-  
-    it "should map #new" do
-      route_for(:controller => "images", :action => "new").should == "/images/new"
-    end
-  
-    it "should map #show" do
-      route_for(:controller => "images", :action => "show", :id => 1).should == "/images/1"
-    end
-  
-    it "should map #edit" do
-      route_for(:controller => "images", :action => "edit", :id => 1).should == "/images/1/edit"
-    end
-  
-    it "should map #update" do
-      route_for(:controller => "images", :action => "update", :id => 1).should == "/images/1"
-    end
-  
-    it "should map #destroy" do
-      route_for(:controller => "images", :action => "destroy", :id => 1).should == "/images/1"
-    end
-  end
 
-  describe "route recognition" do
-    it "should generate params for #index" do
-      params_from(:get, "/images").should == {:controller => "images", :action => "index"}
+    it "should route #new" do
+      expect(:get => "/images/new").to route_to("images#new")
     end
-  
-    it "should generate params for #new" do
-      params_from(:get, "/images/new").should == {:controller => "images", :action => "new"}
+
+    it "should route #create" do
+      expect(:get => "/images/create").to route_to("images#create")
     end
-  
-    it "should generate params for #create" do
-      params_from(:post, "/images").should == {:controller => "images", :action => "create"}
+
+    it "should route #view" do
+      expect(:get => "/images/1/view").to route_to("images#view", :id => "1", :method => :get)
     end
-  
-    it "should generate params for #show" do
-      params_from(:get, "/images/1").should == {:controller => "images", :action => "show", :id => "1"}
+
+    it "should route #list_filter" do
+      expect(:post => "/images/list/filter").to route_to("images#index", :method => :post)
     end
-  
-    it "should generate params for #edit" do
-      params_from(:get, "/images/1/edit").should == {:controller => "images", :action => "edit", :id => "1"}
+
+    it "should route #show" do
+      expect(:get => "/images/1").to route_to("images#show", :id => "1")
     end
-  
-    it "should generate params for #update" do
-      params_from(:put, "/images/1").should == {:controller => "images", :action => "update", :id => "1"}
+
+    it "should route #edit" do
+      expect(:get => "/images/1/edit").to route_to("images#edit", :id => "1")
     end
-  
-    it "should generate params for #destroy" do
-      params_from(:delete, "/images/1").should == {:controller => "images", :action => "destroy", :id => "1"}
+
+    it "should route #destroy" do
+      expect(:delete => "/images/1").to route_to("images#destroy", :id => "1")
     end
+
   end
 end

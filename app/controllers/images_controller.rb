@@ -122,11 +122,12 @@ class ImagesController < ApplicationController
     @image = Image.find(params[:id])
     redirect_to @image.image.url(:attributed)
   end
-  
+
   protected
 
   def update_image_attributes
     my_params  = params[:image]
+    return unless my_params
     image      = my_params.delete(:image)
     img_params = {:image => image}
     # we're updating the image separately, to avoid having

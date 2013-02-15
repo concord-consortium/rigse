@@ -548,7 +548,8 @@ constraints :id => /\d+/ do
 
   resources :images
   match '/images/list/filter' => 'images#index', :as => :list_filter_image, :method => :post
-  match '/images/view/:id'    => 'images#view',  :as => :view_image, :method => :get
+  match '/images/:id/view'    => 'images#view',  :as => :view_image, :method => :get
+
   match '/resource_pages/list/filter' => 'resource_pages#index', :as => :list_filter_resource_page, :method => :post
   resources :resource_pages do
     collection do
