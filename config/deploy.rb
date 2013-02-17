@@ -235,6 +235,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"
     run "ln -nfs #{shared_path}/config/sis_import_data.yml #{release_path}/config/sis_import_data.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
+    run "ln -nfs #{shared_path}/config/google_analytics.yml #{release_path}/config/google_analytics.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
