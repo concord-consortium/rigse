@@ -7,7 +7,7 @@ class Activity < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :investigation
-  belongs_to :original
+  belongs_to :original, :class_name => "Activity"
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
@@ -239,6 +239,7 @@ class Activity < ActiveRecord::Base
 
   def duplicate(new_owner)
     @return_activity = self.clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @return_activity.original = self
     @return_activity.user = new_owner
     @return_activity.name = Activity.gen_unique_name(self.name)
     @return_activity.deep_set_user(new_owner)
