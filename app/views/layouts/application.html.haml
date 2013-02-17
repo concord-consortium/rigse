@@ -29,6 +29,10 @@
     - if defined? @container_type && @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
     = calendar_date_select_includes "silver"
+
+    - if USING_GOOGLE_ANALYTICS
+      = javascript_tag google_analytics_config
+
   %body
 
     #note{:style=>"display: none;"}
