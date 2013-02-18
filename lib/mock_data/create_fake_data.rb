@@ -5,6 +5,28 @@ module MockData
   
   #Create fake users and roles
   def self.create_default_users
+  
+    #create roles in order
+    roles_in_order = [
+      admin_role = Role.find_or_create_by_title('admin'),
+      manager_role = Role.find_or_create_by_title('manager'),
+      researcher_role = Role.find_or_create_by_title('researcher'),
+      author_role = Role.find_or_create_by_title('author'),
+      member_role = Role.find_or_create_by_title('member'),
+      guest_role = Role.find_or_create_by_title('guest')
+    ] 
+    
+    all_roles = Role.find(:all)
+    unused_roles = all_roles - roles_in_order
+    if unused_roles.length > 0
+      unused_roles.each { |role| role.destroy }
+    end
+    
+    # to make sure the list is ordered correctly in case a new role is added
+    roles_in_order.each_with_index do |role, i|
+      role.insert_at(i)
+    end
+    
     
     #following semesters exist
     data = {
