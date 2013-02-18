@@ -27,7 +27,7 @@ Feature: User logs in using header login box to use the portal
     When I login with username: author password: author
     Then I should see "Logged in successfully"
     And I should not see "Forgot your user name or password?"
-    When I login with username: admin password: admin
+    When I login with username: myadmin password: myadmin
     Then I should see "Logged in successfully"
     And I should not see "Forgot your user name or password?"
     When I login with username: manager password: manager

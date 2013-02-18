@@ -60,7 +60,7 @@ module MockData
       :user_3 => {"login" => "manager", "password" => "manager", "roles" => "manager"},
       :user_4 => {"login" => "mymanager", "password" => "mymanager", "roles" => "manager"},
       :user_5 => {"login" => "researcher", "password" => "researcher", "roles" => "researcher"},
-      :user_6 => {"login" => "admin", "password" => "admin", "roles" => "admin"},
+      :user_6 => {"login" => "admin", "password" => "password", "roles" => "admin"}
     }
     
     User.anonymous(true)

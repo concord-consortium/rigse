@@ -11,23 +11,23 @@ Feature: Resource pages can be filtered by cohort
       | cohorts       | experiment      |
     And the following teachers exist:
       | login         | password        | cohort_list          |
-      | teacher       | teacher         | control              |
+      | teacher1      | teacher         | control              |
       | bteacher      | teacher         | experiment           |
       | cteacher      | teacher         | control, experiment  |
       | dteacher      | teacher         |                      |
       | author        | teacher         |                      |
     And the following classes exist:
       | name        | teacher     |
-      | My Class    | teacher     |
+      | My Class    | teacher1    |
       | My b Class  | bteacher    |
       | My c Class  | cteacher    |
       | My d Class  | dteacher    |
     And the following resource pages exist:
       | name           | user     | cohort_list         |
-      | neither        | teacher  |                     |
-      | control        | teacher  | control             |
-      | experiment     | teacher  | experiment          |
-      | both           | teacher  | control, experiment |
+      | neither        | teacher1 |                     |
+      | control        | teacher1 | control             |
+      | experiment     | teacher1 | experiment          |
+      | both           | teacher1 | control, experiment |
       | b neither b    | bteacher |                     |
       | b control b    | bteacher | control             |
       | b experiment b | bteacher | experiment          |
@@ -38,7 +38,7 @@ Feature: Resource pages can be filtered by cohort
       | a both a       | author   | control, experiment |
 
   Scenario: Resource Pages are visible for the control cohort
-    Given I am logged in with the username teacher
+    Given I am logged in with the username teacher1
     When I am on the class page for "My Class"
     Then the following should be displayed in the assignables list:
       | name                       |

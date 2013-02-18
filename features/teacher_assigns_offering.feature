@@ -51,7 +51,7 @@ Feature: Teacher can assign an offering to a class
   @javascript
   Scenario: Offerings from the default class show learner data in the default class
     Given the default class is created
-    And the student "student" is in the class "My Class"
+    And the student "student" belongs to class "My Class"
     And the following external activity exists:
       | name        | user    | url    |
       | My Activity | teacher | /about |
@@ -71,10 +71,9 @@ Feature: Teacher can assign an offering to a class
     And I login as an admin
     And I am on the class page for "Default Class"
     Then I should see "My Activity"
-    And I should see "joe user"
+    And I should see "John Nash"
     And the learner count for the external activity "My Activity" in the class "Default Class" should be "1"
 
-  @dialog
   @javascript
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class
     Given the default class is created
@@ -90,6 +89,5 @@ Feature: Teacher can assign an offering to a class
     When I login as an admin
     And am on the class page for "Default Class"
     And I try to assign the external activity "My Activity" to the class "Default Class"
-    Then I need to confirm "The External Activity My Activity is already assigned in a class."
     And the external activity named "My Activity" should have "offerings_count" equal to "1"
     And the class "Default Class" should not have any offerings
