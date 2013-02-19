@@ -10,7 +10,7 @@
         %ul.menu
           - unless local_assigns[:hide_print]
             %li= link_to "printable view", printable_index_resource_pages_path(resource_page_printable_index_params), :id => "printable-view", :target => "_blank"
-          - if ResourcePage.can_be_created_by?(current_user)
+          - if ResourcePage.can_be_created_by?(current_visitor)
             %li= link_to "create #{ResourcePage.display_name}", new_resource_page_path
 
   - resource_pages.each do |resource_page|

@@ -4,9 +4,9 @@ class Portal::TeachersController < ApplicationController
   public
 
   def teacher_admin_or_manager
-    if current_user.has_role?('admin') ||
-       current_user.has_role?('manager') ||
-       (current_user.portal_teacher && current_user.portal_teacher.id.to_s == params[:id])
+    if current_visitor.has_role?('admin') ||
+       current_visitor.has_role?('manager') ||
+       (current_visitor.portal_teacher && current_visitor.portal_teacher.id.to_s == params[:id])
        # this user is authorized
        true
     else
@@ -128,9 +128,9 @@ class Portal::TeachersController < ApplicationController
   end
   
   def failed_creation(message = 'Sorry, there was an error creating your account')
-    # force the current_user to anonymous, because we have not successfully created an account yet.
+    # force the current_visitor to anonymous, because we have not successfully created an account yet.
     # edge case, which we might need a more integrated solution for??
-    self.current_user = User.anonymous
+    self.current_visitor = User.anonymous
     flash.now[:error] = message
     render :action => :new
   end

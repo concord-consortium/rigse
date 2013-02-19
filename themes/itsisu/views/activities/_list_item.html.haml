@@ -1,9 +1,9 @@
 - cache_key = "item_list_#{runnable.class.to_s}_#{runnable.id}_"
-- cache_key = "changeable_" + cache_key if runnable.changeable? current_user
+- cache_key = "changeable_" + cache_key if runnable.changeable? current_visitor
 - cache(cache_key) do
   .activity
     .actions
-      - if runnable.changeable? current_user
+      - if runnable.changeable? current_visitor
         %a{:href => (runnable.is_a?(Page) ? page_path(runnable) : template_edit_activity_path(runnable))}
           %img{:alt => "edit", :src => "/images/diy_icons/edit.png", :title => "edit this activity"}/
       - if runnable.is_a?(Page)

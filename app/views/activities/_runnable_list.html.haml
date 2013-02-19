@@ -9,7 +9,7 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
-        -if current_user.has_role? "author"
+        -if current_visitor.has_role? "author"
           %li= link_to "create #{Activity.display_name}", new_activity_path
 
 - activities.each do |activity|
@@ -22,9 +22,9 @@
             = activity.user.name
         %div.action_menu_header_right
           %ul.menu
-            - unless(current_user.anonymous?)
+            - unless(current_visitor.anonymous?)
               %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
-            - if (activity.changeable?(current_user))
+            - if (activity.changeable?(current_visitor))
               %li.menu=link_to 'delete', activity, :class => 'delete', :data => { :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{activity.id}" }, :method => :delete
       %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
         %p=activity.description

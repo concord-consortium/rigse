@@ -3,5 +3,5 @@
   %ul#section_pages_list.menu
     - @section.pages.each do |page|
       = render :partial => 'page_list_item', :locals => {:page => page} 
-  - if (@section.changeable?(current_user))
+  - if (@section.changeable?(current_visitor))
     = sortable_element :section_pages_list,:url=> {:action => 'sort_pages', :params => {:id => @section.id }}, :scroll => "window", :handle=> "action_menu", :constraint => :vertical

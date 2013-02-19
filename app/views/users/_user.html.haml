@@ -5,7 +5,7 @@
         =link_to name_for_component(user), user
       %div.action_menu_header_right
         %ul.menu
-          - if (user.changeable?(current_user))
+          - if (user.changeable?(current_visitor))
             - if user.portal_teacher
               %li.menu=link_to 'Teacher Page', portal_teacher_path(user.portal_teacher)
             - if portal_student = user.portal_student
@@ -14,7 +14,7 @@
             %li.menu=link_to 'Reset Password', reset_password_user_path(user)
             - if user.state == 'pending'
               %li.menu=link_to 'Activate', activate_path(:activation_code => user.activation_code)
-            - if(user != current_user)
+            - if(user != current_visitor)
               - switch_user_form_id = "switch_user_id_#{user.id}"
               %li.menu=link_to 'Switch', 'javascript: void(0);',:onclick => "$('#{switch_user_form_id}').submit();"
               = form_for user, :url => switch_user_path(user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|

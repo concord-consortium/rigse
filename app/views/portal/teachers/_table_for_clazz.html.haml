@@ -14,9 +14,9 @@
       %td
         = portal_teacher.login
       %td
-        - reason = portal_clazz.reason_user_cannot_remove_teacher_from_class(current_user, portal_teacher)
+        - reason = portal_clazz.reason_user_cannot_remove_teacher_from_class(current_visitor, portal_teacher)
         - if !reason
-          - if portal_teacher.user_id == current_user.id
+          - if portal_teacher.user_id == current_visitor.id
             - confirm = Portal::Clazz.WARNING_REMOVE_TEACHER_CURRENT_USER(portal_clazz.name)
           - else
             - confirm = Portal::Clazz.CONFIRM_REMOVE_TEACHER(portal_teacher.name, portal_clazz.name)

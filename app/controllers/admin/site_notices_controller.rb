@@ -4,7 +4,7 @@ class Admin::SiteNoticesController < ApplicationController
   protected
   
   def admin_or_manager
-    unless current_user.has_role?('admin') or current_user.has_role?('manager')
+    unless current_visitor.has_role?('admin') or current_visitor.has_role?('manager')
       flash[:error] = "Please log in as an administrator or manager"
       redirect_to(:home)
     end
@@ -47,8 +47,8 @@ class Admin::SiteNoticesController < ApplicationController
     
     site_notice = Admin::SiteNotice.new
     site_notice.notice_html = @notice_html
-    site_notice.created_by = current_user.id
-    site_notice.updated_by = current_user.id
+    site_notice.created_by = current_visitor.id
+    site_notice.updated_by = current_visitor.id
     site_notice.save!
     
     #storing all roles that should see this notice
@@ -107,7 +107,7 @@ class Admin::SiteNoticesController < ApplicationController
     
     site_notice = @notice
     site_notice.notice_html= @notice_html
-    site_notice.updated_by = current_user.id
+    site_notice.updated_by = current_visitor.id
     site_notice.save!
     
     notice_role_ids = @notice_roles.map {|nr| nr.id}
@@ -159,7 +159,7 @@ class Admin::SiteNoticesController < ApplicationController
   
 
   def toggle_notice_display
-    user_collapsed_notice = Admin::NoticeUserDisplayStatus.find_or_create_by_user_id(current_user.id)
+    user_collapsed_notice = Admin::NoticeUserDisplayStatus.find_or_create_by_user_id(current_visitor.id)
     status_to_be_set = (user_collapsed_notice.collapsed_status.nil? || user_collapsed_notice.collapsed_status == false)? true : false
     
     user_collapsed_notice.last_collapsed_at_time = DateTime.now
@@ -175,7 +175,7 @@ class Admin::SiteNoticesController < ApplicationController
   
   def dismiss_notice
     notice = Admin::SiteNotice.find(params[:id])
-    user_notice = Admin::SiteNoticeUser.find_or_create_by_notice_id_and_user_id(notice.id , current_user.id)
+    user_notice = Admin::SiteNoticeUser.find_or_create_by_notice_id_and_user_id(notice.id , current_visitor.id)
     user_notice.notice_dismissed = true
     user_notice.updated_at = DateTime.now
     user_notice.save!

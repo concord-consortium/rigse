@@ -35,8 +35,8 @@
         - if portal_clazz.new_record?
           %tr
             - schools = []
-            - if current_user.portal_teacher
-              - schools = current_user.portal_teacher.schools
+            - if current_visitor.portal_teacher
+              - schools = current_visitor.portal_teacher.schools
             - if schools.empty?
               - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
             %td.title= label_tag :school, 'School: ', :class=>"right"

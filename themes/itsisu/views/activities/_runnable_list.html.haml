@@ -24,7 +24,7 @@
             %h2="#{unit[:name]} (#{unit[:count]})"
             - unit[:activities].each do |runnable|
               .activity-title
-                - if runnable.changeable? current_user
+                - if runnable.changeable? current_visitor
                   %a{:href => edit_polymorphic_url(runnable)}
                     %img{:alt => "edit", :src => "/images/diy_icons/edit.png", :title => "edit this activity"}/
                 %a{:href => duplicate_activity_url(runnable), :title => "Make your own version of this activity"}
