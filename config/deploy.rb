@@ -669,7 +669,7 @@ namespace 'jnlp' do
   desc "Bump the JNLP version to the current latest snaphot"
   task :bump_snapshot_to_latest , :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:jnlp:bump_snapshot_to_latest --trace"
+      "RAILS_ENV=#{rails_env} bundle exec rake app:jnlp:bump_snapshot_to_latest --trace"
   end
 end
 
