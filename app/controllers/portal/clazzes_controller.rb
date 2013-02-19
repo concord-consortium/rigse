@@ -319,7 +319,6 @@ class Portal::ClazzesController < ApplicationController
       render :update do |page|
         page << "var element = $('#{dom_id}');"
         page << "element.show();"
-        page << "$('flash').update('#{error_msg}');"
         page << "alert('#{error_msg}');"
       end
     end
