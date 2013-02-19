@@ -6,7 +6,7 @@
       %div.action_menu_header_right   
         %ul.menu
           %li= run_link_for(section,nil,{:no_button=>true})
-          - if (section.changeable?(current_user))
+          - if (section.changeable?(current_visitor))
             %li= link_to 'duplicate', duplicate_section_url(section)
             %li= link_to 'edit', section
             %li.menu=toggle_more section

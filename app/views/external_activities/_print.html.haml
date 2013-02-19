@@ -4,7 +4,7 @@
     %h4=page.section ? "#{page.activity.name} : #{page.section.name} : #{page.name}" : page.name
   .page_content
     - page.page_elements.each do |element|
-      %div{ :id => dom_id_for(element.embeddable, :item), :class => element.changeable?(current_user) ? 'item item_selectable': 'item' }
+      %div{ :id => dom_id_for(element.embeddable, :item), :class => element.changeable?(current_visitor) ? 'item item_selectable': 'item' }
         = render_show_partial_for(element.embeddable)
 
   - if teacher_mode && (should_show_teacher_notes? page)

@@ -1,4 +1,4 @@
-- if portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
+- if portal_clazz.is_teacher?(current_visitor) || current_visitor.has_role?("admin")
   .action_menu
     .action_menu_left
   %ul#clazz_offerings.drop_target.clazz_offerings_for_class_summary_page

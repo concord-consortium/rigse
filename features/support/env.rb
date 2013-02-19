@@ -116,7 +116,7 @@ Spork.each_run do
 
   # Make visible for testing
   include AuthenticatedSystem
-  ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
+  ApplicationController.send(:public, :logged_in?, :current_visitor, :authorized?)
 
   # so we can use things like dom_id_for
   include ApplicationHelper

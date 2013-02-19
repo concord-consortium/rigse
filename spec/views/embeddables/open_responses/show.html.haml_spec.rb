@@ -5,7 +5,7 @@ describe "/embeddable/open_responses/show.html.haml" do
   before(:each) do
     power_user = stub_model(User, :has_role? => true)
     view.stub!(:edit_menu_for).and_return("edit menu")
-    view.stub!(:current_user).and_return(power_user)
+    view.stub!(:current_visitor).and_return(power_user)
     assign(:open_response, @open_response = stub_model(Embeddable::OpenResponse,
       :new_record? => false, 
       :id => 1,

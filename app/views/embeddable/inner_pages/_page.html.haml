@@ -12,7 +12,7 @@
       .padded_content
         %span.page_name inner page: #{page.name}
     .action_menu_header_right
-      - if (page.changeable?(current_user))
+      - if (page.changeable?(current_visitor))
         = dropdown_button "add.png", :content_id=>dom_id_for(page, :add_menu),:name=> dom_id_for(page, :add_menu), :title => 'add content to this page'
         - delete_url = url_for(:controller => "embeddable/inner_pages", :action => 'delete_page', :id => inner_page.id, :page_id => page.id)
         = remote_link_button "delete.png", :confirm => "Delete the page #{page.name}?", :url => delete_url, :title => "delete #{page.name}"
@@ -23,6 +23,6 @@
     %ul.menu{:id => page_elements_container}
       - page.page_elements.each_with_index do |element,i|
         = render :partial => 'pages/element_container', :locals => {:element => element, :component => element.embeddable, :page_element => element, :page => page }
-      - if (page.changeable?(current_user))
+      - if (page.changeable?(current_visitor))
         - url = polymorphic_url([:sort_elements, page])
         =sortable_element page_elements_container, :url => url, :handle=> "action_menu", :constraint => :vertical, :scroll => "window"

@@ -8,7 +8,7 @@ class TeacherNotesController < ApplicationController
     if (! note.authored_entity.nil?)
       note.user = note.authored_entity.user
     else
-      note.user = current_user
+      note.user = current_visitor
     end
   end
   
@@ -40,7 +40,7 @@ class TeacherNotesController < ApplicationController
   end
   
   def show_teacher_note
-    if @teacher_note.changeable?(current_user)
+    if @teacher_note.changeable?(current_visitor)
       render :update do |page|
           page.replace_html  'note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @teacher_note}
           page.visual_effect :toggle_blind, 'note'
@@ -89,7 +89,7 @@ class TeacherNotesController < ApplicationController
   # POST /teacher_notes
   # POST /teacher_notes.xml
   def create
-    if (@teacher_note.changeable?(current_user) && @teacher_note.update_attributes(params[:teacher_note]))
+    if (@teacher_note.changeable?(current_visitor) && @teacher_note.update_attributes(params[:teacher_note]))
       if (request.xhr?)
         render :text => "<div class='notice'>teacher note saved</div>"
       else
@@ -115,7 +115,7 @@ class TeacherNotesController < ApplicationController
   # PUT /teacher_notes/1
   # PUT /teacher_notes/1.xml
   def update
-    if (@teacher_note.changeable?(current_user) && @teacher_note.update_attributes(params[:teacher_note]))
+    if (@teacher_note.changeable?(current_visitor) && @teacher_note.update_attributes(params[:teacher_note]))
       if (request.xhr?)
         render :text => "<div class='notice'>teacher note saved</div>"
       else
@@ -141,7 +141,7 @@ class TeacherNotesController < ApplicationController
   # DELETE /teacher_notes/1
   # DELETE /teacher_notes/1.xml
   def destroy
-    if(@teacher_note.changeable?(current_user))
+    if(@teacher_note.changeable?(current_visitor))
       @teacher_note.destroy
       respond_to do |format|
         format.html { redirect_to(teacher_notes_url) }

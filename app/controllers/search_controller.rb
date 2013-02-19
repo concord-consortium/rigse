@@ -5,7 +5,7 @@ class SearchController < ApplicationController
   protected
   
   def teacher_only
-    if current_user.portal_student
+    if current_visitor.portal_student
       redirect_to(:root)
     end
   end
@@ -97,7 +97,7 @@ class SearchController < ApplicationController
     if @probe_type.class == String
       @probe_type = [@probe_type]
     end
-    if current_user.anonymous?
+    if current_visitor.anonymous?
       @without_teacher_only=true
     end
     
@@ -108,7 +108,7 @@ class SearchController < ApplicationController
       :grade_span => @grade_span|| [],
       :paginate => false,
       :probe_type => @probe_type,
-      :user => current_user,
+      :user => current_visitor,
       :without_teacher_only =>@without_teacher_only || false
       #:page => params[:investigation_page] ? params[:investigation_page] : 1,
       #:per_page => 10
@@ -130,7 +130,7 @@ class SearchController < ApplicationController
     external_activities=[]
     ajaxResponseCounter = params[:ajaxRequestCounter]
     submitform = params[:submit_form]
-    if current_user.anonymous?
+    if current_visitor.anonymous?
       @without_teacher_only=true
     end
     search_options = {
@@ -139,7 +139,7 @@ class SearchController < ApplicationController
       :domain_id => @domain_id || [],
       :grade_span => @grade_span|| [],
       :probe_type => @probe_type,
-      :user => current_user,
+      :user => current_visitor,
       :without_teacher_only =>@without_teacher_only || false
     }
     
@@ -178,7 +178,7 @@ class SearchController < ApplicationController
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
     
-    teacher_clazzes = current_user.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}
+    teacher_clazzes = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}
     teacher_clazzes = teacher_clazzes.select{|item| item.active == true}
     teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
     

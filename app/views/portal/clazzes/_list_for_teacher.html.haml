@@ -3,7 +3,7 @@
     .action_menu_header_left
       Classes:        
     .action_menu_header_right
-      - if teacher.changeable?(current_user)
+      - if teacher.changeable?(current_visitor)
         = link_button "add.png",  new_portal_clazz_path(:teacher_id => teacher.id), :title => "add a new class"
   %hr
   .item_collection

@@ -1,6 +1,6 @@
 = render :partial => "notice"
 
-- role_partials = current_user.roles.map{|role| role.title}
+- role_partials = current_visitor.roles.map{|role| role.title}
 - if @portal_teacher
   - role_partials << "teacher"
 - if @portal_student
