@@ -65,7 +65,7 @@ Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_
   student.clazzes.should include clazz
 end
 
-When /^I run the investigation$/ do
+When /^I run the (?:investigation|activity)$/ do
   # this assumes the user is logged in as a student
   # lets verify that in the most simple way
   # you should expand this if you want to use this step in other cases
