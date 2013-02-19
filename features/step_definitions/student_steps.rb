@@ -64,3 +64,21 @@ Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_
   clazz = Portal::Clazz.find_by_name class_name
   student.clazzes.should include clazz
 end
+
+When /^I run the investigation$/ do
+  # this assumes the user is logged in as a student
+  # lets verify that in the most simple way
+  # you should expand this if you want to use this step in other cases
+  @cuke_current_username.should == 'student'
+  click_link("Run by Myself")
+end
+
+Then /^I should see the run link for "([^"]*)"$/ do | runnable_name |
+  within(".offering_for_student:contains('#{runnable_name}')") do
+    page.should have_content("Run by Myself")
+  end
+end
+
+Then /^I should not see the run link for "([^"]*)"$/ do | runnable_name |
+  page.should_not have_content(runnable_name)
+end
