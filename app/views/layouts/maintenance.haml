@@ -12,24 +12,37 @@
         line-height:150%;
       }
       #container{
-        background:url(maintenance/bubble.png) no-repeat;
+        background:url(http://concord.org/sites/default/files/images/bubble.png) no-repeat;
         height:395px;
         left:50%;
         margin:-187px 0 0 -300px;
         position:absolute;
         top:50%;
         width:600px;
+        padding-top: 70px;
       }
       #container p{
-        margin:30px 70px 0 100px;
+        margin:1em 70px 0 100px;
       }
-      #cc-link {
+      #sg-logo{
+        height:80px;
+        margin:85px 0 10px 100px;
+        width:300px;
+      }
+      #cc-link{
         display:block;
-        margin:55px 80px 0 0;
+        /*margin:55px 80px 0 0;*/
         text-align:right;
       }
+      #cc-link img {
+        border:none;
+        height:38px;
+        width:125px;
+        margin-top: 2em;
+      }
       a {
-        color:#eb8723;
+        color: #e1643a;
+        text-decoration: none;
       }
     /**/
     %body
@@ -45,3 +58,8 @@
       if you need to get in touch.
     %p
       #{message}
+    %p
+      %a#cc-link{:href => "http://concord.org/", :title => "The Concord Consortium"}
+        %img{:alt => "The Concord Consortium",
+          :src => "http://concord.org/sites/default/files/images/cc-logo.png",
+          :title => "The Concord Consortium"}/

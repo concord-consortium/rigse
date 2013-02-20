@@ -43,7 +43,9 @@ task :disable_web, :roles => :web do
                          :site_name => site_name
                        })
 
-
+  # File.open(File.expand_path("~/Desktop/index.html"),"w") do |f|
+  #   f.write(maintenance)
+  # end
   run "mkdir -p #{shared_path}/system/"
   put maintenance, "#{shared_path}/system/maintenance.html",
                    :mode => 0644
