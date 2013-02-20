@@ -28,19 +28,18 @@
         margin:55px 80px 0 0;
         text-align:right;
       }
-      #cc-link img {border:none;height:38px;width:125px;}
     /**/
     %body
   #container
     %p
       As of #{Time.now.strftime("%b %d,  %I:%M%p (%Z)")}
       This site undergoing maintenance. Sorry for the inconvenience.
-      We'll be back  #{back_up ? "by #{back_up}" : "shortly"}
-      %br/
+      We'll be back  #{back_up ? "by #{back_up}" : "shortly"} .
+    %p
       Please
       %a{:href => "mailto:rites-help@concord.org"}
         email us
       if you need to get in touch.
 
     %a#cc-link{:href => "http://concord.org/", :title => "The Concord Consortium"}
-      %img{:alt => "The Concord Consortium", :src => "maintenance/cc-logo.png", :title => "The Concord Consortium"}/
+      The Concord Consortium
