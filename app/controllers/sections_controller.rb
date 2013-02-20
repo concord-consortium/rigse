@@ -10,7 +10,7 @@ class SectionsController < ApplicationController
   protected 
   
   def can_create
-    if (current_user.anonymous?)
+    if (current_visitor.anonymous?)
       flash[:error] = "Anonymous users can not create sections"
       redirect_back_or sections_path
     end
@@ -38,8 +38,8 @@ class SectionsController < ApplicationController
   
   def can_edit
     if defined? @section
-      unless @section.changeable?(current_user)
-        error_message = "you (#{current_user.login}) can not #{action_name.humanize} #{@section.name}"
+      unless @section.changeable?(current_visitor)
+        error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@section.name}"
         flash[:error] = error_message
         if request.xhr?
           render :text => "<div class='flash_error'>#{error_message}</div>"
@@ -76,7 +76,7 @@ class SectionsController < ApplicationController
     })
 
     if params[:mine_only]
-      @sections = @sections.reject { |i| i.user.id != current_user.id }
+      @sections = @sections.reject { |i| i.user.id != current_visitor.id }
     end
 
     @paginated_objects = @sections
@@ -117,7 +117,7 @@ class SectionsController < ApplicationController
   ##
   def new
     @section = Section.new
-    @section.user = current_user
+    @section.user = current_visitor
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @section }
@@ -129,13 +129,13 @@ class SectionsController < ApplicationController
   ##
   def create
     @section = Section.create!(params[:section])
-    @section.user = current_user
+    @section.user = current_visitor
     respond_to do |format|
       format.js {
         @page = Page.create
-        @page.user = current_user
+        @page.user = current_visitor
         @xhtml = Embeddable::Xhtml.create
-        @xhtml.user = current_user
+        @xhtml.user = current_visitor
         @xhtml.save!
         @xhtml.pages << @page
         @section.pages << @page
@@ -200,7 +200,7 @@ class SectionsController < ApplicationController
   def add_page
     @page= Page.create
     @page.section = @section
-    @page.user = current_user
+    @page.user = current_visitor
     @page.save
     redirect_to @page
   end
@@ -232,7 +232,7 @@ class SectionsController < ApplicationController
     @copy = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => :pages
     @copy.name = "copy of #{@section.name}"
     @copy.save
-    @copy.deep_set_user current_user
+    @copy.deep_set_user current_visitor
     @activity = @copy.activity
     flash[:notice] ="Copied #{@section.name}"
     redirect_to url_for(@copy)
@@ -249,7 +249,7 @@ class SectionsController < ApplicationController
   # In a section controller, we only accept page clipboard data,
   # 
   def paste
-    if @section.changeable?(current_user)
+    if @section.changeable?(current_visitor)
       @original = clipboard_object(params)
       if @original
         @container = params[:container] || 'section_pages_list'
@@ -264,7 +264,7 @@ class SectionsController < ApplicationController
           @component.section = @section
           @component.save
         end
-        @component.deep_set_user current_user
+        @component.deep_set_user current_visitor
       end
     end
     render :update do |page|

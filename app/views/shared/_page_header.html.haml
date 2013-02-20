@@ -11,7 +11,7 @@
     %li= print_link_for(page,{:teacher_mode => true})
     %li= toggle_all('elements')
     %li= link_to toggle_link_title('preview', 'edit').html_safe, preview_page_path(page)
-    - if (page.changeable?(current_user))
+    - if (page.changeable?(current_visitor))
       %li= link_to 'edit page details', edit_page_url(page)
       %li= link_to 'duplicate', duplicate_page_url(page)
       %li#paste_link= paste_link_for(Page.paste_acceptable_types,{:container_id => @container_id}) # see lib/clipboard.rb
@@ -30,12 +30,12 @@
   .action_menu_header_right
     = render :partial => "shared/notes_menu", :locals => {:authorable => page}
     = dropdown_button "actions.png", :title => "actions for this page"
-    - if (page.changeable?(current_user))
+    - if (page.changeable?(current_visitor))
       = dropdown_button "add.png", :title => 'add content to this page'
     - else
       = link_button "disabled.png", "#", :title => "can't add content"
     = render :partial => "shared/dot_pager", :locals => {:node => page}
-    - if (page.changeable?(current_user))
+    - if (page.changeable?(current_visitor))
       - if (page.section)
         = delete_button_for(page, :redirect => url_for(page.section))
       - else

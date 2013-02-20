@@ -6,10 +6,10 @@ class HomeController < ApplicationController
   theme "rites"
   
   def index
-   notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
+   notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
-   if current_user.anonymous?
+   if current_visitor.anonymous?
     @wide_content_layout = true
    end
   end
@@ -79,19 +79,19 @@ class HomeController < ApplicationController
   end
 
   # def index
-  #   if current_user.require_password_reset
+  #   if current_visitor.require_password_reset
   #     redirect_to :controller => :passwords, :action=>'reset', :reset_code => 0
   #   end
   # end
   
   def recent_activity
     
-    unless current_user.portal_teacher
+    unless current_visitor.portal_teacher
       redirect_to home_url
       return
     end
     
-    notices_hash = Admin::SiteNotice.get_notices_for_user(current_user)
+    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
     @notices = notices_hash[:notices]
     @notice_display_type = notices_hash[:notice_display_type]
     
@@ -107,7 +107,7 @@ class HomeController < ApplicationController
     @offerings_count = 0
     @student_count = 0
     
-    portal_teacher = current_user.portal_teacher
+    portal_teacher = current_visitor.portal_teacher
     teacher_clazzes = portal_teacher.clazzes
     portal_teacher_clazzes = portal_teacher.teacher_clazzes
     if (portal_teacher_clazzes.select{|tc| tc.active }).count == 0
@@ -180,7 +180,7 @@ class HomeController < ApplicationController
     @home_page_preview_content = params[:home_page_preview_content]
   end
   
-  def current_user #override to preview home page content
+  def current_visitor #override to preview home page content
       if defined? @preview_home_page_content
         @anonymous_user = User.find_by_login('anonymous')
         @anonymous_user

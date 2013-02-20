@@ -50,9 +50,9 @@
         .right_content
           .padded_content_right
             Welcome
-            = "#{current_user.name}."
-            - unless current_user.anonymous?
-              = link_to 'Preferences', preferences_user_path(current_user)
+            = "#{current_visitor.name}."
+            - unless current_visitor.anonymous?
+              = link_to 'Preferences', preferences_user_path(current_visitor)
               \/
               = link_to 'Logout', logout_path
             - else
@@ -61,7 +61,7 @@
               = link_to 'Sign Up', pick_signup_path
             - if @original_user.has_role?('admin', 'manager')
               \/
-              = link_to 'Switch', switch_user_path(current_user)
+              = link_to 'Switch', switch_user_path(current_visitor)
 
       #nav_top
         %span.hidden.doNotPrint
@@ -74,12 +74,12 @@
           %li.trail= link_to 'About', about_path
           %li.trail=link_to(TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize.pluralize, pages_path)
           %li.trail=link_to('New Page', new_page_path)
-          - if current_user.has_role?('researcher')
+          - if current_visitor.has_role?('researcher')
             %li.trail=link_to('GSEs', ri_gse_grade_span_expectations_path)
             
           %ul.menu_h_right
 
-            - if current_user.has_role?('admin')
+            - if current_visitor.has_role?('admin')
               %li.trail= link_to 'Districts', portal_districts_path
               %li.trail= link_to 'Schools', portal_schools_path
               %li.trail= link_to 'Users', users_path
@@ -89,9 +89,9 @@
         #left_nav.nav_menu
           - if @portal_school
             = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
-          - elsif @portal_teacher && (@portal_teacher.user == current_user)
+          - elsif @portal_teacher && (@portal_teacher.user == current_visitor)
             = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}  
-          - elsif @portal_student && (@portal_student.user == current_user)
+          - elsif @portal_student && (@portal_student.user == current_visitor)
             = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
           = content_for :side_bar
 
@@ -113,11 +113,11 @@
             = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "RITES question", :encode => "javascript")
           #footer_right
       #under_footer
-        - if current_user.has_role?('admin')
+        - if current_visitor.has_role?('admin')
           = display_system_info
           
       / once somebody is logged in,they should open outside the iframe.
-      - unless current_user.anonymous?
+      - unless current_visitor.anonymous?
         :javascript 
           document.observe("dom:loaded", function() {
             // if we are in an iframe, pop-out.

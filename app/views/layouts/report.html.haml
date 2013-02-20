@@ -48,6 +48,6 @@
         = content_for :layout
       = render :partial => 'shared/footer'
       #under_footer
-        - if current_user.has_role?('admin')
+        - if current_visitor.has_role?('admin')
           = display_system_info
 

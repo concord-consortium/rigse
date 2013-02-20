@@ -238,7 +238,7 @@ Then /^(?:|I )should be on (.+)$/ do |page_name|
       expected_path = path_to(page_name)
       break
     rescue
-      throw if time == 2
+      raise if time == 2
       sleep(0.05)
       next
     end

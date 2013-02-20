@@ -6,9 +6,9 @@
     %li= print_link_for(@investigation)
     %li= print_link_for(@investigation, {:teacher_mode => true}) 
     %li= toggle_all('activities')
-    - if (investigation.duplicateable?(current_user))
+    - if (investigation.duplicateable?(current_visitor))
       %li= duplicate_link_for(@investigation)
-    - if (investigation.changeable?(current_user))
+    - if (investigation.changeable?(current_visitor))
       %li= edit_link_for(@investigation)
     
       %li#paste_link= paste_link_for(['activity'],{:container_id => @container_id}) # see pages_helper.rb
@@ -25,7 +25,7 @@
     .action_menu_header_right
       = render :partial => "shared/notes_menu", :locals => {:authorable => investigation}
       = dropdown_button "actions.png", :title => "actions for this investigation"
-      - if (investigation.changeable?(current_user))
+      - if (investigation.changeable?(current_visitor))
         = dropdown_button "add.png"
         = delete_button_for(investigation)
       - else

@@ -11,5 +11,5 @@
   #attachments
     = render :partial => @resource_page.attached_files
       
-- if logged_in? && @resource_page.changeable?(current_user)
+- if logged_in? && @resource_page.changeable?(current_visitor)
   %p= link_to 'Edit this page', edit_resource_page_path(@resource_page)

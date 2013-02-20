@@ -102,7 +102,7 @@ You can also defer the theme lookup to a controller method:
       # If you let the user choose their own theme, you might
       # add a User#theme field...
 
-      current_user.theme
+      current_visitor.theme
     end
 
     ...

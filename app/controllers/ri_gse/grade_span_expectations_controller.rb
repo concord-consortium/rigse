@@ -19,7 +19,7 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
       format.html do
         @search_string = params[:search]
         if params[:mine_only]
-          @grade_span_expectations = RiGse::GradeSpanExpectation.search(params[:search], params[:page], self.current_user, [{:expectations => [:expectation_indicators, :expectation_stem]}])
+          @grade_span_expectations = RiGse::GradeSpanExpectation.search(params[:search], params[:page], self.current_visitor, [{:expectations => [:expectation_indicators, :expectation_stem]}])
         else
           @grade_span_expectations = RiGse::GradeSpanExpectation.search(params[:search], params[:page], nil)
         end

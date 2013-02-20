@@ -17,5 +17,5 @@
   .action_menu_header_left
     Static area
   .action_menu_header_right
-    - if (page.changeable?(current_user))
+    - if (page.changeable?(current_visitor))
       = dropdown_button "add.png", :content_id=>dom_id_for(page, :add_menu),:name=> dom_id_for(page, :add_menu), :title => 'Add content for the static page'

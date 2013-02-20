@@ -9,7 +9,7 @@ module RestrictedBundleController
       before_filter :admin_only, :except => [:new, :create]
     protected 
       def admin_only 
-        unless (current_user != nil && current_user.has_role?('admin')) || request.format == :bundle
+        unless (current_visitor != nil && current_visitor.has_role?('admin')) || request.format == :bundle
           flash[:notice] = "Please log in as an administrator" 
           redirect_to(:home)
         end

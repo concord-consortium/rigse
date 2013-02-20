@@ -20,14 +20,14 @@ class ExternalSessionsController < ApplicationController
   def password_authentication
     user = User.authenticate(params[:login], params[:password])
     if user
-      self.current_user = user
-      session[:original_user_id] = current_user.id
+      self.current_visitor = user
+      session[:original_user_id] = current_visitor.id
       successful_login
     else
       note_failed_signin
       @login = params[:login]
       @remember_me = params[:remember_me]
-      self.current_user = User.anonymous
+      self.current_visitor = User.anonymous
       render :action => :new
     end
   end
