@@ -1,55 +1,46 @@
-!!! Strict
-%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
-  %head
-    %title Maintenance
-    %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
-    %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
-    %meta{ :name => "distribution", :content => "all" }
-    %meta{ :name => "robots", :content => "all" }
-    %meta{ :name => "resource-type", :content => "document" }
-    %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
-  %style{:type => "text/css", :media => "screen"}
-    :sass
-      body
-        :padding 0px
-        :background
-          :image url(/images/rites-bg.jpg) 
-          :repeat repeat
-        :margin 10px 
-          :bottom 0px
-      #centered
-        :margin-left auto
-        :margin-right auto
-        :padding 1em
-        :width 800px
-        :height 400px
-        :display block
-        :background-color white
-        :font-family helvetica, arial, sans-serif
-        :color brown
-      .big
-        :font-size 2em
-        :font-weight bold
-      a
-        :color brown
-      img
-        :float left
-        :border none
-  %body
-    #centered
-      %p.big
-        As of #{Time.now.strftime("%b %d,  %I:%M%p (%Z)")} 
-        %br
-        the RITES Investigation server 
-        is down #{reason ? reason : "for maintenance" }
-        
-      %p
-        #{message ? message : "" }
-      %p
-        Sorry for the inconvenience. We'll be back  #{back_up ? "by #{back_up}" : "shortly"}
-      %p
-        Please 
-        %a{:href => "mailto:rites-help@concord.org"}
-          email us 
-        if you need to get in touch
+!!!
+%head
+  %meta{:charset => "utf-8"}/
+  %title
+    Undergoing Maintenance
+  :css
+    /**/
+      body{
+        background:#fee9aa;
+        color:#3a878b;
+        font:100% 'lucida grande', 'trebuchet ms', arial, sans-serif;
+        line-height:150%;
+      }
+      #container{
+        background:url(maintenance/bubble.png) no-repeat;
+        height:395px;
+        left:50%;
+        margin:-187px 0 0 -300px;
+        position:absolute;
+        top:50%;
+        width:600px;
+      }
+      #container p{
+        margin:100px 70px 0 100px;
+      }
+      #cc-link {
+        display:block;
+        margin:55px 80px 0 0;
+        text-align:right;
+      }
+      #cc-link img {border:none;height:38px;width:125px;}
+    /**/
+    %body
+  #container
+    %p
+      As of #{Time.now.strftime("%b %d,  %I:%M%p (%Z)")}
+      This site undergoing maintenance. Sorry for the inconvenience.
+      We'll be back  #{back_up ? "by #{back_up}" : "shortly"}
+      %br/
+      Please
+      %a{:href => "mailto:rites-help@concord.org"}
+        email us
+      if you need to get in touch.
 
+    %a#cc-link{:href => "http://concord.org/", :title => "The Concord Consortium"}
+      %img{:alt => "The Concord Consortium", :src => "maintenance/cc-logo.png", :title => "The Concord Consortium"}/
