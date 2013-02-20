@@ -2,7 +2,7 @@
 %head
   %meta{:charset => "utf-8"}/
   %title
-    Undergoing Maintenance
+    #{site_name} Maintenance
   :css
     /**/
       body{
@@ -21,25 +21,27 @@
         width:600px;
       }
       #container p{
-        margin:100px 70px 0 100px;
+        margin:30px 70px 0 100px;
       }
       #cc-link {
         display:block;
         margin:55px 80px 0 0;
         text-align:right;
       }
+      a {
+        color:#eb8723;
+      }
     /**/
     %body
   #container
     %p
       As of #{Time.now.strftime("%b %d,  %I:%M%p (%Z)")}
-      This site undergoing maintenance. Sorry for the inconvenience.
-      We'll be back  #{back_up ? "by #{back_up}" : "shortly"} .
+      #{site_name} is undergoing maintenance. Sorry for the inconvenience.
+      We'll be back  #{back_up} .
     %p
       Please
       %a{:href => "mailto:rites-help@concord.org"}
         email us
       if you need to get in touch.
-
-    %a#cc-link{:href => "http://concord.org/", :title => "The Concord Consortium"}
-      The Concord Consortium
+    %p
+      #{message}
