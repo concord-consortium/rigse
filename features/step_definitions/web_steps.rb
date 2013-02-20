@@ -233,12 +233,12 @@ Then /^(?:|I )should be on (.+)$/ do |page_name|
   # since there is only a single DB connection this can result in 2 threads trying to use the same connection at once
   # so to work around this, we just try multple times if there is an error
   expected_path = nil
-  3.times { |time|
+  10.times { |time|
     begin
       expected_path = path_to(page_name)
       break
     rescue
-      raise if time == 2
+      raise if time == 9
       sleep(0.05)
       next
     end
