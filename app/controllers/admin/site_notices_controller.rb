@@ -38,7 +38,7 @@ class Admin::SiteNoticesController < ApplicationController
     @notice_role_ids.map!{|a| a.to_i }
     
     if error
-      flash[:error] = error.html_safe
+      flash.now[:error] = error.html_safe
       respond_to do |format|
         format.html { render :action => "new" }
       end
