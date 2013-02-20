@@ -1,6 +1,6 @@
 Given /^I am not logged in$/ do
   # pending # express the regexp above with the code you wish you had
-  # controller.current_user = User.anonymous
+  # controller.current_visitor = User.anonymous
 end
 
 When /^I visit the route (.+)$/ do |path|

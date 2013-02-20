@@ -6,7 +6,7 @@
       %div.action_menu_header_right   
         %ul.menu
           /%li= run_link_for(activity)
-          - if (activity.changeable?(current_user))
+          - if (activity.changeable?(current_visitor))
             /%li= link_to 'duplicate', duplicate_activity_url(activity)
             / %li= link_to 'edit', activity
             / %li.menu=toggle_more activity

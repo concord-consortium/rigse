@@ -11,7 +11,7 @@ class ResourcePagesController < ApplicationController
 
     @resource_pages = ResourcePage.search_list({
       :name => @name,
-      :user => current_user,
+      :user => current_visitor,
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts,
       :sort_order => @sort_order,
@@ -28,7 +28,7 @@ class ResourcePagesController < ApplicationController
   def printable_index
     @resource_pages = ResourcePage.search_list({
       :name => param_find(:name),
-      :user => current_user,
+      :user => current_visitor,
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => param_find(:include_drafts, true),
       :sort_order => param_find(:sort_order, true),
@@ -39,13 +39,13 @@ class ResourcePagesController < ApplicationController
   end
 
   def show
-    if current_user.has_role? 'admin'
+    if current_visitor.has_role? 'admin'
       @resource_page = ResourcePage.find(params[:id])
     else
-      @resource_page = ResourcePage.visible_to_user_with_drafts(current_user).find(params[:id])
+      @resource_page = ResourcePage.visible_to_user_with_drafts(current_visitor).find(params[:id])
       # If this is a student, increment the counter on StudentViews
-      if current_user.portal_student
-        @student_view = StudentView.find_or_create_by_user_id_and_viewable_id_and_viewable_type(current_user.id,
+      if current_visitor.portal_student
+        @student_view = StudentView.find_or_create_by_user_id_and_viewable_id_and_viewable_type(current_visitor.id,
                                                                                                 @resource_page.id,
                                                                                                 @resource_page.class.name)
         @student_view.increment(:count)
@@ -55,11 +55,11 @@ class ResourcePagesController < ApplicationController
   end
 
   def new
-    @resource_page = current_user.resource_pages.new
+    @resource_page = current_visitor.resource_pages.new
   end
 
   def create
-    @resource_page = current_user.resource_pages.new(params[:resource_page])
+    @resource_page = current_visitor.resource_pages.new(params[:resource_page])
 
     if params[:update_cohorts]
       # set the cohort tags
@@ -101,14 +101,14 @@ class ResourcePagesController < ApplicationController
 protected
 
   def teacher_required
-    return if logged_in? && (current_user.portal_teacher || current_user.has_role?("admin"))
+    return if logged_in? && (current_visitor.portal_teacher || current_visitor.has_role?("admin"))
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end
 
   def find_resource_page_and_verify_owner
     @resource_page = ResourcePage.find(params[:id])
-    return if @resource_page.changeable?(current_user)
+    return if @resource_page.changeable?(current_visitor)
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end

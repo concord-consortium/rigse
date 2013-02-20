@@ -28,7 +28,7 @@ module RoleRequirementSystem
     # 
     #    require_role "contractor"
     #    require_role "admin", :only => :destroy # don't allow contractors to destroy
-    #    require_role "admin", :only => :update, :unless => "current_user.authorized_for_listing?(params[:id]) "
+    #    require_role "admin", :only => :update, :unless => "current_visitor.authorized_for_listing?(params[:id]) "
     #
     # Valid options
     #
@@ -122,7 +122,7 @@ module RoleRequirementSystem
     end
     
     def check_roles       
-      return access_denied unless self.class.user_authorized_for?(current_user, params, binding)
+      return access_denied unless self.class.user_authorized_for?(current_visitor, params, binding)
       
       true
     end
@@ -140,7 +140,7 @@ module RoleRequirementSystem
       else
         klass = self.class
       end
-      klass.user_authorized_for?(current_user, params, binding)
+      klass.user_authorized_for?(current_visitor, params, binding)
     end
   end
 end

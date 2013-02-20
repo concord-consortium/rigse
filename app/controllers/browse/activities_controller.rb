@@ -10,11 +10,11 @@ class Browse::ActivitiesController < ApplicationController
     @wide_content_layout = true
     
     material = ::Activity.find(params[:id])
-    if material.teacher_only && current_user.anonymous?
+    if material.teacher_only && current_visitor.anonymous?
       flash.now[:important] = 'Please log in as a teacher to see this content.'
     end
     
-    @search_material = Search::SearchMaterial.new(material, current_user)
+    @search_material = Search::SearchMaterial.new(material, current_visitor)
     @search_material.url = url_for(@search_material.url)
     @search_material.parent_material.url = url_for(@search_material.parent_material.url)
     

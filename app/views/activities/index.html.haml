@@ -11,7 +11,7 @@
         = will_paginate @activities
     .action_menu_header_right
       %ul.menu
-        -unless current_user.anonymous?
+        -unless current_visitor.anonymous?
           %li= link_to 'create activity', new_activity_path
         %li= toggle_all 'activity descriptions'
 
@@ -26,10 +26,10 @@
           %div.action_menu_header_right
             %ul.menu
               %li= run_link_for(activity)
-              - unless(current_user.anonymous?)
+              - unless(current_visitor.anonymous?)
                 %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
               %li.menu=link_to 'export (xml)', export_activity_url(activity)
-              - if (activity.changeable?(current_user))
+              - if (activity.changeable?(current_visitor))
                 %li.menu=link_to 'delete', activity, :class => 'delete', :data => { :confirm => "Are you sure you want to delete ivestigation #{activity.id}" }, :method => :delete
         %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
           %p=activity.description

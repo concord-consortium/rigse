@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
   # for cucumber testing only
   def backdoor
     logout_killing_session!
-    self.current_user = User.find_by_login!(params[:username])
+    self.current_visitor = User.find_by_login!(params[:username])
     head :ok
   end
 
@@ -32,14 +32,14 @@ class SessionsController < ApplicationController
   def password_authentication
     user = User.authenticate(params[:login], params[:password])
     if user
-      self.current_user = user
-      session[:original_user_id] = current_user.id
+      self.current_visitor = user
+      session[:original_user_id] = current_visitor.id
       successful_login
     else
       note_failed_signin
       @login = params[:login]
       @remember_me = params[:remember_me]
-      self.current_user = User.anonymous
+      self.current_visitor = User.anonymous
       redirect_to :home
     end
   end
@@ -51,8 +51,8 @@ class SessionsController < ApplicationController
     
     redirect_path = root_path
     
-    if APP_CONFIG[:recent_activity_on_login] && current_user.portal_teacher
-      portal_teacher = current_user.portal_teacher
+    if APP_CONFIG[:recent_activity_on_login] && current_visitor.portal_teacher
+      portal_teacher = current_visitor.portal_teacher
       if (portal_teacher.teacher_clazzes.select{|tc| tc.active }).count > 0
         # Teachers with active classes are redirected to the "Recent Activity" page
         redirect_path = recent_activity_path
@@ -69,8 +69,8 @@ class SessionsController < ApplicationController
   
   # 2011-11-07 NP: moved to ApplicationController 
   # def check_student_security_questions_ok
-  #   if current_project && current_project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
-  #     redirect_to(edit_user_security_questions_path(current_user))
+  #   if current_project && current_project.use_student_security_questions && !current_visitor.portal_student.nil? && current_visitor.security_questions.size < 3
+  #     redirect_to(edit_user_security_questions_path(current_visitor))
   #     return false
   #   end
   #   return true
@@ -79,12 +79,12 @@ class SessionsController < ApplicationController
   protected
   # authenticated system does this by default: 
   #def logged_in?
-  #  !!current_user
+  #  !!current_visitor
   #end
   #
-  # but out current_user will be 'anonymous'
-  # because we always have a current_user
+  # but out current_visitor will be 'anonymous'
+  # because we always have a current_visitor
   def logged_in?
-    return (!(current_user.nil? || current_user == User.anonymous))
+    return (!(current_visitor.nil? || current_visitor == User.anonymous))
   end
 end

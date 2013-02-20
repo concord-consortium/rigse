@@ -1,12 +1,12 @@
 = field_set_tag "#{Investigation.display_name.pluralize} you've authored" do
   %ul
-    - current_user.investigations.each do |inv|
+    - current_visitor.investigations.each do |inv|
       %li
         = link_to_container(inv)
 
-- unless current_user.resource_pages.blank?
+- unless current_visitor.resource_pages.blank?
   = field_set_tag "#{ResourcePage.display_name.pluralize} you've authored" do
     %ul
-      - current_user.resource_pages.each do |resource_page|
+      - current_visitor.resource_pages.each do |resource_page|
         %li
           = link_to resource_page.display_name, resource_page

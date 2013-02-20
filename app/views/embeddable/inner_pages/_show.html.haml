@@ -8,7 +8,7 @@
       .action_menu_header_left
         = inner_page.menu_name
       .action_menu_header_right
-        - if (inner_page.changeable?(current_user))
+        - if (inner_page.changeable?(current_visitor))
           = remote_link_button "add.png", :url => add_page_embeddable_inner_page_path(inner_page, :id=>inner_page.id), :title => "add new page", :xxxupdate => dom_id_for(inner_page, :inner_page_area), :position => "bottom"
 
     - inner_page_area_id = dom_id_for(inner_page, :inner_page_area)
@@ -22,6 +22,6 @@
           %li.menu.page.item.container_element{:id => dom_id_for(sub_page, :container)}
             = render :partial => 'embeddable/inner_pages/page', :locals => locals
          
-    - if (inner_page.changeable?(current_user))
+    - if (inner_page.changeable?(current_visitor))
       = sortable_element inner_page_area_id, :url=> {:controller =>'embeddable/inner_pages', :action => 'sort_pages', :id => inner_page.id, :list_name => inner_page_area_id}, :scroll => "window", :constraint => :vertical
 

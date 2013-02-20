@@ -1,7 +1,7 @@
 class MiscController < ActionController::Base
   # This controller is intended for things that don't need all of the
   # complex setup that happens in ApplicationController. If you have
-  # actions that don't need things like authentication, current_user,
+  # actions that don't need things like authentication, current_visitor,
   # etc. then you can place them here and they will execute more
   # quickly.
   # Also notably, nothing in the chain before this accesses session[],

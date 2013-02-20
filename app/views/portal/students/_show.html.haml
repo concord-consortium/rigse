@@ -1,7 +1,7 @@
 - content_for :lightboxes do
   = render :partial => 'shared/lightbox_report'
   = render :partial => 'shared/workgroup'
-- unless current_user.anonymous? 
+- unless current_visitor.anonymous? 
   %h3 Classes and Offerings:
   = render :partial => 'portal/clazzes/list_for_student', :locals => { :portal_student => portal_student }
 

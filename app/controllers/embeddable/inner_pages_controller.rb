@@ -13,7 +13,7 @@ class Embeddable::InnerPagesController < ApplicationController
   def add_page
     @inner_page = Embeddable::InnerPage.find(params['id'])
     @new_page = Page.create
-    @new_page.user = current_user
+    @new_page.user = current_visitor
     @inner_page << @new_page
     # render add_page.js.rjs
     # render :partial => "page", :locals => {:page => @new_page, :inner_page => @inner_page}
@@ -76,10 +76,10 @@ class Embeddable::InnerPagesController < ApplicationController
       @component = component_class.create
     end
     @component.pages << @page
-    @component.user = current_user
+    @component.user = current_visitor
     @component.save
     @element = @page.element_for(@component)
-    @element.user = current_user
+    @element.user = current_visitor
     @element.save
     # @element.update_investigation_timestamp
     @page.reload
@@ -118,7 +118,7 @@ class Embeddable::InnerPagesController < ApplicationController
   # GET /Embeddable/inner_pages/new.xml
   def new
     @inner_page = Embeddable::InnerPage.new
-    @inner_page.user = current_user
+    @inner_page.user = current_visitor
     if request.xhr?
       render :partial => 'remote_form', :locals => { :inner_page => @inner_page }
     else

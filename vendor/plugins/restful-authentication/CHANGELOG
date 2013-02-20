@@ -20,7 +20,7 @@ h3. Changes to session_controller
 * avoid calling logged_in? which will auto-log-you-in (safe in the face of
   logout! call, but idiot-proof)
 * Moved reset_session into only the "now logged in" branch
-** wherever it goes, it has to be in front of the current_user= call
+** wherever it goes, it has to be in front of the current_visitor= call
 ** See more in README-Tradeoffs.txt
 * made a place to take action on failed login attempt
 * recycle login and remember_me setting on failed login
@@ -31,7 +31,7 @@ h3. Changes to users_controller
 * use uniform logout function
 * use uniform remember_cookie functions
 * Moved reset_session into only the "now logged in" branch
-** wherever it goes, it has to be in front of the current_user= call
+** wherever it goes, it has to be in front of the current_visitor= call
 ** See more in README-Tradeoffs.txt
 * made the implicit login only happen for non-activationed sites
 * On a failed signup, kick you back to the signin screen (but strip out the password & confirmation)

@@ -40,5 +40,5 @@
       - with_format(:html) do
         = render :partial => 'shared/footer'
         #under_footer
-          - if current_user.has_role?('admin')
+          - if current_visitor.has_role?('admin')
             = display_system_info.html_safe

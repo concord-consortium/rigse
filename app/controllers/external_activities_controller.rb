@@ -13,7 +13,7 @@ class ExternalActivitiesController < ApplicationController
   protected  
 
   def can_create
-    if (current_user.anonymous?)
+    if (current_visitor.anonymous?)
       flash[:error] = "Anonymous users can not create external external_activities"
       redirect_back_or external_activities_path
     end
@@ -25,8 +25,8 @@ class ExternalActivitiesController < ApplicationController
 
   def can_edit
     if defined? @external_activity
-      unless @external_activity.changeable?(current_user)
-        error_message = "you (#{current_user.login}) can not #{action_name.humanize} #{@external_activity.name}"
+      unless @external_activity.changeable?(current_visitor)
+        error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@external_activity.name}"
         flash[:error] = error_message
         if request.xhr?
           render :text => "<div class='flash_error'>#{error_message}</div>"
@@ -68,12 +68,12 @@ class ExternalActivitiesController < ApplicationController
       :name => @name, 
       :description => @description, 
       :include_drafts => @include_drafts,
-      :user => current_user,
+      :user => current_visitor,
       :paginate => true, 
       :page => pagination
     })
     if params[:mine_only]
-      @external_activities = @external_activities.reject { |i| i.user.id != current_user.id }
+      @external_activities = @external_activities.reject { |i| i.user.id != current_visitor.id }
     end
     @paginated_objects = @external_activities
 
@@ -117,7 +117,7 @@ class ExternalActivitiesController < ApplicationController
   # GET /external_activities/new.xml
   def new
     @external_activity = ExternalActivity.new
-    @external_activity.user = current_user
+    @external_activity.user = current_visitor
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @external_activity }
@@ -136,7 +136,7 @@ class ExternalActivitiesController < ApplicationController
   # POST /pages.xml
   def create
     @external_activity = ExternalActivity.new(params[:external_activity])
-    @external_activity.user = current_user
+    @external_activity.user = current_visitor
 
     if params[:update_cohorts]
       # set the cohort tags
@@ -210,10 +210,10 @@ class ExternalActivitiesController < ApplicationController
     @original = ExternalActivity.find(params['id'])
     @external_activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => [{:teacher_notes => {}}, {:author_notes => {}}]
     @external_activity.name = "copy of #{@external_activity.name}"
-    @external_activity.user = current_user
+    @external_activity.user = current_visitor
     @external_activity.save
 
-    (@external_activity.teacher_notes + @external_activity.author_notes).each {|tn| n.user = current_user; n.save }
+    (@external_activity.teacher_notes + @external_activity.author_notes).each {|tn| n.user = current_visitor; n.save }
 
     flash[:notice] ="Copied #{@original.name}"
     redirect_to url_for(@external_activity)

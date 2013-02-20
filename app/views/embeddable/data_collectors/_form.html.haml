@@ -96,7 +96,7 @@
           = labeled_check_box(f, :ruler_enabled)
         %li
           = labeled_check_box(f, :show_tare)
-    - if current_user.has_role?('admin')
+    - if current_visitor.has_role?('admin')
       = field_set_tag 'otml_root_content' do
         = f.text_area :otml_root_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'
       = field_set_tag 'otml_library_content' do
