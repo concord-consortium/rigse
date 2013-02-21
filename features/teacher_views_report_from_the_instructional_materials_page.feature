@@ -7,10 +7,6 @@ Feature: Teacher views report from the instructional materials page of a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the teachers "teacher" are in a school named "Harvard School"
-    And the following semesters exist:
-      | name     |
-      | Fall     |
-      | Spring   |
     And the following classes exist:
       | name        | teacher | class_word | semester |
       | My Class    | teacher | my_classes | Fall     |
