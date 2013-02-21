@@ -21,6 +21,29 @@ Then /^the teachers "([^"]*)" are in a school named "([^"]*)"$/ do |teachers,sch
   teachers.each {|t| t.schools = [ school ]; t.save!; t.reload}
 end
 
+# Table: | login | password |
+Given /^the following teachers exist:$/ do |users_table|
+  User.anonymous(true)
+  users_table.hashes.each do |hash|
+    begin
+      cohorts = hash.delete("cohort_list")
+      user = Factory(:user, hash)
+      user.add_role("member")
+      user.register
+      user.activate
+      user.save!
+      
+      portal_teacher = Factory(:portal_teacher, { :user => user })
+      portal_teacher.cohort_list = cohorts if cohorts
+      portal_teacher.save!
+      
+    rescue ActiveRecord::RecordInvalid
+      # assume this user is already created...
+    end
+  end
+end
+
+
 Given /^the following teacher and class mapping exists:$/ do |teacher_clazz|
   teacher_clazz.hashes.each do |hash|
     portal_clazz = Portal::Clazz.find_by_name(hash['class_name'])
