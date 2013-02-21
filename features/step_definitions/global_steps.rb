@@ -35,29 +35,6 @@ def scroll_into_view(selector)
   el.native.send_keys(:null) if el.native.class.to_s.split("::").first == "Selenium"
 end
 
-Given /the following users[(?exist):\s]*$/i do |users_table|
-  User.anonymous(true)
-  users_table.hashes.each do |hash|
-    roles = hash.delete('roles')
-    if roles
-      roles = roles ? roles.split(/,\s*/) : nil
-    else
-      roles =  []
-    end
-    begin
-      user = Factory(:user, hash)
-      roles.each do |role|
-        user.add_role(role)
-      end
-      user.register
-      user.activate
-      user.save!
-    rescue ActiveRecord::RecordInvalid
-      # assume this user is already created...
-    end
-  end
-end
-
 Given /^(?:|I )login as an admin$/ do
   step 'I log out'
   step 'When I login with username: admin password: password'

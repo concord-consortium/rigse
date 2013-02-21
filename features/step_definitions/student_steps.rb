@@ -1,25 +1,3 @@
-Given /^the following students exist:$/ do |table|
-  User.anonymous(true)
-  table.hashes.each do |hash|
-    begin
-      clazz = Portal::Clazz.find_by_name(hash.delete('class'))
-      user = Factory(:user, hash)
-      user.add_role("member")
-      user.register
-      user.activate
-      user.save!
-
-      portal_student = Factory(:full_portal_student, { :user => user })
-      portal_student.save!
-      if (clazz)
-        portal_student.add_clazz(clazz)
-      end
-    rescue ActiveRecord::RecordInvalid
-      # assume this user is already created...
-    end
-  end
-end
-
 # And the student "student_a" is in the class "intro to bugs"
 Given /^the student "([^"]*)" is in the class "([^"]*)"$/ do |student_name, class_name|
   student = User.find_by_login(student_name).portal_student

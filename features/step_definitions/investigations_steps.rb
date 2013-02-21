@@ -89,12 +89,6 @@ Given /^the following investigations with multiple choices exist:$/ do |investig
   end
 end
 
-Given /^the following semesters exist:$/ do|semesters_table|
-   semesters_table.hashes.each do |hash|
-     Factory.create(:portal_semester, hash)
-   end
-end
-
 
 Given /^the following classes exist:$/ do |table|
   table.hashes.each do |hash|
