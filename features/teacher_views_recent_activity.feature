@@ -12,10 +12,6 @@ Feature: Teacher can see recent activity
       | albert  | albert   | Albert     | Fernandez |
       | robert  | robert   | Robert     | Fernandez |
     And the teachers "teacher" are in a school named "Harvard School"
-    And the following semesters exist:
-      | name   |
-      | Fall   |
-      | Spring |
     And the following classes exist:
       | name        | teacher | semester |
       | My Class    | teacher | Fall     |
