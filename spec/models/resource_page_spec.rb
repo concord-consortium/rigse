@@ -1,13 +1,6 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe ResourcePage do
-  
-  before(:each) do
-    generate_default_users_with_factories
-      # @anon_user
-      # @admin_user
-  end
-  
   describe "being created" do
     before do
       Paperclip.options[:log] = false
