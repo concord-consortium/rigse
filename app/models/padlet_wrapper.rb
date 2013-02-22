@@ -1,7 +1,8 @@
-class PadletHelper
+class PadletWrapper
 
   PadletBaseUri = 'http://padlet.com'
   DefaultEmail = "all-portal-errors@concord.org"
+
 
   attr_accessor :password
   attr_accessor :username
@@ -32,25 +33,32 @@ class PadletHelper
     self.password = _pass
   end
 
-  def make_data(data)
+  def basic_auth
+    # {:username => "test", :password => "test"}
+  end
+
+  def get_opts(data)
     headers  = {'Content-Type' => 'application/json' }
     unless (self.auth_cookies.blank?)
       headers['cookie'] = self.auth_cookies.join(";")
     end
-    return {
-      :headers =>  headers,
-      :body    =>  data.to_json
-    }
+    opts = {}
+    opts[:headers] = headers
+    opts[:body]    = data.to_json
+    if (self.basic_auth)
+      opts[:basic_auth] = basic_auth
+    end
+    opts
   end
 
   def json_get(path,data)
     endpoint = "#{PadletBaseUri}/#{path}"
-    HTTParty.post(endpoint, self.make_data(data))
+    HTTParty.post(endpoint, self.get_opts(data))
   end
 
   def json_post(path,data)
     endpoint = "#{PadletBaseUri}/#{path}"
-    HTTParty.post(endpoint, self.make_data(data))
+    HTTParty.post(endpoint, self.get_opts(data))
   end
 
   def get_auth_token
