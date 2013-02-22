@@ -1,6 +1,7 @@
 .header-login-box
   %div
-    = form_tag session_path, :id=>"header-project-signin" do
+    /= form_tag session_path, :id=>"header-project-signin" do
+    = form_tag "", :id=>"header-project-signin" do
       %table{:cellpadding=>"0", :cellspacing=>"0", :border=>"0"}
         %tbody
           %tr.first-row
@@ -21,4 +22,8 @@
               =link_to 'Register', pick_signup_path
               %input{:type=>"submit", :id=>"LoginSubmitButtonHeader",:value=>"GO"}
       .clear_both
-        
+  - if current_user
+    %div
+      = link_to 'Logout', destroy_user_session_path
+  - else
+    %div Not Logged In

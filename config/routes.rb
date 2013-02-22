@@ -1,4 +1,9 @@
 RailsPortal::Application.routes.draw do
+  
+  devise_for :users
+
+  root :to => "home#index"
+  
   match "search" => 'search#index', :as => :search
 
   get "search/index"
@@ -277,7 +282,7 @@ constraints :id => /\d+/ do
 
   match '/users/reports/account_report' => 'users#account_report', :as => :users_account_report, :method => :get
   resources :passwords
-  resource :session
+  #resource :session
 
   resources :external_user_domains do
     resources :external_users

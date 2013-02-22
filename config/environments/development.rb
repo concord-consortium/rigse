@@ -28,7 +28,7 @@ RailsPortal::Application.configure do
 
   # Minify/uglify/compress assets from the pipeline
   config.assets.compress = false
-
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   # split apart assets to make debugging easier
   # config.assets.debug = true
 end
