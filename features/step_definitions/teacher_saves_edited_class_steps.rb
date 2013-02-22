@@ -65,9 +65,9 @@ And /^the first investigation in the list should be "(.+)"$/ do |investigation_n
   result = page.execute_script(
                                 "
                                  var bSortSuccess = false;
-                                 var arrListItems = Prototype.Selector.select('ul.quiet_list>li');
+                                 var arrListItems = Prototype.Selector.select('div.offering_for_student>p>span.name');
                                  var firstChild = arrListItems[0];
-                                 var strLinkText = firstChild.innerHTML.stripTags().strip().toLowerCase().replace('run ','')
+                                 var strLinkText = firstChild.innerHTML.stripTags().strip().toLowerCase()
                                  if(strLinkText == \"#{investigation_name}\".toLowerCase())
                                  {
                                     bSortSuccess = true;

@@ -13,7 +13,7 @@
               #{portal_clazz.students.length}    
       .action_menu_header_right
         = link_to "Print", class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
-    - if portal_clazz.changeable?(current_user)
+    - if portal_clazz.changeable?(current_visitor)
       %br
       = student_add_dropdown(portal_clazz)
       %br

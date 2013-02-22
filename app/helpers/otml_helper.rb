@@ -143,7 +143,6 @@ module OtmlHelper
     [
       ['text_edit_view', 'org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditView'],
       ['question_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
-      ['choice_radio_button_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceRadioButtonView'],
       ['data_drawing_tool2_view', 'org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
       ['blob_image_view', 'org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView'],
       ['data_collector_view', 'org.concord.datagraph.state.OTDataCollector', 'org.concord.datagraph.state.OTDataCollectorView'],
@@ -190,7 +189,7 @@ module OtmlHelper
     [
       ['text_edit_edit_view', 'org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditEditView'],
       ['question_edit_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionEditView'],
-      ['choice_radio_button_edit_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView'],
+#      ['choice_radio_button_edit_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView'],
       ['lab_book_button_view', 'org.concord.otrunk.labbook.OTLabbookButton', 'org.concord.otrunk.labbook.ui.OTLabbookButtonEditView'],
 #      ['data_drawing_tool2_view', 'org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
 #      ['blob_image_view', 'org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView'],
@@ -262,7 +261,7 @@ module OtmlHelper
   end
 
   def ot_interface_manager(use_current_user = false)
-    # Now that we're using the HttpCookieService, current_user.vendor_interface 
+    # Now that we're using the HttpCookieService, current_visitor.vendor_interface 
     # should be correct, even when requesting from the java client
     vendor_interface = nil
     # allow switching between using the current user and not. This way 
@@ -270,7 +269,7 @@ module OtmlHelper
     # otml can use the current user's device.
     # debugger
     if use_current_user
-      vendor_interface = current_user.vendor_interface
+      vendor_interface = current_visitor.vendor_interface
     else
       vendor_interface = Probe::VendorInterface.find_by_short_name("vernier_goio")
     end
@@ -293,7 +292,14 @@ module OtmlHelper
         haml_concat ot_interface_manager
         haml_concat ot_script_engine_bundle
         use_bitmap = Admin::Project.default_project.use_bitmap_snapshots? ? 'false' : 'true'
-        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle', :scaleDrawTools => use_bitmap }
+        button_label = "Save and Close"
+        haml_tag(
+          :OTLabbookBundle, {
+            :local_id         => 'lab_book_bundle',
+            :scaleDrawTools   => use_bitmap,
+            :closeButtonLabel => button_label
+          }
+        )
       end
     end
   end

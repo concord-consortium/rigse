@@ -19,7 +19,7 @@ class Portal::LearnersController < ApplicationController
       # this will only work once for this token
       if jnlp_user = Dataservice::JnlpSession.get_user_from_token(params[:jnlp_session])
         # store this user in the rails session so future request use this user
-        self.current_user = jnlp_user
+        self.current_visitor = jnlp_user
       else
         # no valid jnlp_session could be found for this token
         render :partial => 'shared/sail',
@@ -32,9 +32,9 @@ class Portal::LearnersController < ApplicationController
   end
 
   def authorize_show
-    authorized_user = (Portal::Learner.find(params[:id]).student.user == current_user) ||
-        current_clazz.is_teacher?(current_user) ||
-        current_user.has_role?('admin')
+    authorized_user = (Portal::Learner.find(params[:id]).student.user == current_visitor) ||
+        current_clazz.is_teacher?(current_visitor) ||
+        current_visitor.has_role?('admin')
     if !authorized_user
       if request.format.config?
         raise "unauthorized config request"
@@ -134,7 +134,7 @@ class Portal::LearnersController < ApplicationController
         # if this isn't the learner then it is launched read only
         properties = {}
         bundle_get_url = dataservice_bundle_logger_url(@portal_learner.bundle_logger, :format => :bundle)
-        if @portal_learner.student.user == current_user
+        if @portal_learner.student.user == current_visitor
           if @portal_learner.bundle_logger.in_progress_bundle
             launch_event = Dataservice::LaunchProcessEvent.create(
               :event_type => Dataservice::LaunchProcessEvent::TYPES[:config_requested],

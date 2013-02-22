@@ -44,13 +44,13 @@
           - when Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS']
             - clazz_url = [:fullstatus, clazz]
           - else
-            - if current_user.portal_teacher
+            - if current_visitor.portal_teacher
               - clazz_url = [:materials, clazz]
             - else
               - clazz_url = [clazz]
           - clazz_url = url_for(clazz_url)
       - else
-        - if current_user.portal_teacher
+        - if current_visitor.portal_teacher
           - clazz_url = [:materials, clazz]
         - else
           - clazz_url = [clazz]

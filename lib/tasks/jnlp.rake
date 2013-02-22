@@ -10,16 +10,16 @@ namespace :app do
         HighLine.new.agree(prompt)
       end
     end
-    
+
     desc "delete and re-generate MavenJnlp resources from jnlp servers in settings.yml"
     task :delete_and_regenerate_maven_jnlp_resources => [:delete_maven_jnlp_resources, :generate_maven_jnlp_resources] do
     end
-    
+
     desc "generate names for existing MavenJnlpServers that don't have them"
     task :generate_names_for_maven_jnlp_servers => :environment do
        MavenJnlp::MavenJnlpServer.generate_names_for_maven_jnlp_servers
     end
-    
+
     desc "generate MavenJnlp resources from jnlp servers in settings.yml"
     task :generate_maven_jnlp_resources, [:interactive] => [:environment, :empty_jnlp_object_cache, :generate_names_for_maven_jnlp_servers] do |t, args|
       puts <<-HEREDOC
@@ -27,7 +27,7 @@ namespace :app do
 Generate MavenJnlp family of resources from jnlp servers in settings.yml.
 
   Example from file: config/settings.yml:
-  
+
     default_maven_jnlp_server: concord
     default_maven_jnlp_family: all-otrunk-snapshot
     maven_jnlp_families:
@@ -63,7 +63,7 @@ delete all the family names assigned to: maven_jnlp_families.
           mj_server = MavenJnlp::MavenJnlpServer.create!(server)
         end
       end
-      
+
       servers = MavenJnlp::MavenJnlpServer.find(:all)
       servers.each do |mj_server|
 
@@ -88,7 +88,7 @@ Generating: #{families} MavenJnlp families from this jnlp server specification:
     task :empty_jnlp_object_cache  => :environment do
       MavenJnlp::MavenJnlpServer.delete_all_cached_maven_jnlp_resources
     end
-    
+
     desc "delete all the MavenJnlp resources"
     task :delete_maven_jnlp_resources => [:environment, :empty_jnlp_object_cache] do
       puts <<-HEREDOC
@@ -105,10 +105,10 @@ This will delete all the data in the following tables:
 
       HEREDOC
       if wrapped_agree("Do you want to do this?  (y/n)" )
-        
+
         MavenJnlp::MavenJnlpServer.delete_all_cached_maven_jnlp_resources
-                
-        # The TRUNCATE cammand works in mysql to effectively empty the database and reset 
+
+        # The TRUNCATE cammand works in mysql to effectively empty the database and reset
         # the autogenerating primary key index ... not certain about other databases
         puts
 
@@ -134,9 +134,14 @@ This will delete all the data in the following tables:
         puts "deleted: #{deleted_properties_versioned_jnlps} from habtm join table: properties_versioned_jnlps"
         deleted_native_libraries_versioned_jnlps = ActiveRecord::Base.connection.delete("DELETE FROM `native_libraries_versioned_jnlps`")
         puts "deleted: #{deleted_native_libraries_versioned_jnlps} from habtm join table: native_libraries_versioned_jnlps"
-        
+
         puts
       end
+    end
+
+    desc "Bump the JNLP version to the current latest snaphot"
+    task :bump_snapshot_to_latest  => :environment do
+      JnlpAdaptor.update_snapshot_version
     end
   end
 end

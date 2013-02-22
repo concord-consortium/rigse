@@ -11,7 +11,7 @@ class Browse::InvestigationsController < ApplicationController
     
     material = ::Investigation.find(params[:id])
     
-    @search_material = Search::SearchMaterial.new(material, current_user)
+    @search_material = Search::SearchMaterial.new(material, current_visitor)
     @search_material.url = url_for(@search_material.url)
     @search_material.parent_material.url = url_for(@search_material.parent_material.url)
     

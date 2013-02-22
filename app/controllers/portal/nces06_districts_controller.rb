@@ -6,16 +6,16 @@ class Portal::Nces06DistrictsController < ApplicationController
   protected
 
   def admin_only
-    unless current_user.has_role?('admin')
+    unless current_visitor.has_role?('admin')
       flash[:notice] = "Please log in as an administrator" 
       redirect_to(:home)
     end
   end
   
   def admin_or_manager
-    if current_user.has_role?('admin')
+    if current_visitor.has_role?('admin')
       @admin_role = true
-    elsif current_user.has_role?('manager')
+    elsif current_visitor.has_role?('manager')
       @manager_role = true
     else
       flash[:notice] = "Please log in as an administrator or manager" 

@@ -31,15 +31,22 @@ end
 #  Maintenance mode
 #############################################################
 task :disable_web, :roles => :web do
-  on_rollback { delete "#{shared_path}/system/maintenance.html" }
+  on_rollback { delete "#{shared_path}/system/maintenance.html"    }
+
+  site_name = ask("site name? ") { |q| q.default = "RITES"         }
+  back_up   = ask("back up?   ") { |q| q.default = "in 12 minutes" }
+  message   = ask("message?   ") { |q| q.default = ""              }
 
   maintenance = render("./app/views/layouts/maintenance.haml",
                        {
-                         :back_up => ENV['BACKUP'],
-                         :reason => ENV['REASON'],
-                         :message => ENV['MESSAGE']
+                         :back_up   => back_up,
+                         :message   => message,
+                         :site_name => site_name
                        })
 
+  # File.open(File.expand_path("~/Desktop/index.html"),"w") do |f|
+  #   f.write(maintenance)
+  # end
   run "mkdir -p #{shared_path}/system/"
   put maintenance, "#{shared_path}/system/maintenance.html",
                    :mode => 0644
@@ -212,6 +219,7 @@ namespace :deploy do
       mkdir -p #{shared_path} &&
       mkdir -p #{shared_path}/config &&
       mkdir -p #{shared_path}/log &&
+      mkdir -p #{shared_path}/pids &&
       mkdir -p #{shared_path}/sis_import_data &&
       mkdir -p #{shared_path}/config/nces_data &&
       mkdir -p #{shared_path}/public/otrunk-examples &&
@@ -279,7 +287,7 @@ namespace :deploy do
     # sudo "chmod -R g+rw #{shared_path}/system/attachments"
   end
 
-  # asset compilation included in Capfile load 'deploy/assets' 
+  # asset compilation included in Capfile load 'deploy/assets'
   # desc "Create asset packages for production"
   # task :create_asset_packages, :roles => :app do
   #   # run "cd #{deploy_to}/current && bundle exec compass compile --sass-dir public/stylesheets/scss/ --css-dir public/stylesheets/ -s compact --force"
@@ -597,18 +605,19 @@ namespace :convert do
   task :change_git_origin_url_to_concord_consortium, :roles => :app do
     run("cd #{shared_path}/cached-copy; git remote set-url origin git://github.com/concord-consortium/rigse.git")
   end
+
 end
 
 #
 # generake (hehe) cap task to run rake tasks.
 # found here: http://stackoverflow.com/questions/312214/how-do-i-run-a-rake-task-from-capistrano
-namespace :rake_tasks do  
+namespace :rake_tasks do
   desc "Run a rake task: cap staging rake:invoke task=a_certain_task"
-  # run like: cap staging rake:invoke task=a_certain_task  
-  task :invoke do  
+  # run like: cap staging rake:invoke task=a_certain_task
+  task :invoke do
     run("cd #{deploy_to}/current; bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}")
- rake #{ENV['task']} RAILS_ENV=#{rails_env}")  
-  end  
+ rake #{ENV['task']} RAILS_ENV=#{rails_env}")
+  end
 end
 
 #############################################################
@@ -653,17 +662,25 @@ end
 
 namespace 'account_data' do
   desc 'upload_csv_for_district: copy the local csv import files to remote for district (set district=whatever)'
-    task 'upload_csv_for_district' do
-      district = ENV['district']
-      if district
-        domain = ENV['domain'] || 'rinet_sakai'
-        district_root = File.join('sis_import_data','districts',domain, 'csv')
-        from_dir = File.join('sis_import_data','districts',domain, 'csv',district)
-        to_dir   = File.join(deploy_to,current_dir,'sis_import_data','districts',domain, 'csv')
-        upload(from_dir, to_dir, :via => :scp, :recursive => true)
-      end
+  task 'upload_csv_for_district' do
+    district = ENV['district']
+    if district
+      domain = ENV['domain'] || 'rinet_sakai'
+      district_root = File.join('sis_import_data','districts',domain, 'csv')
+      from_dir = File.join('sis_import_data','districts',domain, 'csv',district)
+      to_dir   = File.join(deploy_to,current_dir,'sis_import_data','districts',domain, 'csv')
+      upload(from_dir, to_dir, :via => :scp, :recursive => true)
     end
   end
+end
+
+namespace 'jnlp' do
+  desc "Bump the JNLP version to the current latest snaphot"
+  task :bump_snapshot_to_latest , :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "RAILS_ENV=#{rails_env} bundle exec rake app:jnlp:bump_snapshot_to_latest --trace"
+  end
+end
 
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
@@ -672,6 +689,7 @@ after 'deploy:update_code', 'deploy:shared_symlinks'
 # after 'deploy:create_symlink', 'deploy:create_asset_packages'
 after 'deploy:shared_symlinks', 'deploy:cleanup'
 after 'installer:create', 'deploy:restart'
+after 'convert:bump_jnlp_to_latest_snapshot', 'deploy:restart'
 
 # start the delayed_job worker
 # use a prefix incase multiple apps are deployed to the same server

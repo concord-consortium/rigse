@@ -102,7 +102,7 @@ describe ResourcePage do
 
   # @resource_pages = ResourcePage.search_list({
   #   :name => @name,
-  #   :user => current_user,
+  #   :user => current_visitor,
   #   :portal_clazz_id => @portal_clazz_id,
   #   :include_drafts => @include_drafts,
   #   :sort_order => @sort_order,

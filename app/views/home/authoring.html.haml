@@ -4,22 +4,22 @@
 %h4= link_to "#{Investigation.display_name.pluralize}", investigations_path
 = field_set_tag "#{Investigation.display_name.pluralize} you've authored" do
   %ul
-    - current_user.investigations.each do |inv|
+    - current_visitor.investigations.each do |inv|
       %li
         = link_to_container(inv)
 
-- if current_user.has_role?('admin') || current_user.resource_pages.present?
+- if current_visitor.has_role?('admin') || current_visitor.resource_pages.present?
   %h4= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
   = field_set_tag "#{ResourcePage.display_name.pluralize} you've authored" do
     %ul
-      - current_user.resource_pages.each do |resource_page|
+      - current_visitor.resource_pages.each do |resource_page|
         %li
           = link_to resource_page.display_name, resource_page
 
-- if current_user.has_role?('admin') || current_user.external_activities.present?
+- if current_visitor.has_role?('admin') || current_visitor.external_activities.present?
   %h4= link_to "#{ExternalActivity.display_name.pluralize}", external_activities_path
   = field_set_tag "#{ExternalActivity.display_name.pluralize} you've authored" do
     %ul
-      - current_user.external_activities.each do |item|
+      - current_visitor.external_activities.each do |item|
         %li
           = link_to item.name, item

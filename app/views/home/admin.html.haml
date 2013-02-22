@@ -2,9 +2,9 @@
   Administration and Reports
 
 %ul
-  - if current_user.has_role?('admin', 'manager','researcher')
+  - if current_visitor.has_role?('admin', 'manager','researcher')
     %li= link_to 'Reports', learner_report_path
-  - if current_user.has_role?('admin', 'manager')
+  - if current_visitor.has_role?('admin', 'manager')
     %li= link_to 'Districts', portal_districts_path
     %li= link_to 'Schools', portal_schools_path
     - if APP_CONFIG[:use_gse]

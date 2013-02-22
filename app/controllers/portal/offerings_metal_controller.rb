@@ -2,8 +2,8 @@ require 'json'
 class Portal::OfferingsMetalController < ActionController::Metal
 
   def launch_status
-    if (offering = Portal::Offering.find(params[:id])) && (current_user = (session[:user_id] ? User.find(session[:user_id]) : nil)) && current_user.portal_student
-      learner = Portal::Learner.find_by_offering_id_and_student_id(offering.id, current_user.portal_student.id)
+    if (offering = Portal::Offering.find(params[:id])) && (current_visitor = (session[:user_id] ? User.find(session[:user_id]) : nil)) && current_visitor.portal_student
+      learner = Portal::Learner.find_by_offering_id_and_student_id(offering.id, current_visitor.portal_student.id)
       status_event_info = {}
       if learner && learner.bundle_logger.in_progress_bundle
         last_event = learner.bundle_logger.in_progress_bundle.launch_process_events.last

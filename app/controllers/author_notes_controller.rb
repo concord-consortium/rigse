@@ -13,18 +13,18 @@ class AuthorNotesController < ApplicationController
       @author_note = AuthorNote.new(params[:activity])
       @author_note.authored_entity_type=params[:authored_entity_type]
       @author_note.authored_entity_id=params[:authored_entity_id]
-      @author_note.user = current_user
+      @author_note.user = current_visitor
     elsif params[:authored_entity_type] && params[:authored_entity_id]
       @author_note = AuthorNote.find_by_authored_entity_type_and_authored_entity_id(params[:authored_entity_type],params[:authored_entity_id])
       if (@author_note.nil?)
         @author_note = AuthorNote.new
         @author_note.authored_entity_type=params[:authored_entity_type]
         @author_note.authored_entity_id=params[:authored_entity_id]
-        @author_note.user = current_user
+        @author_note.user = current_visitor
       end
     else
       @author_note = AuthorNote.new
-      @author_note.user = current_user
+      @author_note.user = current_visitor
     end
   end
   
@@ -49,7 +49,7 @@ class AuthorNotesController < ApplicationController
   end
 
   def show_author_note
-    if(@author_note.changeable?(current_user))
+    if(@author_note.changeable?(current_visitor))
       render :update do |page|
           page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @author_note}
           page.visual_effect :toggle_blind, 'note'
@@ -84,7 +84,7 @@ class AuthorNotesController < ApplicationController
   # POST /author_notes
   # POST /author_notes.xml
   def create
-    if (@author_note.changeable?(current_user) && @author_note.update_attributes(params[:author_note]))      
+    if (@author_note.changeable?(current_visitor) && @author_note.update_attributes(params[:author_note]))      
       flash[:notice] = 'AuthorNote was successfully created.'
       if (request.xhr?)
          render :text => "<div class='notice'>Author note saved</div>"
@@ -100,7 +100,7 @@ class AuthorNotesController < ApplicationController
   # PUT /author_notes/1
   # PUT /author_notes/1.xml
   def update
-    if(@author_note.changeable?(current_user))
+    if(@author_note.changeable?(current_visitor))
       if @author_note.update_attributes(params[:author_note])
         if (request.xhr?)
            render :text => "<div class='notice'>Author note saved</div>"
@@ -128,7 +128,7 @@ class AuthorNotesController < ApplicationController
   # DELETE /author_notes/1
   # DELETE /author_notes/1.xml
   def destroy
-    if(@author_note.changeable?(current_user))
+    if(@author_note.changeable?(current_visitor))
       @author_note.destroy
     end
     respond_to do |format|
