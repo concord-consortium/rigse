@@ -78,11 +78,10 @@ module MockData
     #following users exist
     data = {
       :user_1 => {"login" => "author", "password" => "author", "roles" => "member, author"},
-      :user_2 => {"login" => "myadmin", "password" => "myadmin", "roles" => "admin"},
-      :user_3 => {"login" => "manager", "password" => "manager", "roles" => "manager"},
-      :user_4 => {"login" => "mymanager", "password" => "mymanager", "roles" => "manager"},
-      :user_5 => {"login" => "researcher", "password" => "researcher", "roles" => "researcher"},
-      :user_6 => {"login" => "admin", "password" => "password", "roles" => "admin"}
+      :user_2 => {"login" => "manager", "password" => "manager", "roles" => "manager"},
+      :user_3 => {"login" => "mymanager", "password" => "mymanager", "roles" => "manager"},
+      :user_4 => {"login" => "researcher", "password" => "researcher", "roles" => "researcher"},
+      :user_5 => {"login" => "admin", "password" => "password", "roles" => "admin"}
     }
     
     User.anonymous(true)
