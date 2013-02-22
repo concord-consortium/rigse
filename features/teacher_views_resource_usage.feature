@@ -6,7 +6,7 @@ Feature: Teacher views resource usage
   I want to see a count of students who have viewed a resource page
 
   Background:
-    Given The default project and jnlp resources exist using factories hhh
+    Given The default project and jnlp resources exist using factories
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |

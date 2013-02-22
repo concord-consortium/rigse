@@ -60,8 +60,7 @@ end
 
 Given /^(?:|I )login as an admin$/ do
   step 'I log out'
-  admin = Factory.next(:admin_user)
-  login_as(admin.login)
+  step 'I login with username: admin password: password'
 end
 
 

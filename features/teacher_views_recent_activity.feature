@@ -6,11 +6,6 @@ Feature: Teacher can see recent activity
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login   | password | first_name | last_name |
-      | teacher | teacher  | John       | Nash      |
-      | albert  | albert   | Albert     | Fernandez |
-      | robert  | robert   | Robert     | Fernandez |
     And the teachers "teacher" are in a school named "Harvard School"
     And the following classes exist:
       | name        | teacher | semester |
@@ -44,14 +39,6 @@ Feature: Teacher can see recent activity
       | investigation | Plant reproduction   | Physics     |
       | investigation | Aerodynamics         | Physics     |
       | investigation | Aerodynamics         | Mechanics   |
-    And the following students exist:
-      | login  | password | first_name | last_name |
-      | dave   | student  | Dave       | Doe       |
-      | chuck  | student  | Chuck      | Smith     |
-      | shon   | student  | shon       | done      |
-      | ross  | student  | ross      | taylor    |
-      | monty  | student  | Monty      | Donald    |
-      | taylor | student  | taylor     | Donald    |
     And the student "dave" belongs to class "My Class"
     And the student "chuck" belongs to class "Physics"
     And the student "chuck" belongs to class "Mechanics"
@@ -102,7 +89,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher should not see teacher only activity
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ross     | Physics       | Aerodynamics        | d               | y      |
+      | ross      | Physics       | Aerodynamics        | d               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Air activity"
@@ -124,7 +111,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher should view the progress bar for recent investigation
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ross     | Physics       | Aerodynamics        | c               | y      |
+      | ross      | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
@@ -136,7 +123,7 @@ Feature: Teacher can see recent activity
       | student   | class         | investigation       | question_prompt | answer |
       | chuck     | Mechanics     | Aerodynamics        | image_q         | Y      |
       | chuck     | Mechanics     | Aerodynamics        | c               | Y      |
-      | ross     | Physics       | Aerodynamics        | c               | y      |
+      | ross      | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
@@ -148,7 +135,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher views class size
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ross     | Physics       | Aerodynamics        | c               | y      |
+      | ross      | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
@@ -188,7 +175,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher should be able to run the report
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ross     | Physics       | Aerodynamics        | c               | y      |
+      | ross      | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation

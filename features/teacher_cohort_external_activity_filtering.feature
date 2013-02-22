@@ -9,36 +9,29 @@ Feature: External activities can be filtered by cohort
       | scope         | tag             |
       | cohorts       | control         |
       | cohorts       | experiment      |
-    And the following teachers exist:
-      | login         | password        | cohort_list          |
-      | teacher1      | teacher         | control              |
-      | bteacher      | teacher         | experiment           |
-      | cteacher      | teacher         | control, experiment  |
-      | dteacher      | teacher         |                      |
-      | author        | teacher         |                      |
     And the following classes exist:
-      | name        | teacher     |
-      | My Class    | teacher1    |
-      | My b Class  | bteacher    |
-      | My c Class  | cteacher    |
-      | My d Class  | dteacher    |
+      | name        | teacher   |
+      | My Class    | teacher   |
+      | My b Class  | albert    |
+      | My c Class  | robert    |
+      | My d Class  | peterson  |
     And the following external activities exist:
       | name           | user      | cohort_list         |
-      | neither        | teacher1  |                     |
-      | control        | teacher1  | control             |
-      | experiment     | teacher1  | experiment          |
-      | both           | teacher1  | control, experiment |
-      | b neither b    | bteacher  |                     |
-      | b control b    | bteacher  | control             |
-      | b experiment b | bteacher  | experiment          |
-      | b both b       | bteacher  | control, experiment |
-      | a neither a    | author    |                     |
-      | a control a    | author    | control             |
-      | a experiment a | author    | experiment          |
-      | a both a       | author    | control, experiment |
+      | neither        | teacher   |                     |
+      | control        | teacher   | control             |
+      | experiment     | teacher   | experiment          |
+      | both           | teacher   | control, experiment |
+      | b neither b    | albert    |                     |
+      | b control b    | albert    | control             |
+      | b experiment b | albert    | experiment          |
+      | b both b       | albert    | control, experiment |
+      | a neither a    | jonson    |                     |
+      | a control a    | jonson    | control             |
+      | a experiment a | jonson    | experiment          |
+      | a both a       | jonson    | control, experiment |
 
   Scenario: External Activities are visible for the control cohort
-    Given I am logged in with the username teacher1
+    Given I am logged in with the username teacher
     When I am on the class page for "My Class"
     Then the following should be displayed in the assignables list:
       | name                           |
@@ -58,7 +51,7 @@ Feature: External activities can be filtered by cohort
       | External Activity: a experiment a |
 
   Scenario: External Activities are visible for the experiment cohort
-    Given I am logged in with the username bteacher
+    Given I am logged in with the username albert
     When I am on the class page for "My b Class"
     Then the following should be displayed in the assignables list:
       | name                              |
@@ -78,7 +71,7 @@ Feature: External activities can be filtered by cohort
       | External Activity: a control a |
 
   Scenario: External Activities are visible for someone in both cohorts
-    Given I am logged in with the username cteacher
+    Given I am logged in with the username robert
     When I am on the class page for "My c Class"
     Then the following should be displayed in the assignables list:
       | name                              |
@@ -96,7 +89,7 @@ Feature: External activities can be filtered by cohort
       | External Activity: a both a       |
 
   Scenario: External Activities that are untagged are visible to a teacher in neither cohort
-    Given I am logged in with the username dteacher
+    Given I am logged in with the username peterson
     When I am on the class page for "My d Class"
     Then the following should be displayed in the assignables list:
       | name                           |
