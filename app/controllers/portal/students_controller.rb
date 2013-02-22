@@ -120,13 +120,19 @@ class Portal::StudentsController < ApplicationController
           @portal_clazz.reload
           render :update do |page|
             add_student_url = new_portal_student_path(:clazz_id => @portal_clazz.id)
+            button_method = "get_Add_Register_Student_Popup(\\\"#{add_student_url}\\\")"
+            popup_title = "Add and Register New Student"
+            if @user.group_account_class_id
+              button_method = "get_Add_Register_Group_Popup()"
+              popup_title = "Add and Register New Group"
+            end
             success_msg = "<div style='padding:5px;font-size:15px'>You have successfully registered <b>#{@user.name}</b> with the username <b>#{@user.login}</b>.</div>" +
                           "<br/><br/><div style='padding:5px;text-align:center'><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td>" +
-                          "<input type='button' class='pie' onclick='get_Add_Register_Student_Popup(\\\"#{add_student_url}\\\")' value='Add Another' />&nbsp;&nbsp;&nbsp;" +
+                          "<input type='button' class='pie' onclick='#{button_method}' value='Add Another' />&nbsp;&nbsp;&nbsp;" +
                           "<input type='button' class='pie' onclick='close_popup()' value='Close' />" +
                           "</td></tr></table></div>"
             page << "close_popup();"
-            page << "student_list_modal = new Lightbox({ theme:\"lightbox\", width:400, height:350,content:\"#{success_msg}\",title:\"Add and Register New Student\"});"
+            page << "student_list_modal = new Lightbox({ theme:\"lightbox\", width:400, height:350,content:\"#{success_msg}\",title:\"#{popup_title}\"});"
             page << "if ($('students_listing')){"
             page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
             page << "}"
@@ -370,7 +376,9 @@ class Portal::StudentsController < ApplicationController
 
   def generate_user_attributes_from_params
     user_attributes = params[:user]
-    user_attributes[:login] = Portal::Student.generate_user_login(user_attributes[:first_name], user_attributes[:last_name])
+    group_account = !user_attributes[:group_account_class_id].nil?
+    user_attributes[:first_name] = "" if group_account
+    user_attributes[:login] = Portal::Student.generate_user_login(user_attributes[:first_name], user_attributes[:last_name], group_account)
     user_attributes[:email] = Portal::Student.generate_user_email
     user_attributes
   end
