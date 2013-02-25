@@ -124,4 +124,7 @@ HEREDOC
     puts summary
     summary
   end 
+  def enabled_bookmark_types
+    ['PadletBookmark']
+  end
 end

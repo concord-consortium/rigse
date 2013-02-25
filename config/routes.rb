@@ -584,7 +584,7 @@ constraints :id => /\d+/ do
   post  '/installer_report' => 'misc#installer_report', :as => :installer_report
   match 'authoring' => 'home#authoring', :as => :authoring
   match '/:controller(/:action(/:id))'
-
+  match '/add_padlet' => 'bookmarks#add_padlet', :as => :add_padlet
   root :to => 'home#index'
 
 

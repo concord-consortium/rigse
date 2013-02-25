@@ -1,19 +1,18 @@
 class PadletBookmark < Bookmark
   # include Changeable
 
-  def self.for_user(user)
-    found = self.find_by_user_id(user) || create_for_user(user)
-    found.touch
-  end
-
   def self.create_for_user(user)
-    padlet = PadletHelper.make_bookmark
+    found = self.for_user(user)
+    return found unless found.blank?
+    padlet = PadletWrapper.make_bookmark
     url    = padlet.padlet_url
     name   = "#{user.name}'s Padlet"
-    self.create(:user => user, :name => name, :url => url)
+    made   = self.create(:user => user, :name => name, :url => url)
+    return made
   end
 
-  def self.viewTemplate
-
+  def self.user_can_make?(user)
+    return false unless self.is_allowed?
+    return self.for_user(user).blank?
   end
 end
