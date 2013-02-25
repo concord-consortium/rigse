@@ -484,7 +484,16 @@ class Portal::ClazzesController < ApplicationController
       return
     end
   end
-  
+
+  def add_new_group_popup
+    if request.xhr?
+      @portal_student = Portal::Student.new
+      @user = User.new
+      render :partial => 'portal/students/group_form', :locals => {:portal_student => @portal_student, :portal_clazz => Portal::Clazz.find_by_id(params[:id]), :signup => false}
+      return
+    end
+  end
+
   def manage_classes
     unless current_visitor.portal_teacher
       redirect_to home_url

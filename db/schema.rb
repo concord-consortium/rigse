@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130129175554) do
+ActiveRecord::Schema.define(:version => 20130222165705) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -2316,6 +2316,7 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
     t.boolean  "of_consenting_age",                        :default => false
     t.boolean  "have_consent",                             :default => false
     t.boolean  "asked_age",                                :default => false
+    t.integer  "group_account_class_id"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
