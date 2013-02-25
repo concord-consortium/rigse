@@ -82,7 +82,7 @@ class SessionsController < ApplicationController
     delete_blog_cookie   # first delete any remaining blog cookies
     user = User.authenticate(params[:login], params[:password])
     if user
-      self.current_user = user
+      self.current_visitor = user
       save_cc_cookie
       save_blog_cookie
       values = {:login => user.login, :first => user.first_name, :last => user.last_name}
@@ -204,7 +204,7 @@ class SessionsController < ApplicationController
   end
 
   def save_cc_cookie
-    token = CCCookieAuth.make_auth_token(current_user.login, request.remote_ip)
+    token = CCCookieAuth.make_auth_token(current_visitor.login, request.remote_ip)
     #cookies[CCCookieAuth.cookie_name.to_sym] = token
     cookies[CCCookieAuth.cookie_name.to_sym] = {:value => token, :domain => cookie_domain }
   end
@@ -212,7 +212,7 @@ class SessionsController < ApplicationController
   def save_blog_cookie
     begin
       # log in to the blog
-      resp = Wordpress.new.log_in_user(current_user.login, params[:password])
+      resp = Wordpress.new.log_in_user(current_visitor.login, params[:password])
 
       # capture the cookies set by the blog
       # and set those cookies in our current domain
