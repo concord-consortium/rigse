@@ -123,6 +123,16 @@
                   %b
                     No
                   (External Activities will not appear in the materials search.)
+              %li
+                Group accounts are enabled:
+                - if admin_project.group_accounts_enabled?
+                  %b
+                    Yes
+                  (Group accounts can be created by teachers.)
+                - else
+                  %b
+                    No
+                  (Group accounts can not be created by teachers.)
             = field_set_tag 'Maven Jnlp' do
               %p
                 Jnlp CDN Hostname:

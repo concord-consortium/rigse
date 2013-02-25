@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130222165705) do
+ActiveRecord::Schema.define(:version => 20130225222840) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(:version => 20130222165705) do
     t.text     "custom_help_page_html"
     t.string   "help_type"
     t.boolean  "include_external_activities",                  :default => false
+    t.boolean  "group_accounts_enabled",                       :default => false
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|
