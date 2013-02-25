@@ -45,6 +45,7 @@ class SessionsController < ApplicationController
       values = {:login => login, :first => user.first_name, :last => user.last_name}
       student = user.portal_student
       teacher = user.portal_teacher
+      values[:group] = user.group_account_class_id ? true : false
       if student
         values[:class_words] = student.clazzes.map{ |c| c.class_word }
         values[:teacher] = false
