@@ -6,6 +6,11 @@ class Bookmark < ActiveRecord::Base
   validates_presence_of :user
   validates_presence_of :url
 
+
+  def self.available_types
+    [PadletBookmark, GenericBookmark]
+  end
+
   def self.for_project
     self.where(:type => self.allowed_types)
   end
@@ -15,16 +20,16 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.allowed_types
-    Admin::Project.default_project.enabled_bookmark_types
+    Admin::Project.default_project.enabled_bookmark_types.map {|b| b.safe_constantize}
   end
 
   def self.is_allowed?
-    return true if (self.allowed_types.include?(self.name))
+    return true if (self.allowed_types.include?(self))
     return false
   end
 
   def self.user_can_make?(user)
-    return true if self.is_allowed?
+    return true if (self.is_allowed?)
   end
 
 end

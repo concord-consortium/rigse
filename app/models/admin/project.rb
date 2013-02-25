@@ -3,6 +3,8 @@ require 'fileutils'
 class Admin::Project < ActiveRecord::Base
   self.table_name = "admin_projects"
 
+  serialize :enabled_bookmark_types, Array
+
   after_initialize :init
 
   belongs_to :user
@@ -26,11 +28,23 @@ class Admin::Project < ActiveRecord::Base
   def init
     # the description needs to be non null for the searchable model code to work properly
     self.description ||= ''
+    self.enabled_bookmark_types ||= []
   end
 
   # this is a named object but really it doesn't have a name so just return the id
   def name
     id.to_s
+  end
+
+  def update_attributes(hashy)
+    enabled_bookmark_types = hashy['enabled_bookmark_types']
+    if enabled_bookmark_types
+      enabled_bookmark_types = enabled_bookmark_types.map { |h| h.split(",") }
+      enabled_bookmark_types.flatten!
+      enabled_bookmark_types.reject! {|i| i.blank? }
+      hashy['enabled_bookmark_types'] = enabled_bookmark_types
+    end
+    super hashy
   end
 
   def using_custom_css?
@@ -125,7 +139,9 @@ HEREDOC
     summary
   end
 
-  def enabled_bookmark_types
-    ['PadletBookmark']
+  def available_bookmark_types
+    Bookmark.available_types.map { |t| t.name }
   end
+
+
 end

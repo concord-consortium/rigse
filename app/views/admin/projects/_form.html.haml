@@ -73,6 +73,10 @@
             %br
             (This option changes whether or not External Activities will appear in the class materials search)
           %li
+            %b
+              = f.label :enabled_bookmark_types,  "Enabled bookmark types"
+            = f.select(:enabled_bookmark_types, admin_project.available_bookmark_types.map { |b| [b,b]}, {},{ :class => ".chzn-select", :multiple => true})
+          %li
             Jnlp CDN Hostname:
             = f.text_field :jnlp_cdn_hostname, :size => 60
 
@@ -92,3 +96,5 @@
           = check_box_tag "admin_project[enabled_vendor_interface_ids][]", "#{interface.id}", admin_project.enabled_vendor_interfaces.include?(interface), :id=>domid
           %label{:for => domid}= interface.name_with_driver
           %br
+      :javascript
+        new Chosen($('admin_project_enabled_bookmark_types'));

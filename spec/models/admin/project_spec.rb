@@ -25,22 +25,22 @@ describe Admin::Project do
       @all_interfaces = Probe::VendorInterface.find(:all)
       @num_interfaces = @all_interfaces.length
     end
-    
+
     it "should have a sane testing environment" do
       @all_interfaces.should have(@num_interfaces).things
     end
-    
+
     it "should exist" do
       @new_valid_project.enabled_vendor_interfaces.should_not be_nil
     end
-    
+
     it "should initially have all the existant vendor interfaces" do
       @new_valid_project.enabled_vendor_interfaces.should have(@num_interfaces).things
       @all_interfaces.each do |interface|
         @new_valid_project.enabled_vendor_interfaces.should include(interface)
       end
     end
-    
+
     it "should allow removing vendor interfaces" do
       interface_to_remove = Probe::VendorInterface.find(:first)
       @new_valid_project.save # delete throws an exception if our model doesn't have an id
@@ -49,7 +49,7 @@ describe Admin::Project do
       @new_valid_project.reload
       @new_valid_project.enabled_vendor_interfaces.should have(@num_interfaces -1).things
     end
-    
+
     describe "custom_css" do
       before(:each) do
         @css =  ".testing {position:relative; padding:5px;}"
@@ -57,13 +57,38 @@ describe Admin::Project do
       it "it should allow for custom css" do
         @new_valid_project.custom_css = @css
         @new_valid_project.should be_valid
-        @new_valid_project.should be_using_custom_css 
+        @new_valid_project.should be_using_custom_css
       end
       it "not be using custom css by default" do
         @new_valid_project.should_not be_using_custom_css
       end
     end
-    
+
+
+    describe "#available_bookmark_types" do
+      subject  { @new_valid_project.available_bookmark_types }
+
+      it "should return an array" do
+        should be_kind_of Array
+      end
+
+      it "should include a generic bookmark type" do
+        should include GenericBookmark.name
+      end
+    end
+
+    describe "#enabled_bookmark_types" do
+      subject  { @new_valid_project.enabled_bookmark_types }
+      it "should return an array" do
+        should be_kind_of Array
+      end
+
+      it "should be empty be default" do
+        should be_empty
+      end
+
+    end
+
   end
 
   describe "class methods" do
