@@ -28,8 +28,9 @@
           %td.hide_in_print{:style=>"text-align:right"}
             - add_student_url = new_portal_student_path(:clazz_id => portal_clazz.id)
             = link_to "Register and add new student", "#", :title => "Add a student to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
-            %br
-            = link_to "Register and add new group", "#", :title => "Add a group to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Group_Popup()"
+            - if current_project.group_accounts_enabled
+              %br
+              = link_to "Register and add new group", "#", :title => "Add a group to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Group_Popup()"
 
       %table.roster_student_list{:width=>"100%"}
         %tr

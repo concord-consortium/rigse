@@ -73,6 +73,12 @@
             %br
             (This option changes whether or not External Activities will appear in the class materials search)
           %li
+            %b
+            = f.label :group_accounts_enabled, "Enable Group Accounts:", :style => "display:inline;"
+            = f.check_box :group_accounts_enabled
+            %br
+            (This option changes whether or not group accounts can be created by teachers)
+          %li
             Jnlp CDN Hostname:
             = f.text_field :jnlp_cdn_hostname, :size => 60
 
