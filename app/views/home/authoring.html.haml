@@ -23,3 +23,4 @@
       - current_visitor.external_activities.each do |item|
         %li
           = link_to item.name, item
+%h4= link_to "#{Image.display_name.pluralize}", images_path

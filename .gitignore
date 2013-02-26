@@ -59,6 +59,7 @@ spec/reports
 .rvmrc
 config/newrelic.yml
 public/system/attachments/*
+public/system/images/*
 *.swp
 *.swo
 capybara-*.html

@@ -16,7 +16,7 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
-  
+
   gem "rails",                "~> 3.2"
   gem "arrayfields"
   gem "httpclient",           "~> 2.2"
@@ -24,14 +24,14 @@ source "http://rubygems.org"
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
   gem "haml",           :git => "git://github.com/concord-consortium/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
-  
+
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
   gem "spreadsheet",          "~> 0.7.3"  #see http://spreadsheet.rubyforge.org/
 
   # ruby-ole is a spreadsheet dependency but v1.2.11.1 doesn't work on Ruby 1.9.3
   gem "ruby-ole",             "~> 1.2.11.2"
-  
+
   gem "prawn",                "~> 0.12.0"
   gem 'prawn_rails',          "~> 0.0.6"
 
@@ -48,7 +48,7 @@ source "http://rubygems.org"
   gem "net-sftp",             "~> 2.0",   :require => "net/sftp"
   gem "redcarpet",            "~> 2.1.1"
   gem "syntax",               "~> 1.0"
-  gem "paperclip",            "~> 2.4.0"
+  gem "paperclip",            "~> 3.4.0"
   gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "acts_as_list",         "~> 0.1.6"
   gem "nokogiri",             "~> 1.5.0"
@@ -64,7 +64,7 @@ source "http://rubygems.org"
   gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/willbryant/prototype_legacy_helper.git'
   # gem "in_place_editing",     "~> 1.2.0"
   gem 'in_place_editing',      :git => 'git://github.com/concord-consortium/in_place_editing.git'
-  
+
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
@@ -76,7 +76,8 @@ source "http://rubygems.org"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
   # to support hosting paperclip attachments on S3:
-  gem "aws-s3",               :require => "aws/s3"
+  # gem "aws-s3",               :require => "aws/s3" (for paperclip 3.x)
+  gem "aws-sdk",              "~> 1.8.1.2"
   gem "newrelic_rpm",         "~> 3.5.3.25"
   gem "tinymce-rails",        "~>3.5.6"
   gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
