@@ -9,7 +9,7 @@ describe "/images/show.html.haml" do
       :has_role?       => true,
       :anonymous?      => false
     )
-    view.stub!(:current_user).and_return(@user)
+    view.stub!(:current_visitor).and_return(@user)
   end
 
 
