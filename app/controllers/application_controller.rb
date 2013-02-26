@@ -103,8 +103,8 @@ class ApplicationController < ActionController::Base
 
   # setup the portal_teacher and student instance variables
   def portal_resources
-    @portal_teacher = current_user.portal_teacher
-    @portal_student = current_user.portal_student
+    @portal_teacher = current_visitor.portal_teacher
+    @portal_student = current_visitor.portal_student
   end
 
   # Accesses the user that this session originally logged in as.
@@ -112,16 +112,16 @@ class ApplicationController < ActionController::Base
     if session[:original_user_id]
       @original_user ||=  User.find(session[:original_user_id])
     else
-      @original_user = current_user
+      @original_user = current_visitor
     end
   end
 
 
   def check_user
     if logged_in?
-      self.current_user = current_user
+      self.current_visitor = current_visitor
     else
-      self.current_user = User.anonymous
+      self.current_visitor = User.anonymous
     end
   end
 
@@ -138,7 +138,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_for_password_reset_requirement
-    if current_user && current_user.require_password_reset
+    if current_visitor && current_visitor.require_password_reset
       unless session_sensitive_path
         redirect_to change_password_path :reset_code => "0"
       end
@@ -146,17 +146,17 @@ class ApplicationController < ActionController::Base
   end
 
   def check_student_security_questions_ok
-    if current_project && current_project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
+    if current_project && current_project.use_student_security_questions && !current_visitor.portal_student.nil? && current_visitor.security_questions.size < 3
       unless session_sensitive_path
-        redirect_to(edit_user_security_questions_path(current_user))
+        redirect_to(edit_user_security_questions_path(current_visitor))
       end
     end
   end
 
   def check_student_consent
-    if current_project && current_project.require_user_consent? && !current_user.portal_student.nil? && !current_user.asked_age?
+    if current_project && current_project.require_user_consent? && !current_visitor.portal_student.nil? && !current_visitor.asked_age?
       unless session_sensitive_path
-        redirect_to(ask_consent_portal_student_path(current_user.portal_student))
+        redirect_to(ask_consent_portal_student_path(current_visitor.portal_student))
       end
     end
   end

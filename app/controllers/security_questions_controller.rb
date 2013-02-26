@@ -3,15 +3,15 @@ class SecurityQuestionsController < ApplicationController
   
   # GET
   def edit
-    @security_questions = SecurityQuestion.fill_array(current_user.security_questions)
+    @security_questions = SecurityQuestion.fill_array(current_visitor.security_questions)
   end
 
   # PUT
   def update
-    @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions], current_user)
+    @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions], current_visitor)
     errors = SecurityQuestion.errors_for_questions_list!(@security_questions)  
     if (!errors) || errors.empty?
-      current_user.update_security_questions!(@security_questions)
+      current_visitor.update_security_questions!(@security_questions)
       flash[:notice] = "Your security questions have been successfully updated."
       redirect_to(root_path)
     else
@@ -24,7 +24,7 @@ class SecurityQuestionsController < ApplicationController
   protected
   
   def user_has_security_questions
-    unless current_user && !current_user.portal_student.nil?
+    unless current_visitor && !current_visitor.portal_student.nil?
       redirect_to(root_path)
       return
     end
@@ -35,7 +35,7 @@ class SecurityQuestionsController < ApplicationController
   #     data = params["question#{i}"]
   #     next if data.nil?
   #     
-  #     existing_object = current_user.security_questions.find_by_id(data[:id]) if data[:id] && data[:question_idx] == "current"
+  #     existing_object = current_visitor.security_questions.find_by_id(data[:id]) if data[:id] && data[:question_idx] == "current"
   #     
   #     if existing_object.nil?
   #       new_question = SecurityQuestion::QUESTIONS[data[:question_idx].to_i] if data[:question_idx].to_i.to_s == data[:question_idx].to_s

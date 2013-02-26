@@ -129,7 +129,7 @@ class Embeddable::DataTablesController < ApplicationController
   
   def update_cell_data
     @data_table = Embeddable::DataTable.find(params[:id])
-    if @data_table.changeable? current_user
+    if @data_table.changeable? current_visitor
       @data_table.column_data = params[:data]
       if @data_table.save
         # TODO: give some good feedback to the author 

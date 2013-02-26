@@ -1,11 +1,11 @@
 %li#home.trail= link_to 'Home', home_path
 %li.trail= link_to 'About', about_path
 = render :partial => 'shared/extra_nav'
-- if current_user.has_role?('admin', 'manager', 'researcher', 'author')
+- if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
   %li.trail=link_to('Authoring', authoring_path)
-- unless current_user.only_a_student?
+- unless current_visitor.only_a_student?
   %li.trail= link_to 'Browse Instructional Materials' , search_path
-- if current_user.has_role?('admin', 'manager','researcher')
+- if current_visitor.has_role?('admin', 'manager','researcher')
   %li.trail= link_to 'Admin', admin_path
 - #A developer can load home page without initializing data in database
 - if current_project

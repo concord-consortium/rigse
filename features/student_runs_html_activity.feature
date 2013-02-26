@@ -21,13 +21,13 @@ Feature: Student runs html activity
   @lightweight
   Scenario: Student runs html
     And I login with username: student
-    When I follow "run simple activity"
+    When I follow "Run by Myself"
     And I press "Submit"
 
   @javascript @lightweight @disable_adhoc_workgroups
   Scenario: Student runs html and teacher sees recent activity
     And I login with username: student
-    When I follow "run simple activity"
+    When I follow "Run by Myself"
     And I choose "Choice 1"
     And I press "Submit"
     And I login with username: teacher

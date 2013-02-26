@@ -5,7 +5,7 @@ describe "/admin/tags/new.html.haml" do
 
   before(:each) do
     power_user = stub_model(User, :has_role? => true)
-    view.stub!(:current_user).and_return(power_user)
+    view.stub!(:current_visitor).and_return(power_user)
     assign(:admin_tag, Factory.build(:admin_tag,
       :scope => "value for scope",
       :tag => "value for tag"

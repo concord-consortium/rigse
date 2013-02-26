@@ -248,7 +248,7 @@ module ApplicationHelper
     dom_id = dom_id_for(component, :edit_link)
 
     capture_haml do
-      if component.changeable?(current_user)
+      if component.changeable?(current_visitor)
         haml_tag :div, :id=> dom_id, :class => 'editable_block', :onDblClick=> js_function  do
           if block_given?
             yield
@@ -299,7 +299,7 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            #if (component.changeable?(current_user))
+            #if (component.changeable?(current_visitor))
             haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
             haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless options[:omit_cancel]
             #end
@@ -464,7 +464,7 @@ module ApplicationHelper
   end
 
   def delete_button_for(model, options={})
-    if model.changeable? current_user
+    if model.changeable? current_visitor
       # find the page_element for the embeddable
       embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
       controller = "#{model.class.name.pluralize.underscore}"
@@ -491,7 +491,7 @@ module ApplicationHelper
   def title_for_component(component, options={})
     title = name_for_component(component, options)
     id = dom_id_for(component, options[:id_prefix], :title)
-    if ::Rails.env == "development" || current_user.has_role?('admin')
+    if ::Rails.env == "development" || current_visitor.has_role?('admin')
       "<span id=#{id} class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
     else
       "<span id=#{id} class='component_title'>#{title}</span>"
@@ -855,7 +855,7 @@ module ApplicationHelper
           if learner.offering.runnable.run_format == :jnlp
             haml_concat link_to('Run', run_url_for(learner))
             haml_concat " | "
-            if current_user.has_role?("admin")
+            if current_visitor.has_role?("admin")
               haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
               haml_concat " | "
             end
@@ -935,7 +935,7 @@ module ApplicationHelper
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          if (component.changeable?(current_user))
+          if (component.changeable?(current_visitor))
             begin
               if component.authorable_in_java?
                 haml_concat otrunk_edit_button_for(component, options)
@@ -1067,7 +1067,7 @@ module ApplicationHelper
 
   def style_for_item(component,style_classes=[])
     style_classes << 'item' << 'selectable' << 'item_selectable'
-    if (component.respond_to? 'changeable?') && (component.changeable?(current_user))
+    if (component.respond_to? 'changeable?') && (component.changeable?(current_visitor))
       style_classes << 'movable'
     end
     style_classes = style_for_teachers(component,style_classes)
@@ -1171,9 +1171,9 @@ module ApplicationHelper
   end
 
 #            Welcome
-#            = "#{current_user.name}."
-#            - unless current_user.anonymous?
-#              = link_to 'Preferences', preferences_user_path(current_user)
+#            = "#{current_visitor.name}."
+#            - unless current_visitor.anonymous?
+#              = link_to 'Preferences', preferences_user_path(current_visitor)
 #              \/
 #              = link_to 'Logout', logout_path
 #            - else
@@ -1182,7 +1182,7 @@ module ApplicationHelper
 #              = link_to 'Sign Up', pick_signup_path
 #            - if @original_user.has_role?('admin', 'manager')
 #              \/
-#              = link_to 'Switch', switch_user_path(current_user)
+#              = link_to 'Switch', switch_user_path(current_visitor)
   def login_line(options = {})
     opts = {
       :welcome  => "Welcome",
@@ -1195,7 +1195,7 @@ module ApplicationHelper
     }
     opts.merge!(options)
     message = ""
-    if current_user.anonymous?
+    if current_visitor.anonymous?
       if opts[:guest]
         message += "#{opts[:welcome]} #{opts[:guest]} &nbsp;"
       end
@@ -1203,13 +1203,13 @@ module ApplicationHelper
       message += " / "
       message += link_to opts[:signup], pick_signup_path
     else
-      message += "#{opts[:welcome]} #{current_user.send(opts[:name_method])} &nbsp;"
-      message += link_to opts[:prefs],  preferences_user_path(current_user)
+      message += "#{opts[:welcome]} #{current_visitor.send(opts[:name_method])} &nbsp;"
+      message += link_to opts[:prefs],  preferences_user_path(current_visitor)
       message += " / "
       message += link_to opts[:logout], logout_path
       if @original_user.has_role?('admin','manager')
         message += " "
-        message += link_to 'Switch', switch_user_path(current_user)
+        message += link_to 'Switch', switch_user_path(current_visitor)
       end
     end
     message
@@ -1268,9 +1268,9 @@ module ApplicationHelper
 
   # this appears to not be used in master right now
   def current_user_can_author
-    return true if current_user.has_role? "author"
+    return true if current_visitor.has_role? "author" 
     if settings_for(:teachers_can_author)
-      return true unless current_user.portal_teacher.nil?
+      return true unless current_visitor.portal_teacher.nil?
     end
     # TODO add aditional can-author conditions
     return false

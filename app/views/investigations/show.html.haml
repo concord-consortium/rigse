@@ -10,5 +10,5 @@
   %ul#investigation_activities_list.menu
     - @investigation.activities.each do |activity|
       =render :partial => 'activity_list_item', :locals => {:activity => activity}
-      -if (@investigation.changeable?(current_user))
+      -if (@investigation.changeable?(current_visitor))
         =sortable_element :investigation_activities_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_activities', :params => {:investigation_id => @investigation.id }}

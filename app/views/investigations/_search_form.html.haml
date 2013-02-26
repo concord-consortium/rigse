@@ -1,6 +1,6 @@
 - # requires: grade_span, portal_clazz_id, domain_id
 - # optional: hide_drafts_checkbox, hide_usage_checkbox
-- if (current_user.anonymous?)
+- if (current_visitor.anonymous?)
   - local_assigns[:hide_drafts_checkbox] = true
   - local_assigns[:hide_usage_checkbox] = true
 

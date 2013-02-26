@@ -51,7 +51,7 @@ describe Portal::ClazzesController do
   # def login_as(user_sym)
   #     @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
   #
-  #     @controller.stub!(:current_user).and_return(@logged_in_user)
+  #     @controller.stub!(:current_visitor).and_return(@logged_in_user)
   #     @logged_in_user
   #   end
 
@@ -637,7 +637,7 @@ describe Portal::ClazzesController do
   describe "Put teacher Manage class" do
     before(:each) do
       
-      controller.stub!(:current_user).and_return(@authorized_teacher_user)
+      controller.stub!(:current_visitor).and_return(@authorized_teacher_user)
       
       @mock_teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
       
@@ -721,7 +721,7 @@ describe Portal::ClazzesController do
       @offering.clazz_id = @mock_clazz.id
       @offering.runnable_type = 'Investigation'
       @offering.save!
-      controller.stub!(:current_user).and_return(@authorized_teacher_user)
+      controller.stub!(:current_visitor).and_return(@authorized_teacher_user)
       
       @post_params = {
         :id => @mock_clazz.id,

@@ -30,15 +30,22 @@ end
 #  Maintenance mode
 #############################################################
 task :disable_web, :roles => :web do
-  on_rollback { delete "#{shared_path}/system/maintenance.html" }
+  on_rollback { delete "#{shared_path}/system/maintenance.html"    }
+
+  site_name = ask("site name? ") { |q| q.default = "RITES"         }
+  back_up   = ask("back up?   ") { |q| q.default = "in 12 minutes" }
+  message   = ask("message?   ") { |q| q.default = ""              }
 
   maintenance = render("./app/views/layouts/maintenance.haml",
                        {
-                         :back_up => ENV['BACKUP'],
-                         :reason => ENV['REASON'],
-                         :message => ENV['MESSAGE']
+                         :back_up   => back_up,
+                         :message   => message,
+                         :site_name => site_name
                        })
 
+  # File.open(File.expand_path("~/Desktop/index.html"),"w") do |f|
+  #   f.write(maintenance)
+  # end
   run "mkdir -p #{shared_path}/system/"
   put maintenance, "#{shared_path}/system/maintenance.html",
                    :mode => 0644
@@ -211,6 +218,7 @@ namespace :deploy do
       mkdir -p #{shared_path} &&
       mkdir -p #{shared_path}/config &&
       mkdir -p #{shared_path}/log &&
+      mkdir -p #{shared_path}/pids &&
       mkdir -p #{shared_path}/sis_import_data &&
       mkdir -p #{shared_path}/config/nces_data &&
       mkdir -p #{shared_path}/public/otrunk-examples &&

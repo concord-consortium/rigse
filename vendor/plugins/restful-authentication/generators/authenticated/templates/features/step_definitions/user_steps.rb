@@ -67,8 +67,8 @@ end
 
 Then "$login should be logged in" do |login|
   controller.logged_in?.should be_true
-  controller.current_user.should === @user
-  controller.current_user.login.should == login
+  controller.current_visitor.should === @user
+  controller.current_visitor.login.should == login
 end
 
 def named_user login
@@ -120,7 +120,7 @@ def log_in_user user_params=nil
   user_params  ||= @user_params
   post "/session", user_params
   @user = User.find_by_login(user_params['login'])
-  controller.current_user
+  controller.current_visitor
 end
 
 def log_in_user! *args

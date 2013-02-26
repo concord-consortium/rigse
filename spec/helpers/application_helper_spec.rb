@@ -23,7 +23,7 @@ describe ApplicationHelper do
 
     describe "as anonymous" do
       before(:each) do
-        stub!(:current_user).and_return(@anonymous_user)
+        stub!(:current_visitor).and_return(@anonymous_user)
         @original_user = @anonymous_user
       end
       it "should display appropriate login messages" do
@@ -37,7 +37,7 @@ describe ApplicationHelper do
 
     describe "as admin" do
       before(:each) do
-        stub!(:current_user).and_return(@admin_user)
+        stub!(:current_visitor).and_return(@admin_user)
         @original_user = @admin_user
       end
       it "should display appropriate login messages" do

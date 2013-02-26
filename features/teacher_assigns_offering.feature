@@ -51,6 +51,8 @@ Feature: Teacher can assign an offering to a class
     Then I should see "Resource Page: Test Resource Page"
     Then I should see "External Activity: My Activity"
 
+  # default class is only used by SPARKS and they are not planning to continuing using the portal
+  @pending
   @javascript
   Scenario: Offerings from the default class show learner data in the default class
     Given the default class is created
@@ -72,7 +74,7 @@ Feature: Teacher can assign an offering to a class
     And the external activity named "My Activity" should have "offerings_count" equal to "2"
     And I am logged in with the username student
     And I am on the class page for "My Class"
-    And I follow "run My Activity"
+    And I run the activity
     Then I should be on the about page
     And I login as an admin
     And I am on the class page for "Default Class"
@@ -80,6 +82,8 @@ Feature: Teacher can assign an offering to a class
     And I should see "joe user"
     And the learner count for the external activity "My Activity" in the class "Default Class" should be "1"
 
+  # default class is only used by SPARKS and they are not planning to continuing using the portal
+  @pending
   @dialog
   @javascript
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class

@@ -19,7 +19,7 @@ class PagesController < ApplicationController
   end
   
   def can_create
-    if (current_user.anonymous?)
+    if (current_visitor.anonymous?)
       flash[:error] = "Anonymous users can not create pages"
       redirect_back_or pages_path
     end
@@ -49,8 +49,8 @@ class PagesController < ApplicationController
   
   def can_edit
     if defined? @page
-      unless @page.changeable?(current_user)
-        error_message = "you (#{current_user.login}) are not permitted to #{action_name.humanize} (#{@page.name})"
+      unless @page.changeable?(current_visitor)
+        error_message = "you (#{current_visitor.login}) are not permitted to #{action_name.humanize} (#{@page.name})"
         flash[:error] = error_message
         if request.xhr?
           render :text => "<div class='flash_error'>#{error_message}</div>"
@@ -89,7 +89,7 @@ class PagesController < ApplicationController
     })
 
     if params[:mine_only]
-      @pages = @pages.reject { |i| i.user.id != current_user.id }
+      @pages = @pages.reject { |i| i.user.id != current_visitor.id }
     end
 
     @paginated_objects = @pages
@@ -168,7 +168,7 @@ class PagesController < ApplicationController
   # POST /page.xml
   def create
     @page = Page.create(params[:page])
-    @page.user = current_user
+    @page.user = current_visitor
     respond_to do |format|
       if @page.save
         format.js
@@ -240,10 +240,10 @@ class PagesController < ApplicationController
     end
     @component.create_default_choices if component_class == Embeddable::MultipleChoice
     @component.pages << @page
-    @component.user = current_user
+    @component.user = current_visitor
     @component.save
     @element = @page.element_for(@component)
-    @element.user = current_user
+    @element.user = current_visitor
     @element.save
     
     # 
@@ -297,7 +297,7 @@ class PagesController < ApplicationController
   # Paste a page component
   #
   def paste
-    if @page.changeable?(current_user)
+    if @page.changeable?(current_visitor)
       @original = clipboard_object(params)      
       if (@original) 
         # let some embeddables define their own means to save

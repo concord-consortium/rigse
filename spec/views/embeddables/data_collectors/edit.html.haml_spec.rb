@@ -7,7 +7,7 @@ describe "/embeddable/data_collectors/edit.html.haml" do
     # cut off the edit_menu_for helper which traverses lots of other code
     power_user = stub_model(User, :has_role? => true)
     view.stub!(:edit_menu_for).and_return("edit menu")
-    view.stub!(:current_user).and_return(power_user)
+    view.stub!(:current_visitor).and_return(power_user)
     assign(:data_collector, @data_collector = stub_model(Embeddable::DataCollector,
       :new_record? => false, 
       :id => 1, 

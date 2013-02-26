@@ -11,17 +11,16 @@ Feature: Class state should be saved
       | Physics    | teacher |
     And the classes "My Class" are in a school named "VJTI"
     And the classes "Physics" are in a school named "VJTI"
-    And I login with username: teacher password: teacher 
+    And I am logged in with the username teacher
   
   
   @javascript
   Scenario: Teacher should land on instructional materials page
+    When I am on the home page
     When I follow "Physics" within left panel for class navigation
     Then I should be on the Instructional Materials page for "Physics"
-    And I follow "Physics" within left panel for class navigation
-    And  I should be on the Instructional Materials page for "Physics"
-  
-  
+    
+    
   @javascript
   Scenario: Teacher's state in the left pane should be maintained when navigating across classes
     When I am on "Student Roster" page for "My Class"

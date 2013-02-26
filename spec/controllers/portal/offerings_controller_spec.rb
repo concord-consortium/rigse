@@ -45,7 +45,7 @@ describe Portal::OfferingsController do
       get :show, :id => @offering.id, :format => 'run_external_html'
       response.cookies["save_path"].should == @offering.runnable.save_path
       response.cookies["learner_id"].should == @learner.id.to_s
-      response.cookies["student_name"].should == "#{current_user.first_name} #{current_user.last_name}"
+      response.cookies["student_name"].should == "#{current_visitor.first_name} #{current_visitor.last_name}"
       response.cookies["activity_name"].should == @offering.runnable.name
       response.cookies["class_id"].should == @clazz.id.to_s
 

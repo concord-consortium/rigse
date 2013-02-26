@@ -44,13 +44,11 @@ Feature: Student should see latest class information
     Then I should see "Basic Electronics"
     
     
-  @javascript
   Scenario: Student should see all the updated information of a class
     When I login with username: student
     And I follow "Basic Electronics"
     Then I should see "Semester: Fall"
     And I should see "Class Word: betrx"
-    And I should see "This is a biology class"
     And I should not see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "static discipline"

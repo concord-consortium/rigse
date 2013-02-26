@@ -7,9 +7,9 @@ describe "/dataservice/blobs/show.html.haml" do
     view.stub!(:show_menu_for).and_return("show menu")
 
     power_user = stub_model(User, :has_role? => true)
-    view.stub!(:current_user).and_return(power_user)
+    view.stub!(:current_visitor).and_return(power_user)
 
-    # :changeable? => true prevents a current_user lookup, but will test if editing links correctly wrap the passed block
+    # :changeable? => true prevents a current_visitor lookup, but will test if editing links correctly wrap the passed block
     @dataservice_blob = stub_model(Dataservice::Blob, :id => 1, :token => "8ad04a50ba96463d80407cd119173b86", 
       :content => "", :changeable? => true)
     assign(:dataservice_blob, @dataservice_blob)

@@ -4,7 +4,7 @@ describe "/admin/tags/show.html.haml" do
   include Admin::TagsHelper
   before(:each) do
     power_user = stub_model(User, :has_role? => true)
-    view.stub!(:current_user).and_return(power_user)
+    view.stub!(:current_visitor).and_return(power_user)
     @admin_tag = stub_model(Admin::Tag,
       :scope => "value for scope",
       :tag => "value for tag")

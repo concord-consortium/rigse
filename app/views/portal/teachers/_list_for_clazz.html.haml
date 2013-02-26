@@ -8,7 +8,7 @@
       %strong= "Teachers: #{portal_clazz.teachers.length}"    
     .action_menu_header_right
       %ul
-        - if portal_clazz.changeable?(current_user)     
+        - if portal_clazz.changeable?(current_visitor)     
           - if teacher_list.size > -1
             %li 
               %span{:id => 'link_text'} 
