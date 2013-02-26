@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130214205707) do
+ActiveRecord::Schema.define(:version => 20130225200028) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -20,8 +20,6 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
@@ -70,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.text     "custom_help_page_html"
     t.string   "help_type"
     t.boolean  "include_external_activities",                  :default => false
+    t.text     "enabled_bookmark_types"
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|
@@ -123,6 +122,15 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+  end
+
+  create_table "bookmarks", :force => true do |t|
+    t.string   "name"
+    t.string   "type"
+    t.string   "url"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "collaborations", :force => true do |t|
@@ -457,13 +465,14 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.string   "x_axis_units"
     t.string   "y_axis_label"
     t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled",               :default => false
-    t.boolean  "draw_marks",                               :default => false
-    t.boolean  "connect_points",                           :default => true
-    t.boolean  "autoscale_enabled",                        :default => false
-    t.boolean  "ruler_enabled",                            :default => false
-    t.boolean  "show_tare",                                :default => false
-    t.boolean  "single_value",                             :default => false
+    t.boolean  "multiple_graphable_enabled"
+    t.boolean  "draw_marks"
+    t.boolean  "connect_points"
+    t.boolean  "autoscale_enabled"
+    t.boolean  "ruler_enabled"
+    t.boolean  "show_tare"
+    t.boolean  "single_value"
+    t.integer  "probe_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "graph_type_id"
@@ -609,8 +618,6 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.string   "uuid",             :limit => 36
     t.text     "prompt"
     t.string   "default_response"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "rows",                           :default => 5
     t.integer  "columns",                        :default => 32
     t.integer  "font_size",                      :default => 12
@@ -718,17 +725,19 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
   end
 
   create_table "images", :force => true do |t|
-    t.integer  "parent_id"
-    t.string   "content_type"
-    t.string   "filename"
-    t.string   "thumbnail"
-    t.integer  "size"
-    t.integer  "width"
-    t.integer  "height"
-    t.string   "description"
-    t.string   "uuid",         :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "attribution"
+    t.string   "publication_status", :default => "private"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.string   "license_code"
+    t.integer  "width",              :default => 0
+    t.integer  "height",             :default => 0
   end
 
   create_table "installer_reports", :force => true do |t|
@@ -941,9 +950,6 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.integer  "position"
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
-    t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "user_id"
   end
 
@@ -960,11 +966,6 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.integer  "position"
     t.integer  "section_id"
     t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
     t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
@@ -2010,7 +2011,7 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",          :limit => 2147483647
+    t.text     "answers",          :limit => 16777215
     t.string   "runnable_type"
     t.float    "complete_percent"
   end
@@ -2235,11 +2236,6 @@ ActiveRecord::Schema.define(:version => 20130214205707) do
     t.integer  "position"
     t.integer  "activity_id"
     t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
   end
