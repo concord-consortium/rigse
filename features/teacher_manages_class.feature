@@ -6,9 +6,8 @@ Feature: Teacher manages a class
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the teachers "teacher, teacher_with_no_class" are in a school named "Harvard School"
     And the following classes exist:
-      | name        | teacher | class_word |
+      | name        | teacher    | class_word |
       | Physics     | teacher    | phy        |
       | Chemistry   | teacher    | chem       |
       | Mathematics | teacher    | math       |
@@ -80,7 +79,7 @@ Feature: Teacher manages a class
   @javascript
   Scenario: Teacher logs in and visits a class page which some other teacher has deactivated
     Given the following teacher and class mapping exists:
-      | class_name  | teacher  |
+      | class_name  | teacher                   |
       | Mathematics |  teacher_with_no_class    |
       | Biology     |  teacher_with_no_class    |
       | Geography   |  teacher_with_no_class    |
@@ -98,7 +97,7 @@ Feature: Teacher manages a class
   @javascript
   Scenario: Teacher creates a copy of a class
     Given the following teacher and class mapping exists:
-      | class_name  | teacher  |
+      | class_name  | teacher                   |
       | Physics     |  teacher_with_no_class    |
     When I follow copy class link for first class
     And I fill in "Class Name:" with "Copy of Physics"

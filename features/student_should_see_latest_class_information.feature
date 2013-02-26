@@ -6,7 +6,6 @@ Feature: Student should see latest class information
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And  the teachers "teacher , albert" are in a school named "VJTI"
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |

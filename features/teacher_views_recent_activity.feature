@@ -6,7 +6,6 @@ Feature: Teacher can see recent activity
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the teachers "teacher" are in a school named "Harvard School"
     And the following classes exist:
       | name        | teacher | semester |
       | My Class    | teacher | Fall     |
