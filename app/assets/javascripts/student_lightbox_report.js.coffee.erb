@@ -67,12 +67,12 @@ class LightboxReport
     @disableUpdates()
     @lightbox_elm.hide()
 
+  updatedAtBaseUrl: "<%= URLResolver.getUrl('learner_updated_at_path', {:id => 999}) %>"
   parseOfferingUrl: (url) ->
-    @report_url = url.match(/\/portal\/offerings\/\d+\/student_report/gi).first();
+    @report_url = url.match(/\/.*portal\/offerings\/\d+\/student_report/gi).first()
     if @report_url?
       @offering_id = @report_url.match(/\d+/gi).first()
-      # TODO relative routes?
-      @updated_at_url = "/report/learner/updated_at/#{@offering_id}"
+      @updated_at_url = @updatedAtBaseUrl.replace(/999/,@offering_id)
 
   isItUpdatetime: (response) ->
     should_we_udpate = false
