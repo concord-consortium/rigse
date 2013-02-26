@@ -6,6 +6,7 @@
 = require 'effects'
 = require 'dragdrop'
 = require 'controls'
+= require 'rails'
 = require 'misc/resizable'
 = require 'flotr/excanvas'
 = require 'flotr/flotr'

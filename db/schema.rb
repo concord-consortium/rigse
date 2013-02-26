@@ -11,15 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130129175554) do
+ActiveRecord::Schema.define(:version => 20130225200028) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",               :limit => 36
     t.string   "name"
-    t.text     "description"
+    t.string   "uuid",               :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "description"
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
     t.boolean  "enable_grade_levels",                          :default => false
     t.text     "custom_css"
     t.boolean  "use_bitmap_snapshots",                         :default => false
-    t.boolean  "teachers_can_author",                          :default => true
     t.boolean  "opportunistic_installer",                      :default => false
+    t.boolean  "teachers_can_author",                          :default => true
     t.boolean  "enable_member_registration",                   :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
     t.boolean  "require_user_consent",                         :default => false
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
     t.text     "custom_help_page_html"
     t.string   "help_type"
     t.boolean  "include_external_activities",                  :default => false
+    t.text     "enabled_bookmark_types"
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|
@@ -123,12 +124,35 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
     t.integer  "user_id"
   end
 
+  create_table "bookmarks", :force => true do |t|
+    t.string   "name"
+    t.string   "type"
+    t.string   "url"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "collaborations", :force => true do |t|
     t.integer  "bundle_content_id"
     t.integer  "student_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "commons_licenses", :id => false, :force => true do |t|
+    t.string   "code",        :null => false
+    t.string   "name",        :null => false
+    t.text     "description"
+    t.string   "deed"
+    t.string   "legal"
+    t.string   "image"
+    t.integer  "number"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "commons_licenses", ["code"], :name => "index_commons_licenses_on_code"
 
   create_table "dataservice_blobs", :force => true do |t|
     t.binary   "content",                    :limit => 16777215
@@ -233,8 +257,8 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
     t.boolean  "valid_xml"
     t.boolean  "empty"
     t.string   "uuid"
-    t.datetime "created_at",                                                       :null => false
-    t.datetime "updated_at",                                                       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "parts_extracted",                               :default => false
   end
 
@@ -243,8 +267,8 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   create_table "dataservice_periodic_bundle_loggers", :force => true do |t|
     t.integer  "learner_id"
     t.text     "imports"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "dataservice_periodic_bundle_loggers", ["learner_id"], :name => "learner_index"
@@ -254,8 +278,8 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
     t.boolean  "delta",                                         :default => true
     t.string   "key"
     t.text     "value",                     :limit => 16777215
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index"
@@ -430,25 +454,25 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   create_table "embeddable_data_collectors", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "probe_type_id"
     t.integer  "user_id"
     t.string   "uuid",                       :limit => 36
+    t.integer  "y_axis_min",                               :default => 0
+    t.integer  "y_axis_max",                               :default => 5
+    t.integer  "x_axis_min",                               :default => 0
+    t.integer  "x_axis_max",                               :default => 60
     t.string   "title"
-    t.float    "y_axis_min",                               :default => 0.0
-    t.float    "y_axis_max",                               :default => 5.0
-    t.float    "x_axis_min"
-    t.float    "x_axis_max"
-    t.string   "x_axis_label",                             :default => "Time"
-    t.string   "x_axis_units",                             :default => "s"
+    t.string   "x_axis_label"
+    t.string   "x_axis_units"
     t.string   "y_axis_label"
     t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled",               :default => false
-    t.boolean  "draw_marks",                               :default => false
-    t.boolean  "connect_points",                           :default => true
-    t.boolean  "autoscale_enabled",                        :default => false
-    t.boolean  "ruler_enabled",                            :default => false
-    t.boolean  "show_tare",                                :default => false
-    t.boolean  "single_value",                             :default => false
+    t.boolean  "multiple_graphable_enabled"
+    t.boolean  "draw_marks"
+    t.boolean  "connect_points"
+    t.boolean  "autoscale_enabled"
+    t.boolean  "ruler_enabled"
+    t.boolean  "show_tare"
+    t.boolean  "single_value"
+    t.integer  "probe_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "graph_type_id"
@@ -586,14 +610,14 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",             :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "prompt"
-    t.string   "default_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.string   "uuid",             :limit => 36
+    t.text     "prompt"
+    t.string   "default_response"
     t.integer  "rows",                           :default => 5
     t.integer  "columns",                        :default => 32
     t.integer  "font_size",                      :default => 12
@@ -660,10 +684,10 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   end
 
   create_table "embeddable_xhtmls", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -701,17 +725,19 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   end
 
   create_table "images", :force => true do |t|
-    t.integer  "parent_id"
-    t.string   "content_type"
-    t.string   "filename"
-    t.string   "thumbnail"
-    t.integer  "size"
-    t.integer  "width"
-    t.integer  "height"
-    t.string   "description"
-    t.string   "uuid",         :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "attribution"
+    t.string   "publication_status", :default => "private"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.string   "license_code"
+    t.integer  "width",              :default => 0
+    t.integer  "height",             :default => 0
   end
 
   create_table "installer_reports", :force => true do |t|
@@ -918,12 +944,12 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
-    t.integer  "page_id"
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "page_id"
+    t.integer  "position"
+    t.integer  "embeddable_id"
+    t.string   "embeddable_type"
     t.integer  "user_id"
   end
 
@@ -932,17 +958,17 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "section_id"
-    t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "section_id"
+    t.string   "uuid",               :limit => 36
     t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
     t.integer  "offerings_count",                  :default => 0
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -973,7 +999,7 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
@@ -1985,7 +2011,7 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",          :limit => 2147483647
+    t.text     "answers",          :limit => 16777215
     t.string   "runnable_type"
     t.float    "complete_percent"
   end
@@ -2202,14 +2228,14 @@ ActiveRecord::Schema.define(:version => 20130129175554) do
   end
 
   create_table "sections", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "activity_id"
-    t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "activity_id"
+    t.string   "uuid",               :limit => 36
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
   end

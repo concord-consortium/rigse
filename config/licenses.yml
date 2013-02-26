@@ -1,0 +1,40 @@
+---
+# from http://creativecommons.org/licenses/
+licenses:
+  - code        : CC0
+    name        : Public Domain, all uses and modifications allowed (no rights reserved)
+    description : CC0 enables scientists, educators, artists and other creators and owners of copyright- or database-protected content to waive those interests in their works and thereby place them as completely as possible in the public domain, so that others may freely build upon, enhance and reuse the works for any purposes without restriction under copyright or database law.
+    deed        : http://creativecommons.org/about/cc0
+    legal       : http://creativecommons.org/about/cc0
+    image       : http://i.creativecommons.org/p/zero/1.0/88x31.png
+    number      : 0
+
+  - code        : CC-BY
+    name        : Modifications YES, commercial use YES, sharing required  NO (CC-BY-3.0)
+    description : This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials.
+    number      : 1
+
+  - code        : CC-BY-SA
+    name        : Modifications YES, commercial use YES, sharing required YES (CC-BY-SA-3.0)
+    description : This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to “copyleft” free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects.
+    number      : 2
+
+  - code        : CC-BY-NC
+    name        : Modifications YES, commercial use  NO, sharing required NO (CC-BY-NC-3.0)
+    description : This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms.
+    number      : 3
+
+  - code        : CC-BY-NC-SA
+    name        : Modifications YES, commercial use  NO, sharing required YES (CC-BY-NC-SA-3.0)
+    description : This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.
+    number      : 4
+
+  - code        : CC-BY-ND
+    name        : Modifications  NO, commercial use YES, sharing required  NO (CC-BY-ND-3.0)
+    description : This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you.
+    number      : 5
+
+  - code        : CC-BY-NC-ND
+    name        : Modifications  NO, commercial use  NO, sharing required  NO (CC-BY-NC-ND-3.0)
+    description : This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.
+    number      : 6
