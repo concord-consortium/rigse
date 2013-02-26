@@ -13,7 +13,7 @@ class ImagesController < ApplicationController
     @images = Image.search_list({
       :name => @name,
       :only_current_users => @only_mine,
-      :user => current_user,
+      :user => current_visitor,
       :sort_order => @sort_order,
       :paginate => true,
       :per_page => 36,
@@ -30,10 +30,10 @@ class ImagesController < ApplicationController
   # GET /images/1
   # GET /images/1.xml
   def show
-    if current_user.has_role? 'admin'
+    if current_visitor.has_role? 'admin'
       @image = Image.find(params[:id])
     else
-      @image = Image.visible_to_user_with_drafts(current_user).find(params[:id])
+      @image = Image.visible_to_user_with_drafts(current_visitor).find(params[:id])
     end
 
     respond_to do |format|
@@ -60,7 +60,7 @@ class ImagesController < ApplicationController
   # POST /images
   # POST /images.xml
   def create
-    params[:image][:user_id] = current_user.id.to_s
+    params[:image][:user_id] = current_visitor.id.to_s
     @image = Image.new(params[:image])
 
     respond_to do |format|
@@ -145,20 +145,20 @@ class ImagesController < ApplicationController
   end
 
   def teacher_required
-    return true if logged_in? && (current_user.portal_teacher || current_user.has_role?("admin"))
+    return true if logged_in? && (current_visitor.portal_teacher || current_visitor.has_role?("admin"))
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end
 
   def author_required
-    return true if logged_in? && (current_user.has_role?("author"))
+    return true if logged_in? && (current_visitor.has_role?("author"))
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end
 
   def find_image_and_verify_owner
     @image = Image.find(params[:id])
-    return if @image.changeable?(current_user)
+    return if @image.changeable?(current_visitor)
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end

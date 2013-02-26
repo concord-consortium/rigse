@@ -35,7 +35,7 @@
       %span.small= link_to license.name, license.deed, :target => 'new'
       %span.tiny.description= license.description
 .horizontal_button_panel
-  - if @image.changeable?(current_user)
+  - if @image.changeable?(current_visitor)
     = button_to 'Edit', edit_image_path(@image), :method => :get
     - unless @image.public?
       = button_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
