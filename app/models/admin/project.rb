@@ -89,7 +89,17 @@ class Admin::Project < ActiveRecord::Base
   def default_project?
     active
   end
-  
+
+  def school_hours
+    start_hour = (school_start_hour % 12).to_s + " " + am_pm(school_start_hour)
+    end_hour = (school_end_hour % 12).to_s + " " + am_pm(school_end_hour)
+    "#{start_hour} to #{end_hour} #{Time.now.zone}"
+  end
+
+  def am_pm(hour)
+    hour > 12 ? "pm" : "am"
+  end
+
   def summary_info
     summary = <<HEREDOC
 

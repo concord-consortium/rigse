@@ -173,7 +173,7 @@ class Portal::OfferingsController < ApplicationController
     respond_to do |format|
       format.html {
         reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
-        @learners = reportUtil.learners
+        @learners = Sorting.sort_by_student(reportUtil.learners)
         @page_elements = reportUtil.page_elements
         
         render :layout => 'report' # report.html.haml

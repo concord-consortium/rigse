@@ -79,6 +79,15 @@
             %br
             (This option changes whether or not group accounts can be created by teachers)
           %li
+            %b
+              School Hours -
+              Start hour:
+              = f.text_field :school_start_hour, :size => 3
+              End hour:
+              = f.text_field :school_end_hour, :size => 3
+            %br
+            (This changes the time period during which group accounts are allowed to log in. Please use 24 hour notation.)
+          %li
             Jnlp CDN Hostname:
             = f.text_field :jnlp_cdn_hostname, :size => 60
 
