@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
       if user.group_account_class_id
         # if it's outside of school hours, fail the login
         # TODO Can we adjust school hours based on the user's school's time zone?
-        t = Time.now
+        t = TZ[:eastern].utc_to_local(Time.now.utc)
         hour = t.hour
         if hour < current_project.school_start_hour || hour >= current_project.school_end_hour || t.saturday? || t.sunday?
           note_failed_signin_time_restriction
