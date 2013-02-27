@@ -1,9 +1,5 @@
 class PadletWrapper
 
-  PadletBaseUri = 'http://padlet.com'
-  DefaultEmail = "all-portal-errors@concord.org"
-
-
   attr_accessor :password
   attr_accessor :username
   attr_accessor :padlet_url
@@ -11,8 +7,33 @@ class PadletWrapper
   attr_accessor :auth_data
   attr_accessor :auth_cookies
 
+  yaml_file_path = File.join(Rails.root,'config','padlet.yml')
+  Opts = {
+    :host            => 'padlet.com',
+    :email           => 'all-portal-errors@concord.org',
+  }
+  begin
+    yaml_config = YAML.load_file(yaml_file_path).symbolize_keys
+    Opts.merge!(yaml_config)
+  rescue Exception => e
+    puts "Error: #{e} loading yaml: #{yaml_file_path}"
+    puts "Using defaults (see padlet_wrapper.rb)"
+  end
+
+  def self.hostname
+    Opts[:host]
+  end
+
+  def self.basic_auth_user
+    Opts[:basic_auth_user]
+  end
+
+  def self.basic_auth_pass
+    Opts[:basic_auth_pass]
+  end
+
   def self.email
-    Admin::Project.settings_for(:help_email) || DefaultEmail
+    Opts[:email]
   end
 
   def self.pass
@@ -21,7 +42,7 @@ class PadletWrapper
 
   def self.make_bookmark(user=nil,pass=nil)
     user ||= self.email
-    pass || self.pass
+    pass ||= self.pass
     instance = self.new(user,pass)
     instance.get_auth_token
     instance.make_wall
@@ -33,31 +54,39 @@ class PadletWrapper
     self.password = _pass
   end
 
-  def basic_auth
-    # {:username => "test", :password => "test"}
-  end
-
-  def get_opts(data)
+  def headers(opts)
     headers  = {'Content-Type' => 'application/json' }
     unless (self.auth_cookies.blank?)
       headers['cookie'] = self.auth_cookies.join(";")
     end
-    opts = {}
     opts[:headers] = headers
-    opts[:body]    = data.to_json
-    if (self.basic_auth)
-      opts[:basic_auth] = basic_auth
+    opts
+  end
+
+  def auth_headers(opts)
+    user =PadletWrapper.basic_auth_user
+    pass =PadletWrapper.basic_auth_pass
+    if (user && pass)
+      opts[:basic_auth] = {:username => user, :password => pass }
     end
     opts
   end
 
+  def get_opts(data)
+    opts = {}
+    headers(opts)
+    auth_headers(opts)
+    opts[:body] = data.to_json
+    opts
+  end
+
   def json_get(path,data)
-    endpoint = "#{PadletBaseUri}/#{path}"
+    endpoint = "http://#{PadletWrapper.hostname}/#{path}"
     HTTParty.post(endpoint, self.get_opts(data))
   end
 
   def json_post(path,data)
-    endpoint = "#{PadletBaseUri}/#{path}"
+    endpoint = "http://#{PadletWrapper.hostname}/#{path}"
     HTTParty.post(endpoint, self.get_opts(data))
   end
 
@@ -84,8 +113,9 @@ class PadletWrapper
 
   def make_wall
     results = self.json_post('/walls',self.auth_data)
-    # self.padlet_url=results['links']['embed']
-    self.padlet_url=results['links']['doodle']
+    self.padlet_url=results['links']['doodle'] # also checkout 'embed'
+    # TODO: HACK/FIX the walls endpoint returns "stage.padlet.com"
+    self.padlet_url.gsub!(/stage\.padlet\.com/, PadletWrapper.hostname)
     self
   end
 
