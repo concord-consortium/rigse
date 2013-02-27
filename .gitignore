@@ -97,3 +97,4 @@ config/google_analytics.yml
 chromedriver.log
 public/assets/
 public/*/calendar_date_select
+padlet.yml
