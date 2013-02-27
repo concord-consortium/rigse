@@ -3,9 +3,13 @@ class Bookmark < ActiveRecord::Base
   # TODO: Its probably best not to use this type directly.
   attr_accessible :name, :url, :user_id, :user
   belongs_to :user
+  has_many   :bookmark_visits,  :dependent => :destroy
   validates_presence_of :user
   validates_presence_of :url
 
+
+  url_regex      = /https?:\/\/(\S+)+\s*$/i
+  validates_format_of :url,  :with => url_regex
 
   def self.available_types
     [PadletBookmark, GenericBookmark]
@@ -32,4 +36,11 @@ class Bookmark < ActiveRecord::Base
     return true if (self.is_allowed?)
   end
 
+  def visits
+    bookmark_visits
+  end
+
+  def record_visit(user)
+    self.bookmark_visits <<  BookmarkVisit.new(:user => user)
+  end
 end

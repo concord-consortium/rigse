@@ -14,7 +14,7 @@ module BookmarksHelper
     type = bookmark.type.underscore
     concat(render(:partial => "bookmarks/#{type}/#{form}", :locals => {
       :name => bookmark.name,
-      :url  => bookmark.url
+      :url  => visit_bookmark_path(bookmark)
     }))
   end
 
