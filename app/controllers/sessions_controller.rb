@@ -32,6 +32,20 @@ class SessionsController < ApplicationController
   def password_authentication
     user = User.authenticate(params[:login], params[:password])
     if user
+      if user.group_account_class_id
+        # if it's outside of school hours, fail the login
+        # TODO Can we adjust school hours based on the user's school's time zone?
+        t = Time.now
+        hour = t.hour
+        if hour < current_project.school_start_hour || hour >= current_project.school_end_hour || t.saturday? || t.sunday?
+          note_failed_signin_time_restriction
+          @login = params[:login]
+          @remember_me = params[:remember_me]
+          self.current_visitor = User.anonymous
+          redirect_to :home
+          return
+        end
+      end
       self.current_visitor = user
       session[:original_user_id] = current_visitor.id
       successful_login
@@ -66,7 +80,10 @@ class SessionsController < ApplicationController
     flash[:error] = "Couldn't log you in as '#{params[:login]}'"
     logger.warn "Failed login for '#{params[:login]}' from #{request.remote_ip} at #{Time.now.utc}"
   end
-  
+
+  def note_failed_signin_time_restriction
+    flash[:error] = "The account '#{params[:login]}' is only allowed to log in during school hours (#{current_project.school_hours})"
+  end
   # 2011-11-07 NP: moved to ApplicationController 
   # def check_student_security_questions_ok
   #   if current_project && current_project.use_student_security_questions && !current_visitor.portal_student.nil? && current_visitor.security_questions.size < 3
