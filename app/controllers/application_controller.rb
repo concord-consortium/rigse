@@ -118,8 +118,8 @@ class ApplicationController < ActionController::Base
 
 
   def check_user
-    if logged_in?
-      self.current_visitor = current_visitor
+    if user_signed_in?
+      self.current_visitor = current_user
     else
       self.current_visitor = User.anonymous
     end

@@ -1,34 +1,24 @@
 .header-login-box
-  - if current_user
-    %div{:style=> "font-size:14px"}
-      %span{:style=> "max-width: 646px; text-align: left;"}
-        Welcome
-        = current_user.first_name + " " + current_user.last_name
-      = link_to 'Logout', destroy_user_session_path
-      
-  - else
-    %div
-      /= form_tag session_path, :id=>"header-project-signin" do
-      = form_tag "", :id=>"header-project-signin" do
-        %table{:cellpadding=>"0", :cellspacing=>"0", :border=>"0"}
-          %tbody
-            %tr.first-row
-              %td
-                %label{:for=>"header_login"}Username
-              %td.login-box
-                %input{:type=>"text", :id=>"header_login", :value=> @login, :name=>"login"}
-            %tr.second-row
-              %td
-                %label{:for=>"header_password"}Password
-              %td.password-box
-                %input{:type=>"password", :id=>"header_password", :class=>"text", :name=>"password"}
-            %tr.third-row
-              %td
-              %td
-                =link_to 'Forgot login?',forgot_password_path, :id=>"link_forgot_password"
-                | 
-                =link_to 'Register', pick_signup_path
-                %input{:type=>"submit", :id=>"LoginSubmitButtonHeader",:value=>"GO"}
-        .clear_both
-  
-    
+  %div
+    /= form_tag session_path, :id=>"header-project-signin" do
+    = form_tag "", :id=>"header-project-signin" do
+      %table{:cellpadding=>"0", :cellspacing=>"0", :border=>"0"}
+        %tbody
+          %tr.first-row
+            %td
+              %label{:for=>"header_login"}Username
+            %td.login-box
+              %input{:type=>"text", :id=>"header_login", :value=> @login, :name=>"login"}
+          %tr.second-row
+            %td
+              %label{:for=>"header_password"}Password
+            %td.password-box
+              %input{:type=>"password", :id=>"header_password", :class=>"text", :name=>"password"}
+          %tr.third-row
+            %td
+            %td
+              =link_to 'Forgot login?',forgot_password_path, :id=>"link_forgot_password"
+              | 
+              =link_to 'Register', pick_signup_path
+              %input{:type=>"submit", :id=>"LoginSubmitButtonHeader",:value=>"GO"}
+      .clear_both
