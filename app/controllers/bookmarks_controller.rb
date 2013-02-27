@@ -1,4 +1,5 @@
 class BookmarksController < ApplicationController
+  include BookmarksHelper
 
   def add_padlet
     mark = PadletBookmark.create_for_user(current_visitor)
@@ -6,8 +7,8 @@ class BookmarksController < ApplicationController
       page.hide "padlet_form"
       page.insert_html :bottom,
         "bookmarks_box",
-        :partial => "bookmarks/generic_bookmark/show",
-        :locals => {:name => mark.name, :url => visit_bookmark_path(mark)}
+        :partial => "bookmarks/show",
+        :locals => {:bookmark => mark}
     end
   end
 
@@ -20,8 +21,8 @@ class BookmarksController < ApplicationController
         :partial => "bookmarks/generic_bookmark/form"
       page.insert_html :bottom,
         "bookmarks_box",
-        :partial => "bookmarks/generic_bookmark/show",
-        :locals => {:name => mark.name, :url => visit_bookmark_path(mark)}
+        :partial => "bookmarks/show",
+        :locals => {:bookmark => mark}
     end
   end
 
@@ -29,5 +30,19 @@ class BookmarksController < ApplicationController
     mark = Bookmark.find(params['id'])
     mark.record_visit(current_visitor)
     redirect_to mark.url
+  end
+
+  def delete
+    mark = Bookmark.find(params['id'])
+    dom_id = bookmark_dom_item(mark)
+    if mark.changeable? current_visitor
+      mark.destroy
+      render :update do |page|
+        page.remove dom_id
+        if PadletBookmark.user_can_make? current_visitor
+          page.show "padlet_form"
+        end
+      end
+    end
   end
 end

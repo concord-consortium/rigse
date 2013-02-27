@@ -1,6 +1,32 @@
 #bookmarks_box {
   margin-top: 2em;
   border-top: 1px dotted #479492;
+  li {
+    padding-top:    5px;
+    padding-bottom: 5px;
+    a {
+      display: inline;
+      padding: 4px;
+      border-radius: 6px;
+    }
+    a.delete {
+      margin-left: 2em;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      padding-left: 4px;
+      padding-right: 4px;
+      color: white;
+      background-color: red;
+      border-radius: 10px;
+      opacity: 0.2;
+      background-color: #dd6e0d;
+      background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
+      background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+    }
+    a.delete:hover {
+      opacity: 1.0;
+    }
+  }
 }
 .bookmarks_form {
   display: block;

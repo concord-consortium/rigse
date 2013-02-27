@@ -19,11 +19,9 @@ module BookmarksHelper
     end
   end
 
-  def render_bookmark(bookmark,form='show')
-    type = bookmark.type.underscore
-    concat(render(:partial => "bookmarks/#{type}/#{form}", :locals => {
-      :name => bookmark.name,
-      :url  => visit_bookmark_path(bookmark)
+  def render_bookmark(bookmark)
+    concat(render(:partial => "bookmarks/show", :locals => {
+      :bookmark => bookmark
     }))
   end
 
@@ -42,5 +40,23 @@ module BookmarksHelper
     end
   end
 
+  def delete_bookmark_button(mark)
+    name    = mark.name
+    url     = delete_bookmark_path(mark)
+    confirm = "delete bookmark to #{name}"
+
+    link_to_remote( "x",
+      {:confirm => confirm,  :url => url},
+      {:class => "delete"}
+    )
+  end
+
+  def bookmark_dom_item(mark)
+    "bookmark_#{mark.type}_#{mark.id}"
+  end
+# remote_link_button "delete.png",
+# :method => :delete,
+# :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?",
+# :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
 
 end

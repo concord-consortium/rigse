@@ -584,9 +584,13 @@ constraints :id => /\d+/ do
   post  '/installer_report' => 'misc#installer_report', :as => :installer_report
   match 'authoring' => 'home#authoring', :as => :authoring
   match '/:controller(/:action(/:id))'
-  match '/bookmark/add_padlet'     => 'bookmarks#add_padlet',     :as => :add_padlet
-  match '/bookmark/add'            => 'bookmarks#add',            :as => :add_bookmark
-  match '/bookmark/visit/:id'      => 'bookmarks#visit',          :as => :visit_bookmark
+
+  # TODO: clean up these adhoc bookmark routes:
+  match '/bookmark/add_padlet'     => 'bookmarks#add_padlet', :as => :add_padlet
+  match '/bookmark/add'            => 'bookmarks#add',        :as => :add_bookmark
+  match '/bookmark/visit/:id'      => 'bookmarks#visit',      :as => :visit_bookmark
+  match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark
+
   root :to => 'home#index'
 
 

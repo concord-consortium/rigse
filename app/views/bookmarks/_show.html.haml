@@ -1,0 +1,3 @@
+%li.padlet_item{:id => bookmark_dom_item(bookmark) }
+  = delete_bookmark_button(bookmark)
+  %a{:href => visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
