@@ -590,6 +590,7 @@ constraints :id => /\d+/ do
   match '/bookmark/add'            => 'bookmarks#add',        :as => :add_bookmark
   match '/bookmark/visit/:id'      => 'bookmarks#visit',      :as => :visit_bookmark
   match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark
+  match '/bookmark/visits'         => 'bookmarks#visits',     :as => :bookmark_visits
 
   root :to => 'home#index'
 

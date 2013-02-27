@@ -45,4 +45,13 @@ class BookmarksController < ApplicationController
       end
     end
   end
+
+  def visits
+    if current_visitor.has_role? "admin"
+      @visits = BookmarkVisit.recent
+      render :index
+    else
+      redirect_to :home
+    end
+  end
 end
