@@ -1,12 +1,21 @@
 module BookmarksHelper
 
   def bookmarks
-    Bookmark.find_all_by_user_id(current_visitor)
+    types = Admin::Project.default_project.enabled_bookmark_types
+    Bookmark.find_all_by_user_id(current_visitor).select do |mark|
+      types.include? mark.type
+    end
   end
 
   def render_all_bookmarks
-    bookmarks.each do |bookmark|
-      render_bookmark bookmark
+    return if Admin::Project.default_project.enabled_bookmark_types.empty?
+    haml_tag "#bookmarks_box" do
+      haml_tag "p", :style => "padding: 10px 0px 0px 10px; font-weight: bold;" do
+        haml_concat("Bookmarks:")
+      end
+      bookmarks.each do |bookmark|
+        render_bookmark bookmark
+      end
     end
   end
 
@@ -25,8 +34,10 @@ module BookmarksHelper
       type = claz.name.underscore
       if (claz.respond_to? :user_can_make?) && claz.user_can_make?(current_visitor)
         bookmark = claz.new
-        concat(render(:partial => "bookmarks/#{type}/form", :locals => {
+        haml_tag '.bookmarks_form' do
+          haml_concat(render(:partial => "bookmarks/#{type}/form", :locals => {
           :bookmark => bookmark}))
+        end
       end
     end
   end
