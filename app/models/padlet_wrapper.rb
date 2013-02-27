@@ -114,9 +114,25 @@ class PadletWrapper
   def make_wall
     results = self.json_post('/walls',self.auth_data)
     self.padlet_url=results['links']['doodle'] # also checkout 'embed'
-    # TODO: HACK/FIX the walls endpoint returns "stage.padlet.com"
-    self.padlet_url.gsub!(/stage\.padlet\.com/, PadletWrapper.hostname)
+    self.fix_hostname_in_response_url
+    self.add_auth_info_to_url
     self
+  end
+
+  protected
+  # TODO: HACK/FIX the walls endpoint returns "stage.padlet.com"
+  def fix_hostname_in_response_url
+    self.padlet_url.gsub!(/stage\.padlet\.com/, PadletWrapper.hostname)
+  end
+
+  def add_auth_info_to_url
+    user =PadletWrapper.basic_auth_user
+    pass =PadletWrapper.basic_auth_pass
+    host =PadletWrapper.hostname
+    if (user && pass && host)
+      replacement = "#{user}:#{pass}@#{host}"
+      self.padlet_url.gsub!(PadletWrapper.hostname,replacement)
+    end
   end
 
 end
