@@ -15,14 +15,17 @@ class BookmarksController < ApplicationController
   def add
     mark = GenericBookmark.new(params['generic_bookmark'])
     mark.user = current_visitor
-    mark.save
-    render :update do |page|
-      page.replace_html "bookmark_form",
-        :partial => "bookmarks/generic_bookmark/form"
-      page.insert_html :bottom,
-        "bookmarks_box",
-        :partial => "bookmarks/show",
-        :locals => {:bookmark => mark}
+    if mark.save
+      render :update do |page|
+        page.replace_html "bookmark_form",
+          :partial => "bookmarks/generic_bookmark/form"
+        page.insert_html :bottom,
+          "bookmarks_box",
+          :partial => "bookmarks/show",
+          :locals => {:bookmark => mark}
+      end
+    else
+      render :nothing => true
     end
   end
 
