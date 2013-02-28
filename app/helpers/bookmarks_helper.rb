@@ -54,9 +54,5 @@ module BookmarksHelper
   def bookmark_dom_item(mark)
     "bookmark_#{mark.type}_#{mark.id}"
   end
-# remote_link_button "delete.png",
-# :method => :delete,
-# :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?",
-# :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
 
 end
