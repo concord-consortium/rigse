@@ -1,5 +1,5 @@
 module MockData
-  require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
+  
   #load all the factories
   Dir[File.dirname(__FILE__) + '/../../factories/*.rb'].each {|file| require file }
   
@@ -7,74 +7,55 @@ module MockData
   def self.create_default_users
   
     #create roles in order
-    roles_in_order = [
-      admin_role = Role.find_or_create_by_title('admin'),
-      manager_role = Role.find_or_create_by_title('manager'),
-      researcher_role = Role.find_or_create_by_title('researcher'),
-      author_role = Role.find_or_create_by_title('author'),
-      member_role = Role.find_or_create_by_title('member'),
-      guest_role = Role.find_or_create_by_title('guest')
-    ] 
-    
-    all_roles = Role.find(:all)
-    unused_roles = all_roles - roles_in_order
-    if unused_roles.length > 0
-      unused_roles.each { |role| role.destroy }
+    %w| admin manager researcher author member guest|.each_with_index do |role_name,index|
+      unless Role.find_by_title_and_position(role_name,index)
+        Factory.create(:role, :title => role_name, :position => index)
+      end
     end
     
-    # to make sure the list is ordered correctly in case a new role is added
-    roles_in_order.each_with_index do |role, i|
-      role.insert_at(i)
+    
+    #create a school
+    schools = []
+    data = {
+       :school_1 => {"name" => 'fake school', "description" => "fake school"},
+       :school_2 => {"name" => 'VJTI', "description" => "Tech School"}
+    }
+    data.each do |school, school_info|
+      school = Portal::School.find_by_name(school_info["name"])
+      unless school
+        school = Factory.create(:portal_school, school_info)
+      end
+      schools << school
+    end
+    
+    #remove all the semesters associated with above school where semester name is null
+    schools.each do |school|
+      school.semesters.each do |semester|
+        if semester.name.blank?
+          semester.destroy
+        end
+      end
     end
     
     
     #following semesters exist
+    
     data = {
-      :fall => {"name" => 'Fall', "start_time" => DateTime.new(2012, 12, 01, 00, 00, 00), "end_time" => DateTime.new(2012, 03, 01, 23, 59, 59) },
-      :spring => {"name" => 'Spring', "start_time" => DateTime.new(2012, 10, 10, 23, 59, 59), "end_time" => DateTime.new(2013, 03, 31, 23, 59, 59) } 
+      :fall => {"name" => 'Fall', "description" => 'Fall Semester', "start_time" => DateTime.new(2012, 12, 01, 00, 00, 00), "end_time" => DateTime.new(2012, 03, 01, 23, 59, 59)},
+      :spring => {"name" => 'Spring', "description" => 'Spring Semester', "start_time" => DateTime.new(2012, 10, 10, 23, 59, 59), "end_time" => DateTime.new(2013, 03, 31, 23, 59, 59)},
     }
     
-    data.each do |semester, semester_info|
-     Factory.create(:portal_semester, semester_info)
-    end
-    
-
-    #following teachers exist
-    data = {
-      :teacher_1 => {"login" => 'teacher', "password" => 'teacher', "first_name" => 'John', "last_name" =>'Nash', "email" => 'bademail@noplace.com', "cohort_list" => "control"},
-      :teacher_2 => {"login" => 'albert', "password" => 'albert', "first_name" => 'Albert', "last_name" =>'Fernandez', "email" => 'bademail@noplace2.com', "cohort_list" => "experiment"},
-      :teacher_3 => {"login" => 'robert', "password" => 'robert', "first_name" => 'Robert', "last_name" =>'Fernandez', "email" => 'bademail@noplace3.com', "cohort_list" => "control, experiment"},
-      :teacher_4 => {"login" => 'peterson', "password" => 'teacher', "first_name" => 'peterson', "last_name" =>'taylor', "email" => 'bademail@noplace4.com'},
-      :teacher_5 => {"login" => 'teacher_with_no_class', "password" => 'teacher_with_no_class', "first_name"=> 'teacher_with_no_class', "last_name" =>'teacher_with_no_class', "email" => 'bademail@noplace5.com'},
-      :teacher_6 => {"login" => 'jonson', "password" => 'teacher', "first_name" => 'Jonson', "last_name" =>'Jackson', "email" => 'bademail@noplace6.com'}
-    }
-    
-    semester = Portal::Semester.first
-    school = Factory.create(:portal_school, :semesters => [semester])
-    course = Factory.create(:portal_course, :school => school)
-    clazz = Factory.create(:portal_clazz, :course => course)
-    User.anonymous(true)
-    data.each do |teacher, teacher_info|
-      begin
-        cohorts = teacher_info.delete("cohort_list")
-        user = Factory(:user, teacher_info)
-        user.add_role("member")
-        user.register
-        user.activate
-        user.save!
-        
-        portal_teacher = Portal::Teacher.create(:user_id => user.id)
-        portal_teacher.schools = [school]
-        portal_teacher.clazzes = [clazz]
-        portal_teacher.cohort_list = cohorts if cohorts
-        portal_teacher.save!
-        
-      rescue ActiveRecord::RecordInvalid
-        # assume this user is already created...
+    schools.each do |school|
+      data.each do |semester, semester_info|
+        unless Portal::Semester.find_by_school_id_and_name(school.id, semester_info["name"])
+          sem = Factory.create(:portal_semester, semester_info)
+          sem.school = school
+          sem.save!
+        end
       end
     end
     
- 
+    
     #following users exist
     data = {
       :user_1 => {"login" => "author", "password" => "author", "roles" => "member, author"},
@@ -83,7 +64,6 @@ module MockData
       :user_4 => {"login" => "researcher", "password" => "researcher", "roles" => "researcher"},
       :user_5 => {"login" => "admin", "password" => "password", "roles" => "admin"}
     }
-    
     User.anonymous(true)
     data.each do |user, user_info|
       roles = user_info.delete('roles')
@@ -92,16 +72,19 @@ module MockData
       else
         roles =  []
       end
-      begin
+      user = User.find_by_login(user_info["login"])
+      unless user
         user = Factory(:user, user_info)
-        roles.each do |role|
-          user.add_role(role)
-        end
         user.register
         user.activate
-        user.save!
-      rescue ActiveRecord::RecordInvalid
-        # assume this user is already created...
+      else
+        user.password = user_info["password"]
+        user.password_confirmation = user_info["password"]
+      end
+      user.save!
+      
+      roles.each do |role|
+        user.add_role(role)
       end
     end
     #'the teachers "teacher , albert" are in a school named "VJTI"'
@@ -118,7 +101,60 @@ module MockData
     teachers.each {|k| k.schools = [ school ]; k.save!; k.reload}
     
     
-    #following students exist:
+    
+    #following teachers exist
+    data = {
+      :teacher_1 => {"login" => 'teacher', "password" => 'teacher', "first_name" => 'John', "last_name" =>'Nash', "email" => 'bademail@noplace.com', "cohort_list" => "control"},
+      :teacher_2 => {"login" => 'albert', "password" => 'albert', "first_name" => 'Albert', "last_name" =>'Fernandez', "email" => 'bademail@noplace2.com', "cohort_list" => "experiment"},
+      :teacher_3 => {"login" => 'robert', "password" => 'robert', "first_name" => 'Robert', "last_name" =>'Fernandez', "email" => 'bademail@noplace3.com', "cohort_list" => "control, experiment"},
+      :teacher_4 => {"login" => 'peterson', "password" => 'teacher', "first_name" => 'peterson', "last_name" =>'taylor', "email" => 'bademail@noplace4.com'},
+      :teacher_5 => {"login" => 'teacher_with_no_class', "password" => 'teacher_with_no_class', "first_name"=> 'teacher_with_no_class', "last_name" =>'teacher_with_no_class', "email" => 'bademail@noplace5.com'},
+      :teacher_6 => {"login" => 'jonson', "password" => 'teacher', "first_name" => 'Jonson', "last_name" =>'Jackson', "email" => 'bademail@noplace6.com'}
+    }
+    
+    data.each do |teacher, teacher_info|
+      cohorts = teacher_info.delete("cohort_list")
+      user = User.find_by_login(teacher_info["login"])
+      unless user
+        user = Factory(:user, teacher_info)
+        user.add_role("member")
+        user.register
+        user.activate
+      else
+        user.password = teacher_info["password"]
+        user.password_confirmation = teacher_info["password"]
+        user.first_name = teacher_info["first_name"]
+        user.last_name = teacher_info["last_name"]
+        user.email = teacher_info["email"]
+      end
+      user.save!
+      
+      portal_teacher = user.portal_teacher
+      unless portal_teacher
+        portal_teacher = Portal::Teacher.create
+        portal_teacher.user = user
+        #all the teachers belong to fake school
+        portal_teacher.schools = [schools[0]]
+      end
+      
+      portal_teacher.cohort_list = cohorts if cohorts
+      portal_teacher.save!
+    end
+    
+    
+    #Following school and teacher mapping exists
+    data = {
+      "VJTI" => "teacher, albert",
+    }
+    data.each do |school, teachers|
+      school = Portal::School.find_by_name(school)
+      teachers = teachers.split(",").map { |t| t.strip }
+      teachers.map! {|t| User.find_by_login(t)}
+      teachers.map! {|u| u.portal_teacher }
+      teachers.each {|t| t.schools = t.schools + [ school ]; t.save!; t.reload}
+    end
+    
+    
     data = {
       :student_1 =>{"login" => "student" ,"password" => "student" ,"first_name" => "Alfred" ,"last_name" => "Robert" ,"email" => "student@mailinator.com" },
       :student_2 =>{"login" => "dave" ,"password" => "student" ,"first_name" => "Dave" ,"last_name" => "Doe" ,"email" => "student@mailinator1.com" },
@@ -130,28 +166,31 @@ module MockData
       :student_8 =>{"login" => "monty" ,"password" => "student" ,"first_name" => "Monty" ,"last_name" => "Donald" ,"email" => "student@mailinator7.com" },
       :student_9 =>{"login" => "Switchuser" ,"password" => "Switchuser" ,"first_name" => "Joe" ,"last_name" => "Switchuser" ,"email" => "student@mailinator8.com" },
     }
-    User.anonymous(true)
-    portal_grade = Factory.create(:portal_grade)
-    portal_grade_level = Factory.create(:portal_grade_level, {:grade => portal_grade})
     data.each do |student, student_info|
-      begin
-        clazz = Portal::Clazz.find_by_name(student_info.delete('class'))
+      user = User.find_by_login(student_info["login"])
+      unless user
         user = Factory(:user, student_info)
         user.add_role("member")
         user.register
         user.activate
-        user.save!
-  
-        portal_student = Factory(:full_portal_student, { :user => user, :grade_level =>  portal_grade_level})
-        portal_student.save!
-        if (clazz)
-          portal_student.add_clazz(clazz)
-        end
-      rescue ActiveRecord::RecordInvalid
-        # assume this user is already created...
+      else
+        user.password = student_info["password"]
+        user.password_confirmation = student_info["password"]
+        user.first_name = student_info["first_name"]
+        user.last_name = student_info["last_name"]
+        user.email = student_info["email"]
       end
-    end
-    
-  end #end of method create_default_users
+      
+      user.save!
 
+      portal_student = user.portal_student
+      unless portal_student
+        portal_student = Factory(:full_portal_student, { :user => user})
+        portal_student.save!
+      end 
+    end
+  
+  end #end of method create_default_users
+  
+  
 end # end of MockData
