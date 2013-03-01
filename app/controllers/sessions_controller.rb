@@ -68,10 +68,11 @@ class SessionsController < ApplicationController
           end
           val
         }
-        values[:cohorts] = values[:classes].map{|vc| vc[:cohorts]}.flatten.compact.uniq
+        values[:cohorts] = values[:classes].map{|vc| vc[:cohorts]}.flatten.compact.uniq.map{|c| c.name}
       end
       if teacher
         values[:class_words] = teacher.clazzes.map{ |c| c.class_word }
+        valuse[:cohorts] = teacher.cohorts.map{|c| c.name }
         values[:teacher] = true
       end
       render :json => values
