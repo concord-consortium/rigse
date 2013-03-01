@@ -234,6 +234,7 @@ namespace :deploy do
       touch #{shared_path}/config/initializers/subdirectory.rb &&
       touch #{shared_path}/config/database.yml &&
       touch #{shared_path}/config/google_analytics.yml
+      touch #{shared_path}/config/padlet.yml
     CMD
 
     # support for running a SproutCore app from within the public directory
@@ -250,6 +251,7 @@ namespace :deploy do
       ln -nfs #{shared_path}/config/paperclip.yml #{release_path}/config/paperclip.yml &&
       ln -nfs #{shared_path}/config/aws_s3.yml #{release_path}/config/aws_s3.yml &&
       ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml &&
+      ln -nfs #{shared_path}/config/padlet.yml #{release_path}/config/padlet.yml &&
       ln -nfs #{shared_path}/config/sis_import_data.yml #{release_path}/config/sis_import_data.yml &&
       ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml &&
       ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb &&

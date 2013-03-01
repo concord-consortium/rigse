@@ -2,19 +2,21 @@ require 'fileutils'
 
 class Admin::Project < ActiveRecord::Base
   self.table_name = "admin_projects"
-  
+
+  serialize :enabled_bookmark_types, Array
+
   after_initialize :init
 
   belongs_to :user
 
   has_many :project_vendor_interfaces, :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
   has_many :enabled_vendor_interfaces, :through => :project_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
-  
+
   acts_as_replicatable
-  
+
   include Changeable
   include AppSettings
-  
+
   self.extend SearchableModel
 
   @@searchable_attributes = %w{description}
@@ -22,15 +24,27 @@ class Admin::Project < ActiveRecord::Base
   default_value_for :enabled_vendor_interfaces do
     Probe::VendorInterface.all
   end
-  
+
   def init
     # the description needs to be non null for the searchable model code to work properly
     self.description ||= ''
+    self.enabled_bookmark_types ||= []
   end
 
   # this is a named object but really it doesn't have a name so just return the id
   def name
     id.to_s
+  end
+
+  def update_attributes(hashy)
+    enabled_bookmark_types = hashy['enabled_bookmark_types']
+    if enabled_bookmark_types
+      enabled_bookmark_types = enabled_bookmark_types.map { |h| h.split(",") }
+      enabled_bookmark_types.flatten!
+      enabled_bookmark_types.reject! {|i| i.blank? }
+      hashy['enabled_bookmark_types'] = enabled_bookmark_types
+    end
+    super hashy
   end
 
   def using_custom_css?
@@ -40,7 +54,7 @@ class Admin::Project < ActiveRecord::Base
   def display_type
     self.default_project? ? 'Default ' : ''
   end
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -60,7 +74,7 @@ class Admin::Project < ActiveRecord::Base
       end
       proj
     end
-    
+
     def summary_info
       default_project ? default_project.summary_info : "no default project defined"
     end
@@ -68,10 +82,10 @@ class Admin::Project < ActiveRecord::Base
     def notify_missing_setting(symbol)
       logger.warn("undefined configuartion setting in config/setttings.yml: #{symbol.to_s}")
     end
-    
+
     def settings_for(symbol)
       value = APP_CONFIG[symbol]
-      if value.nil? 
+      if value.nil?
         notify_missing_setting(symbol)
       end
       return APP_CONFIG[symbol]
@@ -85,11 +99,11 @@ class Admin::Project < ActiveRecord::Base
       return settings_for(:unique_activity_names)
     end
   end
-  
+
   def default_project?
     active
   end
-  
+
   def summary_info
     summary = <<HEREDOC
 
@@ -123,5 +137,11 @@ t = ut.portal_teacher; s = us.portal_student; c = t.clazzes.first; o = c.offerin
 HEREDOC
     puts summary
     summary
-  end 
+  end
+
+  def available_bookmark_types
+    Bookmark.available_types.map { |t| t.name }
+  end
+
+
 end

@@ -1,0 +1,3 @@
+class GenericBookmark < Bookmark
+
+end
