@@ -3,6 +3,7 @@ class PadletBookmark < Bookmark
 
   def self.create_for_user(user)
     found = self.for_user(user)
+    return false if user.anonymous?
     return found unless found.blank?
     email  = user.email || "#{user.login}@concord.org"
     padlet = PadletWrapper.make_bookmark(email,'password')
@@ -14,6 +15,7 @@ class PadletBookmark < Bookmark
 
   def self.user_can_make?(user)
     return false unless self.is_allowed?
+    return false if user.anonymous?
     return self.for_user(user).blank?
   end
 end

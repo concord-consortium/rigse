@@ -33,6 +33,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.user_can_make?(user)
+    return false if user.anonymous?
     return true if (self.is_allowed?)
   end
 
