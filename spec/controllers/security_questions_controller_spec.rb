@@ -10,6 +10,7 @@ describe SecurityQuestionsController do
     @test_project.should_receive(:use_student_security_questions).and_return(true)
     @test_project.stub!(:require_user_consent?).and_return(false)
     @test_project.stub!(:help_type).and_return('no help')
+    @test_project.stub!(:enabled_bookmark_types).and_return([])
     Admin::Project.stub(:default_project).and_return(@test_project)
   end
   
