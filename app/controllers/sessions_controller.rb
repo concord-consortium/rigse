@@ -50,7 +50,8 @@ class SessionsController < ApplicationController
         values[:class_words] = student.clazzes.map{ |c| c.class_word }
         values[:teacher] = false
         values[:classes] = student.clazzes.map{|c|
-          val = {:teacher => c.teacher.name, :word => c.class_word, :name => c.name}
+          cohorts = c.teachers.map{|t| t.cohorts}.flatten.compact.uniq
+          val = {:teacher => c.teacher.name, :word => c.class_word, :name => c.name, :cohorts => cohorts}
           offerings = c.offerings
           offerings = offerings.select{|o| o.active && o.runnable.is_a?(ExternalActivity)}
           offerings = offerings.select{|o|
