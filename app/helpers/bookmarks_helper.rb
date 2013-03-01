@@ -1,5 +1,10 @@
 module BookmarksHelper
 
+  def types
+    return [] if Admin::Project.default_project.enabled_bookmark_types.nil?
+    Admin::Project.default_project.enabled_bookmark_types
+  end
+
   def bookmarks
     types = Admin::Project.default_project.enabled_bookmark_types
     Bookmark.find_all_by_user_id(current_visitor).select do |mark|
@@ -8,9 +13,7 @@ module BookmarksHelper
   end
 
   def render_all_bookmarks
-
-    return if Admin::Project.default_project.enabled_bookmark_types.nil?
-    return if Admin::Project.default_project.enabled_bookmark_types.empty?
+    return if types.empty?
     return if current_visitor.anonymous?
     haml_tag "#bookmarks_box" do
       haml_tag "p", :style => "padding: 10px 0px 0px 10px; font-weight: bold;" do
@@ -29,7 +32,6 @@ module BookmarksHelper
   end
 
   def render_add_bookmark_form
-    types = Admin::Project.default_project.enabled_bookmark_types
     clazzes = types.map {|t|t.safe_constantize}.compact
     clazzes.each do |claz|
       type = claz.name.underscore
