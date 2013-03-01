@@ -68,6 +68,7 @@ class SessionsController < ApplicationController
           end
           val
         }
+        values[:cohorts] = values[:classes].map{|vc| vc[:cohorts]}.flatten.compact.uniq
       end
       if teacher
         values[:class_words] = teacher.clazzes.map{ |c| c.class_word }
