@@ -8,6 +8,8 @@ module BookmarksHelper
   end
 
   def render_all_bookmarks
+
+    return if Admin::Project.default_project.enabled_bookmark_types.nil?
     return if Admin::Project.default_project.enabled_bookmark_types.empty?
     haml_tag "#bookmarks_box" do
       haml_tag "p", :style => "padding: 10px 0px 0px 10px; font-weight: bold;" do
