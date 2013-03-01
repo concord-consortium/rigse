@@ -1,0 +1,11 @@
+#bookmark_form.bookmark_form
+  = remote_form_for GenericBookmark.new, :url => add_bookmark_path, :method => :post, :remote => true do |f|
+    .fields
+      =f.label :name
+      =f.text_field  :name, :size => 15
+      %br
+      =f.label :url
+      =f.text_field  :url, :size => 15
+      %br
+    =f.submit :value => "Add bookmark"
+

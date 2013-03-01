@@ -1,0 +1,68 @@
+#bookmarks_box {
+  margin-top: 2em;
+  border-top: 1px dotted #479492;
+  li {
+    padding-top:    5px;
+    padding-bottom: 5px;
+    a {
+      display: inline;
+      padding: 4px;
+      border-radius: 6px;
+    }
+    a.delete {
+      margin-left: 2em;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      padding-left: 4px;
+      padding-right: 4px;
+      color: white;
+      background-color: red;
+      border-radius: 10px;
+      opacity: 0.2;
+      background-color: #dd6e0d;
+      background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
+      background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+    }
+    a.delete:hover {
+      opacity: 1.0;
+    }
+  }
+}
+table.bookmark_visits {
+  td {
+    padding-left:  1em;
+    padding-right: 1em;
+  }
+}
+.bookmarks_form {
+  display: block;
+  background-color: rgba(255,255,255,0.3);
+  text-align: right;
+  padding: 1em;
+  margin: 0.5em;
+  border-radius: 5px;
+  font-size-size: 9px;
+
+  input[type="text"]  {
+   background: none;
+   font-size: 9px;
+  }
+  input[type="button"] {
+    font-size: 10px;
+  }
+  input[type="submit"]{
+   font-size: 10px;
+  }
+  label {
+    display: inline;
+  }
+  label:after {
+    content: ":";
+  }
+  .fields {
+    text-align: right;
+    line-height: 2.1em;
+    vertical-align: bottom;
+    margin-bottom: 0.5em;
+  }
+}

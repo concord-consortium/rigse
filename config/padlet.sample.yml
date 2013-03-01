@@ -1,0 +1,10 @@
+---
+host:  padlet.com
+email: all-portal-errors@concord.org
+
+# Example for custom domain hosted padlet:
+#host:  concordconsortium.padlet.com
+#email: all-portal-errors@concord.org
+#basic_auth_user: xxxxxxx
+#basic_auth_pass: yyyyyyy
+
