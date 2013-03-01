@@ -87,19 +87,6 @@ module MockData
         user.add_role(role)
       end
     end
-    #'the teachers "teacher , albert" are in a school named "VJTI"'
-    teachers = "teacher , albert"
-    school_name = "VJTI"
-    semester = Portal::Semester.first
-    school = Portal::School.find_by_name(school_name)
-    if (school.nil?) then
-      school = Factory(:portal_school, {:name=>school_name, :semesters => [semester]})
-    end
-    teachers = teachers.split(",").map { |k| k.strip }
-    teachers.map! {|k| User.find_by_login(k)}
-    teachers.map! {|u| u.portal_teacher }
-    teachers.each {|k| k.schools = [ school ]; k.save!; k.reload}
-    
     
     
     #following teachers exist
