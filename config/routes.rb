@@ -13,7 +13,7 @@ RailsPortal::Application.routes.draw do
 
   post "help/preview_help_page"
   post "home/preview_home_page"
-  
+
 constraints :id => /\d+/ do
   namespace :saveable do
     namespace :sparks do
@@ -76,8 +76,8 @@ constraints :id => /\d+/ do
       match 'delete_page/:page_id', :controller => 'embeddable__inner_pages', :action => 'delete_page'
     end
 
-    
-    
+
+
     resources :lab_book_snapshots
     resources :raw_otmls
     resources :n_logo_models
@@ -144,13 +144,13 @@ constraints :id => /\d+/ do
         get :materials
         get :fullstatus
       end
-      
+
       collection do
         #get :manage_classes, :path => 'manage'
-        match 'manage', :to => 'clazzes#manage_classes' 
+        match 'manage', :to => 'clazzes#manage_classes'
         #post :manage_classes_save, :as => 'manage_save'
       end
-      
+
     end
 
     resources :clazzes, :path => :classes do
@@ -269,7 +269,7 @@ constraints :id => /\d+/ do
     resource :security_questions, :only => [:edit, :update]
 
     # this is added to prevent caching and reuse of jnlp files by other users
-    # this caching or saving of jnlps could still happen, but adding this eliminates 
+    # this caching or saving of jnlps could still happen, but adding this eliminates
     # one potential way it could be cached and reused
     namespace :portal do
       resources :offerings, :only => [:show]
@@ -328,13 +328,13 @@ constraints :id => /\d+/ do
         delete :remove_notice
         post :dismiss_notice
       end
-      
+
       collection do
         #get :manage_classes, :path => 'manage'
-        post :toggle_notice_display 
+        post :toggle_notice_display
         #post :manage_classes_save, :as => 'manage_save'
       end
-      
+
     end
   end
 
@@ -547,6 +547,10 @@ constraints :id => /\d+/ do
     end
   end
 
+  resources :images
+  match '/images/list/filter' => 'images#index', :as => :list_filter_image, :method => :post
+  match '/images/:id/view'    => 'images#view',  :as => :view_image, :method => :get
+
   match '/resource_pages/list/filter' => 'resource_pages#index', :as => :list_filter_resource_page, :method => :post
   resources :resource_pages do
     collection do
@@ -582,8 +586,15 @@ constraints :id => /\d+/ do
   match 'authoring' => 'home#authoring', :as => :authoring
   match '/:controller(/:action(/:id))'
 
+  # TODO: clean up these adhoc bookmark routes:
+  match '/bookmark/add_padlet'     => 'bookmarks#add_padlet', :as => :add_padlet
+  match '/bookmark/add'            => 'bookmarks#add',        :as => :add_bookmark
+  match '/bookmark/visit/:id'      => 'bookmarks#visit',      :as => :visit_bookmark
+  match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark
+  match '/bookmark/visits'         => 'bookmarks#visits',     :as => :bookmark_visits
+
   root :to => 'home#index'
-  
-  
+
+
 end
 end

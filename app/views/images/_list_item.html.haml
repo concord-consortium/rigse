@@ -1,8 +1,0 @@
-.item
-  .menu
-    %ul
-      %li
-        = list_item.public_filename
-  .image_content
-    = if list_item.image?
-      = link_to image_tag(list_item.public_filename(:thumb)), list_item.public_filename

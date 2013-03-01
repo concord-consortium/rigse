@@ -1,6 +1,6 @@
 module ApplicationHelper
   include Clipboard
-  
+
   def current_project
     @_project ||= Admin::Project.default_project
   end
@@ -53,13 +53,13 @@ module ApplicationHelper
     jnlp = maven_jnlp_info rescue {:name => "<b>Error loading JNLP info!</b>"}
     info = <<-HEREDOC
 <span class="tiny menu_h">
-  #{commit[:branch]} 
-  | <a href="#{commit[:href]}">#{commit[:short_id]}</a> 
-  | #{commit[:author]} 
-  | #{commit[:date]} 
-  | #{commit[:short_message]} 
-  | #{jnlp[:name]} 
-  | <a href="#{jnlp[:href]}">#{jnlp[:version]}</a> 
+  #{commit[:branch]}
+  | <a href="#{commit[:href]}">#{commit[:short_id]}</a>
+  | #{commit[:author]}
+  | #{commit[:date]}
+  | #{commit[:short_message]}
+  | #{jnlp[:name]}
+  | <a href="#{jnlp[:href]}">#{jnlp[:version]}</a>
   | #{jnlp[:snapshot]}
 </span>
     HEREDOC
@@ -344,9 +344,10 @@ module ApplicationHelper
     end
   end
 
-  def sort_dropdown(selected)
+  def sort_dropdown(selected,keep = [])
     selected ||= "name ASC"
-    sort_options = [ ["Oldest", "created_at ASC"], [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
+    default_options = [ ["Oldest", "created_at ASC"], [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
+    sort_options = (keep.size > 0 ? default_options.select{|o| keep.include?(o[0]) } : default_options)
     select nil, :sort_order, sort_options, {:selected => selected, :include_blank => false }
   end
 
@@ -468,7 +469,7 @@ module ApplicationHelper
       embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
       controller = "#{model.class.name.pluralize.underscore}"
       if defined? model.parent
-        
+
         # allow specification of options[:redirect] = false to skip
         if options[:redirect].nil?
           options[:redirect]= url_for model.parent
@@ -1260,7 +1261,7 @@ module ApplicationHelper
       end
     end
   end
-  
+
   def settings_for(key)
     Admin::Project.settings_for(key)
   end
