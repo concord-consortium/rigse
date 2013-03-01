@@ -28,7 +28,8 @@ module RunnablesHelper
   end
 
   def student_run_buttons(offering,opts={})
-    solo_label      = opts[:solo_text]  || "Run by Myself"
+    default_solo_label = display_workgroups_run_link?(offering) ? "Run by Myself" : "Run"
+    solo_label      = opts[:solo_text]  || default_solo_label
     group_label     = opts[:group_label]|| "Run with Other Students"
     options         = popup_options_for(offering)
     options[:href]  = run_url_for(offering)
