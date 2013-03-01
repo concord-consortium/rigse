@@ -97,7 +97,7 @@ class Portal::StudentsController < ApplicationController
     if @user.valid? && errors.length < 1
       # temporarily disable sending email notifications for state change events
       @user.skip_notifications = true
-      @user.register!
+      @user.save!
       user_created = @user.save
       if user_created
         @user.activate!

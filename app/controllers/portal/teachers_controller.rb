@@ -82,7 +82,8 @@ class Portal::TeachersController < ApplicationController
       t.schools << @school_selector.school if @school_selector.valid?
       t.grades << @portal_grade if !@portal_grade.nil?
     end
-    if @school_selector.valid? && @user.register! && @portal_teacher.save
+    @resource = @user
+    if @school_selector.valid? && @resource.save! && @portal_teacher.save
       # will redirect:
       return successful_creation(@user)
     end

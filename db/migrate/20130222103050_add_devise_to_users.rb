@@ -18,15 +18,17 @@ class AddDeviseToUsers < ActiveRecord::Migration
     rename_column :users, :activation_code, :confirmation_token
     change_column :users, :confirmation_token, :string, :limit => 255
     rename_column :users, :activated_at, :confirmed_at
+    add_column :users, :unconfirmed_email, :string
 
     add_column :users, :confirmation_sent_at, :datetime
+    add_index :users, :confirmation_token, :unique => true
   end
 
   def self.down
     # By default, we don't want to make any assumption about how to roll back a migration when your
     # model already existed. Please edit below which fields you would like to remove in this migration.
     #raise ActiveRecord::IrreversibleMigration
-    add_column :users, :name, :string, :limit => 100, :default => ""
+    #add_column :users, :name, :string, :limit => 100, :default => ""
     rename_column :users, :encrypted_password, :crypted_password
     change_column :users, :crypted_password, :string, :limit => 40
     rename_column :users, :password_salt, :salt
@@ -42,8 +44,9 @@ class AddDeviseToUsers < ActiveRecord::Migration
     remove_column :users, :last_sign_in_ip
 
     rename_column :users, :confirmation_token, :activation_code
-    change_column :users, :confirmation_token, :string, :limit => 40
+    change_column :users, :activation_code, :string, :limit => 40
     rename_column :users, :confirmed_at, :activated_at
+    remove_column :users, :unconfirmed_email
 
     remove_column :users, :confirmation_sent_at
   end

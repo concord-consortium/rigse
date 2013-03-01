@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
 
   # Setup accessible (or protected) attributes for your model
@@ -68,22 +68,36 @@ class User < ActiveRecord::Base
   end
 
   # Validations
+  
+  login_regex       = /\A\w[\w\.\-_@]+\z/                     # ASCII, strict
+  bad_login_message = "use only letters, numbers, and .-_@ please.".freeze
+
+  name_regex        = /\A[^[:cntrl:]\\<>\/&]*\z/              # Unicode, permissive
+  bad_name_message  = "avoid non-printing characters and \\&gt;&lt;&amp;/ please.".freeze
+
+  email_name_regex  = '[\w\.%\+\-\']+'.freeze
+  domain_head_regex = '(?:[A-Z0-9\-]+\.)+'.freeze
+  domain_tld_regex  = '(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|jobs|museum)'.freeze
+  email_regex       = /\A[^@]+@[^@]+\z/
+  bad_email_message = "should look like an email address.".freeze
+  
+  
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 1..40
   validates_uniqueness_of   :login, :case_sensitive => false
-  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
+  validates_format_of       :login,    :with => login_regex, :message => bad_login_message
 
-  validates_format_of       :first_name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
+  validates_format_of       :first_name,     :with => name_regex,  :message => bad_name_message, :allow_nil => true
   validates_length_of       :first_name,     :maximum => 100
 
-  validates_format_of       :last_name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
+  validates_format_of       :last_name,     :with => name_regex,  :message => bad_name_message, :allow_nil => true
   validates_length_of       :last_name,     :maximum => 100
 
   validates_presence_of     :email
   validates_length_of       :email,    :within => 6..100 #r@a.wk
   validates_uniqueness_of   :email, :case_sensitive => false
-  validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
+  validates_format_of       :email,    :with => email_regex, :message => bad_email_message
 
   validates_presence_of     :vendor_interface_id
   validates_presence_of     :password, :on => :update, :if => :updating_password?
