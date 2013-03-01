@@ -30,10 +30,14 @@ class Portal::Student < ActiveRecord::Base
     "no-email-#{hash}@concord.org"
   end
   
-  def self.generate_user_login(first_name, last_name)
+  def self.generate_user_login(first_name, last_name, group_account = false)
     # Old method, first_name + last initial
     #generated_login = "#{first_name.downcase.gsub(/[^a-z0-9]/,'')}#{last_name[0..0].downcase}"
-    suggested_login = "#{first_name[0..0].downcase}#{last_name.downcase.gsub(/[^a-z0-9]/,'')}"
+    if group_account
+      suggested_login = "#{last_name.downcase.gsub(/[^a-z0-9]/,'')}"
+    else
+      suggested_login = "#{first_name[0..0].downcase}#{last_name.downcase.gsub(/[^a-z0-9]/,'')}"
+    end
     # existing_users = User.find(:all, :conditions => "login RLIKE '#{generated_login}[0-9]*$'", :order => :login)
     counter = 0
     generated_login = suggested_login

@@ -139,6 +139,7 @@ constraints :id => /\d+/ do
         post :edit_offerings
         get :roster
         post :add_new_student_popup
+        post :add_new_group_popup
         post :copy_class
         get :materials
         get :fullstatus

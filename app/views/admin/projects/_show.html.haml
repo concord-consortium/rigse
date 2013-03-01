@@ -126,7 +126,20 @@
               %li
                 Enabled Bookmark Types:
                 = admin_project.enabled_bookmark_types.join(', ')
-
+              %li
+                Group accounts are enabled:
+                - if admin_project.group_accounts_enabled?
+                  %b
+                    Yes
+                  (Group accounts can be created by teachers.)
+                - else
+                  %b
+                    No
+                  (Group accounts can not be created by teachers.)
+              %li
+                School hours:
+                = admin_project.school_hours
+                (Group accounts are only allowed to log in during the school hours defined here.)
             = field_set_tag 'Maven Jnlp' do
               %p
                 Jnlp CDN Hostname:

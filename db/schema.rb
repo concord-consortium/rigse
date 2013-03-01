@@ -68,6 +68,9 @@ ActiveRecord::Schema.define(:version => 20130227173920) do
     t.text     "custom_help_page_html"
     t.string   "help_type"
     t.boolean  "include_external_activities",                  :default => false
+    t.boolean  "group_accounts_enabled",                       :default => false
+    t.integer  "school_start_hour",                            :default => 8
+    t.integer  "school_end_hour",                              :default => 15
     t.text     "enabled_bookmark_types"
   end
 
@@ -2344,6 +2347,7 @@ ActiveRecord::Schema.define(:version => 20130227173920) do
     t.boolean  "of_consenting_age",                        :default => false
     t.boolean  "have_consent",                             :default => false
     t.boolean  "asked_age",                                :default => false
+    t.integer  "group_account_class_id"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
