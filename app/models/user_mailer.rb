@@ -1,4 +1,5 @@
 class UserMailer < Devise::Mailer
+  default :from => "Admin <#{APP_CONFIG[:help_email]}>"
   
   def confirmation_instructions(record, opts={})
   end
