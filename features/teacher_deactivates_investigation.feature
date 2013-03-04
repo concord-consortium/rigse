@@ -35,5 +35,7 @@ Feature: Teacher can deactivate investigations from a class
   Scenario: Teacher drags active investigation with students off of class
     When I am on the class page for "My Class"
     And I drag the investigation "Test Investigation" in the class "My Class" to "#offering_list"
+    And accept the dialog
+    And I should wait 2 seconds
     And I should see "Test Investigation" within "#clazz_offerings"
     And the investigation "Test Investigation" in the class "My Class" should be active

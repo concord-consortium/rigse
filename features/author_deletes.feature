@@ -18,6 +18,7 @@ Feature: An author deletes parts of an investigation
     Then I should see "Page: testing fast cars"
     When I follow "delete"
     And accept the dialog
+    And I should wait 2 seconds
     Then I should not see "Page: testing fast cars"
 
   @dialog
@@ -32,4 +33,5 @@ Feature: An author deletes parts of an investigation
     Then I should see "Text: "
     When I follow "delete text"
     And accept the dialog
+    And I should wait 2 seconds
     Then I should not see "Text: "
