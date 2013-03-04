@@ -24,10 +24,11 @@ Feature: Teacher can search and assign instructional materials to a class
       | Quantum Mechanics       | Mechanics     | author  | published          | Quantum Mechanics is a great material  |
       | Geometry                | Geometry      | author  | published          | Triangle is a great material           |
     And the following classes exist:
-      | name        | teacher    | class_word |
-      | Physics     | teacher    | phy        |
-      | Mathematics | teacher    | math       |
-      | Geography   | teacher    | geo        |
+      | name                     | teacher    | class_word               |
+      | Physics                  | teacher    | phy                      |
+      | Mathematics              | teacher    | math                     |
+      | Geography                | teacher    | geo                      |
+      | class_with_no_assignment | albert     | class_with_no_assignment |
     And I login with username: teacher password: teacher
     
     

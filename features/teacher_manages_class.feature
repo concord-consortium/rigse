@@ -99,7 +99,7 @@ Feature: Teacher manages a class
     Given the following teacher and class mapping exists:
       | class_name  | teacher                   |
       | Physics     |  teacher_with_no_class    |
-    When I follow copy class link for first class
+    When I follow copy class link for the class "Physics"
     And I fill in "Class Name:" with "Copy of Physics"
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
@@ -122,7 +122,7 @@ Feature: Teacher manages a class
       | Physics     |  teacher_with_no_class    |
       | Chemistry   |  teacher_with_no_class    |
       | Mathematics |  teacher_with_no_class    |
-    When I follow copy class link for first class
+    When I follow copy class link for the class "Physics"
     And I fill in "Class Name:" with "Copy of Physics"
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
@@ -135,7 +135,7 @@ Feature: Teacher manages a class
     
   @javascript
   Scenario: Teacher fills in class name with a blank string while creating copy of a class
-    When I follow copy class link for first class
+    When I follow copy class link for the class "Physics"
     And I fill in "Class Name:" with ""
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
@@ -145,7 +145,7 @@ Feature: Teacher manages a class
     
   @javascript
   Scenario: Teacher fills in class word with a blank string while creating copy of a class
-    When I follow copy class link for first class
+    When I follow copy class link for the class "Physics"
     And I fill in "Class Name:" with "Copy of Physics"
     And I fill in "Class Word:" with ""
     And I fill in "Class Description" with "electronics class"
@@ -155,7 +155,7 @@ Feature: Teacher manages a class
     
   @javascript
   Scenario: Teacher fills in class word which has already been taken
-    When I follow copy class link for first class
+    When I follow copy class link for the class "Physics"
     And I fill in "Class Name:" with "Copy of Physics"
     And I fill in "Class Word:" with "phy"
     And I fill in "Class Description" with "electronics class"
