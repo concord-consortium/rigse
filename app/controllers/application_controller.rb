@@ -160,4 +160,18 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def after_sign_in_path_for(resource)
+
+    redirect_path = root_path
+    if APP_CONFIG[:recent_activity_on_login] && current_visitor.portal_teacher
+      portal_teacher = current_visitor.portal_teacher
+      if (portal_teacher.teacher_clazzes.select{|tc| tc.active }).count > 0
+        # Teachers with active classes are redirected to the "Recent Activity" page
+        redirect_path = recent_activity_path
+      end
+    end
+    return redirect_path
+  end
+
 end
