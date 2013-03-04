@@ -115,6 +115,8 @@ class PadletWrapper
     results = self.json_post('/walls',self.auth_data)
     self.padlet_url=results['links']['doodle'] # also checkout 'embed'
     self.fix_hostname_in_response_url
+    # Noah removed because IE can't deal with basic auth urls:
+    # http://support.microsoft.com/kb/834489
     self.add_auth_info_to_url
     self
   end
@@ -122,7 +124,7 @@ class PadletWrapper
   protected
   # TODO: HACK/FIX the walls endpoint returns "stage.padlet.com"
   def fix_hostname_in_response_url
-    self.padlet_url.gsub!(/stage\.padlet\.com/, PadletWrapper.hostname)
+    self.padlet_url.gsub!(/.*padlet\.com/, "http://#{PadletWrapper.hostname}")
   end
 
   def add_auth_info_to_url
