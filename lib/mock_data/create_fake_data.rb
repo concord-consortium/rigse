@@ -24,6 +24,9 @@ module MockData
       school = Portal::School.find_by_name(school_info["name"])
       unless school
         school = Factory.create(:portal_school, school_info)
+      else
+        school.description = school_info["description"]
+        school.save!
       end
       schools << school
     end
@@ -47,9 +50,15 @@ module MockData
     
     schools.each do |school|
       data.each do |semester, semester_info|
-        unless Portal::Semester.find_by_school_id_and_name(school.id, semester_info["name"])
+        sem  = Portal::Semester.find_by_school_id_and_name(school.id, semester_info["name"])
+        unless sem
           sem = Factory.create(:portal_semester, semester_info)
           sem.school = school
+          sem.save!
+        else
+          sem.start_time = semester_info["start_time"]
+          sem.end_time = semester_info["end_time"]
+          sem.description = semester_info["description"]
           sem.save!
         end
       end
