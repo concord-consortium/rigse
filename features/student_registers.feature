@@ -12,9 +12,6 @@ Feature: Student registers to use the portal
   Scenario: Anonymous user signs up as student
     Given I am an anonymous user
     And the option to allow default classes is disabled
-    And the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |
@@ -37,9 +34,6 @@ Feature: Student registers to use the portal
     Then I should see "Logged in successfully"
 
   Scenario: Anonymous user signs up as student with form errors
-    Given the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |
@@ -63,9 +57,6 @@ Feature: Student registers to use the portal
     
   @javascript
   Scenario: Class words are not case sensitive
-    Given the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |
@@ -109,9 +100,6 @@ Feature: Student registers to use the portal
   @javascript
   Scenario: Student under 18 registered when student consent is enabled
     Given the default project has student consent enabled
-    And the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |
@@ -136,9 +124,6 @@ Feature: Student registers to use the portal
   @javascript
   Scenario: Student over 18 registers and gives consent
     Given the default project has student consent enabled
-    And the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |
@@ -164,9 +149,6 @@ Feature: Student registers to use the portal
   @javascript
   Scenario: Student over 18 registered and doesn't give consent
     Given the default project has student consent enabled
-    And the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |

@@ -8,10 +8,7 @@ Feature: A teacher creates a resource page
 
   @javascript
   Scenario: The teacher creates a resource page
-    Given the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
-    And I am logged in with the username teacher
+    When I am logged in with the username teacher
     When I go to the resource pages page
     And I follow "create Resource Page"
     Then I should see "New Resource"

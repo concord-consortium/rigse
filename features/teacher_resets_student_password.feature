@@ -5,9 +5,6 @@ Feature: Teacher can reset a students password
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
@@ -15,9 +12,6 @@ Feature: Teacher can reset a students password
   @javascript
   Scenario: Teacher can reset their students passwords
     Given the default class is created
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
     And the student "student" is in the class "My Class"
     And I am logged in with the username teacher
     And I am on "Student Roster" page for "My Class"
