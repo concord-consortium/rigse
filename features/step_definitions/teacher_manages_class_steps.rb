@@ -1,6 +1,6 @@
 
-And /^I follow copy class link for first class$/ do
-  xpath_for_list_elem = "//ul[@id=\"sortable\"]/li[2]"
+And /^I follow copy class link for the class "(.+)"$/ do|class_name|
+  xpath_for_list_elem = "//tr[contains(.,'#{class_name}')]"
   within(:xpath, xpath_for_list_elem) do
     click_link('Copy Class')
   end

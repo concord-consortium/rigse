@@ -6,18 +6,6 @@ Feature: Investigations can be searched
   Background:
     Given The default project and jnlp resources exist using factories
     Given The theme is "rites"
-    Given the following users exit:
-      | login         | password        | roles |
-      | author        | author          | author|
-
-
-    And the following students exist:
-      | login         | password        |
-      | student       | student         |
-
-    And the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |

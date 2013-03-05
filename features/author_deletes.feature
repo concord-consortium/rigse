@@ -9,9 +9,6 @@ Feature: An author deletes parts of an investigation
   @dialog
   @javascript
   Scenario: The author deletes a page from a section
-    Given the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
     Given the following simple investigations exist:
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |
@@ -21,6 +18,7 @@ Feature: An author deletes parts of an investigation
     Then I should see "Page: testing fast cars"
     When I follow "delete"
     And accept the dialog
+    And I should wait 2 seconds
     Then I should not see "Page: testing fast cars"
 
   @dialog
@@ -35,4 +33,5 @@ Feature: An author deletes parts of an investigation
     Then I should see "Text: "
     When I follow "delete text"
     And accept the dialog
+    And I should wait 2 seconds
     Then I should not see "Text: "

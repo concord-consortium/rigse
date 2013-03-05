@@ -16,7 +16,7 @@ Given /^member registration is (.+)$/ do |member_registration|
 end
 
 When /^an admin sets the jnlp CDN hostname to "([^"]*)"$/ do |cdn_hostname|
-  admin = Factory.next(:admin_user)
+  admin = User.find_by_login('admin')
   login_as(admin.login)
   visit admin_projects_path
   click_link "edit project"

@@ -9,9 +9,6 @@ Feature: An copies and pastes embeddables
   @dialog
   @javascript
   Scenario: The author copies and pastes an embeddable by clicking on the embeddable content
-    Given the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
     Given the following simple investigations exist:
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |
