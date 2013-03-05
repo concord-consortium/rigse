@@ -72,7 +72,7 @@ class SessionsController < ApplicationController
       end
       if teacher
         values[:class_words] = teacher.clazzes.map{ |c| c.class_word }
-        valuse[:cohorts] = teacher.cohorts.map{|c| c.name }
+        values[:cohorts] = teacher.cohorts.map{|c| c.name }
         values[:teacher] = true
       end
       render :json => values
