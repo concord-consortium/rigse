@@ -568,7 +568,7 @@ constraints :id => /\d+/ do
   resources :images
 
   if Rails.env.cucumber? || Rails.env.test?
-    match '/login/:username' => 'sessions#backdoor', :as => :login_backdoor
+    match '/login/:username' => 'users#backdoor', :as => :login_backdoor
   end
 
   match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'

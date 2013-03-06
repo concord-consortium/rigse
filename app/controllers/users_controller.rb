@@ -212,5 +212,12 @@ class UsersController < ApplicationController
     session[:return_to] = request.referer
     redirect_to change_password_path(:reset_code => p.reset_code)
   end
+  
+  def backdoor
+    sign_out self.current_visitor
+    user = User.find_by_login!(params[:username])
+    sign_in user
+    head :ok
+  end
 
 end
