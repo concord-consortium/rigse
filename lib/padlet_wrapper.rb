@@ -117,7 +117,7 @@ class PadletWrapper
     self.fix_hostname_in_response_url
     # Noah removed because IE can't deal with basic auth urls:
     # http://support.microsoft.com/kb/834489
-    self.add_auth_info_to_url
+    # self.add_auth_info_to_url
     self
   end
 
