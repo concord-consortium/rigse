@@ -15,14 +15,14 @@ def login_as(username)
 end
 
 def login_with_ui_as(username, password)
-  visit "/login"
-  within("#header-project-signin") do
-    fill_in("login", :with => username)
-    fill_in("password", :with => password)
+  visit "/home"
+  within(".header-login-box") do
+    fill_in("header_login", :with => username)
+    fill_in("header_password", :with => password)
     click_button("GO")
     @cuke_current_username = username
   end
-  page.should have_content("Logged in successfully")
+  page.should have_content("Signed in successfully.")
 end
 
 # scroll_into_view is a hack so an element is scrolled into view in selenium in IE
@@ -84,7 +84,7 @@ Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S
 end
 
 When /^I log out$/ do
-  visit "/logout"
+  visit "/users/sign_out"
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|

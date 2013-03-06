@@ -34,7 +34,7 @@ Feature: An author registers to use the portal
       | login    | login    |
       | password | password |
     And I press "GO"
-    Then I should see "Logged in successfully"
+    Then I should see "Signed in successfully."
     And I should not see "Sorry, there was an error creating your account"
 
   Scenario: Anonymous user signs up as an author with form errors

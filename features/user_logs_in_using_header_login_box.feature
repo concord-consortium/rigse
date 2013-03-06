@@ -10,26 +10,21 @@ Feature: User logs in using header login box to use the portal
       
   Scenario: Teacher should be logged in
     When I login with username: teacher password: teacher
-    Then I should see "Logged in successfully"
     And I should not see "Forgot your user name or password?"
     
     
   Scenario: Student should be logged in
     When I login with username: student password: student
-    Then I should see "Logged in successfully"
     And I should not see "Forgot your user name or password?"
     
     
   Scenario: Other user with different roles should be logged in
     When I login with username: author password: author
-    Then I should see "Logged in successfully"
-    And I should not see "Forgot your user name or password?"
+    Then I should not see "Forgot your user name or password?"
     When I login as an admin
-    Then I should see "Logged in successfully"
-    And I should not see "Forgot your user name or password?"
+    Then I should not see "Forgot your user name or password?"
     When I login with username: manager password: manager
-    Then I should see "Logged in successfully"
-    And I should not see "Forgot your user name or password?"
+    Then I should not see "Forgot your user name or password?"
     
     
   Scenario: Anonymous user should see header login box

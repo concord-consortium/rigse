@@ -28,12 +28,7 @@ Feature: Teacher resets password
     When I open the email
     Then I should see "Please activate your new account" in the email subject
     When I click the first link in the email
-    Then I should see "Signup complete!"
-    When I fill in the following:
-      | login    | login    |
-      | password | password |
-    And I press "GO"
-    Then I should see "Logged in successfully"
+    Then I should see "Your account was successfully confirmed. You are now signed in."
     Given I am an anonymous user
     And I follow "Forgot login?"
     When I fill in "login" with "login" within content box in change password page
@@ -47,10 +42,5 @@ Feature: Teacher resets password
     And I fill in "confirm password" with "password2" within content box in change password page
     And I press "Submit" within content box in change password page
     Then I should see "Password for login was successfully updated."
-    When I fill in the following:
-      | login    | login    |
-      | password | password2 |
-    And I press "GO"
-    Then I should see "Logged in successfully"
     
     

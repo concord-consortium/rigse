@@ -84,8 +84,8 @@ module MockData
       user = User.find_by_login(user_info["login"])
       unless user
         user = Factory(:user, user_info)
-        user.register
-        user.activate
+        user.save!
+        user.confirm!
       else
         user.password = user_info["password"]
         user.password_confirmation = user_info["password"]
@@ -114,8 +114,8 @@ module MockData
       unless user
         user = Factory(:user, teacher_info)
         user.add_role("member")
-        user.register
-        user.activate
+        user.save!
+        user.confirm!
       else
         user.password = teacher_info["password"]
         user.password_confirmation = teacher_info["password"]
@@ -167,8 +167,8 @@ module MockData
       unless user
         user = Factory(:user, student_info)
         user.add_role("member")
-        user.register
-        user.activate
+        user.save!
+        user.confirm!
       else
         user.password = student_info["password"]
         user.password_confirmation = student_info["password"]

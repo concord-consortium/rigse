@@ -24,5 +24,5 @@ Feature: Teacher can reset a students password
     Then I should see "Class Name : My Class"
     When I log out
     And I login with username: student password: new_password
-    Then I should see "Logged in successfully"
+    Then I should see "Signed in successfully."
 
