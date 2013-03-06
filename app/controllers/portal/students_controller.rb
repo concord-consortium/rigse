@@ -100,7 +100,7 @@ class Portal::StudentsController < ApplicationController
       @user.save!
       user_created = @user.save
       if user_created
-        @user.activate!
+        @user.confirm!
         if current_project.allow_default_class || @grade_level.nil?
           @portal_student = Portal::Student.create(:user_id => @user.id)
         else
