@@ -1,5 +1,14 @@
 class UsersController < ApplicationController
 
+
+  def new
+    @user = User.new
+  end
+
+  def create
+    create_new_user(params[:user])
+  end
+
   def index
     if params[:mine_only]
       @users = User.search(params[:search], params[:page], self.current_visitor)
