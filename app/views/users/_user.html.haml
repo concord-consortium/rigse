@@ -13,7 +13,7 @@
             %li.menu=link_to 'edit', edit_user_path(user)
             %li.menu=link_to 'Reset Password', reset_password_user_path(user)
             - if user.state == 'pending'
-              %li.menu=link_to 'Activate', activate_path(:activation_code => user.activation_code)
+              %li.menu=link_to 'Activate', activate_path(:activation_code => user.confirmation_token)
             - if(user != current_visitor)
               - switch_user_form_id = "switch_user_id_#{user.id}"
               %li.menu=link_to 'Switch', 'javascript: void(0);',:onclick => "$('#{switch_user_form_id}').submit();"
