@@ -8,10 +8,12 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
 
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "periodic_bundle_content_id"
 
+  attr_accessor :skip_collaborators
+
   before_create :process_bundle
   # If the body has a OTStateRoot, it means it was a non-periodic bundle imported to initialize old learner data.
   # Don't copy these to collaborators since they likely have their own non-periodic bundles which will be imported.
-  after_create :copy_to_collaborators, :unless => Proc.new {|pbc| pbc.empty? || pbc.has_state_root? }
+  after_create :copy_to_collaborators, :unless => Proc.new {|pbc| pbc.skip_collaborators || pbc.empty? || pbc.has_state_root? }
 
   include BlobExtraction
   include SaveableExtraction
@@ -80,6 +82,7 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
       new_bundle_logger.sail_bundle if new_bundle_logger.periodic_bundle_parts.size == 0 && slearner.bundle_logger.last_non_empty_bundle_content != nil
 
       new_attributes = self.attributes.merge({
+        :skip_collaborators => true,
         :processed => false,
         :periodic_bundle_logger_id => new_bundle_logger.id
       })

@@ -351,6 +351,14 @@ class Portal::OfferingsController < ApplicationController
         bundle_logger.start_bundle
         students = params[:students] || ''
         students = students.split(',').map { |s| Portal::Student.find(s) }
+        # clear any in_progress_bundles for any of the collaborators, except for the current student
+        students_to_clear = students - [learner.student]
+        students_to_clear.each do |s|
+          l = @offering.find_or_create_learner(s)
+          if l.bundle_logger && l.bundle_logger.in_progress_bundle
+            l.bundle_logger.end_bundle( { :body => "" } )
+          end
+        end
         bundle_logger.in_progress_bundle.collaborators = students.compact.uniq
         bundle_logger.in_progress_bundle.save
 
