@@ -11,9 +11,10 @@
           element_id = element.id;
         } else {
           element_id = element;
+	      window.location.hash = '#' + element_id;
         }
-        updateUrlHash(element_id);
       }
+      window.scrollTo(0, 0);
       if (typeof button !== 'undefined') {
         $(button).addClassName('selected-category');
       }
@@ -151,15 +152,5 @@
       var button = $$('#activity-chart-navigation ul > li:nth-child(' + element_index + ')');
       show_section(url_hash, button[0]);
     }
-
-	function updateUrlHash(element) {
-      // update URL with hash but do not scroll page
-      if (history.pushState) {
-        history.pushState(null, null, '#' + element);
-      } else {
-        location.hash = '#' + element;
-      }
-    }
-
   });
 })();
