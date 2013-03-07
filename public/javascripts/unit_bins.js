@@ -147,6 +147,7 @@
 
     // check for hash value in URL and open specified pane as necessary, match pane with button by index number
     var url_hash = window.location.hash.replace('#', '');
+    url_hash = url_hash.replace('msengineering', '2middleschoolengineering');
     if (!!url_hash) {
       var element_index = $(url_hash).previousSiblings().size() + 1;
       var button = $$('#activity-chart-navigation ul > li:nth-child(' + element_index + ')');
