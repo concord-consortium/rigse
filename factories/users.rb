@@ -120,10 +120,11 @@ Factory.sequence :anonymous_user do |n|
         :roles => [Factory.next(:guest_role)]
       })
       anon.save!
-      anon.confirm
+      anon.confirm!
       # clear any previous Anonymous user still cached as a class variable in the User class
       User.anonymous(true)
       anon.save!
+      
     end
     anon
   rescue
