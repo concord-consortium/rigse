@@ -11,10 +11,11 @@
           element_id = element.id;
         } else {
           element_id = element;
+          $(element_id).setAttribute('id', element_id + '-disabled');
 	      window.location.hash = '#' + element_id;
+          $(element_id + '-disabled').setAttribute('id', element_id);
         }
       }
-      window.scrollTo(0, 0);
       if (typeof button !== 'undefined') {
         $(button).addClassName('selected-category');
       }
