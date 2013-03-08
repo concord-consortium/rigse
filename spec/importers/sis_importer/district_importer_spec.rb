@@ -377,11 +377,6 @@ describe SisImporter::DistrictImporter do
       run_importer #FIXME: ExternalUserDomain::ExternalUserDomainError
     end
 
-   @initial_clazzes = Portal::Clazz.find(:all)
-      @initial_schools = Portal::School.find(:all)
-      @initial_districts = Portal::District.find(:all)
-      Portal::Nces06District.stub!(:find => nil)
-      Portal::Nces06School.s
     it "should work for classes with same course numbers in different schools" do
       run_importer(:district => "02")
       # in the test import data, teacher e and teacher d both teach a course with course Number ART
