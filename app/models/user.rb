@@ -206,6 +206,12 @@ class User < ActiveRecord::Base
     super && user_active?
   end
 
+  def confirm!
+    super
+    self.state = "active"
+    save(:validate => true)
+  end
+
   def inactive_message
     user_not_deleted_or_suspended? ? super : "You cannot login since your account has been suspended."
   end

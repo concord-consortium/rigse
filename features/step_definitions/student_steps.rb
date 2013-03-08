@@ -5,9 +5,8 @@ Given /^the following students exist:$/ do |table|
       clazz = Portal::Clazz.find_by_name(hash.delete('class'))
       user = Factory(:user, hash)
       user.add_role("member")
-      user.register
-      user.activate
       user.save!
+      user.confirm!
 
       portal_student = Factory(:full_portal_student, { :user => user })
       portal_student.save!
