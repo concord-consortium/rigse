@@ -1,4 +1,4 @@
-Feature: Student resets password
+Feature: Student resets passwordAnd
 
   In order to log in after I forgot my old password
   As a student
@@ -9,10 +9,7 @@ Feature: Student resets password
 
   @javascript
   Scenario: Passwords can not be blank
-    Given the following students exist:
-      | login   | password |
-      | student | student  |
-    And the student "student" has security questions set
+    When the student "student" has security questions set
     And I am on the forgot password page
     When I fill in "login" with "student" within content box in change password page
     And I press "Submit"

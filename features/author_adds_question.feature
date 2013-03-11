@@ -8,9 +8,6 @@ Feature: An author adds multiple choice questions
 
   @javascript
   Scenario: The author adds a multiple choice question to an investigation
-    Given the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
     Given the following simple investigations exist:
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |

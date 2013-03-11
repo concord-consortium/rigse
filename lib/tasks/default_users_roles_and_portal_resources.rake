@@ -40,6 +40,12 @@ namespace :app do
     # Create default users, roles, district, school, course, and class, and greade_levels
     #
     #######################################################################   
+    desc "Create fake users and roles"
+    task :create_default_users => :environment do
+      require File.expand_path('../../mock_data/create_fake_data.rb', __FILE__)
+      MockData.create_default_users
+    end
+    
     desc "Create default users and roles"
     task :default_users_roles => :environment do
 

@@ -6,15 +6,9 @@ Feature: Teachers can drag-drop offerings to reposition them on the class summar
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login    | password   | first_name | last_name |
-      | teacher  | teacher    | John       | Nash      |
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
-    And the following students exist:
-      | login     | password |
-      | student   | student  |
     And the following offerings exist
       | name                       |
       | Lumped circuit abstraction |

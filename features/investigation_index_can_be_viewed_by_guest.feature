@@ -5,9 +5,6 @@ Feature: Investigations can be viewed by guests
 
   Background:
     Given The default project and jnlp resources exist using factories
-    Given the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
 
     And the following empty investigations exist:
         | name                    | user    | offerings_count | publication_status |

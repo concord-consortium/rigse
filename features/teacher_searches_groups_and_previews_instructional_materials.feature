@@ -6,12 +6,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login    | password | first_name   | last_name |
-      | teacher  | teacher  | John         | Nash      |
-    And the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
     And the following simple investigations exist:
       | name                   | user   | publication_status | description                                     |
       | Radioactivity          | author | published          | Nuclear Energy is a great subject               |

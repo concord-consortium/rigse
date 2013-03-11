@@ -6,9 +6,6 @@ Feature: Teacher creates new portal class
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login   | password |
-      | teacher | teacher  |
     And I am logged in with the username teacher
     And grade levels for classes is enabled
 
