@@ -269,6 +269,7 @@ constraints :id => /\d+/ do
       get :preferences
       put :preferences
       get :reset_password
+      get :confirm
     end
     resource :security_questions, :only => [:edit, :update]
 
