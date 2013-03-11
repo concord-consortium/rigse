@@ -44,7 +44,6 @@ Feature: An author registers to use the portal
     Then I should see "Signup"
     When I press "Sign up"
     Then I should see "9 errors prohibited this user from being saved"
-    And "8" fields should have the class selector ".fieldWithErrors"
     When I fill in the following:
       | user_first_name            | Example             |
       | user_last_name             | Author              |

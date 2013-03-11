@@ -39,7 +39,7 @@ ITSI-SU requires that teachers self-register.
     And I press "Sign up as a teacher"
     Then I should see "Teacher Signup Page"
     When I press "Submit"
-    Then I should see "9 errors prohibited this user from being saved"
+    Then I should see "10 errors prohibited this user from being saved"
     When I fill in the following:
       | user_first_name            | Example             |
       | user_last_name             | Teacher             |

@@ -29,9 +29,9 @@ Given /^the following teachers exist:$/ do |users_table|
       cohorts = hash.delete("cohort_list")
       user = Factory(:user, hash)
       user.add_role("member")
-      user.register
-      user.activate
       user.save!
+      user.confirm!
+      
       
       portal_teacher = Factory(:portal_teacher, { :user => user })
       portal_teacher.cohort_list = cohorts if cohorts

@@ -50,9 +50,9 @@ Given /the following users[(?exist):\s]*$/i do |users_table|
       roles.each do |role|
         user.add_role(role)
       end
-      user.register
-      user.activate
       user.save!
+      user.confirm!
+      
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...
     end

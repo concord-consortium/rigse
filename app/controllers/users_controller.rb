@@ -1,5 +1,20 @@
 class UsersController < ApplicationController
 
+  include RestrictedController
+  before_filter :changeable_filter,
+    :only => [
+      :show,
+      :edit,
+      :update,
+      :reset_password
+    ]
+  before_filter :manager, :only => [:destroy]
+  before_filter :manager_or_researcher,
+    :only => [
+      :index,
+      :account_report
+    ]
+  after_filter :store_location, :only => [:index]
 
   def new
     @user = User.new
