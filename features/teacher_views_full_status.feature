@@ -6,10 +6,6 @@ Feature: Teacher can see full status
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login     | password | first_name   | last_name |
-      | teacher   | teacher  | John         | Nash      |
-      | peterson  | teacher  | peterson     | gaurav    |
     And the following classes exist:
       | name        | teacher  |
       | My Class    | teacher  |
@@ -36,11 +32,6 @@ Feature: Teacher can see full status
       | investigation | Radioactivity        | My Class    |
       | investigation | Plant reproduction   | My Class    |
       | activity      | Algebra              | My Class    |
-    And the following students exist:
-      | login     | password  | first_name | last_name |
-      | dave      | student   | Dave       | Doe       |
-      | chuck     | student   | Chuck      | Smith     |
-      | Mache     | student   | Mache      | Smith     |
     And the student "dave" belongs to class "My Class"
     And the student "chuck" belongs to class "My Class"
     And the student "Mache" belongs to class "Physics"

@@ -10,9 +10,6 @@ Feature: An author creates an investigation
   @javascript
   Scenario: The author creates an investigation
     Given a mock gse
-    Given the following users exist:
-      | login        | password            | roles                |
-      | author       | author              | member, author       |
     And I am logged in with the username author
     When I go to the create investigation page
     Then I should see "Investigation: (new)"

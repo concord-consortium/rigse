@@ -5,12 +5,6 @@ Feature: Student runs html activity
 
   Background:
     Given the most basic default project
-    And the following students exist:
-      | login     | password  |
-      | student   | student   |
-    And the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |

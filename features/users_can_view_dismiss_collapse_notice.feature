@@ -6,19 +6,6 @@ Feature: Users can view notices created by project staff
 
   Background:
     Given The default project and jnlp resources exist using factories
-    
-    And the following users exist:
-      | login      | password   | roles          |
-      | mymanager  | mymanager  | manager        |
-      | author     | author     | member, author |
-      | researcher | researcher | researcher     |
-      | admin      | admin      | admin          |
-    And the following teachers exist:
-      | login   | password | first_name | last_name |
-      | teacher | teacher  | John       | Nash      |
-    And the following students exist:
-      | login   | password | first_name | last_name |
-      | student | student  | Albert     | Chuck     |
     And I login as an admin
     And I create the following notices:
       | notice_html          | roles                                   |
@@ -48,7 +35,7 @@ Feature: Users can view notices created by project staff
     
   @javascript
   Scenario: Manager roles should see notices
-    And I am logged in with the username mymanager
+    And I am logged in with the username manager
     And am on the my home page
     Then I should see "Notice for all users"
     
@@ -70,7 +57,7 @@ Feature: Users can view notices created by project staff
   @dialog
   @javascript
   Scenario: Users can dismiss a notice without affecting other users
-    When I am logged in with the username mymanager
+    When I am logged in with the username manager
     And am on the my home page
     And I follow "x"
     And accept the dialog
@@ -87,7 +74,7 @@ Feature: Users can view notices created by project staff
     
   @javascript
   Scenario: Users can collapse and expand notices
-    When I am logged in with the username mymanager
+    When I am logged in with the username manager
     And am on the my home page
     And I follow "Hide Notices"
     And I should wait 2 seconds
@@ -99,20 +86,20 @@ Feature: Users can view notices created by project staff
     
   @javascript
   Scenario: Notice expand-collapse state should be maintained across sessions
-    When I am logged in with the username mymanager
+    When I am logged in with the username manager
     And am on the my home page
     And I follow "Hide Notices"
     And I should wait 2 seconds
     Then I should see "Show Notices"
     When I log out
-    And I am logged in with the username mymanager
+    And I am logged in with the username manager
     And am on the my home page
     Then I should see "Show Notices"
     When I follow "Show Notices"
     And I should wait 2 seconds
     Then I should see "Hide Notices"
     When I log out
-    And I am logged in with the username mymanager
+    And I am logged in with the username manager
     And am on the my home page
     Then I should see "Hide Notices"
     

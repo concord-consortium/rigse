@@ -9,9 +9,6 @@ Feature: A user changes which probeware interface they are using
 
   @javascript
   Scenario: Student changes probeware interface on preferences page
-    Given the following students exist:
-      | login     | password  |
-      | student   | student   |
     And I am logged in with the username student
     When I go to my preferences
     And I select "Fourier Ecolog" from "user_vendor_interface_id"

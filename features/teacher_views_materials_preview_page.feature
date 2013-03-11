@@ -6,13 +6,6 @@ Feature: Teacher can search and assign instructional materials to a class
   
   Background:
     Given The default project and jnlp resources exist using factories
-    And the following teachers exist:
-      | login    | password | first_name   | last_name |
-      | teacher  | teacher  | John         | Nash      |
-      | albert   | albert   | Albert       | Michael   |
-    And the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |
@@ -31,10 +24,11 @@ Feature: Teacher can search and assign instructional materials to a class
       | Quantum Mechanics       | Mechanics     | author  | published          | Quantum Mechanics is a great material  |
       | Geometry                | Geometry      | author  | published          | Triangle is a great material           |
     And the following classes exist:
-      | name        | teacher    | class_word |
-      | Physics     | teacher    | phy        |
-      | Mathematics | teacher    | math       |
-      | Geography   | teacher    | geo        |
+      | name                     | teacher    | class_word               |
+      | Physics                  | teacher    | phy                      |
+      | Mathematics              | teacher    | math                     |
+      | Geography                | teacher    | geo                      |
+      | class_with_no_assignment | albert     | class_with_no_assignment |
     And I login with username: teacher password: teacher
     
     
