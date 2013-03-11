@@ -28,6 +28,5 @@ Feature: Student views resource page
   Scenario: Student opens resource page
     And I am logged in with the username student
     And I am on the class page for "My Class"
-    Then I should see "Run by Myself"
-    When I follow "Run by Myself"
+    And run the resource page
     Then I should see "Test Resource"

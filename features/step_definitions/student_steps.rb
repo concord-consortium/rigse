@@ -65,17 +65,19 @@ Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_
   student.clazzes.should include clazz
 end
 
-When /^I run the (?:investigation|activity|resource page)$/ do
+When /^(?:|I )run the (?:investigation|activity|external activity|resource page)$/ do
   # this assumes the user is logged in as a student
   # lets verify that in the most simple way
   # you should expand this if you want to use this step in other cases
   @cuke_current_username.should == 'student'
-  click_link("Run by Myself")
+  # note this isn't an exact match sometimes the link is Run by Myself, sometimes it is just Run
+  # and addtionally if groups are turned on then there will be another link that is Run with Other Students
+  find(".solo.button").click
 end
 
 Then /^I should see the run link for "([^"]*)"$/ do | runnable_name |
   within(".offering_for_student:contains('#{runnable_name}')") do
-    page.should have_content("Run by Myself")
+    page.should have_selector('.solo.button')
   end
 end
 

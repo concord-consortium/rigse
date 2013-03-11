@@ -23,5 +23,5 @@ Feature: External Activities can be run as offerings
     And the external activity "My Activity" is assigned to the class "My Class"
     And I am logged in with the username student
     When I go to my home page
-    And follow "Run by Myself"
+    And run the external activity
     Then I should be on /mock_html/test-external-activity.html
