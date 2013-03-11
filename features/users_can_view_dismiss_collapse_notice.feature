@@ -14,7 +14,7 @@ Feature: Users can view notices created by project staff
     
   @javascript
   Scenario: Member roles should see notices
-    When I login with username: teacher password: teacher
+    When I login with username: teacher password: password
     And am on the my home page
     Then I should see "Notice for all users"
     
@@ -49,7 +49,7 @@ Feature: Users can view notices created by project staff
     
   @javascript
   Scenario: Students should not see notices
-    And I login with username: student password: student
+    And I login with username: student password: password
     And am on the my home page
     Then I should not see "Notice for all users"
     

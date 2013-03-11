@@ -67,10 +67,10 @@ module MockData
     
     #following users exist
     data = {
-      :user_1 => {"login" => "author", "password" => "author", "roles" => "member, author"},
-      :user_2 => {"login" => "manager", "password" => "manager", "roles" => "manager"},
-      :user_3 => {"login" => "mymanager", "password" => "mymanager", "roles" => "manager"},
-      :user_4 => {"login" => "researcher", "password" => "researcher", "roles" => "researcher"},
+      :user_1 => {"login" => "author", "password" => "password", "roles" => "member, author"},
+      :user_2 => {"login" => "manager", "password" => "password", "roles" => "manager"},
+      :user_3 => {"login" => "mymanager", "password" => "password", "roles" => "manager"},
+      :user_4 => {"login" => "researcher", "password" => "password", "roles" => "researcher"},
       :user_5 => {"login" => "admin", "password" => "password", "roles" => "admin"}
     }
     User.anonymous(true)
@@ -100,12 +100,12 @@ module MockData
     
     #following teachers exist
     data = {
-      :teacher_1 => {"login" => 'teacher', "password" => 'teacher', "first_name" => 'John', "last_name" =>'Nash', "email" => 'bademail@noplace.com', "cohort_list" => "control"},
-      :teacher_2 => {"login" => 'albert', "password" => 'albert', "first_name" => 'Albert', "last_name" =>'Fernandez', "email" => 'bademail@noplace2.com', "cohort_list" => "experiment"},
-      :teacher_3 => {"login" => 'robert', "password" => 'robert', "first_name" => 'Robert', "last_name" =>'Fernandez', "email" => 'bademail@noplace3.com', "cohort_list" => "control, experiment"},
-      :teacher_4 => {"login" => 'peterson', "password" => 'teacher', "first_name" => 'peterson', "last_name" =>'taylor', "email" => 'bademail@noplace4.com'},
+      :teacher_1 => {"login" => 'teacher', "password" => 'password', "first_name" => 'John', "last_name" =>'Nash', "email" => 'bademail@noplace.com', "cohort_list" => "control"},
+      :teacher_2 => {"login" => 'albert', "password" => 'password', "first_name" => 'Albert', "last_name" =>'Fernandez', "email" => 'bademail@noplace2.com', "cohort_list" => "experiment"},
+      :teacher_3 => {"login" => 'robert', "password" => 'password', "first_name" => 'Robert', "last_name" =>'Fernandez', "email" => 'bademail@noplace3.com', "cohort_list" => "control, experiment"},
+      :teacher_4 => {"login" => 'peterson', "password" => 'password', "first_name" => 'peterson', "last_name" =>'taylor', "email" => 'bademail@noplace4.com'},
       :teacher_5 => {"login" => 'teacher_with_no_class', "password" => 'teacher_with_no_class', "first_name"=> 'teacher_with_no_class', "last_name" =>'teacher_with_no_class', "email" => 'bademail@noplace5.com'},
-      :teacher_6 => {"login" => 'jonson', "password" => 'teacher', "first_name" => 'Jonson', "last_name" =>'Jackson', "email" => 'bademail@noplace6.com'}
+      :teacher_6 => {"login" => 'jonson', "password" => 'password', "first_name" => 'Jonson', "last_name" =>'Jackson', "email" => 'bademail@noplace6.com'}
     }
     
     data.each do |teacher, teacher_info|
@@ -152,15 +152,15 @@ module MockData
     
     
     data = {
-      :student_1 =>{"login" => "student" ,"password" => "student" ,"first_name" => "Alfred" ,"last_name" => "Robert" ,"email" => "student@mailinator.com" },
-      :student_2 =>{"login" => "dave" ,"password" => "student" ,"first_name" => "Dave" ,"last_name" => "Doe" ,"email" => "student@mailinator1.com" },
-      :student_3 =>{"login" => "chuck" ,"password" => "student" ,"first_name" => "Chuck" ,"last_name" => "Smith" ,"email" => "student@mailinator2.com" },
-      :student_4 =>{"login" => "taylor" ,"password" => "student" ,"first_name" => "taylor" ,"last_name" => "Donald" ,"email" => "student@mailinator3.com" },
-      :student_5 =>{"login" => "Mache" ,"password" => "student" ,"first_name" => "Mache" ,"last_name" => "Smith" ,"email" => "student@mailinator4.com" },
-      :student_6 =>{"login" => "shon" ,"password" => "student" ,"first_name" => "shon" ,"last_name" => "done" ,"email" => "student@mailinator5.com" },
-      :student_7 =>{"login" => "ross" ,"password" => "student" ,"first_name" => "ross" ,"last_name" => "taylor" ,"email" => "student@mailinator6.com" },
-      :student_8 =>{"login" => "monty" ,"password" => "student" ,"first_name" => "Monty" ,"last_name" => "Donald" ,"email" => "student@mailinator7.com" },
-      :student_9 =>{"login" => "Switchuser" ,"password" => "Switchuser" ,"first_name" => "Joe" ,"last_name" => "Switchuser" ,"email" => "student@mailinator8.com" },
+      :student_1 =>{"login" => "student" ,"password" => "password" ,"first_name" => "Alfred" ,"last_name" => "Robert" ,"email" => "student@mailinator.com" },
+      :student_2 =>{"login" => "dave" ,"password" => "password" ,"first_name" => "Dave" ,"last_name" => "Doe" ,"email" => "student@mailinator1.com" },
+      :student_3 =>{"login" => "chuck" ,"password" => "password" ,"first_name" => "Chuck" ,"last_name" => "Smith" ,"email" => "student@mailinator2.com" },
+      :student_4 =>{"login" => "taylor" ,"password" => "password" ,"first_name" => "taylor" ,"last_name" => "Donald" ,"email" => "student@mailinator3.com" },
+      :student_5 =>{"login" => "Mache" ,"password" => "password" ,"first_name" => "Mache" ,"last_name" => "Smith" ,"email" => "student@mailinator4.com" },
+      :student_6 =>{"login" => "shon" ,"password" => "password" ,"first_name" => "shon" ,"last_name" => "done" ,"email" => "student@mailinator5.com" },
+      :student_7 =>{"login" => "ross" ,"password" => "password" ,"first_name" => "ross" ,"last_name" => "taylor" ,"email" => "student@mailinator6.com" },
+      :student_8 =>{"login" => "monty" ,"password" => "password" ,"first_name" => "Monty" ,"last_name" => "Donald" ,"email" => "student@mailinator7.com" },
+      :student_9 =>{"login" => "Switchuser" ,"password" => "password" ,"first_name" => "Joe" ,"last_name" => "Switchuser" ,"email" => "student@mailinator8.com" },
     }
     data.each do |student, student_info|
       user = User.find_by_login(student_info["login"])
@@ -178,7 +178,6 @@ module MockData
       end
       
       user.save!
-
       portal_student = user.portal_student
       unless portal_student
         portal_student = Factory(:full_portal_student, { :user => user})

@@ -42,7 +42,7 @@ Feature: Teacher can see full status
     And the following student answers:
       | student   | class    | activity            | question_prompt | answer |
       | Chuck     | My Class | Algebra             | a               | y      |
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     And I am on the full status page for "My Class"
     
   @javascript
@@ -86,7 +86,7 @@ Feature: Teacher can see full status
     And I should see "Radio activity"
     And I should see "Nuclear Energy"
     And I log out
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     And I am on the full status page for "My Class"
     Then the column for "Radioactivity" on the Full Status page should be expanded
     
@@ -98,7 +98,7 @@ Feature: Teacher can see full status
     
     
   Scenario: Teacher can see a message if no materials are in the class
-    When I login with username: peterson password: teacher
+    When I login with username: peterson password: password
     And I am on the full status page for "Physics"
     Then I should see "No materials assigned to this class."
     

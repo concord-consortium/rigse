@@ -36,7 +36,7 @@ Feature: Class state should be saved
   Scenario: Teacher's state in the left pane should be maintained across sessions
     When I am on "Student Roster" page for "My Class"
     And I log out
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     And I follow "Physics" within left panel for class navigation
     Then I should see "Class Name : Physics"
     And I should be on "Student Roster" page for "Physics" 

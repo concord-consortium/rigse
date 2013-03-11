@@ -44,7 +44,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And the following external activities exist:
       | name        | user    | url               |
       | Google Home | author  | http://google.com |
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     And I am on the search instructional materials page
 
 

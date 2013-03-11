@@ -29,7 +29,7 @@ Feature: Teacher can search and assign instructional materials to a class
       | Mathematics              | teacher    | math                     |
       | Geography                | teacher    | geo                      |
       | class_with_no_assignment | albert     | class_with_no_assignment |
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     
     
   @javascript
@@ -221,7 +221,7 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message in the popup if the investigation is assigned to all the classes
-    When I login with username: albert password: albert
+    When I login with username: albert password: password
     And I am on the the preview investigation page for the investigation "differential calculus"
     And I follow "Assign Investigation"
     And I check "clazz_id[]"
@@ -234,7 +234,7 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message in the popup if the activity is assigned to all the classes
-    When I login with username: albert password: albert
+    When I login with username: albert password: password
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
     And I check "clazz_id[]"
@@ -247,7 +247,7 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message if assign to a class popup is opened without creating any class
-    When I login with username: albert password: albert
+    When I login with username: albert password: password
     And I go to the Manage Class Page
     And I uncheck "teacher_clazz[]"
     And I should wait 2 seconds
