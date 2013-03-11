@@ -140,6 +140,7 @@ class ApplicationController < ActionController::Base
   def check_for_password_reset_requirement
     if current_visitor && current_visitor.require_password_reset
       unless session_sensitive_path
+        flash.keep
         redirect_to change_password_path :reset_code => "0"
       end
     end
@@ -148,6 +149,7 @@ class ApplicationController < ActionController::Base
   def check_student_security_questions_ok
     if current_project && current_project.use_student_security_questions && !current_visitor.portal_student.nil? && current_visitor.security_questions.size < 3
       unless session_sensitive_path
+        flash.keep
         redirect_to(edit_user_security_questions_path(current_visitor))
       end
     end
@@ -156,6 +158,7 @@ class ApplicationController < ActionController::Base
   def check_student_consent
     if current_project && current_project.require_user_consent? && !current_visitor.portal_student.nil? && !current_visitor.asked_age?
       unless session_sensitive_path
+        flash.keep
         redirect_to(ask_consent_portal_student_path(current_visitor.portal_student))
       end
     end
