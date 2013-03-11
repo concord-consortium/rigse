@@ -84,3 +84,8 @@ end
 When /^show usage count is enabled on the session$/ do
   pending # express the regexp above with the code you wish you had
 end
+
+Then /^I should see the "([^"]*)" resource page$/ do | page_name |
+  page.should have_selector("h1:contains('#{page_name}')")
+end
+

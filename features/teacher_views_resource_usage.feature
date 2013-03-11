@@ -55,8 +55,8 @@ Feature: Teacher views resource usage
     When I am on the resource pages page
     And I open the accordion for the resource "Test Resource"
     Then I should see "Viewed by: 0 students"
-
     When I follow "view" for the resource page "Test Resource"
+    Then I should see the "Test Resource" resource page
     And I am on the resource pages page
     And I open the accordion for the resource "Test Resource"
     Then I should see "Viewed by: 0 students"
