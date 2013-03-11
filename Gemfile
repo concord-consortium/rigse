@@ -118,7 +118,7 @@ group :development do
 end
 
 group :test do
-  gem "selenium-webdriver", "2.27.2"
+  gem "selenium-webdriver", "2.31.0"
   gem "cucumber",          "~> 1.1.9"
   gem "cucumber-rails",    "~> 1.3.0", :require => false
   gem "database_cleaner",  "~> 0.7.2"
