@@ -6,6 +6,7 @@ Feature: An author registers to use the portal
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And member registration is enabled
     
     

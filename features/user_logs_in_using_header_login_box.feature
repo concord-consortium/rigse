@@ -6,8 +6,9 @@ Feature: User logs in using header login box to use the portal
   
   Background:
     Given The default project and jnlp resources exist using factories
-      
-      
+    And the database has been seeded
+    
+    
   Scenario: Teacher should be logged in
     When I login with username: teacher password: password
     And I should not see "Forgot your user name or password?"

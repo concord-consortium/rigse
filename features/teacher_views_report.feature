@@ -6,7 +6,7 @@ Feature: Teacher views report
 
   Background:
     Given The default project and jnlp resources exist using factories
-    
+    And the database has been seeded
     # for the sake of visual clarity, all correct answers are 'a'
     And the following multiple choice questions exists:
            | prompt | answers | correct_answer |

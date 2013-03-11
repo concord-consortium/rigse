@@ -6,6 +6,7 @@ Feature: Teacher can search and assign instructional materials to a class
   
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |

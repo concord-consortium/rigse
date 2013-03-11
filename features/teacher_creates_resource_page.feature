@@ -5,6 +5,7 @@ Feature: A teacher creates a resource page
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   @javascript
   Scenario: The teacher creates a resource page

@@ -6,6 +6,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
   
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the following simple investigations exist:
       | name                   | user   | publication_status | description                                     |
       | Radioactivity          | author | published          | Nuclear Energy is a great subject               |

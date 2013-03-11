@@ -6,6 +6,7 @@ Feature: Users can view notices created by project staff
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And I login as an admin
     And I create the following notices:
       | notice_html          | roles                                   |

@@ -5,6 +5,7 @@ Feature: An author deletes parts of an investigation
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   @dialog
   @javascript
