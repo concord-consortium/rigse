@@ -9,7 +9,6 @@ Feature: An author registers to use the portal
     And member registration is enabled
     
     
-  @javascript
   Scenario: Anonymous user signs up as an author
     Given I am an anonymous user
     When I go to the pick signup page
@@ -24,17 +23,12 @@ Feature: An author registers to use the portal
       | user_password_confirmation | password            |
 
     And I press "Sign up"
-    Then I should see "Thanks for signing up!"
+    Then I should see "A message with a confirmation link has been sent to your email address. Please open the link to activate your account."
     And "example@example.com" should receive an email
     When I open the email
     Then I should see "Please activate your new account" in the email subject
     When I click the first link in the email
-    Then I should see "Signup complete!"
-    When I fill in the following:
-      | login    | login    |
-      | password | password |
-    And I press "GO"
-    Then I should see "Signed in successfully."
+    Then I should see "Your account was successfully confirmed. You are now signed in."
     And I should not see "Sorry, there was an error creating your account"
 
   Scenario: Anonymous user signs up as an author with form errors
@@ -53,7 +47,12 @@ Feature: An author registers to use the portal
       | user_password_confirmation | password            |
 
     And I press "Sign up"
-    Then I should see " Thanks for signing up!"
+    Then I should see "A message with a confirmation link has been sent to your email address. Please open the link to activate your account."
+    And "example@example.com" should receive an email
+    When I open the email
+    Then I should see "Please activate your new account" in the email subject
+    When I click the first link in the email
+    Then I should see "Your account was successfully confirmed. You are now signed in."
     And I should not see "Sorry, there was an error creating your account"
 
   Scenario: Anonymous user can't sign up as an author when member registration is disabled

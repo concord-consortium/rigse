@@ -15,7 +15,12 @@ class UsersController < ApplicationController
       :account_report
     ]
   after_filter :store_location, :only => [:index]
-
+  
+  def changeable_filter
+    @user = User.find(params[:id])
+    redirect_home unless @user.changeable?(current_user)
+  end
+  
   def new
     @user = User.new
   end
@@ -242,6 +247,23 @@ class UsersController < ApplicationController
     user = User.find_by_login!(params[:username])
     sign_in user
     head :ok
+  end
+  
+  #Used for activation of users by a manager/admin
+  def confirm
+    if current_visitor && current_visitor.has_role?('admin', 'manager')
+      user = User.find(params[:id]) unless params[:id].blank?
+      if !params[:id].blank? && user && user.state != "active"
+        user.confirm!
+        user.make_user_a_member
+        # assume this type of user just activated someone from somewhere else in the app
+        flash[:notice] = "Activation of #{user.name_and_login} complete."
+        redirect_to(session[:return_to] || root_path)
+      end
+    else
+      flash[:notice] = "Please login as an administrator."
+      redirect_to(root_path)
+    end
   end
 
 end

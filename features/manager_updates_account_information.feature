@@ -21,7 +21,7 @@ Feature: A manager updates account information for another user
       | username | changed_email          |
       | student  | test1@mailintator.com  |
       | teacher  | test2@mailintator.com  |
-
+  
   Scenario Outline: Managers can change a users password
     When I am logged in with the username mymanager
     And I am on the user list page
@@ -41,11 +41,13 @@ Feature: A manager updates account information for another user
       | Alfred Robert | student   | foobarbaz    |
       | John Nash     | teacher   | buzbixbez    |
 
+  @javascript
   Scenario: Managers can activate users
     When there is an unactivated user named "justsignedup"
     And I am logged in with the username mymanager
     And I am on the user list page
     And I should see "justsignedup"
-    And I follow "Activate"
+    And I activate the user from user list by searching "justsignedup"
     Then I should be on the user list page
-    And I see the activation is complete
+    And I should see "Activation of user, joe ( justsignedup ) complete."
+
