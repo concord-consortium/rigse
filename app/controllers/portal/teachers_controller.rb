@@ -127,7 +127,8 @@ class Portal::TeachersController < ApplicationController
   
   def successful_creation(user)
     # Render the UsersController#thanks page instead of showing a flash message.
-    render :template => 'users/thanks'
+    redirect_to thanks_for_sign_up_url(:type=>"teacher")
+    #render :template => 'users/thanks'
   end
   
   def failed_creation(message = 'Sorry, there was an error creating your account')

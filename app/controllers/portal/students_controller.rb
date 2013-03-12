@@ -157,7 +157,9 @@ class Portal::StudentsController < ApplicationController
             # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
             @user.update_security_questions!(@security_questions) if current_project.use_student_security_questions
   
-            format.html { render 'signup_success' }
+            #format.html { render 'signup_success' }
+            redirect_to thanks_for_sign_up_url(:type=>"#{@portal_student.user.login}")
+            return
           else
             msg = <<-EOF
             You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>.
