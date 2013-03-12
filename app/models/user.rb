@@ -1,6 +1,17 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :token_authenticatable, :confirmable,
+  # :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable, :confirmable,
+         :recoverable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
+  
+  default_scope where("state != 'disabled'")
+  
+  
+  # Setup accessible (or protected) attributes for your model
+  attr_accessible :email, :password, :password_confirmation, :remember_me
   NO_EMAIL_STRING='no-email-'
   has_many :investigations
   has_many :resource_pages
@@ -24,7 +35,9 @@ class User < ActiveRecord::Base
   
   has_one :notice_user_display_status, :class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
   
+  scope :all_users, { :conditions => {}}
   scope :active, { :conditions => { :state => 'active' } }
+  scope :suspended, {:conditions => { :state => 'suspended'}}
   scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
   scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
   scope :default, { :conditions => { :default_user => true } }
@@ -44,14 +57,12 @@ class User < ActiveRecord::Base
 
   include Changeable
 
-  include Authentication
-  include Authentication::ByPassword
-  include Authentication::ByCookieToken
-  include Authorization::AasmRoles
-
   attr_accessor :skip_notifications
 
   before_validation :strip_spaces
+  
+  after_update :set_passive_users_as_pending
+  after_create :set_passive_users_as_pending
 
   # strip leading and trailing spaces from names, login and email
   def strip_spaces
@@ -65,25 +76,42 @@ class User < ActiveRecord::Base
   end
 
   # Validations
+  
+  login_regex       = /\A\w[\w\.\-_@]+\z/                     # ASCII, strict
+  bad_login_message = "use only letters, numbers, and .-_@ please.".freeze
+
+  name_regex        = /\A[^[:cntrl:]\\<>\/&]*\z/              # Unicode, permissive
+  bad_name_message  = "avoid non-printing characters and \\&gt;&lt;&amp;/ please.".freeze
+
+  email_name_regex  = '[\w\.%\+\-\']+'.freeze
+  domain_head_regex = '(?:[A-Z0-9\-]+\.)+'.freeze
+  domain_tld_regex  = '(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|jobs|museum)'.freeze
+  email_regex       = /\A#{email_name_regex}@#{domain_head_regex}#{domain_tld_regex}\z/i
+  bad_email_message = "should look like an email address.".freeze
+  
+  
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 1..40
   validates_uniqueness_of   :login, :case_sensitive => false
-  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
+  validates_format_of       :login,    :with => login_regex, :message => bad_login_message
 
-  validates_format_of       :first_name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
+  validates_format_of       :first_name,     :with => name_regex,  :message => bad_name_message, :allow_nil => true
   validates_length_of       :first_name,     :maximum => 100
 
-  validates_format_of       :last_name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
+  validates_format_of       :last_name,     :with => name_regex,  :message => bad_name_message, :allow_nil => true
   validates_length_of       :last_name,     :maximum => 100
 
   validates_presence_of     :email
   validates_length_of       :email,    :within => 6..100 #r@a.wk
   validates_uniqueness_of   :email, :case_sensitive => false
-  validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
+  validates_format_of       :email,    :with => email_regex, :message => bad_email_message
 
   validates_presence_of     :vendor_interface_id
   validates_presence_of     :password, :on => :update, :if => :updating_password?
+  validates_presence_of     :password_confirmation, :on => :create
+  validates_presence_of     :password_confirmation, :on => :update, :if => :updating_password?
+  validates_confirmation_of :password_confirmation
 
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
@@ -166,12 +194,27 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, 
-                  :vendor_interface_id, :external_id, :of_consenting_age, :have_consent
+                  :vendor_interface_id, :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
-    u1 = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
-    u1 && u1.authenticated?(password) ? u1 : nil
+    u1 =  User.find(:first, :conditions => ['login = ? AND state = "active"',login])
+    u1 && u1.valid_password?(password) ? u1 : nil
+  end
+
+  def active_for_authentication?
+    super && user_active?
+  end
+
+  def confirm!
+    super
+    self.state = "active"
+    save(:validate => true)
+    self.make_user_a_member
+  end
+
+  def inactive_message
+    user_active? ? super : "You cannot login since your account has been suspended."
   end
 
   def name
@@ -325,10 +368,58 @@ class User < ActiveRecord::Base
   def only_a_student?
     portal_student and !has_role?('admin', 'manager', 'researcher', 'author') and portal_teacher.nil?
   end
+  def remember_me
+    self.remember_me_for 2.weeks
+  end
 
+  def remember_me_for(time)
+    self.remember_me_until time.from_now.utc
+  end
+
+  def remember_me_until(time)
+    self.remember_created_at = time
+    self.remember_token = self.class.remember_token
+    save(:validate => false)
+  end
+  
+  def forget_me
+    self.forget_me!
+  end
+  
+  def set_passive_users_as_pending
+    if (self.state == 'passive' && (!self.confirmation_token.nil? && self.confirmed_at.nil?))
+      self.update_attribute(:state, "pending")
+    end
+    self.reload
+  end
+  
+  def suspend!
+    self.update_attribute(:state, 'suspended')
+    self.reload
+  end
+  
+  def delete!
+    self.update_attribute(:state, 'disabled')
+    self.update_attribute( :deleted_at, DateTime.now.utc)
+    self.reload
+  end
+  
+  def unsuspend!
+    user_state = "active"
+    user_state = (self.confirmation_token.nil? && self.confirmed_at.nil?)? "passive" : user_state 
+    user_state = (!self.confirmation_token.nil? && self.confirmed_at.nil?)? "pending" : user_state 
+    self.update_attribute(:state, user_state)
+    self.reload
+  end
+  
+  def user_active?
+    self.state != "suspended" && self.state != "disabled"
+  end
+  
   protected
   def make_activation_code
     self.deleted_at = nil
     self.activation_code = self.class.make_token
   end
+  
 end

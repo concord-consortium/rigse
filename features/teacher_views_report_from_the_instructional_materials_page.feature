@@ -6,6 +6,7 @@ Feature: Teacher views report from the instructional materials page of a class
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the following classes exist:
       | name        | teacher | class_word | semester |
       | My Class    | teacher | my_classes | Fall     |

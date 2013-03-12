@@ -2,7 +2,7 @@
   #flash
     .padded_contents
       %div{:class=>"flash flash_notice"}= flash[:notice]
-- [:error, :important].each do |key|
+- [:error, :important,:alert].each do |key|
   - unless flash[key].blank?
     - encoded_msg = URI::encode("#{flash[key]}")
     :javascript

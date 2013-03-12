@@ -14,6 +14,7 @@ In NO case should the system allow:
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   Scenario Outline: Anonymous user can't access dataservice routes
     Given I am not logged in

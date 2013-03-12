@@ -87,6 +87,14 @@ Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fulln
   end
 end
 
+Then /^(?:|I )activate the user from user list by searching "([^"]*)"$/ do |search|
+  fill_in("search", :with => search)
+  click_button('Search')
+  within(:xpath,"//div[@id='action_menu_wrapper' and contains(.,'#{search}')]") do
+    click_link('Activate')
+  end
+end
+
 Then /^(?:|I )should see "([^"]*)" in the input box of external URL for help page on projects page$/ do |url|
   step_text = "I should see the xpath \"//input[@name='admin_project[external_url]' and @value = '#{url}']\""
   step step_text

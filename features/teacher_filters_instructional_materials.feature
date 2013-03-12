@@ -6,9 +6,10 @@ Feature: Teacher can search and filter instructional materials
   
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the investigation "Digestive System" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
     And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     And I am on the search instructional materials page
     
     
@@ -76,13 +77,13 @@ Feature: Teacher can search and filter instructional materials
     
   @javascript
   Scenario: I log out and log back in again, and my sensor choice is remembered
-    When I login with username: teacher password: teacher
+    When I login with username: teacher password: password
     And I am on the search instructional materials page
     And I check "Temperature"
     And I should wait 2 seconds
     And I should see "A Weather Underground"
     Then I log out
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     And I am on the search instructional materials page
     Then the "Temperature" checkbox should be checked
     

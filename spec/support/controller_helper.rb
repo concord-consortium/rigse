@@ -163,7 +163,8 @@ def generate_default_project_and_jnlps_with_mocks
     :require_user_consent?          => false,
     :allow_default_class            => false,
     :allow_default_class?           => false,
-    :jnlp_cdn_hostname              => ''
+    :jnlp_cdn_hostname              => '',
+    :enabled_bookmark_types         => []
   )
 
   Admin::Project.stub!(:default_project).and_return(@mock_project)
@@ -350,8 +351,12 @@ def stub_current_user(user_sym)
   else
     @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
   end
-
+  
+  ApplicationController.any_instance.stub(:current_user).and_return(@logged_in_user)
+  ApplicationController.any_instance.stub(:user_signed_in?).and_return(true)
+  sign_in @logged_in_user
   @controller.stub!(:current_visitor).and_return(@logged_in_user)
+  
   @logged_in_user
 end
 
@@ -365,3 +370,4 @@ def xml_http_html_request(request_method, action, parameters = nil, session = ni
   request.env['HTTP_ACCEPT'] = Mime::HTML
   xml_http_request request_method, action, parameters, session, flash
 end
+

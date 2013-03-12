@@ -97,10 +97,10 @@ class Portal::StudentsController < ApplicationController
     if @user.valid? && errors.length < 1
       # temporarily disable sending email notifications for state change events
       @user.skip_notifications = true
-      @user.register!
+      @user.save!
       user_created = @user.save
       if user_created
-        @user.activate!
+        @user.confirm!
         if current_project.allow_default_class || @grade_level.nil?
           @portal_student = Portal::Student.create(:user_id => @user.id)
         else
@@ -157,7 +157,9 @@ class Portal::StudentsController < ApplicationController
             # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
             @user.update_security_questions!(@security_questions) if current_project.use_student_security_questions
   
-            format.html { render 'signup_success' }
+            #format.html { render 'signup_success' }
+            redirect_to thanks_for_sign_up_url(:type=>"#{@portal_student.user.login}")
+            return
           else
             msg = <<-EOF
             You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>.

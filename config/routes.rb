@@ -1,4 +1,9 @@
 RailsPortal::Application.routes.draw do
+  
+  devise_for :users
+
+  root :to => "home#index"
+  
   match "search" => 'search#index', :as => :search
 
   get "search/index"
@@ -252,6 +257,7 @@ constraints :id => /\d+/ do
   match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions
   match '/opensession' => 'sessions#create', :as => :open_id_complete, :constraints => { :method => 'get' }
   match '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => 'get' }
+  match '/thanks_for_sign_up/:type' => 'users#registration_successful', :as => :thanks_for_sign_up, :type=>nil
 
   resources :users do
     member do
@@ -264,6 +270,7 @@ constraints :id => /\d+/ do
       get :preferences
       put :preferences
       get :reset_password
+      get :confirm
     end
     resource :security_questions, :only => [:edit, :update]
 
@@ -277,7 +284,7 @@ constraints :id => /\d+/ do
 
   match '/users/reports/account_report' => 'users#account_report', :as => :users_account_report, :method => :get
   resources :passwords
-  resource :session
+  #resource :session
 
   resources :external_user_domains do
     resources :external_users
@@ -563,7 +570,7 @@ constraints :id => /\d+/ do
   resources :images
 
   if Rails.env.cucumber? || Rails.env.test?
-    match '/login/:username' => 'sessions#backdoor', :as => :login_backdoor
+    match '/login/:username' => 'users#backdoor', :as => :login_backdoor
   end
 
   match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'

@@ -6,6 +6,7 @@ Feature: User updates account information
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   @javascript
   Scenario Outline: Users can not change their usernames

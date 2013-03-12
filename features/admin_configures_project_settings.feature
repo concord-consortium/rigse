@@ -6,6 +6,7 @@ Feature: Admin configures project settings
   
   Scenario: Admin views project without setting up jnlps
     Given the most basic default project
+    And the database has been seeded
     And I login as an admin
     And am on the admin projects page
     Then I should see the sites name

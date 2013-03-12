@@ -5,13 +5,14 @@ describe "Portal::Offering" do
     generate_default_project_and_jnlps_with_factories
     learner = Factory(:full_portal_learner)
     user = learner.student.user
-    user.register
-    user.activate
     user.save!
+    user.confirm!
+    
     
     # log in as this learner
     visit "/"
-    within("#header-project-signin") do
+    
+    within("div.header-login-box") do
       fill_in("Username", :with => user.login)
       fill_in("Password", :with => 'password')
       click_button("GO")
