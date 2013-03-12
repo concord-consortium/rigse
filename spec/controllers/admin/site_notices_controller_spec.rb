@@ -10,7 +10,8 @@ describe Admin::SiteNoticesController do
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
 
     @admin_user = Factory.next(:admin_user)
-    @teacher_user = Factory.create(:user, :login => "teacher")
+    @teacher_user = Factory.create(:user, :login => "teacher_user")
+    @teacher_user.add_role('member')
     @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
     @manager_user = Factory.next(:manager_user)
     @researcher_user = Factory.next(:researcher_user)

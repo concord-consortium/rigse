@@ -10,7 +10,7 @@ describe SearchController do
     
     @mock_semester = Factory.create(:portal_semester, :name => "Fall")
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
-    @teacher_user = Factory.create(:user, :login => "teacher")
+    @teacher_user = Factory.create(:user, :login => "teacher_user")
     @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
     @admin_user = Factory.next(:admin_user)
     @author_user = Factory.next(:author_user)

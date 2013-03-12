@@ -35,16 +35,17 @@ describe Admin::ProjectsController do
       second_project = Factory.create(:admin_project)
       Admin::Project.stub!(:default_project).and_return(project)
       manager_user = Factory.create(:user)
-      manager_user.add_role("manager")
-
+      manager_user.add_role('manager')
+      manager_user.save!
+      
       stub_current_user manager_user
       
       get :index
-
+      
       assert_response :success
       assert_template :partial => "_show_for_managers"
 
-      assigns[:admin_projects].size.should == 1
+      assigns[:admin_projects].size.should be(1)
       assigns[:admin_projects].should include(project)
       assigns[:admin_projects].should_not include(second_project)
     end

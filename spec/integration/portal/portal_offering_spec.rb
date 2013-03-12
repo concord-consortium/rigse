@@ -11,7 +11,8 @@ describe "Portal::Offering" do
     
     # log in as this learner
     visit "/"
-    within("#header-project-signin") do
+    
+    within("div.header-login-box") do
       fill_in("Username", :with => user.login)
       fill_in("Password", :with => 'password')
       click_button("GO")
