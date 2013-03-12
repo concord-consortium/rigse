@@ -5,7 +5,7 @@ Feature: An author creates an investigation
 
   Background:
     Given The default project and jnlp resources exist using factories
-    
+    And the database has been seeded
     
   @javascript
   Scenario: The author creates an investigation

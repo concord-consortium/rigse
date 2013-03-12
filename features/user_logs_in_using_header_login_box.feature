@@ -6,24 +6,25 @@ Feature: User logs in using header login box to use the portal
   
   Background:
     Given The default project and jnlp resources exist using factories
-      
-      
+    And the database has been seeded
+    
+    
   Scenario: Teacher should be logged in
-    When I login with username: teacher password: teacher
+    When I login with username: teacher password: password
     And I should not see "Forgot your user name or password?"
     
     
   Scenario: Student should be logged in
-    When I login with username: student password: student
+    When I login with username: student password: password
     And I should not see "Forgot your user name or password?"
     
     
   Scenario: Other user with different roles should be logged in
-    When I login with username: author password: author
+    When I login with username: author password: password
     Then I should not see "Forgot your user name or password?"
     When I login as an admin
     Then I should not see "Forgot your user name or password?"
-    When I login with username: manager password: manager
+    When I login with username: manager password: password
     Then I should not see "Forgot your user name or password?"
     
     

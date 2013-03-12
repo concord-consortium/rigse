@@ -6,6 +6,7 @@ Feature: Teacher resets password
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   @javascript
   Scenario: Anonymous user signs up as teacher

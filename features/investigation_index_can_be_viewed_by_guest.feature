@@ -5,7 +5,7 @@ Feature: Investigations can be viewed by guests
 
   Background:
     Given The default project and jnlp resources exist using factories
-
+    And the database has been seeded
     And the following empty investigations exist:
         | name                    | user    | offerings_count | publication_status |
         | b Investigation         | teacher | 5               | published          |        
