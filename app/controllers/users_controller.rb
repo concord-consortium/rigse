@@ -268,7 +268,7 @@ class UsersController < ApplicationController
 
   def registration_successful
     if params[:type] == "teacher"
-      render :template => 'portal/teachers/thanks'
+      render :template => 'users/thanks'
     else
       render :template => 'portal/students/signup_success'
     end
