@@ -340,8 +340,14 @@ def login_anonymous
 end
 
 def logout_user
+  sign_out @logged_in_user unless @logged_in_user.nil?
+  
   @logged_in_user = Factory.next :anonymous_user
+  
+  ApplicationController.any_instance.stub(:current_user).and_return(@logged_in_user)
+  ApplicationController.any_instance.stub(:user_signed_in?).and_return(false)
   @controller.stub!(:current_visitor).and_return(@logged_in_user)
+  
   @logged_in_user
 end
 
