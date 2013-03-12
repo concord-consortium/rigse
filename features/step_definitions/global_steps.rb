@@ -22,7 +22,11 @@ def login_with_ui_as(username, password)
     click_button("GO")
     @cuke_current_username = username
   end
-  page.should have_content("Signed in successfully.")
+  user = User.find_by_login(username)
+  user_first_name = user.first_name
+  user_last_name = user.last_name
+  page.should have_content("Welcome #{user_first_name} #{user_last_name}")
+  
 end
 
 # scroll_into_view is a hack so an element is scrolled into view in selenium in IE
