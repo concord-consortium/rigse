@@ -1,6 +1,6 @@
 module MockData
   
-  DEFAULT_DATA = YAML.load_file(File.dirname(__FILE__) + "/faulty_data.yml")
+  DEFAULT_DATA = YAML.load_file(File.dirname(__FILE__) + "/default_data.yml")
   
   #load all the factories
   Dir[File.dirname(__FILE__) + '/../../factories/*.rb'].each {|file| require file }
