@@ -87,19 +87,21 @@ class PadletWrapper
 
   def json_post(path,data)
     endpoint = "http://#{PadletWrapper.hostname}/#{path}"
-    HTTParty.post(endpoint, self.get_opts(data))
+    args = self.get_opts(data)
+    HTTParty.post(endpoint, args) 
   end
 
   def get_auth_token
     results = self.json_post('/session', self.auth_request)
-    self.padlet_user_id = results['id']
-    self.auth_data = results.dup
     cookies = results.get_fields('Set-Cookie');
     cookies.map! { |c|
       name, remainder = c.split("=",2)
       value = remainder.split(";")[0]
       "#{name}=#{value}"
     }
+    results = JSON.parse(results)
+    self.padlet_user_id = results['id']
+    self.auth_data = results.dup
     self.auth_cookies   = cookies
     self
   end
@@ -113,6 +115,7 @@ class PadletWrapper
 
   def make_wall
     results = self.json_post('/walls',self.auth_data)
+    results = JSON.parse(results)
     self.padlet_url=results['links']['doodle'] # also checkout 'embed'
     self.fix_hostname_in_response_url
     # Noah removed because IE can't deal with basic auth urls:
