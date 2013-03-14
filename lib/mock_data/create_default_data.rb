@@ -8,7 +8,8 @@ module MockData
   #Create fake users and roles
   def self.create_default_users
     
-    password = APP_CONFIG[:default_users_password]
+    password = APP_CONFIG[:password_for_default_users]
+    
     #create roles in order
     %w| admin manager researcher author member guest|.each_with_index do |role_name,index|
       unless Role.find_by_title_and_position(role_name,index)
