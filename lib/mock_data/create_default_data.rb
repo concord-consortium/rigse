@@ -1,11 +1,14 @@
 module MockData
   
+  DEFAULT_DATA = YAML.load_file(File.dirname(__FILE__) + "/faulty_data.yml")
+  
   #load all the factories
   Dir[File.dirname(__FILE__) + '/../../factories/*.rb'].each {|file| require file }
   
   #Create fake users and roles
   def self.create_default_users
-  
+    
+    password = APP_CONFIG[:default_users_password]
     #create roles in order
     %w| admin manager researcher author member guest|.each_with_index do |role_name,index|
       unless Role.find_by_title_and_position(role_name,index)
@@ -16,11 +19,8 @@ module MockData
     
     #create a school
     schools = []
-    data = {
-       :school_1 => {"name" => 'fake school', "description" => "fake school"},
-       :school_2 => {"name" => 'VJTI', "description" => "Tech School"}
-    }
-    data.each do |school, school_info|
+    
+    DEFAULT_DATA['schools'].each do |school, school_info|
       school = Portal::School.find_by_name(school_info["name"])
       unless school
         school = Factory.create(:portal_school, school_info)
@@ -43,13 +43,10 @@ module MockData
     
     #following semesters exist
     
-    data = {
-      :fall => {"name" => 'Fall', "description" => 'Fall Semester', "start_time" => DateTime.new(2012, 12, 01, 00, 00, 00), "end_time" => DateTime.new(2012, 03, 01, 23, 59, 59)},
-      :spring => {"name" => 'Spring', "description" => 'Spring Semester', "start_time" => DateTime.new(2012, 10, 10, 23, 59, 59), "end_time" => DateTime.new(2013, 03, 31, 23, 59, 59)},
-    }
+    
     
     schools.each do |school|
-      data.each do |semester, semester_info|
+      DEFAULT_DATA['semesters'].each do |semester, semester_info|
         sem  = Portal::Semester.find_by_school_id_and_name(school.id, semester_info["name"])
         unless sem
           sem = Factory.create(:portal_semester, semester_info)
@@ -66,16 +63,11 @@ module MockData
     
     
     #following users exist
-    data = {
-      :user_1 => {"login" => "author", "password" => "password", "roles" => "member, author"},
-      :user_2 => {"login" => "manager", "password" => "password", "roles" => "manager"},
-      :user_3 => {"login" => "mymanager", "password" => "password", "roles" => "manager"},
-      :user_4 => {"login" => "researcher", "password" => "password", "roles" => "researcher"},
-      :user_5 => {"login" => "admin", "password" => "password", "roles" => "admin"}
-    }
+    
     User.anonymous(true)
-    data.each do |user, user_info|
+    DEFAULT_DATA['users'].each do |user, user_info|
       roles = user_info.delete('roles')
+      user_info.merge!('password' => password)
       if roles
         roles = roles ? roles.split(/,\s*/) : nil
       else
@@ -87,8 +79,8 @@ module MockData
         user.save!
         user.confirm!
       else
-        user.password = user_info["password"]
-        user.password_confirmation = user_info["password"]
+        user.password = user_info['password']
+        user.password_confirmation = user_info['password']
       end
       user.save!
       
@@ -99,17 +91,10 @@ module MockData
     
     
     #following teachers exist
-    data = {
-      :teacher_1 => {"login" => 'teacher', "password" => 'password', "first_name" => 'John', "last_name" =>'Nash', "email" => 'bademail@noplace.com', "cohort_list" => "control"},
-      :teacher_2 => {"login" => 'albert', "password" => 'password', "first_name" => 'Albert', "last_name" =>'Fernandez', "email" => 'bademail@noplace2.com', "cohort_list" => "experiment"},
-      :teacher_3 => {"login" => 'robert', "password" => 'password', "first_name" => 'Robert', "last_name" =>'Fernandez', "email" => 'bademail@noplace3.com', "cohort_list" => "control, experiment"},
-      :teacher_4 => {"login" => 'peterson', "password" => 'password', "first_name" => 'peterson', "last_name" =>'taylor', "email" => 'bademail@noplace4.com'},
-      :teacher_5 => {"login" => 'teacher_with_no_class', "password" => 'teacher_with_no_class', "first_name"=> 'teacher_with_no_class', "last_name" =>'teacher_with_no_class', "email" => 'bademail@noplace5.com'},
-      :teacher_6 => {"login" => 'jonson', "password" => 'password', "first_name" => 'Jonson', "last_name" =>'Jackson', "email" => 'bademail@noplace6.com'}
-    }
     
-    data.each do |teacher, teacher_info|
+    DEFAULT_DATA['teachers'].each do |teacher, teacher_info|
       cohorts = teacher_info.delete("cohort_list")
+      teacher_info.merge!('password' => password)
       user = User.find_by_login(teacher_info["login"])
       unless user
         user = Factory(:user, teacher_info)
@@ -139,10 +124,8 @@ module MockData
     
     
     #Following school and teacher mapping exists
-    data = {
-      "VJTI" => "teacher, albert",
-    }
-    data.each do |school, teachers|
+    
+    DEFAULT_DATA['school_teacher_mapping'].each do |school, teachers|
       school = Portal::School.find_by_name(school)
       teachers = teachers.split(",").map { |t| t.strip }
       teachers.map! {|t| User.find_by_login(t)}
@@ -151,19 +134,10 @@ module MockData
     end
     
     
-    data = {
-      :student_1 =>{"login" => "student" ,"password" => "password" ,"first_name" => "Alfred" ,"last_name" => "Robert" ,"email" => "student@mailinator.com" },
-      :student_2 =>{"login" => "dave" ,"password" => "password" ,"first_name" => "Dave" ,"last_name" => "Doe" ,"email" => "student@mailinator1.com" },
-      :student_3 =>{"login" => "chuck" ,"password" => "password" ,"first_name" => "Chuck" ,"last_name" => "Smith" ,"email" => "student@mailinator2.com" },
-      :student_4 =>{"login" => "taylor" ,"password" => "password" ,"first_name" => "taylor" ,"last_name" => "Donald" ,"email" => "student@mailinator3.com" },
-      :student_5 =>{"login" => "Mache" ,"password" => "password" ,"first_name" => "Mache" ,"last_name" => "Smith" ,"email" => "student@mailinator4.com" },
-      :student_6 =>{"login" => "shon" ,"password" => "password" ,"first_name" => "shon" ,"last_name" => "done" ,"email" => "student@mailinator5.com" },
-      :student_7 =>{"login" => "ross" ,"password" => "password" ,"first_name" => "ross" ,"last_name" => "taylor" ,"email" => "student@mailinator6.com" },
-      :student_8 =>{"login" => "monty" ,"password" => "password" ,"first_name" => "Monty" ,"last_name" => "Donald" ,"email" => "student@mailinator7.com" },
-      :student_9 =>{"login" => "Switchuser" ,"password" => "password" ,"first_name" => "Joe" ,"last_name" => "Switchuser" ,"email" => "student@mailinator8.com" },
-    }
-    data.each do |student, student_info|
+    
+    DEFAULT_DATA['students'].each do |student, student_info|
       user = User.find_by_login(student_info["login"])
+      student_info.merge!('password' => password)
       unless user
         user = Factory(:user, student_info)
         user.add_role("member")
@@ -178,6 +152,7 @@ module MockData
       end
       
       user.save!
+
       portal_student = user.portal_student
       unless portal_student
         portal_student = Factory(:full_portal_student, { :user => user})
@@ -187,5 +162,56 @@ module MockData
   
   end #end of method create_default_users
   
-  
+  def self.create_default_clazzes
+
+    # this method creates default classes,
+    # teacher class mapping
+    # student class mapping
+    
+    #following classes exist:
+    DEFAULT_DATA['classes'].each do |claz, clazz_info|
+      user = User.find_by_login clazz_info['teacher']
+      teacher = user.portal_teacher
+      clazz_info.merge!('teacher' => teacher)
+      
+      clazz = Portal::Clazz.find_by_class_word(clazz_info['class_word'])
+      if clazz
+        clazz.name = clazz_info['name']
+        clazz.add_teacher(teacher)
+      else
+      Factory.create(:portal_clazz, clazz_info)
+      end
+    end
+    
+    #following teacher and class mapping exists:
+    DEFAULT_DATA['teacher_clazzes'].each do |teacher, clazzes_name|
+      user = User.find_by_login(teacher)
+      portal_teacher = Portal::Teacher.find_by_user_id(user.id)
+      clazzes_name = clazzes_name.split(",").map{|c| c.strip }
+      clazzes = clazzes_name.map!{|c| Portal::Clazz.find_by_name(c)}
+      clazzes.each do |clazz|
+        teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(clazz.id, portal_teacher.id)
+        unless teacher_clazz
+          teacher_clazz = Portal::TeacherClazz.new()
+          teacher_clazz.clazz_id = clazz.id
+          teacher_clazz.teacher_id = portal_teacher.id
+          save_result = teacher_clazz.save!
+        end
+      end
+    end
+    
+    #And following student clazz mapping exist
+    DEFAULT_DATA['student_clazzes'].each do |student_name, clazzes|
+      student = User.find_by_login(student_name).portal_student
+      clazzes = clazzes.split(",").map{|c| c.strip }
+      clazzes.map!{|c| Portal::Clazz.find_by_name(c)}
+      clazzes.each do |each_clazz|
+        student_clazz = Portal::StudentClazz.find_by_student_id_and_clazz_id(student.id, each_clazz.id)
+        unless student_clazz
+          Factory.create :portal_student_clazz, :student => student, :clazz => each_clazz
+        end
+      end
+    end
+
+  end #end of create_default_clazzes
 end # end of MockData
