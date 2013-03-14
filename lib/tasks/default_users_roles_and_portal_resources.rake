@@ -44,6 +44,7 @@ namespace :app do
     task :create_default_users => :environment do
       require File.expand_path('../../mock_data/create_fake_data.rb', __FILE__)
       MockData.create_default_users
+      MockData.create_default_clazzes
     end
     
     desc "Create default users and roles"
