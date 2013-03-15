@@ -17,6 +17,24 @@ Feature: Teacher manages a class
     
     
   @javascript
+  Scenario: Teacher creates a copy of a class
+    When I follow copy class link for the class "Physics"
+    And I fill in "Class Name:" with "Copy of Physics"
+    And I fill in "Class Word:" with "etrx"
+    And I fill in "Class Description" with "electronics class"
+    And I press "Save" within the popup
+    Then I should see "Copy of Physics"
+    And "Copy of Physics" should be the last on the list with id "sortable"
+    And "Copy of Physics" should be the last class within left panel for class navigation
+    And there should be no student in "Copy of Physics"
+    And I should see "Robert Fernandez"
+    And I should see "John Nash"
+    And I should see "Lumped circuit abstraction"
+    And I should see "static discipline"
+    And I should see "Non Linear Devices"
+    
+    
+  @javascript
   Scenario: Teacher should be on Manage their Class Page
     Then I should be on Manage Class Page
     
@@ -75,25 +93,7 @@ Feature: Teacher manages a class
     And I should see "Geography"
     
     
-  @javascript
-  Scenario: Teacher creates a copy of a class
-    Given the following teacher and class mapping exists:
-      | class_name  | teacher                   |
-      | Physics     |  teacher_with_no_class    |
-    When I follow copy class link for the class "Physics"
-    And I fill in "Class Name:" with "Copy of Physics"
-    And I fill in "Class Word:" with "etrx"
-    And I fill in "Class Description" with "electronics class"
-    And I press "Save" within the popup
-    Then I should see "Copy of Physics"
-    And "Copy of Physics" should be the last on the list with id "sortable"
-    And "Copy of Physics" should be the last class within left panel for class navigation
-    And there should be no student in "Copy of Physics"
-    And I should see " teacher_with_no_class teacher_with_no_class"
-    And I should see "John Nash"
-    And I should see "Lumped circuit abstraction"
-    And I should see "static discipline"
-    And I should see "Non Linear Devices"
+
     
     
   @javascript

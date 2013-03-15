@@ -10,14 +10,8 @@ Feature: Resource pages can be filtered by cohort
       | scope         | tag             |
       | cohorts       | control         |
       | cohorts       | experiment      |
-    And the following classes exist:
-      | name        | teacher     |
-      | My Class    | teacher    |
-      | My b Class  | albert    |
-      | My c Class  | robert    |
-      | My d Class  | peterson    |
     And the following resource pages exist:
-      | name           | user     | cohort_list         |
+      | name           | user    | cohort_list         |
       | neither        | teacher |                     |
       | control        | teacher | control             |
       | experiment     | teacher | experiment          |
@@ -53,7 +47,7 @@ Feature: Resource pages can be filtered by cohort
 
   Scenario: Resource Pages are visible for the experiment cohort
     Given I am logged in with the username albert
-    When I am on the class page for "My b Class"
+    When I am on the class page for "Biology"
     Then the following should be displayed in the assignables list:
       | name                          |
       | Resource Page: neither        |
@@ -73,7 +67,7 @@ Feature: Resource pages can be filtered by cohort
 
   Scenario: Resource Pages are visible for someone in both cohorts
     Given I am logged in with the username robert
-    When I am on the class page for "My c Class"
+    When I am on the class page for "Physics"
     Then the following should be displayed in the assignables list:
       | name                          |
       | Resource Page: neither        |
@@ -91,7 +85,7 @@ Feature: Resource pages can be filtered by cohort
 
   Scenario: Resource Pages that are untagged are visible to a teacher in neithers
     Given I am logged in with the username peterson
-    When I am on the class page for "My d Class"
+    When I am on the class page for "class_with_no_assignment"
     Then the following should be displayed in the assignables list:
       | name                       |
       | Resource Page: neither     |

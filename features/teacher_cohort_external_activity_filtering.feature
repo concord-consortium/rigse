@@ -10,12 +10,6 @@ Feature: External activities can be filtered by cohort
       | scope         | tag             |
       | cohorts       | control         |
       | cohorts       | experiment      |
-    And the following classes exist:
-      | name        | teacher   |
-      | My Class    | teacher   |
-      | My b Class  | albert    |
-      | My c Class  | robert    |
-      | My d Class  | peterson  |
     And the following external activities exist:
       | name           | user      | cohort_list         |
       | neither        | teacher   |                     |
@@ -53,7 +47,7 @@ Feature: External activities can be filtered by cohort
 
   Scenario: External Activities are visible for the experiment cohort
     Given I am logged in with the username albert
-    When I am on the class page for "My b Class"
+    When I am on the class page for "Biology"
     Then the following should be displayed in the assignables list:
       | name                              |
       | External Activity: neither        |
@@ -73,7 +67,7 @@ Feature: External activities can be filtered by cohort
 
   Scenario: External Activities are visible for someone in both cohorts
     Given I am logged in with the username robert
-    When I am on the class page for "My c Class"
+    When I am on the class page for "Physics"
     Then the following should be displayed in the assignables list:
       | name                              |
       | External Activity: neither        |
@@ -91,7 +85,7 @@ Feature: External activities can be filtered by cohort
 
   Scenario: External Activities that are untagged are visible to a teacher in neither cohort
     Given I am logged in with the username peterson
-    When I am on the class page for "My d Class"
+    When I am on the class page for "class_with_no_assignment"
     Then the following should be displayed in the assignables list:
       | name                           |
       | External Activity: neither     |

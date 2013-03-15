@@ -23,13 +23,14 @@ Feature: Teacher can see recent activity
       | Aerodynamics       | Aeroplane      | section d | page 4 | d                | image_q         | teacher    | true                   |
       | Arithmatics        | Algebra        | section a | page 1 | a                | image_q         | teacher    | false                  |
     And the following assignments exist:
-      | type          | name                 | class       |
-      | investigation | Radioactivity        | My Class    |
-      | investigation | Plant reproduction   | My Class    |
-      | investigation | Radioactivity        | Physics     |
-      | investigation | Plant reproduction   | Physics     |
-      | investigation | Aerodynamics         | Physics     |
-      | investigation | Aerodynamics         | Mechanics   |
+      | type          | name                 | class                  |
+      | investigation | Radioactivity        | My Class               |
+      | investigation | Plant reproduction   | My Class               |
+      | investigation | Radioactivity        | Physics                |
+      | investigation | Plant reproduction   | Physics                |
+      | investigation | Aerodynamics         | Physics                |
+      | investigation | Aerodynamics         | Mechanics              |
+      | investigation | Aerodynamics         | class_with_no_students |
     And I login with username: teacher password: password
     
     
@@ -49,17 +50,13 @@ Feature: Teacher can see recent activity
     And the student "monty" belongs to class "Biology"
     And I login with username: albert password: password
     Then I should see "As your students get started, their progress will be displayed here."
-
+    
   Scenario: Teacher should see a message if no student is assigned to the class
-    When the following empty investigations exist:
-     | name      | user   | offerings_count | publication_status |
-     | Digestion | albert | 5               | published          |
-    And the following assignments exist:
-     | type          | name      | class   |
-     | investigation | Digestion | Biology |
-    And I login with username: albert password: password
-    Then I should see "You have not yet assigned students to your classes."
-    And I should see "As your students get started, their progress will be displayed here."
+    When the following teacher and class mapping exists:
+      | class_name                   | teacher  |
+      | class_with_no_students       | robert   |
+    And I login with username: robert password: password
+    Then I should see "As your students get started, their progress will be displayed here."
     
   @javascript
   Scenario: Teacher should see standalone activity 
@@ -124,7 +121,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
-    Then I should see "Class Size = 3"
+    Then I should see "Class Size = 4"
     
   @javascript
   Scenario: Teacher views message if no student has completed

@@ -18,10 +18,6 @@ Feature: Teacher edits and saves class information
       | Lumped circuit abstraction | Air activity   | section a | page 1 | a                | image_q         | teacher   | false                 |
       | Static discipline          | Air activity   | section a | page 1 | b                | image_q         | teacher   | false                 |
       | Non Linear Devices         | Air activity   | section a | page 1 | c                | image_q         | teacher   | false                 |
-    And the classes "Mathematics" are in a school named "VJTI"
-    And the following teacher and class mapping exists:
-      | class_name  | teacher    |
-      | Mathematics | peterson   |
     And the following assignments exist:
       | type          | name                       | class       |
       | investigation | Lumped circuit abstraction | Mathematics |

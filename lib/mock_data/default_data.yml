@@ -199,12 +199,13 @@ classes:
 
 teacher_clazzes:
   albert: Biology, class_with_no_assignment
-  peterson: class_with_no_assignment, My Class
+  peterson: class_with_no_assignment, My Class, Mathematics
+  robert: Physics,
   
 
 student_clazzes:
   student: My Class, class_with_no_assignment, class_with_no_attempts
-  dave: My Class
+  dave: My Class, Biology
   chuck: My Class, Physics, Mechanics
   taylor: My Class, Mathematics
   Mache: Physics
