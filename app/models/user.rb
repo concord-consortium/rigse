@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
   
   has_one :notice_user_display_status, :class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
   
+  scope :all_users, { :conditions => {}}
   scope :active, { :conditions => { :state => 'active' } }
   scope :suspended, {:conditions => { :state => 'suspended'}}
   scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
