@@ -7,15 +7,6 @@ Feature: Teacher can see recent activity
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name        | teacher | semester |
-      | My Class    | teacher | Fall     |
-      | Physics     | teacher | Fall     |
-      | Mathematics | teacher | Fall     |
-      | Chemistry   | teacher | Fall     |
-      | Mechanics   | teacher | Fall     |
-      | Biology     | albert  | Fall     |
-    And the classes "My Class, Physics, Mathematics" are in a school named "Harvard School"
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |
@@ -39,12 +30,6 @@ Feature: Teacher can see recent activity
       | investigation | Plant reproduction   | Physics     |
       | investigation | Aerodynamics         | Physics     |
       | investigation | Aerodynamics         | Mechanics   |
-    And the student "dave" belongs to class "My Class"
-    And the student "chuck" belongs to class "Physics"
-    And the student "chuck" belongs to class "Mechanics"
-    And the student "shon" belongs to class "Physics"
-    And the student "ross" belongs to class "Physics"
-    And the student "taylor" belongs to class "Mathematics"
     And I login with username: teacher password: password
     
     

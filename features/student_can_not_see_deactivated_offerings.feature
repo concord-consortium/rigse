@@ -6,9 +6,6 @@ Feature: Student can not see deactivated offerings
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name      | teacher     |
-      | My Class  | teacher     |
     And the following simple investigations exist:
       | name                | user      | publication_status |
       | Test Investigation  | teacher   | published          |
@@ -16,7 +13,6 @@ Feature: Student can not see deactivated offerings
       | name          | user      | publication_status |
       | Test Resource | teacher   | published          |
     And I am logged in with the username teacher
-    And the student "student" belongs to class "My Class"
     And the investigation "Test Investigation" is assigned to the class "My Class"
     And the resource page "Test Resource" is assigned to the class "My Class"
 

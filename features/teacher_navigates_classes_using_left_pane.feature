@@ -7,10 +7,6 @@ Feature: Teacher navigates using left pane
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    When the following classes exist:
-      | name       | teacher | class_word   |
-      | My Class   | teacher | PhysicsClass |
-      
    And I login with username: teacher
    
    

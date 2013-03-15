@@ -7,9 +7,6 @@ Feature: Investigations can be searched
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name      | teacher     |
-      | My Class  | teacher     |
     And the following empty investigations exist:
           | name            | user    | offerings_count | publication_status | 
           | a Investigation | teacher | 5               | published          | 
