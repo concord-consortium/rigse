@@ -22,11 +22,8 @@ class UsersController < ApplicationController
   end
   
   def new
+    #This method is called when a user tries to register as a member
     @user = User.new
-  end
-
-  def create
-    create_new_user(params[:user])
   end
 
   def index

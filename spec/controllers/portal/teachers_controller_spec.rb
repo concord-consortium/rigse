@@ -62,7 +62,7 @@ describe Portal::TeachersController do
         
         post :create, params
         
-        @response.should redirect_to(thanks_for_sign_up_url(:type=>'teacher'))
+        @response.should redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
         
       end
       

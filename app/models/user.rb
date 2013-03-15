@@ -8,10 +8,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   
   default_scope where("state != 'disabled'")
-  
-  
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
+
   NO_EMAIL_STRING='no-email-'
   has_many :investigations
   has_many :resource_pages
@@ -35,7 +32,6 @@ class User < ActiveRecord::Base
   
   has_one :notice_user_display_status, :class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
   
-  scope :all_users, { :conditions => {}}
   scope :active, { :conditions => { :state => 'active' } }
   scope :suspended, {:conditions => { :state => 'suspended'}}
   scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
@@ -193,7 +189,7 @@ class User < ActiveRecord::Base
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, 
+  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :remember_me,
                   :vendor_interface_id, :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.

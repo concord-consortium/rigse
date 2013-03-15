@@ -49,7 +49,8 @@ development: &non_production_settings
       - pastext, pasteword,selectall
       - justifyleft,justifycenter,justifyright
       - code
-
+  :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
+  
 test:
   <<: *non_production_settings
 
@@ -88,6 +89,7 @@ staging:
       - pastext, pasteword,selectall
       - justifyleft,justifycenter,justifyright
       - code
+  :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
 
 production:
   :site_name: Rails Portal
@@ -123,3 +125,4 @@ production:
       - pastext, pasteword,selectall
       - justifyleft,justifycenter,justifyright
       - code
+  :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
