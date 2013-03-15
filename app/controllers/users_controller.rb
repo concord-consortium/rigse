@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   
   def changeable_filter
     @user = User.find(params[:id])
-    redirect_home unless @user.changeable?(current_user)
+    redirect_home unless @user.changeable?(current_visitor)
   end
   
   def new
