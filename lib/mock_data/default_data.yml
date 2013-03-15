@@ -89,7 +89,7 @@ students:
   student_1:
     login: student
     first_name: Alfred
-    last_name: Rober 
+    last_name: Robert
     email: student@mailinator.com
       
   student_2:
@@ -205,10 +205,10 @@ teacher_clazzes:
 student_clazzes:
   student: My Class, class_with_no_assignment, class_with_no_attempts
   dave: My Class
-  chuck: My Class, Physics, Mechanics,
+  chuck: My Class, Physics, Mechanics
   taylor: My Class, Mathematics
   Mache: Physics
   shon: Physics
   ross: Physics
-      
- 
+  
+   
