@@ -28,7 +28,7 @@ Feature: Student must give consent for research study
     And I press "Submit"
     And I log out
     And I login with username: estudent password: password
-    Then I should see "Welcome Example Student"
+    Then I should see "Your age"
     And I choose "user_of_consenting_age_true"
     And I choose "user_have_consent_true"
     And I press "Submit"
