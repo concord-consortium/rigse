@@ -49,7 +49,6 @@ namespace :app do
     desc "Create default classes, teacher class mapping and student class mapping"
     task :create_default_classes => [:environment, :create_default_users] do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
-      MockData.create_default_users
       MockData.create_default_clazzes
     end
     

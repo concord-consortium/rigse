@@ -1,4 +1,5 @@
 development: &non_production_settings
+  :password_for_default_users: secret
   :site_name: Rails Portal (development)
   :site_url: http://localhost:3000
   :description: ""
@@ -53,11 +54,14 @@ development: &non_production_settings
   
 test:
   <<: *non_production_settings
+  :password_for_default_users: password
 
 cucumber:
   <<: *non_production_settings
+  :password_for_default_users: password
 
 staging:
+  :password_for_default_users: secret
   :site_name: Rails Portal (staging)
   :site_url: http://rails-portal.staging.concord.org
   :description: ""
