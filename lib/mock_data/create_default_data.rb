@@ -5,10 +5,58 @@ module MockData
   #load all the factories
   Dir[File.dirname(__FILE__) + '/../../factories/*.rb'].each {|file| require file }
   
+  
+  
+  
+  def self.convert_hash_keys_to_symbols(hash_to_convert)
+    new_hash = {}
+    hash_to_convert.reduce('') {|s, (k, v)|
+      new_hash[k.to_sym] = v
+    }
+    new_hash
+  end
+  
+  def self.add_default_user(user_info)
+    
+    default_password = APP_CONFIG[:password_for_default_users]
+    user = nil
+    roles = user_info.delete('roles')
+    roles = roles ? roles.split(/,\s*/) : []
+    
+    #TODO: if YAML provides a user password don't override it with the default
+    user_info.merge!('password' => default_password)
+    
+    user_by_uuid = User.find_by_uuid(user_info["uuid"])
+    user_by_login = User.find_by_login(user_info["login"])
+    
+    if user_by_uuid
+      user = user_by_uuid
+      user.password = user_info['password']
+      user.password_confirmation = user_info['password']
+      
+      user.first_name = user_info['first_name'] if user_info['first_name']
+      user.last_name = user_info['last_name'] if user_info['last_name']
+      user.email = user_info['email'] if user_info['email']
+      
+      user.save!
+    elsif user_by_login.nil?
+      user_info = self.convert_hash_keys_to_symbols(user_info)
+      user = Factory(:user, user_info)
+      user.save!
+      user.confirm!
+    end
+    
+    if user
+      roles.each do |role|
+        user.add_role(role)
+      end
+    end
+    
+    user
+  end
+  
   #Create fake users and roles
   def self.create_default_users
-    
-    password = APP_CONFIG[:password_for_default_users]
     
     #create roles in order
     %w| admin manager researcher author member guest|.each_with_index do |role_name,index|
@@ -18,149 +66,137 @@ module MockData
     end
     
     
-    #create a school
-    schools = []
+    #create a district
+    default_district = nil
+    district_info = DEFAULT_DATA['district']
+    district_by_uuid = Portal::District.find_by_uuid(district_info["uuid"])
+    district_by_name = Portal::District.find_by_name(district_info["name"])
     
-    DEFAULT_DATA['schools'].each do |school, school_info|
-      school = Portal::School.find_by_name(school_info["name"])
-      unless school
-        school = Factory.create(:portal_school, school_info)
-      else
-        school.description = school_info["description"]
-        school.save!
-      end
-      schools << school
+    if district_by_uuid
+      default_district = district_by_uuid
+      default_district.name = district_info["name"]
+      default_district.description = district_info['description']
+      default_district.save!
+    elsif district_by_name.nil?
+       default_district = Portal::District.create!(district_info)
     end
     
-    #remove all the semesters associated with above school where semester name is null
-    schools.each do |school|
-      school.semesters.each do |semester|
-        if semester.name.blank?
-          semester.destroy
+    
+    #create schools if default district is present
+    default_schools = []
+    if default_district
+      DEFAULT_DATA['schools'].each do |school, school_info|
+        semester_info = school_info.delete("semesters")
+        school_by_uuid = Portal::School.find_by_uuid(school_info["uuid"])
+        school_by_name_and_district = Portal::School.find_by_name_and_district_id(school_info["name"], default_district.id)
+        school = nil
+        if school_by_uuid
+          school = school_by_uuid
+          school.name = school_info['name']
+          school.description = school_info['description']
+          school.district_id = default_district.id
+          school.save!
+          default_schools << school
+        elsif school_by_name_and_district.nil?
+          school_info['district_id'] = default_district.id
+          school_info = self.convert_hash_keys_to_symbols(school_info)
+          school = Portal::School.create!(school_info)
+          default_schools << school
         end
-      end
-    end
-    
-    
-    #following semesters exist
-    
-    
-    
-    schools.each do |school|
-      DEFAULT_DATA['semesters'].each do |semester, semester_info|
-        sem  = Portal::Semester.find_by_school_id_and_name(school.id, semester_info["name"])
-        unless sem
-          sem = Factory.create(:portal_semester, semester_info)
-          sem.school = school
-          sem.save!
-        else
-          sem.start_time = semester_info["start_time"]
-          sem.end_time = semester_info["end_time"]
-          sem.description = semester_info["description"]
-          sem.save!
+        
+        if school
+          semester_info.each do |semester, sem_info|
+            sem = Portal::Semester.find_or_create_by_uuid(sem_info['uuid'])
+            sem.name = sem_info['name']
+            sem.school_id = school.id
+            sem.save!
+          end
         end
       end
     end
     
     
     #following users exist
+    default_users = []
     
-    User.anonymous(true)
     DEFAULT_DATA['users'].each do |user, user_info|
-      roles = user_info.delete('roles')
-      user_info.merge!('password' => password)
-      if roles
-        roles = roles ? roles.split(/,\s*/) : nil
-      else
-        roles =  []
-      end
-      user = User.find_by_login(user_info["login"])
-      unless user
-        user = Factory(:user, user_info)
-        user.save!
-        user.confirm!
-      else
-        user.password = user_info['password']
-        user.password_confirmation = user_info['password']
-      end
-      user.save!
       
-      roles.each do |role|
-        user.add_role(role)
+      user = add_default_user(user_info)
+      
+      if user
+        default_users << user
       end
+      
     end
     
     
     #following teachers exist
     
     DEFAULT_DATA['teachers'].each do |teacher, teacher_info|
-      cohorts = teacher_info.delete("cohort_list")
-      teacher_info.merge!('password' => password)
-      user = User.find_by_login(teacher_info["login"])
-      unless user
-        user = Factory(:user, teacher_info)
-        user.add_role("member")
-        user.save!
-        user.confirm!
+      
+      teacher_school_name = teacher_info.delete('school')
+      teacher_school = default_schools.select { |school| school.name == teacher_school_name }
+      if teacher_school.length == 0
+        next
       else
-        user.password = teacher_info["password"]
-        user.password_confirmation = teacher_info["password"]
-        user.first_name = teacher_info["first_name"]
-        user.last_name = teacher_info["last_name"]
-        user.email = teacher_info["email"]
-      end
-      user.save!
-      
-      portal_teacher = user.portal_teacher
-      unless portal_teacher
-        portal_teacher = Portal::Teacher.create
-        portal_teacher.user = user
-        #all the teachers belong to fake school
-        portal_teacher.schools = [schools[0]]
+        teacher_school = teacher_school[0]
       end
       
-      portal_teacher.cohort_list = cohorts if cohorts
-      portal_teacher.save!
-    end
-    
-    
-    #Following school and teacher mapping exists
-    
-    DEFAULT_DATA['school_teacher_mapping'].each do |school, teachers|
-      school = Portal::School.find_by_name(school)
-      teachers = teachers.split(",").map { |t| t.strip }
-      teachers.map! {|t| User.find_by_login(t)}
-      teachers.map! {|u| u.portal_teacher }
-      teachers.each {|t| t.schools = t.schools + [ school ]; t.save!; t.reload}
+      
+      cohorts = teacher_info.delete("cohort_list")
+      
+      roles = teacher_info['roles']
+      if roles
+        roles << 'member'
+      else
+        roles = ['member']
+      end
+      teacher_info['roles'] = roles
+      
+      user = add_default_user(teacher_info)
+      
+      if user
+        portal_teacher = user.portal_teacher
+        
+        unless portal_teacher
+          portal_teacher = Portal::Teacher.create!(:user_id => user.id)
+        end
+        
+        teacher_school.portal_teachers << portal_teacher
+        portal_teacher.cohort_list = cohorts if cohorts
+        portal_teacher.save!
+        
+        default_users << user
+        
+      end
     end
     
     
     
     DEFAULT_DATA['students'].each do |student, student_info|
-      user = User.find_by_login(student_info["login"])
-      student_info.merge!('password' => password)
-      unless user
-        user = Factory(:user, student_info)
-        user.add_role("member")
-        user.save!
-        user.confirm!
+      
+      roles = student_info['roles']
+      if roles
+        roles << 'member'
       else
-        user.password = student_info["password"]
-        user.password_confirmation = student_info["password"]
-        user.first_name = student_info["first_name"]
-        user.last_name = student_info["last_name"]
-        user.email = student_info["email"]
+        roles = ['member']
       end
       
-      user.save!
-
-      portal_student = user.portal_student
-      unless portal_student
-        portal_student = Factory(:full_portal_student, { :user => user})
-        portal_student.save!
-      end 
+      student_info['roles'] = roles
+      
+      user = add_default_user(student_info)
+      
+      if user
+        portal_student = user.portal_student
+        unless portal_student
+          Portal::Student.create!(:user_id => user.id)
+        end
+        
+        default_users << user
+      end
     end
-  
+    
+    
   end #end of method create_default_users
   
   def self.create_default_clazzes
@@ -180,7 +216,7 @@ module MockData
         clazz.name = clazz_info['name']
         clazz.add_teacher(teacher)
       else
-      Factory.create(:portal_clazz, clazz_info)
+        Factory.create(:portal_clazz, clazz_info)
       end
     end
     
