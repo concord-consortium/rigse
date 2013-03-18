@@ -5,6 +5,7 @@ Feature: The Project administrator disables certain vendor interfaces
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   @javascript
   Scenario: The project administrator removes some probe interfaces

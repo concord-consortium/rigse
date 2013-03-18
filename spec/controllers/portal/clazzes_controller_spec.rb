@@ -15,6 +15,8 @@ describe Portal::ClazzesController do
     Portal::School.destroy_all
     Portal::Semester.destroy_all
     User.destroy_all
+    
+    
 
     @mock_semester = Factory.create(:portal_semester, :name => "Fall")
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
@@ -65,6 +67,8 @@ describe Portal::ClazzesController do
   before(:each) do
     setup_for_repeated_tests
     stub_current_user :admin_user # Make admin our default test user
+    #controller.stub(:current_user) { @admin_user }
+    #sign_in @admin_user
   end
 
 
@@ -92,7 +96,7 @@ describe Portal::ClazzesController do
       @authorized_teacher.reload
       @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['NONE']
     end
-    
+   
   end # end describe GET show
 
   describe "XMLHttpRequest edit" do

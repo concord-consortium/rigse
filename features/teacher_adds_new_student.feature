@@ -7,6 +7,7 @@ Feature: Teacher adds a new student
   
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the teachers "teacher" are in a school named "Harvard"
     And the following classes exist:
       | name       | teacher | semester |
@@ -18,7 +19,7 @@ Feature: Teacher adds a new student
   @javascript
   Scenario: Teacher can add a registered user
     When the student "student" belongs to class "My Class 2"
-    When I login with username: teacher password: teacher
+    When I login with username: teacher password: password
     And I am on "Student Roster" page for "My Class"
     And I follow "Search for registered student."
     And I should see "Robert, Alfred"
@@ -32,7 +33,7 @@ Feature: Teacher adds a new student
   Scenario: Teacher can add an unregistered user
     When the student "student" belongs to class "My Class"
     And the student "student" belongs to class "My Class 2"
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     And I am on "Student Roster" page for "My Class"
     And I follow "Register and add new student"
     And I should see "Register and Add New Student"
@@ -51,7 +52,7 @@ Feature: Teacher adds a new student
   Scenario: Teacher adds another student from the pop up
     When the student "student" belongs to class "My Class"
     And the student "student" belongs to class "My Class 2"
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     And I am on "Student Roster" page for "My Class"
     And I follow "Register and add new student"
     And I should see "Register and Add New Student"
@@ -69,7 +70,7 @@ Feature: Teacher adds a new student
   Scenario: With the default class enabled, teachers cannot directly add existing students
     Given the option to allow default classes is enabled
     When the student "student" belongs to class "My Class 2"
-    When I login with username: teacher password: teacher
+    When I login with username: teacher password: password
     And I am on "Student Roster" page for "My Class"
     Then I should see "If a student already has an account, ask the student to enter the Class Word above"
     And I should not see "Search for registered student"

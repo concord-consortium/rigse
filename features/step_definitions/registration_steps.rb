@@ -4,8 +4,8 @@ end
 
 Given /^there is an unactivated user named "([^"]*)"$/ do |login|
   @unactivated_user = Factory(:user, :login => login)
-  @unactivated_user.register!
-  @unactivated_user.should be_pending
+  @unactivated_user.save!
+  assert_equal @unactivated_user.state, 'pending'
 end
 
 Then /^I see the activation is complete$/ do

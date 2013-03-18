@@ -61,12 +61,9 @@ describe Portal::TeachersController do
         current_teacher_count = Portal::Teacher.count(:all)
         
         post :create, params
-        @response.should render_template("users/thanks")
         
-        assert_equal User.count(:all), current_user_count + 1, "TeachersController#create did not create a User when given valid POST data"
-        assert_equal Portal::Teacher.count(:all), current_teacher_count + 1, "TeachersController#create did not create a Portal::Teacher when given valid POST data"
-        assert_nil flash[:error]
-        assert_nil flash[:notice]
+        @response.should redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
+        
       end
       
       it "should not force the teacher not to select a school" do

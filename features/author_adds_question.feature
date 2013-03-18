@@ -5,6 +5,7 @@ Feature: An author adds multiple choice questions
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   @javascript
   Scenario: The author adds a multiple choice question to an investigation

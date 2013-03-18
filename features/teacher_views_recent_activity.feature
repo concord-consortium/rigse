@@ -6,6 +6,7 @@ Feature: Teacher can see recent activity
   
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the following classes exist:
       | name        | teacher | semester |
       | My Class    | teacher | Fall     |
@@ -44,11 +45,11 @@ Feature: Teacher can see recent activity
     And the student "shon" belongs to class "Physics"
     And the student "ross" belongs to class "Physics"
     And the student "taylor" belongs to class "Mathematics"
-    And I login with username: teacher password: teacher
+    And I login with username: teacher password: password
     
     
   Scenario: Teacher should see a message if no investigation is assigned to the class
-    When I login with username: albert password: albert
+    When I login with username: albert password: password
     And I follow "Recent Activity" within left panel for class navigation
     Then I should see "You need to assign investigations to your classes."
     And I should see "As your students get started, their progress will be displayed here."
@@ -61,7 +62,7 @@ Feature: Teacher can see recent activity
      | type          | name      | class   |
      | investigation | Digestion | Biology |
     And the student "monty" belongs to class "Biology"
-    And I login with username: albert password: albert
+    And I login with username: albert password: password
     Then I should see "As your students get started, their progress will be displayed here."
 
   Scenario: Teacher should see a message if no student is assigned to the class
@@ -71,7 +72,7 @@ Feature: Teacher can see recent activity
     And the following assignments exist:
      | type          | name      | class   |
      | investigation | Digestion | Biology |
-    And I login with username: albert password: albert
+    And I login with username: albert password: password
     Then I should see "You have not yet assigned students to your classes."
     And I should see "As your students get started, their progress will be displayed here."
     

@@ -7,6 +7,7 @@ describe Browse::InvestigationsController do
         @response = ActionController::TestResponse.new
         @author_user = Factory.next(:author_user)
         @physics_investigation = Factory.create(:investigation, :name => 'physics_inv', :user => @author_user, :publication_status => 'published')
+        @controller.stub!(:user_signed_in?).and_return(false)
     end
     
     describe "GET show" do
