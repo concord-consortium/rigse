@@ -30,15 +30,15 @@ Feature: Teacher manages instructional materials of a class
       | activity | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
       | Algebra  | section a | page 6 | f                | image_q         | teacher   | false                 |
     And the following assignments exist:
-      | type          | name                 | class       |
-      | investigation | Aerodynamics         | My Class    |
-      | investigation | Plant reproduction   | My Class    |
-      | investigation | Radioactivity        | My Class    |
-      | investigation | Electricity          | Physics     |
-      | investigation | Plant reproduction   | Physics     |
-      | activity      | Algebra              | Physics     |
-      | investigation | Aerodynamics         | Physics     |
-      | investigation | Aerodynamics         | class_with_no_students    |
+      | type          | name                 | class                  |
+      | investigation | Aerodynamics         | My Class               |
+      | investigation | Plant reproduction   | My Class               |
+      | investigation | Radioactivity        | My Class               |
+      | investigation | Electricity          | Physics                |
+      | investigation | Plant reproduction   | Physics                |
+      | activity      | Algebra              | Physics                |
+      | investigation | Aerodynamics         | Physics                |
+      | investigation | Aerodynamics         | class_with_no_students |
     And the following offerings exist in the classes:
       | name                       | class       |
       | Lumped circuit abstraction | Mathematics |

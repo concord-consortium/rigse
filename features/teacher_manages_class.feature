@@ -93,9 +93,6 @@ Feature: Teacher manages a class
     And I should see "Geography"
     
     
-
-    
-    
   @javascript
   Scenario: Teacher creates a copy of a class to which another teacher belongs and the other teacher logs in.
     Given the following teacher and class mapping exists:
