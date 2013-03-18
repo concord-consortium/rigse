@@ -1,0 +1,215 @@
+schools:
+  school_1:
+    name: fake school
+    description: fake school
+    
+  school_2:
+    name: VJTI
+    description: Tech School best in the world
+
+
+semesters:
+  semester_1:
+    name: Fall
+    description: Fall Semester
+    start_time: <%= DateTime.new(2012, 12, 01, 00, 00, 00) %>
+    end_time: <%= DateTime.new(2012, 03, 01, 23, 59, 59) %>
+      
+  semester_2:
+    name: Spring
+    description: Spring Semester
+    start_time: <%= DateTime.new(2012, 10, 10, 23, 59, 59) %>
+    end_time: <%= DateTime.new(2013, 03, 31, 23, 59, 59) %>
+
+
+users:
+  user_1:
+    login: author
+    roles: member, author
+    
+  user_2:
+    login: manager
+    roles: manager
+    
+  user_3:
+    login: mymanager
+    roles: manager
+      
+  user_4:
+    login: researcher
+    roles: researcher
+      
+  user_5:
+    login: admin
+    roles: admin
+
+
+teachers:
+  teacher_1:
+    login: teacher
+    first_name: John
+    last_name: Nash
+    email: bademail@noplace.com
+    cohort_list: control
+  
+  teacher_2:
+    login: albert
+    first_name: Albert
+    last_name: Fernandez
+    email: bademail@noplace2.com
+    cohort_list: experiment
+  
+  teacher_3:
+    login: robert
+    first_name: Robert
+    last_name: Fernandez
+    email: bademail@noplace3.com
+    cohort_list: control, experiment
+    
+  teacher_4:
+    login: peterson
+    first_name: peterson
+    last_name: taylor
+    email: bademail@noplace4.com
+      
+  teacher_5:
+    login: teacher_with_no_class
+    first_name: teacher_with_no_class
+    last_name: teacher_with_no_class
+    email: bademail@noplace5.com
+      
+  teacher_6:
+    login: jonson
+    first_name: Jonson
+    last_name: Jackson
+    email: bademail@noplace6.com
+
+
+students:
+  student_1:
+    login: student
+    first_name: Alfred
+    last_name: Robert
+    email: student@mailinator.com
+      
+  student_2:
+    login: dave
+    first_name: Dave 
+    last_name: Doe
+    email: student@mailinator1.com
+      
+  student_3:
+    login: chuck
+    first_name: Chuck
+    last_name: Smith
+    email: student@mailinator2.com
+      
+  student_4:
+    login: taylor
+    first_name: taylor
+    last_name: Donald
+    email: student@mailinator3.com
+    
+  student_5:
+    login: Mache
+    first_name: Mache
+    last_name: Smith
+    email: student@mailinator4.com
+      
+  student_6:
+    login: shon
+    first_name: shon
+    last_name: done
+    email: student@mailinator5.com
+      
+  student_7:
+    login: ross
+    first_name: ross
+    last_name: taylor
+    email: student@mailinator6.com
+    
+  student_8:
+      login: monty
+      first_name: Monty
+      last_name: Donald
+      email: student@mailinator7.com
+      
+  student_9:
+    login: Switchuser
+    first_name: Joe
+    last_name: Switchuser
+    email: student@mailinator8.com
+
+
+school_teacher_mapping:
+  VJTI: teacher, albert
+
+
+classes:
+  clazz_1:
+    name: My Class
+    teacher: teacher
+    class_word: My Class
+    
+  clazz_2:
+    name: Physics
+    teacher: teacher
+    class_word: phy
+      
+  clazz_3:
+    name: Mathematics
+    teacher: teacher
+    class_word: math
+      
+  clazz_4:
+    name: Chemistry
+    teacher: teacher
+    class_word: chem
+      
+  clazz_5: 
+    name: Biology
+    teacher: teacher
+    class_word: bio
+    
+  clazz_6:
+    name: Geography
+    teacher: teacher
+    class_word: geo
+    
+  clazz_7:
+    name: Mechanics
+    teacher: teacher
+    class_word: Mec
+      
+  clazz_8: 
+    name: class_with_no_assignment
+    teacher: teacher
+    class_word: class_with_no_assignment
+      
+  clazz_9: 
+    name: class_with_no_students
+    teacher: teacher
+    class_word: class_with_no_students
+      
+  clazz_10:
+    name: class_with_no_attempts
+    teacher: teacher
+    class_word: class_with_no_attempts
+
+
+teacher_clazzes:
+  albert: Biology, class_with_no_assignment
+  peterson: class_with_no_assignment, My Class, Mathematics
+  robert: Physics,
+  
+
+student_clazzes:
+  student: My Class, class_with_no_assignment, class_with_no_attempts
+  dave: My Class, Biology
+  chuck: My Class, Physics, Mechanics
+  taylor: My Class, Mathematics
+  Mache: Physics
+  shon: Physics
+  ross: Physics
+  
+   

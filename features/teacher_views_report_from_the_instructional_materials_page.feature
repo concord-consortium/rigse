@@ -7,9 +7,6 @@ Feature: Teacher views report from the instructional materials page of a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name        | teacher | class_word | semester |
-      | My Class    | teacher | my_classes | Fall     |
     And the classes "My Class" are in a school named "Harvard School"
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
@@ -21,8 +18,6 @@ Feature: Teacher views report from the instructional materials page of a class
     And the following assignments exist:
       | type          | name                 | class       |
       | investigation | Aerodynamics         | My Class    |
-    And the student "dave" belongs to class "My Class"
-    And the student "chuck" belongs to class "My Class"
     And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
     

@@ -2,7 +2,7 @@ Feature: Teacher can search and assign instructional materials to a class
 
   As a teacher
   I should be able to preview and assign materials to a class
-  In order to provide study materials to the students from the class 
+  In order to provide study materials to the students from the class
   
   Background:
     Given The default project and jnlp resources exist using factories
@@ -24,12 +24,6 @@ Feature: Teacher can search and assign instructional materials to a class
       | Fluid Mechanics         | Mechanics     | author  | published          | Fluid Mechanics is a great material    |
       | Quantum Mechanics       | Mechanics     | author  | published          | Quantum Mechanics is a great material  |
       | Geometry                | Geometry      | author  | published          | Triangle is a great material           |
-    And the following classes exist:
-      | name                     | teacher    | class_word               |
-      | Physics                  | teacher    | phy                      |
-      | Mathematics              | teacher    | math                     |
-      | Geography                | teacher    | geo                      |
-      | class_with_no_assignment | albert     | class_with_no_assignment |
     And I login with username: teacher password: password
     
     
@@ -222,7 +216,10 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message in the popup if the investigation is assigned to all the classes
-    When I login with username: albert password: password
+    When the following classes exist:
+          | name        | teacher               | semester |
+          | New Class   | teacher_with_no_class | Fall     |
+    And I login with username: teacher_with_no_class password: password
     And I am on the the preview investigation page for the investigation "differential calculus"
     And I follow "Assign Investigation"
     And I check "clazz_id[]"
@@ -235,7 +232,10 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message in the popup if the activity is assigned to all the classes
-    When I login with username: albert password: password
+    When the following classes exist:
+          | name        | teacher               | semester |
+          | New Class   | teacher_with_no_class | Fall     |
+    And I login with username: teacher_with_no_class password: password
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
     And I check "clazz_id[]"
@@ -248,7 +248,10 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message if assign to a class popup is opened without creating any class
-    When I login with username: albert password: password
+    When the following classes exist:
+          | name        | teacher               | semester |
+          | New Class   | teacher_with_no_class | Fall     |
+    And I login with username: teacher_with_no_class password: password
     And I go to the Manage Class Page
     And I uncheck "teacher_clazz[]"
     And I should wait 2 seconds

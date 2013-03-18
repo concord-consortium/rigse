@@ -12,9 +12,9 @@ Feature: Teacher creates new portal class
 
   Scenario: Class words are stored as lowercase
     Given I am on the clazz create page
-    When I fill in "portal_clazz[name]" with "My Class"
+    When I fill in "portal_clazz[name]" with "My New Class"
     And I fill in "portal_clazz[class_word]" with "WINSTON"
     And I check "9"
     And I press "Save"
-    Then the portal class "My Class" should have been created
-    And the class word for the portal class "My Class" should be "winston"
+    Then the portal class "My New Class" should have been created
+    And the class word for the portal class "My New Class" should be "winston"

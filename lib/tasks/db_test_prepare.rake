@@ -8,7 +8,8 @@ namespace :db do
       Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
       Rake::Task['app:jnlp:generate_maven_jnlp_resources'].invoke('false')
       require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
-      Rake::Task['app:setup:create_default_users'].invoke
+      APP_CONFIG[:password_for_default_users] = 'password'
+      Rake::Task['app:setup:create_default_data'].invoke
     end
 
   end

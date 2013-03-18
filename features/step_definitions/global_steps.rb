@@ -25,7 +25,9 @@ def login_with_ui_as(username, password)
   user = User.find_by_login(username)
   user_first_name = user.first_name
   user_last_name = user.last_name
-  page.should have_content("Welcome #{user_first_name} #{user_last_name}")
+  page.should have_content("Welcome")
+  page.should have_content(user_first_name)
+  page.should have_content(user_last_name)
   
 end
 
