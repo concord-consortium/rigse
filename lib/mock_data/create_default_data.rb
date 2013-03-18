@@ -223,6 +223,8 @@ module MockData
           default_clazz = default_clazz_by_uuid
           default_clazz.clazz_word = clazz_info[:class_word]
           default_clazz.teacher_id = teacher.id
+          default_clazz.save!
+          teacher.add_clazz(default_clazz)
         end
       elsif teacher and default_clazz_by_clazz_word.nil?
         info = {
@@ -232,6 +234,7 @@ module MockData
           :uuid => clazz_info[:uuid]
         }
         default_clazz = Portal::Clazz.create!(info)
+        teacher.add_clazz(default_clazz)
       end
       
       default_classes << default_clazz if default_clazz
