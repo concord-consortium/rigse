@@ -4,14 +4,36 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :confirmable,
-         :recoverable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
+  has_many :authentications, :dependent => :delete_all
+  has_many :access_grants, :dependent => :delete_all
+
+  before_validation :initialize_fields, :on => :create
+
+  devise :database_authenticatable, :registerable, :confirmable,:token_authenticatable,
+         :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
+  self.token_authentication_key = "oauth_token"
   
-  default_scope where("state != 'disabled'")
-  
+  users = User.arel_table
+  default_scope where(users[:state].not_in(['disabled']))
   
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :first_name, :last_name
+  
+  def apply_omniauth(omniauth)
+    puts "User modelllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll"
+    authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
+  end
+
+  def self.find_for_token_authentication(conditions)
+    where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[token_authentication_key], Time.now]).joins(:access_grants).select("users.*").first
+  end
+  
+  def initialize_fields
+    self.state = "active"
+    #self.expiration_date = 1.year.from_now
+  end
+  
+  
   NO_EMAIL_STRING='no-email-'
   has_many :investigations
   has_many :resource_pages
