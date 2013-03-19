@@ -3,6 +3,17 @@
   :description: "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
   :uuid: 00000000-0000-0000-0000-000000000001
 
+:grades:
+  :grade_1:
+    :name: 9
+    :description: 9th grade
+    :uuid: 00000000-0000-0000-0000-000000000001
+  
+:grade_levels:
+  :name: grade level 9
+  :uuid: 00000000-0000-0000-0000-000000000001
+  :grade: 9
+
 :schools:
   :school_1:
     :name: fake school
@@ -15,6 +26,7 @@
       :semester_2:
         :name: Spring
         :uuid: 00000000-0000-0000-0000-000000000004
+    :grade_levels: grade level 9
     
   :school_2:
     :name: VJTI
@@ -27,8 +39,19 @@
       :semester_2:
         :name: Spring
         :uuid: 00000000-0000-0000-0000-000000000007
+    :grade_levels: grade level 9
         
 
+:courses:
+  :course_1:
+    :name: Course for fake school
+    :uuid: 00000000-0000-0000-0000-000000000038
+    :school: fake school
+
+  :course_2:
+    :name: Course for VJTI school
+    :uuid: 00000000-0000-0000-0000-000000000039
+    :school: VJTI
 
 :users:
   :user_1:
@@ -278,4 +301,7 @@
   :student_clazz_7:
     :student: ross
     :clazz_names: Physics
+    
+    
+
 
