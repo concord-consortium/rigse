@@ -38,7 +38,7 @@ Feature: Teacher manages instructional materials of a class
       | investigation | Plant reproduction   | Physics                |
       | activity      | Algebra              | Physics                |
       | investigation | Aerodynamics         | Physics                |
-      | investigation | Aerodynamics         | class_with_no_students |
+      | investigation | Aerodynamics         | Class_with_no_students |
     And the following offerings exist in the classes:
       | name                       | class       |
       | Lumped circuit abstraction | Mathematics |
@@ -119,7 +119,7 @@ Feature: Teacher manages instructional materials of a class
     Then I should see "Investigation: Lumped circuit abstraction"
     
   Scenario: Teacher should see a message if no students are present
-    When I go to Instructional Materials page for "class_with_no_students"
+    When I go to Instructional Materials page for "Class_with_no_students"
     Then I should see "No students have registered for this class yet"
     
   Scenario: Teacher should be able to run investigation as teacher

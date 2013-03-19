@@ -71,8 +71,8 @@ Feature: Teacher manages a class
     And I log out
     And I login with username: student
     Then I should see "My Class"
-    And I should see "class_with_no_assignment"
-    And I should see "class_with_no_attempts"
+    And I should see "Class_with_no_assignment"
+    And I should see "Class_with_no_attempts"
     
     
   @javascript

@@ -11,73 +11,73 @@
   
 :grade_levels:
   :name: grade level 9
-  :uuid: 00000000-0000-0000-0000-000000000001
+  :uuid: 00000000-0000-0000-0000-000000000002
   :grade: 9
 
 :schools:
   :school_1:
-    :name: fake school
-    :description: fake school
-    :uuid: 00000000-0000-0000-0000-000000000002
+    :name: Fake School
+    :description: Fake School
+    :uuid: 00000000-0000-0000-0000-000000000003
     :semesters:
       :semester_1:
         :name: Fall
-        :uuid: 00000000-0000-0000-0000-000000000003
+        :uuid: 00000000-0000-0000-0000-000000000004
       :semester_2:
         :name: Spring
-        :uuid: 00000000-0000-0000-0000-000000000004
-    :grade_levels: grade level 9
+        :uuid: 00000000-0000-0000-0000-000000000005
+    
     
   :school_2:
     :name: VJTI
     :description: Tech School best in the world
-    :uuid: 00000000-0000-0000-0000-000000000005
+    :uuid: 00000000-0000-0000-0000-000000000006
     :semesters:
       :semester_1:
         :name: Fall
-        :uuid: 00000000-0000-0000-0000-000000000006
+        :uuid: 00000000-0000-0000-0000-000000000007
       :semester_2:
         :name: Spring
-        :uuid: 00000000-0000-0000-0000-000000000007
-    :grade_levels: grade level 9
+        :uuid: 00000000-0000-0000-0000-000000000008
+    
         
 
 :courses:
   :course_1:
-    :name: Course for fake school
-    :uuid: 00000000-0000-0000-0000-000000000038
-    :school: fake school
+    :name: Course for Fake School
+    :uuid: 00000000-0000-0000-0000-00000000009
+    :school: Fake School
 
   :course_2:
     :name: Course for VJTI school
-    :uuid: 00000000-0000-0000-0000-000000000039
+    :uuid: 00000000-0000-0000-0000-000000000010
     :school: VJTI
 
 :users:
   :user_1:
     :login: author
     :roles: member, author
-    :uuid: 00000000-0000-0000-0000-000000000008
+    :uuid: 00000000-0000-0000-0000-0000000000011
     
   :user_2:
     :login: manager
     :roles: manager
-    :uuid: 00000000-0000-0000-0000-000000000009
+    :uuid: 00000000-0000-0000-0000-0000000000012
     
   :user_3:
     :login: mymanager
     :roles: manager
-    :uuid: 00000000-0000-0000-0000-000000000010
+    :uuid: 00000000-0000-0000-0000-000000000013
       
   :user_4:
     :login: researcher
     :roles: researcher
-    :uuid: 00000000-0000-0000-0000-000000000011
+    :uuid: 00000000-0000-0000-0000-000000000014
       
   :user_5:
     :login: admin
     :roles: admin
-    :uuid: 00000000-0000-0000-0000-000000000012
+    :uuid: 00000000-0000-0000-0000-000000000015
 
 
 :teachers:
@@ -88,7 +88,7 @@
     :email: bademail@noplace.com
     :school: VJTI
     :cohort_list: control
-    :uuid: 00000000-0000-0000-0000-000000000013
+    :uuid: 00000000-0000-0000-0000-000000000016
   
   :teacher_2:
     :login: albert
@@ -97,39 +97,39 @@
     :email: bademail@noplace2.com
     :school: VJTI
     :cohort_list: experiment
-    :uuid: 00000000-0000-0000-0000-000000000014
+    :uuid: 00000000-0000-0000-0000-000000000017
   
   :teacher_3:
     :login: robert
     :first_name: Robert
     :last_name: Fernandez
     :email: bademail@noplace3.com
-    :school: fake school
+    :school: Fake School
     :cohort_list: control, experiment
-    :uuid: 00000000-0000-0000-0000-000000000015
+    :uuid: 00000000-0000-0000-0000-000000000018
   :teacher_4:
     :login: peterson
-    :first_name: peterson
-    :last_name: taylor
+    :first_name: Peterson
+    :last_name: Taylor
     :email: bademail@noplace4.com
-    :school: fake school
-    :uuid: 00000000-0000-0000-0000-000000000016
+    :school: Fake School
+    :uuid: 00000000-0000-0000-0000-000000000019
       
   :teacher_5:
     :login: teacher_with_no_class
-    :first_name: teacher_with_no_class
-    :last_name: teacher_with_no_class
+    :first_name: Teacher_with_no_class
+    :last_name: Teacher_with_no_class
     :email: bademail@noplace5.com
-    :school: fake school
-    :uuid: 00000000-0000-0000-0000-000000000017
+    :school: Fake School
+    :uuid: 00000000-0000-0000-0000-000000000020
       
   :teacher_6:
     :login: jonson
     :first_name: Jonson
     :last_name: Jackson
     :email: bademail@noplace6.com
-    :school: fake school
-    :uuid: 00000000-0000-0000-0000-000000000018
+    :school: Fake School
+    :uuid: 00000000-0000-0000-0000-000000000021
 
 :students:
   :student_1:
@@ -137,63 +137,63 @@
     :first_name: Alfred
     :last_name: Robert
     :email: student@mailinator.com
-    :uuid: 00000000-0000-0000-0000-000000000019
+    :uuid: 00000000-0000-0000-0000-000000000022
       
   :student_2:
     :login: dave
     :first_name: Dave 
     :last_name: Doe
     :email: student@mailinator1.com
-    :uuid: 00000000-0000-0000-0000-000000000020
+    :uuid: 00000000-0000-0000-0000-000000000023
       
   :student_3:
     :login: chuck
     :first_name: Chuck
     :last_name: Smith
     :email: student@mailinator2.com
-    :uuid: 00000000-0000-0000-0000-000000000021
+    :uuid: 00000000-0000-0000-0000-000000000024
       
   :student_4:
     :login: taylor
-    :first_name: taylor
+    :first_name: Taylor
     :last_name: Donald
     :email: student@mailinator3.com
-    :uuid: 00000000-0000-0000-0000-000000000022
+    :uuid: 00000000-0000-0000-0000-000000000025
     
   :student_5:
     :login: Mache
     :first_name: Mache
     :last_name: Smith
     :email: student@mailinator4.com
-    :uuid: 00000000-0000-0000-0000-000000000023
+    :uuid: 00000000-0000-0000-0000-000000000026
       
   :student_6:
     :login: shon
-    :first_name: shon
-    :last_name: done
+    :first_name: Shon
+    :last_name: Done
     :email: student@mailinator5.com
-    :uuid: 00000000-0000-0000-0000-000000000024
+    :uuid: 00000000-0000-0000-0000-000000000027
       
   :student_7:
     :login: ross
-    :first_name: ross
-    :last_name: taylor
+    :first_name: Ross
+    :last_name: Taylor
     :email: student@mailinator6.com
-    :uuid: 00000000-0000-0000-0000-000000000025
+    :uuid: 00000000-0000-0000-0000-000000000028
     
   :student_8:
     :login: monty
     :first_name: Monty
     :last_name: Donald
     :email: student@mailinator7.com
-    :uuid: 00000000-0000-0000-0000-000000000026
+    :uuid: 00000000-0000-0000-0000-000000000029
       
   :student_9:
     :login: Switchuser
     :first_name: Joe
     :last_name: Switchuser
     :email: student@mailinator8.com
-    :uuid: 00000000-0000-0000-0000-000000000027
+    :uuid: 00000000-0000-0000-0000-000000000030
 
 
 :classes:
@@ -201,71 +201,71 @@
     :name: My Class
     :teacher: teacher
     :class_word: My Class
-    :uuid: 00000000-0000-0000-0000-000000000028
+    :uuid: 00000000-0000-0000-0000-000000000031
     
   :clazz_2:
     :name: Physics
     :teacher: teacher
     :class_word: phy
-    :uuid: 00000000-0000-0000-0000-000000000029
+    :uuid: 00000000-0000-0000-0000-000000000032
       
   :clazz_3:
     :name: Mathematics
     :teacher: teacher
     :class_word: math
-    :uuid: 00000000-0000-0000-0000-000000000030
+    :uuid: 00000000-0000-0000-0000-000000000033
       
   :clazz_4:
     :name: Chemistry
     :teacher: teacher
     :class_word: chem
-    :uuid: 00000000-0000-0000-0000-000000000031
+    :uuid: 00000000-0000-0000-0000-000000000034
       
   :clazz_5: 
     :name: Biology
     :teacher: teacher
     :class_word: bio
-    :uuid: 00000000-0000-0000-0000-000000000032
+    :uuid: 00000000-0000-0000-0000-000000000035
     
   :clazz_6:
     :name: Geography
     :teacher: teacher
     :class_word: geo
-    :uuid: 00000000-0000-0000-0000-000000000033
+    :uuid: 00000000-0000-0000-0000-000000000036
     
   :clazz_7:
     :name: Mechanics
     :teacher: teacher
     :class_word: Mec
-    :uuid: 00000000-0000-0000-0000-000000000034
+    :uuid: 00000000-0000-0000-0000-000000000037
       
   :clazz_8: 
-    :name: class_with_no_assignment
+    :name: Class_with_no_assignment
     :teacher: teacher
     :class_word: class_with_no_assignment
-    :uuid: 00000000-0000-0000-0000-000000000035
+    :uuid: 00000000-0000-0000-0000-000000000038
       
   :clazz_9: 
-    :name: class_with_no_students
+    :name: Class_with_no_students
     :teacher: teacher
     :class_word: class_with_no_students
-    :uuid: 00000000-0000-0000-0000-000000000036
+    :uuid: 00000000-0000-0000-0000-000000000039
       
   :clazz_10:
-    :name: class_with_no_attempts
+    :name: Class_with_no_attempts
     :teacher: teacher
     :class_word: class_with_no_attempts
-    :uuid: 00000000-0000-0000-0000-000000000037
+    :uuid: 00000000-0000-0000-0000-000000000040
 
 
 :teacher_clazzes:
   :teacher_clazz_1:
     :teacher: albert
-    :clazz_names: Biology, class_with_no_assignment
+    :clazz_names: Biology, Class_with_no_assignment
     
   :teacher_clazz_2:
     :teacher: peterson
-    :clazz_names: class_with_no_assignment, My Class, Mathematics
+    :clazz_names: Class_with_no_assignment, My Class, Mathematics
     
   :teacher_clazz_3:
     :teacher: robert
@@ -276,7 +276,7 @@
 :student_clazzes:
   :student_clazz_1:
     :student: student
-    :clazz_names: My Class, class_with_no_assignment, class_with_no_attempts
+    :clazz_names: My Class, Class_with_no_assignment, Class_with_no_attempts
     
   :student_clazz_2:
     :student: dave

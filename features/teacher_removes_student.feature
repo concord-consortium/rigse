@@ -16,14 +16,14 @@ Feature: Teacher removes a student
       | Aerodynamics         | Air activity   | section a | page 1 | a                | image_q         | teacher   | false                 |
     And the following assignments exist:
       | type          | name                 | class                  |
-      | investigation | Aerodynamics         | class_with_no_students |
+      | investigation | Aerodynamics         | Class_with_no_students |
       
       
   @javascript
   Scenario: Teacher removes a student
-    When the student "student" belongs to class "class_with_no_students"
+    When the student "student" belongs to class "Class_with_no_students"
     And I login with username: teacher password: password
-    And I am on "Student Roster" page for "class_with_no_students"
+    And I am on "Student Roster" page for "Class_with_no_students"
     And I accept the upcoming javascript confirm box
     When I follow "Remove Student"
     Then I should see "No students registered for this class yet."

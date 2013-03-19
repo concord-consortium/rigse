@@ -11,7 +11,7 @@ Feature: Student joins another class
   @javascript
   Scenario: Student joins another class
     And the class "My Class" has the class word "word"
-    And the student "student" belongs to class "class_with_no_students"
+    And the student "student" belongs to class "Class_with_no_students"
     And I am logged in with the username student
     And I am on the home page
     And I fill in "clazz_class_word" with "word"
@@ -26,7 +26,7 @@ Feature: Student joins another class
   Scenario: Student joins another class with invalid information
     Given the option to allow default classes is enabled
     And the class "My Class" has the class word "word"
-    And the student "student" belongs to class "class_with_no_students"
+    And the student "student" belongs to class "Class_with_no_students"
     And I am logged in with the username student
     And I am on the home page
     And I press "Submit"
@@ -44,7 +44,7 @@ Feature: Student joins another class
   Scenario: With the default class enabled, student joins another class
     Given the option to allow default classes is enabled
     And the class "My Class" has the class word "word"
-    And the student "student" belongs to class "class_with_no_students"
+    And the student "student" belongs to class "Class_with_no_students"
     And I am logged in with the username student
     And I am on the home page
     And I fill in "clazz_class_word" with "word"
@@ -60,7 +60,7 @@ Feature: Student joins another class
   Scenario: With the default class enabled, student joins another class with invalid information
     Given the option to allow default classes is enabled
     And the class "My Class" has the class word "word"
-    And the student "student" belongs to class "class_with_no_students"
+    And the student "student" belongs to class "Class_with_no_students"
     And I am logged in with the username student
     And I am on the home page
     And I press "Submit"

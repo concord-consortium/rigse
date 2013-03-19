@@ -85,7 +85,7 @@ Feature: External activities can be filtered by cohort
 
   Scenario: External Activities that are untagged are visible to a teacher in neither cohort
     Given I am logged in with the username peterson
-    When I am on the class page for "class_with_no_assignment"
+    When I am on the class page for "Class_with_no_assignment"
     Then the following should be displayed in the assignables list:
       | name                           |
       | External Activity: neither     |

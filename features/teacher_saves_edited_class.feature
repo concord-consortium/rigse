@@ -30,7 +30,7 @@ Feature: Teacher edits and saves class information
     
   @javascript
   Scenario: Teacher can see all the teachers which are in the class
-    Then I should see "peterson taylor"
+    Then I should see "Peterson Taylor"
     And I should see "John Nash"
     
     
@@ -71,9 +71,9 @@ Feature: Teacher edits and saves class information
   Scenario: Teacher can see message if no materials are in the class
     When the following teacher and class mapping exists:
       | class_name                 | teacher   |
-      | class_with_no_assignment   | peterson  |
+      | Class_with_no_assignment   | peterson  |
     And I am logged in with the username peterson
-    And I am on "the class edit page for "class_with_no_assignment""
+    And I am on "the class edit page for "Class_with_no_assignment""
     Then I should see "No materials assigned to this class."
     
     

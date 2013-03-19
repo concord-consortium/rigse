@@ -85,7 +85,7 @@ Feature: Resource pages can be filtered by cohort
 
   Scenario: Resource Pages that are untagged are visible to a teacher in neithers
     Given I am logged in with the username peterson
-    When I am on the class page for "class_with_no_assignment"
+    When I am on the class page for "Class_with_no_assignment"
     Then the following should be displayed in the assignables list:
       | name                       |
       | Resource Page: neither     |

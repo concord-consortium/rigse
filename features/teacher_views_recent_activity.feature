@@ -30,7 +30,7 @@ Feature: Teacher can see recent activity
       | investigation | Plant reproduction   | Physics                |
       | investigation | Aerodynamics         | Physics                |
       | investigation | Aerodynamics         | Mechanics              |
-      | investigation | Aerodynamics         | class_with_no_students |
+      | investigation | Aerodynamics         | Class_with_no_students |
     And I login with username: teacher password: password
     
     
@@ -54,7 +54,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher should see a message if no student is assigned to the class
     When the following teacher and class mapping exists:
       | class_name                   | teacher  |
-      | class_with_no_students       | robert   |
+      | Class_with_no_students       | robert   |
     And I login with username: robert password: password
     Then I should see "As your students get started, their progress will be displayed here."
     
@@ -110,7 +110,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
-    Then I should see "taylor, ross" in In-progress on the recent activity page
+    Then I should see "Taylor, Ross" in In-progress on the recent activity page
     And I should see "Completed Smith, Chuck"
     And I should see "Not Yet Started done, shon"
     
