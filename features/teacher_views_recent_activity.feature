@@ -33,7 +33,6 @@ Feature: Teacher can see recent activity
       | investigation | Aerodynamics         | Class_with_no_students |
     And I login with username: teacher password: password
     
-    
   Scenario: Teacher should see a message if no investigation is assigned to the class
     When I login with username: albert password: password
     And I follow "Recent Activity" within left panel for class navigation
@@ -112,7 +111,7 @@ Feature: Teacher can see recent activity
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Taylor, Ross" in In-progress on the recent activity page
     And I should see "Completed Smith, Chuck"
-    And I should see "Not Yet Started done, shon"
+    And I should see "Not Yet Started Done, Shon"
     
   Scenario: Teacher views class size
     When the following student answers:
