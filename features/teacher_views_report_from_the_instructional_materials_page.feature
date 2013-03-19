@@ -7,7 +7,6 @@ Feature: Teacher views report from the instructional materials page of a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the classes "My Class" are in a school named "Harvard School"
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |
