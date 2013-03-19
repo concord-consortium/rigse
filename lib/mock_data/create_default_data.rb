@@ -8,53 +8,7 @@ module MockData
   @default_users = nil
   @default_teachers = nil
   @default_students = nil
-  
-  def self.convert_hash_keys_to_symbols(hash_to_convert)
-    new_hash = {}
-    hash_to_convert.reduce('') {|s, (k, v)|
-      new_hash[k.to_sym] = v
-    }
-    new_hash
-  end
-  
-  def self.add_default_user(user_info)
-    
-    default_password = APP_CONFIG[:password_for_default_users]
-    user = nil
-    roles = user_info.delete(:roles)
-    roles = roles ? roles.split(/,\s*/) : []
-    
-    #TODO: if YAML provides a user password don't override it with the default
-    user_info.merge!(:password => default_password)
-    
-    user_by_uuid = User.find_by_uuid(user_info[:uuid])
-    user_by_login = User.find_by_login(user_info[:login])
-    
-    if user_by_uuid
-      user = user_by_uuid
-      user.password = user_info[:password]
-      user.password_confirmation = user_info[:password]
-      
-      user.first_name = user_info[:first_name] if user_info[:first_name]
-      user.last_name = user_info[:last_name] if user_info[:last_name]
-      user.email = user_info[:email] if user_info[:email]
-      
-      user.save!
-    elsif user_by_login.nil?
-      user_info = self.convert_hash_keys_to_symbols(user_info)
-      user = Factory(:user, user_info)
-      user.save!
-      user.confirm!
-    end
-    
-    if user
-      roles.each do |role|
-        user.add_role(role)
-      end
-    end
-    
-    user
-  end
+  @default_courses = nil
   
   #Create fake users and roles
   def self.create_default_users
@@ -82,26 +36,62 @@ module MockData
        default_district = Portal::District.create!(district_info)
     end
     
+    #create default grades
+    default_grades = []
+    DEFAULT_DATA[:grades].each do |grade, grade_info|
+      portal_grade = Portal::Grade.find_by_uuid(grade_info[:uuid])
+      if portal_grade
+        portal_grade.name = grade_info[:name]
+        portal_grade.description = grade_info[:description]
+        portal_grade.save!
+      else
+        portal_grade = Factory.create(:portal_grade, grade_info)
+      end
+      default_grades << portal_grade
+    end
+    
+    #create default grades levels
+    default_grades_levels = []
+    DEFAULT_DATA[:grade_levels].each do |grade, grade_level_info|
+      portal_grade = default_grades.find{|g| g.name == grade_level_info[:grade]}
+      if portal_grade
+        portal_grade_level = Portal::GradeLevel.find_by_uuid(grade_level_info[:uuid])
+        if portal_grade_level
+          portal_grade_level.grade_id = portal_grade.id
+          portal_grade_level.name = grade_level_info[:name]
+          portal_grade_level.save!
+        else
+          grade_level_info.delete(:grade)
+          grade_level_info[:grade_id] = portal_grade.id
+          portal_grade_level = Portal::GradeLevel.create!(grade_level_info)
+        end
+        default_grades_levels << portal_grade_level
+      end
+    end
+    
     
     #create schools if default district is present
     default_schools = []
     if default_district
       DEFAULT_DATA[:schools].each do |school, school_info|
+        
         semester_info = school_info.delete(:semesters)
+        grade_levels_info = school_info.delete(:grade_levels)
+        grade_levels = grade_levels_info.split(',').map{|c| c.strip }
+        
         school_by_uuid = Portal::School.find_by_uuid(school_info[:uuid])
         school_by_name_and_district = Portal::School.find_by_name_and_district_id(school_info[:name], default_district.id)
         school = nil
+        
         if school_by_uuid
           school = school_by_uuid
           school.name = school_info[:name]
           school.description = school_info[:description]
           school.district_id = default_district.id
           school.save!
-          default_schools << school
         elsif school_by_name_and_district.nil?
           school_info[:district_id] = default_district.id
           school = Portal::School.create!(school_info)
-          default_schools << school
         end
         
         if school
@@ -111,10 +101,39 @@ module MockData
             sem.school_id = school.id
             sem.save!
           end
+          
+          grade_levels.map! { |gl| default_grades_levels.find { |dgl| dgl.name == gl } }
+          grade_levels.compact
+          
+          school.grade_levels = grade_levels
+          
+          default_schools << school
         end
       end
     end
     
+    
+    #following courses exist
+    default_courses = []
+    DEFAULT_DATA[:courses].each do |course, course_info|
+      school = default_schools.find{|s| s.name == course_info[:school]}
+      if school
+        default_course = Portal::Course.find_by_uuid(course_info[:uuid])
+        if default_course
+          default_course.name = course_info[:name]
+          default_course.school_id = school.id
+          default_course.save!
+        else
+          course_info.delete(:school)
+          course_info[:school_id] = school.id
+          default_course = Portal::Course.create(course_info)
+        end
+        
+        default_courses << default_course
+      end
+    end
+    
+    @default_courses = default_courses
     
     #following users exist
     default_users = []
@@ -213,31 +232,33 @@ module MockData
     #following classes exist:
     default_classes = []
     DEFAULT_DATA[:classes].each do |clazz, clazz_info|
-      default_clazz = nil
-      default_clazz_by_uuid = Portal::Clazz.find_by_uuid(clazz_info[:uuid])
-      default_clazz_by_clazz_word = Portal::Clazz.find_by_class_word(clazz_info[:class_word])
-      teacher = @default_teachers.find{|t| t.user.login == clazz_info[:teacher]}
-      
-      if default_clazz_by_uuid
-        unless default_clazz_by_clazz_word
-          default_clazz = default_clazz_by_uuid
-          default_clazz.clazz_word = clazz_info[:class_word]
-          default_clazz.teacher_id = teacher.id
-          default_clazz.save!
+      course = @default_courses.find{|c| c.name == clazz_info[:course]}
+      clazz_info.delete(:course)
+      if course 
+        default_clazz = nil
+        default_clazz_by_uuid = Portal::Clazz.find_by_uuid(clazz_info[:uuid])
+        default_clazz_by_clazz_word = Portal::Clazz.find_by_class_word(clazz_info[:class_word])
+        teacher = @default_teachers.find{|t| t.user.login == clazz_info[:teacher]}
+        
+        if default_clazz_by_uuid
+          unless default_clazz_by_clazz_word
+            default_clazz = default_clazz_by_uuid
+            default_clazz.clazz_word = clazz_info[:class_word]
+            default_clazz.teacher_id = teacher.id
+            default_clazz.course_id = course.id
+            default_clazz.save!
+            teacher.add_clazz(default_clazz)
+          end
+        elsif teacher and default_clazz_by_clazz_word.nil?
+          clazz_info.delete(:teacher)
+          clazz_info[:teacher_id] = teacher.id
+          clazz_info[:course_id] = course.id
+          default_clazz = Portal::Clazz.create!(clazz_info)
           teacher.add_clazz(default_clazz)
         end
-      elsif teacher and default_clazz_by_clazz_word.nil?
-        info = {
-          :name => clazz_info[:name],
-          :class_word => clazz_info[:class_word],
-          :teacher_id => teacher.id,
-          :uuid => clazz_info[:uuid]
-        }
-        default_clazz = Portal::Clazz.create!(info)
-        teacher.add_clazz(default_clazz)
+        
+        default_classes << default_clazz if default_clazz
       end
-      
-      default_classes << default_clazz if default_clazz
     end
     
     #following teacher and class mapping exists:
@@ -269,4 +290,45 @@ module MockData
     end
 
   end #end of create_default_clazzes
+  
+  
+  # helper methods
+  
+  def self.add_default_user(user_info)
+    
+    default_password = APP_CONFIG[:password_for_default_users]
+    user = nil
+    roles = user_info.delete(:roles)
+    roles = roles ? roles.split(/,\s*/) : []
+    
+    #TODO: if YAML provides a user password don't override it with the default
+    user_info.merge!(:password => default_password)
+    
+    user_by_uuid = User.find_by_uuid(user_info[:uuid])
+    user_by_login = User.find_by_login(user_info[:login])
+    
+    if user_by_uuid
+      user = user_by_uuid
+      user.password = user_info[:password]
+      user.password_confirmation = user_info[:password]
+      
+      user.first_name = user_info[:first_name] if user_info[:first_name]
+      user.last_name = user_info[:last_name] if user_info[:last_name]
+      user.email = user_info[:email] if user_info[:email]
+      
+      user.save!
+    elsif user_by_login.nil?
+      user = Factory(:user, user_info)
+      user.save!
+      user.confirm!
+    end
+    
+    if user
+      roles.each do |role|
+        user.add_role(role)
+      end
+    end
+    
+    user
+  end 
 end # end of MockData
