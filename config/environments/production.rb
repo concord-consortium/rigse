@@ -78,5 +78,5 @@ RailsPortal::Application.configure do
   
   # Generate digests for assets' URLs.
   config.assets.digest = true
-  config.action_mailer.default_url_options = { :host => "rites.concord.zeuslearning.com" }
+  config.action_mailer.default_url_options = { :host => APP_CONFIG[:site_url] }
 end

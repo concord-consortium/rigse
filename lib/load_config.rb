@@ -1,3 +1,4 @@
+require File.expand_path('../app_settings', __FILE__)
 include AppSettings
 APP_CONFIG = AppSettings.load_app_settings
 
