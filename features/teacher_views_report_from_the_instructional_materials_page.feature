@@ -7,16 +7,6 @@ Feature: Teacher views report from the instructional materials page of a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following multiple choice questions exists:
-      | prompt | answers | correct_answer |
-      | a      | a,b,c,d | a              |
-    And there is an image question with the prompt "image_q"
-    And the following investigations with multiple choices exist:
-      | investigation        | activity       | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
-      | Aerodynamics         | Air activity   | section a | page 1 | a                | image_q         | teacher   | false                 |
-    And the following assignments exist:
-      | type          | name                 | class       |
-      | investigation | Aerodynamics         | My Class    |
     And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
     

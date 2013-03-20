@@ -6,11 +6,6 @@ Feature: Investigations can be sorted
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following empty investigations exist:
-      | name       | user      | offerings_count | created_at                      | publication_status  |
-      | NewestInv  | teacher   | 5               | Wed Jan 26 12:00:00 -0500 2011  | published           |
-      | MediumInv  | teacher   | 10              | Wed Jan 23 12:00:00 -0500 2011  | published           |
-      | OldestInv  | teacher   | 20              | Wed Jan 20 12:00:00 -0500 2011  | published           |
     Given I am logged in with the username teacher
   
   Scenario: The investigation list page has a sort mechanism

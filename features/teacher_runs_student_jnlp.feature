@@ -9,9 +9,9 @@ Feature: Teacher runs student jnlps
     And the following simple investigations exist:
       | name                | user      | publication_status |
       | Test Investigation  | teacher   | published          |
-    And the student "student" belongs to class "My Class"
-    And the investigation "Test Investigation" is assigned to the class "My Class"
-    And the student "student" has run the investigation "Test Investigation" in the class "My Class"
+    And the student "student" belongs to class "class_with_no_assignmen"
+    And the investigation "Test Investigation" is assigned to the class "class_with_no_assignmen"
+    And the student "student" has run the investigation "Test Investigation" in the class "class_with_no_assignmen"
     And I login with username: teacher
 
   Scenario: Teacher runs student jnlp from Class Page

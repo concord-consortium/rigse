@@ -6,9 +6,6 @@ Feature: External Activities can be run as offerings
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following external activity exists:
-      | name        | user    | url               |
-      | My Activity | teacher | /mock_html/test-external-activity.html |
 
   Scenario: External Activity offerings are runnable
     When the external activity "My Activity" is assigned to the class "My Class"
