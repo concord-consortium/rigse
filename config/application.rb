@@ -2,6 +2,8 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
+require File.expand_path('../../lib/load_config', __FILE__)
+
 module RailsPortal
   class Application < Rails::Application
     config.assets.enabled = true
