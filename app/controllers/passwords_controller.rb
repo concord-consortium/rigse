@@ -123,7 +123,7 @@ class PasswordsController < ApplicationController
   protected 
   
   def find_password_user
-    return current_user unless current_user.anonymous? || params[:reset_code] != 0
+    return current_user unless current_user.anonymous? || params[:reset_code].to_i != 0
     begin
       @user = Password.find(:first, :conditions => ['reset_code = ? and expiration_date > ?', params[:reset_code], Time.now]).user
       return @user
