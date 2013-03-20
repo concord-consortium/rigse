@@ -3,7 +3,8 @@ Feature: Teacher can edit their class information
 
   Background:
     Given The default project and jnlp resources exist using factories
-  
+    And the database has been seeded
+    
   @javascript
   Scenario: Teacher can follow link to edit their class info
     When the following classes exist:

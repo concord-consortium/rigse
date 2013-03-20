@@ -5,6 +5,7 @@ Feature: Teacher can reset a students password
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
@@ -24,5 +25,5 @@ Feature: Teacher can reset a students password
     Then I should see "Class Name : My Class"
     When I log out
     And I login with username: student password: new_password
-    Then I should see "Logged in successfully"
+    Then I should see "Signed in successfully."
 

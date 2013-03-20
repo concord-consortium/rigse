@@ -5,6 +5,7 @@ Feature: Pages can be assigned as offerings
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |

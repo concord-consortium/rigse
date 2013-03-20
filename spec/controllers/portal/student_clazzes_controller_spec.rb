@@ -25,6 +25,7 @@ describe Portal::StudentClazzesController do
       @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
       @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
       
+      stub_current_user @authorized_teacher.user
       post_params = {
         :id => @mock_clazz.id.to_s,
         :student_id => @authorized_student.id.to_s
@@ -32,7 +33,6 @@ describe Portal::StudentClazzesController do
       post :add_student, post_params
       
       @mock_student_clazz = Portal::StudentClazz.find_by_clazz_id_and_student_id(@mock_clazz.id, @authorized_student.id)
-      
       
     end
     

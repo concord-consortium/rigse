@@ -2,7 +2,9 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe UsersController do
   fixtures :users
   fixtures :roles
-
+  
+  render_views
+  
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     logout_user
@@ -96,8 +98,43 @@ describe UsersController do
     flash[:error ].should_not be_nil
   end
   
+  it 'shows thank you page to teacher on successful registration' do
+    
+    get :registration_successful, {:type => 'teacher'}
+    
+    @response.should render_template("users/thanks")
+    
+    assert_select 'h2', /thanks/i
+    assert_select 'p', /activation code/i
+    
+  end
+  
+  it 'shows thank you page to the student with login name on successful registration' do
+    
+    get :registration_successful, {:type => 'student'}
+    
+    @response.should render_template("portal/students/signup_success")
+    
+    # should show text "your username is"
+    assert_select "p", /username\s+is/i
+    
+    # should show directions to login:
+    assert_select 'p', /login/i
+    
+    assert_select "*#clazzes_nav", false
+    assert_select "input#header_login"
+    
+    
+    assert_nil flash[:error]
+    assert_nil flash[:notice]
+  end
+  
+  
   def create_user(options = {})
     post :create, :user => { :login => 'quire', :email => 'quire@example.com',
       :password => 'quire69', :password_confirmation => 'quire69' }.merge(options)
   end
+  
+  
+  
 end

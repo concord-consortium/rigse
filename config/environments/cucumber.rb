@@ -21,7 +21,7 @@ RailsPortal::Application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
-
+  config.action_mailer.default_url_options = { :host => APP_CONFIG[:host] }
   # All the gems required for testing are listed in: config/environments/test.rb
   #
   # Install the gems required for testing:

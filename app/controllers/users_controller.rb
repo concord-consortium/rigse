@@ -1,7 +1,5 @@
 class UsersController < ApplicationController
-  # skip_before_filter :verify_authenticity_token, :only => :create
-  #access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
-  #access_rule 'admin || manager || researcher', :only => [:index, :account_report]
+
   include RestrictedController
   before_filter :changeable_filter,
     :only => [
@@ -17,10 +15,15 @@ class UsersController < ApplicationController
       :account_report
     ]
   after_filter :store_location, :only => [:index]
-
+  
   def changeable_filter
     @user = User.find(params[:id])
     redirect_home unless @user.changeable?(current_visitor)
+  end
+  
+  def new
+    #This method is called when a user tries to register as a member
+    @user = User.new
   end
 
   def index
@@ -34,7 +37,7 @@ class UsersController < ApplicationController
       format.xml  { render :xml => @users }
     end
   end
-
+  
   # GET /users/1
   # GET /users/1.xml
   def show
@@ -44,17 +47,6 @@ class UsersController < ApplicationController
       format.xml  { render :xml => @user }
     end
   end
-
-  def new
-    @user = User.new
-  end
-
-  def create
-    logout_keeping_session!
-    create_new_user(params[:user])
-    # redirect_to(root_path) # (no need to redirect here, the above controller did it.)
-  end
-
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
@@ -64,8 +56,7 @@ class UsersController < ApplicationController
       redirect_to login_url
     end
   end
-
-  # GET /users/1/edit
+# GET /users/1/edit
   def preferences
     @user = User.find(params[:id])
     @roles = Role.all
@@ -74,8 +65,7 @@ class UsersController < ApplicationController
       redirect_to login_url
     end
   end
-
-  # /users/1/switch
+   # /users/1/switch
   def switch
     # @original_user is setup in app/controllers/application_controller.rb
     unless @original_user.has_role?('admin', 'manager')
@@ -129,10 +119,13 @@ class UsersController < ApplicationController
             unless session[:original_user_id]  # session[:original_user_auth_token]
               session[:original_user_id] = current_visitor.id
             end
+            sign_out self.current_visitor
+            sign_in switch_to_user
             recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
             recently_switched_from_users.insert(0, current_visitor.id)
             self.current_visitor=(switch_to_user)
             session[:recently_switched_from_users] = recently_switched_from_users.uniq
+            
           end
         elsif params[:commit] =~ /#{@original_user.name}/
           self.current_visitor=(@original_user)
@@ -141,9 +134,7 @@ class UsersController < ApplicationController
       end
     end
   end
-
-  # PUT /users/1
-  # PUT /users/1.xml
+  
   def update
     if params[:commit] == "Cancel"
       # FIXME: ugly hack
@@ -183,34 +174,7 @@ class UsersController < ApplicationController
       end
     end
   end
-
-
-  def activate
-    user = User.find_by_activation_code(params[:activation_code]) unless params[:activation_code].blank?
-    case
-    when (!params[:activation_code].blank?) && user && !user.active?
-      user.activate!
-      user.make_user_a_member
-      if current_visitor && current_visitor.has_role?('admin', 'manager')
-        # assume this type of user just activated someone from somewhere else in the app
-        flash[:notice] = "Activation of #{user.name_and_login} complete."
-        redirect_to(session[:return_to] || root_path)
-      else
-        logout_keeping_session!
-        flash[:notice] = "Signup complete! Please sign in to continue."
-        redirect_to login_path
-      end
-    when params[:activation_code].blank?
-      logout_keeping_session!
-      flash[:error] = "The activation code was missing.  Please follow the URL from your email."
-      redirect_back_or_default(root_path)
-    else
-      logout_keeping_session!
-      flash[:error]  = "We couldn't find a user with that activation code -- check your email? Or maybe you've already activated -- try signing in."
-      redirect_back_or_default(root_path)
-    end
-  end
-
+  
   def interface
     # Select the probeware vendor and interface to use when generating jnlps and otml
     # files. This redult is saved in a session variable and if the user is logged-in
@@ -267,37 +231,44 @@ class UsersController < ApplicationController
     rep.run_report(sio)
     send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "accounts-report.xls" )
   end
-
+  
   def reset_password
-    p = Password.new(:user_id => @user.id)
+    p = Password.new(:user_id => params[:id])
     p.save(:validate => false) # we don't need the user to have a valid email address...
     session[:return_to] = request.referer
     redirect_to change_password_path(:reset_code => p.reset_code)
   end
-
-  protected
-
-  def create_new_user(attributes)
-    @user = User.new(attributes)
-    if @user && @user.valid?
-      @user.register!
-    end
-    if @user.errors.empty?
-      self.current_visitor = User.anonymous
-      render :action => :thanks
+  
+  def backdoor
+    sign_out self.current_visitor
+    user = User.find_by_login!(params[:username])
+    sign_in user
+    head :ok
+  end
+  
+  #Used for activation of users by a manager/admin
+  def confirm
+    if current_visitor && current_visitor.has_role?('admin', 'manager')
+      user = User.find(params[:id]) unless params[:id].blank?
+      if !params[:id].blank? && user && user.state != "active"
+        user.confirm!
+        user.make_user_a_member
+        # assume this type of user just activated someone from somewhere else in the app
+        flash[:notice] = "Activation of #{user.name_and_login} complete."
+        redirect_to(session[:return_to] || root_path)
+      end
     else
-      # will redirect:
-      failed_creation
+      flash[:notice] = "Please login as an administrator."
+      redirect_to(root_path)
     end
   end
 
-
-
-  def failed_creation(message = 'Sorry, there was an error creating your account')
-    # force the current_visitor to anonymous, because we have not successfully created an account yet.
-    # edge case, which we might need a more integrated solution for??
-    self.current_visitor = User.anonymous
-    flash.now[:error] = message
-    render :action => :new
+  def registration_successful
+    if params[:type] == "teacher"
+      render :template => 'users/thanks'
+    else
+      render :template => 'portal/students/signup_success'
+    end
   end
+
 end

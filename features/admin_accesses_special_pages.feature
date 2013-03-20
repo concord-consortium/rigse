@@ -6,6 +6,7 @@ Feature: Admin can access various admin pages
   
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   @enable_gses
   Scenario: Admin access GSEs

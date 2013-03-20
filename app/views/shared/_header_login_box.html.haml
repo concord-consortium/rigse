@@ -1,24 +1,23 @@
 .header-login-box
   %div
-    = form_tag session_path, :id=>"header-project-signin" do
+    = form_for( @user, :as => 'user', :url => '/users/sign_in', :html => {:id=>"header-project-signin"} )  do |f|
       %table{:cellpadding=>"0", :cellspacing=>"0", :border=>"0"}
         %tbody
           %tr.first-row
             %td
-              %label{:for=>"header_login"}Username
+              = f.label :login, "Username",:for=>"header_login"
             %td.login-box
-              %input{:type=>"text", :id=>"header_login", :value=> @login, :name=>"login"}
+              = f.text_field :login,:id=>'header_login'
           %tr.second-row
             %td
-              %label{:for=>"header_password"}Password
+              = f.label :password, "Password", :for=>"header_password"
             %td.password-box
-              %input{:type=>"password", :id=>"header_password", :class=>"text", :name=>"password"}
+              = f.password_field :password,:id=>'header_password',:class=>'text'
           %tr.third-row
             %td
             %td
               =link_to 'Forgot login?',forgot_password_path, :id=>"link_forgot_password"
               | 
               =link_to 'Register', pick_signup_path
-              %input{:type=>"submit", :id=>"LoginSubmitButtonHeader",:value=>"GO"}
+              = f.submit "GO", :id=>"LoginSubmitButtonHeader"
       .clear_both
-        

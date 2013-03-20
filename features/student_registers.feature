@@ -6,9 +6,8 @@ Feature: Student registers to use the portal
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     
-    
-  @javascript
   Scenario: Anonymous user signs up as student
     Given I am an anonymous user
     And the option to allow default classes is disabled
@@ -31,8 +30,9 @@ Feature: Student registers to use the portal
     And I should see "Your username is: estudent"
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
-    Then I should see "Logged in successfully"
-
+    Then I should see "Signed in successfully."
+    
+    
   Scenario: Anonymous user signs up as student with form errors
     And the following classes exist:
       | name       | teacher |
@@ -42,8 +42,7 @@ Feature: Student registers to use the portal
     And I press "Sign up as a student"
     Then I should see "Student Signup"
     When I press "Submit"
-    Then I should see "7 errors prohibited this user from being saved"
-    And "2" fields should have the class selector ".fieldWithErrors"
+    Then I should see "6 errors prohibited this user from being saved"
     When I fill in the following:
       | user_first_name            | Example             |
       | user_last_name             | Student             |
@@ -55,7 +54,6 @@ Feature: Student registers to use the portal
     Then I should see "Success!"
     
     
-  @javascript
   Scenario: Class words are not case sensitive
     And the following classes exist:
       | name       | teacher |
@@ -75,10 +73,9 @@ Feature: Student registers to use the portal
     Then I should see "Success!"
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
-    Then I should see "Logged in successfully"
+    Then I should see "Signed in successfully."
     
     
-  @javascript
   Scenario: Student registered when default classes are enabled
     Given the option to allow default classes is enabled
     When I go to the pick signup page
@@ -94,10 +91,9 @@ Feature: Student registers to use the portal
     Then I should see "Your username is: estudent"
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
-    And I should see "Logged in successfully"
+    And I should see "Signed in successfully."
     
     
-  @javascript
   Scenario: Student under 18 registered when student consent is enabled
     Given the default project has student consent enabled
     And the following classes exist:
@@ -118,10 +114,9 @@ Feature: Student registers to use the portal
     Then I should see "Success!"
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
-    Then I should see "Logged in successfully"
+    Then I should see "Signed in successfully."
     
     
-  @javascript
   Scenario: Student over 18 registers and gives consent
     Given the default project has student consent enabled
     And the following classes exist:
@@ -143,10 +138,9 @@ Feature: Student registers to use the portal
     Then I should see "Success!"
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
-    Then I should see "Logged in successfully"
+    Then I should see "Signed in successfully."
     
     
-  @javascript
   Scenario: Student over 18 registered and doesn't give consent
     Given the default project has student consent enabled
     And the following classes exist:
@@ -168,4 +162,4 @@ Feature: Student registers to use the portal
     Then I should see "Success!"
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
-    Then I should see "Logged in successfully"
+    Then I should see "Signed in successfully."

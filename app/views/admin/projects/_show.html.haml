@@ -1,8 +1,6 @@
-- current_active_project = Admin::Project.default_project
-- current_active_project.reload
 %script
   helpLink = $('help')
-  - if current_active_project.help_type == 'no help'
+  - if admin_project.help_type == 'no help'
     helpLink.parentNode.style.display = "none"
   - else
     helpLink.href = "javascript: void(0)"

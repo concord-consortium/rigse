@@ -7,6 +7,7 @@ Feature: Student must give consent for research study
   Background: portal configured with student consent
     Given The default project and jnlp resources exist using factories
     And the default project has student consent enabled
+    And the database has been seeded
 
   @javascript
   Scenario: Teacher signs up a student, student them must give consent on logging in
@@ -25,6 +26,7 @@ Feature: Student must give consent for research study
       | user_password              | password |
       | user_password_confirmation | password |
     And I press "Submit"
+    And I log out
     And I login with username: estudent password: password
     Then I should see "Your age"
     And I choose "user_of_consenting_age_true"
