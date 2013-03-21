@@ -12,7 +12,6 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :confirmable,:token_authenticatable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   self.token_authentication_key = "oauth_token"
-  
   users = User.arel_table
   default_scope where(users[:state].not_in(['disabled']))
   
@@ -30,7 +29,6 @@ class User < ActiveRecord::Base
   
   def initialize_fields
     self.state = "active"
-    #self.expiration_date = 1.year.from_now
   end
   
   
