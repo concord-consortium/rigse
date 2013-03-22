@@ -261,7 +261,7 @@
     :name: Class_with_no_students
     :teacher: teacher
     :class_word: class_with_no_students
-    :uuid: 00000000-0000-0000-0000-000000000040
+    :uuid: 00000000-0000-0000-0000-000000000040author
     :course: Course for Fake School
     
   :clazz_10:
@@ -315,3 +315,458 @@
     :student: ross
     :clazz_names: Physics
 
+
+:mult_cho_questions:
+  :mcq_1:
+    :prompt: a
+    :answers: a,b,c,d
+    :correct_answer: a
+    :uuid: 00000000-0000-0000-0000-000000000042
+  
+  :mcq_2: 
+    :prompt: b
+    :answers: a,b,c,d
+    :correct_answer: a
+    :uuid: 00000000-0000-0000-0000-000000000043
+  
+  :mcq_3: 
+    :prompt: c
+    :answers: a,b,c,d
+    :correct_answer: a
+    :uuid: 00000000-0000-0000-0000-000000000044
+    
+  :mcq_4:
+    :prompt: d
+    :answers: a,b,c,d
+    :correct_answer: a
+    :uuid: 00000000-0000-0000-0000-000000000045
+      
+  :mcq_5: 
+    :prompt: e
+    :answers: a,b,c,d
+    :correct_answer: a
+    :uuid: 00000000-0000-0000-0000-000000000046
+      
+  :mcq_6:
+    :prompt: f
+    :answers: a,b,c,d
+    :correct_answer: a
+    :uuid: 00000000-0000-0000-0000-000000000047
+
+
+:image_questions:
+  :imgq_1:
+    :prompt: image_q
+    :uuid: 00000000-0000-0000-0000-000000000048
+    
+
+:empty_investigations:
+  :empt_inv_1:
+    :name: draft g
+    :user: teacher
+    :offerings_count: 5
+    :publication_status: draft
+    :uuid: 00000000-0000-0000-0000-000000000049
+    
+  :empt_inv_2: 
+    :name: b Investigation
+    :user: teacher
+    :offerings_count: 5
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000050
+     
+  :empt_inv_3:
+    :name: a Investigation
+    :user: teacher
+    :offerings_count: 5
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000051
+    
+  :empt_inv_4:
+    :name: c Investigation
+    :user: teacher
+    :offerings_count: 5
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000052
+    
+  :empt_inv_5:
+    :name: d Investigation
+    :user: teacher
+    :offerings_count: 5
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000053
+      
+  :empt_inv_6: 
+    :name: e Investigation
+    :user: teacher
+    :offerings_count: 5
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000054
+      
+  :empt_inv_7:
+    :name: f Investigation
+    :user: teacher
+    :offerings_count: 5
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000055
+    
+  :empt_inv_8: 
+    :name: NewestInv
+    :user: teacher
+    :offerings_count: 5
+    :created_at: Wed Jan 26 12:00:00 -0500 2111
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000056
+    
+  :empt_inv_9:
+    :name: MediumInv
+    :user: teacher
+    :offerings_count: 10
+    :created_at: Wed Jan 23 12:00:00 -0500 2111
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000057
+       
+  :empt_inv_10:
+    :name: OldestInv
+    :user: teacher
+    :offerings_count: 20
+    :created_at: Wed Jan 20 12:00:00 -0500 2111
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000058
+
+
+:simple_investigations:
+  :sim_inv_1:
+    :name: Radioactivity
+    :user: author
+    :publication_status: published
+    :description: Nuclear Energy is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000059
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+    
+  :sim_inv_2:
+    :name: Set Theory
+    :user: author
+    :publication_status: published
+    :description: Set Theory is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000060
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+    
+  :sim_inv_3:
+    :name: Mechanics
+    :user: author
+    :publication_status: published
+    :description: Mechanics is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000061
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+      
+  :sim_inv_4:
+    :name: Geometry
+    :user: author
+    :publication_status: published
+    :description: Triangle is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000062
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+      
+  :sim_inv_5:
+    :name: integral calculus
+    :user: author
+    :publication_status: published
+    :description: integral calculus is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000063 
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+    
+  :sim_inv:
+    :name: differential calculus
+    :user: author
+    :publication_status: published
+    :description: differential calculus is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000064
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+      
+  :sim_inv_7:
+    :name: differential equations
+    :user: author
+    :publication_status: published
+    :description: differential equations is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000065
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+    
+  :sim_inv_8:
+    :name: organic chemistry
+    :user: author
+    :publication_status: published
+    :description: organic chemistry is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000066
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+      
+  :sim_inv_9:
+    :name: inorganic chemistry
+    :user: author
+    :publication_status: published
+    :description: inorganic chemistry is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000067
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+      
+  :sim_inv_10:
+    :name: graph theory
+    :user: author
+    :publication_status: published
+    :description: graph theory is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000068
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+  
+  :sim_inv_11:
+    :name: investigaion_not_assigned
+    :user: author
+    :publication_status: published
+    :description: investigaion_not_assigned is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000069
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+    
+  :sim_inv_12: 
+    :name: testing fast cars
+    :user: author
+    :publication_status: published
+    :description: how fast can cars go
+    :uuid: 00000000-0000-0000-0000-000000000070
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+      
+  :sim_inv_13:
+    :name: Lumped circuit abstraction
+    :user: author
+    :publication_status: published
+    :description: LCA is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000071
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+      
+  :sim_inv_14: 
+    :name: Static discipline
+    :user: author
+    :publication_status: published
+    :description: SD is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000072
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+  
+  :sim_inv_15:
+    :name: Non Linear Devices
+    :user: author
+    :publication_status: published
+    :description: NLD is a great subject
+    :uuid: 00000000-0000-0000-0000-000000000073
+    :activity_uuid: 
+    :section_uuid:
+    :page_uuid:
+    
+
+:resource_pages:
+  :res_page_1:
+    :name: NewestResource
+    :user: teacher
+    :offerings_count: 6
+    :created_at: <%= Wed Jan 26 12:00:00 -0500 2011 %>
+    :publication_status: published
+    
+  :res_page_2:
+    :name: MediumResource
+    :user: teacher
+    :offerings_count: 11
+    :created_at: <%= Wed Jan 23 12:00:00 -0500 2011 %>
+    :publication_status: published
+      
+  :res_page_3:
+    :name: OldestResource
+    :user: teacher
+    :offerings_count: 21
+    :created_at: <%= Wed Jan 20 12:00:00 -0500 2011 %>
+    :publication_status: published
+    
+    
+
+:pages:
+  :page_1:
+    :name: My Page
+    :user: teacher
+    :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000074
+    
+    
+:linked_investigations:
+  :name: WithLinksInv
+  :user: author
+  :offerings_count: 5
+  :created_at: <%= Wed Jan 25 12:00:00 -0500 2011 %>
+  :publication_status: published
+  :uuid: 00000000-0000-0000-0000-000000000074
+  :activity_uuid:
+  :open_response_uuid:
+
+
+:activities:
+  :activity_1:
+    :name: Radioactive decay
+    :user: author
+    :publication_status: published
+    :description: Nuclear Energy is a great material
+    :investigation: Radioactivity
+    :uuid:
+  
+  :activity_2:
+    :name: Gamma Rays
+    :user: author
+    :publication_status: published
+    :description: :Gamma Rays is a great material
+    :investigation: Radioactivity
+    
+  :activity_3:
+    :name: Diagram
+    :user: author
+    :publication_status: published
+    :description: Venn Diagram is a great material
+    :investigation: Set Theory
+    :uuid:
+  
+  :activity_4:
+    :name: operations on sets
+    :user: author
+    :publication_status: published
+    :description: operations on sets is a great material
+    :investigation: Set Theory
+    :uuid:
+    
+  :activity_5:
+    :name: Fluid Mechanics
+    :user: author
+    :publication_status: published
+    :description: Fluid Mechanics is a great material
+    :investigation: Mechanics
+    :uuid:
+    
+  :activity_6:
+    :name: Circular Motion
+    :user: author
+    :publication_status: published
+    :description: Circular Motion is a great material
+    :investigation: Mechanics
+    :uuid:
+    
+  :activity_7:
+    :name: Quantum Mechanics
+    :user: author
+    :publication_status: published
+    :description: Quantum Mechanics is a great material
+    :investigation: Mechanics
+    :uuid:
+                    
+  :activity_8:
+    :name: Geometry
+    :user: author
+    :publication_status: published
+    :description: Triangle is a great material
+    :investigation: Geometry
+    :uuid:
+
+  :activity_9:
+    :name: intersecting lines
+    :user: author
+    :publication_status: published
+    :description: intersecting lines is a great material
+    :investigation: Geometry
+    :uuid:
+    
+  :activity_10:
+    :name: parallel lines
+    :user: author
+    :publication_status: published
+    :description: parallel lines is a great material
+    :investigation: Geometry
+    :uuid:
+          
+  :activity_11:
+    :name: graphs and lines
+    :user: author
+    :publication_status: published
+    :description: parallel lines is a great material
+    :investigation: Geometry
+    :uuid:
+    
+  :activity_12:
+    :name: circles
+    :user: author
+    :publication_status: published
+    :description: circles is a great material
+    :investigation: Geometry
+    :uuid:
+    
+  :activity_13:
+    :name: boolean algebra
+    :user: author
+    :publication_status: published
+    :description: boolean algebra is a great material
+    :investigation: Geometry
+    :uuid:
+                     
+  :activity_14:
+    :name: Atmosphere
+    :user: author
+    :publication_status: published
+    :description: :Atmosphere is a great material
+    :investigation: Geometry
+    :uuid:
+      
+      
+:mcq_activities:
+  :mcq_activity_1:
+    :name: Algebra
+    :sections:
+      :section_1:
+        :name: section a
+        :uuid:
+        :pages:
+          :page_1:
+            :name: page 6
+            :uuid: 
+    :multiple_choices:
+      :prompt: f
+      :uuid: 
+    :image_questions:
+      :prompt: image_q
+      :uuid:
+    :user: teacher
+    :activity_teacher_only: false
+    :uuid:
+    
+:external_activities:
+  :ext_activity_1:
+    :name: My Activity
+    :user: teacher
+    :url: /mock_html/test-exernal-activity.html
+    :uuid:

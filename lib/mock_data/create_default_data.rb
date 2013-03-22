@@ -137,6 +137,7 @@ module MockData
     
     #following users exist
     default_users = []
+    @default_users = default_users
     
     DEFAULT_DATA[:users].each do |user, user_info|
       
@@ -151,6 +152,8 @@ module MockData
     
     #following teachers exist
     default_teachers = []
+    @default_teachers = default_teachers
+    
     DEFAULT_DATA[:teachers].each do |teacher, teacher_info|
       
       teacher_school_name = teacher_info.delete(:school)
@@ -189,10 +192,10 @@ module MockData
         default_teachers << portal_teacher
       end
     end
-    @default_teachers = default_teachers
     
     
     default_students = []
+    @default_students = default_students
     DEFAULT_DATA[:students].each do |student, student_info|
       
       roles = student_info[:roles]
@@ -217,9 +220,8 @@ module MockData
       end
     end
     
-    @default_students = default_students
     
-    @default_users = default_users
+    
     
   end #end of method create_default_users
   
@@ -290,6 +292,298 @@ module MockData
     end
 
   end #end of create_default_clazzes
+  
+  
+  def self.create_study_materials
+    # this method creates -
+    # multiple choice questions, image questions
+    #default investigations, activities, pages and external activities
+    
+    #TODO Populate default_investigations where ever you create investigations
+    default_investigations = []
+    
+    # Resource pages
+    DEFAULT_DATA[:resource_pages].each do |key, rp|
+      user_name = rp.delete(:user)
+      user = @default_users.find{|u| u.login == user_name}
+      if user
+        rp[:user_id] = user.id
+        resource_page = ResourcePage.create!(rp)
+        resource_page.save!
+      end
+    end
+    
+    # pages
+    DEFAULT_DATA[:pages].each do |key, p|
+      user_name = p.delete(:user)
+      user = @default_users.find{|u| u.login == user_name}
+      if user
+        default_page = nil
+        page_by_uuid = Page.find_by_uuid(p[:uuid])
+        if page_by_uuid
+          default_page = page_by_uuid
+          default_page.name = p[:name]
+          default_page.user = user
+          default_page.publication_status = p[:publication_status]
+        else
+          p[:user_id] = user.id
+          Page.create!(p)
+        end
+      end
+    end
+    
+    # Multiple Choice questions
+    author = @default_users.find{|u| u.login == 'author'}
+    if author
+      DEFAULT_DATA[:mult_cho_questions].each do |key,mcq|
+        choices = mcq.delete(:answers)
+        choices = choices.split(',')
+        choices.map!{|c| c.strip}
+        correct = mcq.delete(:correct_answer)
+        
+        multi_ch_que = nil
+        mcq_by_uuid =  Embeddable::MultipleChoice.find_by_uuid(mcq[:uuid])
+        
+        if mcq_by_uuid
+          multi_ch_que = mcq_by_uuid
+          multi_ch_que.prompt = mcq[:prompt]
+          multi_ch_que.save!
+        else
+          mcq[:user_id] = author.id
+          multi_ch_que = Embeddable::MultipleChoice.create!(mcq)
+          
+          choices.map! { |c| Embeddable::MultipleChoiceChoice.create(
+            :choice => c, 
+            :multiple_choice_id => multi_ch_que.id,
+            :is_correct => (c == correct)
+          )}
+          
+          multi_ch_que.choices = choices
+        end
+      end
+    end
+    
+    if author
+      # Image Questions
+      DEFAULT_DATA[:image_questions].each do |key, imgq|
+        image_que = nil
+        imgq_by_uuid = Embeddable::ImageQuestion.find_by_uuid(imgq[:uuid])
+        if imgq_by_uuid
+          image_que = imgq_by_uuid
+          image_que.user_id = author.id
+          image_que.prompt = imgq[:uuid]
+          image_que.save!
+        else
+          imgq[:user_id] = author.id
+          image_que = Embeddable::ImageQuestion.create!(imgq)
+        end
+      end
+    end
+    
+    
+    # Empty Investigations
+    default_investigations = []
+    DEFAULT_DATA[:empty_investigations].each do |key, inv|
+      user_login = inv.delete(:user)
+      user = @default_users.find{|u| u.login == user_login}
+      if user
+        empt_inv = nil
+        inv_by_uuid = Investigation.find_by_uuid(inv[:uuid])
+        inv_by_name = Investigation.find_by_name(inv[:name])
+        if inv_by_uuid
+          empt_inv = inv_by_uuid
+          empt_inv.name = inv[:name]
+          empt_inv.user_id = user.id
+          empt_inv.offerings_count = inv[:offerings_count]
+          empt_inv.publication_status = empt_inv.publication_status
+          empt_inv.created_at = inv[:created_at] if inv[:created_at]
+          empt_inv.save!
+        else
+          inv[:user_id] = user.id 
+          empt_inv = Investigation.create!(inv)
+        end
+        default_investigations if empt_inv
+      end
+    end
+    
+    
+    # Simple Investigation
+    DEFAULT_DATA[:simple_investigations].each do |key, inv|
+      user_login = inv.delete(:user)
+      user = @default_users.find{|u| u.login == user_login}
+      
+      activity_uuid = inv.delete(:activity_uuid)
+      section_uuid = inv.delete(:section_uuid)
+      page_uuid = inv.delete(:page_uuid)
+      
+      if user
+        sim_inv = nil
+        inv_by_uuid = Investigation.find_by_uuid(inv[:uuid])
+        inv_by_name = Investigation.find_by_name(inv[:name])
+        if inv_by_uuid
+          sim_inv = inv_by_uuid
+          
+          act = Activity.find_or_create_by_uuid(:activity_uuid)
+          sec = Section.find_or_create_by_uuid(:section_uuid)
+          page = Page.find_or_create_by_uuid(:page_uuid)
+          
+          [sim_inv, act, sec, page].each do |obj|
+            sim_inv.name = inv[:name]
+            sim_inv.user_id = user.id
+            sim_inv.offerings_count = inv[:offerings_count]
+            sim_inv.publication_status = inv[:publication_status]
+          end
+        else
+          inv[:user_id] = user.id
+          sim_inv = Investigation.create!(inv)
+          activity = Activity.create(inv)
+          section = Section.create(inv)
+          page = Page.create(inv)
+          section.pages << page
+          activity.sections << section
+          sim_inv.activities << activity
+          sim_inv.save!
+        end
+        default_investigations if sim_inv
+        
+      end
+    end
+    
+    # Activities for the above investigations exist
+    DEFAULT_DATA[:activities].each do |key, act|
+      inv_name = act.delete(:investigation)
+      user_login = act.delete(:user)
+      user = @default_users.find{|u| u.login == user_login}
+      inv = default_investigations.find{|i| i.name == inv_name}
+      if inv and user
+        default_activity = nil
+        act_by_uuid = Activity.find_by_uuid(act[:uuid])
+        
+        if act_by_uuid
+          default_activity = act_by_uuid
+          default_activity.user_id = user.id
+          default_activity.name = act[:name]
+          default_activity.investigation_id = inv.id
+        else
+          act[:user_id] = user.id
+          act[:investigation_id] = inv.id
+          default_activity = Activity.create!(act)
+        end
+      end
+    end
+=begin    
+    # Activities with multiple
+    DEFAULT_DATA[:mcq_activities].each do |key, act|
+      pages  = []
+      user_login = act.delete(:user)
+      user = @default_user.find{|u| u.login == user_login}
+      if user
+        default_activity = nil
+        act_by_uuid = Activity.find_by_uuid(act[:uuid])
+        if act_by_uuid
+          default_activity = act_by_uuid
+          default_activity.user_id = user.id
+          default_activity.name = act[:activity]
+          default_activity.save!
+          
+          default_activity[:sections].each do |section|
+            sec = Section.find_or_create_by_uuid(section[:uuid])
+            sec.name = section[:name]
+            sec.save!
+            
+            default_activity.sections << sec
+            
+            section[:pages].each do |p|
+              page = Page.find_or_create_by_uuid(p[:uuid])
+              page.name = p[:name]
+              page.save!
+              pages << page
+              
+              sec.pages << page
+            end
+          end
+          
+          act[:multiple_choices].each do |mcq|
+            mul_cho_que = Embeddable::MultipleChoice.find_or_create_by_uuid(mcq[:uuid])
+            mul_cho_que.prompt = mcq[:prompt]
+            mul_cho_que.save!
+            
+            pages.each do |p|
+              mul_cho_que.pages << p
+            end
+          end
+          
+          act[:image_questions].each do |iq|
+            img_que = Embeddable::ImageQuestion.find_or_create_by_uuid(mcq[:uuid])
+            img_que.prompt = mcq[:prompt]
+            img_que.save!
+            
+            pages.each do |p|
+              mul_cho_que.pages << p
+            end
+          end
+        end
+      else
+        defaut_activity = Activity.create!(:uuid => act[:uuid], :name => act[:name])
+        pages = []
+        default_activity[:sections].each do |section|
+          sec = Section.create!(:name => section[:name], :uuid => section[:uuid])
+          sec.save!
+          
+          defaut_activity.section << sec
+          
+          section[:pages].each |p|
+            page = Page.create!(:name = p[:name], :uuid => p[:uuid])
+            sec.pages << page
+            pages << page
+          end
+        end
+        act[:multiple_choices].each do |mcq|
+            mul_cho_que = Embeddable::MultipleChoice.find_or_create_by_uuid(mcq[:uuid])
+            mul_cho_que.prompt = mcq[:prompt]
+            mul_cho_que.save!
+            
+            pages.each do |p|
+              mul_cho_que.pages << p
+            end
+          end
+          
+          act[:image_questions].each do |iq|
+            img_que = Embeddable::ImageQuestion.find_or_create_by_uuid(mcq[:uuid])
+            img_que.prompt = mcq[:prompt]
+            img_que.save!
+            
+            pages.each do |p|
+              mul_cho_que.pages << p
+            end
+          end
+      end
+    end
+=end
+    # External Activity
+    DEFAULT_DATA[:external_activities].each do |key, act|
+      user_login = act.delete(:user)
+      user = @default_users.find{|u| u.login == user_login}
+      if user
+        default_ext_act = nil
+        act_by_uuid = Activity.find_by_uuid(act[:uuid])
+        if act_by_uuid
+          default_ext_act = act_by_uuid
+          default_ext_act.user_id = user.id
+          default_ext_act.url = act[:url]
+          default_ext_act.name = act[:name]
+          default_ext_act.save!
+        else
+          act[:user_id] = user.id
+          default_ext_act = ExternalActivity.create!(act)
+          default_ext_act.publish
+          default_ext_act.save!
+        end
+      end
+    end
+    
+
+  end
   
   
   # helper methods
