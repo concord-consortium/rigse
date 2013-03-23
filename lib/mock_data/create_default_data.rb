@@ -449,48 +449,158 @@ module MockData
       end
     end
     
-    # Activities for the above investigations exist
-    DEFAULT_DATA[:activities].each do |key, act|
-      inv_name = act.delete(:investigation)
-      user_login = act.delete(:user)
-      user = @default_users.find{|u| u.login == user_login}
-      inv = default_investigations.find{|i| i.name == inv_name}
-      if inv and user
-        default_activity = nil
-        act_by_uuid = Activity.find_by_uuid(act[:uuid])
+  # Linked Investigation
+  DEFAULT_DATA[:linked_investigations].each do |key, inv|
+    user_login = inv.delete(:user)
+    user = @default_users.find{|u| u.login == user_login}
+    activity_uuid = inv.delete(:activity_uuid)
+    section_uuid = inv.delete(:section_uuid)
+    page_uuid = inv.delete(:page_uuid)
+    open_response_uuid = inv.delete(:open_response_uuid)
+    draw_tool_uuid = inv.delete(:draw_tool_uuid)
+    lab_book_snapshot = inv.delete(:lab_book_snapshot)
+    prediction_graph_uuid = inv.delete(:prediction_graph_uuid)
+    displaying_graph_uuid = inv.delete(:displaying_graph_uuid)
+    
+    if user
+      investigation = nil
+      inv_by_uuid = Investigation.find_by_uuid(inv[:uuid])
+      inv_by_name = Investigation.find_by_name(inv[:name])
+      if inv_by_uuid
+        act = Activity.find_or_create_by_uuid(:uuid => activity_uuid)
+        act.user_id = user.id
+        act.save!
+        inv_by_uuid.activities << act
         
-        if act_by_uuid
-          default_activity = act_by_uuid
-          default_activity.user_id = user.id
-          default_activity.name = act[:name]
-          default_activity.investigation_id = inv.id
-        else
-          act[:user_id] = user.id
-          act[:investigation_id] = inv.id
-          default_activity = Activity.create!(act)
-        end
+        sec = Section.find_or_create_by_uuid(:uuid => section_uuid)
+        sec.user_id = user.id
+        sec.save!
+        act.sections << sec
+        
+        page = Page.find_or_create_by_uuid(:uuid => page_uuid)
+        page.user_id = user.id
+        sec.save!
+        sec.pages << page
+        
+        open_response = Embeddable::OpenResponse.find_or_create_by_uuid(:uuid => open_response_uuid)
+        open_response.user_id = user.id
+        open_response.save!
+        open_response.pages << page
+        
+        draw_tool = Embeddable::DrawingTool.find_or_create_by_uuid(:uuid)
+        draw_tool.user_id = user.id
+        draw_tool.background_image_url = "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg"
+        draw_tool.save!
+        draw_tool.pages << page
+        
+        snapshot_button = Embeddable::LabBookSnapshot.find_or_create_by_uuid(lab_book_snapshot)
+        snapshot_button.user_id = user.id
+        snapshot_button.target_element_id = draw_tool.id
+        snapshot_button.save!
+        snapshot_button << page
+        
+        prediction_graph = Embeddable::DataCollector.find_or_create_by_uuid(:uuid => prediction_graph_uuid)
+        prediction_graph.pages << page
+        
+        displaying_graph = Embeddable::DataCollector.find_or_create_by_uuid(displaying_graph_uuid)
+        displaying_graph.user_id = user.id
+        displaying_graph.prediction_graph_id = prediction_graph.id
+        displaying_graph.save!
+        displaying_graph.pages << page
+      else
+        inv[:user_id] = user.id
+        investigation = Investigation.create!(inv)
+        act =  Activity.create!(:user_id => user.id, :uuid => activity_uuid)
+        investigation.activities << act
+        sec = Section.create!(:user_id => user.id, :uuid => section_uuid)
+        act.sections << sec
+        page = Page.create!(:user_id => user.id, :uuid => page_uuid)
+        sec.pages << page
+        
+        open_response = Embeddable::OpenResponse.create!(:user_id => user.id, :uuid => open_response_uuid)
+        open_response.pages << page
+        
+        info = {
+                 :user_id => user.id,
+                 :background_image_url => "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg",
+                 :uuid => draw_tool_uuid
+               }
+        draw_tool = Embeddable::DrawingTool.create!(info)
+        draw_tool.pages << page
+        
+        info = {
+                 :user_id => user.id,
+                 :target_element_id => draw_tool.id,
+                 :uuid => lab_book_snapshot
+               }
+        snapshot_button = Embeddable::LabBookSnapshot.create!(info)
+        snapshot_button.pages << investigation.activities[0].sections[0].pages[0]
+        
+        prediction_graph = Embeddable::DataCollector.create!(:user_id => user.id, :uuid => prediction_graph_uuid)
+        prediction_graph.pages << page
+        
+        info = {
+                 :user_id => user.id,
+                 :prediction_graph_id => prediction_graph.id,
+                 :uuid => displaying_graph_uuid
+               }
+        displaying_graph =  Embeddable::DataCollector.create!(info)
+        displaying_graph.pages << page
+        
       end
     end
-=begin    
+  end
+    
+  # investigations with multiple choices exist
+  DEFAULT_DATA[:investigations_with_mcq].each do |key, inv|
+    
+  end
+  
+  # Activities for the above investigations exist
+  DEFAULT_DATA[:activities].each do |key, act|
+    inv_name = act.delete(:investigation)
+    user_login = act.delete(:user)
+    user = @default_users.find{|u| u.login == user_login}
+    inv = default_investigations.find{|i| i.name == inv_name}
+    if inv and user
+      default_activity = nil
+      act_by_uuid = Activity.find_by_uuid(act[:uuid])
+      
+      if act_by_uuid
+        default_activity = act_by_uuid
+        default_activity.user_id = user.id
+        default_activity.name = act[:name]
+        default_activity.investigation_id = inv.id
+        default_activity.save!
+      else
+        act[:user_id] = user.id
+        act[:investigation_id] = inv.id
+        default_activity = Activity.create!(act)
+      end
+    end
+  end
+
     # Activities with multiple
     DEFAULT_DATA[:mcq_activities].each do |key, act|
       pages  = []
       user_login = act.delete(:user)
-      user = @default_user.find{|u| u.login == user_login}
+      user = @default_users.find{|u| u.login == user_login}
       if user
         default_activity = nil
         act_by_uuid = Activity.find_by_uuid(act[:uuid])
         if act_by_uuid
           default_activity = act_by_uuid
           default_activity.user_id = user.id
-          default_activity.name = act[:activity]
+          default_activity.name = act[:name]
+          default_activity.description = act[:name]
           default_activity.save!
           
-          default_activity[:sections].each do |section|
+          act[:sections].each do |section|
             sec = Section.find_or_create_by_uuid(section[:uuid])
             sec.name = section[:name]
             sec.save!
             
+            # Check if section is added twice if already in array
             default_activity.sections << sec
             
             section[:pages].each do |p|
@@ -519,25 +629,34 @@ module MockData
             img_que.save!
             
             pages.each do |p|
-              mul_cho_que.pages << p
+              img_que.pages << p
             end
           end
         end
+        
+        
       else
-        defaut_activity = Activity.create!(:uuid => act[:uuid], :name => act[:name])
-        pages = []
-        default_activity[:sections].each do |section|
+        act_info = {
+          :name => act[:name],
+          :description => act[:name],
+          :user_id => user.id,
+          :uuid => act[:uuid]
+        }
+        defaut_activity = Activity.create!(act_info)
+        
+        act[:sections].each do |section|
           sec = Section.create!(:name => section[:name], :uuid => section[:uuid])
           sec.save!
           
           defaut_activity.section << sec
           
-          section[:pages].each |p|
-            page = Page.create!(:name = p[:name], :uuid => p[:uuid])
+          section[:pages].each do |p|
+            page = Page.create!(p)
             sec.pages << page
             pages << page
           end
         end
+        
         act[:multiple_choices].each do |mcq|
             mul_cho_que = Embeddable::MultipleChoice.find_or_create_by_uuid(mcq[:uuid])
             mul_cho_que.prompt = mcq[:prompt]
@@ -554,12 +673,12 @@ module MockData
             img_que.save!
             
             pages.each do |p|
-              mul_cho_que.pages << p
+              img_que.pages << p
             end
           end
       end
     end
-=end
+
     # External Activity
     DEFAULT_DATA[:external_activities].each do |key, act|
       user_login = act.delete(:user)
