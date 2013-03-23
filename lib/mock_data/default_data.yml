@@ -641,66 +641,72 @@
     :name: Plant reproduction
     :activities:
       :activitiy_1:
-        :uuid:00000000-0000-0000-0000-000000000148
+        :uuid: 00000000-0000-0000-0000-000000000148
         :name: Plant activity
         :sections:
           :section_1:
-            :uuid:00000000-0000-0000-0000-000000000149
+            :uuid: 00000000-0000-0000-0000-000000000149
             :name: section b
             :pages:
               :page_1:
-                :uuid:00000000-0000-0000-0000-000000000150
+                :uuid: 00000000-0000-0000-0000-000000000150
                 :name: page 2
         :multiple_choices:
-          :uuid:00000000-0000-0000-0000-000000000151
-          :prompt: b
+          :mcq_1:
+            :uuid: 00000000-0000-0000-0000-000000000043
+            :prompt: b
         :image_questions:
-          :uuid:00000000-0000-0000-0000-000000000152
-          :prompt: image_q
+          :imgq_1:
+            :uuid: 00000000-0000-0000-0000-000000000048
+            :prompt: image_q
         :user: teacher
         :activity_teacher_only: false
 
   :mcq_inv_2:
-    :uuid:00000000-0000-0000-0000-000000000153
+    :uuid: 00000000-0000-0000-0000-000000000153
     :name: Aerodynamics
     :activities:
       :activitiy_1:
-        :uuid:00000000-0000-0000-0000-000000000154
+        :uuid: 00000000-0000-0000-0000-000000000154
         :name: Air activity
         :sections:
           :section_1:
-            :uuid:00000000-0000-0000-0000-000000000155
+            :uuid: 00000000-0000-0000-0000-000000000155
             :name: section c
             :pages:
               :page_1:
-                :uuid:00000000-0000-0000-0000-000000000156
+                :uuid: 00000000-0000-0000-0000-000000000156
                 :name: page 3
-          :multiple_choices:
-            :uuid:00000000-0000-0000-0000-000000000157
+        :multiple_choices:
+          :mcq_1:
+            :uuid: 00000000-0000-0000-0000-000000000044
             :prompt: c
-          :image_questions:
-            :uuid:00000000-0000-0000-0000-000000000158
+        :image_questions:
+          :imgq_1:
+            :uuid: 00000000-0000-0000-0000-000000000048
             :prompt: image_q
         :user: teacher
         :activity_teacher_only: false
         
       :activitiy_2:
-        :uuid:00000000-0000-0000-0000-000000000159
+        :uuid: 00000000-0000-0000-0000-000000000159
         :name: Air activity
         :sections:
           :section_1:
-            :uuid:00000000-0000-0000-0000-000000000160
+            :uuid: 00000000-0000-0000-0000-000000000160
             :name: section c
             :pages:
               :page_1:
-                :uuid:00000000-0000-0000-0000-000000000161
+                :uuid: 00000000-0000-0000-0000-000000000161
                 :name: page 3
         :multiple_choices:
-          :uuid:00000000-0000-0000-0000-000000000162
-          :prompt: c
+          :mcq_1:
+            :uuid: 00000000-0000-0000-0000-000000000045
+            :prompt: d
         :image_questions:
-          :uuid:00000000-0000-0000-0000-000000000163
-          :prompt: image_q
+          :mcq_1:
+            :uuid: 00000000-0000-0000-0000-000000000048
+            :prompt: image_q
         :user: teacher
         :activity_teacher_only: false
         
@@ -709,92 +715,100 @@
     :name: Arithmatics
     :activities:
       :activitiy_1:
-        :uuid:00000000-0000-0000-0000-000000000165
+        :uuid: 00000000-0000-0000-0000-000000000165
         :name: Linear algebra
         :sections:
           :section_1:
-            :uuid:00000000-0000-0000-0000-000000000166
+            :uuid: 00000000-0000-0000-0000-000000000166
             :name: section a
             :pages:
               :page_1:
-                :uuid:00000000-0000-0000-0000-000000000167
+                :uuid: 00000000-0000-0000-0000-000000000167
                 :name: page 1
         :multiple_choices:
-          :uuid:00000000-0000-0000-0000-000000000168
-          :prompt: b
+          :mcq_1:
+            :uuid: 00000000-0000-0000-0000-000000000043
+            :prompt: b
         :image_questions:
-          :uuid:00000000-0000-0000-0000-000000000169
-          :prompt: image_q
+          :imgq_1:
+            :uuid: 00000000-0000-0000-0000-000000000048
+            :prompt: image_q
         :user: teacher
         :activity_teacher_only: false
 
 
   :mcq_inv_4:
-    :uuid:00000000-0000-0000-0000-000000000170
+    :uuid: 00000000-0000-0000-0000-000000000170
     :name: Radioactivity
     :activities:
       :activitiy_1:
-        :uuid:00000000-0000-0000-0000-000000000171
+        :uuid: 00000000-0000-0000-0000-000000000171
         :name: Radio activity
         :sections:
           :section_1:
-            :uuid:00000000-0000-0000-0000-000000000172
+            :uuid: 00000000-0000-0000-0000-000000000172
             :name: section a
             :pages:
               :page_1:
-                :uuid:00000000-0000-0000-0000-000000000173
+                :uuid: 00000000-0000-0000-0000-000000000173
                 :name: page 1
-          :multiple_choices:
-            :uuid:00000000-0000-0000-0000-000000000174
+        :multiple_choices:
+          :mcq_1:
+            :uuid: 00000000-0000-0000-0000-000000000042
             :prompt: a
-          :image_questions:
-            :uuid:00000000-0000-0000-0000-000000000175
+        :image_questions:
+          :imgq_1:
+            :uuid: 00000000-0000-0000-0000-000000000048
             :prompt: image_q
         :user: teacher
         :activity_teacher_only: false
         
       :activitiy_2:
-        :uuid:00000000-0000-0000-0000-000000000176
+        :uuid: 00000000-0000-0000-0000-000000000176
         :name: Nuclear Energy
         :sections:
           :section_1:
-            :uuid:00000000-0000-0000-0000-000000000177
+            :uuid: 00000000-0000-0000-0000-000000000177
             :name: section b
             :pages:
               :page_1:
-                :uuid:00000000-0000-0000-0000-000000000178
+                :uuid: 00000000-0000-0000-0000-000000000178
                 :name: page 2
         :multiple_choices:
-          :uuid:00000000-0000-0000-0000-000000000179
-          :prompt: b
+          :mcq_1:
+            :uuid: 00000000-0000-0000-0000-000000000043
+            :prompt: b
         :image_questions:
-          :uuid:00000000-0000-0000-0000-000000000180
-          :prompt: image_q
+          :imgq_1:
+            :uuid: 00000000-0000-0000-0000-000000000048
+            :prompt: image_q
         :user: teacher
         :activity_teacher_only: false
     
 
   :mcq_inv_5:
-    :uuid:00000000-0000-0000-0000-000000000181
+    :uuid: 00000000-0000-0000-0000-000000000181
     :name: Electricity
     :activities:
       :activitiy_1:
-        :uuid:00000000-0000-0000-0000-000000000182
+        :uuid: 00000000-0000-0000-0000-000000000182
         :name: current
         :sections:
           :section_1:
-            :uuid:00000000-0000-0000-0000-000000000183
+            :uuid: 00000000-0000-0000-0000-000000000183
             :name: section b
             :pages:
               :page_1:
-                :uuid:00000000-0000-0000-0000-000000000184
+                :uuid: 00000000-0000-0000-0000-000000000184
                 :name: page 2
         :multiple_choices:
-          :uuid:00000000-0000-0000-0000-000000000185
-          :prompt: b
+          :mcq_1:
+            :uuid: 00000000-0000-0000-0000-000000000043
+            :prompt: b
         :image_questions:
-          :uuid:00000000-0000-0000-0000-000000000186
-          :prompt: image_q
+          :imgq_1:
+            :uuid: 00000000-0000-0000-0000-000000000048
+            :prompt: image_q
         :user: teacher
         :activity_teacher_only: false
 
@@ -925,11 +939,13 @@
             :name: page 6
             :uuid: 00000000-0000-0000-0000-000000000138
     :multiple_choices:
-      :prompt: f
-      :uuid: 00000000-0000-0000-0000-000000000047
+      :mcq_1:
+        :prompt: f
+        :uuid: 00000000-0000-0000-0000-000000000047
     :image_questions:
-      :prompt: image_q
-      :uuid: 00000000-0000-0000-0000-000000000048
+      :imgq_1:
+        :prompt: image_q
+        :uuid: 00000000-0000-0000-0000-000000000048
     :user: teacher
     :activity_teacher_only: false
     :uuid: 00000000-0000-0000-0000-000000000141
