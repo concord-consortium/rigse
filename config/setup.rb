@@ -364,6 +364,7 @@ def create_new_settings_yml
 
     HEREDOC
   end
+  generate_devise_pepper_for_all_environments(@settings_config)
   File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
 end
 
@@ -578,6 +579,24 @@ def check_for_config_settings_yml
           @settings_config[env][:use_gse] = true
         end
       end
+      
+      
+      if @settings_config[env][:pepper].nil? || @settings_config[env][:pepper].blank?
+        new_pepper = generate_devise_pepper
+        unless @options[:quiet]
+          puts <<-HEREDOC
+
+  The pepper parameter does not yet exist in the #{env} section of settings.yml
+
+  Setting it to '#{new_pepper}'.
+
+          HEREDOC
+        end
+        
+        @settings_config[env][:pepper] = new_pepper
+      end
+      
+      
     end
   end
 end
@@ -1115,6 +1134,22 @@ Here is the new mailer configuration:
 
     if agree("OK to save to config/mailer.yml? (y/n): ")
       File.open(@mailer_config_path, 'w') {|f| f.write @mailer_config.to_yaml }
+    end
+  end
+end
+
+# generate new pepper for devise
+def generate_devise_pepper
+  pepper = UUIDTools::UUID.timestamp_create.to_s
+  pepper
+end
+
+def generate_devise_pepper_for_all_environments(settings, unique_pepper_for_each_env = false)
+  new_pepper = generate_devise_pepper
+  %w{development test cucumber staging production}.each do |env|
+    settings[env][:pepper] = new_pepper
+    if unique_pepper_for_each_env
+      new_pepper = generate_devise_pepper
     end
   end
 end
