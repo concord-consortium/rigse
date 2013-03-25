@@ -581,7 +581,7 @@ def check_for_config_settings_yml
       end
       
       
-      if @settings_config[env][:pepper].nil? || @settings_config[env][:pepper].blank?
+      if @settings_config[env][:pepper].nil?
         new_pepper = generate_devise_pepper
         unless @options[:quiet]
           puts <<-HEREDOC
@@ -594,6 +594,23 @@ def check_for_config_settings_yml
         end
         
         @settings_config[env][:pepper] = new_pepper
+      end
+      
+      
+      
+      if @settings_config[env][:password_for_default_users].nil?
+        password_for_default_users = 'secret'
+        unless @options[:quiet]
+          puts <<-HEREDOC
+
+  The password_for_default_users parameter does not yet exist in the #{env} section of settings.yml
+
+  Setting it to '#{password_for_default_users}'.
+
+          HEREDOC
+        end
+        
+        @settings_config[env][:password_for_default_users] = password_for_default_users
       end
       
       
