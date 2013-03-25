@@ -306,9 +306,21 @@ module MockData
       user_name = rp.delete(:user)
       user = @default_users.find{|u| u.login == user_name}
       if user
-        rp[:user_id] = user.id
-        resource_page = ResourcePage.create!(rp)
-        resource_page.save!
+        default_rp = nil
+        rp_by_uuid = ResourcePage.find_by_uuid(rp[:uuid])
+        if rp_by_uuid
+          default_rp = rp_by_uuid
+          default_rp.name = rp[:name]
+          default_rp.user_id = user.id
+          default_rp.offerings_count = rp[:offerings_count]
+          default_rp.created_at = rp[:offerings_count]
+          default_rp.publication_status = rp[:publication_status]
+          default_rp.save!
+        else
+          rp[:user_id] = user.id
+          resource_page = ResourcePage.create!(rp)
+          resource_page.save!
+        end
       end
     end
     

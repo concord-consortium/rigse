@@ -594,6 +594,7 @@
     :offerings_count: 6
     :created_at: <%= Wed Jan 26 12:00:00 -0500 2011 %>
     :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000143
     
   :res_page_2:
     :name: MediumResource
@@ -601,6 +602,7 @@
     :offerings_count: 11
     :created_at: <%= Wed Jan 23 12:00:00 -0500 2011 %>
     :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000144
       
   :res_page_3:
     :name: OldestResource
@@ -608,6 +610,7 @@
     :offerings_count: 21
     :created_at: <%= Wed Jan 20 12:00:00 -0500 2011 %>
     :publication_status: published
+    :uuid: 00000000-0000-0000-0000-000000000145
     
     
 
