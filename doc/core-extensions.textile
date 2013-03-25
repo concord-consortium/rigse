@@ -9,6 +9,9 @@ h3. Hash
 Hash is extended with a method: recursive_symbolize_keys which Recursively converts the keys in a Hash to symbols.
 It also converts the keys in any Array elements which are Hashes to symbols.
 
++Note+: This extension has been moved to lib/app_settings.rb since it was required there for loading the settings
+file into APP_CONFIG.
+
 h3. Kernel
 
 Kernel is extended with the method: suppress_warnings

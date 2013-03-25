@@ -174,7 +174,7 @@ h3. when deploying to a new server
 ## /web/production/APP_NAME/shared/initializers
 ## /web/production/APP_NAME/releases
 # put configuration files in /web/production/APP_NAME/shared/config
-## at a minimum you need database.yml and initializers/site_key.rb
+## at a minimum you need database.yml
 # modify the deploy recipies (in your local config/deploy.rb and config/deploy)
 # deploy cap deploy ( it will fail, but it will get far enough to make some of the other things below possible)
 # run ruby config/setup.rb on the server
@@ -205,8 +205,7 @@ If the codebase on your development system has moved forward you may need to run
 
 The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional and necessary default model initialization.
 
-In order for the same passwords to work you will also need to have the same keys in your local config/initializers/site_keys.rb as on the server you copied the production data from.
-<pre><code>  cap <stage> db:fetch_remote_site_keys</code></pre>
+In order for the same passwords to work you will also need to have the same _pepper_ in your local config/settings.yml as on the server you copied the production data from.
 
 Recreating a new portal instance from scratch from an existing application.
 <pre><code>
@@ -682,12 +681,18 @@ not much to do.
 
 h2. Authentication, Sessions, and Cookies
 
-h3. RESTful Authentication
+h3. User authentication with Devise
 
-RESTful Authentication is already setup. The routes are setup, along with the mailers and observers.
+Devise is already setup. The routes are setup, along with the mailers and observers.
 Forgotten password comes setup, so you don't have to mess around setting it up with every project.
 
-The AASM plugin comes pre-installed. RESTful Authentication is also setup to use user activation.
+Devise uses the _pepper_ parameter within settings.yml to encrypt user passwords. The _pepper_ is
+generated automatically when first setting up the app. It is also generated if not existing or is
+blank when updating the app using the command
+<code><pre>ruby config/setup.rb -y -q -t default</pre></code>
+
+Devise is also setup to use user activation. Users which require activation are sent emails
+automatically.
 
 h2. Uses the Database for Sessions
 
@@ -699,6 +704,8 @@ Bort, as of 0.3, has Open ID integrated with RESTful Authentication. Rejoice!
 
 _However I've (stepheneb) removed this to make debugging the authentication simpler and it 
 seems as though open-id is not becoming widespread._
+
+_RESTful Authentication is no longer integrated with the project. It has been replaced with Devise. (zeuslearning)_
 
 h3. Will Paginate
 
@@ -760,7 +767,7 @@ h2. Application Settings
 h2. Settings YAML
 
 There is a settings.yml file that contains site-wide stuff. The site name, url and admin email are all used
-in the RESTful Auth mailers, so you don't need to worry about editing them.
+in the Devise mailers, so you don't need to worry about editing them.
 
 h3. Database YAML
 

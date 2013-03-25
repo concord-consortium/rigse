@@ -7,8 +7,11 @@ APP_CONFIG = {
   :use_gse => true,
   :recent_activity_on_login => true,
   :top_level_container_name => 'investigation',
-  :use_jnlps => true
+  :use_jnlps => true,
+  :host => nil
 }.merge(APP_CONFIG)
+
+APP_CONFIG[:host] = APP_CONFIG[:site_url].gsub("http://","")
 
 USING_RITES = APP_CONFIG[:theme] && (APP_CONFIG[:theme] == 'default' || APP_CONFIG[:theme] == 'rites')
 NOT_USING_RITES = !USING_RITES
