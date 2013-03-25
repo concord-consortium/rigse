@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
 
   def session_sensitive_path
     path = request.env['PATH_INFO']
-    return path =~ /password|session|login|logout|security_questions|consent/i
+    return path =~ /password|session|sign_in|sign_out|security_questions|consent|help/i
   end
 
   def check_for_password_reset_requirement
