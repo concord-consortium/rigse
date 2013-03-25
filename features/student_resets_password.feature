@@ -6,7 +6,8 @@ Feature: Student resets passwordAnd
 
   Background:
     Given The default project and jnlp resources exist using factories
-
+    And the database has been seeded
+    
   @javascript
   Scenario: Passwords can not be blank
     When the student "student" has security questions set

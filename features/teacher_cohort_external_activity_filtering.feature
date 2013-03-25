@@ -5,6 +5,7 @@ Feature: External activities can be filtered by cohort
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And the following tags exist:
       | scope         | tag             |
       | cohorts       | control         |

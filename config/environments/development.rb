@@ -15,8 +15,10 @@ RailsPortal::Application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default_url_options = { :host => APP_CONFIG[:host] }
   config.action_mailer.delivery_method = :test
+  config.action_mailer.raise_delivery_errors = false
+  
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -28,7 +30,7 @@ RailsPortal::Application.configure do
 
   # Minify/uglify/compress assets from the pipeline
   config.assets.compress = false
-
+  
   # split apart assets to make debugging easier
   # config.assets.debug = true
 end

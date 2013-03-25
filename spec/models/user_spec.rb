@@ -20,13 +20,13 @@ describe User do
     it 'initializes #activation_code' do
       @creating_user.call
       @user.reload
-      @user.activation_code.should_not be_nil
+      @user.confirmation_token.should_not be_nil
     end
 
     it 'starts in pending state' do
       @creating_user.call
       @user.reload
-      @user.should be_pending
+      assert_equal @user.state, 'pending'
     end
   end
 
@@ -146,12 +146,12 @@ describe User do
   end
 
   it 'resets password' do
-    users(:quentin).update_attributes(:password => 'new password', :password_confirmation => 'new password')
+    users(:quentin).update_attributes({:password => 'new password', :password_confirmation => 'new password'})
     User.authenticate('quentin', 'new password').should == users(:quentin)
   end
 
   it 'does not rehash password' do
-    users(:quentin).update_attributes(:login => 'quentin2')
+    users(:quentin).update_attributes({:login => 'quentin2'})
     User.authenticate('quentin2', 'monkey').should == users(:quentin)
   end
 
@@ -170,11 +170,11 @@ describe User do
  if REST_AUTH_SITE_KEY.blank?
    # old-school passwords
    it "authenticates a user against a hard-coded old-style password" do
-     User.authenticate('old_password_holder', 'test').should == users(:old_password_holder)
+     User.authenticate('old_password_holder', 'monkey').should == users(:old_password_holder)
    end
  else
    it "doesn't authenticate a user against a hard-coded old-style password" do
-     User.authenticate('old_password_holder', 'test').should be_nil
+     User.authenticate('old_password_holder', 'monkey').should be_nil
    end
 
    # New installs should bump this up and set REST_AUTH_DIGEST_STRETCHES to give a 10ms encrypt time or so
@@ -194,7 +194,7 @@ describe User do
   it 'sets remember token' do
     users(:quentin).remember_me
     users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_token_expires_at.should_not be_nil
+    users(:quentin).remember_created_at.should_not be_nil
   end
 
   it 'unsets remember token' do
@@ -209,16 +209,16 @@ describe User do
     users(:quentin).remember_me_for 1.week
     after = 1.week.from_now.utc
     users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_token_expires_at.should_not be_nil
-    users(:quentin).remember_token_expires_at.between?(before, after).should be_true
+    users(:quentin).remember_created_at.should_not be_nil
+    users(:quentin).remember_created_at.between?(before, after).should be_true
   end
 
   it 'remembers me until one week' do
     time = 1.week.from_now.utc
     users(:quentin).remember_me_until time
     users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_token_expires_at.should_not be_nil
-    users(:quentin).remember_token_expires_at.utc.to_s(:db).should == time.to_s(:db)
+    users(:quentin).remember_created_at.should_not be_nil
+    users(:quentin).remember_created_at.utc.to_s(:db).should == time.to_s(:db)
   end
 
   it 'remembers me default two weeks' do
@@ -226,21 +226,22 @@ describe User do
     users(:quentin).remember_me
     after = 2.weeks.from_now.utc
     users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_token_expires_at.should_not be_nil
-    users(:quentin).remember_token_expires_at.between?(before, after).should be_true
+    users(:quentin).remember_created_at.should_not be_nil
+    users(:quentin).remember_created_at.between?(before, after).should be_true
   end
 
   it 'registers passive user' do
     user = create_user(:password => nil, :password_confirmation => nil)
-    user.should be_passive
-    user.update_attributes(:password => 'new password', :password_confirmation => 'new password')
-    user.register!
-    user.should be_pending
+    assert_equal user.state, 'passive'
+    user.update_attributes({:password => 'new password', :password_confirmation => 'new password'})
+    user.save!
+    user.reload
+    assert_equal user.state, 'pending'
   end
 
   it 'suspends user' do
     users(:quentin).suspend!
-    users(:quentin).should be_suspended
+    assert_equal users(:quentin).state, 'suspended'
   end
 
   it 'does not authenticate suspended user' do
@@ -252,7 +253,7 @@ describe User do
     users(:quentin).deleted_at.should be_nil
     users(:quentin).delete!
     users(:quentin).deleted_at.should_not be_nil
-    users(:quentin).should be_deleted
+    assert_equal users(:quentin).state, 'disabled'
   end
 
   describe "being unsuspended" do
@@ -265,19 +266,25 @@ describe User do
 
     it 'reverts to active state' do
       @user.unsuspend!
-      @user.should be_active
+      assert_equal @user.state, 'active'
     end
 
     it 'reverts to passive state if activation_code and activated_at are nil' do
-      User.update_all :activation_code => nil, :activated_at => nil
+      User.update_all({:confirmation_token => nil, :confirmed_at => nil})
       @user.reload.unsuspend!
-      @user.should be_passive
+      assert_equal @user.state, 'passive'
     end
 
     it 'reverts to pending state if activation_code is set and activated_at is nil' do
-      User.update_all :activation_code => 'foo-bar', :activated_at => nil
+      count = 1
+      User.all.each do |user|
+        user.update_attribute(:confirmation_token, "foo-bar-#{count}")
+        user.update_attribute(:confirmed_at, nil)
+        count = count + 1
+        user.save!
+      end
       @user.reload.unsuspend!
-      @user.should be_pending
+      assert_equal @user.state, 'pending'
     end
   end
   
@@ -336,7 +343,7 @@ describe User do
 protected
   def create_user(options = {})
     record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
-    record.register! if record.valid?
+    record.save! if record.valid?
     record
   end
 end

@@ -6,6 +6,7 @@ Feature: Admin configures project help page
   
   Background:
     Given the most basic default project
+    And the database has been seeded
     And I login as an admin
     And am on the admin projects page
     When I follow "edit project"

@@ -51,6 +51,7 @@ Spork.prefork do
 
     config.include FailsInThemes
     config.include Sprockets::Helpers::RailsHelper
+    config.include Devise::TestHelpers, :type => :controller
 
   end
 end

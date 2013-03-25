@@ -49,6 +49,7 @@ describe Portal::StudentsController do
 
       @new_user = User.new(user_attributes)
       User.stub!(:new).and_return(@new_user)
+      @new_user
     end
 
     it "creates a user and a student when given valid parameters" do
@@ -70,20 +71,16 @@ describe Portal::StudentsController do
     it "clearly shows that the student needs to login after successful create" do
       stub_user_with_params
       post :create, @params_for_creation
-
-      # should show text "your username is"
-      assert_select "p", /username\s+is/i
-
-      # should show directions to login:
-      assert_select "p", /login/i
+      
+      response.should redirect_to(thanks_for_sign_up_url(:type=>"student", :login=>@new_user.login))
+      
     end
 
     # student is not logged in, so we shouldn't display their classes!
     it "does not show any of the students classes after successful creation" do
       stub_user_with_params
       post :create, @params_for_creation
-      assert_select "*#clazzes_nav", false
-      assert_select "input#header_login"
+      response.should redirect_to(thanks_for_sign_up_url(:type=>"student",:login=>@new_user.login))
     end
 
     it "does not create a user or a student when given incorrect password_confirmation" do

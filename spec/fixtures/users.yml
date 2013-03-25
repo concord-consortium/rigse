@@ -1,4 +1,4 @@
-# spec/support/mock_objects.rb resets REST_AUTH_SITE_KEY to 'sitekeyforrunningtests'
+# spec/support/controller_helper.rb resets APP_CONFIG[:pepper] to 'sitekeyforrunningtests'
 #
 # using this site key:
 #
@@ -12,13 +12,13 @@ quentin:
   uuid:                      7aef8f84-627b-11de-97fe-001ff3caa767
   login:                     quentin
   email:                     quentin@example.com
-  salt:                      9b25330fc7fb05fe100077d0b8ce7ce1cf40eb65
-  crypted_password:          296ea29fed9f77a3cd23b028704b6b967e65a8a0 # monkey
+  password_salt:             w7TnCtPqEjEzGAQtyvZs
+  encrypted_password:        36aabfd5891e9e6e3981f3ebcee6d270a7e00a1d # monkey
   created_at:                <%= 5.days.ago.to_s :db  %>
-  remember_token_expires_at: <%= 1.days.from_now.to_s %>
+  remember_created_at:       <%= 1.days.from_now.to_s %>
   remember_token:            77de68daecd823babbb58edb1c8e14d7106e83bb
-  activation_code:           
-  activated_at:              <%= 5.days.ago.to_s :db %>
+  confirmation_token:        
+  confirmed_at:              <%= 5.days.ago.to_s :db %>
   state:                     active
 
 aaron:
@@ -27,13 +27,13 @@ aaron:
   vendor_interface_id:       1
   login:                     aaron
   email:                     aaron@example.com
-  salt:                      353612a91f8208330da4df1ccfef9a2110645535
-  crypted_password:          3102f18a67ad87aa66e5a5783bd13862b16665c0 # monkey
+  password_salt:             qp3wVvnW2xszu4QECpaV
+  encrypted_password:        4501ec62797702f8daec5d46132c7ea19785f34e # monkey
   created_at:                <%= 1.days.ago.to_s :db %>
-  remember_token_expires_at: 
+  remember_created_at:       
   remember_token:            
-  activation_code:           1b6453892473a467d07372d45eb05abc2031647a
-  activated_at:              
+  confirmation_token:        1b6453892473a467d07372d45eb05abc2031647a
+  confirmed_at:              
   state:                     pending
 
 
@@ -43,10 +43,10 @@ old_password_holder:
   vendor_interface_id:       1
   login:                     old_password_holder
   email:                     salty_dog@example.com
-  salt:                      7e3041ebc2fc05a40c60028e2c4901a81035d3cd
-  crypted_password:          00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  password_salt:             9BEzpzxnFsoueGmxNGcz
+  encrypted_password:        2c50835e177570d37946e4148cbcabed1f90e219 # test
   created_at:                <%= 1.days.ago.to_s :db %>
-  activation_code:           
-  activated_at:              <%= 5.days.ago.to_s :db %>
+  confirmation_token:        
+  confirmed_at:              <%= 5.days.ago.to_s :db %>
   state:                     active
 

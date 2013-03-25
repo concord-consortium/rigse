@@ -33,7 +33,7 @@ module HtmlSelectorsHelpers
     when "the top navigation bar"
       "div#nav_top"
     when "header login box"
-      "form#header-project-signin"
+      "div.header-login-box"
     when "content box in change password page"
       "div#content"
     # Add more mappings here.

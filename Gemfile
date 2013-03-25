@@ -16,6 +16,8 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
+  gem "devise",               "~>2.1.0"
+  gem 'devise-encryptable'
 
   gem "rails",                "~> 3.2"
   gem "arrayfields"

@@ -5,6 +5,7 @@ Feature: An copies and pastes embeddables
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
 
   @dialog
   @javascript

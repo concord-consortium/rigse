@@ -22,7 +22,8 @@
                 = hidden_field_tag 'user[id]', @original_user.id
                 = hidden_field_tag 'commit', 'Switch'
             |
-            = link_to 'Log Out', logout_path           
+            = link_to 'Logout', destroy_user_session_path
+                       
 #nav_top
   %span.hidden.doNotPrint
     Navigation:

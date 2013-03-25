@@ -1,12 +1,17 @@
 
 # In order to run the user specs the encrypted passwords
 # for the 'quentin' and 'aaron' users in spec/fixtures/users.yml
-# need to be created with a REST_AUTH_SITE_KEY used for testing.
+# need to be created with a hard-coded pepper used for testing.
 #
 # suppress_warnings is a Kernel extension ...
 # See: config/initializers/00_core_extensions.rb
 #
-suppress_warnings { REST_AUTH_SITE_KEY = 'sitekeyforrunningtests' }
+suppress_warnings {
+  APP_CONFIG[:pepper] = 'sitekeyforrunningtests'
+  Devise.setup do |config|
+    config.pepper = APP_CONFIG[:pepper]
+  end
+}
 
 # This modification allows stubing helper methods when using integrate views
 # the template object isn't ready until the render method is called, so this code
@@ -163,7 +168,8 @@ def generate_default_project_and_jnlps_with_mocks
     :require_user_consent?          => false,
     :allow_default_class            => false,
     :allow_default_class?           => false,
-    :jnlp_cdn_hostname              => ''
+    :jnlp_cdn_hostname              => '',
+    :enabled_bookmark_types         => []
   )
 
   Admin::Project.stub!(:default_project).and_return(@mock_project)
@@ -339,8 +345,14 @@ def login_anonymous
 end
 
 def logout_user
+  sign_out @logged_in_user unless @logged_in_user.nil?
+  
   @logged_in_user = Factory.next :anonymous_user
+  
+  ApplicationController.any_instance.stub(:current_user).and_return(@logged_in_user)
+  ApplicationController.any_instance.stub(:user_signed_in?).and_return(false)
   @controller.stub!(:current_visitor).and_return(@logged_in_user)
+  
   @logged_in_user
 end
 
@@ -350,8 +362,12 @@ def stub_current_user(user_sym)
   else
     @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
   end
-
+  
+  ApplicationController.any_instance.stub(:current_user).and_return(@logged_in_user)
+  ApplicationController.any_instance.stub(:user_signed_in?).and_return(true)
+  sign_in @logged_in_user
   @controller.stub!(:current_visitor).and_return(@logged_in_user)
+  
   @logged_in_user
 end
 
@@ -365,3 +381,4 @@ def xml_http_html_request(request_method, action, parameters = nil, session = ni
   request.env['HTTP_ACCEPT'] = Mime::HTML
   xml_http_request request_method, action, parameters, session, flash
 end
+

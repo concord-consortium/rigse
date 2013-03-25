@@ -2,6 +2,9 @@ Given /^the most basic default project$/ do
   Factory.create(:admin_project_no_jnlps)
 end
 
+Given /^the database has been seeded$/ do
+  ## see lib/mock_data/create_fake_data.rb for more information...
+end
 #
 # generator methods are in spec/helpers/controller_helper.rb
 #

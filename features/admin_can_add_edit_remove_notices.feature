@@ -6,6 +6,7 @@ Feature: Admin can add, edit and remove notices
   
   Background:
     Given The default project and jnlp resources exist using factories
+    And the database has been seeded
     And I login as an admin
     And I create a notice "Notice for admin" for the roles "Admin"
     

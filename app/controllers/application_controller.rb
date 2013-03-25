@@ -118,8 +118,8 @@ class ApplicationController < ActionController::Base
 
 
   def check_user
-    if logged_in?
-      self.current_visitor = current_visitor
+    if user_signed_in?
+      self.current_visitor = current_user
     else
       self.current_visitor = User.anonymous
     end
@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
 
   def session_sensitive_path
     path = request.env['PATH_INFO']
-    return path =~ /password|session|login|logout|security_questions|consent/i
+    return path =~ /password|session|sign_in|sign_out|security_questions|consent|help/i
   end
 
   def check_for_password_reset_requirement
@@ -163,4 +163,18 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def after_sign_in_path_for(resource)
+
+    redirect_path = root_path
+    if APP_CONFIG[:recent_activity_on_login] && current_visitor.portal_teacher
+      portal_teacher = current_visitor.portal_teacher
+      if (portal_teacher.teacher_clazzes.select{|tc| tc.active }).count > 0
+        # Teachers with active classes are redirected to the "Recent Activity" page
+        redirect_path = recent_activity_path
+      end
+    end
+    return redirect_path
+  end
+
 end
