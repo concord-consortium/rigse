@@ -705,6 +705,8 @@ Bort, as of 0.3, has Open ID integrated with RESTful Authentication. Rejoice!
 _However I've (stepheneb) removed this to make debugging the authentication simpler and it 
 seems as though open-id is not becoming widespread._
 
+_RESTful Authentication is no longer integrated with the project. It has been replaced with Devise. (zeuslearning)_
+
 h3. Will Paginate
 
 We use will_paginate in pretty much every project we use.
