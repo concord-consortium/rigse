@@ -17,17 +17,17 @@ Feature: Student runs a jnlps
     And I login with username: student
 
   Scenario: Student runs jnlp
-    When I follow "Run by Myself"
+    When I run the investigation
     Then a jnlp file is downloaded
     And the jnlp file has a configuration for the student and offering
 
   Scenario: Student jnlps are not cached
-    When I follow "Run by Myself"
+    When I run the investigation
     Then the jnlp should not be cached
 
   @pending
   Scenario: Student runs the same jnlp a second time
-    When I follow "Run by Myself"
+    When I run the investigation
     And a jnlp file is downloaded
     Then the jnlp file has a configuration for the student and offering
     And I simulate opening the jnlp a second time
