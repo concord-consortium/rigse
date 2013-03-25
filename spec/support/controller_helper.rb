@@ -6,7 +6,12 @@
 # suppress_warnings is a Kernel extension ...
 # See: config/initializers/00_core_extensions.rb
 #
-suppress_warnings { APP_CONFIG[:pepper] = 'sitekeyforrunningtests' }
+suppress_warnings {
+  APP_CONFIG[:pepper] = 'sitekeyforrunningtests'
+  Devise.setup do |config|
+    config.pepper = APP_CONFIG[:pepper]
+  end
+}
 
 # This modification allows stubing helper methods when using integrate views
 # the template object isn't ready until the render method is called, so this code
