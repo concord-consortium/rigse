@@ -9,6 +9,9 @@ module MockData
   @default_teachers = nil
   @default_students = nil
   @default_courses = nil
+  @default_classes = nil
+  @default_investigations = nil
+  @default_activities = nil
   
   #Create fake users and roles
   def self.create_default_users
@@ -232,7 +235,10 @@ module MockData
     # student class mapping
     
     #following classes exist:
+    
     default_classes = []
+    @default_classes = default_classes
+    
     DEFAULT_DATA[:classes].each do |clazz, clazz_info|
       course = @default_courses.find{|c| c.name == clazz_info[:course]}
       clazz_info.delete(:course)
@@ -294,12 +300,16 @@ module MockData
   end #end of create_default_clazzes
   
   
-  def self.create_study_materials
+  def self.create_default_study_materials
     # this method creates -
     # multiple choice questions, image questions
     #default investigations, activities, pages and external activities
     
     default_investigations = []
+    default_activities = []
+    
+    @default_investigations = default_investigations
+    @default_activities = default_activities
     
     # Resource pages
     DEFAULT_DATA[:resource_pages].each do |key, rp|
@@ -393,7 +403,7 @@ module MockData
     
     
     # Empty Investigations
-    default_investigations = []
+    
     DEFAULT_DATA[:empty_investigations].each do |key, inv|
       user_login = inv.delete(:user)
       user = @default_users.find{|u| u.login == user_login}
@@ -547,7 +557,6 @@ module MockData
                  }
           snapshot_button = Embeddable::LabBookSnapshot.create!(info)
           snapshot_button.pages << investigation.activities[0].sections[0].pages[0]
-          
           prediction_graph = Embeddable::DataCollector.create!(:user_id => user.id, :uuid => prediction_graph_uuid)
           prediction_graph.pages << page
           
@@ -707,6 +716,7 @@ module MockData
           act[:investigation_id] = inv.id
           default_activity = Activity.create!(act)
         end
+        default_activities << default_activity if default_activity
       end
     end
 
@@ -755,8 +765,8 @@ module MockData
           end
           
           act[:image_questions].each do |iq_key, iq|
-            img_que = Embeddable::ImageQuestion.find_or_create_by_uuid(mcq[:uuid])
-            img_que.prompt = mcq[:prompt]
+            img_que = Embeddable::ImageQuestion.find_or_create_by_uuid(iq[:uuid])
+            img_que.prompt = iq[:prompt]
             img_que.save!
             
             pages.each do |p|
@@ -772,13 +782,13 @@ module MockData
             :uuid => act[:uuid],
             :teacher_only => act[:activity_teacher_only]
           }
-          defaut_activity = Activity.create!(act_info)
+          default_activity = Activity.create!(act_info)
           
           act[:sections].each do |section_key, section|
             sec = Section.create!(:name => section[:name], :uuid => section[:uuid])
             sec.save!
             
-            defaut_activity.sections << sec
+            default_activity.sections << sec
             
             section[:pages].each do |page_key, p|
               page = Page.create!(p)
@@ -808,6 +818,7 @@ module MockData
         
         end
         
+        default_activities << default_activity if default_activity
       end
     end
 
@@ -830,12 +841,40 @@ module MockData
           default_ext_act.publish
           default_ext_act.save!
         end
+        default_activities << default_ext_act if default_ext_act
       end
     end
     
 
   end # end of create_study_materials
   
+  
+  def self.create_default_assignments_for_class
+    #this method assigns study materials to the classes
+    
+    DEFAULT_DATA[:assignments].each do |assignment_key, assignment|
+      clazz = @default_classes.find{|c| c.name == assignment[:class_name]}
+      if clazz
+        assignment[:assignables].each do |assignable_key, assignable|
+          if assignable[:type] == 'investigation'
+            study_material = @default_investigations.find{|i| i.name == assignable[:name]}
+          elsif assignable[:type] == 'activity'
+            study_material = @default_activities.find{|a| a.name == assignable[:name]}
+          end
+        
+          if study_material
+            default_portal_offering  = Portal::Offering.find_by_clazz_id_and_runnable_id_and_runnable_type(clazz.id, study_material.id, assignable[:type])
+            unless default_portal_offering
+              default_portal_offering = Factory.create(:portal_offering, { :runnable => study_material,:clazz => clazz})
+              default_portal_offering.runnable_type = assignable[:type]
+              default_portal_offering.save!
+            end
+          end
+        end
+      end
+    end
+    
+  end # end of create_assignmentss
   
   # helper methods
   

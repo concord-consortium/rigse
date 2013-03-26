@@ -953,9 +953,81 @@
     :activity_teacher_only: false
     :uuid: 00000000-0000-0000-0000-000000000141
     
+
 :external_activities:
   :ext_activity_1:
     :name: My Activity
     :user: teacher
     :url: /mock_html/test-exernal-activity.html
     :uuid: 00000000-0000-0000-0000-000000000142
+
+
+:assignments:
+  :assignment_1:
+    :class_name: My Class
+    :assignables:
+      :assignable_1:
+        :type: investigation
+        :name: Aerodynamics
+      :assignable_2:
+        :type: investigation
+        :name: Plant reproduction
+      :assignable_3:
+        :type: investigation
+        :name: Radioactivity
+      :assignable_4:
+        :type: activity
+        :name: Algebra
+        
+  :assignment_2:
+    :class_name: Physics
+    :assignables:
+      :assignable_1:
+        :type: investigation
+        :name: Electricity
+      :assignable_2:
+        :type: investigation
+        :name: Plant reproduction
+      :assignable_3:
+        :type: investigation
+        :name: Aerodynamics
+      :assignable_4:
+        :type: investigation
+        :name: Radioactivity
+      :assignable_5:
+        :type: activity
+        :name: Algebra
+                      
+  :assignment_3:
+    :class_name: Mechanics
+    :assignables:
+      :assignable_1:
+        :type: investigation
+        :name: Aerodynamics
+        
+  :assignment_4:
+    :class_name: Class_with_no_attempts
+    :assignables:
+      :assignable_1:
+        :type: investigation
+        :name: Aerodynamics
+        
+  :assignment_5:
+    :class_name: Class_with_no_students
+    :assignables:
+      :assignable_1:
+        :type: investigation
+        :name: Plant reproduction
+        
+  :assignment_6:
+    :class_name: Mathematics
+    :assignables:
+      :assignable_1:
+        :type: investigation
+        :name: Lumped circuit abstraction
+      :assignable_2:
+        :type: investigation
+        :name: Static discipline
+      :assignable_3:
+        :type: investigation
+        :name: Non Linear Devices
