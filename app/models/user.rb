@@ -5,8 +5,11 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
-         :recoverable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
-  
+         :recoverable, :rememberable, :trackable, :validatable,:encryptable,
+         :encryptor => :old_restful_authentication_sha1
+         # see config/initializers/devise_encryptor.rb
+         #:encryptor => :restful_authentication_sha1
+
   default_scope where("state != 'disabled'")
 
   NO_EMAIL_STRING='no-email-'
