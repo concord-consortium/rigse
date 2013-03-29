@@ -13,6 +13,7 @@ set :stages, %w(
   interactions-staging interactions-production
   genomedynamics-dev genomedynamics-staging
   sparks-dev sparks-staging sparks-production sparks-aws1
+  nextgen-staging nextgen-production
   xproject-dev )
 
 set :default_stage, "development"
