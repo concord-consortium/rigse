@@ -8,7 +8,7 @@ module MockData
   end
 
   def self.default_password
-    @default_password ||= ENV['default_password'] || APP_CONFIG['default_password'] || 'password'
+    @default_password ||= ENV['default_password'] || APP_CONFIG[:default_password] || 'password'
   end
 
   #Create fake users and roles
