@@ -96,7 +96,8 @@ source "http://rubygems.org"
   gem 'uglifier'
   gem 'yui-compressor'
   gem "turbo-sprockets-rails3", "~> 0.3.6"
-# end
+  gem "factory_girl",           "~> 2.0.5"
+#      ⬆         ⬆  needed for setup tasks in production and dev :(
 
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
@@ -134,7 +135,6 @@ group :test do
 end
 
 group :test, :development do
-  gem "factory_girl",      "~> 2.0.5"
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
