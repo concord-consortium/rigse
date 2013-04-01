@@ -517,7 +517,7 @@ module MockData
           
           snapshot_button = Embeddable::LabBookSnapshot.find_or_create_by_uuid(lab_book_snapshot)
           snapshot_button.user_id = user.id
-          snapshot_button.target_element_id = draw_tool.id
+          snapshot_button.target_element = draw_tool
           snapshot_button.save!
           snapshot_button << page
           
