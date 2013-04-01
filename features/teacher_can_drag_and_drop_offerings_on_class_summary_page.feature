@@ -35,7 +35,7 @@ Feature: Teachers can drag-drop offerings to reposition them on the class summar
     
   @javascript
   Scenario: Students should be able to see the changes on the class summary page
-    When I login with username: student
+    When I login with username: taylor
     And I am on the class page for "Mathematics"
     Then "Non Linear Devices" should appear before "Lumped circuit abstraction"
     

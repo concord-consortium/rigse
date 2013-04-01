@@ -10,9 +10,9 @@ Feature: Teacher can assign an offering to a class
   Scenario: Teacher can assign an investigation to a class
     Given the following simple investigations exist:
       | name               | user    |
-      | Test Investigation | teacher |
-    And the investigation "Test Investigation" is assigned to the class "My Class"
-    Then the investigation named "Test Investigation" should have "offerings_count" equal to "1"
+      | A A Test Investigation | teacher |
+    And the investigation "A A Test Investigation" is assigned to the class "My Class"
+    Then the investigation named "A A Test Investigation" should have "offerings_count" equal to "1"
 
   Scenario: Teacher can assign a resource page to a class
     Given the following resource pages exist:
@@ -32,8 +32,8 @@ Feature: Teacher can assign an offering to a class
   Scenario: All potential offerings are visible
     Given the following simple investigations exist:
       | name               | user    |
-      | Test Investigation | teacher |
-    And the investigation "Test Investigation" is published
+      | A A Test Investigation | teacher |
+    And the investigation "A A Test Investigation" is published
     And the following resource pages exist:
       | name               | user    |
       | Test Resource Page | teacher |
@@ -42,7 +42,7 @@ Feature: Teacher can assign an offering to a class
       | My Activity | teacher |
     And I am logged in with the username teacher
     And I am on the class page for "My Class"
-    Then I should see "Investigation: Test Investigation"
+    Then I should see "Investigation: A A Test Investigation"
     Then I should see "Resource Page: Test Resource Page"
     Then I should see "External Activity: My Activity"
 

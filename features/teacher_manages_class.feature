@@ -22,7 +22,7 @@ Feature: Teacher manages a class
     And "Copy of Mathematics" should be the last on the list with id "sortable"
     And "Copy of Mathematics" should be the last class within left panel for class navigation
     And there should be no student in "Copy of Mathematics"
-    And I should see "Robert Fernandez"
+    And I should see "Peterson Taylor"
     And I should see "John Nash"
     And I should see "Lumped circuit abstraction"
     And I should see "Static discipline"

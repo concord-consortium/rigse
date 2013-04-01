@@ -10,7 +10,7 @@ Feature: Investigations can be viewed by guests
   @javascript
   Scenario: Guest can Change the sort order
     When I sort investigations by "name DESC"
-    Then There should be 6 investigations displayed
+    Then There should be 20 investigations displayed
     And  "e Investigation" should appear before "f Investigation"   
     And  "draft" should not be displayed in the investigations list
 

@@ -52,6 +52,7 @@ Feature: Investigations show drafts
     Then I should see "Investigation21"
     And I should see "Investigation22"
     And I should see "Investigation23"
+    When I follow "Next"
     And I should see "Investigation24"
     And the "drafts too:" checkbox should be checked
     When I uncheck "drafts too:"
