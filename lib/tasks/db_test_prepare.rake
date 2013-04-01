@@ -1,7 +1,7 @@
 namespace :db do
   namespace :test do
     
-    def common_stuff
+    def load_common_data
       Rake::Task['db:backup:load_probe_configurations'].invoke
       Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
       Rake::Task['app:jnlp:generate_maven_jnlp_resources'].invoke('false')
@@ -10,7 +10,7 @@ namespace :db do
     desc 'after completing db:test:prepare load probe configurations'
     task :prepare do
         ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['test'])
-        common_stuff
+        load_common_data
     end
     
     
@@ -21,7 +21,7 @@ namespace :db do
       Rake::Task['db:create'].invoke
       Rake::Task['db:schema:load'].invoke
       
-      common_stuff
+      load_common_data
       
       require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
       APP_CONFIG[:password_for_default_users] = 'password'
