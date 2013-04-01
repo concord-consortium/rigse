@@ -2,10 +2,10 @@ namespace :app do
   namespace :setup do
 
     require 'fileutils'
-    
+
     # require 'highline/import'
     autoload :Highline, 'highline'
-    
+
     def agree_check_in_development_mode
       if ::Rails.env == 'development'
         HighLine.new.agree("Accept defaults? (y/n) ")
@@ -13,7 +13,7 @@ namespace :app do
         true
       end
     end
-    
+
     def display_user(user)
       puts <<-HEREDOC
 
@@ -24,7 +24,7 @@ namespace :app do
 
       HEREDOC
     end
-  
+
     def edit_user(user)
       user.login =                 HighLine.new.ask("            login: ") {|q| q.default = user.login}
       user.email =                 HighLine.new.ask("            email: ") {|q| q.default = user.email}
@@ -39,19 +39,19 @@ namespace :app do
     #
     # Create default users, roles, district, school, course, and class, and greade_levels
     #
-    #######################################################################   
+    #######################################################################
     desc "Create fake users and roles"
     task :create_default_users => :environment do
       require File.expand_path('../../mock_data/create_fake_data.rb', __FILE__)
       MockData.create_default_users
     end
-    
+
     desc "Create default users and roles"
     task :default_users_roles => :environment do
 
       # some constants that should probably be moved to settings.yml
       DEFAULT_CLASS_NAME = 'Fun with Investigations'
-      
+
       puts <<-HEREDOC
 
 This task creates six roles (if they don't already exist):
@@ -63,12 +63,12 @@ This task creates six roles (if they don't already exist):
   member
   guest
 
-It creates one user with an admin role. 
+It creates one user with an admin role.
 
   The default values for the admin user are taken from config/settings.yml.
   Edit the values in this file if you want to specify a different default admin user.
 
-In addition it creates seven more default users with these login names and the 
+In addition it creates seven more default users with these login names and the
 default password: 'password'. You can change the default password if you wish.
 
   manager
@@ -102,13 +102,13 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         member_role = Role.find_or_create_by_title('member'),
         guest_role = Role.find_or_create_by_title('guest')
       ]
-      
+
       all_roles = Role.find(:all)
       unused_roles = all_roles - roles_in_order
       if unused_roles.length > 0
         unused_roles.each { |role| role.destroy }
       end
-      
+
       # to make sure the list is ordered correctly in case a new role is added
       roles_in_order.each_with_index do |role, i|
         role.insert_at(i)
@@ -117,49 +117,49 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       default_admin_user_settings = APP_CONFIG[:default_admin_user]
 
       default_user_list = [
-        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings [:login], 
-          :first_name => default_admin_user_settings[:first_name], 
+        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings [:login],
+          :first_name => default_admin_user_settings[:first_name],
           :last_name =>  default_admin_user_settings[:last_name],
-          :email =>      default_admin_user_settings[:email], 
+          :email =>      default_admin_user_settings[:email],
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-        manager_user = User.find_or_create_by_login(:login => 'manager', 
-          :first_name => 'Manager', :last_name => 'User', 
-          :email => 'manager@concord.org', 
+        manager_user = User.find_or_create_by_login(:login => 'manager',
+          :first_name => 'Manager', :last_name => 'User',
+          :email => 'manager@concord.org',
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-        researcher_user = User.find_or_create_by_login(:login => 'researcher', 
-          :first_name => 'Researcher', :last_name => 'User', 
-          :email => 'researcher@concord.org', 
+        researcher_user = User.find_or_create_by_login(:login => 'researcher',
+          :first_name => 'Researcher', :last_name => 'User',
+          :email => 'researcher@concord.org',
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-        author_user = User.find_or_create_by_login(:login => 'author', 
-          :first_name => 'Author', :last_name => 'User', 
-          :email => 'author@concord.org', 
+        author_user = User.find_or_create_by_login(:login => 'author',
+          :first_name => 'Author', :last_name => 'User',
+          :email => 'author@concord.org',
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-        member_user = User.find_or_create_by_login(:login => 'member', 
-          :first_name => 'Member', :last_name => 'User', 
-          :email => 'member@concord.org', 
+        member_user = User.find_or_create_by_login(:login => 'member',
+          :first_name => 'Member', :last_name => 'User',
+          :email => 'member@concord.org',
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         anonymous_user = User.anonymous,
 
-        teacher_user = User.find_or_create_by_login(:login => 'teacher', 
-          :first_name => 'Valerie', :last_name => 'Frizzle', 
-          :email => 'teacher@concord.org', 
+        teacher_user = User.find_or_create_by_login(:login => 'teacher',
+          :first_name => 'Valerie', :last_name => 'Frizzle',
+          :email => 'teacher@concord.org',
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-        student_user = User.find_or_create_by_login(:login => 'student', 
-          :first_name => 'Jackie', :last_name => 'Demeter', 
-          :email => 'student@concord.org', 
+        student_user = User.find_or_create_by_login(:login => 'student',
+          :first_name => 'Jackie', :last_name => 'Demeter',
+          :email => 'student@concord.org',
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
       ]
 
       edit_user_list = default_user_list - [anonymous_user]
-      
+
       edit_user_list.each { |user| display_user(user) }
-      
+
       unless agree_check_in_development_mode
         edit_user_list.each do |user|
           user = edit_user(user)  if HighLine.new.agree("Edit #{user.login}?  (y/n) ")
@@ -175,7 +175,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         end
         user.roles.clear
       end
-      
+
       # Setting the default_user boolean allows suspending and unsuspending
       # the whole group of default_users like this:
       #
@@ -197,25 +197,39 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
 
       admin_user.add_role('admin')
-      
+
       # Set the site_admin attribute to true for the site_admin.
-      # This will be used more later for performance reasons as 
+      # This will be used more later for performance reasons as
       # we integrate permission_sets into membership models.
       admin_user.update_attribute(:site_admin, true)
-      
+
       manager_user.add_role('manager')
       researcher_user.add_role('researcher')
       teacher_user.add_role('member')
       member_user.add_role('member')
       anonymous_user.add_role('guest')
     end
-    
-    
+
+
+    #######################################################################
+    #
+    # Create the default project.
+    #
+    #######################################################################
+    desc "create a default project"
+    task :default_project => :environment do
+      project = Admin::Project.first
+      if project.nil?
+        project = Admin::Project.create(:active => true)
+      end
+    end
+
+
     #######################################################################
     #
     # Create default portal resources: project, district, school, course, and class, investigation and grades
     #
-    #######################################################################   
+    #######################################################################
     desc "Create default portal resources"
     task :default_portal_resources => :environment do
 
@@ -225,7 +239,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       author_user = User.find_by_login('author')
       teacher_user = User.find_by_login('teacher')
       student_user = User.find_by_login('student')
-      
+
       default_investigation = DefaultRunnable.create_default_runnable_for_user(author_user)
 
       grades_in_order = [
@@ -250,10 +264,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
 
       # make a default project if it doesn't exist
-      project = Admin::Project.first
-      if project.nil?
-        project = Admin::Project.create(:active => true)
-      end
+      Rake::Task['app:setup:default_project'].invoke
 
       # make a default district and school
       site_district = Portal::District.find_or_create_by_name(APP_CONFIG[:site_district])
@@ -266,21 +277,21 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # start with two semesters
       site_school_fall_semester = Portal::Semester.find_or_create_by_name_and_school_id('Fall', site_school.id)
       site_school_spring_semester = Portal::Semester.find_or_create_by_name_and_school_id('Spring', site_school.id)
-  
+
       # default course
-      # This model is currently underdeveloped and not implemented into the app properly 
+      # This model is currently underdeveloped and not implemented into the app properly
       # Use the default class name for now
       site_school_default_course = Portal::Course.find_or_create_by_name_and_school_id(DEFAULT_CLASS_NAME, site_school.id)
       site_school_default_course.grades << grade_9
-      
+
       # default_school_teacher = teacher_user.portal_teacher.find_or_create_by_school_id(site_school.id)
       unless default_school_teacher = teacher_user.portal_teacher
         default_school_teacher = Portal::Teacher.create!(:user_id => teacher_user.id)
       end
       default_school_teacher.grades << grade_9
-      
+
       site_school.portal_teachers << default_school_teacher
-      
+
       # default_school_teacher.courses << site_school_default_course
 
       # default class
@@ -292,7 +303,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         :class_word => 'abc123',
         :description => 'This is a default class created for the default school ... etc'
       }
-      unless default_course_class = 
+      unless default_course_class =
         Portal::Clazz.find_by_class_word(attributes[:class_word]) ||
         Portal::Clazz.find_by_name_and_teacher_id(attributes[:name], attributes[:teacher_id])
         default_course_class = Portal::Clazz.create!(attributes)
@@ -302,7 +313,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       default_course_class.status = 'open'
       default_course_class.teacher = default_school_teacher
       default_course_class.save!
-      
+
       # default offering
       attributes = {
         :clazz_id => default_course_class.id,
@@ -328,7 +339,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       site_school.add_member(default_student)
       #
       # default_student = student_user.student || student_user.student.create!
-      # 
+      #
       # To make a new learner you need an existing student and offering -- presumably
       # an offering that the student is not already a learner in.
       #
@@ -362,7 +373,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     #
     # Force Create default users and roles
     # (similar to Create Default users, but without prompting)
-    #######################################################################   
+    #######################################################################
     desc "Force Create default users and roles"
     task :force_default_users_roles => :environment do
       admin_role = Role.find_or_create_by_title('admin')
@@ -383,20 +394,20 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         user.register!
         user.activate!
       end
-      admin_user.roles << admin_role 
+      admin_user.roles << admin_role
       researcher_user.roles << researcher_role
       member_user.roles << member_role
     end
-    
+
 
     #######################################################################
     #
     # Delete existing users and restore default users and roles
     #
-    #######################################################################   
+    #######################################################################
     desc "Delete existing users and restore default users and roles"
     task :delete_users_and_restore_default_users_roles => :environment do
-      # The TRUNCATE cammand works in mysql to effectively empty the database and reset 
+      # The TRUNCATE cammand works in mysql to effectively empty the database and reset
       # the autogenerating primary key index ... not certain about other databases
       puts
       puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{User.table_name}`")} from User"
@@ -404,7 +415,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       Rake::Task['app:setup:create_additional_users'].invoke
     end
 
-    
+
     #######################################################################
     #
     # Create additional users
@@ -420,14 +431,14 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     # Here's an example of how to create and additional_users.yml file:
     #
     # additional_users = { "stephen" =>
-    #   { "role"=>"admin", 
-    #     "first_name"=>"Stephen", 
-    #     "last_name"=>"Bannasch", 
+    #   { "role"=>"admin",
+    #     "first_name"=>"Stephen",
+    #     "last_name"=>"Bannasch",
     #     "login" => "stephen",
     #     "email"=>"stephen.bannasch@gmail.com"}
     #   }
     # File.open(File.join(::Rails.root.to_s, %w{config additional_users.yml}), 'w') {|f| YAML.dump(additional_users, f)}
-    # 
+    #
     # The additional users will be created but each one will need to go to the
     # forgot password link to actually get a working password:
     #
@@ -445,12 +456,12 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
           if u = User.find_by_email(user_config[1]['email'])
             puts "  *** user: #{u.name} already exists ...\n"
           else
-            u = User.create(:login => user_config[0], 
-              :first_name => user_config[1]['first_name'], 
-              :last_name => user_config[1]['last_name'], 
-              :login => user_config[1]['login'], 
-              :email => user_config[1]['email'], 
-              :password => pw, 
+            u = User.create(:login => user_config[0],
+              :first_name => user_config[1]['first_name'],
+              :last_name => user_config[1]['last_name'],
+              :login => user_config[1]['login'],
+              :email => user_config[1]['email'],
+              :password => pw,
               :password_confirmation => pw)
             u = User.find_by_login(user_config[0])
             u.register!
