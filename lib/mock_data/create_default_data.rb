@@ -15,6 +15,14 @@ module MockData
   
   #Create fake users and roles
   def self.create_default_users
+    admin_info = DEFAULT_DATA[:admin_project]
+    project = Admin::Project.find_by_uuid(admin_info[:uuid])
+    if project
+      project.active = false
+      project.save!
+    else
+      Admin::Project.create!(admin_info)
+    end
     
     #create roles in order
     %w| admin manager researcher author member guest|.each_with_index do |role_name,index|
@@ -579,15 +587,18 @@ module MockData
       DEFAULT_DATA[:investigations_with_mcq].each do |key, inv|
         investigation = nil
         inv_by_uuid = Investigation.find_by_uuid(inv[:uuid])
-        default_pages = []
+        
         if inv_by_uuid
           investigation = inv_by_uuid
           investigation.name = inv[:name]
           investigation.user_id = author.id
           investigation.save!
           inv[:activities].each do |act, act_info|
+            default_pages = []
+            
             activity = Activity.find_or_create_by_uuid(act_info[:uuid])
             activity.name = act_info[:name]
+            activity.teacher_only = act_info[:activity_teacher_only]
             activity.save!
             
             investigation.activities << activity
@@ -639,9 +650,11 @@ module MockData
           investigation = Investigation.create!(info)
           
           inv[:activities].each do |act, act_info|
+            default_pages = []
             info = {
                      :name => act_info[:name],
-                     :uuid => act_info[:uuid]
+                     :uuid => act_info[:uuid],
+                     :teacher_only => act_info[:activity_teacher_only]
                    }
             activity = Activity.create!(info)
             
@@ -851,14 +864,13 @@ module MockData
   
   def self.create_default_assignments_for_class
     #this method assigns study materials to the classes
-    
     DEFAULT_DATA[:assignments].each do |assignment_key, assignment|
       clazz = @default_classes.find{|c| c.name == assignment[:class_name]}
       if clazz
         assignment[:assignables].each do |assignable_key, assignable|
-          if assignable[:type] == 'investigation'
+          if assignable[:type] == 'Investigation'
             study_material = @default_investigations.find{|i| i.name == assignable[:name]}
-          elsif assignable[:type] == 'activity'
+          elsif assignable[:type] == 'Activity'
             study_material = @default_activities.find{|a| a.name == assignable[:name]}
           end
         
