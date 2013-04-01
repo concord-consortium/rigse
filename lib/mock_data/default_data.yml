@@ -967,67 +967,67 @@
     :class_name: My Class
     :assignables:
       :assignable_1:
-        :type: investigation
+        :type: Investigation
         :name: Aerodynamics
       :assignable_2:
-        :type: investigation
+        :type: Investigation
         :name: Plant reproduction
       :assignable_3:
-        :type: investigation
+        :type: Investigation
         :name: Radioactivity
       :assignable_4:
-        :type: activity
+        :type: Activity
         :name: Algebra
         
   :assignment_2:
     :class_name: Physics
     :assignables:
       :assignable_1:
-        :type: investigation
+        :type: Investigation
         :name: Electricity
       :assignable_2:
-        :type: investigation
+        :type: Investigation
         :name: Plant reproduction
       :assignable_3:
-        :type: investigation
+        :type: Investigation
         :name: Aerodynamics
       :assignable_4:
-        :type: investigation
+        :type: Investigation
         :name: Radioactivity
       :assignable_5:
-        :type: activity
+        :type: Activity
         :name: Algebra
                       
   :assignment_3:
     :class_name: Mechanics
     :assignables:
       :assignable_1:
-        :type: investigation
+        :type: Investigation
         :name: Aerodynamics
         
   :assignment_4:
     :class_name: Class_with_no_attempts
     :assignables:
       :assignable_1:
-        :type: investigation
+        :type: Investigation
         :name: Aerodynamics
         
   :assignment_5:
     :class_name: Class_with_no_students
     :assignables:
       :assignable_1:
-        :type: investigation
+        :type: Investigation
         :name: Plant reproduction
         
   :assignment_6:
     :class_name: Mathematics
     :assignables:
       :assignable_1:
-        :type: investigation
+        :type: Investigation
         :name: Lumped circuit abstraction
       :assignable_2:
-        :type: investigation
+        :type: Investigation
         :name: Static discipline
       :assignable_3:
-        :type: investigation
+        :type: Investigation
         :name: Non Linear Devices
