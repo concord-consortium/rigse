@@ -27,6 +27,11 @@ def render(file,opts={})
   output
 end
 
+def run_remote_rake(taskname)
+    run "cd #{deploy_to}/#{current_dir} && " +
+    "bundle exec rake RAILS_ENV=#{rails_env} #{taskname} --trace"
+end
+
 #############################################################
 #  Maintenance mode
 #############################################################
@@ -285,7 +290,14 @@ namespace :deploy do
   #   # run "cd #{deploy_to}/current && bundle exec compass compile --sass-dir public/stylesheets/scss/ --css-dir public/stylesheets/ -s compact --force"
   #   run "cd #{deploy_to}/current && bundle exec rake assets:precompile --trace"
   # end
+end
 
+namespace :setup do
+   # 2013_04_01 NP:
+  desc "ensure that one default project exists"
+  task :create_default_project, :roles => :app do
+    run_remote_rake "app:setup:default_project"
+  end
 end
 
 #############################################################
