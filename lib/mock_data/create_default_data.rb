@@ -1,6 +1,6 @@
 module MockData
   
-  DEFAULT_DATA = YAML.load_file(File.dirname(__FILE__) + "/default_data.yml")
+  DEFAULT_DATA = YAML.load_file(File.dirname(__FILE__) + "/default_data.yml").recursive_symbolize_keys
   
   #load all the factories
   Dir[File.dirname(__FILE__) + '/../../factories/*.rb'].each {|file| require file }
