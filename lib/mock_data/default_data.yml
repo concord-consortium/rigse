@@ -701,7 +701,7 @@ investigations_with_mcq:
         
       activitiy_2:
         uuid: 00000000-0000-0000-0000-000000000140
-        name: Air activity
+        name: Aeroplane
         sections:
           section_1:
             uuid: 00000000-0000-0000-0000-000000000141
@@ -719,7 +719,7 @@ investigations_with_mcq:
             uuid: 00000000-0000-0000-0000-000000000049
             prompt: image_q
         user: teacher
-        activity_teacher_only: false
+        activity_teacher_only: true
         
   mcq_inv_3:
     uuid: 00000000-0000-0000-0000-000000000143
