@@ -750,7 +750,7 @@ investigations_with_mcq:
 
   mcq_inv_4:
     uuid: 00000000-0000-0000-0000-000000000147
-    name: Radioactivity
+    name: Atomic Energy
     activities:
       activitiy_1:
         uuid: 00000000-0000-0000-0000-000000000148
@@ -986,6 +986,10 @@ assignments:
       assignable_4:
         type: Activity
         name: Algebra
+      assignable_5:
+        type: Investigation
+        name: Atomic Energy
+
         
   assignment_2:
     class_name: Physics
@@ -1005,6 +1009,9 @@ assignments:
       assignable_5:
         type: Activity
         name: Algebra
+      assignable_4:
+        type: Investigation
+        name: Atomic Energy
                       
   assignment_3:
     class_name: Mechanics

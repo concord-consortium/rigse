@@ -38,7 +38,7 @@ Feature: Teacher can see recent activity
     When the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | taylor    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | f               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     Then I should see "Mathematics: Algebra"
     
@@ -60,7 +60,7 @@ Feature: Teacher can see recent activity
     And the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | taylor    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | f               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     Then "Mathematics" should appear before "Physics"
     
@@ -103,7 +103,7 @@ Feature: Teacher can see recent activity
     When the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | taylor    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | f               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Completed No student has completed this investigation yet."
