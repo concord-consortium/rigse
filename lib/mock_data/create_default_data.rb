@@ -560,7 +560,7 @@ module MockData
           
           info = {
                    :user_id => user.id,
-                   :target_element_id => draw_tool.id,
+                   :target_element => draw_tool,
                    :uuid => lab_book_snapshot
                  }
           snapshot_button = Embeddable::LabBookSnapshot.create!(info)
