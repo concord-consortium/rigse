@@ -127,7 +127,22 @@ class Portal::TeachersController < ApplicationController
   
   def successful_creation(user)
     # Render the UsersController#thanks page instead of showing a flash message.
-    redirect_to thanks_for_sign_up_url(:type=>"teacher")
+    #redirect_to thanks_for_sign_up_url(:type=>"teacher")
+    
+    redirect_path = '/'
+    
+    
+    
+    if session[:sso_callback_params]
+      AccessGrant.prune!
+      access_grant = user.access_grants.create({:client => session[:sso_application], :state => session[:sso_callback_params][:state]}, :without_protection => true)
+      redirect_path = access_grant.redirect_uri_for(session[:sso_callback_params][:redirect_uri])
+      session[:sso_callback_params] = nil
+      session[:sso_application] = nil
+    end
+    
+    sign_in user
+    redirect_to redirect_path
     #render :template => 'users/thanks'
   end
   

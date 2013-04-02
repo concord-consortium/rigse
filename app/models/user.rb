@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
 
   before_validation :initialize_fields, :on => :create
 
-  devise :database_authenticatable, :registerable, :confirmable,:token_authenticatable,
+  devise :database_authenticatable, :registerable,:token_authenticatable, #:confirmable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   self.token_authentication_key = "oauth_token"
   users = User.arel_table
