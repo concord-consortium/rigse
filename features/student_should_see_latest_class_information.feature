@@ -7,18 +7,8 @@ Feature: Student should see latest class information
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name     | teacher |
-      | My Class | teacher |
-    And the classes "My Class" are in a school named "VJTI"
-    And the following offerings exist
-      | name                      |
-      | Lumped circuit abstraction|
-      | static discipline         |
-      | Non Linear Devices        |
-    And the student "student" belongs to class "My Class"
     And I am logged in with the username teacher
-    And I am on the class edit page for "My Class"
+    And I am on the class edit page for "Mathematics"
     And I fill in Class Name with "Basic Electronics"
     And I select Term "Fall" from the drop down
     And I fill Description with "This is a biology class"
@@ -29,17 +19,17 @@ Feature: Student should see latest class information
     
   @javascript
   Scenario: Student should see the updated class name
-    When I login with username: student
+    When I login with username: taylor
     Then I should see "Basic Electronics"
     
     
   Scenario: Student should see all the updated information of a class
-    When I login with username: student
+    When I login with username: taylor
     And I follow "Basic Electronics"
     Then I should see "Semester: Fall"
     And I should see "Class Word: betrx"
     And I should not see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
-    And I should see "static discipline"
+    And I should see "Static discipline"
     
     

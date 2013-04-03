@@ -7,28 +7,14 @@ Feature: Teacher edits and saves class information
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name                     |
-      | My Class                 |
-      | Physics                  |
-      | class_with_no_assignment |
-    And the classes "My Class" are in a school named "VJTI"
-    And the following teacher and class mapping exists:
-      | class_name | teacher  |
-      | My Class   | teacher  |
-      | My Class   | peterson |
-    And the following offerings exist
-      | name                       |
-      | Lumped circuit abstraction |
-      | static discipline          |
-      | Non Linear Devices         |
+    And the classes "Mathematics" are in a school named "VJTI"
     And I am logged in with the username teacher
-    And I am on "the class edit page for "My Class""
+    And I am on "the class edit page for "Mathematics""
     
     
   @javascript
   Scenario: Teacher can see all the teachers which are in the class
-    Then I should see "peterson taylor"
+    Then I should see "Peterson Taylor"
     And I should see "John Nash"
     
     
@@ -69,9 +55,9 @@ Feature: Teacher edits and saves class information
   Scenario: Teacher can see message if no materials are in the class
     When the following teacher and class mapping exists:
       | class_name                 | teacher   |
-      | class_with_no_assignment   | peterson  |
+      | Class_with_no_assignment   | peterson  |
     And I am logged in with the username peterson
-    And I am on "the class edit page for "class_with_no_assignment""
+    And I am on "the class edit page for "Class_with_no_assignment""
     Then I should see "No materials assigned to this class."
     
     

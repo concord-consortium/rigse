@@ -6,16 +6,13 @@ Feature: Student runs a jnlps
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name      | teacher     |
-      | My Class  | teacher     |
     And the following simple investigations exist:
       | name                | user      | publication_status |
       | Test Investigation  | teacher   | published          |
-    And the student "student" belongs to class "My Class"
     And the investigation "Test Investigation" is assigned to the class "My Class"
     And I login with username: student
-
+  
+  @javascript
   Scenario: Student runs jnlp
     When I run the investigation
     Then a jnlp file is downloaded

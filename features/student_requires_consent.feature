@@ -11,11 +11,7 @@ Feature: Student must give consent for research study
 
   @javascript
   Scenario: Teacher signs up a student, student them must give consent on logging in
-    Given the following classes exist:
-          | name       | teacher | semester |
-          | My Class   | teacher | Fall     |
-    And the classes "My Class" are in a school named "VJTI"
-    And I am logged in with the username teacher
+    When I am logged in with the username teacher
     And I am on "Student Roster" page for "My Class"
     And I follow "Register and add new student"
     And I should see "Register and Add New Student"

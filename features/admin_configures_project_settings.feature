@@ -132,6 +132,7 @@ Feature: Admin configures project settings
     When I follow "edit project"
     And I fill in "admin_project[home_page_content]" with "Creating Home Page"
     And I press "Save"
+    And I should wait 2 seconds
     And I log out
     And am on the my home page
     Then I should see "Creating Home Page"
