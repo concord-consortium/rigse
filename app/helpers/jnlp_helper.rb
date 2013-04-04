@@ -39,6 +39,10 @@ module JnlpHelper
     jnlp_adaptor.windows_native_jars
   end
 
+  def pub_interval
+    return Admin::Project.pub_interval * 1000
+  end
+
   def system_properties(options={})
     if options[:authoring]
       additional_properties = [
@@ -59,7 +63,7 @@ module JnlpHelper
           pbl = l.periodic_bundle_logger || Dataservice::PeriodicBundleLogger.create(:learner_id => l.id)
           additional_properties << ['otrunk.periodic.uploading.enabled', 'true']
           additional_properties << ['otrunk.periodic.uploading.url', dataservice_periodic_bundle_logger_periodic_bundle_contents_url(pbl)]
-          additional_properties << ['otrunk.periodic.uploading.interval', '300000']  # 5 minutes. TODO: Maybe make this configurable in the admin project settings?
+          additional_properties << ['otrunk.periodic.uploading.interval', pub_interval]
           additional_properties << ['otrunk.session_end.notification.url', dataservice_periodic_bundle_logger_session_end_notification_url(pbl)]
         end
       end
