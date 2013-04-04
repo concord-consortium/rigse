@@ -68,6 +68,12 @@
             (This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
           %li
             %b
+            = f.label :pub_interval, "PUB Interval seconds:", :style => "display:inline;"
+            = f.text_field :pub_interval, :size=>4
+            %br
+            ([ minimum value: #{Admin::Project::MinPubInterval} ] This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
+          %li
+            %b
             = f.label :include_external_activities, "Include External Activities in class materials search:", :style => "display:inline;"
             = f.check_box :include_external_activities
             %br

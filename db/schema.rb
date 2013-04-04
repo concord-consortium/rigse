@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130227173920) do
+ActiveRecord::Schema.define(:version => 20130404203823) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20130227173920) do
     t.string   "help_type"
     t.boolean  "include_external_activities",                  :default => false
     t.text     "enabled_bookmark_types"
+    t.integer  "pub_interval",                                 :default => 30000
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|
@@ -2319,33 +2320,42 @@ ActiveRecord::Schema.define(:version => 20130227173920) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "login",                     :limit => 40
-    t.string   "first_name",                :limit => 100, :default => ""
-    t.string   "last_name",                 :limit => 100, :default => ""
-    t.string   "email",                     :limit => 100
-    t.string   "crypted_password",          :limit => 40
-    t.string   "salt",                      :limit => 40
-    t.string   "remember_token",            :limit => 40
-    t.string   "activation_code",           :limit => 40
-    t.string   "state",                                    :default => "passive", :null => false
-    t.datetime "remember_token_expires_at"
-    t.datetime "activated_at"
+    t.string   "login",                   :limit => 40
+    t.string   "first_name",              :limit => 100, :default => ""
+    t.string   "last_name",               :limit => 100, :default => ""
+    t.string   "email",                   :limit => 128, :default => "",        :null => false
+    t.string   "encrypted_password",      :limit => 128, :default => "",        :null => false
+    t.string   "password_salt",                          :default => "",        :null => false
+    t.string   "remember_token"
+    t.string   "confirmation_token"
+    t.string   "state",                                  :default => "passive", :null => false
+    t.datetime "remember_created_at"
+    t.datetime "confirmed_at"
     t.datetime "deleted_at"
-    t.string   "uuid",                      :limit => 36
+    t.string   "uuid",                    :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "vendor_interface_id"
-    t.boolean  "default_user",                             :default => false
-    t.boolean  "site_admin",                               :default => false
+    t.boolean  "default_user",                           :default => false
+    t.boolean  "site_admin",                             :default => false
     t.string   "type"
     t.integer  "external_user_domain_id"
     t.string   "external_id"
-    t.boolean  "require_password_reset",                   :default => false
-    t.boolean  "of_consenting_age",                        :default => false
-    t.boolean  "have_consent",                             :default => false
-    t.boolean  "asked_age",                                :default => false
+    t.boolean  "require_password_reset",                 :default => false
+    t.boolean  "of_consenting_age",                      :default => false
+    t.boolean  "have_consent",                           :default => false
+    t.boolean  "asked_age",                              :default => false
+    t.string   "reset_password_token"
+    t.integer  "sign_in_count",                          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "unconfirmed_email"
+    t.datetime "confirmation_sent_at"
   end
 
+  add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
 end

@@ -112,6 +112,12 @@
                     No
                   (User data will be uploaded in one large chunk at the end of the session.)
               %li
+                PUB interval seconds:
+                %b
+                  = admin_project.pub_interval
+                (This option changes the rate at which student data is sent to the
+                server if periodic bundle uploading is trurned on)
+              %li
                 Include External Activities in class materials search:
                 - if admin_project.include_external_activities?
                   %b

@@ -1,6 +1,8 @@
 require 'fileutils'
 
 class Admin::Project < ActiveRecord::Base
+  MinPubInterval     = 10   # 10 second update seems close to too fast.
+  DefaultPubInterval = 300  # default is five minues
   self.table_name = "admin_projects"
 
   serialize :enabled_bookmark_types, Array
@@ -24,6 +26,12 @@ class Admin::Project < ActiveRecord::Base
   default_value_for :enabled_vendor_interfaces do
     Probe::VendorInterface.all
   end
+
+  default_value_for :pub_interval do
+    DefaultPubInterval
+  end
+
+  validates :pub_interval, :numericality => { :greater_than_or_equal_to => MinPubInterval }
 
   def init
     # the description needs to be non null for the searchable model code to work properly
@@ -79,6 +87,9 @@ class Admin::Project < ActiveRecord::Base
       default_project ? default_project.summary_info : "no default project defined"
     end
 
+    def pub_interval
+      default_project ? default_project.pub_interval : DefaultPubInterval
+    end
     def notify_missing_setting(symbol)
       logger.warn("undefined configuartion setting in config/setttings.yml: #{symbol.to_s}")
     end
