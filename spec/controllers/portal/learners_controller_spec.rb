@@ -1,33 +1,53 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::LearnersController do
-  it "should render the config builder" do
-  	@controller.stub!(:current_project).and_return(
-  		mock(:project, 
-  			:use_periodic_bundle_uploading? => false,
-  			:use_student_security_questions => false,
-  			:require_user_consent? => false)
-  	)
-  	learner = Factory(:full_portal_learner)
-  	stub_current_user(learner.student.user)
-  	get :show, :format => :config, :id => learner.id
-  end
+
+  describe "GET config" do
+    before(:each) do
+      @controller.stub!(:current_project).and_return(
+        mock(:project,
+          :use_periodic_bundle_uploading? => false,
+          :use_student_security_questions => false,
+          :require_user_consent? => false)
+      )
+      @learner = Factory(:full_portal_learner)
+    end
+
+    it "should render the config builder" do
+      stub_current_user(@learner.student.user)
+      get :show, :format => :config, :id => @learner.id
+    end
 
 
-  it "should raise an exception when unauthorized config request is made" do
-  	@controller.stub!(:current_project).and_return(
-  		mock(:project, 
-  			:use_periodic_bundle_uploading? => false,
-  			:use_student_security_questions => false,
-  			:require_user_consent? => false)
-  	)
-  	learner = Factory(:full_portal_learner)
-  	lambda { 
-  		get :show, :format => :config, :id => learner.id
-  	}.should raise_error
-  	
+    it "should raise an exception when unauthorized config request is made" do
+      lambda {
+        get :show, :format => :config, :id => @learner.id
+      }.should raise_error
+    end
+
+    it "should log in the user with the jnlp_session" do
+      @learner.student.user.confirm!
+      Dataservice::JnlpSession.stub!(:get_user_from_token).and_return(
+        @learner.student.user
+      )
+      get :show, :format => :config, :id => @learner.id, :jnlp_session => "doesn't mater what is here"
+      @controller.current_user.should == @learner.student.user
+    end
+
+    it "should work even if a different user is currently logged in" do
+      other_user = Factory(:user)
+      other_user.confirm!
+      sign_in other_user
+
+      @learner.student.user.confirm!
+      Dataservice::JnlpSession.stub!(:get_user_from_token).and_return(
+        @learner.student.user
+      )
+      get :show, :format => :config, :id => @learner.id, :jnlp_session => "doesn't mater what is here"
+      @controller.current_user.should == @learner.student.user
+    end
   end
-  
+
   describe "GET report" do 
     before(:each) do
       @mock_semester = Factory.create(:portal_semester, :name => "Fall")

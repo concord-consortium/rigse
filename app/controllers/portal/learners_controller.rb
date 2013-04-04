@@ -18,7 +18,11 @@ class Portal::LearnersController < ApplicationController
     if request.format.config? && params[:jnlp_session]
       # this will only work once for this token
       if jnlp_user = Dataservice::JnlpSession.get_user_from_token(params[:jnlp_session])
-        # store this user in the rails session so future request use this user
+        # log out any current user because java might support persistant cookies sometime in the future
+        # and we don't want an existing logged in user to mess up the sign_in process
+        sign_out current_user if current_user
+        # log in the user so future requests don't need a token
+        sign_in jnlp_user
         self.current_visitor = jnlp_user
       else
         # no valid jnlp_session could be found for this token
