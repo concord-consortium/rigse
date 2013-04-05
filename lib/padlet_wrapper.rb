@@ -63,32 +63,12 @@ class PadletWrapper
     opts
   end
 
-  def auth_headers(opts)
-    user =PadletWrapper.basic_auth_user
-    pass =PadletWrapper.basic_auth_pass
-    if (user && pass)
-      opts[:basic_auth] = {:username => user, :password => pass }
-    end
-    opts
-  end
-
   def get_opts(data)
     opts = {}
     headers(opts)
     auth_headers(opts)
     opts[:body] = data.to_json
     opts
-  end
-
-  def json_get(path,data)
-    endpoint = "http://#{PadletWrapper.hostname}/#{path}"
-    HTTParty.post(endpoint, self.get_opts(data))
-  end
-
-  def json_post(path,data)
-    endpoint = "http://#{PadletWrapper.hostname}/#{path}"
-    args = self.get_opts(data)
-    HTTParty.post(endpoint, args) 
   end
 
   def get_auth_token
@@ -106,13 +86,6 @@ class PadletWrapper
     self
   end
 
-  def auth_request
-    {
-      'email'    => self.username,
-      'password' => self.password
-    }
-  end
-
   def make_wall
     results = self.json_post('/walls',self.auth_data)
     results = JSON.parse(results)
@@ -125,6 +98,43 @@ class PadletWrapper
   end
 
   protected
+  def auth_headers(opts)
+    user =PadletWrapper.basic_auth_user
+    pass =PadletWrapper.basic_auth_pass
+    if (user && pass)
+      opts[:basic_auth] = {:username => user, :password => pass }
+    end
+    opts
+  end
+
+  def auth_request
+    {
+      'email'    => self.username,
+      'password' => self.password
+    }
+  end
+
+  def format_request(path)
+    return "http://#{PadletWrapper.hostname}/#{path}"
+  end
+
+  def json_get(path,data)
+    endpoint = format_request(path)
+    HTTParty.post(endpoint, self.get_opts(data))
+  end
+
+  def json_post(path,data)
+    endpoint = format_request(path)
+    args = self.get_opts(data)
+    HTTParty.post(endpoint, args)
+  end
+
+  def json_put(path,data)
+    endpoint = format_request(path)
+    args = self.get_opts(data)
+    HTTParty.put(endpoint, args)
+  end
+
   # TODO: HACK/FIX the walls endpoint returns "stage.padlet.com"
   def fix_hostname_in_response_url
     self.padlet_url.gsub!(/.*padlet\.com/, "http://#{PadletWrapper.hostname}")
