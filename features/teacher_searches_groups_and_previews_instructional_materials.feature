@@ -8,9 +8,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
     Given the default project has include external activities enabled
-    And the following external activities exist:
-      | name        | user    | url               |
-      | Google Home | author  | http://google.com |
     And I login with username: teacher password: password
     And I am on the search instructional materials page
 
