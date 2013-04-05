@@ -7,7 +7,7 @@ development:
   password: '*****'
   pool: 5
 
-test: &test_settings
+test:
   encoding: utf8
   adapter: mysql2
   username: root
@@ -16,7 +16,12 @@ test: &test_settings
   pool: 5
 
 cucumber:
-  <<: *test_settings
+  encoding: utf8
+  adapter: mysql2
+  username: root
+  database: rites_cucumber
+  password: '*****'
+  pool: 5
 
 staging: 
   encoding: utf8

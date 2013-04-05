@@ -3,7 +3,7 @@ require 'pathname'
 
 module AppSettings
 
-  APP_SETTINGS_PATH = File.expand_path("config/settings.yml")
+  APP_SETTINGS_PATH = File.expand_path("../../config/settings.yml", __FILE__)
 
   def settings_exists?(path=APP_SETTINGS_PATH)
     File.exists?(path) && File.stat(path).size > 0

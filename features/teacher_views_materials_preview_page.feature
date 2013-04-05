@@ -24,7 +24,7 @@ Feature: Teacher can search and assign instructional materials to a class
   @javascript
   Scenario: Anonymous user should see message for teacher only activity
     When I log out
-    And I am on the the preview activity page for the activity "Radio activity"
+    And I am on the the preview activity page for the activity "Aeroplane"
     Then I should see "Please log in as a teacher to see this content."
     
     
@@ -88,6 +88,7 @@ Feature: Teacher can search and assign instructional materials to a class
   @javascript
   Scenario: Teacher should be able return on search page
     When I am on the search instructional materials page
+    And I search study material "Mechanics" on the search instructional materials page
     And I follow investigation link "Mechanics" on the search instructional materials page
     And the check box for the activity "Mechanics" should be checked
     And the check box for the activity "Fluid Mechanics" should be checked
@@ -116,6 +117,7 @@ Feature: Teacher can search and assign instructional materials to a class
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I uncheck "Mechanics" from the investigation preview page
     And I uncheck "Quantum Mechanics" from the investigation preview page
+    And I uncheck "Circular Motion" from the investigation preview page
     And I follow "Assign Individual Activities"
     And "Mechanics" should appear before "Fluid Mechanics"
     When I check "Physics"
@@ -131,6 +133,7 @@ Feature: Teacher can search and assign instructional materials to a class
     And I uncheck "Mechanics" from the investigation preview page
     And I uncheck "Fluid Mechanics" from the investigation preview page
     And I uncheck "Quantum Mechanics" from the investigation preview page
+    And I uncheck "Circular Motion" from the investigation preview page
     And I follow "Assign Individual Activities"
     Then I should see "Please select atleast one activity to assign to a class" within the lightbox in focus
     
@@ -146,7 +149,7 @@ Feature: Teacher can search and assign instructional materials to a class
     And I follow "Save"
     Then I should see "Assigned successfully" within the lightbox in focus
     And I should see "Physics" within the lightbox in focus
-    And I should see "Fluid Mechanics, Quantum Mechanics" within the lightbox in focus
+    And I should see "Fluid Mechanics, Circular Motion, Quantum Mechanics" within the lightbox in focus
     And I am on the the preview investigation page for the investigation "Mechanics"
     And I uncheck "Mechanics" from the investigation preview page
     And I follow "Assign Individual Activities"

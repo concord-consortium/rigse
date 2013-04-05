@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/portal"
-set :branch, "topic_au_rationale"
+set :branch, "master"
 
 #############################################################
 #  Servers

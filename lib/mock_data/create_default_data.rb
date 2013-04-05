@@ -571,7 +571,7 @@ module MockData
           
           info = {
                    :user_id => user.id,
-                   :target_element_id => draw_tool.id,
+                   :target_element => draw_tool,
                    :uuid => lab_book_snapshot
                  }
           snapshot_button = Embeddable::LabBookSnapshot.create!(info)
@@ -951,6 +951,7 @@ module MockData
     
     default_password = APP_CONFIG[:password_for_default_users]
     user = nil
+    user_by_email = nil
     roles = user_info.delete(:roles)
     roles = roles ? roles.split(/,\s*/) : []
     
@@ -959,6 +960,7 @@ module MockData
     
     user_by_uuid = User.find_by_uuid(user_info[:uuid])
     user_by_login = User.find_by_login(user_info[:login])
+    user_by_email = User.find_by_email(user_info[:email]) if user_info[:email]
     
     if user_by_uuid
       user = user_by_uuid
@@ -970,7 +972,7 @@ module MockData
       user.email = user_info[:email] if user_info[:email]
       
       user.save!
-    elsif user_by_login.nil?
+    elsif user_by_login.nil? && user_by_email.nil?
       user = Factory(:user, user_info)
       user.save!
       user.confirm!

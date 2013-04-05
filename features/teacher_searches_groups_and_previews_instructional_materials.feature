@@ -166,6 +166,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And the Investigation "integral calculus" is assigned to the class "Geography"
     And I follow "Popularity" in Sort By on the search instructional materials page
     And I should wait 2 seconds
+    And I search study material "calculus" on the search instructional materials page
     Then "differential calculus" should appear before "integral calculus"
     
     
