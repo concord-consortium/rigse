@@ -12,6 +12,8 @@ module MockData
   @default_classes = nil
   @default_investigations = nil
   @default_activities = nil
+  @default_mcq = nil
+  @default_image_question = nil
   
   #Create fake users and roles
   def self.create_default_users
@@ -364,6 +366,9 @@ module MockData
     # Multiple Choice questions
     author = @default_users.find{|u| u.login == 'author'}
     if author
+      default_mcq = []
+      @default_mcq = default_mcq
+      
       DEFAULT_DATA[:mult_cho_questions].each do |key,mcq|
         choices = mcq.delete(:answers)
         choices = choices.split(',')
@@ -389,11 +394,15 @@ module MockData
           
           multi_ch_que.choices = choices
         end
+        default_mcq << multi_ch_que
       end
     end
     
     if author
       # Image Questions
+      default_image_question = []
+      @default_image_question = default_image_question
+      
       DEFAULT_DATA[:image_questions].each do |key, imgq|
         image_que = nil
         imgq_by_uuid = Embeddable::ImageQuestion.find_by_uuid(imgq[:uuid])
@@ -406,6 +415,8 @@ module MockData
           imgq[:user_id] = author.id
           image_que = Embeddable::ImageQuestion.create!(imgq)
         end
+        
+        default_image_question << image_que
       end
     end
     
@@ -886,7 +897,53 @@ module MockData
       end
     end
     
-  end # end of create_assignmentss
+  end # end of create_assignments
+  
+  
+  def self.record_learner_data
+    # record investigation answers
+    investigation_index = 0
+    DEFAULT_DATA[:student_answers_investigations].each do |key, res|
+      clazz = @default_classes.find{|c| c.name == res[:class]}
+      student = @default_students.find{|s| s.user.login == res[:student]}
+      investigation = @default_investigations.find{|i| i.name == res[:investigation]}
+      if clazz && student && investigation
+        res[:class] = clazz
+        res[:student] = student
+        res[:assignable] = investigation
+        res[:index] = investigation_index
+        
+        res.delete(:investigation)
+        
+        record_student_answer(res, 'Investigation')
+        
+        investigation_index = investigation_index + 1
+      end
+      
+    end
+    
+    # record activity answers
+    
+    activity_index = 0
+    DEFAULT_DATA[:student_answers_activities].each do |key, res|
+      clazz = @default_classes.find{|c| c.name == res[:class]}
+      student = @default_students.find{|s| s.user.login == res[:student]}
+      activity = @default_activities.find{|i| i.name == res[:activity]}
+      if clazz && student && activity
+        res[:class] = clazz
+        res[:student] = student
+        res[:assignable] = activity
+        res[:index] = activity_index
+        
+        res.delete(:activity)
+        
+        record_student_answer(res, 'Activity')
+        
+        activity_index = activity_index + 1
+      end
+    end
+    
+  end # end of record_learner_data
   
   # helper methods
   
@@ -926,5 +983,131 @@ module MockData
     end
     
     user
-  end 
+  end
+  
+  
+  def self.record_student_answer(data, runnable_type)
+    index = data.delete(:index)
+    first_date = DateTime.now - data.length
+    student = data[:student]
+    clazz = data[:class]
+    assignable = data[:assignable]
+    offering = Portal::Offering.find_by_clazz_id_and_runnable_id_and_runnable_type(clazz.id, assignable.id, runnable_type)
+    if offering
+      learner = offering.find_or_create_learner(student)
+      learner.uuid = data[:learner_uuid]
+      learner.save!
+      
+      add_response(learner,data)
+      
+      report_learner = learner.report_learner
+      # need to make sure the last_run is sequencial inorder for some tests to work
+      report_learner.last_run = first_date + index
+      report_learner.update_fields
+    end
+  end # end of record_student_answer
+  
+  
+  def self.add_response(learner,data)
+    prompts = @default_mcq + @default_image_question
+    prompt_text = data[:question_prompt]
+    answer_text = data[:answer]
+    
+    question = prompts.find{|q| q.prompt == prompt_text}
+    
+    puts "No Question found for #{prompt_text}" if question.nil?
+    return if question.nil?
+    case question.class.name
+    when "Embeddable::MultipleChoice" 
+      return add_multichoice_answer(learner,question, answer_text, data)
+    when "Embeddable::ImageQuestion"
+      return add_image_question_answer(learner,question, answer_text, data)
+    end
+  end # end of self.add_response
+
+
+  def self.add_multichoice_answer(learner,question,answer_text, data)
+    answer = question.choices.detect{ |c| c.choice == answer_text}
+    
+    new_answer_by_uuid = Saveable::MultipleChoice.find_by_uuid(data[:saveable_multiple_choices_uuid])
+    if new_answer_by_uuid
+      new_answer = new_answer_by_uuid
+      new_answer.learner = learner
+      new_answer.offering = learner.offering
+      new_answer.multiple_choice = question
+      new_answer.save!
+      
+      saveable_answer = Saveable::MultipleChoiceAnswer.find_or_create_by_uuid(data[:saveable_multiple_choice_answers_uuid])
+      saveable_answer.multiple_choice = new_answer
+      saveable_answer.save!
+      
+      saveable_mc_rationale_choice = Saveable::MultipleChoiceRationaleChoice.find_or_create_by_uuid(data[:saveable_multiple_choice_rationale_choices_uuid])
+      saveable_mc_rationale_choice.choice = answer
+      saveable_mc_rationale_choice.answer = saveable_answer
+      saveable_mc_rationale_choice.save!
+    else
+      info = {
+        :learner => learner,
+        :offering => learner.offering,
+        :multiple_choice => question,
+        :uuid => data[:saveable_multiple_choices_uuid]
+      }
+      new_answer = Saveable::MultipleChoice.create!(info)
+      saveable_answer = Saveable::MultipleChoiceAnswer.create!(:multiple_choice => new_answer, :uuid => data[:saveable_multiple_choice_answers_uuid])
+      Saveable::MultipleChoiceRationaleChoice.create(
+        :choice => answer,
+        :answer => saveable_answer,
+        :uuid   => data[:saveable_multiple_choice_rationale_choices_uuid]
+      )
+    end
+    
+  end #end of add_multichoice_answer
+  
+  
+  def self.add_image_question_answer(learner,question,answer_text,data)
+    return nil if (answer_text.nil? || answer_text.strip.empty?)
+
+    new_answer_by_uuid = Saveable::ImageQuestion.find_by_uuid(data[:saveable_image_question_uuid])
+    if new_answer_by_uuid
+      new_answer = new_answer_by_uuid
+      new_answer.learner = learner
+      new_answer.offering = learner.offering
+      new_answer.image_question = question
+      new_answer.save!
+      
+      blob = Dataservice::Blob.find_or_create_by_uuid[data[:dataservice_blob_uuid]]
+      blob.content = answer_text
+      blob.token = answer_text
+      blob.save!
+      
+      saveable_answer = Saveable::ImageQuestionAnswer.find_or_create_by_uuid(data[:saveable_image_question_answer_uuid])
+      saveable_answer.blob = blob
+      saveable_answer.save!
+      
+      new_answer.answers << saveable_answer
+    else
+      info = {
+               :learner => learner,
+               :offering => learner.offering,
+               :image_question => question,
+               :uuid => data[:saveable_image_question_uuid]
+             }
+      
+      new_answer = Saveable::ImageQuestion.create!(info)
+      
+      info = {
+               :content => answer_text,
+               :token => answer_text,
+               :uuid => data[:dataservice_blob_uuid]
+             }
+      blob = Dataservice::Blob.create!(info)
+      
+      info = {
+               :blob => blob,
+               :uuid => data[:saveable_image_question_answer_uuid]
+             }
+      saveable_answer = Saveable::ImageQuestionAnswer.create!(info)
+    end
+  end # end add_image_question_answer
+  
 end # end of MockData
