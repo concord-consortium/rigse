@@ -15,7 +15,6 @@ describe PadletWrapper do
     ]
 
     @auth_url = "http://#{PadletWrapper.hostname}/#{PadletWrapper::AuthPath}"
-    @auth_url = "http://concordconsortium.padletpro.com/session"
     @auth_data = {
          "auth_type" => 1,
         "created_at" => "2013-02-27T16:54:42Z",
