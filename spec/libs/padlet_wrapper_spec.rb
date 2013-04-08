@@ -78,12 +78,9 @@ describe PadletWrapper do
            "wall_id" => 1780279
     }.to_json
 
-
     @wall_url = "http://#{PadletWrapper.hostname}/#{PadletWrapper::WallPath}"
-
     @make_public_url = "http://#{PadletWrapper.hostname}/#{PadletWrapper::PolicyPath}/971713"
 
-    FakeWeb.allow_net_connect = false
     FakeWeb.register_uri(:post, @auth_url,
       :status => ["200", "OK"],
       :content_type => "application/json",
