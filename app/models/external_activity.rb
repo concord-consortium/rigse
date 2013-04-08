@@ -38,6 +38,7 @@ class ExternalActivity < ActiveRecord::Base
 
   scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
 
+  scope :ordered_by, lambda { |order| { :order => order } }
   # FIXME: See comments in app/models/resource_page.rb
   scope :match_any, lambda { |scopes|
     table_name_dot_id = "#{self.table_name}.id"
@@ -55,7 +56,7 @@ class ExternalActivity < ActiveRecord::Base
       name = options[:name]
       name_matches = ExternalActivity.like(name)
       is_visible = options[:include_drafts] ? name_matches.not_private : name_matches.published
-
+      sort_order = options[:sort_order] || "name ASC"
       external_activities = nil
 
       if options[:user]
@@ -91,7 +92,9 @@ class ExternalActivity < ActiveRecord::Base
       if portal_clazz
         external_activities = external_activities - portal_clazz.offerings.map { |o| o.runnable }
       end
-
+      if external_activities.respond_to? :ordered_by
+        external_activities = external_activities.ordered_by(sort_order)
+      end
       if options[:paginate]
         external_activities = external_activities.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
       else
