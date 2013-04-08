@@ -31,5 +31,6 @@
 = require 'search_materials'
 = require 'student_lightbox_report'
 = require 'progress_disclosure'
+= require 'anonymizer'
 = require 'run_status'
 */
