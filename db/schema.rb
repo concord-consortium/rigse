@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130404203823) do
+ActiveRecord::Schema.define(:version => 20130408140416) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(:version => 20130404203823) do
     t.string   "help_type"
     t.boolean  "include_external_activities",                  :default => false
     t.text     "enabled_bookmark_types"
-    t.integer  "pub_interval",                                 :default => 30000
+    t.integer  "pub_interval",                                 :default => 10
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|
