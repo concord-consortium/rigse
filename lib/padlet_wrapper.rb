@@ -1,17 +1,28 @@
 class PadletWrapper
 
+  DefaultHost  = 'padlet.com'
+  DefaultEmail = 'all-portal-errors@concord.org'
+  WallPath     = 'walls'
+  AuthPath     = 'session'
+  PolicyPath   = 'privacy_policies'
+  PadletPublicPolicy = 4
+
   attr_accessor :password
   attr_accessor :username
   attr_accessor :padlet_url
   attr_accessor :padlet_user_id
   attr_accessor :auth_data
   attr_accessor :auth_cookies
+  attr_accessor :policy_id
+  attr_accessor :is_public
+  attr_accessor :is_moderated
 
   yaml_file_path = File.join(Rails.root,'config','padlet.yml')
   Opts = {
-    :host            => 'padlet.com',
-    :email           => 'all-portal-errors@concord.org',
+    :host            => DefaultHost,
+    :email           => DefaultEmail
   }
+
   begin
     yaml_config = YAML.load_file(yaml_file_path).symbolize_keys
     Opts.merge!(yaml_config)
@@ -72,7 +83,7 @@ class PadletWrapper
   end
 
   def get_auth_token
-    results = self.json_post('/session', self.auth_request)
+    results = self.json_post(AuthPath, self.auth_request)
     cookies = results.get_fields('Set-Cookie');
     cookies.map! { |c|
       name, remainder = c.split("=",2)
@@ -87,8 +98,7 @@ class PadletWrapper
   end
 
   def make_wall
-    results = self.json_post('/walls',self.auth_data)
-    results = JSON.parse(results)
+    results = self.json_post(WallPath,self.auth_data)
     self.padlet_url=results['links']['doodle'] # also checkout 'embed'
     self.fix_hostname_in_response_url
     # Noah removed because IE can't deal with basic auth urls:
