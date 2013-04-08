@@ -43,10 +43,10 @@ def download_config(session)
   )
 end
 
-Then /^the jnlp file has a configuration for the student and offering$/ do
+Then /^the jnlp file for "([^"]+)" has a configuration for the student and offering$/ do |inv_name|
   download_config(:java_session)
 
-  investigation = Investigation.first
+  investigation = Investigation.find_by_name(inv_name)
   @config_otml_url.should match %r{investigations/#{investigation.id}.*otml}
 
   learner = Portal::Learner.first
