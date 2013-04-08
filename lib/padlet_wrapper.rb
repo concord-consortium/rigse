@@ -90,15 +90,16 @@ class PadletWrapper
       value = remainder.split(";")[0]
       "#{name}=#{value}"
     }
-    results = JSON.parse(results)
+    results = JSON.parse(results.body)
     self.padlet_user_id = results['id']
-    self.auth_data = results.dup
+    self.auth_data      = results.dup
     self.auth_cookies   = cookies
     self
   end
 
   def make_wall
     results = self.json_post(WallPath,self.auth_data)
+    results = JSON.parse(results.body)
     self.padlet_url=results['links']['doodle'] # also checkout 'embed'
     self.fix_hostname_in_response_url
     # Noah removed because IE can't deal with basic auth urls:
