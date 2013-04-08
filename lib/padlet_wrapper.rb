@@ -57,6 +57,7 @@ class PadletWrapper
     instance = self.new(user,pass)
     instance.get_auth_token
     instance.make_wall
+    instance.make_public
     return instance
   end
 
@@ -101,12 +102,26 @@ class PadletWrapper
     results = self.json_post(WallPath,self.auth_data)
     results = JSON.parse(results.body)
     self.padlet_url=results['links']['doodle'] # also checkout 'embed'
+    self.policy_id =results['privacy_policy']['id']
     self.fix_hostname_in_response_url
     # Noah removed because IE can't deal with basic auth urls:
     # http://support.microsoft.com/kb/834489
     # self.add_auth_info_to_url
     self
   end
+
+  def make_public
+    policy_id = self.policy_id
+    policy_request = {
+      'id' => self.policy_id,
+      'public' => PadletPublicPolicy
+    }
+    results = self.json_put("#{PolicyPath}/#{self.policy_id}" ,policy_request)
+    results = JSON.parse(results.body)
+    self.is_public = results['public'] == PadletPublicPolicy
+    self.is_moderated = results['is_moderated']
+  end
+
 
   protected
   def auth_headers(opts)
