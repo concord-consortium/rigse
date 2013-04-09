@@ -365,9 +365,6 @@ class User < ActiveRecord::Base
   def only_a_student?
     portal_student and !has_role?('admin', 'manager', 'researcher', 'author') and portal_teacher.nil?
   end
-  def remember_me
-    self.remember_me_for 2.weeks
-  end
 
   def remember_me_for(time)
     self.remember_me_until time.from_now.utc

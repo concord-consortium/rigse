@@ -192,13 +192,13 @@ describe User do
   #
 
   it 'sets remember token' do
-    users(:quentin).remember_me
+    users(:quentin).remember_me!
     users(:quentin).remember_token.should_not be_nil
     users(:quentin).remember_created_at.should_not be_nil
   end
 
   it 'unsets remember token' do
-    users(:quentin).remember_me
+    users(:quentin).remember_me!
     users(:quentin).remember_token.should_not be_nil
     users(:quentin).forget_me
     users(:quentin).remember_token.should be_nil
@@ -223,7 +223,7 @@ describe User do
 
   it 'remembers me default two weeks' do
     before = 2.weeks.ago.utc
-    users(:quentin).remember_me
+    users(:quentin).remember_me!
     after = 2.weeks.from_now.utc
     users(:quentin).remember_token.should_not be_nil
     users(:quentin).remember_created_at.should_not be_nil
