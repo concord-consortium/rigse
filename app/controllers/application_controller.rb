@@ -165,7 +165,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-
+    cookies[:current_user_single_sign_on_id] = current_user.id
     redirect_path = root_path
     if APP_CONFIG[:recent_activity_on_login] && current_visitor.portal_teacher
       portal_teacher = current_visitor.portal_teacher

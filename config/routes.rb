@@ -1,6 +1,6 @@
 RailsPortal::Application.routes.draw do
   
-  devise_for :users, :controllers => { :registrations => 'registrations'}
+  devise_for :users, :controllers => { :registrations => 'registrations',:sessions=>'sessions'}
   # omniauth client stuff
   match '/auth/:provider/callback', :to => 'authentications#create'
   match '/auth/failure', :to => 'authentications#failure'
