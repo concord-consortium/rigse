@@ -7,10 +7,6 @@ Feature: Teacher can see full status
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name        | teacher  |
-      | My Class    | teacher  |
-      | Physics     | peterson |
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |
@@ -33,9 +29,6 @@ Feature: Teacher can see full status
       | investigation | Radioactivity        | My Class    |
       | investigation | Plant reproduction   | My Class    |
       | activity      | Algebra              | My Class    |
-    And the student "dave" belongs to class "My Class"
-    And the student "chuck" belongs to class "My Class"
-    And the student "Mache" belongs to class "Physics"
     And the following student answers:
       | student   | class    | investigation      | question_prompt | answer |
       | dave      | My Class | Radioactivity      | a               | y      |

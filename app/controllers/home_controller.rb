@@ -177,15 +177,8 @@ class HomeController < ApplicationController
     
     response.headers["X-XSS-Protection"] = "0"
     
+    @emulate_anonymous_user = true
     @home_page_preview_content = params[:home_page_preview_content]
   end
   
-  def current_visitor #override to preview home page content
-      if defined? @preview_home_page_content
-        @anonymous_user = User.find_by_login('anonymous')
-        @anonymous_user
-      else
-        super
-      end
-  end
 end

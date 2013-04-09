@@ -99,3 +99,8 @@ Then /^(?:|I )should see "([^"]*)" in the input box of external URL for help pag
   step_text = "I should see the xpath \"//input[@name='admin_project[external_url]' and @value = '#{url}']\""
   step step_text
 end
+
+When /^I save the project$/ do
+  click_button "Save"
+  page.should have_no_button("Save")
+end 

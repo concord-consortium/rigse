@@ -12,12 +12,6 @@ Feature: Teacher views report
            | prompt | answers | correct_answer |
            | a      | a,b,c,d | a              |
     And there is an image question with the prompt "image_q"
-    And the following classes exist:
-        | name             | teacher |
-        | Intro to bugs    | teacher |
-    And the classes "Intro to bugs" are in a school named "Test School"
-    And the student "student" is in the class "Intro to bugs"
-    And the student "dave" is in the class "Intro to bugs"
     
   Scenario: A teacher views a report of an investigation
     Given the following investigations with multiple choices exist:
@@ -25,14 +19,14 @@ Feature: Teacher views report
         | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type          | name                 | class            |
-        | investigation | first investigation  | Intro to bugs    |
+        | investigation | first investigation  | My Class    |
     And the following student answers:
         | student   | class         | investigation       | question_prompt | answer |
-        | student   | Intro to bugs | first investigation | a               | a      |
-        | student   | Intro to bugs | first investigation | image_q         | Y      |
-        | dave      | Intro to bugs | first investigation | a               | b      |
+        | student   | My Class | first investigation | a               | a      |
+        | student   | My Class | first investigation | image_q         | Y      |
+        | dave      | My Class | first investigation | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "Intro to bugs"
+    And go to the class page for "My Class"
     And follow "Display a report" within ".action_menu_activity"
     
   Scenario: A teacher filters a question
@@ -41,14 +35,14 @@ Feature: Teacher views report
         | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type          | name                 | class            |
-        | investigation | first investigation  | Intro to bugs    |
+        | investigation | first investigation  | My Class    |
     And the following student answers:
         | student   | class         | investigation       | question_prompt | answer |
-        | student   | Intro to bugs | first investigation | a               | a      |
-        | student   | Intro to bugs | first investigation | image_q         | Y      |
-        | dave      | Intro to bugs | first investigation | a               | b      |
+        | student   | My Class | first investigation | a               | a      |
+        | student   | My Class | first investigation | image_q         | Y      |
+        | dave      | My Class | first investigation | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "Intro to bugs"
+    And go to the class page for "My Class"
     And follow "Display a report" within ".action_menu_activity"
     And I wait 2 seconds
     Then I should see "image_q"
@@ -62,14 +56,14 @@ Feature: Teacher views report
         | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type          | name                 | class            |
-        | investigation | first investigation  | Intro to bugs    |
+        | investigation | first investigation  | My Class    |
     And the following student answers:
         | student   | class         | investigation       | question_prompt | answer |
-        | student   | Intro to bugs | first investigation | a               | a      |
-        | student   | Intro to bugs | first investigation | image_q         | Y      |
-        | dave      | Intro to bugs | first investigation | a               | b      |
+        | student   | My Class | first investigation | a               | a      |
+        | student   | My Class | first investigation | image_q         | Y      |
+        | dave      | My Class | first investigation | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "Intro to bugs"
+    And go to the class page for "My Class"
     And follow "Display a report" within ".action_menu_activity"
     And I wait 2 seconds
     Then I should see "image_q"
@@ -85,14 +79,14 @@ Feature: Teacher views report
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type     | name            | class            |
-        | activity | first activity  | Intro to bugs    |
+        | activity | first activity  | My Class    |
     And the following student answers:
         | student   | class         | activity       | question_prompt | answer |
-        | student   | Intro to bugs | first activity | a               | a      |
-        | student   | Intro to bugs | first activity | image_q         | Y      |
-        | dave      | Intro to bugs | first activity | a               | b      |
+        | student   | My Class | first activity | a               | a      |
+        | student   | My Class | first activity | image_q         | Y      |
+        | dave      | My Class | first activity | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "Intro to bugs"
+    And go to the class page for "My Class"
     And follow "Display a report" within ".action_menu_activity"
     Then I should see "image_q"
     And I check "filter_Embeddable::MultipleChoice_"
@@ -107,14 +101,14 @@ Feature: Teacher views report
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type     | name            | class            |
-        | activity | first activity  | Intro to bugs    |
+        | activity | first activity  | My Class    |
     And the following student answers:
         | student   | class         | activity       | question_prompt | answer |
-        | student   | Intro to bugs | first activity | a               | a      |
-        | student   | Intro to bugs | first activity | image_q         | Y      |
-        | dave      | Intro to bugs | first activity | a               | b      |
+        | student   | My Class | first activity | a               | a      |
+        | student   | My Class | first activity | image_q         | Y      |
+        | dave      | My Class | first activity | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "Intro to bugs"
+    And go to the class page for "My Class"
     And follow "Display a report" within ".action_menu_activity"
     And follow "print all users"
     Then I should see "image_q"
@@ -125,14 +119,14 @@ Feature: Teacher views report
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type     | name            | class            |
-        | activity | first activity  | Intro to bugs    |
+        | activity | first activity  | My Class    |
     And the following student answers:
         | student   | class         | activity       | question_prompt | answer |
-        | student   | Intro to bugs | first activity | a               | a      |
-        | student   | Intro to bugs | first activity | image_q         | Y      |
-        | dave      | Intro to bugs | first activity | a               | b      |
+        | student   | My Class | first activity | a               | a      |
+        | student   | My Class | first activity | image_q         | Y      |
+        | dave      | My Class | first activity | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "Intro to bugs"
+    And go to the class page for "My Class"
     And follow "Display a report for the learner"
     Then I should see "image_q"
     
@@ -143,14 +137,14 @@ Feature: Teacher views report
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type     | name            | class            |
-        | activity | first activity  | Intro to bugs    |
+        | activity | first activity  | My Class    |
     And the following student answers:
         | student   | class         | activity       | question_prompt | answer |
-        | student   | Intro to bugs | first activity | a               | a      |
-        | student   | Intro to bugs | first activity | image_q         | Y      |
-        | dave      | Intro to bugs | first activity | a               | b      |
+        | student   | My Class | first activity | a               | a      |
+        | student   | My Class | first activity | image_q         | Y      |
+        | dave      | My Class | first activity | a               | b      |
     When I am logged in with the username teacher
-    And I go to Instructional Materials page for "Intro to bugs"
+    And I go to Instructional Materials page for "My Class"
     And I follow "Run Report"
     And I apply filter for the question "a" in the report page
     Then I should see question "a" checked when all question is displayed in the report page
@@ -163,14 +157,14 @@ Feature: Teacher views report
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type     | name            | class            |
-        | activity | first activity  | Intro to bugs    |
+        | activity | first activity  | My Class    |
     And the following student answers:
         | student   | class         | activity       | question_prompt | answer |
-        | student   | Intro to bugs | first activity | a               | a      |
-        | student   | Intro to bugs | first activity | image_q         | Y      |
-        | dave      | Intro to bugs | first activity | a               | b      |
+        | student   | My Class | first activity | a               | a      |
+        | student   | My Class | first activity | image_q         | Y      |
+        | dave      | My Class | first activity | a               | b      |
     When I am logged in with the username teacher
-    And I go to Instructional Materials page for "Intro to bugs"
+    And I go to Instructional Materials page for "My Class"
     And I follow "Run Report"
     And I click "Show selected" button on report page
     Then I should see "No questions have been selected." message on the report page
