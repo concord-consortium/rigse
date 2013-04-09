@@ -34,13 +34,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
       | graphs and lines            | Geometry      | author  | published          | parallel lines is a great material     |
       | circles                     | Geometry      | author  | published          | circles is a great material            |
       | boolean algebra             | Geometry      | author  | published          | boolean algebra is a great material    |
-    And the following classes exist:
-      | name        | teacher    | class_word |
-      | Physics     | teacher    | phy        |
-      | Chemistry   | teacher    | chem       |
-      | Mathematics | teacher    | math       |
-      | Biology     | teacher    | bio        |
-      | Geography   | teacher    | geo        |
     Given the default project has include external activities enabled
     And the following external activities exist:
       | name        | user    | url               |

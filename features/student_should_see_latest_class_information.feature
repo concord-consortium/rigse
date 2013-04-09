@@ -7,16 +7,11 @@ Feature: Student should see latest class information
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name     | teacher |
-      | My Class | teacher |
-    And the classes "My Class" are in a school named "VJTI"
     And the following offerings exist
       | name                      |
       | Lumped circuit abstraction|
       | static discipline         |
       | Non Linear Devices        |
-    And the student "student" belongs to class "My Class"
     And I am logged in with the username teacher
     And I am on the class edit page for "My Class"
     And I fill in Class Name with "Basic Electronics"
