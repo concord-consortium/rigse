@@ -2,13 +2,22 @@ class PadletBookmark < Bookmark
   # include Changeable
 
   def self.create_for_user(user)
-    found = self.for_user(user)
     return false if user.anonymous?
-    return found unless found.blank?
+    found  = self.for_user(user)
     email  = user.email || "#{user.login}@concord.org"
     padlet = PadletWrapper.make_bookmark(email,'password')
     url    = padlet.padlet_url
-    name   = "#{user.name}'s Padlet"
+    count  = found.size
+    numbers = found.map do |item|
+      match = item.name.match(/my\s+(\d+)(rd|st|nd|th)\s+padlet/i)
+      match = match ? match[1].to_i : nil
+    end
+    numbers.compact!
+    if numbers.max
+      count = numbers.max if (numbers.max > count)
+    end
+    ordinal  = (count + 1).ordinalize
+    name   = "My #{ordinal} Padlet"
     made   = self.create(:user => user, :name => name, :url => url)
     return made
   end
@@ -16,6 +25,7 @@ class PadletBookmark < Bookmark
   def self.user_can_make?(user)
     return false unless self.is_allowed?
     return false if user.anonymous?
-    return self.for_user(user).blank?
+    # return self.for_user(user).blank?  # no more 1-per user limit.
+    return true
   end
 end

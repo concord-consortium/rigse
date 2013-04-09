@@ -4,7 +4,7 @@ class BookmarksController < ApplicationController
   def add_padlet
     mark = PadletBookmark.create_for_user(current_visitor)
     render :update do |page|
-      page.hide "padlet_form"
+      # page.hide "padlet_form"  # no more limit of 1 per user...
       page.insert_html :bottom,
         "bookmarks_box",
         :partial => "bookmarks/show",
