@@ -24,7 +24,7 @@ Feature: Admin configures project help page
     When I choose "Use external help URL"
     And I check "Mark this project as active:"
     And I fill in "admin_project[external_url]" with "www.google.com"
-    And I press "Save"
+    And I save the project
     And I follow "edit project"
     And I should see "http://www.google.com" in the input box of external URL for help page on projects page
     And I should wait 2 seconds
@@ -41,8 +41,7 @@ Feature: Admin configures project help page
     When I choose "Use custom help page HTML"
     And I check "Mark this project as active:"
     And I fill in "admin_project[custom_help_page_html]" with "Creating Help Page"
-    And I press "Save"
-    And I should wait 2 seconds
+    And I save the project
     And I follow "Help"
     Then the newly opened window should have content "Creating Help Page"
     And I close the newly opened window
@@ -86,7 +85,7 @@ Feature: Admin configures project help page
  @javascript
   Scenario: Admin should be allowed to remove help page link
     When I choose "No help link"
-    And I press "Save"
+    And I save the project
     Then I should see "No Help Page"
     And am on the Project Help Page
     Then I should see "There is no help available for this site."

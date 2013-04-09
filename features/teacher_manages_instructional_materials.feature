@@ -7,14 +7,6 @@ Feature: Teacher manages instructional materials of a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name        | teacher | class_word | semester |
-      | My Class    | teacher | my_classes | Fall     |
-      | Physics     | teacher | physics    | Fall     |
-      | Mathematics | teacher | math       | Fall     |
-      | Chemistry   | teacher | chem       | Fall     |
-    And the classes "My Class, Physics, Mathematics" are in a school named "Harvard School"
-    
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |
@@ -38,21 +30,19 @@ Feature: Teacher manages instructional materials of a class
       | activity | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
       | Algebra  | section a | page 6 | f                | image_q         | teacher   | false                 |
     And the following assignments exist:
-      | type          | name                 | class       |
-      | investigation | Aerodynamics         | My Class    |
-      | investigation | Plant reproduction   | My Class    |
-      | investigation | Radioactivity        | My Class    |
-      | investigation | Electricity          | Physics     |
-      | investigation | Plant reproduction   | Physics     |
-      | activity      | Algebra              | Physics     |
-      | investigation | Aerodynamics         | Physics     |
+      | type          | name                 | class                  |
+      | investigation | Aerodynamics         | My Class               |
+      | investigation | Plant reproduction   | My Class               |
+      | investigation | Radioactivity        | My Class               |
+      | investigation | Electricity          | Physics                |
+      | investigation | Plant reproduction   | Physics                |
+      | activity      | Algebra              | Physics                |
+      | investigation | Aerodynamics         | Physics                |
+      | investigation | Aerodynamics         | Class_with_no_students |
     And the following offerings exist in the classes:
       | name                       | class       |
       | Lumped circuit abstraction | Mathematics |
       | Static discipline          | Mathematics |
-    And the student "dave" belongs to class "My Class"
-    And the student "chuck" belongs to class "My Class"
-    And the student "taylor" belongs to class "My Class"
     And the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
       | dave      | My Class      | Radioactivity       | a               | a      |
@@ -129,7 +119,7 @@ Feature: Teacher manages instructional materials of a class
     Then I should see "Investigation: Lumped circuit abstraction"
     
   Scenario: Teacher should see a message if no students are present
-    When I go to Instructional Materials page for "Physics"
+    When I go to Instructional Materials page for "Class_with_no_students"
     Then I should see "No students have registered for this class yet"
     
   Scenario: Teacher should be able to run investigation as teacher

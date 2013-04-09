@@ -3,7 +3,7 @@ Given /^the most basic default project$/ do
 end
 
 Given /^the database has been seeded$/ do
-  ## see lib/mock_data/create_fake_data.rb for more information...
+  ## see lib/mock_data/create_fake_data.rb and lib/mock_data/default_data.yml for more information...
 end
 #
 # generator methods are in spec/helpers/controller_helper.rb
