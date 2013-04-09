@@ -44,7 +44,7 @@ Feature: Admin configures project settings
     When I follow "edit project"
     Then I should see "Enable Default Class"
     When I check "Enable Default Class"
-    And I press "Save"
+    And I save the project
     Then I should see "Default Class: enabled"
     
   @javascript
@@ -62,7 +62,7 @@ Feature: Admin configures project settings
     When I follow "edit project"
     Then I should see "Enable Grade Levels for Classes"
     When I check "Enable Grade Levels for Classes"
-    And I press "Save"
+    And I save the project
     Then I should see "Grade Levels for Classes: enabled"
     When I am logged in with the username teacher
     And I am on the clazz create page
@@ -77,7 +77,7 @@ Feature: Admin configures project settings
     When I follow "edit project"
     Then I should see "Custom stylesheet for OTML:"
     When I fill in "admin_project[custom_css]" with ".testing_css_class_here {position:relative; padding:5px;}"
-    And I press "Save"
+    And I save the project
     Then I should see ".testing_css_class_here"
     
   # OTLabbookButton useBitmap="true"
@@ -91,7 +91,7 @@ Feature: Admin configures project settings
     When I follow "edit project"
     Then I should see "Use Bitmaps in Labbook Exclusively:"
     When I check "Use Bitmaps in Labbook Exclusively"
-    And I press "Save"
+    And I save the project
     Then I should see "Use Bitmaps in Labbook Exclusively: Yes"
     
   Scenario: Admin creates a new project
@@ -109,7 +109,7 @@ Feature: Admin configures project settings
     And I follow "edit project"
     And I choose "Use custom help page HTML"
     And I fill in "admin_project[custom_help_page_html]" with "Creating Help Page"
-    And I press "Save"
+    And I save the project
     And am on the admin projects page
     And I press "Preview Custom Help Page"
     Then the newly opened window should have content "Creating Help Page"
@@ -118,7 +118,7 @@ Feature: Admin configures project settings
     And I follow "edit project"
     And I choose "Use external help URL"
     And I fill in "admin_project[external_url]" with "www.google.com"
-    And I press "Save"
+    And I save the project
     And am on the admin projects page
     And I press "Preview External Help URL"
     Then the newly opened window should have content "google"
@@ -131,7 +131,7 @@ Feature: Admin configures project settings
     And am on the admin projects page
     When I follow "edit project"
     And I fill in "admin_project[home_page_content]" with "Creating Home Page"
-    And I press "Save"
+    And I save the project
     And I log out
     And am on the my home page
     Then I should see "Creating Home Page"
@@ -143,7 +143,7 @@ Feature: Admin configures project settings
     And am on the admin projects page
     When I follow "edit project"
     And I fill in "admin_project[home_page_content]" with "Creating Home Page"
-    And I press "Save"
+    And I save the project
     And I press "Preview Home Page"
     Then the newly opened window should have content "Creating Home Page"
     And the newly opened window should have content "Username"
@@ -157,7 +157,7 @@ Feature: Admin configures project settings
     And am on the admin projects page
     When I follow "edit project"
     And I fill in "admin_project[home_page_content]" with "Creating Home Page"
-    And I press "Save"
+    And I save the project
     And am on the admin projects page
     And I press "Preview Home Page"
     Then the newly opened window should have content "Creating Home Page"

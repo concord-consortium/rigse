@@ -8,13 +8,9 @@ Feature: Student views resource page
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name     | teacher |
-      | My Class | teacher |
     And the following resource pages exist:
       | name          | user    | publication_status |
       | Test Resource | teacher | published          |
-    And the student "student" belongs to class "My Class"
     And I am logged in with the username teacher
     And I am on the class page for "My Class"
     And I assign the resource page "Test Resource" to the class "My Class"

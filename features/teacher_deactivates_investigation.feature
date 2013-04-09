@@ -6,9 +6,6 @@ Feature: Teacher can deactivate investigations from a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name      | teacher     |
-      | My Class  | teacher     |
     And the following simple investigations exist:
       | name                | user      | publication_status |
       | Test Investigation  | teacher   | published          |

@@ -6,11 +6,7 @@ Feature: Student runs html activity
   Background:
     Given the most basic default project
     And the database has been seeded
-    And the following classes exist:
-      | name      | teacher     |
-      | My Class  | teacher     |
     And a simple activity with a multiple choice exists
-    And the student "student" belongs to class "My Class"
     And the activity "simple activity" is assigned to the class "My Class"
   
   @lightweight

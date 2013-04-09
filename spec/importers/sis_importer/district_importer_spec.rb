@@ -449,10 +449,10 @@ describe SisImporter::DistrictImporter do
       end
     end
 
-    it "GYM is imported from district 01, and PHYSICS is imported from district 02. Both should be in Active Record tables." do
+    it "GYM is imported from district 01, and GEOMETRY is imported from district 02. Both should be in Active Record tables." do
       run_importer(:district => '01')
       run_importer(:district => '02')
-      ["GYM","PHYSICS"].each do | name |
+      ["GYM","GEOMETRY"].each do | name |
         Portal::Clazz.count(:conditions=>{:name => name}).should be(1)
         Portal::Course.count(:conditions=>{:name => name}).should be(1)
       end

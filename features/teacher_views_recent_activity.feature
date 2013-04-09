@@ -7,15 +7,6 @@ Feature: Teacher can see recent activity
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following classes exist:
-      | name        | teacher | semester |
-      | My Class    | teacher | Fall     |
-      | Physics     | teacher | Fall     |
-      | Mathematics | teacher | Fall     |
-      | Chemistry   | teacher | Fall     |
-      | Mechanics   | teacher | Fall     |
-      | Biology     | albert  | Fall     |
-    And the classes "My Class, Physics, Mathematics" are in a school named "Harvard School"
     And the following multiple choice questions exists:
       | prompt | answers | correct_answer |
       | a      | a,b,c,d | a              |
@@ -32,21 +23,15 @@ Feature: Teacher can see recent activity
       | Aerodynamics       | Aeroplane      | section d | page 4 | d                | image_q         | teacher    | true                   |
       | Arithmatics        | Algebra        | section a | page 1 | a                | image_q         | teacher    | false                  |
     And the following assignments exist:
-      | type          | name                 | class       |
-      | investigation | Radioactivity        | My Class    |
-      | investigation | Plant reproduction   | My Class    |
-      | investigation | Radioactivity        | Physics     |
-      | investigation | Plant reproduction   | Physics     |
-      | investigation | Aerodynamics         | Physics     |
-      | investigation | Aerodynamics         | Mechanics   |
-    And the student "dave" belongs to class "My Class"
-    And the student "chuck" belongs to class "Physics"
-    And the student "chuck" belongs to class "Mechanics"
-    And the student "shon" belongs to class "Physics"
-    And the student "ross" belongs to class "Physics"
-    And the student "taylor" belongs to class "Mathematics"
+      | type          | name                 | class                  |
+      | investigation | Radioactivity        | My Class               |
+      | investigation | Plant reproduction   | My Class               |
+      | investigation | Radioactivity        | Physics                |
+      | investigation | Plant reproduction   | Physics                |
+      | investigation | Aerodynamics         | Physics                |
+      | investigation | Aerodynamics         | Mechanics              |
+      | investigation | Aerodynamics         | Class_with_no_students |
     And I login with username: teacher password: password
-    
     
   Scenario: Teacher should see a message if no investigation is assigned to the class
     When I login with username: albert password: password
@@ -64,17 +49,13 @@ Feature: Teacher can see recent activity
     And the student "monty" belongs to class "Biology"
     And I login with username: albert password: password
     Then I should see "As your students get started, their progress will be displayed here."
-
+    
   Scenario: Teacher should see a message if no student is assigned to the class
-    When the following empty investigations exist:
-     | name      | user   | offerings_count | publication_status |
-     | Digestion | albert | 5               | published          |
-    And the following assignments exist:
-     | type          | name      | class   |
-     | investigation | Digestion | Biology |
-    And I login with username: albert password: password
-    Then I should see "You have not yet assigned students to your classes."
-    And I should see "As your students get started, their progress will be displayed here."
+    When the following teacher and class mapping exists:
+      | class_name                   | teacher  |
+      | Class_with_no_students       | robert   |
+    And I login with username: robert password: password
+    Then I should see "As your students get started, their progress will be displayed here."
     
   @javascript
   Scenario: Teacher should see standalone activity 
@@ -128,9 +109,9 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
-    Then I should see "taylor, ross" in In-progress on the recent activity page
+    Then I should see "Taylor, Ross" in In-progress on the recent activity page
     And I should see "Completed Smith, Chuck"
-    And I should see "Not Yet Started done, shon"
+    And I should see "Not Yet Started Done, Shon"
     
   Scenario: Teacher views class size
     When the following student answers:
@@ -139,7 +120,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
-    Then I should see "Class Size = 3"
+    Then I should see "Class Size = 4"
     
   @javascript
   Scenario: Teacher views message if no student has completed
