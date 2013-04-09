@@ -91,6 +91,7 @@ end
 
 When /^I log out$/ do
   visit "/users/sign_out"
+  User.anonymous(true)
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|
