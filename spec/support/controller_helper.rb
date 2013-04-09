@@ -352,7 +352,7 @@ def logout_user
   ApplicationController.any_instance.stub(:current_user).and_return(@logged_in_user)
   ApplicationController.any_instance.stub(:user_signed_in?).and_return(false)
   @controller.stub!(:current_visitor).and_return(@logged_in_user)
-  
+  @current_visitor = @logged_in_user
   @logged_in_user
 end
 
@@ -367,7 +367,7 @@ def stub_current_user(user_sym)
   ApplicationController.any_instance.stub(:user_signed_in?).and_return(true)
   sign_in @logged_in_user
   @controller.stub!(:current_visitor).and_return(@logged_in_user)
-  
+  @current_visitor = @logged_in_user
   @logged_in_user
 end
 

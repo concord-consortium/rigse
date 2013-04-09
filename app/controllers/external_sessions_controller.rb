@@ -34,7 +34,6 @@ class ExternalSessionsController < ApplicationController
   
   def successful_login
     new_cookie_flag = (params[:remember_me] == "1")
-    handle_remember_cookie! new_cookie_flag
     redirect_to(root_path)
     flash[:notice] = "Logged in successfully"
   end
