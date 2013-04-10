@@ -1,5 +1,6 @@
 class PadletBookmark < Bookmark
-  # include Changeable
+  default_scope :order => 'position'
+  acts_as_list
 
   def self.create_for_user(user)
     return false if user.anonymous?

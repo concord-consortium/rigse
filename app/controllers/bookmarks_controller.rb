@@ -49,6 +49,19 @@ class BookmarksController < ApplicationController
     end
   end
 
+  def sort
+    ids = JSON.parse(params['ids'])
+    bookmarks = ids.map { |i| Bookmark.find(i) }
+    position = 0
+    bookmarks.each do |bookmark|
+      if bookmark.changeable? current_visitor
+        bookmark.position = position
+        position = position + 1
+        bookmark.save
+      end
+    end
+    render :nothing => true
+  end
   def visits
     if current_visitor.has_role? "admin"
       @visits = BookmarkVisit.recent

@@ -600,6 +600,7 @@ constraints :id => /\d+/ do
   match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark
   match '/bookmark/visits'         => 'bookmarks#visits',     :as => :bookmark_visits
 
+  match '/bookmark/sort'           => 'bookmarks#sort',       :method => :post, :as => :sort_bookmarks
   root :to => 'home#index'
 
 
