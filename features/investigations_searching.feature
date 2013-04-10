@@ -77,7 +77,8 @@ Feature: Investigations can be searched
     Then There should be 20 investigations displayed
     And "copy" should not be displayed in the investigations list
     And I follow "Next →"
-    And I should wait 2 seconds
+    And I should see "y Investigation"
+    And I should see "z Investigation"
     And "y Investigation" should appear before "z Investigation"
 
   @javascript
