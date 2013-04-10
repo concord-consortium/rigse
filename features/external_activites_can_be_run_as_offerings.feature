@@ -8,8 +8,9 @@ Feature: External Activities can be run as offerings
     And the database has been seeded
     
   Scenario: External Activity offerings are runnable
-    When the external activity "My Activity" is assigned to the class "My Class"
+    When the external activity "My Activity" is assigned to the class "Class_with_no_assignment"
     And I am logged in with the username student
     When I go to my home page
+    And I follow "Class_with_no_assignment" within left panel for class navigation
     And run the external activity
-    Then I receive a file for download with a filename like "_investigation_"
+    Then I should be on /mock_html/test-external-activity.html
