@@ -7,30 +7,6 @@ Feature: Teacher can see recent activity
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following multiple choice questions exists:
-      | prompt | answers | correct_answer |
-      | a      | a,b,c,d | a              |
-      | b      | a,b,c,d | a              |
-      | c      | a,b,c,d | a              |
-      | d      | a,b,c,d | a              |
-      | e      | a,b,c,d | a              |
-    And there is an image question with the prompt "image_q"
-    And the following investigations with multiple choices exist:
-      | investigation      | activity       | section   | page   | multiple_choices | image_questions | user       | activity_teacher_only |
-      | Radioactivity      | Radio activity | section a | page 1 | a                | image_q         | teacher    | false                  |
-      | Plant reproduction | Plant activity | section b | page 2 | b                | image_q         | teacher    | false                  |
-      | Aerodynamics       | Air activity   | section c | page 3 | c                | image_q         | teacher    | false                  |
-      | Aerodynamics       | Aeroplane      | section d | page 4 | d                | image_q         | teacher    | true                   |
-      | Arithmatics        | Algebra        | section a | page 1 | a                | image_q         | teacher    | false                  |
-    And the following assignments exist:
-      | type          | name                 | class                  |
-      | investigation | Radioactivity        | My Class               |
-      | investigation | Plant reproduction   | My Class               |
-      | investigation | Radioactivity        | Physics                |
-      | investigation | Plant reproduction   | Physics                |
-      | investigation | Aerodynamics         | Physics                |
-      | investigation | Aerodynamics         | Mechanics              |
-      | investigation | Aerodynamics         | Class_with_no_students |
     And I login with username: teacher password: password
     
   Scenario: Teacher should see a message if no investigation is assigned to the class
@@ -62,7 +38,7 @@ Feature: Teacher can see recent activity
     When the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | taylor    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | f               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     Then I should see "Mathematics: Algebra"
     
@@ -84,7 +60,7 @@ Feature: Teacher can see recent activity
     And the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | taylor    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | f               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     Then "Mathematics" should appear before "Physics"
     
@@ -127,7 +103,7 @@ Feature: Teacher can see recent activity
     When the Activity "Algebra" is assigned to the class "Mathematics"
     And the following student answers:
       | student   | class         | activity            | question_prompt | answer |
-      | taylor    | Mathematics   | Algebra             | a               | y      |
+      | taylor    | Mathematics   | Algebra             | f               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Completed No student has completed this investigation yet."

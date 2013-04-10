@@ -6,13 +6,6 @@ Feature: External Activities can be assigned as offerings
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following simple investigations exist:
-      | name               | user    |
-      | Test Investigation | teacher |
-    And the investigation "Test Investigation" is published
-    And the following external activity exists:
-      | name        | user    |
-      | My Activity | teacher |
 
   # DO NOT TOUCH THE BROWSER WINDOW THAT SELENIUM IS DRIVING
   # IT WILL CAUSE THE TEST TO FAIL
@@ -20,14 +13,14 @@ Feature: External Activities can be assigned as offerings
   Scenario: External Activities and Investigations are assigned
     Given I am logged in with the username teacher
     And I am on the class page for "My Class"
-    When I assign the investigation "Test Investigation" to the class "My Class"
+    When I assign the investigation "Mechanics" to the class "My Class"
     And I assign the external activity "My Activity" to the class "My Class"
-    Then I should see "Test Investigation" within "#clazz_offerings"
+    Then I should see "Mechanics" within "#clazz_offerings"
     And I should see "My Activity" within "#clazz_offerings"
 
   Scenario: Offering counts increase when either a external activity or investigation is assigned
     Given the external activity "My Activity" is assigned to the class "My Class"
-    And the investigation "Test Investigation" is assigned to the class "My Class"
+    And the investigation "Mechanics" is assigned to the class "My Class"
     Then the external activity named "My Activity" should have "offerings_count" equal to "1"
-    And the investigation named "Test Investigation" should have "offerings_count" equal to "1"
+    And the investigation named "Mechanics" should have "offerings_count" equal to "1"
 

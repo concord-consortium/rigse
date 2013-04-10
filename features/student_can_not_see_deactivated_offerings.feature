@@ -5,36 +5,29 @@ Feature: Student can not see deactivated offerings
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the database has been seeded
-    And the following simple investigations exist:
-      | name                | user      | publication_status |
-      | Test Investigation  | teacher   | published          |
-    And the following resource pages exist:
-      | name          | user      | publication_status |
-      | Test Resource | teacher   | published          |
     And I am logged in with the username teacher
-    And the investigation "Test Investigation" is assigned to the class "My Class"
-    And the resource page "Test Resource" is assigned to the class "My Class"
+    And the student "monty" belongs to class "class_with_no_students"
+    And the resource page "NewestResource" is assigned to the class "class_with_no_students"
 
   Scenario: Student should see activated offerings
     When I log out
-    And I login with username: student
-    Then I should see the run link for "Test Investigation"
-    Then I should see the run link for "Test Resource"
-
+    And I login with username: monty
+    Then I should see "Plant reproduction" in the content
+    And I should see "NewestResource" in the content
+    
   Scenario: Student should not see deactivated offerings
-    When I am on the class page for "My Class"
-    And I follow "Deactivate" on the investigation "Test Investigation" from the class "My Class"
-    And I follow "Deactivate" on the resource page "Test Resource" from the class "My Class"
+    When I am on the class page for "class_with_no_students"
+    And I follow "Deactivate" on the investigation "Plant reproduction" from the class "class_with_no_students"
+    And I follow "Deactivate" on the resource page "NewestResource" from the class "class_with_no_students"
     And I log out
-    And I login with username: student
+    And I login with username: monty
     Then I should be on the homepage
-    Then I should not see the run link for "Test Investigation"
-    Then I should not see the run link for "Test Resource"
+    And I should not see "run Plant reproduction" in the content
+    And I should not see "View NewestResource" in the content
     And I should see "No offerings available." in the content
 
-    When I am on the class page for "My Class"
-    Then I should not see the run link for "Test Investigation"
-    Then I should not see the run link for "Test Resource"
-    And I should not see "View Test Resource" in the content
+    When I am on the class page for "class_with_no_students"
+    And I should not see "run Plant reproduction" in the content
+    And I should see "No offerings available." in the content
+    And I should not see "View NewestResource" in the content
 

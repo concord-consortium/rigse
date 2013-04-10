@@ -6,9 +6,6 @@ Feature: Pages can be assigned as offerings
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following page exists:
-      | name    | user    | publication_status |
-      | My Page | teacher | published          |
     And I am logged in with the username teacher
 
   @javascript

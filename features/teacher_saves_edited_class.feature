@@ -8,22 +8,6 @@ Feature: Teacher edits and saves class information
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
     And the classes "Mathematics" are in a school named "VJTI"
-    And the following multiple choice questions exists:
-      | prompt | answers | correct_answer |
-      | a      | a,b,c   | a              |
-      | b      | a,b,c   | a              |
-      | c      | a,b,c   | a              |
-    And there is an image question with the prompt "image_q"
-    And the following investigations with multiple choices exist:
-      | investigation              | activity       | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
-      | Lumped circuit abstraction | Air activity   | section a | page 1 | a                | image_q         | teacher   | false                 |
-      | Static discipline          | Air activity   | section a | page 1 | b                | image_q         | teacher   | false                 |
-      | Non Linear Devices         | Air activity   | section a | page 1 | c                | image_q         | teacher   | false                 |
-    And the following assignments exist:
-      | type          | name                       | class       |
-      | investigation | Lumped circuit abstraction | Mathematics |
-      | investigation | Static discipline          | Mathematics |
-      | investigation | Non Linear Devices         | Mathematics |
     And I am logged in with the username teacher
     And I am on "the class edit page for "Mathematics""
     
