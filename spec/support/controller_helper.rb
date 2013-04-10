@@ -173,9 +173,6 @@ def generate_default_project_and_jnlps_with_mocks
   )
 
   Admin::Project.stub!(:default_project).and_return(@mock_project)
-  mock_anonymous_user
-  mock_admin_user
-  mock_researcher_user
   
   # we have to do this because we can't easily stub helper methods so instead we are stubbing one level lower
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
@@ -221,123 +218,28 @@ def generate_otrunk_example_with_mocks
   )
 end
 
-# >> User.anonymous
-# => #<User id: 1, login: "anonymous", identity_url: nil, first_name: "Anonymous", last_name: "User",
-#     email: "anonymous@concord.org", crypted_password: "c6dc287d3ec67838c8ad87760d1967099c101989",
-#     salt: "c61a47e536e388ceb5e417fed9e74e1c890b2f2b", remember_token: nil, activation_code: nil,
-#     state: "active", remember_token_expires_at: nil, activated_at: "2009-07-23 04:09:33",
-#     deleted_at: nil, uuid: "d65bd9c4-264c-11de-ae9c-0014c2c34555", created_at: "2009-04-11 03:57:12",
-#     updated_at: "2009-07-23 04:09:33", vendor_interface_id: 6, default_user: false, site_admin: false,
-#     type: "User", external_user_domain_id: nil>
-def mock_anonymous_user
-  if @anonymous_user
-    @anonymous_user
-  else
-    @anonymous_user = mock_model(User, :login => "anonymous", :name => "Anonymous User")
-    @guest_role = mock_model(Role, :title => "guest")
-    @anonymous_user.stub!(:id).and_return(1)
-    @anonymous_user.stub!(:portal_teacher).and_return(nil)
-    @anonymous_user.stub!(:portal_student).and_return(nil)
-    @anonymous_user.stub!(:has_role?).and_return(nil)
-    @anonymous_user.stub!(:has_role?).with("guest").and_return(true)
-    @anonymous_user.stub!(:only_a_student?).and_return(false)
-    @anonymous_user.stub!(:roles).and_return([@guest_role])
-    @anonymous_user.stub!(:forget_me).and_return(nil)
-    @anonymous_user.stub!(:anonymous?).and_return(true)
-    @anonymous_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
-    @anonymous_user.stub!(:extra_params).and_return({})
-    @anonymous_user.stub!(:resource_pages).and_return([])
-    @anonymous_user.stub!(:require_password_reset).and_return(false)
-    User.stub!(:anonymous).and_return(@anonymous_user)
-    User.stub!(:find_by_login).with('anonymous').and_return(@anonymous_user)
-  end
+def login_admin
+  logged_in_user = Factory.next :admin_user
+  sign_in logged_in_user
+  logged_in_user
 end
 
-def mock_admin_user
- if @admin_user
-   @admin_user
- else
-   @admin_user = mock_model(User, :login => "admin", :name => "Admin User")
-   @admin_role = mock_model(Role, :title => "admin")
-   @admin_user.stub!(:id).and_return(2)
-   @admin_user.stub!(:portal_teacher).and_return(nil)
-   @admin_user.stub!(:portal_student).and_return(nil)
-   @admin_user.stub!(:has_role?).and_return(true)
-   @admin_user.stub!(:has_role?).with("researcher").and_return(nil)
-   @admin_user.stub!(:has_role?).with("teacher").and_return(nil)
-   @admin_user.stub!(:has_role?).with("guest").and_return(nil)
-   @admin_user.stub!(:has_role?).with("student").and_return(nil)
-   @admin_user.stub!(:only_a_student?).and_return(false)
-   @admin_user.stub!(:roles).and_return([@admin_role])
-   @admin_user.stub!(:forget_me).and_return(nil)
-   @admin_user.stub!(:anonymous?).and_return(false)
-   @admin_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
-   @admin_user.stub!(:resource_pages).and_return([])
-   @admin_user.stub!(:extra_params).and_return({})
-   @admin_user.stub!(:require_password_reset).and_return(false)
-   User.stub!(:find_by_login).with('admin').and_return(@admin_user)
- end
+def login_manager
+  logged_in_user = Factory.next :manager_user
+  sign_in logged_in_user
+  logged_in_user
 end
 
-def mock_researcher_user
- if @researcher_user
-   @researcher_user
- else
-   @researcher_user = mock_model(User, :login => "admin", :name => "Admin User")
-   @researcher_role = mock_model(Role, :title => "researcher")
-   @researcher_user.stub!(:id).and_return(2)
-   @researcher_user.stub!(:portal_teacher).and_return(nil)
-   @researcher_user.stub!(:portal_student).and_return(nil)
-   @researcher_user.stub!(:has_role?).and_return(true)
-   @researcher_user.stub!(:has_role?).with("admin").and_return(nil)
-   @researcher_user.stub!(:has_role?).with("teacher").and_return(nil)
-   @researcher_user.stub!(:has_role?).with("guest").and_return(nil)
-   @researcher_user.stub!(:has_role?).with("student").and_return(nil)
-   @researcher_user.stub!(:only_a_student?).and_return(false)
-   @researcher_user.stub!(:roles).and_return([@researcher_role])
-   @researcher_user.stub!(:forget_me).and_return(nil)
-   @researcher_user.stub!(:anonymous?).and_return(false)
-   @researcher_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
-   @researcher_user.stub!(:extra_params).and_return({})
-   User.stub!(:find_by_login).with('researcher').and_return(@researcher_user)
- end
+def login_researcher
+  logged_in_user = Factory.next :researcher_user
+  sign_in logged_in_user
+  logged_in_user
 end
 
-def mock_probe_vendor_interface
-  unless @probe_vendor_interface
-    @probe_vendor_interface = mock_model(Probe::VendorInterface,
-      :name => "Vernier Go! Link",
-      :short_name => "vernier_goio",
-      :communication_protocol => "usb",
-      :device_id => 10
-    )
-    @probe_device_config = mock_model(Probe::DeviceConfig,
-      :vendor_interface_id => @probe_vendor_interface,
-      :config_string => "none"
-    )
-    @probe_vendor_interface.stub!(:device_configs).and_return([@probe_device_config])
-  end
-  @probe_vendor_interface
-end
-
-def login_admin(options = {})
-  options[:admin] = true
-  @logged_in_user = Factory.next :admin_user
-  @controller.stub!(:current_visitor).and_return(@logged_in_user)
-  @logged_in_user
-end
-
-def login_researcher(options = {})
-  @logged_in_user = Factory.next :researcher_user
-  @controller.stub!(:current_visitor).and_return(@logged_in_user)
-  @logged_in_user
-end
-
-def login_author(options = {})
-  @logged_in_user = Factory.next :researcher_user
-  @controller.stub!(:current_visitor).and_return(@logged_in_user)
-  @logged_in_user.add_role "author"
-  @logged_in_user
+def login_author
+  logged_in_user = Factory.next :author_user
+  sign_in logged_in_user
+  logged_in_user
 end
 
 def login_anonymous
@@ -345,30 +247,7 @@ def login_anonymous
 end
 
 def logout_user
-  sign_out @logged_in_user unless @logged_in_user.nil?
-  
-  @logged_in_user = Factory.next :anonymous_user
-  
-  ApplicationController.any_instance.stub(:current_user).and_return(@logged_in_user)
-  ApplicationController.any_instance.stub(:user_signed_in?).and_return(false)
-  @controller.stub!(:current_visitor).and_return(@logged_in_user)
-  @current_visitor = @logged_in_user
-  @logged_in_user
-end
-
-def stub_current_user(user_sym)
-  if user_sym.is_a?(User)
-    @logged_in_user = user_sym
-  else
-    @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
-  end
-  
-  ApplicationController.any_instance.stub(:current_user).and_return(@logged_in_user)
-  ApplicationController.any_instance.stub(:user_signed_in?).and_return(true)
-  sign_in @logged_in_user
-  @controller.stub!(:current_visitor).and_return(@logged_in_user)
-  @current_visitor = @logged_in_user
-  @logged_in_user
+  sign_out :user
 end
 
 def will_paginate_params(opts = {})

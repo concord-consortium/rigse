@@ -1,22 +1,18 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe SearchController do
-  def setup_for_repeated_tests
+  before(:each) do
     @admin_project = Factory.create(:admin_project_no_jnlps, :include_external_activities => false)
 
-    @controller = SearchController.new
-    @request = ActionController::TestRequest.new
-    @response = ActionController::TestResponse.new
-    
     @mock_semester = Factory.create(:portal_semester, :name => "Fall")
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
-    @teacher_user = Factory.create(:user, :login => "teacher_user")
+    @teacher_user = Factory.create(:confirmed_user, :login => "teacher_user")
     @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
     @admin_user = Factory.next(:admin_user)
     @author_user = Factory.next(:author_user)
     @manager_user = Factory.next(:manager_user)
     @researcher_user = Factory.next(:researcher_user)
-    @student_user = Factory.create(:user, :login => "authorized_student")
+    @student_user = Factory.create(:confirmed_user, :login => "authorized_student")
     @student = Factory.create(:portal_student, :user_id => @student_user.id)
     
     
@@ -34,10 +30,7 @@ describe SearchController do
     @external_activity1 = Factory.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published')
     @external_activity2 = Factory.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published')
 
-    stub_current_user :teacher_user
-  end
-  before(:each) do
-    setup_for_repeated_tests
+    sign_in @teacher_user
   end
 
   describe "GET index" do

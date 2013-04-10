@@ -10,7 +10,7 @@ describe Portal::OfferingsController do
 
     it "renders a jnlp as a learner" do
       learner = Factory(:full_portal_learner)
-      stub_current_user(learner.student.user)
+      sign_in learner.student.user
       get :show, :id => learner.offering.id, :format => :jnlp
       response.should render_template('shared/_learn_or_installer')
     end
@@ -31,12 +31,12 @@ describe Portal::OfferingsController do
       }
       @runnable = Factory(:external_activity, @runnable_opts )
       @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz)
-      @user = Factory(:user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
+      @user = Factory(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
       @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
       controller.stub!(:setup_portal_student).and_return(@learner)
       Portal::Offering.stub!(:find).and_return(@offering)
-      stub_current_user :user
+      sign_in @user
     end
 
     it "saves learner data in the cookie" do
@@ -45,7 +45,7 @@ describe Portal::OfferingsController do
       get :show, :id => @offering.id, :format => 'run_external_html'
       response.cookies["save_path"].should == @offering.runnable.save_path
       response.cookies["learner_id"].should == @learner.id.to_s
-      response.cookies["student_name"].should == "#{current_visitor.first_name} #{current_visitor.last_name}"
+      response.cookies["student_name"].should == "#{@user.first_name} #{@user.last_name}"
       response.cookies["activity_name"].should == @offering.runnable.name
       response.cookies["class_id"].should == @clazz.id.to_s
 
@@ -90,7 +90,7 @@ describe Portal::OfferingsController do
       @open_response.reload
 
       @offering = mock_model(Portal::Offering, :id => 45, :runnable => @runnable, :clazz => @clazz)
-      @user = Factory(:user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
+      @user = Factory(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
       @report_learner = mock_model(Report::Learner,
         :last_run=     => nil,
@@ -102,7 +102,7 @@ describe Portal::OfferingsController do
         :report_learner => @report_learner)
       controller.stub!(:setup_portal_student).and_return(@learner)
       Portal::Offering.stub!(:find).and_return(@offering)
-      stub_current_user :user
+      sign_in @user
     end
 
     it 'should render an html form' do
@@ -189,9 +189,9 @@ describe Portal::OfferingsController do
       @researcher_user = Factory.next(:researcher_user)
       @author_user = Factory.next(:author_user)
       @guest_user = Factory.next(:anonymous_user)
-      @student_user = Factory.create(:user, :login => "authorized_student")
+      @student_user = Factory.create(:confirmed_user, :login => "authorized_student")
       @portal_student = Factory.create(:portal_student, :user => @student_user)
-      @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [@mock_school])
+      @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
       @authorized_teacher_user = @authorized_teacher.user
       @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz)
       @params = {
@@ -199,32 +199,32 @@ describe Portal::OfferingsController do
       }
     end
     it "should render nothing and return for users other than teacher" do
-      stub_current_user :admin_user
+      login_admin
       xhr :post, :offering_collapsed_status, @params
       response.body.should be_blank
 
-      stub_current_user :manager_user
+      sign_in @manager_user
       xhr :post, :offering_collapsed_status, @params
       response.body.should be_blank
       
-      stub_current_user :researcher_user
+      sign_in @researcher_user
       xhr :post, :offering_collapsed_status, @params
       response.body.should be_blank
 
-      stub_current_user :author_user
+      sign_in @author_user
       xhr :post, :offering_collapsed_status, @params
       response.body.should be_blank
 
-      stub_current_user :guest_user
+      sign_in @guest_user
       xhr :post, :offering_collapsed_status, @params
       response.body.should be_blank
 
-      stub_current_user :student_user
+      sign_in @student_user
       xhr :post, :offering_collapsed_status, @params
       response.body.should be_blank
     end
     it "should maintain the offering collapse expand status when user is a teacher" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
       #when teacher has never expanded or collapsed before
       portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
       assert_nil(portal_teacher_full_status)
@@ -249,10 +249,10 @@ describe Portal::OfferingsController do
     before(:each) do
       @mock_semester = Factory.create(:portal_semester, :name => "Fall")
       @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
-      @teacher_user = Factory.create(:user, :login => "teacher_user")
+      @teacher_user = Factory.create(:confirmed_user, :login => "teacher_user")
       @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
       @author_user = Factory.next(:author_user)
-      @student_user = Factory.create(:user)
+      @student_user = Factory.create(:confirmed_user)
       @student = Factory.create(:portal_student,:user_id=> @student_user.id)
       @physics_investigation = Factory.create(:investigation, :name => 'physics_inv', :user => @author_user, :publication_status => 'published')
       @laws_of_motion_activity = Factory.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => @physics_investigation.id, :user => @author_user)
@@ -264,7 +264,7 @@ describe Portal::OfferingsController do
       @page=Factory.create(:page,:user_id=>@teacher_user.id,:section_id=>@section.id)
       @embeddable=Factory.create(:embeddable_xhtml,:user_id=>@teacher_user.id)
       @page.add_embeddable(@embeddable)
-      stub_current_user :teacher_user
+      sign_in @teacher_user
     end
     
     it "should show report when no filter is set" do

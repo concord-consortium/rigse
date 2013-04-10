@@ -66,20 +66,17 @@ Given /the following users[(?exist):\s]*$/i do |users_table|
 end
 
 Given /^(?:|I )login as an admin$/ do
-  step 'I log out'
-  step 'I login with username: admin password: password'
+  login_as('admin')
 end
 
 
 # the quote in the pattern is to prevent this from matching other rules
 # and hopefully there is no need for quotes in a usernames
 Given /^I am logged in with the username ([^"]*)$/ do |username|
-  step 'I log out'
   login_as(username)
 end
 
 Given /^(?:|I )login with username[\s=:,]*(\S+)$/ do |username|
-  step 'I log out'
   login_as(username)
   visit "/"
 end

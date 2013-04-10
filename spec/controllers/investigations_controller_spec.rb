@@ -17,7 +17,7 @@ describe InvestigationsController do
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
     @admin_user.add_role("admin")
 
-    stub_current_user :admin_user
+    login_admin
     
     @investigation = Factory.create(:investigation, {
       :name => "test investigation",

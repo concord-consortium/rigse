@@ -2,13 +2,10 @@ require 'spec_helper'
 
 describe Browse::ActivitiesController do
     before(:each) do
-        @controller = Browse::ActivitiesController.new
-        @request = ActionController::TestRequest.new
-        @response = ActionController::TestResponse.new
         @author_user = Factory.next(:author_user)
         @physics_investigation = Factory.create(:investigation, :name => 'physics_inv', :user => @author_user, :publication_status => 'published')
         @laws_of_motion_activity = Factory.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => @physics_investigation.id, :user => @author_user)
-        @controller.stub!(:user_signed_in?).and_return(false)
+        # @controller.stub!(:user_signed_in?).and_return(false)
     end
     
     describe "GET show" do
@@ -24,7 +21,7 @@ describe Browse::ActivitiesController do
         
         assert_equal assigns[:wide_content_layout], true
         
-        assert_equal assigns[:back_url],"#{request.url}search?activity_page=1&investigation_page=1&search_term=#{@laws_of_motion_activity.name}&type=act"
+        assigns[:back_url].should match(/.*search\?activity_page=1&investigation_page=1&search_term=#{@laws_of_motion_activity.name}&type=act$/)
         assert_not_nil assigns[:search_material]
         assert_equal assigns[:search_material].material, @laws_of_motion_activity
         

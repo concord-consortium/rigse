@@ -116,19 +116,20 @@ class UsersController < ApplicationController
       elsif request.put?
         if params[:commit] == "Switch"
           if switch_to_user = User.find(params[:user][:id])
-            unless session[:original_user_id]  # session[:original_user_auth_token]
-              session[:original_user_id] = current_visitor.id
-            end
+            switch_from_user = current_visitor
+            original_user_from_session = session[:original_user_id]
+            recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
             sign_out self.current_visitor
             sign_in switch_to_user
-            recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
-            recently_switched_from_users.insert(0, current_visitor.id)
-            self.current_visitor=(switch_to_user)
+
+            # the original user is only set on the session once:
+            # the first time an admin switches to another user
+            unless original_user_from_session
+              session[:original_user_id] = switch_from_user.id
+            end
+            recently_switched_from_users.insert(0, switch_from_user.id)
             session[:recently_switched_from_users] = recently_switched_from_users.uniq
-            
           end
-        elsif params[:commit] =~ /#{@original_user.name}/
-          self.current_visitor=(@original_user)
         end
         redirect_to home_path
       end
@@ -240,7 +241,7 @@ class UsersController < ApplicationController
   end
   
   def backdoor
-    sign_out self.current_visitor
+    sign_out :user
     user = User.find_by_login!(params[:username])
     sign_in user
     head :ok
