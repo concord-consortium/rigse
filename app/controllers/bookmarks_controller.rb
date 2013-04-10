@@ -7,7 +7,7 @@ class BookmarksController < ApplicationController
       page.insert_html :bottom,
         "bookmarks_box",
         :partial => "bookmarks/show",
-        :locals => {:bookmark => mark}
+        :locals => {:bookmark => mark, :adding => true}
     end
   end
 
@@ -21,7 +21,7 @@ class BookmarksController < ApplicationController
         page.insert_html :bottom,
           "bookmarks_box",
           :partial => "bookmarks/show",
-          :locals => {:bookmark => mark}
+          :locals => {:bookmark => mark, :adding => true}
       end
     else
       render :nothing => true

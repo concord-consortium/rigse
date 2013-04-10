@@ -18,3 +18,8 @@
           %button.save save
         %td
           = delete_bookmark_button(bookmark)
+-if defined?(adding)
+  :javascript
+    if (window.bookmarksManager) {
+      window.bookmarksManager.addBookmarks();
+    }

@@ -69,24 +69,24 @@ class Bookmark
 class BookmarksManager
   constructor: ->
     @bookmarks = {}
-    Sortable.create CollectionsDomID,
-      'tag'     : 'div'
-      'handle'  : SortHandle
-      'onUpdate': (divs) => @orderChanged(divs)
     @addBookmarks()
 
   addBookmarks: ->
     $$(ItemSelector).each (item) =>
       @bookmarkForDiv(item)
+    Sortable.create CollectionsDomID,
+      'tag'     : 'div'
+      'handle'  : SortHandle
+      'onUpdate': (divs) => @orderChanged(divs)
 
   bookmarkForDiv: (div) ->
     id = bookmark_identify(div)
-    @bookmarks[id] || @addBookMark(div)
+    @bookmarks[id] ||= @addBookMark(div)
 
   addBookMark: (div) ->
     new Bookmark(div)
 
-  orderChanged: (divs) ->
+  orderChanged:(divs) ->
     results = $$(ItemSelector).map (div) =>
       @bookmarkForDiv(div).id
     @changeOrder(results)
@@ -101,10 +101,9 @@ class BookmarksManager
         Accept: 'application/json'
       onSuccess: (transport) ->
         json = transport.responseText.evalJSON(true)
-        console.log json
 
 
 
 
 document.observe "dom:loaded", ->
-  manager = new BookmarksManager()
+  window.bookmarksManager = new BookmarksManager()
