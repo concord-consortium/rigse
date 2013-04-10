@@ -26,7 +26,6 @@ class PadletBookmark < Bookmark
   def self.user_can_make?(user)
     return false unless self.is_allowed?
     return false if user.anonymous?
-    # return self.for_user(user).blank?  # no more 1-per user limit.
     return true
   end
 end
