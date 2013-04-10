@@ -15,7 +15,7 @@ namespace :hudson do
   end
 
   if defined? Cucumber
-    task_dependencies = [:cucumber_report_setup, 'db:migrate', 'db:test:prepare']
+    task_dependencies = [:cucumber_report_setup, 'db:test:prepare_cucumber']
     opts = %{--profile default --tags ~@dialog --tags ~@pending --format junit --out #{cucumber_report_path} --format html --out #{cucumber_report_path}report.html}
     Cucumber::Rake::Task.new({:cucumber  => task_dependencies}) do |t|
       t.cucumber_opts = opts
