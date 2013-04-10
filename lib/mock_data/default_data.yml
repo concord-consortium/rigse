@@ -1051,7 +1051,7 @@ student_answers_investigations:
   student_response_1:
     student: dave
     class: My Class
-    investigation: Radioactivity
+    investigation: Atomic Energy
     question_prompt: a
     answer: a
     learner_uuid: 00000000-0000-0000-0000-000000000177
