@@ -1,39 +1,59 @@
+@mixin control {
+  margin: 0px 0px 0px 1px;
+  padding: 0px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #dd6e0d;
+  opacity: 0.2;
+  cursor: pointer;
+  &:hover {
+    opacity: 1.0;
+  }
+}
+
 #bookmarks_box {
   margin-top: 2em;
   border-top: 1px dotted #479492;
-  li {
-    padding-top:    5px;
-    padding-bottom: 5px;
+
+  .bookmark_item {
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    line-height: 1em;
+    overflow: hidden;
+    white-space: nowrap;
     a {
       display: inline;
       padding: 4px;
       border-radius: 6px;
     }
     a.delete {
-      margin-left: 2em;
-      padding-top: 1px;
-      padding-bottom: 1px;
-      padding-left: 4px;
-      padding-right: 4px;
-      color: white;
-      background-color: red;
-      border-radius: 10px;
-      opacity: 0.2;
-      background-color: #dd6e0d;
-      background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-      background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+      @include control;
     }
-    a.delete:hover {
-      opacity: 1.0;
+    .control {
+      @include control;
+    }
+    .slide {
+      cursor: move;
+      float: right;
+    }
+    a.link_text {
+      display: inline-block;
+      width: 70%;
+      white-space: nowrap;
+      overflow: hidden;
     }
   }
 }
+
 table.bookmark_visits {
   td {
     padding-left:  1em;
     padding-right: 1em;
   }
 }
+
 .bookmarks_form {
   display: block;
   background-color: rgba(255,255,255,0.3);

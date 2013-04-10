@@ -62,6 +62,27 @@ class BookmarksController < ApplicationController
     end
     render :nothing => true
   end
+
+  def edit
+    bookmark = Bookmark.find(params['id'])
+    if bookmark && bookmark.changeable?(current_visitor)
+      %w[name url].each do |param|
+        unless params[param].blank?
+          bookmark.update_attribute(param,params[param])
+        end
+      end
+      if bookmark.save
+        render :json => {
+          id: bookmark.id,
+          name: bookmark.name,
+          url: bookmark.url
+        }
+        return
+      end
+    end
+    render :json => { failure: 'true' }, :status => :unprocessable_entity
+  end
+
   def visits
     if current_visitor.has_role? "admin"
       @visits = BookmarkVisit.recent

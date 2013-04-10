@@ -1,5 +1,5 @@
 /*
- // TODO: consider moving assets from zeus into 
+ // TODO: consider moving assets from zeus into
  // package (mange_classes,instructional_materials, &etc.)
 
 = require 'globals'
@@ -32,5 +32,6 @@
 = require 'student_lightbox_report'
 = require 'progress_disclosure'
 = require 'anonymizer'
+= require 'bookmarks'
 = require 'run_status'
 */
