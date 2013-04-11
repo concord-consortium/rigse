@@ -19,13 +19,6 @@ Feature: Investigations show drafts
       | Investigation04 | teacher | 5               | Wed Jan 26 12:00:00 -0500 2011 | draft              |
       | Investigation05 | teacher | 10              | Wed Jan 23 12:00:00 -0500 2011 | draft              |
       | Investigation06 | teacher | 20              | Wed Jan 20 12:00:00 -0500 2011 | draft              |
-      | Investigation07 | teacher | 5               | Wed Jan 26 12:00:00 -0500 2011 | draft              |
-      | Investigation08 | teacher | 10              | Wed Jan 23 12:00:00 -0500 2011 | draft              |
-      | Investigation09 | teacher | 20              | Wed Jan 20 12:00:00 -0500 2011 | draft              |
-      | Investigation10 | teacher | 5               | Wed Jan 26 12:00:00 -0500 2011 | draft              |
-      | Investigation11 | teacher | 10              | Wed Jan 23 12:00:00 -0500 2011 | draft              |
-      | Investigation12 | teacher | 20              | Wed Jan 20 12:00:00 -0500 2011 | draft              |
-      | Investigation13 | teacher | 5               | Wed Jan 26 12:00:00 -0500 2011 | draft              |
       | Investigation14 | teacher | 10              | Wed Jan 23 12:00:00 -0500 2011 | draft              |
       | Investigation15 | teacher | 20              | Wed Jan 20 12:00:00 -0500 2011 | draft              |
       | Investigation16 | teacher | 5               | Wed Jan 26 12:00:00 -0500 2011 | draft              |
@@ -47,12 +40,13 @@ Feature: Investigations show drafts
     And I should see "Next"
     And I should see "Investigation01"
     And I should see "Investigation02"
-    And I should see "Investigation03"
     When I follow "Next"
-    Then I should see "Investigation21"
+    Then I should see "Investigation03"
+    And I should see "Investigation21"
     And I should see "Investigation22"
     And I should see "Investigation23"
     And I should see "Investigation24"
+    When I follow "Next"
     And the "drafts too:" checkbox should be checked
     When I uncheck "drafts too:"
-    Then I should not see "Investigation21"
+    Then I should not see "WithLinksInv"

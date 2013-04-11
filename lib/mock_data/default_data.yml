@@ -1,317 +1,1085 @@
-:district:
-  :name: default district
-  :description: "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
-  :uuid: 00000000-0000-0000-0000-000000000001
-
-:grades:
-  :grade_1:
-    :name: '9'
-    :description: 9th grade
-    :uuid: 00000000-0000-0000-0000-000000000002
+admin_project:
+  uuid: 00000000-0000-0000-0000-000000000001
+  active: false
   
-:grade_levels:
-  :grade_level_1:
-    :name: grade level 9
-    :uuid: 00000000-0000-0000-0000-000000000003
-    :grade: '9'
+district:
+  name: default district
+  description: "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
+  uuid: 00000000-0000-0000-0000-000000000002
 
-
-:schools:
-  :school_1:
-    :name: Fake School
-    :description: Fake School
-    :uuid: 00000000-0000-0000-0000-000000000004
-    :semesters:
-      :semester_1:
-        :name: Fall
-        :uuid: 00000000-0000-0000-0000-000000000005
-      :semester_2:
-        :name: Spring
-        :uuid: 00000000-0000-0000-0000-000000000006
-    :grade_levels: '9'
-
-  :school_2:
-    :name: VJTI
-    :description: Tech School best in the world
-    :uuid: 00000000-0000-0000-0000-000000000007
-    :semesters:
-      :semester_1:
-        :name: Fall
-        :uuid: 00000000-0000-0000-0000-000000000008
-      :semester_2:
-        :name: Spring
-        :uuid: 00000000-0000-0000-0000-000000000009
-    :grade_levels: '9'
-
-
-
-:courses:
-  :course_1:
-    :name: Course for Fake School
-    :uuid: 00000000-0000-0000-0000-00000000010
-    :school: Fake School
-    
-  :course_2:
-    :name: Course for VJTI school
-    :uuid: 00000000-0000-0000-0000-000000000011
-    :school: VJTI
-
-:users:
-  :user_1:
-    :login: author
-    :roles: member, author
-    :uuid: 00000000-0000-0000-0000-0000000000012
-    
-  :user_2:
-    :login: manager
-    :roles: manager
-    :uuid: 00000000-0000-0000-0000-0000000000013
-    
-  :user_3:
-    :login: mymanager
-    :roles: manager
-    :uuid: 00000000-0000-0000-0000-000000000014
-      
-  :user_4:
-    :login: researcher
-    :roles: researcher
-    :uuid: 00000000-0000-0000-0000-000000000015
-      
-  :user_5:
-    :login: admin
-    :roles: admin
-    :uuid: 00000000-0000-0000-0000-000000000016
-
-
-:teachers:
-  :teacher_1:
-    :login: teacher
-    :first_name: John
-    :last_name: Nash
-    :email: bademail@noplace.com
-    :school: VJTI
-    :cohort_list: control
-    :uuid: 00000000-0000-0000-0000-000000000017
+grades:
+  grade_1:
+    name: '9'
+    description: 9th grade
+    uuid: 00000000-0000-0000-0000-000000000003
   
-  :teacher_2:
-    :login: albert
-    :first_name: Albert
-    :last_name: Fernandez
-    :email: bademail@noplace2.com
-    :school: VJTI
-    :cohort_list: experiment
-    :uuid: 00000000-0000-0000-0000-000000000018
+grade_levels:
+  grade_level_1:
+    name: grade level 9
+    uuid: 00000000-0000-0000-0000-000000000004
+    grade: '9'
+
+
+schools:
+  school_1:
+    name: Fake School
+    description: Fake School
+    uuid: 00000000-0000-0000-0000-000000000005
+    semesters:
+      semester_1:
+        name: Fall
+        uuid: 00000000-0000-0000-0000-000000000006
+      semester_2:
+        name: Spring
+        uuid: 00000000-0000-0000-0000-000000000007
+    grade_levels: '9'
+
+  school_2:
+    name: VJTI
+    description: Tech School best in the world
+    uuid: 00000000-0000-0000-0000-000000000008
+    semesters:
+      semester_1:
+        name: Fall
+        uuid: 00000000-0000-0000-0000-000000000009
+      semester_2:
+        name: Spring
+        uuid: 00000000-0000-0000-0000-000000000010
+    grade_levels: '9'
+
+
+
+courses:
+  course_1:
+    name: Course for Fake School
+    uuid: 00000000-0000-0000-0000-00000000011
+    school: Fake School
+    
+  course_2:
+    name: Course for VJTI school
+    uuid: 00000000-0000-0000-0000-000000000012
+    school: VJTI
+
+users:
+  user_1:
+    login: author
+    roles: member, author
+    uuid: 00000000-0000-0000-0000-0000000000013
+    
+  user_2:
+    login: manager
+    roles: manager
+    uuid: 00000000-0000-0000-0000-0000000000014
+    
+  user_3:
+    login: mymanager
+    roles: manager
+    uuid: 00000000-0000-0000-0000-000000000015
+      
+  user_4:
+    login: researcher
+    roles: researcher
+    uuid: 00000000-0000-0000-0000-000000000016
+      
+  user_5:
+    login: admin
+    roles: admin
+    uuid: 00000000-0000-0000-0000-000000000017
+
+
+teachers:
+  teacher_1:
+    login: teacher
+    first_name: John
+    last_name: Nash
+    email: bademail@noplace.com
+    school: VJTI
+    cohort_list: control
+    uuid: 00000000-0000-0000-0000-000000000018
   
-  :teacher_3:
-    :login: robert
-    :first_name: Robert
-    :last_name: Fernandez
-    :email: bademail@noplace3.com
-    :school: Fake School
-    :cohort_list: control, experiment
-    :uuid: 00000000-0000-0000-0000-000000000019
+  teacher_2:
+    login: albert
+    first_name: Albert
+    last_name: Fernandez
+    email: bademail@noplace2.com
+    school: VJTI
+    cohort_list: experiment
+    uuid: 00000000-0000-0000-0000-000000000019
   
-  :teacher_4:
-    :login: peterson
-    :first_name: Peterson
-    :last_name: Taylor
-    :email: bademail@noplace4.com
-    :school: Fake School
-    :uuid: 00000000-0000-0000-0000-000000000020
+  teacher_3:
+    login: robert
+    first_name: Robert
+    last_name: Fernandez
+    email: bademail@noplace3.com
+    school: Fake School
+    cohort_list: control, experiment
+    uuid: 00000000-0000-0000-0000-000000000020
+  
+  teacher_4:
+    login: peterson
+    first_name: Peterson
+    last_name: Taylor
+    email: bademail@noplace4.com
+    school: Fake School
+    uuid: 00000000-0000-0000-0000-000000000021
       
-  :teacher_5:
-    :login: teacher_with_no_class
-    :first_name: Teacher_with_no_class
-    :last_name: Teacher_with_no_class
-    :email: bademail@noplace5.com
-    :school: Fake School
-    :uuid: 00000000-0000-0000-0000-000000000021
+  teacher_5:
+    login: teacher_with_no_class
+    first_name: Teacher_with_no_class
+    last_name: Teacher_with_no_class
+    email: bademail@noplace5.com
+    school: Fake School
+    uuid: 00000000-0000-0000-0000-000000000022
       
-  :teacher_6:
-    :login: jonson
-    :first_name: Jonson
-    :last_name: Jackson
-    :email: bademail@noplace6.com
-    :school: Fake School
-    :uuid: 00000000-0000-0000-0000-000000000022
+  teacher_6:
+    login: jonson
+    first_name: Jonson
+    last_name: Jackson
+    email: bademail@noplace6.com
+    school: Fake School
+    uuid: 00000000-0000-0000-0000-000000000023
 
-:students:
-  :student_1:
-    :login: student
-    :first_name: Alfred
-    :last_name: Robert
-    :email: student@mailinator.com
-    :uuid: 00000000-0000-0000-0000-000000000023
+students:
+  student_1:
+    login: student
+    first_name: Alfred
+    last_name: Robert
+    email: student@mailinator.com
+    uuid: 00000000-0000-0000-0000-000000000024
       
-  :student_2:
-    :login: dave
-    :first_name: Dave 
-    :last_name: Doe
-    :email: student@mailinator1.com
-    :uuid: 00000000-0000-0000-0000-000000000024
+  student_2:
+    login: dave
+    first_name: Dave 
+    last_name: Doe
+    email: student@mailinator1.com
+    uuid: 00000000-0000-0000-0000-000000000025
       
-  :student_3:
-    :login: chuck
-    :first_name: Chuck
-    :last_name: Smith
-    :email: student@mailinator2.com
-    :uuid: 00000000-0000-0000-0000-000000000025
+  student_3:
+    login: chuck
+    first_name: Chuck
+    last_name: Smith
+    email: student@mailinator2.com
+    uuid: 00000000-0000-0000-0000-000000000026
       
-  :student_4:
-    :login: taylor
-    :first_name: Taylor
-    :last_name: Donald
-    :email: student@mailinator3.com
-    :uuid: 00000000-0000-0000-0000-000000000026
+  student_4:
+    login: taylor
+    first_name: Taylor
+    last_name: Donald
+    email: student@mailinator3.com
+    uuid: 00000000-0000-0000-0000-000000000027
     
-  :student_5:
-    :login: Mache
-    :first_name: Mache
-    :last_name: Smith
-    :email: student@mailinator4.com
-    :uuid: 00000000-0000-0000-0000-000000000027
+  student_5:
+    login: Mache
+    first_name: Mache
+    last_name: Smith
+    email: student@mailinator4.com
+    uuid: 00000000-0000-0000-0000-000000000028
       
-  :student_6:
-    :login: shon
-    :first_name: Shon
-    :last_name: Done
-    :email: student@mailinator5.com
-    :uuid: 00000000-0000-0000-0000-000000000028
+  student_6:
+    login: shon
+    first_name: Shon
+    last_name: Done
+    email: student@mailinator5.com
+    uuid: 00000000-0000-0000-0000-000000000029
       
-  :student_7:
-    :login: ross
-    :first_name: Ross
-    :last_name: Taylor
-    :email: student@mailinator6.com
-    :uuid: 00000000-0000-0000-0000-000000000029
+  student_7:
+    login: ross
+    first_name: Ross
+    last_name: Taylor
+    email: student@mailinator6.com
+    uuid: 00000000-0000-0000-0000-000000000030
     
-  :student_8:
-    :login: monty
-    :first_name: Monty
-    :last_name: Donald
-    :email: student@mailinator7.com
-    :uuid: 00000000-0000-0000-0000-000000000030
+  student_8:
+    login: monty
+    first_name: Monty
+    last_name: Donald
+    email: student@mailinator7.com
+    uuid: 00000000-0000-0000-0000-000000000031
       
-  :student_9:
-    :login: Switchuser
-    :first_name: Joe
-    :last_name: Switchuser
-    :email: student@mailinator8.com
-    :uuid: 00000000-0000-0000-0000-000000000031
-
-
-:classes:
-  :clazz_1:
-    :name: My Class
-    :teacher: teacher
-    :class_word: My Class
-    :uuid: 00000000-0000-0000-0000-000000000032
-    :course: Course for Fake School
-    
-  :clazz_2:
-    :name: Physics
-    :teacher: teacher
-    :class_word: phy
-    :uuid: 00000000-0000-0000-0000-000000000033
-    :course: Course for Fake School
-    
-  :clazz_3:
-    :name: Mathematics
-    :teacher: teacher
-    :class_word: math
-    :uuid: 00000000-0000-0000-0000-000000000034
-    :course: Course for Fake School
-    
-  :clazz_4:
-    :name: Chemistry
-    :teacher: teacher
-    :class_word: chem
-    :uuid: 00000000-0000-0000-0000-000000000035
-    :course: Course for Fake School
-    
-  :clazz_5: 
-    :name: Biology
-    :teacher: teacher
-    :class_word: bio
-    :uuid: 00000000-0000-0000-0000-000000000036
-    :course: Course for Fake School
-    
-  :clazz_6:
-    :name: Geography
-    :teacher: teacher
-    :class_word: geo
-    :uuid: 00000000-0000-0000-0000-000000000037
-    :course: Course for Fake School
-    
-  :clazz_7:
-    :name: Mechanics
-    :teacher: teacher
-    :class_word: Mec
-    :uuid: 00000000-0000-0000-0000-000000000038
-    :course: Course for Fake School
-
-  :clazz_8: 
-    :name: Class_with_no_assignment
-    :teacher: teacher
-    :class_word: class_with_no_assignment
-    :uuid: 00000000-0000-0000-0000-000000000039
-    :course: Course for Fake School
-    
-  :clazz_9: 
-    :name: Class_with_no_students
-    :teacher: teacher
-    :class_word: class_with_no_students
-    :uuid: 00000000-0000-0000-0000-000000000040
-    :course: Course for Fake School
-    
-  :clazz_10:
-    :name: Class_with_no_attempts
-    :teacher: teacher
-    :class_word: class_with_no_attempts
-    :uuid: 00000000-0000-0000-0000-000000000041
-    :course: Course for Fake School
+  student_9:
+    login: Switchuser
+    first_name: Joe
+    last_name: Switchuser
+    email: student@mailinator8.com
+    uuid: 00000000-0000-0000-0000-000000000032
 
 
-:teacher_clazzes:
-  :teacher_clazz_1:
-    :teacher: albert
-    :clazz_names: Biology, Class_with_no_assignment
+classes:
+  clazz_1:
+    name: My Class
+    teacher: teacher
+    class_word: My Class
+    uuid: 00000000-0000-0000-0000-000000000033
+    course: Course for Fake School
     
-  :teacher_clazz_2:
-    :teacher: peterson
-    :clazz_names: Class_with_no_assignment, My Class, Mathematics
+  clazz_2:
+    name: Physics
+    teacher: teacher
+    class_word: phy
+    uuid: 00000000-0000-0000-0000-000000000034
+    course: Course for Fake School
     
-  :teacher_clazz_3:
-    :teacher: robert
-    :clazz_names: Physics
+  clazz_3:
+    name: Mathematics
+    teacher: teacher
+    class_word: math
+    uuid: 00000000-0000-0000-0000-000000000035
+    course: Course for Fake School
+    
+  clazz_4:
+    name: Chemistry
+    teacher: teacher
+    class_word: chem
+    uuid: 00000000-0000-0000-0000-000000000036
+    course: Course for Fake School
+    
+  clazz_5: 
+    name: Biology
+    teacher: teacher
+    class_word: bio
+    uuid: 00000000-0000-0000-0000-000000000037
+    course: Course for Fake School
+    
+  clazz_6:
+    name: Geography
+    teacher: teacher
+    class_word: geo
+    uuid: 00000000-0000-0000-0000-000000000038
+    course: Course for Fake School
+    
+  clazz_7:
+    name: Mechanics
+    teacher: teacher
+    class_word: Mec
+    uuid: 00000000-0000-0000-0000-000000000039
+    course: Course for Fake School
+
+  clazz_8: 
+    name: Class_with_no_assignment
+    teacher: teacher
+    class_word: class_with_no_assignment
+    uuid: 00000000-0000-0000-0000-000000000040
+    course: Course for Fake School
+    
+  clazz_9: 
+    name: Class_with_no_students
+    teacher: teacher
+    class_word: class_with_no_students
+    uuid: 00000000-0000-0000-0000-000000000041
+    course: Course for Fake School
+    
+  clazz_10:
+    name: Class_with_no_attempts
+    teacher: teacher
+    class_word: class_with_no_attempts
+    uuid: 00000000-0000-0000-0000-000000000042
+    course: Course for Fake School
+
+
+teacher_clazzes:
+  teacher_clazz_1:
+    teacher: albert
+    clazz_names: Biology, Class_with_no_assignment
+    
+  teacher_clazz_2:
+    teacher: peterson
+    clazz_names: Class_with_no_assignment, My Class, Mathematics
+    
+  teacher_clazz_3:
+    teacher: robert
+    clazz_names: Physics
     
   
-:student_clazzes:
-  :student_clazz_1:
-    :student: student
-    :clazz_names: My Class, Class_with_no_assignment, Class_with_no_attempts
+student_clazzes:
+  student_clazz_1:
+    student: student
+    clazz_names: My Class, Class_with_no_assignment, Class_with_no_attempts
     
-  :student_clazz_2:
-    :student: dave
-    :clazz_names: My Class, Biology
+  student_clazz_2:
+    student: dave
+    clazz_names: My Class, Biology
     
-  :student_clazz_3:
-    :student: chuck
-    :clazz_names: My Class, Physics, Mechanics
+  student_clazz_3:
+    student: chuck
+    clazz_names: My Class, Physics, Mechanics
     
-  :student_clazz_4:
-    :student: taylor
-    :clazz_names: My Class, Mathematics
+  student_clazz_4:
+    student: taylor
+    clazz_names: My Class, Mathematics
     
-  :student_clazz_5:
-    :student: Mache
-    :clazz_names: Physics
+  student_clazz_5:
+    student: Mache
+    clazz_names: Physics
     
-  :student_clazz_6:
-    :student: shon
-    :clazz_names: Physics
+  student_clazz_6:
+    student: shon
+    clazz_names: Physics
     
-  :student_clazz_7:
-    :student: ross
-    :clazz_names: Physics
+  student_clazz_7:
+    student: ross
+    clazz_names: Physics
 
+
+mult_cho_questions:
+  mcq_1:
+    prompt: a
+    answers: a,b,c,d
+    correct_answer: a
+    uuid: 00000000-0000-0000-0000-000000000043
+  
+  mcq_2: 
+    prompt: b
+    answers: a,b,c,d
+    correct_answer: a
+    uuid: 00000000-0000-0000-0000-000000000044
+  
+  mcq_3: 
+    prompt: c
+    answers: a,b,c,d
+    correct_answer: a
+    uuid: 00000000-0000-0000-0000-000000000045
+    
+  mcq_4:
+    prompt: d
+    answers: a,b,c,d
+    correct_answer: a
+    uuid: 00000000-0000-0000-0000-000000000046
+      
+  mcq_5: 
+    prompt: e
+    answers: a,b,c,d
+    correct_answer: a
+    uuid: 00000000-0000-0000-0000-000000000047
+      
+  mcq_6:
+    prompt: f
+    answers: a,b,c,d
+    correct_answer: a
+    uuid: 00000000-0000-0000-0000-000000000048
+
+
+image_questions:
+  imgq_1:
+    prompt: image_q
+    uuid: 00000000-0000-0000-0000-000000000049
+    
+
+empty_investigations:
+  empt_inv_1:
+    name: draft g
+    user: teacher
+    offerings_count: 5
+    publication_status: draft
+    uuid: 00000000-0000-0000-0000-000000000050
+    
+  empt_inv_2: 
+    name: b Investigation
+    user: teacher
+    offerings_count: 5
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000051
+     
+  empt_inv_3:
+    name: a Investigation
+    user: teacher
+    offerings_count: 5
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000052
+    
+  empt_inv_4:
+    name: c Investigation
+    user: teacher
+    offerings_count: 5
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000053
+    
+  empt_inv_5:
+    name: d Investigation
+    user: teacher
+    offerings_count: 5
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000054
+      
+  empt_inv_6: 
+    name: e Investigation
+    user: teacher
+    offerings_count: 5
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000055
+      
+  empt_inv_7:
+    name: f Investigation
+    user: teacher
+    offerings_count: 5
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000056
+    
+  empt_inv_8: 
+    name: NewestInv
+    user: teacher
+    offerings_count: 5
+    created_at: <%=Wed Jan 26 12:00:00 -0500 2111%>
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000057
+    
+  empt_inv_9:
+    name: MediumInv
+    user: teacher
+    offerings_count: 10
+    created_at: <%=Wed Jan 23 12:00:00 -0500 2111%>
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000058
+       
+  empt_inv_10:
+    name: OldestInv
+    user: teacher
+    offerings_count: 20
+    created_at: <%=Wed Jan 20 12:00:00 -0500 2111%>
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000059
+
+
+simple_investigations:
+  sim_inv_1:
+    name: Radioactivity
+    user: author
+    publication_status: published
+    description: Nuclear Energy is a great subject
+    uuid: 00000000-0000-0000-0000-000000000060
+    activity_uuid: 00000000-0000-0000-0000-000000000061 
+    section_uuid: 00000000-0000-0000-0000-000000000062
+    page_uuid: 00000000-0000-0000-0000-000000000063
+    
+  sim_inv_2:
+    name: Set Theory
+    user: author
+    publication_status: published
+    description: Set Theory is a great subject
+    uuid: 00000000-0000-0000-0000-000000000064
+    activity_uuid: 00000000-0000-0000-0000-000000000065
+    section_uuid: 00000000-0000-0000-0000-000000000066
+    page_uuid: 00000000-0000-0000-0000-000000000067
+    
+  sim_inv_3:
+    name: Mechanics
+    user: author
+    publication_status: published
+    description: Mechanics is a great subject
+    uuid: 00000000-0000-0000-0000-000000000068
+    activity_uuid: 00000000-0000-0000-0000-000000000069
+    section_uuid: 00000000-0000-0000-0000-000000000070
+    page_uuid: 00000000-0000-0000-0000-000000000071
+      
+  sim_inv_4:
+    name: Geometry
+    user: author
+    publication_status: published
+    description: Triangle is a great subject
+    uuid: 00000000-0000-0000-0000-000000000072
+    activity_uuid: 00000000-0000-0000-0000-000000000073 
+    section_uuid: 00000000-0000-0000-0000-000000000074
+    page_uuid: 00000000-0000-0000-0000-000000000075
+      
+  sim_inv_5:
+    name: integral calculus
+    user: author
+    publication_status: published
+    description: integral calculus is a great subject
+    uuid: 00000000-0000-0000-0000-000000000076 
+    activity_uuid: 00000000-0000-0000-0000-000000000077
+    section_uuid: 00000000-0000-0000-0000-000000000078
+    page_uuid: 00000000-0000-0000-0000-000000000079
+    
+  sim_inv:
+    name: differential calculus
+    user: author
+    publication_status: published
+    description: differential calculus is a great subject
+    uuid: 00000000-0000-0000-0000-000000000080
+    activity_uuid: 00000000-0000-0000-0000-000000000081
+    section_uuid: 00000000-0000-0000-0000-000000000082
+    page_uuid: 00000000-0000-0000-0000-000000000083
+      
+  sim_inv_7:
+    name: differential equations
+    user: author
+    publication_status: published
+    description: differential equations is a great subject
+    uuid: 00000000-0000-0000-0000-000000000084
+    activity_uuid: 00000000-0000-0000-0000-000000000085
+    section_uuid: 00000000-0000-0000-0000-000000000086
+    page_uuid: 00000000-0000-0000-0000-000000000087
+    
+  sim_inv_8:
+    name: organic chemistry
+    user: author
+    publication_status: published
+    description: organic chemistry is a great subject
+    uuid: 00000000-0000-0000-0000-000000000088
+    activity_uuid: 00000000-0000-0000-0000-000000000089
+    section_uuid: 00000000-0000-0000-0000-000000000090
+    page_uuid: 00000000-0000-0000-0000-000000000091
+      
+  sim_inv_9:
+    name: inorganic chemistry
+    user: author
+    publication_status: published
+    description: inorganic chemistry is a great subject
+    uuid: 00000000-0000-0000-0000-000000000092
+    activity_uuid: 00000000-0000-0000-0000-000000000093
+    section_uuid: 00000000-0000-0000-0000-000000000094
+    page_uuid: 00000000-0000-0000-0000-000000000095
+     
+  sim_inv_10:
+    name: graph theory
+    user: author
+    publication_status: published
+    description: graph theory is a great subject
+    uuid: 00000000-0000-0000-0000-000000000096
+    activity_uuid: 00000000-0000-0000-0000-000000000097
+    section_uuid: 00000000-0000-0000-0000-000000000098
+    page_uuid: 00000000-0000-0000-0000-000000000099
+  
+  sim_inv_11:
+    name: investigaion_not_assigned
+    user: author
+    publication_status: published
+    description: investigaion_not_assigned is a great subject
+    uuid: 00000000-0000-0000-0000-000000000100
+    activity_uuid: 00000000-0000-0000-0000-000000000101
+    section_uuid: 00000000-0000-0000-0000-000000000102
+    page_uuid: 00000000-0000-0000-0000-000000000103
+    
+  sim_inv_12: 
+    name: testing fast cars
+    user: author
+    publication_status: published
+    description: how fast can cars go
+    uuid: 00000000-0000-0000-0000-000000000104
+    activity_uuid: 00000000-0000-0000-0000-000000000105
+    section_uuid: 00000000-0000-0000-0000-000000000106
+    page_uuid: 00000000-0000-0000-0000-000000000107
+      
+  sim_inv_13:
+    name: Lumped circuit abstraction
+    user: author
+    publication_status: published
+    description: LCA is a great subject
+    uuid: 00000000-0000-0000-0000-000000000108
+    activity_uuid:  00000000-0000-0000-0000-000000000109
+    section_uuid: 00000000-0000-0000-0000-000000000110
+    page_uuid: 00000000-0000-0000-0000-000000000111
+      
+  sim_inv_14: 
+    name: Static discipline
+    user: author
+    publication_status: published
+    description: SD is a great subject
+    uuid: 00000000-0000-0000-0000-000000000112
+    activity_uuid: 00000000-0000-0000-0000-000000000113
+    section_uuid: 00000000-0000-0000-0000-000000000114
+    page_uuid: 00000000-0000-0000-0000-000000000115
+  
+  sim_inv_15:
+    name: Non Linear Devices
+    user: author
+    publication_status: published
+    description: NLD is a great subject
+    uuid: 00000000-0000-0000-0000-000000000116
+    activity_uuid: 00000000-0000-0000-0000-000000000117
+    section_uuid: 00000000-0000-0000-0000-000000000118
+    page_uuid: 00000000-0000-0000-0000-000000000119
+    
+
+resource_pages:
+  res_page_1:
+    name: NewestResource
+    description: NewestResource description
+    user: teacher
+    offerings_count: 6
+    created_at: <%= Wed Jan 26 12:00:00 -0500 2011 %>
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000120
+    
+  res_page_2:
+    name: MediumResource
+    description: MediumResource description
+    user: teacher
+    offerings_count: 11
+    created_at: <%= Wed Jan 23 12:00:00 -0500 2011 %>
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000121
+    
+      
+  res_page_3:
+    name: OldestResource
+    description: OldestResource description
+    user: teacher
+    offerings_count: 21
+    created_at: <%= Wed Jan 20 12:00:00 -0500 2011 %>
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000122
+        
+
+pages:
+  page_1:
+    name: My Page
+    user: teacher
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000123
+    
+    
+linked_investigations:
+  l_inv_1:
+    name: WithLinksInv
+    user: author
+    offerings_count: 5
+    created_at: <%= Wed Jan 25 12:00:00 -0500 2011 %>
+    publication_status: published
+    uuid: 00000000-0000-0000-0000-000000000124
+    activity_uuid: 00000000-0000-0000-0000-000000000125
+    page_uuid: 00000000-0000-0000-0000-000000000126
+    open_response_uuid: 00000000-0000-0000-0000-000000000127
+    draw_tool_uuid: 00000000-0000-0000-0000-000000000128
+    lab_book_snapshot: 00000000-0000-0000-0000-000000000129
+    prediction_graph_uuid: 00000000-0000-0000-0000-000000000130
+    displaying_graph_uuid: 00000000-0000-0000-0000-000000000131
+    
+    
+investigations_with_mcq:
+  mcq_inv_1:
+    uuid: 00000000-0000-0000-0000-000000000132
+    name: Plant reproduction
+    activities:
+      activitiy_1:
+        uuid: 00000000-0000-0000-0000-000000000133
+        name: Plant activity
+        sections:
+          section_1:
+            uuid: 00000000-0000-0000-0000-000000000134
+            name: section b
+            pages:
+              page_1:
+                uuid: 00000000-0000-0000-0000-000000000135
+                name: page 2
+        multiple_choices:
+          mcq_1:
+            uuid: 00000000-0000-0000-0000-000000000044
+            prompt: b
+        image_questions:
+          imgq_1:
+            uuid: 00000000-0000-0000-0000-000000000049
+            prompt: image_q
+        user: teacher
+        activity_teacher_only: false
+
+  mcq_inv_2:
+    uuid: 00000000-0000-0000-0000-000000000136
+    name: Aerodynamics
+    activities:
+      activitiy_1:
+        uuid: 00000000-0000-0000-0000-000000000137
+        name: Air activity
+        sections:
+          section_1:
+            uuid: 00000000-0000-0000-0000-000000000138
+            name: section c
+            pages:
+              page_1:
+                uuid: 00000000-0000-0000-0000-000000000139
+                name: page 3
+        multiple_choices:
+          mcq_1:
+            uuid: 00000000-0000-0000-0000-000000000045
+            prompt: c
+        image_questions:
+          imgq_1:
+            uuid: 00000000-0000-0000-0000-000000000049
+            prompt: image_q
+        user: teacher
+        activity_teacher_only: false
+        
+      activitiy_2:
+        uuid: 00000000-0000-0000-0000-000000000140
+        name: Aeroplane
+        sections:
+          section_1:
+            uuid: 00000000-0000-0000-0000-000000000141
+            name: section c
+            pages:
+              page_1:
+                uuid: 00000000-0000-0000-0000-000000000142
+                name: page 3
+        multiple_choices:
+          mcq_1:
+            uuid: 00000000-0000-0000-0000-000000000046
+            prompt: d
+        image_questions:
+          mcq_1:
+            uuid: 00000000-0000-0000-0000-000000000049
+            prompt: image_q
+        user: teacher
+        activity_teacher_only: true
+        
+  mcq_inv_3:
+    uuid: 00000000-0000-0000-0000-000000000143
+    name: Arithmatics
+    activities:
+      activitiy_1:
+        uuid: 00000000-0000-0000-0000-000000000144
+        name: Linear algebra
+        sections:
+          section_1:
+            uuid: 00000000-0000-0000-0000-000000000145
+            name: section a
+            pages:
+              page_1:
+                uuid: 00000000-0000-0000-0000-000000000146
+                name: page 1
+        multiple_choices:
+          mcq_1:
+            uuid: 00000000-0000-0000-0000-000000000044
+            prompt: b
+        image_questions:
+          imgq_1:
+            uuid: 00000000-0000-0000-0000-000000000049
+            prompt: image_q
+        user: teacher
+        :activity_teacher_only: false
+
+
+  mcq_inv_4:
+    uuid: 00000000-0000-0000-0000-000000000147
+    name: Atomic Energy
+    activities:
+      activitiy_1:
+        uuid: 00000000-0000-0000-0000-000000000148
+        name: Radio activity
+        sections:
+          section_1:
+            uuid: 00000000-0000-0000-0000-000000000149
+            name: section a
+            pages:
+              page_1:
+                uuid: 00000000-0000-0000-0000-000000000150
+                name: page 1
+        multiple_choices:
+          mcq_1:
+            uuid: 00000000-0000-0000-0000-000000000043
+            prompt: a
+        image_questions:
+          imgq_1:
+            uuid: 00000000-0000-0000-0000-000000000049
+            prompt: image_q
+        user: teacher
+        activity_teacher_only: false
+        
+      activitiy_2:
+        uuid: 00000000-0000-0000-0000-000000000151
+        name: Nuclear Energy
+        sections:
+          section_1:
+            uuid: 00000000-0000-0000-0000-000000000152
+            name: section b
+            pages:
+              page_1:
+                uuid: 00000000-0000-0000-0000-000000000153
+                name: page 2
+        multiple_choices:
+          mcq_1:
+            uuid: 00000000-0000-0000-0000-000000000044
+            prompt: b
+        image_questions:
+          imgq_1:
+            uuid: 00000000-0000-0000-0000-000000000049
+            prompt: image_q
+        user: teacher
+        activity_teacher_only: false
+    
+
+  mcq_inv_5:
+    uuid: 00000000-0000-0000-0000-000000000156
+    name: Electricity
+    activities:
+      activitiy_1:
+        uuid: 00000000-0000-0000-0000-000000000157
+        name: current
+        sections:
+          section_1:
+            uuid: 00000000-0000-0000-0000-000000000158
+            name: section b
+            pages:
+              page_1:
+                uuid: 00000000-0000-0000-0000-000000000159
+                name: page 2
+        multiple_choices:
+          mcq_1:
+            uuid: 00000000-0000-0000-0000-000000000044
+            prompt: b
+        image_questions:
+          imgq_1:
+            uuid: 00000000-0000-0000-0000-000000000049
+            prompt: image_q
+        user: teacher
+        activity_teacher_only: false
+
+
+activities:
+  activity_1:
+    name: Radioactive decay
+    user: author
+    publication_status: published
+    description: Nuclear Energy is a great material
+    investigation: Radioactivity
+    uuid: 00000000-0000-0000-0000-000000000160
+  
+  activity_2:
+    name: Gamma Rays
+    user: author
+    publication_status: published
+    description: :Gamma Rays is a great material
+    investigation: Radioactivity
+    uuid: 00000000-0000-0000-0000-000000000161
+    
+  activity_3:
+    name: Diagram
+    user: author
+    publication_status: published
+    description: Venn Diagram is a great material
+    investigation: Set Theory
+    uuid: 00000000-0000-0000-0000-000000000162
+  
+  activity_4:
+    name: operations on sets
+    user: author
+    publication_status: published
+    description: operations on sets is a great material
+    investigation: Set Theory
+    uuid: 00000000-0000-0000-0000-000000000163
+    
+  activity_5:
+    name: Fluid Mechanics
+    user: author
+    publication_status: published
+    description: Fluid Mechanics is a great material
+    investigation: Mechanics
+    uuid: 00000000-0000-0000-0000-000000000164
+    
+  activity_6:
+    name: Circular Motion
+    user: author
+    publication_status: published
+    description: Circular Motion is a great material
+    investigation: Mechanics
+    uuid: 00000000-0000-0000-0000-000000000165
+    
+  activity_7:
+    name: Quantum Mechanics
+    user: author
+    publication_status: published
+    description: Quantum Mechanics is a great material
+    investigation: Mechanics
+    uuid: 00000000-0000-0000-0000-000000000166
+                    
+  activity_8:
+    name: Geometry
+    user: author
+    publication_status: published
+    description: Triangle is a great material
+    investigation: Geometry
+    uuid: 00000000-0000-0000-0000-000000000167
+
+  activity_9:
+    name: intersecting lines
+    user: author
+    publication_status: published
+    description: intersecting lines is a great material
+    investigation: Geometry
+    uuid: 00000000-0000-0000-0000-000000000168
+    
+  activity_10:
+    name: parallel lines
+    user: author
+    publication_status: published
+    description: parallel lines is a great material
+    investigation: Geometry
+    uuid: 00000000-0000-0000-0000-000000000169
+          
+  activity_11:
+    name: graphs and lines
+    user: author
+    publication_status: published
+    description: parallel lines is a great material
+    investigation: Geometry
+    uuid: 00000000-0000-0000-0000-000000000170
+    
+  activity_12:
+    name: circles
+    user: author
+    publication_status: published
+    description: circles is a great material
+    investigation: Geometry
+    uuid: 00000000-0000-0000-0000-000000000171
+    
+  activity_13:
+    name: boolean algebra
+    user: author
+    publication_status: published
+    description: boolean algebra is a great material
+    investigation: Geometry
+    uuid: 00000000-0000-0000-0000-000000000172
+                     
+  activity_14:
+    name: Atmosphere
+    user: author
+    publication_status: published
+    description: :Atmosphere is a great material
+    investigation: Geometry
+    uuid: 00000000-0000-0000-0000-000000000173
+      
+      
+mcq_activities:
+  mcq_activity_1:
+    name: Algebra
+    sections:
+      section_1:
+        name: section a
+        uuid: 00000000-0000-0000-0000-000000000174
+        pages:
+          page_1:
+            name: page 6
+            uuid: 00000000-0000-0000-0000-000000000175
+    multiple_choices:
+      mcq_1:
+        prompt: f
+        uuid: 00000000-0000-0000-0000-000000000048
+    image_questions:
+      imgq_1:
+        prompt: image_q
+        uuid: 00000000-0000-0000-0000-000000000049
+    user: teacher
+    activity_teacher_only: false
+    uuid: 00000000-0000-0000-0000-000000000176
+    
+
+external_activities:
+  ext_activity_1:
+    name: My Activity
+    user: teacher
+    url: /mock_html/test-external-activity.html
+    uuid: 00000000-0000-0000-0000-000000000177
+
+
+assignments:
+  assignment_1:
+    class_name: My Class
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Aerodynamics
+      assignable_2:
+        type: Investigation
+        name: Plant reproduction
+      assignable_3:
+        type: Investigation
+        name: Radioactivity
+      assignable_4:
+        type: Activity
+        name: Algebra
+      assignable_5:
+        type: Investigation
+        name: Atomic Energy
+
+        
+  assignment_2:
+    class_name: Physics
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Electricity
+      assignable_2:
+        type: Investigation
+        name: Plant reproduction
+      asignable_3:
+        type: Investigation
+        name: Aerodynamics
+      assignable_4:
+        type: Investigation
+        name: Radioactivity
+      assignable_5:
+        type: Activity
+        name: Algebra
+      assignable_4:
+        type: Investigation
+        name: Atomic Energy
+                      
+  assignment_3:
+    class_name: Mechanics
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Aerodynamics
+        
+  assignment_4:
+    class_name: Class_with_no_attempts
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Aerodynamics
+        
+  assignment_5:
+    class_name: Class_with_no_students
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Plant reproduction
+        
+  assignment_6:
+    class_name: Mathematics
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Lumped circuit abstraction
+      assignable_2:
+        type: Investigation
+        name: Static discipline
+      assignable_3:
+        type: Investigation
+        name: Non Linear Devices
+        
+student_answers_investigations:
+  student_response_1:
+    student: dave
+    class: My Class
+    investigation: Atomic Energy
+    question_prompt: a
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000177
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000178
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000179
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000180
+
+student_answers_activities:
+  student_response_1:
+    student: taylor
+    class: My Class
+    activity: Algebra
+    question_prompt: f
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000181
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000182
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000183
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000184
+  
+  student_response_2:
+    student: chuck
+    class: My Class
+    activity: Algebra
+    question_prompt: f
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000185
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000186
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000187
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000188
+
+# if response is for image questions then provide saveable_image_question_uuid:, :dataservice_blob_uuid, :saveable_image_question_answer_uuid

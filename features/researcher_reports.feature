@@ -12,12 +12,6 @@ Feature: Investigations can be reported on
     # for the sake of visual clarity, all correct answers are 'a'
     And the following multiple choice questions exists:
            | prompt | answers | correct_answer |
-           | a      | a,b,c,d | a              |
-           | b      | a,b,c,d | a              |
-           | c      | a,b,c,d | a              |
-           | d      | a,b,c,d | a              |
-           | e      | a,b,c,d | a              |
-           | f      | a,b,c,d | a              |
            | b_a    | a,b,c,d | a              |
            | b_b    | a,b,c,d | a              |
            | b_c    | a,b,c,d | a              |
@@ -27,11 +21,11 @@ Feature: Investigations can be reported on
     And there is an image question with the prompt "image_q"
 
     And the following investigations with multiple choices exist:
-       | investigation        | activity | section   | page   | multiple_choices | image_questions |
-       | first investigation  | act 1    | section 1 | page 1 | a, b             |                 |
-       | first investigation  | act 2    | section 2 | page 2 | c, d             |                 |
-       | second investigation | act 3    | section 3 | page 3 | b_a, b_b         | image_q         |
-       | second investigation | act 4    | section 4 | page 4 | b_c, b_d         |                 |
+       | investigation        | activity | section   | page      | multiple_choices | image_questions |
+       | first investigation  | act 1    | section 1 | fi page 1 | a, b             |                 |
+       | first investigation  | act 2    | section 2 | fi page 2 | c, d             |                 |
+       | second investigation | act 3    | section 3 | si page 3 | b_a, b_b         | image_q         |
+       | second investigation | act 4    | section 4 | si page 4 | b_c, b_d         |                 |
 
     And the following assignments exist:
           | type          | name                 | class       |

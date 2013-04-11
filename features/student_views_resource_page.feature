@@ -7,13 +7,10 @@ Feature: Student views resource page
 
   Background:
     Given The default project and jnlp resources exist using factories
-    And the database has been seeded
-    And the following resource pages exist:
-      | name          | user    | publication_status |
-      | Test Resource | teacher | published          |
+    And the database has been seeded 
     And I am logged in with the username teacher
     And I am on the class page for "My Class"
-    And I assign the resource page "Test Resource" to the class "My Class"
+    And I assign the resource page "NewestResource" to the class "My Class"
     And I log out
 
   @javascript
@@ -21,4 +18,4 @@ Feature: Student views resource page
     And I am logged in with the username student
     And I am on the class page for "My Class"
     And run the resource page
-    Then I should see "Test Resource"
+    Then I should see "NewestResource"

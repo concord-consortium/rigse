@@ -7,30 +7,25 @@ Feature: Teacher manages a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following offerings exist in the classes:
-      | name                      | class     |
-      | Lumped circuit abstraction| Physics   |
-      | static discipline         | Physics   |
-      | Non Linear Devices        | Physics   |
     And I am logged in with the username teacher
     And I go to the Manage Class Page
     
     
   @javascript
   Scenario: Teacher creates a copy of a class
-    When I follow copy class link for the class "Physics"
-    And I fill in "Class Name:" with "Copy of Physics"
+    When I follow copy class link for the class "Mathematics"
+    And I fill in "Class Name:" with "Copy of Mathematics"
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
     And I press "Save" within the popup
-    Then I should see "Copy of Physics"
-    And "Copy of Physics" should be the last on the list with id "sortable"
-    And "Copy of Physics" should be the last class within left panel for class navigation
-    And there should be no student in "Copy of Physics"
-    And I should see "Robert Fernandez"
+    Then I should see "Copy of Mathematics"
+    And "Copy of Mathematics" should be the last on the list with id "sortable"
+    And "Copy of Mathematics" should be the last class within left panel for class navigation
+    And there should be no student in "Copy of Mathematics"
+    And I should see "Peterson Taylor"
     And I should see "John Nash"
     And I should see "Lumped circuit abstraction"
-    And I should see "static discipline"
+    And I should see "Static discipline"
     And I should see "Non Linear Devices"
     
     
@@ -97,23 +92,23 @@ Feature: Teacher manages a class
   Scenario: Teacher creates a copy of a class to which another teacher belongs and the other teacher logs in.
     Given the following teacher and class mapping exists:
       | class_name  | teacher                   |
-      | Physics     |  teacher_with_no_class    |
+      | Mathematics     |  teacher_with_no_class    |
       | Chemistry   |  teacher_with_no_class    |
       | Mathematics |  teacher_with_no_class    |
-    When I follow copy class link for the class "Physics"
-    And I fill in "Class Name:" with "Copy of Physics"
+    When I follow copy class link for the class "Mathematics"
+    And I fill in "Class Name:" with "Copy of Mathematics"
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
     And I press "Save" within the popup
     And I log out
     And login with username:  teacher_with_no_class
     And I am on Manage Class Page
-    Then I should see "Copy of Physics"
+    Then I should see "Copy of Mathematics"
     
     
   @javascript
   Scenario: Teacher fills in class name with a blank string while creating copy of a class
-    When I follow copy class link for the class "Physics"
+    When I follow copy class link for the class "Mathematics"
     And I fill in "Class Name:" with ""
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
@@ -123,8 +118,8 @@ Feature: Teacher manages a class
     
   @javascript
   Scenario: Teacher fills in class word with a blank string while creating copy of a class
-    When I follow copy class link for the class "Physics"
-    And I fill in "Class Name:" with "Copy of Physics"
+    When I follow copy class link for the class "Mathematics"
+    And I fill in "Class Name:" with "Copy of Mathematics"
     And I fill in "Class Word:" with ""
     And I fill in "Class Description" with "electronics class"
     And I press "Save" within the popup
@@ -133,8 +128,8 @@ Feature: Teacher manages a class
     
   @javascript
   Scenario: Teacher fills in class word which has already been taken
-    When I follow copy class link for the class "Physics"
-    And I fill in "Class Name:" with "Copy of Physics"
+    When I follow copy class link for the class "Mathematics"
+    And I fill in "Class Name:" with "Copy of Mathematics"
     And I fill in "Class Word:" with "phy"
     And I fill in "Class Description" with "electronics class"
     And I press "Save" within the popup

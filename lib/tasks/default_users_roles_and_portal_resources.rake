@@ -52,8 +52,26 @@ namespace :app do
       MockData.create_default_clazzes
     end
     
+    desc "Create default study materials"
+    task :create_default_study_materials => [:environment, :create_default_classes] do
+      require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
+      MockData.create_default_study_materials
+    end
+    
+    desc "Create default assignments for classes"
+    task :create_default_assignments_for_class => [:environment, :create_default_study_materials] do
+      require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
+      MockData.create_default_assignments_for_class
+    end
+    
+    desc "This task creats default learners."
+    task :create_default_learners_and_learner_attempts => [:environment, :create_default_assignments_for_class] do
+      require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
+      MockData.record_learner_data
+    end
+    
     desc "Create default data. It is a blank task that calls other task to create default data."
-    task :create_default_data => [:environment, :create_default_classes] do
+    task :create_default_data => [:environment, :create_default_learners_and_learner_attempts] do
     end
     
     desc "Create default users and roles"

@@ -6,16 +6,12 @@ Feature: Student runs a jnlps
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following simple investigations exist:
-      | name                | user      | publication_status |
-      | Test Investigation  | teacher   | published          |
-    And the investigation "Test Investigation" is assigned to the class "My Class"
     And I login with username: student
-
+  
   Scenario: Student runs jnlp
     When I run the investigation
     Then a jnlp file is downloaded
-    And the jnlp file has a configuration for the student and offering
+    And the jnlp file for "Aerodynamics" has a configuration for the student and offering
 
   Scenario: Student jnlps are not cached
     When I run the investigation
