@@ -12,7 +12,6 @@ Feature: Student runs a jnlps
     And the investigation "Test Investigation" is assigned to the class "My Class"
     And I login with username: student
   
-  @javascript
   Scenario: Student runs jnlp
     When I run the investigation
     Then a jnlp file is downloaded
