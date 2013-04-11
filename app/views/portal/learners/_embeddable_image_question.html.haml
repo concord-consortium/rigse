@@ -8,7 +8,8 @@
           != embeddable.prompt
       .item{:class => css_style, :style => 'display: block;'}
         - if saveable.answered? && saveable.answer
-          %img{:src => dataservice_blob_raw_url(:id => saveable.answer[:blob].id, :token => saveable.answer[:blob].token)}
+          %img{:src => blob_url_for(saveable.answer)}
           .image_question_note= saveable.answer[:note]
+          %a.blob_url{:href => blob_url_for(saveable.answer)}=blob_url_for(saveable.answer)
         - else
           = 'not answered'
