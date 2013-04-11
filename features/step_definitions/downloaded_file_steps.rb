@@ -43,12 +43,14 @@ def download_config(session)
   )
 end
 
-Then /^the jnlp file has a configuration for the student and offering$/ do
+Then /^the jnlp file has a configuration for the student and "([^"]*)" offering$/ do |inv_name|
   download_config(:java_session)
 
-  investigation = Investigation.first
+  investigation = Investigation.find_by_name(inv_name)
   @config_otml_url.should match %r{investigations/#{investigation.id}.*otml}
 
+  # this is hack because of the seed data, this will only work if investigation is the first one assigned
+  # in the seed data, to do it right we need the class name and we could assume the login is 'student'
   learner = Portal::Learner.first
   @config_bundle_post_url.should match %r{bundle_loggers/#{learner.bundle_logger.id}.*bundle}  
 end

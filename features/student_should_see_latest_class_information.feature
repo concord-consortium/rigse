@@ -15,8 +15,8 @@ Feature: Student should see latest class information
     And I fill Class Word with "betrx"
     And I uncheck investigation with label "Lumped circuit abstraction"
     And I press "Save"
-    
-    
+    Then I should not see "Save"
+
   @javascript
   Scenario: Student should see the updated class name
     When I login with username: taylor

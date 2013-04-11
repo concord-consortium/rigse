@@ -14,7 +14,7 @@ Feature: Teacher adds a new student
   @javascript
   Scenario: Teacher can add a registered user
     When the student "student" belongs to class "Physics"
-    When I login with username: teacher password: password
+    When I login with username: teacher
     And I am on "Student Roster" page for "Mathematics"
     And I follow "Search for registered student."
     And I should see "Robert, Alfred"
@@ -28,7 +28,7 @@ Feature: Teacher adds a new student
   Scenario: Teacher can add an unregistered user
     When the student "student" belongs to class "Mathematics"
     And the student "student" belongs to class "Physics"
-    And I login with username: teacher password: password
+    And I login with username: teacher
     And I am on "Student Roster" page for "Mathematics"
     And I follow "Register and add new student"
     And I should see "Register and Add New Student"
@@ -47,7 +47,7 @@ Feature: Teacher adds a new student
   Scenario: Teacher adds another student from the pop up
     When the student "student" belongs to class "Mathematics"
     And the student "student" belongs to class "Physics"
-    And I login with username: teacher password: password
+    And I login with username: teacher
     And I am on "Student Roster" page for "Mathematics"
     And I follow "Register and add new student"
     And I should see "Register and Add New Student"
@@ -65,7 +65,7 @@ Feature: Teacher adds a new student
   Scenario: With the default class enabled, teachers cannot directly add existing students
     Given the option to allow default classes is enabled
     When the student "student" belongs to class "Physics"
-    When I login with username: teacher password: password
+    When I login with username: teacher
     And I am on "Student Roster" page for "Mathematics"
     Then I should see "If a student already has an account, ask the student to enter the Class Word above"
     And I should not see "Search for registered student"
