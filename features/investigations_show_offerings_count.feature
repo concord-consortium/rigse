@@ -10,11 +10,6 @@ Feature: Investigations show the offerings count
 
   @javascript
   Scenario: The investigations list can show the offerings count
-    Given the following empty investigations exist:
-      | name       | user      | offerings_count | created_at                      | publication_status  |
-      | NewestInv  | teacher   | 5               | Wed Jan 26 12:00:00 -0500 2011  | published           |
-      | MediumInv  | teacher   | 10              | Wed Jan 23 12:00:00 -0500 2011  | published           |
-      | OldestInv  | teacher   | 20              | Wed Jan 20 12:00:00 -0500 2011  | published           |
     When I show offerings count on the investigations page
     Then I should see "assigned 5 times"
     And I should see "assigned 10 times"

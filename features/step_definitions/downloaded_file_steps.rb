@@ -43,22 +43,22 @@ def download_config(session)
   )
 end
 
-Then /^the jnlp file has a configuration for the student and offering$/ do
+Then /^the jnlp file for "([^"]+)" has a configuration for the student and offering$/ do |inv_name|
   download_config(:java_session)
 
-  investigation = Investigation.first
+  investigation = Investigation.find_by_name(inv_name)
   @config_otml_url.should match %r{investigations/#{investigation.id}.*otml}
 
   learner = Portal::Learner.first
   @config_bundle_post_url.should match %r{bundle_loggers/#{learner.bundle_logger.id}.*bundle}  
 end
 
-Then /^the jnlp file has a read-only configuration for the student and offering$/ do
+Then /^the jnlp file for "([^"]+)" has a read-only configuration for the student and offering$/ do |inv_name|
   download_config(:java_session)
 
-  investigation = Investigation.first
+  investigation = Investigation.find_by_name(inv_name)
   @config_otml_url.should match %r{investigations/#{investigation.id}.*otml}
-
+  
   learner = Portal::Learner.first
   @config_bundle_post_url.should be_nil
 end
