@@ -7,33 +7,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following simple investigations exist:
-      | name                   | user   | publication_status | description                                     |
-      | Radioactivity          | author | published          | Nuclear Energy is a great subject               |
-      | Set Theory             | author | published          | Set Theory is a great subject                   |
-      | Mechanics              | author | published          | Mechanics is a great subject                    |
-      | Geometry               | author | published          | Triangle is a great subject                     |
-      | integral calculus      | author | published          | integral calculus is a great subject            |
-      | differential calculus  | author | published          | differential calculus is a great subject        |
-      | differential equations | author | published          | differential equations is a great subject       |
-      | organic chemistry      | author | published          | organic chemistry is a great subject            |
-      | inorganic chemistry    | author | published          | inorganic chemistry is a great subject          |
-      | graph theory           | author | published          | graph theory is a great subject                 |
-      | radar theory           | author | published          | radar theory is a great subject                 |
-    And the following activities for the above investigations exist:
-      | name                        | investigation | user    | publication_status | description                            |
-      | Radioactive decay           | Radioactivity | author  | published          | Nuclear Energy is a great material     |
-      | Gamma Rays                  | Radioactivity | author  | published          | Gamma Rays is a great material         |
-      | Venn Diagram                | Set Theory    | author  | published          | Venn Diagram is a great material       |
-      | operations on sets          | Set Theory    | author  | published          | operations on sets is a great material |
-      | Fluid Mechanics             | Mechanics     | author  | published          | Fluid Mechanics is a great material    |
-      | Circular Motion             | Mechanics     | author  | published          | Circular Motion is a great material    |
-      | Geometry                    | Geometry      | author  | published          | Triangle is a great material           |
-      | intersecting lines          | Geometry      | author  | published          | intersecting lines is a great material |
-      | parallel lines              | Geometry      | author  | published          | parallel lines is a great material     |
-      | graphs and lines            | Geometry      | author  | published          | parallel lines is a great material     |
-      | circles                     | Geometry      | author  | published          | circles is a great material            |
-      | boolean algebra             | Geometry      | author  | published          | boolean algebra is a great material    |
     Given the default project has include external activities enabled
     And the following external activities exist:
       | name        | user    | url               |
@@ -193,6 +166,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And the Investigation "integral calculus" is assigned to the class "Geography"
     And I follow "Popularity" in Sort By on the search instructional materials page
     And I should wait 2 seconds
+    And I search study material "calculus" on the search instructional materials page
     Then "differential calculus" should appear before "integral calculus"
     
     

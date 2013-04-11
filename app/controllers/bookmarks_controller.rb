@@ -4,11 +4,10 @@ class BookmarksController < ApplicationController
   def add_padlet
     mark = PadletBookmark.create_for_user(current_visitor)
     render :update do |page|
-      page.hide "padlet_form"
       page.insert_html :bottom,
         "bookmarks_box",
         :partial => "bookmarks/show",
-        :locals => {:bookmark => mark}
+        :locals => {:bookmark => mark, :adding => true}
     end
   end
 
@@ -22,7 +21,7 @@ class BookmarksController < ApplicationController
         page.insert_html :bottom,
           "bookmarks_box",
           :partial => "bookmarks/show",
-          :locals => {:bookmark => mark}
+          :locals => {:bookmark => mark, :adding => true}
       end
     else
       render :nothing => true
@@ -47,6 +46,40 @@ class BookmarksController < ApplicationController
         end
       end
     end
+  end
+
+  def sort
+    ids = JSON.parse(params['ids'])
+    bookmarks = ids.map { |i| Bookmark.find(i) }
+    position = 0
+    bookmarks.each do |bookmark|
+      if bookmark.changeable? current_visitor
+        bookmark.position = position
+        position = position + 1
+        bookmark.save
+      end
+    end
+    render :nothing => true
+  end
+
+  def edit
+    bookmark = Bookmark.find(params['id'])
+    if bookmark && bookmark.changeable?(current_visitor)
+      %w[name url].each do |param|
+        unless params[param].blank?
+          bookmark.update_attribute(param,params[param])
+        end
+      end
+      if bookmark.save
+        render :json => {
+          id: bookmark.id,
+          name: bookmark.name,
+          url: bookmark.url
+        }
+        return
+      end
+    end
+    render :json => { failure: 'true' }, :status => :unprocessable_entity
   end
 
   def visits

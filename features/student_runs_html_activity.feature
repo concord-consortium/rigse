@@ -19,7 +19,7 @@ Feature: Student runs html activity
   Scenario: Student runs html and teacher sees recent activity
     And I login with username: student
     And run the activity
-    And I choose "Choice 1"
+    And I choose "a"
     And I press "Submit"
     And I login with username: teacher
     And I follow "Recent Activity"

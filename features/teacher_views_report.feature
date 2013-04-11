@@ -7,11 +7,6 @@ Feature: Teacher views report
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    # for the sake of visual clarity, all correct answers are 'a'
-    And the following multiple choice questions exists:
-           | prompt | answers | correct_answer |
-           | a      | a,b,c,d | a              |
-    And there is an image question with the prompt "image_q"
     
   Scenario: A teacher views a report of an investigation
     Given the following investigations with multiple choices exist:
@@ -19,14 +14,14 @@ Feature: Teacher views report
         | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type          | name                 | class            |
-        | investigation | first investigation  | My Class    |
+        | investigation | first investigation  | Class_with_no_assignment    |
     And the following student answers:
-        | student   | class         | investigation       | question_prompt | answer |
-        | student   | My Class | first investigation | a               | a      |
-        | student   | My Class | first investigation | image_q         | Y      |
-        | dave      | My Class | first investigation | a               | b      |
+        | student   | class         		   | investigation       | question_prompt | answer |
+        | student   | Class_with_no_assignment | first investigation | a               | a      |
+        | student   | Class_with_no_assignment | first investigation | image_q         | Y      |
+        | dave      | Class_with_no_assignment | first investigation | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "My Class"
+    And go to the class page for "Class_with_no_assignment"
     And follow "Display a report" within ".action_menu_activity"
     
   Scenario: A teacher filters a question
@@ -34,15 +29,15 @@ Feature: Teacher views report
         | investigation        | activity | section   | page   | multiple_choices | image_questions | user      |
         | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
-        | type          | name                 | class            |
-        | investigation | first investigation  | My Class    |
+        | type          | name                 | class       |
+        | investigation | first investigation  | Class_with_no_assignment    |
     And the following student answers:
-        | student   | class         | investigation       | question_prompt | answer |
-        | student   | My Class | first investigation | a               | a      |
-        | student   | My Class | first investigation | image_q         | Y      |
-        | dave      | My Class | first investigation | a               | b      |
+        | student   | class                    | investigation       | question_prompt | answer |
+        | student   | Class_with_no_assignment | first investigation | a               | a      |
+        | student   | Class_with_no_assignment | first investigation | image_q         | Y      |
+        | dave      | Class_with_no_assignment | first investigation | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "My Class"
+    And go to the class page for "Class_with_no_assignment"
     And follow "Display a report" within ".action_menu_activity"
     And I wait 2 seconds
     Then I should see "image_q"
@@ -56,14 +51,14 @@ Feature: Teacher views report
         | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type          | name                 | class            |
-        | investigation | first investigation  | My Class    |
+        | investigation | first investigation  | Class_with_no_assignment    |
     And the following student answers:
-        | student   | class         | investigation       | question_prompt | answer |
-        | student   | My Class | first investigation | a               | a      |
-        | student   | My Class | first investigation | image_q         | Y      |
-        | dave      | My Class | first investigation | a               | b      |
+        | student   | class                    | investigation       | question_prompt | answer |
+        | student   | Class_with_no_assignment | first investigation | a               | a      |
+        | student   | Class_with_no_assignment | first investigation | image_q         | Y      |
+        | dave      | Class_with_no_assignment | first investigation | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "My Class"
+    And go to the class page for "Class_with_no_assignment"
     And follow "Display a report" within ".action_menu_activity"
     And I wait 2 seconds
     Then I should see "image_q"
@@ -78,15 +73,15 @@ Feature: Teacher views report
         | activity       | section   | page   | multiple_choices | image_questions | user      |
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
-        | type     | name            | class            |
-        | activity | first activity  | My Class    |
+        | type     | name            | class                       |
+        | activity | first activity  | Class_with_no_assignment    |
     And the following student answers:
-        | student   | class         | activity       | question_prompt | answer |
-        | student   | My Class | first activity | a               | a      |
-        | student   | My Class | first activity | image_q         | Y      |
-        | dave      | My Class | first activity | a               | b      |
+        | student   | class                    | activity       | question_prompt | answer |
+        | student   | Class_with_no_assignment | first activity | a               | a      |
+        | student   | Class_with_no_assignment | first activity | image_q         | Y      |
+        | dave      | Class_with_no_assignment | first activity | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "My Class"
+    And go to the class page for "Class_with_no_assignment"
     And follow "Display a report" within ".action_menu_activity"
     Then I should see "image_q"
     And I check "filter_Embeddable::MultipleChoice_"
@@ -97,18 +92,18 @@ Feature: Teacher views report
     
   Scenario: A teacher prints report of an activity
     Given the following activities with multiple choices exist:
-        | activity       | section   | page   | multiple_choices | image_questions | user      |
+        | activity       | section   | page   | multiple_choices | image_questions | user    |
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
-        | type     | name            | class            |
-        | activity | first activity  | My Class    |
+        | type     | name            | class                       |
+        | activity | first activity  | Class_with_no_assignment    |
     And the following student answers:
-        | student   | class         | activity       | question_prompt | answer |
-        | student   | My Class | first activity | a               | a      |
-        | student   | My Class | first activity | image_q         | Y      |
-        | dave      | My Class | first activity | a               | b      |
+        | student   | class                    | activity       | question_prompt | answer |
+        | student   | Class_with_no_assignment | first activity | a               | a      |
+        | student   | Class_with_no_assignment | first activity | image_q         | Y      |
+        | dave      | Class_with_no_assignment | first activity | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "My Class"
+    And go to the class page for "Class_with_no_assignment"
     And follow "Display a report" within ".action_menu_activity"
     And follow "print all users"
     Then I should see "image_q"
@@ -119,14 +114,14 @@ Feature: Teacher views report
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type     | name            | class            |
-        | activity | first activity  | My Class    |
+        | activity | first activity  | Class_with_no_assignment    |
     And the following student answers:
-        | student   | class         | activity       | question_prompt | answer |
-        | student   | My Class | first activity | a               | a      |
-        | student   | My Class | first activity | image_q         | Y      |
-        | dave      | My Class | first activity | a               | b      |
+        | student   | class                    | activity       | question_prompt | answer |
+        | student   | Class_with_no_assignment | first activity | a               | a      |
+        | student   | Class_with_no_assignment | first activity | image_q         | Y      |
+        | dave      | Class_with_no_assignment | first activity | a               | b      |
     When I am logged in with the username teacher
-    And go to the class page for "My Class"
+    And go to the class page for "Class_with_no_assignment"
     And follow "Display a report for the learner"
     Then I should see "image_q"
     
@@ -137,14 +132,14 @@ Feature: Teacher views report
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
         | type     | name            | class            |
-        | activity | first activity  | My Class    |
+        | activity | first activity  | Class_with_no_assignment    |
     And the following student answers:
-        | student   | class         | activity       | question_prompt | answer |
-        | student   | My Class | first activity | a               | a      |
-        | student   | My Class | first activity | image_q         | Y      |
-        | dave      | My Class | first activity | a               | b      |
+        | student   | class                    | activity       | question_prompt | answer |
+        | student   | Class_with_no_assignment | first activity | a               | a      |
+        | student   | Class_with_no_assignment | first activity | image_q         | Y      |
+        | dave      | Class_with_no_assignment | first activity | a               | b      |
     When I am logged in with the username teacher
-    And I go to Instructional Materials page for "My Class"
+    And I go to Instructional Materials page for "Class_with_no_assignment"
     And I follow "Run Report"
     And I apply filter for the question "a" in the report page
     Then I should see question "a" checked when all question is displayed in the report page
@@ -156,15 +151,15 @@ Feature: Teacher views report
         | activity       | section   | page   | multiple_choices | image_questions | user      |
         | first activity | section 3 | page 3 | a                | image_q         | teacher |
     And the following assignments exist:
-        | type     | name            | class            |
-        | activity | first activity  | My Class    |
+        | type     | name            | class                       |
+        | activity | first activity  | Class_with_no_assignment    |
     And the following student answers:
-        | student   | class         | activity       | question_prompt | answer |
-        | student   | My Class | first activity | a               | a      |
-        | student   | My Class | first activity | image_q         | Y      |
-        | dave      | My Class | first activity | a               | b      |
+        | student   | class                    | activity       | question_prompt | answer |
+        | student   | Class_with_no_assignment | first activity | a               | a      |
+        | student   | Class_with_no_assignment | first activity | image_q         | Y      |
+        | dave      | Class_with_no_assignment | first activity | a               | b      |
     When I am logged in with the username teacher
-    And I go to Instructional Materials page for "My Class"
+    And I go to Instructional Materials page for "Class_with_no_assignment"
     And I follow "Run Report"
     And I click "Show selected" button on report page
     Then I should see "No questions have been selected." message on the report page

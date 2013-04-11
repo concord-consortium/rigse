@@ -6,16 +6,12 @@ Feature: Student runs a jnlps
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following simple investigations exist:
-      | name                | user      | publication_status |
-      | Test Investigation  | teacher   | published          |
-    And the investigation "Test Investigation" is assigned to the class "My Class"
     And I login with username: student
-
+  
   Scenario: Student runs jnlp
     When I run the investigation
     Then a jnlp file is downloaded
-    And the jnlp file has a configuration for the student and offering
+    Then the jnlp file has a configuration for the student and "Aerodynamics" offering
 
   Scenario: Student jnlps are not cached
     When I run the investigation
@@ -25,7 +21,7 @@ Feature: Student runs a jnlps
   Scenario: Student runs the same jnlp a second time
     When I run the investigation
     And a jnlp file is downloaded
-    Then the jnlp file has a configuration for the student and offering
+    Then the jnlp file has a configuration for the student and "Aerodynamics" offering
     And I simulate opening the jnlp a second time
     Then I should see an error message in the Java application
 

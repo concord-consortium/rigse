@@ -1,3 +1,25 @@
-%li.padlet_item{:id => bookmark_dom_item(bookmark) }
-  = delete_bookmark_button(bookmark)
-  %a{:href => visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
+%div.bookmark_item{:id => bookmark_dom_item(bookmark),'data-bookmark-id' => bookmark.id,'data-bookmark-name' => bookmark.name,'data-bookmark-url' => bookmark.url}
+  %a.control.edit ✎
+  / = delete_bookmark_button(bookmark)
+  %a.link_text{:href => visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
+  %a.control.slide ☰
+  %div.edit{:style => "display: none;"}
+    %table
+      %tr.name_field
+        %td name:
+        %td
+          %input{:name => 'name', :type => 'text', :value=>bookmark.name}
+      %tr.url_field
+        %td url
+        %td
+          %input{:name => 'url', :type => 'text', :value=>bookmark.url}
+      %tr.save_field
+        %td
+          %button.save save
+        %td
+          = delete_bookmark_button(bookmark)
+-if defined?(adding)
+  :javascript
+    if (window.bookmarksManager) {
+      window.bookmarksManager.addBookmarks();
+    }

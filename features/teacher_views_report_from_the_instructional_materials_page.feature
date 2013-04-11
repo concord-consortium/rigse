@@ -7,16 +7,6 @@ Feature: Teacher views report from the instructional materials page of a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following multiple choice questions exists:
-      | prompt | answers | correct_answer |
-      | a      | a,b,c,d | a              |
-    And there is an image question with the prompt "image_q"
-    And the following investigations with multiple choices exist:
-      | investigation        | activity       | section   | page   | multiple_choices | image_questions | user      | activity_teacher_only |
-      | Aerodynamics         | Air activity   | section a | page 1 | a                | image_q         | teacher   | false                 |
-    And the following assignments exist:
-      | type          | name                 | class       |
-      | investigation | Aerodynamics         | My Class    |
     And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
     
@@ -25,7 +15,7 @@ Feature: Teacher views report from the instructional materials page of a class
   Scenario: Teacher should see report for activity
     When the following student answers:
       | student   | class          | investigation       | question_prompt | answer |
-      | dave      | My Class       | Aerodynamics        | a               | y      |
+      | dave      | My Class       | Aerodynamics        | c               | y      |
       | chuck     | My Class       | Aerodynamics        | a               | Y      |
     And I go to Instructional Materials page for "My Class"
     And I follow "Air activity"
@@ -39,9 +29,9 @@ Feature: Teacher views report from the instructional materials page of a class
   Scenario: Teacher should see report for student
     When the following student answers:
       | student   | class          | investigation       | question_prompt | answer |
-      | dave      | My Class       | Aerodynamics        | a               | y      |
+      | dave      | My Class       | Aerodynamics        | c               | y      |
       | chuck     | My Class       | Aerodynamics        | image_q         | Y      |
-      | chuck     | My Class       | Aerodynamics        | a               | Y      |
+      | chuck     | My Class       | Aerodynamics        | c               | Y      |
     And I go to Instructional Materials page for "My Class"
     And I follow "Doe, Dave"
     Then Report page should have content "Dave Doe"
@@ -53,7 +43,7 @@ Feature: Teacher views report from the instructional materials page of a class
   Scenario: Teacher should see report for student and corresponding activity
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | dave      | My Class      | Aerodynamics        | a               | y      |
+      | dave      | My Class      | Aerodynamics        | c               | y      |
     And I go to Instructional Materials page for "My Class"
     And I click progress bar on the instructional materials page for the student "dave" and activity "Air activity"
     Then Report page should have content "Air activity"
@@ -66,7 +56,7 @@ Feature: Teacher views report from the instructional materials page of a class
   Scenario: Report filtered state should be maintained if filter is applied at investigation level
     When the following student answers:
       | student   | class          | investigation       | question_prompt | answer |
-      | dave      | My Class       | Aerodynamics        | a               | y      |
+      | dave      | My Class       | Aerodynamics        | c               | y      |
       | dave      | My Class       | Aerodynamics        | image_q         | Y      |
     And I go to Instructional Materials page for "My Class"
     And I follow "Run Report"
@@ -88,7 +78,7 @@ Feature: Teacher views report from the instructional materials page of a class
   Scenario: Report filtered state should be maintained if filter is applied at activity level,student level and student's activity level
     When the following student answers:
       | student   | class          | investigation       | question_prompt | answer |
-      | dave      | My Class       | Aerodynamics        | a               | y      |
+      | dave      | My Class       | Aerodynamics        | c               | y      |
       | dave      | My Class       | Aerodynamics        | image_q         | Y      |
     And I go to Instructional Materials page for "My Class"
     And I follow "Doe, Dave"
@@ -120,7 +110,7 @@ Feature: Teacher views report from the instructional materials page of a class
   Scenario: Filtering the activity report should effect main report
     When the following student answers:
       | student   | class          | investigation       | question_prompt | answer |
-      | dave      | My Class       | Aerodynamics        | a               | y      |
+      | dave      | My Class       | Aerodynamics        | c               | y      |
       | dave      | My Class       | Aerodynamics        | image_q         | Y      |
     And I go to Instructional Materials page for "My Class"
     And I follow "Air activity"
@@ -136,7 +126,7 @@ Feature: Teacher views report from the instructional materials page of a class
   Scenario: Filtering the main report should effect activity
     When the following student answers:
       | student   | class          | investigation       | question_prompt | answer |
-      | dave      | My Class       | Aerodynamics        | a               | y      |
+      | dave      | My Class       | Aerodynamics        | c               | y      |
       | dave      | My Class       | Aerodynamics        | image_q         | Y      |
     And I go to Instructional Materials page for "My Class"
     And I follow "Run Report"

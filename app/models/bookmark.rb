@@ -6,7 +6,8 @@ class Bookmark < ActiveRecord::Base
   has_many   :bookmark_visits,  :dependent => :destroy
   validates_presence_of :user
   validates_presence_of :url
-
+  default_scope :order => 'position'
+  acts_as_list
 
   url_regex      = /https?:\/\/(\S+)+\s*$/i
   validates_format_of :url,  :with => url_regex
