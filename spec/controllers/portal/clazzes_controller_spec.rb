@@ -10,7 +10,7 @@ describe Portal::ClazzesController do
     mock_clazz
   end
 
-  def sign_in_sym(user_sym)
+  def sign_in_symbol(user_sym)
     sign_in instance_variable_get("@#{user_sym}")
   end
 
@@ -21,16 +21,16 @@ describe Portal::ClazzesController do
     # set up our user types
     @normal_user = Factory.next(:anonymous_user)
     @admin_user = Factory.next(:admin_user)
-    @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
-    @authorized_student = Factory.create(:portal_student, :user =>Factory.create(:confirmed_user, :login => "authorized_student"))
+    @authorized_student =         Factory.create(:portal_student, :user => Factory.create(:confirmed_user, :login => "authorized_student"))
+    @authorized_teacher =         Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
     @another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "another_authorized_teacher"), :schools => [@mock_school])
-    @unauthorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "unauthorized_teacher"), :schools => [@mock_school])
+    @unauthorized_teacher =       Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "unauthorized_teacher"), :schools => [@mock_school])
+    # another teacher, to act as an arbitrary third party
+    @random_teacher =             Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "random_teacher"), :schools => [@mock_school])
 
     @authorized_teacher_user = @authorized_teacher.user
     @unauthorized_teacher_user = @unauthorized_teacher.user
 
-    # another teacher, to act as an arbitrary third party
-    @random_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "random_teacher"), :schools => [@mock_school])
 
     @mock_clazz_name = "Random Test Class"
     @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
@@ -132,7 +132,7 @@ describe Portal::ClazzesController do
         does_this = "populates the list of available teachers for ADD functionality if current user is a #{user}"
       end
       it does_this do
-        sign_in_sym user
+        sign_in_symbol user
 
         xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
@@ -151,7 +151,7 @@ describe Portal::ClazzesController do
       it "will add the selected teacher to the given class if the current user is authorized" do
         # @id
         # @teacher_id
-        sign_in_sym user
+        sign_in_symbol user
 
         post :add_teacher, { :id => @mock_clazz.id, :teacher_id => @unauthorized_teacher.id }
 
@@ -174,7 +174,7 @@ describe Portal::ClazzesController do
       it "will remove the selected teacher from the given class if the current user is authorized" do
         # @id
         # @teacher_id
-        sign_in_sym user
+        sign_in_symbol user
 
         teachers = [@authorized_teacher, @random_teacher] # Any teachers except for @unauthorized_teacher will work here
         @mock_clazz.teachers = teachers
@@ -244,7 +244,7 @@ describe Portal::ClazzesController do
 
     [:authorized_teacher_user, :unauthorized_teacher_user].each do |user|
       it "will redirect the user to their home page if they remove themselves from a class" do
-        sign_in_sym user
+        sign_in_symbol user
 
         teachers = [@authorized_teacher, @unauthorized_teacher]
         @mock_clazz.teachers = teachers
@@ -285,7 +285,7 @@ describe Portal::ClazzesController do
 
     [:admin_user, :authorized_teacher_user].each do |user|
       it "should populate the schools list with the project default school if the current user does not belong to any schools" do
-        sign_in_sym user
+        sign_in_symbol user
 
         get :new
 
@@ -615,9 +615,6 @@ describe Portal::ClazzesController do
 
   describe "Put teacher Manage class" do
     before(:each) do
-      
-      controller.stub!(:current_visitor).and_return(@authorized_teacher_user)
-      
       @mock_teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
       
       mock_clazz_name = "Mock Class Physics"
@@ -649,7 +646,7 @@ describe Portal::ClazzesController do
     end
     
     it "should should save all the activated and deactivated classes and in the right order" do
-      login_admin
+      sign_in @authorized_teacher_user
       @post_params = {
         'teacher_clazz'  => Array[@mock_teacher_clazz.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_bio.id , @mock_teacher_clazz_math.id ],
         'teacher_clazz_position'  => Array[@mock_teacher_clazz_math.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_chem.id, @mock_teacher_clazz_bio.id ,@mock_teacher_clazz.id ]
