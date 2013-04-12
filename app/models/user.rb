@@ -7,9 +7,8 @@ class User < ActiveRecord::Base
   has_many :authentications, :dependent => :delete_all
   has_many :access_grants, :dependent => :delete_all
 
-  before_validation :initialize_fields, :on => :create
 
-  devise :database_authenticatable, :registerable,:token_authenticatable, #:confirmable,
+  devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   self.token_authentication_key = "oauth_token"
   users = User.arel_table
@@ -23,9 +22,6 @@ class User < ActiveRecord::Base
     where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[token_authentication_key], Time.now]).joins(:access_grants).select("users.*").first
   end
   
-  def initialize_fields
-    self.state = "active"
-  end
   
   
   NO_EMAIL_STRING='no-email-'
