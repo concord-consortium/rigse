@@ -2041,6 +2041,7 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.datetime "updated_at"
     t.integer  "offerings_count",    :default => 0
     t.text     "content"
+    t.string   "uuid"
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
