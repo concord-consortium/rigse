@@ -15,7 +15,7 @@ namespace :db do
     
     
     desc "prepare db for feature"
-    task :prepare_cucumber => "db:schema:dump" do
+    task :prepare_cucumber do
       Rails.env = ENV['RAILS_ENV'] = 'cucumber'
       Rake::Task['db:drop'].invoke
       Rake::Task['db:create'].invoke
