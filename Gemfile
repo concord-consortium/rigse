@@ -18,6 +18,7 @@ source "http://rubygems.org"
 
   gem "devise",               "~>2.1.0"
   gem 'devise-encryptable'
+  gem 'omniauth'
 
   gem "rails",                "~> 3.2"
   gem "arrayfields"
