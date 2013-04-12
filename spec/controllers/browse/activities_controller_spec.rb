@@ -5,7 +5,6 @@ describe Browse::ActivitiesController do
         @author_user = Factory.next(:author_user)
         @physics_investigation = Factory.create(:investigation, :name => 'physics_inv', :user => @author_user, :publication_status => 'published')
         @laws_of_motion_activity = Factory.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => @physics_investigation.id, :user => @author_user)
-        # @controller.stub!(:user_signed_in?).and_return(false)
     end
     
     describe "GET show" do
