@@ -6,7 +6,7 @@ class Saveable::ImageQuestion < ActiveRecord::Base
   
   belongs_to :image_question,  :class_name => 'Embeddable::ImageQuestion'
 
-  has_many :answers, :order => :position, :class_name => "Saveable::ImageQuestionAnswer"
+  has_many :answers, :dependent => :destroy, :order => :position, :class_name => "Saveable::ImageQuestionAnswer"
 
   # has_one :answer, 
   #   :class_name => "Saveable::OpenResponseAnswer",

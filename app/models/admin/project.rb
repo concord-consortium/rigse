@@ -11,7 +11,7 @@ class Admin::Project < ActiveRecord::Base
 
   belongs_to :user
 
-  has_many :project_vendor_interfaces, :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
+  has_many :project_vendor_interfaces, :dependent => :destroy , :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
   has_many :enabled_vendor_interfaces, :through => :project_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
 
   acts_as_replicatable

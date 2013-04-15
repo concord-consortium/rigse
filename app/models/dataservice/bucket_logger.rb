@@ -2,8 +2,8 @@ class Dataservice::BucketLogger < ActiveRecord::Base
   attr_accessible :learner, :learner_id
 
   belongs_to :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
-  has_many :bucket_contents, :class_name => "Dataservice::BucketContent", :foreign_key => 'bucket_logger_id', :order => :updated_at
-  has_many :bucket_log_items, :class_name => "Dataservice::BucketLogItem", :foreign_key => 'bucket_logger_id', :order => :updated_at
+  has_many :bucket_contents, :dependent => :destroy ,:class_name => "Dataservice::BucketContent", :foreign_key => 'bucket_logger_id', :order => :updated_at
+  has_many :bucket_log_items, :dependent => :destroy, :class_name => "Dataservice::BucketLogItem", :foreign_key => 'bucket_logger_id', :order => :updated_at
 
   def most_recent_content
     # don't use .last because that has weird interactions with has_many

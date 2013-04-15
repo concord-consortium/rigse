@@ -9,9 +9,9 @@ class Embeddable::OpenResponse < ActiveRecord::Base
 
   self.table_name = "embeddable_open_responses"
   belongs_to :user
-  has_many :page_elements, :as => :embeddable
+  has_many :page_elements, :dependent => :destroy, :as => :embeddable
   has_many :pages, :through =>:page_elements
-  has_many :teacher_notes, :as => :authored_entity
+  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
 
   has_many :saveables, :class_name => "Saveable::OpenResponse", :foreign_key => :open_response_id do
     def by_offering(offering)

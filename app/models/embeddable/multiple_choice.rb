@@ -3,9 +3,9 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
 
   
   belongs_to :user
-  has_many :page_elements, :as => :embeddable
+  has_many :page_elements, :dependent => :destroy, :as => :embeddable
   has_many :pages, :through =>:page_elements
-  has_many :teacher_notes, :as => :authored_entity
+  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :choices, :class_name => "Embeddable::MultipleChoiceChoice", :dependent => :destroy
   
   has_many :saveables, :class_name => "Saveable::MultipleChoice", :foreign_key => :multiple_choice_id do
