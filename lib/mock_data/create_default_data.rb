@@ -852,7 +852,7 @@ module MockData
       user = @default_users.find{|u| u.login == user_login}
       if user
         default_ext_act = nil
-        act_by_uuid = Activity.find_by_uuid(act[:uuid])
+        act_by_uuid = ExternalActivity.find_by_uuid(act[:uuid])
         if act_by_uuid
           default_ext_act = act_by_uuid
           default_ext_act.user_id = user.id
