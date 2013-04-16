@@ -9,7 +9,7 @@ class Embeddable::OpenResponse < ActiveRecord::Base
 
   self.table_name = "embeddable_open_responses"
   belongs_to :user
-  has_many :page_elements, :dependent => :destroy, :as => :embeddable
+  has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
 

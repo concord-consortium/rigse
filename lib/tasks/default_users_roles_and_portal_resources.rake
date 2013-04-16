@@ -74,6 +74,18 @@ namespace :app do
     task :create_default_data => [:environment, :create_default_learners_and_learner_attempts] do
     end
     
+    desc "Deletes the default data"
+    task :delete_default_data => :environment do
+      require File.expand_path('../../mock_data/delete_default_data.rb', __FILE__)
+      MockData.delete_default_data
+    end
+    
+    desc "Resets the default data"
+    task :reset_default_data => :environment do
+      Rake::Task['app:setup:delete_default_data'].invoke
+      Rake::Task['app:setup:create_default_data'].invoke
+    end
+    
     desc "Create default users and roles"
     task :default_users_roles => :environment do
 

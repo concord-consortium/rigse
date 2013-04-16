@@ -886,10 +886,16 @@ module MockData
           end
         
           if study_material
+            offering_uuid = assignable[:offering_uuid]
+            
             default_portal_offering  = Portal::Offering.find_by_clazz_id_and_runnable_id_and_runnable_type(clazz.id, study_material.id, assignable[:type])
-            unless default_portal_offering
+            if default_portal_offering
+              default_portal_offering.uuid = offering_uuid
+              default_portal_offering.save!
+            else
               default_portal_offering = Factory.create(:portal_offering, { :runnable => study_material,:clazz => clazz})
               default_portal_offering.runnable_type = assignable[:type]
+              default_portal_offering.uuid = offering_uuid
               default_portal_offering.save!
             end
           end
