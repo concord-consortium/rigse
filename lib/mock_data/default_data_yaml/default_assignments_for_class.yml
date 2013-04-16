@@ -1,0 +1,92 @@
+assignments:
+  assignment_1:
+    class_name: My Class
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Aerodynamics
+        offering_uuid: 00000000-0000-0000-0000-000000000182
+      assignable_2:
+        type: Investigation
+        name: Plant reproduction
+        offering_uuid: 00000000-0000-0000-0000-000000000183
+      assignable_3:
+        type: Investigation
+        name: Radioactivity
+        offering_uuid: 00000000-0000-0000-0000-000000000184
+      assignable_4:
+        type: Activity
+        name: Algebra
+        offering_uuid: 00000000-0000-0000-0000-000000000185
+      assignable_5:
+        type: Investigation
+        name: Atomic Energy
+        offering_uuid: 00000000-0000-0000-0000-000000000186
+        
+  assignment_2:
+    class_name: Physics
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Electricity
+        offering_uuid: 00000000-0000-0000-0000-000000000187
+      assignable_2:
+        type: Investigation
+        name: Plant reproduction
+        offering_uuid: 00000000-0000-0000-0000-000000000188
+      asignable_3:
+        type: Investigation
+        name: Aerodynamics
+        offering_uuid: 00000000-0000-0000-0000-000000000189
+      assignable_4:
+        type: Investigation
+        name: Radioactivity
+        offering_uuid: 00000000-0000-0000-0000-000000000190
+      assignable_5:
+        type: Activity
+        name: Algebra
+        offering_uuid: 00000000-0000-0000-0000-000000000191
+      assignable_4:
+        type: Investigation
+        name: Atomic Energy
+        offering_uuid: 00000000-0000-0000-0000-000000000192
+                      
+  assignment_3:
+    class_name: Mechanics
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Aerodynamics
+        offering_uuid: 00000000-0000-0000-0000-000000000194
+        
+  assignment_4:
+    class_name: Class_with_no_attempts
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Aerodynamics
+        offering_uuid: 00000000-0000-0000-0000-000000000195
+        
+  assignment_5:
+    class_name: Class_with_no_students
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Plant reproduction
+        offering_uuid: 00000000-0000-0000-0000-000000000196
+        
+  assignment_6:
+    class_name: Mathematics
+    assignables:
+      assignable_1:
+        type: Investigation
+        name: Lumped circuit abstraction
+        offering_uuid: 00000000-0000-0000-0000-000000000197
+      assignable_2:
+        type: Investigation
+        name: Static discipline
+        offering_uuid: 00000000-0000-0000-0000-000000000198
+      assignable_3:
+        type: Investigation
+        name: Non Linear Devices
+        offering_uuid: 00000000-0000-0000-0000-000000000199
