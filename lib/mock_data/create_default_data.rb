@@ -26,13 +26,27 @@ module MockData
       Admin::Project.create!(admin_info)
     end
     
-    #create roles in order
-    %w| admin manager researcher author member guest|.each_with_index do |role_name,index|
-      unless Role.find_by_title_and_position(role_name,index)
-        Factory.create(:role, :title => role_name, :position => index)
+    DEFAULT_DATA[:roles].each do |i, role|
+      role_by_uuid = Role.find_by_uuid(role[:uuid])
+      if role_by_uuid
+        r = role_by_uuid
+        r.title = role[:title]
+        r.save!
+      else
+        role_by_title = Role.find_by_title(role[:title])
+        unless role_by_title
+          last_role = Role.all.last
+          unless last_role
+            max_pos = 0
+          else
+            max_pos = last_role.position + 1
+          end
+          new_role = Role.create!(role)
+          new_role.position = max_pos
+          new_role.save!
+        end
       end
     end
-    
     
     #create a district
     default_district = nil
@@ -575,7 +589,7 @@ module MockData
                    :uuid => lab_book_snapshot
                  }
           snapshot_button = Embeddable::LabBookSnapshot.create!(info)
-          snapshot_button.pages << investigation.activities[0].sections[0].pages[0]
+          snapshot_button.pages << page
           prediction_graph = Embeddable::DataCollector.create!(:user_id => user.id, :uuid => prediction_graph_uuid)
           prediction_graph.pages << page
           
@@ -852,7 +866,7 @@ module MockData
       user = @default_users.find{|u| u.login == user_login}
       if user
         default_ext_act = nil
-        act_by_uuid = Activity.find_by_uuid(act[:uuid])
+        act_by_uuid = ExternalActivity.find_by_uuid(act[:uuid])
         if act_by_uuid
           default_ext_act = act_by_uuid
           default_ext_act.user_id = user.id
