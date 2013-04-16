@@ -1,9 +1,19 @@
 module MockData
   
-  DEFAULT_DATA = YAML.load_file(File.dirname(__FILE__) + "/default_data.yml").recursive_symbolize_keys
+  current_dir = File.dirname(__FILE__)
+  default_data = {}
+  
+  default_data_yaml_files = Dir.glob(current_dir + '/default_data_yaml/*')
+  
+  default_data_yaml_files.each do |file|
+    current_file_data = YAML.load_file(file).recursive_symbolize_keys
+    default_data.merge!(current_file_data)
+  end
+  
+  DEFAULT_DATA = default_data
   
   #load all the factories
-  Dir[File.dirname(__FILE__) + '/../../factories/*.rb'].each {|file| require file }
+  Dir[current_dir + '/../../factories/*.rb'].each {|file| require file }
   
   @default_users = nil
   @default_teachers = nil
