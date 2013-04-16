@@ -113,13 +113,6 @@ class ExternalActivity < ActiveRecord::Base
     return uri.to_sc
   end
 
-  ##
-  ## Hackish stub: Noah Paessel
-  ##
-  def offerings
-    []
-  end
-
   # methods to mimic Activity
   def teacher_only
     false
