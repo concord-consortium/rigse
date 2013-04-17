@@ -1,8 +1,8 @@
 Feature: External Activities can support a REST api
   Background:
     Given the following external REST activity:
-      | name        | "Cool Thing" |
-      | create_url  | "http://activity.example.com/activity/1/sessions/" |
+      | name             | "Cool Thing" |
+      | rest_create_url  | "http://activity.example.com/activity/1/sessions/" |
     And "activity.example.com/activity/1/sessions/" handles a POST and responds with
       """
       HTTP/1.1 201 Created
