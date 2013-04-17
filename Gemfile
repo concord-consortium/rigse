@@ -136,7 +136,8 @@ group :test do
   gem "email_spec",        "~> 1.2.1"
   gem "fakeweb",           "~> 1.3", :require => false
   gem "ci_reporter",       "~> 1.7.0"
-  gem "delorean",           "~> 1.1"
+  gem "delorean",          "~> 1.1"
+  gem "webmock",           "~> 1.11.0"
 end
 
 group :test, :development do
