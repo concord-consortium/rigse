@@ -12,12 +12,12 @@ class Portal::Student < ActiveRecord::Base
   # has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
   # has_many :schools, :through => :school_memberships, :class_name => "Portal::School"
   
-  has_many :learners, :class_name => "Portal::Learner", :foreign_key => "student_id"
-  has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
+  has_many :learners, :dependent => :destroy , :class_name => "Portal::Learner", :foreign_key => "student_id"
+  has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
   
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz
   
-  has_many :collaborations, :class_name => "Portal::Collaboration", :foreign_key => "student_id"
+  has_many :collaborations, :dependent => :destroy, :class_name => "Portal::Collaboration", :foreign_key => "student_id"
   has_many :collaborative_bundles, :through => :collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content 
 
   [:name, :first_name, :last_name, :email, :login, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }

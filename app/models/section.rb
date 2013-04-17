@@ -10,7 +10,7 @@ class Section < ActiveRecord::Base
 
   has_one :investigation, :through => :activity
 
-  has_many :pages, :order => :position, :dependent => :destroy do
+  has_many :pages, :dependent => :destroy ,:order => :position, :dependent => :destroy do
     def student_only
       find(:all, :conditions => {'teacher_only' => false})
     end
@@ -47,8 +47,8 @@ class Section < ActiveRecord::Base
 
   include Changeable
 
-  has_many :teacher_notes, :as => :authored_entity
-  has_many :author_notes, :as => :authored_entity
+  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
+  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   include Noteable # convenience methods for notes...
 
   validates_presence_of :name, :on => :create, :message => "can't be blank"

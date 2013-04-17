@@ -7,13 +7,6 @@ Feature: Teacher manages instructional materials of a class
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following student answers:
-      | student   | class         | investigation       | question_prompt | answer |
-      | dave      | My Class      | Radioactivity       | a               | a      |
-      | dave      | My Class      | Radioactivity       | image_q         | Y      |
-    And the following student answers:
-      | student   | class         | activity            | question_prompt | answer |
-      | taylor    | My Class      | Algebra             | f               | y      |
     And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
     
