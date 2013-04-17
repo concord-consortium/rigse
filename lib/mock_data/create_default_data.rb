@@ -6,11 +6,11 @@ module MockData
   default_data_yaml_files = Dir.glob(current_dir + '/default_data_yaml/*')
   
   default_data_yaml_files.each do |file|
-    current_file_data = YAML.load_file(file).recursive_symbolize_keys
+    current_file_data = YAML.load_file(file)
     default_data.merge!(current_file_data)
   end
   
-  DEFAULT_DATA = default_data
+  DEFAULT_DATA = default_data.recursive_symbolize_keys
   
   #load all the factories
   Dir[current_dir + '/../../factories/*.rb'].each {|file| require file }
