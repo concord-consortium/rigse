@@ -28,10 +28,15 @@ Then /^the (portal|browser) should not send a (POST|GET) to "([^"]*)"$/ do |clie
   stub.should_not have_been_requested
 end
 
-When /^a student first runs the external activity "([^"]*)"$/ do |arg1|
-  # need to assign external activity to predefined class that 'student' is in
-  # then log in as the student, go to the home page, and click the 'run' link
-  #pending # express the regexp above with the code you wish you had
+When /^a student first runs the external activity "([^"]*)"$/ do |activity_name|
+  activity = ExternalActivity.find_by_name activity_name
+  clazz = Portal::Clazz.find_by_name("My Class")
+  Factory.create(:portal_offering, :runnable => activity, :clazz => clazz)
+  login_as('student')
+  visit('/')
+  within(".offering_for_student:contains('#{activity_name}')") do
+    find(".solo.button").click
+  end
 end
 
 Given /^a student has already run the external REST activity "([^"]*)" before$/ do |arg1|
