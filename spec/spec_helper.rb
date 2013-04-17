@@ -66,6 +66,9 @@ Spork.each_run do
       puts
       puts "*** Probe configuration models need to be loaded into the test database to run the tests"
       puts "*** run: rake db:test:prepare"
+      puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
+      puts "Rails.env: #{Rails.env}"
+      puts "Database: #{ActiveRecord::Base.connection.current_database}"
       puts
       exit
     end
@@ -73,6 +76,9 @@ Spork.each_run do
     puts
     puts "*** pending migrations need to be applied to run the tests"
     puts "*** run: rake db:test:prepare"
+    puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
+    puts "Rails.env: #{Rails.env}"
+    puts "Database: #{ActiveRecord::Base.connection.current_database}"
     puts
     exit
   end
