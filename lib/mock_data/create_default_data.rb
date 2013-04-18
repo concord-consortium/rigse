@@ -27,7 +27,6 @@ module MockData
   
   #Create fake users and roles
   def self.create_default_users
-    
     puts
     puts
     admin_info = DEFAULT_DATA[:admin_project]
@@ -275,6 +274,8 @@ module MockData
     @default_courses = default_courses
     
     #following users exist
+    puts
+    puts
     default_users = []
     @default_users = default_users
     
@@ -302,9 +303,12 @@ module MockData
       end
       
     end
-    
+    puts
+    puts "Generated #{create_count} and updated #{update_count} users"
     
     #following teachers exist
+    puts
+    puts
     default_teachers = []
     @default_teachers = default_teachers
     
@@ -361,8 +365,12 @@ module MockData
         puts "Skipped teacher user '#{teacher_info[:login]}' as it already exists (conflict user id: #{user_data[:conflicting_user]})"
       end
     end
+    puts
+    puts "Generated #{create_count} and Updated #{update_count} teachers"
     
     
+    puts
+    puts
     default_students = []
     @default_students = default_students
     
@@ -380,7 +388,7 @@ module MockData
       
       student_info[:roles] = roles
       
-      user = add_default_user(student_info)
+      user_data = add_default_user(student_info)
       
       unless user_data[:skipped?]
         user = user_data[:user]
@@ -406,14 +414,14 @@ module MockData
         puts "Skipped student user '#{student_info[:login]}' as it already exists (conflict user id: #{user_data[:conflicting_user]})"
       end
     end
-    
+    puts
+    puts "Generated #{create_count} and Updated #{update_count} students"
     
     
     
   end #end of method create_default_users
   
   def self.create_default_clazzes
-
     # this method creates default classes,
     # teacher class mapping
     # student class mapping
@@ -1217,6 +1225,7 @@ module MockData
   
   def self.record_learner_data
     # record investigation answers
+    count = 0
     puts
     investigation_index = 0
     DEFAULT_DATA[:student_answers_investigations].each do |key, res|
@@ -1234,7 +1243,7 @@ module MockData
         record_student_answer(res, 'Investigation')
         
         investigation_index = investigation_index + 1
-        puts "Record learner #{student.user.first_name}'s response for  offering #{investigation.name} assigned to class #{clazz.name}"
+        count += 1
       end
       
     end
@@ -1257,10 +1266,12 @@ module MockData
         record_student_answer(res, 'Activity')
         
         activity_index = activity_index + 1
-        puts "Record learner #{student.user.first_name}'s response for  offering #{activity.name} assigned to class #{clazz.name}"
+        count += 1
       end
     end
     
+    puts
+    puts "Generated/updated #{count} student responses"
   end # end of record_learner_data
   
   # helper methods
