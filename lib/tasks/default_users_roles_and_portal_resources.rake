@@ -77,6 +77,7 @@ namespace :app do
     
     desc "Deletes the default data"
     task :delete_default_data => :environment do
+      puts 'Deleting default data'
       require File.expand_path('../../mock_data/delete_default_data.rb', __FILE__)
       MockData.delete_default_data
     end
