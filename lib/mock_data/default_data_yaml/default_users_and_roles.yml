@@ -77,7 +77,7 @@ schools:
 courses:
   course_1:
     name: Course for Fake School
-    uuid: 00000000-0000-0000-0000-00000000017
+    uuid: 00000000-0000-0000-0000-000000000017
     school: Fake School
     
   course_2:
@@ -89,12 +89,12 @@ users:
   user_1:
     login: author
     roles: member, author
-    uuid: 00000000-0000-0000-0000-0000000000019
+    uuid: 00000000-0000-0000-0000-000000000019
     
   user_2:
     login: manager
     roles: manager
-    uuid: 00000000-0000-0000-0000-0000000000020
+    uuid: 00000000-0000-0000-0000-000000000020
     
   user_3:
     login: mymanager
