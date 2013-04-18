@@ -4,8 +4,8 @@ describe SecurityQuestionsController do
   render_views
 
   before(:each) do
-    @student = Factory.create(:portal_student, :user => Factory.create(:user))
-    stub_current_user @student.user
+    @student = Factory.create(:portal_student, :user => Factory.create(:confirmed_user))
+    sign_in @student.user
     @test_project = mock("project",:name=> "Test Project")
     @test_project.should_receive(:use_student_security_questions).and_return(true)
     @test_project.stub!(:require_user_consent?).and_return(false)
@@ -53,6 +53,11 @@ describe SecurityQuestionsController do
     it "updates the user's security questions" do
       SecurityQuestion.should_receive(:make_questions_from_hash_and_user)
       SecurityQuestion.should_receive(:errors_for_questions_list!)
+
+      # In the controller current_user recreates the user object based on a user id
+      # in the session, so we have to stub current_user here to make sure the controller
+      # is using the same object
+      controller.stub(:current_user).and_return @student.user
       @student.user.should_receive(:update_security_questions!)
 
       put :update, @params_for_update

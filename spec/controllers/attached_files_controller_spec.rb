@@ -19,10 +19,9 @@ describe AttachedFilesController do
     end
     
     it "should not destroy the attached file when requested by a non-approved user" do
-      @anonymous_user = login_anonymous
-      
+      @author = login_author
       @attached_file.stub!(:changeable?).and_return(false)
-      @attached_file.should_receive(:changeable?).with(@anonymous_user)
+      @attached_file.should_receive(:changeable?).with(@author)
       @attached_file.should_not_receive(:destroy)
       
       delete :destroy, :id => @attached_file.id

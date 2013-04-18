@@ -36,7 +36,6 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
 
-  before_filter :check_user
   before_filter :original_user
   before_filter :portal_resources
   before_filter :check_for_password_reset_requirement
@@ -115,16 +114,6 @@ class ApplicationController < ActionController::Base
       @original_user = current_visitor
     end
   end
-
-
-  def check_user
-    if user_signed_in?
-      self.current_visitor = current_user
-    else
-      self.current_visitor = User.anonymous
-    end
-  end
-
 
   def redirect_back_or(path)
     redirect_to :back

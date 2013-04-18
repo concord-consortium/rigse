@@ -131,9 +131,9 @@ class Portal::TeachersController < ApplicationController
   end
   
   def failed_creation(message = 'Sorry, there was an error creating your account')
-    # force the current_visitor to anonymous, because we have not successfully created an account yet.
-    # edge case, which we might need a more integrated solution for??
-    self.current_visitor = User.anonymous
+    # FIXME is the sign_out necessary??? The user should not be signed in yet, however
+    # previously there was a current_visitor=User.anonymous here.
+    sign_out :user
     flash.now[:error] = message
     render :action => :new
   end

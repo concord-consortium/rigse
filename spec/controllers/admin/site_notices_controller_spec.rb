@@ -1,65 +1,63 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::SiteNoticesController do
-  def setup_for_repeated_tests
-    @controller = Admin::SiteNoticesController.new
-    @request = ActionController::TestRequest.new
-    @response = ActionController::TestResponse.new
-
+  before(:each) do
     @mock_semester = Factory.create(:portal_semester, :name => "Fall")
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
 
     @admin_user = Factory.next(:admin_user)
-    @teacher_user = Factory.create(:user, :login => "teacher_user")
+    @teacher_user = Factory.create(:confirmed_user, :login => "teacher_user")
     @teacher_user.add_role('member')
     @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
     @manager_user = Factory.next(:manager_user)
     @researcher_user = Factory.next(:researcher_user)
     @author_user = Factory.next(:author_user)
-    @student_user = Factory.create(:user, :login => "authorized_student")
+    @student_user = Factory.create(:confirmed_user, :login => "authorized_student")
     @portal_student = Factory.create(:portal_student, :user => @student_user)
     @guest_user = Factory.next(:anonymous_user)
 
     @all_role_ids = Role.all.map {|r| r.id}
 
-  end
-  before(:each) do
-    setup_for_repeated_tests
-    stub_current_user :admin_user
+    login_admin
   end
   describe "GET new" do
     it"doesn't show notice create page to users with roles other than admin and manager" do
-
       get :new
       assert_template "new"
 
-      stub_current_user :manager_user
+      sign_out :user
+      sign_in @manager_user
       get :new
       assert_template "new"
 
       error_msg = /Please log in as an administrator or manager/i
 
-      stub_current_user :teacher_user
+      sign_out :user
+      sign_in @teacher_user
       get :new
       response.should redirect_to("/home")
       flash[:error].should =~ error_msg
 
-      stub_current_user :researcher_user
+      sign_out :user
+      sign_in @researcher_user
       get :new
       response.should redirect_to("/home")
       flash[:error].should =~ error_msg
 
-      stub_current_user :author_user
+      sign_out :user
+      sign_in @author_user
       get :new
       response.should redirect_to("/home")
       flash[:error].should =~ error_msg
 
-      stub_current_user :student_user
+      sign_out :user
+      sign_in @student_user
       get :new
       response.should redirect_to("/home")
       flash[:error].should =~ error_msg
 
-      stub_current_user :guest_user
+      sign_out :user
+      sign_in @guest_user
       get :new
       response.should redirect_to("/home")
       flash[:error].should =~ error_msg
@@ -200,7 +198,7 @@ describe Admin::SiteNoticesController do
   end
   describe "Dismiss a notice" do
     before(:each) do
-      stub_current_user :teacher_user
+      sign_in @teacher_user
       @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
@@ -220,7 +218,7 @@ describe Admin::SiteNoticesController do
   end
   describe "toggle_notice_display" do
     before(:each) do
-      stub_current_user :teacher_user
+      sign_in @teacher_user
       @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|

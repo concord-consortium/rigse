@@ -3,37 +3,34 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::ClazzesController do
   render_views
 
-  def setup_for_repeated_tests
-    @controller = Portal::ClazzesController.new
-    @request = ActionController::TestRequest.new
-    @response = ActionController::TestResponse.new
+  def mock_clazz(stubs={})
+    mock_clazz = Factory.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
+    #mock_clazz.stub!(stubs) unless stubs.empty?
 
-    # cleanup after previous tests
-    Portal::Teacher.destroy_all
-    Portal::Course.destroy_all
-    Portal::Clazz.destroy_all
-    Portal::School.destroy_all
-    Portal::Semester.destroy_all
-    User.destroy_all
-    
-    
+    mock_clazz
+  end
 
+  def sign_in_symbol(user_sym)
+    sign_in instance_variable_get("@#{user_sym}")
+  end
+
+  before(:each) do
     @mock_semester = Factory.create(:portal_semester, :name => "Fall")
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
 
     # set up our user types
     @normal_user = Factory.next(:anonymous_user)
     @admin_user = Factory.next(:admin_user)
-    @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [@mock_school])
-    @authorized_student = Factory.create(:portal_student, :user =>Factory.create(:user, :login => "authorized_student"))
-    @another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "another_authorized_teacher"), :schools => [@mock_school])
-    @unauthorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "unauthorized_teacher"), :schools => [@mock_school])
+    @authorized_student =         Factory.create(:portal_student, :user => Factory.create(:confirmed_user, :login => "authorized_student"))
+    @authorized_teacher =         Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
+    @another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "another_authorized_teacher"), :schools => [@mock_school])
+    @unauthorized_teacher =       Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "unauthorized_teacher"), :schools => [@mock_school])
+    # another teacher, to act as an arbitrary third party
+    @random_teacher =             Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "random_teacher"), :schools => [@mock_school])
 
     @authorized_teacher_user = @authorized_teacher.user
     @unauthorized_teacher_user = @unauthorized_teacher.user
 
-    # another teacher, to act as an arbitrary third party
-    @random_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "random_teacher"), :schools => [@mock_school])
 
     @mock_clazz_name = "Random Test Class"
     @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
@@ -50,36 +47,15 @@ describe Portal::ClazzesController do
     Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 
-  # def login_as(user_sym)
-  #     @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
-  #
-  #     @controller.stub!(:current_visitor).and_return(@logged_in_user)
-  #     @logged_in_user
-  #   end
-
-  def mock_clazz(stubs={})
-    mock_clazz = Factory.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
-    #mock_clazz.stub!(stubs) unless stubs.empty?
-
-    mock_clazz
-  end
-
-  before(:each) do
-    setup_for_repeated_tests
-    stub_current_user :admin_user # Make admin our default test user
-    #controller.stub(:current_user) { @admin_user }
-    #sign_in @admin_user
-  end
-
-
   describe "GET show" do
     it "assigns the requested class as @portal_clazz" do
+      login_admin
       get :show, :id => @mock_clazz.id
       assigns[:portal_clazz].should == @mock_clazz
     end
 
     it "doesn't show class to unauthorized teacheruser" do
-      stub_current_user :unauthorized_teacher_user
+      sign_in @unauthorized_teacher_user
       get :show, { :id => @mock_clazz.id }
 
       response.should_not be_success
@@ -87,8 +63,7 @@ describe Portal::ClazzesController do
     end
 
     it "saves the position of the left pane submenu item for an authorized teacher" do
-      setup_for_repeated_tests
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       get :show, { :id => @mock_clazz.id }
 
@@ -101,7 +76,7 @@ describe Portal::ClazzesController do
 
   describe "XMLHttpRequest edit" do
     it "doesn't show the details of a class to unauthorized teachers" do
-      stub_current_user :unauthorized_teacher_user
+      sign_in @unauthorized_teacher_user
       teachers = [@authorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
 
@@ -111,6 +86,7 @@ describe Portal::ClazzesController do
     end
 
     it "should not allow me to modify the requested class's school" do
+      login_admin
       xml_http_request :post, :edit, :id => @mock_clazz.id
 
       assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]", false)
@@ -156,8 +132,7 @@ describe Portal::ClazzesController do
         does_this = "populates the list of available teachers for ADD functionality if current user is a #{user}"
       end
       it does_this do
-        setup_for_repeated_tests
-        stub_current_user user
+        sign_in_symbol user
 
         xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
@@ -172,12 +147,11 @@ describe Portal::ClazzesController do
   end
 
   describe "POST add_teacher" do
-    it "will add the selected teacher to the given class if the current user is authorized" do
-      # @id
-      # @teacher_id
-      [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
-        setup_for_repeated_tests
-        stub_current_user user
+    [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
+      it "will add the selected teacher to the given class if the current user is authorized" do
+        # @id
+        # @teacher_id
+        sign_in_symbol user
 
         post :add_teacher, { :id => @mock_clazz.id, :teacher_id => @unauthorized_teacher.id }
 
@@ -196,12 +170,11 @@ describe Portal::ClazzesController do
   end
 
   describe "DELETE remove_teacher" do
-    it "will remove the selected teacher from the given class if the current user is authorized" do
-      # @id
-      # @teacher_id
-      [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
-        setup_for_repeated_tests
-        stub_current_user user
+    [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
+      it "will remove the selected teacher from the given class if the current user is authorized" do
+        # @id
+        # @teacher_id
+        sign_in_symbol user
 
         teachers = [@authorized_teacher, @random_teacher] # Any teachers except for @unauthorized_teacher will work here
         @mock_clazz.teachers = teachers
@@ -222,6 +195,7 @@ describe Portal::ClazzesController do
     end
 
     it "will not let me remove the last teacher from the given class" do
+      login_admin
       #remove one teacher
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @another_authorized_teacher.id }
       
@@ -235,6 +209,7 @@ describe Portal::ClazzesController do
     end
 
     it "will disable the remaining delete button if there is only one remaining teacher after this operation" do
+      login_admin
       teachers = [@authorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
 
@@ -256,6 +231,7 @@ describe Portal::ClazzesController do
     # end
 
     it "will re-render the teacher listing when a teacher is removed" do
+      login_admin
       teachers = [@authorized_teacher, @unauthorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
 
@@ -266,10 +242,9 @@ describe Portal::ClazzesController do
       assert_select("tr#portal__teacher_#{@authorized_teacher.id}", false)
     end
 
-    it "will redirect the user to their home page if they remove themselves from a class" do
-      [:authorized_teacher_user, :unauthorized_teacher_user].each do |user|
-        setup_for_repeated_tests
-        stub_current_user user
+    [:authorized_teacher_user, :unauthorized_teacher_user].each do |user|
+      it "will redirect the user to their home page if they remove themselves from a class" do
+        sign_in_symbol user
 
         teachers = [@authorized_teacher, @unauthorized_teacher]
         @mock_clazz.teachers = teachers
@@ -287,19 +262,19 @@ describe Portal::ClazzesController do
 
   describe "GET new" do
     it "should show a list of the current teacher's schools to which to assign this class" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       get :new
 
       assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
-        @logged_in_user.portal_teacher.schools.each do |school|
+        @authorized_teacher_user.portal_teacher.schools.each do |school|
           assert_select("option[value='#{school.id}']", :text => school.name)
         end
       end
     end
 
     it "should show a check box for each possible site grade level" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       get :new
 
@@ -308,10 +283,9 @@ describe Portal::ClazzesController do
       end
     end
 
-    it "should populate the schools list with the project default school if the current user does not belong to any schools" do
-      [:admin_user, :authorized_teacher_user].each do |user|
-        setup_for_repeated_tests
-        stub_current_user user
+    [:admin_user, :authorized_teacher_user].each do |user|
+      it "should populate the schools list with the project default school if the current user does not belong to any schools" do
+        sign_in_symbol user
 
         get :new
 
@@ -371,7 +345,7 @@ describe Portal::ClazzesController do
     end
 
     it "should create a new class, assigned to the correct teacher, in the correct school" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       post :create, @post_params
 
@@ -391,7 +365,7 @@ describe Portal::ClazzesController do
       assert course
       course.clazzes.size.should == 0
 
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       post :create, @post_params
 
@@ -408,7 +382,7 @@ describe Portal::ClazzesController do
     it "should create a new course in the specified school if this class has a unique name" do
       assert_nil Portal::Course.find_by_name(@post_params[:portal_clazz][:name])
 
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       post :create, @post_params
 
@@ -420,24 +394,24 @@ describe Portal::ClazzesController do
     end
 
     it "should create exactly one teacher object for the current user if the current user does not already have one" do
-      @random_user = Factory.create(:user, :login => "random_user")
-      stub_current_user :random_user
+      @random_user = Factory.create(:confirmed_user, :login => "random_user")
+      sign_in @random_user
 
-      assert_nil @logged_in_user.portal_teacher
+      assert_nil @random_user.portal_teacher
       current_count = Portal::Teacher.count(:all)
 
       @post_params[:portal_clazz][:teacher_id] = nil
 
       post :create, @post_params
 
-      @logged_in_user.reload
+      @random_user.reload
 
-      assert_not_nil @logged_in_user.portal_teacher
+      assert_not_nil @random_user.portal_teacher
       Portal::Teacher.count(:all).should == current_count + 1
     end
 
     it "should not let me create a class with no school" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       current_count = Portal::Clazz.count(:all)
 
@@ -450,7 +424,7 @@ describe Portal::ClazzesController do
     end
 
     it "should assign the specified grade levels to the new class" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       post :create, @post_params
 
@@ -463,7 +437,7 @@ describe Portal::ClazzesController do
     end
 
     it "should not let me create a class with no grade levels when grade levels are enabled" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       current_count = Portal::Clazz.count(:all)
 
@@ -479,7 +453,7 @@ describe Portal::ClazzesController do
       @mock_project.stub(:enable_grade_levels?).and_return(false)
       @post_params[:portal_clazz].delete(:grade_levels)
 
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       current_count = Portal::Clazz.count(:all)
 
@@ -497,8 +471,6 @@ describe Portal::ClazzesController do
         grade.active = true
         grade.save
       end
-
-      setup_for_repeated_tests
 
       @post_params = {
         :id => @mock_clazz.id,
@@ -518,7 +490,7 @@ describe Portal::ClazzesController do
     end
 
     it "should not let me update a class with no grade levels when grade levels are enabled" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       @post_params[:portal_clazz][:grade_levels] = nil
 
@@ -531,7 +503,7 @@ describe Portal::ClazzesController do
       @mock_project.stub(:enable_grade_levels?).and_return(false)
       @post_params[:portal_clazz].delete(:grade_levels)
 
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       put :update, @post_params
 
@@ -541,7 +513,7 @@ describe Portal::ClazzesController do
   
   describe "POST add_offering" do
     it "should run without error" do
-      setup_for_repeated_tests
+      login_admin
       page = Factory.create(:page)
       post_params = {
         :runnable_id => page.id, 
@@ -558,7 +530,6 @@ describe Portal::ClazzesController do
   
   describe "Post edit class information" do
     before(:each) do
-      setup_for_repeated_tests
       page = Factory.create(:page)
       post_params = {
         :runnable_id => page.id, 
@@ -599,6 +570,7 @@ describe Portal::ClazzesController do
     
 
     it "should not save the edited class info if the class name is blank" do
+      login_admin
       @post_params[:portal_clazz][:name] = ''
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
@@ -606,6 +578,7 @@ describe Portal::ClazzesController do
     end
     
     it "should not save the edited class info if the class word is blank" do
+      login_admin
       @post_params[:portal_clazz][:class_word] = ''
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
@@ -613,6 +586,7 @@ describe Portal::ClazzesController do
     end
     
     it "all the deactivated offerings should actually get deactivated in the database" do
+      login_admin
       @post_params[:clazz_investigations] = Array[]
       post :update, @post_params
       
@@ -627,6 +601,7 @@ describe Portal::ClazzesController do
   describe "Post add a new student to a class" do
     
     it "should add a new student to the class" do
+      login_admin
       post_params = {
         :id => @mock_clazz.id.to_s,
         :student_id => @authorized_student.id.to_s
@@ -640,9 +615,6 @@ describe Portal::ClazzesController do
 
   describe "Put teacher Manage class" do
     before(:each) do
-      
-      controller.stub!(:current_visitor).and_return(@authorized_teacher_user)
-      
       @mock_teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
       
       mock_clazz_name = "Mock Class Physics"
@@ -674,6 +646,7 @@ describe Portal::ClazzesController do
     end
     
     it "should should save all the activated and deactivated classes and in the right order" do
+      sign_in @authorized_teacher_user
       @post_params = {
         'teacher_clazz'  => Array[@mock_teacher_clazz.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_bio.id , @mock_teacher_clazz_math.id ],
         'teacher_clazz_position'  => Array[@mock_teacher_clazz_math.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_chem.id, @mock_teacher_clazz_bio.id ,@mock_teacher_clazz.id ]
@@ -725,18 +698,17 @@ describe Portal::ClazzesController do
       @offering.clazz_id = @mock_clazz.id
       @offering.runnable_type = 'Investigation'
       @offering.save!
-      controller.stub!(:current_visitor).and_return(@authorized_teacher_user)
+      sign_in @authorized_teacher_user
       
       @post_params = {
         :id => @mock_clazz.id,
         :clazz_name  => 'Concept of physics',
         :clazz_desc  => 'Concept of physics',
-        :clazz_word => 'Phy'
+        :clazz_word => 'Phy123456'
       }
     end
     
     it "should create a new class that's a copy of the original class with investigations and teachers but no students" do
-      
       xhr :post, :copy_class, @post_params
       
       @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
@@ -762,7 +734,7 @@ describe Portal::ClazzesController do
   describe "GET edit" do
     
     it "saves the position of the left pane submenu item for an authorized teacher" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       get :edit, { :id => @mock_clazz.id }
 
@@ -777,7 +749,7 @@ describe Portal::ClazzesController do
   describe "GET materials" do
     
     it "saves the position of the left pane submenu item for an authorized teacher" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       get :materials, { :id => @mock_clazz.id }
 
@@ -792,7 +764,7 @@ describe Portal::ClazzesController do
   describe "GET roster" do
     
     it "saves the position of the left pane submenu item for an authorized teacher" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
 
       get :roster, { :id => @mock_clazz.id }
 
@@ -813,7 +785,7 @@ describe Portal::ClazzesController do
       @params = {
         :clazz_offerings => [@physics_offering.id, @chemistry_offering.id, @biology_offering.id , @mathematics_offering.id]
       }
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
     end
     it "should store position of all the offerings after teacher sorts offerings" do
       
@@ -841,13 +813,13 @@ describe Portal::ClazzesController do
       }
     end
     it "should redirect to home page for anonymous user" do
-      stub_current_user :normal_user
+      sign_in @normal_user
       get :fullstatus, @params
       response.should_not be_success
       response.should redirect_to home_url
     end
     it "should retrieve the class when user is not anonymous user" do
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
       get :fullstatus, @params
       assert_equal assigns[:portal_clazz], @mock_clazz
       response.should be_success
@@ -870,7 +842,7 @@ describe Portal::ClazzesController do
       @mock_project.save!
       Admin::Project.stub(:default_project).and_return(@mock_project)
       
-      stub_current_user :authorized_teacher_user
+      sign_in @authorized_teacher_user
       
       @params = {
         :id => @mock_clazz.id

@@ -23,7 +23,6 @@ class Portal::LearnersController < ApplicationController
         sign_out current_user if current_user
         # log in the user so future requests don't need a token
         sign_in jnlp_user
-        self.current_visitor = jnlp_user
       else
         # no valid jnlp_session could be found for this token
         render :partial => 'shared/sail',

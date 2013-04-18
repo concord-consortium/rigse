@@ -26,6 +26,9 @@ Factory.define :user do |f|
   f.vendor_interface { |d| Probe::VendorInterface.find(:first) || Factory(:probe_vendor_interface) }
 end
 
+Factory.define :confirmed_user, :parent => :user do |f|
+  f.after_create { |user| user.confirm! }
+end
 
 ##
 ## Singleton Factory Pattern for Admin user.

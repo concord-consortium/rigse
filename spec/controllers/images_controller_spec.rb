@@ -13,7 +13,7 @@ describe ImagesController do
   end
 
   before(:each) do
-    login_author
+    @logged_in_user = login_author
   end
 
 
