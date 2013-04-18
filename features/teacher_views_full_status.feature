@@ -7,13 +7,6 @@ Feature: Teacher can see full status
   Background:
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
-    And the following student answers:
-      | student   | class    | investigation      | question_prompt | answer |
-      | dave      | My Class | Atomic Energy      | a               | y      |
-      | chuck     | My Class | Plant reproduction | b               | Y      |
-    And the following student answers:
-      | student   | class    | activity            | question_prompt | answer |
-      | Chuck     | My Class | Algebra             | a               | y      |
     And I login with username: teacher password: password
     And I am on the full status page for "My Class"
     
