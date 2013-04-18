@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130417173717) do
+ActiveRecord::Schema.define(:version => 20130418013618) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1072,13 +1072,14 @@ ActiveRecord::Schema.define(:version => 20130417173717) do
   end
 
   create_table "portal_learners", :force => true do |t|
-    t.string   "uuid",              :limit => 36
+    t.string   "uuid",                        :limit => 36
     t.integer  "student_id"
     t.integer  "offering_id"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.integer  "bundle_logger_id"
     t.integer  "console_logger_id"
+    t.string   "external_activity_state_url"
   end
 
   add_index "portal_learners", ["bundle_logger_id"], :name => "index_portal_learners_on_bundle_logger_id"

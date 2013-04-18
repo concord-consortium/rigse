@@ -58,7 +58,18 @@ class Portal::OfferingsController < ApplicationController
          else
            # session[:put_path] = nil
          end
-         redirect_to(@offering.runnable.url(learner))
+         external_activity = @offering.runnable
+         if external_activity.rest_create_url
+           # check if the learner already has edit url
+           unless learner.external_activity_state_url
+             post_response = HTTParty.post(external_activity.rest_create_url)
+             learner.external_activity_state_url = post_response.headers['Location']
+             learner.save
+           end
+           redirect_to(learner.external_activity_state_url)
+         else
+           redirect_to(@offering.runnable.url(learner))
+         end
        }
 
       format.jnlp {

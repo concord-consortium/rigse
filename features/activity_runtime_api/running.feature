@@ -7,7 +7,7 @@ Feature: External Activities can support a REST api
     And "activities.com/activity/1/sessions/" handles a POST and responds with
       """
       HTTP/1.1 201 Created
-      Location: http://example.com/activity/1/sessions/1
+      Location: http://activities.com/activity/1/sessions/1
       Content-Type: application/json
 
       {
@@ -30,7 +30,7 @@ Feature: External Activities can support a REST api
 
   @mechanize
   Scenario: External REST activity is run the second time
-    Given a student has already run the external REST activity "Cool Thing" before
-    When a student first runs the external activity "Cool Thing"
+    Given the student ran the external REST activity "Cool Thing" before
+    When the student runs the external activity "Cool Thing" again
     Then the portal should not send a POST to "activities.com/activity/1/sessions/"
     And the browser should send a GET to "activities.com/activity/1/sessions/1"

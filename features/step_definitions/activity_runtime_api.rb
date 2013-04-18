@@ -23,12 +23,7 @@ Then /^the (portal|browser) should send a (POST|GET) to "([^"]*)"$/ do |client,m
   stub.should have_been_requested
 end
 
-Then /^the (portal|browser) should not send a (POST|GET) to "([^"]*)"$/ do |client, method, address|
-  stub = get_request_stub(method, address)
-  stub.should_not have_been_requested
-end
-
-When /^a student first runs the external activity "([^"]*)"$/ do |activity_name|
+def create_and_run_external_rest_activity(activity_name)
   activity = ExternalActivity.find_by_name activity_name
   clazz = Portal::Clazz.find_by_name("My Class")
   Factory.create(:portal_offering, :runnable => activity, :clazz => clazz)
@@ -39,6 +34,24 @@ When /^a student first runs the external activity "([^"]*)"$/ do |activity_name|
   end
 end
 
-Given /^a student has already run the external REST activity "([^"]*)" before$/ do |arg1|
-  #pending # express the regexp above with the code you wish you had
+Then /^the (portal|browser) should not send a (POST|GET) to "([^"]*)"$/ do |client, method, address|
+  stub = get_request_stub(method, address)
+  stub.should_not have_been_requested
+end
+
+When /^a student first runs the external activity "([^"]*)"$/ do |activity_name|
+  create_and_run_external_rest_activity(activity_name)
+end
+
+Given /^the student ran the external REST activity "([^"]*)" before$/ do |activity_name|
+  create_and_run_external_rest_activity(activity_name)
+  WebMock::RequestRegistry.instance.reset!
+end
+
+When /^the student runs the external activity "([^"]*)" again$/ do |activity_name|
+  login_as('student')
+  visit('/')
+  within(".offering_for_student:contains('#{activity_name}')") do
+    find(".solo.button").click
+  end
 end
