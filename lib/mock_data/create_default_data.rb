@@ -6,11 +6,11 @@ module MockData
   default_data_yaml_files = Dir.glob(current_dir + '/default_data_yaml/*')
   
   default_data_yaml_files.each do |file|
-    current_file_data = YAML.load_file(file).recursive_symbolize_keys
+    current_file_data = YAML.load_file(file)
     default_data.merge!(current_file_data)
   end
   
-  DEFAULT_DATA = default_data
+  DEFAULT_DATA = default_data.recursive_symbolize_keys
   
   #load all the factories
   Dir[current_dir + '/../../factories/*.rb'].each {|file| require file }
@@ -27,21 +27,27 @@ module MockData
   
   #Create fake users and roles
   def self.create_default_users
+    
     admin_info = DEFAULT_DATA[:admin_project]
     project = Admin::Project.find_by_uuid(admin_info[:uuid])
     if project
       project.active = false
       project.save!
+      puts 'Skipped Default Project already present'
     else
       Admin::Project.create!(admin_info)
+      puts '.'
+      puts 'Generated 1 project'
     end
     
+    count = 0
     DEFAULT_DATA[:roles].each do |i, role|
       role_by_uuid = Role.find_by_uuid(role[:uuid])
       if role_by_uuid
         r = role_by_uuid
         r.title = role[:title]
         r.save!
+        puts "skipping role #{r.title} as default role already exist"
       else
         role_by_title = Role.find_by_title(role[:title])
         unless role_by_title
@@ -54,9 +60,17 @@ module MockData
           new_role = Role.create!(role)
           new_role.position = max_pos
           new_role.save!
+          
+          print '.'
+          count = count + 1
+        else
+          puts "skipping role #{r.title} as it already exist"
         end
       end
     end
+    
+    puts ''
+    puts "Generated #{count} default roles"
     
     #create a district
     default_district = nil
@@ -69,26 +83,38 @@ module MockData
       default_district.name = district_info[:name]
       default_district.description = district_info[:description]
       default_district.save!
+      puts "skipping district #{default_district.name} as default district already exist"
     elsif district_by_name.nil?
        default_district = Portal::District.create!(district_info)
+       print '.'
+       puts ''
+       puts 'Generated 1 default district'
     end
     
     #create default grades
     default_grades = []
+    count = 0
     DEFAULT_DATA[:grades].each do |grade, grade_info|
       portal_grade = Portal::Grade.find_by_uuid(grade_info[:uuid])
       if portal_grade
         portal_grade.name = grade_info[:name]
         portal_grade.description = grade_info[:description]
         portal_grade.save!
+        puts "skipping grade #{portal_grade.name} as default grade already exist"
       else
         portal_grade = Factory.create(:portal_grade, grade_info)
+        print '.'
+        count = count + 1
       end
       default_grades << portal_grade
     end
+    puts ''
+    puts "Generated #{count} default grades"
     
     #create default grades levels
     default_grades_levels = []
+    count = 0
+    
     DEFAULT_DATA[:grade_levels].each do |grade, grade_level_info|
       portal_grade = default_grades.find{|g| g.name == grade_level_info[:grade]}
       if portal_grade
@@ -97,17 +123,22 @@ module MockData
           portal_grade_level.grade_id = portal_grade.id
           portal_grade_level.name = grade_level_info[:name]
           portal_grade_level.save!
+          puts "skipping grade level #{portal_grade_level.name} as default grade already exist"
         else
           grade_level_info.delete(:grade)
           grade_level_info[:grade_id] = portal_grade.id
           portal_grade_level = Portal::GradeLevel.create!(grade_level_info)
+          print '.'
+          count = count + 1
         end
         default_grades_levels << portal_grade_level
       end
     end
-    
+    puts ''
+    puts "Generated #{count} default grade levels"
     
     #create schools if default district is present
+    count = 0
     default_schools = []
     if default_district
       DEFAULT_DATA[:schools].each do |school, school_info|
@@ -126,9 +157,12 @@ module MockData
           school.description = school_info[:description]
           school.district_id = default_district.id
           school.save!
+          puts "skipping school #{school.name} as default school already exist"
         elsif school_by_name_and_district.nil?
           school_info[:district_id] = default_district.id
           school = Portal::School.create!(school_info)
+          print '.'
+          count = count + 1
         end
         
         if school
@@ -147,10 +181,13 @@ module MockData
           default_schools << school
         end
       end
+      puts ''
+      puts "Generated #{count} default schools"
     end
     
     
     #following courses exist
+    count = 0
     default_courses = []
     DEFAULT_DATA[:courses].each do |course, course_info|
       school = default_schools.find{|s| s.name == course_info[:school]}
@@ -160,15 +197,19 @@ module MockData
           default_course.name = course_info[:name]
           default_course.school_id = school.id
           default_course.save!
+          puts "skipping course #{default_course.name} as default course already exist"
         else
           course_info.delete(:school)
           course_info[:school_id] = school.id
           default_course = Portal::Course.create(course_info)
+          print '.'
+          count = count + 1
         end
-        
         default_courses << default_course
       end
     end
+    puts ''
+    puts "Generated #{count} default courses"
     
     @default_courses = default_courses
     
@@ -270,6 +311,7 @@ module MockData
     
     #following classes exist:
     
+    count = 0
     default_classes = []
     @default_classes = default_classes
     
@@ -291,17 +333,21 @@ module MockData
             default_clazz.save!
             teacher.add_clazz(default_clazz)
           end
+          puts "Skipped. Default class #{default_clazz_by_uuid.name} already exist"
         elsif teacher and default_clazz_by_clazz_word.nil?
           clazz_info.delete(:teacher)
           clazz_info[:teacher_id] = teacher.id
           clazz_info[:course_id] = course.id
           default_clazz = Portal::Clazz.create!(clazz_info)
           teacher.add_clazz(default_clazz)
+          print '.'
+          count = count + 1
         end
-        
         default_classes << default_clazz if default_clazz
       end
     end
+    puts ''
+    puts "Generated #{count} default classes"
     
     #following teacher and class mapping exists:
     DEFAULT_DATA[:teacher_clazzes].each do |teacher_clazz, teacher_clazz_info|
@@ -1006,6 +1052,8 @@ module MockData
       user = Factory(:user, user_info)
       user.save!
       user.confirm!
+    else
+      conflicting_user = user_by_login || user_by_email
     end
     
     if user
