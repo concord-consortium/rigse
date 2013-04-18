@@ -12,9 +12,24 @@ def set_request_stub(method, address, stub)
   @request_stub_map[[method,address]] = stub
 end
 
-Given /^"([^"]*)" handles a (POST|GET) and responds with$/ do |address, method, response|
+Given /^"([^"]*)" handles a (POST|GET) with body$/ do |address, method, body|
   method_symbol = method.downcase.to_sym
-  stub = set_request_stub(method, address, stub_request(method_symbol, address))
+  stub = get_request_stub(method, address)
+  unless stub
+    stub = set_request_stub(method, address, stub_request(method_symbol, address))
+  end
+  if body =~ /^\/.*\/$/
+    body = Regexp.new(body[1..-2])
+  end
+  stub.with(:body => body)
+end
+
+Given /^"([^"]*)" (?:handles a )?(POST|GET) (?:and )?responds with$/ do |address, method, response|
+  method_symbol = method.downcase.to_sym
+  stub = get_request_stub(method, address)
+  unless stub
+    stub = set_request_stub(method, address, stub_request(method_symbol, address))
+  end
   stub.to_return(response)
 end
 

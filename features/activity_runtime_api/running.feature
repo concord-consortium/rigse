@@ -4,7 +4,11 @@ Feature: External Activities can support a REST api
       | name             | Cool Thing |
       | url              | http://activities.com/activity/1 |
       | rest_create_url  | http://activities.com/activity/1/sessions/ |
-    And "activities.com/activity/1/sessions/" handles a POST and responds with
+    And "activities.com/activity/1/sessions/" handles a POST with body
+      """
+      /returnUrl=http%3A%2F%2Fwww.example.com%2Fdataservice%2Fexternal_activity_data%2F\d+/
+      """
+    And "activities.com/activity/1/sessions/" POST responds with
       """
       HTTP/1.1 201 Created
       Location: http://activities.com/activity/1/sessions/1

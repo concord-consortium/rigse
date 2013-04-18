@@ -62,7 +62,7 @@ class Portal::OfferingsController < ApplicationController
          if external_activity.rest_create_url
            # check if the learner already has edit url
            unless learner.external_activity_state_url
-             post_response = HTTParty.post(external_activity.rest_create_url)
+             post_response = HTTParty.post(external_activity.rest_create_url, :body => { :returnUrl => external_activity_return_url(learner.id) })
              learner.external_activity_state_url = post_response.headers['Location']
              learner.save
            end
