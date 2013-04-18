@@ -33,6 +33,12 @@ module MockData
   end
   
   def self.delete_default_learners
+    puts <<-HEREDOC
+    
+    Deleting default learners
+    
+    HEREDOC
+    
     portal_learners = Portal::Learner.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN) 
     portal_learners.each do |l|
       delete_learner_response_data(l)
@@ -41,6 +47,12 @@ module MockData
   end
   
   def self.delete_default_study_materials
+    puts <<-HEREDOC
+    
+    Deleting default study materials
+    
+    HEREDOC
+    
     investigations = Investigation.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN) 
     investigations.each do |i|
       i.destroy
@@ -58,6 +70,12 @@ module MockData
   end
   
   def self.delete_default_resource_pages
+    puts <<-HEREDOC
+    
+    Deleting resource pages
+    
+    HEREDOC
+    
     resource_pages = ResourcePage.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     resource_pages.each do |rp|
       rp.destroy
@@ -65,6 +83,12 @@ module MockData
   end
   
   def self.delete_default_pages
+    puts <<-HEREDOC
+    
+    Deleting default pages
+    
+    HEREDOC
+    
     pages = Page.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     pages.each do |p|
       p.destroy
@@ -72,6 +96,12 @@ module MockData
   end
   
   def self.delete_default_questions
+    puts <<-HEREDOC
+    
+    Deleting default questions
+    
+    HEREDOC
+    
     mcqs = Embeddable::MultipleChoice.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     mcqs.each do |mcq|
       mcq.destroy
@@ -84,6 +114,12 @@ module MockData
   end
   
   def self.delete_default_clazzes
+    puts <<-HEREDOC
+    
+    Deleting default classes
+    
+    HEREDOC
+    
     clazzes = Portal::Clazz.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     clazzes.each do |c|
       c.destroy
@@ -91,6 +127,12 @@ module MockData
   end
   
   def self.delete_default_users
+    puts <<-HEREDOC
+    
+    Deleting default users
+    
+    HEREDOC
+    
     users = User.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     users.each do |u|
       u.destroy
@@ -98,6 +140,12 @@ module MockData
   end
   
   def self.delete_default_courses
+    puts <<-HEREDOC
+    
+    Deleting default courses
+    
+    HEREDOC
+    
     courses = Portal::Course.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     courses.each do |c|
       c.destroy
@@ -105,6 +153,12 @@ module MockData
   end
   
   def self.delate_default_roles
+    puts <<-HEREDOC
+    
+    Deleting default roles
+    
+    HEREDOC
+    
     roles = Role.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     roles.each do |ro|
       ro.destroy
@@ -112,6 +166,12 @@ module MockData
   end
   
   def self.delete_default_schools
+    puts <<-HEREDOC
+    
+    Deleting default schools
+    
+    HEREDOC
+    
     schools = Portal::School.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     schools.each do |s|
       s.destroy
@@ -119,6 +179,12 @@ module MockData
   end
   
   def self.delete_default_grade_levels
+    puts <<-HEREDOC
+    
+    Deleting default grade levels
+    
+    HEREDOC
+    
     grades = Portal::Grade.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     grades.each do |g|
       g.destroy
@@ -126,6 +192,12 @@ module MockData
   end
   
   def self.delete_default_districts
+    puts <<-HEREDOC
+    
+    Deleting default districts
+    
+    HEREDOC
+    
     districts = Portal::District.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     districts.each do |d|
       d.destroy
@@ -133,6 +205,12 @@ module MockData
   end
   
   def self.delete_default_projects
+    puts <<-HEREDOC
+    
+    Deleting default projects
+    
+    HEREDOC
+    
     admin_projects = Admin::Project.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     admin_projects.each do |s|
       s.destroy
