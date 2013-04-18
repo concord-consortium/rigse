@@ -14,11 +14,8 @@ describe ActivitiesController do
       response.template.stub_chain(:current_project).and_return(@current_project);
     }
 
-    @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
-    @admin_user.add_role("admin")
+    @admin_user = login_admin
 
-    stub_current_user :admin_user
-    
     @activity = Factory.create(:activity, {
       :name => "test activity",
       :description => "new decription",

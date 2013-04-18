@@ -34,11 +34,8 @@ describe Admin::ProjectsController do
       project = Factory.create(:admin_project, :active => true)
       second_project = Factory.create(:admin_project)
       Admin::Project.stub!(:default_project).and_return(project)
-      manager_user = Factory.create(:user)
-      manager_user.add_role('manager')
-      manager_user.save!
-      
-      stub_current_user manager_user
+
+      login_manager
       
       get :index
       
@@ -98,10 +95,7 @@ describe Admin::ProjectsController do
       project = Factory.create(:admin_project)
       Admin::Project.should_receive(:find).with("37").and_return(project)
 
-      manager_user = Factory.create(:user)
-      manager_user.add_role("manager")
-
-      stub_current_user manager_user
+      login_manager
 
       get :edit, :id => "37"
 

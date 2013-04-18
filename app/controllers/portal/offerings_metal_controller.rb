@@ -2,7 +2,7 @@ require 'json'
 class Portal::OfferingsMetalController < ActionController::Metal
 
   def launch_status
-    if (offering = Portal::Offering.find(params[:id])) && (current_visitor = (session[:user_id] ? User.find(session[:user_id]) : nil)) && current_visitor.portal_student
+    if (offering = Portal::Offering.find(params[:id])) && (current_visitor=logged_in_user) && current_visitor.portal_student
       learner = Portal::Learner.find_by_offering_id_and_student_id(offering.id, current_visitor.portal_student.id)
       status_event_info = {}
       if learner && learner.bundle_logger.in_progress_bundle
@@ -27,5 +27,13 @@ class Portal::OfferingsMetalController < ActionController::Metal
       self.content_type = 'text/html'
       self.response_body = 'Not Found'
     end
+  end
+
+  private
+
+  def logged_in_user
+    return nil unless warden_session = session['warden.user.user.key']
+    return nil unless warden_id_array = warden_session[1]
+    User.find(warden_id_array[0])
   end
 end

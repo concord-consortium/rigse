@@ -14,7 +14,7 @@ describe Portal::LearnersController do
     end
 
     it "should render the config builder" do
-      stub_current_user(@learner.student.user)
+      sign_in @learner.student.user
       get :show, :format => :config, :id => @learner.id
     end
 
@@ -35,7 +35,7 @@ describe Portal::LearnersController do
     end
 
     it "should work even if a different user is currently logged in" do
-      other_user = Factory(:user)
+      other_user = Factory(:confirmed_user)
       other_user.confirm!
       sign_in other_user
 
@@ -52,10 +52,10 @@ describe Portal::LearnersController do
     before(:each) do
       @mock_semester = Factory.create(:portal_semester, :name => "Fall")
       @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
-      @teacher_user = Factory.create(:user, :login => "teacher_user")
+      @teacher_user = Factory.create(:confirmed_user, :login => "teacher_user")
       @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
       @author_user = Factory.next(:author_user)
-      @student_user = Factory.create(:user)
+      @student_user = Factory.create(:confirmed_user)
       @student = Factory.create(:portal_student,:user_id=> @student_user.id)
       @physics_investigation = Factory.create(:investigation, :name => 'physics_inv', :user => @author_user, :publication_status => 'published')
       @laws_of_motion_activity = Factory.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => @physics_investigation.id, :user => @author_user)
@@ -67,7 +67,7 @@ describe Portal::LearnersController do
       @page=Factory.create(:page,:user_id=>@teacher_user.id,:section_id=>@section.id)
       @embeddable=Factory.create(:embeddable_xhtml,:user_id=>@teacher_user.id)
       @page.add_embeddable(@embeddable)
-      stub_current_user :teacher_user
+      sign_in @teacher_user
     end
     
     it "should show learner report when no filter is set" do
