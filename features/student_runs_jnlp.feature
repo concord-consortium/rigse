@@ -11,7 +11,7 @@ Feature: Student runs a jnlps
   Scenario: Student runs jnlp
     When I run the investigation
     Then a jnlp file is downloaded
-    Then the jnlp file has a configuration for the student and "Aerodynamics" offering
+    And the jnlp file for "Aerodynamics" has a configuration for the student and offering
 
   Scenario: Student jnlps are not cached
     When I run the investigation

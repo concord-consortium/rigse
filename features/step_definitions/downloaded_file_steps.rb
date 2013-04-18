@@ -43,7 +43,7 @@ def download_config(session)
   )
 end
 
-Then /^the jnlp file has a configuration for the student and "([^"]*)" offering$/ do |inv_name|
+Then /^the jnlp file for "([^"]+)" has a configuration for the student and offering$/ do |inv_name|
   download_config(:java_session)
 
   investigation = Investigation.find_by_name(inv_name)
