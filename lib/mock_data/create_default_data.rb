@@ -41,8 +41,10 @@ module MockData
       puts 'Generated default project'
     end
     
+    
     create_count = 0
     update_count = 0
+    
     DEFAULT_DATA[:roles].each do |i, role|
       role_by_uuid = Role.find_by_uuid(role[:uuid])
       if role_by_uuid
@@ -159,8 +161,12 @@ module MockData
     puts "Generated #{create_count} and updated #{update_count} portal grade levels"
     
     #create schools if default district is present
-    count = 0
+    
     default_schools = []
+    
+    create_count = 0
+    update_count = 0
+    
     if default_district
       DEFAULT_DATA[:schools].each do |school, school_info|
         
@@ -178,21 +184,29 @@ module MockData
           school.description = school_info[:description]
           school.district_id = default_district.id
           school.save!
-          puts "skipping school #{school.name} as default school already exist"
+          
+          update_count += 1
+          print '+'
         elsif school_by_name_and_district.nil?
           school_info[:district_id] = default_district.id
           school = Portal::School.create!(school_info)
+          
+          create_count += 1
           print '.'
-          count = count + 1
         end
         
         if school
+          semester_count = 0
           semester_info.each do |semester, sem_info|
             sem = Portal::Semester.find_or_create_by_uuid(sem_info[:uuid])
             sem.name = sem_info[:name]
             sem.school_id = school.id
             sem.save!
+            semester_count += 1
           end
+          
+          puts
+          puts "Generated/updated #{semester_count} portal semesters for school '#{school.name}'"
           
           grade_levels.map! { |gl| default_grades_levels.find { |dgl| dgl.name == gl } }
           grade_levels.compact
@@ -202,14 +216,18 @@ module MockData
           default_schools << school
         end
       end
-      puts ''
-      puts "Generated #{count} default schools"
+      puts
+      puts "Generated #{create_count} and updated #{update_count} portal schools"
     end
     
     
     #following courses exist
-    count = 0
+    
     default_courses = []
+    
+    create_count = 0
+    update_count = 0
+    
     DEFAULT_DATA[:courses].each do |course, course_info|
       school = default_schools.find{|s| s.name == course_info[:school]}
       if school
@@ -218,19 +236,22 @@ module MockData
           default_course.name = course_info[:name]
           default_course.school_id = school.id
           default_course.save!
-          puts "skipping course #{default_course.name} as default course already exist"
+          
+          update_count += 1
+          print '+'
         else
           course_info.delete(:school)
           course_info[:school_id] = school.id
           default_course = Portal::Course.create(course_info)
+          
+          create_count += 1
           print '.'
-          count = count + 1
         end
         default_courses << default_course
       end
     end
-    puts ''
-    puts "Generated #{count} default courses"
+    puts
+    puts "Generated #{create_count} and updated #{update_count} portal courses"
     
     @default_courses = default_courses
     
@@ -238,12 +259,27 @@ module MockData
     default_users = []
     @default_users = default_users
     
+    create_count = 0
+    update_count = 0
+    
     DEFAULT_DATA[:users].each do |user, user_info|
       
-      user = add_default_user(user_info)
+      user_data = add_default_user(user_info)
       
-      if user
-        default_users << user
+      unless user_data[:skipped?]
+        
+        if user_data[:created?]
+          create_count += 1
+          print '.'
+        elsif user_data[:updated?]
+          update_count += 1
+          print '+'
+        end
+        
+        default_users << user_data[:user]
+      else
+        puts
+        puts "Skipped user '#{user_info[:login]}' as it already exists (conflict user id: #{user_data[:conflicting_user]})"
       end
       
     end
@@ -252,6 +288,9 @@ module MockData
     #following teachers exist
     default_teachers = []
     @default_teachers = default_teachers
+    
+    create_count = 0
+    update_count = 0
     
     DEFAULT_DATA[:teachers].each do |teacher, teacher_info|
       
@@ -274,10 +313,19 @@ module MockData
       end
       teacher_info[:roles] = roles
       
-      user = add_default_user(teacher_info)
+      user_data = add_default_user(teacher_info)
       
-      if user
+      unless user_data[:skipped?]
+        user = user_data[:user]
         portal_teacher = user.portal_teacher
+        
+        if user_data[:created?]
+          create_count += 1
+          print '.'
+        elsif user_data[:updated?]
+          update_count += 1
+          print '+'
+        end
         
         unless portal_teacher
           portal_teacher = Portal::Teacher.create!(:user_id => user.id)
@@ -289,12 +337,19 @@ module MockData
         
         default_users << user
         default_teachers << portal_teacher
+      else
+        puts
+        puts "Skipped teacher user '#{teacher_info[:login]}' as it already exists (conflict user id: #{user_data[:conflicting_user]})"
       end
     end
     
     
     default_students = []
     @default_students = default_students
+    
+    create_count = 0
+    update_count = 0
+    
     DEFAULT_DATA[:students].each do |student, student_info|
       
       roles = student_info[:roles]
@@ -308,14 +363,28 @@ module MockData
       
       user = add_default_user(student_info)
       
-      if user
+      unless user_data[:skipped?]
+        user = user_data[:user]
         portal_student = user.portal_student
+        
+        if user_data[:created?]
+          create_count += 1
+          print '.'
+        elsif user_data[:updated?]
+          update_count += 1
+          print '+'
+        end
+        
+        
         unless portal_student
           portal_student = Portal::Student.create!(:user_id => user.id)
         end
         
         default_users << user
         default_students << portal_student
+      else
+        puts
+        puts "Skipped student user '#{student_info[:login]}' as it already exists (conflict user id: #{user_data[:conflicting_user]})"
       end
     end
     
@@ -1059,6 +1128,14 @@ module MockData
     user_by_login = User.find_by_login(user_info[:login])
     user_by_email = User.find_by_email(user_info[:email]) if user_info[:email]
     
+    return_value = {
+                      :user => nil,
+                      :created? => false,
+                      :updated? => false,
+                      :skipped? => false,
+                      :conflicting_user => nil
+                   }
+    
     if user_by_uuid
       user = user_by_uuid
       user.password = user_info[:password]
@@ -1069,12 +1146,21 @@ module MockData
       user.email = user_info[:email] if user_info[:email]
       
       user.save!
+      
+      return_value[:updated?] = true
+      return_value[:user] = user
     elsif user_by_login.nil? && user_by_email.nil?
       user = Factory(:user, user_info)
       user.save!
       user.confirm!
+      
+      return_value[:created?] = true
+      return_value[:user] = user
     else
       conflicting_user = user_by_login || user_by_email
+      
+      return_value[:skipped?] = true
+      return_value[:conflicting_user] = conflicting_user
     end
     
     if user
@@ -1083,7 +1169,7 @@ module MockData
       end
     end
     
-    user
+    return_value
   end
   
   
