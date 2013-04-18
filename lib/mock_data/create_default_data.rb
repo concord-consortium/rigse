@@ -33,21 +33,25 @@ module MockData
     if project
       project.active = false
       project.save!
-      puts 'Skipped Default Project already present'
+      puts
+      puts 'Updated default project'
     else
       Admin::Project.create!(admin_info)
-      puts '.'
-      puts 'Generated 1 project'
+      puts
+      puts 'Generated default project'
     end
     
-    count = 0
+    create_count = 0
+    update_count = 0
     DEFAULT_DATA[:roles].each do |i, role|
       role_by_uuid = Role.find_by_uuid(role[:uuid])
       if role_by_uuid
         r = role_by_uuid
         r.title = role[:title]
         r.save!
-        puts "skipping role #{r.title} as default role already exist"
+        
+        update_count += 1
+        print '+'
       else
         role_by_title = Role.find_by_title(role[:title])
         unless role_by_title
@@ -61,16 +65,17 @@ module MockData
           new_role.position = max_pos
           new_role.save!
           
+          create_count += 1
           print '.'
-          count = count + 1
         else
-          puts "skipping role #{r.title} as it already exist"
+          puts
+          puts "Skipping role '#{r.title}' as it already exists"
         end
       end
     end
     
-    puts ''
-    puts "Generated #{count} default roles"
+    puts
+    puts "Generated #{create_count} and updated #{update_count} roles"
     
     #create a district
     default_district = nil
@@ -83,37 +88,50 @@ module MockData
       default_district.name = district_info[:name]
       default_district.description = district_info[:description]
       default_district.save!
-      puts "skipping district #{default_district.name} as default district already exist"
+      
+      puts
+      puts "Updated '#{default_district.name}' district"
     elsif district_by_name.nil?
-       default_district = Portal::District.create!(district_info)
-       print '.'
-       puts ''
-       puts 'Generated 1 default district'
+      default_district = Portal::District.create!(district_info)
+      
+      puts
+      puts "Generated '#{default_district.name}' district"
+    else
+      puts
+      puts "Skipping district #{default_district.name} as it already exists"
     end
     
     #create default grades
     default_grades = []
-    count = 0
+    
+    create_count = 0
+    update_count = 0
+    
     DEFAULT_DATA[:grades].each do |grade, grade_info|
       portal_grade = Portal::Grade.find_by_uuid(grade_info[:uuid])
       if portal_grade
         portal_grade.name = grade_info[:name]
         portal_grade.description = grade_info[:description]
         portal_grade.save!
-        puts "skipping grade #{portal_grade.name} as default grade already exist"
+        
+        update_count += 1
+        print '+'
       else
         portal_grade = Factory.create(:portal_grade, grade_info)
+        
+        create_count += 1
         print '.'
-        count = count + 1
       end
       default_grades << portal_grade
     end
-    puts ''
-    puts "Generated #{count} default grades"
+    puts
+    puts "Generated #{create_count} and updated #{update_count} portal grades"
     
     #create default grades levels
     default_grades_levels = []
-    count = 0
+    
+    create_count = 0
+    update_count = 0
     
     DEFAULT_DATA[:grade_levels].each do |grade, grade_level_info|
       portal_grade = default_grades.find{|g| g.name == grade_level_info[:grade]}
@@ -123,19 +141,22 @@ module MockData
           portal_grade_level.grade_id = portal_grade.id
           portal_grade_level.name = grade_level_info[:name]
           portal_grade_level.save!
-          puts "skipping grade level #{portal_grade_level.name} as default grade already exist"
+          
+          update_count += 1
+          print '+'
         else
           grade_level_info.delete(:grade)
           grade_level_info[:grade_id] = portal_grade.id
           portal_grade_level = Portal::GradeLevel.create!(grade_level_info)
+          
+          create_count += 1
           print '.'
-          count = count + 1
         end
         default_grades_levels << portal_grade_level
       end
     end
-    puts ''
-    puts "Generated #{count} default grade levels"
+    puts
+    puts "Generated #{create_count} and updated #{update_count} portal grade levels"
     
     #create schools if default district is present
     count = 0
