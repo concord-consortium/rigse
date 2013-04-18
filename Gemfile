@@ -137,7 +137,7 @@ group :test do
   gem "fakeweb",            "~> 1.3", :require => false
   gem "ci_reporter",        "~> 1.7.0"
   gem "delorean",           "~> 1.1"
-  gem "webmock",            "~> 1.11.0"
+  gem "webmock",            "~> 1.11.0", :require => false
   gem "capybara-mechanize", "~> 0.3.0"
 end
 
