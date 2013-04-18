@@ -38,22 +38,3 @@ production:
   database: rites_production
   password: '*****'
   pool: 5
-
-# Optionally used for importing of ITSI activities
-itsi: 
-  encoding: utf8
-  adapter: mysql2
-  username: root
-  database: production_itsi_prod
-  password: '*****'
-  pool: 5
-  asset_url: http://itsidiy.concord.org
-
-# Optionally used with the itsi database for importing ITSI units
-ccportal:
-  encoding: utf8
-  adapter: mysql2
-  username: root
-  database: ccportal
-  password: '*****'
-  pool: 5
