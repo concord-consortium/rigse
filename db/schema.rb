@@ -15,11 +15,11 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "name"
     t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "description"
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.boolean  "enable_grade_levels",                          :default => false
     t.text     "custom_css"
     t.boolean  "use_bitmap_snapshots",                         :default => false
-    t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "teachers_can_author",                          :default => true
+    t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "enable_member_registration",                   :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
     t.boolean  "require_user_consent",                         :default => false
@@ -170,6 +170,7 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "periodic_bundle_content_id"
+    t.string   "uuid",                       :limit => 36
   end
 
   add_index "dataservice_blobs", ["bundle_content_id"], :name => "index_dataservice_blobs_on_bundle_content_id"
@@ -266,8 +267,8 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.boolean  "valid_xml"
     t.boolean  "empty"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
     t.boolean  "parts_extracted",                               :default => false
   end
 
@@ -276,8 +277,8 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
   create_table "dataservice_periodic_bundle_loggers", :force => true do |t|
     t.integer  "learner_id"
     t.text     "imports"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "dataservice_periodic_bundle_loggers", ["learner_id"], :name => "learner_index"
@@ -287,8 +288,8 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.boolean  "delta",                                         :default => true
     t.string   "key"
     t.text     "value",                     :limit => 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
   end
 
   add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index"
@@ -463,25 +464,25 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
   create_table "embeddable_data_collectors", :force => true do |t|
     t.string   "name"
     t.text     "description"
+    t.integer  "probe_type_id"
     t.integer  "user_id"
     t.string   "uuid",                       :limit => 36
-    t.integer  "y_axis_min",                               :default => 0
-    t.integer  "y_axis_max",                               :default => 5
-    t.integer  "x_axis_min",                               :default => 0
-    t.integer  "x_axis_max",                               :default => 60
     t.string   "title"
-    t.string   "x_axis_label"
-    t.string   "x_axis_units"
+    t.float    "y_axis_min",                               :default => 0.0
+    t.float    "y_axis_max",                               :default => 5.0
+    t.float    "x_axis_min"
+    t.float    "x_axis_max"
+    t.string   "x_axis_label",                             :default => "Time"
+    t.string   "x_axis_units",                             :default => "s"
     t.string   "y_axis_label"
     t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled"
-    t.boolean  "draw_marks"
-    t.boolean  "connect_points"
-    t.boolean  "autoscale_enabled"
-    t.boolean  "ruler_enabled"
-    t.boolean  "show_tare"
-    t.boolean  "single_value"
-    t.integer  "probe_type_id"
+    t.boolean  "multiple_graphable_enabled",               :default => false
+    t.boolean  "draw_marks",                               :default => false
+    t.boolean  "connect_points",                           :default => true
+    t.boolean  "autoscale_enabled",                        :default => false
+    t.boolean  "ruler_enabled",                            :default => false
+    t.boolean  "show_tare",                                :default => false
+    t.boolean  "single_value",                             :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "graph_type_id"
@@ -619,14 +620,14 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
     t.string   "uuid",             :limit => 36
+    t.string   "name"
+    t.text     "description"
     t.text     "prompt"
     t.string   "default_response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "rows",                           :default => 5
     t.integer  "columns",                        :default => 32
     t.integer  "font_size",                      :default => 12
@@ -693,14 +694,26 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
   end
 
   create_table "embeddable_xhtmls", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
     t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "equipments", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "equipments", ["created_by"], :name => "created_by_index"
+  add_index "equipments", ["updated_by"], :name => "updated_by_index"
 
   create_table "external_activities", :force => true do |t|
     t.integer  "user_id"
@@ -775,6 +788,19 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.integer "jar_id"
     t.integer "versioned_jnlp_id"
   end
+
+  create_table "material_equipments", :force => true do |t|
+    t.integer  "material_id"
+    t.string   "material_type"
+    t.integer  "equipment_id"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "material_equipments", ["created_by"], :name => "created_by_index"
+  add_index "material_equipments", ["updated_by"], :name => "updated_by_index"
 
   create_table "maven_jnlp_icons", :force => true do |t|
     t.string   "uuid"
@@ -953,12 +979,12 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
   add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "page_id"
-    t.integer  "position"
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "user_id"
   end
 
@@ -967,17 +993,17 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
-    t.integer  "position"
     t.integer  "section_id"
     t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1008,7 +1034,7 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
@@ -2020,7 +2046,7 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",          :limit => 16777215
+    t.text     "answers",          :limit => 2147483647
     t.string   "runnable_type"
     t.float    "complete_percent"
   end
@@ -2036,12 +2062,12 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.integer  "user_id"
     t.string   "name"
     t.text     "description"
-    t.string   "publication_status", :default => "draft"
+    t.string   "publication_status",               :default => "draft"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "offerings_count",    :default => 0
+    t.integer  "offerings_count",                  :default => 0
     t.text     "content"
-    t.string   "uuid"
+    t.string   "uuid",               :limit => 36
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
@@ -2147,6 +2173,7 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "note"
+    t.string   "uuid",              :limit => 36
   end
 
   add_index "saveable_image_question_answers", ["image_question_id", "position"], :name => "i_q_id_and_position_index"
@@ -2155,9 +2182,10 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.integer  "learner_id"
     t.integer  "offering_id"
     t.integer  "image_question_id"
-    t.integer  "response_count",    :default => 0
+    t.integer  "response_count",                  :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "uuid",              :limit => 36
   end
 
   add_index "saveable_image_questions", ["learner_id"], :name => "index_saveable_image_questions_on_learner_id"
@@ -2169,6 +2197,7 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "uuid",               :limit => 36
   end
 
   add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
@@ -2177,8 +2206,9 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.integer  "choice_id"
     t.integer  "answer_id"
     t.string   "rationale"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.string   "uuid",       :limit => 36
   end
 
   add_index "saveable_multiple_choice_rationale_choices", ["answer_id"], :name => "index_saveable_multiple_choice_rationale_choices_on_answer_id"
@@ -2190,7 +2220,8 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "offering_id"
-    t.integer  "response_count",     :default => 0
+    t.integer  "response_count",                   :default => 0
+    t.string   "uuid",               :limit => 36
   end
 
   add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"
@@ -2238,14 +2269,14 @@ ActiveRecord::Schema.define(:version => 20130410181518) do
   end
 
   create_table "sections", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
-    t.integer  "position"
     t.integer  "activity_id"
     t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
   end

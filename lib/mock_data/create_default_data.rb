@@ -28,6 +28,8 @@ module MockData
   #Create fake users and roles
   def self.create_default_users
     
+    puts
+    puts
     admin_info = DEFAULT_DATA[:admin_project]
     project = Admin::Project.find_by_uuid(admin_info[:uuid])
     if project
@@ -41,7 +43,8 @@ module MockData
       puts 'Generated default project'
     end
     
-    
+    puts
+    puts
     create_count = 0
     update_count = 0
     
@@ -80,6 +83,8 @@ module MockData
     puts "Generated #{create_count} and updated #{update_count} roles"
     
     #create a district
+    puts
+    puts
     default_district = nil
     district_info = DEFAULT_DATA[:district]
     district_by_uuid = Portal::District.find_by_uuid(district_info[:uuid])
@@ -104,6 +109,8 @@ module MockData
     end
     
     #create default grades
+    puts
+    puts
     default_grades = []
     
     create_count = 0
@@ -130,6 +137,8 @@ module MockData
     puts "Generated #{create_count} and updated #{update_count} portal grades"
     
     #create default grades levels
+    puts
+    puts
     default_grades_levels = []
     
     create_count = 0
@@ -161,6 +170,11 @@ module MockData
     puts "Generated #{create_count} and updated #{update_count} portal grade levels"
     
     #create schools if default district is present
+
+    
+
+    puts
+    puts
     
     default_schools = []
     
@@ -222,6 +236,11 @@ module MockData
     
     
     #following courses exist
+
+    
+
+    puts
+    puts
     
     default_courses = []
     
@@ -400,8 +419,10 @@ module MockData
     # student class mapping
     
     #following classes exist:
-    
-    count = 0
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     default_classes = []
     @default_classes = default_classes
     
@@ -415,29 +436,35 @@ module MockData
         teacher = @default_teachers.find{|t| t.user.login == clazz_info[:teacher]}
         
         if default_clazz_by_uuid
-          unless default_clazz_by_clazz_word
+          unless default_clazz_by_clazz_word.uuid != default_clazz_by_uuid.uuid
             default_clazz = default_clazz_by_uuid
-            default_clazz.clazz_word = clazz_info[:class_word]
+            default_clazz.name = clazz_info[:name]
+            default_clazz.class_word = clazz_info[:class_word]
             default_clazz.teacher_id = teacher.id
             default_clazz.course_id = course.id
             default_clazz.save!
             teacher.add_clazz(default_clazz)
+            update_count += 1
+            print '+'
+          else
+            puts "Skipping Class #{default_clazz_by_uuid.name} as class word #{clazz_info[:class_word]} is already taken"
           end
-          puts "Skipped. Default class #{default_clazz_by_uuid.name} already exist"
         elsif teacher and default_clazz_by_clazz_word.nil?
           clazz_info.delete(:teacher)
           clazz_info[:teacher_id] = teacher.id
           clazz_info[:course_id] = course.id
           default_clazz = Portal::Clazz.create!(clazz_info)
           teacher.add_clazz(default_clazz)
+          create_count = create_count + 1
           print '.'
-          count = count + 1
+        else
+          puts "Skipping Class because teacher or class word were not proper."
         end
         default_classes << default_clazz if default_clazz
       end
     end
-    puts ''
-    puts "Generated #{count} default classes"
+    puts
+    puts "Generated #{create_count} and updated #{update_count} Classes"
     
     #following teacher and class mapping exists:
     DEFAULT_DATA[:teacher_clazzes].each do |teacher_clazz, teacher_clazz_info|
@@ -481,7 +508,12 @@ module MockData
     @default_investigations = default_investigations
     @default_activities = default_activities
     
+
     # Resource pages
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     DEFAULT_DATA[:resource_pages].each do |key, rp|
       user_name = rp.delete(:user)
       user = @default_users.find{|u| u.login == user_name}
@@ -496,15 +528,25 @@ module MockData
           default_rp.created_at = rp[:offerings_count]
           default_rp.publication_status = rp[:publication_status]
           default_rp.save!
+          print '+'
+          update_count += 1
         else
           rp[:user_id] = user.id
           resource_page = ResourcePage.create!(rp)
           resource_page.save!
+          create_count += 1
+          print '.'
         end
       end
     end
+    puts
+    puts "Generated #{create_count} and updated #{update_count} Resource pages"
     
     # pages
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     DEFAULT_DATA[:pages].each do |key, p|
       user_name = p.delete(:user)
       user = @default_users.find{|u| u.login == user_name}
@@ -516,14 +558,25 @@ module MockData
           default_page.name = p[:name]
           default_page.user = user
           default_page.publication_status = p[:publication_status]
+          update_count += 1
+          print '+'
         else
           p[:user_id] = user.id
           Page.create!(p)
+          create_count += 1
+          print '.'
         end
       end
     end
+    puts
+    puts "Generated #{create_count} and updated #{update_count} Pages"
+    
     
     # Multiple Choice questions
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     author = @default_users.find{|u| u.login == 'author'}
     if author
       default_mcq = []
@@ -542,6 +595,8 @@ module MockData
           multi_ch_que = mcq_by_uuid
           multi_ch_que.prompt = mcq[:prompt]
           multi_ch_que.save!
+          update_count += 1
+          print "+"
         else
           mcq[:user_id] = author.id
           multi_ch_que = Embeddable::MultipleChoice.create!(mcq)
@@ -553,11 +608,21 @@ module MockData
           )}
           
           multi_ch_que.choices = choices
+          
+          print '.'
+          create_count += 1
         end
         default_mcq << multi_ch_que
       end
+      puts
+      puts "Generated #{create_count} and updated #{update_count} Multiple Choice questions"
     end
     
+    
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     if author
       # Image Questions
       default_image_question = []
@@ -571,18 +636,27 @@ module MockData
           image_que.user_id = author.id
           image_que.prompt = imgq[:uuid]
           image_que.save!
+          update_count += 1
+          print '+'
         else
           imgq[:user_id] = author.id
           image_que = Embeddable::ImageQuestion.create!(imgq)
+          create_count += 1
+          print '.'
         end
         
         default_image_question << image_que
       end
+      puts
+      puts "Generated #{create_count} and updated #{update_count} Image questions"
     end
     
     
     # Empty Investigations
-    
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     DEFAULT_DATA[:empty_investigations].each do |key, inv|
       user_login = inv.delete(:user)
       user = @default_users.find{|u| u.login == user_login}
@@ -598,16 +672,25 @@ module MockData
           empt_inv.publication_status = empt_inv.publication_status
           empt_inv.created_at = inv[:created_at] if inv[:created_at]
           empt_inv.save!
+          update_count += 1
+          print '+'
         else
           inv[:user_id] = user.id 
           empt_inv = Investigation.create!(inv)
+          create_count += 1
+          print '.'
         end
         default_investigations << empt_inv if empt_inv
       end
     end
-    
+    puts
+    puts "Generated #{create_count} and updated #{update_count} Empty Investigations"
     
     # Simple Investigation
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     DEFAULT_DATA[:simple_investigations].each do |key, inv|
       user_login = inv.delete(:user)
       user = @default_users.find{|u| u.login == user_login}
@@ -633,6 +716,8 @@ module MockData
             sim_inv.offerings_count = inv[:offerings_count]
             sim_inv.publication_status = inv[:publication_status]
           end
+          update_count += 1
+          print '+'
         else
           inv[:user_id] = user.id
           sim_inv = Investigation.create!(inv)
@@ -643,12 +728,21 @@ module MockData
           activity.sections << section
           sim_inv.activities << activity
           sim_inv.save!
+          create_count += 1
+          print '.'
         end
         default_investigations << sim_inv if sim_inv
         
       end
     end
+    puts
+    puts "Generated #{create_count} and updated #{update_count} Simple Investigation"
     
+    
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     # Linked Investigation
     DEFAULT_DATA[:linked_investigations].each do |key, inv|
       user_login = inv.delete(:user)
@@ -668,6 +762,13 @@ module MockData
         inv_by_name = Investigation.find_by_name(inv[:name])
         if inv_by_uuid
           investigation = inv_by_uuid
+          investigation.name = inv[:name]
+          investigation.user = user
+          investigation.offerings_count = inv[:offerings_count]
+          investigation.publication_status = inv[:publication_status]
+          investigation.created_at = inv[:created_at]
+          investigation.save!
+          
           act = Activity.find_or_create_by_uuid(:uuid => activity_uuid)
           act.user_id = user.id
           act.save!
@@ -698,7 +799,7 @@ module MockData
           snapshot_button.user_id = user.id
           snapshot_button.target_element = draw_tool
           snapshot_button.save!
-          snapshot_button << page
+          snapshot_button.pages << page
           
           prediction_graph = Embeddable::DataCollector.find_or_create_by_uuid(:uuid => prediction_graph_uuid)
           prediction_graph.pages << page
@@ -708,6 +809,9 @@ module MockData
           displaying_graph.prediction_graph_id = prediction_graph.id
           displaying_graph.save!
           displaying_graph.pages << page
+          
+          update_count += 1
+          print '+'
         else
           inv[:user_id] = user.id
           investigation = Investigation.create!(inv)
@@ -747,13 +851,22 @@ module MockData
           displaying_graph =  Embeddable::DataCollector.create!(info)
           displaying_graph.pages << page
           
+          create_count += 1
+          print '.'
         end
         
         default_investigations << investigation if investigation
       end
     end
-      
+    puts
+    puts "Generated #{create_count} and updated #{update_count} Linked investigations"
+    
+    
     # investigations with multiple choices exist
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     if author
       DEFAULT_DATA[:investigations_with_mcq].each do |key, inv|
         investigation = nil
@@ -812,6 +925,8 @@ module MockData
               end
             end
           end
+          update_count += 1
+          print '+'
         else
           info = {
                    :name => inv[:name],
@@ -873,13 +988,21 @@ module MockData
             end
           
           end
+          create_count += 1
+          print '.'
         end
         
         default_investigations << investigation if investigation
       end
+      puts
+      puts "Generated #{create_count} and updated #{update_count} Investigations with multiple choice"
     end
     
     # Activities for the above investigations exist
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     DEFAULT_DATA[:activities].each do |key, act|
       inv_name = act.delete(:investigation)
       user_login = act.delete(:user)
@@ -895,16 +1018,27 @@ module MockData
           default_activity.name = act[:name]
           default_activity.investigation_id = inv.id
           default_activity.save!
+          update_count += 1
+          print '+'
         else
           act[:user_id] = user.id
           act[:investigation_id] = inv.id
           default_activity = Activity.create!(act)
+          create_count += 1
+          print '.'
         end
         default_activities << default_activity if default_activity
       end
     end
+    puts
+    puts "Generated #{create_count} and updated #{update_count} Activities"
 
+    
     # Activities with multiple
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     DEFAULT_DATA[:mcq_activities].each do |key, act|
       pages  = []
       user_login = act.delete(:user)
@@ -957,6 +1091,8 @@ module MockData
               img_que.pages << p
             end
           end
+          update_count += 1
+          print '+'
         else
           
           act_info = {
@@ -999,14 +1135,22 @@ module MockData
               img_que.pages << p
             end
           end
-        
+          create_count += 1
+          print '.'
         end
         
         default_activities << default_activity if default_activity
       end
+      puts
+      puts "Generated #{create_count} and updated #{update_count} Activities with multiple choice"
     end
 
+    
     # External Activity
+    puts
+    puts
+    create_count = 0
+    update_count = 0
     DEFAULT_DATA[:external_activities].each do |key, act|
       user_login = act.delete(:user)
       user = @default_users.find{|u| u.login == user_login}
@@ -1019,16 +1163,21 @@ module MockData
           default_ext_act.url = act[:url]
           default_ext_act.name = act[:name]
           default_ext_act.save!
+          update_count += 1
+          print '+'
         else
           act[:user_id] = user.id
           default_ext_act = ExternalActivity.create!(act)
           default_ext_act.publish
           default_ext_act.save!
+          create_count += 1
+          print '.' 
         end
         default_activities << default_ext_act if default_ext_act
       end
     end
-    
+    puts
+    puts "Generated #{create_count} and updated #{update_count} External Activities"
 
   end # end of create_study_materials
   
@@ -1068,6 +1217,7 @@ module MockData
   
   def self.record_learner_data
     # record investigation answers
+    puts
     investigation_index = 0
     DEFAULT_DATA[:student_answers_investigations].each do |key, res|
       clazz = @default_classes.find{|c| c.name == res[:class]}
@@ -1084,6 +1234,7 @@ module MockData
         record_student_answer(res, 'Investigation')
         
         investigation_index = investigation_index + 1
+        puts "Record learner #{student.user.first_name}'s response for  offering #{investigation.name} assigned to class #{clazz.name}"
       end
       
     end
@@ -1106,6 +1257,7 @@ module MockData
         record_student_answer(res, 'Activity')
         
         activity_index = activity_index + 1
+        puts "Record learner #{student.user.first_name}'s response for  offering #{activity.name} assigned to class #{clazz.name}"
       end
     end
     
@@ -1212,7 +1364,7 @@ module MockData
     end
   end # end of self.add_response
 
-
+  
   def self.add_multichoice_answer(learner,question,answer_text, data)
     answer = question.choices.detect{ |c| c.choice == answer_text}
     

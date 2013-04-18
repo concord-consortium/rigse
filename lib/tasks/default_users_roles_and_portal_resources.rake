@@ -43,6 +43,7 @@ namespace :app do
     desc "Create default users and roles"
     task :create_default_users => :environment do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
+      puts 'Generating default data from default data ymls'
       MockData.create_default_users
     end
     
