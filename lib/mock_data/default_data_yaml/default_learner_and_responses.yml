@@ -1,0 +1,36 @@
+student_answers_investigations:
+  student_response_1:
+    student: dave
+    class: My Class
+    investigation: Atomic Energy
+    question_prompt: a
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000200
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000201
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000202
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000203
+
+student_answers_activities:
+  student_response_1:
+    student: taylor
+    class: My Class
+    activity: Algebra
+    question_prompt: f
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000204
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000205
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000206
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000207
+  
+  student_response_2:
+    student: chuck
+    class: My Class
+    activity: Algebra
+    question_prompt: f
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000208
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000209
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000210
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000211
+
+# if response is for image questions then provide saveable_image_question_uuid:, :dataservice_blob_uuid, :saveable_image_question_answer_uui

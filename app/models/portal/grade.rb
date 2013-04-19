@@ -5,7 +5,7 @@ class Portal::Grade < ActiveRecord::Base
   acts_as_replicatable
 
   scope :active, { :conditions => { :active => true } }  
-  has_many :grade_levels, :class_name => "Portal::GradeLevel"
+  has_many :grade_levels, :dependent => :destroy,:class_name => "Portal::GradeLevel"
   
   include Changeable
   

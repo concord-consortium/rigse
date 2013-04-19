@@ -18,7 +18,7 @@ class Page < ActiveRecord::Base
   #   WHERE pages.section_id = #{id}" }
 
   has_many :page_elements, :order => :position, :dependent => :destroy
-  has_many :inner_page_pages, :class_name => 'Embeddable::InnerPagePage'
+  has_many :inner_page_pages, :dependent => :destroy, :class_name => 'Embeddable::InnerPagePage'
   has_many :inner_pages, :class_name => 'Embeddable::InnerPage', :through => :inner_page_pages
 
   # The array of embeddables is defined in conf/initializers/embeddables.rb
@@ -49,8 +49,8 @@ class Page < ActiveRecord::Base
 
   has_many :raw_otmls, :through => :page_elements, :source => :embeddable, :source_type => 'Embeddable::RawOtml'
 
-  has_many :teacher_notes, :as => :authored_entity
-  has_many :author_notes, :as => :authored_entity
+  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
+  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   include Noteable # convenience methods for notes...
 
   include Publishable
