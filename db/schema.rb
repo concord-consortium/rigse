@@ -13,6 +13,18 @@
 
 ActiveRecord::Schema.define(:version => 20130418013618) do
 
+  create_table "access_grants", :force => true do |t|
+    t.string   "code"
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.datetime "access_token_expires_at"
+    t.integer  "user_id"
+    t.integer  "client_id"
+    t.string   "state"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",               :limit => 36
@@ -115,6 +127,14 @@ ActiveRecord::Schema.define(:version => 20130418013618) do
     t.datetime "updated_at",              :null => false
   end
 
+  create_table "authentications", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "author_notes", :force => true do |t|
     t.text     "body"
     t.string   "uuid",                 :limit => 36
@@ -140,6 +160,14 @@ ActiveRecord::Schema.define(:version => 20130418013618) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "position"
+  end
+
+  create_table "clients", :force => true do |t|
+    t.string   "name"
+    t.string   "app_id"
+    t.string   "app_secret"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "collaborations", :force => true do |t|
