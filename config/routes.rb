@@ -336,7 +336,7 @@ constraints :id => /\d+/ do
   get  '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_learner'
 
   # external activity return url
-  post '/dataservice/external_activity_data/:id' => 'dataservice/external_activity_data_metal#create', :as => 'external_activity_return'
+  post '/dataservice/external_activity_data/:id' => 'dataservice/external_activity_data#create', :as => 'external_activity_return'
 
   # A prettier version of the blob w/ token url
   match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
