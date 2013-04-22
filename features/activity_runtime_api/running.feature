@@ -38,3 +38,23 @@ Feature: External Activities can support a REST api
     When the student runs the external activity "Cool Thing" again
     Then the portal should not send a POST to "activities.com/activity/1/sessions/"
     And the browser should send a GET to "activities.com/activity/1/sessions/1"
+
+  @mechanize
+  Scenario: External REST activity sends data back to the portal
+    Given the student ran the external REST activity "Cool Thing" before
+    When the browser returns the following data to the portal
+      """
+      [
+        { "type": "open_response",
+          "question_id": "1234567",
+          "answer": "I like this activity"
+        },
+        { "type": "multiple_choice",
+          "question_id": "456789",
+          "answer_ids": ["98"],
+          "answer_texts": ["blue"]
+        }
+      ]
+      """
+    Then the portal should create an open response saveable with the answer "I like this activity"
+    And the portal should create a multiple choice saveable with the answer "blue"

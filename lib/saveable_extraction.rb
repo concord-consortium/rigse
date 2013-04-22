@@ -54,7 +54,7 @@ module SaveableExtraction
     return rationales
   end
 
-  def process_multiple_choice(choice_ids, rationales)
+  def process_multiple_choice(choice_ids, rationales = {})
     choice = Embeddable::MultipleChoiceChoice.find_by_id(choice_ids.first, :include => :multiple_choice)
     multiple_choice = choice ? choice.multiple_choice : nil
     if multiple_choice && choice
