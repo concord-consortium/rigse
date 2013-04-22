@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130418013618) do
+ActiveRecord::Schema.define(:version => 20130422174635) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -607,6 +607,7 @@ ActiveRecord::Schema.define(:version => 20130418013618) do
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.boolean  "is_correct"
+    t.string   "external_id"
   end
 
   add_index "embeddable_multiple_choice_choices", ["multiple_choice_id"], :name => "index_embeddable_multiple_choice_choices_on_multiple_choice_id"
@@ -622,6 +623,7 @@ ActiveRecord::Schema.define(:version => 20130418013618) do
     t.boolean  "enable_rationale",                       :default => false
     t.text     "rationale_prompt"
     t.boolean  "allow_multiple_selection",               :default => false
+    t.string   "external_id"
   end
 
   create_table "embeddable_mw_modeler_pages", :force => true do |t|
@@ -658,6 +660,7 @@ ActiveRecord::Schema.define(:version => 20130418013618) do
     t.integer  "rows",                           :default => 5
     t.integer  "columns",                        :default => 32
     t.integer  "font_size",                      :default => 12
+    t.string   "external_id"
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
