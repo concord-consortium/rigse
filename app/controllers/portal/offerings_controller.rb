@@ -60,15 +60,13 @@ class Portal::OfferingsController < ApplicationController
          end
          external_activity = @offering.runnable
          if external_activity.rest_create_url
-           # check if the learner already has edit url
-           unless learner.external_activity_state_url
-             post_response = HTTParty.post(external_activity.rest_create_url, 
-               :body => { :returnUrl => external_activity_return_url(learner.id) },
-               :follow_redirects => false)
-             learner.external_activity_state_url = post_response.headers['Location']
-             learner.save
-           end
-           redirect_to(learner.external_activity_state_url)
+           uri = URI.parse(external_activity.rest_create_url)
+           uri.query = {
+             :domain => root_url,
+             :externalId => external_activity.id,
+             :returnUrl => external_activity_return_url(learner.id)
+           }.to_query
+           redirect_to(uri.to_s)
          else
            redirect_to(@offering.runnable.url(learner))
          end

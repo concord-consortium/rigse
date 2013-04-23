@@ -1110,7 +1110,6 @@ ActiveRecord::Schema.define(:version => 20130422174635) do
     t.datetime "updated_at",                                :null => false
     t.integer  "bundle_logger_id"
     t.integer  "console_logger_id"
-    t.string   "external_activity_state_url"
   end
 
   add_index "portal_learners", ["bundle_logger_id"], :name => "index_portal_learners_on_bundle_logger_id"
