@@ -73,7 +73,7 @@ module MockData
           print '.'
         else
           puts
-          puts "Skipping role '#{r.title}' as it already exists"
+          puts "Skipping role '#{role_by_title.title}' as it already exists"
         end
       end
     end
