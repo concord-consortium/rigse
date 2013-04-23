@@ -1222,7 +1222,8 @@ module MockData
     
   end # end of create_assignments
   
-  
+  puts
+  puts
   def self.record_learner_data
     # record investigation answers
     count = 0
@@ -1244,6 +1245,7 @@ module MockData
         
         investigation_index = investigation_index + 1
         count += 1
+        print '.'
       end
       
     end
@@ -1267,6 +1269,7 @@ module MockData
         
         activity_index = activity_index + 1
         count += 1
+        print '.'
       end
     end
     
