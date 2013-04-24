@@ -35,15 +35,15 @@ def set_request_stub(method, address, stub)
 end
 
 Given(/^"([^"]*)" handles a (POST|GET) with query:$/) do |address, method, table|
-  query_data = table.rows_hash #.clone
+  query_data = table.rows_hash
   method_symbol = method.downcase.to_sym
   stub = get_request_stub(method, address)
   unless stub
     stub = set_request_stub(method, address, stub_request(method_symbol, address))
   end
   # must use a copy! Cucumber apparently doesn't re-allocate arguments for Background steps
-  query_data["externalId"] = "" + query_data["externalId"].sub(/999/,"#{@external_activity.id}")
-  query_data["returnUrl"] = "" + query_data["returnUrl"].sub(/888/,"#{@learner.id}")
+  query_data["externalId"] = query_data["externalId"].sub(/999/,"#{@learner.id}")
+  query_data["returnUrl"] = query_data["returnUrl"].sub(/888/,"#{@learner.id}")
   stub.with(:query => query_data)
 end
 

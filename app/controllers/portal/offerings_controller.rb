@@ -63,7 +63,7 @@ class Portal::OfferingsController < ApplicationController
            uri = URI.parse(external_activity.rest_create_url)
            uri.query = {
              :domain => root_url,
-             :externalId => external_activity.id,
+             :externalId => learner.id,
              :returnUrl => external_activity_return_url(learner.id)
            }.to_query
            redirect_to(uri.to_s)
