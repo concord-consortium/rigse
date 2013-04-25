@@ -94,9 +94,8 @@ end
 When(/^the browser returns the following data to the portal$/) do |string|
   login_as('student')
   path = external_activity_return_path(@learner)
-  dr = page.driver
   Delayed::Job.should_receive(:enqueue)
-  dr.post(path, string)
+  page.driver.post(path, :content => string)
   # delayed_job doesn't work in tests, so force running the job
   Dataservice::ProcessExternalActivityDataJob.new(@learner.id, string).perform
 end
