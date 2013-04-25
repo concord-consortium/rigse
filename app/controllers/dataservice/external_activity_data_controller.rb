@@ -4,8 +4,7 @@ class Dataservice::ExternalActivityDataController < ApplicationController
     learner_id = params[:id]
     if learner = Portal::Learner.find(learner_id)
       if learner.user == current_visitor
-        body = request.body.read
-        Delayed::Job.enqueue Dataservice::ProcessExternalActivityDataJob.new(learner_id, body)
+        Delayed::Job.enqueue Dataservice::ProcessExternalActivityDataJob.new(learner_id, params[:content])
         render :status => 201, :nothing => true
         return
       end
