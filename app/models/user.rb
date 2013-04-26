@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   has_many :access_grants, :dependent => :delete_all
 
 
-  devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable,
+  devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable, :bearer_token_authenticatable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   self.token_authentication_key = "oauth_token"
   users = User.arel_table
