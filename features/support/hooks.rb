@@ -15,3 +15,18 @@ add_project_setting_tag('@lightweight', :use_jnlps, false)
     add_project_setting_tag("@enable_#{tag_name}", setting, true)
     add_project_setting_tag("@disable_#{tag_name}", setting, false)
   }
+
+# capybara needs to make a connection to the rails app that it starts up
+# note Around is broken in cucumber becuase it doesn't happen before the Background steps
+# and also note that After happens before the capybara deletes the session so disabling
+# the network in an After causes an WebMock failure
+Before('@javascript') do
+  # only allowing localhost connections will let us track down code that
+  # connects to external services, but if that is a problem you can
+  # change this to:
+  # WebMock.allow_net_connect!
+  WebMock.disable_net_connect!(:allow_localhost => true)
+end
+Before('~@javascript') do
+  WebMock.disable_net_connect!
+end
