@@ -9,7 +9,8 @@ require 'spork'
 
 require 'spork/ext/ruby-debug'
 
-Rails.env = ENV['RAILS_ENV'] = 'cucumber'
+Rails.env = 'cucumber' if defined?(Rails)
+ENV['RAILS_ENV'] = 'cucumber'
 
 Spork.prefork do
   require 'cucumber/rails'
