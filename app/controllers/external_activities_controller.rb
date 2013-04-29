@@ -1,10 +1,10 @@
 class ExternalActivitiesController < ApplicationController
 
-  before_filter :setup_object, :except => [:index, :preview_index]
+  before_filter :setup_object, :except => [:index, :preview_index, :publish]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
-  before_filter :can_create, :only => [:new, :create,:duplicate]
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export,:publish]
+  before_filter :can_create, :only => [:new, :create, :duplicate, :publish]
   
   in_place_edit_for :external_activity, :name
   in_place_edit_for :external_activity, :description
@@ -202,6 +202,11 @@ class ExternalActivitiesController < ApplicationController
     end
   end
   
+  def publish
+    json = JSON.parse(request.body.read)
+    external_activity = ActivityRuntimeAPI.publish(json)
+    head :created, :location => external_activity
+  end
   
   ##
   ##
