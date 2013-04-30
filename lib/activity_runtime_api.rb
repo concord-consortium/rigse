@@ -1,6 +1,7 @@
 class ActivityRuntimeAPI
   def self.publish(hash, user)
-    activity = Activity.create(:name => hash["name"], :user => user)
+    investigation = Investigation.create(:name => hash["name"], :user => user)
+    activity = Activity.create(:name => hash["name"], :user => user, :investigation => investigation)
     external_activity = ExternalActivity.create(
       :name             => hash["name"],
       :description      => hash["description"],
