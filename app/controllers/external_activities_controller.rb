@@ -204,7 +204,7 @@ class ExternalActivitiesController < ApplicationController
   
   def publish
     json = JSON.parse(request.body.read)
-    external_activity = ActivityRuntimeAPI.publish(json)
+    external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
     head :created, :location => external_activity
   end
   

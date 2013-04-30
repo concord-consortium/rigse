@@ -1,32 +1,35 @@
 class ActivityRuntimeAPI
-  def self.publish(hash)
-    activity = Activity.create(:name => hash["name"])
+  def self.publish(hash, user)
+    activity = Activity.create(:name => hash["name"], :user => user)
     external_activity = ExternalActivity.create(
       :name             => hash["name"],
       :description      => hash["description"],
       :url              => hash["url"],
       :rest_create_url  => hash["create_url"],
-      :template         => activity
+      :template         => activity,
+      :user => user
     )
 
     hash["sections"].each do |section_data|
       section = Section.create(
         :name => section_data["name"],
-        :activity => activity
+        :activity => activity,
+        :user => user
       )
 
       section_data["pages"].each do |page_data|
         page = Page.create(
           :name => page_data["name"],
-          :section => section
+          :section => section,
+          :user => user
         )
 
         page_data["elements"].each do |element_data|
           embeddable = case element_data["type"]
           when "open_response"
-            create_open_response(element_data)
+            create_open_response(element_data, user)
           when "multiple_choice"
-            create_multiple_choice(element_data)
+            create_multiple_choice(element_data, user)
           else
             next
           end
@@ -41,18 +44,20 @@ class ActivityRuntimeAPI
 
   private
 
-  def self.create_open_response(or_data)
+  def self.create_open_response(or_data, user)
     Embeddable::OpenResponse.create(
       :prompt => or_data["prompt"],
-      :external_id => or_data["id"]
+      :external_id => or_data["id"],
+      :user => user
     )
   end
 
-  def self.create_multiple_choice(mc_data)
+  def self.create_multiple_choice(mc_data, user)
     mc = Embeddable::MultipleChoice.create(
       :prompt => mc_data["prompt"],
       :external_id => mc_data["id"],
-      :allow_multiple_selection => mc_data["allow_multiple_selection"]
+      :allow_multiple_selection => mc_data["allow_multiple_selection"],
+      :user => user
     )
 
     mc_data["choices"].each do |choice_data|
