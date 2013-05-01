@@ -1,41 +1,44 @@
 class ActivityRuntimeAPI
   def self.publish(hash, user)
-    investigation = Investigation.create(:name => hash["name"], :user => user)
-    activity = Activity.create(:name => hash["name"], :user => user, :investigation => investigation)
-    external_activity = ExternalActivity.create(
-      :name             => hash["name"],
-      :description      => hash["description"],
-      :url              => hash["url"],
-      :rest_create_url  => hash["create_url"],
-      :template         => activity,
-      :user => user
-    )
-
-    hash["sections"].each do |section_data|
-      section = Section.create(
-        :name => section_data["name"],
-        :activity => activity,
+    external_activity = nil
+    Investigation.transaction do
+      investigation = Investigation.create(:name => hash["name"], :user => user)
+      activity = Activity.create(:name => hash["name"], :user => user, :investigation => investigation)
+      external_activity = ExternalActivity.create(
+        :name             => hash["name"],
+        :description      => hash["description"],
+        :url              => hash["url"],
+        :rest_create_url  => hash["create_url"],
+        :template         => activity,
         :user => user
       )
 
-      section_data["pages"].each do |page_data|
-        page = Page.create(
-          :name => page_data["name"],
-          :section => section,
+      hash["sections"].each do |section_data|
+        section = Section.create(
+          :name => section_data["name"],
+          :activity => activity,
           :user => user
         )
 
-        page_data["elements"].each do |element_data|
-          embeddable = case element_data["type"]
-          when "open_response"
-            create_open_response(element_data, user)
-          when "multiple_choice"
-            create_multiple_choice(element_data, user)
-          else
-            next
-          end
+        section_data["pages"].each do |page_data|
+          page = Page.create(
+            :name => page_data["name"],
+            :section => section,
+            :user => user
+          )
 
-          page.add_embeddable(embeddable)
+          page_data["elements"].each do |element_data|
+            embeddable = case element_data["type"]
+            when "open_response"
+              create_open_response(element_data, user)
+            when "multiple_choice"
+              create_multiple_choice(element_data, user)
+            else
+              next
+            end
+
+            page.add_embeddable(embeddable)
+          end
         end
       end
     end
