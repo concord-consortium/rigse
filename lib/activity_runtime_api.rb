@@ -10,6 +10,7 @@ class ActivityRuntimeAPI
         :url              => hash["url"],
         :rest_create_url  => hash["create_url"],
         :template         => activity,
+        :publication_status => "published",
         :user => user
       )
 
