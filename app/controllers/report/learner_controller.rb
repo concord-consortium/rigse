@@ -12,7 +12,7 @@ class Report::LearnerController < ApplicationController
     @all_teachers          = Portal::Teacher.all.sort_by {|t| t.name.downcase}
 
     # TODO: fix me -- choose runnables better
-    @all_runnables         = Assignable.all_assignables.sort_by { |i| i.name.downcase }
+    @all_runnables         = (Assignable.top_level_assignables(:include_drafts => true) + Assignable.other_assignables).sort_by { |i| i.name.downcase }
     @all_runnables_by_id   = @all_runnables.group_by {|r| "#{r.class.to_s}|#{r.id}" }
 
     @start_date            = params['start_date']
