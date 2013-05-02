@@ -46,3 +46,4 @@ Feature: External Activities can support a REST api
       """
     Then the portal should create an open response saveable with the answer "I like this activity"
     And the portal should create a multiple choice saveable with the answer "blue"
+    And the student's progress bars should be updated

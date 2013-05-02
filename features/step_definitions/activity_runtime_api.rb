@@ -112,3 +112,10 @@ Then(/^the portal should create a multiple choice saveable with the answer "([^"
   mcs.first.answer.size.should == 1
   mcs.first.answer.first[:answer].should == answer
 end
+
+# Only test that the report_learner is upadted
+# TODO: Test the actual report learner content
+Then(/the student's progress bars should be updated/) do
+  @learner.reload
+  @learner.report_learner.complete_percent.should be > 0.0
+end
