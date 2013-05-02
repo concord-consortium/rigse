@@ -118,4 +118,5 @@ end
 Then(/the student's progress bars should be updated/) do
   @learner.reload
   @learner.report_learner.complete_percent.should be > 0.0
+  @learner.report_learner.last_run.should_not be_nil
 end

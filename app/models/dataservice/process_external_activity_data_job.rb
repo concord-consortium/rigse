@@ -22,6 +22,7 @@ class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :con
         internal_process_multiple_choice(student_response, embeddable)
       end
     end
+    learner.report_learner.last_run = Time.now
     learner.report_learner.update_fields if learner
   end
 
