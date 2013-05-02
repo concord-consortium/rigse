@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120524200956) do
+ActiveRecord::Schema.define(:version => 20130502165301) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -255,6 +255,7 @@ ActiveRecord::Schema.define(:version => 20120524200956) do
     t.integer  "width"
     t.integer  "version"
     t.datetime "updated_at",         :default => '2011-05-12 10:23:34'
+    t.string   "interactive_url"
   end
 
   add_index "diy_models", ["diy_id"], :name => "index_diy_models_on_diy_id"
