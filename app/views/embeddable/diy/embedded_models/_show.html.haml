@@ -2,12 +2,16 @@
   - if diy_embedded_model.diy_model
     %b Model #{diy_embedded_model.diy_model.id}:
     = diy_embedded_model.name
-
-    .model_image
+    .model_image{:id => dom_id_for(diy_embedded_model, :model_image)}
       - if ! diy_embedded_model.diy_model.image_url.blank?
         =image_tag(diy_embedded_model.diy_model.image_url)
       - else
         (No Model Image)
+    - if diy_embedded_model.diy_model.interactive_url
+      :javascript
+        if (Object.isExtensible && Modernizr.svg) {
+          $("#{dom_id_for(diy_embedded_model, :model_image)}").innerHTML = "<iframe class='interactive' src='#{diy_embedded_model.diy_model.interactive_url}' frameborder='no' mozallowfullscreen='true' webkitallowfullscreen='true' allowfullscreen='true'></iframe>";
+        }
   -else
     (No Model Selected)
 

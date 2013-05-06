@@ -22,6 +22,7 @@ javascripts:
   - workgroup
   - chosen.proto
   - pt_event_simulate  
+  - modernizr
 stylesheets: 
 - base: 
   - app
