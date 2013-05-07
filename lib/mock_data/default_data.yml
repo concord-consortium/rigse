@@ -1046,3 +1046,40 @@ assignments:
       assignable_3:
         type: Investigation
         name: Non Linear Devices
+        
+student_answers_investigations:
+  student_response_1:
+    student: dave
+    class: My Class
+    investigation: Atomic Energy
+    question_prompt: a
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000177
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000178
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000179
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000180
+
+student_answers_activities:
+  student_response_1:
+    student: taylor
+    class: My Class
+    activity: Algebra
+    question_prompt: f
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000181
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000182
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000183
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000184
+  
+  student_response_2:
+    student: chuck
+    class: My Class
+    activity: Algebra
+    question_prompt: f
+    answer: a
+    learner_uuid: 00000000-0000-0000-0000-000000000185
+    saveable_multiple_choices_uuid: 00000000-0000-0000-0000-000000000186
+    saveable_multiple_choice_answers_uuid: 00000000-0000-0000-0000-000000000187
+    saveable_multiple_choice_rationale_choices_uuid: 00000000-0000-0000-0000-000000000188
+
+# if response is for image questions then provide saveable_image_question_uuid:, :dataservice_blob_uuid, :saveable_image_question_answer_uuid
