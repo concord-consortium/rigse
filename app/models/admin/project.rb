@@ -109,6 +109,13 @@ class Admin::Project < ActiveRecord::Base
     def unique_activity_names
       return settings_for(:unique_activity_names)
     end
+
+    def teachers_can_author?
+      default = default_project
+      return default.teachers_can_author if default
+      return false
+    end
+
   end
 
   def default_project?

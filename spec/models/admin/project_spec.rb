@@ -153,6 +153,20 @@ describe Admin::Project do
         @clazz.unique_activity_names.should be_false
       end
     end
+
+    describe "teachers_can_author" do
+      let(:active_project) { mock() }
+      it "should return true if the current project allows teachers to author" do
+        @clazz.should_receive(:default_project).and_return(active_project)
+        active_project.should_receive(:teachers_can_author).and_return(true)
+        @clazz.teachers_can_author?.should == true
+      end
+      it "should return false if the current project dissalows teachers authoring" do
+        @clazz.should_receive(:default_project).and_return(active_project)
+        active_project.should_receive(:teachers_can_author).and_return(false)
+        @clazz.teachers_can_author?.should == false
+      end
+    end
   end
 
 end
