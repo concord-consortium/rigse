@@ -11,10 +11,12 @@
   =(h @image.attribution).gsub("\n", "<br/>\n")
 
 %p
-  %b
-    Embedding URL:
-  / = link_to view_image_path(@image), view_image_path(@image)
+  %b Embedding Path:
   = view_image_path(@image)
+
+%p
+  %b Embedding Url:
+  = view_image_url(@image)
 
 %p
   %b
