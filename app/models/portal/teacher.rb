@@ -63,6 +63,18 @@ class Portal::Teacher < ActiveRecord::Base
     portal_teacher.save_left_pane_submenu_item(item_value)
   end
 
+  def self.can_author?
+    return Admin::Project.teachers_can_author?
+  end
+
+  def self.update_authoring_roles
+    if self.can_author?
+      self.all.each do |teacher|
+        teacher.user.add_role('author') if teacher.user
+      end
+    end
+  end
+
 
   def save_left_pane_submenu_item(item_value)
     self.left_pane_submenu_item = item_value
@@ -125,6 +137,12 @@ class Portal::Teacher < ActiveRecord::Base
 
   def school
     return schools.first
+  end
+
+  def possibly_add_authoring_role
+    if self.class.can_author?
+      self.user.add_role('author')
+    end
   end
 
 end
