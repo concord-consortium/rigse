@@ -84,7 +84,15 @@ class Activity < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id
     WHERE sections.activity_id = #{id}'
 
-  delegate :saveable_types, :reportable_types, :to => :investigation
+  # delegate :saveable_types, :reportable_types, :to => :investigation
+  def saveable_types
+    Investigation.saveable_types
+  end
+
+  def reportable_types
+    Investigation.reportable_types
+  end
+
   acts_as_replicatable
   acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags
   acts_as_list :scope => :investigation
