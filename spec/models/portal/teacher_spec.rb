@@ -59,13 +59,22 @@ describe Portal::Teacher do
   #   @nces_teacher.should_not be_valid
   # end
 
-
   describe "possibly_add_authoring_role" do
     describe "when the portal allows teachers to author" do
       it "should add the authoring role to teachers when they are created" do
         Admin::Project.stub!(:teachers_can_author? => true)
         teacher = Factory.create(:portal_teacher)
+        teacher.possibly_add_authoring_role
         teacher.user.should have_role('author')
+      end
+    end
+
+    describe "when the portal doesn't allow the teacher to author" do
+      it "should not add the authoring role to teachers when they are created" do
+        Admin::Project.stub!(:teachers_can_author? => false)
+        teacher = Factory.create(:portal_teacher)
+        teacher.possibly_add_authoring_role
+        teacher.user.should_not have_role('author')
       end
     end
   end
