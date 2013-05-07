@@ -13,13 +13,22 @@
 
   .dropdown{:id => dom_id_for(offering.runnable,"run_dropdown")}
     .container
-      %ul
+      %ul{:id => dom_id_for(offering.runnable,:run_items)}
         - run_params = {:link_text => "preview as a student..."}
         - run_params[:format] = :run_html if offering.runnable.is_a?(Page)
         %li= preview_link_for(offering.runnable, nil, run_params.clone)
         - run_params[:teacher_mode] = true
         - run_params[:link_text] = "run in teacher mode"
         %li= run_link_for(offering.runnable, nil, run_params)
+        - if offering.can_run_lightweight?(logger)
+          - run_params[:link_text] = "run in lightweight mode"
+          - run_params[:format] = :run_html
+          :javascript
+            if (Object.isExtensible && Modernizr.svg) {
+              var elem = $("#{dom_id_for(offering.runnable, :run_items)}");
+              var link = '<li>#{run_link_for(offering.runnable, nil, run_params).gsub(/'/, "")}</li>';
+              elem.innerHTML = elem.innerHTML + link;
+            }
   %div{ :id => dom_id_for(offering), :class => "offering #{"no-delete" unless offering.can_be_deleted?}" }
     - if offering.resource_page?
       = render :partial => 'resource_pages/accordion', :locals => { :resource_page => offering.runnable, :offering => offering }

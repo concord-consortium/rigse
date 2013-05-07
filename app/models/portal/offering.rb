@@ -92,6 +92,29 @@ class Portal::Offering < ActiveRecord::Base
     runnable.run_format
   end
 
+  def can_run_lightweight?(logger = nil)
+    case runnable
+    when Activity
+      # filter through all the embeddables to make sure they all have lightweight views
+      runnable.sections.each do |section|
+        next unless section.is_enabled?
+        section.pages.each do |page|
+          next unless page.is_enabled?
+          page.page_elements.each do |element|
+            next unless element.is_enabled?
+            component = element.embeddable
+            if !component.respond_to?('can_run_lightweight?') || !component.can_run_lightweight?
+              logger.add(2, "Can't run component lightweight: #{component}\n") if logger
+              return false
+            end
+          end
+        end
+      end
+      return true
+    end
+    return false
+  end
+
   # def saveable_count
   #   @saveable_count ||= begin
   #     runnable = self.runnable

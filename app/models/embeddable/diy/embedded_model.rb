@@ -21,4 +21,12 @@ class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
     "Model"
   end
   
+  def can_run_lightweight?
+    if diy_model.interactive_url
+      return true
+    else
+      return false
+    end
+  end
+
 end

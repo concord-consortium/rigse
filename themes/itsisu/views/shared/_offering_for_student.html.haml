@@ -3,7 +3,16 @@
     - description_id = dom_id_for(offering, :description);
     - link_title = "run #{offering.name}"
     = info_button(description_id,"description for #{offering.name}")
-    = link_to image_tag("/images/diy_icons/bullet_go.png"), polymorphic_url(offering, :format => (offering.runnable.is_a?(Page) ? :run_html : :jnlp)), {:class => 'run_link offering', :title=>link_title}
+    %span{:id => dom_id_for(offering, :heavyweight)}
+      = link_to image_tag("/images/diy_icons/bullet_go.png"), polymorphic_url(offering, :format => (offering.runnable.is_a?(Page) ? :run_html : :jnlp)), {:class => 'run_link offering', :title=>link_title}
+    - if offering.can_run_lightweight?
+      %span{:id => dom_id_for(offering, :lightweight)}= ""
+      - link_title = "run lightweight #{offering.name}"
+      - link = link_to image_tag("/images/diy_icons/bullet_go.png"), polymorphic_url(offering, :format => :run_html), {:class => 'run_link offering', :title=>link_title}
+      :javascript
+        if (Object.isExtensible && Modernizr.svg) {
+          $("#{dom_id_for(offering, :lightweight)}").innerHTML = '#{link.gsub("'", "")}';
+        }
     = offering.name
   .activity_description{:id => description_id, :style=>"display: none;"}
     = offering.description
