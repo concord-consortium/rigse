@@ -1,4 +1,9 @@
 %div{:id => dom_id_for(diy_section, :details), :class => 'content'}
-  = diy_section.prompt
-
-  %textarea{:type => 'text', :style=>"width: 100%;", :value =>diy_section.default_response, :class=> "mceNoEditor",:id => dom_id_for(diy_section, :item, :default_response_field)}
+  = diy_section.content
+  - if diy_section.has_question
+    - value = diy_section.default_response
+    - if local_assigns[:learner]
+      - if saveable = Saveable::OpenResponse.find_by_learner_id_and_open_response_id(learner.id, 0) # FIXME!!
+        - value = saveable.answer if saveable.answered?
+    %textarea{:type => 'text', :style=>"width: 100%;", :class=> "mceNoEditor", :name => "questions[#{dom_id_for(diy_section)}]", :id => dom_id_for(diy_section, :item, :default_response_field)}
+      = value
