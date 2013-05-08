@@ -306,4 +306,22 @@ class Activity < ActiveRecord::Base
     models = enabled_diy_model_types.uniq.map{|m| m.name }
     { :probes => probes, :models => models}
   end
+
+  def can_run_lightweight?
+    # filter through all the embeddables to make sure they all have lightweight views
+    sections.each do |section|
+      next unless section.is_enabled?
+      section.pages.each do |page|
+        next unless page.is_enabled?
+        page.page_elements.each do |element|
+          next unless element.is_enabled?
+          component = element.embeddable
+          if !component.respond_to?('can_run_lightweight?') || !component.can_run_lightweight?
+            return false
+          end
+        end
+      end
+    end
+    return true
+  end
 end
