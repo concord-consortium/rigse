@@ -20,7 +20,7 @@
         - run_params[:teacher_mode] = true
         - run_params[:link_text] = "run in teacher mode"
         %li= run_link_for(offering.runnable, nil, run_params)
-        - if offering.can_run_lightweight?(logger)
+        - if offering.can_run_lightweight?
           - run_params[:link_text] = "run in lightweight mode"
           - run_params[:format] = :run_html
           :javascript

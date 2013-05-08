@@ -92,7 +92,7 @@ class Portal::Offering < ActiveRecord::Base
     runnable.run_format
   end
 
-  def can_run_lightweight?(logger = nil)
+  def can_run_lightweight?
     case runnable
     when Activity
       return runnable.can_run_lightweight?
