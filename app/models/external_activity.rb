@@ -46,6 +46,16 @@ class ExternalActivity < ActiveRecord::Base
     where(conditions)
   }
 
+  scope :exemplar,
+  {
+    :conditions => { :is_exemplar => true }
+  }
+
+  scope :not_exemplar,
+  {
+    :conditions => { :is_exemplar => false }
+  }
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
