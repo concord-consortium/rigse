@@ -32,17 +32,15 @@
 #
 module SearchableModel
   # see: http://github.com/mislav/will_paginate/wikis/simple-search
-  def search(search, page, user, includes={})
-    sql_parameters = []
-    sql_conditions = ""
+  def search(search, page, user, includes={}, sql_conditions = "", sql_parameters = [])
     # pass in a username to limit the search to the users items
     if (!user.nil?) && (!user.id.nil?)
       if column_names.include? 'user_id'
         if self == User
-          sql_conditions = ""
+          # sql_conditions = ""
         else
           # sql_conditions = "(#{table_name}.user_id = ? or #{table_name}.public = '1') and "
-          sql_conditions = "(#{table_name}.user_id = ?) and "
+          sql_conditions += "(#{table_name}.user_id = ?) and "
           sql_parameters << user.id
         end
       end
