@@ -378,7 +378,7 @@ class Portal::OfferingsController < ApplicationController
     case embeddable
     when Embeddable::OpenResponse
       saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(learner.id, offering.id, embeddable.id)
-      if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
+      if (saveable_open_response.response_count == 0 && answer != "") || (saveable_open_response.response_count > 0 && saveable_open_response.answers.last.answer != answer)
         saveable_open_response.answers.create(:bundle_content_id => nil, :answer => answer)
       end
     when Embeddable::MultipleChoice
