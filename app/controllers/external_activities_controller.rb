@@ -201,13 +201,13 @@ class ExternalActivitiesController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
+
   def publish
     json = JSON.parse(request.body.read)
-    external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
-    head :created, :location => external_activity
+    @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
+    head :created, :location => @external_activity
   end
-  
+
   ##
   ##
   ##
