@@ -1,7 +1,5 @@
 %div{:id => dom_id_for(diy_embedded_model, :details), :class => 'content'}
   - if diy_embedded_model.diy_model
-    %b Model #{diy_embedded_model.diy_model.id}:
-    = diy_embedded_model.name
     .model_image{:id => dom_id_for(diy_embedded_model, :model_image)}
       .error{:style => "color: red;"}= "This model can't run in the browser!"
       - if ! diy_embedded_model.diy_model.image_url.blank?
