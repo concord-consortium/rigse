@@ -21,7 +21,7 @@
         - run_params[:link_text] = "run in teacher mode"
         %li= run_link_for(offering.runnable, nil, run_params)
         - if offering.can_run_lightweight?
-          - run_params[:link_text] = "run in lightweight mode"
+          - run_params[:link_text] = "run in the browser"
           - run_params[:format] = :run_html
           :javascript
             if (Object.isExtensible && Modernizr.svg) {
