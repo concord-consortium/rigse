@@ -17,7 +17,7 @@ class ExternalActivity < ActiveRecord::Base
   include Publishable
 
   self.extend SearchableModel
-  @@searchable_attributes = %w{name description}
+  @@searchable_attributes = %w{name description is_exemplar}
 
   scope :like, lambda { |name|
     name = "%#{name}%"
