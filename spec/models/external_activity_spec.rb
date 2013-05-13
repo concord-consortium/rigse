@@ -15,6 +15,47 @@ describe ExternalActivity do
     ExternalActivity.create!(valid_attributes)
   end
 
+  describe '#search_list' do
+    let (:exemplar) do
+      ea = ExternalActivity.create!(valid_attributes)
+      ea.publication_status = 'published'
+      ea.save
+      ea
+    end
+    let (:community) do
+      ea = ExternalActivity.create!(valid_attributes)
+      ea.is_exemplar = false
+      ea.publication_status = 'published'
+      ea.save
+      ea
+    end
+
+    context 'when include_community is true' do
+      let (:params) { { :include_community => true } }
+      before(:each) do
+        exemplar
+        community
+      end
+
+      it 'should return activities where is_exemplar is true or false' do
+        external = ExternalActivity.search_list(params)
+        external.should include(exemplar, community)
+      end
+    end
+
+    context 'when include_community is false or absent' do
+      let (:params) { { } }
+      before(:each) do
+        exemplar
+      end
+
+      it 'should return only activities where is_exemplar is true' do
+        external = ExternalActivity.search_list(params)
+        external.should include(exemplar)
+      end
+    end
+  end
+
   describe "url transforms" do
     let(:act) { ExternalActivity.create!(valid_attributes)}
     let(:learner) { mock_model(Portal::Learner, :id => 34) }

@@ -62,6 +62,10 @@
               = @external_activity_checkedstatus
               = check_box_tag 'material[]', 'external_activity',@material_type.include?('external_activity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
               = label_tag 'external_activity','External Activity'
+            .tablecell
+              = @external_include_community_checkedstatus
+              = check_box_tag 'include_community'
+              = label_tag 'include_community', 'Include contributed activities?'
         %td.probescolumn
           - no_probes_req_selected = @probe_type.include?("0")
           .filterheader

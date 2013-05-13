@@ -98,6 +98,11 @@ class ExternalActivity < ActiveRecord::Base
         external_activities = is_visible
       end
 
+      if !options[:include_community]
+        # If param is included, we want *all*; if not, only the Concord ones.
+        external_activities = external_activities.exemplar
+      end
+
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
       if portal_clazz
         external_activities = external_activities - portal_clazz.offerings.map { |o| o.runnable }
