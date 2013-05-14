@@ -174,10 +174,10 @@ describe SearchController do
       }
       xhr :post, :show, @post_params
       response.should redirect_to(:root)
-      
+
       post :show, @post_params
       response.should redirect_to(:root)
-      
+
     end
     it "should search all study materials materials matching the search term" do
       @post_params = {
@@ -289,9 +289,9 @@ describe SearchController do
       assert assigns[:domain_id].kind_of? Enumerable
     end
   end
-  
+
   describe "Post get_current_material_unassigned_clazzes" do
-    
+
     before(:each) do
       #remove all the classes assigned to the teacher
       teacher_clazzes = Portal::TeacherClazz.where(:teacher_id => @teacher.id)
@@ -347,32 +347,32 @@ describe SearchController do
       assigns[:unassigned_clazzes].should eq [@physics_clazz, @chemistry_clazz, @mathematics_clazz]
     end
 
-  end  
+  end
   describe "POST add_material_to_clazzes" do
-    
+
     before(:each) do
       @clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])
       @another_clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [@teacher])
     end
     it "should assign only unassigned investigations to the classes" do
       already_assigned_offering = Factory.create(:portal_offering, :clazz_id=> @clazz.id, :runnable_id=> @chemistry_investigation.id, :runnable_type => 'Investigation'.classify)
-      
+
       @post_params = {
         :clazz_id => [@clazz.id, @another_clazz.id],
         :material_id => @chemistry_investigation.id,
         :material_type => 'Investigation'
       }
       xhr :post, :add_material_to_clazzes, @post_params
-      
+
       runnable_id = @post_params[:material_id]
       runnable_type = @post_params[:material_type].classify
       offering_for_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
       offering_for_another_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(@another_clazz.id,runnable_type,runnable_id)
-      
+
       assert_not_nil(offering_for_clazz)
       assert_equal(offering_for_clazz.length, 1)
       assert_equal(offering_for_clazz[0], already_assigned_offering)
-      
+
       assert_not_nil(offering_for_another_clazz)
       assert_equal(offering_for_another_clazz.length, 1)
       assert_equal(offering_for_another_clazz[0].runnable_id, @chemistry_investigation.id)
@@ -386,7 +386,7 @@ describe SearchController do
         :material_type => 'Activity'
       }
       xhr :post, :add_material_to_clazzes, @post_params
-      
+
       runnable_ids = @post_params[:material_id].split(',')
       runnable_type = @post_params[:material_type].classify
       all_clazzes = @post_params[:clazz_id]
