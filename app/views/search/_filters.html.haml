@@ -16,16 +16,16 @@
           .filterheader
             Sort By
           %div
-            = label_tag 'sort_order_created_at_ASC','Oldest',:class=>(@sort_order == "created_at ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = label_tag 'sort_order_created_at_ASC','Oldest', :class=>(@sort_order == "created_at ASC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
             = radio_button_tag :sort_order,'created_at ASC',(@sort_order == "created_at ASC"),:class=>'sort_radio'
           %div
-            = label_tag 'sort_order_created_at_DESC','Newest',:class=>(@sort_order == "created_at DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = label_tag 'sort_order_created_at_DESC','Newest',:class=>(@sort_order == "created_at DESC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
             = radio_button_tag :sort_order,'created_at DESC',(@sort_order == "created_at DESC"),:class=>'sort_radio'
           %div
-            = label_tag 'sort_order_name_ASC','Alphabetical',:class=>(@sort_order == "name ASC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = label_tag 'sort_order_name_ASC','Alphabetical',:class=>(@sort_order == "name ASC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
             = radio_button_tag :sort_order,'name ASC',(@sort_order == "name ASC"),:class=>'sort_radio'
           %div
-            = label_tag 'sort_order_offerings_count_DESC' ,'Popularity',:class=>(@sort_order == "offerings_count DESC")?'highlightoption':'',:onclick=>'highlightlabel(this)'
+            = label_tag 'sort_order_offerings_count_DESC' ,'Popularity',:class=>(@sort_order == "offerings_count DESC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
             = radio_button_tag :sort_order,'offerings_count DESC',(@sort_order == "offerings_count DESC"),:class=>'sort_radio'
         %td.domaincolumn
           .filterheader
