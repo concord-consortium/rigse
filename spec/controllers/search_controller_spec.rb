@@ -27,8 +27,17 @@ describe SearchController do
     @thermodynamics_activity = Factory.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => @physics_investigation.id, :user => @author_user)
     @parallel_lines = Factory.create(:activity, :name => 'parallel_lines' , :investigation_id => @lines.id, :user => @author_user)
 
-    @external_activity1 = Factory.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published')
-    @external_activity2 = Factory.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published')
+    @external_activity1 = Factory.create(:external_activity,
+      :name => 'external_1',
+      :url => "http://concord.org",
+      :publication_status => 'published',
+      :is_exemplar => true)
+
+    @external_activity2 = Factory.create(:external_activity,
+      :name => 'a_study_in_lines_and_curves',
+      :url => "http://github.com",
+      :publication_status => 'published',
+      :is_exemplar => true)
 
     sign_in @teacher_user
   end
@@ -91,7 +100,7 @@ describe SearchController do
       end
       assert_not_nil assigns[:external_activities]
       assert_not_nil assigns[:external_activities_count]
-      assert_equal assigns[:external_activities_count], 2
+      assigns[:external_activities_count].should == 2
       all_external_activities = [@external_activity1, @external_activity2]
       retrieved_external_activities = assigns[:external_activities]
       retrieved_external_activities.each do |ext_activity|
