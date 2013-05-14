@@ -39,6 +39,12 @@ describe SearchController do
       :publication_status => 'published',
       :is_exemplar => true)
 
+    @external_activity3 = Factory.create(:external_activity,
+      :name => "Copy of external_1",
+      :url => "http://concord.org",
+      :publication_status => 'published',
+      :is_exemplar => false)
+
     sign_in @teacher_user
   end
 
@@ -161,6 +167,15 @@ describe SearchController do
       retrieved_activities.each do |activity|
         assert(all_activities.include?(activity))
       end
+    end
+    it 'should include contributed activities if requested' do
+      @post_params = {
+        :material => ['external_activity'],
+        :include_community => 1
+      }
+      post :index, @post_params
+      assigns[:external_activities_count].should == 3
+      assigns[:external_activities].should include(@external_activity3)
     end
   end
 
