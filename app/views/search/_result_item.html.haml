@@ -34,6 +34,11 @@
             %span
               from investigation
               ="\"#{material.parent.name}\""
+          %span.official
+            - if material.respond_to?(:is_exemplar) && material.is_exemplar
+              Official
+            - elsif material.respond_to?(:is_exemplar) && !material.is_exemplar
+              Contributed
           -unless material.user.name.nil?
             %div
               %span{:style=>"font-weight:bold"}
