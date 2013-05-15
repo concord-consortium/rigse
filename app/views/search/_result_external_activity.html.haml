@@ -16,6 +16,7 @@
         - materials.each do |activity|
           - item_classes = []
           - item_classes << 'last' if materials.last==activity
+          - item_classes << 'exemplar' if activity.is_exemplar
           %div.material_list_item{:id=>"search_external_activity_#{activity.id}", :class => item_classes }
             = render :partial => 'result_item', :locals=>{:material=>activity}
   %br
