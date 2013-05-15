@@ -44,6 +44,7 @@
         = render :partial=>'search/result_activity',:locals=>{:materials=>activities,:type=>'Activities'}
     -unless external_activities.nil?
       - if external_activities.length>0
+        -# I'd like to use a named scope here, but it turns out that because the results are a lazy-loaded AREL object that adding a scope re-builds the query rather than filtering the results.
         -if external_activities.where(:is_exemplar => true).length > 0
           = render :partial=>'search/result_external_activity',:locals=>{:materials=>external_activities.where(:is_exemplar => true), :type=>'External Activities', :head_label => 'Official' }
         -if external_activities.where(:is_exemplar => false).length > 0
