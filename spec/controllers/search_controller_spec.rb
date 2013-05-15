@@ -261,78 +261,79 @@ describe SearchController do
 
   describe "Post get_current_material_unassigned_clazzes" do
 
-    before(:each) do
-      # TODO: Refactor so this all doesn't run for every test
-      #remove all the classes assigned to the teacher
-      teacher_clazzes = Portal::TeacherClazz.where(:teacher_id => teacher.id)
-      teacher_clazzes.each do |teacher_clazz|
-        teacher_clazz.destroy
-      end
-      #assign new classes to the teacher
-      @physics_clazz = Factory.create(:portal_clazz, :name => 'Physics Clazz', :course => @mock_course,:teachers => [teacher])
-      @chemistry_clazz = Factory.create(:portal_clazz, :name => 'Chemistry Clazz', :course => @mock_course,:teachers => [teacher])
-      @mathematics_clazz = Factory.create(:portal_clazz, :name => 'Mathematics Clazz', :course => @mock_course,:teachers => [teacher])
-      
-      @investigations_for_all_clazz = Factory.create(:investigation, :name => 'investigations_for_all_clazz', :user => author_user, :publication_status => 'published')
-      @activity_for_all_clazz = Factory.create(:activity, :name => 'activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
+    let (:physics_clazz)     { Factory.create(:portal_clazz, :name => 'Physics Clazz', :course => @mock_course,:teachers => [teacher]) }
+    let (:chemistry_clazz)   { Factory.create(:portal_clazz, :name => 'Chemistry Clazz', :course => @mock_course,:teachers => [teacher]) }
+    let (:mathematics_clazz) { Factory.create(:portal_clazz, :name => 'Mathematics Clazz', :course => @mock_course,:teachers => [teacher]) }
     
-      #assign activity_for_all_clazz to physics class
-      Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@physics_clazz.id,'Activity',@activity_for_all_clazz.id)
-      
+    let (:investigations_for_all_clazz) do
+      inv = Factory.create(:investigation, :name => 'investigations_for_all_clazz', :user => author_user, :publication_status => 'published')
       #assign investigations_for_all_clazz to physics class
-      Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@physics_clazz.id,'Investigation',@investigations_for_all_clazz.id)
+      Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(physics_clazz.id,'Investigation',inv.id)
+      inv
+    end
+
+    let (:activity_for_all_clazz) do
+      act = Factory.create(:activity, :name => 'activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
+      #assign activity_for_all_clazz to physics class
+      Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(physics_clazz.id,'Activity',act.id)
+      act
+    end
+
+    before(:each) do
+      #remove all the classes assigned to the teacher
+      # FIXME: This is slow, and it seems like rspec must provide a more elegant way to set this up than to reset these every time.
+      teacher.teacher_clazzes.each { |tc| tc.destroy }
+      all_classes = [physics_clazz, chemistry_clazz, mathematics_clazz]
     end
 
     it "should get all the classes to which the activity is not assigned. Material to be assigned is a single activity" do
       post_params = {
         :material_type => 'Activity',
-        :material_id => @activity_for_all_clazz.id
+        :material_id => activity_for_all_clazz.id
       }
       xhr :post, :get_current_material_unassigned_clazzes, post_params
       should render_template('_material_unassigned_clazzes')
-      assigns[:material].should eq [@activity_for_all_clazz]
-      assigns[:assigned_clazzes].should eq [@physics_clazz]
-      assigns[:unassigned_clazzes].should eq [@chemistry_clazz, @mathematics_clazz]
+      assigns[:material].should eq [activity_for_all_clazz]
+      assigns[:assigned_clazzes].should eq [physics_clazz]
+      assigns[:unassigned_clazzes].should eq [chemistry_clazz, mathematics_clazz]
     end
 
     it "should get all the classes to which the investigation is not assigned. Material to be assigned is a single investigation" do
       post_params = {
         :material_type => 'Investigation',
-        :material_id => @investigations_for_all_clazz.id
+        :material_id => investigations_for_all_clazz.id
       }
       xhr :post, :get_current_material_unassigned_clazzes, post_params
-      assigns[:material].should eq [@investigations_for_all_clazz]
-      assigns[:assigned_clazzes].should eq [@physics_clazz]
-      assigns[:unassigned_clazzes].should eq [@chemistry_clazz, @mathematics_clazz]
+      assigns[:material].should eq [investigations_for_all_clazz]
+      assigns[:assigned_clazzes].should eq [physics_clazz]
+      assigns[:unassigned_clazzes].should eq [chemistry_clazz, mathematics_clazz]
     end
 
     it "should get all the classes to which the activity is not assigned. Material to be assigned is a multiple activity" do
-      @another_activity_for_all_clazz = Factory.create(:activity, :name => 'another_activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
+      another_activity_for_all_clazz = Factory.create(:activity, :name => 'another_activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
       post_params = {
         :material_type => 'Activity',
-        :material_id => "#{@activity_for_all_clazz.id},#{@another_activity_for_all_clazz.id}"
+        :material_id => "#{activity_for_all_clazz.id},#{another_activity_for_all_clazz.id}"
       }
       xhr :post, :get_current_material_unassigned_clazzes, post_params
-      assigns[:material].should eq [@activity_for_all_clazz, @another_activity_for_all_clazz]
+      assigns[:material].should eq [activity_for_all_clazz, another_activity_for_all_clazz]
       assigns[:assigned_clazzes].should eq []
-      assigns[:unassigned_clazzes].should eq [@physics_clazz, @chemistry_clazz, @mathematics_clazz]
+      assigns[:unassigned_clazzes].should eq [physics_clazz, chemistry_clazz, mathematics_clazz]
     end
 
   end
   describe "POST add_material_to_clazzes" do
 
-    before(:each) do
-      # TODO: Refactor so this all doesn't run for every test
-      @clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [teacher])
-      @another_clazz = Factory.create(:portal_clazz,:course => @mock_course,:teachers => [teacher])
-    end
+    let (:clazz)         { Factory.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+    let (:another_clazz) { Factory.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+
+    let (:already_assigned_offering) { Factory.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'Investigation'.classify) }
+    let (:another_assigned_offering) { Factory.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'Investigation'.classify) }
 
     it "should assign only unassigned investigations to the classes" do
-      # TODO: let() this
-      already_assigned_offering = Factory.create(:portal_offering, :clazz_id=> @clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'Investigation'.classify)
-
+      already_assigned_offering
       post_params = {
-        :clazz_id => [@clazz.id, @another_clazz.id],
+        :clazz_id => [clazz.id, another_clazz.id],
         :material_id => chemistry_investigation.id,
         :material_type => 'Investigation'
       }
@@ -340,23 +341,22 @@ describe SearchController do
 
       runnable_id = post_params[:material_id]
       runnable_type = post_params[:material_type].classify
-      # TODO: Clean up for readability
-      offering_for_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
-      offering_for_another_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(@another_clazz.id,runnable_type,runnable_id)
 
-      # TODO: rspec syntax
-      assert_equal(offering_for_clazz.length, 1)
-      assert_equal(offering_for_clazz[0], already_assigned_offering)
+      offering_for_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(clazz.id, runnable_type, runnable_id)
+      offering_for_another_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(another_clazz.id, runnable_type, runnable_id)
 
-      assert_equal(offering_for_another_clazz.length, 1)
-      assert_equal(offering_for_another_clazz[0].runnable_id, chemistry_investigation.id)
-      assert_equal(offering_for_another_clazz[0].clazz_id, @another_clazz.id)
+      offering_for_clazz.length.should be(1)
+      offering_for_clazz.first.should == already_assigned_offering
+
+      offering_for_another_clazz.length.should be(1)
+      offering_for_another_clazz.first.runnable_id.should be(chemistry_investigation.id)
+      offering_for_another_clazz.first.clazz_id.should be(another_clazz.id)
     end
 
     it "should assign activities to the classes" do
-      already_assigned_offering = Factory.create(:portal_offering, :clazz_id=> @clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'Investigation')
+      another_assigned_offering
       post_params = {
-        :clazz_id => [@clazz.id, @another_clazz.id],
+        :clazz_id => [clazz.id, another_clazz.id],
         :material_id => "#{laws_of_motion_activity.id},#{fluid_mechanics_activity.id}",
         :material_type => 'Activity'
       }
