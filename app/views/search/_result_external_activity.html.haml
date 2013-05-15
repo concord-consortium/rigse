@@ -1,7 +1,7 @@
 #external_activities_bookmark
 .materials_container
   .material_list_header
-    External Activities
+    = head_label
   %p.border_top= page_entries_info materials, :model=>"ExternalActivity"
   = will_paginate materials, {:param_name => 'external_activity_page', :params => {:controller => 'search', :action => 'index', :search_term => @search_term, :investigation_page => @investigation_page,:type=>'act'}}
   
@@ -16,7 +16,7 @@
         - materials.each do |activity|
           - item_classes = []
           - item_classes << 'last' if materials.last==activity
-          - item_classes << 'exemplar' if activity.is_exemplar
+          -# item_classes << 'exemplar' if activity.is_exemplar
           %div.material_list_item{:id=>"search_external_activity_#{activity.id}", :class => item_classes }
             = render :partial => 'result_item', :locals=>{:material=>activity}
   %br

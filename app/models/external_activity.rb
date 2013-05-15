@@ -46,15 +46,8 @@ class ExternalActivity < ActiveRecord::Base
     where(conditions)
   }
 
-  scope :exemplar,
-  {
-    :conditions => { :is_exemplar => true }
-  }
-
-  scope :not_exemplar,
-  {
-    :conditions => { :is_exemplar => false }
-  }
+  scope :exemplar, where(:is_exemplar => true)
+  scope :not_exemplar, where(:is_exemplar => false)
 
   class <<self
     def searchable_attributes
@@ -67,7 +60,7 @@ class ExternalActivity < ActiveRecord::Base
       name_matches = ExternalActivity.like(name)
       is_visible = options[:include_drafts] ? name_matches.not_private : name_matches.published
       sort_order = options[:sort_order] || "name ASC"
-      sort_order = 'is_exemplar DESC, ' + sort_order
+      # sort_order = 'is_exemplar DESC, ' + sort_order
       external_activities = nil
 
       if options[:user]
