@@ -191,6 +191,9 @@ search_materials{
   padding:5px 10px 5px 10px;
   overflow:hidden;
 }
+.material_list_item.last {
+  border: none;
+}
 
 .domin_container
 {
