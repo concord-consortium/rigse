@@ -9,6 +9,7 @@ class Reports::Detail < Reports::Excel
     # stud.id, class, school, user.id, username, student name, teachers, completed, %completed, last_run
     @common_columns = [
       Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
+      Reports::ColumnDefinition.new(:title => "Class ID",     :width => 10),
       Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
       Reports::ColumnDefinition.new(:title => "School",       :width => 25),
       Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
@@ -91,11 +92,12 @@ class Reports::Detail < Reports::Excel
     end # runnables
     puts " done." if @verbose
 
-    student_learners = sorted_learners.group_by {|l| l.student_id }
+    student_learners = sorted_learners.group_by {|l| [l.student_id,l.class_id] }
 
     print "Filling in student data" if @verbose
-    iterate_with_status(student_learners.keys) do |student_id|
-      student_learners[student_id].each do |l|
+    iterate_with_status(student_learners.keys) do |student_class|
+      student_id = student_class[0]
+      student_learners[student_class].each do |l|
         next unless (runnable = @runnables.detect{|r| l.runnable_type == r.class.to_s && r.id == l.runnable_id})
         correctable = runnable.reportable_elements.select {|r| r[:embeddable].respond_to? :correctable? }
         # <=================================================>

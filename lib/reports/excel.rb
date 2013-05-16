@@ -143,7 +143,8 @@ class Reports::Excel
 
   def report_learner_info_cells(report_learner)
     return [
-      learner_id(report_learner),
+      report_learner.student_id,
+      report_learner.class_id,
       report_learner.class_name,
       report_learner.school_name,
       user_id(report_learner),
