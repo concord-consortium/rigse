@@ -64,17 +64,29 @@ class ExternalActivitiesController < ApplicationController
     else
       @include_drafts = param_find(:include_drafts,true)
     end
-    @external_activities = ExternalActivity.search_list({
-      :name => @name, 
-      :description => @description, 
-      :include_drafts => @include_drafts,
-      :user => current_visitor,
-      :paginate => true, 
-      :page => pagination
-    })
-    if params[:mine_only]
-      @external_activities = @external_activities.reject { |i| i.user.id != current_visitor.id }
+    if current_visitor.has_role?('admin')
+      @external_activities = ExternalActivity.search_list({
+          :name => @name,
+          :description => @description,
+          :include_drafts => @include_drafts,
+          :paginate => true,
+          :include_community => true,
+          :page => pagination,
+        })
+    else
+      @external_activities = ExternalActivity.search_list({
+          :name => @name,
+          :description => @description,
+          :include_drafts => @include_drafts,
+          :paginate => true,
+          :include_community => true,
+          :page => pagination,
+          :user => current_visitor
+        })
     end
+    #if params[:mine_only]
+    #  @external_activities = @external_activities.reject { |i| i.user.id != current_visitor.id }
+    #end
     @paginated_objects = @external_activities
 
     if request.xhr?

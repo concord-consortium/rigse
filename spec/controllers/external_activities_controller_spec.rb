@@ -71,14 +71,39 @@ describe ExternalActivitiesController do
       :name        => name,
       :description => description,
       :url         => existing_url,
+      :publication_status => 'published',
       :template    => Factory.create(:activity, {
         :investigation => Factory.create(:investigation)
       })
+    })
+    @another = Factory.create(:external_activity, {
+      :name        => "#{name} again",
+      :description => "#{description} again",
+      :url         => existing_url,
+      :publication_status => 'published',
+      :is_exemplar => false
     })
   end
 
   let(:activity) do
 
+  end
+
+  describe '#index' do
+    context 'when the user is an author' do
+      it "should show only public, official, and user-owned activities" do
+        current_visitor = login_author
+        get :index
+        assigns[:external_activities].length.should be(ExternalActivity.published.count + ExternalActivity.by_user(current_visitor).count)
+      end
+    end
+
+    context 'when the user is an admin' do
+      it "should show all activities" do
+        get :index
+        assigns[:external_activities].length.should be(ExternalActivity.count)
+      end
+    end
   end
 
   describe "#show" do
@@ -91,7 +116,7 @@ describe ExternalActivitiesController do
 
   describe "#publish" do
 
-    describe "when no existing external_activit exists" do
+    describe "when no existing external_activity exists" do
       it "should create a new activity" do
         raw_post :publish, {}, activity_hash.to_json
         created = assigns(:external_activity)
