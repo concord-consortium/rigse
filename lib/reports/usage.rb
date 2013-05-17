@@ -13,6 +13,7 @@ class Reports::Usage < Reports::Excel
     # stud.id, class, school, user.id, username, student name, teachers
     @shared_column_defs = [
       Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
+      Reports::ColumnDefinition.new(:title => "Class ID",   :width => 10),
       Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
       Reports::ColumnDefinition.new(:title => "School",       :width => 25),
       Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
@@ -55,9 +56,10 @@ class Reports::Usage < Reports::Excel
     puts " done." if @verbose
 
     puts "Filling in student data" if @verbose
-    student_learners = sorted_learners.group_by {|l| l.student_id }
-    iterate_with_status(student_learners.keys) do |student_id|
-      learners = student_learners[student_id]
+    student_learners = sorted_learners.group_by {|l| [l.student_id,l.class_id] }
+    iterate_with_status(student_learners.keys) do |student_class|
+      student_id = student_class[0]
+      learners = student_learners[student_class]
       learner_info = report_learner_info_cells(learners.first)
       rows = []
       @sheets.each do |sheet|
