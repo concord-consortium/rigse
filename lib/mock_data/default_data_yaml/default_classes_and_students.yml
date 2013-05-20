@@ -1,0 +1,114 @@
+classes:
+  clazz_1:
+    name: My Class
+    teacher: teacher
+    class_word: My Class
+    uuid: 00000000-0000-0000-0000-000000000039
+    course: Course for Fake School
+    
+  clazz_2:
+    name: Physics
+    teacher: teacher
+    class_word: phy
+    uuid: 00000000-0000-0000-0000-000000000040
+    course: Course for Fake School
+    
+  clazz_3:
+    name: Mathematics
+    teacher: teacher
+    class_word: math
+    uuid: 00000000-0000-0000-0000-000000000041
+    course: Course for Fake School
+    
+  clazz_4:
+    name: Chemistry
+    teacher: teacher
+    class_word: chem
+    uuid: 00000000-0000-0000-0000-000000000042
+    course: Course for Fake School
+    
+  clazz_5: 
+    name: Biology
+    teacher: teacher
+    class_word: bio
+    uuid: 00000000-0000-0000-0000-000000000043
+    course: Course for Fake School
+    
+  clazz_6:
+    name: Geography
+    teacher: teacher
+    class_word: geo
+    uuid: 00000000-0000-0000-0000-000000000044
+    course: Course for Fake School
+    
+  clazz_7:
+    name: Mechanics
+    teacher: teacher
+    class_word: Mec
+    uuid: 00000000-0000-0000-0000-000000000045
+    course: Course for Fake School
+
+  clazz_8: 
+    name: Class_with_no_assignment
+    teacher: teacher
+    class_word: class_with_no_assignment
+    uuid: 00000000-0000-0000-0000-000000000046
+    course: Course for Fake School
+    
+  clazz_9: 
+    name: Class_with_no_students
+    teacher: teacher
+    class_word: class_with_no_students
+    uuid: 00000000-0000-0000-0000-000000000047
+    course: Course for Fake School
+    
+  clazz_10:
+    name: Class_with_no_attempts
+    teacher: teacher
+    class_word: class_with_no_attempts
+    uuid: 00000000-0000-0000-0000-000000000048
+    course: Course for Fake School
+
+
+teacher_clazzes:
+  teacher_clazz_1:
+    teacher: albert
+    clazz_names: Biology, Class_with_no_assignment
+    
+  teacher_clazz_2:
+    teacher: peterson
+    clazz_names: Class_with_no_assignment, My Class, Mathematics
+    
+  teacher_clazz_3:
+    teacher: robert
+    clazz_names: Physics
+    
+  
+student_clazzes:
+  student_clazz_1:
+    student: student
+    clazz_names: My Class, Class_with_no_assignment, Class_with_no_attempts
+    
+  student_clazz_2:
+    student: dave
+    clazz_names: My Class, Biology
+    
+  student_clazz_3:
+    student: chuck
+    clazz_names: My Class, Physics, Mechanics
+    
+  student_clazz_4:
+    student: taylor
+    clazz_names: My Class, Mathematics
+    
+  student_clazz_5:
+    student: Mache
+    clazz_names: Physics
+    
+  student_clazz_6:
+    student: shon
+    clazz_names: Physics
+    
+  student_clazz_7:
+    student: ross
+    clazz_names: Physics

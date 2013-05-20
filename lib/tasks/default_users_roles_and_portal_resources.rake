@@ -43,6 +43,7 @@ namespace :app do
     desc "Create default users and roles"
     task :create_default_users => :environment do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
+      puts 'Generating default data from default data ymls'
       MockData.create_default_users
     end
     
@@ -72,6 +73,19 @@ namespace :app do
     
     desc "Create default data. It is a blank task that calls other task to create default data."
     task :create_default_data => [:environment, :create_default_learners_and_learner_attempts] do
+    end
+    
+    desc "Deletes the default data"
+    task :delete_default_data => :environment do
+      puts 'Deleting default data'
+      require File.expand_path('../../mock_data/delete_default_data.rb', __FILE__)
+      MockData.delete_default_data
+    end
+    
+    desc "Resets the default data"
+    task :reset_default_data => :environment do
+      Rake::Task['app:setup:delete_default_data'].invoke
+      Rake::Task['app:setup:create_default_data'].invoke
     end
     
     desc "Create default users and roles"

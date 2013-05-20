@@ -1,7 +1,7 @@
 class Admin::SiteNotice < ActiveRecord::Base
   self.table_name = "admin_site_notices"
-  has_many :admin_site_notice_roles, :class_name => 'Admin::SiteNoticeRole', :foreign_key => 'notice_id', :primary_key => 'id'
-  has_many :admin_site_notice_users, :class_name => 'Admin::SiteNoticeUser', :foreign_key => 'notice_id', :primary_key => 'id'
+  has_many :admin_site_notice_roles, :dependent => :destroy ,:class_name => 'Admin::SiteNoticeRole', :foreign_key => 'notice_id', :primary_key => 'id'
+  has_many :admin_site_notice_users, :dependent => :destroy, :class_name => 'Admin::SiteNoticeUser', :foreign_key => 'notice_id', :primary_key => 'id'
   
   belongs_to :creator, :class_name => 'User', :foreign_key => 'created_by'
   belongs_to :updater, :class_name => 'User', :foreign_key => 'updated_by'
