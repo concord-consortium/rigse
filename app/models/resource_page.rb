@@ -8,7 +8,7 @@ class ResourcePage < ActiveRecord::Base
   belongs_to :user
   has_many :attached_files, :as => :attachable, :dependent => :destroy
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
-  has_many :student_views, :as => :viewable
+  has_many :student_views, :dependent => :destroy, :as => :viewable
 
   validates_presence_of :user_id, :name, :publication_status
 

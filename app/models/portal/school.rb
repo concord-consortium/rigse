@@ -12,11 +12,11 @@ class Portal::School < ActiveRecord::Base
 
   # has_many :grade_levels, :class_name => "Portal::GradeLevel", :foreign_key => "school_id"
 
-  has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
+  has_many :grade_levels, :dependent => :destroy, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   # has_many :clazzes, :through => :courses, :class_name => "Portal::Clazz"
 
-  has_many :clazzes, :through => :courses, :class_name => "Portal::Clazz" do
+  has_many :clazzes, :dependent => :destroy, :through => :courses, :class_name => "Portal::Clazz" do
     def active
       find(:all) & Portal::Clazz.has_offering
     end

@@ -21,15 +21,15 @@ class Portal::Teacher < ActiveRecord::Base
   # It's presence was generating duplicate school_membership models when a Teacher registered.
 
 
-  has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
+  has_many :school_memberships, :dependent => :destroy , :as => :member, :class_name => "Portal::SchoolMembership"
   has_many :schools, :through => :school_memberships, :class_name => "Portal::School", :uniq => true
 
-  has_many :subjects, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
+  has_many :subjects, :dependent => :destroy, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
 
   # Used to be that clazzes has a teacher_id field, now we use a mapping table like students
   # to support common case of multiple teachers per class
   # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
-  has_many :teacher_clazzes, :class_name => "Portal::TeacherClazz", :foreign_key => "teacher_id"
+  has_many :teacher_clazzes, :dependent => :destroy, :class_name => "Portal::TeacherClazz", :foreign_key => "teacher_id"
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz", :source => :clazz
 
   [:first_name, :login, :password, :last_name, :email, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }

@@ -27,10 +27,10 @@ class User < ActiveRecord::Base
   has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
   has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
   
-  has_many :created_notices, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
-  has_many :updated_notices, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
+  has_many :created_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
+  has_many :updated_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
   
-  has_one :notice_user_display_status, :class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
+  has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
   
   scope :all_users, { :conditions => {}}
   scope :active, { :conditions => { :state => 'active' } }
@@ -113,8 +113,8 @@ class User < ActiveRecord::Base
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
 
-  has_one :portal_teacher, :class_name => "Portal::Teacher"
-  has_one :portal_student, :class_name => "Portal::Student"
+  has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher"
+  has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student"
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
 

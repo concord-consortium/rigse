@@ -13,21 +13,21 @@ class Portal::Learner < ActiveRecord::Base
   has_one    :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger", :foreign_key => "learner_id", :dependent => :destroy
   has_one    :bucket_logger, :class_name => "Dataservice::BucketLogger", :foreign_key => "learner_id", :dependent => :destroy
 
-  has_many :open_responses, :class_name => "Saveable::OpenResponse" do
+  has_many :open_responses, :dependent => :destroy , :class_name => "Saveable::OpenResponse" do
     def answered
       find(:all).select { |question| question.answered? }
     end
   end
   
-  has_many :learner_activities, :class_name => "Report::LearnerActivity"
+  has_many :learner_activities, :dependent => :destroy , :class_name => "Report::LearnerActivity"
   
-  has_many :image_questions, :class_name => "Saveable::ImageQuestion" do
+  has_many :image_questions, :dependent => :destroy, :class_name => "Saveable::ImageQuestion" do
     def answered
       find(:all).select { |question| question.answered? }
     end
   end
 
-  has_many :multiple_choices, :class_name => "Saveable::MultipleChoice" do
+  has_many :multiple_choices, :dependent => :destroy, :class_name => "Saveable::MultipleChoice" do
     def answered
       find(:all).select { |question| question.answered? }
     end
@@ -36,7 +36,7 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
   
-  has_one :report_learner, :class_name => "Report::Learner", :foreign_key => "learner_id"
+  has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner", :foreign_key => "learner_id"
 
   # automatically make the report learner if it doesn't exist yet
   def report_learner
