@@ -106,6 +106,13 @@ class Activity < ActiveRecord::Base
     :conditions =>['activities.publication_status = "published" OR investigations.publication_status = "published"']
   }
   
+  scope :directly_published,
+  {
+    :conditions =>['activities.publication_status = "published"']
+  }
+
+  scope :assigned, where('offerings_count > 0')
+
   scope :ordered_by, lambda { |order| { :order => order } }
   
   class <<self

@@ -31,6 +31,8 @@ class ExternalActivity < ActiveRecord::Base
     :conditions =>{:publication_status => "published"}
   }
 
+  scope :assigned, where('offerings_count > 0')
+
   scope :not_private,
   {
     :conditions => "#{self.table_name}.publication_status IN ('published', 'draft')"

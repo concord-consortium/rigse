@@ -7,12 +7,14 @@ class Report::Learner < ActiveRecord::Base
 
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
   serialize    :answers
+  belongs_to   :runnable, :polymorphic => true
 
   scope :after,  lambda         { |date|         {:conditions => ["last_run > ?", date]} }
   scope :before, lambda         { |date|         {:conditions => ["last_run < ?", date]} }
   scope :in_schools, lambda     { |school_ids|   {:conditions => {:school_id   => school_ids   }}}
   scope :in_classes, lambda     { |class_ids|    {:conditions => {:class_id    => class_ids    }}}
-  scope :with_runnables, lambda { |runnable_ids| {:conditions => {:runnable_id => runnable_ids }}}
+  scope :with_runnables, lambda { |runnables|
+    where 'CONCAT(runnable_type, "_", runnable_id) IN (?)', runnables.map{|runnable| "#{runnable.class}_#{runnable.id}"}.join(",")}
 
   validates_presence_of   :learner
   validates_uniqueness_of :learner_id

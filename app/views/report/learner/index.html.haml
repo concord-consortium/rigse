@@ -12,27 +12,30 @@
         %td
           %label Schools:
         %td
-          = select_tag('schools', options_for_select(@all_schools.map {|s| [s.name, s.id]}, @select_schools.map {|s| s.id}), { :multiple => true })
+          = select_tag('schools', options_for_select(@learner_selector.all_schools.map {|s| [s.name, s.id]},
+                                                     @learner_selector.select_schools.map {|s| s.id}), { :multiple => true })
       %tr
         %td
           %label Teachers:
         %td
-          = select_tag('teachers', options_for_select(@all_teachers.map {|s| [s.name, s.id]}, @select_teachers.map {|s| s.id}), { :multiple => true })
+          = select_tag('teachers', options_for_select(@learner_selector.all_teachers.map {|s| [s.name, s.id]},
+                                                      @learner_selector.select_teachers.map {|s| s.id}), { :multiple => true })
       %tr
         %td
-          %label Investigations:
+          %label Runnables:
         %td
-          = select_tag('runnables', options_for_select(@all_runnables.map {|s| [s.name, s.id]}, @select_runnables.map {|s| s.id}), { :multiple => true })
+          = select_tag('runnables', options_for_select(@learner_selector.all_runnables.map {|r| ["#{r.name}(#{r.class})", "#{r.class}_#{r.id}"]},
+                                                       @learner_selector.select_runnables.map {|r| "#{r.class}_#{r.id}"}), { :multiple => true })
       %tr
         %td
           %label Start Date:
         %td
-          = calpicker_tag "start_date", @start_date
+          = calpicker_tag "start_date", @learner_selector.start_date
       %tr
         %td
           %label End Date:
         %td
-          = calpicker_tag "end_date", @end_date
+          = calpicker_tag "end_date", @learner_selector.end_date
 
     = submit_tag @button_texts[:apply]
     = submit_tag @button_texts[:usage]

@@ -27,13 +27,13 @@ class Reports::Usage < Reports::Excel
     @runnables.each do |runnable|
       col_defs = @sheet_defs.last
       @runnable_start_column[runnable] = {:sheet => (@sheet_defs.size - 1), :column => (col_defs.size + @shared_column_defs.size)}
-      col_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.id})\nAssessments Completed", :width => 4, :left_border => :thin)
+      col_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.class}_#{runnable.id})\nAssessments Completed", :width => 25, :height => 2, :left_border => :thin)
       col_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
       col_defs << Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
       if @include_child_usage
         children = (get_containers(runnable) - [runnable])
         children.each do |child|
-          col_defs << Reports::ColumnDefinition.new(:title => "#{child.name} (#{child.id})\nAssessments Completed", :width => 4)
+          col_defs << Reports::ColumnDefinition.new(:title => "#{child.name} (#{child.class}_#{child.id})\nAssessments Completed", :width => 4)
           col_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
         end
       end
