@@ -28,41 +28,48 @@ describe "Portal::Offering" do
     main_class.text.should == 'org.concord.LaunchJnlp'
   end
 
-  it "the jnlp argument points to a config file with a jnlp_session" do
-    visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
-    xml = Nokogiri::XML(page.driver.response.body)
-    jnlp_elements = xml.xpath("/jnlp")
-    jnlp_elements.should_not be_empty
-    argument = xml.xpath("/jnlp/application-desc/argument")[0]
-    argument.text.should match 'config'
-    argument.text.should match 'jnlp_session'
-  end
+  describe "the dynamic jnlp file" do
+    describe "the jnlp argument" do
+      it "points to a config file with a jnlp_session" do
+        visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
+        jnlp_xml = Nokogiri::XML(page.driver.response.body)
+        jnlp_elements = jnlp_xml.xpath("/jnlp")
+        jnlp_elements.should_not be_empty
+        argument = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
+        argument.text.should match 'config'
+        argument.text.should match 'jnlp_session'
+      end
 
-  it "the config argument logs in the student" do
-    visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
-    xml = Nokogiri::XML(page.driver.response.body)
-    argument = xml.xpath("/jnlp/application-desc/argument")[0]
+      it "logs in the student" do
+        visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
+        jnlp_xml = Nokogiri::XML(page.driver.response.body)
+        argument = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
 
-    page.reset!
-    # make sure that worked by checking we are not logged in
-    visit "/"
-    page.should have_no_content "Welcome"
+        page.reset!
+        # make sure that worked by checking we are not logged in
+        visit "/"
+        page.should have_no_content "Welcome"
 
-    # load in the config file
-    visit argument
-    visit "/"
-    page.should have_content "Welcome #{@user.name}"
-  end
+        # load in the config file
+        visit argument
+        visit "/"
+        page.should have_content "Welcome #{@user.name}"
+      end
 
-  it "the config argument returns a valid config" do
-    visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
-    jnlp_xml = Nokogiri::XML(page.driver.response.body)
-    config_url = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
-
-    page.reset!
-    visit config_url
-    config_xml = Nokogiri::XML(page.driver.response.body)
-    puts config_xml
-    puts page.driver.response.headers
+      it "returns a valid config that sets the correct session" do
+        visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
+        jnlp_xml = Nokogiri::XML(page.driver.response.body)
+        config_url = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
+        page.reset!
+        visit config_url
+        config_xml = Nokogiri::XML(page.driver.response.body)
+        cookie_service_node = config_xml.xpath("/java/object[@class='net.sf.sail.emf.launch.HttpCookieServiceImpl']")
+        session_cookie_string = cookie_service_node.xpath("void/object/void/string/text()")[1].to_s
+        config_session_id = session_cookie_string[/\=([^;]*);/, 1]
+        header_session_string = page.driver.response.headers["Set-Cookie"]
+        header_session_id = header_session_string[/\=([^;]*);/, 1]
+        header_session_id.should == config_session_id
+      end
+    end
   end
 end
