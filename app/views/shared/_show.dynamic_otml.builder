@@ -1,3 +1,4 @@
+NoCache.add_headers(response.headers)
 xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") { 
   xml.imports { 
     xml.import :class => "org.concord.otrunk.OTIncludeRootObject"
