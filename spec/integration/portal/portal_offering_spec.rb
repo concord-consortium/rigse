@@ -29,7 +29,20 @@ describe "Portal::Offering" do
   end
 
   describe "the dynamic jnlp file" do
-    describe "the jnlp argument" do
+    it "should not be cached" do
+      visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
+
+      headers = page.driver.response.headers
+      headers.should have_key 'Pragma'
+      # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match it
+      headers['Pragma'].should match "no-cache"
+      headers.should have_key 'Cache-Control'
+      headers['Cache-Control'].should match "max-age=0"
+      headers['Cache-Control'].should match "no-cache"
+      headers['Cache-Control'].should match "no-store"
+    end
+
+    describe "whose jnlp argument" do
       it "points to a config file with a jnlp_session" do
         visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
         jnlp_xml = Nokogiri::XML(page.driver.response.body)
@@ -69,6 +82,21 @@ describe "Portal::Offering" do
         header_session_string = page.driver.response.headers["Set-Cookie"]
         header_session_id = header_session_string[/\=([^;]*);/, 1]
         header_session_id.should == config_session_id
+      end
+
+      it "should not be cached" do
+        visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
+        jnlp_xml = Nokogiri::XML(page.driver.response.body)
+        config_url = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
+        visit config_url
+        headers = page.driver.response.headers
+        headers.should have_key 'Pragma'
+        # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match it
+        headers['Pragma'].should match "no-cache"
+        headers.should have_key 'Cache-Control'
+        headers['Cache-Control'].should match "max-age=0"
+        headers['Cache-Control'].should match "no-cache"
+        headers['Cache-Control'].should match "no-store"
       end
     end
   end

@@ -32,7 +32,7 @@ if local_assigns[:properties]
 end
 
 response.headers["Content-Type"] = "application/xml"
-response.headers["Cache-Control"] = "max-age=1"
+NoCache.add_headers(response.headers)
 session_options = request.env["rack.session.options"]
 xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
   xml.object("class" => "net.sf.sail.emf.launch.HttpCookieServiceImpl") {

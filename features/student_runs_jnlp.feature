@@ -13,10 +13,6 @@ Feature: Student runs a jnlps
     Then a jnlp file is downloaded
     And the jnlp file for "Aerodynamics" has a configuration for the student and offering
 
-  Scenario: Student jnlps are not cached
-    When I run the investigation
-    Then the jnlp should not be cached
-
   @pending
   Scenario: Student runs the same jnlp a second time
     When I run the investigation

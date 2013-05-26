@@ -9,7 +9,9 @@ describe InvestigationsController do
       :using_custom_css? => false,
       :use_bitmap_snapshots? => false,
       :maven_jnlp_family => nil,
-      :snapshot_enabled => false)
+      :snapshot_enabled => false,
+      :use_student_security_questions => false,
+      :require_user_consent? => false)
     Admin::Project.stub!(:default_project).and_return(@current_project)
     
     # this part is broken when the monkey patched application controller was removed
@@ -47,5 +49,17 @@ describe InvestigationsController do
         end
       end
     end
+  end
+
+  it "should not be cached" do
+    visit investigation_path(:id => @investigation.id, :format => :dynamic_otml)
+    headers = page.driver.response.headers
+    headers.should have_key 'Pragma'
+    # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match it
+    headers['Pragma'].should match "no-cache"
+    headers.should have_key 'Cache-Control'
+    headers['Cache-Control'].should match "max-age=0"
+    headers['Cache-Control'].should match "no-cache"
+    headers['Cache-Control'].should match "no-store"
   end
 end
