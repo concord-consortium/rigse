@@ -19,6 +19,7 @@ class MiscController < ActionController::Base
     end
     image_folder = File.join(RAILS_ROOT, "public","images","new","banners")
     image_file = File.exists?(theme_file = File.join(image_folder, "#{APP_CONFIG[:theme]}.png")) ? theme_file : File.join(image_folder, "empty.png")
+    NoCache.add_headers(response.headers)
     send_file(image_file, {:type => 'image/png', :disposition => 'inline'} )
   end
 
