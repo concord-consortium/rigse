@@ -154,7 +154,10 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-
+    cookies[:current_user_single_sign_on_id] = {
+     :value => current_user.id,
+     :domain => '.rites.concord.zeuslearning.com'
+    }
     redirect_path = root_path
     if APP_CONFIG[:recent_activity_on_login] && current_visitor.portal_teacher
       portal_teacher = current_visitor.portal_teacher
@@ -162,6 +165,13 @@ class ApplicationController < ActionController::Base
         # Teachers with active classes are redirected to the "Recent Activity" page
         redirect_path = recent_activity_path
       end
+    end
+    if session[:sso_callback_params]
+      AccessGrant.prune!
+      access_grant = current_user.access_grants.create({:client => session[:sso_application], :state => session[:sso_callback_params][:state]}, :without_protection => true)
+      redirect_path = access_grant.redirect_uri_for(session[:sso_callback_params][:redirect_uri])
+      session[:sso_callback_params] = nil
+      session[:sso_application] = nil
     end
     return redirect_path
   end
