@@ -57,36 +57,36 @@ describe ExternalActivity do
   end
 
   describe "url transforms" do
-    let(:act) { ExternalActivity.create!(valid_attributes)}
+    let(:activity) { ExternalActivity.create!(valid_attributes)}
     let(:learner) { mock_model(Portal::Learner, :id => 34) }
 
     it "should default to not appending the learner id to the url" do
-      act.append_learner_id_to_url.should be_false
+      activity.append_learner_id_to_url.should be_false
     end
 
     it "should return the original url when appending is false" do
-      act.url.should eql(valid_attributes[:url])
-      act.url(learner).should eql(valid_attributes[:url])
+      activity.url.should eql(valid_attributes[:url])
+      activity.url(learner).should eql(valid_attributes[:url])
     end
 
     it "should return a modified url when appending is true" do
-      act.append_learner_id_to_url = true
-      act.url.should eql(valid_attributes[:url])
-      act.url(learner).should eql(valid_attributes[:url] + "?learner=34")
+      activity.append_learner_id_to_url = true
+      activity.url.should eql(valid_attributes[:url])
+      activity.url(learner).should eql(valid_attributes[:url] + "?learner=34")
     end
 
     it "should return a correct url when appending to a url with existing params" do
       url = "http://www.concord.org/?foo=bar"
-      act.append_learner_id_to_url = true
-      act.url = url
-      act.url(learner).should eql(url + "&learner=34")
+      activity.append_learner_id_to_url = true
+      activity.url = url
+      activity.url(learner).should eql(url + "&learner=34")
     end
 
     it "should return a correct url when appending to a url with existing fragment" do
       url = "http://www.concord.org/#3"
-      act.append_learner_id_to_url = true
-      act.url = url
-      act.url(learner).should eql(url + "?learner=34")
+      activity.append_learner_id_to_url = true
+      activity.url = url
+      activity.url(learner).should eql(url + "?learner=34")
     end
   end
 end
