@@ -27,9 +27,9 @@ describe SearchController do
   let (:thermodynamics_activity)  { Factory.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
   let (:parallel_lines)           { Factory.create(:activity, :name => 'parallel_lines' , :investigation_id => lines.id, :user => author_user) }
 
-  let (:external_activity1) { Factory.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published', :is_exemplar => true) }
-  let (:external_activity2) { Factory.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published', :is_exemplar => true) }
-  let (:external_activity3) { Factory.create(:external_activity, :name => "Copy of external_1", :url => "http://concord.org", :publication_status => 'published', :is_exemplar => false) }
+  let (:external_activity1) { Factory.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
+  let (:external_activity2) { Factory.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published', :is_official => true) }
+  let (:external_activity3) { Factory.create(:external_activity, :name => "Copy of external_1", :url => "http://concord.org", :publication_status => 'published', :is_official => false) }
 
   before(:each) do
     admin_project
