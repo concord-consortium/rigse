@@ -84,9 +84,6 @@ class ExternalActivitiesController < ApplicationController
           :user => current_visitor
         })
     end
-    #if params[:mine_only]
-    #  @external_activities = @external_activities.reject { |i| i.user.id != current_visitor.id }
-    #end
     @paginated_objects = @external_activities
 
     if request.xhr?
