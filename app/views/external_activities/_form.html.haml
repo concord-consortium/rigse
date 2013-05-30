@@ -21,7 +21,7 @@
       Append a unique Survey Monkey user id to the url (e.g. http://www.surveymonkey.com/s/H2Y9H27?c=00001)
     - if current_visitor.has_role?('admin', 'manager','researcher')
       .config
-        = f.check_box :is_exemplar
+        = f.check_box :is_official
         Designate this as an "official" Concord activity in lists
   = field_set_tag 'Save Path' do
     = f.text_field :save_path

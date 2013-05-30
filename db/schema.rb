@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130509181928) do
+ActiveRecord::Schema.define(:version => 20130530141920) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -751,7 +751,7 @@ ActiveRecord::Schema.define(:version => 20130509181928) do
     t.integer  "template_id"
     t.string   "template_type"
     t.string   "rest_create_url"
-    t.boolean  "is_exemplar",              :default => false
+    t.boolean  "is_official",              :default => false
   end
 
   add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"

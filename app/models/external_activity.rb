@@ -17,7 +17,7 @@ class ExternalActivity < ActiveRecord::Base
   include Publishable
 
   self.extend SearchableModel
-  @@searchable_attributes = %w{name description is_exemplar}
+  @@searchable_attributes = %w{name description is_official}
 
   scope :like, lambda { |name|
     name = "%#{name}%"
@@ -46,8 +46,8 @@ class ExternalActivity < ActiveRecord::Base
     where(conditions)
   }
 
-  scope :exemplar, where(:is_exemplar => true)
-  scope :not_exemplar, where(:is_exemplar => false)
+  scope :official, where(:is_official => true)
+  scope :contributed, where(:is_official => false)
 
   class <<self
     def searchable_attributes
@@ -60,7 +60,6 @@ class ExternalActivity < ActiveRecord::Base
       name_matches = ExternalActivity.like(name)
       is_visible = options[:include_drafts] ? name_matches.not_private : name_matches.published
       sort_order = options[:sort_order] || "name ASC"
-      # sort_order = 'is_exemplar DESC, ' + sort_order
       external_activities = nil
 
       if options[:user]
@@ -92,9 +91,9 @@ class ExternalActivity < ActiveRecord::Base
         external_activities = is_visible
       end
 
-      if !options[:include_community]
+      if !options[:include_contributed]
         # If param is included, we want *all*; if not, only the Concord ones.
-        external_activities = external_activities.exemplar
+        external_activities = external_activities.official
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
