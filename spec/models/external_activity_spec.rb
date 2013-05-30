@@ -31,7 +31,7 @@ describe ExternalActivity do
     end
 
     context 'when include_community is true' do
-      let (:params) { { :include_community => true } }
+      let (:params) { { :include_contributed => true } }
       before(:each) do
         official
         contributed
