@@ -16,6 +16,7 @@ class Dataservice::PeriodicBundleLoggersController < ApplicationController
         :bundle_content => ipb
       )
     end
+    NoCache.add_headers(response.headers)
     respond_to do |format|
       # format.html # show.html.erb
       format.xml  { render :xml => eportfolio_bundle }

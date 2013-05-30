@@ -18,6 +18,7 @@ class MiscController < ActionController::Base
       )
     end
     asset = ActionController::Base.helpers.asset_paths.asset_for("cc_corner_logo.png", nil)
+    NoCache.add_headers(response.headers)
     send_file(asset.pathname.to_s, {:type => 'image/png', :disposition => 'inline'} )
   end
 

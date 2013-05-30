@@ -6,7 +6,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
 
   belongs_to :multiple_choice,  :class_name => 'Embeddable::MultipleChoice'
 
-  has_many :answers, :order => :position, :class_name => "Saveable::MultipleChoiceAnswer"
+  has_many :answers, :dependent => :destroy , :order => :position, :class_name => "Saveable::MultipleChoiceAnswer"
   
   [:prompt, :name, :choices].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
 

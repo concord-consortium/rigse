@@ -23,6 +23,15 @@ class Portal::LearnersController < ApplicationController
         sign_out current_user if current_user
         # log in the user so future requests don't need a token
         sign_in jnlp_user
+        # Calling sign_in without :bypass => true will cause the session to be renewed
+        # when the session is renewed it means that the session id will change just before the response
+        # is sent to the client.
+        # which means the code to generate the config file won't have the correct session in it
+        # Calling sign_in with :bypass => true skips all the warden callbacks wich means that
+        # current_user is not configured
+        # the hack for now is to delete the :renew flag added to session options, so the session won't be
+        # renewed
+        request.env['rack.session.options'].delete(:renew)
       else
         # no valid jnlp_session could be found for this token
         render :partial => 'shared/sail',

@@ -4,8 +4,8 @@ class ExternalActivity < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
-  has_many :teacher_notes, :as => :authored_entity
-  has_many :author_notes, :as => :authored_entity
+  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
+  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
   belongs_to :template, :polymorphic => true
 
@@ -30,6 +30,8 @@ class ExternalActivity < ActiveRecord::Base
   {
     :conditions =>{:publication_status => "published"}
   }
+
+  scope :assigned, where('offerings_count > 0')
 
   scope :not_private,
   {
@@ -119,13 +121,6 @@ class ExternalActivity < ActiveRecord::Base
       append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
     end
     return uri.to_sc
-  end
-
-  ##
-  ## Hackish stub: Noah Paessel
-  ##
-  def offerings
-    []
   end
 
   # methods to mimic Activity

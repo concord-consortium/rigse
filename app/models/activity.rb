@@ -7,7 +7,7 @@ class Activity < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
   
-  has_many :learner_activities, :class_name => "Report::LearnerActivity"
+  has_many :learner_activities, :dependent => :destroy, :class_name => "Report::LearnerActivity"
 
   has_many :external_activities, :as => :template
 
@@ -17,8 +17,8 @@ class Activity < ActiveRecord::Base
     end
   end
   has_many :pages, :through => :sections
-  has_many :teacher_notes, :as => :authored_entity
-  has_many :author_notes, :as => :authored_entity
+  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
+  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
   BASE_EMBEDDABLES.each do |klass|
@@ -106,6 +106,13 @@ class Activity < ActiveRecord::Base
     :conditions =>['activities.publication_status = "published" OR investigations.publication_status = "published"']
   }
   
+  scope :directly_published,
+  {
+    :conditions =>['activities.publication_status = "published"']
+  }
+
+  scope :assigned, where('offerings_count > 0')
+
   scope :ordered_by, lambda { |order| { :order => order } }
   
   class <<self
