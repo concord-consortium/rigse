@@ -70,7 +70,7 @@ class ExternalActivitiesController < ApplicationController
           :description => @description,
           :include_drafts => @include_drafts,
           :paginate => true,
-          :include_community => true,
+          :include_contributed => true,
           :page => pagination,
         })
     else
@@ -79,7 +79,7 @@ class ExternalActivitiesController < ApplicationController
           :description => @description,
           :include_drafts => @include_drafts,
           :paginate => true,
-          :include_community => true,
+          :include_contributed => true,
           :page => pagination,
           :user => current_visitor
         })
