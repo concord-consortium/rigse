@@ -81,7 +81,7 @@ describe ExternalActivitiesController do
       :description => "#{description} again",
       :url         => existing_url,
       :publication_status => 'published',
-      :is_exemplar => false
+      :is_official => false
     })
   end
 
