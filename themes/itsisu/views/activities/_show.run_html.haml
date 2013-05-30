@@ -23,3 +23,6 @@
   %ul.page-utility
     %li.print-this-page
       %a{:href => '#', :onclick => 'window.print(); return false;'} Print this page
+- if local_assigns[:learner] && labbook_enabled?
+  .labbook
+    = link_to 'Lab book', labbook_url(local_assigns[:learner]), :target => "_blank", :class => 'button'
