@@ -7,7 +7,7 @@ describe ExternalActivity do
       :name => "value for name",
       :description => "value for description",
       :publication_status => "value for publication_status",
-      :is_exemplar => true,
+      :is_official => true,
       :url => "http://www.concord.org/"
     } }
 
@@ -16,15 +16,15 @@ describe ExternalActivity do
   end
 
   describe '#search_list' do
-    let (:exemplar) do
+    let (:official) do
       ea = ExternalActivity.create!(valid_attributes)
       ea.publication_status = 'published'
       ea.save
       ea
     end
-    let (:community) do
+    let (:contributed) do
       ea = ExternalActivity.create!(valid_attributes)
-      ea.is_exemplar = false
+      ea.is_official = false
       ea.publication_status = 'published'
       ea.save
       ea
@@ -33,25 +33,25 @@ describe ExternalActivity do
     context 'when include_community is true' do
       let (:params) { { :include_community => true } }
       before(:each) do
-        exemplar
-        community
+        official
+        contributed
       end
 
-      it 'should return activities where is_exemplar is true or false' do
+      it 'should return activities where is_official is true or false' do
         external = ExternalActivity.search_list(params)
-        external.should include(exemplar, community)
+        external.should include(official, contributed)
       end
     end
 
-    context 'when include_community is false or absent' do
+    context 'when include_contributed is false or absent' do
       let (:params) { { } }
       before(:each) do
-        exemplar
+        official
       end
 
-      it 'should return only activities where is_exemplar is true' do
+      it 'should return only activities where is_official is true' do
         external = ExternalActivity.search_list(params)
-        external.should include(exemplar)
+        external.should include(official)
       end
     end
   end
