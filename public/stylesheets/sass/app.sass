@@ -1263,10 +1263,31 @@ iframe.interactive
   width: 690px
   height: 400px
 
-.labbook
-  position: fixed
-  bottom: 5px
-  right: 5px
+#labbook-outer
+  position: fixed !important
+  width: auto
+  height: auto
+  top: 10px
+  left: 10px
+  width: auto
+  height: auto
+  border: 1px solid black
+  background-color: white
   z-index: 10
-  .button
-    font-size: 1.2em
+  cursor: move
+  .title
+    float: left
+  .controls
+    float: right
+  .content
+    width: 100%
+    height: 100%
+    padding: 10px
+    padding-bottom: 30px
+  iframe
+    display: none
+    width: 100%
+    height: 100%
+
+.ui-state-disabled
+  opacity: 1
