@@ -129,7 +129,7 @@ describe SearchController do
       all_external_activities = [external_activity1, external_activity2, external_activity3]
       post_params = {
         :material => ['external_activity'],
-        :include_community => 1
+        :include_contributed => 1
       }
       post :index, post_params
       assigns[:external_activities_count].should == 3
