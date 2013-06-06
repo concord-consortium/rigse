@@ -26,6 +26,7 @@
 - if local_assigns[:learner] && labbook_enabled?
   #labbook-outer
     .content
+      #labbook-cover
       .title-bar
         %span.title
           Lab book
@@ -34,9 +35,22 @@
       %iframe#labbook{:src => labbook_url(local_assigns[:learner]) }
   :javascript
     $j(function() {
-      $j("#labbook-outer").draggable();
+      var hideCover = function() {
+        $j("#labbook-cover").hide();
+      };
+      var showCover = function() {
+        $j("#labbook-cover").show();
+      };
+      $j("#labbook-outer").draggable({
+        start: showCover,
+        stop: hideCover
+      });
       $j("#labbook-outer").draggable("disable");
-      $j("#labbook-outer .content").resizable({handles: "e,s,se"});
+      $j("#labbook-outer .content").resizable({
+        handles: "e,s,se",
+        start: showCover,
+        stop: hideCover
+      });
       $j("#labbook-outer .content").resizable("disable");
       $j("#labbook-outer .content").css({width: 110});
       window.LABBOOK = {
