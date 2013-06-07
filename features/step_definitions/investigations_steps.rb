@@ -257,7 +257,7 @@ Then /^"([^"]*)" should not be displayed in the (?:investigations|assignables) l
   end
 end
 
-Then /the following should (not )?be displayed in the (?:investigations|assignables) list:$/ do |nomatch, table|
+Then /^the following should (not )?be displayed in the (?:investigations|assignables) list:$/ do |nomatch, table|
   within('#assignable_list') do
     table.hashes.each do |hash|
       if nomatch == "not "
