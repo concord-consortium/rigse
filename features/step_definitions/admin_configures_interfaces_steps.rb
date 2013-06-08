@@ -14,7 +14,7 @@ end
 Given /^I am an anonymous user$/ do
   User.anonymous(true)
   visit('/users/sign_out')
-  URI.parse(current_url).path.should == '/'
+  URI.parse(current_url).path.should == '/home'
 end
 
 
