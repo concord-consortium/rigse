@@ -217,7 +217,6 @@ Then /^I should receive an Excel spreadsheet$/ do
 end
 
 Given /^the following researchers exist:$/ do |users_table|
-  User.anonymous(true)
   users_table.hashes.each do |hash|
     begin
       user = Factory(:user, hash)

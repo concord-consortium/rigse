@@ -282,6 +282,9 @@ module MockData
     create_count = 0
     update_count = 0
     
+    # create the anonymous user
+    User.anonymous
+
     DEFAULT_DATA[:users].each do |user, user_info|
       
       user_data = add_default_user(user_info)

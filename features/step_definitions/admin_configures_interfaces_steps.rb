@@ -12,7 +12,6 @@ Then /the current project should be using the following interfaces:/ do |interfa
 end
 
 Given /^I am an anonymous user$/ do
-  User.anonymous(true)
   visit('/users/sign_out')
   ['/home', '/'].should include URI.parse(current_url).path
 end

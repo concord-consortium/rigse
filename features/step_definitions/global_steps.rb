@@ -43,7 +43,6 @@ def scroll_into_view(selector)
 end
 
 Given /the following users[(?exist):\s]*$/i do |users_table|
-  User.anonymous(true)
   users_table.hashes.each do |hash|
     roles = hash.delete('roles')
     if roles
@@ -87,8 +86,6 @@ Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S
 end
 
 When /^I log out$/ do
-  # make sure the anon user exists
-  User.anonymous(true)
   visit "/users/sign_out"
   ['/home', '/'].should include URI.parse(current_url).path
 end
