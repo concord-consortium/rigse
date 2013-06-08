@@ -12,11 +12,11 @@ def get_activity_definition(name, modified = false)
   @activity_definitions[name][version]
 end
 
-Given(/^a(?:n)?( modified version of the)? external activity named "([^"]*)" with the definition$/) do |modified, name, string|
+Given /^a(?:n)?( modified version of the)? external activity named "([^"]*)" with the definition$/ do |modified, name, string|
   store_activity_definition(name, string, modified.nil?)
 end
 
-Then(/^the portal should create a(?:n)? (.*?) with the following attributes:$/) do |type, table|
+Then /^the portal should create a(?:n)? (.*?) with the following attributes:$/ do |type, table|
   klass = case type
   when "external activity"
     ExternalActivity
@@ -77,14 +77,14 @@ def compare_complex(obj, complex_data)
   end
 end
 
-Then(/^the portal should respond with a "([^"]*)" status and location$/) do |status|
+Then /^the portal should respond with a "([^"]*)" status and location$/ do |status|
   page.status_code.to_s.should == status
   location = page.response_headers["Location"]
   location.should_not be_nil
   location.should match(/http:\/\/www.example.com\/external_activities\/\d+/)
 end
 
-Then(/^the external activity should have a template$/) do
+Then /^the external activity should have a template$/ do
   @external_activity.should_not be_nil
   @external_activity.template.should_not be_nil
 end
@@ -95,11 +95,11 @@ def publish(name, again)
   page.driver.post(external_activities_publish_url, content)
 end
 
-When(/^the external runtime publishes the activity "([^"]*)"( again)?$/) do |name, again|
+When /^the external runtime publishes the activity "([^"]*)"( again)?$/ do |name, again|
   publish(name, again.nil?)
 end
 
 
-Given(/^the external runtime published the activity "([^"]*)" before$/) do |name|
+Given /^the external runtime published the activity "([^"]*)" before$/ do |name|
   publish(name, false)
 end

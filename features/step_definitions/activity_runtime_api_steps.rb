@@ -1,4 +1,4 @@
-Given(/^the following external REST activity:$/) do |table|
+Given /^the following external REST activity:$/ do |table|
   @external_activity = Factory.create(:external_activity, table.rows_hash)
 
   # also create the mirrored activity template
@@ -34,7 +34,7 @@ def set_request_stub(method, address, stub)
   @request_stub_map[[method,address]] = stub
 end
 
-Given(/^"([^"]*)" handles a (POST|GET) with query:$/) do |address, method, table|
+Given /^"([^"]*)" handles a (POST|GET) with query:$/ do |address, method, table|
   query_data = table.rows_hash
   method_symbol = method.downcase.to_sym
   stub = get_request_stub(method, address)
@@ -47,7 +47,7 @@ Given(/^"([^"]*)" handles a (POST|GET) with query:$/) do |address, method, table
   stub.with(:query => query_data)
 end
 
-Given(/^"([^"]*)" (?:handles a )?(POST|GET) (?:and )?responds with$/) do |address, method, response|
+Given /^"([^"]*)" (?:handles a )?(POST|GET) (?:and )?responds with$/ do |address, method, response|
   method_symbol = method.downcase.to_sym
   stub = get_request_stub(method, address)
   unless stub
@@ -56,7 +56,7 @@ Given(/^"([^"]*)" (?:handles a )?(POST|GET) (?:and )?responds with$/) do |addres
   stub.to_return(response)
 end
 
-Then(/^the (portal|browser) should send a (POST|GET) to "([^"]*)"$/) do |client,method,address|
+Then /^the (portal|browser) should send a (POST|GET) to "([^"]*)"$/ do |client,method,address|
   stub = get_request_stub(method, address)
   stub.should have_been_requested
 end
