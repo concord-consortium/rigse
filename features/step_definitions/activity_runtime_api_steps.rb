@@ -69,21 +69,21 @@ def create_and_run_external_rest_activity(activity_name)
   end
 end
 
-Then(/^the (portal|browser) should not send a (POST|GET) to "([^"]*)"$/) do |client, method, address|
+Then /^the (portal|browser) should not send a (POST|GET) to "([^"]*)"$/  do |client, method, address|
   stub = get_request_stub(method, address)
   stub.should_not have_been_requested
 end
 
-When(/^a student first runs the external activity "([^"]*)"$/) do |activity_name|
+When /^a student first runs the external activity "([^"]*)"$/  do |activity_name|
   create_and_run_external_rest_activity(activity_name)
 end
 
-Given(/^the student ran the external REST activity "([^"]*)" before$/) do |activity_name|
+Given /^the student ran the external REST activity "([^"]*)" before$/ do |activity_name|
   create_and_run_external_rest_activity(activity_name)
   WebMock::RequestRegistry.instance.reset!
 end
 
-When(/^the student runs the external activity "([^"]*)" again$/) do |activity_name|
+When /^the student runs the external activity "([^"]*)" again$/ do |activity_name|
   login_as('student')
   visit('/')
   within(".offering_for_student:contains('#{activity_name}')") do
@@ -91,7 +91,7 @@ When(/^the student runs the external activity "([^"]*)" again$/) do |activity_na
   end
 end
 
-When(/^the browser returns the following data to the portal$/) do |string|
+When /^the browser returns the following data to the portal$/ do |string|
   login_as('student')
   path = external_activity_return_path(@learner)
   Delayed::Job.should_receive(:enqueue)
@@ -100,22 +100,21 @@ When(/^the browser returns the following data to the portal$/) do |string|
   Dataservice::ProcessExternalActivityDataJob.new(@learner.id, string).perform
 end
 
-Then(/^the portal should create an open response saveable with the answer "([^"]*)"$/) do |answer|
+Then /^the portal should create an open response saveable with the answer "([^"]*)"$/ do |answer|
   ors = Saveable::OpenResponse.all
   ors.count.should == 1
   ors.first.answer.should == answer
 end
 
-Then(/^the portal should create a multiple choice saveable with the answer "([^"]*)"$/) do |answer|
-  mcs = Saveable::MultipleChoice.all
-  mcs.count.should == 1
-  mcs.first.answer.size.should == 1
-  mcs.first.answer.first[:answer].should == answer
+Then /^the portal should create a multiple choice saveable with the answer "([^"]*)"$/ do |answer|
+  multiple_choices = Saveable::MultipleChoice.all
+  matching = multiple_choices.select {|mcs| mcs.answer.first[:answer] == answer}
+  matching.size.should >= 1
 end
 
 # Only test that the report_learner is upadted
 # TODO: Test the actual report learner content
-Then(/the student's progress bars should be updated/) do
+Then /the student's progress bars should be updated/ do
   @learner.reload
   @learner.report_learner.complete_percent.should be > 0.0
   @learner.report_learner.last_run.should_not be_nil
