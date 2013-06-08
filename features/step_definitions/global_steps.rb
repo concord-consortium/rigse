@@ -87,8 +87,10 @@ Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S
 end
 
 When /^I log out$/ do
-  visit "/users/sign_out"
+  # make sure the anon user exists
   User.anonymous(true)
+  visit "/users/sign_out"
+  ['/home', '/'].should include URI.parse(current_url).path
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|
