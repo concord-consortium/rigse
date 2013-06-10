@@ -25,6 +25,13 @@ Then /^(?:|I )should preview activity "(.+)" on the search instructional materia
     step 'I receive a file for download with a filename like "_activity_"'
 end
 
+When /^(?:|I )search for "(.+)" on the search instructional materials page$/ do |search_text|
+  step_text = "I fill in \"search_term\" with \"#{search_text}\""
+  step step_text
+  step 'I press "GO"'
+  page.should have_content("matching search term \"#{search_text}\"")
+end
+
 When /^(?:|I )enter search text "(.+)" on the search instructional materials page$/ do |search_text|
   step_text = "I fill in \"search_term\" with \"#{search_text}\""
   step step_text
@@ -34,13 +41,6 @@ end
 When /^(?:|I )should see search suggestions for "(.+)" on the search instructional materials page$/ do |search_text|
   step_text = "I should see \"#{search_text}\" within suggestion box"
   step step_text
-end
-
-When /^(?:|I )search study material "(.+)" on the search instructional materials page$/ do |search_text|
-  step_text = "I fill in \"search_term\" with \"#{search_text}\""
-  step step_text
-  step 'I press "GO"'
-  step 'I should wait 2 seconds'
 end
 
 When /^(?:|I )should see search results for "(.+)" on the search instructional materials page$/ do|search_text|
