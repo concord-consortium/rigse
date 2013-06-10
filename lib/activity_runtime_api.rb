@@ -17,7 +17,7 @@ class ActivityRuntimeAPI
         :name             => hash["name"],
         :description      => hash["description"],
         :url              => hash["url"],
-        :rest_create_url  => hash["create_url"],
+        :launch_url  => hash["launch_url"] || hash["create_url"],
         :template         => activity,
         :publication_status => "published",
         :user => user

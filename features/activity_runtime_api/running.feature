@@ -3,7 +3,7 @@ Feature: External Activities can support a REST api
     Given the following external REST activity:
       | name             | Cool Thing |
       | url              | http://activities.com/activity/1 |
-      | rest_create_url  | http://activities.com/activity/1/sessions/ |
+      | launch_url  | http://activities.com/activity/1/sessions/ |
     And "activities.com/activity/1/sessions/" handles a GET with query:
       | domain     | http://www.example.com/  |
       | externalId | 999                      |

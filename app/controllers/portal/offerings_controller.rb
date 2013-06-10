@@ -59,8 +59,8 @@ class Portal::OfferingsController < ApplicationController
            # session[:put_path] = nil
          end
          external_activity = @offering.runnable
-         if external_activity.rest_create_url
-           uri = URI.parse(external_activity.rest_create_url)
+         if external_activity.launch_url
+           uri = URI.parse(external_activity.launch_url)
            uri.query = {
              :domain => root_url,
              :externalId => learner.id,

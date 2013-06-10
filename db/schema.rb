@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130530141920) do
+ActiveRecord::Schema.define(:version => 20130610135033) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -198,6 +198,7 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.datetime "created_at",                                     :null => false
     t.datetime "updated_at",                                     :null => false
     t.integer  "periodic_bundle_content_id"
+    t.string   "uuid",                       :limit => 36
   end
 
   add_index "dataservice_blobs", ["bundle_content_id"], :name => "index_dataservice_blobs_on_bundle_content_id"
@@ -740,8 +741,8 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.text     "description"
     t.text     "url"
     t.string   "publication_status"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.integer  "offerings_count",          :default => 0
     t.string   "save_path"
     t.boolean  "append_learner_id_to_url"
@@ -750,7 +751,7 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.string   "report_url"
     t.integer  "template_id"
     t.string   "template_type"
-    t.string   "rest_create_url"
+    t.string   "launch_url"
     t.boolean  "is_official",              :default => false
   end
 
@@ -1111,6 +1112,7 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.datetime "updated_at",                                :null => false
     t.integer  "bundle_logger_id"
     t.integer  "console_logger_id"
+    t.string   "external_activity_state_url"
   end
 
   add_index "portal_learners", ["bundle_logger_id"], :name => "index_portal_learners_on_bundle_logger_id"
@@ -2069,12 +2071,12 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.integer  "user_id"
     t.string   "name"
     t.text     "description"
-    t.string   "publication_status", :default => "draft"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.integer  "offerings_count",    :default => 0
+    t.string   "publication_status",               :default => "draft"
+    t.datetime "created_at",                                            :null => false
+    t.datetime "updated_at",                                            :null => false
+    t.integer  "offerings_count",                  :default => 0
     t.text     "content"
-    t.string   "uuid"
+    t.string   "uuid",               :limit => 36
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
@@ -2177,9 +2179,10 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.integer  "bundle_content_id"
     t.integer  "blob_id"
     t.integer  "position"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.text     "note"
+    t.string   "uuid",              :limit => 36
   end
 
   add_index "saveable_image_question_answers", ["image_question_id", "position"], :name => "i_q_id_and_position_index"
@@ -2188,9 +2191,10 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.integer  "learner_id"
     t.integer  "offering_id"
     t.integer  "image_question_id"
-    t.integer  "response_count",    :default => 0
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.integer  "response_count",                  :default => 0
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
+    t.string   "uuid",              :limit => 36
   end
 
   add_index "saveable_image_questions", ["learner_id"], :name => "index_saveable_image_questions_on_learner_id"
@@ -2200,8 +2204,9 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.integer  "multiple_choice_id"
     t.integer  "bundle_content_id"
     t.integer  "position"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.string   "uuid",               :limit => 36
   end
 
   add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
@@ -2210,8 +2215,9 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
     t.integer  "choice_id"
     t.integer  "answer_id"
     t.string   "rationale"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.string   "uuid",       :limit => 36
   end
 
   add_index "saveable_multiple_choice_rationale_choices", ["answer_id"], :name => "index_saveable_multiple_choice_rationale_choices_on_answer_id"
@@ -2220,10 +2226,11 @@ ActiveRecord::Schema.define(:version => 20130530141920) do
   create_table "saveable_multiple_choices", :force => true do |t|
     t.integer  "learner_id"
     t.integer  "multiple_choice_id"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.integer  "offering_id"
-    t.integer  "response_count",     :default => 0
+    t.integer  "response_count",                   :default => 0
+    t.string   "uuid",               :limit => 36
   end
 
   add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"

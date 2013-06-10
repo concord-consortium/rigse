@@ -5,7 +5,7 @@ Feature: External Activities can support a REST publishing api
       {
         "name": "Cool Activity",
         "url": "http://activity.com/activity/1",
-        "create_url": "http://activity.com/activity/1/sessions/",
+        "launch_url": "http://activity.com/activity/1/sessions/",
         "description": "This activity does fun stuff.",
         "sections": [
           {
@@ -52,7 +52,7 @@ Feature: External Activities can support a REST publishing api
       {
         "name": "Cool Activity",
         "url": "http://activity.com/activity/1",
-        "create_url": "http://activity.com/activity/1/sessions/",
+        "launch_url": "http://activity.com/activity/1/sessions/",
         "sections": [
           {
             "name": "Cool Activity Section 1",
@@ -101,7 +101,7 @@ Feature: External Activities can support a REST publishing api
     And the portal should create an external activity with the following attributes:
       | name            | Cool Activity |
       | url             | http://activity.com/activity/1 |
-      | rest_create_url | http://activity.com/activity/1/sessions/ |
+      | launch_url | http://activity.com/activity/1/sessions/ |
       | description     | This activity does fun stuff. |
     And the external activity should have a template
     And the portal should create an activity with the following attributes:

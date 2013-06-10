@@ -5,14 +5,14 @@ describe ExternalActivitiesController do
   let(:name)        { "Cool Activity"                  }
   let(:description) { name                             }
   let(:url )        { "http://activity.com/activity/1" }
-  let(:create_url)  { "#{url}/1/sessions/"             }
+  let(:launch_url)  { "#{url}/1/sessions/"             }
   let(:existing_url){ nil }
 
   let(:activity_hash) do
     {
       "name" => name,
       "url" => url,
-      "create_url" => create_url,
+      "launch_url" => launch_url,
       "sections" => [
         {
           "name" => "Cool Activity Section 1",
