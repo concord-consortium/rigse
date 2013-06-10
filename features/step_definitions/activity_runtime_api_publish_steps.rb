@@ -92,7 +92,7 @@ end
 def publish(name, again)
   login_as('author')
   content = get_activity_definition(name, again)
-  page.driver.post(external_activities_publish_url, content)
+  page.driver.post(publish_external_activities_url, content)
 end
 
 When /^the external runtime publishes the activity "([^"]*)"( again)?$/ do |name, again|

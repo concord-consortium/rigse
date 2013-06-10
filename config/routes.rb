@@ -542,8 +542,10 @@ constraints :id => /\d+/ do
   end
 
   match '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list, :method => :get
-  match '/external_activities/publish' => 'external_activities#publish', :as => :external_activities_publish, :method => :post
   resources :external_activities do
+    collection do
+      post :publish
+    end
     member do
       get :duplicate
     end
