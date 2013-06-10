@@ -173,6 +173,7 @@ class ActivityRuntimeAPI
     mc_data["choices"].each do |choice_data|
       id = choice_data["id"]
       choice   = cached_choices.delete(id)
+      # when the choices list was emptied then all of the choices were modified
       choice.reload if choice
       choice ||= Embeddable::MultipleChoiceChoice.create(:external_id => id)
       choice.update_attributes(
