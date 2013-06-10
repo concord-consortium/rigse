@@ -1,8 +1,8 @@
 class AuthController < ApplicationController
-  before_filter :verify_is_admin, :except => [:access_token]
+  before_filter :verify_logged_in, :except => [:access_token]
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
-  def verify_is_admin
+  def verify_logged_in
 
     if current_user.nil?
       session[:sso_callback_params] = params;
