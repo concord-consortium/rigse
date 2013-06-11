@@ -98,32 +98,23 @@ Then /^the search results should be paginated on the search instructional materi
 end
 
 And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do |link, material_type, material_name|
-  material_id = nil
-  case material_type
-    when "investigation"
-      material_id = Investigation.find_by_name(material_name).id
-    when "activity"
-      material_id = Activity.find_by_name(material_name).id
-  end
-  
-  within(:xpath,"//div[@id = 'search_#{material_type}_#{material_id}']") do
-    step_text = "I follow \"#{link}\""
-    step step_text
+  within(".materials_container.#{material_type.pluralize}") do
+    # the following is a way to track down the div that contains all the information about this material
+    # the first part might stop working if capybara is upgraded because newer capybara uses the devices css
+    # matching system and 'contains' is not supported by all browsers.
+    # a possibly better approach would be to make a custom selector that builds a single xpath selector from some
+    # arguments. Or another approach is to add aria-label(by) to the top level div and search based on that
+    material_name_span = find("span.material_header:contains(\"#{material_name}\")")
+    material_item_div = material_name_span.first(:xpath, "ancestor-or-self::div[@class='material_list_item']")
+    within(material_item_div) do
+      step_text = "I follow \"#{link}\""
+      step step_text
+    end
   end
 end
 
 And /^(?:|I )follow (investigation|activity) link "(.+)" on the search instructional materials page$/ do |material_type, material_name|
-  material_id = nil
-  case material_type
-    when "investigation"
-      material_id = Investigation.find_by_name(material_name).id
-      within(:xpath,"//div[@id = 'search_#{material_type}_#{material_id}']") do
-        click_link(material_name)
-      end
-    when "activity"
-      material_id = Activity.find_by_name(material_name).id
-      within(:xpath,"//div[@id = 'search_#{material_type}_#{material_id}']") do
-        click_link(material_name)
-      end
+  within(".materials_container.#{material_type.pluralize}") do
+    click_link(material_name)
   end
 end
