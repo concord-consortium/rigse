@@ -13,9 +13,13 @@ module RestrictedPortalController
        end
 
        def student_teacher_admin_or_config
-         
          redirect_home unless current_clazz.is_student?(current_visitor) || current_clazz.is_teacher?(current_visitor) ||
                    current_visitor.has_role?('admin') || request.format == :config
+       end
+
+       def student_teacher_or_admin
+         redirect_home unless current_clazz.is_student?(current_visitor) || current_clazz.is_teacher?(current_visitor) ||
+                   current_visitor.has_role?('admin')
        end
      }
    end

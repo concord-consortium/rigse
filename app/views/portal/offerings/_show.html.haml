@@ -1,7 +1,9 @@
+clazz = offering.clazz
 - if offering.runnable
-  - if @portal_teacher
-    = render :partial => 'shared/offering_for_teacher', :locals => {:offering => offering}
-  - else
+  -# note the order is important. It is possible that an admin is also a student in a class
+  - if clazz.is_student?(current_visitor)
     = render :partial => 'shared/offering_for_student', :locals => {:offering => offering}
+  - elsif clazz.is_teacher?(current_visitor) || current_visitor.has_role?('admin')
+    = render :partial => 'shared/offering_for_teacher', :locals => {:offering => offering}
 - else
   = "No runnable for this offering: #{offering.name}"

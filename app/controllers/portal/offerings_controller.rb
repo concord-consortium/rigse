@@ -5,6 +5,7 @@ class Portal::OfferingsController < ApplicationController
   
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter,:activity_report]
   before_filter :student_teacher_admin_or_config, :only => [:answers]
+  before_filter :student_teacher_or_admin, :only => [:show]
 
   def current_clazz
     Portal::Offering.find(params[:id]).clazz
