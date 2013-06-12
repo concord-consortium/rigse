@@ -14,6 +14,8 @@ class ExternalActivitiesController < ApplicationController
 
   def can_create
     if (current_visitor.anonymous?)
+      logger.warn "Didn't proceed: current_visitor.anonymous? was true"
+      logger.info "Current visitor: #{current_visitor.to_s}"
       flash[:error] = "Anonymous users can not create external external_activities"
       redirect_back_or external_activities_path
     end
