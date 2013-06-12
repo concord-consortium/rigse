@@ -17,7 +17,7 @@ class ExternalActivity < ActiveRecord::Base
   include Publishable
 
   self.extend SearchableModel
-  @@searchable_attributes = %w{name description}
+  @@searchable_attributes = %w{name description is_official}
 
   scope :like, lambda { |name|
     name = "%#{name}%"
@@ -47,6 +47,9 @@ class ExternalActivity < ActiveRecord::Base
     conditions = "(#{scopes.map { |scope| "#{table_name_dot_id} IN (#{scope.select(table_name_dot_id).to_sql})" }.join(" OR ")})"
     where(conditions)
   }
+
+  scope :official, where(:is_official => true)
+  scope :contributed, where(:is_official => false)
 
   class <<self
     def searchable_attributes
@@ -88,6 +91,11 @@ class ExternalActivity < ActiveRecord::Base
         external_activities = ExternalActivity.match_any([is_visible, by_user])
       else
         external_activities = is_visible
+      end
+
+      if !options[:include_contributed]
+        # If param is included, we want *all*; if not, only the Concord ones.
+        external_activities = external_activities.official
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil

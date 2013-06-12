@@ -23,7 +23,6 @@ end
 
 # Table: | login | password |
 Given /^the following teachers exist:$/ do |users_table|
-  User.anonymous(true)
   users_table.hashes.each do |hash|
     begin
       cohorts = hash.delete("cohort_list")

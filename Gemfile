@@ -18,6 +18,7 @@ source "http://rubygems.org"
 
   gem "devise",               "~>2.1.0"
   gem 'devise-encryptable'
+  gem 'omniauth'
 
   gem "rails",                "~> 3.2"
   gem "arrayfields"
@@ -127,16 +128,18 @@ end
 
 group :test do
   gem "selenium-webdriver", "2.31.0"
-  gem "cucumber",          "~> 1.1.9"
-  gem "cucumber-rails",    "~> 1.3.0", :require => false
-  gem "database_cleaner",  "~> 0.7.2"
-  gem "capybara",          "~> 1.1.2"
-  gem "rspec",             "~> 2.11.0"
-  gem "rspec-rails",       "~> 2.11.0"
-  gem "email_spec",        "~> 1.2.1"
-  gem "fakeweb",           "~> 1.3", :require => false
-  gem "ci_reporter",       "~> 1.7.0"
+  gem "cucumber",           "~> 1.1.9"
+  gem "cucumber-rails",     "~> 1.3.0", :require => false
+  gem "database_cleaner",   "~> 0.7.2"
+  gem "capybara",           "~> 1.1.2"
+  gem "rspec",              "~> 2.11.0"
+  gem "rspec-rails",        "~> 2.11.0"
+  gem "email_spec",         "~> 1.2.1"
+  gem "fakeweb",            "~> 1.3", :require => false
+  gem "ci_reporter",        "~> 1.7.0"
   gem "delorean",           "~> 1.1"
+  gem "webmock",            "~> 1.11.0", :require => false
+  gem "capybara-mechanize", "~> 0.3.0"
 end
 
 group :test, :development do

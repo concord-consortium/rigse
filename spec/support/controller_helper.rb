@@ -261,3 +261,9 @@ def xml_http_html_request(request_method, action, parameters = nil, session = ni
   xml_http_request request_method, action, parameters, session, flash
 end
 
+def raw_post(action, params, body)
+  @request.env['RAW_POST_DATA'] = body
+  response = post(action, params)
+  @request.env.delete('RAW_POST_DATA')
+  response
+end

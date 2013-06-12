@@ -1,6 +1,20 @@
 RailsPortal::Application.routes.draw do
   
-  devise_for :users
+  devise_for :users, :controllers => { :registrations => 'registrations'}
+  # omniauth client stuff
+  match '/auth/:provider/callback', :to => 'authentications#create'
+  match '/auth/failure', :to => 'authentications#failure'
+
+  # Provider stuff
+  match '/auth/concord_id/authorize' => 'auth#authorize'
+  match '/auth/concord_id/access_token' => 'auth#access_token'
+  match '/auth/concord_id/user' => 'auth#user'
+  match '/oauth/token' => 'auth#access_token'
+
+  # Account linking
+  match 'authentications/:user_id/link' => 'authentications#link', :as => :link_accounts
+  match 'authentications/:user_id/add' => 'authentications#add', :as => :add_account
+
 
   root :to => "home#index"
   
@@ -321,6 +335,9 @@ constraints :id => /\d+/ do
   post '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_learner'
   get  '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_learner'
 
+  # external activity return url
+  post '/dataservice/external_activity_data/:id' => 'dataservice/external_activity_data#create', :as => 'external_activity_return'
+
   # A prettier version of the blob w/ token url
   match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
   match 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/ }, :format => 'blob'
@@ -526,6 +543,9 @@ constraints :id => /\d+/ do
 
   match '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list, :method => :get
   resources :external_activities do
+    collection do
+      post :publish
+    end
     member do
       get :duplicate
     end

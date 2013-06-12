@@ -4,11 +4,25 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :confirmable,
-         :recoverable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
-  
-  default_scope where("state != 'disabled'")
+  has_many :authentications, :dependent => :delete_all
+  has_many :access_grants, :dependent => :delete_all
 
+
+  devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable, :bearer_token_authenticatable,
+         :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
+  self.token_authentication_key = "oauth_token"
+  default_scope where(User.arel_table[:state].not_in(['disabled']))
+  
+  def apply_omniauth(omniauth)
+    authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
+  end
+
+  def self.find_for_token_authentication(conditions)
+    where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[token_authentication_key], Time.now]).joins(:access_grants).select("users.*").first
+  end
+  
+  
+  
   NO_EMAIL_STRING='no-email-'
   has_many :investigations
   has_many :resource_pages

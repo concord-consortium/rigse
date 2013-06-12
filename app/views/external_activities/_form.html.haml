@@ -19,6 +19,10 @@
     .config
       = f.check_box :append_survey_monkey_uid
       Append a unique Survey Monkey user id to the url (e.g. http://www.surveymonkey.com/s/H2Y9H27?c=00001)
+    - if current_visitor.has_role?('admin', 'manager','researcher')
+      .config
+        = f.check_box :is_official
+        Designate this as an "official" Concord activity in lists
   = field_set_tag 'Save Path' do
     = f.text_field :save_path
   = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }

@@ -59,10 +59,10 @@ Feature: Teacher can search instructional materials grouped by material type, so
   @javascript
   Scenario: Teacher can see classes in which materials are assigned on the search page
     When the Investigation "differential calculus" is assigned to the class "Physics"
-    And I search study material "differential calculus" on the search instructional materials page
+    And I search for "differential calculus" on the search instructional materials page
     Then I should see "(Assigned to Physics)"
     And the Activity "Fluid Mechanics" is assigned to the class "Physics"
-    And I search study material "Fluid Mechanics" on the search instructional materials page
+    And I search for "Fluid Mechanics" on the search instructional materials page
     Then I should see "(Assigned to Physics)"
     
     
@@ -84,9 +84,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And the Activity "parallel lines" is assigned to the class "Geography"
     And the Activity "parallel lines" is assigned to the class "Mathematics"
     And I am on the search instructional materials page
-    And I enter search text "parallel lines" on the search instructional materials page
-    And I press "GO"
-    And I should wait 2 seconds
+    And I search for "parallel lines" on the search instructional materials page
     Then I should see "Used in 4 classes."
     And I am on the the preview activity page for the activity "parallel lines"
     Then I should see "Used in 4 classes."
@@ -112,21 +110,17 @@ Feature: Teacher can search instructional materials grouped by material type, so
     
   @javascript
   Scenario: Teacher can search instructional materials
-    When I search study material "Venn Diagram" on the search instructional materials page
+    When I search for "Venn Diagram" on the search instructional materials page
     Then I should see search results for "Venn Diagram" on the search instructional materials page
     
     
   @javascript
   Scenario: Teacher can sort search results alphabetically
-    When I enter search text "lines" on the search instructional materials page
-    And I press "GO"
-    And I should wait 2 seconds
+    When I search for "lines" on the search instructional materials page
     And I follow "Alphabetical" in Sort By on the search instructional materials page
     Then "graphs and lines" should appear before "intersecting lines"
     And "intersecting lines" should appear before "parallel lines"
-    And I enter search text "calculus" on the search instructional materials page
-    And I press "GO"
-    And I should wait 2 seconds
+    And I search for "calculus" on the search instructional materials page
     And I follow "Alphabetical" in Sort By on the search instructional materials page
     Then "differential calculus" should appear before "integral calculus"
     
@@ -134,8 +128,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
   @javascript
   Scenario: Teacher can sort search results for investigations on the basis of creation date
     When I create investigations "differential calculus" before "integral calculus" by date
-    And I enter search text "calculus" on the search instructional materials page
-    And I press "GO"
+    And I search for "calculus" on the search instructional materials page
     And I follow "Oldest" in Sort By on the search instructional materials page
     And I should wait 2 seconds
     Then "integral calculus" should appear before "differential calculus"
@@ -147,8 +140,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
   @javascript
   Scenario: Teacher can sort search results for activities on the basis of creation date
     When I create activities "parallel lines" before "graphs and lines" by date
-    And I enter search text "lines" on the search instructional materials page
-    And I press "GO"
+    And I search for "lines" on the search instructional materials page
     And I follow "Oldest" in Sort By on the search instructional materials page
     And I should wait 2 seconds
     Then "graphs and lines" should appear before "parallel lines"
@@ -166,7 +158,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And the Investigation "integral calculus" is assigned to the class "Geography"
     And I follow "Popularity" in Sort By on the search instructional materials page
     And I should wait 2 seconds
-    And I search study material "calculus" on the search instructional materials page
+    And I search for "calculus" on the search instructional materials page
     Then "differential calculus" should appear before "integral calculus"
     
     
@@ -206,9 +198,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     
   @javascript
   Scenario: Search results should be paginated
-    When I enter search text "is a great material" on the search instructional materials page
-    And I press "GO"
-    And I should wait 2 seconds
+    When I search for "is a great" on the search instructional materials page
     Then the search results should be paginated on the search instructional materials page
     
     

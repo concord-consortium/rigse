@@ -1,5 +1,4 @@
 Given /^the following students exist:$/ do |table|
-  User.anonymous(true)
   table.hashes.each do |hash|
     begin
       clazz = Portal::Clazz.find_by_name(hash.delete('class'))

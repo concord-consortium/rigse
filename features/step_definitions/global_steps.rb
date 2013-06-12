@@ -43,7 +43,6 @@ def scroll_into_view(selector)
 end
 
 Given /the following users[(?exist):\s]*$/i do |users_table|
-  User.anonymous(true)
   users_table.hashes.each do |hash|
     roles = hash.delete('roles')
     if roles
@@ -88,7 +87,7 @@ end
 
 When /^I log out$/ do
   visit "/users/sign_out"
-  User.anonymous(true)
+  ['/home', '/'].should include URI.parse(current_url).path
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|
@@ -107,7 +106,13 @@ Then /^the (.*) named "([^"]*)" should have "([^"]*)" equal to "([^"]*)"$/ do |c
   obj.send(field.to_sym).to_s.should == value
 end
 
-Then /"(.*)" should appear before "(.*)"/ do |first_item, second_item|
+Then /^"(.*)" should appear before "(.*)"$/ do |first_item, second_item|
+  # these first two lines make sure the content is actually on the page
+  # and will trigger synchronized waiting
+  page.should have_content(first_item)
+  page.should have_content(second_item)
+  # this won't trigger synchronized waiting so if there is synchronization issues you should
+  # try to verify something is on the page, before using this step
   page.body.should =~ /#{first_item}.*#{second_item}/m
 end
 

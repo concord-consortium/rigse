@@ -58,7 +58,18 @@ class Portal::OfferingsController < ApplicationController
          else
            # session[:put_path] = nil
          end
-         redirect_to(@offering.runnable.url(learner))
+         external_activity = @offering.runnable
+         if external_activity.launch_url
+           uri = URI.parse(external_activity.launch_url)
+           uri.query = {
+             :domain => root_url,
+             :externalId => learner.id,
+             :returnUrl => external_activity_return_url(learner.id)
+           }.to_query
+           redirect_to(uri.to_s)
+         else
+           redirect_to(@offering.runnable.url(learner))
+         end
        }
 
       format.jnlp {

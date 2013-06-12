@@ -282,6 +282,9 @@ module MockData
     create_count = 0
     update_count = 0
     
+    # create the anonymous user
+    User.anonymous
+
     DEFAULT_DATA[:users].each do |user, user_info|
       
       user_data = add_default_user(user_info)
@@ -1170,6 +1173,7 @@ module MockData
           default_ext_act.user_id = user.id
           default_ext_act.url = act[:url]
           default_ext_act.name = act[:name]
+          default_ext_act.is_official = true
           default_ext_act.save!
           update_count += 1
           print '+'
@@ -1177,6 +1181,7 @@ module MockData
           act[:user_id] = user.id
           default_ext_act = ExternalActivity.create!(act)
           default_ext_act.publish
+          default_ext_act.is_official = true
           default_ext_act.save!
           create_count += 1
           print '.' 
