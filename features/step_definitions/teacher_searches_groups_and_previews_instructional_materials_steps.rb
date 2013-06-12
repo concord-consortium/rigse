@@ -55,7 +55,6 @@ end
 
 
 Then /^the search results should be paginated on the search instructional materials page$/ do
-  save_and_open_page
   #pagination for investigations  
   within(".results_container .materials_container.investigations") do
     if page.respond_to? :should
