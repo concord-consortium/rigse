@@ -90,6 +90,8 @@ class SearchController < ApplicationController
     @external_activity_page = params[:external_activity_page] || 1
     setup_material_type
     @probe_type = param_find(:probe, (params[:method] == :get)) || []
+
+    @include_contributed = params[:include_contributed] || false
     
     # from cookies, this comes back as as single string sometimes.
     # see features/teacher_filters_instructional_materials.feature:80
@@ -109,6 +111,7 @@ class SearchController < ApplicationController
       :paginate => false,
       :probe_type => @probe_type,
       :user => current_visitor,
+      :include_contributed => @include_contributed,
       :without_teacher_only =>@without_teacher_only || false
       #:page => params[:investigation_page] ? params[:investigation_page] : 1,
       #:per_page => 10

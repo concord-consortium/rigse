@@ -4,6 +4,7 @@ Given /^the following external activit(?:y|ies) exist[s]?:$/ do |activity_table|
     hash[:user_id] = user.id
     activity = Factory :external_activity, hash
     activity.publish
+    activity.is_official = true
     activity.save
   end
 end

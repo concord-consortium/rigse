@@ -1,10 +1,10 @@
 class ExternalActivitiesController < ApplicationController
 
-  before_filter :setup_object, :except => [:index, :preview_index]
+  before_filter :setup_object, :except => [:index, :preview_index, :publish]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
-  before_filter :can_create, :only => [:new, :create,:duplicate]
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export,:publish]
+  before_filter :can_create, :only => [:new, :create, :duplicate, :publish]
   
   in_place_edit_for :external_activity, :name
   in_place_edit_for :external_activity, :description
@@ -64,16 +64,25 @@ class ExternalActivitiesController < ApplicationController
     else
       @include_drafts = param_find(:include_drafts,true)
     end
-    @external_activities = ExternalActivity.search_list({
-      :name => @name, 
-      :description => @description, 
-      :include_drafts => @include_drafts,
-      :user => current_visitor,
-      :paginate => true, 
-      :page => pagination
-    })
-    if params[:mine_only]
-      @external_activities = @external_activities.reject { |i| i.user.id != current_visitor.id }
+    if current_visitor.has_role?('admin')
+      @external_activities = ExternalActivity.search_list({
+          :name => @name,
+          :description => @description,
+          :include_drafts => @include_drafts,
+          :paginate => true,
+          :include_contributed => true,
+          :page => pagination,
+        })
+    else
+      @external_activities = ExternalActivity.search_list({
+          :name => @name,
+          :description => @description,
+          :include_drafts => @include_drafts,
+          :paginate => true,
+          :include_contributed => true,
+          :page => pagination,
+          :user => current_visitor
+        })
     end
     @paginated_objects = @external_activities
 
@@ -201,8 +210,13 @@ class ExternalActivitiesController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
-  
+
+  def publish
+    json = JSON.parse(request.body.read)
+    @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
+    head :created, :location => @external_activity
+  end
+
   ##
   ##
   ##
