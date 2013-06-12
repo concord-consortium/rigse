@@ -169,6 +169,8 @@ class UsersController < ApplicationController
           end
           format.xml  { head :ok }
         else
+          # need the roles instance variable for the edit template
+          @roles = Role.all
           format.html { render :action => "edit" }
           format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
         end
