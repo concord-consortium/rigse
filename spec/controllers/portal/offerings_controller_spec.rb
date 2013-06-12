@@ -2,8 +2,18 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::OfferingsController do
   describe "Show Jnlp Offering" do
-    it "renders a jnlp" do
+    it "renders a jnlp for an admin" do
       offering = Factory(:portal_offering)
+      admin = Factory.next :admin_user
+      sign_in admin
+      get :show, :id => offering.id, :format => :jnlp
+      response.should render_template('shared/_show_or_installer')
+    end
+
+    it "renders a jnlp for a teacher" do
+      teacher = Factory(:portal_teacher)
+      offering = Factory(:portal_offering, :clazz => teacher.clazzes.first)
+      sign_in teacher.user
       get :show, :id => offering.id, :format => :jnlp
       response.should render_template('shared/_show_or_installer')
     end
@@ -23,7 +33,7 @@ describe Portal::OfferingsController do
       Admin::Project.stub!(:default_project).and_return(@mock_project)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
-      @clazz = mock_model(Portal::Clazz)
+      @clazz = mock_model(Portal::Clazz, :is_student? => true)
       @runnable_opts = {
         :name      => "Some Activity",
         :url       => "http://example.com",
@@ -68,7 +78,7 @@ describe Portal::OfferingsController do
       Admin::Project.stub!(:default_project).and_return(@mock_project)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
-      @clazz = mock_model(Portal::Clazz)
+      @clazz = mock_model(Portal::Clazz, :is_student? => true)
       
       @runnable = Factory(:page)
       @xhtml = Factory(:xhtml)

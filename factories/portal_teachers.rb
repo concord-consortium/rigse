@@ -13,7 +13,7 @@
 
 
 Factory.define :teacher, :class => Portal::Teacher do |f|
-  f.association :user, :factory => :user
+  f.association :user, :factory => :confirmed_user
   f.clazzes { |clazzes| [ clazzes.association(:portal_clazz) ] }
 end
 
