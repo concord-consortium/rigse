@@ -198,7 +198,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     
   @javascript
   Scenario: Search results should be paginated
-    When I search for "is a great material" on the search instructional materials page
+    When I search for "is a great" on the search instructional materials page
     Then the search results should be paginated on the search instructional materials page
     
     

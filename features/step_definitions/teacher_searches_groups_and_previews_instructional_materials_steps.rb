@@ -55,8 +55,9 @@ end
 
 
 Then /^the search results should be paginated on the search instructional materials page$/ do
-  #pagination for investigations
-  within(:xpath, "//div[@class = 'results_container']//div[@class = 'materials_container'][1]") do
+  save_and_open_page
+  #pagination for investigations  
+  within(".results_container .materials_container.investigations") do
     if page.respond_to? :should
       page.should have_link("Next")
     else
@@ -77,7 +78,7 @@ Then /^the search results should be paginated on the search instructional materi
   
   #pagination for activity
   step 'I am on the search instructional materials page'
-  within(:xpath, "//div[@class = 'results_container']//div[@class = 'materials_container'][2]") do
+  within(".results_container .materials_container.activities") do
     if page.respond_to? :should
       page.should have_link("Next")
     else
