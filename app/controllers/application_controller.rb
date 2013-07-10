@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
   before_filter :check_for_password_reset_requirement
   before_filter :check_student_security_questions_ok
   before_filter :check_student_consent
+  before_filter :set_locale
 
   # Portal::School.find(:first).members.count
 
@@ -172,4 +173,14 @@ class ApplicationController < ActionController::Base
     return redirect_path
   end
 
+  def set_locale
+    # This checks if there's a localization set for this site by checking the components of the host name.
+    # So a request to has.portal.concord.org will check for locales of en-HAS, en-PORTAL, en-CONCORD, en-ORG
+    # with the last one it finds winning, i.e. en-CONCORD trumps en-HAS. (So don't create an en-ORG locale, OK?)
+    request.host.split('.').each do |name|
+      if I18n.available_locales.include?("en-#{name.upcase}".to_sym)
+        I18n.locale = "en-#{name.upcase}".to_sym
+      end
+    end
+  end
 end
