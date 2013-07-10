@@ -182,6 +182,10 @@ class Investigation < ActiveRecord::Base
       end
     end
 
+    def display_name
+      # TODO: for some reason this returns '<p>investigation</p>', not the desired "Investigation" (or "Sequence")
+      t(:investigation).capitalize
+    end
   end
 
   # Enables a teacher note to call the investigation method of an
