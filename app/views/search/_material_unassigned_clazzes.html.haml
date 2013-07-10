@@ -29,7 +29,7 @@
   %div
     %table.material_detail
       %tr
-        %td.title Investigation: 
+        %td.title= "#{t(:investigation).pluralize.titleize}:" 
         %td 
           = investigation_name
 - if activity_name.length > 0

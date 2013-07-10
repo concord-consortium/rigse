@@ -24,7 +24,7 @@
         = render :partial=>'shared/in_place_fields', :locals => {:item=>investigation}
     .action_menu_header_right
       = render :partial => "shared/notes_menu", :locals => {:authorable => investigation}
-      = dropdown_button "actions.png", :title => "actions for this investigation"
+      = dropdown_button "actions.png", :title => "actions for this #{t(:investigation)}"
       - if (investigation.changeable?(current_visitor))
         = dropdown_button "add.png"
         = delete_button_for(investigation)

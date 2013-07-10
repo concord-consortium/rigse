@@ -10,8 +10,8 @@
     .action_menu_header_right
       %ul.menu
         -unless current_visitor.anonymous?
-          %li= link_to 'create investigation', new_investigation_path
-        %li= toggle_all 'investigation descriptions'
+          %li= link_to "create #{t(:investigation)}", new_investigation_path
+        %li= toggle_all "#{t(:investigation)} descriptions"
         
 %ul.quiet_list
   - for investigation in investigations

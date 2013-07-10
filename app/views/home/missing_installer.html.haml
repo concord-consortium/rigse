@@ -4,7 +4,8 @@
     %p 
       Please download the installer for your operating system
       %strong= "( #{@os} )"
-      before running an investigation:
+      before running an 
+      = "#{t(:investigation)}:"
       %ul
         %ul=link_to('download the Mac OS X installer', "/installers/#{jnlp_installer_project}-#{jnlp_installer_version}-osx-installer.dmg")
         %ul=link_to('download the Windows installer', "/installers/#{jnlp_installer_project}-#{jnlp_installer_version}-windows-installer.exe")
