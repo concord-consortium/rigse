@@ -5,3 +5,7 @@ en:
   activerecord:
     models:
       "portal/clazz": Class
+  investigation: investigation
+# HAS shows "sequences" instead of "investigations"
+'en-HAS':
+  investigation: sequence
