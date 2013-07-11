@@ -20,10 +20,9 @@ describe "Object#display_name" do
     LocalNames.stub!(:instance).and_return(@mock)  
   end
   describe "when the object does not define its own #display_name" do
-    it "should call LocalNames.instance#local_name_for" do
+    it "should use its #class method" do
       instance = TestClass.new
-      @mock.should_receive(:local_name_for).and_return("foo")
-      instance.display_name.should == "foo"
+      instance.display_name.should == "test_class"
     end
   end
   describe "when the object does define its own #display_name" do

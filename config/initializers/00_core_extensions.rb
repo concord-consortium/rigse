@@ -94,7 +94,8 @@ end
 #    spec/core_extensions/object_extensions_spec.rb
 module DisplayNameMethod
   def display_name
-    LocalNames.instance.local_name_for(self)
+    # LocalNames.instance.local_name_for(self)
+    t(self.class.to_s.underscore)
   end
 end
 
