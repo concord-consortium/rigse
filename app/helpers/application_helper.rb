@@ -404,7 +404,7 @@ module ApplicationHelper
     end
     url = polymorphic_url(reportable, :action => action, :format => format)
     if title.nil?
-      title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser windowwoo."
+      title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window."
     end
     link_to(link_text, url, :target => '_blank', :title => title)
   end
