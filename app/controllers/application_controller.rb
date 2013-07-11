@@ -174,13 +174,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    # This checks if there's a localization set for this site by checking the components of the host name.
-    # So a request to has.portal.concord.org will check for locales of en-HAS, en-PORTAL, en-CONCORD, en-ORG
-    # with the last one it finds winning, i.e. en-CONCORD trumps en-HAS. (So don't create an en-ORG locale, OK?)
-    request.host.split('.').each do |name|
-      if I18n.available_locales.include?("en-#{name.upcase}".to_sym)
-        I18n.locale = "en-#{name.upcase}".to_sym
-      end
+    # Set locale according to theme
+    name = "en-#{APP_CONFIG[:theme].upcase}" || "en"
+    if I18n.available_locales.include?(name.to_sym)
+      I18n.locale = name.to_sym
     end
   end
 end
