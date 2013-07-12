@@ -31,6 +31,12 @@ RailsPortal::Application.configure do
   # like if you have constraints or database-specific column types
   # config.active_record.schema_format = :sql
 
+  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
+  # the I18n.default_locale when a translation can not be found)
+  # Turn this off if localizing
+  config.i18n.default_locale = 'en'
+  config.i18n.fallbacks = true
+
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 end
