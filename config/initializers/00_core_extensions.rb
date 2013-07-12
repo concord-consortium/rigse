@@ -1,4 +1,4 @@
-require 'local_names'
+# require 'local_names'
 
 # To enable selective supression of warnings from Ruby such as when
 # redefining the constant: REST_AUTH_SITE_KEY when running spec tests
