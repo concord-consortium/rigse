@@ -60,6 +60,7 @@ en:
       "portal/nces06_district" : "NCES District"
       "portal/nces06_school" : "NCES School"
       Investigation: Sequence
+      ExternalActivity : Activity
   investigation: sequence
 'en-NEXTGEN':
   activerecord:
@@ -90,6 +91,7 @@ en:
       "portal/nces06_district" : "NCES District"
       "portal/nces06_school" : "NCES School"
       Investigation: Sequence
+      ExternalActivity : Activity
   investigation: sequence
 'en-SMARTGRAPHS':
   activerecord:
