@@ -12,26 +12,45 @@ class HasOwnDisplayName
 end
 
 class TestClass
+  # stub ActiveModel method
+  def self.model_name
+    ActiveModel::Name.new(TestClass)
+  end
+end
+
+module TestModule
+  module InnerTest
+    class TestClass
+      # stub ActiveModel method
+      def self.model_name
+        ActiveModel::Name.new(TestClass)
+      end
+    end
+  end
 end
 
 describe "Object#display_name" do
-  pending "LocalNames is gone now"
-  before(:each) do
-    @mock = mock(:local_name_instance)
-    # LocalNames.stub!(:instance).and_return(@mock)  
-  end
-  describe "when the object does not define its own #display_name" do
-    it "should use its #class method" do
+  describe "when the class does not define its own #display_name" do
+    it "should use the global class method" do
       instance = TestClass.new
-      instance.display_name.should == "test_class"
+      TestClass.display_name.should == 'Test Class'
+      instance.class.display_name.should == 'Test Class'
     end
   end
+
   describe "when the object does define its own #display_name" do
     it "should not call LocalNames.instance#local_name_for" do
       instance = HasOwnDisplayName.new
-      @mock.should_not_receive(:local_name_for)
-      instance.display_name.should == HasOwnDisplayName::DisplayNameValue
+      instance.should_not_receive(:display_name)
+      instance.class.display_name.should == HasOwnDisplayName::DisplayNameValue
       HasOwnDisplayName.display_name.should == HasOwnDisplayName::DisplayNameValue
+    end
+  end
+
+  describe 'when the model is part of a module' do
+    it 'should not include the module name as part of the #display_name' do
+      instance = TestModule::InnerTest::TestClass.new
+      instance.class.display_name.should == 'Test Class'      
     end
   end
 end
