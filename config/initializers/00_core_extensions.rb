@@ -95,7 +95,7 @@ end
 module DisplayNameMethod
   def display_name
     # LocalNames.instance.local_name_for(self)
-    self.class.to_s.underscore
+    self.model_name.human.titlecase
   end
 end
 
