@@ -17,6 +17,14 @@ Given /^the following external REST activity:$/ do |table|
   mc.choices.create!(:choice => "blue", :external_id => "98")
   mc.choices.create!(:choice => "green", :external_id => "99")
   page.add_embeddable(mc)
+
+
+  iq = Embeddable::ImageQuestion.create(
+    :name => "Image Question",
+    :prompt => "Draw a picture of the sky",
+    :external_id => "1970")
+  page.add_embeddable(iq)
+
   page.save
 
   clazz = Portal::Clazz.find_by_name("My Class")
@@ -105,6 +113,15 @@ Then /^the portal should create an open response saveable with the answer "([^"]
   ors.count.should == 1
   ors.first.answer.should == answer
 end
+
+Then /^the portal should create an image question saveable with the answer "([^"]*)"$/ do |answer|
+  iqs = Saveable::ImageQuestion.all
+  iqs.count.should == 1
+  a = iqs.first.answer
+  a[:note].should == answer
+  a[:blob].should_not be_nil
+end
+
 
 Then /^the portal should create a multiple choice saveable with the answer "([^"]*)"$/ do |answer|
   multiple_choices = Saveable::MultipleChoice.all
