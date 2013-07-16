@@ -68,6 +68,7 @@ class ActivityRuntimeAPI
     # save the embeddables
     mc_cache = {}
     or_cache = {}
+    iq_cache = {}
 
     investigation.multiple_choices.each do |multiple_choice|
       mc_cache[multiple_choice.external_id] = multiple_choice
@@ -77,7 +78,9 @@ class ActivityRuntimeAPI
       or_cache[open_response.external_id] = open_response
     end
 
-    # TODO: Image questions
+    investigation.image_questions.each do |image_question|
+      iq_cache[image_question.external_id] = image_question
+    end
 
     # remove the pages and sections
     (investigation.sections + investigation.pages).each do |section|
@@ -85,11 +88,12 @@ class ActivityRuntimeAPI
     end
 
     # Update or build sections, pages and embeddables
-    build_page_components(hash, activity, user, or_cache, mc_cache)
+    build_page_components(hash, activity, user, or_cache, mc_cache, iq_cache)
 
     # delete the cached items which werent removed
     mc_cache.each_value { |v| v.destroy }
     or_cache.each_value { |v| v.destroy }
+    iq_cache.each_value { |v| v.destroy }
     return external_activity
   end
 
@@ -136,6 +140,7 @@ class ActivityRuntimeAPI
     # save the embeddables
     mc_cache = {}
     or_cache = {}
+    iq_cache = {}
 
     investigation.multiple_choices.each do |multiple_choice|
       mc_cache[multiple_choice.external_id] = multiple_choice
@@ -145,7 +150,9 @@ class ActivityRuntimeAPI
       or_cache[open_response.external_id] = open_response
     end
 
-    # TODO: Image questions
+    investigation.image_questions.each do |image_question|
+      iq_cache[image_question.external_id] = image_question
+    end
 
     # remove the pages and sections
     (investigation.sections + investigation.pages).each do |section|
@@ -163,7 +170,7 @@ class ActivityRuntimeAPI
     hash['activities'].each do |new_activity|
       existing = activity_cache.delete(new_activity['url'])
       if existing
-        build_page_components(new_activity, existing, user, or_cache, mc_cache)
+        build_page_components(new_activity, existing, user, or_cache, mc_cache, iq_cache)
         existing.investigation = investigation
       else
         activity = activity_from_hash(new_activity, investigation, user)
@@ -173,6 +180,7 @@ class ActivityRuntimeAPI
     # delete the cached items which weren't removed
     mc_cache.each_value { |v| v.destroy }
     or_cache.each_value { |v| v.destroy }
+    iq_cache.each_value { |v| v.destroy }
     activity_cache.each_value { |v| v.destroy }
 
     return external_activity
@@ -184,10 +192,7 @@ class ActivityRuntimeAPI
     return activity
   end
 
-  def self.update_activity_from_hash(hash)
-  end
-
-  def self.build_page_components(hash, activity, user, or_cache=nil, mc_cache=nil)
+  def self.build_page_components(hash, activity, user, or_cache=nil, mc_cache=nil, iq_cache=nil)
     hash["sections"].each do |section_data|
       section = Section.create(
         :name => section_data["name"],
@@ -218,6 +223,13 @@ class ActivityRuntimeAPI
             else
               create_multiple_choice(element_data, user)
             end
+          when "image_question"
+            existant = iq_cache ? iq_cache.delete(element_data["id"]) : nil
+            if existant
+              update_image_question(element_data, existant)
+            else
+              create_image_question(element_data, user)
+            end
           else
             next
           end
@@ -239,6 +251,21 @@ class ActivityRuntimeAPI
     Embeddable::OpenResponse.create(
       :prompt => or_data["prompt"],
       :external_id => or_data["id"],
+      :user => user
+    )
+  end
+
+  def self.update_image_question(iq_data, existant)
+    existant.update_attributes(
+      :prompt => iq_data["prompt"]
+    )
+    return existant
+  end
+
+  def self.create_image_question(iq_data, user)
+    Embeddable::ImageQuestion.create(
+      :prompt => iq_data["prompt"],
+      :external_id => iq_data["id"],
       :user => user
     )
   end

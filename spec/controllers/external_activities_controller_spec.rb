@@ -26,6 +26,11 @@ describe ExternalActivitiesController do
                   "prompt" => "Why do you like/dislike this activity?"
                 },
                 {
+                  "type" => "image_question",
+                  "id" => "12345689",
+                  "prompt" => "Draw a picture of why this activity is awesome."
+                },
+                {
                   "type" => "multiple_choice",
                   "id" => "456789",
                   "prompt" => "What color is the sky?",
