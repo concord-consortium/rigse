@@ -1,5 +1,3 @@
-# require 'local_names'
-
 # To enable selective supression of warnings from Ruby such as when
 # redefining the constant: REST_AUTH_SITE_KEY when running spec tests
 # See: http://mentalized.net/journal/2010/04/02/suppress_warnings_from_ruby/
@@ -89,12 +87,9 @@ end
 
 # Define Object#dipsplay_name
 # See:
-#    lib/local_names.rb,
-#    spec/libs/local_names_spec.rb,
 #    spec/core_extensions/object_extensions_spec.rb
 module DisplayNameMethod
   def display_name
-    # LocalNames.instance.local_name_for(self)
     self.model_name.human.titlecase
   end
 end
