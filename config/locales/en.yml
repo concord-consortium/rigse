@@ -1,7 +1,51 @@
-# Sample localization file for English. Add more files in this directory for other locales.
+# Localization file for English. Add more files in this directory for other locales.
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
   activerecord:
     models:
+      "dataservice/bundle_content": BundleContent
+      "dataservice/bundle_logger": BundleLogger
+      "dataservice/console_content": ConsoleContent
+      "dataservice/console_logger": ConsoleLogger
+      "embeddable/biologica/breed_offspring" : "Biologica Breed Offspring"
+      "embeddable/biologica/chromosome" : "Biologica Chromosome"
+      "embeddable/biologica/chromosome_zoom" : "Biologica Chromosome Zoom"
+      "embeddable/biologica/meiosis_view" : "Biologica Meiosis View"
+      "embeddable/biologica/multiple_organism" : "Biologica Multiple Organism"
+      "embeddable/biologica/organism" : "Biologica Organism"
+      "embeddable/biologica/pedigree" : "Biologica Pedigree"
+      "embeddable/biologica/static_organism" : "Biologica Static Organism View"
+      "embeddable/biologica/world" : "Biologica World"
+      "embeddable/data_collector" : Graph
+      "embeddable/drawing_tool" : "Draw Tool"
+      "embeddable/image_question" : "Image Question"
+      "embeddable/lab_book_snapshot" : "Snapshot Button"
+      "embeddable/multiple_choice" : "Multiple Choice Question"
+      "embeddable/mw_modeler_page" : "Molecular Workbench Model"
+      "embeddable/n_logo_model" : "Net Logo Model"
+      "embeddable/smartgraph/range_question" : "Smartgraph Range Question"
+      "embeddable/xhtml" : Text
       "portal/clazz": Class
+      "portal/nces06_district" : "NCES District"
+      "portal/nces06_school" : "NCES School"
+      Investigation: Sequence
+  investigation: sequence
+'en-HAS':
+  activerecord:
+    models:
+      ExternalActivity : Activity
+'en-NEXTGEN':
+  activerecord:
+    models:
+      ExternalActivity : Activity
+'en-SMARTGRAPHS':
+  activerecord:
+    models:
+      ExternalActivity : Activity
+      ResourcePage : Resource
+'en-RITES':
+  activerecord:
+    models:
+      Investigation: Investigation
+  investigation: investigation

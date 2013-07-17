@@ -32,7 +32,8 @@
               = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
           - if material.parent
             %span
-              from investigation
+              from 
+              = t(:investigation)
               ="\"#{material.parent.name}\""
           -unless material.user.name.nil?
             %div

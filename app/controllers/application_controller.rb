@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
   before_filter :check_for_password_reset_requirement
   before_filter :check_student_security_questions_ok
   before_filter :check_student_consent
+  before_filter :set_locale
 
   # Portal::School.find(:first).members.count
 
@@ -172,4 +173,11 @@ class ApplicationController < ActionController::Base
     return redirect_path
   end
 
+  def set_locale
+    # Set locale according to theme
+    name = "en-#{APP_CONFIG[:theme].upcase}" || "en"
+    if I18n.available_locales.include?(name.to_sym)
+      I18n.locale = name.to_sym
+    end
+  end
 end

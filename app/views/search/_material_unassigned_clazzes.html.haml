@@ -29,8 +29,8 @@
   %div
     %table.material_detail
       %tr
-        %td.title Investigation: 
-        %td 
+        %td.title= "#{t(:investigation).titleize}:"
+        %td
           = investigation_name
 - if activity_name.length > 0
   %table.material_detail
@@ -46,7 +46,7 @@
   %div
     %table.material_detail
       %tr
-        %td.title External Activity: 
+        %td.title= "#{ExternalActivity.display_name}:" 
         %td 
           = external_activity_name
 %br
