@@ -4,7 +4,7 @@ class Dataservice::Blob < ActiveRecord::Base
   belongs_to :bundle_content, :class_name => "Dataservice::BundleContent", :foreign_key => "bundle_content_id"
   belongs_to :periodic_bundle_content, :class_name => "Dataservice::PeriodicBundleContent", :foreign_key => "periodic_bundle_content_id"
   # lightweight learners create blobs directly (without a bundle content...)
-  belongs_to :leightweight_learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
+  belongs_to :lightweight_learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
   before_create :create_token
 
   def create_token
@@ -90,7 +90,7 @@ class Dataservice::Blob < ActiveRecord::Base
   end
 
   def self.for_learner_and_url(learner, url)
-    new_blob = self.new(:leightweight_learner => learner)
+    new_blob = self.new(:lightweight_learner => learner)
     new_blob.load_content_from(url)
     found = self.find_by_checksum(new_blob.checksum)
     return found if found;
