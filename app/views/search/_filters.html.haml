@@ -52,7 +52,7 @@
           .tablecell
             = @investigation_checkedstatus
             = check_box_tag 'material[]', 'investigation', @material_type.include?('investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
-            = label_tag 'investigation','Investigation'
+            = label_tag 'investigation', t(:investigation).titleize
           .tablecell
             = @activity_checkedstatus
             = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
@@ -61,7 +61,7 @@
             .tablecell
               = @external_activity_checkedstatus
               = check_box_tag 'material[]', 'external_activity',@material_type.include?('external_activity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
-              = label_tag 'external_activity','External Activity'
+              = label_tag 'external_activity', ExternalActivity.display_name
             .tablecell
               = @external_include_contributed_checkedstatus
               = check_box_tag 'include_contributed'

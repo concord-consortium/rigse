@@ -1,8 +1,8 @@
 #investigations_bookmark
 .materials_container.investigations
   .material_list_header
-    Investigations
-  %p.border_top= page_entries_info materials, :model=>"Investigation"
+    ="#{t(:investigation).pluralize.titleize}"
+  %p.border_top= page_entries_info materials, :model=> Investigation.display_name
   = will_paginate materials, {:param_name => 'investigation_page', :params => {:controller => 'search', :action => 'index', :search_term => @search_term, :activity_page => @activity_page,:type=>"inv"}}
   
   %table.result_material{:cellpadding=>0,:cellspacing=>0}

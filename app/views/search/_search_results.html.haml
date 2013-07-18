@@ -1,8 +1,8 @@
 - show_message_onSearch= ""
 - if @investigations_count == 1
-  - show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)'>investigation</a>"
+  - show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)'>#{t(:investigation)}</a>"
 - elsif @investigations_count > 0
-  - show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)''>investigations</a>"
+  - show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)''>#{t(:investigation).pluralize}</a>"
 
 - if @activities_count > 0 && @investigations_count > 0
   - show_message_onSearch += ","

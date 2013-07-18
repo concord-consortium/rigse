@@ -98,7 +98,7 @@ module RunnablesHelper
     unless run_as
       run_as = case component
       when JnlpLaunchable   then use_jnlps? ? "Java Web Start application" : "Browser Activity"
-      when ExternalActivity then "External Activity"
+      when ExternalActivity then ExternalActivity.display_name
       end
     end
 
@@ -120,7 +120,7 @@ module RunnablesHelper
 
     run_type = case component
     when JnlpLaunchable   then use_jnlps? ? "Java Web Start application" : "Browser Activity"
-    when ExternalActivity then "External Activity"
+    when ExternalActivity then ExternalActivity.display_name
     end
 
     title = title_text(component, verb, run_type)

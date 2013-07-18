@@ -51,7 +51,7 @@
         %th
           Not Yet Started
       %tr
-        %td All students have started this investigation.
+        %td= "All students have started this #{t(:investigation)}."
   %br
   
   - if offering.completed_students_count > 0
@@ -67,6 +67,6 @@
         %th
           Completed
       %tr
-        %td No student has completed this investigation yet.
+        %td= "No student has completed this #{t(:investigation)} yet."
 - else
-  %div.item No activities available in this investigation.
+  %div.item= "No activities available in this #{t(:investigation)}."

@@ -31,6 +31,12 @@ RailsPortal::Application.configure do
   # Minify/uglify/compress assets from the pipeline
   config.assets.compress = false
   
+  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
+  # the I18n.default_locale when a translation can not be found)
+  # Turn this off if localizing
+  config.i18n.default_locale = 'en'
+  config.i18n.fallbacks = true
+
   # split apart assets to make debugging easier
   # config.assets.debug = true
 end
