@@ -232,7 +232,7 @@ describe ActivityRuntimeAPI do
         end
         it "should update the image_question" do
           original_id = image_question.id
-          image_question.external_id.should == 987654321
+          image_question.external_id.should == "987654321"
           existing
           result = ActivityRuntimeAPI.publish(new_hash,user)
           result.template.image_questions.first.id == original_id
