@@ -90,7 +90,11 @@ end
 #    spec/core_extensions/object_extensions_spec.rb
 module DisplayNameMethod
   def display_name
-    self.model_name.human.titlecase
+    if self.respond_to? :model_name  # model_name only works for AR
+      self.model_name.human.titlecase
+    else
+      self.class.name.humanize.titlecase
+    end
   end
 end
 
