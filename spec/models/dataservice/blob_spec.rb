@@ -114,7 +114,7 @@ describe Dataservice::Blob do
 
     describe "when there is an http error" do
       let(:status) { 500 }
-      it "should update its content with the content" do
+      it "should leave the content unchanged" do
         subject.content = "booga booga"
         subject.load_content_from(url)
         subject.content.should_not == url_content
