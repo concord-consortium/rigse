@@ -235,7 +235,7 @@ describe ActivityRuntimeAPI do
           image_question.external_id.should == "987654321"
           existing
           result = ActivityRuntimeAPI.publish(new_hash,user)
-          result.template.image_questions.first.id == original_id
+          result.template.image_questions.first.id.should == original_id
           result.should have_image_question_like("draw a picture")
           result.should_not have_image_question_like("original prompt")
         end
