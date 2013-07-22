@@ -30,15 +30,39 @@ en:
       "portal/nces06_district" : "NCES District"
       "portal/nces06_school" : "NCES School"
       Investigation: Sequence
+      investigation:
+        zero: sequences
+        one: sequence
+        other: sequences
   investigation: sequence
 'en-HAS':
   activerecord:
     models:
       ExternalActivity : Activity
+      external_activity:
+        zero: activities
+        one: activity
+        other: activities
+  will_paginate:
+    models:
+      external_activity:
+        zero: activities
+        one: activity
+        other: activities
 'en-NEXTGEN':
   activerecord:
     models:
       ExternalActivity : Activity
+      external_activity:
+        zero: activities
+        one: activity
+        other: activities
+  will_paginate:
+    models:
+      external_activity:
+        zero: activities
+        one: activity
+        other: activities
 'en-SMARTGRAPHS':
   activerecord:
     models:

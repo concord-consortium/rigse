@@ -14,9 +14,9 @@
 - if @external_activities_count > 0 && (@investigations_count > 0 || @activities_count > 0)
   - show_message_onSearch += ","
 - if @external_activities_count == 1
-  - show_message_onSearch += " #{@external_activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"external_activities_bookmark\").offsetTop)'>external activity</a>"
+  - show_message_onSearch += " #{@external_activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"external_activities_bookmark\").offsetTop)'>#{ExternalActivity.display_name.downcase}</a>"
 - elsif @external_activities_count > 0
-  - show_message_onSearch += " #{@external_activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"external_activities_bookmark\").offsetTop)'>external activities</a>"
+  - show_message_onSearch += " #{@external_activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"external_activities_bookmark\").offsetTop)'>#{ExternalActivity.display_name.pluralize.downcase}</a>"
 
 - show_message_onSearch +=" matching"
 - if @search_term != ""
