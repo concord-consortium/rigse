@@ -30,7 +30,7 @@ Feature: Teachers can drag-drop offerings to reposition them on the class summar
   Scenario: Teacher should be able to see the changes on the Materials page
     When I am on Instructional Materials page for "Mathematics"
     Then I should see "Non Linear Devices" within the tab block for Instructional Materials
-    And I should see "Investigation: Non Linear Devices"
+    And I should see "Sequence: Non Linear Devices"
     
     
   @javascript

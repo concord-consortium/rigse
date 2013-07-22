@@ -52,7 +52,7 @@ And /^(?:|I )should see progress bars for the students$/ do
 end
 
 When /^(?:|I )follow "(.+)" for the investigation "(.+)"$/ do |link, investigation_name|
-  within(:xpath, "//tr[contains(.,'#{investigation_name}') and contains(.,'Investigation:')]") do
+  within(:xpath, "//tr[contains(.,'#{investigation_name}') and contains(.,'Sequence:')]") do
     step "I follow \"#{link}\""
   end
 end

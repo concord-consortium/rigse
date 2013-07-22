@@ -19,7 +19,7 @@ Feature: Investigation index pages can be printed
     And the link to "printable-view" should have a target "_blank"
     When show usage count is enabled on the session
     And I am on the investigations printable index page
-    Then I should see "Investigation"
+    Then I should see "Sequence"
     And I should see "Usage Count"
     And I should see "NewestInv"
     And I should see "MediumInv"
@@ -34,7 +34,7 @@ Feature: Investigation index pages can be printed
     And "printable-view" should have href like "printable_index"
     And the link to "printable-view" should have a target "_blank"
     When I am on the investigations printable index page
-    Then I should see "Investigation"
+    Then I should see "Sequence"
     And I should see "NewestInv"
     And I should see "MediumInv"
     And I should see "OldestInv"
@@ -48,7 +48,7 @@ Feature: Investigation index pages can be printed
     And "printable-view" should have href like "printable_index" with params "name=New"
     And the link to "printable-view" should have a target "_blank"
     When I am on the investigations printable index page
-    Then I should see "Investigations"
+    Then I should see "Sequences"
     And I should see "NewestInv"
     And I should not see "MediumInv"
     And I should not see "OldestInv"

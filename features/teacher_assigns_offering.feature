@@ -42,7 +42,7 @@ Feature: Teacher can assign an offering to a class
       | My Activity | teacher |
     And I am logged in with the username teacher
     And I am on the class page for "My Class"
-    Then I should see "Investigation: A A Test Investigation"
+    Then I should see "Sequence: A A Test Investigation"
     Then I should see "Resource Page: Test Resource Page"
     Then I should see "External Activity: My Activity"
 

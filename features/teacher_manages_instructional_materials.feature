@@ -31,7 +31,7 @@ Feature: Teacher manages instructional materials of a class
     Then I should see "Radioactivity" within the tab block for Instructional Materials
     And I should see "Plant reproduction" within the tab block for Instructional Materials
     And I should see "Aerodynamics" within the tab block for Instructional Materials
-    And I should see "Investigation: Radioactivity"
+    And I should see "Sequence: Radioactivity"
     
   @javascript
   Scenario: Teacher should see activity name in tab
@@ -40,7 +40,7 @@ Feature: Teacher manages instructional materials of a class
   @javascript
   Scenario: Teacher should be able to switch tabs
     When I click the tab of Instructional Materials with text "Plant reproduction"
-    Then I should see "Investigation: Plant reproduction"
+    Then I should see "Sequence: Plant reproduction"
     
   @javascript
   Scenario: Teacher should be able to hide activities and their "Run Activity" buttons 
@@ -76,7 +76,7 @@ Feature: Teacher manages instructional materials of a class
       | name                       | class       |
       | Lumped circuit abstraction | My Class    |
     And I go to Instructional Materials page for "Mathematics"
-    Then I should see "Investigation: Lumped circuit abstraction"
+    Then I should see "Sequence: Lumped circuit abstraction"
     
   Scenario: Teacher should see a message if no students are present
     When I go to Instructional Materials page for "Class_with_no_students"
