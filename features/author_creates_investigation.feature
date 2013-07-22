@@ -17,7 +17,7 @@ Feature: An author creates an investigation
       | investigation[name]           | Test Investigation    |
       | investigation[description]    | testing testing 1 2 3 |
     And I save the investigation
-    Then I should see "Investigation was successfully created."
+    Then I should see "Sequence was successfully created."
 
   #@javascript
   #Scenario: The author creates a RITES investigation
