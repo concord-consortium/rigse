@@ -1,6 +1,6 @@
 Feature: Teacher registers to use the portal
 
-ITSI-SU requires that teachers self-register.
+Innovative Technology in Science Inquiry requires that teachers self-register.
 
   As a potential teacher
   I want to create a teacher account
