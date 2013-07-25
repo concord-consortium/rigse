@@ -5,6 +5,10 @@ class ActivityRuntimeAPI
     return external_activity
   end
 
+  def self.publish2(hash, user)
+    true
+  end
+
 
   private
 
