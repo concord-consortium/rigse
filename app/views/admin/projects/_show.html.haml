@@ -1,3 +1,6 @@
+- if @additional_partials && @additional_partials.length > 0
+  - @additional_partials.each do |p|
+    = render :partial => p, :locals => { :admin_project => admin_project }
 %script
   helpLink = $('help')
   - if admin_project.help_type == 'no help'
@@ -130,6 +133,7 @@
               %li
                 Enabled Bookmark Types:
                 = admin_project.enabled_bookmark_types.join(', ')
+              = content_for "admin_project_show_#{admin_project.id || 'new'}"
 
             = field_set_tag 'Maven Jnlp' do
               %p
