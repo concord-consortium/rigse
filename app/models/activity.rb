@@ -84,7 +84,15 @@ class Activity < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id
     WHERE sections.activity_id = #{id}'
 
-  delegate :saveable_types, :reportable_types, :to => :investigation
+  # delegate :saveable_types, :reportable_types, :to => :investigation
+  def saveable_types
+    Investigation.saveable_types
+  end
+
+  def reportable_types
+    Investigation.reportable_types
+  end
+
   acts_as_replicatable
   acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags
   acts_as_list :scope => :investigation
@@ -297,5 +305,23 @@ class Activity < ActiveRecord::Base
     probes = enabled_probes.uniq.map{|p| p.name }
     models = enabled_diy_model_types.uniq.map{|m| m.name }
     { :probes => probes, :models => models}
+  end
+
+  def can_run_lightweight?
+    # filter through all the embeddables to make sure they all have lightweight views
+    sections.each do |section|
+      next unless section.is_enabled?
+      section.pages.each do |page|
+        next unless page.is_enabled?
+        page.page_elements.each do |element|
+          next unless element.is_enabled?
+          component = element.embeddable
+          if !component.respond_to?('can_run_lightweight?') || !component.can_run_lightweight?
+            return false
+          end
+        end
+      end
+    end
+    return true
   end
 end

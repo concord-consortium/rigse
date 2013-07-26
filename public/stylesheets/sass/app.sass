@@ -1118,6 +1118,9 @@ ul.quiet_list
   a:hover
     background-color: #111111
     color: #bcd6ea
+  &.bins
+    margin: 2px
+    display: inline-block
 
 //Fields with validation errors:
 $error_color: #e16a3e
@@ -1255,3 +1258,44 @@ table#help_request_list
     right: 5px
     text-decoration: none
     top: 3px
+
+iframe.interactive
+  width: 690px
+  height: 400px
+
+#labbook-cover
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  display: none
+
+#labbook-outer
+  position: fixed !important
+  width: auto
+  height: auto
+  top: 10px
+  left: 10px
+  width: auto
+  height: auto
+  border: 1px solid black
+  background-color: white
+  z-index: 10
+  cursor: move
+  .title
+    float: left
+  .controls
+    float: right
+  .content
+    width: 100%
+    height: 100%
+    padding: 10px
+    padding-bottom: 30px
+  iframe
+    display: none
+    width: 100%
+    height: 100%
+
+.ui-state-disabled
+  opacity: 1

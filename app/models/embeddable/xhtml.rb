@@ -40,4 +40,8 @@ class Embeddable::Xhtml < ActiveRecord::Base
     end
   end
 
+  def can_run_lightweight?
+    true
+  end
+
 end

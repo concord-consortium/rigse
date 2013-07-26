@@ -2,7 +2,13 @@ class Diy::ModelsController < ApplicationController
   # GET /Embeddable/embedded_models
   # GET /Embeddable/embedded_models.xml
   def index
-    @models = Diy::Model.search(params[:search], params[:page], nil)
+    sql_conditions = ""
+    sql_params = []
+    if params[:model_type] && params[:model_type] != ""
+      sql_conditions << "(#{Diy::Model.table_name}.model_type_id = ?) and "
+      sql_params << params[:model_type].to_i
+    end
+    @models = Diy::Model.search(params[:search], params[:page], nil, [:model_type], sql_conditions, sql_params)
 
     respond_to do |format|
       format.html # index.html.erb

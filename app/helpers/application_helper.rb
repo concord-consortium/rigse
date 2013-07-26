@@ -1307,4 +1307,16 @@ _gaq.push(['_trackPageview']);
 CONFIG
   end
 
+  def labbook_enabled?
+    ENV['LABBOOK_PROVIDER_URL'] && !ENV['LABBOOK_PROVIDER_URL'].empty?
+  end
+
+  def labbook_url(learner)
+    if ENV['LABBOOK_PROVIDER_URL']
+      "#{ENV['LABBOOK_PROVIDER_URL']}/albums?source=#{request.host}&user_id=#{learner.id}".gsub('//albums', '/albums')
+    else
+      nil
+    end
+  end
+
 end
