@@ -113,8 +113,7 @@ group :geniverse_wordpress do
 end
 
 group :geniverse_remote_auth do
-  # gem "cc_portal_remote_auth", :git => "git://github.com/concord-consortium/cc_portal_remote_auth"
-  gem "cc_portal_remote_auth", :path => "../cc_portal_remote_auth"
+  gem "cc_portal_remote_auth", :git => "git://github.com/concord-consortium/cc_portal_remote_auth"
 end
 
 group :development do

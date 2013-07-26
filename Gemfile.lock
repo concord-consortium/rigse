@@ -7,10 +7,18 @@ GIT
       rails (~> 3.2.0)
 
 GIT
-  remote: git://github.com/concord-consortium/cc_portal_wordpress_integration
-  revision: df022ed52a6c756014f54bbed93fbb750a532583
+  remote: git://github.com/concord-consortium/cc_portal_remote_auth
+  revision: a598dc475a6c16916115f5a135b45ce7df8d5987
   specs:
-    cc_portal_wordpress_integration (0.0.2)
+    cc_portal_remote_auth (0.0.2)
+      devise (~> 2.1.0)
+      rails (~> 3.2.11)
+
+GIT
+  remote: git://github.com/concord-consortium/cc_portal_wordpress_integration
+  revision: 71c11bd9c86ad93206aff654a924fdd57010d5d3
+  specs:
+    cc_portal_wordpress_integration (0.0.3)
       devise (~> 2.1.0)
       haml (~> 3.1.4)
       rails (~> 3.2.11)
@@ -57,13 +65,6 @@ GIT
   revision: fc4fbb8792e7bb511ca8327774bbf4f6a3ec7434
   specs:
     prototype_legacy_helper (0.0.0)
-
-PATH
-  remote: ../cc_portal_remote_auth
-  specs:
-    cc_portal_remote_auth (0.0.2)
-      devise (~> 2.1.0)
-      rails (~> 3.2.11)
 
 GEM
   remote: http://rubygems.org/
