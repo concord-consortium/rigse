@@ -72,6 +72,7 @@ class ActivitiesController < ApplicationController
   public
 
   def index
+    @lightweight_only = (params[:lightweight_only] ? true : false)
     # all the logic here is currently handled through the activities/_runnable_list which hands it off to
     # to tag_defaults#list_bins
   end

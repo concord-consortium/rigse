@@ -21,4 +21,8 @@ class Embeddable::Diy::Section < Embeddable::Embeddable
     "main content"
   end
   
+  def can_run_lightweight?
+    true
+  end
+
 end

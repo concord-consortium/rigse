@@ -80,6 +80,7 @@ module TagDefaults
     def list_bins(opts = {})
       portal_clazz = opts[:portal_clazz]
       user = opts[:user]
+      lightweight_only = opts[:lightweight_only] || false
       offerings = nil
       off_runnables = []
 
@@ -91,11 +92,13 @@ module TagDefaults
       
       # Add exemplar activities
       activities = opts[:activities] || self.published_exemplars.find(:all, :include => [:user, :grade_levels, :subject_areas, :units]) # self should be publishable
+      activities.reject! { |activity| !activity.can_run_lightweight? } if lightweight_only
       key_map = activities.map { |a| {:activity => a, :keys => a.bin_keys }}
       if user
         # Add all un archived activities of the user:
         # this is using the ar extensions
         users_own = self.find(:all, :conditions => {:user_id => user.id, :publication_status => ['published', 'private']});
+        users_own.reject! { |activity| !activity.can_run_lightweight? } if lightweight_only
         users_key_map = users_own.map do |a|
           # todo
           grade_level = "My #{self.name.humanize.pluralize}"
@@ -112,6 +115,7 @@ module TagDefaults
         # Add published activities by others (non-exemplars)
         if (user.portal_teacher || user.has_role?("admin") || user.has_role?("manager") || user.has_role?("author"))
           other_activities = self.published_non_exemplars.find(:all, :include => [:user, :grade_levels, :subject_areas, :units] )
+          other_activities.reject! { |activity| !activity.can_run_lightweight? } if lightweight_only
           other_activities.reject! { |activity| activity.user == user }
           others_key_map = other_activities.map do |a|
             # todo

@@ -11,8 +11,8 @@ ACTIVE_STUDENT_THRESHOLD = 2  # need to have run 2 activities to count as an act
 ACTIVE_TEACHER_THRESHOLD = 1  # need 1 active students to count as an active teacher
 
 TIME_THRESHOLDS = {
-  :year1 => {:start => Time.gm(2010,5,1), :finish => Time.gm(2012,4,30,23,59,59)},
-  :year2 => {:start => Time.gm(2012,5,1), :finish => Time.gm(2013,4,30,23,59,59)}
+  "May 2010 - Apr 2012" => {:start => Time.gm(2010,5,1), :finish => Time.gm(2012,4,30,23,59,59)},
+  "May 2012 - Apr 2013" => {:start => Time.gm(2012,5,1), :finish => Time.gm(2013,4,30,23,59,59)}
 }
 
 def process_school_data(all_users, type, active, school_data, list_dupes = false)

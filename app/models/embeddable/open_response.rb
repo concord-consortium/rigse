@@ -67,4 +67,8 @@ class Embeddable::OpenResponse < Embeddable::Embeddable
     "Open Response Question"
   end
 
+  def can_run_lightweight?
+    true
+  end
+
 end

@@ -1,0 +1,94 @@
+- if activity.investigation
+  = render  :partial => 'shared/activity_header', :locals => { :activity => activity }
+  .item_collection
+    %ul#activity_sections_list.menu
+      - activity.sections.each do |section|
+        =render :partial => 'section_list_item', :locals => {:section => section}
+        -if (activity.changeable?(current_user))
+          =sortable_element :activity_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:activity_id => activity.id }}
+- else
+  %h2= activity.name
+  - activity.sections.each do |section|
+    - next unless section.is_enabled?
+    %h4=section.name
+    - section.pages.each do |page|
+      - next unless page.is_enabled?
+      - page.page_elements.each do |element|
+        - if element.is_enabled?
+          - component = element.embeddable
+          %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
+            = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element, :learner => local_assigns[:learner]}
+  %p#print_button
+    %a.button{:href => '#', :onclick => 'window.print(); return false;'} Print This Page
+  %ul.page-utility
+    %li.print-this-page
+      %a{:href => '#', :onclick => 'window.print(); return false;'} Print this page
+- if local_assigns[:learner] && labbook_enabled?
+  #labbook-outer
+    .content
+      #labbook-cover
+      .title-bar
+        %span.title
+          Lab book
+        %span.controls
+          %a{:href => '#', :onclick => 'toggle_labbook(); return false;'}= "Show"
+      %iframe#labbook{:src => labbook_url(local_assigns[:learner]) }
+  :javascript
+    $j(function() {
+      var hideCover = function() {
+        $j("#labbook-cover").hide();
+      };
+      var showCover = function() {
+        $j("#labbook-cover").show();
+      };
+      $j("#labbook-outer").draggable({
+        start: showCover,
+        stop: hideCover
+      });
+      $j("#labbook-outer").draggable("disable");
+      $j("#labbook-outer .content").resizable({
+        handles: "e,s,se",
+        start: showCover,
+        stop: hideCover
+      });
+      $j("#labbook-outer .content").resizable("disable");
+      $j("#labbook-outer .content").css({width: 110});
+      window.LABBOOK = {
+        top: 10,
+        left: 10,
+        height: 350,
+        width: 640,
+        hidden: true
+      };
+
+      // $j("#labbook-outer .content").css({width: 110, height: 20});
+
+      var store_positioning = function() {
+        var p = $j("#labbook-outer").position();
+        window.LABBOOK.top = p.top;
+        window.LABBOOK.left = p.left;
+        window.LABBOOK.height = $j("#labbook-outer .content").height();
+        window.LABBOOK.width = $j("#labbook-outer .content").width();
+      }
+
+      window.toggle_labbook = function() {
+        if (window.LABBOOK.hidden) {
+          $j("#labbook-outer").css({top: window.LABBOOK.top, left: window.LABBOOK.left});
+          $j("#labbook-outer .content").css({width: window.LABBOOK.width, height: window.LABBOOK.height});
+          $j("#labbook").show();
+          $j("#labbook-outer .controls a").html("Hide");
+          $j("#labbook-outer").draggable("enable");
+          $j("#labbook-outer .content").resizable("enable");
+          window.LABBOOK.hidden = false;
+        } else {
+          store_positioning();
+          $j("#labbook-outer").css({top: "", left: ""});
+          $j("#labbook-outer .content").css({width: 110, height: ""});
+          $j("#labbook").hide();
+          $j("#labbook-outer .controls a").html("Show");
+          $j("#labbook-outer").draggable("disable");
+          $j("#labbook-outer .content").resizable("disable");
+          window.LABBOOK.hidden = true;
+        }
+      }
+    });

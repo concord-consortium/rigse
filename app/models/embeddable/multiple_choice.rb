@@ -89,4 +89,9 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     self.save
     choice
   end
+
+  def can_run_lightweight?
+    true
+  end
+
 end
