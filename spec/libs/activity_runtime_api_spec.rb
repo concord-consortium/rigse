@@ -79,6 +79,13 @@ describe ActivityRuntimeAPI do
     }
   end
 
+  let (:v2hash) do
+    v2hash = new_hash
+    v2hash['type'] = 'Activity'
+  end
+
+  let (:sequence)
+
   let(:investigation) do
     Factory.create(:investigation,
       :user => user
@@ -123,11 +130,11 @@ describe ActivityRuntimeAPI do
   let(:user)    { Factory.create(:user) }
 
 
-  describe "publish" do
+  describe "publish_activity" do
 
     describe "When publishing a new external activity" do
       it "should create a new activity" do
-        result = ActivityRuntimeAPI.publish(new_hash,user)
+        result = ActivityRuntimeAPI.publish_activity(new_hash,user)
         result.should_not be_nil
         result.should have_multiple_choice_like "What color is the sky"
         result.should have_choice_like "blue"
@@ -141,7 +148,7 @@ describe ActivityRuntimeAPI do
       describe "when updating an external activity" do
         it "should delete the non-mapped embeddables in the existing activity" do
           existing
-          result = ActivityRuntimeAPI.publish(new_hash,user)
+          result = ActivityRuntimeAPI.publish_activity(new_hash,user)
           result.should_not be_nil
           result.id.should == existing.id
           result.template.multiple_choices.should have(1).question
@@ -159,7 +166,7 @@ describe ActivityRuntimeAPI do
         it "should update the open_response" do
           original_id = open_response.id
           existing
-          result = ActivityRuntimeAPI.publish(new_hash,user)
+          result = ActivityRuntimeAPI.publish_activity(new_hash,user)
           result.template.open_responses.first.id.should == original_id
           result.should have_open_response_like("dislike this activity")
           result.should_not have_open_response_like("original prompt")
@@ -184,7 +191,7 @@ describe ActivityRuntimeAPI do
         before(:each) do
           @original_id = multiple_choice.id
           existing
-          @result = ActivityRuntimeAPI.publish(new_hash,user)
+          @result = ActivityRuntimeAPI.publish_activity(new_hash,user)
         end
 
         it "should update the existing question" do
@@ -211,5 +218,6 @@ describe ActivityRuntimeAPI do
 
   end
 
-
+  describe 'publish_sequence' do
+  end
 end

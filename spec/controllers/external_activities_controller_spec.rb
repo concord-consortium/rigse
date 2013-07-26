@@ -54,6 +54,27 @@ describe ExternalActivitiesController do
     }
   end
 
+  let (:activity2_hash) do
+    a2hash = activity_hash
+    a2hash['type'] = 'Activity'
+    a2hash
+  end
+
+  let (:sequence_name) { "Many fun things" }
+  let (:sequence_desc) { "Several activities together in a sequence" }
+  let (:sequence_url)  { "http://activity.com/sequence/1" }
+
+  let (:sequence_hash) do
+    {
+      "type" => "Sequence",
+      "name" => sequence_name,
+      "description" => sequence_desc,
+      "url" => sequence_url,
+      "launch_url" => sequence_url,
+      "activities" => [activity2_hash]
+    }
+  end
+
   before(:each) do
     @current_project = mock(
       :name => "test project",
@@ -75,6 +96,13 @@ describe ExternalActivitiesController do
       :template    => Factory.create(:activity, {
         :investigation => Factory.create(:investigation)
       })
+    })
+    @existing_sequence = Factory.create(:external_activity, {
+      :name         => sequence_name,
+      :description  => sequence_desc,
+      :url          => sequence_url,
+      :publication_status => 'published',
+      :template     => Factory.create(:investigation)
     })
     @another = Factory.create(:external_activity, {
       :name        => "#{name} again",
@@ -116,31 +144,89 @@ describe ExternalActivitiesController do
 
   describe "#publish" do
 
-    describe "when no existing external_activity exists" do
-      it "should create a new activity" do
-        raw_post :publish, {}, activity_hash.to_json
-        created = assigns(:external_activity)
-        created.should_not be_nil
-        created.name.should == name
-        created.url.should  == url
-        created.id.should_not == @existing.id
+    context "when no version information is in the request" do
+      describe "when no existing external_activity exists" do
+        it "should create a new activity" do
+          raw_post :publish, {}, activity_hash.to_json
+          created = assigns(:external_activity)
+          created.should_not be_nil
+          created.name.should == name
+          created.url.should  == url
+          created.id.should_not == @existing.id
+        end
+      end
+
+      describe "when an existing external_activity does exist" do
+        let(:existing_url) { url }
+        it "should update the existing activity" do
+          raw_post :publish, {}, activity_hash.to_json
+          created = assigns(:external_activity)
+          created.should_not be_nil
+          created.name.should == name
+          created.url.should  == url
+          created.id.should   == @existing.id
+          # See spec/lib/activity_runtime_api_spec.rb for more update tests
+          created.template.sections.should have(1).section
+          created.template.pages.should have(1).page
+          created.template.open_responses.should have(1).open_response
+          created.template.multiple_choices.should have(1).multiple_choice
+        end
       end
     end
 
-    describe "when an existing external_activity does exist" do
-      let(:existing_url) { url }
-      it "should update the existing activity" do
-        raw_post :publish, {}, activity_hash.to_json
-        created = assigns(:external_activity)
-        created.should_not be_nil
-        created.name.should == name
-        created.url.should  == url
-        created.id.should   == @existing.id
-        # See spec/lib/activity_runtime_api_spec.rb for more update tests
-        created.template.sections.should have(1).section
-        created.template.pages.should have(1).page
-        created.template.open_responses.should have(1).open_response
-        created.template.multiple_choices.should have(1).multiple_choice
+    context "when version 2 of the API is requested" do
+      describe "when there is no existing external_activity" do
+        it "should create a new activity" do
+          raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
+          created = assigns(:external_activity)
+          created.should_not be_nil
+          created.name.should == name
+          created.url.should  == url
+          created.id.should_not == @existing.id
+          created.template.should be_an_instance_of(Activity)
+        end
+      end
+
+      describe "when there is already an existing external_activity" do
+        let(:existing_url) { url }
+        it "should update the existing activity" do
+          raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
+          created = assigns(:external_activity)
+          created.should_not be_nil
+          created.name.should == name
+          created.url.should  == url
+          created.id.should   == @existing.id
+          # See spec/lib/activity_runtime_api_spec.rb for more update tests
+          created.template.sections.should have(1).section
+          created.template.pages.should have(1).page
+          created.template.open_responses.should have(1).open_response
+          created.template.multiple_choices.should have(1).multiple_choice
+        end
+      end
+
+      describe "when no external_activity exists for the sequence" do
+        it 'should create a new external activity with an investigation template' do
+          raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
+          created = assigns(:external_activity)
+          created.should_not be_nil
+          created.name.should == sequence_name
+          created.url.should  == sequence_url
+          created.id.should_not == @existing_sequence.id
+          created.template.should be_an_instance_of(Investigation)
+        end
+      end
+
+      describe "when an external_activity already exists for the sequence" do
+        let (:existing_url) { sequence_url }
+        it 'should update the existing external_activity' do
+          raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
+          created = assigns(:external_activity)
+          created.should_not be_nil
+          created.name.should == name
+          created.url.should  == url
+          created.id.should   == @existing_sequence.id
+          # More about the updated sequence?
+        end
       end
     end
   end

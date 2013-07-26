@@ -1,18 +1,26 @@
 class ActivityRuntimeAPI
 
   def self.publish(hash, user)
-    external_activity = self.update(hash) || self.create(hash,user)
+    # First version only published activities
+    # TODO: update_activities
+    external_activity = self.update_activity(hash) || self.publish_activity(hash,user)
     return external_activity
   end
 
   def self.publish2(hash, user)
-    true
+    # use hash['type'] to determine what to build
+    if hash['type'] == 'Activity'
+      external_activity = self.update_activity(hash) || self.publish_activity(hash,user)
+    elsif hash['type'] == 'Sequence'
+      external_activity = self.update_sequence(hash) || self.publish_sequence(hash, user)
+    end
+    return external_activity
   end
 
 
   private
 
-  def self.create(hash, user)
+  def self.publish_activity(hash, user)
     external_activity = nil
     Investigation.transaction do
       investigation = Investigation.create(:name => hash["name"], :user => user)
@@ -66,7 +74,7 @@ class ActivityRuntimeAPI
   end
 
 
-  def self.update(hash)
+  def self.update_activity(hash)
     external_activity = self.find(hash["url"])
     return nil unless external_activity
     activity = external_activity.template
@@ -140,6 +148,14 @@ class ActivityRuntimeAPI
     mc_cache.each_value { |v| v.destroy }
     or_cache.each_value { |v| v.destroy }
     return external_activity
+  end
+
+  def self.create_sequence(hash, user)
+    return nil
+  end
+
+  def self.update_sequence(hash)
+    return nil
   end
 
   def self.update_open_response(or_data, existant)
