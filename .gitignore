@@ -57,6 +57,8 @@ mkmf.log
 hudson/*
 spec/reports
 .rvmrc
+.ruby-version
+.ruby-gemset
 config/newrelic.yml
 public/system/attachments/*
 public/system/images/*
