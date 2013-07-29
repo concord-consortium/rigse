@@ -215,7 +215,7 @@ class ExternalActivitiesController < ApplicationController
 
   def publish
     json = JSON.parse(request.body.read)
-    if params[:version].present?
+    if params[:version].present? and params[:version] == 'v2'
       @external_activity = ActivityRuntimeAPI.publish2(json, current_visitor)
     else
       @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)

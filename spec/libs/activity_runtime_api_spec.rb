@@ -84,7 +84,20 @@ describe ActivityRuntimeAPI do
     v2hash['type'] = 'Activity'
   end
 
-  let (:sequence)
+  let (:sequence_name) { "Many fun things" }
+  let (:sequence_desc) { "Several activities together in a sequence" }
+  let (:sequence_url)  { "http://activity.com/sequence/1" }
+
+  let (:sequence_hash) do
+    {
+      "type" => "Sequence",
+      "name" => sequence_name,
+      "description" => sequence_desc,
+      "url" => sequence_url,
+      "launch_url" => sequence_url,
+      "activities" => [v2hash]
+    }
+  end
 
   let(:investigation) do
     Factory.create(:investigation,
@@ -126,7 +139,21 @@ describe ActivityRuntimeAPI do
     }
   end
 
+  let (:sequence_template) { Factory.create(:investigation) }
+
+  let (:existing_sequence_stubs) do
+    {
+      :name => sequence_name,
+      :description => sequence_desc,
+      :url => sequence_url,
+      :template => sequence_template
+    }
+  end
+
   let(:existing){ Factory.create(:external_activity, exist_stubs) }
+
+  let (:existing_sequence) { Factory.create(:external_activity, existing_sequence_stubs) }
+
   let(:user)    { Factory.create(:user) }
 
 
@@ -219,5 +246,23 @@ describe ActivityRuntimeAPI do
   end
 
   describe 'publish_sequence' do
+    context 'when publishing a new sequence' do
+      it 'should create a new activity' do
+        result = ActivityRuntimeAPI.publish_sequence(sequence_hash, user)
+        result.should_not be_nil
+        result.should be_a_kind_of(ExternalActivity)
+        result.url.should == sequence_url
+        result.template.should be_a_kind_of(Investigation)
+        result.template.activities.length.should be_greater_than(0)
+      end
+    end
+
+    context 'when updating an existing sequence' do
+      it 'should update the existing investigation details' do
+        existing_sequence
+        result = ActivityRuntimeAPI.publish_sequence(sequence_hash, user)
+        result.id.should == existing_sequence.id
+      end
+    end
   end
 end
