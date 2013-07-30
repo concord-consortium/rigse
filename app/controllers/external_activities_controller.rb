@@ -215,12 +215,17 @@ class ExternalActivitiesController < ApplicationController
 
   def publish
     json = JSON.parse(request.body.read)
-    if params[:version].present? and params[:version] == 'v2'
-      @external_activity = ActivityRuntimeAPI.publish2(json, current_visitor)
-    else
-      @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
+    begin
+      if params[:version].present? and params[:version] == 'v2'
+        @external_activity = ActivityRuntimeAPI.publish2(json, current_visitor)
+      else
+        @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
+      end
+      head :created, :location => @external_activity
+    rescue StandardError => e
+      # Return JSON with the error message
+      render :json => { :error => e }, :content_type => 'text/json'
     end
-    head :created, :location => @external_activity
   end
 
   ##

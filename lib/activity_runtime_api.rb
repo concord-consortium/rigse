@@ -16,6 +16,8 @@ class ActivityRuntimeAPI
       external_activity = self.update_activity(hash) || self.publish_activity(hash,user)
     elsif hash['type'] == 'Sequence'
       external_activity = self.update_sequence(hash) || self.publish_sequence(hash, user)
+    else
+      raise ActivityRuntimeAPIError, "Submitted data must declare a type"
     end
     return external_activity
   end
