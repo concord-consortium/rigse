@@ -1,3 +1,6 @@
+class ActivityRuntimeAPIError < StandardError
+end
+
 class ActivityRuntimeAPI
 
   def self.publish(hash, user)
@@ -72,49 +75,16 @@ class ActivityRuntimeAPI
       or_cache[open_response.external_id] = open_response
     end
 
+    # TODO: Image questions
+
     # remove the pages and sections
     (investigation.sections + investigation.pages).each do |section|
       section.delete
     end
 
-    hash["sections"].each do |section_data|
-      section = Section.create(
-        :name => section_data["name"],
-        :activity => activity,
-        :user => user
-      )
+    # Update or build sections, pages and embeddables
+    build_page_components(hash, activity, user, or_cache, mc_cache)
 
-      section_data["pages"].each do |page_data|
-        page = Page.create(
-          :name => page_data["name"],
-          :section => section,
-          :user => user
-        )
-
-        page_data["elements"].each do |element_data|
-          embeddable = case element_data["type"]
-          when "open_response"
-            existant = or_cache.delete(element_data["id"])
-            if existant
-              update_open_response(element_data, existant)
-            else
-              create_open_response(element_data, user)
-            end
-          when "multiple_choice"
-            existant = mc_cache.delete(element_data["id"])
-            if existant
-              update_mc_response(element_data, existant)
-            else
-              create_multiple_choice(element_data, user)
-            end
-          else
-            next
-          end
-
-          page.add_embeddable(embeddable)
-        end
-      end
-    end
     # delete the cached items which werent removed
     mc_cache.each_value { |v| v.destroy }
     or_cache.each_value { |v| v.destroy }
@@ -144,11 +114,78 @@ class ActivityRuntimeAPI
   end
 
   def self.update_sequence(hash)
-    return nil
+    external_activity = self.find(hash["url"])
+    return nil unless external_activity
+    if external_activity.template.is_a?(Investigation)
+      investigation = external_activity.template
+    else
+      # The URL in the hash isn't for a sequence.
+      raise ActivityRuntimeAPIError, "URL and kind values don't match."
+    end
+    user = external_activity.user
+
+    # update the simple attributes
+    [investigation, external_activity].each do |act|
+      ['name','description'].each do |attribute|
+        act.update_attribute(attribute,hash[attribute])
+      end
+    end
+
+    # save the embeddables
+    mc_cache = {}
+    or_cache = {}
+
+    investigation.multiple_choices.each do |multiple_choice|
+      mc_cache[multiple_choice.external_id] = multiple_choice
+    end
+
+    investigation.open_responses.each do |open_response|
+      or_cache[open_response.external_id] = open_response
+    end
+
+    # TODO: Image questions
+
+    # remove the pages and sections
+    (investigation.sections + investigation.pages).each do |section|
+      section.delete
+    end
+
+    # Now the investigation has shallow activities; cache those
+    activity_cache = {}
+    investigation.activities.each do |act|
+      activity_cache[act.url] = act
+      act.investigation_id = nil
+    end
+
+    # Add hashed activities back in to investigation
+    hash['activities'].each do |new_activity|
+      existing = activity_cache.delete(new_activity['url'])
+      if existing
+        build_page_components(new_activity, existing, user, or_cache, mc_cache)
+        existing.investigation = investigation
+      else
+        activity = activity_from_hash(new_activity, investigation, user)
+      end
+    end
+
+    # delete the cached items which weren't removed
+    mc_cache.each_value { |v| v.destroy }
+    or_cache.each_value { |v| v.destroy }
+    activity_cache.each_value { |v| v.destroy }
+
+    return external_activity
   end
 
   def self.activity_from_hash(hash, investigation, user)
     activity = Activity.create(:name => hash["name"], :user => user, :investigation => investigation)
+    build_page_components(hash, activity, user)
+    return activity
+  end
+
+  def self.update_activity_from_hash(hash)
+  end
+
+  def self.build_page_components(hash, activity, user, or_cache=nil, mc_cache=nil)
     hash["sections"].each do |section_data|
       section = Section.create(
         :name => section_data["name"],
@@ -166,9 +203,19 @@ class ActivityRuntimeAPI
         page_data["elements"].each do |element_data|
           embeddable = case element_data["type"]
           when "open_response"
-            create_open_response(element_data, user)
+            existant = or_cache ? or_cache.delete(element_data["id"]) : nil
+            if existant
+              update_open_response(element_data, existant)
+            else
+              create_open_response(element_data, user)
+            end
           when "multiple_choice"
-            create_multiple_choice(element_data, user)
+            existant = mc_cache ? mc_cache.delete(element_data["id"]) : nil
+            if existant
+              update_mc_response(element_data, existant)
+            else
+              create_multiple_choice(element_data, user)
+            end
           else
             next
           end
@@ -177,7 +224,6 @@ class ActivityRuntimeAPI
         end
       end
     end
-    return activity
   end
 
   def self.update_open_response(or_data, existant)

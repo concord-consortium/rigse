@@ -267,7 +267,7 @@ describe ActivityRuntimeAPI do
     context 'when updating an existing sequence' do
       it 'should update the existing investigation details' do
         existing_sequence
-        result = ActivityRuntimeAPI.publish_sequence(sequence_hash, user)
+        result = ActivityRuntimeAPI.update_sequence(sequence_hash)
         result.id.should == existing_sequence.id
       end
     end
