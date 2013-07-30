@@ -82,6 +82,7 @@ describe ActivityRuntimeAPI do
   let (:v2hash) do
     v2hash = new_hash
     v2hash['type'] = 'Activity'
+    v2hash
   end
 
   let (:sequence_name) { "Many fun things" }
@@ -160,6 +161,11 @@ describe ActivityRuntimeAPI do
   describe "publish_activity" do
 
     describe "When publishing a new external activity" do
+      it 'should get nil from update_activity' do
+        result = ActivityRuntimeAPI.update_activity(new_hash)
+        result.should be_nil
+      end
+
       it "should create a new activity" do
         result = ActivityRuntimeAPI.publish_activity(new_hash,user)
         result.should_not be_nil
@@ -175,7 +181,7 @@ describe ActivityRuntimeAPI do
       describe "when updating an external activity" do
         it "should delete the non-mapped embeddables in the existing activity" do
           existing
-          result = ActivityRuntimeAPI.publish_activity(new_hash,user)
+          result = ActivityRuntimeAPI.update_activity(new_hash)
           result.should_not be_nil
           result.id.should == existing.id
           result.template.multiple_choices.should have(1).question
@@ -190,10 +196,11 @@ describe ActivityRuntimeAPI do
             :prompt => "the original prompt",
             :external_id => "1234568")
         end
+
         it "should update the open_response" do
           original_id = open_response.id
           existing
-          result = ActivityRuntimeAPI.publish_activity(new_hash,user)
+          result = ActivityRuntimeAPI.update_activity(new_hash)
           result.template.open_responses.first.id.should == original_id
           result.should have_open_response_like("dislike this activity")
           result.should_not have_open_response_like("original prompt")
@@ -218,7 +225,7 @@ describe ActivityRuntimeAPI do
         before(:each) do
           @original_id = multiple_choice.id
           existing
-          @result = ActivityRuntimeAPI.publish_activity(new_hash,user)
+          @result = ActivityRuntimeAPI.update_activity(new_hash)
         end
 
         it "should update the existing question" do
@@ -253,7 +260,7 @@ describe ActivityRuntimeAPI do
         result.should be_a_kind_of(ExternalActivity)
         result.url.should == sequence_url
         result.template.should be_a_kind_of(Investigation)
-        result.template.activities.length.should be_greater_than(0)
+        result.template.activities.length.should > 0
       end
     end
 
