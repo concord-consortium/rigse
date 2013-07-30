@@ -24,7 +24,7 @@ class ActivityRuntimeAPI
     external_activity = nil
     Investigation.transaction do
       investigation = Investigation.create(:name => hash["name"], :user => user)
-      activity = Activity.create(:name => hash["name"], :user => user, :investigation => investigation)
+      activity = activity_from_hash(hash, investigation, user)
       external_activity = ExternalActivity.create(
         :name             => hash["name"],
         :description      => hash["description"],
@@ -34,35 +34,6 @@ class ActivityRuntimeAPI
         :publication_status => "published",
         :user => user
       )
-
-      hash["sections"].each do |section_data|
-        section = Section.create(
-          :name => section_data["name"],
-          :activity => activity,
-          :user => user
-        )
-
-        section_data["pages"].each do |page_data|
-          page = Page.create(
-            :name => page_data["name"],
-            :section => section,
-            :user => user
-          )
-
-          page_data["elements"].each do |element_data|
-            embeddable = case element_data["type"]
-            when "open_response"
-              create_open_response(element_data, user)
-            when "multiple_choice"
-              create_multiple_choice(element_data, user)
-            else
-              next
-            end
-
-            page.add_embeddable(embeddable)
-          end
-        end
-      end
     end
 
     return external_activity
@@ -150,12 +121,63 @@ class ActivityRuntimeAPI
     return external_activity
   end
 
-  def self.create_sequence(hash, user)
-    return nil
+  def self.publish_sequence(hash, user)
+    external_activity = nil # Why are we initializing this? For the transaction?
+    Investigation.transaction do
+      investigation = Investigation.create(:name => hash["name"], :description => hash['description'], :user => user)
+      hash['activities'].each do |act|
+        activity_from_hash(act, investigation, user)
+      end
+      external_activity = ExternalActivity.create(
+        :name             => hash["name"],
+        :description      => hash["description"],
+        :url              => hash["url"],
+        :launch_url  => hash["launch_url"] || hash["create_url"],
+        :template         => investigation,
+        :publication_status => "published",
+        :user => user
+      )
+
+    end
+
+    return external_activity
   end
 
   def self.update_sequence(hash)
     return nil
+  end
+
+  def self.activity_from_hash(hash, investigation, user)
+    activity = Activity.create(:name => hash["name"], :user => user, :investigation => investigation)
+    hash["sections"].each do |section_data|
+      section = Section.create(
+        :name => section_data["name"],
+        :activity => activity,
+        :user => user
+      )
+
+      section_data["pages"].each do |page_data|
+        page = Page.create(
+          :name => page_data["name"],
+          :section => section,
+          :user => user
+        )
+
+        page_data["elements"].each do |element_data|
+          embeddable = case element_data["type"]
+          when "open_response"
+            create_open_response(element_data, user)
+          when "multiple_choice"
+            create_multiple_choice(element_data, user)
+          else
+            next
+          end
+
+          page.add_embeddable(embeddable)
+        end
+      end
+    end
+    return activity
   end
 
   def self.update_open_response(or_data, existant)
