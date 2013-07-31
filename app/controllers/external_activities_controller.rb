@@ -224,7 +224,8 @@ class ExternalActivitiesController < ApplicationController
       head :created, :location => @external_activity
     rescue StandardError => e
       # Return JSON with the error message
-      render :json => { :error => e }, :content_type => 'text/json'
+      # Great place to use 418 I'm a teapot
+      render :json => { :error => e }, :content_type => 'text/json', :status => 422
     end
   end
 

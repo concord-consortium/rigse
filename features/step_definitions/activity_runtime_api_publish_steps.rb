@@ -118,7 +118,7 @@ end
 def publish_sequence(name, again)
   login_as('author')
   content = get_sequence_definition(name, again)
-  page.driver.post(publish_external_activities_url('v2'), content)
+  page.driver.post(publish_external_activities_url(:version => 'v2'), content)
 end
 
 When /^the external runtime publishes the (sequence|activity) "([^"]*)"( again)?$/ do |kind, name, again|
