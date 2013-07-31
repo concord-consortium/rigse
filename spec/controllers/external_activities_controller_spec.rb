@@ -168,6 +168,15 @@ describe ExternalActivitiesController do
     end
 
     context "when version 2 of the API is requested" do
+      before(:each) do
+        @existing_sequence = Factory.create(:external_activity, {
+          :name => sequence_name,
+          :description => sequence_desc,
+          :url => sequence_url,
+          :template => Factory.create(:investigation)
+        })
+      end
+
       describe "when there is no existing external_activity" do
         it "should create a new activity" do
           raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
@@ -199,28 +208,19 @@ describe ExternalActivitiesController do
 
       describe "when no external_activity exists for the sequence" do
         it 'should create a new external activity with an investigation template' do
+          sequence_hash['url'] = 'http://activity.org/sequence/2'
           raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
           created = assigns(:external_activity)
           created.should_not be_nil
           created.name.should == sequence_name
-          created.url.should  == sequence_url
+          created.url.should  == 'http://activity.org/sequence/2'
           created.id.should_not == @existing_sequence.id
           created.template.should be_an_instance_of(Investigation)
         end
       end
 
       describe "when an external_activity already exists for the sequence" do
-        before(:each) do
-          @existing_sequence = Factory.create(:external_activity, {
-            :name => sequence_name,
-            :description => sequence_desc,
-            :url => sequence_url,
-            :template => Factory.create(:investigation)
-          })
-        end
-
         it 'should update the existing external_activity' do
-          sequence_hash['url'] = sequence_url
           raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
           updated = assigns(:external_activity)
           updated.should_not be_nil
