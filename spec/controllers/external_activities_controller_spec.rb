@@ -97,14 +97,6 @@ describe ExternalActivitiesController do
         :investigation => Factory.create(:investigation)
       })
     })
-    @existing_sequence = Factory.create(:external_activity, {
-      :name         => sequence_name,
-      :description  => sequence_desc,
-      :url          => 'http://activity.com/sequence/2',
-      :publication_status => 'published',
-      # FIXME: This template is broken
-      :template     => Factory.create(:investigation)
-    })
     @another = Factory.create(:external_activity, {
       :name        => "#{name} again",
       :description => "#{description} again",
@@ -218,16 +210,23 @@ describe ExternalActivitiesController do
       end
 
       describe "when an external_activity already exists for the sequence" do
-        let (:existing_url) { sequence_url }
+        before(:each) do
+          @existing_sequence = Factory.create(:external_activity, {
+            :name => sequence_name,
+            :description => sequence_desc,
+            :url => sequence_url,
+            :template => Factory.create(:investigation)
+          })
+        end
+
         it 'should update the existing external_activity' do
-          pending "Need to address the template of the existing external_activity - see FIXME above"
           sequence_hash['url'] = sequence_url
           raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
-          created = assigns(:external_activity)
-          created.should_not be_nil
-          created.name.should == name
-          created.url.should  == url
-          created.id.should   == @existing_sequence.id
+          updated = assigns(:external_activity)
+          updated.should_not be_nil
+          updated.name.should == sequence_name
+          updated.url.should  == sequence_url
+          updated.id.should   == @existing_sequence.id
           # More about the updated sequence?
         end
       end
