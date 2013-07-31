@@ -83,6 +83,12 @@
             (This option changes whether or not External Activities will appear in the class materials search)
           %li
             %b
+            = f.label :anonymous_can_browse_materials, "Anonymous can browse instructional materials:", :style => "display:inline;"
+            = f.check_box :anonymous_can_browse_materials
+            %br
+            (This option changes whether or not Browse Instructional Materials will appear in the nav bar for anonymous users.)
+          %li
+            %b
               = f.label :enabled_bookmark_types,  "Enabled bookmark types"
             = f.select(:enabled_bookmark_types, admin_project.available_bookmark_types.map { |b| [b,b]}, {},{ :class => ".chzn-select", :multiple => true})
           %li
