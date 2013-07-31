@@ -112,7 +112,7 @@ end
 def publish_activity(name, again)
   login_as('author')
   content = get_activity_definition(name, again)
-  page.driver.post(publish_external_activities_url, content)
+  page.driver.post(publish_external_activities_url(:version => 'v2'), content)
 end
 
 def publish_sequence(name, again)
