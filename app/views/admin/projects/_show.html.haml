@@ -128,6 +128,16 @@
                     No
                   (External Activities will not appear in the materials search.)
               %li
+                Anonymous can browse instructional materials:
+                - if admin_project.anonymous_can_browse_materials?
+                  %b
+                    Yes
+                  (Browse Instructional Materials link will appear in the navbar for anonymous users.)
+                - else
+                  %b
+                    No
+                  (Browse Instructional Materials link will not appear in the navbar for anonymous users.)
+              %li
                 Enabled Bookmark Types:
                 = admin_project.enabled_bookmark_types.join(', ')
 

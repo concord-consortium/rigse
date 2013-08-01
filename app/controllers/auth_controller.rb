@@ -7,7 +7,7 @@ class AuthController < ApplicationController
     if current_user.nil?
       session[:sso_callback_params] = params;
       session[:sso_application] = application;
-      redirect_to '/'
+      redirect_to root_path
     end
   end
 

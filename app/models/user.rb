@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable, :bearer_token_authenticatable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
-  self.token_authentication_key = "oauth_token"
+  self.token_authentication_key = "access_token"
   default_scope where(User.arel_table[:state].not_in(['disabled']))
   
   def apply_omniauth(omniauth)

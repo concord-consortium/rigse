@@ -11,6 +11,8 @@ class HasOwnDisplayName
   end
 end
 
+class RandomClass; end
+
 class TestClass
   # stub ActiveModel method
   def self.model_name
@@ -30,7 +32,15 @@ module TestModule
 end
 
 describe "Object#display_name" do
-  describe "when the class does not define its own #display_name" do
+
+  describe "when a plain old object doesn't define its own method" do
+    it "should use Class.name.humaize.titlecase" do
+      instance = RandomClass.new
+      instance.display_name.should == RandomClass.name.humanize.titlecase
+    end
+  end
+
+  describe "when an ActiveModel class does not define its own #display_name" do
     it "should use the global class method" do
       instance = TestClass.new
       TestClass.display_name.should == 'Test Class'
@@ -50,7 +60,7 @@ describe "Object#display_name" do
   describe 'when the model is part of a module' do
     it 'should not include the module name as part of the #display_name' do
       instance = TestModule::InnerTest::TestClass.new
-      instance.class.display_name.should == 'Test Class'      
+      instance.class.display_name.should == 'Test Class'
     end
   end
 end

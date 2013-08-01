@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130610135033) do
+ActiveRecord::Schema.define(:version => 20130731162423) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(:version => 20130610135033) do
     t.boolean  "include_external_activities",                  :default => false
     t.text     "enabled_bookmark_types"
     t.integer  "pub_interval",                                 :default => 10
+    t.boolean  "anonymous_can_browse_materials",               :default => true
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|
