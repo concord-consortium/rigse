@@ -1311,9 +1311,11 @@ CONFIG
     ENV['LABBOOK_PROVIDER_URL'] && !ENV['LABBOOK_PROVIDER_URL'].empty?
   end
 
-  def labbook_url(learner)
+  def labbook_url(learner, model=nil)
     if ENV['LABBOOK_PROVIDER_URL']
-      "#{ENV['LABBOOK_PROVIDER_URL']}/albums?source=#{request.host}&user_id=#{learner.id}".gsub('//albums', '/albums')
+      id = "#{learner.id}"
+      id += "-#{model.class.to_s}-#{model.id}" if model
+      "#{ENV['LABBOOK_PROVIDER_URL']}/albums?source=#{request.host}&user_id=#{Digest::MD5.hexdigest(id)}".gsub('//albums', '/albums')
     else
       nil
     end

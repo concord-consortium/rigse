@@ -71,16 +71,7 @@
         window.LABBOOK.width = $j("#labbook-outer .content").width();
       }
 
-      window.toggle_labbook = function() {
-        if (window.LABBOOK.hidden) {
-          $j("#labbook-outer").css({top: window.LABBOOK.top, left: window.LABBOOK.left});
-          $j("#labbook-outer .content").css({width: window.LABBOOK.width, height: window.LABBOOK.height});
-          $j("#labbook").show();
-          $j("#labbook-outer .controls a").html("Hide");
-          $j("#labbook-outer").draggable("enable");
-          $j("#labbook-outer .content").resizable("enable");
-          window.LABBOOK.hidden = false;
-        } else {
+      window.hide_labbook = function() {
           store_positioning();
           $j("#labbook-outer").css({top: "", left: ""});
           $j("#labbook-outer .content").css({width: 110, height: ""});
@@ -89,6 +80,26 @@
           $j("#labbook-outer").draggable("disable");
           $j("#labbook-outer .content").resizable("disable");
           window.LABBOOK.hidden = true;
+      }
+
+      window.show_labbook = function(url) {
+          if (typeof(url) != "undefined" && url != null) {
+            $j("#labbook").attr("src", url)
+          }
+          $j("#labbook-outer").css({top: window.LABBOOK.top, left: window.LABBOOK.left});
+          $j("#labbook-outer .content").css({width: window.LABBOOK.width, height: window.LABBOOK.height});
+          $j("#labbook").show();
+          $j("#labbook-outer .controls a").html("Hide");
+          $j("#labbook-outer").draggable("enable");
+          $j("#labbook-outer .content").resizable("enable");
+          window.LABBOOK.hidden = false;
+      }
+
+      window.toggle_labbook = function(url) {
+        if (window.LABBOOK.hidden) {
+          window.show_labbook(url);
+        } else {
+          window.hide_labbook();
         }
       }
     });
