@@ -15,6 +15,13 @@ RSpec::Matchers.define :have_open_response_like do |prompt|
   end
 end
 
+RSpec::Matchers.define :have_image_question_like do |prompt|
+  match do |thing|
+    activity = thing.respond_to?(:template) ? thing.template : thing
+    activity.image_questions.map{ |m| m.prompt}.detect{|p| p =~ /#{prompt}/i }
+  end
+end
+
 RSpec::Matchers.define :have_choice_like do |choice|
   match do |thing|
     activity = thing.respond_to?(:template) ? thing.template : thing
@@ -49,6 +56,11 @@ describe ActivityRuntimeAPI do
                   "type" => "open_response",
                   "id" => "1234568",
                   "prompt" => "Why do you like/dislike this activity?"
+                },
+                {
+                  "type" => "image_question",
+                  "id" => "987654321",
+                  "prompt" => "draw a picture of why you love this activity."
                 },
                 {
                   "type" => "multiple_choice",
@@ -87,12 +99,14 @@ describe ActivityRuntimeAPI do
 
   let(:multiple_choice) { Factory.create(:multiple_choice) }
   let(:open_response)   { Factory.create(:open_response)   }
+  let(:image_question)  { Factory.create(:image_question)  }
 
   let(:page) do
     Factory.create(:page,
       :page_elements => [
         Factory.create(:page_element, :embeddable => multiple_choice),
-        Factory.create(:page_element, :embeddable => open_response)
+        Factory.create(:page_element, :embeddable => open_response),
+        Factory.create(:page_element, :embeddable => image_question)
       ]
     )
   end
@@ -132,6 +146,7 @@ describe ActivityRuntimeAPI do
         result.should have_multiple_choice_like "What color is the sky"
         result.should have_choice_like "blue"
         result.should_not have_choice_like "brown"
+        result.should have_image_question_like "draw a picture"
       end
     end
 
@@ -147,13 +162,14 @@ describe ActivityRuntimeAPI do
           result.template.multiple_choices.should have(1).question
           result.template.open_responses.should have(1).question
           result.should have_open_response_like("dislike this activity")
+          result.should have_image_question_like("draw a picture")
         end
       end
 
       describe "updating an existing open response" do
         let(:open_response) do
           Factory.create(:open_response,
-            :prompt => "the original prompt",
+            :prompt => "the original prompt",  # this will be replaced.
             :external_id => "1234568")
         end
         it "should update the open_response" do
@@ -163,6 +179,24 @@ describe ActivityRuntimeAPI do
           result.template.open_responses.first.id.should == original_id
           result.should have_open_response_like("dislike this activity")
           result.should_not have_open_response_like("original prompt")
+        end
+      end
+
+
+      describe "updating an existing image question" do
+        let(:image_question) do
+          Factory.create(:image_question,
+            :prompt => "the original prompt",  # this will be replaced.
+            :external_id => "987654321")
+        end
+        it "should update the image_question" do
+          original_id = image_question.id
+          image_question.external_id.should == "987654321"
+          existing
+          result = ActivityRuntimeAPI.publish(new_hash,user)
+          result.template.image_questions.first.id.should == original_id
+          result.should have_image_question_like("draw a picture")
+          result.should_not have_image_question_like("original prompt")
         end
       end
 

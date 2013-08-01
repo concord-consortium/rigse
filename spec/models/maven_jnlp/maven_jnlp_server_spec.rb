@@ -9,6 +9,9 @@ describe MavenJnlp::MavenJnlpServer do
       :name => "value for name",
       :local_cache_dir => "value for local_cache_dir"
     }
+    stub_request(:get, /maven-jnlp/).
+       with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+       to_return(:status => 200, :body => "", :headers => {})
   end
 
   it "should create a new instance given valid attributes" do
