@@ -11,19 +11,20 @@ Spork.prefork do
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
   require 'rspec/mocks'
-  
+
   # *** customizations ***
-  
+
   # Add this to load Capybara integration:
-  # The Capybara DSL is automatically mixed in to specs running in 
+  # The Capybara DSL is automatically mixed in to specs running in
   # spec/requests, spec/integration or spec/acceptance.
   #
-  # You can use the Capybara DSL in any rspec test if you add: 
+  # You can use the Capybara DSL in any rspec test if you add:
   #  ',:type => :request'  to the describe invocation ...
   #
   require 'capybara/rspec'
   require 'capybara/rails'
-  
+  require 'webmock/rspec'
+
   require 'remarkable_activerecord'
   # we have to include our extensions in the rspec configuration block
   require File.expand_path("../support/rspec_extensions", __FILE__)
@@ -84,7 +85,7 @@ Spork.each_run do
   end
 
   require 'factory_girl'
-  
+
   # I don't think this is necessary anymore with the latest factory_girl
   @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each { |f| require(f) }
 end

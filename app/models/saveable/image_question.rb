@@ -27,4 +27,9 @@ class Saveable::ImageQuestion < ActiveRecord::Base
   def answered?
     answers.length > 0
   end
+
+  def add_external_answer(note,url)
+    blob = Dataservice::Blob.for_learner_and_url(self.learner, url)
+    self.answers.create(:blob  => blob, :note => note)
+  end
 end
