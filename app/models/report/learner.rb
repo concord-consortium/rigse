@@ -29,10 +29,22 @@ class Report::Learner < ActiveRecord::Base
   end
 
   def calculate_last_run
-    begin
-      self.last_run = self.learner.bundle_logger.last_non_empty_bundle_content.updated_at
-    rescue
-      Rails.logger.warn("could not load last bundle content. #{$!}!")
+    bundle_logger = self.learner.bundle_logger
+    pub_logger = self.learner.periodic_bundle_logger
+    bundle_time = nil
+    pub_time = nil
+
+    if bundle_logger && bundle_logger.last_non_empty_bundle_content
+      bundle_time = bundle_logger.last_non_empty_bundle_content.updated_at
+    end
+
+    if pub_logger && pub_logger.periodic_bundle_contents.last
+      pub_time =pub_logger.periodic_bundle_contents.last.updated_at
+    end
+
+    times = [pub_time,bundle_time].compact.sort
+    if times.size > 0
+      self.last_run = times.last
     end
   end
 

@@ -64,7 +64,9 @@ ActiveRecord::Schema.define(:version => 20130502165301) do
     t.boolean  "teachers_can_author",                          :default => true
     t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
+    t.boolean  "use_periodic_bundle_uploading",                :default => false
     t.string   "jnlp_cdn_hostname"
+    t.integer  "pub_interval",                                 :default => 10
   end
 
   create_table "admin_tags", :force => true do |t|
@@ -169,9 +171,11 @@ ActiveRecord::Schema.define(:version => 20130502165301) do
     t.integer  "bundle_content_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "periodic_bundle_content_id"
   end
 
   add_index "dataservice_blobs", ["bundle_content_id"], :name => "index_dataservice_blobs_on_bundle_content_id"
+  add_index "dataservice_blobs", ["periodic_bundle_content_id"], :name => "pbc_idx"
 
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
@@ -217,6 +221,41 @@ ActiveRecord::Schema.define(:version => 20130502165301) do
   end
 
   add_index "dataservice_launch_process_events", ["bundle_content_id"], :name => "index_dataservice_launch_process_events_on_bundle_content_id"
+
+  create_table "dataservice_periodic_bundle_contents", :force => true do |t|
+    t.integer  "periodic_bundle_logger_id"
+    t.text     "body",                      :limit => 2147483647
+    t.boolean  "processed"
+    t.boolean  "valid_xml"
+    t.boolean  "empty"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "parts_extracted",                                 :default => false
+  end
+
+  add_index "dataservice_periodic_bundle_contents", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
+
+  create_table "dataservice_periodic_bundle_loggers", :force => true do |t|
+    t.integer  "learner_id"
+    t.text     "imports"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dataservice_periodic_bundle_loggers", ["learner_id"], :name => "learner_index"
+
+  create_table "dataservice_periodic_bundle_parts", :force => true do |t|
+    t.integer  "periodic_bundle_logger_id"
+    t.boolean  "delta",                                         :default => true
+    t.string   "key"
+    t.text     "value",                     :limit => 16777215
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index"
+  add_index "dataservice_periodic_bundle_parts", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
 
   create_table "diy_model_types", :force => true do |t|
     t.string  "name"
