@@ -162,13 +162,13 @@ class ActivityRuntimeAPI
     # Now the investigation has shallow activities; cache those
     activity_cache = {}
     investigation.activities.each do |act|
-      activity_cache[act.url] = act
+      activity_cache[act.name] = act
       act.investigation_id = nil
     end
 
     # Add hashed activities back in to investigation
     hash['activities'].each do |new_activity|
-      existing = activity_cache.delete(new_activity['url'])
+      existing = activity_cache.delete(new_activity['name'])
       if existing
         build_page_components(new_activity, existing, user, or_cache, mc_cache, iq_cache)
         existing.investigation = investigation
