@@ -12,7 +12,7 @@
       - else
         - js = 'alert(\\"The Lab Book is not available in preview\\"); return false;'
       :javascript
-        $("#{dom_id_for(diy_embedded_model, :model_image)}").innerHTML = "<a href='#' onclick='#{js}'>Open Lab Book</a>";
+        $("#{dom_id_for(diy_embedded_model, :model_image)}").innerHTML = "<a href='#' onclick='#{js}'><img class='labbook_button' src='/images/diy_icons/photo-album.png' alt='Open Snapshot Album' title='Open Snapshot Album' /></a>";
     - elsif diy_embedded_model.diy_model.interactive_url
       :javascript
         if (Object.isExtensible && Modernizr.svg) {
