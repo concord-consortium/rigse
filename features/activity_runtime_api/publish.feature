@@ -331,36 +331,3 @@ Feature: External Activities can support a REST publishing api
     When the external runtime publishes the activity "Fun Stuff" again
     Then the published activity "Fun Stuff" should be correctly modified by the API
 
-  @mechanize
-  Scenario: External REST sequence is published the first time
-    When the external runtime publishes the sequence "Many fun things"
-    Then the portal should respond with a "201" status and location
-    And the portal should create an external activity with the following attributes:
-      | name            | Many fun things |
-      | url             | http://activity.com/sequence/1 |
-      | launch_url | http://activity.com/sequence/1 |
-      | description     | Several activities together in a sequence |
-    And the external activity should have a template
-    And the portal should create an investigation with the following attributes:
-      | name            | Many fun things |
-    And the portal should create an activity with the following attributes:
-      | name            | Cooler Activity |
-    And the portal should create a section with the following attributes:
-      | name            | Cooler Activity Section 1 |
-    And the portal should create a page with the following attributes:
-      | name            | Cooler Activity Page 1 |
-    And the portal should create an open response with the following attributes:
-      | prompt          | Do you hate this activity? |
-      | external_id     | 1234568 |
-    And the portal should create a multiple choice with the following attributes:
-      | prompt                   | What sound is the sky? |
-      | allow_multiple_selection | false |
-      | external_id              | 456790 |
-      | choices                  | [{"external_id": "100", "choice": "red"},{"external_id": "101", "choice": "blue", "is_correct": "true"},{"external_id": "102", "choice": "green"}] |
-
-  @mechanize
-  Scenario: External REST sequence is published the second time
-    Given the external runtime published the sequence "Many fun things" before
-    When the external runtime publishes the sequence "Many fun things" again
-    Then magic stuff happens
-
