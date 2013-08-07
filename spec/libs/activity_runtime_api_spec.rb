@@ -91,6 +91,27 @@ describe ActivityRuntimeAPI do
     }
   end
 
+  let (:v2hash) do
+    v2hash = new_hash
+    v2hash['type'] = 'Activity'
+    v2hash
+  end
+
+  let (:sequence_name) { "Many fun things" }
+  let (:sequence_desc) { "Several activities together in a sequence" }
+  let (:sequence_url)  { "http://activity.com/sequence/1" }
+
+  let (:sequence_hash) do
+    {
+      "type" => "Sequence",
+      "name" => sequence_name,
+      "description" => sequence_desc,
+      "url" => sequence_url,
+      "launch_url" => sequence_url,
+      "activities" => [v2hash]
+    }
+  end
+
   let(:investigation) do
     Factory.create(:investigation,
       :user => user
@@ -133,15 +154,34 @@ describe ActivityRuntimeAPI do
     }
   end
 
+  let (:sequence_template) { Factory.create(:investigation) }
+
+  let (:existing_sequence_stubs) do
+    {
+      :name => sequence_name,
+      :description => sequence_desc,
+      :url => sequence_url,
+      :template => sequence_template
+    }
+  end
+
   let(:existing){ Factory.create(:external_activity, exist_stubs) }
+
+  let (:existing_sequence) { Factory.create(:external_activity, existing_sequence_stubs) }
+
   let(:user)    { Factory.create(:user) }
 
 
-  describe "publish" do
+  describe "publish_activity" do
 
     describe "When publishing a new external activity" do
+      it 'should get nil from update_activity' do
+        result = ActivityRuntimeAPI.update_activity(new_hash)
+        result.should be_nil
+      end
+
       it "should create a new activity" do
-        result = ActivityRuntimeAPI.publish(new_hash,user)
+        result = ActivityRuntimeAPI.publish_activity(new_hash,user)
         result.should_not be_nil
         result.should have_multiple_choice_like "What color is the sky"
         result.should have_choice_like "blue"
@@ -156,7 +196,7 @@ describe ActivityRuntimeAPI do
       describe "when updating an external activity" do
         it "should delete the non-mapped embeddables in the existing activity" do
           existing
-          result = ActivityRuntimeAPI.publish(new_hash,user)
+          result = ActivityRuntimeAPI.update_activity(new_hash)
           result.should_not be_nil
           result.id.should == existing.id
           result.template.multiple_choices.should have(1).question
@@ -172,10 +212,11 @@ describe ActivityRuntimeAPI do
             :prompt => "the original prompt",  # this will be replaced.
             :external_id => "1234568")
         end
+
         it "should update the open_response" do
           original_id = open_response.id
           existing
-          result = ActivityRuntimeAPI.publish(new_hash,user)
+          result = ActivityRuntimeAPI.update_activity(new_hash)
           result.template.open_responses.first.id.should == original_id
           result.should have_open_response_like("dislike this activity")
           result.should_not have_open_response_like("original prompt")
@@ -218,7 +259,7 @@ describe ActivityRuntimeAPI do
         before(:each) do
           @original_id = multiple_choice.id
           existing
-          @result = ActivityRuntimeAPI.publish(new_hash,user)
+          @result = ActivityRuntimeAPI.update_activity(new_hash)
         end
 
         it "should update the existing question" do
@@ -245,5 +286,24 @@ describe ActivityRuntimeAPI do
 
   end
 
+  describe 'publish_sequence' do
+    context 'when publishing a new sequence' do
+      it 'should create a new activity' do
+        result = ActivityRuntimeAPI.publish_sequence(sequence_hash, user)
+        result.should_not be_nil
+        result.should be_a_kind_of(ExternalActivity)
+        result.url.should == sequence_url
+        result.template.should be_a_kind_of(Investigation)
+        result.template.activities.length.should > 0
+      end
+    end
 
+    context 'when updating an existing sequence' do
+      it 'should update the existing investigation details' do
+        existing_sequence
+        result = ActivityRuntimeAPI.update_sequence(sequence_hash)
+        result.id.should == existing_sequence.id
+      end
+    end
+  end
 end

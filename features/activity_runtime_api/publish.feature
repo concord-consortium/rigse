@@ -3,6 +3,7 @@ Feature: External Activities can support a REST publishing api
     Given an external activity named "Fun Stuff" with the definition
       """
       {
+        "type": "Activity",
         "name": "Cool Activity",
         "url": "http://activity.com/activity/1",
         "launch_url": "http://activity.com/activity/1/sessions/",
@@ -50,6 +51,7 @@ Feature: External Activities can support a REST publishing api
     And a modified version of the external activity named "Fun Stuff" with the definition
       """
       {
+        "type": "Activity",
         "name": "Cool Activity",
         "url": "http://activity.com/activity/1",
         "launch_url": "http://activity.com/activity/1/sessions/",
@@ -83,6 +85,210 @@ Feature: External Activities can support a REST publishing api
                       {
                         "id": "99",
                         "content": "greenish-green"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+    And a sequence named "Many fun things" with the definition
+      """
+      {
+        "type": "Sequence",
+        "name": "Many fun things",
+        "description": "Several activities together in a sequence",
+        "url": "http://activity.com/sequence/1",
+        "launch_url": "http://activity.com/sequence/1",
+        "activities": [
+          {
+            "type": "Activity",
+            "name": "Cool Activity",
+            "url": "http://activity.com/activity/1",
+            "launch_url": "http://activity.com/activity/1/sessions/",
+            "description": "This activity does fun stuff.",
+            "sections": [
+              {
+                "name": "Cool Activity Section 1",
+                "pages": [
+                  {
+                    "name": "Cool Activity Page 1",
+                    "elements": [
+                      {
+                        "type": "open_response",
+                        "id": "1234567",
+                        "prompt": "Do you like this activity?"
+                      },
+                      {
+                        "type": "multiple_choice",
+                        "id": "456789",
+                        "prompt": "What color is the sky?",
+                        "allow_multiple_selection": false,
+                        "choices": [
+                          {
+                            "id": "97",
+                            "content": "red"
+                          },
+                          {
+                            "id": "98",
+                            "content": "blue",
+                            "correct": true
+                          },
+                          {
+                            "id": "99",
+                            "content": "green"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Activity",
+            "name": "Cooler Activity",
+            "url": "http://activity.com/activity/2",
+            "launch_url": "http://activity.com/activity/2/sessions/",
+            "description": "This activity does even more fun stuff.",
+            "sections": [
+              {
+                "name": "Cooler Activity Section 1",
+                "pages": [
+                  {
+                    "name": "Cooler Activity Page 1",
+                    "elements": [
+                      {
+                        "type": "open_response",
+                        "id": "1234568",
+                        "prompt": "Do you hate this activity?"
+                      },
+                      {
+                        "type": "multiple_choice",
+                        "id": "456790",
+                        "prompt": "What sound is the sky?",
+                        "allow_multiple_selection": false,
+                        "choices": [
+                          {
+                            "id": "100",
+                            "content": "red"
+                          },
+                          {
+                            "id": "101",
+                            "content": "blue",
+                            "correct": true
+                          },
+                          {
+                            "id": "102",
+                            "content": "green"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+    And a modified version of the sequence named "Many fun things" with the definition
+      """
+      {
+        "type": "Sequence",
+        "name": "This has a different name",
+        "description": "All we did was change the name. And the description.",
+        "url": "http://activity.com/sequence/1",
+        "launch_url": "http://activity.com/sequence/1",
+        "activities": [
+          {
+            "type": "Activity",
+            "name": "Cool Activity",
+            "url": "http://activity.com/activity/1",
+            "launch_url": "http://activity.com/activity/1/sessions/",
+            "description": "This activity does fun stuff.",
+            "sections": [
+              {
+                "name": "Cool Activity Section 1",
+                "pages": [
+                  {
+                    "name": "Cool Activity Page 1",
+                    "elements": [
+                      {
+                        "type": "open_response",
+                        "id": "1234567",
+                        "prompt": "Do you like this activity?"
+                      },
+                      {
+                        "type": "multiple_choice",
+                        "id": "456789",
+                        "prompt": "What color is the sky?",
+                        "allow_multiple_selection": false,
+                        "choices": [
+                          {
+                            "id": "97",
+                            "content": "red"
+                          },
+                          {
+                            "id": "98",
+                            "content": "blue",
+                            "correct": true
+                          },
+                          {
+                            "id": "99",
+                            "content": "green"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Activity",
+            "name": "Cooler Activity",
+            "url": "http://activity.com/activity/2",
+            "launch_url": "http://activity.com/activity/2/sessions/",
+            "description": "This activity does even more fun stuff.",
+            "sections": [
+              {
+                "name": "Cooler Activity Section 1",
+                "pages": [
+                  {
+                    "name": "Cooler Activity Page 1",
+                    "elements": [
+                      {
+                        "type": "open_response",
+                        "id": "1234568",
+                        "prompt": "Do you hate this activity?"
+                      },
+                      {
+                        "type": "multiple_choice",
+                        "id": "456790",
+                        "prompt": "What sound is the sky?",
+                        "allow_multiple_selection": false,
+                        "choices": [
+                          {
+                            "id": "100",
+                            "content": "red"
+                          },
+                          {
+                            "id": "101",
+                            "content": "blue",
+                            "correct": true
+                          },
+                          {
+                            "id": "102",
+                            "content": "green"
+                          }
+                        ]
                       }
                     ]
                   }

@@ -12,12 +12,32 @@ def get_activity_definition(name, modified = false)
   @activity_definitions[name][version]
 end
 
+def store_sequence_definition(name, content, modified = false)
+  @sequence_definitions ||= {}
+  @sequence_definitions[name] ||= {}
+  version = modified ? :modified : :original
+  @sequence_definitions[name][version] = content
+end
+
+def get_sequence_definition(name, modified = false)
+  @sequence_definitions ||= {}
+  @sequence_definitions[name] ||= {}
+  version = modified ? :modified : :original
+  @sequence_definitions[name][version]
+end
+
 Given /^a(?:n)?( modified version of the)? external activity named "([^"]*)" with the definition$/ do |modified, name, string|
   store_activity_definition(name, string, modified.nil?)
 end
 
+Given /^a(?:n)?( modified version of the)? sequence named "([^"]*)" with the definition$/ do |modified, name, string|
+  store_sequence_definition(name, string, modified.nil?)
+end
+
 Then /^the portal should create a(?:n)? (.*?) with the following attributes:$/ do |type, table|
   klass = case type
+  when "investigation"
+    Investigation
   when "external activity"
     ExternalActivity
   when "activity"
@@ -89,17 +109,30 @@ Then /^the external activity should have a template$/ do
   @external_activity.template.should_not be_nil
 end
 
-def publish(name, again)
+def publish_activity(name, again)
   login_as('author')
   content = get_activity_definition(name, again)
-  page.driver.post(publish_external_activities_url, content)
+  page.driver.post(publish_external_activities_url(:version => 'v2'), content)
 end
 
-When /^the external runtime publishes the activity "([^"]*)"( again)?$/ do |name, again|
-  publish(name, again.nil?)
+def publish_sequence(name, again)
+  login_as('author')
+  content = get_sequence_definition(name, again)
+  page.driver.post(publish_external_activities_url(:version => 'v2'), content)
 end
 
+When /^the external runtime publishes the (sequence|activity) "([^"]*)"( again)?$/ do |kind, name, again|
+  if kind == 'activity'
+    publish_activity(name, again.nil?)
+  elsif kind == 'sequence'
+    publish_sequence(name, again.nil?)
+  end
+end
 
-Given /^the external runtime published the activity "([^"]*)" before$/ do |name|
-  publish(name, false)
+Given /^the external runtime published the (activity|sequence) "([^"]*)" before$/ do |kind, name|
+  if kind == 'activity'
+    publish_activity(name, false)
+  elsif kind == 'sequence'
+    publish_sequence(name, false)
+  end
 end
