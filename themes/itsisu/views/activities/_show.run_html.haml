@@ -29,9 +29,9 @@
       #labbook-cover
       .title-bar
         %span.title
-          Lab book
+          Snapshot Album
         %span.controls
-          %a{:href => '#', :onclick => 'toggle_labbook(); return false;'}= "Show"
+          %a{:href => '#', :onclick => 'hide_labbook(); return false;'}= "Close"
       %iframe#labbook{:src => labbook_url(local_assigns[:learner]) }
   :javascript
     $j(function() {
@@ -52,54 +52,21 @@
         stop: hideCover
       });
       $j("#labbook-outer .content").resizable("disable");
-      $j("#labbook-outer .content").css({width: 110});
-      window.LABBOOK = {
-        top: 10,
-        left: 10,
-        height: 350,
-        width: 640,
-        hidden: true
-      };
-
-      // $j("#labbook-outer .content").css({width: 110, height: 20});
-
-      var store_positioning = function() {
-        var p = $j("#labbook-outer").position();
-        window.LABBOOK.top = p.top;
-        window.LABBOOK.left = p.left;
-        window.LABBOOK.height = $j("#labbook-outer .content").height();
-        window.LABBOOK.width = $j("#labbook-outer .content").width();
-      }
 
       window.hide_labbook = function() {
-          store_positioning();
-          $j("#labbook-outer").css({top: "", left: ""});
-          $j("#labbook-outer .content").css({width: 110, height: ""});
-          $j("#labbook").hide();
-          $j("#labbook-outer .controls a").html("Show");
-          $j("#labbook-outer").draggable("disable");
-          $j("#labbook-outer .content").resizable("disable");
-          window.LABBOOK.hidden = true;
+        $j("#labbook-outer").draggable("disable");
+        $j("#labbook-outer .content").resizable("disable");
+        $j("#labbook-outer").hide();
       }
 
       window.show_labbook = function(url) {
-          if (typeof(url) != "undefined" && url != null) {
-            $j("#labbook").attr("src", url)
-          }
-          $j("#labbook-outer").css({top: window.LABBOOK.top, left: window.LABBOOK.left});
-          $j("#labbook-outer .content").css({width: window.LABBOOK.width, height: window.LABBOOK.height});
-          $j("#labbook").show();
-          $j("#labbook-outer .controls a").html("Hide");
-          $j("#labbook-outer").draggable("enable");
-          $j("#labbook-outer .content").resizable("enable");
-          window.LABBOOK.hidden = false;
+        if (typeof(url) != "undefined" && url != null) {
+          $j("#labbook").attr("src", url)
+        }
+        $j("#labbook-outer").show();
+        $j("#labbook-outer").draggable("enable");
+        $j("#labbook-outer .content").resizable("enable");
       }
 
-      window.toggle_labbook = function(url) {
-        if (window.LABBOOK.hidden) {
-          window.show_labbook(url);
-        } else {
-          window.hide_labbook();
-        }
-      }
+      window.hide_labbook();
     });
