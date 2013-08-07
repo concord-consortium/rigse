@@ -6,18 +6,8 @@
         =image_tag(diy_embedded_model.diy_model.image_url)
       - else
         (No Model Image)
-    - if diy_embedded_model.diy_model.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
-      - if local_assigns[:learner]
-        - js = %|show_labbook(\\"#{labbook_url(local_assigns[:learner], diy_embedded_model)}\\"); return false;|
-      - else
-        - js = 'alert(\\"The Lab Book is not available in preview\\"); return false;'
-      :javascript
-        $("#{dom_id_for(diy_embedded_model, :model_image)}").innerHTML = "<a href='#' onclick='#{js}'><img class='labbook_button' src='/images/diy_icons/photo-album.png' alt='Open Snapshot Album' title='Open Snapshot Album' /></a>";
-    - elsif diy_embedded_model.diy_model.interactive_url
-      :javascript
-        if (Object.isExtensible && Modernizr.svg) {
-          $("#{dom_id_for(diy_embedded_model, :model_image)}").innerHTML = "<iframe class='interactive' src='#{diy_embedded_model.diy_model.interactive_url}' frameborder='no' mozallowfullscreen='true' webkitallowfullscreen='true' allowfullscreen='true'></iframe>";
-        }
+    - if diy_embedded_model.can_run_lightweight?
+      = render :partial => 'embeddable/diy/embedded_models/browser_based', :locals => { :diy_embedded_model => diy_embedded_model, :learner => local_assigns[:learner] }
   -else
     (No Model Selected)
 
