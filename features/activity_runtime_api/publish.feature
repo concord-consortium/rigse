@@ -123,5 +123,5 @@ Feature: External Activities can support a REST publishing api
   Scenario: External REST activity is published the second time
     Given the external runtime published the activity "Fun Stuff" before
     When the external runtime publishes the activity "Fun Stuff" again
-    Then magic stuff happens
+    Then the published activity "Fun Stuff" should be correctly modified by the API
 
