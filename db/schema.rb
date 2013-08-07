@@ -200,9 +200,15 @@ ActiveRecord::Schema.define(:version => 20130731162423) do
     t.datetime "updated_at",                                     :null => false
     t.integer  "periodic_bundle_content_id"
     t.string   "uuid",                       :limit => 36
+    t.string   "mimetype"
+    t.string   "file_extension"
+    t.integer  "learner_id"
+    t.string   "checksum"
   end
 
   add_index "dataservice_blobs", ["bundle_content_id"], :name => "index_dataservice_blobs_on_bundle_content_id"
+  add_index "dataservice_blobs", ["checksum"], :name => "index_dataservice_blobs_on_checksum"
+  add_index "dataservice_blobs", ["learner_id"], :name => "index_dataservice_blobs_on_learner_id"
   add_index "dataservice_blobs", ["periodic_bundle_content_id"], :name => "pbc_idx"
 
   create_table "dataservice_bucket_contents", :force => true do |t|
@@ -561,12 +567,15 @@ ActiveRecord::Schema.define(:version => 20130731162423) do
 
   create_table "embeddable_image_questions", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",       :limit => 36
+    t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "prompt"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.string   "external_id"
   end
+
+  add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
 
   create_table "embeddable_inner_page_pages", :force => true do |t|
     t.integer  "inner_page_id"
