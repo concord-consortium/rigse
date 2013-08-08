@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502165301) do
+ActiveRecord::Schema.define(:version => 20130808154331) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -238,7 +238,7 @@ ActiveRecord::Schema.define(:version => 20130502165301) do
 
   create_table "dataservice_periodic_bundle_loggers", :force => true do |t|
     t.integer  "learner_id"
-    t.text     "imports"
+    t.text     "active_imports"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

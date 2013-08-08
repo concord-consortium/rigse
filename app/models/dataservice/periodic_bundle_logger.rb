@@ -1,7 +1,7 @@
 class Dataservice::PeriodicBundleLogger < ActiveRecord::Base
   self.table_name = :dataservice_periodic_bundle_loggers
 
-  serialize :imports
+  serialize :active_imports
 
   belongs_to :learner, :class_name => "Portal::Learner"
   has_many :periodic_bundle_contents, :class_name => "Dataservice::PeriodicBundleContent", :order => :created_at, :dependent => :destroy
@@ -66,7 +66,7 @@ OTML
   private
 
   def imports_otml
-    imps = (self.imports + ['org.concord.otrunk.OTStateRoot', 'org.concord.otrunk.user.OTUserObject', 'org.concord.otrunk.user.OTReferenceMap']).uniq
+    imps = (self.active_imports + ['org.concord.otrunk.OTStateRoot', 'org.concord.otrunk.user.OTUserObject', 'org.concord.otrunk.user.OTReferenceMap']).uniq
     imps.map{|i| %!    <import class="#{i}" />! }.join("\n")
   end
   

@@ -58,7 +58,7 @@ PART
     bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)
     bundle_content.extract_parts
     @bundle_logger.reload
-    @bundle_logger.imports.size.should eql(18)
+    @bundle_logger.active_imports.size.should eql(18)
   end
 
   it "should extract blobs into separate model objects" do

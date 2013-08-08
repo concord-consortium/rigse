@@ -101,17 +101,17 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
 
   def extract_imports(doc = Nokogiri::XML(self.body))
     # extract the imports and merge them into the bundle logger's import list
-    existing_imports = self.periodic_bundle_logger.imports || []
+    existing_imports = self.periodic_bundle_logger.active_imports || []
     new_imports = []
-    imports = doc.xpath("/otrunk/imports/import")
-    imports.each do |imp|
+    doc_imports = doc.xpath("/otrunk/imports/import")
+    doc_imports.each do |imp|
       k = imp['class']
       new_imports << k
     end
     new_different_imports = (new_imports - existing_imports)
     if new_different_imports.size > 0
-      self.periodic_bundle_logger.imports ||= []
-      self.periodic_bundle_logger.imports += new_different_imports
+      self.periodic_bundle_logger.active_imports ||= []
+      self.periodic_bundle_logger.active_imports += new_different_imports
       self.periodic_bundle_logger.save
     end
   end
