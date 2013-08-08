@@ -32,7 +32,7 @@
           Snapshot Album
         %span.controls
           %a{:href => '#', :onclick => 'hide_labbook(); return false;'}= "Close"
-      %iframe#labbook{:src => labbook_url(local_assigns[:learner]) }
+      %iframe#labbook
   :javascript
     $j(function() {
       var hideCover = function() {

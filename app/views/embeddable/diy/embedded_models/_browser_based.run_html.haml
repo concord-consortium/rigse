@@ -1,12 +1,61 @@
+.model_interactive{:id => dom_id_for(diy_embedded_model, :model_interactive)}
+  - if diy_embedded_model.diy_model.interactive_url
+    %iframe.interactive{:src => diy_embedded_model.diy_model.interactive_url, :frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
+.model_interactive_snapshots{:id => dom_id_for(diy_embedded_model, :model_interactive_snapshots)}
+  %button.labbook_button{:id => dom_id_for(diy_embedded_model, :model_take_snapshot)}= "Take a Snapshot"
+  %img.labbook_button{ :id => dom_id_for(diy_embedded_model, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
+
+:javascript
+  $j("##{dom_id_for(diy_embedded_model, :model_open_album)}").click(function() {
+    if (#{local_assigns[:learner] ? true : false}) {
+      show_labbook("#{labbook_url(local_assigns[:learner], diy_embedded_model)}");
+      return false;
+    } else {
+      alert("The Snapshot Album is not available in preview");
+      return false;
+    }
+  });
 - if diy_embedded_model.diy_model.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
-  - if local_assigns[:learner]
-    - js = %|show_labbook(\\"#{labbook_url(local_assigns[:learner], diy_embedded_model)}\\"); return false;|
-  - else
-    - js = 'alert(\\"The Lab Book is not available in preview\\"); return false;'
   :javascript
-    $("#{dom_id_for(diy_embedded_model, :model_image)}").innerHTML = "<a href='#' onclick='#{js}'><img class='labbook_button' src='/images/diy_icons/photo-album.png' alt='Open Snapshot Album' title='Open Snapshot Album' /></a>";
+    $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
+      if (#{local_assigns[:learner] ? true : false}) {
+        show_labbook("#{labbook_url(local_assigns[:learner], diy_embedded_model)}&todo=new");
+        return false;
+      } else {
+        alert("The Snapshot Album is not available in preview");
+        return false;
+      }
+    });
+    $j("##{dom_id_for(diy_embedded_model, :model_image)}").hide();
+    $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").show();
 - elsif diy_embedded_model.diy_model.interactive_url
   :javascript
     if (Object.isExtensible && Modernizr.svg) {
-      $("#{dom_id_for(diy_embedded_model, :model_image)}").innerHTML = "<iframe class='interactive' src='#{diy_embedded_model.diy_model.interactive_url}' frameborder='no' mozallowfullscreen='true' webkitallowfullscreen='true' allowfullscreen='true'></iframe>";
+      $j("##{dom_id_for(diy_embedded_model, :model_image)}").hide();
+      $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").show();
+      $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").show();
+      (function() {
+        var optCallbackFn = function(msg) {
+          var reg = /img src='([^']*)'/;
+          var match = reg.exec(msg);
+          if (match[1] != null) {
+            show_labbook("#{labbook_url(local_assigns[:learner], diy_embedded_model)}&todo=create&source_url=http://" + window.location.host + match[1]);
+          }
+          $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').removeClass("disabled");
+          $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').text("Take a Snapshot");
+        };
+
+        var shutterbug = new Shutterbug("##{dom_id_for(diy_embedded_model, :model_interactive)} iframe", null, optCallbackFn, "#{dom_id_for(diy_embedded_model, :model_take_snapshot)}", $j);
+        $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
+          if (#{local_assigns[:learner] ? true : false}) {
+            $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').addClass("disabled");
+            $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').text("Taking snapshot...");
+            shutterbug.getDomSnapshot();
+            return false;
+          } else {
+            alert("The Snapshot Album is not available in preview");
+            return false;
+          }
+        });
+      })();
     }

@@ -12,6 +12,8 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+require 'shutterbug'
+
 Rails::Initializer.run do |config|
 
   # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
@@ -30,6 +32,11 @@ Rails::Initializer.run do |config|
   #   run ActionController::Dispatcher.new
   
   config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
+  config.middleware.use Shutterbug::Rackapp do |conf|
+    conf.uri_prefix = "http://shutterbug.herokuapp.com/"
+    conf.path_prefix = "/shutterbug"
+    conf.phantom_bin_path = "/app/vendor/phantomjs/bin/phantomjs"
+  end
   
   
   # Settings in config/environments/* take precedence over those specified here.
