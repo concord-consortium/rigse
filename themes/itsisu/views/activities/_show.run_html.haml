@@ -32,6 +32,7 @@
           Snapshot Album
         %span.controls
           %a{:href => '#', :onclick => 'hide_labbook(); return false;'}= "Close"
+      #labbook-loading= "Loading. Please wait..."
       %iframe#labbook
   :javascript
     $j(function() {
@@ -52,6 +53,9 @@
         stop: hideCover
       });
       $j("#labbook-outer .content").resizable("disable");
+      $j("#labbook").load(function() {
+        $j("#labbook-loading").hide();
+      });
 
       window.hide_labbook = function() {
         $j("#labbook-outer").draggable("disable");
@@ -60,9 +64,8 @@
       }
 
       window.show_labbook = function(url) {
-        if (typeof(url) != "undefined" && url != null) {
-          $j("#labbook").attr("src", url)
-        }
+        $j("#labbook-loading").show();
+        $j("#labbook").attr("src", url);
         $j("#labbook-outer").show();
         $j("#labbook-outer").draggable("enable");
         $j("#labbook-outer .content").resizable("enable");
