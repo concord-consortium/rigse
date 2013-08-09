@@ -1,7 +1,7 @@
 - cache_key = "item_list_#{runnable.class.to_s}_#{runnable.id}_"
 - cache_key = "changeable_" + cache_key if runnable.changeable? current_user
 - cache(cache_key) do
-  .activity
+  .activity{:id => dom_id_for(runnable, :list_item)}
     .actions
       - if runnable.changeable? current_user
         %a{:href => (runnable.is_a?(Page) ? page_path(runnable) : template_edit_activity_path(runnable))}
@@ -13,15 +13,21 @@
           %img{:alt => "copy", :src => "/images/diy_icons/page_white_copy.png", :title => "Make your own version of this activity"}/
       %a{:href => "#", :onclick => "$('#{dom_id_for(runnable,:details)}').toggle(); return false;", :title => "View activity details"}
         %img{:alt => "info", :src => "/images/diy_icons/information.png", :title => "View activity description"}/
-      %a{:href => polymorphic_url(runnable) ,  :title => "View a quick preview version of this activity"}
+      %a.preview{:href => polymorphic_url(runnable) ,  :title => "View a quick preview version of this activity"}
         %img{:alt => "preview", :src => "/images/diy_icons/picture.png", :title => "View a quick preview version of this activity"}/
-      %a#try_button_1435.run_link{:href =>polymorphic_url(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp), :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
+      %a.heavyweight.run_link{:href =>polymorphic_url(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp), :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
         %img{:alt => "try", :src => "/images/diy_icons/picture_go.png", :title => "Try this activity (as a teacher, do not save data)"}/
-      %a#run_button_.run_link{:href => polymorphic_url(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp)) , :name => "run_button_", :title => "Run this activity (and save data)"}
+      %a.heavyweight.run_link{:href => polymorphic_url(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp)) , :name => "run_button_", :title => "Run this activity (and save data)"}
         %img{:alt => "run", :src => "/images/diy_icons/bullet_go.png", :title => "Run this activity (and save data)"}/
       - if runnable.respond_to?('can_run_lightweight?') && runnable.can_run_lightweight?
-        %a{:href => polymorphic_url(runnable, :format => :run_html) , :name => "run_lightweight_button_", :title => "Run this activity in the browser", :target => "_blank"}
+        %a.lightweight{:href => polymorphic_url(runnable, :format => :run_html) , :name => "run_lightweight_button_", :title => "Run this activity in the browser", :target => "_blank"}
           %img{:alt => "run", :src => "/images/diy_icons/world_go.png", :title => "Run this activity in the browser"}/
+        :javascript
+          if (Object.isExtensible && Modernizr.svg) {
+            $j("##{dom_id_for(runnable, :list_item)} .heavyweight").hide();
+            $j("##{dom_id_for(runnable, :list_item)} .preview").hide();
+            $j("##{dom_id_for(runnable, :list_item)} .lightweight").show();
+          }
 
     .title
       = runnable.name
