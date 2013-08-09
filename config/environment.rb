@@ -33,10 +33,13 @@ Rails::Initializer.run do |config|
   
   config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
   config.middleware.use Shutterbug::Rackapp do |conf|
-    conf.uri_prefix = "http://shutterbug.herokuapp.com/"
-    conf.path_prefix = "/shutterbug"
-    conf.phantom_bin_path = "/app/vendor/phantomjs/bin/phantomjs"
+    conf.phantom_bin_path = "/usr/bin/phantomjs"
   end
+  # config.middleware.use Shutterbug::Rackapp do |conf|
+  #   conf.uri_prefix = "http://shutterbug.herokuapp.com/"
+  #   conf.path_prefix = "/shutterbug"
+  #   conf.phantom_bin_path = "/app/vendor/phantomjs/bin/phantomjs"
+  # end
   
   
   # Settings in config/environments/* take precedence over those specified here.
