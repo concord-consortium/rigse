@@ -12,6 +12,7 @@
       :javascript
         if (Object.isExtensible && Modernizr.svg) {
           $("#{dom_id_for(offering, :lightweight)}").innerHTML = '#{link.gsub("'", "")}';
+          $("#{dom_id_for(offering, :heavyweight)}").innerHTML = '';
         }
     = offering.name
   .activity_description{:id => description_id, :style=>"display: none;"}
