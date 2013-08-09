@@ -1,7 +1,7 @@
-.model_interactive{:id => dom_id_for(diy_embedded_model, :model_interactive)}
+.model_interactive.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive)}
   - if diy_embedded_model.diy_model.interactive_url
     %iframe.interactive{:src => diy_embedded_model.diy_model.interactive_url, :frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
-.model_interactive_snapshots{:id => dom_id_for(diy_embedded_model, :model_interactive_snapshots)}
+.model_interactive_snapshots.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive_snapshots)}
   %button.labbook_button{:id => dom_id_for(diy_embedded_model, :model_take_snapshot)}= "Take a Snapshot"
   %img.labbook_button{ :id => dom_id_for(diy_embedded_model, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
 
@@ -27,15 +27,15 @@
         return false;
       }
     });
-    $j("##{dom_id_for(diy_embedded_model, :model_image)}").hide();
-    $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").show();
+    $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
+    $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").removeClass('unavailable');
 - elsif diy_embedded_model.diy_model.interactive_url
   :javascript
     if (Object.isExtensible && Modernizr.svg) {
-      $j("##{dom_id_for(diy_embedded_model, :model_image)}").hide();
-      $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").show();
+      $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
+      $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").removeClass('unavailable');
       if (#{Labbook.enabled?}) {
-        $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").show();
+        $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").removeClass('unavailable');
         (function() {
           var optCallbackFn = function(msg) {
             var reg = /img src='([^']*)'/;
