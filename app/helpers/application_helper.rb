@@ -1308,7 +1308,7 @@ CONFIG
   end
 
   def labbook_enabled?
-    ENV['LABBOOK_PROVIDER_URL'] && !ENV['LABBOOK_PROVIDER_URL'].empty?
+    Labbook.enabled?
   end
 
   def labbook_url(learner_or_user, model=nil)
