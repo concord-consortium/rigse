@@ -23,7 +23,7 @@
   %ul.page-utility
     %li.print-this-page
       %a{:href => '#', :onclick => 'window.print(); return false;'} Print this page
-- if local_assigns[:learner] && labbook_enabled?
+- if labbook_enabled? && !current_user.anonymous?
   #labbook-outer
     .content
       #labbook-cover

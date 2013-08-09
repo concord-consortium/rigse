@@ -7,22 +7,22 @@
 
 :javascript
   $j("##{dom_id_for(diy_embedded_model, :model_open_album)}").click(function() {
-    if (#{local_assigns[:learner] ? true : false}) {
-      show_labbook("#{labbook_url(local_assigns[:learner], diy_embedded_model)}");
+    if (#{current_user.anonymous?}) {
+      alert("The Snapshot Album is not available in preview");
       return false;
     } else {
-      alert("The Snapshot Album is not available in preview");
+      show_labbook("#{labbook_url(local_assigns[:learner] || current_user, diy_embedded_model)}");
       return false;
     }
   });
 - if diy_embedded_model.diy_model.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
   :javascript
     $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
-      if (#{local_assigns[:learner] ? true : false}) {
-        show_labbook("#{labbook_url(local_assigns[:learner], diy_embedded_model)}&todo=new");
+      if (#{current_user.anonymous?}) {
+        alert("The Snapshot Album is not available in preview");
         return false;
       } else {
-        alert("The Snapshot Album is not available in preview");
+        show_labbook("#{labbook_url(local_assigns[:learner] || current_user, diy_embedded_model)}&todo=new");
         return false;
       }
     });
@@ -39,7 +39,7 @@
           var reg = /img src='([^']*)'/;
           var match = reg.exec(msg);
           if (match[1] != null) {
-            show_labbook("#{labbook_url(local_assigns[:learner], diy_embedded_model)}&todo=create&source_url=http://" + window.location.host + match[1]);
+            show_labbook("#{labbook_url(local_assigns[:learner] || current_user, diy_embedded_model)}&todo=create&source_url=http://" + window.location.host + match[1]);
           }
           $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').removeClass("disabled");
           $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').text("Take a Snapshot");
@@ -47,13 +47,13 @@
 
         var shutterbug = new Shutterbug("##{dom_id_for(diy_embedded_model, :model_interactive)} iframe", null, optCallbackFn, "#{dom_id_for(diy_embedded_model, :model_take_snapshot)}", $j);
         $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
-          if (#{local_assigns[:learner] ? true : false}) {
+          if (#{current_user.anonymous?}) {
+            alert("The Snapshot Album is not available in preview");
+            return false;
+          } else {
             $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').addClass("disabled");
             $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').text("Taking snapshot...");
             shutterbug.getDomSnapshot();
-            return false;
-          } else {
-            alert("The Snapshot Album is not available in preview");
             return false;
           }
         });
