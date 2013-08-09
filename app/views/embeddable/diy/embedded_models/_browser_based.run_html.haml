@@ -5,25 +5,25 @@
   %button.labbook_button{:id => dom_id_for(diy_embedded_model, :model_take_snapshot)}= "Take a Snapshot"
   %img.labbook_button{ :id => dom_id_for(diy_embedded_model, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
 
-- if labbook_enabled?
+- if Labbook.enabled?
   :javascript
     $j("##{dom_id_for(diy_embedded_model, :model_open_album)}").click(function() {
       if (#{current_user.anonymous?}) {
         alert("The Snapshot Album is not available in preview");
         return false;
       } else {
-        show_labbook("#{labbook_url(local_assigns[:learner] || current_user, diy_embedded_model)}");
+        show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}");
         return false;
       }
     });
-- if labbook_enabled? && diy_embedded_model.diy_model.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
+- if Labbook.enabled? && diy_embedded_model.diy_model.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
   :javascript
     $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
       if (#{current_user.anonymous?}) {
         alert("The Snapshot Album is not available in preview");
         return false;
       } else {
-        show_labbook("#{labbook_url(local_assigns[:learner] || current_user, diy_embedded_model)}&todo=new");
+        show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}&todo=new");
         return false;
       }
     });
@@ -34,14 +34,14 @@
     if (Object.isExtensible && Modernizr.svg) {
       $j("##{dom_id_for(diy_embedded_model, :model_image)}").hide();
       $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").show();
-      if (#{labbook_enabled?}) {
+      if (#{Labbook.enabled?}) {
         $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").show();
         (function() {
           var optCallbackFn = function(msg) {
             var reg = /img src='([^']*)'/;
             var match = reg.exec(msg);
             if (match[1] != null) {
-              show_labbook("#{labbook_url(local_assigns[:learner] || current_user, diy_embedded_model)}&todo=create&source_url=http://" + window.location.host + match[1]);
+              show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}&todo=create&source_url=http://" + window.location.host + match[1]);
             }
             $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').removeClass("disabled");
             $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').text("Take a Snapshot");
