@@ -202,6 +202,8 @@ ActionController::Routing::Routes.draw do |map|
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
+  map.omniauth_callback '/auth/:provider/callback', :controller => 'sessions', :action => 'omniauth'
+  map.omniauth_fail '/auth/fail', :controller => 'sessions', :action => 'omniauth_fail'
   map.linktool '/linktool', :controller => 'sakai_link', :action => 'index'
   map.fake_verification '/sakai-axis/SakaiSigning.jws', :controller => 'sakai_link', :action => 'fake_verification'
   map.register '/register', :controller => 'users', :action => 'create'

@@ -20,6 +20,25 @@ class SessionsController < ApplicationController
     redirect_back_or_default(root_path)
   end
 
+  def omniauth
+    auth = request.env["omniauth.auth"]
+    begin
+      user = User.find_by_provider_and_uid(auth["provider"], auth["uid"]) || User.create_with_omniauth(auth)
+      # TODO Handle email collisions! Merge accounts if password ok?
+      if user
+        self.current_user = user
+        session[:original_user_id] = current_user.id
+        flash[:notice] = "Logged in successfully"
+        redirect_to(root_path) # unless !check_student_security_questions_ok
+      end
+    rescue
+      redirect_to omniauth_fail_path
+    end
+  end
+
+  def omniauth_fail
+  end
+
   protected
   
   def password_authentication

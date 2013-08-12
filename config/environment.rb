@@ -13,6 +13,7 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 require File.join(File.dirname(__FILE__), 'boot')
 
 require 'shutterbug'
+require 'omniauth'
 
 Rails::Initializer.run do |config|
 
@@ -40,8 +41,13 @@ Rails::Initializer.run do |config|
   #   conf.path_prefix = "/shutterbug"
   #   conf.phantom_bin_path = "/app/vendor/phantomjs/bin/phantomjs"
   # end
-  
-  
+
+  if ENV['SCHOOLOGY_CONSUMER_KEY'] && ENV['SCHOOLOGY_CONSUMER_SECRET']
+    config.middleware.use OmniAuth::Builder do
+      provider :schoology, ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET']
+    end
+  end
+
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.

@@ -18,6 +18,9 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
+  gem 'multi_json'
+  gem 'omniauth-oauth', :require => 'omniauth-oauth'
+
   gem "rails",                "2.3.15"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"

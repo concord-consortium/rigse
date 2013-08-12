@@ -136,6 +136,22 @@ class User < ActiveRecord::Base
     def site_admin
       User.find_by_email(APP_CONFIG[:default_admin_user][:email])
     end
+
+    def create_with_omniauth(auth)
+      pw = UUIDTools::UUID.timestamp_create.hexdigest
+      new_user = User.create!({
+        :provider => auth["provider"],
+        :uid => auth["uid"],
+        :first_name => auth["info"]["first_name"],
+        :last_name => auth["info"]["last_name"],
+        :email => auth["info"]["email"],
+        :password => pw,
+        :password_confirmation => pw,
+        :skip_notifications => true
+      })
+      new_user.activate!
+      return new_user
+    end
   end
 
   def removed_investigation
