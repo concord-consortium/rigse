@@ -73,4 +73,7 @@ class MiscController < ActionController::Base
     end
   end
 
+  def schoology_cookie
+    session['schoology_cookie'] = '1'
+  end
 end

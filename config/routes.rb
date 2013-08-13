@@ -494,6 +494,7 @@ ActionController::Routing::Routes.draw do |map|
   map.banner '/banner', :controller => 'misc', :action => 'banner'
   map.stats '/misc/stats.json', :controller => 'misc', :action => 'stats', :format => 'json'
   # map. ':controller/:action/:id.:format'
+  map.schoology_cookie '/misc/schoology_cookie', :controller => 'misc', :action => 'schoology_cookie'
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
