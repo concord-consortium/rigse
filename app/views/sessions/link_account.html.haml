@@ -1,0 +1,16 @@
+%h3= "There appears to already be an account with your email address: #{@user.email}"
+%div
+  If this is your account, please enter your password below. If it is not your account,
+  or you're having trouble remembering your password, please contact the portal admin for help.
+
+- if flash[:error]
+  .auth-error
+    = flash[:error]
+
+- form_tag auth_link_account_path, :method => :post do |f|
+  = label_tag "password", "Password: "
+  = password_field_tag "password"
+  = hidden_tag "user_id", @user.id
+  = hidden_tag "uid", @uid
+  = hidden_tag "provider", @provider
+  = submit_tag("Continue")

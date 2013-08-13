@@ -23,20 +23,79 @@ class SessionsController < ApplicationController
   def omniauth
     auth = request.env["omniauth.auth"]
     begin
-      user = User.find_by_provider_and_uid(auth["provider"], auth["uid"]) || User.create_with_omniauth(auth)
-      # TODO Handle email collisions! Merge accounts if password ok?
-      if user
-        self.current_user = user
+      @user = User.find_by_provider_and_uid(auth["provider"], auth["uid"])
+      if @user
+        self.current_user = @user
         session[:original_user_id] = current_user.id
         flash[:notice] = "Logged in successfully"
         redirect_to(root_path) # unless !check_student_security_questions_ok
+        return
       end
-    rescue
+
+      # Handle email collisions! Merge accounts if password ok?
+      @user = User.find_by_email(auth["info"]["email"])
+      if @user
+        @uid = auth["uid"]
+        @provider = auth["provider"]
+        render "link_account"
+        return
+      end
+
+      @user = User.create_with_omniauth(auth)
+      if @user
+        self.current_user = @user
+        session[:original_user_id] = current_user.id
+        flash[:notice] = "Logged in successfully"
+
+        @school_selector = Portal::SchoolSelector.new(params)
+        render 'choose_school'
+        return
+      end
+    rescue => e
+      Rails.logger.warn "Error: #{e}\n\n#{e.backtrace.join("\n")}"
       redirect_to omniauth_fail_path
     end
   end
 
-  def omniauth_fail
+  def link_account
+    @user = User.authenticate(params[:login], params[:password])
+    @provider = params[:provider]
+    @uid = params[:uid]
+    if user
+      self.current_user = user
+      session[:original_user_id] = current_user.id
+      user.provider = @provider
+      user.uid = @uid
+      if user.save
+        flash[:notice] = "Logged in successfully"
+        redirect_to(root_path) # unless !check_student_security_questions_ok
+      else
+        flash[:error] = "Unable to link user accounts!"
+      end
+    else
+      flash[:error] = "Invalid password!"
+    end
+  end
+
+  def choose_school
+    Rails.logger.warn "Entered choose_school"
+    @user = current_user
+    @school_selector = Portal::SchoolSelector.new(params)
+
+    if @school_selector.valid?
+      @portal_teacher = Portal::Teacher.create {|t|
+        t.user = @user
+        t.schools << @school_selector.school
+      }
+      redirect_to(root_path)
+    else
+      flash[:error] = "Please select a valid school."
+      render
+    end
+  rescue
+  end
+
+  def omniauth_failure
   end
 
   protected

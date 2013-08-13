@@ -140,16 +140,20 @@ class User < ActiveRecord::Base
     def create_with_omniauth(auth)
       pw = UUIDTools::UUID.timestamp_create.hexdigest
       new_user = User.create!({
-        :provider => auth["provider"],
-        :uid => auth["uid"],
+        :login => "#{auth["provider"]}_#{auth["uid"]}",
         :first_name => auth["info"]["first_name"],
         :last_name => auth["info"]["last_name"],
         :email => auth["info"]["email"],
         :password => pw,
-        :password_confirmation => pw,
-        :skip_notifications => true
-      })
+        :password_confirmation => pw
+      }){|u|
+        u.skip_notifications = true
+        u.provider = auth["provider"]
+        u.uid = auth["uid"]
+      }
+      new_user.register!
       new_user.activate!
+      new_user.make_user_a_member
       return new_user
     end
   end

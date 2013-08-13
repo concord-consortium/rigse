@@ -39,15 +39,12 @@ module OmniAuth
 
       def raw_info
         resp = access_token.get('/v1/users/me')
-        Rails.logger.warn "RAW RESP: #{resp.inspect}"
         if resp.kind_of?(Net::HTTPRedirection) && resp["Location"]
           resp = access_token.get(resp["Location"])
         end
 
         resp_body = resp.body
-        Rails.logger.warn "RAW BODY: #{resp_body.inspect}"
         @raw_info ||= MultiJson.decode(resp_body)
-        Rails.logger.warn "RAW SCHOOLOGY INFO:\n\n#{@raw_info.inspect}\n\n"
       end
     end
   end
