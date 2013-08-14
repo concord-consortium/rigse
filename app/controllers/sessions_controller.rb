@@ -61,12 +61,12 @@ class SessionsController < ApplicationController
     @user = User.authenticate(params[:login], params[:password])
     @provider = params[:provider]
     @uid = params[:uid]
-    if user
-      self.current_user = user
+    if @user
+      self.current_user = @user
       session[:original_user_id] = current_user.id
-      user.provider = @provider
-      user.uid = @uid
-      if user.save
+      @user.provider = @provider
+      @user.uid = @uid
+      if @user.save
         flash[:notice] = "Logged in successfully"
         redirect_to(root_path) # unless !check_student_security_questions_ok
       else
