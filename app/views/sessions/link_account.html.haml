@@ -11,6 +11,7 @@
   = label_tag "password", "Password: "
   = password_field_tag "password"
   = hidden_field_tag "user_id", @user.id
+  = hidden_field_tag "login", @user.login
   = hidden_field_tag "uid", @uid
   = hidden_field_tag "provider", @provider
   = submit_tag("Continue")
