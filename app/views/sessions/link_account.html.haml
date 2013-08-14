@@ -3,7 +3,7 @@
   If this is your account, please enter your password below. If it is not your account,
   or you're having trouble remembering your password, please contact the portal admin for help.
 
-- form_tag auth_link_account_path, :method => :post do |f|
+- form_tag(auth_link_account_path, :method => :post) do
   = label_tag "password", "Password: "
   = password_field_tag "password"
   = hidden_field_tag "user_id", @user.id

@@ -20,7 +20,17 @@ class SessionsController < ApplicationController
     redirect_back_or_default(root_path)
   end
 
-  def omniauth
+  def omniauth_check
+    if params[:realm] && params[:realm_id] && params[:realm] == "user"
+      if current_user == User.find_by_provider_and_uid(params[:provider], params[:realm_id])
+        redirect_to(root_path)
+        return
+      end
+    end
+    redirect_to "/auth/#{params[:provider]}"
+  end
+
+  def omniauth_callback
     auth = request.env["omniauth.auth"]
     begin
       @user = User.find_by_provider_and_uid(auth["provider"], auth["uid"])

@@ -202,7 +202,8 @@ ActionController::Routing::Routes.draw do |map|
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
-  map.omniauth_callback '/auth/:provider/callback', :controller => 'sessions', :action => 'omniauth'
+  map.omniauth_check '/auth/:provider/check', :controller => 'sessions', :action => 'omniauth_check'
+  map.omniauth_callback '/auth/:provider/callback', :controller => 'sessions', :action => 'omniauth_callback'
   map.omniauth_failure '/auth/failure', :controller => 'sessions', :action => 'omniauth_failure'
   map.auth_link_account '/auth/link_account', :controller => 'sessions', :action => 'link_account'
   map.auth_choose_school '/auth/choose_school', :controller => 'sessions', :action => 'choose_school'
