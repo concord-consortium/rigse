@@ -73,6 +73,7 @@ class SessionsController < ApplicationController
         flash[:error] = "Unable to link user accounts!"
       end
     else
+      @user = User.find(params[:user_id])
       flash[:error] = "Invalid password!"
     end
   end
