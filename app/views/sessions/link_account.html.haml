@@ -10,7 +10,7 @@
 - form_tag auth_link_account_path, :method => :post do |f|
   = label_tag "password", "Password: "
   = password_field_tag "password"
-  = hidden_tag "user_id", @user.id
-  = hidden_tag "uid", @uid
-  = hidden_tag "provider", @provider
+  = hidden_field_tag "user_id", @user.id
+  = hidden_field_tag "uid", @uid
+  = hidden_field_tag "provider", @provider
   = submit_tag("Continue")

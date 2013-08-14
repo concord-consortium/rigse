@@ -53,7 +53,7 @@ class SessionsController < ApplicationController
       end
     rescue => e
       Rails.logger.warn "Error: #{e}\n\n#{e.backtrace.join("\n")}"
-      redirect_to omniauth_fail_path
+      redirect_to omniauth_failure_path
     end
   end
 
