@@ -74,7 +74,14 @@
         %table{:width=>"100%"}
           %tr
             %td{:style=>"text-align:right"}
-              = f.submit 'Save', {:class => 'pie'} 
+              %span.create_button
+                = f.submit 'Save', {:class => 'pie'} 
+                .create_in_progress{:style => "display: none;"}
+                  .status
+                    %span.wait_image
+                      =image_tag('wait16.gif')
+                    .message.waiting
+                      Please wait while your class is created
               &nbsp;&nbsp;
               - if portal_clazz.id.nil?
                 = link_to "Cancel", home_url 
