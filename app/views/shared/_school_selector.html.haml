@@ -8,19 +8,19 @@
     - can_create = school_selector.allow_teacher_creation(field)
     - next unless (choices && choices.size > 0) || can_create
     %tr
-    %td= label_tag field, "#{field.to_s().capitalize}:"
-    %td
-      -# %span{:id => "#{field.to_s}_choice"}
-      %span{:id => "#{field.to_s}_choice"}
-        = select(*school_selector.select_args(field),{:style=>'min-width: 120px;'})
-        - if can_create
-          .tiny.help{:id => "#{field.to_s}_toggle_write_in"}
-            I can't find my  #{field.to_s} in the list.
-      - if school_selector.allow_teacher_creation(field)
-        %span{:id => "#{field.to_s}_write_in", :style => 'display: none;'}
-          = text_field "school_selector", "#{field}_name", {:live => false }
-          .tiny.help{:id => "#{field.to_s}_show_select"}
-            Go back to the #{field.to_s} list.
+      %td= label_tag field, "#{field.to_s().capitalize}:"
+      %td
+        -# %span{:id => "#{field.to_s}_choice"}
+        %span{:id => "#{field.to_s}_choice"}
+          = select(*school_selector.select_args(field),{:style=>'min-width: 120px;'})
+          - if can_create
+            .tiny.help{:id => "#{field.to_s}_toggle_write_in"}
+              I can't find my  #{field.to_s} in the list.
+        - if school_selector.allow_teacher_creation(field)
+          %span{:id => "#{field.to_s}_write_in", :style => 'display: none;'}
+            = text_field "school_selector", "#{field}_name", {:live => false }
+            .tiny.help{:id => "#{field.to_s}_show_select"}
+              Go back to the #{field.to_s} list.
     :javascript
       new Chosen($('school_selector_#{field.to_s}'));
     - if can_create
