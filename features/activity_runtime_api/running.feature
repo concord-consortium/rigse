@@ -15,6 +15,13 @@ Feature: External Activities can support a REST api
 
       Super Cool Activity here.
       """
+    And "imageshack.com/images/1.png" GET responds with
+      """
+      HTTP/1.1 200 OK
+      Content-Type: image/png
+
+      .PNG fake content here.
+      """
 
   @mechanize
   Scenario: External REST activity is run the first time
@@ -41,9 +48,15 @@ Feature: External Activities can support a REST api
           "question_id": "456789",
           "answer_ids": ["98"],
           "answer_texts": ["blue"]
+        },
+        { "type": "image_question",
+          "question_id": "1970",
+          "answer": "This is my image question answer",
+          "image_url": "imageshack.com/images/1.png"
         }
       ]
       """
     Then the portal should create an open response saveable with the answer "I like this activity"
+    And the portal should create an image question saveable with the answer "This is my image question answer"
     And the portal should create a multiple choice saveable with the answer "blue"
     And the student's progress bars should be updated

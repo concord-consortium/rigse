@@ -38,6 +38,8 @@ class Portal::Learner < ActiveRecord::Base
   
   has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner", :foreign_key => "learner_id"
 
+  has_many :lightweight_blobs, :dependent => :destroy, :class_name => "Dataservice::Blob"
+
   # automatically make the report learner if it doesn't exist yet
   def report_learner
     # I'm using the ! here so we can track down errors faster if there is an issue making

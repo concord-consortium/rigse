@@ -34,4 +34,5 @@
 = require 'anonymizer'
 = require 'bookmarks'
 = require 'run_status'
+= require 'create_status'
 */

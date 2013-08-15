@@ -11,6 +11,7 @@ describe SecurityQuestionsController do
     @test_project.stub!(:require_user_consent?).and_return(false)
     @test_project.stub!(:help_type).and_return('no help')
     @test_project.stub!(:enabled_bookmark_types).and_return([])
+    @test_project.stub!(:anonymous_can_browse_materials).and_return(true)
     Admin::Project.stub(:default_project).and_return(@test_project)
   end
 

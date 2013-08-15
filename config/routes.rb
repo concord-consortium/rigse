@@ -1,5 +1,5 @@
 RailsPortal::Application.routes.draw do
-  
+
   devise_for :users, :controllers => { :registrations => 'registrations'}
   # omniauth client stuff
   match '/auth/:provider/callback', :to => 'authentications#create'
@@ -17,7 +17,7 @@ RailsPortal::Application.routes.draw do
 
 
   root :to => "home#index"
-  
+
   match "search" => 'search#index', :as => :search
 
   get "search/index"
@@ -542,6 +542,7 @@ constraints :id => /\d+/ do
   end
 
   match '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list, :method => :get
+  match '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :method => :post, :version => /v\d+/
   resources :external_activities do
     collection do
       post :publish

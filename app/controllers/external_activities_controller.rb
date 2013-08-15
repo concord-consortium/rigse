@@ -5,12 +5,12 @@ class ExternalActivitiesController < ApplicationController
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export,:publish]
   before_filter :can_create, :only => [:new, :create, :duplicate, :publish]
-  
+
   in_place_edit_for :external_activity, :name
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url
 
-  protected  
+  protected
 
   def can_create
     if (current_visitor.anonymous?)
@@ -20,7 +20,7 @@ class ExternalActivitiesController < ApplicationController
       redirect_back_or external_activities_path
     end
   end
-  
+
   def render_scope
     @render_scope = @external_activity
   end
@@ -38,8 +38,8 @@ class ExternalActivitiesController < ApplicationController
       end
     end
   end
-  
-  
+
+
   def setup_object
     if params[:id]
       if valid_uuid(params[:id])
@@ -54,9 +54,9 @@ class ExternalActivitiesController < ApplicationController
     end
     @page_title = @external_activity.name if @external_activity
   end
-  
+
   public
-  
+
   def index
     @include_drafts = params[:include_drafts]
     @name = param_find(:name)
@@ -99,7 +99,7 @@ class ExternalActivitiesController < ApplicationController
       end
     end
   end
-  
+
   def preview_index
     page= params[:page] || 1
     @activities = ExternalActivity.all.paginate(
@@ -108,14 +108,14 @@ class ExternalActivitiesController < ApplicationController
         :order => 'name')
     render 'preview_index'
   end
-  
+
   # GET /external_activities/1
   # GET /external_activities/1.xml
   def show
     # @teacher_mode = params[:teacher_mode] || @external_activity.teacher_only
     respond_to do |format|
       format.html {
-        if params['print'] 
+        if params['print']
           render :print, :layout => "layouts/print"
         end
       }
@@ -134,7 +134,7 @@ class ExternalActivitiesController < ApplicationController
       format.xml  { render :xml => @external_activity }
     end
   end
-  
+
   # GET /external_activities/1/edit
   def edit
     @external_activity = ExternalActivity.find(params[:id])
@@ -142,7 +142,7 @@ class ExternalActivitiesController < ApplicationController
       render :partial => 'remote_form', :locals => { :external_activity => @external_activity }
     end
   end
-  
+
   # POST /pages
   # POST /pages.xml
   def create
@@ -166,7 +166,7 @@ class ExternalActivitiesController < ApplicationController
       end
     end
   end
-  
+
   # PUT /external_activities/1
   # PUT /external_activities/1.xml
   def update
@@ -198,8 +198,8 @@ class ExternalActivitiesController < ApplicationController
       end
     end
   end
-  
-  
+
+
   # DELETE /external_activities/1
   # DELETE /external_activities/1.xml
   def destroy
@@ -215,8 +215,18 @@ class ExternalActivitiesController < ApplicationController
 
   def publish
     json = JSON.parse(request.body.read)
-    @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
-    head :created, :location => @external_activity
+    begin
+      if params[:version].present? and params[:version] == 'v2'
+        @external_activity = ActivityRuntimeAPI.publish2(json, current_visitor)
+      else
+        @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
+      end
+      head :created, :location => @external_activity
+    rescue StandardError => e
+      # Return JSON with the error message
+      # Great place to use 418 I'm a teapot
+      render :json => { :error => e }, :content_type => 'text/json', :status => 422
+    end
   end
 
   ##
@@ -234,5 +244,5 @@ class ExternalActivitiesController < ApplicationController
     flash[:notice] ="Copied #{@original.name}"
     redirect_to url_for(@external_activity)
   end
-  
+
 end

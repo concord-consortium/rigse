@@ -100,3 +100,6 @@ chromedriver.log
 public/assets/
 public/*/calendar_date_select
 padlet.yml
+.floo
+.powenv
+.sublime-project

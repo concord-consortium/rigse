@@ -22,6 +22,12 @@
       = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
       %tr
         %td
-        %td
+        %td.create_button
           = f.submit 'Submit'
+          .create_in_progress{:style => "display: none;"}
+            .status
+              %span.wait_image
+                =image_tag('wait16.gif')
+              .message.waiting
+                Please wait while your account is created
 
