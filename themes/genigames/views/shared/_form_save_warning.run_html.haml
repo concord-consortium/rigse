@@ -1,0 +1,5 @@
+- unless local_assigns[:skip_warning_popup]
+  :javascript
+    window.onbeforeunload = function() {
+      return 'All unsubmitted answers will be lost! Click "Stay on this page" and then the Submit button at the bottom of the page to save your answers.';
+    }
