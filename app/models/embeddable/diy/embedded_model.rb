@@ -22,7 +22,7 @@ class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
   end
   
   def can_run_lightweight?
-    if diy_model.interactive_url || otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
+    if diy_model.interactive_url || (Labbook.enabled? && otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage")
       return true
     else
       return false

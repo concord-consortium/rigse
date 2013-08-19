@@ -12,6 +12,9 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+require 'shutterbug'
+require 'omniauth'
+
 Rails::Initializer.run do |config|
 
   # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
@@ -30,8 +33,21 @@ Rails::Initializer.run do |config|
   #   run ActionController::Dispatcher.new
   
   config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
-  
-  
+  config.middleware.use Shutterbug::Rackapp do |conf|
+    conf.phantom_bin_path = "/usr/bin/phantomjs"
+  end
+  # config.middleware.use Shutterbug::Rackapp do |conf|
+  #   conf.uri_prefix = "http://shutterbug.herokuapp.com/"
+  #   conf.path_prefix = "/shutterbug"
+  #   conf.phantom_bin_path = "/app/vendor/phantomjs/bin/phantomjs"
+  # end
+
+  if ENV['SCHOOLOGY_CONSUMER_KEY'] && ENV['SCHOOLOGY_CONSUMER_SECRET']
+    config.middleware.use OmniAuth::Builder do
+      provider :schoology, ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET']
+    end
+  end
+
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -92,7 +108,7 @@ Rails::Initializer.run do |config|
   else
     config.after_initialize do
       begin
-        ActiveRecord::Base.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"admin/project_observer", :help_request_observer
+        ActiveRecord::Base.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"dataservice/periodic_bundle_content_observer", :"admin/project_observer", :help_request_observer
         ActiveRecord::Base.instantiate_observers
         puts "Started observers"
       rescue

@@ -17,6 +17,7 @@
     :javascript
       // Don't mess with prototype...
       var $j = jQuery.noConflict();
+    %script{ :src=> "/shutterbug/shutterbug.js", :type=> "text/javascript"}
 
     = stylesheet_link_merged(current_theme.to_sym, {'media' => 'screen, presentation'})
     = stylesheet_link_merged('print', {'media' => 'print'})

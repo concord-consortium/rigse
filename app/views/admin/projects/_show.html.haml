@@ -85,6 +85,22 @@
                   %b
                     No
                   (Teachers must choose their school from a list when registering.)
+              %li
+                Use periodic bundle uploading:
+                - if admin_project.use_periodic_bundle_uploading?
+                  %b
+                    Yes
+                  (User data will be uploaded in smaller chunks at intervals throughout the session.)
+                - else
+                  %b
+                    No
+                  (User data will be uploaded in one large chunk at the end of the session.)
+              %li
+                PUB interval seconds:
+                %b
+                  = admin_project.pub_interval
+                (This option changes the rate at which student data is sent to the
+                server if periodic bundle uploading is turned on)
             - field_set_tag 'Maven Jnlp' do
               %p
                 Jnlp CDN Hostname:

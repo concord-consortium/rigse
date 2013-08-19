@@ -16,7 +16,7 @@ module RunnablesHelper
 
     # this is where we pull in extra parameters for the url, like skip_installer
     params.update(current_user.extra_params)
-    polymorphic_url(component, :format => format, :params => params)
+    polymorphic_path(component, :format => format, :params => params)
   end
 
   def run_button_for(component)

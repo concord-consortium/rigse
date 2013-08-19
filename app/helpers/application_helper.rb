@@ -1191,6 +1191,7 @@ module ApplicationHelper
     opts = {
       :welcome  => "Welcome",
       :login => "Login",
+      :login_schoology => "Login with Schoology",
       :signup => "Sign up",
       :logout => "Logout",
       :prefs => "Preferences",
@@ -1205,6 +1206,8 @@ module ApplicationHelper
         message += "#{opts[:welcome]} #{opts[:guest]} &nbsp;"
       end
       message += link_to opts[:login], login_path
+      message += " / "
+      message += link_to opts[:login_schoology], "/auth/schoology"
       message += " / "
       message += link_to opts[:signup], pick_signup_path
     else
@@ -1305,18 +1308,6 @@ _gaq.push(['_trackPageview']);
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 CONFIG
-  end
-
-  def labbook_enabled?
-    ENV['LABBOOK_PROVIDER_URL'] && !ENV['LABBOOK_PROVIDER_URL'].empty?
-  end
-
-  def labbook_url(learner)
-    if ENV['LABBOOK_PROVIDER_URL']
-      "#{ENV['LABBOOK_PROVIDER_URL']}/albums?source=#{request.host}&user_id=#{learner.id}".gsub('//albums', '/albums')
-    else
-      nil
-    end
   end
 
 end

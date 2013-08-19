@@ -18,6 +18,8 @@
           %button.nontext.button{ :type=>'submit' }
             'Login'
           %p.forgot= link_to 'Forgot Password', forgot_password_path
+
+          %p.forgot= link_to 'Sign in with Schoology', "/auth/schoology"
     .col2
       = render :partial => 'shared/signin_blurb'
     %p.note
