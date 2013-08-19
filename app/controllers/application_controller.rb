@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
   # Accesses the user that this session originally logged in as.
   def original_user
     if session[:original_user_id]
-      @original_user ||=  User.find(session[:original_user_id])
+      @original_user ||=  (User.find(session[:original_user_id]) rescue self.current_user)
     else
       @original_user = current_user
     end
