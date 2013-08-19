@@ -1,13 +1,23 @@
-%h3= "There appears to already be an account with your email address: #{@user.email}"
-%div
-  If this is your account, please enter your password below. If it is not your account,
-  or you're having trouble remembering your password, please contact the portal admin for help.
+- if @user
+  %h3= "There appears to already be an account with your email address: #{@user.email}"
+  %div
+    If this is your account, please enter your password below. If it is not your account,
+    or you're having trouble remembering your password, please contact the portal admin for help.
 
-- form_tag(auth_link_account_path, :method => :post) do
-  = label_tag "password", "Password: "
-  = password_field_tag "password"
-  = hidden_field_tag "user_id", @user.id
-  = hidden_field_tag "login", @user.login
-  = hidden_field_tag "uid", @uid
-  = hidden_field_tag "provider", @provider
-  = submit_tag("Continue")
+- form_tag(auth_link_account_path, :class => 'link_account_form', :method => :post) do
+  - if @user
+    = hidden_field_tag "user_id", @user.id
+    = hidden_field_tag "login", @user.login
+  - else
+    .username
+      = label_tag "login", "Username: "
+      = text_field_tag "login", params[:login]
+  .password
+    = label_tag "password", "Password: "
+    = password_field_tag "password"
+  .submit
+    = hidden_field_tag "uid", @uid
+    = hidden_field_tag "provider", @provider
+    - if @sso_user
+      = hidden_field_tag "sso_user_id", @sso_user.id
+    = submit_tag("Continue")

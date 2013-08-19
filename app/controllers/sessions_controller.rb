@@ -32,8 +32,10 @@ class SessionsController < ApplicationController
 
   def omniauth_callback
     auth = request.env["omniauth.auth"]
+    @uid = auth["uid"]
+    @provider = auth["provider"]
     begin
-      @user = User.find_by_provider_and_uid(auth["provider"], auth["uid"])
+      @user = User.find_by_provider_and_uid(@provider, @uid)
       if @user
         self.current_user = @user
         session[:original_user_id] = current_user.id
@@ -45,18 +47,12 @@ class SessionsController < ApplicationController
       # Handle email collisions! Merge accounts if password ok?
       @user = User.find_by_email(auth["info"]["email"])
       if @user
-        @uid = auth["uid"]
-        @provider = auth["provider"]
         render "link_account"
         return
       end
 
       @user = User.create_with_omniauth(auth)
       if @user
-        self.current_user = @user
-        session[:original_user_id] = current_user.id
-        flash[:notice] = "Logged in successfully"
-
         @school_selector = Portal::SchoolSelector.new(params)
         render 'choose_school'
         return
@@ -68,29 +64,34 @@ class SessionsController < ApplicationController
   end
 
   def link_account
+    Rails.logger.warn "start of link_account"
+
     @user = User.authenticate(params[:login], params[:password])
     @provider = params[:provider]
     @uid = params[:uid]
+    @sso_user = User.find(params[:sso_user_id]) rescue nil
     if @user
       self.current_user = @user
       session[:original_user_id] = current_user.id
       @user.provider = @provider
       @user.uid = @uid
       if @user.save
+        @sso_user.destroy if @sso_user
         flash[:notice] = "Logged in successfully"
         redirect_to(root_path) # unless !check_student_security_questions_ok
       else
         flash[:error] = "Unable to link user accounts!"
       end
     else
-      @user = User.find(params[:user_id])
-      flash[:error] = "Invalid password!"
+      @user = User.find(params[:user_id]) rescue nil
+      flash[:error] = (@user ? "Invalid password!" : "Invalid username or password!")
     end
   end
 
   def choose_school
-    Rails.logger.warn "Entered choose_school"
-    @user = current_user
+    @user = User.find(params[:user_id])
+    @uid = @user.uid
+    @provider = @user.provider
     @school_selector = Portal::SchoolSelector.new(params)
 
     if @school_selector.valid?
@@ -98,6 +99,10 @@ class SessionsController < ApplicationController
         t.user = @user
         t.schools << @school_selector.school
       }
+
+      self.current_user = @user
+      session[:original_user_id] = current_user.id
+
       redirect_to(root_path)
     else
       flash[:error] = "Please select a valid school."
@@ -110,7 +115,7 @@ class SessionsController < ApplicationController
   end
 
   protected
-  
+
   def password_authentication
     user = User.authenticate(params[:login], params[:password])
     if user
