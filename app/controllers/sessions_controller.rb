@@ -37,10 +37,15 @@ class SessionsController < ApplicationController
     begin
       @user = User.find_by_provider_and_uid(@provider, @uid)
       if @user
-        self.current_user = @user
-        session[:original_user_id] = current_user.id
-        flash[:notice] = "Logged in successfully"
-        redirect_to(root_path) # unless !check_student_security_questions_ok
+        if @user.portal_teacher
+          self.current_user = @user
+          session[:original_user_id] = current_user.id
+          flash[:notice] = "Logged in successfully"
+          redirect_to(root_path) # unless !check_student_security_questions_ok
+        else
+          @school_selector = Portal::SchoolSelector.new(params)
+          render 'choose_school'
+        end
         return
       end
 
