@@ -18,6 +18,9 @@ source "http://rubygems.org"
     gem "win32-open3"
   end
 
+  gem 'multi_json'
+  gem 'omniauth-oauth', :require => 'omniauth-oauth'
+
   gem "rails",                "2.3.15"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"
@@ -50,6 +53,7 @@ source "http://rubygems.org"
   gem 'rdoc',                 "~> 3.6.1"
   gem 'json',                 "~> 1.5.1"
   gem 'calendar_date_select'
+  gem 'shutterbug',  :git => "git://github.com/concord-consortium/shutterbug.git"
   
   # gem 'newrelic_rpm'
   # use a patched version of newrelic compatible with older linux

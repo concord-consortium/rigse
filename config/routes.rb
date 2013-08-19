@@ -202,6 +202,11 @@ ActionController::Routing::Routes.draw do |map|
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
+  map.omniauth_check '/auth/:provider/check', :controller => 'sessions', :action => 'omniauth_check'
+  map.omniauth_callback '/auth/:provider/callback', :controller => 'sessions', :action => 'omniauth_callback'
+  map.omniauth_failure '/auth/failure', :controller => 'sessions', :action => 'omniauth_failure'
+  map.auth_link_account '/auth/link_account', :controller => 'sessions', :action => 'link_account'
+  map.auth_choose_school '/auth/choose_school', :controller => 'sessions', :action => 'choose_school'
   map.linktool '/linktool', :controller => 'sakai_link', :action => 'index'
   map.fake_verification '/sakai-axis/SakaiSigning.jws', :controller => 'sakai_link', :action => 'fake_verification'
   map.register '/register', :controller => 'users', :action => 'create'
@@ -253,11 +258,16 @@ ActionController::Routing::Routes.draw do |map|
     dataservice.resources :console_loggers do |console_logger|
       console_logger.resources :console_contents
     end
+    dataservice.resources :periodic_bundle_loggers, :only => [ :show ]
 
   end
 
   # FIXME not sure how to map this within the dataservice namespace above...
   map.dataservice_blob_raw "dataservice/blobs/:id.blob/:token", :controller => "dataservice/blobs", :action => "show", :format => "blob", :requirements => { :id => /\d+/, :token => /[a-zA-Z0-9]{32}/ }
+  map.dataservice_periodic_bundle_logger_session_end_notification '/dataservice/periodic_bundle_loggers/:id/session_end_notification.bundle', :controller => 'dataservice/periodic_bundle_loggers', :action => 'session_end_notification', :requirements => { :format => 'bundle' }, :method => :post
+
+  # This route doesn't actually work, but is here so that we can use route helper methods to automatically generate the correct path/url
+  map.dataservice_periodic_bundle_logger_periodic_bundle_contents '/dataservice/periodic_bundle_loggers/:id/periodic_bundle_contents.bundle', :controller => 'dataservice/periodic_bundle_loggers', :action => 'create_bundle_content', :requirements => { :format => 'bundle' }, :method => :post
 
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
@@ -487,6 +497,7 @@ ActionController::Routing::Routes.draw do |map|
   map.banner '/banner', :controller => 'misc', :action => 'banner'
   map.stats '/misc/stats.json', :controller => 'misc', :action => 'stats', :format => 'json'
   # map. ':controller/:action/:id.:format'
+  map.schoology_cookie '/misc/schoology_cookie', :controller => 'misc', :action => 'schoology_cookie'
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

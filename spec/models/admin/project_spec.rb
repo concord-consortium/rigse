@@ -37,7 +37,24 @@ describe Admin::Project do
     @new_valid_project.states_and_provinces = {'RI' => 'Rhode Island', 'MA' => 'Massachusetts'}
     @new_valid_project.should_not be_valid
   end
-  
+
+  describe "pub_interval" do
+    describe "default value" do
+      it "should be 5 minutes" do
+        five_min = 300
+        @new_valid_project.pub_interval.should == five_min
+      end
+    end
+
+    describe "less than minimum interval" do
+      it "should fail validations" do
+        @new_valid_project.pub_interval = Admin::Project::MinPubInterval - 1
+        @new_valid_project.should_not be_valid
+        puts @new_valid_project.errors
+      end
+    end
+  end
+
   describe "a projects list of enabled vendor interfaces" do
 
     before(:all) do

@@ -1,7 +1,8 @@
 module JnlpHelper
   
   def jnlp_adaptor
-    @_jnlp_adaptor ||= JnlpAdaptor.new(current_project)
+    proj = current_project rescue Admin::Project.default_project
+    @_jnlp_adaptor ||= JnlpAdaptor.new(proj)
   end
   
   def jnlp_icon_url
@@ -39,6 +40,10 @@ module JnlpHelper
     jnlp_adaptor.windows_native_jars
   end
 
+  def pub_interval
+    return Admin::Project.pub_interval * 1000
+  end
+
   def system_properties(options={})
     if options[:authoring]
       additional_properties = [
@@ -52,6 +57,17 @@ module JnlpHelper
       additional_properties = [
         ['otrunk.view.mode', 'student'],
       ]
+      if current_project.use_periodic_bundle_uploading?
+        # make sure the periodic bundle logger exists, just in case
+        l = options[:learner]
+        if l.student.user == current_user
+          pbl = l.periodic_bundle_logger || Dataservice::PeriodicBundleLogger.create(:learner_id => l.id)
+          additional_properties << ['otrunk.periodic.uploading.enabled', 'true']
+          additional_properties << ['otrunk.periodic.uploading.url', dataservice_periodic_bundle_logger_periodic_bundle_contents_url(pbl)]
+          additional_properties << ['otrunk.periodic.uploading.interval', pub_interval]
+          additional_properties << ['otrunk.session_end.notification.url', dataservice_periodic_bundle_logger_session_end_notification_url(pbl)]
+        end
+      end
     else
       additional_properties = [
         ['otrunk.view.mode', 'student'],
@@ -154,20 +170,12 @@ module JnlpHelper
     
     # we don't want the jnlp to be cached because it contains session information for the current user
     # if a shared proxy caches it then multiple users will be loading and storing data in the same place
-    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+    NoCache.add_headers(response.headers)
     response.headers["Last-Modified"] = runnable.updated_at.httpdate
     filename = smoosh_file_name("#{APP_CONFIG[:site_name]} #{runnable.class.name} #{short_name(runnable.name)}")
     response.headers["Content-Disposition"] = "inline; filename=#{filename}.jnlp"
   end
-  
-  def config_headers(runnable)
-    response.headers["Content-Type"] = "application/xml"
-    response.headers["Cache-Control"] = "max-age=1"
-  end
-  
-  
+
   def jnlp_information(xml, learner = nil)
     xml.information { 
       xml.title current_project.name

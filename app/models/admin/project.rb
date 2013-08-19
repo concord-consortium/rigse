@@ -1,6 +1,8 @@
 require 'fileutils'
 
 class Admin::Project < ActiveRecord::Base
+  MinPubInterval     = 10   # 10 second update seems close to too fast.
+  DefaultPubInterval = 300  # default is five minues
   set_table_name "admin_projects"
   
   belongs_to :user
@@ -29,7 +31,13 @@ class Admin::Project < ActiveRecord::Base
   default_value_for :enabled_vendor_interfaces do
     Probe::VendorInterface.find(:all)
   end
-  
+
+  default_value_for :pub_interval do
+    DefaultPubInterval
+  end
+
+  validates_numericality_of :pub_interval, :greater_than_or_equal_to => MinPubInterval
+
   if USING_JNLPS
     validates_associated :maven_jnlp_server
     validates_associated :maven_jnlp_family
@@ -126,6 +134,10 @@ class Admin::Project < ActiveRecord::Base
     
     def summary_info
       default_project ? default_project.summary_info : "no default project defined"
+    end
+
+    def pub_interval
+      default_project ? default_project.pub_interval : DefaultPubInterval
     end
 
     def create_or_update_default_project_from_settings_yml

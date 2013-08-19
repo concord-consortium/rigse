@@ -62,6 +62,18 @@
             = f.check_box :allow_adhoc_schools
             %br
             (This option changes whether or not teachers can create schools)
+          %li
+            %b
+            = f.label :use_periodic_bundle_uploading, "Use Periodic Bundle Uploading:", :style => "display:inline;"
+            = f.check_box :use_periodic_bundle_uploading
+            %br
+            (This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
+          %li
+            %b
+            = f.label :pub_interval, "PUB Interval seconds:", :style => "display:inline;"
+            = f.text_field :pub_interval, :size=>4
+            %br
+            ([ minimum value: #{Admin::Project::MinPubInterval} ] This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
 
       - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }

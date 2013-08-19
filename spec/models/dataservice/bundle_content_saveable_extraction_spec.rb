@@ -46,6 +46,8 @@ describe Dataservice::BundleContent do
     blogger = Dataservice::BundleLogger.create!()
     student = Portal::Student.create!()
     offering = Portal::Offering.create!()
+    offering.runnable = Investigation.create!()
+    offering.save
     learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)
     Report::Learner.should_receive(:for_learner).with(learner).once.and_return(mock(Report::Learner, :update_fields => true))
     learner.bundle_logger = blogger

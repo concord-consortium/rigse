@@ -32,6 +32,7 @@ class Dataservice::BundleLoggersController < ApplicationController
         :bundle_content => @dataservice_bundle_logger.in_progress_bundle
       )
     end
+    NoCache.add_headers(response.headers)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => eportfolio_bundle }

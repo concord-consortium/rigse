@@ -10,6 +10,7 @@ class Portal::Learner < ActiveRecord::Base
   
   belongs_to :console_logger, :class_name => "Dataservice::ConsoleLogger", :foreign_key => "console_logger_id", :dependent => :destroy
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id", :dependent => :destroy
+  has_one    :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger", :foreign_key => "learner_id", :dependent => :destroy
 
   has_many :open_responses, :class_name => "Saveable::OpenResponse" do
     def answered
@@ -34,6 +35,16 @@ class Portal::Learner < ActiveRecord::Base
   
   has_one :report_learner, :class_name => "Report::Learner", :foreign_key => "learner_id"
 
+  # automatically make the report learner if it doesn't exist yet
+  def report_learner_with_create
+    # I'm using the ! here so we can track down errors faster if there is an issue making
+    # the report_learner
+    rl = report_learner_without_create || create_report_learner
+    raise ActiveRecord::RecordInvalid unless rl.valid?
+    return rl
+  end
+  alias_method_chain :report_learner, :create
+
   def sessions
     self.bundle_logger.bundle_contents.length
   end
@@ -45,13 +56,22 @@ class Portal::Learner < ActiveRecord::Base
     learner.create_bundle_logger
   end
 
+  after_create do |learner|
+    # make the report learner now, so two parts of the code aren't trying to create it at the
+    learner.create_periodic_bundle_logger
+    # make the report learner now, so two parts of the code aren't trying to create it at the
+    # same time later
+    learner.report_learner.update_fields
+  end
+
   def valid_loggers?
-    console_logger && bundle_logger
+    console_logger && bundle_logger && periodic_bundle_logger
   end
 
   def create_new_loggers
     create_console_logger
     create_bundle_logger
+    create_periodic_bundle_logger
   end
   
   # validates_presence_of :console_logger, :message => "console_logger association not specified"

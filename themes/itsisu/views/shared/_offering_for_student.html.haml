@@ -8,10 +8,11 @@
     - if offering.can_run_lightweight?
       %span{:id => dom_id_for(offering, :lightweight)}= ""
       - link_title = "run browser-based #{offering.name}"
-      - link = link_to image_tag("/images/diy_icons/world_go.png"), polymorphic_url(offering, :format => :run_html), {:class => 'run_link offering', :title=>link_title}
+      - link = link_to image_tag("/images/diy_icons/world_go.png"), polymorphic_url(offering, :format => :run_html), {:title=>link_title, :target => "_blank"}
       :javascript
         if (Object.isExtensible && Modernizr.svg) {
           $("#{dom_id_for(offering, :lightweight)}").innerHTML = '#{link.gsub("'", "")}';
+          $("#{dom_id_for(offering, :heavyweight)}").innerHTML = '';
         }
     = offering.name
   .activity_description{:id => description_id, :style=>"display: none;"}

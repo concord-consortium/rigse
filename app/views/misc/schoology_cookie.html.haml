@@ -1,0 +1,8 @@
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %title= "Schoology Cookie"
+  %body
+    :javascript
+      // Per the schoology docs: http://developers.schoology.com/app-platform/allowing-cookies
+      document.cookie="setcookie=1"
+      self.close();
