@@ -1,13 +1,8 @@
-Given /^the following external REST activity:$/ do |table|
-  @external_activity = Factory.create(:external_activity, table.rows_hash)
+def create_mirrored_template_activity(name)
+  activity = Activity.create(:name => "#{name} Template")
 
-  # also create the mirrored activity template
-  activity = Activity.create(:name => "#{@external_activity.name} Template")
-  @external_activity.template = activity
-  @external_activity.save
-
-  section = activity.sections.create(:name => "#{@external_activity.name} Section")
-  page = section.pages.create(:name => "#{@external_activity.name} Page")
+  section = activity.sections.create(:name => "#{name} Section")
+  page = section.pages.create(:name => "#{name} Page")
 
   open_res = Embeddable::OpenResponse.create(:name => "Like", :prompt => "Do you like this activity?", :external_id => "1234567")
   page.add_embeddable(open_res)
@@ -18,7 +13,6 @@ Given /^the following external REST activity:$/ do |table|
   mc.choices.create!(:choice => "green", :external_id => "99")
   page.add_embeddable(mc)
 
-
   iq = Embeddable::ImageQuestion.create(
     :name => "Image Question",
     :prompt => "Draw a picture of the sky",
@@ -26,6 +20,34 @@ Given /^the following external REST activity:$/ do |table|
   page.add_embeddable(iq)
 
   page.save
+
+  activity
+end
+
+
+Given /^the following external REST activity:$/ do |table|
+  @external_activity = Factory.create(:external_activity, table.rows_hash)
+
+  # also create the mirrored activity template
+  activity = create_mirrored_template_activity(@external_activity.name)
+  @external_activity.template = activity
+  @external_activity.save
+
+  clazz = Portal::Clazz.find_by_name("My Class")
+  offering = Factory.create(:portal_offering, :runnable => @external_activity, :clazz => clazz)
+  @learner = offering.find_or_create_learner(User.find_by_login('student').portal_student)
+end
+
+Given /^the following external sequence:$/ do |table|
+  @external_activity = Factory.create(:external_activity, table.rows_hash)
+
+  # also create the mirrored activity template
+  activity = create_mirrored_template_activity(@external_activity.name)
+  investigation = Investigation.create(:name => "#{@external_activity.name} Template")
+  investigation.activities << activity
+
+  @external_activity.template = investigation
+  @external_activity.save
 
   clazz = Portal::Clazz.find_by_name("My Class")
   offering = Factory.create(:portal_offering, :runnable => @external_activity, :clazz => clazz)
@@ -91,6 +113,11 @@ Given /^the student ran the external REST activity "([^"]*)" before$/ do |activi
   WebMock::RequestRegistry.instance.reset!
 end
 
+Given /^the student ran the external sequence "([^"]*)" before$/ do |ext_activity_name|
+  create_and_run_external_rest_activity(ext_activity_name)
+  WebMock::RequestRegistry.instance.reset!
+end
+
 When /^the student runs the external activity "([^"]*)" again$/ do |activity_name|
   login_as('student')
   visit('/')
@@ -100,6 +127,15 @@ When /^the student runs the external activity "([^"]*)" again$/ do |activity_nam
 end
 
 When /^the browser returns the following data to the portal$/ do |string|
+  login_as('student')
+  path = external_activity_return_path(@learner)
+  Delayed::Job.should_receive(:enqueue)
+  page.driver.post(path, :content => string)
+  # delayed_job doesn't work in tests, so force running the job
+  Dataservice::ProcessExternalActivityDataJob.new(@learner.id, string).perform
+end
+
+When /^the material provider returns the following data to the portal$/ do |string|
   login_as('student')
   path = external_activity_return_path(@learner)
   Delayed::Job.should_receive(:enqueue)
