@@ -1,0 +1,3 @@
+- if session[:sso_application]
+  .sso_banner
+    = "Please log in. After you log in, you will be redirected back to #{session[:sso_application].name}."

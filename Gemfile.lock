@@ -7,6 +7,23 @@ GIT
       rails (~> 3.2.0)
 
 GIT
+  remote: git://github.com/concord-consortium/cc_portal_remote_auth
+  revision: 3f385bd223c83ff458265bf20012e30677b81172
+  specs:
+    cc_portal_remote_auth (0.0.3)
+      devise (~> 2.1.0)
+      rails (~> 3.2.11)
+
+GIT
+  remote: git://github.com/concord-consortium/cc_portal_wordpress_integration
+  revision: 32e9da1f22bd932954437e4c63fca7f81b2ecdf1
+  specs:
+    cc_portal_wordpress_integration (0.0.3)
+      devise (~> 2.1.0)
+      haml (~> 3.1.4)
+      rails (~> 3.2.11)
+
+GIT
   remote: git://github.com/concord-consortium/contentflow
   revision: 03b18e3c81abead40614f4a748878c63b6381eac
   branch: remove-addon-support
@@ -438,6 +455,8 @@ DEPENDENCIES
   capistrano (~> 2.14.1)
   capybara (~> 1.1.2)
   capybara-mechanize (~> 0.3.0)
+  cc_portal_remote_auth!
+  cc_portal_wordpress_integration!
   ci_reporter (~> 1.7.0)
   coffee-rails
   compass-rails

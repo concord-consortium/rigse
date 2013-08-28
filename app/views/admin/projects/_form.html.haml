@@ -1,3 +1,6 @@
+- if @additional_partials && @additional_partials.length > 0
+  - @additional_partials.each do |p|
+    = render :partial => p, :locals => { :admin_project => admin_project, :f => f }
 - if @manager_role
   = render :partial => "form_for_managers", :locals => { :admin_project => admin_project, :f => f  }
 - else
@@ -91,6 +94,7 @@
           %li
             Jnlp CDN Hostname:
             = f.text_field :jnlp_cdn_hostname, :size => 60
+          = content_for "admin_project_form_#{admin_project.id || 'new'}"
 
       %p
         %b

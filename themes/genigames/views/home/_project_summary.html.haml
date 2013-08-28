@@ -1,0 +1,5 @@
+- unless current_project.home_page_content.blank?
+  - home_page_content = current_project.home_page_content
+  = home_page_content.html_safe
+- else
+  Genetics Learning Online

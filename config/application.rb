@@ -9,7 +9,13 @@ module RailsPortal
     config.assets.enabled = true
     # Bundler.require(:default, Rails.env) if defined?(Bundler)
     # Fixes a Compass bug, per http://stackoverflow.com/questions/6005361/sass-import-error-in-rails-3-app-file-to-import-not-found-or-unreadable-comp?rq=1
-    Bundler.require(*Rails.groups(:assets => %w(development test))) if defined?(Bundler)
+    extra_groups = {:assets => %w(development test)}
+    if ENV['PORTAL_FEATURES'] && !ENV['PORTAL_FEATURES'].empty?
+      ENV['PORTAL_FEATURES'].split(/\s+/).each do |feature|
+        extra_groups[feature.to_sym] = %w(development test production)
+      end
+    end
+    Bundler.require(*Rails.groups(extra_groups)) if defined?(Bundler)
   
     config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
     config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories

@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+ENV['RAILS_ENV'] ||= "production"
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+
+require 'csv'
+
+def print_status
+  @count ||= 0
+  print "\n#{"%8d" % @count}: " if @count % 25000 == 0
+  print "." if @count % 500 == 0
+  @count += 1
+end
+
+def new_csv
+  @csv_count ||= 0
+  @csv_count += 1
+  if @csv
+    @csv.flush
+    @csv.close
+  end
+  @csv = CSV.open("log_items_#{@csv_count}.csv", "wb")
+
+  headers = []
+  headers.push("User ID", "Session", "Time", "Event")
+  (1..10).each do |i|
+    headers.push("Param #{i} Key", "Param #{i} Value")
+  end
+  @csv << headers
+end
+
+puts "\nExporting Bucket Log Items to csv."
+puts "Writing csv to: log_items.csv, log_items_2.csv, etc... "
+puts "Processing #{Dataservice::BucketLogItem.count} log items...\n"
+
+new_csv
+Dataservice::BucketLogger.find_each( batch_size: 100, include: [:bucket_log_items, learner: :student]) do |logger|
+  logger.bucket_log_items.each do |item|
+    row = []
+    content = JSON.parse(item.content)
+    next unless logger.learner
+    next unless logger.learner.student
+    student = logger.learner.student
+    row.push(student.user_id, content["session"],content["time"],content["event"])
+    if content["parameters"]
+      content["parameters"].each do |k,v|
+        row.push(k,v)
+      end
+    end
+    @csv << row
+    print_status
+  end
+  new_csv if @count && @count > @csv_count*1000000 # Excel and OpenOffice are limited to ~1,048,575 rows
+end
+@csv.flush
+@csv.close
+puts "\n\ndone."

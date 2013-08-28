@@ -203,24 +203,46 @@ stylesheets:
   - data_table
   - reports
   - themes/genomedynamics/genomedynamics
-  
+
 - geniverse:
   - app
   - accordion
+  - please_wait
   - window/window
   - window/rites
   - window/lightbox
   - live_validation
-  - accordion
-  - notes
   - action_menu_tab
+  - notes
   - drop_down
   - data_table
   - reports
-  - themes/geniverse/geniverse
-  - themes/geniverse/action_menu_tab
-  - themes/geniverse/drop_down
-  - themes/geniverse/accordion
+  - workgroup
+  - chosen
+  - classes_left_pane
+  - instructional_materials
+  - site_notice
+  - search_materials
+
+- genigames:
+  - app
+  - accordion
+  - please_wait
+  - window/window
+  - window/rites
+  - window/lightbox
+  - live_validation
+  - action_menu_tab
+  - notes
+  - drop_down
+  - data_table
+  - reports
+  - workgroup
+  - chosen
+  - classes_left_pane
+  - instructional_materials
+  - site_notice
+  - search_materials
 
 - interactions:
   - app

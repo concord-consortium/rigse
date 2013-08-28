@@ -107,6 +107,17 @@ group :production do
   gem 'therubyracer',         "~>0.10.2"
 end
 
+# Feature enabling groups
+group :geniverse_wordpress do
+  gem "cc_portal_wordpress_integration", :git => "git://github.com/concord-consortium/cc_portal_wordpress_integration"
+  # gem "cc_portal_wordpress_integration", :path => "../cc_portal_wordpress_integration"
+end
+
+group :geniverse_remote_auth do
+  gem "cc_portal_remote_auth", :git => "git://github.com/concord-consortium/cc_portal_remote_auth"
+  # gem "cc_portal_remote_auth", :path => "../cc_portal_remote_auth"
+end
+
 group :development do
   gem "rake",                 "~> 0.9.2"
   gem "highline"
