@@ -42,6 +42,7 @@ class ApplicationController < ActionController::Base
   before_filter :check_student_security_questions_ok
   before_filter :check_student_consent
   before_filter :set_locale
+  before_filter :wide_layout_for_anonymous
 
   # Portal::School.find(:first).members.count
 
@@ -179,5 +180,9 @@ class ApplicationController < ActionController::Base
     if I18n.available_locales.include?(name.to_sym)
       I18n.locale = name.to_sym
     end
+  end
+
+  def wide_layout_for_anonymous
+    @wide_content_layout = true if current_visitor.anonymous?
   end
 end
