@@ -115,6 +115,8 @@ end
 
 And /^(?:|I )follow (investigation|activity) link "(.+)" on the search instructional materials page$/ do |material_type, material_name|
   within(".materials_container.#{material_type.pluralize}") do
-    click_link(material_name)
+    # for some reason this is not always visible initially, the approach below will cause capybara's waiting
+    # mechanism to kick in waiting for the element to become visible
+    find('a', :text => material_name, :visible => true).click
   end
 end
