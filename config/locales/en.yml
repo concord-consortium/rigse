@@ -78,3 +78,9 @@ en:
     models:
       Investigation: Investigation
   investigation: investigation
+'en-GENIVERSE':
+  recent_activity:
+    no_offerings: ''
+    no_students:  ''
+    no_activity:  'This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available.'
+
