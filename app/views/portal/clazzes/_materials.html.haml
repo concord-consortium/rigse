@@ -34,6 +34,6 @@
         %div.data_container
           = render :partial => 'material_details',:collection => clazz_offerings, :as => :current_offering
       - else
-        %div.messagetext No materials assigned to this class.
+        %div.messagetext= t('class_materials.no_assignments')
       = f.hidden_field :teacher_id
       = f.hidden_field :id

@@ -44,6 +44,8 @@ en:
   class_full_status:
     no_students: "No students have registered for this class yet."
     no_assignments: "No materials assigned to this class."
+  class_materials:
+    no_assignments: "No materials assigned to this class."
 
 'en-HAS':
   activerecord:
