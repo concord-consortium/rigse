@@ -1,0 +1,8 @@
+%tr
+  %td{:colspan=>2}
+    %br
+    .subheader Manage Instructional Materials
+    %div
+%tr
+  %td{:colspan=>2}
+    = render :partial => 'shared/offerings_for_clazz', :locals => {:offerings => portal_clazz.offerings}

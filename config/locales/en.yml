@@ -85,4 +85,6 @@ en:
     no_offerings: ''
     no_students:  ''
     no_activity:  'This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available.'
+  offerings_for_class:
+    no_materials: "This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available."
 
