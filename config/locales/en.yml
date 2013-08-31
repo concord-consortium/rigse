@@ -95,4 +95,6 @@ en:
   class_full_status:
     no_students: "This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available."
     no_assignments: "This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available."
+  class_materials:
+    no_assignments: "Currently, this class is engaged in Geniverse."
 
