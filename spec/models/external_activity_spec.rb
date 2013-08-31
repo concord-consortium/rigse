@@ -29,6 +29,21 @@ describe ExternalActivity do
       ea.save
       ea
     end
+    let (:private_activity) do
+      ea = ExternalActivity.create!(valid_attributes)
+      ea.is_official = false
+      ea.publication_status = 'private'
+      ea.save
+      ea
+    end
+    let (:official_tagged) do
+      Admin::Tag.create!(:scope => 'cohorts', :tag => 'research_group')
+      ea = ExternalActivity.create!(valid_attributes)
+      ea.publication_status = 'published'
+      ea.cohort_list = ["research_group"]
+      ea.save
+      ea
+    end
 
     context 'when include_community is true' do
       let (:params) { { :include_contributed => true } }
@@ -51,6 +66,32 @@ describe ExternalActivity do
 
       it 'should return only activities where is_official is true' do
         external = ExternalActivity.search_list(params)
+        external.should include(official)
+      end
+    end
+
+    context 'when author is searching' do
+      it 'should return private activities authored by author' do
+        user = mock_model(User, :id => 1, :portal_teacher => false)
+        private_activity
+        external = ExternalActivity.search_list({:user => user})
+        external.should include(private_activity)
+      end
+      it 'should still appy the name criteria even if activities are authored by author' do
+        user = mock_model(User, :id => 1, :portal_teacher => false)
+        private_activity
+        external = ExternalActivity.search_list({:user => user, :name => 'blah'})
+        external.should_not include(private_activity)
+      end
+    end
+    context 'when user has no cohorts' do
+      it 'should not return activities tagged with a cohort' do
+        teacher = mock_model(Portal::Teacher, :cohort_list => [])
+        user = mock_model(User, :id => 2, :portal_teacher => teacher, :has_role? => false)
+        official
+        official_tagged
+        external = ExternalActivity.search_list({:user => user})
+        external.should_not include(official_tagged)
         external.should include(official)
       end
     end
