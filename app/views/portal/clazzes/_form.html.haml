@@ -25,11 +25,12 @@
           %td.title{:class=>"left"}
             Description: 
           %td= f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
-        %tr
-          %td.title{ :class=>"left", :style=>"white-space:nowrap"}
-            Class Word: 
-          %td
-            = f.text_field :class_word, :size => 24
+        - if portal_clazz.new_record? || !APP_CONFIG[:lock_classword]
+          %tr
+            %td.title{ :class=>"left", :style=>"white-space:nowrap"}
+              Class Word:
+            %td
+              = f.text_field :class_word, :size => 24
         
         
         - if portal_clazz.new_record?
