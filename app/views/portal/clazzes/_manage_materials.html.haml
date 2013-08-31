@@ -1,0 +1,11 @@
+%tr
+  %td{:colspan=>2}
+    %br
+    .subheader Manage Instructional Materials
+    %div
+      Uncheck the material that you do not want to appear on the list of assigned materials that students
+      see for this class. Drag and drop the material names below to reorder them for students. The new
+      order will also be reflected in the tabs on your Instructional Materials page.
+%tr
+  %td{:colspan=>2}
+    = render :partial => 'shared/offerings_for_clazz', :locals => {:offerings => portal_clazz.offerings}
