@@ -29,12 +29,12 @@
                 = render :partial => 'clazz_student_report_learner_progress',:collection => students, :as => :student,:locals=> {:offering_statuses=>offering_statuses}
             .clearboth{:style=>"height:10px"}
           - else
-            %div.messagetext No students have registered for this class yet.
+            %div.messagetext= t('class_full_status.no_students')
     - else
       - if students.length > 0
-        %div.messagetext No materials assigned to this class.
+        %div.messagetext= t('class_full_status.no_assignments')
       - else
-        %div.messagetext No students have registered for this class yet.
+        %div.messagetext= t('class_full_status.no_students')
                 
 = f.hidden_field :teacher_id
 = f.hidden_field :id

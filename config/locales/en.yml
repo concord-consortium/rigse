@@ -41,6 +41,9 @@ en:
     no_activity:  'As your students get started, their progress will be displayed here.'
   offerings_for_class:
     no_materials: "No materials assigned to this class."
+  class_full_status:
+    no_students: "No students have registered for this class yet."
+    no_assignments: "No materials assigned to this class."
 
 'en-HAS':
   activerecord:
