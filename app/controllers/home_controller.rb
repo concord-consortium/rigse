@@ -96,9 +96,9 @@ class HomeController < ApplicationController
     @clazz_offerings=Array.new
     
     @recent_activity_msgs = {
-      :no_offerings => 'You need to assign investigations to your classes.<br />As your students get started, their progress will be displayed here.',
-      :no_students => 'You have not yet assigned students to your classes.<br />As your students get started, their progress will be displayed here.',
-      :no_activity => 'As your students get started, their progress will be displayed here.'
+      :no_offerings => "#{t('recent_activity.no_offerings')}<br>#{t('recent_activity.no_activity')}",
+      :no_students => "#{t('recent_activity.no_students')}<br>#{t('recent_activity.no_activity')}",
+      :no_activity => t('recent_activity.no_activity')
     }
     @no_recent_activity_msg = nil
     @offerings_count = 0
