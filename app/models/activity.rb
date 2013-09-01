@@ -229,6 +229,10 @@ class Activity < ActiveRecord::Base
 
   # TODO: The next two methods can be extracted to 
   # a more general form: (write tests too)
+  # Also they could be improved, they currently require
+  # lots of database hits when for example the number of
+  # copies is 100. It will take 100 database hits before
+  # the code stumbles on 101 as being a unique name.
   def self.name_is_taken(name)
     return true if self.find_by_name(name)
     return false
@@ -249,11 +253,25 @@ class Activity < ActiveRecord::Base
     @return_activity = self.clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
     @return_activity.original = self
     @return_activity.user = new_owner
-    @return_activity.name = Activity.gen_unique_name(self.name)
-    @return_activity.deep_set_user(new_owner)
+    # this results in a yaml value saved in the status, but fixing it will create inconsistancies since
+    # it has been this way for so long
     @return_activity.publication_status = :draft
     @return_activity.is_exemplar = false
-    @return_activity.save # have to save before modifying predictions
+    @return_activity.name = Activity.gen_unique_name(self.name)
+    # save without validations so the naming validation doesn't stop us from saving
+    # this might result in two activities with the same name, but that will either
+    # get sorted out below or the user will need to deal with it after editing
+    @return_activity.save(false)
+    # Check if our generated name is still unique or not
+    if(!@return_activity.valid? && @return_activity.errors.invalid?(:name))
+      # try again one more time
+      @return_activity.name = Activity.gen_unique_name(@return_activity.name)
+      # this might still fail, but that is ok because when the user goes to edit it
+      # they will forced to change the name at that point, which will be a bit confusing
+      # but shouldn't happen very often
+      @return_activity.save
+    end
+    @return_activity.deep_set_user(new_owner)
     @return_activity.re_associate_prediction_graphs
     return @return_activity
   end
