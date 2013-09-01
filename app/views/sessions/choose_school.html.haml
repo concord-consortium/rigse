@@ -1,9 +1,33 @@
 - content_for :content_header do
   %h1= "First time setup"
 
-%h3= "Please select your school from the options below:"
 .choose_school_form
+  %h3= "Please select your school from the options below:"
   - form_tag(auth_choose_school_path, :id => 'new_portal_teacher', :method => :post) do
     #school_selector
       = render :partial => 'shared/school_selector', :locals => { :school_selector => @school_selector }
+    = hidden_field_tag "user_id", @user.id
     = submit_tag("Continue")
+
+%h2
+  %a#link_account_link{:href => "#"}= "I already have an account"
+.link_account_form{:style => "display: none;"}
+  .instructions
+    Please enter your existing account's username and password.
+  - form_tag(auth_link_account_path, :method => :post) do
+    .username
+      = label_tag "login", "Username: "
+      = text_field_tag "login"
+    .password
+      = label_tag "password", "Password: "
+      = password_field_tag "password"
+    .submit
+      = hidden_field_tag "uid", @uid
+      = hidden_field_tag "provider", @provider
+      = hidden_field_tag "sso_user_id", @user.id
+      = submit_tag("Link Account")
+:javascript
+  $j("#link_account_link").click(function() {
+    $j(".link_account_form").show();
+    $j(".choose_school_form").hide();
+  })
