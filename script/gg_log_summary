@@ -63,15 +63,16 @@ end
 
 puts "\nExporting Genigames student summaries to csv."
 puts "Writing csv to: genigames_summary_1.csv, genigames_summary_2.csv, etc... "
-puts "Processing #{Dataservice::BucketLogger.count} users (#{Dataservice::BucketLogItem.count} log items)...\n"
+puts "Processing #{Portal::Student.count} users (#{Dataservice::BucketLogItem.count} log items)...\n"
 
 new_csv
-Dataservice::BucketLogger.find_each(
-  batch_size: 100,
+
+Portal::Student.find_each(
+  batch_size: 10,
   include: [
-    :bucket_log_items,
-    learner: [
-      student: :user,
+    :user,
+    learners: [
+      bucket_logger: :bucket_log_items,
       offering: [
         clazz: [
           teachers: :user
@@ -79,18 +80,28 @@ Dataservice::BucketLogger.find_each(
       ]
     ]
   ]
-) do |logger|
-  student = logger.learner.student.user rescue nil
-  next unless student
-  teacher = logger.learner.offering.clazz.teacher.user.name rescue "unknown"
-  saved_data = JSON.parse(logger.most_recent_content) rescue {}
-  reputation = (saved_data["user"][student.user.login] || saved_data["user"][student.user.name])["reputation"] rescue nil
-  row = [teacher, student.id, student.name, logger.bucket_log_items.size]
+) do |student|
+  teacher = student.learners.first.offering.clazz.teacher.user.name rescue "unknown"
+  reputation = 0
+
+  log_items = []
+
+  student.learners.each do |learner|
+    next unless learner.bucket_logger
+    logger = learner.bucket_logger
+    saved_data = JSON.parse(logger.most_recent_content) rescue {}
+    reputation += (saved_data["user"][student.user.login] || saved_data["user"][student.user.name])["reputation"] rescue 0
+    log_items += logger.bucket_log_items
+  end
+
+  next unless log_items.size > 0
+
+  row = [teacher, student.id, student.name, log_items.size]
   sessions = []
   counts = {fail: 0, success: 0, towns: 0, afterSchool: 0, allTowns: 0, firstTimeThrough: nil}
   towns_completed = {}
   furthest_completed_town = nil
-  logger.bucket_log_items.each do |item|
+  log_items.each do |item|
     content = JSON.parse(item.content)
     sessions.push content["session"]
     case content["event"]
