@@ -36,12 +36,12 @@ puts "Processing #{Dataservice::BucketLogItem.count} log items...\n"
 
 new_csv
 Dataservice::BucketLogger.find_each( batch_size: 100, include: [:bucket_log_items, learner: :student]) do |logger|
+  next unless logger.learner
+  next unless logger.learner.student
+  student = logger.learner.student
   logger.bucket_log_items.each do |item|
     row = []
     content = JSON.parse(item.content)
-    next unless logger.learner
-    next unless logger.learner.student
-    student = logger.learner.student
     row.push(student.user_id, content["session"],content["time"],content["event"])
     if content["parameters"]
       content["parameters"].each do |k,v|
