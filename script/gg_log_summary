@@ -1,0 +1,147 @@
+#!/usr/bin/env ruby
+
+ENV['RAILS_ENV'] ||= "production"
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+
+require 'csv'
+
+GAME_TOWNS = [
+  "Lullen",
+  "Angeral",
+  "Tarrin's Crag",
+  "Narran",
+  "Luxceros"
+]
+
+BASELINE_TOWNS = [
+  "Level 1A",
+  "Level 1B",
+  "Level 1C",
+  "Level 1D",
+  "Level 2",
+  "Level 3",
+  "Level 4",
+  "Level 5"
+]
+
+TOURNAMENT_TOWNS = [
+  "Mendel"
+]
+
+TOWNS = GAME_TOWNS + BASELINE_TOWNS + TOURNAMENT_TOWNS
+
+ITEMS_PER_DOT = 10
+ITEMS_PER_LINE = ITEMS_PER_DOT * 50
+
+def print_status
+  @count ||= 0
+  print "\n#{"%8d" % @count}: " if @count % ITEMS_PER_LINE == 0
+  print "." if @count % ITEMS_PER_DOT == 0
+  @count += 1
+end
+
+def new_csv
+  @csv_count ||= 0
+  @csv_count += 1
+  if @csv
+    @csv.flush
+    @csv.close
+  end
+  @csv = CSV.open("genigames_summary_#{@csv_count}.csv", "wb")
+
+  headers = []
+  headers.push("Teacher Name", "Student ID", "Student Name", "Records")
+  headers.push("Sessions", "Successes", "Fails", "Final Reputation")
+  headers.push("Logins after 5p", "Towns Completed")
+  TOWNS.each do |t|
+    headers.push("Completed #{t}")
+  end
+  headers.push("Completed Everything", "First Completion Time")
+  @csv << headers
+end
+
+puts "\nExporting Genigames student summaries to csv."
+puts "Writing csv to: genigames_summary_1.csv, genigames_summary_2.csv, etc... "
+puts "Processing #{Dataservice::BucketLogger.count} users (#{Dataservice::BucketLogItem.count} log items)...\n"
+
+new_csv
+Dataservice::BucketLogger.find_each(
+  batch_size: 100,
+  include: [
+    :bucket_log_items,
+    learner: [
+      student: :user,
+      offering: [
+        clazz: [
+          teachers: :user
+        ]
+      ]
+    ]
+  ]
+) do |logger|
+  student = logger.learner.student.user rescue nil
+  next unless student
+  teacher = logger.learner.offering.clazz.teacher.user.name rescue "unknown"
+  saved_data = JSON.parse(logger.most_recent_content) rescue {}
+  reputation = (saved_data["user"][student.user.login] || saved_data["user"][student.user.name])["reputation"] rescue nil
+  row = [teacher, student.id, student.name, logger.bucket_log_items.size]
+  sessions = []
+  counts = {fail: 0, success: 0, towns: 0, afterSchool: 0, allTowns: 0, firstTimeThrough: nil}
+  towns_completed = {}
+  furthest_completed_town = nil
+  logger.bucket_log_items.each do |item|
+    content = JSON.parse(item.content)
+    sessions.push content["session"]
+    case content["event"]
+      when "Completed town"
+        town_name = content["parameters"]["name"]
+
+        counts[:towns] += 1
+        towns_completed[town_name] ||= 0
+        towns_completed[town_name] += 1
+
+        town_idx = GAME_TOWNS.index(town_name) || BASELINE_TOWNS.index(town_name)
+
+        if furthest_completed_town
+          if town_idx == furthest_completed_town+1
+            furthest_completed_town = town_idx
+          end
+
+          # if we're the last town in the sequence, record a trip through
+          # AND if it's the first trip through, record the timestamp
+          if (GAME_TOWNS.include?(town_name)     && town_idx == (GAME_TOWNS.size - 1))     ||
+             (BASELINE_TOWNS.include?(town_name) && town_idx == (BASELINE_TOWNS.size - 3))  # Level 4 and Level 5 in baseline were optional...
+            furthest_completed_town = nil
+            counts[:allTowns] += 1
+            counts[:firstTimeThrough] = item.created_at.in_time_zone('EST') unless counts[:firstTimeThrough]
+          end
+        elsif town_idx == 0
+          furthest_completed_town = 0
+        end
+      when "Completed task"
+        counts[:success] += 1
+      when "Submitted offspring"
+        counts[:fail] += 1 if content["parameters"]["success"] == false
+      when "Started session"
+        time = item.created_at.in_time_zone('EST')
+        # school hours from 7a to 5p
+        counts[:afterSchool] += 1 if time.hour >= 17 || time.hour <= 6
+    end
+    # if content["parameters"]
+    #   content["parameters"].each do |k,v|
+    #   end
+    # end
+  end
+  row.push(sessions.compact.uniq.size, counts[:success], counts[:fail], reputation, counts[:afterSchool], counts[:towns])
+  TOWNS.each do |t|
+    row.push(towns_completed[t])
+  end
+  row.push(counts[:allTowns], counts[:firstTimeThrough])
+  @csv << row
+  print_status
+  new_csv if @count && @count > @csv_count*1000000 # Excel and OpenOffice are limited to ~1,048,575 rows
+end
+@csv.flush
+@csv.close
+puts "\n\ndone."
