@@ -4,6 +4,13 @@ class PageElement < ActiveRecord::Base
   acts_as_list :scope => :page_id
   belongs_to :embeddable, :polymorphic => true
 
+  # this makes it possible to do joins with embeddable_data_collector, so conditions can be added
+  # based on that data_collector
+  belongs_to :embeddable_data_collector,
+    :foreign_key => :embeddable_id,
+    :class_name => "Embeddable::DataCollector",
+    conditions: { page_elements: {embeddable_type: "Embeddable::DataCollector"}}
+
   # this could work if the finder sql was redone
   # has_one :investigation,
   #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors

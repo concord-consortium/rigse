@@ -88,9 +88,15 @@ class Investigation < ActiveRecord::Base
     }
   }
 
-  scope :probe_type, {
-    :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
-    }
+  scope :probe_type, joins: {activities: {sections: {pages: {page_elements: {embeddable_data_collectors: :probe_type}}}}}
+  # scope :probe_type, {
+  #   :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id
+  #              INNER JOIN sections ON sections.activity_id = activities.id
+  #              INNER JOIN pages ON pages.section_id = sections.id
+  #              INNER JOIN page_elements ON page_elements.page_id = pages.id
+  #              INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' 
+  #              INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
+  #   }
     
   scope :probe, lambda { |pt|
     pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
