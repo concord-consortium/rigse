@@ -63,7 +63,7 @@ module TaggableMaterial
       materials = options[:include_drafts] ? not_private : published
       sort_order = options[:sort_order] || "name ASC"
 
-      if !options[:include_contributed]
+      if materials.respond_to?(:is_official) && !options[:include_contributed]
         # If param is included, we want *all*; if not, only the Concord ones.
         materials = materials.official
       end
