@@ -61,8 +61,8 @@ module TaggableMaterial
       materials = options[:include_drafts] ? not_private : published
       sort_order = options[:sort_order] || "name ASC"
 
-      # make sure this particular model has the is_official column
-      if materials.respond_to?(:official) && !options[:include_contributed]
+      # make sure this particular model has the official scope
+      if materials.klass.respond_to?(:official) && !options[:include_contributed]
         # If param is included, we want *all*; if not, only the Concord ones.
         materials = materials.official
       end
