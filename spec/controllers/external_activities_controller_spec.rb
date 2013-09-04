@@ -120,7 +120,7 @@ describe ExternalActivitiesController do
       it "should show only public, official, and user-owned activities" do
         current_visitor = login_author
         get :index
-        assigns[:external_activities].length.should be(ExternalActivity.published.count + ExternalActivity.by_user(current_visitor).count)
+        assigns[:external_activities].length.should be(ExternalActivity.published.count + ExternalActivity.authored_by(current_visitor).count)
       end
     end
 
