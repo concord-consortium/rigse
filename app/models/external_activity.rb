@@ -32,6 +32,9 @@ class ExternalActivity < ActiveRecord::Base
     :conditions =>{:publication_status => "published"}
   }
 
+  scope :official, where(:is_official => true)
+  scope :contributed, where(:is_official => false)
+
   scope :assigned, where('offerings_count > 0')
 
   class <<self

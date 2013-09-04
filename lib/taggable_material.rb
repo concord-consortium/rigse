@@ -8,9 +8,6 @@ module TaggableMaterial
       }
 
       scope :ordered_by, lambda { |order| { :order => order } }
-
-      scope :official, where(:is_official => true)
-      scope :contributed, where(:is_official => false)
     end
   end
 
@@ -44,7 +41,8 @@ module TaggableMaterial
     end
 
     # the authored_by filter is unscoped so it will pick up materials regardless of the
-    # current scope
+    # whether previous scopes or filters took them out. This is so it will show any material
+    # authored by the user.
     def authored_by_or_cohort_visible_to(user)
       unscoped.match_any([
         unscoped.authored_by(user),
@@ -63,7 +61,8 @@ module TaggableMaterial
       materials = options[:include_drafts] ? not_private : published
       sort_order = options[:sort_order] || "name ASC"
 
-      if materials.respond_to?(:is_official) && !options[:include_contributed]
+      # make sure this particular model has the is_official column
+      if materials.respond_to?(:official) && !options[:include_contributed]
         # If param is included, we want *all*; if not, only the Concord ones.
         materials = materials.official
       end
