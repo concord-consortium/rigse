@@ -4,7 +4,7 @@ class Portal::Teacher < ActiveRecord::Base
   acts_as_replicatable
   acts_as_taggable_on :cohorts
 
-  belongs_to :user, :class_name => "User", :foreign_key => "user_id"
+  belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_teacher
   belongs_to :domain, :class_name => 'RiGse::Domain'
 
   has_many :offerings, :as => :runnable, :class_name => "Portal::Offering"

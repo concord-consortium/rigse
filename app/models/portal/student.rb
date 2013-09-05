@@ -3,7 +3,7 @@ class Portal::Student < ActiveRecord::Base
   
   acts_as_replicatable
   
-  belongs_to :user, :class_name => "User", :foreign_key => "user_id"
+  belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_student
   belongs_to :grade_level, :class_name => "Portal::GradeLevel", :foreign_key => "grade_level_id"
   
   # because of has many polymorphs, we don't need the following relationships defined

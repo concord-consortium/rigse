@@ -127,8 +127,8 @@ class User < ActiveRecord::Base
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
 
-  has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher"
-  has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student"
+  has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
+  has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
 
