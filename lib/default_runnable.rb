@@ -144,14 +144,7 @@ class DefaultRunnable
     end
 
     def add_model_to_page(page, model)
-      case model.model_type.name
-      when "Molecular Workbench"
-        ItsiImporter.add_mw_model_to_page(page, model)
-      when "NetLogo"
-        ItsiImporter.add_nl_model_to_page(page, model)
-      else
-        add_xhtml_to_page(page, "unsupported model type: #{model.model_type.name}")
-      end
+      add_xhtml_to_page(page, "unsupported model type: #{model.model_type.name}")
     end
 
     def add_mw_model_to_page(page, model)

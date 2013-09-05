@@ -548,14 +548,6 @@ There may be rake tasks that need to be run to update or fix data in the databas
 
 These should have corresponding capistrano tasks.
 
-Here's an older example:
-
-If the ITSI importers have been updated and you want to run them again:
-<pre><code>    
-  cap xproject_staging import:erase_and_import_itsi_activities
-  cap xproject_staging import:erase_and_import_ccp_itsi_units
-</code></pre>
-
 Test the staging server: "http://xproject.staging.concord.org/":http://xproject.staging.concord.org/
 
 If the authors confirm that there are no blockers then let people know when the
