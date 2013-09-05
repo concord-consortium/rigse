@@ -58,8 +58,12 @@ module TaggableMaterial
     end
 
     def search_list(options)
-      materials = options[:include_drafts] ? not_private : published
+      grade_span = options[:grade_span] || ""
       sort_order = options[:sort_order] || "name ASC"
+      domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
+      probe_type = options[:probe_type] || []
+
+      materials = options[:include_drafts] ? not_private : published
 
       # make sure this particular model has the official scope
       if materials.klass.respond_to?(:official) && !options[:include_contributed]
@@ -68,11 +72,35 @@ module TaggableMaterial
       end
 
       if options[:user]
+        # NOTE filters/scopes that happen before here will be ignored if the user is the author
         materials = materials.authored_by_or_cohort_visible_to(options[:user])
       end
 
       name = options[:name]
       materials = materials.like(name)
+
+      if probe_type.length > 0 && materials.klass.respond_to?(:probe_type)
+        if probe_type.include?("0")
+          # FIXME this should just look for materials that have any probe instead of the double
+          # negative approach currently being used
+          materials = materials.where("#{materials.klass.table_name}.id not in (?)", materials.no_probe)
+        else
+          materials = materials.probe_type.probe(probe_type)
+        end
+      end
+
+      if APP_CONFIG[:use_gse] && materials.klass.respond_to?(:with_gse)
+        if domain_id.length > 0
+          materials = materials.with_gse.domain(domain_id.map{|i| i.to_i})
+        end
+
+        if (!grade_span.empty?)
+          materials = materials.with_gse.grade(grade_span)
+        end
+      end
+
+      # make sure to only get one copy of each material
+      materials = materials.group("#{materials.klass.table_name}.id")
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
       if portal_clazz
@@ -83,9 +111,12 @@ module TaggableMaterial
       end
       if options[:paginate]
         materials = materials.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
-      else
-        materials
       end
+
+      # convert to a simple array so the grouping clause above doesn't cause problems
+      # if size is called on the Relation object after the group clause, then it counts the size
+      # groups not the total size.
+      materials.all
     end
 
 
