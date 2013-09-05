@@ -334,10 +334,6 @@ def create_new_database_yml
     @db_config[env]['username'] = @options[:db_user]
     @db_config[env]['password'] = @options[:db_password]
   end
-  %w{itsi ccportal}.each do |external_db|
-    @db_config[external_db]['username'] = @options[:db_user]
-    @db_config[external_db]['password'] = @options[:db_password]
-  end
   @db_config['cucumber'] = @db_config['test']
 
   unless @options[:quiet]
@@ -753,37 +749,6 @@ Here are the current settings in config/database.yml:
     end
 
     @db_config['cucumber'] = @db_config['test']
-
-    puts <<-HEREDOC
-
-If you have access to a ITSI database for importing ITSI Activities into #{@options[:theme].upcase}
-specify the values for the mysql database name, host, username, password, and asset_url.
-
-    HEREDOC
-
-    puts "\nSetting parameters for the ITSI database:\n\n"
-    @db_config['itsi']['database']  = ask("  database name: ") { |q| q.default = @db_config['itsi']['database'] }
-    @db_config['itsi']['host']      = ask("           host: ") { |q| q.default = @db_config['itsi']['host']  }
-    @db_config['itsi']['username']  = ask("       username: ") { |q| q.default = @db_config['itsi']['username'] }
-    @db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
-    @db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
-    @db_config['itsi']['adapter'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql2<% end %>"
-
-    puts <<-HEREDOC
-
-If you have access to a CCPortal database that indexes ITSI Activities into sequenced Units
-specify the values for the mysql database name, host, username, password.
-
-    HEREDOC
-
-    puts "\nSetting parameters for the CCPortal database:\n\n"
-    @db_config['ccportal']['database']  = ask("  database name: ") { |q| q.default = @db_config['ccportal']['database'] }
-    @db_config['ccportal']['host']      = ask("           host: ") { |q| q.default = @db_config['ccportal']['host']  }
-    @db_config['ccportal']['username']  = ask("       username: ") { |q| q.default = @db_config['ccportal']['username'] }
-    @db_config['ccportal']['password']  = ask("       password: ") { |q| q.default = @db_config['ccportal']['password'] }
-    @db_config['ccportal']['adapter'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql2<% end %>"
-
-    puts <<-HEREDOC
 
     Here is the updated database configuration:
     #{@db_config.to_yaml}

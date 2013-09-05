@@ -15,7 +15,7 @@ end
 
 def for_each_model_instance(find_conditions = {}, &block)
 
-  skip = [Itsi::Itsi, Ccportal::Ccportal, Embeddable::Embeddable, ActiveRecord::SessionStore::Session]
+  skip = [Embeddable::Embeddable, ActiveRecord::SessionStore::Session]
   ar_models = ActiveRecord::Base.descendants.delete_if {|m| skip.include?(m) }.sort_by{|m| m.name }
   find_conditions.merge!({:batch_size => 5})
   ar_models.each do |model|

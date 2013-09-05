@@ -172,21 +172,6 @@ again by running these rake tasks in sequence again:
   RAILS_ENV=production #{jruby_system_command} rake app:setup:new_app
 
 
-If you have access to an ITSI database you can also import ITSI activities 
-into #{APP_CONFIG[:theme].upcase} by running this rake task:
-
-  #{jruby_system_command} rake app:import:erase_and_import_itsi_activities
-
-* if you are developing locally and are using the same database for both development and production
-  environments the ITSI import will run much faster in production mode:
-
-  RAILS_ENV=production #{jruby_system_command} rake app:import:erase_and_import_itsi_activities
-
-If you have access to a CCPortal database that indexes ITSI Activities into sequenced Units 
-you can also import these ITSI activities into #{APP_CONFIG[:theme].upcase} Investigations by running this rake task:
-
-  #{jruby_system_command} rake app:import:erase_and_import_ccp_itsi_units
-
 If you have ssh access to the #{APP_CONFIG[:theme].upcase} production server you can get a copy of the production database on
 your local development instance with the following steps:
 

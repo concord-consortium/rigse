@@ -314,18 +314,6 @@ namespace :import do
       "bundle exec rake RAILS_ENV=#{rails_env} app:setup:import_gses_from_file --trace"
   end
 
-  desc 'erase and import ITSI activities from the ITSI DIY'
-  task :erase_and_import_itsi_activities, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:import:erase_and_import_itsi_activities --trace"
-  end
-
-  desc 'erase and import ITSI Activities from the ITSI DIY collected as Units from the CCPortal'
-  task :erase_and_import_ccp_itsi_units, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:import:erase_and_import_ccp_itsi_units --trace"
-  end
-
   desc "generate names for existing MavenJnlpServers that don't have them"
   task :generate_names_for_maven_jnlp_servers, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
