@@ -2,6 +2,7 @@
   #search_title
     ="Search activities"
 
+- grade_levels = Activity.grade_level_counts.map{ |c| c.name }.sort
 - form_tag url_for(:action => "search"), :method => 'get' do
   = hidden_field_tag 'page', (params[:page] || 1)
   %table
@@ -9,12 +10,23 @@
       %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'matching: ', :class=>"right"
         = text_field_tag :name, @filter_params[:name], :size => 60
-        %br
-        - if current_user.has_role? 'manager', 'admin', 'researcher'
-          = label_tag :filter, 'include draft activities: ', :class=>"right"
-          = check_box_tag 'include_drafts', 'include drafts', @filter_params[:include_drafts]
       %td{:style=>"padding: 0.5em;"}
         %input{ :type => "submit", :value => "Search"}
+    %tr
+      %td{:colspan => 2}
+        - if current_user.has_role? 'manager', 'admin', 'researcher'
+          .searchset
+            = check_box_tag 'include_drafts', 'include drafts', @filter_params[:include_drafts]
+            = label_tag :filter, 'include draft activities'
+        .gradecolumn.searchset
+          .tablecell
+            - allSelected = (@grade_levels.length > 0 && (@grade_levels.select{|i| i.length > 0}).eql?(grade_levels.map{|i| i.to_s}))
+            = check_box_tag 'grade_levels[]',"",allSelected,:id=>'allgrades',:onclick=>"selectAllGrades(this);"
+            = label_tag 'allgrades', 'All Grades'
+          -grade_levels.each do |grade|
+            .tablecell
+              = check_box_tag 'grade_levels[]', grade,(@grade_levels.include?(grade.to_s) ? true : false),:id=>grade,:onclick=>"selectAllGrades(this);"
+              = label_tag grade, grade
 
 #activities
   .action_menu
@@ -26,3 +38,35 @@
 
   - @activities.each do |activity|
     = render(:partial => 'list_item', :locals => {:runnable => activity})
+
+:javascript
+  function selectAllGrades(gradeObj)
+  {
+    var grades = #{grade_levels.inspect};
+    if(gradeObj.id == 'allgrades'){
+      if($(gradeObj).checked){
+        grades.each(function(obj){
+          $(obj).checked= "checked";
+        });
+      }
+      else if(!$(gradeObj).checked){
+        grades.each(function(obj){
+          $(obj).checked= false;
+        });
+      }
+    }
+    else {
+      if(!$(gradeObj).checked){
+        $('allgrades').checked= false;
+      }
+      else{
+        allgrades_selected = true;
+        grades.each(function(obj){
+          allgrades_selected = allgrades_selected && $(obj).checked;
+        });
+        if(allgrades_selected){
+          $('allgrades').checked= "checked";
+        }
+      }
+    }
+  }

@@ -141,6 +141,10 @@ class Activity < ActiveRecord::Base
         activities = Activity.unarchived.published.like(name)
       end
 
+      if options[:grade_levels]
+        activities = activities.tagged_with(options[:grade_levels], :any => true)
+      end
+
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
       if portal_clazz
         activities = activities - portal_clazz.offerings.map { |o| o.runnable }
