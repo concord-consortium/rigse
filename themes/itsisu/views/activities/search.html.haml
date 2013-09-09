@@ -3,6 +3,7 @@
     ="Search activities"
 
 - grade_levels = Activity.grade_level_counts.map{ |c| c.name }.sort
+- subject_areas = Activity.subject_area_counts.map{ |c| c.name }.sort
 - form_tag url_for(:action => "search"), :method => 'get' do
   = hidden_field_tag 'page', (params[:page] || 1)
   %table
@@ -21,12 +22,21 @@
         .gradecolumn.searchset
           .tablecell
             - allSelected = (@grade_levels.length > 0 && (@grade_levels.select{|i| i.length > 0}).eql?(grade_levels.map{|i| i.to_s}))
-            = check_box_tag 'grade_levels[]',"",allSelected,:id=>'allgrades',:onclick=>"selectAllGrades(this);"
-            = label_tag 'allgrades', 'All Grades'
+            = check_box_tag 'grade_levels[]',"",allSelected,:id=>'all-grades',:onclick=>"selectAllGrades(this);"
+            = label_tag 'all-grades', 'All Grades'
           -grade_levels.each do |grade|
             .tablecell
-              = check_box_tag 'grade_levels[]', grade,(@grade_levels.include?(grade.to_s) ? true : false),:id=>grade,:onclick=>"selectAllGrades(this);"
-              = label_tag grade, grade
+              = check_box_tag 'grade_levels[]', grade,(@grade_levels.include?(grade.to_s) ? true : false),:id=>(grade+'-grades'),:onclick=>"selectAllGrades(this);"
+              = label_tag grade+'-grades', grade
+        .subjectcolumn.searchset
+          .tablecell
+            - allSelected = (@subject_areas.length > 0 && (@subject_areas.select{|i| i.length > 0}).eql?(subject_areas.map{|i| i.to_s}))
+            = check_box_tag 'subject_areas[]',"",allSelected,:id=>'all-subjects',:onclick=>"selectAllSubjects(this);"
+            = label_tag 'all-subjects', 'All Subjects'
+          -subject_areas.each do |subject|
+            .tablecell
+              = check_box_tag 'subject_areas[]', subject,(@subject_areas.include?(subject.to_s) ? true : false),:id=>(subject+'-subjects'),:onclick=>"selectAllSubjects(this);"
+              = label_tag subject+'-subjects', subject
 
 #activities
   .action_menu
@@ -40,33 +50,42 @@
     = render(:partial => 'list_item', :locals => {:runnable => activity})
 
 :javascript
-  function selectAllGrades(gradeObj)
-  {
-    var grades = #{grade_levels.inspect};
-    if(gradeObj.id == 'allgrades'){
-      if($(gradeObj).checked){
-        grades.each(function(obj){
-          $(obj).checked= "checked";
-        });
-      }
-      else if(!$(gradeObj).checked){
-        grades.each(function(obj){
-          $(obj).checked= false;
-        });
-      }
-    }
-    else {
-      if(!$(gradeObj).checked){
-        $('allgrades').checked= false;
-      }
-      else{
-        allgrades_selected = true;
-        grades.each(function(obj){
-          allgrades_selected = allgrades_selected && $(obj).checked;
-        });
-        if(allgrades_selected){
-          $('allgrades').checked= "checked";
+  (function() {
+    var allGrades = #{grade_levels.map{|g| "#{g}-grades"}.inspect};
+    var allSubjects = #{subject_areas.map{|s| "#{s}-subjects"}.inspect};
+
+    var selectAll = function(selected, allOptions, type) {
+      if (selected.id == ('all-'+type)) {
+        if ($(selected).checked) {
+          allOptions.each(function(obj) {
+            $(obj).checked = "checked";
+          });
+        } else if (!$(selected).checked) {
+          allOptions.each(function(obj){
+            $(obj).checked = false;
+          });
+        }
+      } else {
+        if (!$(selected).checked) {
+          $('all-'+type).checked = false;
+        } else {
+          allOptions_selected = true;
+          allOptions.each(function(obj) {
+            allOptions_selected = allOptions_selected && $(obj).checked;
+          });
+          if (allOptions_selected) {
+            $('all-'+type).checked= "checked";
+          }
         }
       }
     }
-  }
+
+    window.selectAllSubjects = function(subjectObj) {
+      selectAll(subjectObj, allSubjects, 'subjects');
+    }
+
+    window.selectAllGrades = function(gradeObj) {
+      selectAll(gradeObj, allGrades, 'grades');
+    }
+  })();
+
