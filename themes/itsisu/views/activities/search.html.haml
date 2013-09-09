@@ -4,6 +4,7 @@
 
 - grade_levels = Activity.grade_level_counts.map{ |c| c.name }.sort
 - subject_areas = Activity.subject_area_counts.map{ |c| c.name }.sort
+- sensors = Probe::ProbeType.all.map { |c| c.name }.sort
 - form_tag url_for(:action => "search"), :method => 'get' do
   = hidden_field_tag 'page', (params[:page] || 1)
   %table
@@ -37,6 +38,15 @@
             .tablecell
               = check_box_tag 'subject_areas[]', subject,(@subject_areas.include?(subject.to_s) ? true : false),:id=>(subject+'-subjects'),:onclick=>"selectAllSubjects(this);"
               = label_tag subject+'-subjects', subject
+        .sensorcolumn.searchset
+          .tablecell
+            - allSelected = (@sensors.length > 0 && (@sensors.select{|i| i.length > 0}).eql?(sensors.map{|i| i.to_s}))
+            = check_box_tag 'sensors[]',"",allSelected,:id=>'all-sensors',:onclick=>"selectAllSensors(this);"
+            = label_tag 'all-sensors', 'All Sensors'
+          -sensors.each do |sensor|
+            .tablecell
+              = check_box_tag 'sensors[]', sensor,(@sensors.include?(sensor.to_s) ? true : false),:id=>(sensor+'-sensors'),:onclick=>"selectAllSensors(this);"
+              = label_tag sensor+'-sensors', sensor
 
 #activities
   .action_menu
@@ -53,6 +63,7 @@
   (function() {
     var allGrades = #{grade_levels.map{|g| "#{g}-grades"}.inspect};
     var allSubjects = #{subject_areas.map{|s| "#{s}-subjects"}.inspect};
+    var allSensors = #{sensors.map{|s| "#{s}-sensors"}.inspect};
 
     var selectAll = function(selected, allOptions, type) {
       if (selected.id == ('all-'+type)) {
@@ -86,6 +97,10 @@
 
     window.selectAllGrades = function(gradeObj) {
       selectAll(gradeObj, allGrades, 'grades');
+    }
+
+    window.selectAllSensors = function(sensorObj) {
+      selectAll(sensorObj, allSensors, 'sensors');
     }
   })();
 

@@ -127,7 +127,20 @@ class Activity < ActiveRecord::Base
   named_scope :published_exemplars, :conditions => {:publication_status => "published", :is_exemplar => true}
   named_scope :published_non_exemplars, :conditions => {:publication_status => "published", :is_exemplar => false}
   named_scope :unarchived, :conditions => ["#{self.table_name}.publication_status <> 'archived'"]
-  
+
+  named_scope :with_sensors, lambda {|*sensors|
+    parts = []
+    sensors.size.times {|i| parts << "probe_probe_types.name = ?" }
+    query = 'sections.is_enabled = true AND page_elements.is_enabled = true AND page_elements.embeddable_type = "Embeddable::Diy::Sensor" AND embeddable_diy_sensors.graph_type <> "Prediction" AND ('
+    query += parts.join(" OR ") + ')'
+    {
+      :joins => [:sections => [:pages => [:page_elements => [:embeddable_diy_sensor => [:prototype => :probe_type]]]]],
+      :select => 'activities.*',
+      :group => 'activities.id',
+      :conditions => [query] + sensors
+    }
+  }
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -147,6 +160,10 @@ class Activity < ActiveRecord::Base
 
       if options[:subject_areas]
         activities = activities.tagged_with(options[:subject_areas], :any => true)
+      end
+
+      if options[:sensors]
+        activities = activities.with_sensors(*options[:sensors])
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
