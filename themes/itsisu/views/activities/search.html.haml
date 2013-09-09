@@ -24,29 +24,32 @@
           .tablecell
             - allSelected = (@grade_levels.length > 0 && (@grade_levels.select{|i| i.length > 0}).eql?(grade_levels.map{|i| i.to_s}))
             = check_box_tag 'grade_levels[]',"",allSelected,:id=>'all-grades',:onclick=>"selectAllGrades(this);"
-            = label_tag 'all-grades', 'All Grades'
-          -grade_levels.each do |grade|
-            .tablecell
-              = check_box_tag 'grade_levels[]', grade,(@grade_levels.include?(grade.to_s) ? true : false),:id=>(grade+'-grades'),:onclick=>"selectAllGrades(this);"
-              = label_tag grade+'-grades', grade
+            = label_tag 'all-grades', 'All Grades', :style => "font-weight: bold;"
+          .optionset{:style => 'height: 12em; overflow-y: auto; overflow-x: hidden;'}
+            -grade_levels.each do |grade|
+              .tablecell
+                = check_box_tag 'grade_levels[]', grade,(@grade_levels.include?(grade.to_s) ? true : false),:id=>(grade+'-grades'),:onclick=>"selectAllGrades(this);"
+                = label_tag grade+'-grades', grade
         .subjectcolumn.searchset
           .tablecell
             - allSelected = (@subject_areas.length > 0 && (@subject_areas.select{|i| i.length > 0}).eql?(subject_areas.map{|i| i.to_s}))
             = check_box_tag 'subject_areas[]',"",allSelected,:id=>'all-subjects',:onclick=>"selectAllSubjects(this);"
-            = label_tag 'all-subjects', 'All Subjects'
-          -subject_areas.each do |subject|
-            .tablecell
-              = check_box_tag 'subject_areas[]', subject,(@subject_areas.include?(subject.to_s) ? true : false),:id=>(subject+'-subjects'),:onclick=>"selectAllSubjects(this);"
-              = label_tag subject+'-subjects', subject
+            %b= label_tag 'all-subjects', 'All Subjects', :style => "font-weight: bold;"
+          .optionset{:style => 'height: 12em; overflow-y: auto; overflow-x: hidden;'}
+            -subject_areas.each do |subject|
+              .tablecell
+                = check_box_tag 'subject_areas[]', subject,(@subject_areas.include?(subject.to_s) ? true : false),:id=>(subject+'-subjects'),:onclick=>"selectAllSubjects(this);"
+                = label_tag subject+'-subjects', subject
         .sensorcolumn.searchset
           .tablecell
             - allSelected = (@sensors.length > 0 && (@sensors.select{|i| i.length > 0}).eql?(sensors.map{|i| i.to_s}))
             = check_box_tag 'sensors[]',"",allSelected,:id=>'all-sensors',:onclick=>"selectAllSensors(this);"
-            = label_tag 'all-sensors', 'All Sensors'
-          -sensors.each do |sensor|
-            .tablecell
-              = check_box_tag 'sensors[]', sensor,(@sensors.include?(sensor.to_s) ? true : false),:id=>(sensor+'-sensors'),:onclick=>"selectAllSensors(this);"
-              = label_tag sensor+'-sensors', sensor
+            %b= label_tag 'all-sensors', 'All Sensors', :style => "font-weight: bold;"
+          .optionset{:style => 'height: 12em; overflow-y: auto; overflow-x: hidden; width: 160px;'}
+            -sensors.each do |sensor|
+              .tablecell
+                = check_box_tag 'sensors[]', sensor,(@sensors.include?(sensor.to_s) ? true : false),:id=>(sensor+'-sensors'),:onclick=>"selectAllSensors(this);"
+                = label_tag sensor+'-sensors', sensor
 
 #activities
   .action_menu
