@@ -9,6 +9,9 @@
     = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   = field_set_tag 'Publication status' do
     = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
+  = field_set_tag 'Student Report Enabled' do
+    = f.check_box :student_report_enabled
+    = t('authoring.student_report_enabled_description')
   = field_set_tag 'Extra Options' do
     .config
       = f.check_box :popup

@@ -10,6 +10,11 @@
         %label.right Publication status
         = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
       %li
+        %label.right Student Report Enabled
+        = f.check_box :student_report_enabled
+        %br
+        = t('authoring.student_report_enabled_description')
+      %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
 

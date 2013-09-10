@@ -5,6 +5,9 @@
   = field_set_tag 'Teacher only' do
     = f.check_box :teacher_only 
     (check here if this activity is for teachers only)
+  = field_set_tag 'Student Report Enabled' do
+    = f.check_box :student_report_enabled
+    #{t('authoring.student_report_enabled_description')} (this only applies if this activity is assigned individually)
   = field_set_tag 'Activity Name' do
     = f.text_field :name
   = field_set_tag 'Activity Description' do
