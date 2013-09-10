@@ -30,7 +30,6 @@ Feature: Student views report
     And run the activity
     And choose "Choice 1"
     And I press "Submit"
-    Then show me the page
     Then I should see "Last run"
     And I should not see "Generate a report of my work"
     
