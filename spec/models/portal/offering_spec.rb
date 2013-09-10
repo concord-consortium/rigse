@@ -37,6 +37,18 @@ describe Portal::Offering do
       @offering.active?.should be_true
     end
 
+    describe "delegates whether the student report" do
+      it "is enabled" do
+        @investigation.student_report_enabled = true
+        @offering.student_report_enabled?.should be_true
+      end
+
+      it "is enabled" do
+        @investigation.student_report_enabled = false
+        @offering.student_report_enabled?.should be_false
+      end
+    end
+
     describe "an offering with learners" do
       before (:each) do
         # TODO: Why is delete and destroy being called on this association?  It shouldn't be

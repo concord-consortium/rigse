@@ -64,10 +64,10 @@ Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_
 end
 
 When /^(?:|I )run the (?:investigation|activity|external activity|resource page)$/ do
-  # this assumes the user is logged in as a student
-  # lets verify that in the most simple way
-  # you should expand this if you want to use this step in other cases
-  @cuke_current_username.should == 'student'
+  # make sure the current user is a student
+  user = User.find_by_login(@cuke_current_username)
+  user.portal_student.should_not == nil
+
   # note this isn't an exact match sometimes the link is Run by Myself, sometimes it is just Run
   # and addtionally if groups are turned on then there will be another link that is Run with Other Students
   find(".solo.button").click
@@ -81,4 +81,19 @@ end
 
 Then /^I should not see the run link for "([^"]*)"$/ do | runnable_name |
   page.should_not have_content(runnable_name)
+end
+
+Given /^the student report is disabled for the (activity|investigation|external activity) "([^"]+)"$/ do |type, name|
+  material = nil
+  case type
+    when "investigation"
+      material = Investigation.find_by_name(name)
+    when "activity"
+      material = Activity.find_by_name(name)
+    when "external activity"
+      material = ExternalActivity.find_by_name(name)
+  end
+
+  material.student_report_enabled = false
+  material.save!
 end

@@ -127,6 +127,15 @@ class Portal::Offering < ActiveRecord::Base
     internal_report?
   end
 
+  def student_report_enabled?
+    if runnable.respond_to? :student_report_enabled
+      runnable.student_report_enabled
+    else
+      # by default this is true
+      true
+    end
+  end
+
   def completed_students_count
     student_ids = self.clazz.students.map{|item| item.id}
     learners = self.learners.select{|item| student_ids.include?(item.student_id)}

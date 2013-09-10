@@ -18,8 +18,8 @@ class Report::OfferingStudentStatus
     end
   end
 
-  def dispay_report_link?
-    offering_reportable?
+  def display_report_link?
+    (offering && offering.student_report_enabled? && offering_reportable?)
   end
   
   def offering_reportable?
