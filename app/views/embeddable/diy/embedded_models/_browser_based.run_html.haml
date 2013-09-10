@@ -9,7 +9,7 @@
   :javascript
     $j("##{dom_id_for(diy_embedded_model, :model_open_album)}").click(function() {
       if (#{current_user.anonymous?}) {
-        alert("The Snapshot Album is not available in preview");
+        alert("You must be logged in to open the snapshot album.");
         return false;
       } else {
         show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}");
@@ -20,7 +20,7 @@
   :javascript
     $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
       if (#{current_user.anonymous?}) {
-        alert("The Snapshot Album is not available in preview");
+        alert("You must be logged in to take snapshots.");
         return false;
       } else {
         show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}&todo=new");
@@ -50,7 +50,7 @@
           var shutterbug = new Shutterbug("##{dom_id_for(diy_embedded_model, :model_interactive)} iframe", null, optCallbackFn, "#{dom_id_for(diy_embedded_model, :model_take_snapshot)}", $j);
           $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
             if (#{current_user.anonymous?}) {
-              alert("The Snapshot Album is not available in preview");
+              alert("You must be logged in to take snapshots.");
               return false;
             } else {
               $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').addClass("disabled");
