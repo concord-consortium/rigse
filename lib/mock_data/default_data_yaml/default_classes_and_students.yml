@@ -113,6 +113,6 @@ student_clazzes:
     student: ross
     clazz_names: Physics
 
-  student_clazz_1:
+  student_clazz_8:
     student: davy
     clazz_names: Class_with_no_assignment
