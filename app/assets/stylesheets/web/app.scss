@@ -510,7 +510,9 @@ p.note {
     width: 9em;
     height: 2.2em;
     margin: 20px 0px;
-    font-size: 1.7em; } }
+    font-size: 1.7em; }
+  label {
+    text-transform: none; } }
 
 .item {
   background-color: white;
