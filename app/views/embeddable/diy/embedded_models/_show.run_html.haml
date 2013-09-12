@@ -1,4 +1,4 @@
-%div{:id => dom_id_for(diy_embedded_model, :details), :class => 'content'}
+%div{:id => dom_id_for(diy_embedded_model, :details), :class => 'content', :style => "position: relative;"}
   - if diy_embedded_model.diy_model
     .model_image{:id => dom_id_for(diy_embedded_model, :model_image)}
       .error{:style => "color: red;"}= "This model can't run in the browser!"

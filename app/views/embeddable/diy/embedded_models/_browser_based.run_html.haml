@@ -1,3 +1,6 @@
+.click_to_play{:id => dom_id_for(diy_embedded_model, :click_to_play)}
+  .background
+  .text= "Click here to start the model."
 .model_interactive.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive)}
   - if diy_embedded_model.diy_model.interactive_url
     %iframe.interactive{:src => diy_embedded_model.diy_model.interactive_url, :frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
@@ -32,8 +35,26 @@
 - elsif diy_embedded_model.diy_model.interactive_url
   :javascript
     if (Object.isExtensible && Modernizr.svg) {
-      $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
-      $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").removeClass('unavailable');
+      // set up click-to-play
+      $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").removeClass('unavailable');
+      $j("##{dom_id_for(diy_embedded_model, :model_image)} .error").addClass('unavailable');
+
+      $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").click(function() {
+        // disable all the other interactives
+        // TODO If a model has already been loaded, just stop it if it's running
+        $j('iframe.interactive').attr('src', null);
+        $j('.model_interactive').addClass('unavailable');
+        $j('.click_to_play').removeClass('unavailable');
+        $j('.model_image').removeClass('unavailable');
+
+        $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").removeClass('unavailable');
+        $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
+        $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").addClass('unavailable')
+        setTimeout(function() {
+          $j("##{dom_id_for(diy_embedded_model, :model_interactive)} iframe").attr('src', '#{diy_embedded_model.diy_model.interactive_url}');
+        }, 10);
+      })
+
       if (#{Labbook.enabled?}) {
         $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").removeClass('unavailable');
         (function() {
