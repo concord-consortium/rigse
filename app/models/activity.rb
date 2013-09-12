@@ -191,7 +191,13 @@ class Activity < ActiveRecord::Base
       end
 
       if options[:paginate]
-        activities = activities.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
+        paginate_options = {
+          :page => options[:page] || 1,
+          :per_page => options[:per_page] || 20
+        }
+        # group_by ends up making the auto-count calculation off sometimes
+        paginate_options[:total_entries] = activities.count(:select => 'DISTINCT activities.id') if options[:sensors]
+        activities = activities.paginate(paginate_options)
       else
         activities
       end
