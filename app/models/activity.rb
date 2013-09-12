@@ -129,15 +129,34 @@ class Activity < ActiveRecord::Base
   named_scope :unarchived, :conditions => ["#{self.table_name}.publication_status <> 'archived'"]
 
   named_scope :with_sensors, lambda {|*sensors|
-    parts = []
-    sensors.size.times {|i| parts << "probe_probe_types.name = ?" }
-    query = 'sections.is_enabled = true AND page_elements.is_enabled = true AND page_elements.embeddable_type = "Embeddable::Diy::Sensor" AND embeddable_diy_sensors.graph_type <> "Prediction" AND ('
-    query += parts.join(" OR ") + ')'
+    query_parts = []
+    data = []
+    sensors.each do |s|
+      str = '( probe_probe_types.name = ? '
+      str += 'AND probe_calibrations.name ' + ((s =~ /#/) ? '= ? ' : 'IS NULL ' )
+      str += ')'
+
+      query_parts << str
+      data += s.split(/#/)
+    end
+    query = [
+      'sections.is_enabled = true',
+      'page_elements.is_enabled = true',
+      'page_elements.embeddable_type = "Embeddable::Diy::Sensor"',
+      'embeddable_diy_sensors.graph_type <> "Prediction"'
+      ].join(' AND ')
+    query += ' AND (' + query_parts.join(" OR ") + ')'
     {
-      :joins => [:sections => [:pages => [:page_elements => [:embeddable_diy_sensor => [:prototype => :probe_type]]]]],
+      :joins => "INNER JOIN `sections` ON sections.activity_id = activities.id
+                 INNER JOIN `pages` ON pages.section_id = sections.id
+                 INNER JOIN `page_elements` ON page_elements.page_id = pages.id
+                 INNER JOIN `embeddable_diy_sensors` ON `embeddable_diy_sensors`.id = `page_elements`.embeddable_id
+                 INNER JOIN `embeddable_data_collectors` ON `embeddable_data_collectors`.id = `embeddable_diy_sensors`.prototype_id
+                 INNER JOIN `probe_probe_types` ON `probe_probe_types`.id = `embeddable_data_collectors`.probe_type_id
+                 LEFT JOIN `probe_calibrations` ON `probe_calibrations`.probe_type_id = `embeddable_data_collectors`.calibration_id",
       :select => 'activities.*',
       :group => 'activities.id',
-      :conditions => [query] + sensors
+      :conditions => [query] + data
     }
   }
 

@@ -4,7 +4,11 @@
 
 - grade_levels = Activity.grade_level_counts.map{ |c| c.name }.sort
 - subject_areas = Activity.subject_area_counts.map{ |c| c.name }.sort
-- sensors = Probe::ProbeType.all.map { |c| c.name }.sort
+
+- probe_types = Probe::ProbeType.all(:include => :data_collectors).select{|pt| pt.data_collectors.detect{|dc| dc.is_prototype }}
+- sensors  = probe_types.map { |pt| pt.name }
+- sensors += probe_types.select {|pt| pt.calibrations.size > 0 }.map {|pt| pt.calibrations.map{|ptc| "#{pt.name}##{ptc.name}" }}.flatten.uniq.compact
+- sensors = sensors.sort_by {|name| name.sub(/^.*#/,'').downcase }
 - form_tag url_for(:action => "search"), :method => 'get' do
   = hidden_field_tag 'page', (params[:page] || 1)
   %table
@@ -49,7 +53,7 @@
             -sensors.each do |sensor|
               .tablecell
                 = check_box_tag 'sensors[]', sensor,(@sensors.include?(sensor.to_s) ? true : false),:id=>(sensor+'-sensors'),:onclick=>"selectAllSensors(this);"
-                = label_tag sensor+'-sensors', sensor
+                = label_tag sensor+'-sensors', sensor.sub(/^.*#/,'')
 
 #activities
   .action_menu
