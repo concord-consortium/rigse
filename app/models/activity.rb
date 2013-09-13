@@ -103,7 +103,7 @@ class Activity < ActiveRecord::Base
 
   scope :published,
   {
-    :conditions =>['activities.publication_status = "published" OR investigations.publication_status = "published"']
+    :conditions =>['activities.publication_status = "published" OR (investigations.publication_status = "published" AND investigations.allow_activity_assignment = 1)']
   }
   
   scope :directly_published,

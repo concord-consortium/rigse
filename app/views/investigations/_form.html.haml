@@ -15,6 +15,11 @@
         %br
         = t('authoring.student_report_enabled_description')
       %li
+        %label.right Allow Activity Assignment
+        = f.check_box :allow_activity_assignment
+        %br
+        allow teachers to assign the activities of this investigation
+      %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
 
