@@ -48,6 +48,8 @@ en:
     no_assignments: "No materials assigned to this class."
   authoring:
     student_report_enabled_description: Show a link to the student so they can see all their answers and see if they are correct
+    show_score_description: Show the score in the report
+
 
 'en-HAS':
   activerecord:

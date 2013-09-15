@@ -44,6 +44,14 @@ class Report::OfferingStudentStatus
     end
   end
 
+  def number_correct
+    if learner && offering_reportable?
+      num_correct = learner.report_learner.num_correct || 0
+    else
+      nil
+    end
+  end
+
   # the runnable is passed because in somecases we want the progress for a sub part of the
   # this learners runnable
   def activity_complete_percent(activity)

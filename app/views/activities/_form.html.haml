@@ -9,6 +9,10 @@
   = field_set_tag 'Student Report Enabled' do
     = f.check_box :student_report_enabled
     #{t('authoring.student_report_enabled_description')} (this only applies if this activity is assigned individually)
+  = field_set_tag 'Show Score' do
+    = f.check_box :show_score
+    #{t('authoring.show_score_description')} (this only applies if this activity is assigned individually)
+
   = field_set_tag 'Activity Name' do
     = f.text_field :name
   = field_set_tag 'Activity Description' do

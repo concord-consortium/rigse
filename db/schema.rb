@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130913140647) do
+ActiveRecord::Schema.define(:version => 20130915015023) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(:version => 20130913140647) do
     t.string   "publication_status"
     t.integer  "offerings_count",                      :default => 0
     t.boolean  "student_report_enabled",               :default => true
+    t.boolean  "show_score",                           :default => false
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
@@ -817,6 +818,7 @@ ActiveRecord::Schema.define(:version => 20130913140647) do
     t.integer  "offerings_count",                         :default => 0
     t.boolean  "student_report_enabled",                  :default => true
     t.boolean  "allow_activity_assignment",               :default => true
+    t.boolean  "show_score",                              :default => false
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|

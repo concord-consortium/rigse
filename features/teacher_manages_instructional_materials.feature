@@ -120,4 +120,10 @@ Feature: Teacher manages instructional materials of a class
   Scenario: Teacher should see a message if student has not attempted corresponding activity
     And I click progress bar on the instructional materials page for the student "dave" and activity "Air activity"
     Then I should see "Reporting is unavailable until the selected activity is started by this student" within the lightbox in focus
-    
+
+  @javascript
+  Scenario: Teacher should see the score for a material with it enabled
+    Given the investigation "Plant reproduction" shows scores
+    When I go to Instructional Materials page for "My Class"
+    And I click the tab of Instructional Materials with text "Plant reproduction"
+    Then I should see "Score"

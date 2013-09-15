@@ -124,6 +124,13 @@ Given /^the investigation "([^"]*)" is published$/ do |investigation_name|
   investigation.save
 end
 
+Given /^the investigation "([^"]*)" shows scores$/ do |investigation_name|
+  investigation = Investigation.find_by_name investigation_name
+  investigation.show_score = true
+  investigation.save
+end
+
+
 When /^I sort investigations by "([^"]*)"$/ do |sort_str|
   visit "/investigations?sort_order=#{sort_str}"
 end

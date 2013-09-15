@@ -53,6 +53,9 @@
                     = link_to "#{activity_name}", "#",:class=>"activity_report", :onclick => "openReportLinkPopup('#{description_text}')"
                 - else
                   = activity_name
+          - if offering_status.show_score?
+            %th
+              Score (total: #{offering_status.number_of_scorables})
         - student_statuses.each do |student_status|
           %tr
             - activities.each do |activity|
@@ -79,6 +82,9 @@
                   - else
                     .progressbar{:id => "progressbar_#{student_status.student.user.id}_#{activity.id}"}
                       .progress{:style=>"width:#{percentage}%"}
+              - if offering_status.show_score?
+                %td= student_status.number_correct
+
 
     .clearboth{:style=>"height:10px"}
   - else

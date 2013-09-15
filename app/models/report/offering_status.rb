@@ -56,13 +56,19 @@ class Report::OfferingStatus
     collapsed ? "" : "display:none"
   end
 
-  def student_activities
+  def runnable
+    return @runnable if @runnable
     runnable = offering.runnable
 
     if runnable.is_a?(::ExternalActivity) && runnable.template
-      runnable = runnable.template
+      @runnable = runnable.template
+    else
+      @runnable = runnable
     end
+    @runnable
+  end
 
+  def student_activities
     if runnable.is_a? ::Investigation
       runnable.activities.student_only
     elsif runnable.is_a? ::Activity
@@ -70,5 +76,22 @@ class Report::OfferingStatus
     else
       []
     end
+  end
+
+  def show_score?
+    if runnable.respond_to? :show_score
+      runnable.show_score
+    else
+      false
+    end
+  end
+
+  def number_of_scorables
+    return @number_of_scorables if @number_of_scorables
+
+    @number_of_scorables = runnable.reportable_elements.count{ |element|
+      embeddable = element[:embeddable]
+      embeddable.respond_to?(:correctable?) && embeddable.has_correct_answer?
+    }
   end
 end

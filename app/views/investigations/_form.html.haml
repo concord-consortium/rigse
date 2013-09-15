@@ -18,7 +18,12 @@
         %label.right Allow Activity Assignment
         = f.check_box :allow_activity_assignment
         %br
-        allow teachers to assign the activities of this investigation
+        allow teachers to assign the activities of this #{t(:investigation)}
+      %li
+        %label.right Show Score
+        = f.check_box :show_score
+        %br
+        = t('authoring.show_score_description')
       %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
