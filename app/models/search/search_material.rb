@@ -10,6 +10,7 @@ class Search::SearchMaterial
   attr_accessor :model_name
   attr_accessor :title
   attr_accessor :description
+  attr_accessor :description_for_teacher
   attr_accessor :assign_btn_text
   attr_accessor :icon_image_url
   attr_accessor :activities
@@ -45,6 +46,7 @@ class Search::SearchMaterial
     self.model_name = material.class.name
     self.title = material.full_title
     self.description = material.description
+    self.description_for_teacher = material.description_for_teacher
     self.assign_btn_text = "Assign #{self.model_name}"
     self.icon_image_url = "search/#{self.model_name.downcase}.gif"
     self.activities = (material.is_a? ::Investigation) ? material.activities : nil

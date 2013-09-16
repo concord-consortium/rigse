@@ -27,6 +27,11 @@
       %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
+      %li
+        %label Description for Teacher
+        %br
+        = t('authoring.description_for_teacher_description')
+        = f.text_area :description_for_teacher, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
 
 / = field_set_tag 'Select GSE' do
 /   = field_set_tag 'filter' do

@@ -54,7 +54,10 @@
           = render :partial => '/browse/share', :locals => {:material_url => parent_material.url,:material_title=>parent_material.title}
   %br
   .description
-    = parent_material.description
+    - if current_visitor.portal_teacher && parent_material.description_for_teacher.present?
+      = parent_material.description_for_teacher
+    - else
+      = parent_material.description
     %div.clazz_count{:id=>"material_clazz_count"}
       %i
         - if(material_count == 0)
