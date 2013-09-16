@@ -40,18 +40,17 @@
       $j("##{dom_id_for(diy_embedded_model, :model_image)} .error").addClass('unavailable');
 
       $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").click(function() {
-        // disable all the other interactives
-        // TODO If a model has already been loaded, just stop it if it's running
-        $j('iframe.interactive').attr('src', null);
-        $j('.model_interactive').addClass('unavailable');
-        $j('.click_to_play').removeClass('unavailable');
-        $j('.model_image').removeClass('unavailable');
+        // If a model has already been loaded, just leave it be. It will be stopped when another model's play is clicked.
 
+        // Load this model.
         $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").removeClass('unavailable');
         $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
         $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").addClass('unavailable')
         setTimeout(function() {
-          $j("##{dom_id_for(diy_embedded_model, :model_interactive)} iframe").attr('src', '#{diy_embedded_model.diy_model.interactive_url}');
+          var id = "##{dom_id_for(diy_embedded_model, :model_interactive)} iframe";
+          $j(id).attr('src', '#{diy_embedded_model.diy_model.interactive_url}');
+          // Create the phone for this model.
+          phones[id] = createPhone(id);
         }, 10);
       })
 
