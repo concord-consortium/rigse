@@ -3,7 +3,7 @@
   .text= "Click here to start the model."
 .model_interactive.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive)}
   - if diy_embedded_model.diy_model.interactive_url
-    %iframe.interactive{:src => diy_embedded_model.diy_model.interactive_url, :frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
+    %iframe.interactive{:frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
 .model_interactive_snapshots.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive_snapshots)}
   %button.labbook_button{:id => dom_id_for(diy_embedded_model, :model_take_snapshot)}= "Take a Snapshot"
   %img.labbook_button{ :id => dom_id_for(diy_embedded_model, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
