@@ -670,6 +670,13 @@ namespace 'account_data' do
     end
   end
 
+namespace 'itsi' do
+  desc 'Clear the fragment cache'
+  task 'clear_fragment_cache' do
+    run "rm #{shared_path}/system/fragments/views/*"
+  end
+end
+
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'

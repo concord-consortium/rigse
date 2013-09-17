@@ -77,6 +77,13 @@
 
       - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
+      - field_set_tag '<b>Snapshot Instructions</b>', { :id => dom_id_for(admin_project, :instructions)} do
+        %p
+          %b= "Digital Microscope"
+          = f.text_area :digital_microscope_snapshot_instructions, :id => dom_id_for(admin_project, :item, :digital_microscope_snapshot_instructions), :class => 'tinymce_textarea'
+        %p
+          %b= "Interactives"
+          = f.text_area :interactive_snapshot_instructions, :id => dom_id_for(admin_project, :item, :interactive_snapshot_instructions), :class => 'tinymce_textarea'
       %p
         %b
           Description

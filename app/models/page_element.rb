@@ -10,6 +10,7 @@ class PageElement < ActiveRecord::Base
   #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
   #   INNER JOIN pages ON page_elements.page_id = pages.id
   #   WHERE pages.section_id = #{id}'
+  belongs_to :embeddable_diy_sensor, :foreign_key => :embeddable_id, :class_name => "Embeddable::Diy::Sensor"
   
   # TODO the old named_scope (now page_by_investigation) didn't include elements in inner pages.
   # this method combines elements in pages, with elements in innerpages

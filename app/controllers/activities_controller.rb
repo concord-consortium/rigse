@@ -80,13 +80,20 @@ class ActivitiesController < ApplicationController
   def search
     @include_drafts = params[:include_drafts]
     @name = params[:name]
+    @grade_levels = params[:grade_levels] || []
+    @subject_areas = params[:subject_areas] || []
+    @sensors = params[:sensors] || []
     pagenation = params[:page]
-    @activities = Activity.search_list({
+    search_list_params = {
       :name => @name,
       :include_drafts => @include_drafts,
       :paginate => true,
       :page => pagenation
-    })
+    }
+    search_list_params[:grade_levels] = @grade_levels if @grade_levels && @grade_levels.size > 0
+    search_list_params[:subject_areas] = @subject_areas if @subject_areas && @subject_areas.size > 0
+    search_list_params[:sensors] = @sensors if @sensors && @sensors.size > 0
+    @activities = Activity.search_list(search_list_params)
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_user.id }
     end

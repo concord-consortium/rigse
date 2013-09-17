@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130812204644) do
+ActiveRecord::Schema.define(:version => 20130917153355) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -67,6 +67,8 @@ ActiveRecord::Schema.define(:version => 20130812204644) do
     t.boolean  "use_periodic_bundle_uploading",                :default => false
     t.string   "jnlp_cdn_hostname"
     t.integer  "pub_interval",                                 :default => 10
+    t.text     "interactive_snapshot_instructions"
+    t.text     "digital_microscope_snapshot_instructions"
   end
 
   create_table "admin_tags", :force => true do |t|
