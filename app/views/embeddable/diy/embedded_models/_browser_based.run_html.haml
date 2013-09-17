@@ -1,6 +1,14 @@
+.click_to_play.unavailable{:id => dom_id_for(diy_embedded_model, :click_to_play)}
+  .background
+  .text= "Click here to start the model."
 .model_interactive.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive)}
   - if diy_embedded_model.diy_model.interactive_url
-    %iframe.interactive{:src => diy_embedded_model.diy_model.interactive_url, :frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
+    %iframe.interactive{:frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
+.model_interactive_snapshot_instructions.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive_snapshot_instructions)}
+  - if diy_embedded_model.diy_model.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
+    = current_project.digital_microscope_snapshot_instructions
+  - else
+    = current_project.interactive_snapshot_instructions
 .model_interactive_snapshots.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive_snapshots)}
   %button.labbook_button{:id => dom_id_for(diy_embedded_model, :model_take_snapshot)}= "Take a Snapshot"
   %img.labbook_button{ :id => dom_id_for(diy_embedded_model, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
@@ -9,7 +17,7 @@
   :javascript
     $j("##{dom_id_for(diy_embedded_model, :model_open_album)}").click(function() {
       if (#{current_user.anonymous?}) {
-        alert("The Snapshot Album is not available in preview");
+        alert("You must be logged in to open the snapshot album.");
         return false;
       } else {
         show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}");
@@ -20,7 +28,7 @@
   :javascript
     $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
       if (#{current_user.anonymous?}) {
-        alert("The Snapshot Album is not available in preview");
+        alert("You must be logged in to take snapshots.");
         return false;
       } else {
         show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}&todo=new");
@@ -28,13 +36,32 @@
       }
     });
     $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
+    $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshot_instructions)}").removeClass('unavailable');
     $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").removeClass('unavailable');
 - elsif diy_embedded_model.diy_model.interactive_url
   :javascript
     if (Object.isExtensible && Modernizr.svg) {
-      $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
-      $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").removeClass('unavailable');
+      // set up click-to-play
+      $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").removeClass('unavailable');
+      $j("##{dom_id_for(diy_embedded_model, :model_image)} .error").addClass('unavailable');
+
+      $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").click(function() {
+        // If a model has already been loaded, just leave it be. It will be stopped when another model's play is clicked.
+
+        // Load this model.
+        $j("##{dom_id_for(diy_embedded_model, :model_interactive)}").removeClass('unavailable');
+        $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
+        $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").addClass('unavailable')
+        setTimeout(function() {
+          var id = "##{dom_id_for(diy_embedded_model, :model_interactive)} iframe";
+          $j(id).attr('src', '#{diy_embedded_model.diy_model.interactive_url}');
+          // Create the phone for this model.
+          phones[id] = createPhone(id);
+        }, 10);
+      })
+
       if (#{Labbook.enabled?}) {
+        $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshot_instructions)}").removeClass('unavailable');
         $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").removeClass('unavailable');
         (function() {
           var optCallbackFn = function(msg) {
@@ -50,7 +77,7 @@
           var shutterbug = new Shutterbug("##{dom_id_for(diy_embedded_model, :model_interactive)} iframe", null, optCallbackFn, "#{dom_id_for(diy_embedded_model, :model_take_snapshot)}", $j);
           $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
             if (#{current_user.anonymous?}) {
-              alert("The Snapshot Album is not available in preview");
+              alert("You must be logged in to take snapshots.");
               return false;
             } else {
               $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').addClass("disabled");

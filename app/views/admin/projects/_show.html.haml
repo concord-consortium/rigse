@@ -114,6 +114,15 @@
                       %li= elem
                 - else
                   no server configured
+            - field_set_tag '<b>Snapshot Instructions</b>' do
+              %p
+                %b= "Digital Microscope:"
+                %br
+                = admin_project.digital_microscope_snapshot_instructions
+              %p
+                %b= "Interactives:"
+                %br
+                = admin_project.interactive_snapshot_instructions
             - field_set_tag 'Project Description' do
               %p= admin_project.description
             - field_set_tag 'Home Page Content' do

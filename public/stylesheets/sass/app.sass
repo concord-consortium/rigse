@@ -1263,6 +1263,34 @@ iframe.interactive
   width: 690px
   height: 400px
 
+.click_to_play
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  &.unavailable
+    display: none
+  .background
+    &:hover
+      opacity: 0.9
+    background-color: white
+    opacity: 0.75
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+  .text
+    text-align: center
+    font-size: 3em
+    margin-top: 3em
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+
 #labbook-cover
   position: absolute
   top: 0
@@ -1306,6 +1334,9 @@ iframe.interactive
   background: white
   text-align: center
   padding-top: 25%
+
+.error.unavailable
+  display: none
 
 .model_image
   &.unavailable
@@ -1359,3 +1390,8 @@ iframe.interactive
 
 .ui-state-disabled
   opacity: 1
+
+.searchset
+  display: inline-block
+  margin-right: 20px
+  float: left
