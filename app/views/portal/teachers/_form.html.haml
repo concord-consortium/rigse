@@ -24,5 +24,9 @@
         -# = render :partial => 'cohorts', :locals => { :portal_teacher => portal_teacher }
       %tr
         %td
+        %td{:id => 'source_fields'}
+          = render :partial => 'users/source', :locals => { :user => portal_teacher.user }
+      %tr
+        %td
         %td
           = f.submit 'Submit'
