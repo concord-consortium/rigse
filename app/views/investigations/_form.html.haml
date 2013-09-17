@@ -18,7 +18,7 @@
         %label.right Allow Activity Assignment
         = f.check_box :allow_activity_assignment
         %br
-        allow teachers to assign the activities of this #{t(:investigation)}
+        Allow a teacher to assign the individual activities of this #{t(:investigation)} outside of this #{t(:investigation)}. This means that on the browse materials listing, teachers will see the #{t(:investigation)} listed in the #{t(:investigation)}s section, and each of its activities listed in the activities section. By default this is enabled so teachers can cherry pick activities out of a large #{t(:investigation)}. If you don't want teachers to cherry pick activities out of this #{t(:investigation)}, disable this option.
       %li
         %label.right Show Score
         = f.check_box :show_score
