@@ -1,16 +1,23 @@
 - content_for :content_header do
   %h1= "First time setup"
+#instructions
+  %p
+    In order to use ITSI, we need to know at which school you teach. Please fill in the form below to select your current school.
+  %p
+    If you already have an ITSI account, click this button to fill in your username and password.
+    %br
+    %button#link_account_link= "I already have an ITSI account."
 
 .choose_school_form
   %h3= "Please select your school from the options below:"
   - form_tag(auth_choose_school_path, :id => 'new_portal_teacher', :method => :post) do
     #school_selector
       = render :partial => 'shared/school_selector', :locals => { :school_selector => @school_selector }
+    #source
+      = render :partial => 'users/source', :locals => { :user => @user }
     = hidden_field_tag "user_id", @user.id
-    = submit_tag("Continue")
+    = submit_tag("Select this school")
 
-%h2
-  %a#link_account_link{:href => "#"}= "I already have an ITSI account."
 .link_account_form{:style => "display: none;"}
   .instructions
     Please enter your existing account's username and password.
@@ -30,4 +37,6 @@
   $j("#link_account_link").click(function() {
     $j(".link_account_form").show();
     $j(".choose_school_form").hide();
+    $j("#instructions").hide();
+    $j('#flash').hide();
   })
