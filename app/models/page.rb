@@ -282,4 +282,15 @@ class Page < ActiveRecord::Base
     [{name => self}]
   end
   
+  def can_run_lightweight?
+    # filter through all the embeddables to make sure they all have lightweight views
+    page_elements.each do |element|
+      next unless element.is_enabled?
+      component = element.embeddable
+      if !component.respond_to?('can_run_lightweight?') || !component.can_run_lightweight?
+        return false
+      end
+    end
+    return true
+  end
 end

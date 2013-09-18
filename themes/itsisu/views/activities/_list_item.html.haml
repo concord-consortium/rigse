@@ -23,7 +23,7 @@
         %a.lightweight{:href => polymorphic_path(runnable, :format => :run_html) , :name => "run_lightweight_button_", :title => "Run this activity in the browser", :target => "_blank"}
           %img{:alt => "run", :src => "/images/diy_icons/world_go.png", :title => "Run this activity in the browser"}/
         :javascript
-          if (Object.isExtensible && Modernizr.svg) {
+          if ((Object.isExtensible && Modernizr.svg) || '#{runnable.class.to_s}' == 'Page') {
             $j("##{dom_id_for(runnable, :list_item)} .heavyweight").hide();
             $j("##{dom_id_for(runnable, :list_item)} .preview").hide();
             $j("##{dom_id_for(runnable, :list_item)} .lightweight").show();

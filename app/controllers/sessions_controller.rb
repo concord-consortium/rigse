@@ -27,6 +27,7 @@ class SessionsController < ApplicationController
         return
       end
     end
+    logout_keeping_session!
     redirect_to "/auth/#{params[:provider]}"
   end
 
@@ -95,6 +96,11 @@ class SessionsController < ApplicationController
 
   def choose_school
     @user = User.find(params[:user_id])
+    source = params[:user][:source]
+    if source && !source.empty?
+      @user.source = source
+      @user.save!
+    end
     @uid = @user.uid
     @provider = @user.provider
     @school_selector = Portal::SchoolSelector.new(params)
