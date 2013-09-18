@@ -13,6 +13,8 @@
   - form_tag(auth_choose_school_path, :id => 'new_portal_teacher', :method => :post) do
     #school_selector
       = render :partial => 'shared/school_selector', :locals => { :school_selector => @school_selector }
+    #source
+      = render :partial => 'users/source', :locals => { :user => @user }
     = hidden_field_tag "user_id", @user.id
     = submit_tag("Select this school")
 
