@@ -381,13 +381,7 @@ class Activity < ActiveRecord::Base
       next unless section.is_enabled?
       section.pages.each do |page|
         next unless page.is_enabled?
-        page.page_elements.each do |element|
-          next unless element.is_enabled?
-          component = element.embeddable
-          if !component.respond_to?('can_run_lightweight?') || !component.can_run_lightweight?
-            return false
-          end
-        end
+        return false unless page.can_run_lightweight?
       end
     end
     return true
