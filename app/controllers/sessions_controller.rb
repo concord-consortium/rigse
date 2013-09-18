@@ -27,6 +27,7 @@ class SessionsController < ApplicationController
         return
       end
     end
+    logout_keeping_session!
     redirect_to "/auth/#{params[:provider]}"
   end
 
