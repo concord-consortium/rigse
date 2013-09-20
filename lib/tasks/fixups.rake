@@ -404,6 +404,24 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
     task :remove_teachers_test_students => :environment do
       Fixups.remove_teachers_test_students
     end
+
+    desc "re-populate the 'lightweight' attribute on models that support it"
+    task :recalculate_lightweight => :environment do
+      [Embeddable::Diy::EmbeddedModel, Page, Activity].each do |klass|
+        puts "\n\n#{klass.count} #{klass.to_s} to process ..."
+        klass.find_each(:batch_size => 100) do |m|
+          print "\n#{m.id}: " if (m.id % 100) == 1
+          can_run = m.can_run_lightweight?
+          if m.lightweight? != can_run
+            m.lightweight = can_run
+            m.save ? print(':') : print('!')
+          else
+            print '.'
+          end
+        end
+        puts "\ndone."
+      end
+    end
   end
 end
 
