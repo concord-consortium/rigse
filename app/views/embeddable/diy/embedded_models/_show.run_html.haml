@@ -6,7 +6,7 @@
         =image_tag(diy_embedded_model.diy_model.image_url)
       - else
         (No Model Image)
-    - if diy_embedded_model.can_run_lightweight?
+    - if diy_embedded_model.lightweight?
       = render :partial => 'embeddable/diy/embedded_models/browser_based', :locals => { :diy_embedded_model => diy_embedded_model, :learner => local_assigns[:learner] }
   -else
     (No Model Selected)

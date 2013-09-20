@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130917153355) do
+ActiveRecord::Schema.define(:version => 20130920002739) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(:version => 20130917153355) do
     t.boolean  "is_enabled",                       :default => true
     t.integer  "offerings_count",                  :default => 0
     t.boolean  "is_exemplar",                      :default => false
+    t.boolean  "lightweight",                      :default => false
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
@@ -525,6 +526,7 @@ ActiveRecord::Schema.define(:version => 20130917153355) do
     t.string   "uuid",         :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "lightweight",                :default => false
   end
 
   add_index "embeddable_diy_models", ["diy_model_id"], :name => "index_embeddable_diy_models_on_diy_model_id"
@@ -1039,6 +1041,7 @@ ActiveRecord::Schema.define(:version => 20130917153355) do
     t.string   "publication_status"
     t.integer  "offerings_count",                  :default => 0
     t.boolean  "is_enabled",                       :default => true
+    t.boolean  "lightweight",                      :default => false
   end
 
   add_index "pages", ["name"], :name => "index_pages_on_name"

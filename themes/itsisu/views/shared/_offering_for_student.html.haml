@@ -5,7 +5,7 @@
     = info_button(description_id,"description for #{offering.name}")
     %span{:id => dom_id_for(offering, :heavyweight)}
       = link_to image_tag("/images/diy_icons/bullet_go.png"), polymorphic_url(offering, :format => (offering.runnable.is_a?(Page) ? :run_html : :jnlp)), {:class => 'run_link offering', :title=>link_title}
-    - if offering.can_run_lightweight?
+    - if offering.lightweight?
       %span{:id => dom_id_for(offering, :lightweight)}= ""
       - link_title = "run browser-based #{offering.name}"
       - link = link_to image_tag("/images/diy_icons/world_go.png"), polymorphic_url(offering, :format => :run_html), {:title=>link_title, :target => "_blank"}
