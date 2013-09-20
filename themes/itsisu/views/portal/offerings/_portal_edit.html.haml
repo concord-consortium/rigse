@@ -27,7 +27,7 @@
           - run_params[:format] = :run_html if runnable.is_a?(Page)
           %span.heavyweight
             = run_link_for(runnable,nil,run_params)
-          - if runnable.respond_to?('can_run_lightweight?') && runnable.can_run_lightweight?
+          - if runnable.respond_to?('lightweight?') && runnable.lightweight?
             %span.lightweight
               %a.rollover{:href => polymorphic_path(runnable, :format => :run_html) , :name => "run_lightweight_button_", :title => "Run this activity in the browser", :target => "_blank"}
                 %img{:alt => "run", :src => "/images/diy_icons/world_go_rollover.png", :title => "Run this activity in the browser"}

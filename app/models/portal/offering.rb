@@ -95,9 +95,15 @@ class Portal::Offering < ActiveRecord::Base
   def can_run_lightweight?
     case runnable
     when Activity
-      return runnable.can_run_lightweight?
+      return runnable.lightweight?
+    when Page
+      return runnable.lightweight?
     end
     return false
+  end
+
+  def lightweight?
+    return can_run_lightweight?
   end
 
   # def saveable_count
