@@ -51,8 +51,10 @@ module RunnablesHelper
 
 
   def runnable_type_label(component)
-    type = component.is_a?(Portal::Offering) ? component.runnable.class : component.class
-    return type.display_name
+    runnable = component.is_a?(Portal::Offering) ? component.runnable : component
+    runnable_type = runnable.class
+    runnable_type = runnable.template_type.constantize if runnable.respond_to?(:template_type) && !runnable.template_type.blank?
+    return runnable_type.display_name
   end
 
   def title_text(component, verb, run_as)

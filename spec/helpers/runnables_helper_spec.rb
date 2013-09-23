@@ -76,6 +76,65 @@ describe RunnablesHelper do
 
   end
 
+  # Shows up in _offering_for_student eg.
+  describe ".runnable_type_label" do
+    let(:template_type) { nil}
+    let(:runnable) { mock_model(ExternalActivity, :template_type => template_type) }
+    let(:offering) { mock_model(Portal::Offering, :runnable => runnable )}
+    subject { helper.runnable_type_label(offering) }
+
+    describe "for an external activity offering" do
+      describe "when the external activity template is nil" do
+        it "should include the word investigation (or sequence)" do
+          subject.should == t('activerecord.models.ExternalActivity')
+        end
+      end
+
+      describe "when the external activity template is an investigation" do
+        let(:runnable) { mock_model(ExternalActivity, :template_type => "Investigation")}
+        it "should include the word investigation (or sequence)" do
+          subject.should == t('activerecord.models.Investigation')
+        end
+      end
+
+      describe "when the external activity template is an activity" do
+        let(:runnable) { mock_model(ExternalActivity, :template_type => "Activity")}
+        it "should include the word investigation (or sequence)" do
+          subject.should == t('activerecord.models.Activity')
+        end
+      end
+    end
+
+    describe "for an investigation offering" do
+      let(:runnable) { mock_model(Investigation)}
+      it "should include the word investigation (or sequence)" do
+        subject.should == t('activerecord.models.Investigation')
+      end
+    end
+
+    describe "for a resource_page offering" do
+      let(:runnable) { mock_model(ResourcePage)}
+      it "should include the word ResourcePage" do
+        subject.should == t('activerecord.models.ResourcePage')
+      end
+    end
+
+    describe "for an activity offering" do
+      let(:runnable) { mock_model(Activity)}
+      it "should include the word ResourcePage" do
+        subject.should == t('activerecord.models.Activity')
+      end
+    end
+
+    describe "for an activity runnable" do
+      let(:offering) { mock_model(Activity)}
+      it "should include the word ResourcePage" do
+        subject.should == t('activerecord.models.Activity')
+      end
+    end
+
+  end
+
   describe ".run_button_for" do
     it "should render a run button for a specified component" do
       helper.run_button_for(@resource_page).should be_link_like("http://test.host/resource_pages/#{@resource_page.id}",
@@ -147,7 +206,7 @@ describe RunnablesHelper do
     end
 
     it "should render a link for an External Activity" do
-      ext_act = stub_model(ExternalActivity, :name => "Fetching Wood")
+      ext_act = stub_model(ExternalActivity, :name => "Fetching Wood", :template_type => "Investigation")
       helper.run_link_for(ext_act).should be_link_like("http://test.host/external_activities/#{ext_act.id}.run_external_html",
                                                        "run_link rollover",
                                                        asset_path("run.png"))
