@@ -34,6 +34,21 @@ en:
         zero: sequences
         one: sequence
         other: sequences
+      Activity: Activity
+      activity:
+        zero: activities
+        one: activity
+        other: activities
+      ExternalActivity : External Activity
+      external_activity:
+        zero: external activities
+        one: external activity
+        other: external activities
+      ResourcePage : Resource Page
+      resource_page:
+        zero: resource pages
+        one: resource page
+        other: resource page
   investigation: sequence
   recent_activity:
     no_offerings: 'You need to assign investigations to your classes.'
