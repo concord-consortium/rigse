@@ -100,6 +100,9 @@ source "http://rubygems.org"
   gem "factory_girl",           "~> 2.0.5"
 #      ⬆         ⬆  needed for setup tasks in production and dev :(
 
+  gem 'sunspot_rails'
+  gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
+
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:

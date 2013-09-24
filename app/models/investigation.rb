@@ -2,7 +2,24 @@ class Investigation < ActiveRecord::Base
   include JnlpLaunchable
   include ResponseTypes
 
-  # cattr_accessor :publication_states
+
+# see https://github.com/sunspot/sunspot/blob/master/README.md
+  searchable do
+    text :name, :name
+    text :description, :description
+    text :description_for_teacher, :description_for_teacher
+    boolean :published do
+      publication_status == 'public'
+    end
+    boolean :teacher_only
+
+    integer :offerings_count
+    time    :updated_at
+    time    :created_at
+
+    # integer :domain_id do
+    # end
+  end
 
   belongs_to :user
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
