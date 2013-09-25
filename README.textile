@@ -50,8 +50,9 @@ bc. cd xproject
 Setup rvm to use Ruby 1.9.3-p125 and a gemset named xproject
 (newer versions of 1.9.3 ought to work as well)
 
-bc. rvm use 1.9.3-p125
-rvm gemset create xproject
+bc. 
+  rvm use 1.9.3-p125
+  rvm gemset create xproject
 
 Make an @.rvmrc@ file so rvm will use this ruby gemset combo automatically when you change to this directory:
 
@@ -92,12 +93,14 @@ Setup database.
 
 If this fails it is probably due to a bad mysql gem install, check out the "RVM page on database integration":https://rvm.beginrescueend.com/integration/databases/ for help. You might get a warning if the databases already exist.
 
-bc. RAILS_ENV=production bin/rake db:create:all
-bc. RAILS_ENV=production bin/rake db:migrate:reset
+bc. 
+  RAILS_ENV=production bin/rake db:create:all
+  RAILS_ENV=production bin/rake db:migrate:reset
 
 Setup application resources
 
-bc. RAILS_ENV=production bin/rake app:setup:new_app
+bc. 
+  RAILS_ENV=production bin/rake app:setup:new_app
 
 Save a copy of the development database to make subsequent clean starts much quicker (bypassing rake app:setup:new_app)
 * Saves database to: db/development_data.sql
@@ -112,10 +115,10 @@ but they should run automatically when on 'cap deploy' because capistrano knows 
 
 You may also run the asset packing task manually however:
 
-<pre><code>
-   rake assets:clean       # Remove compiled assets
-   rake assets:precompile  # Compile all the assets named in config.assets.precompile
-</pre></code>
+bc. 
+    rake assets:clean       # Remove compiled assets
+    rake assets:precompile  # Compile all the assets named in config.assets.precompile
+
 
 This will build all the assets within the project.
 
@@ -150,7 +153,7 @@ Sample config files go in config/themes/(name)/settings.sample.yml
 
 For now the best thing to do is to copy an existing theme. eg:
 
-<pre><code>
+bc. 
   mkdir ./config/themes/<new_theme_name>
   
   # configuration files:
@@ -164,7 +167,7 @@ For now the best thing to do is to copy an existing theme. eg:
 
   # then pass arguments to setup.
   ruby ./config/setup.rb -t <new_theme_name>
-</code></pre>
+
 
 h3. when deploying to a new server
 
@@ -191,30 +194,31 @@ If you have ssh access to a portal instance running on a server you can get a co
 your local development instance with the following steps:
 
 In the code below _stage_ means a capistrano stage that identifies a remote server. For example *xproject-dev*.
-<pre><code>
+bc. 
     cap <stage> db:fetch_remote_db
     RAILS_ENV=production jruby -S rake db:load
-</code></pre>
+
 
 If the codebase on your development system has moved forward you may need to run additional tasks such as:
-<pre><code>
+
+bc. 
   RAILS_ENV=production jruby -S rake db:migrate
   RAILS_ENV=production jruby -S rake rigse:setup:default_portal_resources
   RAILS_ENV=production jruby -S rake portal:setup:create_districts_and_schools_from_nces_data
-</code></pre>
+
 
 The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional and necessary default model initialization.
 
 In order for the same passwords to work you will also need to have the same _pepper_ in your local config/settings.yml as on the server you copied the production data from.
 
 Recreating a new portal instance from scratch from an existing application.
-<pre><code>
+bc. 
     rake db:drop:all
     git clean -fXd
     jruby config/setup.rb
     jruby -S rake gems:install
     RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
-</code></pre>
+
 
 The '-fxd' parameters to to git clean:
 
@@ -238,16 +242,16 @@ NCES maintains a database about US districts and schools called the "Common Core
 
 The rake task: <code>portal:setup:create_districts_and_schools_from_nces_data</code> downloads 2006 NCES CCD data files from NCES website and imports data from these data files into the following models:
 
-* <code>Portal::Nces06District</code>
-* <code>Portal::Nces06School</code>
+* @Portal::Nces06District@
+* @Portal::Nces06School@
 
 Only data from states and provinces identified in the <code>config/settings.yml</code> for the portal instance are imported.
 
 The NCES district and school models are used to provide data from which districts and schools actively using the portal are be created.
 
-The <code>Portal::Nces06District</code> includes about 50 different fields of data for each district.
+The @Portal::Nces06District@ includes about 50 different fields of data for each district.
 
-The <code>Portal::Nces06School</code> includes about 500 different fields of data for each school.
+The @Portal::Nces06School@includes about 500 different fields of data for each school.
 
 h3. PDF documentation for the NCES data schemas
 
@@ -274,7 +278,7 @@ This file is sourced by @ ./features/support/local_config.rb @
 
 Here is a sample file which checks for an ENV param named @ SELENIUM_CONFIG @
 
-<code><pre>
+bc. 
     case ENV['SELENIUM_CONFIG']
     when 'saucelabs-ie'
         Capybara.server_port = ENV['RAILS_PORT'].to_i
@@ -296,7 +300,7 @@ Here is a sample file which checks for an ENV param named @ SELENIUM_CONFIG @
         # by default don't customize anything, this ought to keep the current capybara tests running as before
       #
     end
-</pre></code>
+
 h4. Factory Girl
 
 bq. factory_girl allows you to quickly define prototypes for each of your models and ask for instances with properties that are important to the test at hand.
@@ -318,7 +322,7 @@ bq. You're using libxml2 version 2.6.16 which is over 4 years old and has plenty
 If you like using libxml2 version 2.6.16, but don't like this warning, please define the constant I_KNOW_I_AM_USING_AN_OLD_AND_BUGGY_VERSION_OF_LIBXML2 before requring nokogiri.
 
 If you have  a newer version of the libxml2 library installed with macports you can set this environmental variable:
-<pre><code>  LD_LIBRARY_PATH=/opt/local/lib</code></pre> to have nokogiri check there for shared libraries first.
+@LD_LIBRARY_PATH=/opt/local/lib@ to have nokogiri check there for shared libraries first.
 
 See: "libxml2 for Nokogiri in JRuby":http://www.practicalguile.com/2009/06/07/libxml2-for-nokogiri-in-jruby/
 
@@ -328,33 +332,32 @@ h3. Running the rspec tests
 
 *JRuby invocation note*: use this command prefix to run the rake spec tests from JRuby if you have a more recent version of libxml2 installed with macports:
 
-bq. <code>LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec </code> _options_
+bq. @LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec @ _options_
 
 *Running all the rspec tests:*
-<pre><code>  rake spec</code></pre>
+bc.rake spec
 
 *Running a single file:*
-<pre><code>  rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb</code></pre>  
+bc. rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb
 
 *Running a single directory:*
-<pre><code>  rake spec SPEC=spec/routing/dataservice</code></pre>  
+bc. rake spec SPEC=spec/routing/dataservice
 
 *Running all the controller tests:*
-<pre><code>  rake spec SPEC=spec/controllers</code></pre> 
+bc. rake spec SPEC=spec/controllers
 
 h3. Running the feature tests with cucumber
 
-*JRuby invocation note*: use this command prefix to run the rake spec tests from JRuby if you have a more recent version of libxml2 installed with macports:
-<pre><code>  LD_LIBRARY_PATH=/opt/local/lib jruby -S</code></pre>
+*JRuby invocation note*: use this command prefix to run the rake spec tests from JRuby if you have a more recent version of libxml2 installed with macports: @LD_LIBRARY_PATH=/opt/local/lib jruby -S@
 
 *Running all the feature tests:*
-<pre><code>  rake cucumber</code></pre>  
+bc. rake cucumber
 
 *Running all the feature tests using the ci_reporter gem that's used on the hudson CI system:*
-<pre><code>  rake hudson:cucumber</code></pre>  
+bc. rake hudson:cucumber
 
 *Running a single feature:*
-<pre><code>  rake cucumber FEATURE=features/student_can_not_see_deactivated_offerings.feature</code></pre>  
+bc. rake cucumber FEATURE=features/student_can_not_see_deactivated_offerings.feature
 
 h2. Understanding the Codebase
 
@@ -377,9 +380,9 @@ screencast: "The Page Elements Model Part I":http://screencast.com/t/8M2ISjcM
 Install github version of railroad with aasm patches from "ddolar's repo":http://github.com/ddollar/railroad/tree/master
 
 Generate a graph of the projects models using railroad:
-<pre><code>
+bc. 
   railroad -o models.dot -M
-</code></pre>
+
 
 Open that file (models.dot) with omnigraffle, or traslate to some other image format using the dot tool.
 
@@ -393,9 +396,9 @@ Using mysql query browser (part of the osx mysql binary distrobution) to view sc
 "Mysql gui-tools":http://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-gui-tools-5.0-r12-osx10.4-universal.dmg/from/pick
 
 Use the generator to generate page elements eg:
-<pre><code>
+bc. 
   ./script/generate element xhtml content:text
-</code></pre>
+
 
 ---
 
@@ -440,9 +443,9 @@ Other libraries
 h2. Capistrano Recipies (and problems)
 
 +warning+: sometimes the permissions on the shared/cache/.git directory get changed to be read-only for the group. So what i do to fix this is:
-<pre><code>
+bc. 
   sudo chmod -R g+w ./cached-copy/
-</code></pre>
+
 
 More info on capistrano-ext/multistage deployments can be found here: http://weblog.jamisbuck.org/2007/7/23/capistrano-multistage
 
@@ -452,29 +455,29 @@ There are a few database oriented recipes which should cover the basic db-orient
 Here are some scenarios and how to do them. Remember, all commands are entered on your local machine, in the application root directory.
 
 There are 4 basic commands:
-* <code>rake db:dump</code>
+* @rake db:dump@
 ** This dumps the current environment's database to db/... eg db/production_data.sql or db/development_data.sql
-* <code>rake db:load</code>
+* @rake db:load@
 ** This overwrites your current db with a sql dump from db/ into the current environment's db, provided a dump exists for your current environment
-* <code>cap (production|staging|development) db:fetch_remote_db</code>
+* @cap (production|staging|development) db:fetch_remote_db@
 ** The same as db:dump, except it dumps the database from whichever remote instance you chose
-* <code>cap (staging|development) db:push_remote_db</code>
+* @cap (staging|development) db:push_remote_db@
 ** Same as db:load, except the remote database is overwritten
 
 *Download the production database to use locally*
-<pre><code>
+bc. 
   cap production db:fetch_remote_db
   cp db/production_data.sql db/development_data.sql
   rake db:load
-</code></pre>
+
 
 *Reset the Staging or Development database with Production's version*
-* <code>cap production db:fetch_remote_db</code>
-* <code>cap staging db:push_remote_db</code>   or   <code>cap development db:push_remote_db</code>
+* @cap production db:fetch_remote_db@
+* @cap staging db:push_remote_db@ or @cap development db:push_remote_db@
 
 *Update Staging or Development with a copy of your local database*
-* <code>rake db:dump</code>
-* <code>cap staging db:push_remote_db</code>   or   <code>cap development db:push_remote_db</code>
+* @rake db:dump@
+* @cap staging db:push_remote_db or @cap development db:push_remote_db@
 
 *Note*: For safety, you can't push a database to production. If you accidentally try, you'll get a message saying you can't do that.
 
@@ -489,19 +492,18 @@ There are three custom deployment-oriented cap tasks defined in config/deploy.rb
 
 Workarounds for cap deploy:from_scratch:  I usually just end up logging in to otto, dropping all the tables, 
 and then running the various rake tasks by hand:
-<pre><code>
+bc. 
   rake db:migrate
   rake rigse:setup:default_users_roles
   rake rigse:setup:create_additional_users
   rake rigse:setup:import_gses_from_file
-</code></pre>
 
 We should solve this one sooner rather than later.
 
 h3. Miscellaneous recipes
 
 *Set the gse_key field for existing GradeSpanExpectations*
-* <code>cap convert:set_gse_keys</code>
+* @cap convert:set_gse_keys@
 
 h2. Updating a staging server.
 
@@ -519,30 +521,29 @@ For example the _xproject_ family have the following capistrano stages and branc
 In the code below _<stage>_ I will assume that we are using the _xproject_ series of stages and branches.
 
 If you don't already have a local branch of staging
-<pre><code>
-  git branch --track xproject_staging origin/xproject_staging
-</code></pre>
+bc. git branch --track xproject_staging origin/xproject_staging
 
 
 Switch to the staging branch and merge from xproject_dev
-<pre><code>    
+bc. 
   git co xproject_staging
   git merge xproject_dev
-</code></pre>
+
 
 Push your copy of the staging branch to the gihub repository:
-<pre><code>  git push origin xproject_staging</code></pre>
+bc. git push origin xproject_staging
 
-Dump the production database to this file <code>db/production_data.sql</code> on the production server, 
-download it to the local folder <code>db/production_data.sql</code>, the cleans up the production db/ folder.
-<pre><code>  cap xproject_production db:fetch_remote_db</code></pre>
+Dump the production database to this file @db/production_data.sql@ on the production server,
+download it to the local folder @db/production_data.sql@, the cleans up the production db/ folder.
 
-Push the production database from the local <code>db/production_data.sql</code> to the staging server, then import
+bc.  cap xproject_production db:fetch_remote_db
+
+Push the production database from the local @db/production_data.sql@ to the staging server, then import
 the data into the database on staging, then cleanup.
-<pre><code>  cap xproject_staging db:push_remote_db</code></pre>
+bc. cap xproject_staging db:push_remote_db
 
 Run any migrations on the staging server:
-<pre><code>  cap xproject_staging deploy:migrate</code></pre>
+bc. cap xproject_staging deploy:migrate
 
 There may be rake tasks that need to be run to update or fix data in the database.
 
@@ -555,7 +556,7 @@ update will take place and perform these tasks on the production server.
 
 h2. other Rake tasks:
 
-# <code>rigse:make:investigations</code> 
+# @rigse:make:investigations@
 This task simply finds all activities with no parent investigation, and creates a new investigation for that activity. The created investigation has the same name and description as the activity it contains.
 
 h1. haml
@@ -563,24 +564,8 @@ h1. haml
 We use haml for some templates, see: http://haml.hamptoncatlin.com/
 
 To install this plugin we followed this procedure:
-# <code>gem install --no-ri haml</code> 
-# <code>haml --rails path/to/rigse_app</code>
-
-h3. Creating the sakai integration demo user accounts.
-
-*OCT 7 2009 This documentation should go away* as soon as we no longer need to import sakai users by hand.
-<pre><code>
-  RAILS_ENV=production script/console
-  require 'lib/sakaidemo'
-</code></pre>
-
-h3. Importing Sakai usrers from RINET / RIEPS.
-
-
-<pre><code>
-  RAILS_ENV=production script/runner "(RinetData.new).run_scheduled_job"
-</code></pre>
-
+# @gem install --no-ri haml@
+# @haml --rails path/to/rigse_app@
 
 
 h2. Rendering
@@ -590,8 +575,8 @@ h3. haml
 We use haml for some templates, see: http://haml.hamptoncatlin.com/
 
 to install this plugin we followed this procedure:
-# <code>gem install --no-ri haml</code> 
-# <code>haml --rails path/to/rigse_app</code>
+# @gem install --no-ri haml@
+# @haml --rails path/to/rigse_app@
 
 h3. Rendering OTML
 
@@ -606,36 +591,37 @@ between CSS1 and CSS2. You can find out more about this implementations limitati
 h2. Installers
 
 Building installers requires that you are running on a mac with a local installation of "Bit Rock":http://bitrock.com/
-The rake tasks assume that bitrock is in the standard /Applications/ folder.  You can override this by setting an 
-environment variable in your shell which points to the correct path, eg: export BITROCK_INSTALLER=/path/to/bitrock.app
+The rake tasks assume that bitrock is in the standard /Applications/ folder.
+You can override this by setting an environment variable in your shell which points to the correct path, eg: @export BITROCK_INSTALLER=/path/to/bitrock.app@
 
 h3. config/installer.yml
 
 Every host should have its own config/installer.yml file.  There is a config/installer.sample.yml file which can help get you started.
 The shortname field should be specific to that host. Because of limitations in bitrock, the shortname can not use spaces,dashes,underscore, &etc.
-The jnlp_url should point to a jnlp url on the target host.  When you run the <code>rake build:installer:build_all</code> or 
-<code>cap installer:create</code> tasks, the jnlp_url must be available.
+The jnlp_url should point to a jnlp url on the target host.  When you run the
+@rake build:installer:build_all@ or
+@cap installer:create@ tasks, the jnlp_url must be available.
 
 
 h3. Installer Rake Tasks:
 
 Most of the installer building happens via rake tasks defined in lib/tasks/make_installers.rake. a complete list of tasks can
-be gotten using: <code>rake -T installer </code>
+be gotten using: @rake -T installer@
 
 Here are the two useful tasks:
-<code><pre>
-rake build:installer:build_all     # build all installers
-rake build:installer:new_release   # create a new release specification interactively
-</pre></code>
-Assuming that your installer.yml file is correct, running rake build:installer:build_all will take care of the rest.
+bc. 
+  rake build:installer:build_all     # build all installers
+  rake build:installer:new_release   # create a new release specification interactively
+
+Assuming that your installer.yml file is correct, running @rake build:installer:build_all@ will take care of the rest.
 Build_all will automatically clean up, recache jars, and bump version numbers.
 
 h3. Installer Capistrano Recipes
 
 There are two cap recipes in config/deploy.rb which take care of creating installers using remote hosts installer.yml files.
-* <code>cap installer:copy_config</code> copies the local installer.yml to the remote server. This would be useful if you ran new_release locally, and then
+* @cap installer:copy_config@ copies the local installer.yml to the remote server. This would be useful if you ran new_release locally, and then
 wanted to copy those config settings to the remote server.
-* <code>cap installer:create</code> creates the installers and updates the remote installer.yml file, and deploys the installer images.
+* @cap installer:create@ creates the installers and updates the remote installer.yml file, and deploys the installer images.
 
 
 h3. Sample session for building installers:
@@ -645,29 +631,29 @@ h4. boot strapping an unconfigured server:
 In this session we are assuming that we are working with a host which does not have a local installer.yml file.
 First we create a new local release.  The first rake tasks asks a bunch of questions, which are answered from the point of view of the staging server.
 
-<code><pre>
-rake build:installer:new_release
-cap staging installer:copy_config
-cap staging installer:create
-</pre></code>
+bc. 
+  rake build:installer:new_release
+  cap staging installer:copy_config
+  cap staging installer:create
 
-After running <code>rake build:installer:new_release</code> we end up with the following local installer file:
-<code><pre>
-shortname: RitesStaging
-version: "200912.00"
-jnlp_config: http://rites-investigations.staging.concord.org/investigations/545.jnlp
-<code><pre>
 
-this file gets pushed up to staging. with <code>cap staging installer:copy_config</code> we only have to do that the first time we create an
+After running @rake build:installer:new_release@we end up with the following local installer file:
+
+bc. 
+  shortname: RitesStaging
+  version: "200912.00"
+  jnlp_config: http://rites-investigations.staging.concord.org/investigations/545.jnlp
+
+
+this file gets pushed up to staging. with @cap staging installer:copy_config@ we only have to do that the first time we create an
 installer on staging. We could just as easily edit config/installer.yml.
 
-The <code>cap staging installer:create</code> handles incrementing the version number, and pushing the new config files and installers onto staging.
+The @cap staging installer:create@ handles incrementing the version number, and pushing the new config files and installers onto staging.
 
 h4. creating a fresh installer for a host that has had installers before:
 
-<code><pre>
-cap staging installer:create
-</pre></code>
+bc. 
+  cap staging installer:create
 
 not much to do.
 
@@ -680,8 +666,9 @@ Forgotten password comes setup, so you don't have to mess around setting it up w
 
 Devise uses the _pepper_ parameter within settings.yml to encrypt user passwords. The _pepper_ is
 generated automatically when first setting up the app. It is also generated if not existing or is
-blank when updating the app using the command
-<code><pre>ruby config/setup.rb -y -q -t default</pre></code>
+blank when updating the app using the command:
+
+bc. ruby config/setup.rb -y -q -t default
 
 Devise is also setup to use user activation. Users which require activation are sent emails
 automatically.
@@ -724,9 +711,10 @@ The code is borrowed from "Dmitry Polushkin":https://rails.lighthouseapp.com/pro
 h2. Databases
 
 On OS X the mysql2 gem usually can't find the mysql client library that it needs to run.  The command below fixes that.  It assumes your mysql is installed in the default basedir of /usr/local/mysql/lib.  And it assumes you are using bundler.
-<code><pre>
-install_name_tool -change libmysqlclient.16.dylib /usr/local/mysql/lib/libmysqlclient.16.dylib `bundle show mysql2`/lib/mysql2/mysql2.bundle
-</code></pre>
+
+bc. 
+  install_name_tool -change libmysqlclient.16.dylib /usr/local/mysql/lib/libmysqlclient.16.dylib `bundle show mysql2`/lib/mysql2/mysql2.bundle
+
 
 h2. CSS
 
@@ -734,16 +722,16 @@ h3. Rails 3 Asset Pipeline
 
 The portal uses the "Rails 3 Asset Pipeline":http://guides.rubyonrails.org/asset_pipeline.html
 stylesheets, images, javascript should all be placed in the app/assets/ directory structure.
-theme specific assets should be placed in app/assets/theme/themename/.
+theme specific assets should be placed in @app/assets/theme/themename/@.
 
 You should read the Rails guide for more information about the asset Pipeline.
 
 themes_for_rails has been configured to play nice with the asset pipeline. See the initializer:
-config/initializers/themes_for_rails.rb
+@config/initializers/themes_for_rails.rb@
 
-cap deploy should trigger the rake task assets:precompile to run.
+@cap deploy@ should trigger the rake task assets:precompile to run.
 
-You can also run locally by hand: bundle exec rake assets:precompile
+You can also run locally by hand: @bundle exec rake assets:precompile@
 
 The assets will be compiled to public/assets which should be ignored by .gitignore
 
@@ -793,7 +781,7 @@ Bort put together by people at "Fudge":http://www.fudgestudios.com/
 
 h2. Copy & Paste Guide:
 
-<pre><code>
+<code>
 git clone git@github.com:concord-consortium/rigse.git ./xproject
 cd xproject
 echo 'rvm use 1.8.7@xproject-portal --create' > .rvmrc;
@@ -809,4 +797,4 @@ rake db:test:prepare
 
 rake db:dump
 ruby script/server -e production
-</code></pre>
+</code>
