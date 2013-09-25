@@ -335,8 +335,8 @@ SELENIUM_CONFIG @
         puts " ----- using Firefox 6 profile -----"
         Selenium::WebDriver::Firefox.path= '/usr/local/bin/firefox6'
         Capybara.register_driver :selenium do |app|
-        Capybara::Selenium::Driver.new
-    end
+            Capybara::Selenium::Driver.new
+        end
     when 'chrome'
         puts "----- using Chrome profile -----"
         Capybara.register_driver :selenium do |app|
@@ -406,17 +406,20 @@ with macports:
 > `LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec ` *options*
 
 **Running all the rspec tests:*
-bc.rake spec
 
-**Running a single [file:](file:)**
-bc. rake spec
-SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb
+    rake spec
+
+**Running a single file:**
+
+    rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb
 
 **Running a single directory:**
-bc. rake spec SPEC=spec/routing/dataservice
+
+    rake spec SPEC=spec/routing/dataservice
 
 **Running all the controller tests:**
-bc. rake spec SPEC=spec/controllers
+
+    rake spec SPEC=spec/controllers
 
 ### Running the feature tests with cucumber
 
@@ -425,14 +428,14 @@ tests from JRuby if you have a more recent version of libxml2 installed
 with macports: `LD_LIBRARY_PATH=/opt/local/lib jruby -S`
 
 **Running all the feature tests:**
-bc. rake cucumber
+    rake cucumber
 
 **Running all the feature tests using the ci_reporter gem that's used
 on the hudson CI system:**
-bc. rake hudson:cucumber
+    rake hudson:cucumber
 
 **Running a single feature:**
-bc. rake cucumber
+    rake cucumber
 FEATURE=features/student_can_not_see_deactivated_offerings.feature
 
 ## Understanding the Codebase
@@ -458,8 +461,7 @@ Install github version of railroad with aasm patches from [ddolar's
 repo](http://github.com/ddollar/railroad/tree/master)
 
 Generate a graph of the projects models using railroad:
-bc.
- railroad -o models.dot  -M
+    railroad -o models.dot  -M
 
 
 Open that file with omnigraffle, or traslate to some other image format
@@ -477,8 +479,8 @@ Using mysql query browser to view schema:
 gui-tools](http://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-gui-tools-5.0-r12-osx10.4-universal.dmg/from/pick)
 
 Use the generator to generate page elements eg:
-bc.
- ./script/generate element xhtml content:text
+
+    ./script/generate element xhtml content:text
 
 
  ---
@@ -530,8 +532,8 @@ Other libraries
 
 *warning*: sometimes the permissions on the shared/cache/.git directory
 get changed to be read-only for the group. So what i do to fix this is:
-bc.
- sudo chmod -R g+w ./cached-copy/
+
+    sudo chmod -R g+w ./cached-copy/
 
 
 More info on capistrano-ext/multistage deployments can be found here:
@@ -593,11 +595,11 @@ resources that we use. (like config/database.yml)
 Workarounds for cap deploy:from_scratch: I usually just end up logging
 in to otto, dropping all the tables,
 and then running the various rake tasks by hand:
-bc.
- rake db:migrate
- rake rigse:setup:default_users_roles
- rake rigse:setup:create_additional_users
- rake rigse:setup:import_gses_from_file
+
+     rake db:migrate
+     rake rigse:setup:default_users_roles
+     rake rigse:setup:create_additional_users
+     rake rigse:setup:import_gses_from_file
 
 We should solve this one sooner rather than later.
 
@@ -626,32 +628,35 @@ In the code below *<stage>* I will assume that we are using the
 *xproject* series of stages and branches.
 
 If you don't already have a local branch of staging
-bc. git branch  --track xproject_staging origin/xproject_staging
+
+    git branch  --track xproject_staging origin/xproject_staging
 
 
 Switch to the staging branch and merge from xproject_dev
-bc.
- git co xproject_staging
- git merge xproject_dev
+
+    git co xproject_staging
+    git merge xproject_dev
 
 
 Push your copy of the staging branch to the gihub repository:
-bc. git push origin xproject_staging
+
+    git push origin xproject_staging
 
 Dump the production database to this file `db/production_data.sql` on
 the production server,
 download it to the local folder `db/production_data.sql`, the cleans up
 the production db/ folder.
 
-bc. cap xproject_production db:fetch_remote_db
+    cap xproject_production db:fetch_remote_db
 
 Push the production database from the local `db/production_data.sql` to
-the staging server, then import
-the data into the database on staging, then cleanup.
-bc. cap xproject_staging db:push_remote_db
+the staging server, then import the data into the database on staging, then cleanup.
+
+    cap xproject_staging db:push_remote_db
 
 Run any migrations on the staging server:
-bc. cap xproject_staging deploy:migrate
+
+    cap xproject_staging deploy:migrate
 
 There may be rake tasks that need to be run to update or fix data in the
 database.
@@ -811,7 +816,7 @@ generated automatically when first setting up the app. It is also
 generated if not existing or is
 blank when updating the app using the command:
 
-bc. ruby config/setup.rb -y -q  -t default
+    ruby config/setup.rb -y -q  -t default
 
 Devise is also setup to use user activation. Users which require
 activation are sent emails
@@ -857,10 +862,8 @@ it needs to run. The command below fixes that. It assumes your mysql is
 installed in the default basedir of /usr/local/mysql/lib. And it assumes
 you are using bundler.
 
-bc.
- install_name_tool -change libmysqlclient.16.dylib
-/usr/local/mysql/lib/libmysqlclient.16.dylib `bundle show
-mysql2`/lib/mysql2/mysql2.bundle
+
+    install_name_tool -change libmysqlclient.16.dylib /usr/local/mysql/lib/libmysqlclient.16.dylib `bundle show mysql2`/lib/mysql2/mysql2.bundle
 
 
 ## CSS
