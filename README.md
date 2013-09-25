@@ -1,5 +1,6 @@
 CC Rails Portal Activity Authoring, Deployment, and Reporting System
 ====================================================================
+[![Code Climate](https://codeclimate.com/github/concord-consortium/rigse.png)](https://codeclimate.com/github/concord-consortium/rigse)
 
 Setup
 -----
