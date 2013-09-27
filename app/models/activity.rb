@@ -6,7 +6,7 @@ class Activity < ActiveRecord::Base
   belongs_to :original
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
-  
+
   has_many :learner_activities, :dependent => :destroy, :class_name => "Report::LearnerActivity"
 
   has_many :external_activities, :as => :template
@@ -44,18 +44,33 @@ class Activity < ActiveRecord::Base
   include TreeNode
   include Publishable
 
-  self.extend SearchableModel
-  @@searchable_attributes = %w{name description}
+  searchable do
+    text :name, :name
+    text :description, :description
+    text :description_for_teacher, :description_for_teacher
+    boolean :published do
+      publication_status == 'published'
+    end
+    boolean :teacher_only
+
+    integer :offerings_count
+    time    :updated_at
+    time    :created_at
+
+    # integer :domain_id do
+    # end
+  end
+
   send_update_events_to :investigation
 
   scope :with_gse, {
     :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
   }
-  
+
   scope :without_teacher_only,{
     :conditions =>['activities.teacher_only = 0']
   }
-  
+
   scope :domain, lambda { |domain_id|
     {
       :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
@@ -72,7 +87,7 @@ class Activity < ActiveRecord::Base
   scope :probe_type, {
     :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
   }
-    
+
   scope :probe, lambda { |pt|
     pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
     {
@@ -81,7 +96,7 @@ class Activity < ActiveRecord::Base
   }
 
   scope :no_probe,{
-    :select => "activities.id", 
+    :select => "activities.id",
     :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
   }
 
@@ -105,7 +120,7 @@ class Activity < ActiveRecord::Base
   {
     :conditions =>['activities.publication_status = "published" OR (investigations.publication_status = "published" AND investigations.allow_activity_assignment = 1)']
   }
-  
+
   scope :directly_published,
   {
     :conditions =>['activities.publication_status = "published"']
@@ -114,7 +129,7 @@ class Activity < ActiveRecord::Base
   scope :assigned, where('offerings_count > 0')
 
   scope :ordered_by, lambda { |order| { :order => order } }
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -171,7 +186,7 @@ class Activity < ActiveRecord::Base
       else
         activities
       end
-      
+
     end
 
   end
@@ -301,7 +316,7 @@ class Activity < ActiveRecord::Base
     unless self.parent.nil?
       full_title = "#{full_title} | #{self.parent.name}"
     end
-    
+
     return full_title
   end
 end

@@ -3,22 +3,48 @@ class Investigation < ActiveRecord::Base
   include ResponseTypes
 
 
-# see https://github.com/sunspot/sunspot/blob/master/README.md
+  # see https://github.com/sunspot/sunspot/blob/master/README.md
   searchable do
-    text :name, :name
-    text :description, :description
-    text :description_for_teacher, :description_for_teacher
-    boolean :published do
-      publication_status == 'public'
-    end
-    boolean :teacher_only
+    text :name
+    text :description
+    text :description_for_teacher
 
+    text :owner do |inv|
+      inv.user.name
+    end
+
+    boolean :published do |inv|
+      inv.publication_status == 'published'
+    end
+
+    integer :user_id, :user_id
+
+    integer :probe_type_ids, :multiple => true do |inv|
+      inv.data_collectors.map { |dc| dc.probe_type_id }.compact
+    end
+
+    boolean :teacher_only
     integer :offerings_count
+
     time    :updated_at
     time    :created_at
 
-    # integer :domain_id do
-    # end
+    string  :gse_key do |inv|
+      inv.grade_span_expectation.gse_key if inv.grade_span_expectation
+    end
+
+    string  :grade_span do |inv|
+      inv.grade_span_expectation.grade_span if inv.grade_span_expectation
+    end
+
+    string  :domain do |inv|
+      if (inv.grade_span_expectation && inv.grade_span_expectation.domain)
+        inv.grade_span_expectation.domain.name
+      else
+        nil
+      end
+    end
+
   end
 
   belongs_to :user
@@ -108,7 +134,7 @@ class Investigation < ActiveRecord::Base
   scope :probe_type, {
     :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
     }
-    
+
   scope :probe, lambda { |pt|
     pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
     {
@@ -117,7 +143,7 @@ class Investigation < ActiveRecord::Base
   }
 
   scope :no_probe,{
-    :select => "investigations.id", 
+    :select => "investigations.id",
     :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
   }
 
@@ -208,7 +234,7 @@ class Investigation < ActiveRecord::Base
   end
 
   after_save :add_author_role_to_use
-  
+
   def add_author_role_to_use
     if self.user
       self.user.add_role('author')
@@ -322,7 +348,7 @@ class Investigation < ActiveRecord::Base
     end
     return true
   end
-  
+
   # Is it 'safe' to delete this investigation?
   def can_be_deleted?
     return can_be_modified?
@@ -355,8 +381,8 @@ class Investigation < ActiveRecord::Base
 
   def full_title
     full_title = self.name
-    
+
     return full_title
   end
-  
+
 end
