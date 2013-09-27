@@ -95,8 +95,8 @@ describe ExternalActivity do
     let (:real_activity) { Activity.create!( :name => "test activity", :description => "new decription" ) }
     let (:investigation) { Investigation.create!(:name => "test investigation", :description => "new decription") }
 
-    it 'should return nil for no-template EA' do
-      activity.material_type.should be_nil
+    it 'should return ExternalActivity for no-template EA' do
+      activity.material_type.should == 'ExternalActivity'
     end
 
     it 'should return template_type for EAs with templates' do
