@@ -101,7 +101,6 @@ source "http://rubygems.org"
 #      ⬆         ⬆  needed for setup tasks in production and dev :(
 
   gem 'sunspot_rails'
-  gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
 
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
@@ -161,4 +160,5 @@ group :test, :development do
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"
+  gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
 end
