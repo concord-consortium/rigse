@@ -1,5 +1,6 @@
 class Activity < ActiveRecord::Base
   include JnlpLaunchable
+  include MaterialType
 
   belongs_to :user
   belongs_to :investigation
@@ -53,6 +54,7 @@ class Activity < ActiveRecord::Base
     end
     boolean :teacher_only
 
+    string  :material_type
     integer :offerings_count
     time    :updated_at
     time    :created_at
@@ -198,7 +200,6 @@ class Activity < ActiveRecord::Base
   def children
     sections
   end
-
 
   def left_nav_panel_width
     300

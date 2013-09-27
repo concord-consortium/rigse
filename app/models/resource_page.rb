@@ -2,6 +2,7 @@ class ResourcePage < ActiveRecord::Base
   self.table_name = :resource_pages
   include Publishable
   include Changeable
+  include MaterialType
 
   attr_accessor :new_attached_files
 

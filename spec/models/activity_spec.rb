@@ -1,48 +1,46 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe Activity do
-  before(:each) do
-    @valid_attributes = {
-      :name => "test activity",
-      :description => "new decription"
-    }
-  end
+  let (:valid_attributes) { {
+    :name => "test activity",
+    :description => "new decription"
+  } }
+  let (:activity) { Activity.create(valid_attributes) }
 
   it "should create a new instance given valid attributes" do
-    Activity.create!(@valid_attributes)
+    activity.valid?
   end
-  
+
+  it 'should respond to #material_type' do
+    activity.material_type.should == 'Activity'
+  end
+
   it "should be destroy'able" do
-    act = Activity.create!(@valid_attributes)
-    act.destroy
+    activity.destroy
   end
 
   it 'has_many for all BASE_EMBEDDABLES' do
     BASE_EMBEDDABLES.length.should be > 0
-    act = Activity.create!(@valid_attributes)
+    act = Activity.create!(valid_attributes)
     BASE_EMBEDDABLES.each do |e|
       act.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize).should be(true)
     end
   end
 
   describe "should be publishable" do
-    before(:each) do
-      @activity = Activity.create!(@valid_attributes)
-    end
-    
     it "should not be public by default" do
-      @activity.published?.should be(false)
+      activity.published?.should be(false)
     end
     it "should be public if published" do
-      @activity.publish!
-      @activity.public?.should be(true)
+      activity.publish!
+      activity.public?.should be(true)
     end
     
     it "should not be public if unpublished " do
-      @activity.publish!
-      @activity.public?.should be(true)
-      @activity.un_publish!
-      @activity.public?.should_not be(true)
+      activity.publish!
+      activity.public?.should be(true)
+      activity.un_publish!
+      activity.public?.should_not be(true)
     end
   end
 

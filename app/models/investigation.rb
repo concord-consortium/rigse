@@ -1,7 +1,7 @@
 class Investigation < ActiveRecord::Base
   include JnlpLaunchable
   include ResponseTypes
-
+  include MaterialType
 
   # see https://github.com/sunspot/sunspot/blob/master/README.md
   searchable do

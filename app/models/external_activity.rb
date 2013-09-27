@@ -10,6 +10,7 @@ class ExternalActivity < ActiveRecord::Base
       ea.publication_status == 'published'
     end
 
+    string  :material_type
     integer :offerings_count
     time    :updated_at
     time    :created_at
@@ -28,11 +29,8 @@ class ExternalActivity < ActiveRecord::Base
   acts_as_taggable_on :cohorts
 
   include Changeable
-
   include Publishable
-
-  self.extend SearchableModel
-  @@searchable_attributes = %w{name description is_official}
+  include MaterialType
 
   scope :like, lambda { |name|
     name = "%#{name}%"
@@ -136,6 +134,10 @@ class ExternalActivity < ActiveRecord::Base
       append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
     end
     return uri.to_sc
+  end
+
+  def material_type
+    template_type
   end
 
   # methods to mimic Activity

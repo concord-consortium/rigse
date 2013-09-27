@@ -89,4 +89,21 @@ describe ExternalActivity do
       activity.url(learner).should eql(url + "?learner=34")
     end
   end
+
+  describe '#material_type override' do
+    let (:activity) { ExternalActivity.create!(valid_attributes) }
+    let (:real_activity) { Activity.create!( :name => "test activity", :description => "new decription" ) }
+    let (:investigation) { Investigation.create!(:name => "test investigation", :description => "new decription") }
+
+    it 'should return nil for no-template EA' do
+      activity.material_type.should be_nil
+    end
+
+    it 'should return template_type for EAs with templates' do
+      activity.template = real_activity
+      activity.material_type.should == 'Activity'
+      activity.template = investigation
+      activity.material_type.should == 'Investigation'
+    end
+  end
 end
