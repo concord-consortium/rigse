@@ -5,6 +5,22 @@ class ResourcePage < ActiveRecord::Base
 
   attr_accessor :new_attached_files
 
+  searchable do
+    text :name
+    text :description
+    text :content
+    boolean :published do
+      publication_status == 'published'
+    end
+    text :owner do |rp|
+      rp.user.name
+    end
+    integer :user_id
+
+    time    :updated_at
+    time    :created_at
+  end
+
   belongs_to :user
   has_many :attached_files, :as => :attachable, :dependent => :destroy
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
@@ -90,8 +106,6 @@ class ResourcePage < ActiveRecord::Base
 
   acts_as_taggable_on :cohorts
 
-  self.extend SearchableModel
-  @@searchable_attributes = %w{name description content publication_status}
   class <<self
     def can_be_created_by?(user)
       user.has_role?('admin', 'manager', 'researcher', 'author') || (Admin::Project.default_project.teachers_can_author? && user.portal_teacher)

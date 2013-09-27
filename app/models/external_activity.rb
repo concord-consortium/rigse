@@ -1,5 +1,20 @@
 require 'uri'
 class ExternalActivity < ActiveRecord::Base
+
+  # see https://github.com/sunspot/sunspot/blob/master/README.md
+  searchable do
+    text :name
+    text :description
+    boolean :is_official
+    boolean :published do |ea|
+      ea.publication_status == 'published'
+    end
+
+    integer :offerings_count
+    time    :updated_at
+    time    :created_at
+  end
+
   belongs_to :user
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
