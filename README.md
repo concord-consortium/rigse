@@ -894,14 +894,23 @@ The assets will be compiled to public/assets which should be ignored by
 When running in development mode you do not need to pre-compile your
 assets.
 
+## Solar & Sunspot
 
-## Routing
+[Sunspot](https://github.com/sunspot/sunspot/blob/master/README.md
+) is being used to provide search capabilities.
 
-## Application Settings
+In development mode you will need to create an index and start sunspot:
 
+    bundle exec rake sunspot:solr:start
+    bundle exec rake sunspot:reindex
 
+You can then visit the web interface to the solar server by visiting [localhost:8982/solr/admin/](http://localhost:8982/solr/admin/). Though I haven't found any good reason to do so.
 
-## Settings YAML
+### Rspec testing with sunspot disabled & enabled:
+
+[https://github.com/sunspot/sunspot/wiki/RSpec-and-Sunspot](https://github.com/sunspot/sunspot/wiki/RSpec-and-Sunspot)
+
+## Application Settings & Settings YAML
 
 There is a settings.yml file that contains site-wide stuff. The site
 name, url and admin email are all used
