@@ -101,7 +101,7 @@ describe Search do
           end
 
           describe "Search::Oldest" do
-            let(:search_opts) { {:private => false, :order => Search::Oldest} }
+            let(:search_opts) { {:private => false, :sort_order => Search::Oldest} }
             it "the collection should be sorted by updated_at oldest ➙ newest" do
               subject.results.should be_ordered_by(:updated_at)
             end
@@ -109,7 +109,7 @@ describe Search do
         end # by date
 
         describe "by Popularity" do
-          let(:search_opts) { {:private => false, :order => Search::Popularity} }
+          let(:search_opts) { {:private => false, :sort_order => Search::Popularity} }
           let(:factory_opts){ {:publication_status => "published"}         }
           let(:materials) do
             [
