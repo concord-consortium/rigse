@@ -11,28 +11,38 @@ class SearchController < ApplicationController
   end
 
   in_place_edit_for :investigation, :search_term
-  
+
+  # TODO: Move this to its own file & clean up.
+  class SearchFormModel
+    def initialize(search)
+      @search = search
+    end
+    def domain_id; [] ; end
+    def sort_order; @search.sort_order; end
+    def grade_span; @search.grade_span; end
+    def probe_type; @search.probe_type; end
+    def investigation_checkedstatus; @search.material_types.include? ::Investigation ; end
+    def activity_checkedstatus; @search.material_types.include? ::Activity ; end
+    def external_activity_checkedstatus; @search.material_types.include? ::Activity ; end
+    def include_external_activities?; false; end; #current_project.include_external_activities; end
+    def material_type; @search.material_types ; end
+  end
+
+  class SearchResultsModel
+  end
+
   public
   def search_material
-    search_options=get_searchoptions()
-    @investigations_count=0
-    @activities_count=0
-    @external_activities_count=0
-    if @material_type.include?('investigation')
-      @investigations = Investigation.search_list(search_options)
-      @investigations_count = @investigations.length
-      @investigations = @investigations.paginate(:page => @investigation_page, :per_page => 10) 
-    end
-    if @material_type.include?('activity')
-      @activities = Activity.search_list(search_options)
-      @activities_count = @activities.length
-      @activities = @activities.paginate(:page => @activity_page, :per_page => 10)
-    end
-    if @material_type.include?('external_activity')
-      @external_activities = ExternalActivity.search_list(search_options)
-      @external_activities_count = @external_activities.length
-      @external_activities = @external_activities.paginate(:page => @external_activity_page, :per_page => 10)
-    end
+    search = Search.new(params)
+    # TODO: This will become a check on 'material_type'
+    @investigations            = search.results.select {|t| t.class == Investigation    }.paginate
+    @investigations_count      = @investigations.size
+    @activities                = search.results.select {|t| t.class == Activity         }.paginate
+    @activities_count          = @activities.size
+    @external_activities       = search.results.select {|t| t.class == ExternalActivity }.paginate
+    @external_activities_count = @external_activities.size
+
+    @form_model = SearchFormModel.new(search)
   end
 
   def index
@@ -72,58 +82,12 @@ class SearchController < ApplicationController
       (current_project.include_external_activities? ? ['investigation','activity','external_activity'] : ['investigation','activity'])
   end
 
-  def get_searchoptions
-    unless params[:search_term].nil?
-      @search_term = params[:search_term].strip
-    end
-    @sort_order = param_find(:sort_order, (params[:method] == :get)) || 'name ASC'
 
-    # we expect this to always return an array in our view
-    @domain_id  = [param_find(:domain_id, (params[:method] == :get)) || []].flatten.uniq.compact
-
-    @grade_span = param_find(:grade_span, (params[:method] == :get)) || ""
-    if (@grade_span).class == String && @grade_span.length>0 
-      @grade_span= @grade_span.split('&')
-    end
-    @investigation_page=params[:investigation_page]|| 1
-    @activity_page = params[:activity_page] || 1
-    @external_activity_page = params[:external_activity_page] || 1
-    setup_material_type
-    @probe_type = param_find(:probe, (params[:method] == :get)) || []
-
-    @include_contributed = params[:include_contributed] || false
-    
-    # from cookies, this comes back as as single string sometimes.
-    # see features/teacher_filters_instructional_materials.feature:80
-    # TODO: this should all be simplified and cleaned up.
-    if @probe_type.class == String
-      @probe_type = [@probe_type]
-    end
-    if current_visitor.anonymous?
-      @without_teacher_only=true
-    end
-    
-    search_options = {
-      :name => @search_term || '',
-      :sort_order => @sort_order,
-      :domain_id => @domain_id || [],
-      :grade_span => @grade_span|| [],
-      :paginate => false,
-      :probe_type => @probe_type,
-      :user => current_visitor,
-      :include_contributed => @include_contributed,
-      :without_teacher_only =>@without_teacher_only || false
-      #:page => params[:investigation_page] ? params[:investigation_page] : 1,
-      #:per_page => 10
-    }
-    return search_options
-  end
-  
   def get_search_suggestions
     @search_term = params[:search_term]
     @domain_id  = [param_find(:domain_id, (params[:method] == :get)) || []].flatten.uniq.compact
     @grade_span = param_find(:grade_span, (params[:method] == :get)) || ""
-    if (@grade_span).class == String && @grade_span.length>0 
+    if (@grade_span).class == String && @grade_span.length>0
       @grade_span= @grade_span.split('&')
     end
     @probe_type = param_find(:probe, (params[:method] == :get)) || []
