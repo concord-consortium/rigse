@@ -1,15 +1,15 @@
 class SearchController < ApplicationController
-  
+
   before_filter :teacher_only, :only => [:index, :show]
-  
+
   protected
-  
+
   def teacher_only
     if current_visitor.portal_student
       redirect_to(:root)
     end
   end
-  
+
   in_place_edit_for :investigation, :search_term
   
   public
@@ -34,15 +34,15 @@ class SearchController < ApplicationController
       @external_activities = @external_activities.paginate(:page => @external_activity_page, :per_page => 10)
     end
   end
-  
+
   def index
     search_material();
   end
-  
+
   def show
     search_material();
     if request.xhr?
-      render :update do |page| 
+      render :update do |page|
         page.replace_html 'offering_list', :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities,:external_activities=>@external_activities}
         page << "$('suggestions').remove();"
       end
@@ -55,18 +55,18 @@ class SearchController < ApplicationController
       end
     end
   end
-  
+
   def unauthorized_user
     notice_msg = 'Please login or register as a teacher'
     redirect_url = root_url
-    
+
     # Set notice message
     flash[:notice] = notice_msg
-    
+
     # Redirect to the login page
     redirect_to redirect_url
   end
-  
+
   def setup_material_type
     @material_type = param_find(:material, (params[:method] == :get)) ||
       (current_project.include_external_activities? ? ['investigation','activity','external_activity'] : ['investigation','activity'])
@@ -145,7 +145,7 @@ class SearchController < ApplicationController
       :user => current_visitor,
       :without_teacher_only =>@without_teacher_only || false
     }
-    
+
     if @material_type.include?('investigation')
       investigations = Investigation.search_list(search_options)
     end
@@ -166,32 +166,32 @@ class SearchController < ApplicationController
        end
     end
   end
-  
+
   def find_material(type, id)
     material = nil
     if ["Investigation", "Activity", "Page", "ExternalActivity", "ResourcePage"].include?(type)  # this is for safety
       material = type.constantize.find(id)
     end
-    
+
     return material
   end
-  
+
   def get_current_material_unassigned_clazzes
     material_type = params[:material_type]
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
-    
+
     teacher_clazzes = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}
     teacher_clazzes = teacher_clazzes.select{|item| item.active == true}
     teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
-    
-    if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation 
+
+    if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation
       @material = [find_material(material_type, params[:material_id])]
-      
+
       teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
       assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
-      
-      
+
+
       @assigned_clazzes = Portal::Clazz.where(:id=>assigned_clazz_ids)
       @assigned_clazzes = @assigned_clazzes.sort{|a,b| teacher_clazz_ids.index(a.id) <=> teacher_clazz_ids.index(b.id)}
     else
@@ -199,21 +199,21 @@ class SearchController < ApplicationController
       assigned_clazz_ids = []
       @material = material_ids.collect{|a| ::Activity.find(a)}
     end
-    
+
     unassigned_teacher_clazzes = teacher_clazzes.select{|item| assigned_clazz_ids.index(item.clazz_id).nil?}
     @unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
     @unassigned_clazzes = @unassigned_clazzes.sort{|a,b| teacher_clazz_ids.index(a.id) <=> teacher_clazz_ids.index(b.id)}
-    
+
     @teacher_active_clazzes_count = (teacher_clazzes)? teacher_clazzes.length : 0
     render :partial => 'material_unassigned_clazzes'
   end
-  
+
   def add_material_to_clazzes
     clazz_ids = params[:clazz_id] || []
     runnable_ids = params[:material_id].split(',')
     runnable_type = params[:material_type].classify
     assign_summary_data = []
-    
+
     clazz_ids.each do|clazz_id|
       already_assigned_material_names = []
       newly_assigned_material_names = []
@@ -234,7 +234,7 @@ class SearchController < ApplicationController
       end
       assign_summary_data << [portal_clazz.name, newly_assigned_material_names,already_assigned_material_names]
     end
-    
+
     if request.xhr?
       render :update do |page|
         if runnable_ids.length == 1
@@ -250,7 +250,7 @@ class SearchController < ApplicationController
             material = ::ExternalActivity.find(params[:material_id])
             used_in_clazz_count = material.offerings.count
           end
-          
+
           if(used_in_clazz_count == 0)
             class_count_desc = "Not used in any class."
           elsif(used_in_clazz_count == 1)
@@ -258,14 +258,14 @@ class SearchController < ApplicationController
           else
             class_count_desc = "Used in #{used_in_clazz_count} classes."
           end
-        
+
           if clazz_ids.count > 0
             page << "close_popup()"
             page << "getMessagePopup('<div class=\"feedback_message\">#{runnable_type} is assigned to the selected class(es) successfully.</div>')"
             page.replace_html "material_clazz_count", class_count_desc
             if !material_parent.nil? && runnable_type == "Activity"
               used_in_clazz_count = material.offerings.count + material.parent.offerings.count
-              
+
               if(used_in_clazz_count == 0)
                 class_count_desc = "Not used in any class."
               elsif(used_in_clazz_count == 1)
@@ -275,11 +275,11 @@ class SearchController < ApplicationController
               end
               page.replace_html "activity_clazz_count_#{runnable_ids[0]}", class_count_desc
             end
-            
+
             if runnable_type == "Investigation"
               material.activities.each do|activity|
                 used_in_clazz_count = activity.offerings.count + material.offerings.count
-                
+
                 if(used_in_clazz_count == 0)
                   class_count_desc = "Not used in any class."
                 elsif(used_in_clazz_count == 1)
@@ -287,9 +287,9 @@ class SearchController < ApplicationController
                 else
                   class_count_desc = "Used in #{used_in_clazz_count} classes."
                 end
-                
+
                 page.replace_html "activity_clazz_count_#{activity.id}", class_count_desc
-                
+
               end
             end
             #page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
@@ -301,7 +301,7 @@ class SearchController < ApplicationController
             runnable_ids.each do|runnable_id|
               material = ::Activity.find(runnable_id)
               used_in_clazz_count = material.offerings.count + material.parent.offerings.count
-              
+
               if(used_in_clazz_count == 0)
                 class_count_desc = "Not used in any class."
               elsif(used_in_clazz_count == 1)
@@ -310,17 +310,17 @@ class SearchController < ApplicationController
                 class_count_desc = "Used in #{used_in_clazz_count} classes."
               end
               page.replace_html "activity_clazz_count_#{runnable_id}", class_count_desc
-              
+
             end
             page.replace_html "clazz_summary_data", {:partial => 'material_assign_summary', :locals=>{:summary_data=>assign_summary_data}}
             page << "setPopupHeight()"
           else
             page << "$('error_message').update('Select atleast one class to assign this #{runnable_type}');$('error_message').show()"
-          end  
-          
+          end
+
         end
       end
     end
   end
-  
+
 end

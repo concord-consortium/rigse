@@ -5,12 +5,12 @@
   #filtermask
   .showhidefilters
     %div{:id=>"oExpandCollapseText",:style=>"width:10px;float:left"}
-      \-    
+      \-
     = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
   %div{:style=>'clear:both'}
   #filters_wrapper.visible
     %table.filters.collapse_filters{:cellpadding=>0,:cellspacing=>0}
-      
+
       %tr
         %td.sortbycolumn
           .filterheader
@@ -74,7 +74,7 @@
             = check_box_tag 'probe[]', '0', no_probes_req_selected, :id=>'probe_0', :class=>'probe_no_check', :onclick=>'uncheckedallprobes(false);'
             = label_tag "probe_0","No Sensors Required",:class=>"probes_label"
           .probes_container.webkit_scrollbars
-            
+
             %div
               Select&nbsp;
               %span#select_all_probes
