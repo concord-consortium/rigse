@@ -16,58 +16,54 @@
           .filterheader
             Sort By
           %div
-            = label_tag 'sort_order_created_at_ASC','Oldest', :class=>(@sort_order == "created_at ASC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
-            = radio_button_tag :sort_order,'created_at ASC',(@sort_order == "created_at ASC"),:class=>'sort_radio'
+            = order_check_box(Search::Oldest, "Oldest", @form_model.sort_order)
           %div
-            = label_tag 'sort_order_created_at_DESC','Newest',:class=>(@sort_order == "created_at DESC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
-            = radio_button_tag :sort_order,'created_at DESC',(@sort_order == "created_at DESC"),:class=>'sort_radio'
+            = order_check_box(Search::Newest, "Newest", @form_model.sort_order)
           %div
-            = label_tag 'sort_order_name_ASC','Alphabetical',:class=>(@sort_order == "name ASC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
-            = radio_button_tag :sort_order,'name ASC',(@sort_order == "name ASC"),:class=>'sort_radio'
+            = order_check_box(Search::Alphabetical, "Alphabetical", @form_model.sort_order)
           %div
-            = label_tag 'sort_order_offerings_count_DESC' ,'Popularity',:class=>(@sort_order == "offerings_count DESC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
-            = radio_button_tag :sort_order,'offerings_count DESC',(@sort_order == "offerings_count DESC"),:class=>'sort_radio'
+            = order_check_box(Search::Popularity, "Popularity", @form_model.sort_order)
         %td.domaincolumn
           .filterheader
             Scientific Domain
           -scientific_domains.each do |domain|
             .tablecell
-              = check_box_tag 'domain_id[]',domain[1], (@domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
+              = check_box_tag 'domain_id[]',domain[1], (@form_model.domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
               = label_tag domain[0].gsub(/\s+/, ""), domain[0]
             /= check_box_tag :domain_id, domain, true
         %td.gradecolumn
           .filterheader
             Grade
           .tablecell
-            = check_box_tag 'grade_span[]',"",(@grade_span.length > 0 && (@grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
+            = check_box_tag 'grade_span[]',"",(@form_model.grade_span.length > 0 && (@form_model.grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
             = label_tag 'allgrades', 'All Grades'
           -grades.each do |grade|
-            
+
             .tablecell
-              = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
+              = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
               = label_tag grade, grade
         %td.materialcolumn
           .filterheader
             Material
           .tablecell
-            = @investigation_checkedstatus
-            = check_box_tag 'material[]', 'investigation', @material_type.include?('investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
+            = @form_model.investigation_checkedstatus
+            = check_box_tag 'material[]', 'investigation', @form_model.material_type.include?('investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'investigation', t(:investigation).titleize
           .tablecell
-            = @activity_checkedstatus
-            = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
+            = @form_model.activity_checkedstatus
+            = check_box_tag 'material[]', 'activity',@form_model.material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
-          - if current_project.include_external_activities?
+          - if @form_model.include_external_activities?
             .tablecell
-              = @external_activity_checkedstatus
-              = check_box_tag 'material[]', 'external_activity',@material_type.include?('external_activity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
+              = @form_model.external_activity_checkedstatus
+              = check_box_tag 'material[]', 'external_activity',@form_model.material_type.include?('external_activity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
               = label_tag 'external_activity', ExternalActivity.display_name
             .tablecell
-              = @external_include_contributed_checkedstatus
+              = @form_model.external_include_contributed_checkedstatus
               = check_box_tag 'include_contributed'
               = label_tag 'include_contributed', 'Include contributed activities?'
         %td.probescolumn
-          - no_probes_req_selected = @probe_type.include?("0")
+          - no_probes_req_selected = @form_model.probe_type.include?("0")
           .filterheader
             Sensors
           .noprobesrequired
@@ -85,6 +81,6 @@
                 %a{:href => 'javascript: void(0);', :onclick=>"uncheckedallprobes(false);"}none
             - probe_types.each do |probe|
               .tablecell
-                = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items",:onclick=>"uncheckednoprobe(this);"
+                = check_box_tag 'probe[]',"#{probe.id}",(@form_model.probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items",:onclick=>"uncheckednoprobe(this);"
                 = label_tag "probe_#{probe.id}","#{probe.name}",:class=>"probes_label"
           #probes_overlay{ :style=> (no_probes_req_selected ? '' : 'display: none;') }
