@@ -49,6 +49,17 @@ class Activity < ActiveRecord::Base
     text :name, :name
     text :description, :description
     text :description_for_teacher, :description_for_teacher
+    text :content, nil
+
+    integer :probe_type_ids, nil
+
+    text :owner do |act|
+      act.user.name
+    end
+    integer :user_id
+
+    boolean :is_official, true # FIXME: better value for this
+
     boolean :published do
       publication_status == 'published'
     end
@@ -59,8 +70,9 @@ class Activity < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    # integer :domain_id do
-    # end
+    string  :gse_key, nil
+    string  :grade_span, nil
+    string  :domain, nil
   end
 
   send_update_events_to :investigation

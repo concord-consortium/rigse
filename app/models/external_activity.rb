@@ -5,15 +5,33 @@ class ExternalActivity < ActiveRecord::Base
   searchable do
     text :name
     text :description
+    text :description_for_teacher, nil
+    text :content, nil
+
+    integer :probe_type_ids, nil
+    text :owner do |ea|
+      ea.user.name
+    end
     boolean :is_official
     boolean :published do |ea|
       ea.publication_status == 'published'
     end
+    boolean :teacher_only, false
 
     string  :material_type
+    integer :user_id
     integer :offerings_count
+    integer :probe_type_ids, 0
+
+    boolean :teacher_only, false
+    integer :offerings_count
+
     time    :updated_at
     time    :created_at
+
+    string  :gse_key, nil
+    string  :grade_span, nil
+    string  :domain, nil
   end
 
   belongs_to :user

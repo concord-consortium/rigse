@@ -8,6 +8,7 @@ class Investigation < ActiveRecord::Base
     text :name
     text :description
     text :description_for_teacher
+    text :content, nil
 
     text :owner do |inv|
       inv.user.name
@@ -25,6 +26,7 @@ class Investigation < ActiveRecord::Base
 
     boolean :teacher_only
     integer :offerings_count
+    boolean :is_official, true # FIXME: Not sure if true should be the hardwired value here
 
     time    :updated_at
     time    :created_at

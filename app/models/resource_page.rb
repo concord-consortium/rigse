@@ -9,6 +9,7 @@ class ResourcePage < ActiveRecord::Base
   searchable do
     text :name
     text :description
+    text :description_for_teacher, nil
     text :content
     boolean :published do
       publication_status == 'published'
@@ -18,8 +19,20 @@ class ResourcePage < ActiveRecord::Base
     end
     integer :user_id
 
+    integer :probe_type_ids, nil
+
+    boolean :teacher_only, false
+    integer :offerings_count, 0
+    boolean :is_official, true
+
     time    :updated_at
     time    :created_at
+
+    string  :gse_key, nil
+    string  :grade_span, nil
+    string  :domain, nil
+
+    string  :material_type
   end
 
   belongs_to :user
