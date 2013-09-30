@@ -9,7 +9,7 @@ class Search
   attr_accessor :probe_type
   attr_accessor :grade_span
 
-  AllMaterials = [Investigation, Activity]
+  AllMaterials = [Investigation, Activity, ResourcePage, ExternalActivity]
   Newest       = [:updated_at, :desc]
   Oldest       = [:updated_at]
   Alphabetical = [:title]
@@ -19,7 +19,6 @@ class Search
   NoGradeSpan  = NoProbeType = []
 
   def initialize(opts={})
-    debugger
     @results        = []
     @hits           = []
 
@@ -37,8 +36,8 @@ class Search
     _results = @engine.search(AllMaterials) do |s|
       s.fulltext(@text)
       s.with(:published, true) unless @private
-      # s.with(:material_type, material_types)
-      # s.facet :material_type
+      s.with(:material_type, material_types)
+      s.facet :material_type
       s.order_by(*@sort_order)
     end
     self.results        = _results.results
