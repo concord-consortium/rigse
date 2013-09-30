@@ -5,10 +5,16 @@ class ExternalActivity < ActiveRecord::Base
   searchable do
     text :name
     text :description
-    text :description_for_teacher, nil
-    text :content, nil
+    text :description_for_teacher do
+      nil
+    end
+    text :content do
+      nil
+    end
 
-    integer :probe_type_ids, nil
+    integer :probe_type_ids do
+      nil
+    end
     text :owner do |ea|
       ea.user.name
     end
@@ -21,7 +27,9 @@ class ExternalActivity < ActiveRecord::Base
     string  :material_type
     integer :user_id
     integer :offerings_count
-    integer :probe_type_ids, 0
+    integer :probe_type_ids do
+      nil
+    end
 
     boolean :teacher_only, false
     integer :offerings_count
@@ -29,9 +37,15 @@ class ExternalActivity < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :gse_key, nil
-    string  :grade_span, nil
-    string  :domain, nil
+    string  :gse_key do
+      nil
+    end
+    string  :grade_span do
+      nil
+    end
+    string  :domain do
+      nil
+    end
   end
 
   belongs_to :user

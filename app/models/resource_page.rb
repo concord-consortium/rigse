@@ -9,7 +9,9 @@ class ResourcePage < ActiveRecord::Base
   searchable do
     text :name
     text :description
-    text :description_for_teacher, nil
+    text :description_for_teacher do
+      nil
+    end
     text :content
     boolean :published do
       publication_status == 'published'
@@ -19,7 +21,9 @@ class ResourcePage < ActiveRecord::Base
     end
     integer :user_id
 
-    integer :probe_type_ids, nil
+    integer :probe_type_ids do
+      nil
+    end
 
     boolean :teacher_only, false
     integer :offerings_count, 0
@@ -28,9 +32,15 @@ class ResourcePage < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :gse_key, nil
-    string  :grade_span, nil
-    string  :domain, nil
+    string  :gse_key do
+      nil
+    end
+    string  :grade_span do
+      nil
+    end
+    string  :domain do
+      nil
+    end
 
     string  :material_type
   end

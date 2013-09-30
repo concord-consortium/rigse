@@ -8,7 +8,9 @@ class Investigation < ActiveRecord::Base
     text :name
     text :description
     text :description_for_teacher
-    text :content, nil
+    text :content do
+      nil
+    end
 
     text :owner do |inv|
       inv.user.name
