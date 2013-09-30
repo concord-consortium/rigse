@@ -22,7 +22,9 @@ class ExternalActivity < ActiveRecord::Base
     boolean :published do |ea|
       ea.publication_status == 'published'
     end
-    boolean :teacher_only, false
+    boolean :teacher_only do
+      false
+    end
 
     string  :material_type
     integer :user_id
@@ -31,7 +33,9 @@ class ExternalActivity < ActiveRecord::Base
       nil
     end
 
-    boolean :teacher_only, false
+    boolean :teacher_only do
+      false
+    end
     integer :offerings_count
 
     time    :updated_at

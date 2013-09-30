@@ -25,9 +25,15 @@ class ResourcePage < ActiveRecord::Base
       nil
     end
 
-    boolean :teacher_only, false
-    integer :offerings_count, 0
-    boolean :is_official, true
+    boolean :teacher_only do
+      false
+    end
+    integer :offerings_count do
+      0
+    end
+    boolean :is_official do
+      true # FIXME: Not sure if true should be the hardwired value here
+    end
 
     time    :updated_at
     time    :created_at

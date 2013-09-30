@@ -62,7 +62,9 @@ class Activity < ActiveRecord::Base
     end
     integer :user_id
 
-    boolean :is_official, true # FIXME: better value for this
+    boolean :is_official do
+      true # FIXME: Not sure if true should be the hardwired value here
+    end
 
     boolean :published do
       publication_status == 'published'
