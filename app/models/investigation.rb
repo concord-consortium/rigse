@@ -37,6 +37,7 @@ class Investigation < ActiveRecord::Base
       inv.grade_span_expectation.grade_span if inv.grade_span_expectation
     end
 
+    string  :material_type
     string  :domain do |inv|
       if (inv.grade_span_expectation && inv.grade_span_expectation.domain)
         inv.grade_span_expectation.domain.name
