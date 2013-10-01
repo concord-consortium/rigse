@@ -20,7 +20,7 @@ class Investigation < ActiveRecord::Base
       inv.publication_status == 'published'
     end
 
-    integer :user_id, :user_id
+    integer :user_id
 
     integer :probe_type_ids, :multiple => true do |inv|
       inv.data_collectors.map { |dc| dc.probe_type_id }.compact

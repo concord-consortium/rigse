@@ -46,9 +46,9 @@ class Activity < ActiveRecord::Base
   include Publishable
 
   searchable do
-    text :name, :name
-    text :description, :description
-    text :description_for_teacher, :description_for_teacher
+    text :name
+    text :description
+    text :description_for_teacher
     text :content do
       nil
     end
