@@ -42,10 +42,6 @@
     -unless activities.nil?
       - if activities.length>0
         = render :partial=>'search/result_activity',:locals=>{:materials=>activities,:type=>'Activities'}
-    -unless external_activities.nil?
-      - if external_activities.length>0
-        -# I'd like to use a named scope here, but it turns out that because the results are a lazy-loaded AREL object that adding a scope re-builds the query rather than filtering the results.
-        -if external_activities.where(:is_official => true).length > 0
-          = render :partial=>'search/result_external_activity',:locals=>{:materials=>external_activities.where(:is_official => true), :type=>'External Activities', :head_label => 'Official' }
-        -if external_activities.where(:is_official => false).length > 0
-          = render :partial=>'search/result_external_activity',:locals=>{:materials=>external_activities.where(:is_official => false), :type=>'External Activities', :head_label => 'Contributed' }
+    -unless external_activities.blank?
+      = render :partial=>'search/result_external_activity',:locals=>{:materials=>external_activities, :type=>'External Activities', :head_label => 'Official' }
+    -# TODO:  We need to sort / bin by "offical" here..
