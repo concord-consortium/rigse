@@ -7,35 +7,45 @@ class Search
   attr_accessor :sort_order
   attr_accessor :private
   attr_accessor :probe
+  attr_accessor :no_probes
   attr_accessor :grade_span
   attr_accessor :domain_id
 
   AllMaterials = [Investigation, Activity, ResourcePage, ExternalActivity]
-  Newest       = [:updated_at, :desc]
-  Oldest       = [:updated_at, :asc]
-  Alphabetical = [:title]
-  Popularity   = [:offerings_count, :desc]
 
-  NoSearchTerm = nil
-  NoGradeSpan  = NoDomainID = NoProbeType =[]
+  Newest       = 'Newest'
+  Oldest       = 'Oldest'
+  Alphabetical = 'Alphabetical'
+  Popularity   = 'Popularity'
+  SortOptions  = {
+    Newest       => [:updated_at, :desc],
+    Oldest       => [:updated_at],
+    Alphabetical => [:name],
+    Popularity   => [:offerings_count, :desc]
+  }
+  NoSearchTerm    = nil
+  NoGradeSpan     = NoDomainID = AnyProbeType =[]
+  NoProbeRequired = ["0"]
 
   def initialize(opts={})
     @results        = []
     @hits           = []
+    @no_probes      = false
     @material_types = opts[:material_types] || AllMaterials
     @domain_id      = opts[:domain_id]      || NoDomainID
     @text           = opts[:search_term]    || NoSearchTerm
     @engine         = opts[:engine]         || Sunspot
     @grade_span     = opts[:grade_span]     || NoGradeSpan
-    @probe          = opts[:probe]          || NoProbeType
+    @probe          = opts[:probe]          || AnyProbeType
+    @no_probes      = opts[:no_probe]       || false
     @private        = opts[:private]
-    @sort_order     = parse_sort_order(opts[:sort_order])
+    @sort_order     = opts[:sort_order]     || Newest
     self.search()
   end
 
+
   def parse_sort_order(sort_order)
-    return Newest if sort_order.blank?
-    return sort_order.split().map {|i| i.downcase.to_sym}
+    return SortOptions(sort_order) || [:updated_at, :desc]
   end
 
   def search
@@ -45,9 +55,10 @@ class Search
       s.with(:material_type, @material_types)
       s.with(:domain_id, @domain_id) unless @domain_id.empty?
       s.with(:grade_span, @grade_span) unless @grade_span.empty?
-      s.with(:probe_type_ids, @probe) unless @probe.empty?
+      s.with(:probe_type_ids, @probe) unless (@probe.empty? || @no_probes)
+      s.with(:no_probes, true) if @no_probes
       s.facet :material_type
-      # s.order_by(*@sort_order)
+      s.order_by(*SortOptions[@sort_order])
     end
     self.results        = _results.results
     self.hits           = _results.hits
