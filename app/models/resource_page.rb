@@ -42,7 +42,7 @@ class ResourcePage < ActiveRecord::Base
     string  :grade_span do
       nil
     end
-    string  :domain do
+    integer :domain_id do
       nil
     end
 

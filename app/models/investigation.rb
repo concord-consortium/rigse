@@ -40,9 +40,9 @@ class Investigation < ActiveRecord::Base
     end
 
     string  :material_type
-    string  :domain do |inv|
+    integer :domain_id do |inv|
       if (inv.grade_span_expectation && inv.grade_span_expectation.domain)
-        inv.grade_span_expectation.domain.name
+        inv.grade_span_expectation.domain.id
       else
         nil
       end

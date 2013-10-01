@@ -84,9 +84,9 @@ class Activity < ActiveRecord::Base
       end
     end
 
-    string  :domain do |act|
+    integer :domain_id do |act|
       if (act.investigation && act.investigation.grade_span_expectation && act.investigation.grade_span_expectation.domain)
-        inv.grade_span_expectation.domain.name
+        inv.grade_span_expectation.domain.id
       else
         nil
       end
