@@ -79,12 +79,22 @@ class Activity < ActiveRecord::Base
     string  :gse_key do
       nil
     end
-    string  :grade_span do
-      nil
+    string  :grade_span do |act|
+      if (act.investigation && act.investigation.grade_span_expectation)
+        act.investigation.grade_span_expectation.grade_span
+      else
+        nil
+      end
     end
-    string  :domain do
-      nil
+
+    string  :domain do |act|
+      if (act.investigation && act.investigation.grade_span_expectation && act.investigation.grade_span_expectation.domain)
+        inv.grade_span_expectation.domain.name
+      else
+        nil
+      end
     end
+
   end
 
   send_update_events_to :investigation
