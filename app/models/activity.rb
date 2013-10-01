@@ -75,26 +75,14 @@ class Activity < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :grade_span do |act|
-      if (act.investigation && act.investigation.grade_span_expectation)
-        act.investigation.grade_span_expectation.grade_span
-      else
-        nil
-      end
-    end
-
-    integer :domain_id do |act|
-      if (act.investigation && act.investigation.grade_span_expectation && act.investigation.grade_span_expectation.domain)
-        inv.grade_span_expectation.domain.id
-      else
-        nil
-      end
-    end
+    string  :grade_span
+    integer :domain_id
     string  :material_type
 
   end
 
   send_update_events_to :investigation
+  delegate :domain_id, :grade_span, :to => :investigation, :allow_nil => true
 
   scope :with_gse, {
     :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"

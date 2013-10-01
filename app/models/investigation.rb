@@ -34,17 +34,8 @@ class Investigation < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :grade_span do |inv|
-      inv.grade_span_expectation.grade_span if inv.grade_span_expectation
-    end
-
-    integer :domain_id do |inv|
-      if (inv.grade_span_expectation && inv.grade_span_expectation.domain)
-        inv.grade_span_expectation.domain.id
-      else
-        nil
-      end
-    end
+    string  :grade_span
+    integer :domain_id
     string  :material_type
 
   end
@@ -108,7 +99,7 @@ class Investigation < ActiveRecord::Base
   include Publishable
 
   # for convenience (will not work in find_by_* &etc.)
-  [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
+  delegate :grade_span, :domain, :to => :grade_span_expectation, :allow_nil => true
 
   scope :assigned, where('investigations.offerings_count > 0')
   #
@@ -376,8 +367,16 @@ class Investigation < ActiveRecord::Base
 
   def full_title
     full_title = self.name
-
     return full_title
   end
+
+  def domain_id
+    if self.domain
+      self.domain.id
+    else
+      nil
+    end
+  end
+
 
 end
