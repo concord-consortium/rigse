@@ -77,7 +77,11 @@ class Activity < ActiveRecord::Base
 
     boolean :teacher_only
 
-    integer :offerings_count
+    integer :offerings_count do |act|
+      total = 0
+      total += act.investigation.offerings_count if investigation
+      total += act.offerings_count
+    end
     boolean :is_official do
       true # FIXME: Not sure if true should be the hardwired value here
     end
