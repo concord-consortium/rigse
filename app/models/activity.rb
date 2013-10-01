@@ -58,11 +58,16 @@ class Activity < ActiveRecord::Base
     end
     integer :user_id
 
-    boolean :published do
-      publication_status == 'published'
+    boolean :published do |act|
+      if act.investigation
+        act.investigation.published?
+      else
+        act.published?
+      end
     end
-    integer :probe_type_ids do
-      nil
+
+    integer :probe_type_ids, :multiple => true do |act|
+      act.data_collectors.map { |dc| dc.probe_type_id }.compact
     end
 
     boolean :teacher_only
