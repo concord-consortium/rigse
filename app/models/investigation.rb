@@ -26,6 +26,10 @@ class Investigation < ActiveRecord::Base
       inv.data_collectors.map { |dc| dc.probe_type_id }.compact
     end
 
+    boolean :no_probes do |act|
+      act.data_collectors.map { |dc| dc.probe_type_id }.compact.size < 1
+    end
+
     boolean :teacher_only
     integer :offerings_count
     boolean :is_official do

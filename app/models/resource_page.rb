@@ -26,6 +26,11 @@ class ResourcePage < ActiveRecord::Base
       nil
     end
 
+    boolean :no_probes do
+      true
+    end
+
+
     boolean :teacher_only do
       # Useful in Activity and Investigation; stubbed here
       false

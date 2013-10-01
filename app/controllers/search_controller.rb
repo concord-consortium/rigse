@@ -20,7 +20,8 @@ class SearchController < ApplicationController
     def domain_id; [] ; end
     def sort_order; @search.sort_order; end
     def grade_span; @search.grade_span; end
-    def probe_type; @search.probe_type; end
+    def probe_type; @search.probe; end
+    def no_probes; @search.no_probes; end
     def investigation_checkedstatus; @search.material_types.include? ::Investigation ; end
     def activity_checkedstatus; @search.material_types.include? ::Activity ; end
     def external_activity_checkedstatus; @search.material_types.include? ::Activity ; end
