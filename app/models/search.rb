@@ -6,7 +6,7 @@ class Search
   attr_accessor :material_types
   attr_accessor :sort_order
   attr_accessor :private
-  attr_accessor :probe_type
+  attr_accessor :probe
   attr_accessor :grade_span
   attr_accessor :domain_id
 
@@ -17,17 +17,17 @@ class Search
   Popularity   = [:offerings_count, :desc]
 
   NoSearchTerm = nil
-  NoGradeSpan  = NoProbeType = []
+  NoGradeSpan  = NoDomainID = NoProbeType =[]
 
   def initialize(opts={})
     @results        = []
     @hits           = []
     @material_types = opts[:material_types] || AllMaterials
-    @domain_id      = opts[:domain_id]
+    @domain_id      = opts[:domain_id]      || NoDomainID
     @text           = opts[:search_term]    || NoSearchTerm
     @engine         = opts[:engine]         || Sunspot
     @grade_span     = opts[:grade_span]     || NoGradeSpan
-    @probe_type     = opts[:probe_type]     || NoProbeType
+    @probe          = opts[:probe]          || NoProbeType
     @private        = opts[:private]
     @sort_order     = parse_sort_order(opts[:sort_order])
     self.search()
@@ -43,7 +43,9 @@ class Search
       s.fulltext(@text)
       s.with(:published, true) unless @private
       s.with(:material_type, @material_types)
-      s.with(:domain_id, @domain_id) if @domain_id
+      s.with(:domain_id, @domain_id) unless @domain_id.empty?
+      s.with(:grade_span, @grade_span) unless @grade_span.empty?
+      s.with(:probe_type_ids, @probe) unless @probe.empty?
       s.facet :material_type
       # s.order_by(*@sort_order)
     end
