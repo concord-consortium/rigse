@@ -26,6 +26,7 @@ class ResourcePage < ActiveRecord::Base
     end
 
     boolean :teacher_only do
+      # Useful in Activity and Investigation; stubbed here
       false
     end
     integer :offerings_count do
