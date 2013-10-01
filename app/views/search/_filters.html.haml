@@ -47,16 +47,16 @@
             Material
           .tablecell
             = @form_model.investigation_checkedstatus
-            = check_box_tag 'material[]', 'investigation', @form_model.material_type.include?('investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
+            = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'investigation', t(:investigation).titleize
           .tablecell
             = @form_model.activity_checkedstatus
-            = check_box_tag 'material[]', 'activity',@form_model.material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
+            = check_box_tag 'material_types[]', 'Activity',@form_model.material_types.include?('activity'),:id=>'Activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
           - if @form_model.include_external_activities?
             .tablecell
               = @form_model.external_activity_checkedstatus
-              = check_box_tag 'material[]', 'external_activity',@form_model.material_type.include?('external_activity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
+              = check_box_tag 'material_types[]', 'ExternalActivity',@form_model.material_types.include?('ExternalActivity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
               = label_tag 'external_activity', ExternalActivity.display_name
             .tablecell
               = @form_model.external_include_contributed_checkedstatus

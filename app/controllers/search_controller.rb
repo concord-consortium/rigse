@@ -25,7 +25,7 @@ class SearchController < ApplicationController
     def activity_checkedstatus; @search.material_types.include? ::Activity ; end
     def external_activity_checkedstatus; @search.material_types.include? ::Activity ; end
     def include_external_activities?; false; end; #current_project.include_external_activities; end
-    def material_type; @search.material_types ; end
+    def material_types; @search.material_types ; end
   end
 
   class SearchResultsModel
