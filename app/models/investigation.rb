@@ -13,7 +13,7 @@ class Investigation < ActiveRecord::Base
     end
 
     text :owner do |inv|
-      inv.user.name
+      inv.user && inv.user.name
     end
     integer :user_id
 

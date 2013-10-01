@@ -54,7 +54,7 @@ class Activity < ActiveRecord::Base
     end
 
     text :owner do |act|
-      act.user.name
+      act.user && act.user.name
     end
     integer :user_id
 

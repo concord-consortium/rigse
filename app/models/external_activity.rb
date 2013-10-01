@@ -13,7 +13,7 @@ class ExternalActivity < ActiveRecord::Base
     end
 
     text :owner do |ea|
-      ea.user.name
+      ea.user && ea.user.name
     end
     integer :user_id
     boolean :published do |ea|
