@@ -4,6 +4,7 @@ class ExternalActivity < ActiveRecord::Base
   # see https://github.com/sunspot/sunspot/blob/master/README.md
   searchable do
     text :name
+    string :name
     text :description
     text :description_for_teacher do
       nil

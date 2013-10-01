@@ -47,6 +47,7 @@ class Activity < ActiveRecord::Base
 
   searchable do
     text :name
+    string :name
     text :description
     text :description_for_teacher
     text :content do

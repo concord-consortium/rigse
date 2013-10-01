@@ -8,6 +8,7 @@ class ResourcePage < ActiveRecord::Base
 
   searchable do
     text :name
+    string :name
     text :description
     text :description_for_teacher do
       nil
