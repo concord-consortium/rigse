@@ -15,20 +15,19 @@ class ExternalActivity < ActiveRecord::Base
     text :owner do |ea|
       ea.user && ea.user.name
     end
+
     integer :user_id
     boolean :published do |ea|
       ea.publication_status == 'published'
     end
-    integer :probe_type_ids do
-      nil
-    end
+
     boolean :teacher_only do
       false
     end
 
     integer :offerings_count
     boolean :is_official
-    integer :probe_type_ids do
+    integer :probe_type_ids, :multiple => true do
       nil
     end
 
@@ -195,11 +194,11 @@ class ExternalActivity < ActiveRecord::Base
   def print_listing
     listing = []
   end
-  
+
   def run_format
     :run_external_html
   end
-  
+
   def report_format
     :run_external_html
   end
