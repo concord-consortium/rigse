@@ -12,7 +12,7 @@ class Search
 
   AllMaterials = [Investigation, Activity, ResourcePage, ExternalActivity]
   Newest       = [:updated_at, :desc]
-  Oldest       = [:updated_at]
+  Oldest       = [:updated_at, :asc]
   Alphabetical = [:title]
   Popularity   = [:offerings_count, :desc]
 
@@ -35,7 +35,7 @@ class Search
 
   def parse_sort_order(sort_order)
     return Newest if sort_order.blank?
-    return sort_order.split().map {|i| i.to_sym}
+    return sort_order.split().map {|i| i.downcase.to_sym}
   end
 
   def search
