@@ -13,13 +13,13 @@ class ResourcePage < ActiveRecord::Base
       nil
     end
     text :content
-    boolean :published do
-      publication_status == 'published'
-    end
     text :owner do |rp|
       rp.user.name
     end
     integer :user_id
+    boolean :published do
+      publication_status == 'published'
+    end
 
     integer :probe_type_ids do
       nil

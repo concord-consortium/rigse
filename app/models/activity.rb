@@ -53,26 +53,25 @@ class Activity < ActiveRecord::Base
       nil
     end
 
-    integer :probe_type_ids do
-      nil
-    end
-
     text :owner do |act|
       act.user.name
     end
     integer :user_id
 
+    boolean :published do
+      publication_status == 'published'
+    end
+    integer :probe_type_ids do
+      nil
+    end
+
+    boolean :teacher_only
+
+    integer :offerings_count
     boolean :is_official do
       true # FIXME: Not sure if true should be the hardwired value here
     end
 
-    boolean :published do
-      publication_status == 'published'
-    end
-    boolean :teacher_only
-
-    string  :material_type
-    integer :offerings_count
     time    :updated_at
     time    :created_at
 
@@ -91,6 +90,7 @@ class Activity < ActiveRecord::Base
         nil
       end
     end
+    string  :material_type
 
   end
 

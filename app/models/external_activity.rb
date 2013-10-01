@@ -12,23 +12,22 @@ class ExternalActivity < ActiveRecord::Base
       nil
     end
 
-    integer :probe_type_ids do
-      nil
-    end
     text :owner do |ea|
       ea.user.name
     end
-    boolean :is_official
+    integer :user_id
     boolean :published do |ea|
       ea.publication_status == 'published'
+    end
+    integer :probe_type_ids do
+      nil
     end
     boolean :teacher_only do
       false
     end
 
-    string  :material_type
-    integer :user_id
     integer :offerings_count
+    boolean :is_official
     integer :probe_type_ids do
       nil
     end
@@ -48,6 +47,7 @@ class ExternalActivity < ActiveRecord::Base
     integer :domain_id do
       nil
     end
+    string  :material_type
   end
 
   belongs_to :user

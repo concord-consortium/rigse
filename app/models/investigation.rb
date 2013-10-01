@@ -15,12 +15,11 @@ class Investigation < ActiveRecord::Base
     text :owner do |inv|
       inv.user.name
     end
+    integer :user_id
 
     boolean :published do |inv|
       inv.publication_status == 'published'
     end
-
-    integer :user_id
 
     integer :probe_type_ids, :multiple => true do |inv|
       inv.data_collectors.map { |dc| dc.probe_type_id }.compact
@@ -39,7 +38,6 @@ class Investigation < ActiveRecord::Base
       inv.grade_span_expectation.grade_span if inv.grade_span_expectation
     end
 
-    string  :material_type
     integer :domain_id do |inv|
       if (inv.grade_span_expectation && inv.grade_span_expectation.domain)
         inv.grade_span_expectation.domain.id
@@ -47,6 +45,7 @@ class Investigation < ActiveRecord::Base
         nil
       end
     end
+    string  :material_type
 
   end
 
