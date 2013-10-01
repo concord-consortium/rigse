@@ -35,10 +35,6 @@ class Investigation < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :gse_key do |inv|
-      inv.grade_span_expectation.gse_key if inv.grade_span_expectation
-    end
-
     string  :grade_span do |inv|
       inv.grade_span_expectation.grade_span if inv.grade_span_expectation
     end

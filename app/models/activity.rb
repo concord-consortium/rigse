@@ -76,9 +76,6 @@ class Activity < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :gse_key do
-      nil
-    end
     string  :grade_span do |act|
       if (act.investigation && act.investigation.grade_span_expectation)
         act.investigation.grade_span_expectation.grade_span

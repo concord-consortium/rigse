@@ -39,9 +39,6 @@ class ResourcePage < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :gse_key do
-      nil
-    end
     string  :grade_span do
       nil
     end
