@@ -170,14 +170,7 @@ class Investigation < ActiveRecord::Base
   include Changeable
   include Noteable # convenience methods for notes...
 
-  self.extend SearchableModel
-  @@searchable_attributes = %w{name description publication_status}
-
   class <<self
-    def searchable_attributes
-      @@searchable_attributes
-    end
-
     def find_by_grade_span_and_domain_id(grade_span,domain_id)
       @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
       @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
