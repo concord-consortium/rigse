@@ -21,7 +21,7 @@ class ResourcePage < ActiveRecord::Base
       publication_status == 'published'
     end
 
-    integer :probe_type_ids do
+    integer :probe_type_ids, :multiple => true do
       nil
     end
 
