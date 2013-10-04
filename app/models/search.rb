@@ -10,6 +10,9 @@ class Search
   attr_accessor :no_probes
   attr_accessor :grade_span
   attr_accessor :domain_id
+  attr_accessor :without_teacher_only
+  attr_accessor :page
+  attr_accessor :per_page
 
   AllMaterials = [Investigation, Activity, ResourcePage, ExternalActivity]
 
@@ -28,8 +31,8 @@ class Search
   NoProbeRequired = ["0"]
 
   def initialize(opts={})
-    @results        = []
-    @hits           = []
+    @results        = {}
+    @hits           = {}
     @no_probes      = false
     @material_types = opts[:material_types] || AllMaterials
     @domain_id      = opts[:domain_id]      || NoDomainID
@@ -40,6 +43,9 @@ class Search
     @no_probes      = opts[:no_probe]       || false
     @private        = opts[:private]
     @sort_order     = opts[:sort_order]     || Newest
+    @page           = opts[:page]           || 1
+    @per_page       = opts[:per_page]       || 10
+    @without_teacher_only = opts[:without_teacher_only]
     self.search()
   end
 
@@ -49,19 +55,27 @@ class Search
   end
 
   def search
-    _results = @engine.search(AllMaterials) do |s|
-      s.fulltext(@text)
-      s.with(:published, true) unless @private
-      s.with(:material_type, @material_types)
-      s.with(:domain_id, @domain_id) unless @domain_id.empty?
-      s.with(:grade_span, @grade_span) unless @grade_span.empty?
-      s.with(:probe_type_ids, @probe) unless (@probe.empty? || @no_probes)
-      s.with(:no_probes, true) if @no_probes
-      s.facet :material_type
-      s.order_by(*SortOptions[@sort_order])
+    self.results[:all] = []
+    self.hits[:all] = []
+    @material_types.each do |type|
+      _results = @engine.search(AllMaterials) do |s|
+        s.fulltext(@text)
+        s.with(:published, true) unless @private
+        s.with(:material_type, type)
+        s.with(:domain_id, @domain_id) unless @domain_id.empty?
+        s.with(:grade_span, @grade_span) unless @grade_span.empty?
+        s.with(:probe_type_ids, @probe) unless (@probe.empty? || @no_probes)
+        s.with(:no_probes, true) if @no_probes
+        s.facet :material_type
+        s.order_by(*SortOptions[@sort_order])
+        s.paginate(:page => @page, :per_page => @per_page)
+
+      end
+      self.results[:all] += _results.results
+      self.hits[:all]    += _results.hits
+      self.results[type] = _results.results
+      self.hits[type]    = _results.hits
     end
-    self.results        = _results.results
-    self.hits           = _results.hits
   end
 
   def types(*types)

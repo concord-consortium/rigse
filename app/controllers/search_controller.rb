@@ -35,12 +35,13 @@ class SearchController < ApplicationController
   public
   def search_material
     search = Search.new(params)
-    # Binning for Investigations ("Sequences") and Activities
-    # NB: This means we're ignoring results for ResourcePages
-    @investigations            = search.results.select {|t| t.material_type == "Investigation"    }.paginate
+    # TODO: This will become a check on 'material_type'
+    @investigations            = search.results['Investigation'] || []
     @investigations_count      = @investigations.size
-    @activities                = search.results.select {|t| t.material_type == "Activity"         }.paginate
+    @activities                = search.results['Activity'] || []
     @activities_count          = @activities.size
+    @external_activities       = search.results['ExternalActivity'] || []
+    @external_activities_count = @external_activities.size
 
     @form_model = SearchFormModel.new(search)
   end
@@ -78,50 +79,26 @@ class SearchController < ApplicationController
   end
 
   def setup_material_type
-    @material_type = param_find(:material, (params[:method] == :get)) ||
+    @material_type = param_find(:material_types, (params[:method] == :get)) ||
       (current_project.include_external_activities? ? ['investigation','activity','external_activity'] : ['investigation','activity'])
   end
 
 
   def get_search_suggestions
-    @search_term = params[:search_term]
-    @domain_id  = [param_find(:domain_id, (params[:method] == :get)) || []].flatten.uniq.compact
-    @grade_span = param_find(:grade_span, (params[:method] == :get)) || ""
-    if (@grade_span).class == String && @grade_span.length>0
-      @grade_span= @grade_span.split('&')
-    end
-    @probe_type = param_find(:probe, (params[:method] == :get)) || []
     setup_material_type
-    investigations=[]
-    activities=[]
-    external_activities=[]
+
+    other_params = {
+      :without_teacher_only => current_visitor.anonymous?
+    }
+    search = Search.new(other_params.merge(params))
+    investigations = search.results['Investigation']
+    activities= search.results['Activity']
+    external_activities=search.results['ExternalActivity']
+
     ajaxResponseCounter = params[:ajaxRequestCounter]
     submitform = params[:submit_form]
-    if current_visitor.anonymous?
-      @without_teacher_only=true
-    end
-    search_options = {
-      :name => @search_term,
-      :sort_order => 'name ASC',
-      :domain_id => @domain_id || [],
-      :grade_span => @grade_span|| [],
-      :probe_type => @probe_type,
-      :user => current_visitor,
-      :without_teacher_only =>@without_teacher_only || false
-    }
 
-    if @material_type.include?('investigation')
-      investigations = Investigation.search_list(search_options)
-    end
-    if @material_type.include?('activity')
-      activities = Activity.search_list(search_options)
-    end
-    if @material_type.include?('external_activity') && current_project.include_external_activities
-      external_activities = ExternalActivity.search_list(search_options)
-    end
-
-    @suggestions= [];
-    @suggestions = investigations + activities + external_activities
+    @suggestions= search.results[:all]
     if request.xhr?
        render :update do |page|
          page << "if (ajaxRequestCounter == #{ajaxResponseCounter}) {"
