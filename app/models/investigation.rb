@@ -59,6 +59,11 @@ class Investigation < ActiveRecord::Base
 
   has_many :external_activities, :as => :template
 
+  # TODO: We intend to support icons for activities. Until that's a real attribute, have this stub method.
+  def icon_image
+    return nil
+  end
+
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
   BASE_EMBEDDABLES.each do |klass|
     eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',

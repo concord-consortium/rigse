@@ -10,6 +10,6 @@
     = hidden_field_tag "investigation_page", @investigation_page
     = hidden_field_tag "activity_page", @activity_page
     - if investigations && !investigations.empty?
-      = render :partial => 'search/result_material', :locals => { :materials => investigations, :type => 'Investigations' }
+      = render :partial => 'search/result_investigation', :locals => { :materials => investigations, :type => 'Investigations' }
     - if activities && !activities.empty?
       = render :partial => 'search/result_activity', :locals => { :materials => activities, :type => 'Activities' }

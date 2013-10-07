@@ -21,6 +21,11 @@ class Activity < ActiveRecord::Base
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
+  # TODO: We intend to support icons for activities. Until that's a real attribute, have this stub method.
+  def icon_image
+    return nil
+  end
+
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
   BASE_EMBEDDABLES.each do |klass|
       eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',

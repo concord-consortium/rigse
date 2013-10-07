@@ -102,6 +102,11 @@ class ExternalActivity < ActiveRecord::Base
   scope :official, where(:is_official => true)
   scope :contributed, where(:is_official => false)
 
+  # TODO: We intend to support icons for activities. Until that's a real attribute, have this stub method.
+  def icon_image
+    return nil
+  end
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
