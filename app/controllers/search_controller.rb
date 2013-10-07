@@ -35,13 +35,12 @@ class SearchController < ApplicationController
   public
   def search_material
     search = Search.new(params)
-    # TODO: This will become a check on 'material_type'
-    @investigations            = search.results.select {|t| t.class == Investigation    }.paginate
+    # Binning for Investigations ("Sequences") and Activities
+    # NB: This means we're ignoring results for ResourcePages
+    @investigations            = search.results.select {|t| t.material_type == "Investigation"    }.paginate
     @investigations_count      = @investigations.size
-    @activities                = search.results.select {|t| t.class == Activity         }.paginate
+    @activities                = search.results.select {|t| t.material_type == "Activity"         }.paginate
     @activities_count          = @activities.size
-    @external_activities       = search.results.select {|t| t.class == ExternalActivity }.paginate
-    @external_activities_count = @external_activities.size
 
     @form_model = SearchFormModel.new(search)
   end

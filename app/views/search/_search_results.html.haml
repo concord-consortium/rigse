@@ -9,13 +9,7 @@
     = hidden_field_tag "search_term", @search_term
     = hidden_field_tag "investigation_page", @investigation_page
     = hidden_field_tag "activity_page", @activity_page
-    = hidden_field_tag "external_activity_page", @external_activity_page
-    -unless investigations.nil?
-      - if investigations.length>0
-        = render :partial=>'search/result_material',:locals=>{:materials=>investigations,:type=>'Investigations'}
-    -unless activities.nil?
-      - if activities.length>0
-        = render :partial=>'search/result_activity',:locals=>{:materials=>activities,:type=>'Activities'}
-    -unless external_activities.blank?
-      = render :partial=>'search/result_external_activity',:locals=>{:materials=>external_activities, :type=>'External Activities', :head_label => 'Official' }
-    -# TODO:  We need to sort / bin by "offical" here..
+    - if investigations && !investigations.empty?
+      = render :partial => 'search/result_material', :locals => { :materials => investigations, :type => 'Investigations' }
+    - if activities && !activities.empty?
+      = render :partial => 'search/result_activity', :locals => { :materials => activities, :type => 'Activities' }
