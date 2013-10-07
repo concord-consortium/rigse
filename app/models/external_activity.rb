@@ -102,10 +102,17 @@ class ExternalActivity < ActiveRecord::Base
   scope :official, where(:is_official => true)
   scope :contributed, where(:is_official => false)
 
+  # TODO: This block includes methods which should be extractable to e.g. the MaterialType module ------->
   # TODO: We intend to support icons for activities. Until that's a real attribute, have this stub method.
   def icon_image
     return nil
   end
+
+  def offerings_by_clazz(clazz_ids)
+    self.offerings.find(:clazz_id => clazz_ids)
+  end
+
+  # TODO: end of methods which could be refactored into MaterialType (if we gave it a better name)
 
   class <<self
     def searchable_attributes

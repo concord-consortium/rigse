@@ -13,10 +13,6 @@
   .icon_image
     = show_material_icon(material)
 %div
-  - if current_visitor.portal_teacher
-    - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.select{ |item| item.active == true }.map{ |item| item.clazz_id }
-    - offerings = Portal::Offering.where( :runnable_id => material.id, :runnable_type => "#{material.class.to_s}", :clazz_id => teacher_clazz_ids )
-  
   %div{:style=>'overflow:hidden'}
     %table{:width=>"100%"}
       %tr
@@ -40,8 +36,8 @@
           %div{:style=>'float:right'}
             - unless current_visitor.anonymous?
               - unless material.teacher_only?
-                %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material_type}','Preview')"}Preview &#9660;
-                .Expand_Collapse{:id=>"#{material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material.material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material.material_type}','Preview')"}Preview &#9660;
+                .Expand_Collapse{:id=>"#{material.material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
                   .preview_link
                     = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
                   .preview_link{:style=>"padding-top:0px"}
@@ -65,9 +61,9 @@
         %td{:colspan=>3}
           - if current_visitor.portal_teacher
             - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
-            - offerings = offerings.sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
+            - offerings = material.offerings_by_clazz(teacher_clazz_ids).sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
             - offering_clazz_names = offerings.map{|o| o.clazz.name}
-            - if(offerings.length>0)
+            - if ( offerings.length > 0 )
               %span.assignedTo
                 (Assigned to
                 = offering_clazz_names.join(", ")+")"
