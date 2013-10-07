@@ -1,7 +1,7 @@
 class Investigation < ActiveRecord::Base
   include JnlpLaunchable
   include ResponseTypes
-  include MaterialType
+  include SearchModelInterface
 
   # see https://github.com/sunspot/sunspot/blob/master/README.md
   searchable do
@@ -58,18 +58,6 @@ class Investigation < ActiveRecord::Base
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
   has_many :external_activities, :as => :template
-
-  # TODO: This block includes methods which should be extractable to e.g. the MaterialType module ------->
-  # TODO: We intend to support icons for activities. Until that's a real attribute, have this stub method.
-  def icon_image
-    return nil
-  end
-
-  def offerings_by_clazz(clazz_ids)
-    self.offerings.find(:clazz_id => clazz_ids)
-  end
-
-  # TODO: end of methods which could be refactored into MaterialType (if we gave it a better name)
 
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
   BASE_EMBEDDABLES.each do |klass|
