@@ -102,69 +102,6 @@ class ExternalActivity < ActiveRecord::Base
   scope :official, where(:is_official => true)
   scope :contributed, where(:is_official => false)
 
-  class <<self
-    def searchable_attributes
-      @@searchable_attributes
-    end
-
-
-    def search_list(options)
-      name = options[:name]
-      name_matches = ExternalActivity.like(name)
-      is_visible = options[:include_drafts] ? name_matches.not_private : name_matches.published
-      sort_order = options[:sort_order] || "name ASC"
-      external_activities = nil
-
-      if options[:user]
-        by_user = name_matches.by_user(options[:user]) if options[:user]
-        if (t = options[:user].portal_teacher) && ! options[:user].has_role?('admin')
-          # if we're not an admin, filter by tags as well
-          matches_tags = nil
-          has_no_tags = nil
-          available_cohorts = Admin::Tag.find_all_by_scope("cohorts")
-          if available_cohorts.size > 0
-            has_no_tags = ExternalActivity.tagged_with(available_cohorts.collect{|c| c.tag }, :exclude => true, :on => :cohorts)
-          end
-          if t.cohort_list.size > 0
-            # and match everything with the correct tags
-            matches_tags = ExternalActivity.tagged_with(t.cohort_list, :any => true, :on => :cohorts)
-          end
-
-          # sometimes tagged_with returns an empty hash
-          if has_no_tags && has_no_tags != {}
-            if matches_tags && matches_tags != {}
-              is_visible = is_visible.match_any([matches_tags, has_no_tags])
-            else
-              is_visible = is_visible.match_any([has_no_tags])
-            end
-          end
-        end
-        external_activities = ExternalActivity.match_any([is_visible, by_user])
-      else
-        external_activities = is_visible
-      end
-
-      if !options[:include_contributed]
-        # If param is included, we want *all*; if not, only the Concord ones.
-        external_activities = external_activities.official
-      end
-
-      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
-      if portal_clazz
-        external_activities = external_activities - portal_clazz.offerings.map { |o| o.runnable }
-      end
-      if external_activities.respond_to? :ordered_by
-        external_activities = external_activities.ordered_by(sort_order)
-      end
-      if options[:paginate]
-        external_activities = external_activities.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
-      else
-        external_activities
-      end
-    end
-
-  end
-
   def url(learner = nil)
     uri = URI.parse(read_attribute(:url))
     if learner

@@ -161,63 +161,6 @@ class Investigation < ActiveRecord::Base
   include Changeable
   include Noteable # convenience methods for notes...
 
-  class <<self
-    def find_by_grade_span_and_domain_id(grade_span,domain_id)
-      @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
-      @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
-      # @investigations.flatten!.compact!
-    end
-
-    def search_list(options)
-      grade_span = options[:grade_span] || ""
-      sort_order = options[:sort_order] || "name ASC"
-      domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
-      name = options[:name]
-      probe_type = options[:probe_type] || []
-
-      investigations = Investigation.like(name)
-      if probe_type.length > 0
-        if probe_type.include?("0")
-          investigations = investigations.activity_group.where('investigations.id not in (?)', Investigation.no_probe)
-        else
-          investigations = investigations.activity_group.probe_type.probe(probe_type)
-        end
-      end
-
-      unless options[:include_drafts]
-        investigations = investigations.published
-      end
-
-      if APP_CONFIG[:use_gse]
-        if domain_id.length > 0
-          investigations = investigations.with_gse.domain(domain_id.map{|i| i.to_i})
-        end
-
-        if (!grade_span.empty?)
-          investigations = investigations.with_gse.grade(grade_span)
-        end
-      end
-
-      investigations = investigations.uniq
-
-      if investigations.respond_to? :ordered_by
-        investigations = investigations.ordered_by(sort_order)
-      end
-
-      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
-      if portal_clazz
-        investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
-      end
-
-      if options[:paginate]
-        investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
-      else
-        investigations
-      end
-    end
-
-  end
-
   # Enables a teacher note to call the investigation method of an
   # authored_entity to find the relavent investigation
   def investigation

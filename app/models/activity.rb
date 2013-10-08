@@ -22,6 +22,7 @@ class Activity < ActiveRecord::Base
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
+  # This block adds a has_many for each embeddable type to this model.
   BASE_EMBEDDABLES.each do |klass|
       eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
       :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
@@ -100,6 +101,7 @@ class Activity < ActiveRecord::Base
   send_update_events_to :investigation
   delegate :domain_id, :grade_span, :to => :investigation, :allow_nil => true
 
+  # TODO: Which of these scopes can be removed?
   scope :with_gse, {
     :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
   }
@@ -166,63 +168,7 @@ class Activity < ActiveRecord::Base
   scope :assigned, where('offerings_count > 0')
 
   scope :ordered_by, lambda { |order| { :order => order } }
-
-  class <<self
-    def search_list(options)
-      grade_span = options[:grade_span] || ""
-      domain_id = []
-      # we expect domain_id into always be represented as an array:
-      domain_id = [options[:domain_id]].flatten.uniq.compact unless options[:domain_id].blank?
-      name = options[:name]
-      sort_order = options[:sort_order] || "name ASC"
-      probe_type = options[:probe_type] || []
-
-      # the investigation tacked on here is because some of the sql in other scopes assumes the parent
-      # investigation is available
-      activities = Activity.like(name).investigation
-
-      unless options[:include_drafts]
-        activities = activities.published
-      end
-
-      if probe_type.length > 0
-        if probe_type.include?("0")
-          activities = activities.activity_group.where('activities.id not in (?)', Activity.no_probe)
-        else
-          activities = activities.activity_group.probe_type.probe(probe_type)
-        end
-      end
-
-      if APP_CONFIG[:use_gse]
-        if domain_id.length > 0
-          activities = activities.with_gse.domain(domain_id.map{|i| i.to_i})
-        end
-
-        if (!grade_span.empty?)
-          activities = activities.with_gse.grade(grade_span)
-        end
-      end
-
-      if options[:without_teacher_only]
-        activities = activities.without_teacher_only
-      end
-
-      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
-      if portal_clazz
-        activities = activities - portal_clazz.offerings.map { |o| o.runnable }
-      end
-      if activities.respond_to? :ordered_by
-        activities = activities.ordered_by(sort_order)
-      end
-      if options[:paginate]
-        activities = activities.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
-      else
-        activities
-      end
-
-    end
-
-  end
+  # End scope weeding zone
 
   def parent
     return investigation
@@ -235,9 +181,6 @@ class Activity < ActiveRecord::Base
   def left_nav_panel_width
     300
   end
-
-
-
 
   def deep_xml
     self.to_xml(

@@ -15,47 +15,6 @@ describe ExternalActivity do
     ExternalActivity.create!(valid_attributes)
   end
 
-  describe '#search_list' do
-    let (:official) do
-      ea = ExternalActivity.create!(valid_attributes)
-      ea.publication_status = 'published'
-      ea.save
-      ea
-    end
-    let (:contributed) do
-      ea = ExternalActivity.create!(valid_attributes)
-      ea.is_official = false
-      ea.publication_status = 'published'
-      ea.save
-      ea
-    end
-
-    context 'when include_community is true' do
-      let (:params) { { :include_contributed => true } }
-      before(:each) do
-        official
-        contributed
-      end
-
-      it 'should return activities where is_official is true or false' do
-        external = ExternalActivity.search_list(params)
-        external.should include(official, contributed)
-      end
-    end
-
-    context 'when include_contributed is false or absent' do
-      let (:params) { { } }
-      before(:each) do
-        official
-      end
-
-      it 'should return only activities where is_official is true' do
-        external = ExternalActivity.search_list(params)
-        external.should include(official)
-      end
-    end
-  end
-
   describe "url transforms" do
     let(:activity) { ExternalActivity.create!(valid_attributes)}
     let(:learner) { mock_model(Portal::Learner, :id => 34) }
