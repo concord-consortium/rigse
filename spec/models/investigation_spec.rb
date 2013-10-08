@@ -315,6 +315,7 @@ describe Investigation do
 
     it "the position of the first activity should be 1" do
       investigation.activities << activity_one
+      activity_one.insert_at(1)
       investigation.should have(1).activities
       activity_one.position.should_not be_nil
       activity_one.position.should eql 1
@@ -324,6 +325,8 @@ describe Investigation do
       investigation.activities << activity_one
       investigation.activities << activity_two
       investigation.should have(2).activities
+      activity_one.insert_at(1)
+      activity_two.insert_at(2)
       activity_one.position.should eql 1
       activity_two.position.should eql 2
     end
@@ -331,6 +334,8 @@ describe Investigation do
     it "the activities honor the acts_as_list methods" do
       investigation.activities << activity_one
       investigation.activities << activity_two
+      activity_one.insert_at(1)
+      activity_two.insert_at(2)
       
       investigation.reload
       investigation.activities.should eql([activity_one, activity_two])
