@@ -33,13 +33,19 @@ describe Search do
   end
 
   describe "search" do
-    let(:public_opts)  { { :publication_status => "published"} }
-    let(:private_opts) { { :publication_status => "private"  } }
+    let(:public_opts)  { { :publication_status => "published"        }}
+    let(:private_opts) { { :publication_status => "private"          }}
+    let(:external_seq) { { :template => private_investigations.first }}
+    let(:external_act) { { :template => private_activities.first     }}
 
-    let(:public_investigations) { collection(:investigation, 3, public_opts) }
-    let(:private_investigations){ collection(:investigation, 3, private_opts)}
-    let(:public_activities)     { collection(:activity, 3, public_opts)      }
-    let(:private_activities)    { collection(:activity, 3, private_opts)     }
+    let(:public_investigations) { collection(:investigation, 2, public_opts) }
+    let(:private_investigations){ collection(:investigation, 2, private_opts)}
+    let(:public_activities)     { collection(:activity, 2, public_opts)      }
+    let(:private_activities)    { collection(:activity, 2, private_opts)     }
+    let(:public_ext_act)        { collection(:external_activity, 2, external_act.merge(public_opts)) }
+    let(:private_ext_act)       { collection(:external_activity, 2, external_act.merge(private_opts)) }
+    let(:public_ext_seq)        { collection(:external_activity, 2, external_seq.merge(public_opts)) }
+    let(:private_ext_seq)       { collection(:external_activity, 2, external_seq.merge(private_opts)) }
 
     let(:search_opts) { {} }
 
@@ -48,8 +54,8 @@ describe Search do
     end
 
     context "with existing collections" do
-      let(:private_items) { [private_investigations, private_activities].flatten}
-      let(:public_items)  { [public_investigations,  public_activities ].flatten}
+      let(:private_items) { [private_investigations, private_activities, private_ext_act, private_ext_seq].flatten}
+      let(:public_items)  { [public_investigations,  public_activities, public_ext_act,  public_ext_seq].flatten}
       let(:materials)     { [public_items, private_items].flatten }
 
       before(:each) do
@@ -59,27 +65,27 @@ describe Search do
 
       describe "searching public items" do
         let(:search_opts) { {:private => false } }
-        it "results should include 3 public activities and 3 public investigations" do
-          subject.results.should have(6).entries
-          subject.results.select{ |i| i.class == Investigation}.should have(3).entries
-          subject.results.select{ |i| i.class == Activity}.should have(3).entries
+        it "results should include 4 public activities and 4 public investigations" do
+          subject.results[:all].should have(8).entries
+          subject.results[Investigation].should have(4).entries
+          subject.results[Activity].should have(4).entries
         end
       end
 
       describe "searching all items" do
         let(:search_opts) { {:private => true } }
-        it "results should include 6 activities and 6 investigations" do
-          subject.results.should have(12).entries
-          subject.results.select{ |i| i.class == Investigation}.should have(6).entries
-          subject.results.select{ |i| i.class == Activity}.should have(6).entries
+        it "results should include 8 activities and 8 investigations" do
+          # subject.results[:all].should have(16).entries
+          subject.results[Investigation].should have(8).entries
+          subject.results[Activity].should have(8).entries
         end
       end
 
       describe "searching only public Investigations" do
         let(:search_opts) { {:private  => false, :material_types => [Investigation]} }
-        it "results should include 3 investigations" do
-          subject.results.should have(3).entries
-          subject.results.select{ |i| i.class == Investigation}.should have(3).entries
+        it "results should include 4 investigations" do
+          subject.results[:all].should have(4).entries
+          subject.results[Investigation].should have(4).entries
         end
       end
 
@@ -96,14 +102,16 @@ describe Search do
 
           describe "Search::Newest" do
             it "the collection should be sorted by updated_at newest ➙ oldest" do
-              subject.results.should be_ordered_by(:updated_at_desc)
+              subject.results[Investigation].should be_ordered_by(:updated_at_desc)
+              subject.results[Activity].should be_ordered_by(:updated_at_desc)
             end
           end
 
           describe "Search::Oldest" do
             let(:search_opts) { {:private => false, :sort_order => Search::Oldest} }
             it "the collection should be sorted by updated_at oldest ➙ newest" do
-              subject.results.should be_ordered_by(:updated_at)
+              subject.results[Investigation].should be_ordered_by(:updated_at)
+              subject.results[Activity].should be_ordered_by(:updated_at)
             end
           end
         end # by date
@@ -113,16 +121,23 @@ describe Search do
           let(:factory_opts){ {:publication_status => "published"}         }
           let(:materials) do
             [
-              collection(:investigation, 3, factory_opts) do |o|
+              collection(:investigation, 5, factory_opts) do |o|
+                o[:offerings_count] = rand(0..10)
+              end,
+              collection(:external_activity, 5, external_seq.merge(public_opts)) do |o|
                 o[:offerings_count] = rand(0..10)
               end,
               collection(:activity, 3, factory_opts) do |o|
+                o[:offerings_count] = rand(0..10)
+              end,
+              collection(:external_activity, 3, external_act.merge(public_opts)) do |o|
                 o[:offerings_count] = rand(0..10)
               end
             ].flatten
           end
           it "the collection should be sotred by offerings_count desc" do
-            subject.results.should be_ordered_by(:offerings_count_desc)
+            subject.results[Investigation].should be_ordered_by(:offerings_count_desc)
+            subject.results[Activity].should be_ordered_by(:offerings_count_desc)
           end
         end
       end
