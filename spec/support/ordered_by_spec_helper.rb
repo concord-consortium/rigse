@@ -9,7 +9,7 @@ RSpec::Matchers.define :be_ordered_by do |attribute|
     if reverse
       sorted = actual.sort{ |a,b| b.send(attribute) <=> a.send(attribute)}
     else
-      sorted = actual.sort{ |a,b| a.updated_at <=> b.send(attribute)}
+      sorted = actual.sort{ |a,b| a.send(attribute) <=> b.send(attribute)}
     end
     sorted.each_with_index do |a,i|
       result = false unless actual[i] == a
