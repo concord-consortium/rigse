@@ -12,26 +12,6 @@ class SearchController < ApplicationController
 
   in_place_edit_for :investigation, :search_term
 
-  # TODO: Move this to its own file & clean up.
-  class SearchFormModel
-    def initialize(search)
-      @search = search
-    end
-    def domain_id; [] ; end
-    def sort_order; @search.sort_order; end
-    def grade_span; @search.grade_span; end
-    def probe_type; @search.probe; end
-    def no_probes; @search.no_probes; end
-    def investigation_checkedstatus; @search.material_types.include? ::Investigation ; end
-    def activity_checkedstatus; @search.material_types.include? ::Activity ; end
-    def external_activity_checkedstatus; @search.material_types.include? ::Activity ; end
-    def include_external_activities?; false; end; #current_project.include_external_activities; end
-    def material_types; @search.material_types ; end
-  end
-
-  class SearchResultsModel
-  end
-
   public
   def search_material
     search = Search.new(params)
@@ -43,7 +23,7 @@ class SearchController < ApplicationController
     @external_activities       = search.results['ExternalActivity'] || []
     @external_activities_count = @external_activities.size
 
-    @form_model = SearchFormModel.new(search)
+    @form_model = search
   end
 
   def index

@@ -98,4 +98,11 @@ class Search
   alias_method :size, :count
   alias_method :len, :count
 
+  alias_method :probe_type, :probe
+
+  def investigation_checkedstatus; @search.material_types.include? ::Investigation ; end
+  def activity_checkedstatus; @search.material_types.include? ::Activity ; end
+  def external_activity_checkedstatus; @search.material_types.include? ::Activity ; end
+  def include_external_activities?; false; end
+
 end
