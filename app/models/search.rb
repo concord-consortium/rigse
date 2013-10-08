@@ -13,6 +13,7 @@ class Search
   attr_accessor :without_teacher_only
   attr_accessor :page
   attr_accessor :per_page
+  attr_accessor :user_id
 
   AllMaterials = [Investigation, Activity, ResourcePage, ExternalActivity]
 
@@ -47,14 +48,15 @@ class Search
     @sort_order     = opts[:sort_order]     || Newest
     @page           = opts[:page]           || 1
     @per_page       = opts[:per_page]       || 10
+    @user_id        = opts[:user_id]
     @without_teacher_only = opts[:without_teacher_only]
     self.search()
   end
 
   def clean_search_terms (term)
     return NoSearchTerm unless term
-    # http://rubular.com/r/9vCdoWymAh
-    not_word_digit_or_space = /[^\w|\d|\s]/
+    # http://rubular.com/r/0XlbltgfqY
+    not_word_digit_or_space = /[^\w|\s]/
     term.gsub(not_word_digit_or_space,'')
   end
 
@@ -65,7 +67,11 @@ class Search
     @material_types.each do |type|
       _results = @engine.search(AllMaterials) do |s|
         s.fulltext(@text)
-        s.with(:published, true) unless @private
+        s.any_of do |c|
+          c.with(:published, true)
+          c.with(:published, [true, false]) if @private
+          c.with(:user_id, @user_id)
+        end
         s.with(:material_type, type)
         s.with(:domain_id, @domain_id) unless @domain_id.empty?
         s.with(:grade_span, @grade_span) unless @grade_span.empty?

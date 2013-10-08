@@ -126,7 +126,26 @@ describe Search do
             subject.results[ExternalActivity].should include(external_activity)
           end
         end
+      end
 
+      describe "searching with user_id" do
+        let(:my_id)          { 23 }
+        let(:my_activity)    { FactoryGirl.create(:activity, {:publication_status => "private", :user_id => my_id })}
+        let(:someone_elses)  { FactoryGirl.create(:activity, {:publication_status => "private", :user_id => 777   })}
+        let(:private_items)  { [my_activity,someone_elses]}
+        let(:public_items)   { collection(:activity, 2, public_opts)}
+        let(:search_opts)     {{ :private => false, :user_id => my_id }}
+
+        it "should return public items" do
+          public_items.each do |act|
+            subject.results[Activity].should include(act)
+          end
+        end
+
+        it "should return the my_activity" do
+          subject.results[Activity].should include(my_activity)
+          # subject.results[:users].should include(my_activity)
+        end
       end
 
       describe "ordering" do
