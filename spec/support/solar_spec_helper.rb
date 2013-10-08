@@ -3,6 +3,12 @@ Sunspot.session = Sunspot::Rails::StubSessionProxy.new($original_sunspot_session
 
 module SolrSpecHelper
 
+  def clean_solar_index
+    Search::AllMaterials.each do |model_type|
+      model_type.remove_all_from_index!
+    end
+  end
+
   def solr_setup
     unless $sunspot
       $sunspot = Sunspot::Rails::Server.new

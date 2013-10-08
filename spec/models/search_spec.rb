@@ -6,12 +6,6 @@ require 'spec_helper'
 describe Search do
   include SolrSpecHelper
 
-  def clean_solar_index
-    Search::AllMaterials.each do |model_type|
-      model_type.remove_all_from_index!
-    end
-  end
-
   def make(let_expression); end # Syntax sugar for our lets
 
   def collection(factory, count=3, opts={})
@@ -120,10 +114,10 @@ describe Search do
 
         describe "When there is no template" do
           let(:external_activity){FactoryGirl.create(:external_activity, public_opts)}
-          it "should be listed in the ExternalActivity results" do
+          it "should be listed in the Activity results" do
             subject.results[Investigation].should_not include(external_activity)
-            subject.results[Activity].should_not include(external_activity)
-            subject.results[ExternalActivity].should include(external_activity)
+            subject.results[Activity].should include(external_activity)
+            subject.results[ExternalActivity].should be_empty
           end
         end
       end
