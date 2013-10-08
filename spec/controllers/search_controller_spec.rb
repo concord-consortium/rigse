@@ -1,6 +1,7 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe SearchController do
+  include SolrSpecHelper
   let (:admin_project)   { Factory.create(:admin_project_no_jnlps, :include_external_activities => false) }
 
   let (:mock_semester)   { Factory.create(:portal_semester, :name => "Fall") }
@@ -33,8 +34,9 @@ describe SearchController do
 
   before(:each) do
     admin_project
-
     sign_in teacher_user
+    solr_setup
+    clean_solar_index
   end
 
   describe "GET index" do
@@ -173,14 +175,14 @@ describe SearchController do
         :search_term => laws_of_motion_activity.name,
         :material => ['activity']
       }
-      
+
       xhr :post, :show, post_params
       assigns(:activities_count).should be(1)
       assigns(:investigations_count).should be(0)
       assigns(:external_activities_count).should be(0)
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
-      
+
       post :show, post_params
       assert_template "index"
     end
@@ -191,14 +193,14 @@ describe SearchController do
         :activity => nil,
         :investigation => 'true'
       }
-      
+
       xhr :post, :show, post_params
       assigns(:investigations_count).should be(1)
       assigns(:activities_count).should be(0)
       assigns(:external_activities_count).should be(0)
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
-      
+
       post :show, post_params
       assert_template "index"
     end
@@ -208,14 +210,14 @@ describe SearchController do
         :search_term => external_activity1.name,
         :material => ['external_activity']
       }
-      
+
       xhr :post, :show, post_params
       assigns(:investigations_count).should be(0)
       assigns(:activities_count).should be(0)
       assigns(:external_activities_count).should be(1)
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
-      
+
       post :show, post_params
       assert_template "index"
     end
@@ -264,7 +266,7 @@ describe SearchController do
     let (:physics_clazz)     { Factory.create(:portal_clazz, :name => 'Physics Clazz', :course => @mock_course,:teachers => [teacher]) }
     let (:chemistry_clazz)   { Factory.create(:portal_clazz, :name => 'Chemistry Clazz', :course => @mock_course,:teachers => [teacher]) }
     let (:mathematics_clazz) { Factory.create(:portal_clazz, :name => 'Mathematics Clazz', :course => @mock_course,:teachers => [teacher]) }
-    
+
     let (:investigations_for_all_clazz) do
       inv = Factory.create(:investigation, :name => 'investigations_for_all_clazz', :user => author_user, :publication_status => 'published')
       #assign investigations_for_all_clazz to physics class
