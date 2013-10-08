@@ -6,15 +6,23 @@ RSpec::Matchers.define :be_ordered_by do |attribute|
     attribute = attribute.to_s
     reverse = attribute =~ /#{reverse_indicator}/
     attribute = attribute.gsub(/#{reverse_indicator}/,'').to_sym
-    if reverse
-      sorted = actual.sort{ |a,b| b.send(attribute) <=> a.send(attribute)}
-    else
-      sorted = actual.sort{ |a,b| a.send(attribute) <=> b.send(attribute)}
+
+    last = nil
+    actual.each_with_index do |a,i|
+      if last
+        if reverse
+          unless (last >= a.send(attribute))
+            result = false
+          end
+        else
+          unless (a.send(attribute) >= last)
+            result = false
+          end
+        end
+      end
+      last = a.send(attribute)
     end
-    sorted.each_with_index do |a,i|
-      result = false unless actual[i] == a
-    end
-    result # return true or false for this matcher.
+    result
   end
 
   failure_message_for_should do |actual|
