@@ -58,35 +58,16 @@ class ExternalActivitiesController < ApplicationController
   public
 
   def index
-    @include_drafts = params[:include_drafts]
-    @name = param_find(:name)
-    pagination = params[:page]
-    if (pagination)
-      @include_drafts = param_find(:include_drafts)
-    else
-      @include_drafts = param_find(:include_drafts,true)
+    search_params = { :material_types => [ExternalActivity], :page => params[:page] }
+    if !params[:name].blank?
+      search_params[:search_term] = params[:name]
     end
-    if current_visitor.has_role?('admin')
-      @external_activities = ExternalActivity.search_list({
-          :name => @name,
-          :description => @description,
-          :include_drafts => @include_drafts,
-          :paginate => true,
-          :include_contributed => true,
-          :page => pagination,
-        })
-    else
-      @external_activities = ExternalActivity.search_list({
-          :name => @name,
-          :description => @description,
-          :include_drafts => @include_drafts,
-          :paginate => true,
-          :include_contributed => true,
-          :page => pagination,
-          :user => current_visitor
-        })
+    if !current_visitor.has_role?('admin')
+      search_params[:private] = true
+      search_params[:user_id] = current_visitor.id
     end
-    @paginated_objects = @external_activities
+    s = Search.new(search_params)
+    @external_activities = s.results[:all]
 
     if request.xhr?
       render :partial => 'external_activities/runnable_list', :locals => {:external_activities => @external_activities, :paginated_objects => @external_activities}
