@@ -14,29 +14,31 @@ class Search
   attr_accessor :page
   attr_accessor :per_page
 
-  AllMaterials = [Investigation, Activity, ResourcePage, ExternalActivity]
+  AllMaterials = [Investigation]#, Activity, ResourcePage, ExternalActivity
 
   Newest       = 'Newest'
   Oldest       = 'Oldest'
   Alphabetical = 'Alphabetical'
   Popularity   = 'Popularity'
+  Score        = 'Score'
   SortOptions  = {
     Newest       => [:updated_at, :desc],
     Oldest       => [:updated_at],
     Alphabetical => [:name],
-    Popularity   => [:offerings_count, :desc]
+    Popularity   => [:offerings_count, :desc],
+    Score        => [:score, :desc]
   }
   NoSearchTerm    = nil
   NoGradeSpan     = NoDomainID = AnyProbeType =[]
   NoProbeRequired = ["0"]
 
   def initialize(opts={})
+    @text           = clean_search_terms(opts[:search_term])
     @results        = {}
     @hits           = {}
     @no_probes      = false
     @material_types = opts[:material_types] || AllMaterials
     @domain_id      = opts[:domain_id]      || NoDomainID
-    @text           = opts[:search_term]    || NoSearchTerm
     @engine         = opts[:engine]         || Sunspot
     @grade_span     = opts[:grade_span]     || NoGradeSpan
     @probe          = opts[:probe]          || AnyProbeType
@@ -49,10 +51,13 @@ class Search
     self.search()
   end
 
-
-  def parse_sort_order(sort_order)
-    return SortOptions(sort_order) || [:updated_at, :desc]
+  def clean_search_terms (term)
+    return NoSearchTerm unless term
+    # http://rubular.com/r/9vCdoWymAh
+    not_word_digit_or_space = /[^\w|\d|\s]/
+    term.gsub(not_word_digit_or_space,'')
   end
+
 
   def search
     self.results[:all] = []

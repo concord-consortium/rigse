@@ -1,42 +1,9 @@
--investigations.sort! { |a,b| a.name <=> b.name }
--investigations.uniq!{|x| x.name}
--activities.sort! { |a,b| a.name <=> b.name }
--activities.uniq!{|x| x.name}
--if textlength>0 && @suggestions.length>0
+-if textlength>0 && suggestions && suggestions.length>0
   #suggestions
-    -unless investigations.nil?
-      - if investigations.length > 0
-        - investigations.take(3).each do |investigation|
-          - if submit_form == 'true'
-            %a.suggestion_link{:onclick=>'submit_suggestion(this)'}
-              .suggestion
-                = investigation.name
-          - else
-            %a.suggestion_link{:onclick=>'select_suggestion(this)'}
-              .suggestion
-                = investigation.name
-    -unless activities.nil?
-      - if activities.length > 0
-        - activities.take(3).each do |activity|
-          - if submit_form == 'true'
-            %a.suggestion_link{:onclick=>'submit_suggestion(this)'}
-              .suggestion
-                = activity.name
-          - else
-            %a.suggestion_link{:onclick=>'select_suggestion(this)'}
-              .suggestion
-                = activity.name
-    -unless external_activities.nil?
-      - if external_activities.length > 0
-        - external_activities.take(3).each do |activity|
-          - if submit_form == 'true'
-            %a.suggestion_link{:onclick=>'submit_suggestion(this)'}
-              .suggestion
-                = activity.name
-          - else
-            %a.suggestion_link{:onclick=>'select_suggestion(this)'}
-              .suggestion
-                = activity.name
-            
+    - suggestions.each do |material|
+      - if submit_form == 'true'
+        %a.suggestion_link{:onclick=>'submit_suggestion(this)'}
+      .suggestion
+        = material.name
 -else
   %div

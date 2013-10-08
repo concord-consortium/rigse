@@ -86,23 +86,25 @@ class SearchController < ApplicationController
 
   def get_search_suggestions
     setup_material_type
-
-    other_params = {
-      :without_teacher_only => current_visitor.anonymous?
-    }
-    search = Search.new(other_params.merge(params))
-    investigations = search.results['Investigation']
-    activities= search.results['Activity']
-    external_activities=search.results['ExternalActivity']
-
+    search_term         = params[:search_term]
     ajaxResponseCounter = params[:ajaxRequestCounter]
-    submitform = params[:submit_form]
-
-    @suggestions= search.results[:all]
+    submitform          = params[:submit_form]
+    other_params = {
+      :without_teacher_only => current_visitor.anonymous?,
+      :sort_order => Search::Score
+    }
+    p = params.merge(other_params)
+    search = Search.new(params.merge(other_params))
+    suggestions= search.results[:all]
     if request.xhr?
        render :update do |page|
          page << "if (ajaxRequestCounter == #{ajaxResponseCounter}) {"
-         page.replace_html 'search_suggestions', {:partial => 'search/search_suggestions',:locals=>{:textlength=>@search_term.length,:investigations=>investigations,:activities=>activities,:external_activities=>external_activities,:submit_form=>submitform}}
+         page.replace_html 'search_suggestions', {
+          :partial => 'search/search_suggestions',
+          :locals=> {
+            :textlength  => search_term.length,
+            :suggestions => suggestions,
+            :submit_form => submitform}}
          page << '}'
        end
     end
