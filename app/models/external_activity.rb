@@ -112,7 +112,7 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   def material_type
-    template_type ? template_type : 'ExternalActivity'
+    template_type ? template_type : 'Activity'
   end
 
   # methods to mimic Activity
