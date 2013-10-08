@@ -14,7 +14,7 @@ class Search
   attr_accessor :page
   attr_accessor :per_page
 
-  AllMaterials = [Investigation]#, Activity, ResourcePage, ExternalActivity
+  AllMaterials = [Investigation, Activity, ResourcePage, ExternalActivity]
 
   Newest       = 'Newest'
   Oldest       = 'Oldest'
@@ -43,7 +43,7 @@ class Search
     @grade_span     = opts[:grade_span]     || NoGradeSpan
     @probe          = opts[:probe]          || AnyProbeType
     @no_probes      = opts[:no_probe]       || false
-    @private        = opts[:private]
+    @private        = opts[:private]        || false
     @sort_order     = opts[:sort_order]     || Newest
     @page           = opts[:page]           || 1
     @per_page       = opts[:per_page]       || 10
