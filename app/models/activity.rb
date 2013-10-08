@@ -79,7 +79,9 @@ class Activity < ActiveRecord::Base
 
     integer :offerings_count do |act|
       total = 0
-      total += act.investigation.offerings_count if investigation
+      if act.investigation
+        total += act.investigation.offerings_count
+      end
       total += act.offerings_count
     end
     boolean :is_official do
