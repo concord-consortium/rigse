@@ -4,11 +4,12 @@ RSpec::Matchers.define :be_ordered_by do |attribute|
     result = true
     reverse_indicator = "_desc"
     attribute = attribute.to_s
-    if attribute =~ /#{reverse_indicator}/
-      symbol = attribute.gsub(/#{reverse_indicator}/,'').to_sym
-      sorted = actual.sort{ |a,b| b.send(symbol) <=> a.send(symbol)}
+    reverse = attribute =~ /#{reverse_indicator}/
+    attribute = attribute.gsub(/#{reverse_indicator}/,'').to_sym
+    if reverse
+      sorted = actual.sort{ |a,b| b.send(attribute) <=> a.send(attribute)}
     else
-      sorted = actual.sort{ |a,b| a.updated_at <=> b.updated_at}
+      sorted = actual.sort{ |a,b| a.updated_at <=> b.send(attribute)}
     end
     sorted.each_with_index do |a,i|
       result = false unless actual[i] == a
