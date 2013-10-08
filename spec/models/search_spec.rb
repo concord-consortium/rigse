@@ -89,6 +89,46 @@ describe Search do
         end
       end
 
+      describe "external activities binning by sequence or activity" do
+        let(:factory_opts)     {{:publication_status => "published"}     }
+        let(:external_activity){FactoryGirl.create(:external_activity)}
+        let(:materials) do
+            [
+              collection(:investigation, 2, factory_opts),
+              collection(:activity, 2, factory_opts),
+              external_activity
+            ].flatten
+          end
+
+        describe "when the template type is an Investigation" do
+          let(:external_activity){FactoryGirl.create(:external_activity, external_seq.merge(public_opts))}
+          it "should be listed in the investigations results" do
+            subject.results[Investigation].should include(external_activity)
+            subject.results[Activity].should_not include(external_activity)
+            subject.results[ExternalActivity].should be_empty
+          end
+        end
+
+        describe "When the template type is an Activity" do
+          let(:external_activity){FactoryGirl.create(:external_activity, external_act.merge(public_opts))}
+          it "should be listed in the activity results" do
+            subject.results[Investigation].should_not include(external_activity)
+            subject.results[Activity].should include(external_activity)
+            subject.results[ExternalActivity].should be_empty
+          end
+        end
+
+        describe "When there is no template" do
+          let(:external_activity){FactoryGirl.create(:external_activity, public_opts)}
+          it "should be listed in the ExternalActivity results" do
+            subject.results[Investigation].should_not include(external_activity)
+            subject.results[Activity].should_not include(external_activity)
+            subject.results[ExternalActivity].should include(external_activity)
+          end
+        end
+
+      end
+
       describe "ordering" do
         describe "by date" do
           let(:search_opts) { {:private => false, :sort => Search::Newest} }
