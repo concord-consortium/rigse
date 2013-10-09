@@ -26,14 +26,15 @@ describe InvestigationsController do
     })
   end
 
-  it "should handle the show method without error" do
-    get :show, :id => @investigation.id
+  describe '#index' do
   end
-  
-  it "should handle the duplicate metod without error" do
-    get :duplicate, :id => @investigation.id
+
+  describe '#duplicate' do
+    it "should handle the duplicate metod without error" do
+      get :duplicate, :id => @investigation.id
+    end
   end
-  
+
   describe "Researcher Reports" do
     before(:each) do
       controller.should_receive(:send_data) { | data, options | 
@@ -44,7 +45,7 @@ describe InvestigationsController do
       # the implicit render isn't stopped
       controller.stub!(:render)
     end
-    
+
     it 'should return an XLS file for the global Usage Report' do
       get :usage_report
     end
@@ -63,6 +64,10 @@ describe InvestigationsController do
   end
 
   describe "#show" do
+    it "should handle the show method without error" do
+      get :show, :id => @investigation.id
+    end
+
     describe "with teacher mode='true'" do
       before(:each) do
         controller.stub!(:render)
@@ -77,7 +82,7 @@ describe InvestigationsController do
         controller.stub!(:render)
         get :show, :id => @investigation.id, :teacher_mode => "false"
       end
-      it "should assign true to teacher_mode instance var" do
+      it "should assign false to teacher_mode instance var" do
         assert (assigns(:teacher_mode) == false)
       end
     end

@@ -82,11 +82,23 @@ describe ExternalActivitiesController do
     }
   end
 
-  def clean_solar_index
-    Search::AllMaterials.each do |model_type|
-      model_type.remove_all_from_index!
-    end
-  end
+  let (:existing) { Factory.create(:external_activity, {
+      :name        => name,
+      :description => description,
+      :url         => existing_url,
+      :publication_status => 'published',
+      :template    => Factory.create(:activity, {
+        :investigation => Factory.create(:investigation)
+      })
+    })}
+
+  let (:another) { Factory.create(:external_activity, {
+      :name        => "#{name} again",
+      :description => "#{description} again",
+      :url         => existing_url,
+      :publication_status => 'published',
+      :is_official => false
+    }) }
 
   def make(let_expression); end # Syntax sugar for our lets
 
@@ -97,11 +109,6 @@ describe ExternalActivitiesController do
       results << FactoryGirl.create(factory.to_sym, opts)
     end
     results
-  end
-
-  before(:all) do
-    solr_setup
-    clean_solar_index
   end
 
   before(:each) do
@@ -116,34 +123,26 @@ describe ExternalActivitiesController do
       response.template.stub(:net_logo_package_name).and_return("blah")
       response.template.stub_chain(:current_project).and_return(@current_project);
     }
-    @admin_user = login_admin
-    @existing = Factory.create(:external_activity, {
-      :name        => name,
-      :description => description,
-      :url         => existing_url,
-      :publication_status => 'published',
-      :template    => Factory.create(:activity, {
-        :investigation => Factory.create(:investigation)
-      })
-    })
-    @another = Factory.create(:external_activity, {
-      :name        => "#{name} again",
-      :description => "#{description} again",
-      :url         => existing_url,
-      :publication_status => 'published',
-      :is_official => false
-    })
-  end
 
-  after(:each) do
-    clean_solar_index
+    @admin_user = login_admin
   end
 
   describe '#index' do
+    before(:all) do
+      solr_setup
+      clean_solar_index
+    end
+
+    after(:all) do
+      clean_solar_index
+    end
+
     context 'when the user is an author' do
-      it "should show only public, official, and user-owned activities" do
-        pending "This times out trying to log in the author?"
+      before(:each) do
         current_visitor = login_author
+      end
+
+      it "should show only public, official, and user-owned activities" do
         get :index
         assigns[:external_activities].length.should be(ExternalActivity.published.count + ExternalActivity.by_user(current_visitor).count)
       end
@@ -154,14 +153,24 @@ describe ExternalActivitiesController do
         get :index
         assigns[:external_activities].length.should be(ExternalActivity.count)
       end
+
+      it 'filters activities by keyword when provided' do
+        # TODO: set up an activity to be filtered
+        get :index, {:name => 'again'}
+        assigns[:external_activities].length.should be(1)
+      end
+
+      it 'shows drafts when box is checked' do
+        pending "Is this box visible to authors (not just admins)? If not, does it do anything?"
+      end
     end
   end
 
   describe "#show" do
     it "should assign the activity correctly" do
-      get :show, :id => @existing.id
+      get :show, :id => existing.id
       result = assigns(:external_activity)
-      result.name.should == @existing.name
+      result.name.should == existing.name
     end
   end
 
@@ -175,7 +184,7 @@ describe ExternalActivitiesController do
           created.should_not be_nil
           created.name.should == name
           created.url.should  == url
-          created.id.should_not == @existing.id
+          created.id.should_not == existing.id
         end
       end
 
@@ -187,7 +196,7 @@ describe ExternalActivitiesController do
           created.should_not be_nil
           created.name.should == name
           created.url.should  == url
-          created.id.should   == @existing.id
+          created.id.should   == existing.id
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
           created.template.sections.should have(1).section
           created.template.pages.should have(1).page
@@ -198,14 +207,13 @@ describe ExternalActivitiesController do
     end
 
     context "when version 2 of the API is requested" do
-      before(:each) do
-        @existing_sequence = Factory.create(:external_activity, {
+
+      let (:existing_sequence) { Factory.create(:external_activity, {
           :name => sequence_name,
           :description => sequence_desc,
           :url => sequence_url,
           :template => Factory.create(:investigation)
-        })
-      end
+        }) }
 
       describe "when there is no existing external_activity" do
         it "should create a new activity" do
@@ -214,7 +222,7 @@ describe ExternalActivitiesController do
           created.should_not be_nil
           created.name.should == name
           created.url.should  == url
-          created.id.should_not == @existing.id
+          created.id.should_not == existing.id
           created.template.should be_an_instance_of(Activity)
         end
       end
@@ -227,7 +235,7 @@ describe ExternalActivitiesController do
           created.should_not be_nil
           created.name.should == name
           created.url.should  == url
-          created.id.should   == @existing.id
+          created.id.should   == existing.id
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
           created.template.sections.should have(1).section
           created.template.pages.should have(1).page
@@ -244,7 +252,7 @@ describe ExternalActivitiesController do
           created.should_not be_nil
           created.name.should == sequence_name
           created.url.should  == 'http://activity.org/sequence/2'
-          created.id.should_not == @existing_sequence.id
+          created.id.should_not == existing_sequence.id
           created.template.should be_an_instance_of(Investigation)
         end
       end
@@ -256,7 +264,7 @@ describe ExternalActivitiesController do
           updated.should_not be_nil
           updated.name.should == sequence_name
           updated.url.should  == sequence_url
-          updated.id.should   == @existing_sequence.id
+          updated.id.should   == existing_sequence.id
           # More about the updated sequence?
         end
       end

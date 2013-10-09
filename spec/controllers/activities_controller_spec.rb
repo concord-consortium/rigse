@@ -23,6 +23,36 @@ describe ActivitiesController do
     })
   end
 
+  describe '#index' do
+    context 'when the user is an author' do
+      before(:each) do
+        current_visitor = login_author
+      end
+
+      it 'shows only public, official, and user-owned activities' do
+        # TODO: have more than one activity so there are activities which get filtered out of the return here
+        get :index
+        assigns[:activities].length.should be(Activity.published.count + Activity.by_user(current_visitor).count)
+      end
+    end
+
+    context 'when the user is an admin' do
+      it 'shows all activities' do
+        get :index
+        assigns[:activities].length.should be(Activity.count)
+      end
+
+      it 'filters activities by keyword when provided' do
+        get :index, {:name => 'filtered'}
+        assigns[:activities].length.should be(1)
+      end
+
+      it 'shows drafts when box is checked' do
+        pending "Is this box visible to authors (not just admins)? If not, does it do anything?"
+      end
+    end
+  end
+
   describe "#show" do
     describe "with teacher mode='true'" do
       before(:each) do
