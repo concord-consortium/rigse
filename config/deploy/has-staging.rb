@@ -18,13 +18,6 @@ namespace :deploy do
   task :has_resource_symlink do
     run "ln -nfs #{shared_path}/public/resources #{release_path}/public/resources"
   end
-  task :start_sunspot, :on_error => :continue do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} sunspot:solr:start"
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} sunspot:reindex"
-  end
 end
 
 after 'deploy:update_code', 'deploy:has_resource_symlink'
-before 'deploy:restart', 'deploy:start_sunspot'
