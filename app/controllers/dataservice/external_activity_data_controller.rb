@@ -7,7 +7,7 @@ class Dataservice::ExternalActivityDataController < ApplicationController
     return true if (current_visitor.has_role? "admin")
     return true if (current_visitor.has_role? "manager")
     return true if (current_visitor == learner.user )
-    return false
+    raise ActionController::RoutingError.new('Not Allowed')
   end
 
   public
