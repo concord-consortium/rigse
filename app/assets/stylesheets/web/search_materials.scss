@@ -176,7 +176,7 @@ search_materials{
   }
 .probes_label{
   text-transform:none;
-}  
+}
 #select_none_probes,#select_all_probes{
  margin-bottom: 5px;
 }
@@ -256,7 +256,7 @@ vertical-align: middle;
 .material_detail td{font-weight:bold;padding:5px 5px 0px 5px;vertical-align:top;text-align:left;}
 .material_detail td.title{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
 .material_detail td.check_box{width:20px;;padding:7px 0px 0px 5px}
-.material_detail label.clazz_name{text-transform: none;} 
+.material_detail label.clazz_name{text-transform: none;}
 .assign_class_header{font-weight:bold;padding-left:5px;}
 .already_assign_class_header{font-weight:bold;padding-left:5px;padding-bottom:0px;}
 .assigned_material_detail td{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
@@ -299,7 +299,7 @@ vertical-align: middle;
 
 .tablecell input[type='checkbox'],.tablecell label{
   vertical-align:middle;
-  
+
 }
 .tablecell input[type='checkbox']
 {
@@ -330,7 +330,7 @@ filter: alpha(opacity=40);
 }
 .noprobesrequired input[type='checkbox'],.tablecell label{
   vertical-align:middle;
-  
+
 }
 .noprobesrequired input[type='checkbox']
 {
@@ -391,4 +391,18 @@ span.clazz_count{padding-left:5px;font-style:italic;}
 .ss-li{padding-top:2px;}
 .ss-po{padding-top:2px;padding-bottom:4px;}
 
+span.is_official {
+  font-size: 10px;
+  padding: 0.2em;
+  color: white;
+  background-color: #f3951d;
+  margin-left: 0.2em;
+}
+span.material_kind {
+  font-size: 10px;
+  color: white;
+  padding: 0.2em;
+  margin-left: 0.2em;
+  background-color: #479492;
+}
 

@@ -19,13 +19,19 @@
         %td
         %td
           %span.material_header
+            - unless material.java_requirements.blank?
+              %span.material_kind
+                = material.java_requirements
+            - if material.is_official
+              %span.is_official official
+            %br
             - if link_url.nil?
               = material.name
             - else
-              = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
+              = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')"
           - if material.parent
             %span
-              from 
+              from
               = t(:investigation)
               ="\"#{material.parent.name}\""
           -unless material.user.name.nil?
@@ -59,7 +65,8 @@
 
       %tr
         %td{:colspan=>3}
-          - if current_visitor.portal_teacher
+          -# TODO: FIXME: After demo, figure out how to get this working..
+          -# if current_visitor.portal_teacher
             - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
             - offerings = material.offerings_by_clazz(teacher_clazz_ids).sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
             - offering_clazz_names = offerings.map{|o| o.clazz.name}
@@ -81,7 +88,7 @@
         Used in 1 class.
       -else
         Used in #{material_count} classes.
-  - required_equipments = probe_types(material).map { |p| p.name }.join(", ") 
+  - required_equipments = probe_types(material).map { |p| p.name }.join(", ")
   - unless required_equipments == ""
     #required_equipment_container
       %span#required_equipment

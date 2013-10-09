@@ -1,4 +1,4 @@
-# For the purposes of searching and grouping items which appear similar to 
+# For the purposes of searching and grouping items which appear similar to
 # end users but have different representations in the data model
 module SearchModelInterface
   def material_type
@@ -12,5 +12,16 @@ module SearchModelInterface
 
   def offerings_by_clazz(clazz_ids)
     self.offerings.find(:clazz_id => clazz_ids)
+  end
+
+  def java_requirements
+    case self
+    when Investigation
+      return "JNLP"
+    when Activity
+      return "JNLP"
+    else
+      return ""
+    end
   end
 end
