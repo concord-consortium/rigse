@@ -85,9 +85,7 @@ class Activity < ActiveRecord::Base
       end
       total += act.offerings_count
     end
-    boolean :is_official do
-      true # FIXME: Not sure if true should be the hardwired value here
-    end
+    boolean :is_official
 
     time    :updated_at
     time    :created_at
@@ -294,4 +292,9 @@ class Activity < ActiveRecord::Base
 
     return full_title
   end
+
+  def is_official
+    true # FIXME: Not sure if true should be the hardwired value here
+  end
+
 end

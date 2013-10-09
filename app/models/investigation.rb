@@ -32,9 +32,7 @@ class Investigation < ActiveRecord::Base
 
     boolean :teacher_only
     integer :offerings_count
-    boolean :is_official do
-      true # FIXME: Not sure if true should be the hardwired value here
-    end
+    boolean :is_official
 
     time    :updated_at
     time    :created_at
@@ -326,5 +324,7 @@ class Investigation < ActiveRecord::Base
     end
   end
 
-
+  def is_official
+    true # FIXME: Not sure if true should be the hardwired value here
+  end
 end

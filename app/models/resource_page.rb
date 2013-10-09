@@ -38,9 +38,7 @@ class ResourcePage < ActiveRecord::Base
     integer :offerings_count do
       0
     end
-    boolean :is_official do
-      true # FIXME: Not sure if true should be the hardwired value here
-    end
+    boolean :is_official
 
     time    :updated_at
     time    :created_at
@@ -247,6 +245,10 @@ class ResourcePage < ActiveRecord::Base
     if self.user
       self.user.add_role('author')
     end
+  end
+
+  def is_official
+    true # FIXME: Not sure if true should be the hardwired value here
   end
 
 end
