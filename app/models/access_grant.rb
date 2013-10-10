@@ -4,8 +4,9 @@ class AccessGrant < ActiveRecord::Base
   before_create :generate_tokens
   
   attr_accessible :access_token, :access_token_expires_at, :client_id, :code, :refresh_token, :state, :user_id
+  ExpireTime = 1.week
   def self.prune!
-    delete_all(["created_at < ?", 3.days.ago])
+    delete_all(["access_token_expires_at < ?", 1.days.ago])
   end
 
   def self.authenticate(code, application_id)
@@ -24,8 +25,7 @@ class AccessGrant < ActiveRecord::Base
     end
   end
 
-  # Note: This is currently configured through devise, and matches the AuthController access token life
   def start_expiry_period!
-    self.update_attribute(:access_token_expires_at, Time.now + Devise.timeout_in)
+    self.update_attribute(:access_token_expires_at, Time.now + ExpireTime)
   end
 end
