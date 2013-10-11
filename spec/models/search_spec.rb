@@ -17,16 +17,43 @@ describe Search do
     results
   end
 
-  before(:all) do
-    solr_setup
-    clean_solar_index
+  describe "parameter cleaning" do
+    describe "clean_search_terms" do
+      it "should remove emdashes" do
+        Search.clean_search_terms("balrgs – bonk").should == "balrgs  bonk"
+      end
+      it "should remove question marks" do
+        Search.clean_search_terms("balrgs ? bonk").should == "balrgs  bonk"
+      end
+      it "should remove ampersands" do
+        Search.clean_search_terms("balrgs & bonk").should == "balrgs  bonk"
+      end
+    end
+
+    describe "clean_domain_id" do
+      it "returns the defaults when passed nil" do
+        Search.clean_domain_id(nil).should == Search::NoDomainID
+      end
+      it "wraps bare strings in an array" do
+        Search.clean_domain_id("1").should == ["1"]
+      end
+
+      it "leaves arrays alone" do
+        Search.clean_domain_id([1,2,3]).should == [1,2,3]
+      end
+    end
   end
 
-  after(:each) do
-    clean_solar_index
-  end
+  describe "searching" do
+    before(:all) do
+      solr_setup
+      clean_solar_index
+    end
 
-  describe "search" do
+    after(:each) do
+      clean_solar_index
+    end
+
     let(:official)     { { :is_official => true }}
     let(:public_opts)  { { :publication_status => "published"}}
     let(:private_opts) { { :publication_status => "private"          }}

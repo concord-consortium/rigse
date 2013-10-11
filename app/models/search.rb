@@ -37,13 +37,26 @@ class Search
   NoGradeSpan     = NoDomainID = AnyProbeType =[]
   NoProbeRequired = ["0"]
 
+  def self.clean_search_terms (term)
+    return NoSearchTerm unless term
+    # http://rubular.com/r/0XlbltgfqY
+    not_word_digit_or_space = /[^\w|\s]/
+    term.gsub(not_word_digit_or_space,'')
+  end
+
+  def self.clean_domain_id(domain_id)
+    return NoDomainID unless domain_id
+    [domain_id].flatten
+  end
+
   def initialize(opts={})
-    @text           = clean_search_terms(opts[:search_term])
+    @text           = Search.clean_search_terms(opts[:search_term])
+    @domain_id      = Search.clean_domain_id(opts[:domain_id])
     @results        = {}
     @hits           = {}
     @no_probes      = false
     @material_types = opts[:material_types] || AllMaterials
-    @domain_id      = opts[:domain_id]      || NoDomainID
+
     @engine         = opts[:engine]         || Sunspot
     @grade_span     = opts[:grade_span]     || NoGradeSpan
     @probe          = opts[:probe]          || AnyProbeType
@@ -57,14 +70,6 @@ class Search
     @without_teacher_only = opts[:without_teacher_only] || true
     self.search()
   end
-
-  def clean_search_terms (term)
-    return NoSearchTerm unless term
-    # http://rubular.com/r/0XlbltgfqY
-    not_word_digit_or_space = /[^\w|\s]/
-    term.gsub(not_word_digit_or_space,'')
-  end
-
 
   def search
     self.results[:all] = []
