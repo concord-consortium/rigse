@@ -59,6 +59,7 @@ describe SearchController do
     sign_in teacher_user
     make all_investigations
     make all_activities
+    make contributed_activities
     Sunspot.commit_if_dirty
   end
 
@@ -96,7 +97,7 @@ describe SearchController do
       end
 
       describe "searching only investigations" do
-        let(:post_params)      {{:material => ['investigation']}}
+        let(:post_params)      {{:material_types => [Search::InvestigationMaterial]}}
         let(:activity_results) {[]}
 
         it "should return all investigations" do
@@ -105,7 +106,6 @@ describe SearchController do
         end
 
         it "should not return any activities" do
-          controller.should_receive(:new_search).and_return(mock_search)
           post :index, post_params
           assigns[:activities].should be_empty
           assigns[:activities_count].should be(0)
@@ -113,7 +113,7 @@ describe SearchController do
       end
 
       describe "searching only activities" do
-        let(:post_params)           {{:material_types => ['Activity']}}
+        let(:post_params)           {{:material_types => [Search::ActivityMaterial]}}
         it "should not include investigations" do
           assigns[:investigations].should be_empty
           assigns[:investigations_count].should be(0)
@@ -126,7 +126,6 @@ describe SearchController do
           end
         end
         describe "including contributed activities" do
-          let(:activity_results) {all_activities + contributed_activities}
           let(:post_params) {{ :material_types => ['Activity'], :include_contributed => 1 }}
           it  "should include contributed activities" do
             assigns[:activities_count].should == 7
@@ -176,7 +175,6 @@ describe SearchController do
       xhr :post, :show, post_params
       assigns(:activities_count).should be(1)
       assigns(:investigations_count).should be(0)
-      assigns(:external_activities_count).should be(0)
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
 
@@ -194,7 +192,6 @@ describe SearchController do
       xhr :post, :show, post_params
       assigns(:investigations_count).should be(1)
       assigns(:activities_count).should be(0)
-      assigns(:external_activities_count).should be(0)
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
 
@@ -210,8 +207,8 @@ describe SearchController do
 
       xhr :post, :show, post_params
       assigns(:investigations_count).should be(0)
-      assigns(:activities_count).should be(0)
-      assigns(:external_activities_count).should be(1)
+      assigns(:activities_count).should be(1)
+
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
 
@@ -219,43 +216,9 @@ describe SearchController do
       assert_template "index"
     end
 
-    it "should wrap domain_id params into an array" do
-      post_params = {
-        :search_term => physics_investigation.name,
-        :activity => nil,
-        :domain_id => "1",
-        :investigation => 'true'
-      }
-      xhr :post, :show, post_params
-      assigns[:domain_id].should be_a_kind_of(Enumerable)
+    # tests regarding cleaning up domain_id params
+    # moved into search_spec.rb
 
-      post_params = {
-        :search_term => physics_investigation.name,
-        :activity => nil,
-        :domain_id => 1,
-        :investigation => 'true'
-      }
-      xhr :post, :show, post_params
-      assigns[:domain_id].should be_a_kind_of(Enumerable)
-
-      post_params = {
-        :search_term => physics_investigation.name,
-        :activity => nil,
-        :domain_id => ["1","2"],
-        :investigation => 'true'
-      }
-      xhr :post, :show, post_params
-      assigns[:domain_id].should be_a_kind_of(Enumerable)
-
-      post_params = {
-        :search_term => physics_investigation.name,
-        :activity => nil,
-        :domain_id => [1,2],
-        :investigation => 'true'
-      }
-      xhr :post, :show, post_params
-      assigns[:domain_id].should be_a_kind_of(Enumerable)
-    end
   end
 
   describe "Post get_current_material_unassigned_clazzes" do
