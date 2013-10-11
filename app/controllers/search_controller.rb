@@ -16,13 +16,10 @@ class SearchController < ApplicationController
   def search_material
     search = Search.new(params)
     # TODO: This will become a check on 'material_type'
-    @investigations            = search.results['Investigation'] || []
+    @investigations            = search.results[Search::InvestigationMaterial] || []
     @investigations_count      = @investigations.size
-    @activities                = search.results['Activity'] || []
+    @activities                = search.results[Search::ActivityMaterial] || []
     @activities_count          = @activities.size
-    @external_activities       = search.results['ExternalActivity'] || []
-    @external_activities_count = @external_activities.size
-
     @form_model = search
   end
 

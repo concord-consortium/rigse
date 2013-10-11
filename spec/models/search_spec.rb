@@ -27,7 +27,8 @@ describe Search do
   end
 
   describe "search" do
-    let(:public_opts)  { { :publication_status => "published"        }}
+    let(:official)     { { :is_official => true }}
+    let(:public_opts)  { { :publication_status => "published"}}
     let(:private_opts) { { :publication_status => "private"          }}
     let(:external_seq) { { :template => private_investigations.first }}
     let(:external_act) { { :template => private_activities.first     }}
@@ -36,10 +37,10 @@ describe Search do
     let(:private_investigations){ collection(:investigation, 2, private_opts)}
     let(:public_activities)     { collection(:activity, 2, public_opts)      }
     let(:private_activities)    { collection(:activity, 2, private_opts)     }
-    let(:public_ext_act)        { collection(:external_activity, 2, external_act.merge(public_opts)) }
-    let(:private_ext_act)       { collection(:external_activity, 2, external_act.merge(private_opts)) }
-    let(:public_ext_seq)        { collection(:external_activity, 2, external_seq.merge(public_opts)) }
-    let(:private_ext_seq)       { collection(:external_activity, 2, external_seq.merge(private_opts)) }
+    let(:public_ext_act)        { collection(:external_activity, 2, external_act.merge(public_opts).merge(official))  }
+    let(:private_ext_act)       { collection(:external_activity, 2, external_act.merge(private_opts).merge(official)) }
+    let(:public_ext_seq)        { collection(:external_activity, 2, external_seq.merge(public_opts).merge(official))  }
+    let(:private_ext_seq)       { collection(:external_activity, 2, external_seq.merge(private_opts).merge(official)) }
 
     let(:search_opts) { {} }
 
@@ -61,8 +62,8 @@ describe Search do
         let(:search_opts) { {:private => false } }
         it "results should include 4 public activities and 4 public investigations" do
           subject.results[:all].should have(8).entries
-          subject.results[Investigation].should have(4).entries
-          subject.results[Activity].should have(4).entries
+          subject.results[Search::InvestigationMaterial].should have(4).entries
+          subject.results[Search::ActivityMaterial].should have(4).entries
         end
       end
 
@@ -70,16 +71,16 @@ describe Search do
         let(:search_opts) { {:private => true } }
         it "results should include 8 activities and 8 investigations" do
           # subject.results[:all].should have(16).entries
-          subject.results[Investigation].should have(8).entries
-          subject.results[Activity].should have(8).entries
+          subject.results[Search::InvestigationMaterial].should have(8).entries
+          subject.results[Search::ActivityMaterial].should have(8).entries
         end
       end
 
       describe "searching only public Investigations" do
-        let(:search_opts) { {:private  => false, :material_types => [Investigation]} }
+        let(:search_opts) { {:private  => false, :material_types => ["Investigation"]} }
         it "results should include 4 investigations" do
           subject.results[:all].should have(4).entries
-          subject.results[Investigation].should have(4).entries
+          subject.results[Search::InvestigationMaterial].should have(4).entries
         end
       end
 
@@ -95,29 +96,49 @@ describe Search do
           end
 
         describe "when the template type is an Investigation" do
-          let(:external_activity){FactoryGirl.create(:external_activity, external_seq.merge(public_opts))}
+          let(:external_activity){FactoryGirl.create(:external_activity, external_seq.merge(public_opts).merge(official))}
           it "should be listed in the investigations results" do
-            subject.results[Investigation].should include(external_activity)
-            subject.results[Activity].should_not include(external_activity)
-            subject.results[ExternalActivity].should be_empty
+            subject.results[Search::InvestigationMaterial].should include(external_activity)
+            subject.results[Search::ActivityMaterial].should_not include(external_activity)
+
           end
         end
 
         describe "When the template type is an Activity" do
-          let(:external_activity){FactoryGirl.create(:external_activity, external_act.merge(public_opts))}
-          it "should be listed in the activity results" do
-            subject.results[Investigation].should_not include(external_activity)
-            subject.results[Activity].should include(external_activity)
-            subject.results[ExternalActivity].should be_empty
+
+          describe "when its an offical activity" do
+            let(:external_activity){FactoryGirl.create(:external_activity, external_act.merge(public_opts).merge(official))}
+            it "should be listed in the activity results" do
+              subject.results[Search::InvestigationMaterial].should_not include(external_activity)
+              subject.results[Search::ActivityMaterial].should include(external_activity)
+            end
           end
+
+          describe "when its a contributed activity" do
+            let(:external_activity){FactoryGirl.create(:external_activity, external_act.merge(public_opts))}
+            describe "when the search doesn't include contributed items" do
+              it "should not be listed in the  results" do
+                subject.results[Search::InvestigationMaterial].should_not include(external_activity)
+                subject.results[Search::ActivityMaterial].should_not include(external_activity)
+              end
+            end
+
+            describe "when the search includes contributed items" do
+              let(:search_opts) { {:include_contributed => true } }
+              it "should not be listed in the activity results" do
+                subject.results[Search::InvestigationMaterial].should_not include(external_activity)
+                subject.results[Search::ActivityMaterial].should include(external_activity)
+              end
+            end
+          end
+
         end
 
         describe "When there is no template" do
-          let(:external_activity){FactoryGirl.create(:external_activity, public_opts)}
+          let(:external_activity){FactoryGirl.create(:external_activity, public_opts.merge(official))}
           it "should be listed in the Activity results" do
-            subject.results[Investigation].should_not include(external_activity)
-            subject.results[Activity].should include(external_activity)
-            subject.results[ExternalActivity].should be_empty
+            subject.results[Search::InvestigationMaterial].should_not include(external_activity)
+            subject.results[Search::ActivityMaterial].should include(external_activity)
           end
         end
       end
@@ -132,12 +153,12 @@ describe Search do
 
         it "should return public items" do
           public_items.each do |act|
-            subject.results[Activity].should include(act)
+            subject.results[Search::ActivityMaterial].should include(act)
           end
         end
 
         it "should return the my_activity" do
-          subject.results[Activity].should include(my_activity)
+          subject.results[Search::ActivityMaterial].should include(my_activity)
           # subject.results[:users].should include(my_activity)
         end
       end
@@ -155,16 +176,16 @@ describe Search do
 
           describe "Search::Newest" do
             it "the collection should be sorted by updated_at newest ➙ oldest" do
-              subject.results[Investigation].should be_ordered_by(:updated_at_desc)
-              subject.results[Activity].should be_ordered_by(:updated_at_desc)
+              subject.results[Search::InvestigationMaterial].should be_ordered_by(:updated_at_desc)
+              subject.results[Search::ActivityMaterial].should be_ordered_by(:updated_at_desc)
             end
           end
 
           describe "Search::Oldest" do
             let(:search_opts) { {:private => false, :sort_order => Search::Oldest} }
             it "the collection should be sorted by updated_at oldest ➙ newest" do
-              subject.results[Investigation].should be_ordered_by(:updated_at)
-              subject.results[Activity].should be_ordered_by(:updated_at)
+              subject.results[Search::InvestigationMaterial].should be_ordered_by(:updated_at)
+              subject.results[Search::ActivityMaterial].should be_ordered_by(:updated_at)
             end
           end
         end # by date
@@ -189,8 +210,8 @@ describe Search do
             ].flatten
           end
           it "the collection should be sotred by offerings_count desc" do
-            subject.results[Investigation].should be_ordered_by(:offerings_count_desc)
-            subject.results[Activity].should be_ordered_by(:offerings_count_desc)
+            subject.results[Search::InvestigationMaterial].should be_ordered_by(:offerings_count_desc)
+            subject.results[Search::ActivityMaterial].should be_ordered_by(:offerings_count_desc)
           end
         end
       end

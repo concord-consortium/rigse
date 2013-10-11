@@ -14,8 +14,12 @@ class Search
   attr_accessor :page
   attr_accessor :per_page
   attr_accessor :user_id
+  attr_accessor :include_contributed
 
-  AllMaterials = [Investigation, Activity, ResourcePage, ExternalActivity]
+  SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
+  InvestigationMaterial   = "Investigation"
+  ActivityMaterial        = "Activity"
+  AllMaterials            = [InvestigationMaterial, ActivityMaterial]
 
   Newest       = 'Newest'
   Oldest       = 'Oldest'
@@ -49,7 +53,8 @@ class Search
     @page           = opts[:page]           || 1
     @per_page       = opts[:per_page]       || 10
     @user_id        = opts[:user_id]
-    @without_teacher_only = opts[:without_teacher_only]
+    @include_contributed = opts[:include_contributed] || false
+    @without_teacher_only = opts[:without_teacher_only] || true
     self.search()
   end
 
@@ -65,7 +70,7 @@ class Search
     self.results[:all] = []
     self.hits[:all] = []
     @material_types.each do |type|
-      _results = @engine.search(AllMaterials) do |s|
+      _results = @engine.search(SearchableModels) do |s|
         s.fulltext(@text)
         s.any_of do |c|
           c.with(:published, true)
@@ -77,6 +82,7 @@ class Search
         s.with(:grade_span, @grade_span) unless @grade_span.empty?
         s.with(:probe_type_ids, @probe) unless (@probe.empty? || @no_probes)
         s.with(:no_probes, true) if @no_probes
+        s.with(:is_official, true) unless @include_contributed
         s.facet :material_type
         s.order_by(*SortOptions[@sort_order])
         s.paginate(:page => @page, :per_page => @per_page)
