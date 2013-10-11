@@ -193,6 +193,7 @@ describe ExternalActivitiesController do
       describe "when an existing external_activity does exist" do
         let(:existing_url) { url }
         it "should update the existing activity" do
+          existing
           raw_post :publish, {}, activity_hash.to_json
           created = assigns(:external_activity)
           created.should_not be_nil
@@ -232,6 +233,7 @@ describe ExternalActivitiesController do
       describe "when there is already an existing external_activity" do
         let(:existing_url) { url }
         it "should update the existing activity" do
+          existing
           raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
           created = assigns(:external_activity)
           created.should_not be_nil
@@ -261,6 +263,7 @@ describe ExternalActivitiesController do
 
       describe "when an external_activity already exists for the sequence" do
         it 'should update the existing external_activity' do
+          existing_sequence
           raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
           updated = assigns(:external_activity)
           updated.should_not be_nil
