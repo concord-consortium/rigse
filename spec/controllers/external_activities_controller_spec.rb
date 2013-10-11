@@ -2,7 +2,6 @@ require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelpe
 
 
 describe ExternalActivitiesController do
-  include SolrSpecHelper
 
   let(:name)        { "Cool Activity"                  }
   let(:description) { name                             }
@@ -128,40 +127,43 @@ describe ExternalActivitiesController do
   end
 
   describe '#index' do
-    before(:all) do
-      solr_setup
-      clean_solar_index
-    end
-
-    after(:all) do
-      clean_solar_index
+    before(:each) do
+      @double_search = double(Search)
+      Search.stub!(:new).and_return(@double_search)
     end
 
     context 'when the user is an author' do
       before(:each) do
-        current_visitor = login_author
+        @current_visitor = login_author
       end
 
       it "should show only public, official, and user-owned activities" do
+        @double_search.stub(:results => {:all => [existing, another]})
+        # Expect the double to be called with certain params
+        Search.should_receive(:new).with({ :material_types => [ExternalActivity], :page => nil, :private => true, :user_id => @current_visitor.id }).and_return(@double_search)
         get :index
-        assigns[:external_activities].length.should be(ExternalActivity.published.count + ExternalActivity.by_user(current_visitor).count)
+        assigns[:external_activities].length.should be(2) # Because that's what Search#results[:all] is stubbed to return
       end
     end
 
     context 'when the user is an admin' do
       it "should show all activities" do
+        @double_search.stub(:results => {:all => [existing, another]})
+        Search.should_receive(:new).with({ :material_types => [ExternalActivity], :page => nil }).and_return(@double_search)
         get :index
-        assigns[:external_activities].length.should be(ExternalActivity.count)
+        assigns[:external_activities].length.should be(2) # Because that's what Search#results[:all] is stubbed to return
       end
 
       it 'filters activities by keyword when provided' do
-        # TODO: set up an activity to be filtered
+        @double_search.stub(:results => {:all => [existing]})
+        Search.should_receive(:new).with({ :material_types => [ExternalActivity], :page => nil, :search_term => 'again' }).and_return(@double_search)
         get :index, {:name => 'again'}
         assigns[:external_activities].length.should be(1)
       end
 
       it 'shows drafts when box is checked' do
-        pending "Is this box visible to authors (not just admins)? If not, does it do anything?"
+        pending "Do we still want this box?"
+        # TODO: Expect the double to be called with certain params
       end
     end
   end
