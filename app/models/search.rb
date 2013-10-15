@@ -49,16 +49,22 @@ class Search
     return NoDomainID unless domain_id
     [domain_id].flatten
   end
+  def self.clean_material_types(material_types)
+    return AllMaterials if material_types.nil?
+    return AllMaterials if material_types.empty?
+    return AllMaterials if material_types.blank?
+  end
 
   def initialize(opts={})
     self.text           = Search.clean_search_terms(opts[:search_term])
     self.domain_id      = Search.clean_domain_id(opts[:domain_id])
+    self.material_types = Search.clean_material_types(opts[:material_types])
     self.results        = {}
     self.hits           = {}
     self.no_probes      = false
 
     self.user_id        = opts[:user_id]
-    self.material_types = opts[:material_types] || AllMaterials
+
     self.engine         = opts[:engine]         || Sunspot
     self.grade_span     = opts[:grade_span]     || NoGradeSpan
     self.probe          = opts[:probe]          || AnyProbeType
