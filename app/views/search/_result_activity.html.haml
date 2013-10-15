@@ -9,8 +9,7 @@
     %tr
       %td.material_list
         - materials.each do |activity|
-          - unless activity.parent.nil?
-            .material_list_item{ :id => "search_activity_#{activity.id}", :style => ("border:none" if materials.last==activity ) }
-              = render :partial => 'result_item', :locals => { :material => activity }
+          .material_list_item{ :id => "search_activity_#{activity.id}", :style => ("border:none" if materials.last==activity ) }
+            = render :partial => 'result_item', :locals => { :material => activity }
   %br
   = will_paginate @activities, :param_name => 'activity_page', :params => @form_model.params.merge(:type => 'act')
