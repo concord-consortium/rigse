@@ -345,8 +345,8 @@ module ApplicationHelper
   end
 
   def sort_dropdown(selected,keep = [])
-    selected ||= "name ASC"
-    default_options = [ ["Oldest", "created_at ASC"], [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
+    selected ||= Search::Alphabetical
+    default_options = [ [Search::Oldest, "Oldest"], [Search::Newest, "Newest"], [Search::Alphabetical, "Alphabetical"], [Search::Popularity, "Popularity"] ]
     sort_options = (keep.size > 0 ? default_options.select{|o| keep.include?(o[0]) } : default_options)
     select nil, :sort_order, sort_options, {:selected => selected, :include_blank => false }
   end

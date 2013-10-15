@@ -41,10 +41,6 @@ describe ActivitiesController do
         get :index, {:name => 'filtered'}
         assigns[:activities].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
       end
-
-      it 'shows drafts when box is checked' do
-        pending "Do we still need this box?"
-      end
     end
   end
 

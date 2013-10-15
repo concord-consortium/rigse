@@ -160,11 +160,6 @@ describe ExternalActivitiesController do
         get :index, {:name => 'again'}
         assigns[:external_activities].length.should be(1)
       end
-
-      it 'shows drafts when box is checked' do
-        pending "Do we still want this box?"
-        # TODO: Expect the double to be called with certain params
-      end
     end
   end
 
