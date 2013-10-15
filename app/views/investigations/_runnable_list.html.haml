@@ -39,7 +39,8 @@
           %div.action_menu_header_left   
             /= link_to_container(investigation)
             %span.author
-              = investigation.user.name
+              - if investigation.user
+                = investigation.user.name
           %div.action_menu_header_right   
             %ul.menu
               -# %li= preview_button_for(investigation)

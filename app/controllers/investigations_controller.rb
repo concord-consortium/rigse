@@ -86,51 +86,55 @@ class InvestigationsController < AuthoringController
 
   # POST /investigations/select_js
   def index
-    # @grade_span = param_find(:grade_span)
-    # @domain_id = param_find(:domain_id)
-    # @name = param_find(:name
-    # don't save these, see: http://www.pivotaltracker.com/story/show/2428013
-    @grade_span = params[:grade_span]
-    @domain_id = params[:domain_id]
-    @include_drafts = param_find(:include_drafts)
-    @name = param_find(:name)
-    pagination = params[:page] == "" ? 1 : params[:page]
-    if (params[:method] == :get)
-      @include_drafts = param_find(:include_drafts,true)
-    else
-      @include_drafts = param_find(:include_drafts)
+    search_params = { :material_types => [Investigation], :page => params[:page] }
+    if !params[:name].blank?
+      search_params[:search_term] = params[:name]
     end
+    if !current_visitor.has_role?('admin')
+      search_params[:private] = true
+      search_params[:user_id] = current_visitor.id
+    end
+    if params[:grade_span]
+      search_params[:grade_span] = params[:grade_span]
+    end
+    sort_order = param_find(:sort_order, (params[:method] == :get))
+    # search_params[:sort_order] = @sort_order || 'name ASC'
+    s = Search.new(search_params)
+    @investigations = s.results[:all]
 
-    @sort_order = param_find(:sort_order, (params[:method] == :get))
-    if params[:include_usage_count].blank?
-      # The checkbox was unchecked. No other way to detect this as the param gets passed as nil
-      # unless it was actually checked as part of the request
-      session[:include_usage_count] = false if params[:method] == :get
-    else
-      session[:include_usage_count] = params[:include_usage_count]
-    end
-
-    if current_visitor.anonymous?
-      session[:include_usage_count] = false
-      @include_drafts = false
-    end
-    @include_usage_count = session[:include_usage_count]
-    
-    search_options = {
-      :name => @name,
-      :portal_clazz_id => @portal_clazz_id,
-      :include_drafts => @include_drafts,
-      :grade_span => @grade_span,
-      :domain_id => @domain_id,
-      :sort_order => @sort_order || 'name ASC',
-      :paginate => true,
-      :page => pagination
-    }
-    @investigations = Investigation.search_list(search_options)
-
-    if params[:mine_only]
-      @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
-    end
+    # Old-style search param setup
+    # @domain_id = params[:domain_id]
+    # @include_drafts = param_find(:include_drafts)
+    # if (params[:method] == :get)
+    #   @include_drafts = param_find(:include_drafts,true)
+    # else
+    #   @include_drafts = param_find(:include_drafts)
+    # end
+    # 
+    # if params[:include_usage_count].blank?
+    #   # The checkbox was unchecked. No other way to detect this as the param gets passed as nil
+    #   # unless it was actually checked as part of the request
+    #   session[:include_usage_count] = false if params[:method] == :get
+    # else
+    #   session[:include_usage_count] = params[:include_usage_count]
+    # end
+    # 
+    # if current_visitor.anonymous?
+    #   session[:include_usage_count] = false
+    #   @include_drafts = false
+    # end
+    # @include_usage_count = session[:include_usage_count]
+    # 
+    # if params[:mine_only]
+    #   @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
+    # end
+    # 
+    # search_options = {
+    #   :portal_clazz_id => @portal_clazz_id,
+    #   :include_drafts => @include_drafts,
+    #   :grade_span => @grade_span,
+    #   :domain_id => @domain_id,
+    # }
 
     @paginated_objects = @investigations
 

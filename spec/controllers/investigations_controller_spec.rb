@@ -27,10 +27,48 @@ describe InvestigationsController do
   end
 
   describe '#index' do
+    before(:each) do
+      @double_search = double(Search)
+      Search.stub!(:new).and_return(@double_search)
+      @double_search.stub(:results => {:all => [@investigation]})
+    end
+
+    context 'when the current user is an author' do
+      before(:each) do
+        @current_visitor = login_author
+      end
+
+      it 'shows only public, official, and user-owned investigations' do
+        # Expect the double to be called with certain params
+        Search.should_receive(:new).with({ :material_types => [Investigation], :page => nil, :private => true, :user_id => @current_visitor.id }).and_return(@double_search)
+        get :index
+        assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
+      end
+    end
+
+    context 'when the current user is an admin' do
+      it 'shows all investigations' do
+        # Expect the double to be called with certain params
+        Search.should_receive(:new).with({ :material_types => [Investigation], :page => nil }).and_return(@double_search)
+        get :index
+        assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
+      end
+
+      it 'filters investigations by keyword when provided' do
+        # Expect the double to be called with certain params
+        Search.should_receive(:new).with({ :material_types => [Investigation], :page => nil, :search_term => 'filtered' }).and_return(@double_search)
+        get :index, { :name => 'filtered' }
+        assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
+      end
+
+      it 'shows drafts when box is checked' do
+        pending "Do we still need this box?"
+      end
+    end
   end
 
   describe '#duplicate' do
-    it "should handle the duplicate metod without error" do
+    it "should handle the duplicate method without error" do
       get :duplicate, :id => @investigation.id
     end
   end
