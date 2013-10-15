@@ -51,14 +51,9 @@
           .tablecell
             = check_box_tag 'material_types[]', 'Activity',@form_model.material_types.include?('activity'),:id=>'Activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
-          - if @form_model.include_external_activities?
-            .tablecell
-              = check_box_tag 'material_types[]', 'ExternalActivity',@form_model.material_types.include?('ExternalActivity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
-              = label_tag 'external_activity', ExternalActivity.display_name
-            .tablecell
-
-              = check_box_tag 'include_contributed'
-              = label_tag 'include_contributed', 'Include contributed activities?'
+          .tablecell
+            = check_box_tag 'include_contributed'
+            = label_tag 'include_contributed', 'Include contributed?'
         %td.probescolumn
           - no_probes_req_selected = @form_model.probe_type.include?("0")
           .filterheader
