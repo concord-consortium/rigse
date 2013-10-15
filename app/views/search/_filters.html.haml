@@ -49,10 +49,10 @@
             = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'investigation', t(:investigation).titleize
           .tablecell
-            = check_box_tag 'material_types[]', 'Activity',@form_model.material_types.include?('activity'),:id=>'Activity',:onclick=>"materialCheckOnClick(this);"
+            = check_box_tag 'material_types[]', 'Activity', @form_model.material_types.include?('Activity'),:id=>'Activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
           .tablecell
-            = check_box_tag 'include_contributed'
+            = check_box_tag 'include_contributed', '1', @form_model.include_contributed, :id => 'include_contributed'
             = label_tag 'include_contributed', 'Include contributed?'
         %td.probescolumn
           - no_probes_req_selected = @form_model.probe_type.include?("0")
