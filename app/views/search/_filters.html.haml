@@ -9,7 +9,7 @@
     = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
   %div{:style=>'clear:both'}
   #filters_wrapper.visible
-    %table.filters.collapse_filters{:cellpadding=>0,:cellspacing=>0}
+    %table.filters.collapse_filters{:cellpadding=>0,:cellspacing=>0, :width=>"90%"}
 
       %tr
         %td.sortbycolumn
@@ -53,7 +53,10 @@
             = label_tag 'activity','Activity'
           .tablecell
             = check_box_tag 'include_contributed', '1', @form_model.include_contributed, :id => 'include_contributed'
-            = label_tag 'include_contributed', 'Include contributed?'
+            %label.span
+              Include Contributed
+              %span
+                Includes activities and/or sequences that were written by external users.
         %td.probescolumn
           - no_probes_req_selected = @form_model.probe_type.include?("0")
           .filterheader
