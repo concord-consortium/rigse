@@ -53,7 +53,7 @@ class Search
     return AllMaterials if material_types.nil?
     return AllMaterials if material_types.empty?
     return AllMaterials if material_types.blank?
-    return material_types
+    return [material_types].flatten
   end
 
   def initialize(opts={})

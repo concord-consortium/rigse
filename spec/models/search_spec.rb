@@ -42,6 +42,41 @@ describe Search do
         Search.clean_domain_id([1,2,3]).should == [1,2,3]
       end
     end
+
+    describe "clean_material_types(types)" do
+      subject { Search.clean_material_types(types) }
+      let(:types){nil}
+      describe "when types is nil" do
+        let(:types){nil}
+        it "should return AllMaterials" do
+          subject.should == Search::AllMaterials
+        end
+      end
+      describe "when types is blank" do
+        let(:types){""}
+        it "should return AllMaterials" do
+          subject.should == Search::AllMaterials
+        end
+      end
+      describe "when types is empty" do
+        let(:types){[]}
+        it "should return AllMaterials" do
+          subject.should == Search::AllMaterials
+        end
+      end
+      describe "when types is a string" do
+        let(:types){Search::InvestigationMaterial}
+        it "should return an array" do
+          subject.should == [Search::InvestigationMaterial]
+        end
+      end
+      describe "when types is an array" do
+        let(:types){[Search::InvestigationMaterial, Search::ActivityMaterial]}
+        it "should return an array" do
+          subject.should == [Search::InvestigationMaterial, Search::ActivityMaterial]
+        end
+      end
+    end
   end
 
   describe "searching" do
