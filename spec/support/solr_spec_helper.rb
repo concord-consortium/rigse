@@ -9,6 +9,12 @@ module SolrSpecHelper
     end
   end
 
+  def reindex_all
+    Search::SearchableModels.each do |m|
+      m.reindex
+      Sunspot.commit
+    end
+  end
 
   def server_running?
     begin
