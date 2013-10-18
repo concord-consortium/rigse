@@ -30,6 +30,7 @@ describe InvestigationsController do
     let(:current_visitor)    { login_author }
     let(:investigation_page) { nil   }
     let(:grade_span)         { nil   }
+    let(:search_term)        { nil   }
     let(:include_private)    { false }
     let(:expected_search_params) do
       {
@@ -38,6 +39,7 @@ describe InvestigationsController do
         :per_page           => 30,
         :private            => include_private,
         :grade_span         => grade_span,
+        :search_term        => search_term,
         :user_id => current_visitor.id
       }
     end
@@ -70,16 +72,16 @@ describe InvestigationsController do
         assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
       end
 
-      it 'filters investigations by keyword when provided' do
-        # Expect the double to be called with certain params
-        Search.should_receive(:new).with({ :material_types => [Investigation], :page => nil, :search_term => 'filtered' }).and_return(@double_search)
-        get :index, { :name => 'filtered' }
-        assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
+      context "when a search term is provided" do
+        let(:search_term){ "filtered"}
+        it 'filters investigations by keyword when provided' do
+          # Expect the double to be called with certain params
+          Search.should_receive(:new).with(expected_search_params).and_return(@double_search)
+          get :index, { :name => 'filtered' }
+          assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
+        end
       end
 
-      it 'shows drafts when box is checked' do
-        pending "Do we still need this box?"
-      end
     end
   end
 
@@ -128,7 +130,7 @@ describe InvestigationsController do
         get :show, :id => @investigation.id, :teacher_mode => "true"
       end
       it "should assign true to teacher_mode instance var" do
-        assert (assigns(:teacher_mode) == true)
+        assert(assigns(:teacher_mode) == true)
       end
     end
     describe "with teacher mode='false'" do
@@ -137,7 +139,7 @@ describe InvestigationsController do
         get :show, :id => @investigation.id, :teacher_mode => "false"
       end
       it "should assign false to teacher_mode instance var" do
-        assert (assigns(:teacher_mode) == false)
+        assert(assigns(:teacher_mode) == false)
       end
     end
   end
