@@ -84,7 +84,8 @@ module TruncatableXhtml
 
   DEFAULT_REPLACEABLES= {
     /\s+style\s?=\s?"(.*?)"/ => "",
-    /(&nbsp;)+/ => " "
+    /(&nbsp;)+/ => " ",
+    /<br>/i => "<br/>"
   }
 
   REPLACEMENT_MAP=DEFAULT_REPLACEABLES

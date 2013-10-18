@@ -11,11 +11,13 @@ describe TruncatableXhtml do
   before(:each) do
     @replacement_examples = {
       "<p style=\"ANYTHING\">something styled</p>" =>  "<p>something styled</p>",
+      "Text with some badly formated breaks <br/> <br> <br>" => "Text with some badly formated breaks <br/> <br/> <br/>",
       "&nbsp;&nbsp;&nbsp;" => " "
     }
     @non_replacement_examples = [
       "<p> nothing wrong with this paragraph </p>",
-      "<h1> this paragraph is fine</h1>"
+      "<h1> this paragraph is fine</h1>",
+      "<br/> These breaks are fine <br/>"
     ]
   end
 
