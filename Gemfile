@@ -136,6 +136,7 @@ group :development do
   gem "ruby-prof"
   gem "guard-spork"
   gem "guard-rspec"
+  gem "guard-cucumber"
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false

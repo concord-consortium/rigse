@@ -56,7 +56,7 @@ Feature: Investigations can be searched
         | copy of z Investigation | author | 20              | draft              |
     Given I am logged in with the username teacher
 
-  @javascript 
+  @javascript
   Scenario: Default display of public investigations is name ASC
     When I browse public investigations
     Then There should be 20 investigations displayed
@@ -68,7 +68,7 @@ Feature: Investigations can be searched
     When I sort investigations by "name DESC"
     Then There should be 20 investigations displayed
     And  "copy" should not be displayed in the investigations list
-    And  "z Investigation" should appear before "y Investigation"   
+    And  "z Investigation" should appear before "y Investigation"
 
   @javascript
   Scenario: Searching public investigations

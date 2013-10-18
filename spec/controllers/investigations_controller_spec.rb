@@ -18,7 +18,7 @@ describe InvestigationsController do
     @admin_user.add_role("admin")
 
     login_admin
-    
+
     @investigation = Factory.create(:investigation, {
       :name => "test investigation",
       :description => "new decription",
@@ -27,29 +27,45 @@ describe InvestigationsController do
   end
 
   describe '#index' do
+    let(:current_visitor)    { login_author }
+    let(:investigation_page) { nil   }
+    let(:grade_span)         { nil   }
+    let(:include_private)    { false }
+    let(:expected_search_params) do
+      {
+        :material_types     => ["Investigation"],
+        :investigation_page => investigation_page,
+        :per_page           => 30,
+        :private            => include_private,
+        :grade_span         => grade_span,
+        :user_id => current_visitor.id
+      }
+    end
+
     before(:each) do
       @double_search = double(Search)
       Search.stub!(:new).and_return(@double_search)
-      @double_search.stub(:results => {:all => [@investigation]})
+      @double_search.stub(:results => {
+          Search::InvestigationMaterial => [@investigation],
+          :all                          => [@investigation]
+      })
     end
 
     context 'when the current user is an author' do
-      before(:each) do
-        @current_visitor = login_author
-      end
-
       it 'shows only public, official, and user-owned investigations' do
         # Expect the double to be called with certain params
-        Search.should_receive(:new).with({ :material_types => [Investigation], :page => nil, :private => true, :user_id => @current_visitor.id }).and_return(@double_search)
+        Search.should_receive(:new).with(expected_search_params).and_return(@double_search)
         get :index
         assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
       end
     end
 
     context 'when the current user is an admin' do
+      let(:include_private)  { true }
+      let(:current_visitor)  { login_admin }
       it 'shows all investigations' do
         # Expect the double to be called with certain params
-        Search.should_receive(:new).with({ :material_types => [Investigation], :page => nil }).and_return(@double_search)
+        Search.should_receive(:new).with(expected_search_params).and_return(@double_search)
         get :index
         assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
       end
@@ -75,7 +91,7 @@ describe InvestigationsController do
 
   describe "Researcher Reports" do
     before(:each) do
-      controller.should_receive(:send_data) { | data, options | 
+      controller.should_receive(:send_data) { | data, options |
         options[:type].should == "application/vnd.ms.excel"
       }
       # this is needed to prevent a missing template call, the real send_data method

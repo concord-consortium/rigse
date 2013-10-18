@@ -86,21 +86,20 @@ class InvestigationsController < AuthoringController
 
   # POST /investigations/select_js
   def index
-    search_params = { :material_types => [Investigation], :page => params[:page] }
-    if !params[:name].blank?
-      search_params[:search_term] = params[:name]
-    end
-    if !current_visitor.has_role?('admin')
-      search_params[:private] = true
-      search_params[:user_id] = current_visitor.id
-    end
-    if params[:grade_span]
-      search_params[:grade_span] = params[:grade_span]
-    end
+    search_params = {
+      :material_types     => [Search::InvestigationMaterial],
+      :investigation_page => params[:page],
+      :per_page           => 30,
+      :user_id            => current_visitor.id,
+      :grade_span         => params[:grade_span],
+      :private            => current_visitor.has_role?('admin'),
+      :search_term        => params[:name]
+    }
+
     sort_order = param_find(:sort_order, (params[:method] == :get))
     # search_params[:sort_order] = @sort_order || 'name ASC'
     s = Search.new(search_params)
-    @investigations = s.results[:all]
+    @investigations = s.results[Search::InvestigationMaterial]
 
     # Old-style search param setup
     # @domain_id = params[:domain_id]
@@ -110,7 +109,7 @@ class InvestigationsController < AuthoringController
     # else
     #   @include_drafts = param_find(:include_drafts)
     # end
-    # 
+    #
     # if params[:include_usage_count].blank?
     #   # The checkbox was unchecked. No other way to detect this as the param gets passed as nil
     #   # unless it was actually checked as part of the request
@@ -118,17 +117,17 @@ class InvestigationsController < AuthoringController
     # else
     #   session[:include_usage_count] = params[:include_usage_count]
     # end
-    # 
+    #
     # if current_visitor.anonymous?
     #   session[:include_usage_count] = false
     #   @include_drafts = false
     # end
     # @include_usage_count = session[:include_usage_count]
-    # 
+    #
     # if params[:mine_only]
     #   @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
     # end
-    # 
+    #
     # search_options = {
     #   :portal_clazz_id => @portal_clazz_id,
     #   :include_drafts => @include_drafts,

@@ -39,7 +39,7 @@ class Search
   NoProbeRequired = ["0"]
 
   def self.clean_search_terms (term)
-    return NoSearchTerm unless term
+    return NoSearchTerm if (term.nil? || term.blank?)
     # http://rubular.com/r/0XlbltgfqY
     not_word_digit_or_space = /[^\w|\s]/
     term.gsub(not_word_digit_or_space,'')
