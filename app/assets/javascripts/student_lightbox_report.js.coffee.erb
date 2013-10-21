@@ -12,6 +12,7 @@ class LightboxReport
     @report_elm   = $(@report_dom)
     @close_elm    = $('lightbox_closer')    
     @interval_id  = null
+    @update_interval_ms = 5 * 1000
     @rebindEvents()
 
   rebindEvents: ->
@@ -44,13 +45,14 @@ class LightboxReport
           if @isItUpdatetime(transport.responseText)
             @updateReport()
             @restore_scroll_position()
-    @interval_id = setInterval(update_func, 1000)
+          @timeout_id = setTimeout(update_func, @update_interval_ms)
+    @timeout_id = setTimeout(update_func, @update_interval_ms)
     @rebindEvents()
 
   disableUpdates: ->
-    if @interval_id
-      clearInterval(@interval_id)
-      @interval_id = null
+    if @timeout_id
+      clearTimeout(@timeout_id)
+      @timeout_id = null
 
   showLightBox: ->
     @enableUpdates()
