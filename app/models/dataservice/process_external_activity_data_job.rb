@@ -6,7 +6,6 @@ class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :con
     learner = Portal::Learner.find(learner_id)
     offering = learner.offering
     template = offering.runnable.template
-    embeddables = [template.open_responses, template.multiple_choices, template.image_questions].flatten.compact.uniq
 
     # setup for SaveableExtraction
     @learner_id = learner_id
@@ -14,13 +13,15 @@ class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :con
 
     # process the json data
     all_data.each do |student_response|
-      embeddable = embeddables.detect {|e| e.external_id == student_response["question_id"]}
       case student_response["type"]
       when "open_response"
+        embeddable = template.open_responses.detect {|e| e.external_id == student_response["question_id"]}
         internal_process_open_response(student_response, embeddable)
       when "multiple_choice"
+        embeddable = template.multiple_choices.detect {|e| e.external_id == student_response["question_id"]}
         internal_process_multiple_choice(student_response, embeddable)
       when "image_question"
+        embeddable = template.image_questions.detect {|e| e.external_id == student_response["question_id"]}
         internal_process_image_question(student_response, embeddable)
       end
     end
