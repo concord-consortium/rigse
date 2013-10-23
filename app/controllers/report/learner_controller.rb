@@ -1,7 +1,12 @@
 class Report::LearnerController < ApplicationController
 
   include RestrictedController
-  before_filter :setup
+  before_filter :setup,
+      :only => [
+      :index,
+      :update_learners
+    ]
+
   before_filter :manager_or_researcher,
     :only => [
       :index,
