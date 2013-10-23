@@ -50,11 +50,11 @@ class Report::Learner::Selector
     @select_teachers  = @select_teachers.map     { |t| Portal::Teacher.find(t) }
     @select_runnables = @select_runnables.map    { |r|
       case(r)
-      when /Investigation_(\d+)/
+      when /^Investigation_(\d+)/
         Investigation.find($1)
-      when /Activity_(\d+)/
+      when /^Activity_(\d+)/
         ::Activity.find($1)
-      when /ExternalActivity_(\d+)/
+      when /^ExternalActivity_(\d+)/
         ExternalActivity.find($1)
       end
     }
