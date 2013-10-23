@@ -81,6 +81,7 @@ class Dataservice::Blob < ActiveRecord::Base
   end
 
   def load_content_from(url)
+    return if url.blank?
     web_client = HTTPClient.new
     response = web_client.get(url)
     if HTTP::Status.successful?(response.status)

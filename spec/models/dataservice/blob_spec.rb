@@ -98,25 +98,36 @@ describe Dataservice::Blob do
     let (:learner)     { mock_model(Portal::Learner, :id => '234234') }
     let (:atributes)   { { :learner => learner }}
 
-    before(:each) do
-      stub_request(:get, url).
-      to_return(:body => url_content, :status => status, :headers => { 'Content-Type' => mimetype})
-    end
 
-    describe "when there is good content" do
-      let(:status) { 200 }
-      it "should update its content with the content" do
-        subject.content.should be_nil
-        subject.load_content_from(url)
-        subject.content.should == url_content
+    describe "making web requests" do
+      before(:each) do
+        stub_request(:get, url).
+        to_return(:body => url_content, :status => status, :headers => { 'Content-Type' => mimetype})
+      end
+
+      describe "when there is good content" do
+        let(:status) { 200 }
+        it "should update its content with the content" do
+          subject.content.should be_nil
+          subject.load_content_from(url)
+          subject.content.should == url_content
+        end
+      end
+
+      describe "when there is an http error" do
+        let(:status) { 500 }
+        it "should leave the content unchanged" do
+          subject.content = "booga booga"
+          subject.load_content_from(url)
+          subject.content.should_not == url_content
+        end
       end
     end
 
-    describe "when there is an http error" do
-      let(:status) { 500 }
-      it "should leave the content unchanged" do
-        subject.content = "booga booga"
-        subject.load_content_from(url)
+    describe "when the url is blank" do
+      let(:url) { "" }
+      # No need to stub a request either, because none will be made
+      it "should not change the content" do
         subject.content.should_not == url_content
       end
     end
