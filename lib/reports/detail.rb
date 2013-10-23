@@ -39,6 +39,17 @@ class Reports::Detail < Reports::Excel
       answer_defs = []
       header_defs = [] # top level header
 
+      # save the original assignable so we can refer to it later
+      assignable = runnable
+      if runnable.is_a?(::ExternalActivity)
+        if runnable.template
+          runnable = runnable.template
+        else
+          # we can't report on external activities that don't have templates
+          return
+        end
+      end
+
       # This needs to account for varying types of runnables...
       containers = get_containers(runnable)
 
@@ -60,7 +71,7 @@ class Reports::Detail < Reports::Excel
       end #containers
 
       col_defs = sheet_defs + answer_defs + header_defs
-      write_sheet_headers(@runnable_sheet[runnable], col_defs)
+      write_sheet_headers(@runnable_sheet[assignable], col_defs)
   end
 
   def setup_sheet_runnables(container, reportable_header_counter, header_defs, answer_defs)
@@ -99,6 +110,17 @@ class Reports::Detail < Reports::Excel
       student_id = student_class[0]
       student_learners[student_class].each do |l|
         next unless (runnable = @runnables.detect{|r| l.runnable_type == r.class.to_s && r.id == l.runnable_id})
+        # sheets are indexed from the actual runnable
+        sheet = @runnable_sheet[runnable]
+        if runnable.is_a?(::ExternalActivity)
+          if runnable.template
+            runnable = runnable.template
+          else
+            # we can't report on external activities that don't have templates
+            next
+          end
+        end
+
         correctable = runnable.reportable_elements.select {|r| r[:embeddable].respond_to? :correctable? }
         # <=================================================>
         total_assessments = l.num_answerables
@@ -108,7 +130,6 @@ class Reports::Detail < Reports::Excel
         assess_percent = percent(assess_completed, total_assessments)
         last_run = l.last_run || 'never'
 
-        sheet = @runnable_sheet[runnable]
         row = sheet.row(sheet.last_row_index + 1)
         assess_completed = "#{assess_completed}/#{total_assessments}(#{total_by_container})"
         assess_correct = "#{l.num_correct}/#{correctable.size}"
