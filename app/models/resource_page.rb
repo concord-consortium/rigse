@@ -35,9 +35,7 @@ class ResourcePage < ActiveRecord::Base
       # Useful in Activity and Investigation; stubbed here
       false
     end
-    integer :offerings_count do
-      0
-    end
+    integer :offerings_count
     boolean :is_official
 
     time    :updated_at
@@ -51,6 +49,9 @@ class ResourcePage < ActiveRecord::Base
     end
 
     string  :material_type
+    string  :cohorts, :multiple => true do
+      cohort_list
+    end
   end
 
   belongs_to :user
@@ -98,37 +99,37 @@ class ResourcePage < ActiveRecord::Base
   #   http://erniemiller.org/2010/05/11/activerecord-relation-vs-arel/
   #   http://erniemiller.org/2010/03/28/advanced-activerecord-3-queries-with-arel/
   #
-  # The basic query conditions look like this: 
+  # The basic query conditions look like this:
   #
   #   (resource_pages.id IN () OR resource_pages.id IN ())
   #
-  # An additional set of SQL constraints is generated and placed inside 
+  # An additional set of SQL constraints is generated and placed inside
   # each IN() clause with this statement:
   #
   #   scope.select('id').to_sql
   #
-  # For example this query: 
+  # For example this query:
   #
   #   ResourcePage.search_list( { :name => "abc", :user => @admin_user })
   #
   # results in this sql:
   #
-  #   SELECT `resource_pages`.* FROM `resource_pages` 
+  #   SELECT `resource_pages`.* FROM `resource_pages`
   #   WHERE (
   #     (
   #       resource_pages.id IN (
-  #         SELECT id FROM `resource_pages` 
-  #         WHERE `resource_pages`.`publication_status` = 'published' 
+  #         SELECT id FROM `resource_pages`
+  #         WHERE `resource_pages`.`publication_status` = 'published'
   #         AND (resource_pages.name LIKE '%abc%' OR resource_pages.description LIKE '%abc%' OR resource_pages.content LIKE '%abc%')
   #       ) OR resource_pages.id IN (
-  #         SELECT id FROM `resource_pages` WHERE `resource_pages`.`user_id` = 22 
+  #         SELECT id FROM `resource_pages` WHERE `resource_pages`.`user_id` = 22
   #         AND (resource_pages.name LIKE '%abc%' OR resource_pages.description LIKE '%abc%' OR resource_pages.content LIKE '%abc%')
   #       )
   #     )
   #   )
   #
 
-  scope :match_any, lambda { |scopes| 
+  scope :match_any, lambda { |scopes|
     table_name_dot_id = "#{self.table_name}.id"
     conditions = "(#{scopes.map { |scope| "#{table_name_dot_id} IN (#{scope.select(table_name_dot_id).to_sql})" }.join(" OR ")})"
     where(conditions)
@@ -231,7 +232,7 @@ class ResourcePage < ActiveRecord::Base
     # with the mysql2 adapter this sum('count') returns a float for some reason
     student_views.sum('count').to_i
   end
-  
+
   def run_format
     nil
   end
