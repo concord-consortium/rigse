@@ -238,58 +238,104 @@ describe Search do
         end
         describe "With two defined cohorts"  do
           describe "With activities in every combination of cohorts " do
-            let(:cohort1_opts) {{:publication_status=>'published', :cohort_list => 'cohort1' }}
-            let(:cohort2_opts) {{:publication_status=>'published', :cohort_list => 'cohort2' }}
+            let(:cohort1_opts) {{:publication_status=>'published', :cohort_list => ['cohort1'] }}
+            let(:cohort2_opts) {{:publication_status=>'published', :cohort_list => ['cohort2'] }}
+            let(:both_opts)    {{:publication_status=>'published', :cohort_list => ['cohort1','cohort2'] }}
 
-            let(:cohort1_sequences) { collection(:investigation, 2, cohort1_opts)}
-            let(:cohort2_sequences) { collection(:investigation, 2, cohort2_opts)}
+            let(:blank_sequence)     { collection(:investigation, 1, public_opts) }
+            let(:cohort1_sequences)  { collection(:investigation, 2, cohort1_opts)}
+            let(:cohort2_sequences)  { collection(:investigation, 2, cohort2_opts)}
+            let(:both_sequences)     { collection(:investigation, 1, both_opts)}
 
+            let(:blank_activity)     { collection(:activity, 1, public_opts) }
             let(:cohort1_activities) { collection(:activity, 2, cohort1_opts)}
             let(:cohort2_activities) { collection(:activity, 2, cohort2_opts)}
+            let(:both_activity)      { collection(:activity, 1, both_opts)}
 
-            let(:cohort1_externals) { collection(:external_activity, 2, cohort1_opts.merge(official))}
-            let(:cohort2_externals) { collection(:external_activity, 2, cohort2_opts.merge(official))}
+            let(:blank_external)     { collection(:external_activity, 1, official.merge(public_opts)) }
+            let(:cohort1_externals)  { collection(:external_activity, 2, cohort1_opts.merge(official))}
+            let(:cohort2_externals)  { collection(:external_activity, 2, cohort2_opts.merge(official))}
+
             let(:materials) do
               [
+                blank_sequence, blank_activity, blank_external,
                 cohort1_sequences, cohort1_activities, cohort1_externals,
-                cohort2_sequences, cohort2_activities, cohort2_externals
+                cohort2_sequences, cohort2_activities, cohort2_externals,
+                both_sequences, both_activity
               ].flatten
             end
 
-            describe "A teacher in cohort1" do
-              let(:teacher_cohorts) { 'cohort1' }
+            describe "not in a cohort" do
+              let(:teacher_cohorts) { [] }
 
-              describe "Searching all material types"
+              describe "Searching all material types" do
 
-                it "Includes sequences for cohort1" do
-                  subject.results[Search::InvestigationMaterial].should have(2).items
-                  subject.results[Search::InvestigationMaterial].each do |i|
-                    i.cohort_list.should include('cohort1')
+                it "Includes all only blank sequences" do
+                  subject.results[Search::InvestigationMaterial].should have(1).items
+                end
+                it "Includes blank activities and blank externals" do
+                  subject.results[Search::ActivityMaterial].should have(2).items
+                end
+              end
+            end
+
+            describe "Teacher in Cohort1" do
+              let(:teacher_cohorts) { ['cohort1'] }
+
+              describe "Searching all material types" do
+
+                it "Includes sequences for cohort1(2), both(1), and unlabled(2)" do
+                  subject.results[Search::InvestigationMaterial].should have(4).items
+                end
+                it "Includes activities for cohort1(4), both(1), and unlabled(2)" do
+                  subject.results[Search::ActivityMaterial].should have(7).items
+                end
+                it "should be not cohort tagged, or include a cohort1 tag" do
+                  subject.results[:all].each do |r|
+                    unless r.cohort_list.empty?
+                      r.cohort_list.should include('cohort1')
+                    end
                   end
                 end
-                it "Includes activities for cohort1" do
-                  subject.results[Search::ActivityMaterial].should have(4).items
-                  subject.results[Search::ActivityMaterial].each do |i|
-                    i.cohort_list.should include('cohort1')
-                  end
-                end
+              end
+            end
 
-                it "Doesn't include sequences for cohort2" do
-                  subject.results[Search::InvestigationMaterial].each do |i|
-                    i.cohort_list.should_not include('cohort2')
-                  end
-                end
-                it "Doesn't include activities for cohort2" do
-                  subject.results[Search::ActivityMaterial].each do |i|
-                    i.cohort_list.should_not include('cohort2')
-                  end
-                end
+            describe "Teacher in Cohort2" do
+              let(:teacher_cohorts) { ['cohort2'] }
 
+              describe "Searching all material types" do
+
+              it "Includes sequences for cohort2(2), both(1), and unlabled(2)" do
+                  subject.results[Search::InvestigationMaterial].should have(4).items
+                end
+                it "Includes activities for cohort2(4), both(1), and unlabled(2)" do
+                  subject.results[Search::ActivityMaterial].should have(7).items
+                end
+                it "should be not cohort tagged, or include a cohort2 tag" do
+                  subject.results[:all].each do |r|
+                    unless r.cohort_list.empty?
+                      r.cohort_list.should include('cohort2')
+                    end
+                  end
+                end
+              end
+            end
+
+            describe "Teacher in both cohorts" do
+              let(:teacher_cohorts) { ['cohort2','cohort1'] }
+
+              describe "Searching all material types" do
+
+                it "Includes sequences for cohort1(2) cohort2(2), and unlabled(2)" do
+                  subject.results[Search::InvestigationMaterial].should have(6).items
+                end
+                it "Includes activities for cohort2(4), cohort1(4), and unlabled(2)" do
+                  subject.results[Search::ActivityMaterial].should have(10).items
+                end
+              end
             end
           end
-
         end
-
       end
 
       describe "ordering" do

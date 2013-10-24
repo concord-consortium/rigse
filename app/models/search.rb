@@ -106,7 +106,12 @@ class Search
         s.with(:probe_type_ids, self.probe) unless (self.probe.empty? || self.no_probes)
         s.with(:no_probes, true) if self.no_probes
         s.with(:is_official, true) unless self.include_contributed
-        s.with(:cohorts, Search.cohorts_for(self.user_id)) if (!self.private && self.user_id)
+        if (!self.private && self.user_id)
+          s.any_of do |c|
+            c.with(:cohorts, Search.cohorts_for(self.user_id))
+            c.with(:cohorts, nil)
+          end
+        end
         s.facet :material_type
         s.order_by(*SortOptions[self.sort_order])
         if (type==Search::ActivityMaterial)
