@@ -52,6 +52,9 @@ class ExternalActivity < ActiveRecord::Base
       nil
     end
     string  :material_type
+    string  :cohorts, :multiple => true do
+      cohort_list
+    end
   end
 
   belongs_to :user
@@ -64,7 +67,7 @@ class ExternalActivity < ActiveRecord::Base
   belongs_to :template, :polymorphic => true
 
   acts_as_replicatable
-  acts_as_taggable_on :cohorts
+
 
   include Changeable
   include Publishable

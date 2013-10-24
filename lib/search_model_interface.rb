@@ -1,6 +1,14 @@
 # For the purposes of searching and grouping items which appear similar to
 # end users but have different representations in the data model
 module SearchModelInterface
+
+  def self.included(clazz)
+    ## add before_save hooks
+    clazz.class_eval do
+      acts_as_taggable_on :cohorts
+    end
+  end
+
   def material_type
     return self.class.name.to_s
   end

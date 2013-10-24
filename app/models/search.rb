@@ -49,6 +49,14 @@ class Search
     return NoDomainID unless domain_id
     [domain_id].flatten
   end
+
+  def self.cohorts_for(user_id)
+    user = User.find(user_id)
+    return nil unless user
+    return nil if user.cohort_list.empty?
+    return user.cohort_list
+  end
+
   def self.clean_material_types(material_types)
     return AllMaterials if material_types.nil?
     return AllMaterials if material_types.empty?
@@ -98,6 +106,7 @@ class Search
         s.with(:probe_type_ids, self.probe) unless (self.probe.empty? || self.no_probes)
         s.with(:no_probes, true) if self.no_probes
         s.with(:is_official, true) unless self.include_contributed
+        s.with(:cohorts, Search.cohorts_for(self.user_id)) if (!self.private && self.user_id)
         s.facet :material_type
         s.order_by(*SortOptions[self.sort_order])
         if (type==Search::ActivityMaterial)
