@@ -82,10 +82,7 @@ class InvestigationsController < AuthoringController
     end
   end
 
-  public
-
-  # POST /investigations/select_js
-  def index
+  def default_search
     search_params = {
       :material_types     => [Search::InvestigationMaterial],
       :investigation_page => params[:page],
@@ -97,73 +94,20 @@ class InvestigationsController < AuthoringController
     }
 
     sort_order = param_find(:sort_order, (params[:method] == :get))
-    # search_params[:sort_order] = @sort_order || 'name ASC'
     s = Search.new(search_params)
-    @investigations = s.results[Search::InvestigationMaterial]
+    return s.results[Search::InvestigationMaterial]
+  end
 
-    # Old-style search param setup
-    # @domain_id = params[:domain_id]
-    # @include_drafts = param_find(:include_drafts)
-    # if (params[:method] == :get)
-    #   @include_drafts = param_find(:include_drafts,true)
-    # else
-    #   @include_drafts = param_find(:include_drafts)
-    # end
-    #
-    # if params[:include_usage_count].blank?
-    #   # The checkbox was unchecked. No other way to detect this as the param gets passed as nil
-    #   # unless it was actually checked as part of the request
-    #   session[:include_usage_count] = false if params[:method] == :get
-    # else
-    #   session[:include_usage_count] = params[:include_usage_count]
-    # end
-    #
-    # if current_visitor.anonymous?
-    #   session[:include_usage_count] = false
-    #   @include_drafts = false
-    # end
-    # @include_usage_count = session[:include_usage_count]
-    #
-    # if params[:mine_only]
-    #   @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
-    # end
-    #
-    # search_options = {
-    #   :portal_clazz_id => @portal_clazz_id,
-    #   :include_drafts => @include_drafts,
-    #   :grade_span => @grade_span,
-    #   :domain_id => @domain_id,
-    # }
+  public
 
+
+  def index
+    @investigations = default_search
     @paginated_objects = @investigations
-
-    if request.xhr?
-      @resource_pages = ResourcePage.search_list(search_options) unless params[:investigations_only]
-      render :partial => 'investigations/runnable_list_with_resource_pages', :locals => {
-        :investigations => @investigations,
-        :resource_pages => @resource_pages
-      }
-    else
-      respond_to do |format|
-        format.html do
-          render 'index'
-        end
-        format.js
-      end
-    end
   end
 
   def printable_index
-    @investigations = Investigation.search_list({
-      :name => param_find(:name),
-      :portal_clazz_id => @portal_clazz_id,
-      :include_drafts => param_find(:include_drafts, true),
-      :grade_span => param_find(:grade_span),
-      :domain_id => param_find(:domain_id),
-      :sort_order => param_find(:sort_order),
-      :paginate => false
-    })
-
+    @investigations = default_search
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
     end
