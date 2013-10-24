@@ -80,6 +80,7 @@ describe Search do
   end
 
   describe "searching" do
+    let(:mock_user)      { mock_model(User, :cohort_list => []) }
     before(:all) do
       solr_setup
       clean_solar_index
@@ -212,7 +213,9 @@ describe Search do
         let(:private_items)  { [my_activity,someone_elses]}
         let(:public_items)   { collection(:activity, 2, public_opts)}
         let(:search_opts)     {{ :private => false, :user_id => my_id }}
-
+        before(:each) do
+          User.stub!(:find => mock_user)
+        end
         it "should return public items" do
           public_items.each do |act|
             subject.results[Search::ActivityMaterial].should include(act)
@@ -223,6 +226,70 @@ describe Search do
           subject.results[Search::ActivityMaterial].should include(my_activity)
           # subject.results[:users].should include(my_activity)
         end
+      end
+
+
+      describe "With cohort tags" do
+        let(:teacher_cohorts) {[]}
+        let(:mock_user)       { mock_model(User, :id => 23, :cohort_list => teacher_cohorts)}
+        let(:search_opts)     {{ :private => false, :user_id => mock_user.id }}
+        before(:each) do
+          User.stub!(:find => mock_user)
+        end
+        describe "With two defined cohorts"  do
+          describe "With activities in every combination of cohorts " do
+            let(:cohort1_opts) {{:publication_status=>'published', :cohort_list => 'cohort1' }}
+            let(:cohort2_opts) {{:publication_status=>'published', :cohort_list => 'cohort2' }}
+
+            let(:cohort1_sequences) { collection(:investigation, 2, cohort1_opts)}
+            let(:cohort2_sequences) { collection(:investigation, 2, cohort2_opts)}
+
+            let(:cohort1_activities) { collection(:activity, 2, cohort1_opts)}
+            let(:cohort2_activities) { collection(:activity, 2, cohort2_opts)}
+
+            let(:cohort1_externals) { collection(:external_activity, 2, cohort1_opts.merge(official))}
+            let(:cohort2_externals) { collection(:external_activity, 2, cohort2_opts.merge(official))}
+            let(:materials) do
+              [
+                cohort1_sequences, cohort1_activities, cohort1_externals,
+                cohort2_sequences, cohort2_activities, cohort2_externals
+              ].flatten
+            end
+
+            describe "A teacher in cohort1" do
+              let(:teacher_cohorts) { 'cohort1' }
+
+              describe "Searching all material types"
+
+                it "Includes sequences for cohort1" do
+                  subject.results[Search::InvestigationMaterial].should have(2).items
+                  subject.results[Search::InvestigationMaterial].each do |i|
+                    i.cohort_list.should include('cohort1')
+                  end
+                end
+                it "Includes activities for cohort1" do
+                  subject.results[Search::ActivityMaterial].should have(4).items
+                  subject.results[Search::ActivityMaterial].each do |i|
+                    i.cohort_list.should include('cohort1')
+                  end
+                end
+
+                it "Doesn't include sequences for cohort2" do
+                  subject.results[Search::InvestigationMaterial].each do |i|
+                    i.cohort_list.should_not include('cohort2')
+                  end
+                end
+                it "Doesn't include activities for cohort2" do
+                  subject.results[Search::ActivityMaterial].each do |i|
+                    i.cohort_list.should_not include('cohort2')
+                  end
+                end
+
+            end
+          end
+
+        end
+
       end
 
       describe "ordering" do
