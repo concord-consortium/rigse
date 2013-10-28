@@ -53,10 +53,10 @@
             = label_tag 'activity','Activity'
           .tablecell
             = check_box_tag 'include_contributed', '1', @form_model.include_contributed, :id => 'include_contributed'
-            %label.span
-              Include Contributed
-              %span
-                Includes activities and/or sequences that were written by external users.
+            %label.tooltip
+              Authored by Community
+              %span.tip
+                Includes activities and sequences written by external contributors.
         %td.probescolumn
           - no_probes_req_selected = @form_model.probe_type.include?("0")
           .filterheader
