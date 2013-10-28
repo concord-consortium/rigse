@@ -405,9 +405,11 @@ span.material_kind {
   margin-left: 0.2em;
   background-color: #479492;
 }
-
+td.materialcolumn {
+  white-space: nowrap;
+}
 label.tooltip {
-  outline:none; white-space: nowrap;
+  outline:none;
   strong {
     line-height:30px;
   }
