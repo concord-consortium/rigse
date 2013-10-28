@@ -23,25 +23,27 @@
             = order_check_box(Search::Alphabetical, "Alphabetical", @form_model.sort_order)
           %div
             = order_check_box(Search::Popularity, "Popularity", @form_model.sort_order)
-        %td.domaincolumn
-          .filterheader
-            Scientific Domain
-          -scientific_domains.each do |domain|
+        - if scientific_domains.size > 0
+          %td.domaincolumn
+            .filterheader
+              Scientific Domain
+            -scientific_domains.each do |domain|
+              .tablecell
+                = check_box_tag 'domain_id[]',domain[1], (@form_model.domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
+                = label_tag domain[0].gsub(/\s+/, ""), domain[0]
+              /= check_box_tag :domain_id, domain, true
+        - if grades.size > 0
+          %td.gradecolumn
+            .filterheader
+              Grade
             .tablecell
-              = check_box_tag 'domain_id[]',domain[1], (@form_model.domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
-              = label_tag domain[0].gsub(/\s+/, ""), domain[0]
-            /= check_box_tag :domain_id, domain, true
-        %td.gradecolumn
-          .filterheader
-            Grade
-          .tablecell
-            = check_box_tag 'grade_span[]',"",(@form_model.grade_span.length > 0 && (@form_model.grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
-            = label_tag 'allgrades', 'All Grades'
-          -grades.each do |grade|
+              = check_box_tag 'grade_span[]',"",(@form_model.grade_span.length > 0 && (@form_model.grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
+              = label_tag 'allgrades', 'All Grades'
+            -grades.each do |grade|
 
-            .tablecell
-              = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
-              = label_tag grade, grade
+              .tablecell
+                = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
+                = label_tag grade, grade
         %td.materialcolumn
           .filterheader
             Material
