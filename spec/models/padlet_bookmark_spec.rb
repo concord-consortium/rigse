@@ -1,14 +1,9 @@
-require File.expand_path('../../spec_helper', __FILE__)
+  require File.expand_path('../../spec_helper', __FILE__)
 
 describe PadletBookmark do
-
-  # TODO: We probably want to test this without
-  # Making web-connections to padlet!
-  before(:all) do
-    ::WebMock.allow_net_connect!
-  end
-  after(:all) do
-    ::WebMock.dissable_net_conntect!
+  let(:bookmark_wrapper)    { mock(:padlet_url => "http://fake_padlet.com") }
+  before(:each) do
+    PadletWrapper.stub!(:make_bookmark) { bookmark_wrapper }
   end
 
   describe "Class methods" do
