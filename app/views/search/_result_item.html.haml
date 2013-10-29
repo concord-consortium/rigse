@@ -34,7 +34,7 @@
               from
               = t(:investigation)
               ="\"#{material.parent.name}\""
-          -unless material.user.name.nil?
+          -if material.user && (!material.user.name.nil?)
             %div
               %span{:style=>"font-weight:bold"}
                 ="By #{material.user.name}"
