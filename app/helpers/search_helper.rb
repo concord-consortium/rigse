@@ -11,7 +11,7 @@ module SearchHelper
     output
   end
 
-  def build_onSearch_message
+  def build_onSearch_message(form_model)
     show_message_onSearch= ""
     if @investigations_count == 1
       show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)'>#{t(:investigation)}</a>"
@@ -29,8 +29,8 @@ module SearchHelper
     end
 
     show_message_onSearch +=" matching"
-    unless @search_term.blank?
-      show_message_onSearch +=" search term \"#{@search_term}\" and"
+    if (form_model && form_model.text)
+      show_message_onSearch +=" search term \"#{form_model.text}\" and"
     end
     show_message_onSearch +=" selected criteria"
   end
