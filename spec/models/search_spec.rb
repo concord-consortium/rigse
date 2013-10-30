@@ -80,7 +80,7 @@ describe Search do
   end
 
   describe "searching" do
-    let(:mock_user)      { mock_model(User, :cohort_list => []) }
+    let(:mock_user)      { mock_model(User, :portal_teacher => nil) }
     before(:all) do
       solr_setup
       clean_solar_index
@@ -231,7 +231,8 @@ describe Search do
 
       describe "With cohort tags" do
         let(:teacher_cohorts) {[]}
-        let(:mock_user)       { mock_model(User, :id => 23, :cohort_list => teacher_cohorts)}
+        let(:teacher)         { mock_model(Portal::Teacher, :cohort_list => teacher_cohorts)}
+        let(:mock_user)       { mock_model(User, :id => 23, :portal_teacher => teacher)}
         let(:search_opts)     {{ :private => false, :user_id => mock_user.id }}
         before(:each) do
           User.stub!(:find => mock_user)

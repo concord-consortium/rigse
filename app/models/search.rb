@@ -53,8 +53,9 @@ class Search
   def self.cohorts_for(user_id)
     user = User.find(user_id)
     return nil unless user
-    return nil if user.cohort_list.empty?
-    return user.cohort_list
+    return nil unless user.portal_teacher
+    return nil if user.portal_teacher.cohort_list.empty?
+    return user.portal_teacher.cohort_list
   end
 
   def self.clean_material_types(material_types)

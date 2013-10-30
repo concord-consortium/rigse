@@ -14,7 +14,7 @@ class SearchController < ApplicationController
 
   public
   def search_material
-    search = Search.new(params)
+    search = Search.new(params.merge(:user_id => current_visitor.id))
     # TODO: This will become a check on 'material_type'
     @investigations            = search.results[Search::InvestigationMaterial] || []
     @investigations_count      = @investigations.size
