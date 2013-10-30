@@ -1,5 +1,5 @@
 %p{:style=>'font-weight:bold'}
-  - if @activities_count > 0 or @investigations_count > 0 or @external_activities_count > 0
+  - if @activities_count > 0 or @investigations_count > 0
     = build_onSearch_message(@form_model).html_safe
   - else
     No Results Found
