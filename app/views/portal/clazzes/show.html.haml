@@ -10,4 +10,6 @@
   %p
     = render :partial => 'shared/offering_for_teacher', :collection => @portal_clazz.offerings, :as => :offering
 - elsif
+  = render :partial => 'shared/lightbox_report'
+  = render :partial => 'shared/workgroup'
   = render :partial => 'shared/offerings_for_student', :locals => { :offerings => @offerings }
