@@ -16,6 +16,7 @@ class Search
   attr_accessor :per_page
   attr_accessor :user_id
   attr_accessor :include_contributed
+  attr_accessor :include_templates
 
   SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
   InvestigationMaterial   = "Investigation"
@@ -87,6 +88,7 @@ class Search
     self.investigation_page   = opts[:investigation_page]  || 1
     self.include_contributed  = opts[:include_contributed] || false
     self.without_teacher_only = opts[:without_teacher_only]|| true
+    self.include_templates    = false
     self.search()
   end
 
@@ -106,7 +108,8 @@ class Search
         s.with(:grade_span, self.grade_span) unless self.grade_span.empty?
         s.with(:probe_type_ids, self.probe) unless (self.probe.empty? || self.no_probes)
         s.with(:no_probes, true) if self.no_probes
-        s.with(:is_official, true) unless self.include_contributed
+        s.with(:is_official, true)  unless self.include_contributed
+        s.with(:is_template, false) unless self.include_templates
         if (!self.private && self.user_id)
           s.any_of do |c|
             c.with(:cohorts, Search.cohorts_for(self.user_id))

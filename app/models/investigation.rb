@@ -33,6 +33,7 @@ class Investigation < ActiveRecord::Base
     boolean :teacher_only
     integer :offerings_count
     boolean :is_official
+    boolean :is_template
 
     time    :updated_at
     time    :created_at

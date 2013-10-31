@@ -28,6 +28,9 @@ class ExternalActivity < ActiveRecord::Base
 
     integer :offerings_count
     boolean :is_official
+    boolean :is_template do
+      false
+    end
     integer :probe_type_ids, :multiple => true do
       nil
     end

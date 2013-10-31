@@ -86,6 +86,7 @@ class Activity < ActiveRecord::Base
       total += act.offerings_count
     end
     boolean :is_official
+    boolean :is_template
 
     time    :updated_at
     time    :created_at

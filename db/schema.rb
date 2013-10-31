@@ -824,6 +824,7 @@ ActiveRecord::Schema.define(:version => 20131108201323) do
     t.boolean  "show_score",                              :default => false
     t.boolean  "is_template",                             :default => false
     t.text     "description_for_teacher"
+    t.boolean  "is_template",                             :default => false
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|

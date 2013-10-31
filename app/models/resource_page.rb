@@ -38,6 +38,10 @@ class ResourcePage < ActiveRecord::Base
     integer :offerings_count
     boolean :is_official
 
+    boolean :is_template do
+      false
+    end
+
     time    :updated_at
     time    :created_at
 

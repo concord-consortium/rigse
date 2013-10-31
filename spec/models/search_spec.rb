@@ -121,6 +121,23 @@ describe Search do
         Sunspot.index!
       end
 
+      describe "template items should not be included in results by default" do
+        let(:template_ivs)  { collection(:investigation, 2, public_opts.merge({:is_template => true }))}
+        let(:template_acts) { collection(:activity, 2, public_opts.merge({:is_template => true }))}
+        let(:materials)     { [public_items, template_ivs, template_acts].flatten }
+        it "results should not include any of the template activities" do
+          template_acts.each do |act|
+            subject.results[:all].should_not include act
+          end
+        end
+
+        it "results should not include any of the template investigations" do
+          template_ivs.each do |inv|
+            subject.results[:all].should_not include inv
+          end
+        end
+      end
+
       describe "searching public items" do
         let(:search_opts) { {:private => false } }
         it "results should include 4 public activities and 4 public investigations" do
