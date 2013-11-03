@@ -57,7 +57,10 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostna
     if(opportunistic_installer)
       xml.property :name=> "jnlp.skip_not_found_dialog", :value => "true"
       xml.property :name=> "jnlp.not_found_url", :value => polymorphic_url(url_target, {:format => :jnlp}.merge(url_options))
-      xml.property :name=> "jnlp.test_jar_saving", :value => installer_report_url
+
+      # the installer report was causing a very long delay on OS X 10.6 Java version 1.6.0_65
+      # xml.property :name=> "jnlp.test_jar_saving", :value => installer_report_url
+
       xml.property :name=> "jnlp.install_if_not_found", :value => "true"
 
       # include wrapped_jnlp so we know what jnlp to install from
