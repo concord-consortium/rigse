@@ -20,14 +20,27 @@ describe Search do
   describe "parameter cleaning" do
     describe "clean_search_terms" do
       it "should remove emdashes" do
-        Search.clean_search_terms("balrgs – bonk").should == "balrgs  bonk"
+        Search.clean_search_terms("balrgs – bonk").should == "balrgs bonk"
+      end
+      it "should remove normal dashes" do
+        Search.clean_search_terms("balrgs-bonk").should == "balrgs bonk"
       end
       it "should remove question marks" do
-        Search.clean_search_terms("balrgs ? bonk").should == "balrgs  bonk"
+        Search.clean_search_terms("balrgs ? bonk").should == "balrgs bonk"
       end
       it "should remove ampersands" do
-        Search.clean_search_terms("balrgs & bonk").should == "balrgs  bonk"
+        Search.clean_search_terms("balrgs & bonk").should == "balrgs bonk"
       end
+      it "should leave white spaces in the middle" do
+        Search.clean_search_terms("balrgs bonk").should == "balrgs bonk"
+      end
+      it "should strip whitespace at the start" do
+        Search.clean_search_terms(" balrgs bonk").should == "balrgs bonk"
+      end
+      it "remove parens" do
+        Search.clean_search_terms("(2013-2014)").should == "2013 2014"
+      end
+
     end
 
     describe "clean_domain_id" do

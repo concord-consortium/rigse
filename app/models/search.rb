@@ -41,9 +41,9 @@ class Search
 
   def self.clean_search_terms (term)
     return NoSearchTerm if (term.nil? || term.blank?)
-    # http://rubular.com/r/0XlbltgfqY
-    not_word_digit_or_space = /[^\w|\s]/
-    term.gsub(not_word_digit_or_space,'')
+    # http://rubular.com/r/drxgWs7UYZ
+    not_word_digit_or_space = /[^\w]+/
+    term.gsub(not_word_digit_or_space,' ').strip
   end
 
   def self.clean_domain_id(domain_id)
