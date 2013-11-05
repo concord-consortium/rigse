@@ -70,7 +70,6 @@ class SearchController < ApplicationController
       :without_teacher_only => current_visitor.anonymous?,
       :sort_order => Search::Score
     }
-    p = params.merge(other_params)
     search = Search.new(params.merge(other_params))
     suggestions= search.results[:all]
     if request.xhr?

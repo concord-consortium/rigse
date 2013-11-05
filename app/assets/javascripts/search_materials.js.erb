@@ -68,7 +68,7 @@ function showsuggestion(event, oelem) {
         else{
             event.returnValue = false;
         }
-        
+
         return;
     }
     var osuggestions = $$('.suggestion');
@@ -115,19 +115,19 @@ function showsuggestion(event, oelem) {
 }
 
 function showHideFilters(linkElement) {
-    
+
     if (animating)
     {
         return false;
     }
-    
+
     var filtersWrapper = $('filters_wrapper');
     var linkText = "";
     var expandCollapseText = "";
     var afterFinishCallback = function(){
         animating = false;
     };
-    
+
     if (filtersWrapper.hasClassName('visible'))
     {
         Effect.BlindUp(filtersWrapper, { duration: 0.5, afterFinish: afterFinishCallback });
@@ -144,10 +144,10 @@ function showHideFilters(linkElement) {
         expandCollapseText = "-";
         animating = true;
     }
-    
+
     $('oExpandCollapseText').update(expandCollapseText);
     linkElement.update(linkText);
-    
+
     return true;
 }
 
@@ -255,7 +255,7 @@ function LoadingEnd (post) {
   enableForm();
   if (typeof post == 'undefined') { post = endUpdate;  }
   PendingRequests--;
-  if (typeof PendingQue[post] == 'undefined') { 
+  if (typeof PendingQue[post] == 'undefined') {
     PendingQue[post] = 0;
     //console.log("ERROR: PendingEnd called before PendingStart");
   }
@@ -339,7 +339,7 @@ function setSaveAssignToClassInProgress(value)
 
 function selectAllGreades(gradeObj,grades)
 {
-    
+
     if(gradeObj.id == 'allgrades'){
         if($(gradeObj).checked){
             grades.each(function(obj){
@@ -360,7 +360,7 @@ function selectAllGreades(gradeObj,grades)
             allgrades_selected = true;
             grades.each(function(obj){
                 allgrades_selected = allgrades_selected && $(obj).checked;
-                
+
             });
             if(allgrades_selected){
                 $('allgrades').checked= "checked";
@@ -410,17 +410,17 @@ function checkActivityToAssign(chk_box)
 {
     var allCheckboxElements = $$('input[type="checkbox"][name="'+chk_box.name+'"]');
     var checkedElements = [];
-    
+
     allCheckboxElements.each(function (element) {
         if (element.checked) {
             checkedElements.push(element);
         }
     });
-    
+
     var btnAssign = $("btn_Assign");
     var materialId = '';
     var assignMaterialType = '';
-    
+
     if(allCheckboxElements.length == checkedElements.length){
         btnAssign.innerHTML = "Assign Investigation";
         materialId = $("investigation_id").getValue();
@@ -431,10 +431,10 @@ function checkActivityToAssign(chk_box)
         materialId = checkedElements.pluck("value").join(",");
         assignMaterialType = "Activity";
     }
-    
+
     $("material_id").setValue(materialId);
     $("assign_material_type").setValue(assignMaterialType);
-    
+
     return;
 }
 
@@ -442,7 +442,7 @@ function browseMaterial(formAction)
 {
     var form = $("search_result_form");
     form.action = formAction;
-    form.submit(); 
+    form.submit();
 }
 
 function getDataForAssignToClassPopup()
@@ -467,11 +467,11 @@ function getMessagePopup(message)
     {
         g_messageModal.close();
     }
-    
+
     var content = "<div style='padding:10px 15px;'>" +
                   message +
                   "</div>";
-                  
+
     var lightboxConfig = {
         width: 375,
         height: 150,
@@ -479,9 +479,9 @@ function getMessagePopup(message)
         type: Lightbox.type.ALERT,
         content: content
     };
-    
+
     g_messageModal = new Lightbox(lightboxConfig);
-    
+
 }
 
 function setPopupHeight()
