@@ -68,7 +68,8 @@ class SearchController < ApplicationController
     submitform          = params[:submit_form]
     other_params = {
       :without_teacher_only => current_visitor.anonymous?,
-      :sort_order => Search::Score
+      :sort_order => Search::Score,
+      :user_id => current_visitor.id
     }
     search = Search.new(params.merge(other_params))
     suggestions= search.results[:all]
