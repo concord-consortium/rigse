@@ -28,17 +28,16 @@ function searchsuggestions(e, oElement,bSubmit_form) {
     var downArrow_key_code = 40;
     var upArrow_key_code = 38;
     var escape_key_code = 27;
+    var params = $('material_search_form').serialize(true) || {};
     if (bSubmit_form === undefined) bSubmit_form = false;
     if(e.keyCode == enter_key_code || e.keyCode == downArrow_key_code || e.keyCode == upArrow_key_code || e.keyCode == escape_key_code) {
         return false;
     }
     ajaxRequestCounter ++;
+    params.ajaxRequestCounter = ajaxRequestCounter;
+    params.submit_form =  bSubmit_form;
     ajaxRequest = new Ajax.Request('<%= URLResolver.getUrl("search_get_search_suggestions_path") %>', {
-        parameters : {
-            search_term : oElement.value,
-            submit_form : bSubmit_form,
-            ajaxRequestCounter:ajaxRequestCounter
-        },
+        parameters: params,
         method : 'get'
     });
     ajaxRequestSend = 1;
