@@ -24,11 +24,11 @@ class SearchController < ApplicationController
   end
 
   def index
-    search_material();
+    search_material
   end
 
   def show
-    search_material();
+    search_material
     if request.xhr?
       render :update do |page|
         page.replace_html 'offering_list', :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities,:external_activities=>@external_activities}
