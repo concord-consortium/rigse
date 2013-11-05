@@ -19,17 +19,14 @@ describe Search do
 
   describe "parameter cleaning" do
     describe "clean_search_terms" do
-      it "should remove emdashes" do
-        Search.clean_search_terms("balrgs – bonk").should == "balrgs bonk"
-      end
       it "should remove normal dashes" do
         Search.clean_search_terms("balrgs-bonk").should == "balrgs bonk"
       end
-      it "should remove question marks" do
-        Search.clean_search_terms("balrgs ? bonk").should == "balrgs bonk"
+      it "should remove pluses" do
+        Search.clean_search_terms("balrgs+bonk").should == "balrgs bonk"
       end
-      it "should remove ampersands" do
-        Search.clean_search_terms("balrgs & bonk").should == "balrgs bonk"
+      it "should remove pluses" do
+        Search.clean_search_terms("balrgs+bonk").should == "balrgs bonk"
       end
       it "should leave white spaces in the middle" do
         Search.clean_search_terms("balrgs bonk").should == "balrgs bonk"
@@ -37,8 +34,9 @@ describe Search do
       it "should strip whitespace at the start" do
         Search.clean_search_terms(" balrgs bonk").should == "balrgs bonk"
       end
-      it "remove parens" do
-        Search.clean_search_terms("(2013-2014)").should == "2013 2014"
+
+      it "should not remove single quote strings" do
+        Search.clean_search_terms("This is Sarah's test sequence").should == "This is Sarah's test sequence"
       end
 
     end
@@ -132,6 +130,56 @@ describe Search do
       before(:each) do
         make materials
         Sunspot.index!
+      end
+
+      describe "searching for materials with tricky names" do
+        let(:funny_name)       { "" }
+        let(:funny_activity)   { FactoryGirl.create(:activity, public_opts.merge(:name=>funny_name)) }
+        let(:search_opts)      { {:search_term => search_term} }
+        let(:search_term)      { "" }
+        let(:materials)        { [funny_activity] }
+        describe "an activity named '(2013-2014) soup'" do
+          let(:funny_name) {"( 2013 - 2014 ) soup"}
+          describe "searching for '2013'" do
+            let(:search_term)      { "2013" }
+            it "should be found" do
+              subject.results[:all].should include funny_activity
+            end
+          end
+          describe "searching for '(2013-2014)'" do
+            let(:search_term)      { "(2013-2014)" }
+            it "should be found" do
+              subject.results[:all].should include funny_activity
+            end
+          end
+          describe "searching for 'BLARG' " do
+            let(:search_term)      { "BLARG" }
+            it "should NOT be found" do
+              subject.results[:all].should_not include funny_activity
+            end
+          end
+        end
+        describe "Noah's soup'" do
+          let(:funny_name) {"Noah's soup"}
+          describe "searching for 'Noah's'" do
+            let(:search_term)      { "Noah's" }
+            it "should be found" do
+              subject.results[:all].should include funny_activity
+            end
+          end
+          describe "searching for 'Noah" do
+            let(:search_term)      { "Noah" }
+            it "should be found" do
+              subject.results[:all].should include funny_activity
+            end
+          end
+          describe "searching for 'Soup" do
+            let(:search_term)      { "Soup" }
+            it "should be found" do
+              subject.results[:all].should include funny_activity
+            end
+          end
+        end
       end
 
       describe "template items should not be included in results by default" do
