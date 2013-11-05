@@ -44,6 +44,16 @@ function searchsuggestions(e, oElement,bSubmit_form) {
     ajaxRequestSend = 1;
 }
 
+function addSuggestionClickHandlers() {
+    $$('.suggestion').each( function(elem) {
+        // remove the old handlers...
+        elem.stopObserving('click');
+        elem.observe('click', function(evt) {
+            select_suggestion(elem);
+            //submitsuggestion();
+        });
+    });
+}
 function showsuggestion(event, oelem) {
     var enter_key_code = 13;
     var downArrow_key_code = 40;

@@ -82,6 +82,7 @@ class SearchController < ApplicationController
             :textlength  => search_term.length,
             :suggestions => suggestions,
             :submit_form => submitform}}
+         page << "addSuggestionClickHandlers();"
          page << '}'
        end
     end
