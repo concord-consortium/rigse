@@ -103,5 +103,6 @@ padlet.yml
 .floo
 .powenv
 .sublime-project
-solr
+solr/data
+solr/pids
 log
