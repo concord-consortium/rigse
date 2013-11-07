@@ -9,7 +9,8 @@ Feature: Teacher can search and filter instructional materials
     And the database has been seeded
     And the investigation "Digestive System" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
     And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
-    And I login with username: teacher password: password
+    And The materials have been indexed
+    And I am logged in with the username teacher
     And I am on the search instructional materials page
     
     

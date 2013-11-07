@@ -1,3 +1,7 @@
+Given /^The materials have been indexed$/ do
+  reindex_all # see solr_spec_helper.rbs
+end
+
 When /^the following activities for the above investigations exist:$/ do |activity_table|
   #the search data exists
   activity_table.hashes.each do |hash|
