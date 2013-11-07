@@ -92,9 +92,15 @@ describe Search do
 
   describe "searching" do
     let(:mock_user)      { mock_model(User, :portal_teacher => nil) }
+    let(:materials)      { [] }
     before(:all) do
       solr_setup
       clean_solar_index
+    end
+
+    before(:each) do
+      make materials
+      reindex_all
     end
 
     after(:each) do
@@ -126,11 +132,6 @@ describe Search do
       let(:private_items) { [private_investigations, private_activities, private_ext_act, private_ext_seq].flatten}
       let(:public_items)  { [public_investigations,  public_activities, public_ext_act,  public_ext_seq].flatten}
       let(:materials)     { [public_items, private_items].flatten }
-
-      before(:each) do
-        make materials
-        Sunspot.index!
-      end
 
       describe "searching for materials with tricky names" do
         let(:funny_name)       { "" }
