@@ -127,40 +127,9 @@ describe ExternalActivitiesController do
   end
 
   describe '#index' do
-    before(:each) do
-      @double_search = double(Search)
-      Search.stub!(:new).and_return(@double_search)
-    end
-
-    context 'when the user is an author' do
-      before(:each) do
-        @current_visitor = login_author
-      end
-
-      it "should show only public, official, and user-owned activities" do
-        @double_search.stub(:results => {:all => [existing, another]})
-        # Expect the double to be called with certain params
-        Search.should_receive(:new).with({ :material_types => [ExternalActivity], :page => nil, :private => true, :user_id => @current_visitor.id }).and_return(@double_search)
-        get :index
-        assigns[:external_activities].length.should be(2) # Because that's what Search#results[:all] is stubbed to return
-      end
-    end
-
-    context 'when the user is an admin' do
-      it "should show all activities" do
-        @double_search.stub(:results => {:all => [existing, another]})
-        Search.should_receive(:new).with({ :material_types => [ExternalActivity], :page => nil }).and_return(@double_search)
-        get :index
-        assigns[:external_activities].length.should be(2) # Because that's what Search#results[:all] is stubbed to return
-      end
-
-      it 'filters activities by keyword when provided' do
-        @double_search.stub(:results => {:all => [existing]})
-        Search.should_receive(:new).with({ :material_types => [ExternalActivity], :page => nil, :search_term => 'again' }).and_return(@double_search)
-        get :index, {:name => 'again'}
-        assigns[:external_activities].length.should be(1)
-      end
-    end
+    # material browsing & searching is handled search_controller.rb
+    # one idea: show only the current users list?
+    it "should material indexes display anything?"
   end
 
   describe "#show" do

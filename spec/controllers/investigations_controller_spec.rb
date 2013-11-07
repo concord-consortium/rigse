@@ -27,62 +27,9 @@ describe InvestigationsController do
   end
 
   describe '#index' do
-    let(:current_visitor)    { login_author }
-    let(:investigation_page) { nil   }
-    let(:grade_span)         { nil   }
-    let(:search_term)        { nil   }
-    let(:include_private)    { false }
-    let(:expected_search_params) do
-      {
-        :material_types     => ["Investigation"],
-        :investigation_page => investigation_page,
-        :per_page           => 30,
-        :private            => include_private,
-        :grade_span         => grade_span,
-        :search_term        => search_term,
-        :user_id => current_visitor.id
-      }
-    end
-
-    before(:each) do
-      @double_search = double(Search)
-      Search.stub!(:new).and_return(@double_search)
-      @double_search.stub(:results => {
-          Search::InvestigationMaterial => [@investigation],
-          :all                          => [@investigation]
-      })
-    end
-
-    context 'when the current user is an author' do
-      it 'shows only public, official, and user-owned investigations' do
-        # Expect the double to be called with certain params
-        Search.should_receive(:new).with(expected_search_params).and_return(@double_search)
-        get :index
-        assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
-      end
-    end
-
-    context 'when the current user is an admin' do
-      let(:include_private)  { true }
-      let(:current_visitor)  { login_admin }
-      it 'shows all investigations' do
-        # Expect the double to be called with certain params
-        Search.should_receive(:new).with(expected_search_params).and_return(@double_search)
-        get :index
-        assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
-      end
-
-      context "when a search term is provided" do
-        let(:search_term){ "filtered"}
-        it 'filters investigations by keyword when provided' do
-          # Expect the double to be called with certain params
-          Search.should_receive(:new).with(expected_search_params).and_return(@double_search)
-          get :index, { :name => 'filtered' }
-          assigns[:investigations].length.should be(1) # Because that's what Search#results[:all] is stubbed to return
-        end
-      end
-
-    end
+    # material browsing & searching is handled search_controller.rb
+    # one idea: show only the current users list?
+    it "should material indexes display anything?"
   end
 
   describe '#duplicate' do
