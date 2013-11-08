@@ -345,7 +345,7 @@ constraints :id => /\d+/ do
   namespace :admin do
     resources :projects
     resources :tags
-
+    resources :teachers
     resources :site_notices do
       member do
         delete :remove_notice
