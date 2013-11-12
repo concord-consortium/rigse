@@ -1,0 +1,63 @@
+#listings {
+
+  tr.teacher_info {
+    border-top: 2px solid;
+    padding-bottom: 20px;
+    td {
+      white-space: nowrap;
+      padding: 5px;
+      padding-bottom: 20px;
+    }
+  }
+  .admin_class_info {
+    white-space: nowrap;
+    background-color: #f8ac1a;
+    padding: 1em;
+  }
+  .label {
+    font-weight: bold;
+    padding-left: 2em;
+  }
+  .permission_checkbox {
+    padding-left: 2em;
+  }
+  table.admin_students_table {
+    width: 100%;
+  }
+  label {
+    font-weight: bold;
+    padding-right: 2em;
+  }
+
+  form {
+    padding: 0px;
+  }
+
+  table {
+    margin: 0px;
+    padding: 0px;
+    td {
+      vertical-align: top;
+      text-align: left;
+    }
+    td.permissions {
+      border-left: 1px solid;
+      padding-left: 5px;
+    }
+
+    tr.student {
+      &:nth-child(odd) {
+        background-color: #fbf4db;
+      }
+      td {
+        padding: 5px;
+        padding-bottom: 10px;
+      }
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+
+}

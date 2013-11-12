@@ -1,0 +1,9 @@
+%div.admin_class_info
+  %span.name
+    %span.label Class Name:
+    %span.value=clazz.name
+  %span.word
+    %span.label Class Word:
+    %span.value=clazz.word
+%table.admin_students_table
+  = render :partial => 'show_student', :collection => clazz.students, :as => :student
