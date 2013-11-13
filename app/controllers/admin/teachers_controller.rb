@@ -7,6 +7,7 @@ class Admin::TeachersController < ApplicationController
     return true if current_visitor.has_role?('admin')
     return true if current_visitor.has_role?('manager')
     flash[:notice] = "Please log in as an administrator or manager"
+    redirect_to(:home)
   end
 
   public
