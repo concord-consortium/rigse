@@ -346,6 +346,7 @@ constraints :id => /\d+/ do
     resources :projects
     resources :tags
     resources :teachers
+    post '/teachers/update_student_permission_form'
     resources :site_notices do
       member do
         delete :remove_notice

@@ -10,7 +10,18 @@ class Admin::TeachersController < ApplicationController
     redirect_to(:home)
   end
 
-  public
+  def update_student_permissions(student_id, permission_ids)
+    student = Portal::Student.find(student_id)
+    return false unless student
+    permission_ids ||= []
+    permission_ids = [permission_ids].flatten.compact.uniq
+    permissions = permission_ids.map { |pid| Portal::PermissionForm.find(pid) }
+    student.permission_forms = permissions
+    student.save
+    return true
+  end
+
+
   class TeacherSearchForm < Struct.new(:name, :order)
 
     def initialize(params)
@@ -67,19 +78,26 @@ class Admin::TeachersController < ApplicationController
     end
   end
 
+  public
 
   def index
     form = TeacherSearchForm.new(params[:form])
     @teachers = form.search
   end
 
-  def show
+  def update_student_permission_form
+    student_id     = params['student_id']
+    permission_ids = params['permission_ids']
+    status = 400
+    respond_to do |format|
+      format.js do
+        if update_student_permissions(student_id, permission_ids)
+          status = 200
+        end
+        render :nothing => true, :status => status
+      end
+    end
   end
 
-  def edit
-  end
-
-  def update
-  end
 
 end
