@@ -6,17 +6,18 @@
       :id => "student_perms_#{student.id}_form",
       :action => "/admin/permission_forms/update_forms" }
       - Portal::PermissionForm.all.each do |perm|
-        - checked = student.perms.include? perm
-        %input.hidden{:name => 'student_id', :value=>student.id}
-        - if student.perms.include? perm
-          %input.permission_checkbox{'type'=>'checkbox',
-            'id'      => "student_perms_#{student.id}",
-            'name'    => "permission_ids",
-            'value'   => perm.id,
-            'checked' => true}
-        - else
-          %input.permission_checkbox{'type'=>'checkbox',
-            'id'     => "student_perms_#{student.id}",
-            'name'   => "permission_ids",
-            'value'  => perm.id}
-        %label{'for'=>"perm_#{perm.id}_checkbox"}=perm.name
+        %span.permission_from_item
+          - checked = student.perms.include? perm
+          %input.hidden{:name => 'student_id', :value=>student.id}
+          - if student.perms.include? perm
+            %input.permission_checkbox{'type'=>'checkbox',
+              'id'      => "student_perms_#{student.id}",
+              'name'    => "permission_ids",
+              'value'   => perm.id,
+              'checked' => true}
+          - else
+            %input.permission_checkbox{'type'=>'checkbox',
+              'id'     => "student_perms_#{student.id}",
+              'name'   => "permission_ids",
+              'value'  => perm.id}
+          %label{'for'=>"perm_#{perm.id}_checkbox"}=perm.name

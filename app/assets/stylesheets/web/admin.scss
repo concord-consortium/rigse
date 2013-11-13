@@ -80,12 +80,17 @@
     margin: 0px;
     padding: 0px;
     td {
+      white-space: nowrap;
       vertical-align: top;
       text-align: left;
     }
     td.permissions {
       border-left: 1px solid;
       padding-left: 5px;
+      white-space: normal;
+      .permission_from_item {
+        white-space: nowrap;
+      }
     }
 
     tr.student {
