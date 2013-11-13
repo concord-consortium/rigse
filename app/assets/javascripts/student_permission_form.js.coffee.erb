@@ -1,0 +1,35 @@
+# Decorate the links with the class correct class names.
+# hide and show the report view.
+# handle the escape key button presses.
+
+class StudentPermissionForm
+
+  constructor: (@checkbox) ->
+    # @parseOfferingUrl(@checkbox.href);
+    @form = @checkbox.up('form')
+    @bind_events()
+
+  bind_events: ->
+    # disable any lingering events:
+    @checkbox.stopObserving  'click'
+    @checkbox.observe "click", (evt) =>
+      @update_checkbox()
+
+  update_checkbox: ->
+    last_value = !@checkbox.checked
+    @form.request({
+      onSuccess: =>
+        console.log("yippee")
+        @form.enable()
+      onFailure: =>
+        console.log("boo")
+        @form.enable()
+        @form.highlight(startcolor: '#ff0000')
+        @checkbox.checked = last_value
+    })
+    @form.disable()
+
+
+document.observe "dom:loaded", ->
+  $$("input.permission_checkbox").each (item) ->
+    reporter = new StudentPermissionForm(item)
