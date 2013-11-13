@@ -99,5 +99,17 @@ class Admin::PermissionFormsController < ApplicationController
     end
   end
 
+  def create
+    form_data = params['portal_permission']
+    if form_data && (!form_data['name'].blank?)
+      form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'])
+    end
+    redirect_to action: 'index'
+  end
 
+  def remove_form
+    form = Portal::PermissionForm.find(params[:id])
+    form.destroy
+    redirect_to action: 'index'
+  end
 end

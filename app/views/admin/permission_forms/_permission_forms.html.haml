@@ -1,0 +1,27 @@
+
+%div#permission_form_form
+  %h4
+    New permission form:
+  = form_for :portal_permission, :action => :create do |f|
+    %table
+      %tr
+        %td Name:
+        %td= f.text_field :name
+        %td
+      %tr
+        %td Url:
+        %td= f.text_field :url
+        %td=f.submit "Create"
+      %tr
+        %td#permission_form_list{:colspan => 3}
+          %div
+            - Portal::PermissionForm.all.each do |perm|
+              %span.existing_permission
+                %span.name= perm.name
+                %span.url
+                  - if perm.url
+                    %a{:href => perm.url, :target => "_blank"}="(link)"
+                %span.delete
+                  =link_to "✖",
+                    remove_form_admin_permission_form_path(perm),
+                    :confirm => "Delete Permission Form?"

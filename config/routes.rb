@@ -348,6 +348,7 @@ constraints :id => /\d+/ do
     resources :permission_forms do
       member do
         post :update_forms
+        get  :remove_form
       end
     end
     resources :site_notices do

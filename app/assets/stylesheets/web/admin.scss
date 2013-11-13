@@ -1,5 +1,48 @@
-#listings {
+#permission_form_form {
+  border: 2px solid #fbf4db;
+  padding: 0.4em;
+  margin-bottom: 2em;
+  table {
+    margin: 0px;
+    padding: 0px;
+    td {
+      vertical-align: top;
+      text-align: right;
+      padding: 4px;
+      &:nth-child(2) {
+        text-align: left;
+      }
+      &:nth-child(3) {
+        text-align: left;
+      }
+    }
+  }
+}
 
+#permission_form_list {
+
+  .existing_permission {
+    display: inline-block;
+    margin: .2em;
+    float: left;
+    padding: 0.4em;
+    background-color: #fbf4db;
+    color: #3f3f3f;
+    .delete {
+      a {
+        color: #6D1414;
+        &:hover {
+          color: #B64646;
+        }
+      }
+    }
+  }
+}
+
+#listings {
+  float: left;
+  display: inline-block;
+  clear: both;
   tr.teacher_info {
     border-top: 2px solid;
     padding-bottom: 20px;
