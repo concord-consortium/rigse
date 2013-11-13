@@ -2,7 +2,7 @@
 # hide and show the report view.
 # handle the escape key button presses.
 
-class StudentPermissionForm
+class PermissionForm
 
   constructor: (@checkbox) ->
     # @parseOfferingUrl(@checkbox.href);
@@ -32,4 +32,4 @@ class StudentPermissionForm
 
 document.observe "dom:loaded", ->
   $$("input.permission_checkbox").each (item) ->
-    reporter = new StudentPermissionForm(item)
+    reporter = new PermissionForm(item)

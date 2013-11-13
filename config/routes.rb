@@ -345,8 +345,11 @@ constraints :id => /\d+/ do
   namespace :admin do
     resources :projects
     resources :tags
-    resources :teachers
-    post '/teachers/update_student_permission_form'
+    resources :permission_forms do
+      member do
+        post :update_forms
+      end
+    end
     resources :site_notices do
       member do
         delete :remove_notice

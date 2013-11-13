@@ -4,7 +4,7 @@
   %td.permissions
     %form.student_permission_form{ :method => 'post',
       :id => "student_perms_#{student.id}_form",
-      :action => "/admin/teachers/update_student_permission_form"}
+      :action => "/admin/permission_forms/update_forms" }
       - Portal::PermissionForm.all.each do |perm|
         - checked = student.perms.include? perm
         %input.hidden{:name => 'student_id', :value=>student.id}

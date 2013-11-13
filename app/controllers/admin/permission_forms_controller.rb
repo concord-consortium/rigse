@@ -1,4 +1,4 @@
-class Admin::TeachersController < ApplicationController
+class Admin::PermissionFormsController < ApplicationController
   before_filter :admin_or_manager
 
   protected
@@ -85,7 +85,7 @@ class Admin::TeachersController < ApplicationController
     @teachers = form.search
   end
 
-  def update_student_permission_form
+  def update_forms
     student_id     = params['student_id']
     permission_ids = params['permission_ids']
     status = 400

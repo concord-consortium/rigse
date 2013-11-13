@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/portal"
-set :branch, "master"
+set :branch, "student_permission_forms"
 
 #############################################################
 #  Servers
