@@ -62,8 +62,8 @@ class Admin::TeachersController < ApplicationController
       self.login   = user.login
       self.email   = user.email
       self.id      = user.id
-      self.clazzes = teacher.clazzes.map { |c| ClazzView.new(c) }
-      self.clazzes = clazzes.reject { |c| c.students.size < 1}
+      self.clazzes = teacher.clazzes.map { |c| ClazzView.new(c)   }
+      self.clazzes = clazzes.reject      { |c| c.students.size < 1}
     end
   end
 
