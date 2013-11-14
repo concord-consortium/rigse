@@ -5,10 +5,8 @@ describe Embeddable::ImageQuestion do
   
     @default_prompt = Embeddable::ImageQuestion::default_prompt;
     @valid_attributes = {
-      :prompt => "Choose a drawing from your lab book, and enter it here"
-    }
-    @invalid_attributes = {
-      :prompt => ""
+      :drawing_prompt => "Choose a drawing from your lab book, and enter it here",
+      :prompt => "Explain the drawing in this text box"
     }
   end
 
@@ -25,9 +23,9 @@ describe Embeddable::ImageQuestion do
     image_question.should be_valid
   end
  
-  it "should not create a new instance without valid attributes" do
-    image_question = Embeddable::ImageQuestion.create(@invalid_attributes)
-    image_question.save
-    image_question.should_not be_valid
-  end
+  # it "should not create a new instance without valid attributes" do
+  #   image_question = Embeddable::ImageQuestion.create(@invalid_attributes)
+  #   image_question.save
+  #   image_question.should_not be_valid
+  # end
 end

@@ -60,7 +60,14 @@ describe ActivityRuntimeAPI do
                 {
                   "type" => "image_question",
                   "id" => "987654321",
+                  "drawing_prompt" => '',
                   "prompt" => "draw a picture of why you love this activity."
+                },
+                {
+                  "type" => "image_question",
+                  "id" => '5589',
+                  "drawing_prompt" => "Really draw a picture",
+                  "prompt" => "Now explain the picture you drew"
                 },
                 {
                   "type" => "multiple_choice",
@@ -187,6 +194,7 @@ describe ActivityRuntimeAPI do
         result.should have_choice_like "blue"
         result.should_not have_choice_like "brown"
         result.should have_image_question_like "draw a picture"
+        result.should have_image_question_like "now explain"
       end
     end
 
@@ -227,6 +235,7 @@ describe ActivityRuntimeAPI do
       describe "updating an existing image question" do
         let(:image_question) do
           Factory.create(:image_question,
+            :drawing_prompt => '',
             :prompt => "the original prompt",  # this will be replaced.
             :external_id => "987654321")
         end

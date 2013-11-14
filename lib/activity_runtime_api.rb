@@ -257,7 +257,8 @@ class ActivityRuntimeAPI
 
   def self.update_image_question(iq_data, existant)
     existant.update_attributes(
-      :prompt => iq_data["prompt"]
+      :prompt => iq_data["prompt"],
+      :drawing_prompt => iq_data["drawing_prompt"]
     )
     return existant
   end
@@ -265,6 +266,7 @@ class ActivityRuntimeAPI
   def self.create_image_question(iq_data, user)
     Embeddable::ImageQuestion.create(
       :prompt => iq_data["prompt"],
+      :drawing_prompt => iq_data["drawing_prompt"],
       :external_id => iq_data["id"],
       :user => user
     )
