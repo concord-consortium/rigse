@@ -696,6 +696,10 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_left'
       end
       haml_tag(:div, :class => 'item report_question_prompt') {
+        unless image_question.drawing_prompt.blank?
+          haml_concat(image_question.drawing_prompt)
+          haml_concat("<br />")
+        end
         haml_concat(image_question.prompt)
       }
       haml_tag(:div, :class => 'report_question_summary_title') {
