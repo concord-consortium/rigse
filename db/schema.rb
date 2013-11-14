@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130916011408) do
+ActiveRecord::Schema.define(:version => 20131114142629) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -576,6 +576,7 @@ ActiveRecord::Schema.define(:version => 20130916011408) do
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
     t.string   "external_id"
+    t.text     "drawing_prompt"
   end
 
   add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"

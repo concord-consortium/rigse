@@ -13,7 +13,7 @@ class Embeddable::ImageQuestion < ActiveRecord::Base
 
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{name prompt}
+  @@searchable_attributes = %w{name prompt drawing_prompt}
   
   class <<self
     
