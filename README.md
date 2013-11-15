@@ -965,5 +965,4 @@ should be written for it.
     rake db:test:prepare
     rake db:dump
     ruby script/server -e production
-
-    (end)
+(end)
