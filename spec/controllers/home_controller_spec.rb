@@ -24,7 +24,7 @@ describe HomeController do
     
     get :index
     
-    @response.body.should include(content)
+    response.body.should include(content)
   end
 
   describe "GET /stylesheets/project.css" do
