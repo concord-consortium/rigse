@@ -78,6 +78,8 @@ Feature: Teacher manages a class
       | Biology     |  teacher_with_no_class    |
       | Geography   |  teacher_with_no_class    |
     When I uncheck "Biology"
+    And the Manage class list state starts saving
+    And the modal for saving manage classes dissappears
     And I uncheck "Geography"
     And the Manage class list state starts saving
     And the modal for saving manage classes dissappears

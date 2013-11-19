@@ -7,7 +7,6 @@ Feature: A teacher creates a resource page
     Given The default project and jnlp resources exist using factories
     And the database has been seeded
 
-  @javascript
   Scenario: The teacher creates a resource page
     When I am logged in with the username teacher
     When I go to the resource pages page
@@ -15,7 +14,7 @@ Feature: A teacher creates a resource page
     Then I should see "New Resource"
     When I fill in the following:
       | resource_page[name] | Test Page |
-    And I press "Create Resource page"
+    And I press "Create resource page"
     Then I should see "Resource Page was successfully created."
 
 

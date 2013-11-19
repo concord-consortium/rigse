@@ -26,14 +26,14 @@ Feature: Admin configures project settings
     And am on the admin projects page
     When I follow "edit project"
     Then I should see the button "Save"
-    
-  @javascript
+
+  @javascript @pending
   Scenario: Admin sets jnlp CDN hostname
     Given The default project and jnlp resources exist using factories
     When an admin sets the jnlp CDN hostname to "cdn.example.com"
     Then the installer jnlp should have the CDN hostname "cdn.example.com" in the right places
     And the non installer jnlp codebase should not start with "http://cdn.example.com"
-    
+
   @javascript
   Scenario: Admin enables default class
     Given The default project and jnlp resources exist using factories

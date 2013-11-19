@@ -114,7 +114,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should see search results for "Venn Diagram" on the search instructional materials page
     
     
-  @javascript
+  @pending
   Scenario: Teacher can sort search results alphabetically
     When I search for "lines" on the search instructional materials page
     And I follow "Alphabetical" in Sort By on the search instructional materials page
