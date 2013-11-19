@@ -1,0 +1,23 @@
+%tr.student
+  %td.name=student.name
+  %td.name=link_to(student.login, edit_user_path(student.id))
+  %td.permissions
+    %form.student_permission_form{ :method => 'post',
+      :id => "student_perms_#{student.id}_form",
+      :action => "/admin/permission_forms/update_forms" }
+      - Portal::PermissionForm.all.each do |perm|
+        %span.permission_from_item
+          - checked = student.perms.include? perm
+          %input.hidden{:name => 'student_id', :value=>student.id}
+          - if student.perms.include? perm
+            %input.permission_checkbox{'type'=>'checkbox',
+              'id'      => "student_perms_#{student.id}",
+              'name'    => "permission_ids",
+              'value'   => perm.id,
+              'checked' => true}
+          - else
+            %input.permission_checkbox{'type'=>'checkbox',
+              'id'     => "student_perms_#{student.id}",
+              'name'   => "permission_ids",
+              'value'  => perm.id}
+          %label{'for'=>"perm_#{perm.id}_checkbox"}=perm.name

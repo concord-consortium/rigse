@@ -1,0 +1,14 @@
+%tr.teacher_info
+  %td.teacher_info
+    %div
+      %span.label Name
+      %span.value= teacher.name
+    %div
+      %span.label Email
+      %span.value= teacher.email
+    %div
+      %span.label Login
+      %span.value= link_to(teacher.login, edit_user_path(teacher.id))
+
+  %td= render :partial => 'show_class', :collection => teacher.clazzes, :as => :clazz
+

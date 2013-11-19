@@ -1,0 +1,34 @@
+# used in views/admin/permission_forms/index.html.haml
+# handles check-boxes for students who have consented to research
+
+class PermissionForm
+
+  constructor: (@checkbox) ->
+    # @parseOfferingUrl(@checkbox.href);
+    @form = @checkbox.up('form')
+    @bind_events()
+
+  bind_events: ->
+    # disable any lingering events:
+    @checkbox.stopObserving  'click'
+    @checkbox.observe "click", (evt) =>
+      @update_checkbox()
+
+  update_checkbox: ->
+    last_value = !@checkbox.checked
+    @form.request({
+      onSuccess: =>
+        console.log("yippee")
+        @form.enable()
+      onFailure: =>
+        console.log("boo")
+        @form.enable()
+        @form.highlight(startcolor: '#ff0000')
+        @checkbox.checked = last_value
+    })
+    @form.disable()
+
+
+document.observe "dom:loaded", ->
+  $$("input.permission_checkbox").each (item) ->
+    reporter = new PermissionForm(item)

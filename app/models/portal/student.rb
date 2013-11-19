@@ -20,6 +20,9 @@ class Portal::Student < ActiveRecord::Base
   has_many :collaborations, :dependent => :destroy, :class_name => "Portal::Collaboration", :foreign_key => "student_id"
   has_many :collaborative_bundles, :through => :collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content 
 
+  has_many :portal_student_permission_forms, :dependent => :destroy, :class_name => "Portal::StudentPermissionForm", :foreign_key => "portal_student_id"
+  has_many :permission_forms, :through => :portal_student_permission_forms, :class_name => "Portal::PermissionForm", :source => :portal_permission_form
+
   [:name, :first_name, :last_name, :email, :login, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
   
   include Changeable

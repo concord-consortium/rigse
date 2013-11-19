@@ -1,0 +1,14 @@
+%p
+  = render :partial => 'permission_forms', :locals => {:permissions => @permissions}
+  = render :partial => 'search_form',      :locals => {:form => @form}
+  - unless @teachers.blank?
+    %h3 Teachers:
+    #listings
+      %table#admin_teachers_table
+        %tr
+          %th Teacher
+          %th Classes
+        = render :partial => 'show', :collection => @teachers, :as => :teacher
+  - else
+    %p
+      search for teachers by firstname, lastname, login, or email.

@@ -35,4 +35,5 @@
 = require 'bookmarks'
 = require 'run_status'
 = require 'create_status'
+= require 'permission_form'
 */
