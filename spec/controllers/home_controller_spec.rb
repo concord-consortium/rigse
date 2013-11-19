@@ -12,14 +12,16 @@ describe HomeController do
     controller.stub(:before_render) {
       response.template.stub(:current_project).and_return(@test_project)
     }
-  end
-
-  it "should display home page content from the current admin project" do
     # it appears that some previous tests leave a user logged in somehow
     # so we explicitly log in anonymous here
     login_anonymous
+  end
+
+  it "should display home page content from the current admin project" do
+
     content = "Test home page content"
-    @test_project.stub(:home_page_content).and_return(content)
+
+    @test_project.should_receive(:home_page_content).at_least(:once).and_return(content)
     @test_project.stub(:name).and_return("Test Project")
     
     get :index
