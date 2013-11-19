@@ -4,14 +4,16 @@ class Embeddable::ImageQuestion < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages,:through =>:page_elements
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
-  validates_length_of :prompt, :minimum => 1, :too_short => "You must provide a meaningful prompt to this question."
+  # Length validation removed 14Nov2013 - it's optional in LARA and the validation was preventing
+  # publishing questions. See https://www.pivotaltracker.com/story/show/58968402 .
+  # validates_length_of :prompt, :minimum => 1, :too_short => "You must provide a meaningful prompt to this question."
   acts_as_replicatable
 
   include Changeable
 
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{name prompt}
+  @@searchable_attributes = %w{name prompt drawing_prompt}
   
   class <<self
     

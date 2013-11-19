@@ -5,6 +5,9 @@
       - css_style = saveable.answered? ? 'answered' : 'not_answered'
       .item{:style => 'display: block;'}
         %strong
+          != embeddable.drawing_prompt
+        %br
+        %strong
           != embeddable.prompt
       .item{:class => css_style, :style => 'display: block;'}
         - if saveable.answered? && saveable.answer
