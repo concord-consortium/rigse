@@ -440,8 +440,9 @@ function checkActivityToAssign(chk_box)
 
 function browseMaterial(formAction)
 {
-    var form = $("search_result_form");
+    var form = $("material_search_form");
     form.action = formAction;
+    form.method = "POST";
     form.submit();
 }
 

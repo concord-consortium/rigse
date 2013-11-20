@@ -6,6 +6,7 @@
 
 .results_container
   %form{:method => :post, :id => "search_result_form"}
+    -# TODO: I think this form can be safely removed
     = hidden_field_tag "search_term", @search_term
     = hidden_field_tag "investigation_page", @investigation_page
     = hidden_field_tag "activity_page", @activity_page
