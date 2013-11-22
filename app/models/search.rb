@@ -79,7 +79,7 @@ class Search
     self.engine         = opts[:engine]         || Sunspot
     self.grade_span     = opts[:grade_span]     || NoGradeSpan
     self.probe          = opts[:probe]          || AnyProbeType
-    self.no_probes      = opts[:no_probe]       || false
+    self.no_probes      = opts[:no_probes]      || false
     self.private        = opts[:private]        || false
     self.sort_order     = opts[:sort_order]     || Newest
     self.per_page       = opts[:per_page]       || 10
@@ -106,8 +106,12 @@ class Search
         s.with(:material_type, type)
         s.with(:domain_id, self.domain_id) unless self.domain_id.empty?
         s.with(:grade_span, self.grade_span) unless self.grade_span.empty?
-        s.with(:probe_type_ids, self.probe) unless (self.probe.empty? || self.no_probes)
-        s.with(:no_probes, true) if self.no_probes
+
+        if self.no_probes
+          s.with(:no_probes, true)
+        else
+          s.with(:probe_type_ids, self.probe) unless (self.probe.empty?)
+        end
         s.with(:is_official, true)  unless self.include_contributed
         s.with(:is_template, false) unless self.include_templates
         if (!self.private && self.user_id)
