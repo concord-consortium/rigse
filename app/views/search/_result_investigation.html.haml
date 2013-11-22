@@ -10,7 +10,10 @@
     %tr
       %td.material_list
         - materials.each do |investigation|
-          .material_list_item{ :id => "search_investigation_#{investigation.id}", :style => ("border:none" if investigation == materials.last ) }
+          .material_list_item{ :id => "search_investigation_#{investigation.id}",
+          :'data-material_name' => investigation.name,
+          :'data-material_id' => investigation.id,
+          :style => ("border:none" if investigation == materials.last ) }
             = render :partial => 'result_item', :locals => { :material => investigation }
   %br
   = will_paginate @investigations, :param_name => 'investigation_page', :params => @form_model.params.merge(:type => 'inv')
