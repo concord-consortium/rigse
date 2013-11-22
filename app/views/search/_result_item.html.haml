@@ -57,13 +57,14 @@
         %td{:width=>"130px"}
           %div{:style=>'float:right'}
             - if link_url
-              = link_to "Assign to a Class","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')", :class=>"button"
+              = assign_material_link(material, "javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')")
             - else
               -# this is to temporarily deal with external activites which don't have a browse page
               - if current_visitor.portal_teacher
-                = link_to "Assign to a Class","javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')", :class=>"button"
+                = assign_material_link(material, "javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')")
               - else
-                = link_to "Assign to a Class", url_for({ :controller => '/search', :action => 'unauthorized_user' }), :class=>"button"
+                = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
+
 
       %tr
         %td{:colspan=>3}

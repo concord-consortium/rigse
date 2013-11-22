@@ -48,4 +48,8 @@ module SearchHelper
     end
   end
 
+  def assign_material_link(material,action, extra={})
+    link_to("Assign to a Class", action, extra.merge({:class=>"button"}))
+  end
+
 end
