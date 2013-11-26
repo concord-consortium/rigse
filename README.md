@@ -894,7 +894,7 @@ The assets will be compiled to public/assets which should be ignored by
 When running in development mode you do not need to pre-compile your
 assets.
 
-## Solar & Sunspot
+## Solr & Sunspot
 
 [Sunspot](https://github.com/sunspot/sunspot/blob/master/README.md
 ) is being used to provide search capabilities.
@@ -908,7 +908,19 @@ You can then visit the web interface to the solar server by visiting [localhost:
 
 ### Rspec testing with sunspot disabled & enabled:
 
+For rspec tests see the helper methods defined in spec/support/solr_spec_helper.rb
+
+For cucumber tests, you can use "Given The materials have been indexed" to update solr indexes after fixture data has been loaded.
+
+
 [https://github.com/sunspot/sunspot/wiki/RSpec-and-Sunspot](https://github.com/sunspot/sunspot/wiki/RSpec-and-Sunspot)
+
+### Solr delpoyment and index-updating ###
+
+If you make changes to how Solr does its indexing, you will have to run a cap task to tell it to reindex:
+
+In theory a simple `bundle exec cap <host> solr:reindex` should work, but
+to be sure use: `bundle exec cap <host> solr:hard_reindex` to restart and reindex.
 
 ## Application Settings & Settings YAML
 
