@@ -1,41 +1,45 @@
--material_count = material.offerings.count
+- material_count = material.offerings.count
 - if material.parent
   - material_count = material_count + material.parent.offerings.count
+
+- if material.is_a? Investigation
+  - link_url = browse_investigation_url(material)
+- elsif material.is_a? Activity
+  - link_url = browse_activity_url(material)
+- elsif material.is_a? ExternalActivity
+  - link_url = nil
+
 .material_icon
   .icon_image
-    -if(material.is_a? Investigation)
-      - material_type = "Inv"
-      - link_url = browse_investigation_url(material)
-      =image_tag("search/investigation.gif",:size=>"100x100")
-    -elsif(material.is_a? Activity)
-      - material_type = "Act"
-      - link_url = browse_activity_url(material)
-      =image_tag("search/activity.gif",:size=>"100x100")
-    -elsif(material.is_a? ExternalActivity)
-      - material_type = material.class.to_s
-      - link_url = nil
-      =image_tag("search/activity.gif",:size=>"100x100")
+    = show_material_icon(material)
 %div
-  - if current_visitor.portal_teacher
-    - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.select{|item| item.active == true}.map{|item| item.clazz_id}
-    - offerings=Portal::Offering.where(:runnable_id=>material.id, :runnable_type=>"#{material.class.to_s}", :clazz_id=>teacher_clazz_ids)
-  
   %div{:style=>'overflow:hidden'}
     %table{:width=>"100%"}
       %tr
         %td
         %td
           %span.material_header
+            %span.material_meta_data
+              - unless material.java_requirements.blank?
+                %span{:class => material.java_requirements}
+                  = t(material.java_requirements)
+              - if material.is_official
+                %span.is_official Official
+              - else
+                %span.is_community Community
+            %br
             - if link_url.nil?
               = material.name
             - else
-              = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')" 
+              = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')"
+            - if current_visitor.has_role? ["admin","manager"]
+              %span.superTiny= link_to "(edit)", edit_polymorphic_url(material)
           - if material.parent
             %span
-              from 
+              from
               = t(:investigation)
               ="\"#{material.parent.name}\""
-          -unless material.user.name.nil?
+          -if material.user && (!material.user.name.nil?)
             %div
               %span{:style=>"font-weight:bold"}
                 ="By #{material.user.name}"
@@ -43,8 +47,8 @@
           %div{:style=>'float:right'}
             - unless current_visitor.anonymous?
               - unless material.teacher_only?
-                %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material_type}','Preview')"}Preview &#9660;
-                .Expand_Collapse{:id=>"#{material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material.material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material.material_type}','Preview')"}Preview &#9660;
+                .Expand_Collapse{:id=>"#{material.material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
                   .preview_link
                     = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
                   .preview_link{:style=>"padding-top:0px"}
@@ -56,21 +60,23 @@
         %td{:width=>"130px"}
           %div{:style=>'float:right'}
             - if link_url
-              = link_to "Assign to a Class","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')", :class=>"button"
+              = assign_material_link(material, "javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')")
             - else
               -# this is to temporarily deal with external activites which don't have a browse page
               - if current_visitor.portal_teacher
-                = link_to "Assign to a Class","javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')", :class=>"button"
+                = assign_material_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')")
               - else
-                = link_to "Assign to a Class", url_for({ :controller => '/search', :action => 'unauthorized_user' }), :class=>"button"
+                = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
+
 
       %tr
         %td{:colspan=>3}
-          - if current_visitor.portal_teacher
+          -# TODO: FIXME: After demo, figure out how to get this working..
+          -# if current_visitor.portal_teacher
             - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
-            - offerings = offerings.sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
+            - offerings = material.offerings_by_clazz(teacher_clazz_ids).sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
             - offering_clazz_names = offerings.map{|o| o.clazz.name}
-            - if(offerings.length>0)
+            - if ( offerings.length > 0 )
               %span.assignedTo
                 (Assigned to
                 = offering_clazz_names.join(", ")+")"
@@ -88,7 +94,7 @@
         Used in 1 class.
       -else
         Used in #{material_count} classes.
-  - required_equipments = probe_types(material).map { |p| p.name }.join(", ") 
+  - required_equipments = probe_types(material).map { |p| p.name }.join(", ")
   - unless required_equipments == ""
     #required_equipment_container
       %span#required_equipment

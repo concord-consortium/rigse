@@ -1,8 +1,4 @@
 - # requires: grade_span, portal_clazz_id, domain_id
-- # optional: hide_drafts_checkbox, hide_usage_checkbox
-- if (current_visitor.anonymous?)
-  - local_assigns[:hide_drafts_checkbox] = true
-  - local_assigns[:hide_usage_checkbox] = true
 
 %h3
   #search_title
@@ -22,22 +18,10 @@
         = label_tag :filter, 'Grade: ', :class=>"right"
         = select(nil,  :grade_span, RiGse::GradeSpanExpectation.grade_spans, { :selected => grade_span, :include_blank => "all grade spans" })
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'Domain: ', :class=>"right"
-        = select(nil,  :domain_id, RiGse::Domain.all.collect { |d| [d.name,d.id] }, { :selected => domain_id.to_i, :include_blank => "all domains" })
-      %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'Matching: ', :class=>"right"
         = text_field_tag :name, name
-      %td{:style=>"padding: 0.5em; text-align: right"}
-        - unless local_assigns[:hide_drafts_checkbox]
-          = label_tag :include_drafts, 'drafts too: ', :class=>"right"
-          = check_box_tag :include_drafts, 'include drafts', session[:include_drafts]
     %tr
       %td{:style=>"padding: 0.5em;"}
         = label_tag :sort_order, 'sort: ', :class => 'right'
         = sort_dropdown(@sort_order)
       %td{:style=>"padding: 0.5em;"}
-      %td{:style=>"padding: 0.5em;"}
-      %td{:style=>"padding: 0.5em; text-align: right"}
-        - unless local_assigns[:hide_usage_checkbox]
-          = label_tag :include_usage_count, 'show count: ', :class=>"right"
-          = check_box_tag :include_usage_count, true, session[:include_usage_count]

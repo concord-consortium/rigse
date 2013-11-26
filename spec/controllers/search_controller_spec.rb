@@ -1,139 +1,138 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe SearchController do
-  let (:admin_project)   { Factory.create(:admin_project_no_jnlps, :include_external_activities => false) }
+  include SolrSpecHelper
 
-  let (:mock_semester)   { Factory.create(:portal_semester, :name => "Fall") }
-  let (:mock_school)     { Factory.create(:portal_school, :semesters => [mock_semester]) }
+  def make(let); end
 
-  let (:teacher_user)    { Factory.create(:confirmed_user, :login => "teacher_user") }
-  let (:teacher)         { Factory.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
-  let (:admin_user)      { Factory.next(:admin_user) }
-  let (:author_user)     { Factory.next(:author_user) }
-  let (:manager_user)    { Factory.next(:manager_user) }
-  let (:researcher_user) { Factory.next(:researcher_user) }
+  let(:admin_project)   { Factory.create(:admin_project_no_jnlps, :include_external_activities => false) }
 
-  let (:student_user)    { Factory.create(:confirmed_user, :login => "authorized_student") }
-  let (:student)         { Factory.create(:portal_student, :user_id => student_user.id) }
+  let(:mock_semester)   { Factory.create(:portal_semester, :name => "Fall") }
+  let(:mock_school)     { Factory.create(:portal_school, :semesters => [mock_semester]) }
 
-  let (:physics_investigation)     { Factory.create(:investigation, :name => 'physics_inv', :user => author_user, :publication_status => 'published') }
-  let (:chemistry_investigation)   { Factory.create(:investigation, :name => 'chemistry_inv', :user => author_user, :publication_status => 'published') }
-  let (:biology_investigation)     { Factory.create(:investigation, :name => 'mathematics_inv', :user => author_user, :publication_status => 'published') }
-  let (:mathematics_investigation) { Factory.create(:investigation, :name => 'biology_inv', :user => author_user, :publication_status => 'published') }
-  let (:lines)                     { Factory.create(:investigation, :name => 'lines_inv', :user => author_user, :publication_status => 'published') }
+  let(:teacher_user)    { Factory.create(:confirmed_user, :login => "teacher_user") }
+  let(:teacher)         { Factory.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
+  let(:admin_user)      { Factory.next(:admin_user) }
+  let(:author_user)     { Factory.next(:author_user) }
+  let(:manager_user)    { Factory.next(:manager_user) }
+  let(:researcher_user) { Factory.next(:researcher_user) }
 
-  let (:laws_of_motion_activity)  { Factory.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => physics_investigation.id, :user => author_user) }
-  let (:fluid_mechanics_activity) { Factory.create(:activity, :name => 'fluid_mechanics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
-  let (:thermodynamics_activity)  { Factory.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
-  let (:parallel_lines)           { Factory.create(:activity, :name => 'parallel_lines' , :investigation_id => lines.id, :user => author_user) }
+  let(:student_user)    { Factory.create(:confirmed_user, :login => "authorized_student") }
+  let(:student)         { Factory.create(:portal_student, :user_id => student_user.id) }
 
-  let (:external_activity1) { Factory.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
-  let (:external_activity2) { Factory.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published', :is_official => true) }
-  let (:external_activity3) { Factory.create(:external_activity, :name => "Copy of external_1", :url => "http://concord.org", :publication_status => 'published', :is_official => false) }
+  let(:physics_investigation)     { Factory.create(:investigation, :name => 'physics_inv', :user => author_user, :publication_status => 'published') }
+  let(:chemistry_investigation)   { Factory.create(:investigation, :name => 'chemistry_inv', :user => author_user, :publication_status => 'published') }
+  let(:biology_investigation)     { Factory.create(:investigation, :name => 'mathematics_inv', :user => author_user, :publication_status => 'published') }
+  let(:mathematics_investigation) { Factory.create(:investigation, :name => 'biology_inv', :user => author_user, :publication_status => 'published') }
+  let(:lines)                     { Factory.create(:investigation, :name => 'lines_inv', :user => author_user, :publication_status => 'published') }
+
+  let(:laws_of_motion_activity)  { Factory.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => physics_investigation.id, :user => author_user) }
+  let(:fluid_mechanics_activity) { Factory.create(:activity, :name => 'fluid_mechanics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
+  let(:thermodynamics_activity)  { Factory.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
+  let(:parallel_lines)           { Factory.create(:activity, :name => 'parallel_lines' , :investigation_id => lines.id, :user => author_user) }
+
+  let(:external_activity1)   { Factory.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
+  let(:external_activity2)   { Factory.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published', :is_official => true) }
+
+  let(:contributed_activity) { Factory.create(:external_activity, :name => "Copy of external_1", :url => "http://concord.org", :publication_status => 'published', :is_official => false) }
+
+  let(:all_investigations)    { [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines]}
+  let(:all_activities)        { [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines, external_activity1, external_activity2]}
+  let(:contributed_activities){ [contributed_activity] }
+  let(:investigation_results) { [] }
+  let(:activity_results)      { [] }
+
+  let(:search_results) {{ Investigation => investigation_results, Activity => activity_results }}
+  let(:mock_search)    { mock('results', {:results => search_results})}
+
+  before(:all) do
+    solr_setup
+    clean_solar_index
+  end
+
+  after(:each) do
+    clean_solar_index
+  end
 
   before(:each) do
     admin_project
-
     sign_in teacher_user
+    make all_investigations
+    make all_activities
+    make contributed_activities
+    Sunspot.commit_if_dirty
   end
 
   describe "GET index" do
-    it "should redirect to root for students" do
-      student # Ensure student_user has a PortalStudent
-      controller.stub!(:current_visitor).and_return(student_user)
-      post :index
-      response.should redirect_to("/")
-    end
-
-    it "should show all study materials materials" do
-      all_investigations = [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines]
-      all_activities = [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines]
-      external_activities = [external_activity1, external_activity2, external_activity3]
-      post :index
-      assert_response :success
-      assert_template 'index'
-      assigns[:investigations].should_not be_nil
-      assigns[:investigations_count].should be(5)
-      assigns[:investigations].each do |investigation|
-        all_investigations.should include(investigation)
-      end
-      assigns[:activities].should_not be_nil
-      assigns[:activities_count].should be(4)
-      assigns[:activities].each do |activity|
-        all_activities.should include(activity)
-      end
-      assigns[:external_activities].should be_nil
-      assigns[:external_activities_count].should be(0)
-    end
-
-    it "should show all study materials materials including external activities" do
-      all_external_activities = [external_activity1, external_activity2, external_activity3]
-      admin_project.include_external_activities = true
-      admin_project.save
-      post :index
-      assigns[:external_activities].should_not be_nil
-      assigns[:external_activities_count].should == 2
-      assigns[:external_activities].each do |ext_activity|
-        all_external_activities.should include(ext_activity)
+    describe "when its a student visiting" do
+      it "should redirect to root" do
+        student # Ensure student_user has a PortalStudent
+        controller.stub!(:current_visitor).and_return(student_user)
+        post :index
+        response.should redirect_to("/")
       end
     end
 
-    it "should search investigations" do
-      all_investigations = [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines]
-      post_params = {
-        :material => ['investigation']
-      }
-      post :index, post_params
-      assigns[:investigations].should_not be_nil
-      assigns[:investigations_count].should be(5)
-      assigns[:investigations].each do |investigation|
-        all_investigations.should include(investigation)
+    describe "searching for materials" do
+      let(:post_params)      {{}}
+      before(:each) do
+        post :index, post_params
+        assert_response :success
+        assert_template 'index'
       end
-      assigns[:activities].should be_nil
-      assigns[:activities_count].should be(0)
-    end
 
-    it "should search activities" do
-      all_activities = [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines]
-      post_params = {
-        :material => ['activity']
-      }
-      post :index, post_params
-      assigns[:investigations].should be_nil
-      assigns[:investigations_count].should be(0)
-      assigns[:activities].should_not be_nil
-      assigns[:activities_count].should be(4)
-      assigns[:activities].each do |activity|
-        all_activities.should include(activity)
+      describe "with no filter parameters" do
+        it "should show all study materials materials" do
+          assigns[:investigations].should_not be_nil
+          assigns[:investigations_count].should be(5)
+          assigns[:investigations].each do |investigation|
+            all_investigations.should include(investigation)
+          end
+          assigns[:activities].should_not be_nil
+          assigns[:activities_count].should be(6)
+          assigns[:activities].each do |activity|
+            all_activities.should include(activity)
+          end
+        end
       end
-    end
 
-    it "should search external activities" do
-      all_activities = [external_activity1, external_activity2, external_activity3]
-      post_params = {
-        :material => ['external_activity']
-      }
-      post :index, post_params
-      assigns[:investigations].should be_nil
-      assigns[:investigations_count].should be(0)
-      assigns[:activities].should be_nil
-      assigns[:activities_count].should be(0)
-      assigns[:external_activities].should_not be_nil
-      assigns[:external_activities_count].should be(2)
-      assigns[:external_activities].each do |activity|
-        all_activities.should include(activity)
+      describe "searching only investigations" do
+        let(:post_params)      {{:material_types => [Search::InvestigationMaterial]}}
+        let(:activity_results) {[]}
+
+        it "should return all investigations" do
+          assigns[:investigations].should_not be_nil
+          assigns[:investigations_count].should be(5)
+        end
+
+        it "should not return any activities" do
+          post :index, post_params
+          assigns[:activities].should be_empty
+          assigns[:activities_count].should be(0)
+        end
       end
-    end
 
-    it 'should include contributed activities if requested' do
-      all_external_activities = [external_activity1, external_activity2, external_activity3]
-      post_params = {
-        :material => ['external_activity'],
-        :include_contributed => 1
-      }
-      post :index, post_params
-      assigns[:external_activities_count].should == 3
-      assigns[:external_activities].should include(external_activity3)
+      describe "searching only activities" do
+        let(:post_params)           {{:material_types => [Search::ActivityMaterial]}}
+        it "should not include investigations" do
+          assigns[:investigations].should be_empty
+          assigns[:investigations_count].should be(0)
+        end
+        it "should return all activities" do
+          assigns[:activities].should_not be_nil
+          assigns[:activities_count].should be(6)
+          assigns[:activities].each do |activity|
+            all_activities.should include(activity)
+          end
+        end
+        describe "including contributed activities" do
+          let(:post_params) {{ :material_types => ['Activity'], :include_contributed => 1 }}
+          it  "should include contributed activities" do
+            assigns[:activities_count].should == 7
+            assigns[:activities].should include(contributed_activity)
+          end
+        end
+      end
     end
   end
 
@@ -159,12 +158,11 @@ describe SearchController do
       external_activity2
       post_params = {
         :search_term => 'lines',
-        :material => ['activity', 'investigation', 'external_activity']
+        :material_types => ['Activity', 'Investigation']
       }
       xhr :post, :show, post_params
       assigns[:investigations_count].should be(1)
-      assigns[:activities_count].should be(1)
-      assigns[:external_activities_count].should be(1)
+      assigns[:activities_count].should be(2)
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
     end
@@ -173,14 +171,13 @@ describe SearchController do
         :search_term => laws_of_motion_activity.name,
         :material => ['activity']
       }
-      
+
       xhr :post, :show, post_params
       assigns(:activities_count).should be(1)
       assigns(:investigations_count).should be(0)
-      assigns(:external_activities_count).should be(0)
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
-      
+
       post :show, post_params
       assert_template "index"
     end
@@ -191,14 +188,13 @@ describe SearchController do
         :activity => nil,
         :investigation => 'true'
       }
-      
+
       xhr :post, :show, post_params
       assigns(:investigations_count).should be(1)
       assigns(:activities_count).should be(0)
-      assigns(:external_activities_count).should be(0)
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
-      
+
       post :show, post_params
       assert_template "index"
     end
@@ -208,71 +204,37 @@ describe SearchController do
         :search_term => external_activity1.name,
         :material => ['external_activity']
       }
-      
+
       xhr :post, :show, post_params
       assigns(:investigations_count).should be(0)
-      assigns(:activities_count).should be(0)
-      assigns(:external_activities_count).should be(1)
+      assigns(:activities_count).should be(1)
+
       assert_select_rjs :replace_html, 'offering_list'
       assert_select 'suggestions' , false
-      
+
       post :show, post_params
       assert_template "index"
     end
 
-    it "should wrap domain_id params into an array" do
-      post_params = {
-        :search_term => physics_investigation.name,
-        :activity => nil,
-        :domain_id => "1",
-        :investigation => 'true'
-      }
-      xhr :post, :show, post_params
-      assigns[:domain_id].should be_a_kind_of(Enumerable)
+    # tests regarding cleaning up domain_id params
+    # moved into search_spec.rb
 
-      post_params = {
-        :search_term => physics_investigation.name,
-        :activity => nil,
-        :domain_id => 1,
-        :investigation => 'true'
-      }
-      xhr :post, :show, post_params
-      assigns[:domain_id].should be_a_kind_of(Enumerable)
-
-      post_params = {
-        :search_term => physics_investigation.name,
-        :activity => nil,
-        :domain_id => ["1","2"],
-        :investigation => 'true'
-      }
-      xhr :post, :show, post_params
-      assigns[:domain_id].should be_a_kind_of(Enumerable)
-
-      post_params = {
-        :search_term => physics_investigation.name,
-        :activity => nil,
-        :domain_id => [1,2],
-        :investigation => 'true'
-      }
-      xhr :post, :show, post_params
-      assigns[:domain_id].should be_a_kind_of(Enumerable)
-    end
   end
 
   describe "Post get_current_material_unassigned_clazzes" do
 
-    let (:physics_clazz)     { Factory.create(:portal_clazz, :name => 'Physics Clazz', :course => @mock_course,:teachers => [teacher]) }
-    let (:chemistry_clazz)   { Factory.create(:portal_clazz, :name => 'Chemistry Clazz', :course => @mock_course,:teachers => [teacher]) }
-    let (:mathematics_clazz) { Factory.create(:portal_clazz, :name => 'Mathematics Clazz', :course => @mock_course,:teachers => [teacher]) }
-    
-    let (:investigations_for_all_clazz) do
+    let(:physics_clazz)     { Factory.create(:portal_clazz, :name => 'Physics Clazz', :course => @mock_course,:teachers => [teacher]) }
+    let(:chemistry_clazz)   { Factory.create(:portal_clazz, :name => 'Chemistry Clazz', :course => @mock_course,:teachers => [teacher]) }
+    let(:mathematics_clazz) { Factory.create(:portal_clazz, :name => 'Mathematics Clazz', :course => @mock_course,:teachers => [teacher]) }
+
+    let(:investigations_for_all_clazz) do
       inv = Factory.create(:investigation, :name => 'investigations_for_all_clazz', :user => author_user, :publication_status => 'published')
       #assign investigations_for_all_clazz to physics class
       Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(physics_clazz.id,'Investigation',inv.id)
       inv
     end
 
-    let (:activity_for_all_clazz) do
+    let(:activity_for_all_clazz) do
       act = Factory.create(:activity, :name => 'activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
       #assign activity_for_all_clazz to physics class
       Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(physics_clazz.id,'Activity',act.id)
@@ -324,11 +286,11 @@ describe SearchController do
   end
   describe "POST add_material_to_clazzes" do
 
-    let (:clazz)         { Factory.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
-    let (:another_clazz) { Factory.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+    let(:clazz)         { Factory.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+    let(:another_clazz) { Factory.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
 
-    let (:already_assigned_offering) { Factory.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'Investigation'.classify) }
-    let (:another_assigned_offering) { Factory.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'Investigation'.classify) }
+    let(:already_assigned_offering) { Factory.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'Investigation'.classify) }
+    let(:another_assigned_offering) { Factory.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'Investigation'.classify) }
 
     it "should assign only unassigned investigations to the classes" do
       already_assigned_offering

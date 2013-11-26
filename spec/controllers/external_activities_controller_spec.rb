@@ -2,6 +2,7 @@ require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelpe
 
 
 describe ExternalActivitiesController do
+
   let(:name)        { "Cool Activity"                  }
   let(:description) { name                             }
   let(:url )        { "http://activity.com/activity/1" }
@@ -80,6 +81,35 @@ describe ExternalActivitiesController do
     }
   end
 
+  let (:existing) { Factory.create(:external_activity, {
+      :name        => name,
+      :description => description,
+      :url         => existing_url,
+      :publication_status => 'published',
+      :template    => Factory.create(:activity, {
+        :investigation => Factory.create(:investigation)
+      })
+    })}
+
+  let (:another) { Factory.create(:external_activity, {
+      :name        => "#{name} again",
+      :description => "#{description} again",
+      :url         => existing_url,
+      :publication_status => 'published',
+      :is_official => false
+    }) }
+
+  def make(let_expression); end # Syntax sugar for our lets
+
+  def collection(factory, count=3, opts={})
+    results = []
+    count.times do
+      yield opts if block_given?
+      results << FactoryGirl.create(factory.to_sym, opts)
+    end
+    results
+  end
+
   before(:each) do
     @current_project = mock(
       :name => "test project",
@@ -92,51 +122,21 @@ describe ExternalActivitiesController do
       response.template.stub(:net_logo_package_name).and_return("blah")
       response.template.stub_chain(:current_project).and_return(@current_project);
     }
+
     @admin_user = login_admin
-    @existing = Factory.create(:external_activity, {
-      :name        => name,
-      :description => description,
-      :url         => existing_url,
-      :publication_status => 'published',
-      :template    => Factory.create(:activity, {
-        :investigation => Factory.create(:investigation)
-      })
-    })
-    @another = Factory.create(:external_activity, {
-      :name        => "#{name} again",
-      :description => "#{description} again",
-      :url         => existing_url,
-      :publication_status => 'published',
-      :is_official => false
-    })
-  end
-
-  let(:activity) do
-
   end
 
   describe '#index' do
-    context 'when the user is an author' do
-      it "should show only public, official, and user-owned activities" do
-        current_visitor = login_author
-        get :index
-        assigns[:external_activities].length.should be(ExternalActivity.published.count + ExternalActivity.by_user(current_visitor).count)
-      end
-    end
-
-    context 'when the user is an admin' do
-      it "should show all activities" do
-        get :index
-        assigns[:external_activities].length.should be(ExternalActivity.count)
-      end
-    end
+    # material browsing & searching is handled search_controller.rb
+    # one idea: show only the current users list?
+    it "should material indexes display anything?"
   end
 
   describe "#show" do
     it "should assign the activity correctly" do
-      get :show, :id => @existing.id
+      get :show, :id => existing.id
       result = assigns(:external_activity)
-      result.name.should == @existing.name
+      result.name.should == existing.name
     end
   end
 
@@ -150,19 +150,20 @@ describe ExternalActivitiesController do
           created.should_not be_nil
           created.name.should == name
           created.url.should  == url
-          created.id.should_not == @existing.id
+          created.id.should_not == existing.id
         end
       end
 
       describe "when an existing external_activity does exist" do
         let(:existing_url) { url }
         it "should update the existing activity" do
+          existing
           raw_post :publish, {}, activity_hash.to_json
           created = assigns(:external_activity)
           created.should_not be_nil
           created.name.should == name
           created.url.should  == url
-          created.id.should   == @existing.id
+          created.id.should   == existing.id
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
           created.template.sections.should have(1).section
           created.template.pages.should have(1).page
@@ -173,14 +174,13 @@ describe ExternalActivitiesController do
     end
 
     context "when version 2 of the API is requested" do
-      before(:each) do
-        @existing_sequence = Factory.create(:external_activity, {
+
+      let (:existing_sequence) { Factory.create(:external_activity, {
           :name => sequence_name,
           :description => sequence_desc,
           :url => sequence_url,
           :template => Factory.create(:investigation)
-        })
-      end
+        }) }
 
       describe "when there is no existing external_activity" do
         it "should create a new activity" do
@@ -189,7 +189,7 @@ describe ExternalActivitiesController do
           created.should_not be_nil
           created.name.should == name
           created.url.should  == url
-          created.id.should_not == @existing.id
+          created.id.should_not == existing.id
           created.template.should be_an_instance_of(Activity)
         end
       end
@@ -197,12 +197,13 @@ describe ExternalActivitiesController do
       describe "when there is already an existing external_activity" do
         let(:existing_url) { url }
         it "should update the existing activity" do
+          existing
           raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
           created = assigns(:external_activity)
           created.should_not be_nil
           created.name.should == name
           created.url.should  == url
-          created.id.should   == @existing.id
+          created.id.should   == existing.id
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
           created.template.sections.should have(1).section
           created.template.pages.should have(1).page
@@ -219,19 +220,20 @@ describe ExternalActivitiesController do
           created.should_not be_nil
           created.name.should == sequence_name
           created.url.should  == 'http://activity.org/sequence/2'
-          created.id.should_not == @existing_sequence.id
+          created.id.should_not == existing_sequence.id
           created.template.should be_an_instance_of(Investigation)
         end
       end
 
       describe "when an external_activity already exists for the sequence" do
         it 'should update the existing external_activity' do
+          existing_sequence
           raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
           updated = assigns(:external_activity)
           updated.should_not be_nil
           updated.name.should == sequence_name
           updated.url.should  == sequence_url
-          updated.id.should   == @existing_sequence.id
+          updated.id.should   == existing_sequence.id
           # More about the updated sequence?
         end
       end

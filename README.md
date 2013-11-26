@@ -894,14 +894,35 @@ The assets will be compiled to public/assets which should be ignored by
 When running in development mode you do not need to pre-compile your
 assets.
 
+## Solr & Sunspot
 
-## Routing
+[Sunspot](https://github.com/sunspot/sunspot/blob/master/README.md
+) is being used to provide search capabilities.
 
-## Application Settings
+In development mode you will need to create an index and start sunspot:
+
+    bundle exec rake sunspot:solr:start
+    bundle exec rake sunspot:reindex
+
+You can then visit the web interface to the solar server by visiting [localhost:8982/solr/admin/](http://localhost:8982/solr/admin/). Though I haven't found any good reason to do so.
+
+### Rspec testing with sunspot disabled & enabled:
+
+For rspec tests see the helper methods defined in spec/support/solr_spec_helper.rb
+
+For cucumber tests, you can use "Given The materials have been indexed" to update solr indexes after fixture data has been loaded.
 
 
+[https://github.com/sunspot/sunspot/wiki/RSpec-and-Sunspot](https://github.com/sunspot/sunspot/wiki/RSpec-and-Sunspot)
 
-## Settings YAML
+### Solr delpoyment and index-updating ###
+
+If you make changes to how Solr does its indexing, you will have to run a cap task to tell it to reindex:
+
+In theory a simple `bundle exec cap <host> solr:reindex` should work, but
+to be sure use: `bundle exec cap <host> solr:hard_reindex` to restart and reindex.
+
+## Application Settings & Settings YAML
 
 There is a settings.yml file that contains site-wide stuff. The site
 name, url and admin email are all used
@@ -956,5 +977,4 @@ should be written for it.
     rake db:test:prepare
     rake db:dump
     ruby script/server -e production
-
-    (end)
+(end)

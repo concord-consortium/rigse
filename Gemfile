@@ -100,6 +100,10 @@ source "http://rubygems.org"
   gem "factory_girl",           "~> 2.0.5"
 #      ⬆         ⬆  needed for setup tasks in production and dev :(
 
+  gem 'sunspot_rails'
+  gem 'sunspot_solr' # optional pre-packaged Solr distribution
+  # TODO ⬆⬆ remove this, and do something better on production deploy
+
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:
@@ -132,6 +136,7 @@ group :development do
   gem "ruby-prof"
   gem "guard-spork"
   gem "guard-rspec"
+  gem "guard-cucumber"
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
@@ -158,4 +163,5 @@ group :test, :development do
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"
+
 end

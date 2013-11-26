@@ -64,23 +64,22 @@ class ActivitiesController < ApplicationController
   public
 
   def index
-    @include_drafts = params[:include_drafts]
-    @name = param_find(:name)
-    pagenation = params[:page]
-    if (pagenation)
-      @include_drafts = param_find(:include_drafts)
-    else
-      @include_drafts = param_find(:include_drafts,true)
-    end
-    @activities = Activity.search_list({
-      :name => @name,
-      :paginate => true,
-      :page => pagenation
-    })
+    search_params = {
+      :material_types     => [Search::ActivityMaterial],
+      :activity_page      => params[:page],
+      :per_page           => 30,
+      :user_id            => current_visitor.id,
+      :grade_span         => params[:grade_span],
+      :private            => current_visitor.has_role?('admin'),
+      :search_term        => params[:name]
+    }
+
+    s = Search.new(search_params)
+    @activities = s.results[Search::ActivityMaterial]
+
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_visitor.id }
     end
-    @paginated_objects = @activities
 
     if request.xhr?
       render :partial => 'activities/runnable_list', :locals => {:activities => @activities, :paginated_objects =>@activities}

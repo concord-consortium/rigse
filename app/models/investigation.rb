@@ -1,8 +1,52 @@
 class Investigation < ActiveRecord::Base
   include JnlpLaunchable
   include ResponseTypes
+  include SearchModelInterface
 
-  # cattr_accessor :publication_states
+  # see https://github.com/sunspot/sunspot/blob/master/README.md
+  searchable do
+    text :name
+    string :name
+    text :description
+    text :description_for_teacher
+    text :content do
+      nil
+    end
+
+    text :owner do |inv|
+      inv.user && inv.user.name
+    end
+    integer :user_id
+
+    boolean :published do |inv|
+      inv.publication_status == 'published'
+    end
+
+    integer :probe_type_ids, :multiple => true do |inv|
+      inv.data_collectors.map { |dc| dc.probe_type_id }.compact
+    end
+
+    boolean :no_probes do |act|
+      act.data_collectors.map { |dc| dc.probe_type_id }.compact.size < 1
+    end
+
+    boolean :teacher_only
+    integer :offerings_count
+    boolean :is_official
+    boolean :is_template
+
+    time    :updated_at
+    time    :created_at
+
+    string  :grade_span
+    integer :domain_id
+    string  :material_type
+    string  :java_requirements
+    string  :cohorts, :multiple => true do
+      cohort_list
+    end
+
+  end
 
   belongs_to :user
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
@@ -63,7 +107,7 @@ class Investigation < ActiveRecord::Base
   include Publishable
 
   # for convenience (will not work in find_by_* &etc.)
-  [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
+  delegate :grade_span, :domain, :to => :grade_span_expectation, :allow_nil => true
 
   scope :assigned, where('investigations.offerings_count > 0')
   #
@@ -91,7 +135,7 @@ class Investigation < ActiveRecord::Base
   scope :probe_type, {
     :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
     }
-    
+
   scope :probe, lambda { |pt|
     pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
     {
@@ -100,7 +144,7 @@ class Investigation < ActiveRecord::Base
   }
 
   scope :no_probe,{
-    :select => "investigations.id", 
+    :select => "investigations.id",
     :joins => "INNER JOIN activities ON activities.investigation_id = investigations.id INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
   }
 
@@ -120,70 +164,6 @@ class Investigation < ActiveRecord::Base
   include Changeable
   include Noteable # convenience methods for notes...
 
-  self.extend SearchableModel
-  @@searchable_attributes = %w{name description publication_status}
-
-  class <<self
-    def searchable_attributes
-      @@searchable_attributes
-    end
-
-    def find_by_grade_span_and_domain_id(grade_span,domain_id)
-      @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
-      @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
-      # @investigations.flatten!.compact!
-    end
-
-    def search_list(options)
-      grade_span = options[:grade_span] || ""
-      sort_order = options[:sort_order] || "name ASC"
-      domain_id = (!options[:domain_id].nil? && options[:domain_id].length > 0)? (options[:domain_id].class == Array)? options[:domain_id]:[options[:domain_id]] : options[:domain_id] || []
-      name = options[:name]
-      probe_type = options[:probe_type] || []
-
-      investigations = Investigation.like(name)
-      if probe_type.length > 0
-        if probe_type.include?("0")
-          investigations = investigations.activity_group.where('investigations.id not in (?)', Investigation.no_probe)
-        else
-          investigations = investigations.activity_group.probe_type.probe(probe_type)
-        end
-      end
-
-      unless options[:include_drafts]
-        investigations = investigations.published
-      end
-
-      if APP_CONFIG[:use_gse]
-        if domain_id.length > 0
-          investigations = investigations.with_gse.domain(domain_id.map{|i| i.to_i})
-        end
-
-        if (!grade_span.empty?)
-          investigations = investigations.with_gse.grade(grade_span)
-        end
-      end
-
-      investigations = investigations.uniq
-
-      if investigations.respond_to? :ordered_by
-        investigations = investigations.ordered_by(sort_order)
-      end
-
-      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
-      if portal_clazz
-        investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
-      end
-
-      if options[:paginate]
-        investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
-      else
-        investigations
-      end
-    end
-
-  end
-
   # Enables a teacher note to call the investigation method of an
   # authored_entity to find the relavent investigation
   def investigation
@@ -191,7 +171,7 @@ class Investigation < ActiveRecord::Base
   end
 
   after_save :add_author_role_to_use
-  
+
   def add_author_role_to_use
     if self.user
       self.user.add_role('author')
@@ -305,7 +285,7 @@ class Investigation < ActiveRecord::Base
     end
     return true
   end
-  
+
   # Is it 'safe' to delete this investigation?
   def can_be_deleted?
     return can_be_modified?
@@ -338,8 +318,18 @@ class Investigation < ActiveRecord::Base
 
   def full_title
     full_title = self.name
-    
     return full_title
   end
-  
+
+  def domain_id
+    if self.domain
+      self.domain.id
+    else
+      nil
+    end
+  end
+
+  def is_official
+    true # FIXME: Not sure if true should be the hardwired value here
+  end
 end

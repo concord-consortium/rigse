@@ -2,8 +2,62 @@ class ResourcePage < ActiveRecord::Base
   self.table_name = :resource_pages
   include Publishable
   include Changeable
+  include SearchModelInterface
 
   attr_accessor :new_attached_files
+
+  searchable do
+    text :name
+    string :name
+    text :description
+    text :description_for_teacher do
+      nil
+    end
+    text :content
+    text :owner do |rp|
+      rp.user.name
+    end
+    integer :user_id
+    boolean :published do
+      publication_status == 'published'
+    end
+
+    integer :probe_type_ids, :multiple => true do
+      nil
+    end
+
+    boolean :no_probes do
+      true
+    end
+
+
+    boolean :teacher_only do
+      # Useful in Activity and Investigation; stubbed here
+      false
+    end
+    integer :offerings_count
+    boolean :is_official
+
+    boolean :is_template do
+      false
+    end
+
+    time    :updated_at
+    time    :created_at
+
+    string  :grade_span do
+      nil
+    end
+    integer :domain_id do
+      nil
+    end
+
+    string  :material_type
+    string  :java_requirements
+    string  :cohorts, :multiple => true do
+      cohort_list
+    end
+  end
 
   belongs_to :user
   has_many :attached_files, :as => :attachable, :dependent => :destroy
@@ -50,37 +104,37 @@ class ResourcePage < ActiveRecord::Base
   #   http://erniemiller.org/2010/05/11/activerecord-relation-vs-arel/
   #   http://erniemiller.org/2010/03/28/advanced-activerecord-3-queries-with-arel/
   #
-  # The basic query conditions look like this: 
+  # The basic query conditions look like this:
   #
   #   (resource_pages.id IN () OR resource_pages.id IN ())
   #
-  # An additional set of SQL constraints is generated and placed inside 
+  # An additional set of SQL constraints is generated and placed inside
   # each IN() clause with this statement:
   #
   #   scope.select('id').to_sql
   #
-  # For example this query: 
+  # For example this query:
   #
   #   ResourcePage.search_list( { :name => "abc", :user => @admin_user })
   #
   # results in this sql:
   #
-  #   SELECT `resource_pages`.* FROM `resource_pages` 
+  #   SELECT `resource_pages`.* FROM `resource_pages`
   #   WHERE (
   #     (
   #       resource_pages.id IN (
-  #         SELECT id FROM `resource_pages` 
-  #         WHERE `resource_pages`.`publication_status` = 'published' 
+  #         SELECT id FROM `resource_pages`
+  #         WHERE `resource_pages`.`publication_status` = 'published'
   #         AND (resource_pages.name LIKE '%abc%' OR resource_pages.description LIKE '%abc%' OR resource_pages.content LIKE '%abc%')
   #       ) OR resource_pages.id IN (
-  #         SELECT id FROM `resource_pages` WHERE `resource_pages`.`user_id` = 22 
+  #         SELECT id FROM `resource_pages` WHERE `resource_pages`.`user_id` = 22
   #         AND (resource_pages.name LIKE '%abc%' OR resource_pages.description LIKE '%abc%' OR resource_pages.content LIKE '%abc%')
   #       )
   #     )
   #   )
   #
 
-  scope :match_any, lambda { |scopes| 
+  scope :match_any, lambda { |scopes|
     table_name_dot_id = "#{self.table_name}.id"
     conditions = "(#{scopes.map { |scope| "#{table_name_dot_id} IN (#{scope.select(table_name_dot_id).to_sql})" }.join(" OR ")})"
     where(conditions)
@@ -90,8 +144,6 @@ class ResourcePage < ActiveRecord::Base
 
   acts_as_taggable_on :cohorts
 
-  self.extend SearchableModel
-  @@searchable_attributes = %w{name description content publication_status}
   class <<self
     def can_be_created_by?(user)
       user.has_role?('admin', 'manager', 'researcher', 'author') || (Admin::Project.default_project.teachers_can_author? && user.portal_teacher)
@@ -185,7 +237,7 @@ class ResourcePage < ActiveRecord::Base
     # with the mysql2 adapter this sum('count') returns a float for some reason
     student_views.sum('count').to_i
   end
-  
+
   def run_format
     nil
   end
@@ -199,6 +251,10 @@ class ResourcePage < ActiveRecord::Base
     if self.user
       self.user.add_role('author')
     end
+  end
+
+  def is_official
+    true # FIXME: Not sure if true should be the hardwired value here
   end
 
 end

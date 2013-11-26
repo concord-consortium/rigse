@@ -1,12 +1,13 @@
 class Activity < ActiveRecord::Base
   include JnlpLaunchable
+  include SearchModelInterface
 
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
-  
+
   has_many :learner_activities, :dependent => :destroy, :class_name => "Report::LearnerActivity"
 
   has_many :external_activities, :as => :template
@@ -21,6 +22,7 @@ class Activity < ActiveRecord::Base
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
+  # This block adds a has_many for each embeddable type to this model.
   BASE_EMBEDDABLES.each do |klass|
       eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
       :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
@@ -44,18 +46,72 @@ class Activity < ActiveRecord::Base
   include TreeNode
   include Publishable
 
-  self.extend SearchableModel
-  @@searchable_attributes = %w{name description}
-  send_update_events_to :investigation
+  searchable do
+    text :name
+    string :name
+    text :description
+    text :description_for_teacher
+    text :content do
+      nil
+    end
 
+    text :owner do |act|
+      act.user && act.user.name
+    end
+    integer :user_id
+
+    boolean :published do |act|
+      if act.investigation
+        act.investigation.published?
+      else
+        act.published?
+      end
+    end
+
+    integer :probe_type_ids, :multiple => true do |act|
+      act.data_collectors.map { |dc| dc.probe_type_id }.compact
+    end
+
+    boolean :no_probes do |act|
+      act.data_collectors.map { |dc| dc.probe_type_id }.compact.size < 1
+    end
+
+    boolean :teacher_only
+
+    integer :offerings_count do |act|
+      total = 0
+      if act.investigation
+        total += act.investigation.offerings_count
+      end
+      total += act.offerings_count
+    end
+    boolean :is_official
+    boolean :is_template
+
+    time    :updated_at
+    time    :created_at
+
+    string  :grade_span
+    integer :domain_id
+    string  :material_type
+    string  :java_requirements
+    string  :cohorts, :multiple => true do
+      cohort_list
+    end
+  end
+
+  send_update_events_to :investigation
+  delegate :domain_id, :grade_span, :to => :investigation, :allow_nil => true
+
+  # TODO: Which of these scopes can be removed?
   scope :with_gse, {
     :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
   }
-  
+
   scope :without_teacher_only,{
     :conditions =>['activities.teacher_only = 0']
   }
-  
+
   scope :domain, lambda { |domain_id|
     {
       :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
@@ -72,7 +128,7 @@ class Activity < ActiveRecord::Base
   scope :probe_type, {
     :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
   }
-    
+
   scope :probe, lambda { |pt|
     pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
     {
@@ -81,7 +137,7 @@ class Activity < ActiveRecord::Base
   }
 
   scope :no_probe,{
-    :select => "activities.id", 
+    :select => "activities.id",
     :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
   }
 
@@ -105,7 +161,7 @@ class Activity < ActiveRecord::Base
   {
     :conditions =>['activities.publication_status = "published" OR (investigations.publication_status = "published" AND investigations.allow_activity_assignment = 1)']
   }
-  
+
   scope :directly_published,
   {
     :conditions =>['activities.publication_status = "published"']
@@ -114,67 +170,7 @@ class Activity < ActiveRecord::Base
   scope :assigned, where('offerings_count > 0')
 
   scope :ordered_by, lambda { |order| { :order => order } }
-  
-  class <<self
-    def searchable_attributes
-      @@searchable_attributes
-    end
-
-    def search_list(options)
-      grade_span = options[:grade_span] || ""
-      domain_id = []
-      # we expect domain_id into always be represented as an array:
-      domain_id = [options[:domain_id]].flatten.uniq.compact unless options[:domain_id].blank?
-      name = options[:name]
-      sort_order = options[:sort_order] || "name ASC"
-      probe_type = options[:probe_type] || []
-
-      # the investigation tacked on here is because some of the sql in other scopes assumes the parent
-      # investigation is available
-      activities = Activity.like(name).investigation
-
-      unless options[:include_drafts]
-        activities = activities.published
-      end
-
-      if probe_type.length > 0
-        if probe_type.include?("0")
-          activities = activities.activity_group.where('activities.id not in (?)', Activity.no_probe)
-        else
-          activities = activities.activity_group.probe_type.probe(probe_type)
-        end
-      end
-
-      if APP_CONFIG[:use_gse]
-        if domain_id.length > 0
-          activities = activities.with_gse.domain(domain_id.map{|i| i.to_i})
-        end
-
-        if (!grade_span.empty?)
-          activities = activities.with_gse.grade(grade_span)
-        end
-      end
-
-      if options[:without_teacher_only]
-        activities = activities.without_teacher_only
-      end
-
-      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
-      if portal_clazz
-        activities = activities - portal_clazz.offerings.map { |o| o.runnable }
-      end
-      if activities.respond_to? :ordered_by
-        activities = activities.ordered_by(sort_order)
-      end
-      if options[:paginate]
-        activities = activities.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
-      else
-        activities
-      end
-      
-    end
-
-  end
+  # End scope weeding zone
 
   def parent
     return investigation
@@ -184,13 +180,9 @@ class Activity < ActiveRecord::Base
     sections
   end
 
-
   def left_nav_panel_width
     300
   end
-
-
-
 
   def deep_xml
     self.to_xml(
@@ -301,7 +293,19 @@ class Activity < ActiveRecord::Base
     unless self.parent.nil?
       full_title = "#{full_title} | #{self.parent.name}"
     end
-    
+
     return full_title
   end
+
+  def is_official
+    true # FIXME: Not sure if true should be the hardwired value here
+  end
+
+  def is_template
+    if (investigation && investigation.is_template)
+      return true
+    end
+    read_attribute(:is_template)
+  end
+
 end

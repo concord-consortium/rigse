@@ -1,51 +1,16 @@
-- show_message_onSearch= ""
-- if @investigations_count == 1
-  - show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)'>#{t(:investigation)}</a>"
-- elsif @investigations_count > 0
-  - show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)''>#{t(:investigation).pluralize}</a>"
-
-- if @activities_count > 0 && @investigations_count > 0
-  - show_message_onSearch += ","
-- if @activities_count == 1
-  - show_message_onSearch += " #{@activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activity</a>"
-- elsif @activities_count > 0
-  - show_message_onSearch += " #{@activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activities</a>"
-
-- if @external_activities_count > 0 && (@investigations_count > 0 || @activities_count > 0)
-  - show_message_onSearch += ","
-- if @external_activities_count == 1
-  - show_message_onSearch += " #{@external_activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"external_activities_bookmark\").offsetTop)'>#{ExternalActivity.display_name.downcase}</a>"
-- elsif @external_activities_count > 0
-  - show_message_onSearch += " #{@external_activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"external_activities_bookmark\").offsetTop)'>#{ExternalActivity.display_name.pluralize.downcase}</a>"
-
-- show_message_onSearch +=" matching"
-- if @search_term != ""
-  - unless @search_term.nil?
-    - show_message_onSearch +=" search term \"#{@search_term}\" and"
-- show_message_onSearch +=" selected criteria"
-
 %p{:style=>'font-weight:bold'}
-  - if @activities_count > 0 or @investigations_count > 0 or @external_activities_count > 0
-    = show_message_onSearch.html_safe
+  - if @activities_count > 0 or @investigations_count > 0
+    = build_onSearch_message(@form_model).html_safe
   - else
     No Results Found
 
 .results_container
   %form{:method => :post, :id => "search_result_form"}
+    -# TODO: I think this form can be safely removed
     = hidden_field_tag "search_term", @search_term
     = hidden_field_tag "investigation_page", @investigation_page
     = hidden_field_tag "activity_page", @activity_page
-    = hidden_field_tag "external_activity_page", @external_activity_page
-    -unless investigations.nil?
-      - if investigations.length>0
-        = render :partial=>'search/result_material',:locals=>{:materials=>investigations,:type=>'Investigations'}
-    -unless activities.nil?
-      - if activities.length>0
-        = render :partial=>'search/result_activity',:locals=>{:materials=>activities,:type=>'Activities'}
-    -unless external_activities.nil?
-      - if external_activities.length>0
-        -# I'd like to use a named scope here, but it turns out that because the results are a lazy-loaded AREL object that adding a scope re-builds the query rather than filtering the results.
-        -if external_activities.where(:is_official => true).length > 0
-          = render :partial=>'search/result_external_activity',:locals=>{:materials=>external_activities.where(:is_official => true), :type=>'External Activities', :head_label => 'Official' }
-        -if external_activities.where(:is_official => false).length > 0
-          = render :partial=>'search/result_external_activity',:locals=>{:materials=>external_activities.where(:is_official => false), :type=>'External Activities', :head_label => 'Contributed' }
+    - if investigations && !investigations.empty?
+      = render :partial => 'search/result_investigation', :locals => { :materials => investigations, :type => 'Investigations' }
+    - if activities && !activities.empty?
+      = render :partial => 'search/result_activity', :locals => { :materials => activities, :type => 'Activities' }

@@ -5,76 +5,93 @@
   #filtermask
   .showhidefilters
     %div{:id=>"oExpandCollapseText",:style=>"width:10px;float:left"}
-      \-    
+      \-
     = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
   %div{:style=>'clear:both'}
   #filters_wrapper.visible
-    %table.filters.collapse_filters{:cellpadding=>0,:cellspacing=>0}
-      
+    %table.filters.collapse_filters{:cellpadding=>0,:cellspacing=>0, :width=>"95%"}
+
       %tr
         %td.sortbycolumn
           .filterheader
             Sort By
           %div
-            = label_tag 'sort_order_created_at_ASC','Oldest', :class=>(@sort_order == "created_at ASC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
-            = radio_button_tag :sort_order,'created_at ASC',(@sort_order == "created_at ASC"),:class=>'sort_radio'
+            = order_check_box(Search::Oldest, "Oldest", @form_model.sort_order)
           %div
-            = label_tag 'sort_order_created_at_DESC','Newest',:class=>(@sort_order == "created_at DESC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
-            = radio_button_tag :sort_order,'created_at DESC',(@sort_order == "created_at DESC"),:class=>'sort_radio'
+            = order_check_box(Search::Newest, "Newest", @form_model.sort_order)
           %div
-            = label_tag 'sort_order_name_ASC','Alphabetical',:class=>(@sort_order == "name ASC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
-            = radio_button_tag :sort_order,'name ASC',(@sort_order == "name ASC"),:class=>'sort_radio'
+            = order_check_box(Search::Alphabetical, "Alphabetical", @form_model.sort_order)
           %div
-            = label_tag 'sort_order_offerings_count_DESC' ,'Popularity',:class=>(@sort_order == "offerings_count DESC") ? 'highlightoption':'',:onclick=>'highlightlabel(this)'
-            = radio_button_tag :sort_order,'offerings_count DESC',(@sort_order == "offerings_count DESC"),:class=>'sort_radio'
-        %td.domaincolumn
-          .filterheader
-            Scientific Domain
-          -scientific_domains.each do |domain|
+            = order_check_box(Search::Popularity, "Popularity", @form_model.sort_order)
+        - if scientific_domains.size > 0
+          %td.domaincolumn
+            .filterheader
+              Scientific Domain
+            -scientific_domains.each do |domain|
+              .tablecell
+                = check_box_tag 'domain_id[]',domain[1], (@form_model.domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
+                = label_tag domain[0].gsub(/\s+/, ""), domain[0]
+              /= check_box_tag :domain_id, domain, true
+        - if grades.size > 0
+          %td.gradecolumn
+            .filterheader
+              Grade
             .tablecell
-              = check_box_tag 'domain_id[]',domain[1], (@domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
-              = label_tag domain[0].gsub(/\s+/, ""), domain[0]
-            /= check_box_tag :domain_id, domain, true
-        %td.gradecolumn
-          .filterheader
-            Grade
-          .tablecell
-            = check_box_tag 'grade_span[]',"",(@grade_span.length > 0 && (@grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
-            = label_tag 'allgrades', 'All Grades'
-          -grades.each do |grade|
-            
-            .tablecell
-              = check_box_tag 'grade_span[]', grade,(@grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
-              = label_tag grade, grade
+              = check_box_tag 'grade_span[]',"",(@form_model.grade_span.length > 0 && (@form_model.grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
+              = label_tag 'allgrades', 'All Grades'
+            -grades.each do |grade|
+
+              .tablecell
+                = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
+                = label_tag grade, grade
         %td.materialcolumn
           .filterheader
-            Material
+            Material Type
           .tablecell
-            = @investigation_checkedstatus
-            = check_box_tag 'material[]', 'investigation', @material_type.include?('investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
+            = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'investigation', t(:investigation).titleize
           .tablecell
-            = @activity_checkedstatus
-            = check_box_tag 'material[]', 'activity',@material_type.include?('activity'),:id=>'activity',:onclick=>"materialCheckOnClick(this);"
+            = check_box_tag 'material_types[]', 'Activity', @form_model.material_types.include?('Activity'),:id=>'Activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
-          - if current_project.include_external_activities?
-            .tablecell
-              = @external_activity_checkedstatus
-              = check_box_tag 'material[]', 'external_activity',@material_type.include?('external_activity'),:id=>'external_activity',:onclick=>"materialCheckOnClick(this);"
-              = label_tag 'external_activity', ExternalActivity.display_name
-            .tablecell
-              = @external_include_contributed_checkedstatus
-              = check_box_tag 'include_contributed'
-              = label_tag 'include_contributed', 'Include contributed activities?'
+          %br
+          .filterheader
+            Material Properties
+          .tablecell
+            = check_box_tag 'java_requirements[]', SearchModelInterface::NoJavaRequirement, @form_model.runs_in_browser, :id => 'runs_in_browser'
+            %label.tooltip
+              Runs In Browser
+              %span.tip
+                These materials do not launch a Java webstart application.
+          .tablecell
+            = check_box_tag 'java_requirements[]', SearchModelInterface::JNLPJavaRequirement, @form_model.requires_download, :id => 'requires_download'
+            %label.tooltip
+              Requires Download
+              %span.tip
+                These materials download a file to your computer, and start using Java Web Start.
+          %br
+          .filterheader
+            Authorship
+          .tablecell
+            = check_box_tag 'include_official', '1', @form_model.will_show_official, :id => 'include_official'
+            %label.tooltip
+              Official
+              %span.tip
+                These materials are written by the Concord Consortium.
+          .tablecell
+            = check_box_tag 'include_contributed', '1', @form_model.will_show_contributed, :id => 'include_contributed'
+            %label.tooltip
+              Authored by Community
+              %span.tip
+                These materials are written by external contributors.
         %td.probescolumn
-          - no_probes_req_selected = @probe_type.include?("0")
+          - no_probes_req_selected = @form_model.probe_type.include?("0")
           .filterheader
             Sensors
           .noprobesrequired
-            = check_box_tag 'probe[]', '0', no_probes_req_selected, :id=>'probe_0', :class=>'probe_no_check', :onclick=>'uncheckedallprobes(false);'
+            = check_box_tag 'no_probes', '1', @form_model.no_probes, :id=>'probe_0', :class=>'probe_no_check', :onclick=>'uncheckedallprobes(false);'
             = label_tag "probe_0","No Sensors Required",:class=>"probes_label"
           .probes_container.webkit_scrollbars
-            
+
             %div
               Select&nbsp;
               %span#select_all_probes
@@ -85,6 +102,6 @@
                 %a{:href => 'javascript: void(0);', :onclick=>"uncheckedallprobes(false);"}none
             - probe_types.each do |probe|
               .tablecell
-                = check_box_tag 'probe[]',"#{probe.id}",(@probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items",:onclick=>"uncheckednoprobe(this);"
+                = check_box_tag 'probe[]',"#{probe.id}",(@form_model.probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items",:onclick=>"uncheckednoprobe(this);"
                 = label_tag "probe_#{probe.id}","#{probe.name}",:class=>"probes_label"
           #probes_overlay{ :style=> (no_probes_req_selected ? '' : 'display: none;') }

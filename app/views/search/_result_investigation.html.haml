@@ -1,0 +1,19 @@
+-# TODO: Seems like this and _result_activity.html.haml share a lot of code and could be combined.
+#investigations_bookmark
+.materials_container.investigations
+  .material_list_header
+    ="#{t(:investigation).pluralize.titleize}"
+  %p.border_top= page_entries_info materials, :model => Investigation.display_name
+  = will_paginate @investigations, :param_name => 'investigation_page', :params => @form_model.params.merge(:type => 'inv')
+
+  %table.result_material{ :cellpadding => 0, :cellspacing => 0 }
+    %tr
+      %td.material_list
+        - materials.each do |investigation|
+          .material_list_item{ :id => "search_investigation_#{investigation.id}",
+          :'data-material_name' => investigation.name,
+          :'data-material_id' => investigation.id,
+          :style => ("border:none" if investigation == materials.last ) }
+            = render :partial => 'result_item', :locals => { :material => investigation }
+  %br
+  = will_paginate @investigations, :param_name => 'investigation_page', :params => @form_model.params.merge(:type => 'inv')

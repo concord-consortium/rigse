@@ -1,0 +1,22 @@
+production:
+  solr:
+    hostname: localhost
+    port: 8983
+    log_level: WARNING
+    # read_timeout: 2
+    # open_timeout: 0.5
+
+development:
+  solr:
+    hostname: localhost
+    port: 8982
+    log_level: INFO
+
+test: &TEST
+  solr:
+    hostname: localhost
+    port: 8981
+    log_level: WARNING
+    auto_commit_after_request: false
+cucumber:
+  <<: *TEST

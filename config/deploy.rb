@@ -223,6 +223,8 @@ namespace :deploy do
       mkdir -p #{shared_path}/public/installers &&
       mkdir -p #{shared_path}/config/initializers &&
       mkdir -p #{shared_path}/system/attachments &&
+      mkdir -p #{shared_path}/solr/data &&
+      mkdir -p #{shared_path}/solr/pids &&
       touch #{shared_path}/config/database.yml &&
       touch #{shared_path}/config/settings.yml &&
       touch #{shared_path}/config/installer.yml &&
@@ -258,7 +260,9 @@ namespace :deploy do
       ln -nfs #{shared_path}/public/installers #{release_path}/public/installers &&
       ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data &&
       ln -nfs #{shared_path}/sis_import_data #{release_path}/sis_import_data &&
-      ln -nfs #{shared_path}/system #{release_path}/public/system
+      ln -nfs #{shared_path}/system #{release_path}/public/system &&
+      ln -nfs #{shared_path}/solr/data #{release_path}/solr/data &&
+      ln -nfs #{shared_path}/solr/pids #{release_path}/solr/pids
     CMD
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
@@ -673,6 +677,32 @@ namespace 'jnlp' do
   task :bump_snapshot_to_latest , :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "RAILS_ENV=#{rails_env} bundle exec rake app:jnlp:bump_snapshot_to_latest --trace"
+  end
+end
+
+
+# Tasks to interact with Solr and SunSpot
+namespace :solr do
+  desc "start solr"
+  task :start, :roles => :app, :except => { :no_release => true } do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake sunspot:solr:start"
+  end
+  desc "stop solr"
+  task :stop, :roles => :app, :except => { :no_release => true } do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake sunspot:solr:stop ;true"
+  end
+
+  desc "stop solr, remove data, start solr, reindex all records"
+  task :hard_reindex, :roles => :app do
+    stop
+    run "rm -rf #{shared_path}/solr/data/*"
+    start
+    reindex
+  end
+
+  desc "simple reindex" #note the yes | reindex to avoid the nil.chomp error
+  task :reindex, roles: :app do
+    run "cd #{current_path} && yes | RAILS_ENV=#{rails_env} bundle exec rake sunspot:solr:reindex"
   end
 end
 

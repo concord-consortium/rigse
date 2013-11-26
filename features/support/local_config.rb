@@ -41,9 +41,14 @@ class Capybara::Server
   def host
     CapybaraConfig.server_host || "127.0.0.1"
   end
-end  
+end
 
 settings_file = File.expand_path("~/.capybara.rb")
 if File.exists?(settings_file)
   CapybaraConfig.new.instance_eval(IO.read(settings_file), settings_file)
 end
+
+include SolrSpecHelper
+solr_setup
+clean_solar_index
+reindex_all

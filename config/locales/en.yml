@@ -50,6 +50,7 @@ en:
         one: resource page
         other: resource page
   investigation: sequence
+  activity: activity
   recent_activity:
     no_offerings: 'You need to assign investigations to your classes.'
     no_students:  'You have not yet assigned students to your classes.'
@@ -65,7 +66,8 @@ en:
     student_report_enabled_description: Show a link to the student so they can see all their answers and see if they are correct
     show_score_description: Show the score in the report
     description_for_teacher_description: "If this description is filled in, it will be shown in the search page when a teacher is logged in"
-
+  JNLPJavaRequirement: Requires download
+  NoJavaRequirement: Runs in browser
 
 'en-HAS':
   activerecord:

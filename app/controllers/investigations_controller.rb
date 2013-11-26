@@ -82,85 +82,32 @@ class InvestigationsController < AuthoringController
     end
   end
 
+  def default_search
+    search_params = {
+      :material_types     => [Search::InvestigationMaterial],
+      :investigation_page => params[:page],
+      :per_page           => 30,
+      :user_id            => current_visitor.id,
+      :grade_span         => params[:grade_span],
+      :private            => current_visitor.has_role?('admin'),
+      :search_term        => params[:name]
+    }
+
+    sort_order = param_find(:sort_order, (params[:method] == :get))
+    s = Search.new(search_params)
+    return s.results[Search::InvestigationMaterial]
+  end
+
   public
 
-  # POST /investigations/select_js
+
   def index
-    # @grade_span = param_find(:grade_span)
-    # @domain_id = param_find(:domain_id)
-    # @name = param_find(:name
-    # don't save these, see: http://www.pivotaltracker.com/story/show/2428013
-    @grade_span = params[:grade_span]
-    @domain_id = params[:domain_id]
-    @include_drafts = param_find(:include_drafts)
-    @name = param_find(:name)
-    pagination = params[:page] == "" ? 1 : params[:page]
-    if (params[:method] == :get)
-      @include_drafts = param_find(:include_drafts,true)
-    else
-      @include_drafts = param_find(:include_drafts)
-    end
-
-    @sort_order = param_find(:sort_order, (params[:method] == :get))
-    if params[:include_usage_count].blank?
-      # The checkbox was unchecked. No other way to detect this as the param gets passed as nil
-      # unless it was actually checked as part of the request
-      session[:include_usage_count] = false if params[:method] == :get
-    else
-      session[:include_usage_count] = params[:include_usage_count]
-    end
-
-    if current_visitor.anonymous?
-      session[:include_usage_count] = false
-      @include_drafts = false
-    end
-    @include_usage_count = session[:include_usage_count]
-    
-    search_options = {
-      :name => @name,
-      :portal_clazz_id => @portal_clazz_id,
-      :include_drafts => @include_drafts,
-      :grade_span => @grade_span,
-      :domain_id => @domain_id,
-      :sort_order => @sort_order || 'name ASC',
-      :paginate => true,
-      :page => pagination
-    }
-    @investigations = Investigation.search_list(search_options)
-
-    if params[:mine_only]
-      @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
-    end
-
+    @investigations = default_search
     @paginated_objects = @investigations
-
-    if request.xhr?
-      @resource_pages = ResourcePage.search_list(search_options) unless params[:investigations_only]
-      render :partial => 'investigations/runnable_list_with_resource_pages', :locals => {
-        :investigations => @investigations,
-        :resource_pages => @resource_pages
-      }
-    else
-      respond_to do |format|
-        format.html do
-          render 'index'
-        end
-        format.js
-      end
-    end
   end
 
   def printable_index
-    @investigations = Investigation.search_list({
-      :name => param_find(:name),
-      :portal_clazz_id => @portal_clazz_id,
-      :include_drafts => param_find(:include_drafts, true),
-      :grade_span => param_find(:grade_span),
-      :domain_id => param_find(:domain_id),
-      :sort_order => param_find(:sort_order),
-      :paginate => false
-    })
-
+    @investigations = default_search
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
     end
