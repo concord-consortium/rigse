@@ -301,4 +301,11 @@ class Activity < ActiveRecord::Base
     true # FIXME: Not sure if true should be the hardwired value here
   end
 
+  def is_template
+    if (investigation && investigation.is_template)
+      return true
+    end
+    read_attribute(:is_template)
+  end
+
 end

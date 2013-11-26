@@ -122,5 +122,37 @@ describe Activity do
     let (:probe_type)   { Factory.create(:probe_type) }
     let (:embeddable_data_collectors) { Factory.create(:data_collector, :probe_type => probe_type) }
     let (:page_element) { Factory.create(:page_element, :page => page, :embeddable => embeddable_data_collectors) }
-  end 
+  end
+
+  describe "#is_template" do
+    let (:investigation_with_template)    { mock_model(Investigation, :is_template =>true)}
+    let (:investigation_without_template) { mock_model(Investigation, :is_template =>false)}
+    let (:investigation) { nil }
+    let (:is_template)   { false }
+    subject do
+      s = Factory.create(:activity, :is_template => is_template)
+      s.stub!(:investigation => investigation)
+      s.is_template
+    end
+
+    describe "when the attribute is_template is true" do
+      let(:is_template) { true }
+      it { should be_true}
+    end
+    describe "when the attribute is_template is false" do
+      let(:is_template) { false }
+      it { should be_false}
+
+      describe "when the activity has an investigation" do
+        describe "that is a template" do
+          let(:investigation) { investigation_with_template }
+          it { should be_true }
+        end
+        describe "that is not a template" do
+          let(:investigation) { investigation_without_template }
+          it { should be_false }
+        end
+      end
+    end
+  end
 end
