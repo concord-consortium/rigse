@@ -76,13 +76,13 @@
             %label.tooltip
               Official
               %span.tip
-                Activities and Sequences written by the Concord Consortium.
+                These materials are written by the Concord Consortium.
           .tablecell
             = check_box_tag 'include_contributed', '1', @form_model.will_show_contributed, :id => 'include_contributed'
             %label.tooltip
               Authored by Community
               %span.tip
-                Includes activities and sequences written by external contributors.
+                These materials are written by external contributors.
         %td.probescolumn
           - no_probes_req_selected = @form_model.probe_type.include?("0")
           .filterheader
