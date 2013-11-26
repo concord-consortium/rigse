@@ -80,7 +80,6 @@ width: 300px;
   margin:17px 10px 17px 5px;
   height:100px;
   width: 100px;
-  border: 1px solid;
   text-align:center;
 }
 
@@ -391,20 +390,31 @@ span.clazz_count{padding-left:5px;font-style:italic;}
 .ss-li{padding-top:2px;}
 .ss-po{padding-top:2px;padding-bottom:4px;}
 
-span.is_official {
-  font-size: 10px;
-  padding: 0.2em;
-  color: white;
-  background-color: #f3951d;
-  margin-left: 0.2em;
+span.material_meta_data {
+  span {
+    font-size: 10px;
+    padding: 0.2em;
+    color: white;
+    margin-left: 0.2em;
+    text-transform: lowercase;
+  }
+  .is_community {
+    color: #f3951d;
+    background-color: #fbf4da;
+  }
+  .is_official {
+    background-color: #f3951d;
+  }
+  .NoJavaRequirement {
+    background-color: #479492;
+  }
+  .JNLPJavaRequirement {
+    color: #479492;
+    background-color: #c3e7e5;
+  }
 }
-span.material_kind {
-  font-size: 10px;
-  color: white;
-  padding: 0.2em;
-  margin-left: 0.2em;
-  background-color: #479492;
-}
+
+
 td.materialcolumn {
   white-space: nowrap;
 }

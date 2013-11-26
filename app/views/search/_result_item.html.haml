@@ -19,11 +19,14 @@
         %td
         %td
           %span.material_header
-            - unless material.java_requirements.blank?
-              %span.material_kind
-                = material.java_requirements
-            - if material.is_official
-              %span.is_official official
+            %span.material_meta_data
+              - unless material.java_requirements.blank?
+                %span{:class => material.java_requirements}
+                  = t(material.java_requirements)
+              - if material.is_official
+                %span.is_official Official
+              - else
+                %span.is_community Community
             %br
             - if link_url.nil?
               = material.name
