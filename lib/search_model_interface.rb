@@ -1,7 +1,8 @@
 # For the purposes of searching and grouping items which appear similar to
 # end users but have different representations in the data model
 module SearchModelInterface
-
+  JNLPJavaRequirement  = "JNLPJavaRequirement"
+  NoJavaRequirement    = "NoJavaRequirement"
   def self.included(clazz)
     ## add before_save hooks
     clazz.class_eval do
@@ -25,11 +26,11 @@ module SearchModelInterface
   def java_requirements
     case self
     when Investigation
-      return "JNLP"
+      return JNLPJavaRequirement
     when Activity
-      return "JNLP"
+      return JNLPJavaRequirement
     else
-      return ""
+      return NoJavaRequirement
     end
   end
 end

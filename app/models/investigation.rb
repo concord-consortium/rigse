@@ -41,6 +41,7 @@ class Investigation < ActiveRecord::Base
     string  :grade_span
     integer :domain_id
     string  :material_type
+    string  :java_requirements
     string  :cohorts, :multiple => true do
       cohort_list
     end

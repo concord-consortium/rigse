@@ -55,6 +55,7 @@ class ExternalActivity < ActiveRecord::Base
       nil
     end
     string  :material_type
+    string  :java_requirements
     string  :cohorts, :multiple => true do
       cohort_list
     end

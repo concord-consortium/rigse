@@ -16,7 +16,9 @@ class Search
   attr_accessor :per_page
   attr_accessor :user_id
   attr_accessor :include_contributed
+  attr_accessor :include_official
   attr_accessor :include_templates
+  attr_accessor :java_requirements
 
   SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
   InvestigationMaterial   = "Investigation"
@@ -66,6 +68,7 @@ class Search
     return [material_types].flatten
   end
 
+
   def initialize(opts={})
     self.text           = Search.clean_search_terms(opts[:search_term])
     self.domain_id      = Search.clean_domain_id(opts[:domain_id])
@@ -86,8 +89,10 @@ class Search
 
     self.activity_page        = opts[:activity_page]       || 1
     self.investigation_page   = opts[:investigation_page]  || 1
-    self.include_contributed  = opts[:include_contributed] || false
     self.without_teacher_only = opts[:without_teacher_only]|| true
+    self.java_requirements    = opts[:java_requirements]   || []
+    self.include_contributed  = opts[:include_contributed]
+    self.include_official     = opts[:include_official]
     self.include_templates    = false
     self.search()
   end
@@ -112,14 +117,17 @@ class Search
         else
           s.with(:probe_type_ids, self.probe) unless (self.probe.empty?)
         end
-        s.with(:is_official, true)  unless self.include_contributed
+        search_by_authorship(s)
+        search_by_java_requirements(s)
         s.with(:is_template, false) unless self.include_templates
+
         if (!self.private && self.user_id)
           s.any_of do |c|
             c.with(:cohorts, Search.cohorts_for(self.user_id))
             c.with(:cohorts, nil)
           end
         end
+
         s.facet :material_type
         s.order_by(*SortOptions[self.sort_order])
         if (type==Search::ActivityMaterial)
@@ -138,7 +146,7 @@ class Search
   def params
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
-      :per_page, :include_contributed, :investigation_page, :activity_page]
+      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements]
     keys.each do |key|
       value = self.send key
       if value
@@ -152,6 +160,38 @@ class Search
   def types(*types)
     type_names = types.map { |t| t.name                           }
     self.results.select    { |r| type_names.include? r.class_name }
+  end
+
+  def requires_download
+    self.java_requirements.include? SearchModelInterface::JNLPJavaRequirement
+  end
+
+  def runs_in_browser
+    self.java_requirements.include? SearchModelInterface::NoJavaRequirement
+  end
+
+  def will_show_official
+    self.include_official if self.include_contributed
+    true
+  end
+
+  def will_show_contributed
+    self.include_contributed
+  end
+
+  def search_by_authorship(search)
+    return if (include_official && include_contributed)
+    search.with(:is_official, true)  if (include_official)
+    search.with(:is_official, false) if (include_contributed)
+  end
+
+  def search_by_java_requirements(search)
+    return if (java_requirements.size < 1)
+    search.any_of do |s|
+      java_requirements.each do |r|
+        s.with(:java_requirements, r)
+      end
+    end
   end
 
   def count; self.hits.size; end

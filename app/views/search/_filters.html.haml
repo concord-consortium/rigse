@@ -46,15 +46,39 @@
                 = label_tag grade, grade
         %td.materialcolumn
           .filterheader
-            Material
+            Material Type
           .tablecell
             = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'investigation', t(:investigation).titleize
           .tablecell
             = check_box_tag 'material_types[]', 'Activity', @form_model.material_types.include?('Activity'),:id=>'Activity',:onclick=>"materialCheckOnClick(this);"
             = label_tag 'activity','Activity'
+          %br
+          .filterheader
+            Material Properties
           .tablecell
-            = check_box_tag 'include_contributed', '1', @form_model.include_contributed, :id => 'include_contributed'
+            = check_box_tag 'java_requirements[]', SearchModelInterface::NoJavaRequirement, @form_model.runs_in_browser, :id => 'runs_in_browser'
+            %label.tooltip
+              Runs In Browser
+              %span.tip
+                These materials do not launch a Java webstart application.
+          .tablecell
+            = check_box_tag 'java_requirements[]', SearchModelInterface::JNLPJavaRequirement, @form_model.requires_download, :id => 'requires_download'
+            %label.tooltip
+              Requires Download
+              %span.tip
+                These materials download a file to your computer, and start using Java Web Start.
+          %br
+          .filterheader
+            Authorship
+          .tablecell
+            = check_box_tag 'include_official', '1', @form_model.will_show_official, :id => 'include_official'
+            %label.tooltip
+              Official
+              %span.tip
+                Activities and Sequences written by the Concord Consortium.
+          .tablecell
+            = check_box_tag 'include_contributed', '1', @form_model.will_show_contributed, :id => 'include_contributed'
             %label.tooltip
               Authored by Community
               %span.tip
