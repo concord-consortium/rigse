@@ -134,13 +134,6 @@ class Reports::Excel
     "#{learner.student.user.first_name} #{learner.student.user.last_name}"
   end
 
-  def learner_info_cells(learner)
-    clazz = learner.offering.clazz
-    school = clazz.school
-    teachers = clazz.teachers.flatten.compact.uniq.map{|t| t.name }.join(",")
-    return [learner_id(learner), clazz.name, school_name_for(clazz), user_id(learner), learner_login(learner), learner_name(learner), teachers]
-  end
-
   def report_learner_info_cells(report_learner)
     return [
       report_learner.student_id,
