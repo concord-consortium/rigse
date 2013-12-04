@@ -28,6 +28,11 @@
                                                        @learner_selector.select_runnables.map {|r| "#{r.class}_#{r.id}"}), { :multiple => true })
       %tr
         %td
+          %label Permission Forms:
+        %td
+          = select_tag('perm_form', options_for_select(@learner_selector.all_perm_forms, @learner_selector.select_perm_form),  { :multiple => true, :class => 'big_selector'})
+      %tr
+        %td
           %label Start Date:
         %td
           = calpicker_tag "start_date", @learner_selector.start_date
@@ -45,3 +50,4 @@
   new Chosen($('schools'));
   new Chosen($('runnables'));
   new Chosen($('teachers'));
+  new Chosen($('perm_form'));

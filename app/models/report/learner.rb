@@ -13,6 +13,9 @@ class Report::Learner < ActiveRecord::Base
   scope :before, lambda         { |date|         {:conditions => ["last_run < ?", date]} }
   scope :in_schools, lambda     { |school_ids|   {:conditions => {:school_id   => school_ids   }}}
   scope :in_classes, lambda     { |class_ids|    {:conditions => {:class_id    => class_ids    }}}
+  scope :with_perm_form, lambda { |perm_form|
+    where "permission_forms like ?", "%#{perm_form}%"
+  }
   scope :with_runnables, lambda { |runnables|
     where 'CONCAT(runnable_type, "_", runnable_id) IN (?)', runnables.map{|runnable| "#{runnable.class}_#{runnable.id}"}.join(",")}
 

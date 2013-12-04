@@ -2,8 +2,8 @@
 # Its sole purpose is to clean up searching Report::Learner queries.
 
 class Report::Learner::Selector
-  attr_accessor :all_schools, :all_teachers, :all_runnables,
-                :select_schools, :select_teachers, :select_runnables,
+  attr_accessor :all_schools, :all_teachers, :all_runnables, :all_perm_forms,
+                :select_schools, :select_teachers, :select_runnables, :select_perm_form,
                 :start_date, :end_date,
                 :learners
 
@@ -25,7 +25,7 @@ class Report::Learner::Selector
 
     @start_date            = options['start_date']
     @end_date              = options['end_date']
-
+    @all_perm_forms        = Portal::PermissionForm.all.map { |p| p.name }
     begin
       Time.parse(@start_date)
     rescue
@@ -44,6 +44,7 @@ class Report::Learner::Selector
     @select_runnables      = options['runnables'] || []
     @select_schools        = options['schools']   || []
     @select_teachers       = options['teachers']  || []
+    @select_perm_form      = options['perm_form'] || nil
 
     # to populate dropdown menus:
     @select_schools   = @select_schools.map      { |s| Portal::School.find(s) }
@@ -69,6 +70,7 @@ class Report::Learner::Selector
     @scopes[:with_runnables] = @select_runnables                 unless @select_runnables.blank?
     @scopes[:before]         = Time.parse(@parsed_end_date)      unless @parsed_end_date.blank?
     @scopes[:after]          = Time.parse(@start_date)           unless @start_date.blank?
+    @scopes[:with_perm_form] = @select_perm_form                 unless @select_perm_form.blank?
 
     unless @select_teachers.blank?
       clazzes = @select_teachers.map { |t| t.clazzes }
