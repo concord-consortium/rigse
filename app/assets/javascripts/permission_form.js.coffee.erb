@@ -18,10 +18,8 @@ class PermissionForm
     last_value = !@checkbox.checked
     @form.request({
       onSuccess: =>
-        console.log("yippee")
         @form.enable()
       onFailure: =>
-        console.log("boo")
         @form.enable()
         @form.highlight(startcolor: '#ff0000')
         @checkbox.checked = last_value
