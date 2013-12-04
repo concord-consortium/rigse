@@ -12,12 +12,12 @@
           - if student.perms.include? perm
             %input.permission_checkbox{'type'=>'checkbox',
               'id'      => "student_perms_#{student.id}",
-              'name'    => "permission_ids",
+              'name'    => "permission_ids[]",
               'value'   => perm.id,
               'checked' => true}
           - else
             %input.permission_checkbox{'type'=>'checkbox',
               'id'     => "student_perms_#{student.id}",
-              'name'   => "permission_ids",
+              'name'   => "permission_ids[]",
               'value'  => perm.id}
           %label{'for'=>"perm_#{perm.id}_checkbox"}=perm.name
