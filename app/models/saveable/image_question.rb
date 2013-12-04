@@ -12,7 +12,7 @@ class Saveable::ImageQuestion < ActiveRecord::Base
   #   :class_name => "Saveable::OpenResponseAnswer",
   #   :order => 'position DESC' 
   
-  [:prompt, :name].each { |m| delegate m, :to => :image_question, :class_name => 'Embeddable::ImageQuestion' }
+  [:prompt, :name, :drawing_prompt].each { |m| delegate m, :to => :image_question, :class_name => 'Embeddable::ImageQuestion' }
   
   include Saveable::Saveable
   
