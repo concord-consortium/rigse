@@ -126,6 +126,12 @@ class Reports::Excel
     return learner.student.user.id
   end
 
+  def permission_forms(report_learner)
+    results = report_learner.permission_forms
+    results = "none" if results.blank?
+    results
+  end
+
   def learner_login(learner)
     learner.student.user.login
   end
@@ -141,6 +147,7 @@ class Reports::Excel
       report_learner.class_name,
       report_learner.school_name,
       user_id(report_learner),
+      permission_forms(report_learner),
       report_learner.username,
       report_learner.student_name,
       report_learner.teachers_name

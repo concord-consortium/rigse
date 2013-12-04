@@ -13,6 +13,7 @@ class Reports::Detail < Reports::Excel
       Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
       Reports::ColumnDefinition.new(:title => "School",       :width => 25),
       Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
+      Reports::ColumnDefinition.new(:title => "Perm. Forms",  :width => 25),
       Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
       Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),

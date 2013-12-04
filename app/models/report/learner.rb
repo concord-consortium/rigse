@@ -128,9 +128,10 @@ class Report::Learner < ActiveRecord::Base
     update_field "offering.clazz.school.name", "school_name"
     update_field "offering.clazz.school.id",    "school_id"
     update_field("offering.clazz.teachers", "teachers_name") do |ts|
-      ts.map { |t| t.user.name}.join(", ")
+      ts.map{ |t| t.user.name}.join(", ")
     end
 
+    update_permission_forms
     # check to see if we can obtain the last run info
     if self.learner.offering.internal_report?
       calculate_last_run
@@ -145,10 +146,16 @@ class Report::Learner < ActiveRecord::Base
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
   end
-  
+
+  def update_permission_forms
+    update_field("student.permission_forms", "permission_forms") do |pfs|
+      pfs.map{ |p| p.name }.join(", ")
+    end
+  end
+
   def update_activity_completion_status
     report_util = Report::Util.new(self.learner, false, true)
-    
+
     offering = self.learner.offering
     assignable = offering.runnable
     if assignable.is_a?(::ExternalActivity) && assignable.template

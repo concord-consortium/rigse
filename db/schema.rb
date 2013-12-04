@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131114142629) do
+ActiveRecord::Schema.define(:version => 20131204204920) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2097,6 +2097,7 @@ ActiveRecord::Schema.define(:version => 20131114142629) do
     t.text     "answers",          :limit => 16777215
     t.string   "runnable_type"
     t.float    "complete_percent"
+    t.text     "permission_forms"
   end
 
   add_index "report_learners", ["class_id"], :name => "index_report_learners_on_class_id"
