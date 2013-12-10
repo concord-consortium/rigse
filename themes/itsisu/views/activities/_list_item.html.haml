@@ -2,40 +2,44 @@
 - cache_key = "changeable_" + cache_key if runnable.changeable? current_user
 - cache(cache_key) do
   .activity{:id => dom_id_for(runnable, :list_item)}
-    .actions
-      - if runnable.changeable? current_user
-        %a{:href => (runnable.is_a?(Page) ? page_path(runnable) : template_edit_activity_path(runnable))}
-          %img{:alt => "edit", :src => "/images/diy_icons/edit.png", :title => "edit this activity"}/
-      - if runnable.is_a?(Page)
-        %img{:src => "/images/diy_icons/page_grey_copy.png"}
-      - else
-        %a{:href => duplicate_activity_path(runnable), :title => "Make your own version of this activity"}
-          %img{:alt => "copy", :src => "/images/diy_icons/page_white_copy.png", :title => "Make your own version of this activity"}/
-      %a{:href => "#", :onclick => "$('#{dom_id_for(runnable,:details)}').toggle(); return false;", :title => "View activity details"}
-        %img{:alt => "info", :src => "/images/diy_icons/information.png", :title => "View activity description"}/
-      %a.preview{:href => polymorphic_path(runnable) ,  :title => "View a quick preview version of this activity"}
-        %img{:alt => "preview", :src => "/images/diy_icons/picture.png", :title => "View a quick preview version of this activity"}/
-      %a.heavyweight.run_link{:href =>polymorphic_path(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp), :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
-        %img{:alt => "try", :src => "/images/diy_icons/picture_go.png", :title => "Try this activity (as a teacher, do not save data)"}/
-      %a.heavyweight.run_link{:href => polymorphic_path(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp)) , :name => "run_button_", :title => "Run this activity (and save data)"}
-        %img{:alt => "run", :src => "/images/diy_icons/bullet_go.png", :title => "Run this activity (and save data)"}/
-      - if runnable.respond_to?('lightweight?') && runnable.lightweight?
-        %a.lightweight{:href => polymorphic_path(runnable, :format => :run_html) , :name => "run_lightweight_button_", :title => "Run this activity in the browser", :target => "_blank"}
-          %img{:alt => "run", :src => "/images/diy_icons/world_go.png", :title => "Run this activity in the browser"}/
-        :javascript
-          if ((Object.isExtensible && Modernizr.svg) || '#{runnable.class.to_s}' == 'Page') {
-            $j("##{dom_id_for(runnable, :list_item)} .heavyweight").hide();
-            $j("##{dom_id_for(runnable, :list_item)} .preview").hide();
-            $j("##{dom_id_for(runnable, :list_item)} .lightweight").show();
-          }
+    - if runnable.is_a?(ExternalActivity)
+      .title{:style => 'position: relative; left: -35px; top: -10px;'}
+        %a{:href => runnable.url, :target => "_blank"}= "Teacher Guide"
+    - else
+      .actions
+        - if runnable.changeable? current_user
+          %a{:href => (runnable.is_a?(Page) ? page_path(runnable) : template_edit_activity_path(runnable))}
+            %img{:alt => "edit", :src => "/images/diy_icons/edit.png", :title => "edit this activity"}/
+        - if runnable.is_a?(Page)
+          %img{:src => "/images/diy_icons/page_grey_copy.png"}
+        - else
+          %a{:href => duplicate_activity_path(runnable), :title => "Make your own version of this activity"}
+            %img{:alt => "copy", :src => "/images/diy_icons/page_white_copy.png", :title => "Make your own version of this activity"}/
+        %a{:href => "#", :onclick => "$('#{dom_id_for(runnable,:details)}').toggle(); return false;", :title => "View activity details"}
+          %img{:alt => "info", :src => "/images/diy_icons/information.png", :title => "View activity description"}/
+        %a.preview{:href => polymorphic_path(runnable) ,  :title => "View a quick preview version of this activity"}
+          %img{:alt => "preview", :src => "/images/diy_icons/picture.png", :title => "View a quick preview version of this activity"}/
+        %a.heavyweight.run_link{:href =>polymorphic_path(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp), :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
+          %img{:alt => "try", :src => "/images/diy_icons/picture_go.png", :title => "Try this activity (as a teacher, do not save data)"}/
+        %a.heavyweight.run_link{:href => polymorphic_path(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp)) , :name => "run_button_", :title => "Run this activity (and save data)"}
+          %img{:alt => "run", :src => "/images/diy_icons/bullet_go.png", :title => "Run this activity (and save data)"}/
+        - if runnable.respond_to?('lightweight?') && runnable.lightweight?
+          %a.lightweight{:href => polymorphic_path(runnable, :format => :run_html) , :name => "run_lightweight_button_", :title => "Run this activity in the browser", :target => "_blank"}
+            %img{:alt => "run", :src => "/images/diy_icons/world_go.png", :title => "Run this activity in the browser"}/
+          :javascript
+            if ((Object.isExtensible && Modernizr.svg) || '#{runnable.class.to_s}' == 'Page') {
+              $j("##{dom_id_for(runnable, :list_item)} .heavyweight").hide();
+              $j("##{dom_id_for(runnable, :list_item)} .preview").hide();
+              $j("##{dom_id_for(runnable, :list_item)} .lightweight").show();
+            }
 
-    .title
-      = runnable.name
-      = runnable.published? ? "" : "(#{runnable.publication_status})"
-      = "[#{runnable.id}]"
-    - if runnable.is_a? Activity
-      .info
-        = activity_sensor_and_model_summary(runnable)
-    %div{:id => dom_id_for(runnable, :details), :style => "display: none;"}
-      .description
-        = runnable.description
+      .title
+        = runnable.name
+        = runnable.published? ? "" : "(#{runnable.publication_status})"
+        = "[#{runnable.id}]"
+      - if runnable.is_a? Activity
+        .info
+          = activity_sensor_and_model_summary(runnable)
+      %div{:id => dom_id_for(runnable, :details), :style => "display: none;"}
+        .description
+          = runnable.description

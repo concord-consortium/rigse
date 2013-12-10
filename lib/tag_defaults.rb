@@ -151,12 +151,32 @@ module TagDefaults
         {:activity => p, :keys => keys, :test => true}
       }
 
+      # Add teacher guides
+      teacher_guides = ExternalActivity.published.find(:all, :include => [:cohorts, :grade_levels, :subject_areas, :units])
+      # filter based on cohorts
+      if user.has_role?("admin", "manager")
+        # no filtering
+      elsif user.portal_teacher
+        teacher_cohorts = user.portal_teacher.cohorts.find(:all)
+        teacher_guides = teacher_guides.select { |guide|
+          guide.cohorts.any? { |guide_cohort| teacher_cohorts.include? guide_cohort }
+        }
+      else
+        teacher_guides.delete_if { |guide| guide.cohorts.size > 0 }
+      end
+
+      key_map = key_map + teacher_guides.map {|p|
+        keys = p.bin_keys
+        {:activity => p, :keys => keys, :test => false, :teacher_guide => true}
+      }
+
       results = {}
       key_counter = 0
       key_map.each do |key_map|
         keys = key_map[:keys]
         act  = key_map[:activity]
         test = key_map[:test]
+        teacher_guide = key_map[:teacher_guide]
         keys.each do |key|
           grade_level = key[0]
           subject = key[1]
@@ -190,9 +210,11 @@ module TagDefaults
             }
           end
           results[key_string][:activities] << act
-          results[key_string][:units][unit] ||= {:activities => [], :tests => [], :count => 0, :name => unit}
+          results[key_string][:units][unit] ||= {:activities => [], :tests => [], :teacher_guides => [], :count => 0, :name => unit}
           if test
             results[key_string][:units][unit][:tests] << act
+          elsif teacher_guide
+            results[key_string][:units][unit][:teacher_guides] << act
           else
             results[key_string][:units][unit][:activities] << act
           end
@@ -218,6 +240,7 @@ module TagDefaults
               unit[:activities] << test
             end
           }
+          unit[:teacher_guides].each{ |guide| unit[:activities].insert(0, guide) }
           unit[:count] = unit[:activities].size
         end
       end

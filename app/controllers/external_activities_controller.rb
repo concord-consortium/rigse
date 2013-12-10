@@ -101,6 +101,7 @@ class ExternalActivitiesController < ApplicationController
         end
       }
       format.run_external_html   { redirect_to(@external_activity.url) }
+      format.run_html   { redirect_to(@external_activity.url) }
       format.xml  { render :xml => @external_activity }
     end
   end

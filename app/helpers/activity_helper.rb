@@ -33,6 +33,8 @@ module ActivityHelper
               Activity.unit_counts
             when :page
               Page.unit_counts
+            when :external_activity
+              Activity.unit_counts # we want to use the same bins as activities
             else
               []
             end
@@ -46,6 +48,8 @@ module ActivityHelper
               Activity.grade_level_counts
             when :page
               Page.grade_level_counts
+            when :external_activity
+              Activity.grade_level_counts # we want to use the same bins as activities
             else
               []
             end
@@ -62,6 +66,8 @@ module ActivityHelper
               Activity.subject_area_counts
             when :page
               Page.subject_area_counts
+            when :external_activity
+              Activity.subject_area_counts # we want to use the same bins as activities
             else
               []
             end

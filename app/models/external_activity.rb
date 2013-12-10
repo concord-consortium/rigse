@@ -1,5 +1,7 @@
 require 'uri'
 class ExternalActivity < ActiveRecord::Base
+  include TagDefaults
+
   belongs_to :user
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
@@ -8,7 +10,7 @@ class ExternalActivity < ActiveRecord::Base
   has_many :author_notes, :as => :authored_entity
 
   acts_as_replicatable
-  acts_as_taggable_on :cohorts
+  acts_as_taggable_on :grade_levels, :subject_areas, :units, :cohorts
 
   include Changeable
 
