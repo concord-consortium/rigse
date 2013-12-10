@@ -39,7 +39,7 @@ module ActivityHelper
               []
             end
 
-    select(activity, :unit_list, count.map{ |c| [ c.name, c.name ]}, {:include_blank => 'None'})
+    select(activity, :unit_list, count.sort_by{|c| c.name }.map{ |c| [ c.name, c.name ]}, {:include_blank => 'None'})
   end
 
   def grade_level_select(activity = :activity)
@@ -54,7 +54,7 @@ module ActivityHelper
               []
             end
 
-    select(activity, :grade_level_list, count.map{ |c| [ c.name, c.name] }, {:include_blank => 'None'})
+    select(activity, :grade_level_list, count.sort_by{|c| c.name }.map{ |c| [ c.name, c.name] }, {:include_blank => 'None'})
     #haml_tag(:p) do
       #haml_concat("grade level select")
     #end
@@ -72,7 +72,7 @@ module ActivityHelper
               []
             end
 
-    select(activity, :subject_area_list, count.map{ |c| [ c.name, c.name] }, {:include_blank => 'None'})
+    select(activity, :subject_area_list, count.sort_by{|c| c.name }.map{ |c| [ c.name, c.name] }, {:include_blank => 'None'})
     #haml_tag(:p) do
       #haml_concat("subject area select")
     #end
