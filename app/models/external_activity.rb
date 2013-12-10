@@ -49,6 +49,9 @@ class ExternalActivity < ActiveRecord::Base
       @@searchable_attributes
     end
 
+    def display_name
+      "Teacher Guide"
+    end
 
     def search_list(options)
       name = options[:name]
