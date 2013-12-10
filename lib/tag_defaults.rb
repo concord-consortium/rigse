@@ -159,7 +159,7 @@ module TagDefaults
       elsif user.portal_teacher
         teacher_cohorts = user.portal_teacher.cohorts.find(:all)
         teacher_guides = teacher_guides.select { |guide|
-          guide.cohorts.any? { |guide_cohort| teacher_cohorts.include? guide_cohort }
+          guide.cohorts.empty? || guide.cohorts.any? { |guide_cohort| teacher_cohorts.include? guide_cohort }
         }
       else
         teacher_guides.delete_if { |guide| guide.cohorts.size > 0 }
@@ -241,7 +241,7 @@ module TagDefaults
             end
           }
           unit[:teacher_guides].each{ |guide| unit[:activities].insert(0, guide) }
-          unit[:count] = unit[:activities].size
+          unit[:count] = unit[:activities].size - unit[:teacher_guides].size
         end
       end
       results

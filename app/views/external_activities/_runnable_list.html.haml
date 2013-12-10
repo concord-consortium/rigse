@@ -9,7 +9,7 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
-        -if current_user.has_role? "author"
+        -if current_user.has_role?("author", "admin", "manager")
           %li= link_to "create #{ExternalActivity.display_name}", new_external_activity_path
 
 - external_activities.each do |external_activity|
@@ -22,7 +22,7 @@
             = external_activity.user.name
         %div.action_menu_header_right
           %ul.menu
-            - if current_user.has_role? "author"
+            - if current_user.has_role?("author", "admin", "manager")
               %li.menu=link_to 'duplicate', duplicate_external_activity_url(external_activity)
             - if (external_activity.changeable?(current_user))
               %li.menu=link_to 'edit', edit_external_activity_url(external_activity)
