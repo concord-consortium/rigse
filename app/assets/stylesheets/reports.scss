@@ -150,7 +150,15 @@ $incorrect_color: #ffdddd;
 .report_question_prompt {
   width: 565px;
   display: -moz-inline-block;
-  display: inline-block; }
+  display: inline-block;
+  .image-question-drawing-prompt {
+    max-width: 395px;
+    float: left;
+  }
+  .image-question-text-prompt {
+    margin-left: 400px;
+  }
+}
 
 .report_question_summary_title {
   width: 90px;

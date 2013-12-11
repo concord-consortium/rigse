@@ -697,10 +697,13 @@ module ApplicationHelper
       end
       haml_tag(:div, :class => 'item report_question_prompt') {
         unless image_question.drawing_prompt.blank?
-          haml_concat(image_question.drawing_prompt)
-          haml_concat("<br />")
+          haml_tag(:div, :class => 'image-question-drawing-prompt') {
+            haml_concat(image_question.drawing_prompt)
+          }
         end
-        haml_concat(image_question.prompt)
+        haml_tag(:div, :class => 'image-question-text-prompt') {
+          haml_concat(image_question.prompt)
+        }
       }
       haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
