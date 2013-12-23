@@ -1,0 +1,37 @@
+/ required locals: activity
+- paginated_objects ||= nil
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      - if paginated_objects
+        %p= page_entries_info paginated_objects, :entry_name=>TOP_LEVEL_CONTAINER_NAME_PLURAL
+        %p.paginator
+          = will_paginate paginated_objects
+    .action_menu_header_right
+      %ul.menu
+        -unless current_user.anonymous?
+          %li= link_to "create new activity", new_activity_path
+        %li= toggle_all "activity descriptions"
+        
+%ul.quiet_list
+  - for activity in activities
+    %div{ :id => dom_id_for(activity, :item), :class => 'item' }
+      %div.action_menu
+        %div.action_menu_header_left   
+          = link_to_container(activity)
+          %span.author
+            = activity.user.name
+        %div.action_menu_header_right   
+          %ul.menu
+            %li= run_link_for(activity)
+            - unless(current_user.anonymous?)
+              %li.menu=link_to 'copy', duplicate_activity_url(activity)
+            %li.menu=link_to 'export (xml)', export_activity_url(activity)
+            - if (activity.changeable?(current_user))
+              %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete activity #{activity.id}", :method => :delete 
+      %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
+        %p=activity.description
+        - if params[:mine_only]
+          %p
+            %i 
+              = updated_time_text(activity)

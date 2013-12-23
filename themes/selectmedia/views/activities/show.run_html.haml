@@ -1,0 +1,27 @@
+%script{:src => "//lab.concord.org/lab/lab.iframe-phone.js"}
+:javascript
+  window.phones = {};
+
+  window.setupPhone = function(id) {
+    setTimeout(function() {
+      var phone = phones[id];
+
+      phone.addDispatchListener('play', function() {
+        for (var phoneId in phones) {
+          if (phoneId == id) { continue; }
+          // Tell the model to pause
+          var phone = phones[phoneId];
+          phone.post({'type': 'stop'});
+        }
+      }, []);
+    }, 10);
+  }
+
+  window.createPhone = function(id) {
+    return new Lab.IFramePhone($j(id)[0], function() {
+      setupPhone(id);
+    });
+  }
+= render :partial => 'shared/form_save_warning', :locals => { :skip_warning_popup => true }
+= render :partial=> 'activities/show', :locals=>{:activity => @activity }
+%input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => 'disabled'}

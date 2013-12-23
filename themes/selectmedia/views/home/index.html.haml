@@ -1,0 +1,11 @@
+- current_user.roles.each do |role|
+  = render :partial => role.title
+
+- if @portal_teacher
+  = render :partial => "teacher"
+  
+- if @portal_student
+  = render :partial => "student"
+
+= yield :authored_investigations
+  

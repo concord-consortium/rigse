@@ -1,0 +1,12 @@
+%div{ :id => dom_id_for(runnable), :class => 'runnable' }
+  = accordion_for(runnable, runnable.name, :runnable) do  
+    %div.action_menu
+      %div.action_menu_header_left   
+        = title_for_component(runnable)
+        %span.author
+          = runnable.user.name
+      
+    %div{:id => dom_id_for(runnable, :details), :class => 'tiny'}
+      %p=runnable.description
+
+= draggable_element dom_id_for(runnable), :revert => true , :scroll => 'window'

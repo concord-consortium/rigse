@@ -1,0 +1,113 @@
+.action_menu
+  #search_title
+    ="Search activities"
+
+- grade_levels = Activity.grade_level_counts.map{ |c| c.name }.sort
+- subject_areas = Activity.subject_area_counts.map{ |c| c.name }.sort
+
+- probe_types = Probe::ProbeType.all(:include => :data_collectors).select{|pt| pt.data_collectors.detect{|dc| dc.is_prototype }}
+- sensors  = probe_types.map { |pt| pt.name }
+- sensors += probe_types.select {|pt| pt.calibrations.size > 0 }.map {|pt| pt.calibrations.map{|ptc| "#{pt.name}##{ptc.name}" }}.flatten.uniq.compact
+- sensors = sensors.sort_by {|name| name.sub(/^.*#/,'').downcase }
+- form_tag url_for(:action => "search"), :method => 'get' do
+  = hidden_field_tag 'page', (params[:page] || 1)
+  %table
+    %tr
+      %td{:style=>"padding: 0.5em;"}
+        = label_tag :filter, 'matching: ', :class=>"right"
+        = text_field_tag :name, @filter_params[:name], :size => 60
+      %td{:style=>"padding: 0.5em;"}
+        %input{ :type => "submit", :value => "Search"}
+    %tr
+      %td{:colspan => 2}
+        - if current_user.has_role? 'manager', 'admin', 'researcher'
+          .searchset
+            = check_box_tag 'include_drafts', 'include drafts', @filter_params[:include_drafts]
+            = label_tag :filter, 'include draft activities'
+        .gradecolumn.searchset
+          .tablecell
+            - allSelected = (@grade_levels.length > 0 && (@grade_levels.select{|i| i.length > 0}).eql?(grade_levels.map{|i| i.to_s}))
+            = check_box_tag 'grade_levels[]',"",allSelected,:id=>'all-grades',:onclick=>"selectAllGrades(this);"
+            = label_tag 'all-grades', 'All Grades', :style => "font-weight: bold;"
+          .optionset{:style => 'height: 12em; overflow-y: auto; overflow-x: hidden;'}
+            -grade_levels.each do |grade|
+              .tablecell
+                = check_box_tag 'grade_levels[]', grade,(@grade_levels.include?(grade.to_s) ? true : false),:id=>(grade+'-grades'),:onclick=>"selectAllGrades(this);"
+                = label_tag grade+'-grades', grade
+        .subjectcolumn.searchset
+          .tablecell
+            - allSelected = (@subject_areas.length > 0 && (@subject_areas.select{|i| i.length > 0}).eql?(subject_areas.map{|i| i.to_s}))
+            = check_box_tag 'subject_areas[]',"",allSelected,:id=>'all-subjects',:onclick=>"selectAllSubjects(this);"
+            %b= label_tag 'all-subjects', 'All Subjects', :style => "font-weight: bold;"
+          .optionset{:style => 'height: 12em; overflow-y: auto; overflow-x: hidden;'}
+            -subject_areas.each do |subject|
+              .tablecell
+                = check_box_tag 'subject_areas[]', subject,(@subject_areas.include?(subject.to_s) ? true : false),:id=>(subject+'-subjects'),:onclick=>"selectAllSubjects(this);"
+                = label_tag subject+'-subjects', subject
+        .sensorcolumn.searchset
+          .tablecell
+            - allSelected = (@sensors.length > 0 && (@sensors.select{|i| i.length > 0}).eql?(sensors.map{|i| i.to_s}))
+            = check_box_tag 'sensors[]',"",allSelected,:id=>'all-sensors',:onclick=>"selectAllSensors(this);"
+            %b= label_tag 'all-sensors', 'All Sensors', :style => "font-weight: bold;"
+          .optionset{:style => 'height: 12em; overflow-y: auto; overflow-x: hidden; width: 160px;'}
+            -sensors.each do |sensor|
+              .tablecell
+                = check_box_tag 'sensors[]', sensor,(@sensors.include?(sensor.to_s) ? true : false),:id=>(sensor+'-sensors'),:onclick=>"selectAllSensors(this);"
+                = label_tag sensor+'-sensors', sensor.sub(/^.*#/,'')
+
+#activities
+  .action_menu
+    .action_menu_header
+      .action_menu_header_left
+        %p= page_entries_info @activities, :entry_name => Activity.display_name
+        %p.paginator
+          = will_paginate @activities, :params => @filter_params
+
+  - @activities.each do |activity|
+    = render(:partial => 'list_item', :locals => {:runnable => activity})
+
+:javascript
+  (function() {
+    var allGrades = #{grade_levels.map{|g| "#{g}-grades"}.inspect};
+    var allSubjects = #{subject_areas.map{|s| "#{s}-subjects"}.inspect};
+    var allSensors = #{sensors.map{|s| "#{s}-sensors"}.inspect};
+
+    var selectAll = function(selected, allOptions, type) {
+      if (selected.id == ('all-'+type)) {
+        if ($(selected).checked) {
+          allOptions.each(function(obj) {
+            $(obj).checked = "checked";
+          });
+        } else if (!$(selected).checked) {
+          allOptions.each(function(obj){
+            $(obj).checked = false;
+          });
+        }
+      } else {
+        if (!$(selected).checked) {
+          $('all-'+type).checked = false;
+        } else {
+          allOptions_selected = true;
+          allOptions.each(function(obj) {
+            allOptions_selected = allOptions_selected && $(obj).checked;
+          });
+          if (allOptions_selected) {
+            $('all-'+type).checked= "checked";
+          }
+        }
+      }
+    }
+
+    window.selectAllSubjects = function(subjectObj) {
+      selectAll(subjectObj, allSubjects, 'subjects');
+    }
+
+    window.selectAllGrades = function(gradeObj) {
+      selectAll(gradeObj, allGrades, 'grades');
+    }
+
+    window.selectAllSensors = function(sensorObj) {
+      selectAll(sensorObj, allSensors, 'sensors');
+    }
+  })();
+
