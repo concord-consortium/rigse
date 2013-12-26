@@ -856,7 +856,7 @@ class ItsiImporter
 
     def process_textile_content(textile_content, split_last_paragraph=false)
       return ['',''] if textile_content.nil? || textile_content.empty?
-      doc = Hpricot(RedCloth.new(textile_content).to_html)
+      doc = Nokogiri::XML(RedCloth.new(textile_content).to_html)
       # if imaages use paths relative to the itsidiy make the full
       (doc/"img[@src]").each do |img|
         img[:src] = ITSI_ASSET_URL.merge(img[:src]).to_s
