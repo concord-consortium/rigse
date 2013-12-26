@@ -1,5 +1,4 @@
 class OtrunkExampleImport
-  require 'hpricot'
   require 'open-uri'
   require 'fileutils'
 
@@ -8,6 +7,18 @@ class OtrunkExampleImport
 
   ViewEntry = Array.struct :fq_view_classname, :fq_object_classname
 
+  module AttributeHelper
+    def attribute_value(css_selector, attribute)
+      element = @doc.at_css(css_selector)
+      element ? element[attribute] : nil
+    end
+    
+    def attribute_values(css_selector, attribute)
+      elements = @doc.css(css_selector)
+      elements.collect {|i| i[:attribute]}
+    end
+  end
+  
   class OtFile
     attr_accessor :path, :name, :category, :last_modified, :file_size, :imports, :view_entries
     def initialize(path)
@@ -15,22 +26,15 @@ class OtrunkExampleImport
       @name = File.basename(path)
       @category =  File.basename(File.dirname(@path))
       @last_modified =  File.ctime(@path)
-      # @body = File.read(path)
       @file_size = File.stat(path).size
-      # if @file_size < 200000
-      #   @doc = Hpricot::XML(File.read(path))
-      #   @imports = @doc.search("import").collect { |e| e['class'] }
-      #   @view_entries = @doc.search("OTViewEntry").collect {|ve| ViewEntry.new([ve['viewClass'], ve['objectClass']])}
-      # end
       doc_local_var = doc
-      # if @file_size < 200000
-        @imports = doc_local_var.search("import").collect { |e| e['class'] }
-        @view_entries = doc_local_var.search("OTViewEntry").collect {|ve| ViewEntry.new([ve['viewClass'], ve['objectClass']])}
+      @imports = doc_local_var.search("import").collect { |e| e[:class] }
+      @view_entries = doc_local_var.search("OTViewEntry").collect {|ve| ViewEntry.new([ve[:viewClass], ve[:objectClass]])}
       # end
     end
-    
+
     def doc
-      Hpricot::XML(File.read(path))
+      Nokogiri::XML(File.read(path))
     end
   end
 
@@ -59,20 +63,21 @@ class OtrunkExampleImport
   end
 
   class OtLaunchFile
+    include AttributeHelper
     attr_accessor :path, :name, :body, :doc, :launch_type, :project_name, :projects_dir, :class_dir, :category,
-                  :projects, :internal_archives, :main_type, :program_arguments, :vm_arguments, :valid
+    :projects, :internal_archives, :main_type, :program_arguments, :vm_arguments, :valid
     def initialize(path)
       @path = path
       @name = File.basename(@path).chomp('.launch')
       @body = File.read(@path)
-      @doc = Hpricot::XML(@body)
-      @launch_type = @doc.search("launchConfiguration").attr(:type).split('.')[-1]
-      list_entry_values = @doc.search("listAttribute[@key='org.eclipse.jdt.launching.CLASSPATH']/listEntry").collect {|le| le['value']}
-      project_attr = @doc.search("stringAttribute[@key='org.eclipse.jdt.launching.PROJECT_ATTR']")
-      if project_attr.empty?
-        @project_name = 'unnamed'
+      @doc = Nokogiri::XML(@body)
+      @launch_type = @doc.at_css("launchConfiguration")[:type]
+      list_entry_values = @doc.search("listAttribute[@key='org.eclipse.jdt.launching.CLASSPATH']/listEntry").collect {|le| le[:value]}
+      project_attr = @doc.at_css("stringAttribute[@key='org.eclipse.jdt.launching.PROJECT_ATTR']")
+      if project_attr
+        @project_name = project_attr[:value]
       else
-        @project_name = project_attr.attr(:value)
+        @project_name = 'unnamed'
       end
       @projects_dir = @path.split(project_name)[0]
       @category = @path[/#{@project_name}\/(.*)\//, 1]
@@ -80,30 +85,30 @@ class OtrunkExampleImport
       @projects = []
       @valid = true
       list_entry_values.each do |val|
-        value = Hpricot::XML(val)
-        if project = value.search("runtimeClasspathEntry")[0]['projectName']
+        value = Nokogiri::XML(val)
+        if project = value.at_css("runtimeClasspathEntry")[:projectName]
           path = @projects_dir + project
           if File.exists?("#{path}/.classpath")
-            classpath = Hpricot.XML(open("#{path}/.classpath"))
-            output = classpath.at("classpathentry[@kind=output]")['path']
+            classpath = Nokogiri.XML(open("#{path}/.classpath"))
+            output = classpath.at("classpathentry[@kind=output]")[:path]
             @projects <<  "#{path}/#{output}"
           else
             @valid = false
             @projects <<  "#{path}/no-classpath-found"
           end
-        elsif archive = value.search("runtimeClasspathEntry")[0]['internalArchive']
+        elsif archive = value.at_css("runtimeClasspathEntry")[:internalArchive]
           @internal_archives << @projects_dir.chomp('/') + archive
         end
       end
-      @main_type = @doc.search("stringAttribute[@key='org.eclipse.jdt.launching.MAIN_TYPE']").collect {|i| i['value']}.to_s
-      @program_arguments = @doc.search("stringAttribute[@key='org.eclipse.jdt.launching.PROGRAM_ARGUMENTS']").collect {|i| i['value']}.to_s
-      @vm_arguments = @doc.search("stringAttribute[@key='org.eclipse.jdt.launching.VM_ARGUMENTS']").collect {|i| i['value']}.to_s
+      @main_type = attribute_value("stringAttribute[@key='org.eclipse.jdt.launching.MAIN_TYPE']", :value)
+      @program_arguments = attribute_values("stringAttribute[@key='org.eclipse.jdt.launching.PROGRAM_ARGUMENTS']", :value)
+      @vm_arguments = attribute_values("stringAttribute[@key='org.eclipse.jdt.launching.VM_ARGUMENTS']", :value)
     end
   end
 
   class OtIntrospect
     attr_accessor :otml_files, :otml_imports, :otml_view_entries, :otml_launch_files, :imports, 
-                  :view_entries, :projects, :internal_archives, :categories
+    :view_entries, :projects, :internal_archives, :categories
     def initialize(dir='.')
       @otml_files, @otml_imports, @otml_view_entries, @otml_launch_files  = [], [], [], []
       @imports, @view_entries, @projects, @internal_archives, @categories = [], [], [], [], []

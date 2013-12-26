@@ -6,7 +6,6 @@ namespace :app do
       # prefix will be "ITSI, unless we are using and itsi theme"
       @prefix = (APP_CONFIG[:theme] && APP_CONFIG[:theme] =~ /itsi/i) ? "" : "ITSI: "
       @itsi_import_user = ItsiImporter.find_or_create_itsi_import_user
-      require 'hpricot'
       raise "need an 'itsi' specification in database.yml to run this task" unless ITSI_ASSET_URL
     end
 
