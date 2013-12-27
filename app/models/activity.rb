@@ -307,6 +307,7 @@ class Activity < ActiveRecord::Base
     # it has been this way for so long
     @return_activity.publication_status = :draft
     @return_activity.is_exemplar = false
+    @return_activity.is_template = false
     @return_activity.name = Activity.gen_unique_name(self.name)
     # save without validations so the naming validation doesn't stop us from saving
     # this might result in two activities with the same name, but that will either
