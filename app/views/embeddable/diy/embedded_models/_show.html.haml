@@ -7,11 +7,9 @@
         =image_tag(diy_embedded_model.diy_model.image_url)
       - else
         (No Model Image)
-    - if diy_embedded_model.diy_model.interactive_url
-      :javascript
-        if (Object.isExtensible && Modernizr.svg) {
-          $("#{dom_id_for(diy_embedded_model, :model_image)}").innerHTML = "<iframe class='interactive' src='#{diy_embedded_model.diy_model.interactive_url}' frameborder='no' mozallowfullscreen='true' webkitallowfullscreen='true' allowfullscreen='true'></iframe>";
-        }
+    - if diy_embedded_model.lightweight?
+      - with_format(:run_html) do
+        = render :partial => 'embeddable/diy/embedded_models/browser_based', :locals => { :diy_embedded_model => diy_embedded_model, :learner => local_assigns[:learner] }
   -else
     (No Model Selected)
 
