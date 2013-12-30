@@ -28,3 +28,79 @@
           = section.name
       - section.pages.each do |page|
         = render :partial => 'pages/template_edit', :locals => {:page => page }
+
+%script{:src => "//lab.concord.org/lab/lab.iframe-phone.js"}
+:javascript
+  window.phones = {};
+
+  window.setupPhone = function(id) {
+    setTimeout(function() {
+      var phone = phones[id];
+
+      phone.addDispatchListener('play', function() {
+        for (var phoneId in phones) {
+          if (phoneId == id) { continue; }
+          // Tell the model to pause
+          var phone = phones[phoneId];
+          phone.post({'type': 'stop'});
+        }
+      }, []);
+    }, 10);
+  }
+
+  window.createPhone = function(id) {
+    return new Lab.IFramePhone($j(id)[0], function() {
+      setupPhone(id);
+    });
+  }
+
+- if Labbook.enabled? && !current_user.anonymous?
+  #labbook-outer
+    .content
+      #labbook-cover
+      .title-bar
+        %span.title
+          Snapshot Album
+        %span.controls
+          %a{:href => '#', :onclick => 'hide_labbook(); return false;'}= "Close"
+      #labbook-loading= "Loading. Please wait..."
+      %iframe#labbook
+  :javascript
+    $j(function() {
+      var hideCover = function() {
+        $j("#labbook-cover").hide();
+      };
+      var showCover = function() {
+        $j("#labbook-cover").show();
+      };
+      $j("#labbook-outer").draggable({
+        start: showCover,
+        stop: hideCover
+      });
+      $j("#labbook-outer").draggable("disable");
+      $j("#labbook-outer .content").resizable({
+        handles: "e,s,se",
+        start: showCover,
+        stop: hideCover
+      });
+      $j("#labbook-outer .content").resizable("disable");
+      $j("#labbook").load(function() {
+        $j("#labbook-loading").hide();
+      });
+
+      window.hide_labbook = function() {
+        $j("#labbook-outer").draggable("disable");
+        $j("#labbook-outer .content").resizable("disable");
+        $j("#labbook-outer").hide();
+      }
+
+      window.show_labbook = function(url) {
+        $j("#labbook-loading").show();
+        $j("#labbook").attr("src", url);
+        $j("#labbook-outer").show();
+        $j("#labbook-outer").draggable("enable");
+        $j("#labbook-outer .content").resizable("enable");
+      }
+
+      window.hide_labbook();
+    });
