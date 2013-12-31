@@ -46,7 +46,7 @@ class ActivityRuntimeAPI
 
   def self.find(url)
     return nil if url.blank?
-    return ExternalActivity.find(:first, :conditions => {:url => url})
+    return ExternalActivity.where(:url => url).first
   end
 
 
@@ -56,7 +56,6 @@ class ActivityRuntimeAPI
     activity = external_activity.template
     investigation = activity.investigation
     user = investigation.user
-
 
     # update the simple attributes
     [investigation, activity, external_activity].each do |act|
@@ -90,7 +89,7 @@ class ActivityRuntimeAPI
     # Update or build sections, pages and embeddables
     build_page_components(hash, activity, user, or_cache, mc_cache, iq_cache)
 
-    # delete the cached items which werent removed
+    # delete the cached items which weren't removed
     mc_cache.each_value { |v| v.destroy }
     or_cache.each_value { |v| v.destroy }
     iq_cache.each_value { |v| v.destroy }
@@ -193,6 +192,11 @@ class ActivityRuntimeAPI
   end
 
   def self.build_page_components(hash, activity, user, or_cache=nil, mc_cache=nil, iq_cache=nil)
+    # Validate caches so we don't do it repeatedly later
+    or_cache = {} unless or_cache.kind_of?(Hash)
+    mc_cache = {} unless mc_cache.kind_of?(Hash)
+    iq_cache = {} unless iq_cache.kind_of?(Hash)
+
     hash["sections"].each do |section_data|
       section = Section.create(
         :name => section_data["name"],
@@ -210,29 +214,31 @@ class ActivityRuntimeAPI
         page_data["elements"].each do |element_data|
           embeddable = case element_data["type"]
           when "open_response"
-            existant = or_cache ? or_cache.delete(element_data["id"]) : nil
+            existant = or_cache.delete(element_data["id"].to_s) # nil if the key doesn't exist - note the key must be string
             if existant
               update_open_response(element_data, existant)
             else
               create_open_response(element_data, user)
             end
           when "multiple_choice"
-            existant = mc_cache ? mc_cache.delete(element_data["id"]) : nil
+            existant = mc_cache.delete(element_data["id"].to_s)
             if existant
               update_mc_response(element_data, existant)
             else
               create_multiple_choice(element_data, user)
             end
           when "image_question"
-            existant = iq_cache ? iq_cache.delete(element_data["id"]) : nil
+            existant = iq_cache.delete(element_data["id"].to_s)
             if existant
               update_image_question(element_data, existant)
             else
               create_image_question(element_data, user)
             end
           else
+            # We don't support this type, so skip to the next
             next
           end
+          # Either the 'existant' or output of create_#{} has been assigned to 'embeddable'
 
           page.add_embeddable(embeddable)
         end
