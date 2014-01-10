@@ -1,4 +1,4 @@
-%div{:id => dom_id_for(diy_embedded_model, :details), :class => 'content'}
+%div{:id => dom_id_for(diy_embedded_model, :details), :class => 'content', :style => 'position: relative;'}
   - if diy_embedded_model.diy_model
     %b Model #{diy_embedded_model.diy_model.id}:
     = diy_embedded_model.name
