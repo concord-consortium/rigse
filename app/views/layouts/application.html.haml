@@ -46,6 +46,11 @@
         #content.main_content_colors
           #content_header.main_content_colors
             = yield :content_header
+          #shutdown_notice{:style=>"background-color: lightpink;"}
+            This portal will be permanently shutdown on Monday, January 20, 2014 The activities are still available at the
+            %a{:href => "http://concord.org/projects/smartgraphs#curriculum"} SmartGraphs website.
+            If you have questions or concerns please contact
+            %a{:href => "mailto:scytacki@concord.org" } Scott Cytacki
           #js_flash{:style=>"display: none;"}
           #flash
             .padded_contents
