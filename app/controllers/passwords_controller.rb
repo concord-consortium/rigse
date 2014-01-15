@@ -36,7 +36,7 @@ class PasswordsController < ApplicationController
         redirect_to password_questions_path(user)
         return
       else
-        flash[:error] = "This account has not set any security questions. Please contact your teacher to reset your password for you."
+        flash[:error] = "This account has not set any security questions. Please contact your facilitator to reset your password for you."
       end
     elsif user.email
       @password = Password.new(:user => user, :email => user.email)

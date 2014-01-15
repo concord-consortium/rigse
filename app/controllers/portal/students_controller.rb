@@ -221,7 +221,7 @@ class Portal::StudentsController < ApplicationController
         if current_user.anonymous?
           flash[:error] = "You must be logged in to sign up for a class!"
         else
-          flash[:error] = "The class word you provided was not valid! Please check with your teacher to ensure you have the correct word."
+          flash[:error] = "The class word you provided was not valid! Please check with your facilitator to ensure you have the correct word."
         end
       end
       respond_to do |format|

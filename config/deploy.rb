@@ -422,7 +422,7 @@ namespace :convert do
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:run_deep_set_user_on_all_investigations --trace"
   end
 
-  desc 'clean up teacher notes owned by the wrong user'
+  desc 'clean up facilitator notes owned by the wrong user'
   task :clean_teacher_notes, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:clean_teacher_notes --trace"
@@ -511,7 +511,7 @@ namespace :convert do
   end
 
   # Wed Dec 2nd
-  desc "Convert Existing Clazzes so that multiple Teachers can own a clazz. (many to many change)"
+  desc "Convert Existing Clazzes so that multiple Facilitators can own a clazz. (many to many change)"
   task :convert_clazzes_to_multi_teacher, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:convert_clazzes_to_multi_teacher --trace"

@@ -2,9 +2,9 @@
   = f.error_messages
   = f.hidden_field :activity_id, :value =>@section.activity.id
   = edit_menu_for(@section, f)
-  - field_set_tag 'Teacher only' do
+  - field_set_tag 'Facilitator only' do
     = f.check_box :teacher_only 
-    (check here if this section is for teachers only)
+    (check here if this section is for facilitators only)
   - field_set_tag 'Section Name' do
     = f.text_field :name
   - field_set_tag 'Section Description' do

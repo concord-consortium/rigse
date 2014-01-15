@@ -7,9 +7,9 @@
     - if runnable.is_a?(ExternalActivity)
       - if current_user.portal_teacher
         .title{:style => 'position: relative; left: -35px; top: -10px;'}
-          %a{:href => runnable.url, :target => "_blank"}= "Teacher Guide"
+          %a{:href => runnable.url, :target => "_blank"}= "Facilitator Guide"
       - elsif current_user.anonymous?
-        .title{:style => 'position: relative; left: -35px; top: -10px;'}= "Teacher Guide available"
+        .title{:style => 'position: relative; left: -35px; top: -10px;'}= "Facilitator Guide available"
     - else
       .actions
         - if runnable.changeable? current_user

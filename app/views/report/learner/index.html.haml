@@ -10,7 +10,7 @@
     %table{:clas => 'form', :style=>"width: 90%;"}
       %tr
         %td
-          %label teachers:
+          %label facilitators:
         %td
           = select_tag('teachers', options_for_select(@all_teachers.map {|s| [s.name, s.id]}, @select_teachers.map {|s| s.id}), { :multiple => true })
       %tr

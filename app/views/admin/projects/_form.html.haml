@@ -37,7 +37,7 @@
             = f.label :enable_grade_levels, "Enable Grade Levels for Classes:", :style => "display:inline;"
             = f.check_box :enable_grade_levels
             %br
-            (This option will allow teachers to select grade levels during class creation.)
+            (This option will allow facilitators to select grade levels during class creation.)
           %li
             %b
             = f.label :use_bitmap_snapshots, "Use Bitmaps in Labbook Exclusively:", :style => "display:inline;"
@@ -46,10 +46,10 @@
             (This option insures that all labbook entries are treated like simple images.)
           %li
             %b
-            = f.label :teachers_can_author, "Teachers can author:", :style => "display:inline;"
+            = f.label :teachers_can_author, "Facilitators can author:", :style => "display:inline;"
             = f.check_box :teachers_can_author
             %br
-            (This option changes whether or not teachers are considered authors by default.)
+            (This option changes whether or not facilitators are considered authors by default.)
           %li
             %b
             = f.label :opportunistic_installer, "Use JavaClientLauncher:", :style => "display:inline;"
@@ -58,10 +58,10 @@
             (This option changes the boot up process to use an existing installation or automatically install the necessary jars if no installation is found.)
           %li
             %b
-            = f.label :allow_adhoc_schools, "Teachers can create schools:", :style => "display:inline;"
+            = f.label :allow_adhoc_schools, "Facilitators can create schools:", :style => "display:inline;"
             = f.check_box :allow_adhoc_schools
             %br
-            (This option changes whether or not teachers can create schools)
+            (This option changes whether or not facilitators can create schools)
           %li
             %b
             = f.label :use_periodic_bundle_uploading, "Use Periodic Bundle Uploading:", :style => "display:inline;"

@@ -369,7 +369,7 @@ class Portal::ClazzesController < ApplicationController
 
     @teacher = Portal::Teacher.find_by_id(params[:teacher_id])
 
-    (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
+    (render(:update) { |page| page << "$('flash').update('Facilitator not found')" } and return) unless @teacher
 
     begin
       @teacher.add_clazz(@portal_clazz)
@@ -390,7 +390,7 @@ class Portal::ClazzesController < ApplicationController
     (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
 
     @teacher = @portal_clazz.teachers.find_by_id(params[:teacher_id])
-    (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
+    (render(:update) { |page| page << "$('flash').update('Facilitator not found')" } and return) unless @teacher
 
     if (reason = @portal_clazz.reason_user_cannot_remove_teacher_from_class(current_user, @teacher))
       render(:update) { |page| page << "$('flash').update('#{reason}')" }

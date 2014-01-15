@@ -10,9 +10,9 @@
       .block_list
         %ul
           %li
-            = (portal_clazz.teachers.size == 1) ? "Teacher:" : "Teachers:"
+            = (portal_clazz.teachers.size == 1) ? "Facilitator:" : "Facilitators:"
             %strong
-              = (portal_clazz.teachers.size > 0) ? portal_clazz.teachers.collect { |t| t.name }.join(", ") : "no teachers"
+              = (portal_clazz.teachers.size > 0) ? portal_clazz.teachers.collect { |t| t.name }.join(", ") : "no facilitators"
           - if portal_clazz.semester
             %li
               Semester:

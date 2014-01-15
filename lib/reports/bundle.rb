@@ -28,7 +28,7 @@ class Reports::Bundle < Reports::Excel
       Reports::ColumnDefinition.new(:title => "UserID",                 :width => 8),
       Reports::ColumnDefinition.new(:title => "Username",               :width => 10),
       Reports::ColumnDefinition.new(:title => "Student Name",           :width => 15),
-      Reports::ColumnDefinition.new(:title => "Teachers",               :width => 15),
+      Reports::ColumnDefinition.new(:title => "Facilitators",               :width => 15),
     ]
 
     add_col("Runnable Name",          15) {runnable.name }

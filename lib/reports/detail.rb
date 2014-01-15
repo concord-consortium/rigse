@@ -16,7 +16,7 @@ class Reports::Detail < Reports::Excel
       Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
       Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
-      Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
+      Reports::ColumnDefinition.new(:title => "Facilitators",     :width => 50),
       Reports::ColumnDefinition.new(:title => "Assessments Completed", :width => 4, :left_border => true),
       Reports::ColumnDefinition.new(:title => "% Completed", :width => 4),
       Reports::ColumnDefinition.new(:title => "Last run",    :width => 20),

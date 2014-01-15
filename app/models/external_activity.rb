@@ -50,7 +50,7 @@ class ExternalActivity < ActiveRecord::Base
     end
 
     def display_name
-      "Teacher Guide"
+      "Facilitator Guide"
     end
 
     def search_list(options)

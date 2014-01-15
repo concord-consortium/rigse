@@ -5,7 +5,7 @@
 .content
   .action_menu
     .action_menu_header_left
-      %strong= "Teachers: #{portal_clazz.teachers.length}"    
+      %strong= "Facilitators: #{portal_clazz.teachers.length}"    
     .action_menu_header_right
       %ul
         - if portal_clazz.changeable?(current_user)     

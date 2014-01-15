@@ -8,7 +8,7 @@ class Reports::Usage < Reports::Excel
     #@column_defs = [
       #Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10 ),
       #Reports::ColumnDefinition.new(:title => "Student Name", :width => 25 ),
-      #Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50 )
+      #Reports::ColumnDefinition.new(:title => "Facilitators",     :width => 50 )
     #]
     # stud.id, class, school, user.id, username, student name, teachers
     @column_defs = [
@@ -18,7 +18,7 @@ class Reports::Usage < Reports::Excel
       Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
       Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
-      Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
+      Reports::ColumnDefinition.new(:title => "Facilitators",     :width => 50),
     ]
 
     # sanity check the number of cells

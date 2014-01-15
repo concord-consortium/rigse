@@ -7,9 +7,9 @@
     - if runnable.is_a?(ExternalActivity)
       - if current_user.portal_teacher
         .title{:style => 'position: relative; left: -35px; top: -10px;'}
-          %a{:href => runnable.url, :target => "_blank"}= "Teacher Guide"
+          %a{:href => runnable.url, :target => "_blank"}= "Facilitator Guide"
       - elsif current_user.anonymous?
-        .title{:style => 'position: relative; left: -35px; top: -10px;'}= "Teacher Guide available"
+        .title{:style => 'position: relative; left: -35px; top: -10px;'}= "Facilitator Guide available"
     - else
       .actions
         - if runnable.changeable? current_user
@@ -25,7 +25,7 @@
         %a.preview{:href => polymorphic_path(runnable) ,  :title => "View a quick preview version of this activity"}
           %img{:alt => "preview", :src => "/images/diy_icons/picture.png", :title => "View a quick preview version of this activity"}/
         %a.heavyweight.run_link{:href =>polymorphic_path(runnable, :format => (runnable.is_a?(Page) ? :run_html : :jnlp), :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
-          %img{:alt => "try", :src => "/images/diy_icons/picture_go.png", :title => "Try this activity (as a teacher, do not save data)"}/
+          %img{:alt => "try", :src => "/images/diy_icons/picture_go.png", :title => "Try this activity (as a facilitator, do not save data)"}/
         - if current_user.anonymous?
           .heavyweight{:style => 'width: 16px; height: 16px; display: inline-block;'}
         - else

@@ -84,7 +84,7 @@ module RunnablesHelper
   end
 
   def teacher_preview_button_for(component)
-    x_button_for(component, "preview", "teacher_preview", {:teacher_mode => true}, "Teacher")
+    x_button_for(component, "preview", "teacher_preview", {:teacher_mode => true}, "Facilitator")
   end
 
   def preview_link_for(component, as_name = nil, params = {})

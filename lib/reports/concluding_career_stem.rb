@@ -17,7 +17,7 @@ class Reports::ConcludingCareerStem < Reports::Excel
       Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
       Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
-      Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
+      Reports::ColumnDefinition.new(:title => "Facilitators",     :width => 50),
     ]
 
     # Sanity checks

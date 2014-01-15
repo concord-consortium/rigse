@@ -35,7 +35,7 @@ class Portal::Clazz < ActiveRecord::Base
     "This action will remove YOU from the class: #{clazz_name}.\n\nIf you remove yourself, you will lose all access to this class. Are you sure you want to do this?"
   end
   def self.CONFIRM_REMOVE_TEACHER(teacher_name, clazz_name)
-    "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
+    "This action will remove the facilitator: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
   end
 
   self.extend SearchableModel
