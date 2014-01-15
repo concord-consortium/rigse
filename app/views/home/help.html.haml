@@ -35,21 +35,22 @@
           %a{:href => "#graphtool"} Graphing Tool
         %li
           %a{:href => "#drawtool"} Drawing Tool
-    %li
-      %a{:href=>"#creating-activity"} Creating Your Own Activity
-      %ol
-        %li
-          %a{:href=>"#create-activities"} Create Activities
-        %li
-          %a{:href=>"#add-sensor"} Add Sensor
-        %li
-          %a{:href=>"#model-library"} Search the Model Library
-        %li
-          %a{:href=>"#add-model"} Add Model/Microscope
-        %li
-          %a{:href=>"#save-activity"} Save Activity
-        %li
-          %a{:href=>"#customizing-activity"} Customizing an Activity
+    - if current_user.has_role?('admin')
+      %li
+        %a{:href=>"#creating-activity"} Creating Your Own Activity
+        %ol
+          %li
+            %a{:href=>"#create-activities"} Create Activities
+          %li
+            %a{:href=>"#add-sensor"} Add Sensor
+          %li
+            %a{:href=>"#model-library"} Search the Model Library
+          %li
+            %a{:href=>"#add-model"} Add Model/Microscope
+          %li
+            %a{:href=>"#save-activity"} Save Activity
+          %li
+            %a{:href=>"#customizing-activity"} Customizing an Activity
   %hr/
   %h4#getstarted
     Four steps to Getting Started
@@ -207,192 +208,193 @@
       %p.center
         %a{:href => "#wrapper"} Return to Top
   %hr
-  %h4#creating-activity
-    Creating your own Activity
-  %p
-    Once you have logged into the Innovative Technology in Science Inquiry portal click on   in the orange bar at the top of the page. 
-  %ol
-    %li
-      %p#create-activities
-        %strong
-          Create Activities 
-      %p
-        Above the categories of the activities there is a button labeled 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_create_activity.jpg", :alt=>"Create Activity"}/
-        \. This button will bring up a page asking you to name your new activity and give it a description. There is also an “Activity Template” drop down menu that will allow you to choose the template you want to use for your activity. For now the default option is a single-page activity template. When you are done with these steps click on the orange 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_save.jpg", :alt=>"Save"}/
-        button in the upper right hand corner of the page. 
-      %p
-        Once you have saved your activity name and description you can click on the 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"}/ 
-        link below the description to create your activity.  Inside the editor each element of the activity has a check box. 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_check_box.jpg", :alt=>"Check Box"}/ 
-        To add an element click on the check box 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_checked_box.jpg", :alt=>"Checked Box"}/ 
-        and author that section. 
-      %p
-        %a{:href => "#wrapper"} Return to Top
-    %li
-      %p#add-sensor
-        %strong
-          Add Sensor 
-      %p
-        %div{:style=>"float: right; margin-left: 10px; width: 250px;"}
-          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit_sensor_v2.jpg", :alt=>"Edit Sensor"}/
-          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_scrolled_down_sensor.jpg", :alt=>"Scrolled Down Sensor"}/
-        To add a sensor it must be an option under the section you are editing.  When you click the box 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_checked_box.jpg", :alt=>"Checked Box"}/ 
-        to add the sensor the default sensor is temperature. If you do not want to add the temperature sensor click on the “edit” link across from the word sensor on the right. You will then be presented with a drop down menu allowing you to select the sensor you want to connect to the computer for that specific activity. All Collect Data sections and Further Investigation allow sensors to be added. 
-      %p
-        %a{:href => "#wrapper"} Return to Top
-    %li
-      %p#model-library
-        %strong
-          Search the Model Library
-      %p
-        %a{:href => "http://www.concord.org/sites/all/themes/cc/flash/video/player.swf?skin=/sites/all/themes/cc/flash/video/skins/classic.swf&video=http://www.concord.org/sites/default/files/projects/videos/itsisu/model_library.mov&autoplay=1&fullscreen=true", :target=>"_blank"}Click here to watch the video on 'Models'.
-      %p
-        Along with activities, models are also included in your ISTI-SU teacher login. You can access the models by clicking on the word Models in your orange navigation bar.
-        %br/
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/models.FL.jpg", :alt=>"Models"}/
-      %p
-        Models are interactive computational programs that simulate real world phenomenon. Models show your students everything from mixing primary colors to graphs in math class and the moon orbiting the earth. Models are designed to help you explain concepts to your class.
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/models.jpg", :alt=>"Models"}/
-      %p
-        You can search for specific models that have to do with a particular subject or look through all the models, by using the search bar. Under the search bar there are numbers listed to let you know what page of models you are looking.
-      %p
-        The button in the lower right hand corner of the box allows you to either “show/hide Model descriptions” so you can view or not view the information on the model. Students do not have access to choosing activities that you have not assigned them or to viewing models.
-      %p
-        %a{:href => "#wrapper"} Return to Top
-    %li
-      %p#add-model
-        %strong
-          Add Model/Microscope
-      %p
-        To add a model it must be an option under the section you are editing. When you click the box to add the model the default model is “model 1”. To change the model click directly across from the word model to where it says edit. 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_add_model.jpg", :alt=>"Add Model"}/
-      %p
-        When you edit the model there is a drop down menu allowing you to choose what model you want to have in your activity.
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_add_model_type.jpg", :alt=>"Add Model Type"}/  
-      %p
-        You can preview the models in the model library. To get to the model library click on 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_modelsorangebar.jpg", :alt=>"Models"}/ 
-        in the orange bar at the top of the page. It is recommended that you open the library in a separate window or tab than the one you are creating your activity in. To add the functionality of browsing/selecting microscope pictures to your activity the model you should use is listed as model 163: microscope image. 
-      %p
-        %a{:href => "#wrapper"} Return to Top
-    %li
-      %p#save-activity
-        %strong
-          Save Activity 
-      %p
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_public_v_private.jpg", :alt=>"Public vs Private", :style=>"float: right; margin-left: 10px;"}/
-        Before you save your activity think about if you want only you to be able to use the activity or if you want to share it with the Innovative Technology in Science Inquiry community. Under the name of your activity you can set the “publication status.” If you want to keep the activity to yourself you can select private. If you want to share the activity you can set the “publication status” to public.  
-      %p
-        To save your activity you must have saved all the open “What You See Is What You Get” (WYSIWYG) boxes. If you have not saved all the WYSIWYG boxes the top 
-        %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_save.jpg", :alt=>"Save Button"}/ 
-        button under the description will not work. It is important to save all the WYSIWYG boxes even if you decide later that you do not want to include that section, this way the top save button will work. 
-        %h5
-          My Activities 
+  - if current_user.has_role?('admin')
+    %h4#creating-activity
+      Creating your own Activity
+    %p
+      Once you have logged into the Innovative Technology in Science Inquiry portal click on   in the orange bar at the top of the page. 
+    %ol
+      %li
+        %p#create-activities
+          %strong
+            Create Activities 
         %p
-          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_my_activities.jpg", :alt=>"My Activities", :style=>"float: left; margin: 0 10px 20px 0;"}/
-          Once you have created and saved your activity, regardless of the publication status you can access the activity from the Activity page. To find your activity scroll down the categories of activities until you see the section labeled “My Activities”. Click on the section and you will see your activities listed to the right. From there you can also edit the activity by clicking on the blue paper with the pencil across it. 
-          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_blue_pencil.jpg", :alt=>"Edit Icon"}/
+          Above the categories of the activities there is a button labeled 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_create_activity.jpg", :alt=>"Create Activity"}/
+          \. This button will bring up a page asking you to name your new activity and give it a description. There is also an “Activity Template” drop down menu that will allow you to choose the template you want to use for your activity. For now the default option is a single-page activity template. When you are done with these steps click on the orange 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_save.jpg", :alt=>"Save"}/
+          button in the upper right hand corner of the page. 
+        %p
+          Once you have saved your activity name and description you can click on the 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"}/ 
+          link below the description to create your activity.  Inside the editor each element of the activity has a check box. 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_check_box.jpg", :alt=>"Check Box"}/ 
+          To add an element click on the check box 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_checked_box.jpg", :alt=>"Checked Box"}/ 
+          and author that section. 
         %p
           %a{:href => "#wrapper"} Return to Top
-      %li{:style=>"clear: both;"}
-        %p#customizing-activity
+      %li
+        %p#add-sensor
           %strong
-            Customizing an Activity
+            Add Sensor 
         %p
-          If you do not want to completely create your own activity you can customize your class activities by editing one of the exemplar activities that has already been created. Just follow the next set of directions.
-        %ul
-          %li
-            %p
-              %strong
-                Copy an Activity 
-            %p
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_stacked_paper.jpg", :alt=>"Copy Icon", :style=>"float: left; margin-right: 10px;"}/
-              To customize an activity, or make your own version of the activity for your class, first find the activity you want to customize from the list of activities.  In the buttons next to the activity there should be a button that looks like two stacked pieces of paper. By clicking on that button you will be able to make your own version of the activity.  
-            %p
-              When the page first loads it will present you with a preview of the activity. To edit the activity click on the “edit” link under the title and description of the activity. From the edit page you can modify the activity using the 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"}/ 
-              link across from the various sections.  When you are done editing the section of the activity you are working on make sure to click on all the save buttons so your changes are made. 
-
-          %li
-            %p
-              %strong
-                Edit Models &amp; Sensors 
-            %p
-              You can edit the models and sensors by clicking on 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"}/ 
-              across from the model or sensor and choosing a different one from the drop down menu presented. 
-            %p
-              To add to the activity you can click on the empty gray boxes. You can then edit the item you added however you would like by clicking on the 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"}/ 
-              link across from the item on the right hand side. This will open a “What You See Is What You Get” (WYSIWYG) box. 
-            %p
-              To remove an item you can click on the 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_checked_box.jpg", :alt=>"Checked Box"}/ 
-              next to the item and it will be removed from the activity. The items are nested under main sections so if you remove the check 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_check_box.jpg", :alt=>"Check Box"}/ 
-              from a main section everything under it will also be removed.  If you have removed a section but wish to add it back when you click on the section again you will find that all the work is still there. 
-          %li
-            %p
-              %strong
-                Save Activity 
-            %p
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_public_v_private.jpg", :alt=>"Public vs Private", :style=>"float: right; margin-left: 10px;"}/
-              Before you save your activity think about if you only want to be able to use the activity or if you want to share it with the Innovative Technology in Science Inquiry community. Under the name of your activity you can set the “publication status.” If you want to keep the activity to yourself you can select private. If you want to share the activity you can set the “publication status” to public.  
-            %p
-              To save your activity you must have saved all the open WYSIWYG boxes. If you have not saved all the WYSIWYG boxes the top 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_save.jpg", :alt=>"Save Button"}/ 
-              button under the description will not work. It is important that you save all of the WYSIWYG boxes even if you decide not to use them in your final activity. 
-          %li
-            %p
-              %strong
-                My Activities 
-            %p
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_my_activities.jpg", :alt=>"My Activities", :style=>"float: left; margin: 0 10px 20px 0;"}/
-              Once you have created and saved your activity, regardless of the publication status you can access the activity from the Activity page. To find your activity scroll down the categories of activities until you see the section labeled “My Activities”. Click on the section and you will see your activities listed to the right. From there you can also edit the activity by clicking on the blue paper with the 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_blue_pencil.jpg", :alt=>"Edit Icon"}/ 
-              pencil across it. 
-          %li{:style=>"clear: both;"}
-            %p
-              %strong
-                Adding a photo to the image library
-            %p
-              %a{:href => "http://www.concord.org/sites/all/themes/cc/flash/video/player.swf?skin=/sites/all/themes/cc/flash/video/skins/classic.swf&video=http://www.concord.org/sites/default/files/projects/videos/itsisu/images.mov&autoplay=1&fullscreen=true", :target=>"_blank"} Click here to watch the video on 'Images'.
-
-            %p
-              To add an image into an activity you must have the URL of the image.  If you obtain an URL from the Internet it is possible that the image could move or the person hosting the image could take it down. To upload an image to the Image Library, save it to your computer.  Click on the Images link on the navigation bar.
-            %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_image_library_link.png", :alt=>"Image Library Link"}
-            %p
-              This will bring you to the Image Library.
-            %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_image_library.png", :alt=>"Image Library Screen Shot"}
-            %p
-              Click 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_create_image.png", :alt=>"Create Image Button"}
-              , found on the yellow bar above the images.  If your image is larger than the given dimensions (650 x 400), the image will automatically be resized to fit.  If the image is extremely large, you may resize it on your computer.  Name the image.  In the attribution box, enter the name of the author, “Creative Commons”, and the website where the photo was found.  For example, John Smith Creative Commons Flickr.  Choose the file from your computer, then click 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_create.png", :alt=>"Create Button"} 
-              The URL for embedding the image can be found below. 
-
-            %p
-              You can search for specific images or browse the entire library.  When browsing the image library, you can sort the images alphabetically by name or by date added.  To view the images that you have created, check the box labeled “Only Mine”.  
-
-            %p
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_insert_image.jpg", :alt=>"Image Icon", :style=>"float: right; margin-left: 10px;"}
-              To add an image click on 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"} 
-              When the WYSIWYG box opens up look in the edit bar for a button that looks like a tree. 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_treeimageinbar.jpg", :alt=>"Image Icon"} 
-              &nbsp;Once you click on the 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_treeimageinbar.jpg", :alt=>"Image Icon"} 
-              &nbsp;you will be prompted for the URL of the image.
-            %p
-              Click the 
-              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_insert_green_button.jpg", :alt=>"Image Icon"} 
-              &nbsp;when you have entered the URL to insert the photo.
-            %p
-              If you do not want the photo that is inserted simply delete the image with the delete key.
+          %div{:style=>"float: right; margin-left: 10px; width: 250px;"}
+            %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit_sensor_v2.jpg", :alt=>"Edit Sensor"}/
+            %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_scrolled_down_sensor.jpg", :alt=>"Scrolled Down Sensor"}/
+          To add a sensor it must be an option under the section you are editing.  When you click the box 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_checked_box.jpg", :alt=>"Checked Box"}/ 
+          to add the sensor the default sensor is temperature. If you do not want to add the temperature sensor click on the “edit” link across from the word sensor on the right. You will then be presented with a drop down menu allowing you to select the sensor you want to connect to the computer for that specific activity. All Collect Data sections and Further Investigation allow sensors to be added. 
+        %p
+          %a{:href => "#wrapper"} Return to Top
+      %li
+        %p#model-library
+          %strong
+            Search the Model Library
+        %p
+          %a{:href => "http://www.concord.org/sites/all/themes/cc/flash/video/player.swf?skin=/sites/all/themes/cc/flash/video/skins/classic.swf&video=http://www.concord.org/sites/default/files/projects/videos/itsisu/model_library.mov&autoplay=1&fullscreen=true", :target=>"_blank"}Click here to watch the video on 'Models'.
+        %p
+          Along with activities, models are also included in your ISTI-SU teacher login. You can access the models by clicking on the word Models in your orange navigation bar.
+          %br/
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/models.FL.jpg", :alt=>"Models"}/
+        %p
+          Models are interactive computational programs that simulate real world phenomenon. Models show your students everything from mixing primary colors to graphs in math class and the moon orbiting the earth. Models are designed to help you explain concepts to your class.
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/models.jpg", :alt=>"Models"}/
+        %p
+          You can search for specific models that have to do with a particular subject or look through all the models, by using the search bar. Under the search bar there are numbers listed to let you know what page of models you are looking.
+        %p
+          The button in the lower right hand corner of the box allows you to either “show/hide Model descriptions” so you can view or not view the information on the model. Students do not have access to choosing activities that you have not assigned them or to viewing models.
+        %p
+          %a{:href => "#wrapper"} Return to Top
+      %li
+        %p#add-model
+          %strong
+            Add Model/Microscope
+        %p
+          To add a model it must be an option under the section you are editing. When you click the box to add the model the default model is “model 1”. To change the model click directly across from the word model to where it says edit. 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_add_model.jpg", :alt=>"Add Model"}/
+        %p
+          When you edit the model there is a drop down menu allowing you to choose what model you want to have in your activity.
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_add_model_type.jpg", :alt=>"Add Model Type"}/  
+        %p
+          You can preview the models in the model library. To get to the model library click on 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_modelsorangebar.jpg", :alt=>"Models"}/ 
+          in the orange bar at the top of the page. It is recommended that you open the library in a separate window or tab than the one you are creating your activity in. To add the functionality of browsing/selecting microscope pictures to your activity the model you should use is listed as model 163: microscope image. 
+        %p
+          %a{:href => "#wrapper"} Return to Top
+      %li
+        %p#save-activity
+          %strong
+            Save Activity 
+        %p
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_public_v_private.jpg", :alt=>"Public vs Private", :style=>"float: right; margin-left: 10px;"}/
+          Before you save your activity think about if you want only you to be able to use the activity or if you want to share it with the Innovative Technology in Science Inquiry community. Under the name of your activity you can set the “publication status.” If you want to keep the activity to yourself you can select private. If you want to share the activity you can set the “publication status” to public.  
+        %p
+          To save your activity you must have saved all the open “What You See Is What You Get” (WYSIWYG) boxes. If you have not saved all the WYSIWYG boxes the top 
+          %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_save.jpg", :alt=>"Save Button"}/ 
+          button under the description will not work. It is important to save all the WYSIWYG boxes even if you decide later that you do not want to include that section, this way the top save button will work. 
+          %h5
+            My Activities 
+          %p
+            %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_my_activities.jpg", :alt=>"My Activities", :style=>"float: left; margin: 0 10px 20px 0;"}/
+            Once you have created and saved your activity, regardless of the publication status you can access the activity from the Activity page. To find your activity scroll down the categories of activities until you see the section labeled “My Activities”. Click on the section and you will see your activities listed to the right. From there you can also edit the activity by clicking on the blue paper with the pencil across it. 
+            %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_blue_pencil.jpg", :alt=>"Edit Icon"}/
           %p
             %a{:href => "#wrapper"} Return to Top
+        %li{:style=>"clear: both;"}
+          %p#customizing-activity
+            %strong
+              Customizing an Activity
+          %p
+            If you do not want to completely create your own activity you can customize your class activities by editing one of the exemplar activities that has already been created. Just follow the next set of directions.
+          %ul
+            %li
+              %p
+                %strong
+                  Copy an Activity 
+              %p
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_stacked_paper.jpg", :alt=>"Copy Icon", :style=>"float: left; margin-right: 10px;"}/
+                To customize an activity, or make your own version of the activity for your class, first find the activity you want to customize from the list of activities.  In the buttons next to the activity there should be a button that looks like two stacked pieces of paper. By clicking on that button you will be able to make your own version of the activity.  
+              %p
+                When the page first loads it will present you with a preview of the activity. To edit the activity click on the “edit” link under the title and description of the activity. From the edit page you can modify the activity using the 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"}/ 
+                link across from the various sections.  When you are done editing the section of the activity you are working on make sure to click on all the save buttons so your changes are made. 
+
+            %li
+              %p
+                %strong
+                  Edit Models &amp; Sensors 
+              %p
+                You can edit the models and sensors by clicking on 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"}/ 
+                across from the model or sensor and choosing a different one from the drop down menu presented. 
+              %p
+                To add to the activity you can click on the empty gray boxes. You can then edit the item you added however you would like by clicking on the 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"}/ 
+                link across from the item on the right hand side. This will open a “What You See Is What You Get” (WYSIWYG) box. 
+              %p
+                To remove an item you can click on the 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_checked_box.jpg", :alt=>"Checked Box"}/ 
+                next to the item and it will be removed from the activity. The items are nested under main sections so if you remove the check 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_check_box.jpg", :alt=>"Check Box"}/ 
+                from a main section everything under it will also be removed.  If you have removed a section but wish to add it back when you click on the section again you will find that all the work is still there. 
+            %li
+              %p
+                %strong
+                  Save Activity 
+              %p
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_public_v_private.jpg", :alt=>"Public vs Private", :style=>"float: right; margin-left: 10px;"}/
+                Before you save your activity think about if you only want to be able to use the activity or if you want to share it with the Innovative Technology in Science Inquiry community. Under the name of your activity you can set the “publication status.” If you want to keep the activity to yourself you can select private. If you want to share the activity you can set the “publication status” to public.  
+              %p
+                To save your activity you must have saved all the open WYSIWYG boxes. If you have not saved all the WYSIWYG boxes the top 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_save.jpg", :alt=>"Save Button"}/ 
+                button under the description will not work. It is important that you save all of the WYSIWYG boxes even if you decide not to use them in your final activity. 
+            %li
+              %p
+                %strong
+                  My Activities 
+              %p
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_my_activities.jpg", :alt=>"My Activities", :style=>"float: left; margin: 0 10px 20px 0;"}/
+                Once you have created and saved your activity, regardless of the publication status you can access the activity from the Activity page. To find your activity scroll down the categories of activities until you see the section labeled “My Activities”. Click on the section and you will see your activities listed to the right. From there you can also edit the activity by clicking on the blue paper with the 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_blue_pencil.jpg", :alt=>"Edit Icon"}/ 
+                pencil across it. 
+            %li{:style=>"clear: both;"}
+              %p
+                %strong
+                  Adding a photo to the image library
+              %p
+                %a{:href => "http://www.concord.org/sites/all/themes/cc/flash/video/player.swf?skin=/sites/all/themes/cc/flash/video/skins/classic.swf&video=http://www.concord.org/sites/default/files/projects/videos/itsisu/images.mov&autoplay=1&fullscreen=true", :target=>"_blank"} Click here to watch the video on 'Images'.
+
+              %p
+                To add an image into an activity you must have the URL of the image.  If you obtain an URL from the Internet it is possible that the image could move or the person hosting the image could take it down. To upload an image to the Image Library, save it to your computer.  Click on the Images link on the navigation bar.
+              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_image_library_link.png", :alt=>"Image Library Link"}
+              %p
+                This will bring you to the Image Library.
+              %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_image_library.png", :alt=>"Image Library Screen Shot"}
+              %p
+                Click 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_create_image.png", :alt=>"Create Image Button"}
+                , found on the yellow bar above the images.  If your image is larger than the given dimensions (650 x 400), the image will automatically be resized to fit.  If the image is extremely large, you may resize it on your computer.  Name the image.  In the attribution box, enter the name of the author, “Creative Commons”, and the website where the photo was found.  For example, John Smith Creative Commons Flickr.  Choose the file from your computer, then click 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_create.png", :alt=>"Create Button"} 
+                The URL for embedding the image can be found below. 
+
+              %p
+                You can search for specific images or browse the entire library.  When browsing the image library, you can sort the images alphabetically by name or by date added.  To view the images that you have created, check the box labeled “Only Mine”.  
+
+              %p
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_insert_image.jpg", :alt=>"Image Icon", :style=>"float: right; margin-left: 10px;"}
+                To add an image click on 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_edit.jpg", :alt=>"Edit"} 
+                When the WYSIWYG box opens up look in the edit bar for a button that looks like a tree. 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_treeimageinbar.jpg", :alt=>"Image Icon"} 
+                &nbsp;Once you click on the 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_treeimageinbar.jpg", :alt=>"Image Icon"} 
+                &nbsp;you will be prompted for the URL of the image.
+              %p
+                Click the 
+                %img{:src=>"http://www.concord.org/sites/default/files/images/projects/itsisu/itsisu_insert_green_button.jpg", :alt=>"Image Icon"} 
+                &nbsp;when you have entered the URL to insert the photo.
+              %p
+                If you do not want the photo that is inserted simply delete the image with the delete key.
+            %p
+              %a{:href => "#wrapper"} Return to Top

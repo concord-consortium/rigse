@@ -1,5 +1,5 @@
 -#TODO: Add search results param to list_bins?
--if current_user_can_author
+-if current_user.has_role?('admin')
   .button.bins= link_to "create #{Activity.display_name}", new_activity_path
 - bin_params = {:user => current_user}
 - bin_params[:activities] = activities if defined? activities

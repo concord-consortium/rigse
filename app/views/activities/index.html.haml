@@ -11,7 +11,7 @@
         = will_paginate @activities
     .action_menu_header_right
       %ul.menu
-        -unless current_user.anonymous?
+        - if current_user.has_role?('admin')
           %li= link_to 'create activity', new_activity_path
         %li= toggle_all 'activity descriptions'
 
