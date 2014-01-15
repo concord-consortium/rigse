@@ -272,9 +272,9 @@ Dataservice::BundleContent: #{Dataservice::BundleContent.count}
 Dataservice::ConsoleLogger:  #{Dataservice::ConsoleLogger.count}
 Dataservice::ConsoleContent: #{Dataservice::ConsoleContent.count}
 
-There are #{Portal::Teacher.find(:all).select {|t| t.user == nil}.size} Facilitator without Users
-There are #{Portal::Student.find(:all).select {|s| s.user == nil}.size} Students which no longer have Facilitator
-There are #{Portal::Clazz.find(:all).select {|i| i.teacher == nil}.size} Classes which no longer have Facilitator
+There are #{Portal::Teacher.find(:all).select {|t| t.user == nil}.size} Facilitators without Users
+There are #{Portal::Student.find(:all).select {|s| s.user == nil}.size} Students which no longer have Facilitators
+There are #{Portal::Clazz.find(:all).select {|i| i.teacher == nil}.size} Classes which no longer have Facilitators
 There are #{Portal::Learner.find(:all).select {|i| i.student == nil}.size} Learners which are no longer associated with Students
 
 If these numbers are large you may want to consider cleaning up the database.
