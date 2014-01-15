@@ -1,7 +1,4 @@
 #userlinks
-  %p
-    Welcome
-    = "#{current_user.name}."
   %ul
     - unless current_user.anonymous?
       %li= link_to 'Help', '/help'
@@ -21,6 +18,9 @@
         %li.last= link_to 'Switch', users_path
 
       = render :partial => 'shared/activity_trail'
+  %p
+    Welcome
+    = "#{current_user.name}."
 -# the following div fixes a layout bug which hid the #userlinks div in IE7
 %div
 #lead.project-header
