@@ -35,3 +35,182 @@
     float: left
     vertical-align: center
     text-align: center
+
+.ui-window
+  position: absolute
+  z-index: 10000
+
+.ui-window .move_handle
+  cursor: move
+
+.ui-window .resize_handle
+  line-height: 1px
+  font-size: 1px
+  width: 8px
+  height: 8px
+  z-index: 90
+  position: absolute
+
+.ui-window .se_sizer
+  cursor: se-resize
+  z-index: 100
+  bottom: 0
+  right: 0
+
+.ui-window .sw_sizer
+  cursor: sw-resize
+  z-index: 100
+  bottom: 0
+  left: 0
+
+.ui-window .nw_sizer
+  cursor: nw-resize
+  z-index: 100
+  top: 0
+  left: 0
+
+.ui-window .ne_sizer
+  cursor: ne-resize
+  z-index: 100
+  top: 0
+  right: 0
+
+.ui-window .n_sizer
+  cursor: n-resize
+  width: 100%
+  top: 0
+  left: 0
+
+.ui-window .s_sizer
+  cursor: s-resize
+  width: 100%
+  bottom: 0
+  left: 0
+
+.ui-window .e_sizer
+  cursor: e-resize
+  height: 100%
+  top: 0
+  right: 0
+
+.ui-window .w_sizer
+  cursor: w-resize
+  height: 100%
+  top: 0
+  left: 0
+
+.ui-window .content
+  overflow: auto
+  position: relative
+
+html>body .ui-window .content
+  border-top: 1px solid transparent
+
+.lightbox .nw
+  height: 32px
+  padding-left: 10px
+  background-color: white
+  border-left: 2px solid #444
+  border-top: 2px solid #444
+  border-right: 2px solid #444
+
+.lightbox .ne
+  height: 32px
+  padding-right: 10px
+
+.lightbox .n
+  color: #17385B
+  font: normal 14px/26px Arial, sans-serif
+  height: 32px
+  margin: 0
+  padding: 0
+  text-align: center
+  overflow: hidden
+  padding-left: 60px
+  line-height: 20px
+  color: #000
+
+.lightbox .content
+  background-color: #fff
+  color: #00233a
+  overflow: auto
+
+.lightbox .w
+  border-left: 1px solid #444
+  border-right: 1px solid #444
+  border-bottom: 1px solid #444
+
+.lightbox .e
+  border-left: 1px solid #444
+  border-right: 1px solid #444
+  border-bottom: 1px solid #444
+
+.lightbox_focused .se_sizer
+  width: 12px
+  height: 12px
+
+.lightbox .buttons_container
+  bottom: 0px
+  padding: 15px 0px
+  position: absolute
+  text-align: center
+  width: 100%
+
+.lightbox .buttons
+  position: absolute
+  top: 1px
+  height: 30px
+  float: right
+  margin-right: -10px
+  cursor: move
+
+div.buttons
+  width: 100%
+  float: right
+
+.lightbox .buttons a.close
+  float: right
+  background: transparent image-url("window/lightbox/buttons.png") no-repeat 0 0
+  background-repeat: no-repeat
+  height: 29px
+  width: 29px
+  margin: -16px -16px 0 0px
+  padding-top: 0px
+  overflow: hidden
+
+.lightbox_focused .buttons a.close
+  background: transparent image-url("window/lightbox/buttons.png") no-repeat 0 0
+  background-repeat: no-repeat
+  float: right
+
+.lightbox .buttons.over a.close
+  background: transparent image-url("window/lightbox/buttons.png") no-repeat 0 0
+  float: right
+
+.lightbox_overlay
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  background-color: black
+  filter: alpha(opacity=30)
+  opacity: 0.3
+  -moz-opacity: 0.3
+
+.lightbox .nw .move_handle,
+.lightbox_focused .nw .move_handle,
+.lightbox .ne .move_handle,
+.lightbox_focused .ne .move_handle,
+.lightbox .move_handle,
+.lightbox_focused .move_handle
+  position: absolute
+  padding-left: 5px
+  z-index: 14
+  font-weight: bold
+  color: #DF720F
+  font-size: 18px
+  padding-top: 5px
+  cursor: move
+  width: 95%
+  text-align: left
+

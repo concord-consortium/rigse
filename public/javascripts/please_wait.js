@@ -74,7 +74,29 @@ var showWait = function(offering) {
   } else {
     showCountdownWait();
   }
+  display_mac_10_9_installer_message_if_necessary();
 };
+
+is_mac_10_9_or_newer = function() {
+  try {
+    var version = /Mac OS X 10[\._](\d+)/.exec(window.navigator.userAgent);
+    return parseInt(version[1]) >= 9;
+  } catch (e) { }
+  return false;
+}
+
+mac_10_9_message      = '<div style="font-size: 1.1em; color: darkred;">On OS X 10.9 or newer, you will need to install a launcher application in your system in order to run activities. If you have not already installed it, please:<br/>';
+mac_10_9_message     += '<ul>';
+mac_10_9_message     += '<li><a href="http://static.concord.org/installers/cc_launcher_installer.dmg">Click here</a> to download the launcher installer .dmg</li>';
+mac_10_9_message     += '<li>Open the downloaded .dmg and drag the CCLauncher application to your Applications folder</li>';
+mac_10_9_message     += '<li>Return to the portal and launch your activity</li>';
+mac_10_9_message     += '</ul></div>';
+
+display_mac_10_9_installer_message_if_necessary = function() {
+  if (is_mac_10_9_or_newer()) {
+    Lightbox.flash("Info", mac_10_9_message);
+  }
+}
 
 document.observe("dom:loaded", function() {
   $$(".run_link").each(function(item) {
