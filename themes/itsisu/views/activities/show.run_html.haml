@@ -18,7 +18,7 @@
   }
 
   window.createPhone = function(id) {
-    return new Lab.IFramePhone($j(id)[0], function() {
+    return new Lab.IFramePhone($j(id)[0], null, function() {
       setupPhone(id);
     });
   }

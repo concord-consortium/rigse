@@ -86,9 +86,12 @@ class Portal::TeachersController < ApplicationController
       t.schools << @school_selector.school if @school_selector.valid?
       t.grades << @portal_grade if !@portal_grade.nil?
     end
-    if @school_selector.valid? && @user.register! && @portal_teacher.save
-      # will redirect:
-      return successful_creation(@user)
+    if @school_selector.valid?
+      @portal_teacher.cohort_list = ['Select Media Facilitator']
+      if @user.register! && @portal_teacher.save
+        # will redirect:
+        return successful_creation(@user)
+      end
     end
 
     # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes

@@ -4556,7 +4556,7 @@ Class: UI.WindowManager
 UI.WindowManager = Class.create(UI.Options, {
   options: {
     container:   null, // will default to document.body
-    zIndex:      0,
+    zIndex:      10000,
     theme:       "alphacube",
     shadowTheme: "mac_shadow",
     showOverlay: Element.show,
