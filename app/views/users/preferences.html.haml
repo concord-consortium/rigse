@@ -14,7 +14,8 @@
             to change the security questions you use to reset your password if you forget it.
         = link_to("Change Password", :controller => :passwords, :action=>'reset', :reset_code => 0)
       #right-col
-        = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }
+        /
+          = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }
 
       %ul.menu_h
         %li
