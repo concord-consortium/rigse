@@ -84,7 +84,7 @@ class Portal::LearnersController < ApplicationController
     
     respond_to do |format|
       format.html # show.html.erb
-      format.jnlp { render :partial => 'shared/learn',
+      format.jnlp { render :partial => 'shared/learn_or_installer',
         :locals => { :runnable => @portal_learner.offering.runnable, :learner => @portal_learner } }
       format.config { 
         # if this isn't the learner then it is launched read only

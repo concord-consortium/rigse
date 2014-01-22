@@ -116,7 +116,7 @@ class PagesController < ApplicationController
       }
       format.run_sparks_html   { render :show, :layout => "layouts/run" }
       format.run_html   { render :show, :layout => "layouts/run" }
-      format.jnlp       { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
+      format.jnlp       { render :partial => 'shared/show_or_installer', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
       format.config     { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
       format.otml       { render :layout => "layouts/page" } # page.otml.haml
       format.dynamic_otml {

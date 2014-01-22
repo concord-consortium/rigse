@@ -20,7 +20,7 @@ class Embeddable::SoundGraphersController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml   { render :layout => "layouts/embeddable/sound_grapher" } # sound_grapher.otml.haml
-        format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @sound_grapher, :teacher_mode => false } }
+        format.jnlp   { render :partial => 'shared/show_or_installer', :locals => { :runnable => @sound_grapher, :teacher_mode => false } }
         format.config { render :partial => 'shared/show', :locals => { :runnable => @sound_grapher, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @sound_grapher, :teacher_mode => @teacher_mode} }
         format.xml    { render :sound_grapher => @sound_grapher }

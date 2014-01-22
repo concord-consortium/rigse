@@ -43,7 +43,7 @@ class Embeddable::DataCollectorsController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/embeddable/data_collector" } # data_collector.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @data_collector, :teacher_mode => false }}
+        format.jnlp { render :partial => 'shared/show_or_installer', :locals => { :runnable => @data_collector, :teacher_mode => false }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @data_collector, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @data_collector, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @data_collector }
