@@ -29,7 +29,7 @@ class Diy::ModelsController < ApplicationController
         format.otml { render :layout => 'layouts/diy/model' }
         format.config { render :partial => 'shared/show', :locals => { :runnable => @model, :teacher_mode => false, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @model, :teacher_mode => false} }
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @model , :teacher_mode => false } }
+        format.jnlp { render :partial => 'shared/show_or_installer', :locals => { :runnable => @model , :teacher_mode => false } }
       end
     end
   end

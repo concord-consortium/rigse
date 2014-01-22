@@ -23,7 +23,7 @@ class Embeddable::OpenResponsesController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/open_response" } # open_response.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @open_response , :teacher_mode => false } }
+        format.jnlp { render :partial => 'shared/show_or_installer', :locals => { :runnable => @open_response , :teacher_mode => false } }
         format.config { render :partial => 'shared/show', :locals => { :runnable => @open_response, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @open_response, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @open_response }
