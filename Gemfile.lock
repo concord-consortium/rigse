@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/cc_portal_wordpress_integration
-  revision: 0f9d7198ceaff9a848fb1534e16c3108be861a8a
+  revision: 90952c641fd0eada9c05d45975dc6c0155731b54
   specs:
     cc_portal_wordpress_integration (0.0.4)
       devise (~> 2.1.0)
