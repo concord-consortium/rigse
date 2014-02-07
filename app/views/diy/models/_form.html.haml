@@ -14,6 +14,13 @@
   = f.text_area :instructions, :id => dom_id_for(model, :item, :instructions_field)
   - field_set_tag 'Interactive URL' do
     = f.text_field :interactive_url, :id => dom_id_for(model, :item, :interactive_url_field), :size => 86
+  - field_set_tag 'Interactive Sizing' do
+    Scale:
+    = f.text_field :interactive_scale, :id => dom_id_for(model, :item, :interactive_scale_field), :size => 5
+    Width:
+    = f.text_field :interactive_width, :id => dom_id_for(model, :item, :interactive_width_field), :size => 5
+    Height:
+    = f.text_field :interactive_height, :id => dom_id_for(model, :item, :interactive_height_field), :size => 5
   - field_set_tag 'Model Image URL' do
     = f.text_field :image_url, :id => dom_id_for(model, :item, :image_url_field)
   - field_set_tag 'Credits' do

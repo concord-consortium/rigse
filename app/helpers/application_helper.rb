@@ -1310,4 +1310,34 @@ _gaq.push(['_trackPageview']);
 CONFIG
   end
 
+  def valid_float?(val)
+    !!Float(val) rescue false
+  end
+
+  def interactive_style(model)
+    style = ""
+    scale = model.interactive_scale
+    if scale && !scale.empty? && scale != '1.0' && valid_float?(scale)
+      style += "-moz-transform-origin: 0 0;"
+      style += "-o-transform-origin: 0 0;"
+      style += "-webkit-transform-origin: 0 0;"
+      style += "transform-origin: 0 0;"
+
+      style += "-ms-zoom: #{scale};"
+      style += "-moz-transform: scale(#{scale});"
+      style += "-o-transform: scale(#{scale});"
+      style += "-webkit-transform: scale(#{scale});"
+      style += "transform: scale(#{scale});"
+
+      w = (model.interactive_width  / scale.to_f).ceil
+      h = (model.interactive_height / scale.to_f).ceil
+      style += "width: #{model.interactive_width}px;"
+      style += "height: #{model.interactive_height}px;"
+    elsif model.interactive_height != 400 || model.interactive_width != 690
+      style += "width: #{model.interactive_width}px;"
+      style += "height: #{model.interactive_height}px;"
+    end
+    return style.empty? ? nil : style
+  end
+
 end
