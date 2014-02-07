@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/portal"
-set :branch, "itsisu-production"
+set :branch, "selectmedia"
 
 set :domain, "selectmedia.concord.org"
 server domain, :app, :web
