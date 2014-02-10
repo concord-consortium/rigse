@@ -1,4 +1,4 @@
-- cache_key = "item_list_#{runnable.class.to_s}_#{runnable.id}"
+- cache_key = "item_list_#{runnable.class.to_s}_#{runnable.id}_"
 - cache_key = "changeable_" + cache_key if runnable.changeable? current_user
 - cache_key = "anonymous_" + cache_key if current_user.anonymous?
 - cache_key = "teacher_" + cache_key if current_user.portal_teacher
