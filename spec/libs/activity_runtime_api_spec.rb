@@ -98,17 +98,17 @@ describe ActivityRuntimeAPI do
     }
   end
 
-  let (:v2hash) do
+  let(:v2hash) do
     v2hash = new_hash
     v2hash['type'] = 'Activity'
     v2hash
   end
 
-  let (:sequence_name) { "Many fun things" }
-  let (:sequence_desc) { "Several activities together in a sequence" }
-  let (:sequence_url)  { "http://activity.com/sequence/1" }
+  let(:sequence_name) { "Many fun things" }
+  let(:sequence_desc) { "Several activities together in a sequence" }
+  let(:sequence_url)  { "http://activity.com/sequence/1" }
 
-  let (:sequence_hash) do
+  let(:sequence_hash) do
     {
       "type" => "Sequence",
       "name" => sequence_name,
@@ -161,9 +161,9 @@ describe ActivityRuntimeAPI do
     }
   end
 
-  let (:sequence_template) { Factory.create(:investigation) }
+  let(:sequence_template) { Factory.create(:investigation) }
 
-  let (:existing_sequence_stubs) do
+  let(:existing_sequence_stubs) do
     {
       :name => sequence_name,
       :description => sequence_desc,
@@ -174,7 +174,7 @@ describe ActivityRuntimeAPI do
 
   let(:existing){ Factory.create(:external_activity, exist_stubs) }
 
-  let (:existing_sequence) { Factory.create(:external_activity, existing_sequence_stubs) }
+  let(:existing_sequence) { Factory.create(:external_activity, existing_sequence_stubs) }
 
   let(:user)    { Factory.create(:user) }
 
@@ -192,6 +192,8 @@ describe ActivityRuntimeAPI do
         result.should_not be_nil
         result.should have_multiple_choice_like "What color is the sky"
         result.should have_choice_like "blue"
+        result.template.should be_a_kind_of(Activity)
+        result.template.is_template.should be_true
         result.should_not have_choice_like "brown"
         result.should have_image_question_like "draw a picture"
         result.should have_image_question_like "now explain"
@@ -303,6 +305,7 @@ describe ActivityRuntimeAPI do
         result.should be_a_kind_of(ExternalActivity)
         result.url.should == sequence_url
         result.template.should be_a_kind_of(Investigation)
+        result.template.is_template.should be_true
         result.template.activities.length.should > 0
       end
     end

@@ -464,6 +464,23 @@ describe Investigation do
     end # deleting broken investigations
   end
 
+  describe "#is_template" do
+    let(:investigation)        { nil }
+    let(:external_activities)  { [] }
+    subject do
+      s = Factory.create(:investigation)
+      s.stub!(:external_activities => external_activities)
+      s.is_template
+    end
+    describe "when an investigation has external_activities" do
+      let(:external_activities) { [1,2,3]}
+      it { should be_true}
+    end
+    describe "when an investigation has no external_activities" do
+      let(:external_activities) {[]}
+      it { should be_false}
+    end
+  end
 end
 
 

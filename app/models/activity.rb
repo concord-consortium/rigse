@@ -305,7 +305,7 @@ class Activity < ActiveRecord::Base
     if (investigation && investigation.is_template)
       return true
     end
-    read_attribute(:is_template)
+    return external_activities.compact.length > 0
   end
 
 end

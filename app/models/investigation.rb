@@ -332,4 +332,8 @@ class Investigation < ActiveRecord::Base
   def is_official
     true # FIXME: Not sure if true should be the hardwired value here
   end
+
+  def is_template
+    return external_activities.compact.length > 0
+  end
 end

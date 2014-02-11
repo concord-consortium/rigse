@@ -125,22 +125,23 @@ describe Activity do
   end
 
   describe "#is_template" do
-    let (:investigation_with_template)    { mock_model(Investigation, :is_template =>true)}
-    let (:investigation_without_template) { mock_model(Investigation, :is_template =>false)}
-    let (:investigation) { nil }
-    let (:is_template)   { false }
+    let(:investigation_with_template)    { mock_model(Investigation, :is_template =>true)}
+    let(:investigation_without_template) { mock_model(Investigation, :is_template =>false)}
+    let(:investigation)        { nil }
+    let(:external_activities)  { [] }
     subject do
-      s = Factory.create(:activity, :is_template => is_template)
+      s = Factory.create(:activity)
       s.stub!(:investigation => investigation)
+      s.stub!(:external_activities => external_activities)
       s.is_template
     end
 
-    describe "when the attribute is_template is true" do
-      let(:is_template) { true }
+    describe "when an activity has external_activities" do
+      let(:external_activities) { [1,2,3]}
       it { should be_true}
     end
-    describe "when the attribute is_template is false" do
-      let(:is_template) { false }
+    describe "when an activity has no external_activities" do
+      let(:external_activities) {[]}
       it { should be_false}
 
       describe "when the activity has an investigation" do

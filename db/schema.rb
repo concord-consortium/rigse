@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131204204920) do
+ActiveRecord::Schema.define(:version => 20140211161518) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -32,7 +32,6 @@ ActiveRecord::Schema.define(:version => 20131204204920) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "description"
-    t.boolean  "is_template",                           :default => false
     t.integer  "position"
     t.integer  "investigation_id"
     t.integer  "original_id"
@@ -822,9 +821,7 @@ ActiveRecord::Schema.define(:version => 20131204204920) do
     t.boolean  "student_report_enabled",                  :default => true
     t.boolean  "allow_activity_assignment",               :default => true
     t.boolean  "show_score",                              :default => false
-    t.boolean  "is_template",                             :default => false
     t.text     "description_for_teacher"
-    t.boolean  "is_template",                             :default => false
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
