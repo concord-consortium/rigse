@@ -334,7 +334,7 @@ class Investigation < ActiveRecord::Base
   end
 
   def is_template
-    return true if activities.detect { |a| a.is_template}
+    return true if activities.detect { |a| a.external_activities.compact.length > 0 }
     return external_activities.compact.length > 0
   end
 end

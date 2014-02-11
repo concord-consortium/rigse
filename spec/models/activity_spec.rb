@@ -125,8 +125,8 @@ describe Activity do
   end
 
   describe "#is_template" do
-    let(:investigation_with_template)    { mock_model(Investigation, :is_template =>true)}
-    let(:investigation_without_template) { mock_model(Investigation, :is_template =>false)}
+    let(:investigation_with_template)    { mock_model(Investigation, :external_activities =>[1,2,3])}
+    let(:investigation_without_template) { mock_model(Investigation, :external_activities =>[] )}
     let(:investigation)        { nil }
     let(:external_activities)  { [] }
     subject do

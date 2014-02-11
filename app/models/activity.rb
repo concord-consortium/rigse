@@ -302,7 +302,7 @@ class Activity < ActiveRecord::Base
   end
 
   def is_template
-    if (investigation && investigation.is_template)
+    if (investigation && investigation.external_activities.compact.length > 0)
       return true
     end
     return external_activities.compact.length > 0
