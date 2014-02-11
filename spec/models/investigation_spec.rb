@@ -467,19 +467,29 @@ describe Investigation do
   describe "#is_template" do
     let(:investigation)        { nil }
     let(:external_activities)  { [] }
+    let(:activity_is_template) { false }
+    let(:activity)             { mock(:is_template => activity_is_template) }
+    let(:activities)           { [activity] }
     subject do
       s = Factory.create(:investigation)
       s.stub!(:external_activities => external_activities)
+      s.stub!(:activities => activities)
       s.is_template
     end
-    describe "when an investigation has external_activities" do
-      let(:external_activities) { [1,2,3]}
-      it { should be_true}
+    describe "when an investigation has an activity that is a template" do
+      let(:activity_is_template) { true }
+      it { should be_true }
     end
-    describe "when an investigation has no external_activities" do
-      let(:external_activities) {[]}
-      it { should be_false}
-    end
+    describe "when an investigation has an activity that is not a template" do
+      describe "when an investigation has external_activities" do
+        let(:external_activities) { [1,2,3]}
+        it { should be_true}
+      end
+      describe "when an investigation has no external_activities" do
+        let(:external_activities) {[]}
+        it { should be_false}
+      end
+    end  
   end
 end
 
