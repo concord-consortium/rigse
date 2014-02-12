@@ -207,7 +207,7 @@ class Portal::OfferingsController < ApplicationController
       @report_embeddable_filter.ignore = false
     end
 
-    embeddables = params[:filter].collect{|type, ids|
+    embeddables = (params[:filter] || []).collect{|type, ids|
       logger.info "processing #{type}: #{ids.inspect}"
       klass = type.constantize
       ids.collect{|id|
