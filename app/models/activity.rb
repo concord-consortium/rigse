@@ -271,7 +271,7 @@ class Activity < ActiveRecord::Base
     listing = []
     self.sections.each do |s|
       s.pages.each do |p|
-        listing << {"#{s.name} #{p.name}" => p}
+        listing << {"#{p.name}" => p}
       end
     end
     listing

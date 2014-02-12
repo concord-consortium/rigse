@@ -98,7 +98,7 @@ class Report::Util
     @saveables_by_correct    = {}
     @saveables_by_answered   = {}
 
-    reportables          = assignable.reportable_elements
+    reportables          = assignable.respond_to?('reportable_elements?') ? assignable.reportable_elements : []
 
     ## FIXME filtering of embeddables should happen here
     unless skip_filters
