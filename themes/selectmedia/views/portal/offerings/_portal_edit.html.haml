@@ -2,7 +2,7 @@
 .activity-box
   .runnable-title
     - if runnable.is_a?(ExternalActivity) # don't allow assigning teacher guides
-      %a{:href => runnable.url, :target => "_blank"}= "Teacher Guide"
+      %a{:href => runnable.url, :target => "_blank"}= "Facilitator Guide"
     - else
       - if is_being_edited
         %input{:type => "checkbox",
@@ -39,10 +39,3 @@
                   $j("#runnable-links#{runnable.id} .heavyweight").hide();
                   $j("#runnable-links#{runnable.id} .lightweight").show();
                 }
-          -#%a{:class => 'button-link try-link', 
-            -#:id => "try_button_#{runnable.id}", 
-            -#:href => "/diy/view/52/type/runnable/", 
-            -#:title => "Try this runnable (as a teacher, do not save data)"} 
-            -#try it. 
-        -#.runnable-description{:id => "runnable-description-#{runnable.id}"}
-          -#= runnable.description

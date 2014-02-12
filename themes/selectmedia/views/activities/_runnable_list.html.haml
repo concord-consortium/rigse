@@ -1,9 +1,5 @@
 -#TODO: Add search results param to list_bins?
--if defined?(lightweight_only) && lightweight_only
-  .button.bins= link_to "show all activities", activities_path
--else
-  .button.bins= link_to "show only browser-based activities", activities_path(:lightweight_only => "true")
--if current_user_can_author
+-if current_user.has_role?('admin')
   .button.bins= link_to "create #{Activity.display_name}", new_activity_path
 - bin_params = {:user => current_user}
 - bin_params[:activities] = activities if defined? activities
