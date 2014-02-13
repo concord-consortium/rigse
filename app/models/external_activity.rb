@@ -19,6 +19,17 @@ class ExternalActivity < ActiveRecord::Base
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
 
+  validate :valid_url
+
+  def valid_url
+    begin
+      validated_url = URI.parse(read_attribute(:url))
+    rescue Exception
+      validated_url = nil
+    end
+    errors.add(:url, 'must be a valid url') if validated_url.nil?
+  end
+
   named_scope :like, lambda { |name|
     name = "%#{name}%"
     {
@@ -104,12 +115,16 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   def url(learner = nil)
-    uri = URI.parse(read_attribute(:url))
-    if learner
-      append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
-      append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
+    begin
+      uri = URI.parse(read_attribute(:url))
+      if learner
+        append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
+        append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
+      end
+      return uri.to_sc
+    rescue
+      return read_attribute(:url)
     end
-    return uri.to_sc
   end
 
   ##

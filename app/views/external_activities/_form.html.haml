@@ -6,7 +6,7 @@
   - field_set_tag "#{ExternalActivity.display_name} Description" do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   - field_set_tag "#{ExternalActivity.display_name} URL" do
-    = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = f.text_field :url, :size => 60
   - field_set_tag 'Bin' do
     %h3 grade level:
     = grade_level_select(:external_activity)
