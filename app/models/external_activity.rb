@@ -77,6 +77,17 @@ class ExternalActivity < ActiveRecord::Base
   include Publishable
   include SearchModelInterface
 
+  validate :valid_url
+
+  def valid_url
+    begin
+      validated_url = URI.parse(read_attribute(:url))
+    rescue Exception
+      validated_url = nil
+    end
+    errors.add(:url, 'must be a valid url') if validated_url.nil?
+  end
+
   scope :like, lambda { |name|
     name = "%#{name}%"
     {
@@ -110,12 +121,16 @@ class ExternalActivity < ActiveRecord::Base
   scope :contributed, where(:is_official => false)
 
   def url(learner = nil)
-    uri = URI.parse(read_attribute(:url))
-    if learner
-      append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
-      append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
+    begin
+      uri = URI.parse(read_attribute(:url))
+      if learner
+        append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
+        append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
+      end
+      return uri.to_sc
+    rescue
+      return read_attribute(:url)
     end
-    return uri.to_sc
   end
 
   def material_type

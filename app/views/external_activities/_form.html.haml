@@ -9,7 +9,7 @@
     = t('authoring.description_for_teacher_description')
     = f.text_area :description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   = field_set_tag 'External URL' do
-    = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = f.text_field :url, :size => 60
   = field_set_tag 'Publication status' do
     = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
   = field_set_tag 'Student Report Enabled' do
