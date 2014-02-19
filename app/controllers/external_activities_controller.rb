@@ -227,7 +227,6 @@ class ExternalActivitiesController < ApplicationController
 
   # If we have an authentication token from the authoring client
   # then we can republish without concern for current user.
-  # TODO: use special require_peer_authentication filter in controller
   def republish
     json = JSON.parse(request.body.read)
     begin
