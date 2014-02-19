@@ -3,14 +3,31 @@ class ExternalActivitiesController < ApplicationController
   before_filter :setup_object, :except => [:index, :preview_index, :publish]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export,:publish]
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export,:publish,:republish]
   before_filter :can_create, :only => [:new, :create, :duplicate, :publish]
-
+  before_filter :only_peers, :only => [:republish]
   in_place_edit_for :external_activity, :name
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url
 
   protected
+
+  def only_peers
+    # TODO: we must always use SSL for peer to peer communication.
+    # or we could encrypt a known string using the shared secret as salt.
+    auth_token = ""
+    header = request.headers["Authorization"]
+    if header && header =~ /^Bearer (.*)$/
+      auth_token = $1
+    end
+    peer_tokens = Client.all.map { |c| c.app_secret }.uniq
+    return true if peer_tokens.include?(auth_token)
+    json_error('missing or invalid peer token', 401)
+  end
+
+  def json_error(msg,code=422)
+    render :json => { :error => msg }, :content_type => 'text/json', :status => code
+  end
 
   def can_create
     if (current_visitor.anonymous?)
@@ -204,9 +221,20 @@ class ExternalActivitiesController < ApplicationController
       end
       head :created, :location => @external_activity
     rescue StandardError => e
-      # Return JSON with the error message
-      # Great place to use 418 I'm a teapot
-      render :json => { :error => e }, :content_type => 'text/json', :status => 422
+      json_error(e)
+    end
+  end
+
+  # If we have an authentication token from the authoring client
+  # then we can republish without concern for current user.
+  # TODO: use special require_peer_authentication filter in controller
+  def republish
+    json = JSON.parse(request.body.read)
+    begin
+      @external_activity = ActivityRuntimeAPI.republish(json)
+      head :created, :location => @external_activity
+    rescue StandardError => e
+      json_error(e)
     end
   end
 

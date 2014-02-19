@@ -548,6 +548,7 @@ constraints :id => /\d+/ do
 
   match '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list, :method => :get
   match '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :method => :post, :version => /v\d+/
+  match '/external_activities/republish/:version' => 'external_activities#republish', :as => :external_activity_republish, :method => :post, :version => /v\d+/
   resources :external_activities do
     collection do
       post :publish

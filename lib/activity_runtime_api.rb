@@ -22,6 +22,18 @@ class ActivityRuntimeAPI
     return external_activity
   end
 
+  def self.republish(hash)
+    # use hash['type'] to determine what to build
+    if hash['type'] == 'Activity'
+      external_activity = self.update_activity(hash)
+    elsif hash['type'] == 'Sequence'
+      external_activity = self.update_sequence(hash)
+    else
+      raise ActivityRuntimeAPIError, "Submitted data must declare a type"
+    end
+    raise(ActivityRuntimeAPIError, "Activity not found") unless external_activity
+    return external_activity
+  end
 
   private
 
