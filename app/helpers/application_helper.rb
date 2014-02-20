@@ -860,13 +860,16 @@ module ApplicationHelper
 
   def menu_for_learner(learner, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    run_format = learner.offering.runnable.run_format
+    run_format = :run_html if learner.offering.runnable.is_a?(Page)
+    run_format = :run_html if learner.offering.runnable.lightweight?
     options.update(opts)
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_activity_options' do
-          if learner.offering.runnable.run_format == :jnlp
-            haml_concat link_to('Run', run_url_for(learner))
-            haml_concat " | "
+          haml_concat link_to('Run', run_url_for(learner, {}, run_format))
+          haml_concat " | "
+          if run_format == :jnlp
             if current_user.has_role?("admin")
               haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
               haml_concat " | "
