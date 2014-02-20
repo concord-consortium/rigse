@@ -305,6 +305,13 @@ namespace :setup do
   task :create_default_project, :roles => :app do
     run_remote_rake "app:setup:default_project"
   end
+
+  desc "setup the NCES districts: download and configure NCES districts"
+  task :districts, :roles => :app do
+    run_remote_rake "portal:setup:download_nces_data --trace"  
+    run_remote_rake "portal:setup:import_nces_from_files --trace"
+    run_remote_rake "portal:setup:create_districts_and_schools_from_nces_data --trace"
+  end 
 end
 
 #############################################################
