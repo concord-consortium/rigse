@@ -84,6 +84,11 @@ class Portal::LearnersController < ApplicationController
     
     respond_to do |format|
       format.html # show.html.erb
+      format.run_html {
+        @learner = @portal_learner
+        @offering = @learner.offering
+        render 'portal/offerings/show', :layout => "layouts/run"
+      }
       format.jnlp { render :partial => 'shared/learn_or_installer',
         :locals => { :runnable => @portal_learner.offering.runnable, :learner => @portal_learner } }
       format.config { 

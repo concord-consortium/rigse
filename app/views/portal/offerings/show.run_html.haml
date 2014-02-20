@@ -1,4 +1,8 @@
-= render :partial => 'shared/form_save_warning'
-%form.run_html_form{:action => answers_portal_offering_path(@offering), :method => :post}
+- learner_is_not_current_user = (@learner.student.user.id != current_user.id)
+= render :partial => 'shared/form_save_warning', :locals => { :skip_warning_popup => learner_is_not_current_user }
+- if learner_is_not_current_user
   = render_show_partial_for(@offering.runnable, {:locals => {:learner => @learner}})
-  %input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => (@learner.nil? ? "disabled" : ""), :onclick => 'window.onbeforeunload = null; return true;'}
+- else
+  %form.run_html_form{:action => answers_portal_offering_path(@offering), :method => :post}
+    = render_show_partial_for(@offering.runnable, {:locals => {:learner => @learner}})
+    %input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => (@learner.nil? ? "disabled" : ""), :onclick => 'window.onbeforeunload = null; return true;'}
