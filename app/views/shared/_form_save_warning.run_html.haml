@@ -4,4 +4,7 @@
       return 'All unsubmitted answers will be lost! Click "Stay on this page" and then the Submit button at the bottom of the page to save your answers.';
     }
 .warning
-  You will need to press the "Submit" button at the bottom of this page in order to save your work!
+  - if local_assigns[:skip_warning_popup]
+    Caution! YOUR DATA WILL NOT BE SAVED!
+  - else
+    You will need to press the "Submit" button at the bottom of this page in order to save your work!

@@ -1,5 +1,6 @@
+- portal_student = local_assigns[:portal_student] || current_user.portal_student
 - if offerings.size > 0
-  = render :partial => 'shared/offering_for_student', :collection => offerings, :as => :offering
+  = render :partial => 'shared/offering_for_student', :collection => offerings, :as => :offering, :locals => {:portal_student => portal_student}
 - else
   .item
     %ul.quiet_list

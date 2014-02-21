@@ -27,7 +27,7 @@
             if (Object.isExtensible && Modernizr.svg) {
               var elem = $("#{dom_id_for(offering.runnable, :run_items)}");
               var link = '<li>#{run_link_for(offering.runnable, nil, run_params).gsub(/'/, "")}</li>';
-              elem.innerHTML = elem.innerHTML + link;
+              elem.innerHTML = link;
             }
   %div{ :id => dom_id_for(offering), :class => "offering #{"no-delete" unless offering.can_be_deleted?}" }
     - if offering.resource_page?

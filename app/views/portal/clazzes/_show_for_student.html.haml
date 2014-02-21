@@ -1,4 +1,3 @@
-
 - options = { :omit_delete => true }
 %div.item_collection{ :id => dom_id_for(portal_clazz)}
   %div{:id => dom_id_for(portal_clazz, :item), :class => 'item'}
@@ -9,4 +8,4 @@
           = " (#{portal_clazz.section})"
       .action_menu_header_right
         = portal_clazz.teachers.size > 0 ? portal_clazz.teachers.map{ |t| t.name}.join(', ') : 'no facilitators'
-    = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.active_offerings }
+    = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.active_offerings, :portal_student => portal_student }

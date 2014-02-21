@@ -1,8 +1,10 @@
+- portal_student = local_assigns[:portal_student] || current_user.portal_student
+- destination = (portal_student && portal_student.user.id != current_user.id) ? offering.find_or_create_learner(portal_student) : offering
 -if offering.runnable
   .item
     %ul.quiet_list
       %li
-        = run_link_for(offering)
+        = run_link_for(destination)
       %li
         .tiny= offering.description
 
