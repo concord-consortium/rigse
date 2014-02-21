@@ -10,6 +10,8 @@
     = f.text_area :description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   = field_set_tag 'External URL' do
     = f.text_field :url, :size => 60
+  = field_set_tag 'Teacher Guide (URL)' do
+    = f.text_field :teacher_guide_url, :size => 60
   = field_set_tag 'Publication status' do
     = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
   = field_set_tag 'Student Report Enabled' do

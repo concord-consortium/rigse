@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140211161518) do
+ActiveRecord::Schema.define(:version => 20140221205801) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20140211161518) do
     t.boolean  "student_report_enabled",                :default => true
     t.boolean  "show_score",                            :default => false
     t.text     "description_for_teacher"
+    t.string   "teacher_guide_url"
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
@@ -569,7 +570,7 @@ ActiveRecord::Schema.define(:version => 20140211161518) do
 
   create_table "embeddable_image_questions", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "prompt"
     t.datetime "created_at"
@@ -768,6 +769,7 @@ ActiveRecord::Schema.define(:version => 20140211161518) do
     t.boolean  "is_official",              :default => false
     t.boolean  "student_report_enabled",   :default => true
     t.text     "description_for_teacher"
+    t.string   "teacher_guide_url"
   end
 
   add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"
@@ -822,6 +824,7 @@ ActiveRecord::Schema.define(:version => 20140211161518) do
     t.boolean  "allow_activity_assignment",               :default => true
     t.boolean  "show_score",                              :default => false
     t.text     "description_for_teacher"
+    t.string   "teacher_guide_url"
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|

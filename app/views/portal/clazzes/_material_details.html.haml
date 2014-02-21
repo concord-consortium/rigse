@@ -14,7 +14,8 @@
             = link_to "Run as Teacher", run_url_for(runnable, {:teacher_mode => true}), :class=>"button pie"
             %div{:style=>"height:10px"}
             = link_to "Run as Student", run_url_for(runnable, {}), :class=>"button pie"
-
+            %div{:style=>"height:10px"}
+            = teacher_guide_link(runnable)
       - if runnable.is_a? Investigation
         %br
         %div

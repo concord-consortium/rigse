@@ -67,6 +67,8 @@
                 = assign_material_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')")
               - else
                 = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
+          %div{:style=>'float:right;text-align: right; margin-top: 3px;'}
+            = teacher_guide_link(material)
 
 
       %tr
