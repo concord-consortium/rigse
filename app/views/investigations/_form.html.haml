@@ -32,6 +32,10 @@
         %br
         = t('authoring.description_for_teacher_description')
         = f.text_area :description_for_teacher, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
+      %li
+        %label Teacher Guide URL
+        %br
+        = f.text_field :teacher_guide_url, :size => 60
 
 / = field_set_tag 'Select GSE' do
 /   = field_set_tag 'filter' do
