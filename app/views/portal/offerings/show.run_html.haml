@@ -1,4 +1,4 @@
-- learner_is_not_current_user = (@learner.student.user.id != current_user.id)
+- learner_is_not_current_user = (@learner && @learner.student.user.id != current_user.id)
 = render :partial => 'shared/form_save_warning', :locals => { :skip_warning_popup => learner_is_not_current_user }
 - if learner_is_not_current_user
   = render_show_partial_for(@offering.runnable, {:locals => {:learner => @learner}})
