@@ -7,7 +7,6 @@ describe ExternalActivitiesController do
   let(:description) { name                             }
   let(:url )        { "http://activity.com/activity/1" }
   let(:launch_url)  { "#{url}/1/sessions/"             }
-  let(:existing_url){ nil }
 
   let(:activity_hash) do
     {
@@ -84,7 +83,7 @@ describe ExternalActivitiesController do
   let (:existing) { Factory.create(:external_activity, {
       :name        => name,
       :description => description,
-      :url         => existing_url,
+      :url         => url,
       :publication_status => 'published',
       :template    => Factory.create(:activity, {
         :investigation => Factory.create(:investigation)
@@ -94,7 +93,7 @@ describe ExternalActivitiesController do
   let (:another) { Factory.create(:external_activity, {
       :name        => "#{name} again",
       :description => "#{description} again",
-      :url         => existing_url,
+      :url         => url,
       :publication_status => 'published',
       :is_official => false
     }) }
@@ -155,7 +154,6 @@ describe ExternalActivitiesController do
       end
 
       describe "when an existing external_activity does exist" do
-        let(:existing_url) { url }
         it "should update the existing activity" do
           existing
           raw_post :publish, {}, activity_hash.to_json
@@ -195,7 +193,6 @@ describe ExternalActivitiesController do
       end
 
       describe "when there is already an existing external_activity" do
-        let(:existing_url) { url }
         it "should update the existing activity" do
           existing
           raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
