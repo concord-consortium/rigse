@@ -6,14 +6,14 @@ describe Image do
   end
 
   let(:dimensions)  { mock(:width  => 100, :height => 100)}
-  let(:license)     { mock(:code => 'CC-BY')              }
+  let(:license)     { mock_model(CommonsLicense, :code => 'CC-BY') }
   let(:user)        { mock_model(User, :login=>"testuser")}
   let(:img_filename){ "testing_file_name"                 }
   let(:name)        { "testing"                           }
 
   let(:attributes) do
     {
-      'license_code'    => license,
+      'license'    => license,
       'name'            => name,
       'user'            => user,
       'image_file_name' => img_filename
@@ -31,7 +31,7 @@ describe Image do
     context "with missing name" do
       let(:attributes) do
         {
-          'license_code'    => license,
+          'license'    => license,
           'user'            => user,
           'image_file_name' => img_filename
         }
@@ -44,7 +44,7 @@ describe Image do
     context "with missing user" do
       let(:attributes) do
         {
-          'license_code'    => license,
+          'license'    => license,
           'name'            => name,
           'image_file_name' => img_filename
         }
