@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "/external_activities/edit.html.haml" do
-  let (:ext_act) { Factory.create(:external_activity) }
+  let (:ext_act) { Factory.create(:external_activity, :url => 'http://activities.com') }
 
   before(:each) do
     assigns[:external_activity] = @external_activity = ext_act
