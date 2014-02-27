@@ -4,7 +4,7 @@ YAML::ENGINE.yamler= "psych" if defined?(YAML::ENGINE)
 source "http://rubygems.org"
 
 #### COMMON
-  gem "mysql2",             '~> 0.3', :platforms => [:ruby,:mingw]
+  gem "mysql2",             '~> 0.3.15', :platforms => [:ruby,:mingw]
 
   platforms :jruby do
     gem "activerecord-jdbcmysql-adapter",  "~> 1.1.3"
@@ -108,7 +108,7 @@ source "http://rubygems.org"
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:
 group :production do
-  gem 'therubyracer',         "~>0.10.2"
+  gem 'therubyracer',         "~>0.12.1"
 end
 
 # Feature enabling groups
