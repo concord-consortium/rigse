@@ -110,8 +110,9 @@ describe Search do
     let(:official)     { { :is_official => true }}
     let(:public_opts)  { { :publication_status => "published"}}
     let(:private_opts) { { :publication_status => "private"          }}
-    let(:external_seq) { { :template => private_investigations.first }}
-    let(:external_act) { { :template => private_activities.first     }}
+    let(:external_base) { {:url => 'http://activities.com'}}
+    let(:external_seq) { external_base.merge({ :template => private_investigations.first})}
+    let(:external_act) { external_base.merge({ :template => private_activities.first})}
 
     let(:public_investigations) { collection(:investigation, 2, public_opts) }
     let(:private_investigations){ collection(:investigation, 2, private_opts)}
@@ -277,7 +278,7 @@ describe Search do
         end
 
         describe "When there is no template" do
-          let(:external_activity){FactoryGirl.create(:external_activity, public_opts.merge(official))}
+          let(:external_activity){FactoryGirl.create(:external_activity, external_base.merge(public_opts).merge(official))}
           it "should be listed in the Activity results" do
             subject.results[Search::InvestigationMaterial].should_not include(external_activity)
             subject.results[Search::ActivityMaterial].should include(external_activity)
@@ -332,9 +333,9 @@ describe Search do
             let(:cohort2_activities) { collection(:activity, 2, cohort2_opts)}
             let(:both_activity)      { collection(:activity, 1, both_opts)}
 
-            let(:blank_external)     { collection(:external_activity, 1, official.merge(public_opts)) }
-            let(:cohort1_externals)  { collection(:external_activity, 2, cohort1_opts.merge(official))}
-            let(:cohort2_externals)  { collection(:external_activity, 2, cohort2_opts.merge(official))}
+            let(:blank_external)     { collection(:external_activity, 1, external_base.merge(official).merge(public_opts)) }
+            let(:cohort1_externals)  { collection(:external_activity, 2, external_base.merge(official).merge(cohort1_opts)) }
+            let(:cohort2_externals)  { collection(:external_activity, 2, external_base.merge(official).merge(cohort2_opts)) }
 
             let(:materials) do
               [
