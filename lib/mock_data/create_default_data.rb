@@ -536,7 +536,7 @@ module MockData
           default_rp.name = rp[:name]
           default_rp.user_id = user.id
           default_rp.offerings_count = rp[:offerings_count]
-          default_rp.created_at = rp[:offerings_count]
+          default_rp.created_at = rp[:created_at]
           default_rp.publication_status = rp[:publication_status]
           default_rp.save!
           print '+'
