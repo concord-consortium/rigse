@@ -51,6 +51,9 @@ class ActivityRuntimeAPI
         :publication_status => "published",
         :user => user
       )
+      # update activity so external_activity.template is correctly initialzed
+      # otherwise external_activity.template.is_template? won't be true
+      activity.reload
     end
 
     return external_activity
