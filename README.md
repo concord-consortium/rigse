@@ -864,8 +864,22 @@ installed in the default basedir of /usr/local/mysql/lib. And it assumes
 you are using bundler.
 
 
-    install_name_tool -change libmysqlclient.16.dylib /usr/local/mysql/lib/libmysqlclient.16.dylib `bundle show mysql2`/lib/mysql2/mysql2.bundle
+    install_name_tool -change libmysqlclient.16.dylib /usr/local/mysql/lib/libmysqlclient.16.dylib \
+      `bundle show mysql2`/lib/mysql2/mysql2.bundle
 
+For newer versions of rvm and mysql2, you will see an error like this
+
+    dlopen(/Users/scytacki/.rvm/gems/ruby-1.9.3-p545/extensions/x86_64-darwin-13/\
+      1.9.1/mysql2-0.3.15/mysql2/mysql2.bundle, 9): Library not loaded: libmysqlclient.18.dylib
+      Referenced from: /Users/scytacki/.rvm/gems/ruby-1.9.3-p545/extensions/x86_64-darwin-13/\
+        1.9.1/mysql2-0.3.15/mysql2/mysql2.bundle
+      Reason: image not found - /Users/scytacki/.rvm/gems/ruby-1.9.3-p545/extensions/x86_64-darwin-13/\
+        1.9.1/mysql2-0.3.15/mysql2/mysql2.bundle
+
+So then to fix a command like this is needed:
+
+    install_name_tool -change libmysqlclient.18.dylib /usr/local/mysql/lib/libmysqlclient.18.dylib \
+      /Users/scytacki/.rvm/gems/ruby-1.9.3-p545/extensions/x86_64-darwin-13/1.9.1/mysql2-0.3.15/mysql2/mysql2.bundle
 
 ## CSS
 
