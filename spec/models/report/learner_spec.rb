@@ -7,7 +7,8 @@ describe Report::Learner do
     )
 
     @student  = mock_model(Portal::Student,
-      :user => @user
+      :user => @user,
+      :permission_forms => []
     )
 
     @runnable = mock_model(Activity,
@@ -61,7 +62,7 @@ describe Report::Learner do
   describe "with no bundle_loggers" do
     before(:each) do
       @learner.stub!(:periodic_bundle_logger => nil)
-      @bunlde_logger.stub!(:last_non_empty_bundle_content => nil)
+      @bundle_logger.stub!(:last_non_empty_bundle_content => nil)
     end
 
     it "the last_run time should be nil" do
