@@ -127,7 +127,9 @@ class ActivityRuntimeAPI
         :publication_status => "published",
         :user => user
       )
-
+      # update investigation so external_activity.template is correctly initialzed
+      # otherwise external_activity.template.is_template? won't be true
+      investigation.reload
     end
 
     return external_activity
