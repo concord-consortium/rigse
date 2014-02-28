@@ -62,20 +62,22 @@ class Report::Learner < ActiveRecord::Base
   end
 
   def update_answers
-    report_util = Report::Util.new(self.learner, false, true)
+    report_util = Report::UtilLearner.new(self.learner)
 
     # We need to populate these field
     self.num_answerables = report_util.embeddables.size
-    self.num_answered = report_util.answered_number(self.learner)
-    self.num_correct = report_util.correct_number(self.learner)
-    self.complete_percent = report_util.complete_percent(self.learner)
+    self.num_answered = report_util.saveables.count { |s| s.answered? }
+    self.num_correct = report_util.saveables.count { |s|
+      (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false
+    }
+    self.complete_percent = report_util.complete_percent
 
-    update_activity_completion_status
+    update_activity_completion_status(report_util)
 
     # We might also want to gather 'saveables' in An associated model?
     # AU: We'll use a serialized column to store a hash, for now
     answers_hash = {}
-    report_util.saveables(:learner => self.learner).each do |s|
+    report_util.saveables.each do |s|
       hash = {:answer => s.answer, :answered => s.answered? }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
       if hash[:answer].is_a? Hash
@@ -157,9 +159,7 @@ class Report::Learner < ActiveRecord::Base
     end
   end
 
-  def update_activity_completion_status
-    report_util = Report::Util.new(self.learner, false, true)
-
+  def update_activity_completion_status(report_util)
     offering = self.learner.offering
     assignable = offering.runnable
     if assignable.is_a?(::ExternalActivity) && assignable.template
@@ -174,7 +174,7 @@ class Report::Learner < ActiveRecord::Base
     end
     
     activities.each do|activity|
-      complete_percent = report_util.complete_percent(self.learner,activity)
+      complete_percent = report_util.complete_percent(activity)
       report_learner_activity = Report::LearnerActivity.find_or_create_by_learner_id_and_activity_id(self.learner.id, activity.id)
       report_learner_activity.complete_percent = complete_percent
       report_learner_activity.save!
