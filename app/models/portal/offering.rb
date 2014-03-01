@@ -32,6 +32,11 @@ class Portal::Offering < ActiveRecord::Base
   attr_reader :saveable_objects
   before_destroy :can_be_deleted?
 
+  # create one of these on the fly as needed
+  def report_embeddable_filter
+    super || create_report_embeddable_filter(:embeddables => [])
+  end
+
   def sessions
     self.learners.inject(0) { |sum, l| sum + l.sessions }
   end
