@@ -20,7 +20,7 @@ class Report::UtilLearner
     # the pieces we need are: the answer, parts for answered? and answered_correctly?,
     @saveables += Saveable::OpenResponse.find_all_by_learner_id(learner.id)
     @saveables += Saveable::MultipleChoice.find_all_by_learner_id(learner.id)
-    @savelabes += Saveable::ImageQuestion.find_all_by_learner_id(learner.id)
+    @saveables += Saveable::ImageQuestion.find_all_by_learner_id(learner.id)
 
     # ResponseTypes.saveable_types.each do |type|
     #   all = type.find_all_by_learner_id(learner.id)
