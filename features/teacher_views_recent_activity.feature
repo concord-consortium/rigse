@@ -46,7 +46,7 @@ Feature: Teacher can see recent activity
   Scenario: Teacher should not see teacher only activity
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
-      | ross      | Physics       | Aerodynamics        | d               | y      |
+      | ross      | Physics       | Aerodynamics        | c               | y      |
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Air activity"
