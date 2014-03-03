@@ -6,7 +6,10 @@ class Saveable::MultipleChoice < ActiveRecord::Base
 
   belongs_to :multiple_choice,  :class_name => 'Embeddable::MultipleChoice'
 
-  has_many :answers, :dependent => :destroy , :order => :position, :class_name => "Saveable::MultipleChoiceAnswer"
+  has_many :answers, :dependent => :destroy , :order => :position, :class_name => "Saveable::MultipleChoiceAnswer",
+    :inverse_of => :multiple_choice
+
+  belongs_to :last_answer, :class_name => 'Saveable::MultipleChoiceAnswer'
   
   [:prompt, :name, :choices].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
 
@@ -30,5 +33,10 @@ class Saveable::MultipleChoice < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def update_last_answer
+    last_answer = answers.last
+    save
   end
 end

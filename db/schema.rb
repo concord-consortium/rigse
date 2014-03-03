@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140227032819) do
+ActiveRecord::Schema.define(:version => 20140302051229) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2271,6 +2271,7 @@ ActiveRecord::Schema.define(:version => 20140227032819) do
     t.integer  "offering_id"
     t.integer  "response_count",                   :default => 0
     t.string   "uuid",               :limit => 36
+    t.integer  "last_answer_id"
   end
 
   add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"
