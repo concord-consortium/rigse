@@ -74,21 +74,7 @@ describe ActivityRuntimeAPI do
                   "id" => "456789",
                   "prompt" => "What color is the sky?",
                   "allow_multiple_selection" => false,
-                  "choices" => [
-                    {
-                      "id" => "97",
-                      "content" => "red"
-                    },
-                    {
-                      "id" => "98",
-                      "content" => "blue",
-                      "correct" => true
-                    },
-                    {
-                      "id" => "99",
-                      "content" => "greenish-green"
-                    }
-                  ]
+                  "choices" => choice_hash_array
                 }
               ]
             }
@@ -96,6 +82,23 @@ describe ActivityRuntimeAPI do
         }
       ]
     }
+  end
+  let(:choice_hash_array) do
+    [
+      {
+        "id" => "97",
+        "content" => "red"
+      },
+      {
+        "id" => "98",
+        "content" => "blue",
+        "correct" => true
+      },
+      {
+        "id" => "99",
+        "content" => "greenish-green"
+      }
+    ]
   end
 
   let(:v2hash) do
@@ -255,7 +258,8 @@ describe ActivityRuntimeAPI do
       describe "updating an existing multiple choice" do
         let(:choice) do
           Factory.create(:multiple_choice_choice,
-            :choice => "this was an original choice"
+            :choice => "this was an original choice",
+            :external_id => "232323"
           )
         end
 
@@ -289,6 +293,34 @@ describe ActivityRuntimeAPI do
           @result.should have_choice_like("red")
           @result.should have_choice_like("blue")
           @result.should have_choice_like("green")
+        end
+
+        describe "updating choices that exist" do
+          let(:choice_hash_array) do
+            [
+              {
+                "id" => "97",
+                "content" => "red"
+              },
+              {
+                "id" => "98",
+                "content" => "blue",
+                "correct" => true
+              },
+              {
+                "id" => "99",
+                "content" => "greenish-green"
+              },
+              {
+                "id" => "232323",
+                "content" => "the content has changed"
+              }
+            ]
+          end
+          it "The original choice should be updated" do
+            choice.reload
+            choice.choice.should == "the content has changed"
+          end
         end
 
       end
