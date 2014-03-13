@@ -30,6 +30,14 @@ RSpec::Matchers.define :have_choice_like do |choice|
   end
 end
 
+RSpec::Matchers.define :have_choice_id do |choice_id|
+  match do |thing|
+    activity = thing.respond_to?(:template) ? thing.template : thing
+    choices = activity.multiple_choices.map{ |mc| mc.choice_ids}.flatten
+    choices.detect{|p| p == choice_id }
+  end
+end
+
 
 describe ActivityRuntimeAPI do
 
@@ -340,9 +348,12 @@ describe ActivityRuntimeAPI do
           end
 
           it "should have the new choices" do
+            @result.reload
             @result.should have_choice_like("red")
             @result.should have_choice_like("blue")
             @result.should have_choice_like("green")
+            @result.should have_choice_like("the content has changed")
+            @result.should have_choice_id choice.id
           end
         end
 
