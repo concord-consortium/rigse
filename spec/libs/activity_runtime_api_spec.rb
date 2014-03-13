@@ -262,18 +262,28 @@ describe ActivityRuntimeAPI do
             :external_id => "232323"
           )
         end
+        let(:other_choice) do
+          Factory.create(:multiple_choice_choice,
+            :choice => "this choice should be deleted",
+            :external_id => "something_not_in_the_hash"
+          )
+        end
+        let(:choices) do 
+          [choice, other_choice]
+        end
 
         let(:multiple_choice) do
           Factory.create(:multiple_choice,
             :prompt => "the original prompt",
             :external_id => "456789",
-            :choices => [choice]
+            :choices => choices
           )
         end
 
         before(:each) do
           @original_id = multiple_choice.id
           existing
+          @original_choice_id = choice.id
           @result = ActivityRuntimeAPI.update_activity(new_hash)
         end
 
@@ -285,8 +295,9 @@ describe ActivityRuntimeAPI do
           @result.should have_multiple_choice_like("What color is the sky?")
         end
 
-        it "should not have the original choice" do
+        it "should not have the original choices" do
           @result.should_not have_choice_like("original choice")
+          @result.should_not have_choice_like("this choice should be deleted")
         end
 
         it "should have the new choices" do
@@ -317,9 +328,21 @@ describe ActivityRuntimeAPI do
               }
             ]
           end
+
           it "The original choice should be updated" do
             choice.reload
             choice.choice.should == "the content has changed"
+            choice.id.should == @original_choice_id
+          end
+
+          it "The other choice should be deleted" do
+            @result.should_not have_choice_like("this choice should be deleted")
+          end
+
+          it "should have the new choices" do
+            @result.should have_choice_like("red")
+            @result.should have_choice_like("blue")
+            @result.should have_choice_like("green")
           end
         end
 
