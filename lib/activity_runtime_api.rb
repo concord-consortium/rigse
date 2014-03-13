@@ -312,7 +312,7 @@ class ActivityRuntimeAPI
     end
     new_choice_set = []
     mc_data["choices"].each do |choice_data|
-      id = choice_data["id"]
+      id = choice_data["id"].to_s
       choice   = cached_choices.delete(id)
       choice.reload if choice
       choice ||= Embeddable::MultipleChoiceChoice.create(:external_id => id)
