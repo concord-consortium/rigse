@@ -59,8 +59,8 @@ Change to the project directory:
 Setup rvm to use Ruby 1.9.3-p125 and a gemset named xproject
 (newer versions of 1.9.3 ought to work as well)
 
-rvm use 1.9.3-p125
- rvm gemset create xproject
+    rvm use 1.9.3-p125
+    rvm gemset create xproject
 
 Make an `.rvmrc` file so rvm will use this ruby gemset combo
 automatically when you change to this directory:
@@ -111,12 +111,17 @@ the [RVM page on database
 integration](https://rvm.beginrescueend.com/integration/databases/) for
 help. You might get a warning if the databases already exist.
 
-    RAILS_ENV=production bin/rake db:create:all
-    RAILS_ENV=production bin/rake db:migrate:reset
+    RAILS_ENV=development bin/rake db:create:all
+    RAILS_ENV=development bin/rake db:migrate:reset
+    RAILS_ENV=development bin/rake db:backup:load_probe_configurations
+
+Start solr (requires Java, on Mac OS X this command should cause a installating prompt to appear)
+
+    RAILS_ENV=development bin/rake sunspot:solr:start
 
 Setup application resources
 
-    RAILS_ENV=production bin/rake app:setup:new_app
+    RAILS_ENV=development bin/rake app:setup:create_default_data
 
 Save a copy of the development database to make subsequent clean starts
 much quicker (bypassing rake app:setup:new_app).
@@ -141,7 +146,7 @@ This will build all the assets within the project.
 
 Start server and open [http://localhost:3000](http://localhost:3000)
 
-    rails s -eproduction
+    rails s -edevelopment
 
 You can read this documentation at:
 [http://localhost:3000/readme](http://localhost:3000/readme)
