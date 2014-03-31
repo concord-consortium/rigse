@@ -109,5 +109,13 @@ describe "Dataservice Buckets" do
 
       response.body.should == "This is totally different content"
     end
+
+    it 'should accept multiple posted items by name and return them all' do
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle", "This is some content"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle", "This is some content 2"
+
+      get "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle"
+      response.body.should == "[This is some content,This is some content 2]"
+    end
   end
 end
