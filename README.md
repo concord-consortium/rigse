@@ -111,17 +111,17 @@ the [RVM page on database
 integration](https://rvm.beginrescueend.com/integration/databases/) for
 help. You might get a warning if the databases already exist.
 
-    RAILS_ENV=development bin/rake db:create:all
-    RAILS_ENV=development bin/rake db:migrate:reset
-    RAILS_ENV=development bin/rake db:backup:load_probe_configurations
+    RAILS_ENV=development rake db:create:all
+    RAILS_ENV=development rake db:migrate:reset
+    RAILS_ENV=development rake db:backup:load_probe_configurations
 
 Start solr (requires Java, on Mac OS X this command should cause a installating prompt to appear)
 
-    RAILS_ENV=development bin/rake sunspot:solr:start
+    RAILS_ENV=development rake sunspot:solr:start
 
 Setup application resources
 
-    RAILS_ENV=development bin/rake app:setup:create_default_data
+    RAILS_ENV=development rake app:setup:create_default_data
 
 Save a copy of the development database to make subsequent clean starts
 much quicker (bypassing rake app:setup:new_app).
@@ -130,7 +130,7 @@ much quicker (bypassing rake app:setup:new_app).
 * can be reloaded later with: rake db:load
 * note: in default setup created by config.rb above the development and production database is the same
 
-    bin/rake db:dump
+    rake db:dump
 
 This project uses the rails [asset pipeline](http://guides.rubyonrails.org/asset_pipeline.html)
 to manage static assets, and JS & CSS files. There are rake commands for compiling these assets,
