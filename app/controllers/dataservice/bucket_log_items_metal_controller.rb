@@ -10,6 +10,11 @@ class Dataservice::BucketLogItemsMetalController < ActionController::Metal
     create_with_logger(bucket_logger)
   end
 
+  def create_by_name
+    bucket_logger = Dataservice::BucketLogger.find_or_create_by_name(params[:name])
+    create_with_logger(bucket_logger)
+  end
+
   private
 
   def create_with_logger(bucket_logger)
