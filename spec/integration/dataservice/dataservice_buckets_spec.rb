@@ -58,6 +58,14 @@ describe "Dataservice Buckets" do
     @learner.bucket_logger.most_recent_content.should == "This is totally different content"
   end
 
+  it 'should accept multiple posted items by logger id and return them all' do
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle", "This is some content"
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle", "This is some content 2"
+
+    get "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle"
+    response.body.should == "[This is some content,This is some content 2]"
+  end
+
   ### BucketLoggers with no learners ###
   describe "with no learners" do
     it 'should deliver empty bucket data when no bucket contents exist' do
