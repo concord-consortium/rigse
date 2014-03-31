@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140227032819) do
+ActiveRecord::Schema.define(:version => 20140331185024) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -238,9 +238,11 @@ ActiveRecord::Schema.define(:version => 20140227032819) do
     t.integer  "learner_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "name"
   end
 
   add_index "dataservice_bucket_loggers", ["learner_id"], :name => "index_dataservice_bucket_loggers_on_learner_id"
+  add_index "dataservice_bucket_loggers", ["name"], :name => "index_dataservice_bucket_loggers_on_name"
 
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
