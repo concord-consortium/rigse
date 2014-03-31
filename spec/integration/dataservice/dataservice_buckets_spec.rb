@@ -57,4 +57,49 @@ describe "Dataservice Buckets" do
     @learner.reload
     @learner.bucket_logger.most_recent_content.should == "This is totally different content"
   end
+
+  ### BucketLoggers with no learners ###
+  describe "with no learners" do
+    it 'should deliver empty bucket data when no bucket contents exist' do
+      get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
+
+      response.body.should == ""
+    end
+
+    it 'should deliver the most recent bucket contents when more than one contents exist' do
+      log = Dataservice::BucketLogger.find_or_create_by_name('myBucket')
+      Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body1")
+      Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body4")
+      Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body3")
+      get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
+
+      response.body.should == "body3"
+    end
+
+    it 'should deliver bucket contents by logger id' do
+      log = Dataservice::BucketLogger.find_or_create_by_name('myBucket')
+      Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body1")
+      Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body4")
+      get "/dataservice/bucket_loggers/#{log.id}.bundle"
+
+      response.body.should == "body4"
+    end
+
+    it 'should accept posted bundle contents by arbitrary names' do
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content"
+      get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
+
+      response.body.should == "This is some content"
+    end
+
+    it 'should accept multiple posted bundle contents by arbitrary names' do
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content 2"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content 3"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is totally different content"
+      get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
+
+      response.body.should == "This is totally different content"
+    end
+  end
 end
