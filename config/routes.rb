@@ -328,12 +328,16 @@ constraints :id => /\d+/ do
   # bucket contents routes
   post '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents_by_learner'
   get  '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_loggers#show_by_learner',   :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_by_learner'
+  post '/dataservice/bucket_loggers/name/:name/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create_by_name', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents_by_name'
+  get  '/dataservice/bucket_loggers/name/:name/bucket_contents(.:format)' => 'dataservice/bucket_loggers#show_by_name',   :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_by_name'
   post '/dataservice/bucket_loggers/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents'
 
   # bucket log items routes
   post '/dataservice/bucket_loggers/:id/bucket_log_items(.:format)'         => 'dataservice/bucket_log_items_metal#create',            :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items'
   post '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_learner'
   get  '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_learner'
+  post '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_name'
+  get  '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_name'
 
   # external activity return url
   post '/dataservice/external_activity_data/:id' => 'dataservice/external_activity_data#create', :as => 'external_activity_return'
