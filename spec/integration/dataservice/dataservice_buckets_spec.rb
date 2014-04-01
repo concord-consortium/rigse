@@ -68,10 +68,8 @@ describe "Dataservice Buckets" do
 
   ### BucketLoggers with no learners ###
   describe "with no learners" do
-    it 'should deliver empty bucket data when no bucket contents exist' do
-      get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
-
-      response.body.should == ""
+    it 'should raise an error when no bucket contents exist' do
+      expect {get "/dataservice/bucket_loggers/name/unknownBucketName/bucket_contents.bundle"}.to raise_error(ActionController::RoutingError)
     end
 
     it 'should deliver the most recent bucket contents when more than one contents exist' do

@@ -60,7 +60,7 @@ class Dataservice::BucketLoggersController < ApplicationController
   end
 
   def show_by_name
-    @dataservice_bucket_logger = Dataservice::BucketLogger.find_or_create_by_name(params[:name])
+    @dataservice_bucket_logger = Dataservice::BucketLogger.find_by_name(params[:name])
     raise ActionController::RoutingError.new('Not Found') unless @dataservice_bucket_logger
 
     bundle = @dataservice_bucket_logger.most_recent_content
@@ -99,7 +99,7 @@ class Dataservice::BucketLoggersController < ApplicationController
   end
 
   def show_log_items_by_name
-    @dataservice_bucket_logger = Dataservice::BucketLogger.find_or_create_by_name(params[:name])
+    @dataservice_bucket_logger = Dataservice::BucketLogger.find_by_name(params[:name])
     raise ActionController::RoutingError.new('Not Found') unless @dataservice_bucket_logger
 
     bundle = "[" + @dataservice_bucket_logger.bucket_log_items.map{|li| li.content }.join(",") + "]"
