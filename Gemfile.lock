@@ -16,9 +16,10 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/cc_portal_wordpress_integration
-  revision: 90952c641fd0eada9c05d45975dc6c0155731b54
+  revision: 299675c278da5ae21f8c6a4a60456a1cbaddda97
+  branch: wip-optional-autologin
   specs:
-    cc_portal_wordpress_integration (0.0.4)
+    cc_portal_wordpress_integration (0.0.5)
       devise (~> 2.1.0)
       haml (~> 3.1.4)
       rails (~> 3.2.11)

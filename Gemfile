@@ -113,7 +113,7 @@ end
 
 # Feature enabling groups
 group :geniverse_wordpress do
-  gem "cc_portal_wordpress_integration", :git => "git://github.com/concord-consortium/cc_portal_wordpress_integration"
+  gem "cc_portal_wordpress_integration", :git => "git://github.com/concord-consortium/cc_portal_wordpress_integration", :branch => 'wip-optional-autologin'
   # gem "cc_portal_wordpress_integration", :path => "../cc_portal_wordpress_integration"
 end
 
