@@ -9,9 +9,7 @@
 - elsif material.is_a? ExternalActivity
   - link_url = nil
 
-.material_icon
-  .icon_image
-    = show_material_icon(material)
+= show_material_icon(material)
 %div
   %div{:style=>'overflow:hidden'}
     %table{:width=>"100%"}

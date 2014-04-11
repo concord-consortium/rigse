@@ -43,8 +43,9 @@ module SearchHelper
       # link_url = browse_activity_url(material)
       icon_url = material.icon_image || "search/activity.gif"
     end
+    style = "background: url(#{icon_url}) no-repeat center center; "
     output = capture_haml do
-      haml_concat( image_tag( icon_url, :size => "100x100" ) )
+      haml_tag :div, :class => "material_icon", :style => style
     end
   end
 

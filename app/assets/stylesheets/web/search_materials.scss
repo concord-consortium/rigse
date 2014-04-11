@@ -56,7 +56,7 @@ width: 300px;
 .material_body{
   margin-top:3px;
   font-size:14px;
-  margin-left:121px;
+  margin-left:221px;
 }
 .sortbycolumn{width:92px;}
 .domaincolumn{width:170px;}
@@ -78,9 +78,15 @@ width: 300px;
 .material_icon{
   float:left;
   margin:17px 10px 17px 5px;
-  height:100px;
-  width: 100px;
+  height:200px;
+  width: 200px;
+  background-size: 200px 200px;
   text-align:center;
+  background: no-repeat center center; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 .material_type{
