@@ -114,7 +114,11 @@ function showsuggestion(event, oelem) {
     }
 }
 
-function showHideFilters(linkElement) {
+function showHideFilters(linkElement, animationDuration) {
+
+    if (animationDuration == undefined){
+      animationDuration = 0.5;
+    }
 
     if (animating)
     {
@@ -124,13 +128,14 @@ function showHideFilters(linkElement) {
     var filtersWrapper = $('filters_wrapper');
     var linkText = "";
     var expandCollapseText = "";
+
     var afterFinishCallback = function(){
         animating = false;
     };
 
     if (filtersWrapper.hasClassName('visible'))
     {
-        Effect.BlindUp(filtersWrapper, { duration: 0.5, afterFinish: afterFinishCallback });
+        Effect.BlindUp(filtersWrapper, { duration: animationDuration, afterFinish: afterFinishCallback });
         filtersWrapper.removeClassName('visible');
         linkText = "Show Filters";
         expandCollapseText = "+";
@@ -138,7 +143,7 @@ function showHideFilters(linkElement) {
     }
     else
     {
-        Effect.BlindDown(filtersWrapper, { duration: 0.5, afterFinish: afterFinishCallback });
+        Effect.BlindDown(filtersWrapper, { duration: animationDuration, afterFinish: afterFinishCallback });
         filtersWrapper.addClassName('visible');
         linkText = "Hide Filters";
         expandCollapseText = "-";

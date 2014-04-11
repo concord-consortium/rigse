@@ -1,0 +1,7 @@
+-# Hide the filters by default
+:javascript
+  var filtersWrapper = $('filters_wrapper');
+  if (filtersWrapper.hasClassName('visible')) {
+    showHideFilters($('showHideFilters'), 0);
+  }
+  
