@@ -16,6 +16,9 @@ module SearchModelInterface
 
   # TODO: We intend to support icons for activities. Until that's a real attribute, have this stub method.
   def icon_image
+    if self.respond_to? :thumbnail_url 
+      return self.thumbnail_url
+    end
     return nil
   end
 
