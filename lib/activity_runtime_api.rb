@@ -46,6 +46,7 @@ class ActivityRuntimeAPI
         :name             => hash["name"],
         :description      => hash["description"],
         :url              => hash["url"],
+        :thumbnail_url    => hash["thumbnail_url"],
         :launch_url  => hash["launch_url"] || hash["create_url"],
         :template         => activity,
         :publication_status => "published",
@@ -74,7 +75,7 @@ class ActivityRuntimeAPI
 
     # update the simple attributes
     [investigation, activity, external_activity].each do |act|
-      ['name','description'].each do |attribute|
+      ['name','description', 'thumbnail_url'].each do |attribute|
         act.update_attribute(attribute,hash[attribute])
       end
     end
@@ -122,7 +123,8 @@ class ActivityRuntimeAPI
         :name             => hash["name"],
         :description      => hash["description"],
         :url              => hash["url"],
-        :launch_url  => hash["launch_url"] || hash["create_url"],
+        :thumbnail_url    => hash["thumbnail_url"],
+        :launch_url       => hash["launch_url"] || hash["create_url"],
         :template         => investigation,
         :publication_status => "published",
         :user => user
@@ -148,7 +150,7 @@ class ActivityRuntimeAPI
 
     # update the simple attributes
     [investigation, external_activity].each do |act|
-      ['name','description'].each do |attribute|
+      ['name','description','thumbnail_url'].each do |attribute|
         act.update_attribute(attribute,hash[attribute])
       end
     end
@@ -203,7 +205,13 @@ class ActivityRuntimeAPI
   end
 
   def self.activity_from_hash(hash, investigation, user)
-    activity = Activity.create(:name => hash["name"], :user => user, :investigation => investigation)
+    # NOTE: It seems like we don't copy description or thumbnail url.
+    # is this the right behavior for the report template?
+    activity = Activity.create({
+      :name => hash["name"],
+      :user => user,
+      :investigation => investigation
+    })
     build_page_components(hash, activity, user)
     return activity
   end
