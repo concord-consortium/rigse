@@ -5,7 +5,7 @@
  *
  *--------------------------------------------------------------------------*/
 
-if(typeof Prototype == 'undefined' || !Prototype.Version.match("1.6"))
+if(typeof Prototype == 'undefined' || !(Prototype.Version.match("1.6") || Prototype.Version.match("1.7")))
   throw("Prototype-UI library require Prototype library >= 1.6.0");
 
 (function(p) {
