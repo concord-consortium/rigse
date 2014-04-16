@@ -43,6 +43,13 @@ class ApplicationController < ActionController::Base
 
   # Portal::School.find(:first).members.count
 
+  helper_method :is_mac_10_9_or_newer
+
+  def is_mac_10_9_or_newer
+    ua = UserAgent.parse(request.user_agent)
+    return ua.platform == "Macintosh" && ua.os =~ /10\.(\d+)(\.\d+)?$/ && $1.to_i >= 9
+  end
+
   protected
 
 

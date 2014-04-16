@@ -23,6 +23,8 @@ javascripts:
   - chosen.proto
   - pt_event_simulate  
   - modernizr
+  - prototype-ui/prototype-ui
+  - lightbox
 stylesheets: 
 - base: 
   - app

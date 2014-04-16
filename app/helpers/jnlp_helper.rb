@@ -166,14 +166,21 @@ module JnlpHelper
   end
   
   def jnlp_headers(runnable)
-    response.headers["Content-Type"] = "application/x-java-jnlp-file"
-    
+    content_type = "application/x-java-jnlp-file"
+    extension = "jnlp"
+    if is_mac_10_9_or_newer
+      content_type = "application/vnd.concordconsortium.launcher"
+      extension = "ccla"
+    end
+
+    response.headers["Content-Type"] = content_type
+
     # we don't want the jnlp to be cached because it contains session information for the current user
     # if a shared proxy caches it then multiple users will be loading and storing data in the same place
     NoCache.add_headers(response.headers)
     response.headers["Last-Modified"] = runnable.updated_at.httpdate
     filename = smoosh_file_name("#{APP_CONFIG[:site_name]} #{runnable.class.name} #{short_name(runnable.name)}")
-    response.headers["Content-Disposition"] = "inline; filename=#{filename}.jnlp"
+    response.headers["Content-Disposition"] = "inline; filename=#{filename}.#{extension}"
   end
 
   def jnlp_information(xml, learner = nil)
