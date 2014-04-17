@@ -7,7 +7,7 @@ jnlp_headers(runnable)
 session_options = request.env["rack.session.options"]
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 # hard code the codebase because the jar file versions are also hardcoded
-xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostname.presence || 'jnlp.concord.org'}/dev3") { 
+xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostname.presence || 'jnlp.concord.org'}/dev4") { 
   jnlp_information(xml)
   xml.security {
     xml << "    <all-permissions />"
@@ -28,7 +28,7 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostna
     xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
     # do not use version attributes so we can totally avoid all the jnlp jar versioning issues
     xml.jar :href=> "org/concord/utilities/response-cache/response-cache-0.1.0-20140107.154611-222.jar"
-    xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell-1.0-20140107.154449-466.jar", :main =>"true"
+    xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell-1.0-20140114.164730-467.jar", :main =>"true"
     system_properties(local_assigns).each do |property|
       xml.property(:name => 'jnlp.' + property[0], :value => property[1])
     end
