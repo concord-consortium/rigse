@@ -78,15 +78,11 @@ width: 300px;
 .material_icon{
   float:left;
   margin:17px 10px 17px 5px;
-  height:200px;
+  padding: 0px;
+  height: 167px;
   width: 200px;
   background-size: 200px 200px;
   text-align:center;
-  background: no-repeat center center; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
 }
 
 .material_type{

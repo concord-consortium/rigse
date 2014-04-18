@@ -43,10 +43,12 @@ module SearchHelper
       # link_url = browse_activity_url(material)
       icon_url = material.icon_image || "search/activity.gif"
     end
-    style = "background: url(#{icon_url}) no-repeat center center; "
     output = capture_haml do
-      haml_tag :div, :class => "material_icon", :style => style
+      haml_tag :div, :class => "material_icon" do
+        haml_tag :img, :src => icon_url, :width=>"100%"
+      end
     end
+    return output
   end
 
   def assign_material_link(material,action, extra={})
