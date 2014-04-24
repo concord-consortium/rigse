@@ -16,6 +16,7 @@ set :stages, %w(
   genomedynamics-dev genomedynamics-staging
   sparks-dev sparks-staging sparks-production sparks-aws1
   learn-staging learn-production
+  ngss-assessment-staging ngss-assessment-production
   xproject-dev 
   inquiryspace-production inquiryspace-staging)
 
