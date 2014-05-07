@@ -1,7 +1,7 @@
 
 .page
   -unless defined? hide_title
-    %h4=page.section ? "#{page.activity.name} : #{page.section.name} : #{page.name}" : page.name
+    %h4=page.activity ? "#{page.activity} – #{page.name}" : page.name
   .page_content
     - page.page_elements.each do |element|
       %div{ :id => dom_id_for(element.embeddable, :item), :class => element.changeable?(current_user) ? 'item item_selectable': 'item' }
