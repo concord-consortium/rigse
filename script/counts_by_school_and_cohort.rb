@@ -12,7 +12,9 @@ ACTIVE_TEACHER_THRESHOLD = 1  # need 1 active students to count as an active tea
 
 TIME_THRESHOLDS = {
   "May 2010 - Apr 2012" => {:start => Time.gm(2010,5,1), :finish => Time.gm(2012,4,30,23,59,59)},
-  "May 2012 - Apr 2013" => {:start => Time.gm(2012,5,1), :finish => Time.gm(2013,4,30,23,59,59)}
+  "May 2012 - Apr 2013" => {:start => Time.gm(2012,5,1), :finish => Time.gm(2013,4,30,23,59,59)},
+  "May 2013 - Apr 2014" => {:start => Time.gm(2013,5,1), :finish => Time.gm(2014,4,30,23,59,59)},
+  "May 2014 - Apr 2015" => {:start => Time.gm(2014,5,1), :finish => Time.gm(2015,4,30,23,59,59)}
 }
 
 def process_school_data(all_users, type, active, school_data, list_dupes = false)
