@@ -1322,7 +1322,7 @@ CONFIG
   def interactive_style(model)
     style = ""
     scale = model.interactive_scale
-    if scale && !scale.empty? && scale != '1.0' && valid_float?(scale)
+    if scale && !scale.empty? && scale != '1.0' && valid_float?(scale) && scale.to_f > 0
       style += "-moz-transform-origin: 0 0;"
       style += "-o-transform-origin: 0 0;"
       style += "-webkit-transform-origin: 0 0;"
@@ -1334,11 +1334,11 @@ CONFIG
       style += "-webkit-transform: scale(#{scale});"
       style += "transform: scale(#{scale});"
 
-      w = (model.interactive_width  / scale.to_f).ceil
-      h = (model.interactive_height / scale.to_f).ceil
-      style += "width: #{model.interactive_width}px;"
-      style += "height: #{model.interactive_height}px;"
-    elsif model.interactive_height != 400 || model.interactive_width != 690
+      h = (model.interactive_height * scale.to_f).ceil
+      margin = h - model.interactive_height
+      style += "margin-bottom: #{margin}px;"
+    end
+    if model.interactive_height != 400 || model.interactive_width != 690
       style += "width: #{model.interactive_width}px;"
       style += "height: #{model.interactive_height}px;"
     end

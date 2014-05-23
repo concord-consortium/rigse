@@ -1,0 +1,24 @@
+%script{:src => "//lab.concord.org/vendor/iframe-phone/iframe-phone.js"}
+:javascript
+  window.phones = {};
+
+  window.setupPhone = function(id) {
+    setTimeout(function() {
+      var phone = phones[id];
+
+      phone.addListener('play', function() {
+        for (var phoneId in phones) {
+          if (phoneId == id) { continue; }
+          // Tell the model to pause
+          var phone = phones[phoneId];
+          phone.post({type: 'stop'});
+        }
+      }, []);
+    }, 10);
+  }
+
+  window.createPhone = function(id) {
+    return new iframePhone.ParentEndpoint($j(id)[0], function() {
+      setupPhone(id);
+    });
+  }
