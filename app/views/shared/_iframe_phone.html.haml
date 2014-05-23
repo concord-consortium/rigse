@@ -6,12 +6,12 @@
     setTimeout(function() {
       var phone = phones[id];
 
-      phone.addDispatchListener('play', function() {
+      phone.addListener('play', function() {
         for (var phoneId in phones) {
           if (phoneId == id) { continue; }
           // Tell the model to pause
           var phone = phones[phoneId];
-          phone.post({'type': 'stop'});
+          phone.post({type: 'stop'});
         }
       }, []);
     }, 10);
