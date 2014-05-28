@@ -20,10 +20,10 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/shutterbug.git
-  revision: 7d0ec052ca40ea311ca86c5d830829e2113e78e0
-  branch: master
+  revision: 28d543eba4c52ec78d3e02e82cb560e52658935c
+  tag: v0.2.3
   specs:
-    shutterbug (0.2.2)
+    shutterbug (0.2.3)
       fog
       rack
 
@@ -106,7 +106,7 @@ GEM
       net-ssh (>= 2.1.4)
       nokogiri (>= 1.4.4)
       ruby-hmac
-    formatador (0.2.4)
+    formatador (0.2.5)
     gherkin (2.4.0)
       json (>= 1.4.6)
     gherkin (2.4.0-x86-mingw32)
