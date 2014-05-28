@@ -54,7 +54,7 @@ source "http://rubygems.org"
   gem 'rdoc',                 "~> 3.6.1"
   gem 'json',                 "~> 1.5.1"
   gem 'calendar_date_select'
-  gem 'shutterbug',  :git => "git://github.com/concord-consortium/shutterbug.git", :branch => "master"
+  gem 'shutterbug',  :git => "git://github.com/concord-consortium/shutterbug.git", :tag => "v0.2.3"
   
   # gem 'newrelic_rpm'
   # use a patched version of newrelic compatible with older linux
