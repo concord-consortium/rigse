@@ -20,10 +20,10 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/shutterbug.git
-  revision: 28d543eba4c52ec78d3e02e82cb560e52658935c
-  tag: v0.2.3
+  revision: 8dd7279d76fc32b2baf3759313e3419c057cbf91
+  tag: v0.2.4
   specs:
-    shutterbug (0.2.3)
+    shutterbug (0.2.4)
       fog
       rack
 
