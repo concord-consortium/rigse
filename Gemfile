@@ -23,7 +23,6 @@ source "http://rubygems.org"
 
   gem "rails",                "2.3.15"
   gem "arrayfields"
-  gem "hpricot",              "0.6.164"
   gem "httpclient",           "~> 2.1.5.2"
   gem "capistrano-ext",                   :require => "capistrano"
   gem "aasm",                 "~> 2.0.2"

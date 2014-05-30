@@ -30,8 +30,8 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
-    RedCloth (4.2.7)
-    RedCloth (4.2.7-x86-mingw32)
+    RedCloth (4.2.9)
+    RedCloth (4.2.9-x86-mingw32)
     aasm (2.0.7)
     actionmailer (2.3.15)
       actionpack (= 2.3.15)
@@ -118,7 +118,6 @@ GEM
     hashie (2.0.5)
     highline (1.6.2)
     hirb (0.4.5)
-    hpricot (0.6.164)
     httpclient (2.1.5.2)
     interactive_editor (0.0.6)
       spoon (>= 0.0.1)
@@ -265,7 +264,6 @@ DEPENDENCIES
   haml (~> 3.0.25)
   highline
   hirb
-  hpricot (= 0.6.164)
   httpclient (~> 2.1.5.2)
   interactive_editor
   jnlp (~> 0.7.2)
