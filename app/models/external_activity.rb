@@ -151,6 +151,16 @@ class ExternalActivity < ActiveRecord::Base
   end
   # end methods to mimic Activity
 
+  # methods required by Search::SearchMaterial
+  def full_title
+    name
+  end
+
+  def activities
+    template.activities if template_type == 'Investigation'
+  end
+  # end methods required by Search::SearchMaterial
+
   def left_nav_panel_width
     300
   end

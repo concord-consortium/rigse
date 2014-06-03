@@ -1,8 +1,9 @@
 = javascript_include_tag "share_material"
 
-- parent_material = search_material.parent_material
 
--material_count = parent_material.material.offerings.count
+- parent_material = search_material.parent_material
+- material_count = parent_material.material.offerings.count
+- external ||= false
 
 
 %style{:type => "text/css"}
@@ -32,9 +33,9 @@
   %table.browse_material_header
     %tr
       %td
-        .title 
+        .title
           = parent_material.title
-        .material_type 
+        .material_type
           = parent_material.model_name
       %td
         - unless current_visitor.anonymous?
@@ -68,9 +69,12 @@
           Used in #{material_count} classes.
   %br
   %br
-  
+
   - unless parent_material.activities.nil?
     %div
       %script{:src=>"//platform.linkedin.com/in.js",:type=>"text/javascript"}
-      = render :partial => '/browse/investigation_activity_list', :locals => {:search_material => parent_material}
+      - if external
+        = render :partial => '/browse/external_sequence_activity_list', :locals => {:search_material => parent_material}
+      - else
+        = render :partial => '/browse/investigation_activity_list', :locals => {:search_material => parent_material}
 .clearboth

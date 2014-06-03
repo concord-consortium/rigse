@@ -139,6 +139,11 @@ constraints :id => /\d+/ do
         post :show
       end
     end
+    resources :external_activities do
+      member do
+        post :show
+      end
+    end
   end
 
   namespace :portal do

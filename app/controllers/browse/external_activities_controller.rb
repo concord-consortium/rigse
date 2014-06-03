@@ -1,6 +1,6 @@
-class Browse::InvestigationsController < ApplicationController
+class Browse::ExternalActivitiesController < ApplicationController
 
-  # GET /browse/investigations/1
+  # GET /browse/external_activities/1
   def show
     @back_url = nil
     if request.post?
@@ -9,7 +9,7 @@ class Browse::InvestigationsController < ApplicationController
 
     @wide_content_layout = true
 
-    material = ::Investigation.find(params[:id])
+    material = ::ExternalActivity.find(params[:id])
 
     @search_material = Search::SearchMaterial.new(material, current_visitor)
     @search_material.url = url_for(@search_material.url)

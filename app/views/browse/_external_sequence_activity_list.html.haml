@@ -1,0 +1,16 @@
+- activities = search_material.activities
+.activities_container
+  .activity_list_header
+    %span.investigation_name
+      = search_material.activity_list_title + " - "
+    Activities
+  %div
+    %table.activity_list
+      %tbody
+        - activities.each do |activity|
+          %tr
+            %td
+              .activity_name
+                = label_tag "activity_#{activity.id}", activity.name
+              .activity_description
+                = activity.description

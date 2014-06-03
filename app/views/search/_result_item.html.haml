@@ -7,7 +7,7 @@
 - elsif material.is_a? Activity
   - link_url = browse_activity_url(material)
 - elsif material.is_a? ExternalActivity
-  - link_url = nil
+  - link_url = browse_external_activity_url(material)
 
 = show_material_icon(material)
 %div
