@@ -13,12 +13,6 @@ GIT
     deep_cloneable (1.2.3)
 
 GIT
-  remote: git://github.com/concord-consortium/rpm.git
-  revision: 49f8a55d9b72ee4e62d600b27ec8b3de401d0625
-  specs:
-    newrelic_rpm (3.3.0)
-
-GIT
   remote: git://github.com/concord-consortium/shutterbug.git
   revision: 8dd7279d76fc32b2baf3759313e3419c057cbf91
   tag: v0.2.4
@@ -144,6 +138,7 @@ GEM
     net-ssh (2.1.4)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
+    newrelic_rpm (3.5.3.25)
     nokogiri (1.4.4)
     nokogiri (1.4.4-x86-mingw32)
     oauth (0.4.7)
@@ -274,7 +269,7 @@ DEPENDENCIES
   multi_json
   mysql (~> 2.7)
   net-sftp (= 2.0.2)
-  newrelic_rpm (~> 3.3.0)!
+  newrelic_rpm (~> 3.5.3.25)
   nokogiri (~> 1.4.4)
   omniauth-oauth
   open4 (~> 0.9.6)
