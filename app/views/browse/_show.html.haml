@@ -56,9 +56,9 @@
   %br
   .description
     - if current_visitor.portal_teacher && parent_material.description_for_teacher.present?
-      = parent_material.description_for_teacher
+      = strip_tags parent_material.description_for_teacher
     - else
-      = parent_material.description
+      = strip_tags parent_material.description
     %div.clazz_count{:id=>"material_clazz_count"}
       %i
         - if(material_count == 0)

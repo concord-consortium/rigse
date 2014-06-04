@@ -1,10 +1,10 @@
 - activities = search_material.activities
 .activities_container
-  .activity_list_header 
+  .activity_list_header
     %span.investigation_name
       = search_material.activity_list_title + " - "
     Activities
-  .include_Checkbox 
+  .include_Checkbox
     Include
   %div
     %table.activity_list
@@ -29,10 +29,10 @@
                   - else
                     = label_tag "activity_#{activity.id}", activity.name, :style=>"cursor:pointer"
                   - if activity.teacher_only
-                    %span.messagetext{:style=>"font-weight:normal"} 
+                    %span.messagetext{:style=>"font-weight:normal"}
                       (teacher only)
                 .activity_description
-                  = activity.description
+                  = strip_tags activity.description
                   %div.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
                     %i
                       - if(activity_count == 0)

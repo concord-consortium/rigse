@@ -13,4 +13,4 @@
               .activity_name
                 = label_tag "activity_#{activity.id}", activity.name
               .activity_description
-                = activity.description
+                = strip_tags activity.description
