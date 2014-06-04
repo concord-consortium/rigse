@@ -61,4 +61,11 @@ describe ExternalActivity do
       activity.material_type.should == 'Investigation'
     end
   end
+
+  describe '#full_title' do
+    let (:activity) { ExternalActivity.create!(valid_attributes) }
+    it 'should return external activity name (compatibility with regular activities and sequences)' do
+      activity.full_title.should == valid_attributes[:name]
+    end
+  end
 end

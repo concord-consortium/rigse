@@ -157,7 +157,7 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   def activities
-    template.activities if template_type == 'Investigation'
+    template.activities if material_type == 'Investigation'
   end
   # end methods required by Search::SearchMaterial
 
