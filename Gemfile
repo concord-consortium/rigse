@@ -55,10 +55,7 @@ source "http://rubygems.org"
   gem 'calendar_date_select'
   gem 'shutterbug',  :git => "git://github.com/concord-consortium/shutterbug.git", :tag => "v0.2.4"
   
-  # gem 'newrelic_rpm'
-  # use a patched version of newrelic compatible with older linux
-  # kernels.  See: https://github.com/newrelic/rpm/pull/47
-  gem 'newrelic_rpm',          "~> 3.3.0", :git => "git://github.com/concord-consortium/rpm.git"
+  gem "newrelic_rpm",         "~> 3.5.3.25"
   #git "/Users/npaessel/lab/ruby/deep_cloneable", :branch => "cloneable_assocations" do
   git "git://github.com/concord-consortium/deep_cloneable.git", :branch => "cloneable_assocations" do
     gem "deep_cloneable"
