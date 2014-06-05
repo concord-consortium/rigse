@@ -171,17 +171,17 @@ describe Image do
   end
 
   describe "uploaded_by_attribution" do
-    context "when UseUploadedByInAttriution is set to true" do
+    context "when UseUploadedByInAttribution is set to true" do
       before(:each) do
-        Image::UseUploadedByInAttriution = true
+        Image::UseUploadedByInAttribution = true
       end
       it "should return the users login" do
         subject.uploaded_by_attribution.should == "Uploaded by: testuser"
       end
     end
-    context "when UseUploadedByInAttriution is set to false" do
+    context "when UseUploadedByInAttribution is set to false" do
       before(:each) do
-        Image::UseUploadedByInAttriution = false
+        Image::UseUploadedByInAttribution = false
       end
       it "should return an empty string" do
         subject.uploaded_by_attribution.should be_blank

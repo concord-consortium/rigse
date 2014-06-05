@@ -1,5 +1,5 @@
 class Image < ActiveRecord::Base
-  UseUploadedByInAttriution = false
+  UseUploadedByInAttribution = false
 
   attr_accessor :is_reprocessing
 
@@ -141,7 +141,7 @@ class Image < ActiveRecord::Base
 
   # NOTE: user_id and user are nil here. (??)
   def uploaded_by_attribution
-    if (self.user && UseUploadedByInAttriution)
+    if (self.user && UseUploadedByInAttribution)
       return "Uploaded by: #{self.user.login}"
     end
     return ""
