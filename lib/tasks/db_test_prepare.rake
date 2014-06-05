@@ -4,7 +4,6 @@ namespace :db do
     def load_common_data
       Rake::Task['db:backup:load_probe_configurations'].invoke
       Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
-      Rake::Task['app:jnlp:generate_maven_jnlp_resources'].invoke('false')
     end
     
     desc 'after completing db:test:prepare load probe configurations'

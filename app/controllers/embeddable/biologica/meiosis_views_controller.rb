@@ -20,7 +20,7 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/biologica/meiosis_view" } # biologica_meiosis_view.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_meiosis_view  }}
+        format.jnlp { render :partial => 'shared/installer', :locals => { :runnable => @biologica_meiosis_view  }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_meiosis_view, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_meiosis_view} }
         format.xml  { render :biologica_meiosis_view => @biologica_meiosis_view }

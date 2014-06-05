@@ -5,7 +5,7 @@ describe SearchController do
 
   def make(let); end
 
-  let(:admin_project)   { Factory.create(:admin_project_no_jnlps, :include_external_activities => false) }
+  let(:admin_project)   { Factory.create(:admin_project, :include_external_activities => false) }
 
   let(:mock_semester)   { Factory.create(:portal_semester, :name => "Fall") }
   let(:mock_school)     { Factory.create(:portal_school, :semesters => [mock_semester]) }

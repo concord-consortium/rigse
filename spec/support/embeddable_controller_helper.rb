@@ -68,7 +68,7 @@ shared_examples_for 'an embeddable controller' do
         @model_class.stub!(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'jnlp'
         assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template("shared/_show")
+        response.should render_template("shared/_installer")
         assert_select('jnlp') do
           assert_select('information')
           assert_select('security')
@@ -180,107 +180,5 @@ shared_examples_for 'an embeddable controller' do
 
     end
 
-  end
-
-  if model_class_lambda.call.respond_to?(:authorable_in_java?) && model_class_lambda.call.authorable_in_java?
-
-    describe "GET edit" do
-
-      it "assigns the requested #{model_ivar_name_lambda.call} as @#{model_ivar_name_lambda.call}" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
-        get :edit, :id => "37"
-        assigns[@model_ivar_name].should equal(@model_ivar)
-      end
-
-      describe "with mime type of jnlp" do
-
-        it "renders the requested #{model_ivar_name_lambda.call} as jnlp without error" do
-          @model_class.stub!(:find).with("37").and_return(@model_ivar)
-          get :edit, :id => "37", :format => 'jnlp'
-          assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit")
-          assert_select('jnlp') do
-            assert_select('information')
-            assert_select('security')
-            assert_select('resources')
-            assert_select('application-desc') do
-              config_url = controller.polymorphic_url(@model_ivar, :format => :config,
-                Rails.application.config.session_options[:key] => @session_options[:id], :action => 'edit')
-              assert_select('argument', config_url.gsub("&", "&amp;"))
-            end
-          end
-        end
-
-      end
-
-      describe "with mime type of config" do
-
-        it "renders the requested #{model_ivar_name_lambda.call} as config without error" do
-          @model_class.stub!(:find).with("37").and_return(@model_ivar)
-          get :edit, :id => "37", :format => 'config', :session => '6ee4ff32b48026db6f3758da9f090150'
-          assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit")
-          assert_select('java') do
-            assert_select('object') do
-              assert_select('void') do
-                assert_select('object') do
-                  assert_select('void') do
-                    assert_select('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :action => 'edit'))
-                  end
-                end
-              end
-            end
-          end
-        end
-
-      end
-
-      describe "with mime type of dynamic_otml" do
-
-        it "renders the requested #{model_ivar_name_lambda.call} as dynamic_otml without error" do
-          @model_class.stub!(:find).with("37").and_return(@model_ivar)
-          get :edit, :id => "37", :format => 'dynamic_otml', :session => '6ee4ff32b48026db6f3758da9f090150'
-          assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit")
-          assert_select('otrunk') do
-            assert_select('imports')
-            assert_select('objects') do
-              assert_select('OTSystem') do
-                assert_select('includes') do
-                  # assert_select('OTInclude')
-                  assert_select('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :action => 'edit'))
-                end
-                assert_select('bundles')
-                assert_select('overlays')
-                assert_select('root')
-              end
-            end
-          end
-        end
-
-      end
-
-      describe "with mime type of otml" do
-
-        it "renders the requested #{model_ivar_name_lambda.call} as otml without error" do
-          @model_class.stub!(:find).with("37").and_return(@model_ivar)
-          get :edit, :id => "37", :format => 'otml'
-          assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template(:edit)
-          assert_select('otrunk') do
-            assert_select('imports')
-            assert_select('objects') do
-              assert_select('OTSystem') do
-                assert_select('bundles')
-                assert_select('root')
-                assert_select('library') do
-                  with_tags_like_an_otml(@model_ivar_name)
-                end
-              end
-            end
-          end
-        end
-      end
-    end
   end
 end

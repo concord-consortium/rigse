@@ -243,16 +243,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   def display_type
     graph_type
   end
-  
 
-  def self.authorable_in_java?
-    true
-  end
-
-  def authorable_in_java?
-    Embeddable::DataCollector.authorable_in_java?
-  end
-  
   def update_from_otml_library_content
     olc = Hash.from_xml(otml_library_content)
     if ot_data_collector = olc['OTDataCollector']

@@ -1,5 +1,5 @@
 Given /^the most basic default project$/ do
-  Factory.create(:admin_project_no_jnlps)
+  Factory.create(:admin_project)
 end
 
 Given /^the database has been seeded$/ do

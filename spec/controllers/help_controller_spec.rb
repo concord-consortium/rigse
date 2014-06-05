@@ -4,7 +4,7 @@ describe HelpController do
   
   before(:each) do
       @admin_user = Factory.next(:admin_user)
-      @test_project = Factory.create(:admin_project_no_jnlps, :user => @admin_user, :id=> 1)
+      @test_project = Factory.create(:admin_project, :user => @admin_user, :id=> 1)
       login_admin
       Admin::Project.stub(:default_project).and_return(@test_project)
   end

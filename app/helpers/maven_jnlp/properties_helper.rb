@@ -1,2 +1,0 @@
-module MavenJnlp::PropertiesHelper
-end

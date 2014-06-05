@@ -20,7 +20,7 @@ class <%= controller_class_name %>Controller < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml   { render :layout => "layouts/<%= singular_name %>" } # <%= singular_name %>.otml.haml
-        format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @<%= singular_name %> } }
+        format.jnlp   { render :partial => 'shared/installer', :locals => { :runnable => @<%= singular_name %> } }
         format.config { render :partial => 'shared/show', :locals => { :runnable => @<%= singular_name %>, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @<%= singular_name %> } }
         format.xml    { render :<%= singular_name %> => @<%= singular_name %> }

@@ -40,7 +40,7 @@ class Embeddable::DataCollectorsController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/embeddable/data_collector" } # data_collector.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @data_collector }}
+        format.jnlp { render :partial => 'shared/installer', :locals => { :runnable => @data_collector }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @data_collector, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @data_collector} }
         format.xml  { render :xml => @data_collector }
@@ -80,9 +80,6 @@ class Embeddable::DataCollectorsController < ApplicationController
       respond_to do |format|
         format.html
         format.otml { render :layout => "layouts/embeddable/data_collector" } # data_collector.otml.haml
-        format.jnlp { render :partial => 'shared/edit', :locals => { :runnable => @data_collector } }
-        format.config { render :partial => 'shared/edit', :locals => { :runnable => @data_collector, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
-        format.dynamic_otml { render :partial => 'shared/edit', :locals => {:runnable => @data_collector } }
         format.xml  { render :xml => @data_collector }
       end
     end

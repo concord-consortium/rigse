@@ -79,7 +79,7 @@ class Portal::OfferingsController < ApplicationController
           render_learner_jnlp learner
         else
           # The current_visitor is a teacher (or another user acting like a teacher)
-          render :partial => 'shared/show_or_installer', :locals => { :skip_installer => params.delete(:skip_installer), :runnable => @offering.runnable, :teacher_mode => true }
+          render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
         end
       }
     end
@@ -293,24 +293,6 @@ class Portal::OfferingsController < ApplicationController
       # will render student_report.html.haml
     else
       render :nothing => true 
-    end
-  end
-
-  # GET /portal/offerings/data_test(.format)
-  def data_test
-    clazz = Portal::Clazz::data_test_clazz
-    @offering = clazz.offerings.first
-    @user = current_visitor
-    @student = @user.portal_student
-    unless @student
-      @student=Portal::Student.create(:user => @user)
-    end
-    @learner = @offering.find_or_create_learner(@student)
-    respond_to do |format|
-      format.html # views/portal/offerings/test.html.haml
-      format.jnlp {
-        render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => @learner, :data_test => true }
-      }
     end
   end
 

@@ -201,10 +201,6 @@ constraints :id => /\d+/ do
     get 'offerings/:id/launch_status.:format' => 'offerings_metal#launch_status', :constraints => { :format => 'json' }, :as => :launch_status
 
     resources :offerings do
-      collection do
-        get :data_test
-        post :data_test
-      end
       member do
         get :deactivate
         get :activate

@@ -50,7 +50,7 @@ module ApplicationHelper
 
   def display_system_info
     commit = git_repo_info rescue {:branch => "<b>Error loading git info!</b>"}
-    jnlp = maven_jnlp_info rescue {:name => "<b>Error loading JNLP info!</b>"}
+    jnlp = current_project.jnlp_url || "#"
     info = <<-HEREDOC
 <span class="tiny menu_h">
   #{commit[:branch]}
@@ -58,9 +58,7 @@ module ApplicationHelper
   | #{commit[:author]}
   | #{commit[:date]}
   | #{commit[:short_message]}
-  | #{jnlp[:name]}
-  | <a href="#{jnlp[:href]}">#{jnlp[:version]}</a>
-  | #{jnlp[:snapshot]}
+  | <a href="#{jnlp}">#{jnlp}</a>
 </span>
     HEREDOC
     info.html_safe
@@ -102,24 +100,6 @@ module ApplicationHelper
       }
     else
       {}
-    end
-  end
-
-  def maven_jnlp_info
-    if JnlpAdaptor.maven_jnlp_family
-      {
-        :name => jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name,
-        :version => jnlp_adaptor.jnlp.versioned_jnlp_url.version_str,
-        :href => jnlp_adaptor.jnlp.versioned_jnlp_url.url,
-        :snapshot => JnlpAdaptor.snapshot_enabled ? "(snapshot)" : "(frozen)"
-      }
-    else
-      {
-        :name => 'unknown',
-        :version => 'unknown',
-        :href => 'unknown',
-        :snapshot => JnlpAdaptor.snapshot_enabled ? "(snapshot)" : "(frozen)"
-      }
     end
   end
 
@@ -943,12 +923,6 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           if (component.changeable?(current_visitor))
-            begin
-              if component.authorable_in_java?
-                haml_concat otrunk_edit_button_for(component, options)
-              end
-            rescue NoMethodError
-            end
             haml_concat edit_button_for(component, options)  unless options[:omit_edit]
             haml_concat delete_button_for(deletable_element) unless options[:omit_delete]
           end

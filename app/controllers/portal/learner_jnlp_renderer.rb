@@ -16,9 +16,8 @@ module Portal::LearnerJnlpRenderer
       )
     end
 
-    render :partial => 'shared/learn_or_installer', :locals => { 
-      :skip_installer => params.delete(:skip_installer), 
-      :runnable => learner.offering.runnable, 
+    render :partial => 'shared/installer', :locals => {
+      :runnable => learner.offering.runnable,
       :learner => learner, :jnlp_session => jnlp_session }
   end
 end

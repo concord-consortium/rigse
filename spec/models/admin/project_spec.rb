@@ -2,7 +2,6 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::Project do
   before(:each) do
-    generate_jnlps_with_mocks
     @new_valid_project = Admin::Project.new(
       :active => true
     )

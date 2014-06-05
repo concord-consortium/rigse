@@ -66,69 +66,6 @@ class Portal::Clazz < ActiveRecord::Base
     def has_offering
       Portal::Offering.find(:all, :select => 'distinct clazz_id', :include => :clazz).collect {|p| p.clazz}
     end
-
-    # TODO: Should this go here?
-    # We want to crate a clazz to test data saving and loading
-    #
-    def data_test_clazz
-      class_word = '__XyZZy__'
-      clazz = Portal::Clazz.find_by_class_word(class_word)
-      if clazz
-        # TODO: clean this up!
-        # Just in case the existing investigation created for testing needs
-        # to be updated -- make sure we have the right text in the xhtml
-        # because the test relies on the object having the right name and
-        # the name is generated from text in the xhtml prompt.
-        open_response = clazz.offerings[0].runnable.open_responses.first
-        open_response.prompt = "test_text"
-        open_response.save!
-      else
-        clazz = Portal::Clazz.create(
-          :name => 'Data test class',
-          :class_word => class_word
-        )
-        investigation = Investigation.create( {
-          :name => 'Data test'
-        })
-
-
-        activity = Activity.create(:name => 'Data testing Activity')
-        activity.investigation = investigation
-        activity.save
-
-        section = Section.create(:name => "data testing section")
-        section.activity = activity
-        section.save
-
-        page = Page.create(:name => 'data testing page')
-        page.section = section
-        page.save
-
-        xhtml = Embeddable::Xhtml.create(:name => 'data testing xhtml')
-        xhtml.save
-        page.xhtmls << xhtml
-
-        # The prompt gets used as the "name" for the open response, and the OTText's name gets set to #{prompt}_field
-        # The Java test looks for a text box named "test_text_field"
-        open_response = Embeddable::OpenResponse.create(:prompt => "test_text");
-        open_response.save
-        page.open_responses << open_response
-        page.save
-
-        investigation.user = User::site_admin
-        investigation.save
-
-        offering = Portal::Offering.create()
-        offering.runnable = investigation;
-        offering.clazz = clazz
-        offering.save
-        clazz.save
-        clazz.reload
-      end
-      clazz
-    end
-
-
   end
 
   def self.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)

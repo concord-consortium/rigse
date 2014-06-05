@@ -20,7 +20,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/biologica/chromosome" } # biologica_chromosome.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome  }}
+        format.jnlp { render :partial => 'shared/installer', :locals => { :runnable => @biologica_chromosome  }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_chromosome} }
         format.xml  { render :biologica_chromosome=> @biologica_chromosome }

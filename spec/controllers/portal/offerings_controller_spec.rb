@@ -7,7 +7,7 @@ describe Portal::OfferingsController do
       admin = Factory.next :admin_user
       sign_in admin
       get :show, :id => offering.id, :format => :jnlp
-      response.should render_template('shared/_show_or_installer')
+      response.should render_template('shared/_installer')
     end
 
     it "renders a jnlp for a teacher" do
@@ -15,14 +15,14 @@ describe Portal::OfferingsController do
       offering = Factory(:portal_offering, :clazz => teacher.clazzes.first)
       sign_in teacher.user
       get :show, :id => offering.id, :format => :jnlp
-      response.should render_template('shared/_show_or_installer')
+      response.should render_template('shared/_installer')
     end
 
     it "renders a jnlp as a learner" do
       learner = Factory(:full_portal_learner)
       sign_in learner.student.user
       get :show, :id => learner.offering.id, :format => :jnlp
-      response.should render_template('shared/_learn_or_installer')
+      response.should render_template('shared/_installer')
     end
   end
 

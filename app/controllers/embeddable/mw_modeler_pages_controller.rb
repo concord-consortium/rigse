@@ -20,7 +20,7 @@ class Embeddable::MwModelerPagesController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/mw_modeler_page" } # mw_modeler_page.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @mw_modeler_page  } }
+        format.jnlp { render :partial => 'shared/installer', :locals => { :runnable => @mw_modeler_page  } }
         format.config { render :partial => 'shared/show', :locals => { :runnable => @mw_modeler_page, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @mw_modeler_page} }
         format.xml  { render :mw_modeler_page => @mw_modeler_page }
