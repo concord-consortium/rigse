@@ -71,10 +71,10 @@ class Portal::OfferingsController < ApplicationController
             :event_details => "Activity launcher delivered. Activity should be opening...",
             :bundle_content => learner.bundle_logger.in_progress_bundle
           )
-          render :partial => 'shared/learn_or_installer', :locals => { :skip_installer => params.delete(:skip_installer), :runnable => @offering.runnable, :learner => learner }
+          render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
         else
           # The current_user is a teacher (or another user acting like a teacher)
-          render :partial => 'shared/show_or_installer', :locals => { :skip_installer => params.delete(:skip_installer), :runnable => @offering.runnable, :teacher_mode => true }
+          render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
         end
       }
     end
@@ -226,24 +226,6 @@ class Portal::OfferingsController < ApplicationController
         format.html { redirect_to :back }
         format.xml  { render :xml => @report_embeddable_filter.errors, :status => :unprocessable_entity }
       end
-    end
-  end
-
-  # GET /portal/offerings/data_test(.format)
-  def data_test
-    clazz = Portal::Clazz::data_test_clazz
-    @offering = clazz.offerings.first
-    @user = current_user
-    @student = @user.portal_student
-    unless @student
-      @student=Portal::Student.create(:user => @user)
-    end
-    @learner = @offering.find_or_create_learner(@student)
-    respond_to do |format|
-      format.html # views/portal/offerings/test.html.haml
-      format.jnlp {
-        render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => @learner, :data_test => true }
-      }
     end
   end
 

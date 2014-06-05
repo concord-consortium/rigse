@@ -23,7 +23,6 @@ development: &id003
   :description: ""
   :site_district: Genome Dynamics-district
   :use_gse: false
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :login: stephen
@@ -31,19 +30,6 @@ development: &id003
     :email: stephen.bannasch@gmail.com
   :states_and_provinces:
     - ME
-  :maven_jnlp_servers:
-    - :name: concord-current-sig
-      :host: http://jnlp.concord.org
-      :path: /dev3/org/concord/maven-jnlp/
-    - :name: concord
-      :host: http://jnlp.concord.org
-      :path: /dev/org/concord/maven-jnlp/
-  :maven_jnlp_families:
-    - all-otrunk-snapshot
-  :default_maven_jnlp:
-    :version: 0.1.0-20110120.152517
-    :server: concord-current-sig
-    :family: all-otrunk-snapshot
 
 test: *id003
 production: *id003

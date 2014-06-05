@@ -63,18 +63,11 @@ module ApplicationHelper
           git_repo_info.collect { |info| list << content_tag('li') { info } }
           if USING_JNLPS
             list << content_tag('li') { '|' }
-            maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+            list << content_tag('li') { current_project.jnlp_url }
           end
         end
         list
       end
-    # list2 =
-    #   content_tag('ul', :class => 'tiny menu_h') do
-    #     list = ''
-    #     maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
-    #     list
-    #   end
-    # "#{list1}\n<br />#{list2}"
   end
 
   def git_repo_info
@@ -111,25 +104,6 @@ module ApplicationHelper
     else
       []
     end
-  end
-
-  def maven_jnlp_info
-    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
-    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
-    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
-    link = "<a href='#{url}'>#{version}</a>"
-    info = [name, link]
-    if current_project.snapshot_enabled
-      info << "(snapshot)"
-    else
-      info << "(frozen)"
-    end
-
-    # if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
-    #   info << "(snapshot)"
-    # else
-    #   info << "(frozen)"
-    # end
   end
 
   def display_repo_info
@@ -950,14 +924,7 @@ module ApplicationHelper
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          
           if (component.changeable?(current_user))
-            begin
-              if component.authorable_in_java?
-                haml_concat otrunk_edit_button_for(component, options)
-              end
-            rescue NoMethodError
-            end
             haml_concat edit_button_for(component, options)  unless options[:omit_edit]
             haml_concat delete_button_for(deletable_element) unless options[:omit_delete]
           end

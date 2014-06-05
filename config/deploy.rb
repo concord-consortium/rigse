@@ -308,18 +308,6 @@ namespace :import do
       "bundle exec rake RAILS_ENV=#{rails_env} app:import:re_import_ccp_itsi_units_to_itsi_su" 
   end
 
-  desc "generate names for existing MavenJnlpServers that don't have them"
-  task :generate_names_for_maven_jnlp_servers, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:jnlp:generate_names_for_maven_jnlp_servers --trace"
-  end
-
-  desc "generate MavenJnlp resources from jnlp servers in settings.yml"
-  task :generate_maven_jnlp_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:jnlp:generate_maven_jnlp_resources --trace"
-  end
-
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
   task :generate_otrunk_examples_rails_models, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
@@ -372,12 +360,6 @@ end
 #############################################################
 
 namespace :delete do
-
-  desc "delete all the MavenJnlp resources"
-  task :maven_jnlp_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:jnlp:delete_maven_jnlp_resources --trace"
-  end
 
   desc"Delete the otrunk-example models (Rails models)."
   task :otrunk_example_models, :roles => :app do
@@ -458,12 +440,6 @@ namespace :convert do
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:create_default_project_from_config_settings_yml --trace"
   end
 
-  desc "generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls"
-  task :generate_date_str_for_versioned_jnlp_urls, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:generate_date_str_for_versioned_jnlp_urls --trace"
-  end
-
   desc "Create bundle and console loggers for learners"
   task :create_bundle_and_console_loggers_for_learners, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
@@ -517,13 +493,6 @@ namespace :convert do
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:convert_clazzes_to_multi_teacher --trace"
   end
 
-  # Wed Dec 23nd, 2009
-  desc "Delete_and_regenerate_maven_jnlp_resources"
-  task :delete_and_regenerate_maven_jnlp_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "ANSWER_YES=true bundle exec rake RAILS_ENV=#{rails_env} app:jnlp:delete_and_regenerate_maven_jnlp_resources --trace"
-  end
-
   # Wed Jan 6 2010
   desc "Fixup inner pages: add static_page associations (run deploy:migrate first!)"
   task :add_static_pages_to_inner_pages, :roles => :app do
@@ -556,13 +525,6 @@ namespace :convert do
   task :populate_new_district_and_school_attributes_with_data_from_nces_tables, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:populate_new_district_and_school_attributes_with_data_from_nces_tables --trace"
-  end
-
-  # seb: 20100513
-  desc "Erase the marshalled jnlps stored in the jnlp object directory by the jnlp gem: config/jnlp_objects"
-  task :empty_jnlp_object_cache, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:jnlp:empty_jnlp_object_cache --trace"
   end
 
   # seb: 20101019

@@ -23,7 +23,6 @@ development: &id003
   :site_district: DEFAULT Investigations-district
   :help_email: default-investigations@concord.org
   :use_gse: true
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :login: stephen
@@ -31,21 +30,7 @@ development: &id003
     :email: stephen.bannasch@gmail.com
   :states_and_provinces:
     - RI
-  :maven_jnlp_servers:
-    - :host: http://jnlp.concord.org
-      :name: concord-current-sig
-      :path: /dev3/org/concord/maven-jnlp/
-    - :name: concord
-      :host: http://jnlp.concord.org
-      :path: /dev3/org/concord/maven-jnlp/
-  :maven_jnlp_families:
-    - all-otrunk-snapshot
-  :default_maven_jnlp:
-    :version: snapshot
-    :server: concord-current-sig
-    :family: all-otrunk-snapshot
-  :require_activity_descriptions: false
-  :unique_activity_names: false
+
 test: *id003
 staging: *id003
 cucumber: *id003
@@ -74,7 +59,6 @@ production:
   :site_district: DEFAULT Investigations-district
   :help_email: default-investigations@concord.org
   :use_gse: true
-  :enable_default_users: true
   :default_admin_user:
     :first_name: Stephen
     :login: stephen
@@ -82,17 +66,4 @@ production:
     :email: stephen.bannasch@gmail.com
   :states_and_provinces:
     - RI
-  :maven_jnlp_servers:
-    - :host: http://jnlp.concord.org
-      :name: concord-current-sig
-      :path: /dev3/org/concord/maven-jnlp/
-    - :name: concord
-      :host: http://jnlp.concord.org
-      :path: /dev3/org/concord/maven-jnlp/
-  :maven_jnlp_families:
-    - all-otrunk-snapshot
-  :default_maven_jnlp:
-    :version: 0.1.0-20110120.152517
-    :server: concord-current-sig
-    :family: all-otrunk-snapshot
 

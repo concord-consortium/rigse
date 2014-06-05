@@ -11,7 +11,6 @@ describe Portal::SchoolsController do
       :district => nil,
       :children => [],
       :teacher_only? => false,
-      :authorable_in_java? => false,
       :district_id => nil,
       :nces_school_id => nil,
       :clazzes => clazzes,

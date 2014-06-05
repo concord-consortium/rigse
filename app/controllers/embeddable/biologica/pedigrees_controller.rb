@@ -20,7 +20,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/biologica/pedigree" } # biologica_pedigree.otml.haml
-        format.jnlp { render :partial => 'shared/show_or_installer', :locals => { :runnable => @biologica_pedigree, :teacher_mode => false  }}
+        format.jnlp { render :partial => 'shared/installer', :locals => { :runnable => @biologica_pedigree, :teacher_mode => false  }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_pedigree, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false  } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_pedigree, :teacher_mode => @teacher_mode} }
         format.xml  { render :biologica_pedigree => @biologica_pedigree }

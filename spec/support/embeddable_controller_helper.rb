@@ -68,7 +68,7 @@ shared_examples_for 'an embeddable controller' do
         @model_class.stub!(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'jnlp'
         assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template("shared/_show.jnlp.builder")
+        response.should render_template("shared/_installer.jnlp.builder")
         response.should have_tag('jnlp') do
           with_tag('information')
           with_tag('security')
@@ -178,105 +178,5 @@ shared_examples_for 'an embeddable controller' do
 
     end
 
-  end
-
-  if model_class_lambda.call.respond_to?(:authorable_in_java?) && model_class_lambda.call.authorable_in_java?
-
-    describe "GET edit" do
-
-      it "assigns the requested #{model_ivar_name_lambda.call} as @#{model_ivar_name_lambda.call}" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
-        get :edit, :id => "37"
-        assigns[@model_ivar_name].should equal(@model_ivar)
-      end
-
-      describe "with mime type of jnlp" do
-
-        it "renders the requested #{model_ivar_name_lambda.call} as jnlp without error" do
-          @model_class.stub!(:find).with("37").and_return(@model_ivar)
-          get :edit, :id => "37", :format => 'jnlp'
-          assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit.jnlp.builder")
-          response.should have_tag('jnlp') do
-            with_tag('information')
-            with_tag('security')
-            with_tag('resources')
-            with_tag('application-desc') do
-              with_tag('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id], :action => 'edit'))
-            end
-          end
-        end
-
-      end
-
-      describe "with mime type of config" do
-
-        it "renders the requested #{model_ivar_name_lambda.call} as config without error" do
-          @model_class.stub!(:find).with("37").and_return(@model_ivar)
-          get :edit, :id => "37", :format => 'config', :session => '6ee4ff32b48026db6f3758da9f090150'
-          assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit.config.builder")
-          response.should have_tag('java') do
-            with_tag('object') do
-              with_tag('void') do
-                with_tag('object') do
-                  with_tag('void') do
-                    with_tag('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :teacher_mode => false, :action => 'edit'))
-                  end
-                end
-              end
-            end
-          end
-        end
-
-      end
-
-      describe "with mime type of dynamic_otml" do
-
-        it "renders the requested #{model_ivar_name_lambda.call} as dynamic_otml without error" do
-          @model_class.stub!(:find).with("37").and_return(@model_ivar)
-          get :edit, :id => "37", :format => 'dynamic_otml', :session => '6ee4ff32b48026db6f3758da9f090150'
-          assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit.dynamic_otml.builder")
-          response.should have_tag('otrunk') do
-            with_tag('imports')
-            with_tag('objects') do
-              with_tag('OTSystem') do
-                with_tag('includes') do
-                  # with_tag('OTInclude')
-                  with_tag('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :teacher_mode => false, :action => 'edit'))
-                end
-                with_tag('bundles')
-                with_tag('overlays')
-                with_tag('root')
-              end
-            end
-          end
-        end
-
-      end
-
-      describe "with mime type of otml" do
-
-        it "renders the requested #{model_ivar_name_lambda.call} as otml without error" do
-          @model_class.stub!(:find).with("37").and_return(@model_ivar)
-          get :edit, :id => "37", :format => 'otml'
-          assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template(:edit)
-          response.should have_tag('otrunk') do
-            with_tag('imports')
-            with_tag('objects') do
-              with_tag('OTSystem') do
-                with_tag('bundles')
-                with_tag('root')
-                with_tag('library') do
-                  with_tags_like_an_otml(@model_ivar_name)
-                end
-              end
-            end
-          end
-        end
-      end
-    end
   end
 end

@@ -253,7 +253,7 @@ namespace :db do
     desc "Dump the db to a rough Factory Girl format"
     task :dump_to_factory_girl => :environment do
       @skip_attrs = ["id", "created_at", "updated_at", "uuid"]
-      @namespaced = {"maven_jnlp_" => "MavenJnlp::", "admin_" => "Admin::", "dataservice_" => "Dataservice::", "otrunk_example_" => "OtrunkExample::", "portal_" => "Portal::"}
+      @namespaced = {"admin_" => "Admin::", "dataservice_" => "Dataservice::", "otrunk_example_" => "OtrunkExample::", "portal_" => "Portal::"}
       # @non_rich_joins = ["jars_versioned_jnlps","portal_courses_grade_levels","portal_grade_levels_teachers"]
       ActiveRecord::Base.connection.tables.each do |table|
         print "Dumping #{table}... "

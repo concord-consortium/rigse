@@ -2,14 +2,10 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::Project do
   before(:each) do
-    generate_jnlps_with_mocks
     @new_valid_project = Admin::Project.new(
       :name => "Example Project",
       :url => "http://rites.org",
       :states_and_provinces => %w{RI MA},
-      :maven_jnlp_server_id => @mock_maven_jnlp_server.id,
-      :maven_jnlp_family_id => @mock_maven_jnlp_family.id,
-      :jnlp_version_str => @mock_maven_jnlp_family.snapshot_version,
       :snapshot_enabled => false
     )
   end

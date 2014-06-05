@@ -20,7 +20,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/embeddable/sensor" } # sensor.otml.haml
-        format.jnlp { render :partial => 'shared/show_or_installer', :locals => { :runnable => @diy_sensor , :teacher_mode => false } }
+        format.jnlp { render :partial => 'shared/installer', :locals => { :runnable => @diy_sensor , :teacher_mode => false } }
         format.config { render :partial => 'shared/show', :locals => { :runnable => @diy_sensor, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @diy_sensor, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @diy_sensor }

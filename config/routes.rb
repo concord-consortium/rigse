@@ -170,7 +170,7 @@ ActionController::Routing::Routes.draw do |map|
       :launch_status => :get,
       :answers => :post,
       :start => :post
-    }, :collection => { :data_test => [:get,:post] }
+    }
 
     # TODO: Totally not restful.  We should change
     # all routes to use :delete, and then modify
@@ -270,21 +270,9 @@ ActionController::Routing::Routes.draw do |map|
   map.dataservice_periodic_bundle_logger_periodic_bundle_contents '/dataservice/periodic_bundle_loggers/:id/periodic_bundle_contents.bundle', :controller => 'dataservice/periodic_bundle_loggers', :action => 'create_bundle_content', :requirements => { :format => 'bundle' }, :method => :post
 
   map.namespace(:admin) do |admin|
-    admin.resources :projects, :member => { :update_form => :put }
+    admin.resources :projects
     admin.resources :tags
   end
-
-  map.namespace(:maven_jnlp) do |maven_jnlp|
-    maven_jnlp.resources :native_libraries
-    maven_jnlp.resources :jars
-    maven_jnlp.resources :properties
-    maven_jnlp.resources :versioned_jnlps
-    maven_jnlp.resources :versioned_jnlp_urls
-    maven_jnlp.resources :icons
-    maven_jnlp.resources :maven_jnlp_families
-    maven_jnlp.resources :maven_jnlp_servers
-  end
-
 
   map.namespace(:otrunk_example) do |otrunk_example|
     otrunk_example.resources :otrunk_imports

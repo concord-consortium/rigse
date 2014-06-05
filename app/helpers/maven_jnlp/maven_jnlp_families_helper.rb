@@ -1,2 +1,0 @@
-module MavenJnlp::MavenJnlpFamiliesHelper
-end

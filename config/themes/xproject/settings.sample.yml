@@ -23,7 +23,6 @@ development: &id003
   :site_district: Cross Project Portal-district
   :help_email: xproject-investigations@concord.org
   :use_gse: false
-  :enable_default_users: true
   :help_email: xproject@concord.org
   :admin_email: aunger@concord.org
   :default_admin_user:
@@ -33,20 +32,6 @@ development: &id003
     :email: aunger@concord.org
   :states_and_provinces:
     - MA
-  :maven_jnlp_servers:
-    - :name: concord
-      :host: http://jnlp.concord.org
-      :path: /dev3/org/concord/maven-jnlp/
-  :maven_jnlp_families:
-    - all-otrunk-snapshot
-  :default_maven_jnlp:
-    :version: snapshot
-    :server: concord
-    :family: all-otrunk-snapshot
-  :valid_sakai_instances:
-  :teachers_can_author: true
-  :require_activity_descriptions: false
-  :unique_activity_names: false
 
 test: *id003
 production: *id003
