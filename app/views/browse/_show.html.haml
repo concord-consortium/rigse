@@ -25,7 +25,7 @@
 
 .browse_material_other_data
   .icon_image
-    = image_tag(parent_material.icon_image_url, :size=>'100x100')
+    = image_tag(parent_material.icon_image_url)
   %br
   %div
     = render :partial => '/browse/investigation_other_data', :locals => {:material_other_data => parent_material.other_data}
