@@ -116,8 +116,8 @@ class ActivityRuntimeAPI
     external_activity = nil # Why are we initializing this? For the transaction?
     Investigation.transaction do
       investigation = Investigation.create(:name => hash["name"], :description => hash['description'], :user => user)
-      hash['activities'].each do |act|
-        activity_from_hash(act, investigation, user)
+      hash['activities'].each_with_index do |act, index|
+        activity_from_hash(act, investigation, user, index)
       end
       external_activity = ExternalActivity.create(
         :name             => hash["name"],
@@ -183,16 +183,17 @@ class ActivityRuntimeAPI
       act.investigation_id = nil
     end
 
-    # Add hashed activities back in to investigation
-    hash['activities'].each do |new_activity|
+    # Add hashed activities back in to investigation. Note that order
+    # of activities in this hash defines order of activities in portal.
+    hash['activities'].each_with_index do |new_activity, index|
       existing = activity_cache.delete(new_activity['name'])
       if existing
         build_page_components(new_activity, existing, user, or_cache, mc_cache, iq_cache)
         existing.investigation = investigation
-        existing.position = new_activity['position']
+        existing.position = index
         existing.save!
       else
-        activity = activity_from_hash(new_activity, investigation, user)
+        activity = activity_from_hash(new_activity, investigation, user, index)
       end
     end
 
@@ -206,12 +207,12 @@ class ActivityRuntimeAPI
     return external_activity
   end
 
-  def self.activity_from_hash(hash, investigation, user)
+  def self.activity_from_hash(hash, investigation, user, position = nil)
     # NOTE: It seems like we don't copy description or thumbnail url.
     # is this the right behavior for the report template?
     activity = Activity.create({
       :name => hash["name"],
-      :position => hash["position"],
+      :position => position,
       :user => user,
       :investigation => investigation
     })
