@@ -8,7 +8,6 @@ describe InvestigationsController do
       :name => "test project",
       :using_custom_css? => false,
       :use_bitmap_snapshots? => false,
-      :maven_jnlp_family => nil,
       :snapshot_enabled => false,
       :use_student_security_questions => false,
       :require_user_consent? => false)

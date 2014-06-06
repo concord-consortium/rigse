@@ -28,16 +28,6 @@ development: &non_production_settings
   :active_grades: *active_grades
   :theme: default
   :help_email: rails-portal@concord.org
-  :maven_jnlp_families:
-    - "all-otrunk-snapshot"
-  :maven_jnlp_servers:
-    - :name: concord
-      :host: http://jnlp.concord.org
-      :path: /dev3/org/concord/maven-jnlp/
-  :default_maven_jnlp:
-    :server: concord
-    :family: all-otrunk-snapshot
-    :version: snapshot
   :dont_sanitize_xhtml: true
   :tiny_mce:
     :buttons1:
@@ -74,16 +64,6 @@ staging:
   :site_district: Rails Portal-district
   :site_school: Rails Portal-school
   :help_email: rails-portal@concord.org
-  :maven_jnlp_servers:
-    - :name: concord
-      :host: http://jnlp.concord.org
-      :path: /dev3/org/concord/maven-jnlp/
-  :maven_jnlp_families:
-    - "all-otrunk-snapshot"
-  :default_maven_jnlp:
-    :server: concord
-    :family: all-otrunk-snapshot
-    :version: snapshot
   :dont_sanitize_xhtml: true
   :tiny_mce:
     :buttons1:
@@ -110,16 +90,6 @@ production:
   :help_email: rails-portal@concord.org
   :admin_email: npaessel@concord.org
   :allow_drafts_in_assignments: false
-  :maven_jnlp_servers:
-    - :name: concord
-      :host: http://jnlp.concord.org
-      :path: /dev3/org/concord/maven-jnlp/
-  :maven_jnlp_families:
-    - "all-otrunk-snapshot"
-  :default_maven_jnlp:
-    :server: concord
-    :family: all-otrunk-snapshot
-    :version: snapshot
   :dont_sanitize_xhtml: true
   :tiny_mce:
     :buttons1:

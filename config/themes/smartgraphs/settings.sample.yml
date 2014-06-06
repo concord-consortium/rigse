@@ -21,7 +21,6 @@ development: &id003
   :site_name: SmartGraphs
   :site_url: http://smartgraphs.dev.concord.org
   :runnable_mime_type: run_external_html
-  :default_maven_jnlp: 
   :runnables_use: browser
   :default_admin_user:
     :first_name: Aaron

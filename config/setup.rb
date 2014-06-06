@@ -282,14 +282,6 @@ def using_rites_theme?
   !not_using_rites_theme?
 end
 
-def env_does_not_use_jnlps?(env)
-  @settings_config[env][:runnables_use] && @settings_config[env][:runnables_use] == 'browser'
-end
-
-def env_uses_jnlps?(env)
-  !env_does_not_use_jnlps?(env)
-end
-
 # ==================================================================
 #
 #   Create new settings helper methods
@@ -527,24 +519,6 @@ def check_for_config_settings_yml
             default_admin_user[key_pair[1].to_sym] = @settings_config[env].delete(key_pair[0].to_sym)
           end
           @settings_config[env][:default_admin_user] = default_admin_user
-        end
-
-        unless @settings_config[env][:default_maven_jnlp] || env_does_not_use_jnlps?(env)
-          unless @options[:quiet]
-            puts <<-HEREDOC
-
-  Collecting default_maven_jnlp settings into one hash, :default_maven_jnlp in the #{env} section of settings.yml
-
-            HEREDOC
-          end
-
-          default_maven_jnlp = {}
-          original_keys = %w{default_maven_jnlp_server default_maven_jnlp_family default_jnlp_version}
-          new_keys = %w{server family version}
-          original_keys.zip(new_keys).each do |key_pair|
-            default_maven_jnlp[key_pair[1].to_sym] = @settings_config[env].delete(key_pair[0].to_sym)
-          end
-          @settings_config[env][:default_maven_jnlp] = default_maven_jnlp
         end
 
         unless @settings_config[env][:theme]
@@ -891,43 +865,6 @@ School level.  The following codes are used for active school levels:
   @settings_config[env][:active_school_levels] =  active_school_levels.split
 end
 
-
-def get_maven_jnlp_settings(env)
-  puts <<-HEREDOC
-
-  Specify the maven_jnlp server used for providing jnlps and jars dor running Java OTrunk applications.
-
-  HEREDOC
-  @settings_config[env][:maven_jnlp_servers] ||= [{}]
-  maven_jnlp_server = @settings_config[env][:maven_jnlp_servers][0]
-  maven_jnlp_server[:host] =  ask("   host: ") { |q| q.default = maven_jnlp_server[:host] }
-  maven_jnlp_server[:path] =  ask("   path: ") { |q| q.default = maven_jnlp_server[:path] }
-  maven_jnlp_server[:name] =  ask("   name: ") { |q| q.default = maven_jnlp_server[:name] }
-  @settings_config[env][:maven_jnlp_servers][0] = maven_jnlp_server
-  @settings_config[env][:default_maven_jnlp_server] = maven_jnlp_server[:name]
-  @settings_config[env][:default_maven_jnlp_family] =  ask("   default_maven_jnlp_family: ") { |q| q.default = @settings_config[env][:default_maven_jnlp_family] }
-
-  maven_jnlp_families = (@settings_config[env][:maven_jnlp_families] || []).join(' ')
-  puts <<-HEREDOC
-
-  The following is a list of the active maven_jnlp_families:
-
-    #{maven_jnlp_families}
-
-  Specify which maven_jnlp_families to include. Enter nothing to include all
-  the maven_jnlp_families. Delimit multiple items with spaces.
-
-  HEREDOC
-  maven_jnlp_families =  ask("   maven_jnlp_families: ") { |q| q.default = maven_jnlp_families }
-  @settings_config[env][:maven_jnlp_families] =  maven_jnlp_families.split
-  puts <<-HEREDOC
-
-  Specify the default_jnlp_version to use:
-
-  HEREDOC
-  @settings_config[env][:default_jnlp_version] =  ask("   default_jnlp_version: ") { |q| q.default = @settings_config[env][:default_jnlp_version] }
-end
-
 # ==================================================================
 #
 #   "Update existing" settings helper methods
@@ -1003,11 +940,6 @@ Any full member can become part of the site school and district.
       # ---- valid_school_levels  ----
       #
       get_active_school_levels(env)
-
-      #
-      # ---- maven_jnlp ----
-      #
-      get_maven_jnlp_settings(env)
 
     end # each env
 

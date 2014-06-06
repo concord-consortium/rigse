@@ -371,17 +371,6 @@ constraints :id => /\d+/ do
     end
   end
 
-  namespace :maven_jnlp do
-    resources :native_libraries
-    resources :jars
-    resources :properties
-    resources :versioned_jnlps
-    resources :versioned_jnlp_urls
-    resources :icons
-    resources :maven_jnlp_families
-    resources :maven_jnlp_servers
-  end
-
   namespace :otrunk_example do
     resources :otrunk_imports
     resources :otml_categories

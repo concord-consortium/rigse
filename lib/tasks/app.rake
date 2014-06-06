@@ -118,12 +118,11 @@ This task will:
  3. load default probe, interface, and calibration reesources
  4. generate a set of the RI Grade Span Expectation models (if using the 'rites' theme)
  5. assign the Vernier Go!Link interface as a default to the existing users
- 6. generate the maven_jnlp resources (if :runnables_use: otrunk_jnlp in app settings)
- 7. optionally download, introspect, and create models representing otrunk-examples 
- 8. create a default project and associate it with the maven_jnlp resources
- 9. download and generate nces district and school resources
-10. Generate District and School model instances from the NCES data for selected States and Active School Levels.
-11. create default portal resources: district, school, class, investigation and offering
+ 6. optionally download, introspect, and create models representing otrunk-examples 
+ 7. create a default project
+ 8. download and generate nces district and school resources
+ 9. Generate District and School model instances from the NCES data for selected States and Active School Levels.
+10. create default portal resources: district, school, class, investigation and offering
   
       HEREDOC
       if ::Rails.env != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
@@ -136,9 +135,6 @@ This task will:
           Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
         end
         Rake::Task['app:convert:assign_vernier_golink_to_users'].invoke
-        if APP_CONFIG[:use_jnlps]
-          Rake::Task['app:jnlp:generate_maven_jnlp_resources'].invoke
-        end
         if APP_CONFIG[:include_otrunk_examples]
           Rake::Task['app:import:generate_otrunk_examples_rails_models'].invoke
         else
