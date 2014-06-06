@@ -22,6 +22,7 @@ class Admin::Project < ActiveRecord::Base
   @@searchable_attributes = %w{name description}
 
   validates_format_of :url, :with => URI::regexp(%w(http https))
+  validates_format_of :jnlp_url, :with => URI::regexp(%w(http https))
   validates_length_of :name, :minimum => 1
   validate :states_and_provinces_array_members_must_match_list
   

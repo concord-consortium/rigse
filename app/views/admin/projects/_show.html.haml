@@ -90,7 +90,10 @@
                   = admin_project.pub_interval
                 (This option changes the rate at which student data is sent to the
                 server if periodic bundle uploading is turned on)
-            - field_set_tag 'Maven Jnlp' do
+            - field_set_tag '<b>Jnlp</b>' do
+              %p
+                Jnlp URL:
+                = admin_project.jnlp_url
               %p
                 Jnlp CDN Hostname:
                 = admin_project.jnlp_cdn_hostname
