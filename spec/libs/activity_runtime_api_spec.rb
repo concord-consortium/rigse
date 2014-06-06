@@ -109,24 +109,26 @@ describe ActivityRuntimeAPI do
     ]
   end
 
-  let(:v2hash) do
-    v2hash = new_hash
-    v2hash['type'] = 'Activity'
-    v2hash
-  end
-
   let(:sequence_name) { "Many fun things" }
   let(:sequence_desc) { "Several activities together in a sequence" }
   let(:sequence_url)  { "http://activity.com/sequence/1" }
 
   let(:sequence_hash) do
+    act1 = new_hash.clone
+    act1['name'] = 'Cool Activity 1'
+    act1['type'] = 'Activity'
+    act1['position'] = 18
+    act2 = new_hash.clone
+    act2['name'] = 'Cool Activity 2'
+    act2['type'] = 'Activity'
+    act2['position'] = 17
     {
       "type" => "Sequence",
       "name" => sequence_name,
       "description" => sequence_desc,
       "url" => sequence_url,
       "launch_url" => sequence_url,
-      "activities" => [v2hash]
+      "activities" => [act1, act2]
     }
   end
 
@@ -276,7 +278,7 @@ describe ActivityRuntimeAPI do
             :external_id => "something_not_in_the_hash"
           )
         end
-        let(:choices) do 
+        let(:choices) do
           [choice, other_choice]
         end
 
@@ -365,14 +367,21 @@ describe ActivityRuntimeAPI do
 
   describe 'publish_sequence' do
     context 'when publishing a new sequence' do
+      let(:result) { ActivityRuntimeAPI.publish_sequence(sequence_hash, user) }
+
       it 'should create a new activity' do
-        result = ActivityRuntimeAPI.publish_sequence(sequence_hash, user)
         result.should_not be_nil
         result.should be_a_kind_of(ExternalActivity)
         result.url.should == sequence_url
         result.template.should be_a_kind_of(Investigation)
         result.template.is_template.should be_true
-        result.template.activities.length.should > 0
+        result.activities.length.should > 0
+      end
+
+      it 'should keep order of activities' do
+        result.activities[0].position.should <= result.activities[1].position
+        result.activities[0].name.should == sequence_hash['activities'][1]['name']
+        result.activities[1].name.should == sequence_hash['activities'][0]['name']
       end
     end
 
@@ -381,6 +390,16 @@ describe ActivityRuntimeAPI do
         existing_sequence
         result = ActivityRuntimeAPI.update_sequence(sequence_hash)
         result.id.should == existing_sequence.id
+      end
+
+      it 'should update order of activities' do
+        existing_sequence
+        sequence_hash['activities'][0]['position'] = 1
+        sequence_hash['activities'][1]['position'] = 2
+        result = ActivityRuntimeAPI.update_sequence(sequence_hash)
+        result.activities[0].position.should <= result.activities[1].position
+        result.activities[0].name.should == sequence_hash['activities'][0]['name']
+        result.activities[1].name.should == sequence_hash['activities'][1]['name']
       end
     end
   end
