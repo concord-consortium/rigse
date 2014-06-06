@@ -133,7 +133,6 @@ class ActivityRuntimeAPI
       # otherwise external_activity.template.is_template? won't be true
       investigation.reload
     end
-
     return external_activity
   end
 
@@ -190,6 +189,8 @@ class ActivityRuntimeAPI
       if existing
         build_page_components(new_activity, existing, user, or_cache, mc_cache, iq_cache)
         existing.investigation = investigation
+        existing.position = new_activity['position']
+        existing.save!
       else
         activity = activity_from_hash(new_activity, investigation, user)
       end
@@ -201,6 +202,7 @@ class ActivityRuntimeAPI
     iq_cache.each_value { |v| v.destroy }
     activity_cache.each_value { |v| v.destroy }
 
+    external_activity.reload # e.g. updates activities list in case of need
     return external_activity
   end
 
@@ -209,6 +211,7 @@ class ActivityRuntimeAPI
     # is this the right behavior for the report template?
     activity = Activity.create({
       :name => hash["name"],
+      :position => hash["position"],
       :user => user,
       :investigation => investigation
     })
