@@ -50,9 +50,3 @@ production:
   :use_gse: false
   :default_admin_user: *default_admin_user
   :states_and_provinces: all
-  :maven_jnlp_servers: *maven_jnlp_servers
-  :maven_jnlp_families: *maven_jnlp_families
-  :default_maven_jnlp:
-    :version: 0.1.0-20100513.161426
-    :server: concord
-    :family: all-otrunk-snapshot
