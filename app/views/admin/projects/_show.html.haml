@@ -134,7 +134,10 @@
                 = admin_project.enabled_bookmark_types.join(', ')
               = content_for "admin_project_show_#{admin_project.id || 'new'}"
 
-            = field_set_tag 'Maven Jnlp' do
+            = field_set_tag '<b>Jnlp</b>'.html_safe do
+              %p
+                Jnlp URL:
+                = admin_project.jnlp_url
               %p
                 Jnlp CDN Hostname:
                 = admin_project.jnlp_cdn_hostname

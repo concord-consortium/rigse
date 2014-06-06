@@ -85,10 +85,14 @@
             %b
               = f.label :enabled_bookmark_types,  "Enabled bookmark types"
             = f.select(:enabled_bookmark_types, admin_project.available_bookmark_types.map { |b| [b,b]}, {},{ :class => ".chzn-select", :multiple => true})
-          %li
-            Jnlp CDN Hostname:
-            = f.text_field :jnlp_cdn_hostname, :size => 60
           = content_for "admin_project_form_#{admin_project.id || 'new'}"
+      = field_set_tag '<b>Jnlp</b>'.html_safe do
+        %p
+          Jnlp URL:
+          = f.text_field :jnlp_url, :size => 60
+        %p
+          Jnlp CDN Hostname:
+          = f.text_field :jnlp_cdn_hostname, :size => 60
 
       %p
         %b
