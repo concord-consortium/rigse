@@ -50,7 +50,7 @@ module ApplicationHelper
 
   def display_system_info
     commit = git_repo_info rescue {:branch => "<b>Error loading git info!</b>"}
-    jnlp = current_project.respond_to?(:jnlp_url) && current_project.jnlp_url || "#"
+    jnlp = current_project.jnlp_url || "#"
     info = <<-HEREDOC
 <span class="tiny menu_h">
   #{commit[:branch]}
@@ -1249,7 +1249,7 @@ module ApplicationHelper
 
   # this appears to not be used in master right now
   def current_user_can_author
-    return true if current_visitor.has_role? "author"
+    return true if current_visitor.has_role? "author" 
     if settings_for(:teachers_can_author)
       return true unless current_visitor.portal_teacher.nil?
     end
