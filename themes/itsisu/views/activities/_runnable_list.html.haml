@@ -1,3 +1,5 @@
+- anon = current_user.anonymous?
+- is_teacher = current_user.portal_teacher
 -#TODO: Add search results param to list_bins?
 -if defined?(lightweight_only) && lightweight_only
   .button.bins= link_to "show all activities", activities_path
@@ -33,4 +35,9 @@
             .unit
               %h2="#{unit[:name]} (#{unit[:count]})"
               - unit[:activities].each do |runnable|
-                = render :partial => 'list_item', :locals => {:runnable => runnable}
+                - cache_key = "item_list_#{runnable.class.to_s}_#{runnable.id}_"
+                - cache_key = "changeable_" + cache_key if runnable.changeable? current_user
+                - cache_key = "anonymous_" + cache_key if anon
+                - cache_key = "teacher_" + cache_key if is_teacher
+                - cache(cache_key) do
+                  = render :partial => 'list_item', :locals => {:runnable => runnable}
