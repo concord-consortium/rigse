@@ -28,6 +28,8 @@ class User < ActiveRecord::Base
   }
   has_settings
 
+  default_scope :include => :roles
+
   # has_many :assessment_targets, :class_name => 'RiGse::AssessmentTarget'
   # has_many :big_ideas, :class_name => 'RiGse::BigIdea'
   # has_many :domains, :class_name => 'RiGse::Domain'
@@ -212,7 +214,7 @@ class User < ActiveRecord::Base
   #  user.has_role?(%w{admin manager})
   #
   def has_role?(*role_list)
-    roles.reload # will always hit the database?
+    # roles.reload # will always hit the database?
     (roles.map{ |r| r.title.downcase } & role_list.flatten).length > 0
   end
 
