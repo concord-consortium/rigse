@@ -55,6 +55,8 @@
                 = check_box_tag 'sensors[]', sensor,(@sensors.include?(sensor.to_s) ? true : false),:id=>(sensor+'-sensors'),:onclick=>"selectAllSensors(this);"
                 = label_tag sensor+'-sensors', sensor.sub(/^.*#/,'')
 
+- anon = current_user.anonymous?
+- is_teacher = current_user.portal_teacher
 #activities
   .action_menu
     .action_menu_header
@@ -64,7 +66,12 @@
           = will_paginate @activities, :params => @filter_params
 
   - @activities.each do |activity|
-    = render(:partial => 'list_item', :locals => {:runnable => activity})
+    - cache_key = "item_list_#{activity.class.to_s}_#{activity.id}_"
+    - cache_key = "changeable_" + cache_key if activity.changeable? current_user
+    - cache_key = "anonymous_" + cache_key if anon
+    - cache_key = "teacher_" + cache_key if is_teacher
+    - cache(cache_key) do
+      = render(:partial => 'list_item', :locals => {:runnable => activity})
 
 :javascript
   (function() {
