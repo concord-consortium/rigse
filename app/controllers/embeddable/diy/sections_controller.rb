@@ -19,7 +19,7 @@ class Embeddable::Diy::SectionsController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/embeddable/section" } # section.otml.haml
-        format.jnlp { render :partial => 'shared/show_or_installer', :locals => { :runnable => @diy_section , :teacher_mode => false } }
+        format.jnlp { render :partial => 'shared/installer', :locals => { :runnable => @diy_section , :teacher_mode => false } }
         format.config { render :partial => 'shared/show', :locals => { :runnable => @diy_section, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @diy_section, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @diy_section }

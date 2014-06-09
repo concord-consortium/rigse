@@ -15,6 +15,5 @@
 # anon =  Factory.next :anonymous_user
 # admin = Factory.next :admin_user 
 # device_config = Factory.create(:device_config)
-# versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
 # Admin::Project.create_or_update_default_project_from_settings_yml
 # puts "done."

@@ -156,18 +156,5 @@ class Admin::ProjectsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
-  def update_form
-    if request.xhr?
-      @admin_project = Admin::Project.new(params[:admin_project])
-      @admin_project.id = params[:id]
-      if @admin_project.snapshot_enabled
-        @admin_project.jnlp_version_str = @admin_project.maven_jnlp_family.snapshot_version
-      end
-      render :partial => 'maven_jnlp_form', :locals => { :admin_project => @admin_project }
-    else
-      render :nothing => true
-    end
-  end
-  
+
 end

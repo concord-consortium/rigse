@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140206233021) do
+ActiveRecord::Schema.define(:version => 20140606180557) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -63,13 +63,13 @@ ActiveRecord::Schema.define(:version => 20140206233021) do
     t.text     "custom_css"
     t.boolean  "use_bitmap_snapshots",                         :default => false
     t.boolean  "teachers_can_author",                          :default => true
-    t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
     t.boolean  "use_periodic_bundle_uploading",                :default => false
     t.string   "jnlp_cdn_hostname"
     t.integer  "pub_interval",                                 :default => 10
     t.text     "interactive_snapshot_instructions"
     t.text     "digital_microscope_snapshot_instructions"
+    t.string   "jnlp_url"
   end
 
   create_table "admin_tags", :force => true do |t|
@@ -834,120 +834,6 @@ ActiveRecord::Schema.define(:version => 20140206233021) do
   add_index "investigations", ["name"], :name => "index_investigations_on_name"
   add_index "investigations", ["publication_status"], :name => "index_investigations_on_publication_status", :length => {"publication_status"=>"10"}
   add_index "investigations", ["user_id"], :name => "index_investigations_on_user_id"
-
-  create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
-    t.integer "jar_id"
-    t.integer "versioned_jnlp_id"
-  end
-
-  create_table "maven_jnlp_icons", :force => true do |t|
-    t.string   "uuid"
-    t.string   "name"
-    t.string   "href"
-    t.integer  "height"
-    t.integer  "width"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "maven_jnlp_jars", :force => true do |t|
-    t.string   "uuid"
-    t.string   "name"
-    t.boolean  "main"
-    t.string   "os"
-    t.string   "href"
-    t.integer  "size"
-    t.integer  "size_pack_gz"
-    t.boolean  "signature_verified"
-    t.string   "version_str"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "maven_jnlp_maven_jnlp_families", :force => true do |t|
-    t.integer  "maven_jnlp_server_id"
-    t.string   "uuid"
-    t.string   "name"
-    t.string   "snapshot_version"
-    t.string   "url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "maven_jnlp_maven_jnlp_servers", :force => true do |t|
-    t.string   "uuid"
-    t.string   "host"
-    t.string   "path"
-    t.string   "name"
-    t.string   "local_cache_dir"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "maven_jnlp_native_libraries", :force => true do |t|
-    t.string   "uuid"
-    t.string   "name"
-    t.boolean  "main"
-    t.string   "os"
-    t.string   "href"
-    t.integer  "size"
-    t.integer  "size_pack_gz"
-    t.boolean  "signature_verified"
-    t.string   "version_str"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "maven_jnlp_properties", :force => true do |t|
-    t.string   "uuid"
-    t.string   "name"
-    t.string   "value"
-    t.string   "os"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "maven_jnlp_versioned_jnlp_urls", :force => true do |t|
-    t.string  "uuid"
-    t.integer "maven_jnlp_family_id"
-    t.string  "path"
-    t.string  "url"
-    t.string  "version_str"
-    t.string  "date_str",             :limit => 15
-  end
-
-  add_index "maven_jnlp_versioned_jnlp_urls", ["date_str"], :name => "index_maven_jnlp_versioned_jnlp_urls_on_date_str"
-  add_index "maven_jnlp_versioned_jnlp_urls", ["maven_jnlp_family_id"], :name => "index_maven_jnlp_versioned_jnlp_urls_on_maven_jnlp_family_id"
-  add_index "maven_jnlp_versioned_jnlp_urls", ["version_str"], :name => "index_maven_jnlp_versioned_jnlp_urls_on_version_str"
-
-  create_table "maven_jnlp_versioned_jnlps", :force => true do |t|
-    t.integer  "versioned_jnlp_url_id"
-    t.integer  "jnlp_icon_id"
-    t.string   "uuid"
-    t.string   "name"
-    t.string   "main_class"
-    t.string   "argument"
-    t.boolean  "offline_allowed"
-    t.boolean  "local_resource_signatures_verified"
-    t.boolean  "include_pack_gzip"
-    t.string   "spec"
-    t.string   "codebase"
-    t.string   "href"
-    t.string   "j2se_version"
-    t.integer  "max_heap_size"
-    t.integer  "initial_heap_size"
-    t.string   "title"
-    t.string   "vendor"
-    t.string   "homepage"
-    t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "native_libraries_versioned_jnlps", :id => false, :force => true do |t|
-    t.integer "native_library_id"
-    t.integer "versioned_jnlp_id"
-  end
 
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
     t.integer "otml_category_id"
@@ -2040,11 +1926,6 @@ ActiveRecord::Schema.define(:version => 20140206233021) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "driver_short_name"
-  end
-
-  create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
-    t.integer "property_id"
-    t.integer "versioned_jnlp_id"
   end
 
   create_table "report_embeddable_filters", :force => true do |t|

@@ -89,7 +89,7 @@ class Portal::LearnersController < ApplicationController
         @offering = @learner.offering
         render 'portal/offerings/show', :layout => "layouts/run"
       }
-      format.jnlp { render :partial => 'shared/learn_or_installer',
+      format.jnlp { render :partial => 'shared/installer',
         :locals => { :runnable => @portal_learner.offering.runnable, :learner => @portal_learner } }
       format.config { 
         # if this isn't the learner then it is launched read only

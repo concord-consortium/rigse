@@ -52,12 +52,6 @@
             (This option changes whether or not facilitators are considered authors by default.)
           %li
             %b
-            = f.label :opportunistic_installer, "Use JavaClientLauncher:", :style => "display:inline;"
-            = f.check_box :opportunistic_installer
-            %br
-            (This option changes the boot up process to use an existing installation or automatically install the necessary jars if no installation is found.)
-          %li
-            %b
             = f.label :allow_adhoc_schools, "Facilitators can create schools:", :style => "display:inline;"
             = f.check_box :allow_adhoc_schools
             %br
@@ -74,9 +68,14 @@
             = f.text_field :pub_interval, :size=>4
             %br
             ([ minimum value: #{Admin::Project::MinPubInterval} ] This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
+      - field_set_tag '<b>Jnlp</b>' do
+        %p
+          Jnlp URL:
+          = f.text_field :jnlp_url, :size => 60
+        %p
+          Jnlp CDN Hostname:
+          = f.text_field :jnlp_cdn_hostname, :size => 60
 
-      - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
-        = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
       - field_set_tag '<b>Snapshot Instructions</b>', { :id => dom_id_for(admin_project, :instructions)} do
         %p
           %b= "Digital Microscope"

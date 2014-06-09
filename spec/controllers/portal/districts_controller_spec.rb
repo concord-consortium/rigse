@@ -4,10 +4,9 @@ describe Portal::DistrictsController do
   integrate_views  
   def mock_district(_stubs={})
     stubs = {
-      :name => 'default district', 
+      :name => 'default district',
       :description => 'default district',
-      :changeable? => :flase, 
-      :authorable_in_java? => false,
+      :changeable? => :false,
       :schools => [],
       :nces_district_id => nil
     }

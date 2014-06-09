@@ -65,17 +65,6 @@
                     No
                   (Facilitators are not considered authors by default and can only author when given the "author" role.)
               %li
-                Use JavaClientLauncher:
-                - if admin_project.opportunistic_installer?
-                  %b
-                    Yes
-                  (The launcher will use an existing installation or automatically install the necessary jars if no installation is found.)
-                - else
-                  %b
-                    No
-                  (The launcher will use the configured jnlp directly, and launch via Java WebStart.)
-
-              %li
                 Facilitators can create schools:
                 - if admin_project.allow_adhoc_schools?
                   %b
@@ -101,19 +90,13 @@
                   = admin_project.pub_interval
                 (This option changes the rate at which student data is sent to the
                 server if periodic bundle uploading is turned on)
-            - field_set_tag 'Maven Jnlp' do
+            - field_set_tag '<b>Jnlp</b>' do
+              %p
+                Jnlp URL:
+                = admin_project.jnlp_url
               %p
                 Jnlp CDN Hostname:
                 = admin_project.jnlp_cdn_hostname
-              %p
-                Maven Jnlp Server:
-                - if admin_project.maven_jnlp_server
-                  = admin_project.maven_jnlp_server.name
-                  %ul.menu_h
-                    -  maven_jnlp_info.each do |elem|
-                      %li= elem
-                - else
-                  no server configured
             - field_set_tag '<b>Snapshot Instructions</b>' do
               %p
                 %b= "Digital Microscope:"
