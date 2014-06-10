@@ -17,17 +17,17 @@ module SaveableExtraction
     end
   end
 
-  def process_open_response(parent_id, answer)
+  def process_open_response(parent_id, answer, is_final = nil)
     if Embeddable::OpenResponse.find_by_id(parent_id)
       saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(@learner_id, @offering_id, parent_id)
       if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
-        saveable_open_response.answers.create(:bundle_content_id => self.id, :answer => answer)
+        saveable_open_response.answers.create(:bundle_content_id => self.id, :answer => answer, :is_final => is_final)
       end
     else
       logger.error("Missing Embeddable::OpenResponse id: #{parent_id}")
     end
   end
-  
+
   def extract_multiple_choices(extractor = Otrunk::ObjectExtractor.new(self.otml))
     @offering_id = self.learner.offering.id
     @learner_id = self.learner.id
@@ -54,7 +54,7 @@ module SaveableExtraction
     return rationales
   end
 
-  def process_multiple_choice(choice_ids, rationales = {})
+  def process_multiple_choice(choice_ids, rationales = {}, is_final = nil)
     choice = Embeddable::MultipleChoiceChoice.find_by_id(choice_ids.first, :include => :multiple_choice)
     multiple_choice = choice ? choice.multiple_choice : nil
     if multiple_choice && choice
@@ -64,7 +64,7 @@ module SaveableExtraction
          ((saveable.answers.last.rationale_choices.map{|rc| rc.choice_id} - choice_ids).size != 0) || # the actual selections differ
          ((saveable.answers.last.rationale_choices.map{|rc| rc.rationale}.compact - rationales.values).size != 0)    # the actual rationales differ
 
-        saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => multiple_choice.id)
+        saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => multiple_choice.id, :is_final => is_final)
         choice_ids.each do |choice_id|
           Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice_id, :answer_id => saveable_answer.id, :rationale => rationales[choice_id])
         end
@@ -77,7 +77,7 @@ module SaveableExtraction
       end
     end
   end
-  
+
   def extract_image_questions(extractor = Otrunk::ObjectExtractor.new(self.otml))
     @offering_id = self.learner.offering.id
     @learner_id = self.learner.id
