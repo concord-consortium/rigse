@@ -277,7 +277,8 @@ class ActivityRuntimeAPI
 
   def self.update_open_response(or_data, existant)
     existant.update_attributes(
-      :prompt => or_data["prompt"]
+      :prompt => or_data["prompt"],
+      :is_required => or_data["is_required"],
     )
     return existant
   end
@@ -285,6 +286,7 @@ class ActivityRuntimeAPI
   def self.create_open_response(or_data, user)
     Embeddable::OpenResponse.create(
       :prompt => or_data["prompt"],
+     # :is_required => or_data["is_required"],
       :external_id => or_data["id"],
       :user => user
     )
@@ -293,6 +295,7 @@ class ActivityRuntimeAPI
   def self.update_image_question(iq_data, existant)
     existant.update_attributes(
       :prompt => iq_data["prompt"],
+      :is_required => iq_data["is_required"],
       :drawing_prompt => iq_data["drawing_prompt"]
     )
     return existant
@@ -301,6 +304,7 @@ class ActivityRuntimeAPI
   def self.create_image_question(iq_data, user)
     Embeddable::ImageQuestion.create(
       :prompt => iq_data["prompt"],
+      :is_required => iq_data["is_required"],
       :drawing_prompt => iq_data["drawing_prompt"],
       :external_id => iq_data["id"],
       :user => user
@@ -310,6 +314,7 @@ class ActivityRuntimeAPI
   def self.update_mc_response(mc_data, existant)
     existant.update_attributes(
       :prompt => mc_data["prompt"],
+      :is_required => mc_data["is_required"],
       :allow_multiple_selection => mc_data["allow_multiple_selection"]
     )
     self.add_choices(existant,mc_data)
@@ -342,6 +347,7 @@ class ActivityRuntimeAPI
   def self.create_multiple_choice(mc_data, user)
     mc = Embeddable::MultipleChoice.create(
       :prompt => mc_data["prompt"],
+      :is_required => mc_data["is_required"],
       :external_id => mc_data["id"],
       :allow_multiple_selection => mc_data["allow_multiple_selection"],
       :user => user

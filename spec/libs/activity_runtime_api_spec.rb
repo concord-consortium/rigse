@@ -63,26 +63,30 @@ describe ActivityRuntimeAPI do
                 {
                   "type" => "open_response",
                   "id" => "1234568",
-                  "prompt" => "Why do you like/dislike this activity?"
+                  "prompt" => "Why do you like/dislike this activity?",
+                  "is_required" => true
                 },
                 {
                   "type" => "image_question",
                   "id" => "987654321",
                   "drawing_prompt" => '',
-                  "prompt" => "draw a picture of why you love this activity."
+                  "prompt" => "draw a picture of why you love this activity.",
+                  "is_required" => true
                 },
                 {
                   "type" => "image_question",
                   "id" => '5589',
                   "drawing_prompt" => "Really draw a picture",
-                  "prompt" => "Now explain the picture you drew"
+                  "prompt" => "Now explain the picture you drew",
+                  "is_required" => true
                 },
                 {
                   "type" => "multiple_choice",
                   "id" => "456789",
                   "prompt" => "What color is the sky?",
                   "allow_multiple_selection" => false,
-                  "choices" => choice_hash_array
+                  "choices" => choice_hash_array,
+                  "is_required" => true
                 }
               ]
             }
