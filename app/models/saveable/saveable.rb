@@ -25,4 +25,11 @@ module Saveable::Saveable
     self.send(self.class.embeddable_type(self)[:str])
   end
 
+  def submitted?
+    if answered?
+      answers.last.is_final
+    else
+      false
+    end
+  end
 end

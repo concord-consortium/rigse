@@ -2,6 +2,7 @@ $answered_color: white;
 $not_answered_color: #cccccc;
 $correct_color: #ddffdd;
 $incorrect_color: #ffdddd;
+$submitted_color: #ccc;
 
 .answered {
   background-color: $answered_color; }
@@ -50,6 +51,9 @@ $incorrect_color: #ffdddd;
 
 .optionbarbar.incorrect {
   background-color: $incorrect_color; }
+
+.optionbarbar.submitted {
+  background-color: $submitted_color; }
 
 .optionpercent {
   border-left: 2px solid black;

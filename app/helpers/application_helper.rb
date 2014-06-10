@@ -642,6 +642,7 @@ module ApplicationHelper
     total = reportUtil.learners.size
     answered = reportUtil.saveables(:embeddable => open_response, :answered => true).size
     skipped = total - answered
+    submitted = reportUtil.saveables(:embeddable => open_response, :submitted => true).size
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
@@ -651,11 +652,13 @@ module ApplicationHelper
       }
       haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
+        haml_tag(:div) { haml_concat("Submitted") }
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
       haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
+        haml_tag(:div) { haml_concat(submitted) }
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
       }
@@ -670,6 +673,7 @@ module ApplicationHelper
     answered_saveables = reportUtil.saveables(:embeddable => image_question, :answered => true)
     answered = answered_saveables.size
     skipped = total - answered
+    submitted = reportUtil.saveables(:embeddable => image_question, :submitted => true).size
     answers_map = answered_saveables.sort_by{|s| [s.learner.last_name, s.learner.first_name]}.map{|sa| {:name => sa.learner.name, :note => sa.answer[:note], :image_url => dataservice_blob_raw_url(:id => sa.answer[:blob].id, :token => sa.answer[:blob].token)} }
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -687,11 +691,13 @@ module ApplicationHelper
       }
       haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
+        haml_tag(:div) { haml_concat("Submitted") }
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
       haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
+        haml_tag(:div) { haml_concat(submitted) }
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
       }
@@ -732,6 +738,7 @@ module ApplicationHelper
       end
     end
     not_answered_count = answer_counts.has_key?("not answered") ? answer_counts["not answered"].to_i : 0
+    submitted = reportUtil.saveables(:embeddable => multiple_choice, :submitted => true).size
     all_choices = multiple_choice.choices
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -794,6 +801,23 @@ module ApplicationHelper
               }
               haml_tag(:div, :class => 'cell optioncount') {
                 haml_concat("#{not_answered_count}")
+              }
+            }
+            haml_tag(:div, :class => 'row') {
+              haml_tag(:div, :class => 'cell optioncheckmark')
+              haml_tag(:div, :class => 'cell optionlabel') {
+                haml_concat("Submitted")
+              }
+              haml_tag(:div, :class => 'cell optionbar') {
+                haml_tag(:div, :class => 'optionbarbar submitted', :id => "question_id_#{multiple_choice.id}_bar_graph_choice_submitted", :style => "width: #{percent(submitted, learners.size)}%;") {
+                  haml_concat("&nbsp;")
+                }
+              }
+              haml_tag(:div, :class => 'cell optionpercent') {
+                haml_concat(percent_str(submitted, learners.size))
+              }
+              haml_tag(:div, :class => 'cell optioncount') {
+                haml_concat("#{submitted}")
               }
             }
             haml_tag(:div, :class => 'row', :style => 'border-top: 2px solid black;') {
@@ -1249,7 +1273,7 @@ module ApplicationHelper
 
   # this appears to not be used in master right now
   def current_user_can_author
-    return true if current_visitor.has_role? "author" 
+    return true if current_visitor.has_role? "author"
     if settings_for(:teachers_can_author)
       return true unless current_visitor.portal_teacher.nil?
     end

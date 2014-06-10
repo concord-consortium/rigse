@@ -3,17 +3,17 @@ class Saveable::OpenResponse < ActiveRecord::Base
 
   belongs_to :learner,        :class_name => 'Portal::Learner'
   belongs_to :offering,        :class_name => 'Portal::Offering'
-  
+
   belongs_to :open_response,  :class_name => 'Embeddable::OpenResponse'
 
   has_many :answers, :dependent => :destroy ,:order => :position, :class_name => "Saveable::OpenResponseAnswer"
 
-  # has_one :answer, 
+  # has_one :answer,
   #   :class_name => "Saveable::OpenResponseAnswer",
-  #   :order => 'position DESC' 
-  
+  #   :order => 'position DESC'
+
   [:prompt, :name].each { |m| delegate m, :to => :open_response, :class_name => 'Embeddable::OpenResponse' }
-  
+
   include Saveable::Saveable
   def answer
     if answered?
@@ -22,7 +22,7 @@ class Saveable::OpenResponse < ActiveRecord::Base
       "not answered"
     end
   end
-  
+
   def answered?
     answers.length > 0
   end

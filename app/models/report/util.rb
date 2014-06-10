@@ -60,6 +60,7 @@ class Report::Util
       results = results & embeddables.map { |e| @saveables_by_embeddable[e]}.flatten
     end
     results = results & Array(@saveables_by_correct[true]) if options[:correct]
+    results = results & Array(@saveables_by_submittted[true]) if options[:submitted]
     return results
   end
 
@@ -100,6 +101,7 @@ class Report::Util
     @saveables_by_embeddable = {}
     @saveables_by_correct    = {}
     @saveables_by_answered   = {}
+    @saveables_by_submittted = {}
 
     reportables          = assignable.reportable_elements
 
@@ -112,9 +114,9 @@ class Report::Util
       end
     end
 
-    elements             = reportables.map       { |r| r[:element]    } 
-    @embeddables         = reportables.map       { |r| r[:embeddable] } 
-    @embeddables_by_type = @embeddables.group_by { |e| e.class.to_s   } 
+    elements             = reportables.map       { |r| r[:element]    }
+    @embeddables         = reportables.map       { |r| r[:embeddable] }
+    @embeddables_by_type = @embeddables.group_by { |e| e.class.to_s   }
 
     activity_lambda = lambda { |e| e[:activity] }
     section_lambda  = lambda { |e| e[:section]  }
@@ -158,10 +160,11 @@ class Report::Util
       Rails.logger.info(warning)
       @saveables = current
     end
-    @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
-    @saveables_by_learner_id = @saveables.group_by { |s| s.learner_id } 
-    @saveables_by_embeddable = @saveables.group_by { |s| s.embeddable } 
+    @saveables_by_answered   = @saveables.group_by { |s| s.answered?  }
+    @saveables_by_learner_id = @saveables.group_by { |s| s.learner_id }
+    @saveables_by_embeddable = @saveables.group_by { |s| s.embeddable }
     @saveables_by_correct    = @saveables.group_by { |s| (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false }
+    @saveables_by_submittted = @saveables.group_by { |s| s.submitted? }
   end
 
   def complete_number(learner,activity = nil)
@@ -173,14 +176,14 @@ class Report::Util
 
   def complete_percent(learner,activity = nil)
     completed = Float(complete_number(learner,activity))
-    if activity 
-      total = Float(activity.reportable_elements.map { |r| r[:embeddable]}.size)  
+    if activity
+      total = Float(activity.reportable_elements.map { |r| r[:embeddable]}.size)
     else
       total = Float(embeddables.size)
     end
     return total < 0.5 ? 0.0 : (completed/total) * 100.0
   end
-  
+
   def answered_number(learner)
     return saveables(:learner => learner, :answered => true).size
   end
