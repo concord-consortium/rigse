@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140610104843) do
+ActiveRecord::Schema.define(:version => 20140610183228) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -576,10 +576,11 @@ ActiveRecord::Schema.define(:version => 20140610104843) do
     t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "prompt"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.string   "external_id"
     t.text     "drawing_prompt"
+    t.boolean  "is_required",                  :default => false, :null => false
   end
 
   add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
@@ -642,6 +643,7 @@ ActiveRecord::Schema.define(:version => 20140610104843) do
     t.text     "rationale_prompt"
     t.boolean  "allow_multiple_selection",               :default => false
     t.string   "external_id"
+    t.boolean  "is_required",                            :default => false, :null => false
   end
 
   create_table "embeddable_mw_modeler_pages", :force => true do |t|
@@ -673,12 +675,13 @@ ActiveRecord::Schema.define(:version => 20140610104843) do
     t.text     "description"
     t.text     "prompt"
     t.string   "default_response"
-    t.datetime "created_at",                                     :null => false
-    t.datetime "updated_at",                                     :null => false
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
     t.integer  "rows",                           :default => 5
     t.integer  "columns",                        :default => 32
     t.integer  "font_size",                      :default => 12
     t.string   "external_id"
+    t.boolean  "is_required",                    :default => false, :null => false
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
