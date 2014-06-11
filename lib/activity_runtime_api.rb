@@ -276,49 +276,73 @@ class ActivityRuntimeAPI
   end
 
   def self.update_open_response(or_data, existant)
-    existant.update_attributes(
-      :prompt => or_data["prompt"],
-      :is_required => or_data["is_required"],
-    )
+    attrs = {
+      prompt: or_data["prompt"]
+    }
+    # Use default val provided by DB when nil
+    attrs[:is_required] = or_data["is_required"] unless or_data["is_required"].nil?
+    existant.update_attributes(attrs)
     return existant
   end
 
   def self.create_open_response(or_data, user)
-    Embeddable::OpenResponse.create(
-      :prompt => or_data["prompt"],
-      :is_required => or_data["is_required"],
-      :external_id => or_data["id"],
-      :user => user
-    )
+    attrs = {
+      prompt: or_data["prompt"],
+      external_id: or_data["id"],
+      user: user
+    }
+    # Use default values provided by DB when nil
+    attrs[:is_required] = or_data["is_required"] unless or_data["is_required"].nil?
+    Embeddable::OpenResponse.create(attrs)
   end
 
   def self.update_image_question(iq_data, existant)
-    existant.update_attributes(
-      :prompt => iq_data["prompt"],
-      :is_required => iq_data["is_required"],
-      :drawing_prompt => iq_data["drawing_prompt"]
-    )
+    attrs = {
+      prompt: iq_data["prompt"],
+      drawing_prompt: iq_data["drawing_prompt"]
+    }
+    # Use default values provided by DB when nil
+    attrs[:is_required] = iq_data["is_required"] unless iq_data["is_required"].nil?
+    existant.update_attributes(attrs)
     return existant
   end
 
   def self.create_image_question(iq_data, user)
-    Embeddable::ImageQuestion.create(
+    attrs = {
       :prompt => iq_data["prompt"],
-      :is_required => iq_data["is_required"],
       :drawing_prompt => iq_data["drawing_prompt"],
       :external_id => iq_data["id"],
       :user => user
-    )
+    }
+    # Use default values provided by DB when nil
+    attrs[:is_required] = iq_data["is_required"] unless iq_data["is_required"].nil?
+    Embeddable::ImageQuestion.create(attrs)
   end
 
   def self.update_mc_response(mc_data, existant)
-    existant.update_attributes(
-      :prompt => mc_data["prompt"],
-      :is_required => mc_data["is_required"],
-      :allow_multiple_selection => mc_data["allow_multiple_selection"]
-    )
-    self.add_choices(existant,mc_data)
+    attrs = {
+      prompt: mc_data["prompt"],
+      allow_multiple_selection: mc_data["allow_multiple_selection"]
+    }
+    # Use default values provided by DB when nil
+    attrs[:is_required] = mc_data["is_required"] unless mc_data["is_required"].nil?
+    existant.update_attributes(attrs)
+    self.add_choices(existant, mc_data)
     return existant
+  end
+
+  def self.create_multiple_choice(mc_data, user)
+    attrs = {
+      prompt: mc_data["prompt"],
+      external_id: mc_data["id"],
+      allow_multiple_selection: mc_data["allow_multiple_selection"],
+      user: user
+    }
+    # Use default values provided by DB when nil
+    attrs[:is_required] = mc_data["is_required"] unless mc_data["is_required"].nil?
+    mc = Embeddable::MultipleChoice.create(attrs)
+    self.add_choices(mc, mc_data)
+    return mc
   end
 
   def self.add_choices(mc, mc_data)
@@ -342,18 +366,5 @@ class ActivityRuntimeAPI
     end
     mc.choices = new_choice_set
     mc.save
-  end
-
-  def self.create_multiple_choice(mc_data, user)
-    mc = Embeddable::MultipleChoice.create(
-      :prompt => mc_data["prompt"],
-      :is_required => mc_data["is_required"],
-      :external_id => mc_data["id"],
-      :allow_multiple_selection => mc_data["allow_multiple_selection"],
-      :user => user
-    )
-    self.add_choices(mc,mc_data)
-
-    return mc
   end
 end
