@@ -13,7 +13,7 @@ describe Saveable::SaveableStandin do
     @nil_standin.should respond_to :embeddable
   end
 
-  it "should respond to submitted?" dp
+  it "should respond to submitted?" do
     @nil_standin.should respond_to :submitted?
   end
 
