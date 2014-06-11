@@ -92,7 +92,11 @@ $submitted_color: #ccc;
     background-color: $incorrect_color; }
   .learner_response_name {
     font-weight: bold;
-    width: 200px;
+    width: 135px;
+    vertical-align: top; }
+  .learner_response_submitted {
+    font-weight: bold;
+    width: 60px;
     vertical-align: top; }
   .learner_response_checkmark {
     font-weight: bold;
@@ -112,7 +116,24 @@ $submitted_color: #ccc;
     vertical-align: top; }
   .learner_response_rationale {
     width: 255px;
-    vertical-align: top; } }
+    vertical-align: top; }
+}
+
+.tag {
+  background: #CEB3DA;
+  border: 0 solid #CEB3DA;
+  color: white;
+  font: 12px / 1 Arial, Helvetica, sans-serif;
+  padding: 1px 2px !important;
+  /* CSS 3 */
+  background: -webkit-gradient(linear, left top, left bottom, from(#CEB3DA), to(#8A7E91));
+  background: -moz-linear-gradient(top, #CEB3DA, #8A7E91);
+  border-radius: 4px;
+  /* Opera 10.5, IE 9 */
+  -moz-border-radius: 4px;
+  /* FF1+ */
+  -webkit-border-radius: 4px;
+  /* Saf3+, Chrome */ }
 
 .inline_block {
   display: -moz-inline-block;

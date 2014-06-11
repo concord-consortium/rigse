@@ -1,4 +1,5 @@
 = accordion_for(embeddable, offering_details_multiple_choice(offering, embeddable), nil, {:show_hide_text => "show responses"}) do
+  - embeddable_required = embeddable.is_required
   - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
     - saveable = saveable_for_learner(embeddable, l)
     - css_style = saveable.answered? ? 'answered' : 'not_answered'
@@ -10,6 +11,10 @@
     %div{:id => dom_id_for(embeddable, :saveable, :learner, l.id), :class => "#{css_style} learner_response inline_block"}
       %div{:class => "#{css_style} learner_response_name inline_block"}
         = l.name
+      - if embeddable_required
+        %div{:class => "learner_response_submitted inline_block"}
+          - if saveable.submitted?
+            %span.tag= 'submitted'
       %div{:class => "#{css_style} learner_response_content inline_block"}
         - saveable.answer.each do |answer|
           .learner_response_content_part

@@ -639,26 +639,34 @@ module ApplicationHelper
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
     reportUtil = Report::Util.factory(offering)
+    required = open_response.is_required
     total = reportUtil.learners.size
     answered = reportUtil.saveables(:embeddable => open_response, :answered => true).size
     skipped = total - answered
-    submitted = reportUtil.saveables(:embeddable => open_response, :submitted => true).size
+    submitted = reportUtil.saveables(:embeddable => open_response, :submitted => true).size if required
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
       end
-      haml_tag(:div, :class => 'item report_question_prompt') {
+      haml_tag(:div, :class => 'report_question_prompt') {
         haml_concat(open_response.prompt)
       }
+      if required
+        haml_tag(:div) {
+          haml_tag(:span, :class => 'tag') {
+            haml_concat("required")
+          }
+        }
+      end
       haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
-        haml_tag(:div) { haml_concat("Submitted") }
+        haml_tag(:div) { haml_concat("Submitted") } if required
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
       haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
-        haml_tag(:div) { haml_concat(submitted) }
+        haml_tag(:div) { haml_concat(submitted) } if required
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
       }
@@ -668,13 +676,21 @@ module ApplicationHelper
   def offering_details_image_question(offering, image_question, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
+    required = image_question.is_required
     reportUtil = Report::Util.factory(offering)
     total = reportUtil.learners.size
     answered_saveables = reportUtil.saveables(:embeddable => image_question, :answered => true)
     answered = answered_saveables.size
     skipped = total - answered
-    submitted = reportUtil.saveables(:embeddable => image_question, :submitted => true).size
-    answers_map = answered_saveables.sort_by{|s| [s.learner.last_name, s.learner.first_name]}.map{|sa| {:name => sa.learner.name, :note => sa.answer[:note], :image_url => dataservice_blob_raw_url(:id => sa.answer[:blob].id, :token => sa.answer[:blob].token)} }
+    submitted = reportUtil.saveables(:embeddable => image_question, :submitted => true).size if required
+    answers_map = answered_saveables.sort_by { |s| [s.learner.last_name, s.learner.first_name] }.map do |sa|
+      {
+        name: sa.learner.name,
+        note: sa.answer[:note],
+        submitted: sa.submitted?,
+        image_url: dataservice_blob_raw_url(:id => sa.answer[:blob].id, :token => sa.answer[:blob].token)
+      }
+    end
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
@@ -688,16 +704,23 @@ module ApplicationHelper
         haml_tag(:div, :class => 'image-question-text-prompt') {
           haml_concat(image_question.prompt)
         }
+        if required
+          haml_tag(:div) {
+            haml_tag(:span, :class => 'tag') {
+              haml_concat("required")
+            }
+          }
+        end
       }
       haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
-        haml_tag(:div) { haml_concat("Submitted") }
+        haml_tag(:div) { haml_concat("Submitted") } if required
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
       haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
-        haml_tag(:div) { haml_concat(submitted) }
+        haml_tag(:div) { haml_concat(submitted) } if required
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
       }
@@ -714,6 +737,11 @@ module ApplicationHelper
                   haml_tag(:div, :class => 'note') {
                     haml_concat(b[:note])
                   }
+                  if b[:submitted]
+                    haml_tag(:span, :class => 'tag') {
+                      haml_concat('submitted')
+                    }
+                  end
                 }
               }
             end
@@ -727,6 +755,7 @@ module ApplicationHelper
   def offering_details_multiple_choice(offering, multiple_choice, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
+    required = multiple_choice.is_required
     answer_counts = {}
     reportUtil = Report::Util.factory(offering)
     learners = reportUtil.learners
@@ -745,9 +774,16 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_left'
       end
       haml_tag(:div) {
-        haml_tag(:div, :class => 'item') {
+        haml_tag(:div) {
           haml_concat(multiple_choice.prompt)
         }
+        if required
+          haml_tag(:div) {
+            haml_tag(:span, :class => 'tag') {
+              haml_concat("required")
+            }
+          }
+        end
         haml_tag(:div) {
           haml_tag(:div, :class => 'table') {
             haml_tag(:div, :class => 'row', :style => 'display: none;') {
@@ -803,23 +839,25 @@ module ApplicationHelper
                 haml_concat("#{not_answered_count}")
               }
             }
-            haml_tag(:div, :class => 'row') {
-              haml_tag(:div, :class => 'cell optioncheckmark')
-              haml_tag(:div, :class => 'cell optionlabel') {
-                haml_concat("Submitted")
-              }
-              haml_tag(:div, :class => 'cell optionbar') {
-                haml_tag(:div, :class => 'optionbarbar submitted', :id => "question_id_#{multiple_choice.id}_bar_graph_choice_submitted", :style => "width: #{percent(submitted, learners.size)}%;") {
-                  haml_concat("&nbsp;")
+            if required
+              haml_tag(:div, :class => 'row') {
+                haml_tag(:div, :class => 'cell optioncheckmark')
+                haml_tag(:div, :class => 'cell optionlabel') {
+                  haml_concat("Submitted")
+                }
+                haml_tag(:div, :class => 'cell optionbar') {
+                  haml_tag(:div, :class => 'optionbarbar submitted', :id => "question_id_#{multiple_choice.id}_bar_graph_choice_submitted", :style => "width: #{percent(submitted, learners.size)}%;") {
+                    haml_concat("&nbsp;")
+                  }
+                }
+                haml_tag(:div, :class => 'cell optionpercent') {
+                  haml_concat(percent_str(submitted, learners.size))
+                }
+                haml_tag(:div, :class => 'cell optioncount') {
+                  haml_concat("#{submitted}")
                 }
               }
-              haml_tag(:div, :class => 'cell optionpercent') {
-                haml_concat(percent_str(submitted, learners.size))
-              }
-              haml_tag(:div, :class => 'cell optioncount') {
-                haml_concat("#{submitted}")
-              }
-            }
+            end
             haml_tag(:div, :class => 'row', :style => 'border-top: 2px solid black;') {
               haml_tag(:div, :class => 'cell optioncheckmark')
               haml_tag(:div, :class => 'cell optionlabel') {
