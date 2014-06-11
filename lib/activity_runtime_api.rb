@@ -286,7 +286,7 @@ class ActivityRuntimeAPI
   def self.create_open_response(or_data, user)
     Embeddable::OpenResponse.create(
       :prompt => or_data["prompt"],
-     # :is_required => or_data["is_required"],
+      :is_required => or_data["is_required"],
       :external_id => or_data["id"],
       :user => user
     )
