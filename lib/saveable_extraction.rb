@@ -20,7 +20,10 @@ module SaveableExtraction
   def process_open_response(parent_id, answer, is_final = nil)
     if Embeddable::OpenResponse.find_by_id(parent_id)
       saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(@learner_id, @offering_id, parent_id)
-      if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
+      if saveable_open_response.response_count == 0 ||
+         saveable_open_response.answers.last.answer != answer ||
+         saveable_open_response.answers.last.is_final != is_final
+
         saveable_open_response.answers.create(:bundle_content_id => self.id, :answer => answer, :is_final => is_final)
       end
     else
@@ -62,7 +65,8 @@ module SaveableExtraction
       if saveable.answers.empty? || # we don't have any answers yet
          saveable.answers.last.answer.size != choice_ids.size || # the number of selected choices differs
          ((saveable.answers.last.rationale_choices.map{|rc| rc.choice_id} - choice_ids).size != 0) || # the actual selections differ
-         ((saveable.answers.last.rationale_choices.map{|rc| rc.rationale}.compact - rationales.values).size != 0)    # the actual rationales differ
+         ((saveable.answers.last.rationale_choices.map{|rc| rc.rationale}.compact - rationales.values).size != 0) || # the actual rationales differ
+         saveable.answers.last.is_final != is_final # is_final differs (answer is explicitly submitted by learner)
 
         saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => multiple_choice.id, :is_final => is_final)
         choice_ids.each do |choice_id|
