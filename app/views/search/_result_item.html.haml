@@ -81,10 +81,11 @@
                 (Assigned to
                 = offering_clazz_names.join(", ")+")"
 .material_body
-  - if current_visitor.portal_teacher && material.description_for_teacher.present?
-    = material.description_for_teacher.html_safe
-  - elsif material.description.present?
-    = material.description.html_safe
+  %div
+    - if current_visitor.portal_teacher && material.description_for_teacher.present?
+      = strip_tags material.description_for_teacher
+    - elsif material.description.present?
+      = strip_tags material.description
   = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
   %div
     %i
