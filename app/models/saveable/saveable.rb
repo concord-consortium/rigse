@@ -11,7 +11,7 @@ module Saveable::Saveable
     def embeddable_type(instance)
       @embeddable_type ||= get_embeddable_type(instance)
     end
-    def get_possible_types
+  def get_possible_types
       @possible_types = ResponseTypes.reportable_types.map{ |t|  {:klass => t, :str => t.to_s.demodulize.underscore} }
       @possible_types
     end
@@ -26,10 +26,13 @@ module Saveable::Saveable
   end
 
   def submitted?
-    if answered?
-      answers.last.is_final
+    # Note that we consider regular questions (not required) as submitted when
+    # they have any answer available. Required questions have to have the last
+    # answer explicitly marked as final (submitted).
+    if embeddable.is_required
+      answered? && answers.last.is_final
     else
-      false
+      answered?
     end
   end
 end

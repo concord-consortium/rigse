@@ -641,9 +641,8 @@ module ApplicationHelper
     reportUtil = Report::Util.factory(offering)
     required = open_response.is_required
     total = reportUtil.learners.size
-    answered = reportUtil.saveables(:embeddable => open_response, :answered => true).size
+    answered = reportUtil.saveables(:embeddable => open_response, :submitted => true).size
     skipped = total - answered
-    submitted = reportUtil.saveables(:embeddable => open_response, :submitted => true).size if required
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
@@ -660,13 +659,11 @@ module ApplicationHelper
       end
       haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
-        haml_tag(:div) { haml_concat("Submitted") } if required
-        haml_tag(:div) { haml_concat("Skipped") }
+        haml_tag(:div) { haml_concat("Not answered") }
         haml_tag(:div) { haml_concat("Total") }
       }
       haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
-        haml_tag(:div) { haml_concat(submitted) } if required
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
       }
@@ -679,15 +676,13 @@ module ApplicationHelper
     required = image_question.is_required
     reportUtil = Report::Util.factory(offering)
     total = reportUtil.learners.size
-    answered_saveables = reportUtil.saveables(:embeddable => image_question, :answered => true)
+    answered_saveables = reportUtil.saveables(:embeddable => image_question, :submitted => true)
     answered = answered_saveables.size
     skipped = total - answered
-    submitted = reportUtil.saveables(:embeddable => image_question, :submitted => true).size if required
     answers_map = answered_saveables.sort_by { |s| [s.learner.last_name, s.learner.first_name] }.map do |sa|
       {
         name: sa.learner.name,
         note: sa.answer[:note],
-        submitted: sa.submitted?,
         image_url: dataservice_blob_raw_url(:id => sa.answer[:blob].id, :token => sa.answer[:blob].token)
       }
     end
@@ -714,13 +709,11 @@ module ApplicationHelper
       }
       haml_tag(:div, :class => 'report_question_summary_title') {
         haml_tag(:div) { haml_concat("Answered") }
-        haml_tag(:div) { haml_concat("Submitted") } if required
-        haml_tag(:div) { haml_concat("Skipped") }
+        haml_tag(:div) { haml_concat("Not answered") }
         haml_tag(:div) { haml_concat("Total") }
       }
       haml_tag(:div, :class => 'report_question_summary_info') {
         haml_tag(:div) { haml_concat(answered) }
-        haml_tag(:div) { haml_concat(submitted) } if required
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
       }
@@ -737,11 +730,6 @@ module ApplicationHelper
                   haml_tag(:div, :class => 'note') {
                     haml_concat(b[:note])
                   }
-                  if b[:submitted]
-                    haml_tag(:span, :class => 'tag') {
-                      haml_concat('submitted')
-                    }
-                  end
                 }
               }
             end
@@ -761,13 +749,13 @@ module ApplicationHelper
     learners = reportUtil.learners
     learners.each do |learner|
       saveable = reportUtil.saveable(learner, multiple_choice)
-      saveable.answer.each do |answer|
+      saveable.submitted_answer.each do |answer|
         answer_counts[answer[:answer]] ||= 0
         answer_counts[answer[:answer]] += 1
       end
     end
     not_answered_count = answer_counts.has_key?("not answered") ? answer_counts["not answered"].to_i : 0
-    submitted = reportUtil.saveables(:embeddable => multiple_choice, :submitted => true).size
+    not_answered_count += answer_counts.has_key?("not submitted") ? answer_counts["not submitted"].to_i : 0
     all_choices = multiple_choice.choices
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -839,25 +827,6 @@ module ApplicationHelper
                 haml_concat("#{not_answered_count}")
               }
             }
-            if required
-              haml_tag(:div, :class => 'row') {
-                haml_tag(:div, :class => 'cell optioncheckmark')
-                haml_tag(:div, :class => 'cell optionlabel') {
-                  haml_concat("Submitted")
-                }
-                haml_tag(:div, :class => 'cell optionbar') {
-                  haml_tag(:div, :class => 'optionbarbar submitted', :id => "question_id_#{multiple_choice.id}_bar_graph_choice_submitted", :style => "width: #{percent(submitted, learners.size)}%;") {
-                    haml_concat("&nbsp;")
-                  }
-                }
-                haml_tag(:div, :class => 'cell optionpercent') {
-                  haml_concat(percent_str(submitted, learners.size))
-                }
-                haml_tag(:div, :class => 'cell optioncount') {
-                  haml_concat("#{submitted}")
-                }
-              }
-            end
             haml_tag(:div, :class => 'row', :style => 'border-top: 2px solid black;') {
               haml_tag(:div, :class => 'cell optioncheckmark')
               haml_tag(:div, :class => 'cell optionlabel') {

@@ -20,7 +20,17 @@ class Saveable::ImageQuestion < ActiveRecord::Base
     if answered?
       answers.last.answer
     else
-      "not answered"
+      'not answered'
+    end
+  end
+
+    def submitted_answer
+    if submitted?
+      answers.last.answer
+    elsif answered?
+      'not submitted'
+    else
+      'not answered'
     end
   end
 

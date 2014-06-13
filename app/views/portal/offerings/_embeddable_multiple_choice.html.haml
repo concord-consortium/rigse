@@ -2,8 +2,8 @@
   - embeddable_required = embeddable.is_required
   - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
     - saveable = saveable_for_learner(embeddable, l)
-    - css_style = saveable.answered? ? 'answered' : 'not_answered'
-    - if saveable.answered?
+    - css_style = saveable.submitted? ? 'answered' : 'not_answered'
+    - if saveable.submitted?
       - if embeddable.has_correct_answer?
         - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect'
       - else
@@ -11,12 +11,8 @@
     %div{:id => dom_id_for(embeddable, :saveable, :learner, l.id), :class => "#{css_style} learner_response inline_block"}
       %div{:class => "#{css_style} learner_response_name inline_block"}
         = l.name
-      - if embeddable_required
-        %div{:class => "learner_response_submitted inline_block"}
-          - if saveable.submitted?
-            %span.tag= 'submitted'
       %div{:class => "#{css_style} learner_response_content inline_block"}
-        - saveable.answer.each do |answer|
+        - saveable.submitted_answer.each do |answer|
           .learner_response_content_part
             .learner_response_checkmark.inline_block
               = answer[:correct] ? "&#x2713;".html_safe : ""

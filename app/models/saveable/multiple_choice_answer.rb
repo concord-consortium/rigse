@@ -23,6 +23,16 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
     end
   end
 
+  def submitted_answer
+    if submitted? && answered?
+      answer
+    elsif answered?
+      [{:answer => "not submitted"}]
+    else
+      [{:answer => "not answered"}]
+    end
+  end
+
   def answered_correctly?
     if rationale_choices.size > 0
       choices = rationale_choices.compact.select{|rc| rc.choice }.map{|rc| rc.choice.is_correct }

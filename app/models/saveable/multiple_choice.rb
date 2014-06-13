@@ -20,12 +20,22 @@ class Saveable::MultipleChoice < ActiveRecord::Base
     end
   end
 
+  def submitted_answer
+    if submitted?
+      answers.last.answer
+    elsif answered?
+      [{:answer => "not submitted"}]
+    else
+      [{:answer => "not answered"}]
+    end
+  end
+
   def answered?
     answers.length > 0
   end
 
   def answered_correctly?
-    if answered?
+    if submitted?
       answers.last.answered_correctly?
     else
       false
