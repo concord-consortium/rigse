@@ -44,9 +44,9 @@ class Report::UtilLearner
     if activity
       # filter saveables by only the embeddables with the same activity
       embeddables = @reportables.select { |r| r[:activity] && r[:activity].id == activity.id}.map { |r| r[:embeddable]}
-      saveables.count { |s| embeddables.include? s.embeddable }
+      saveables.count { |s| s.submitted? && embeddables.include?(s.embeddable) }
     else
-      saveables.size
+      saveables.count { |s| s.submitted? }
     end
   end
 

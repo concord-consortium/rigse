@@ -67,6 +67,7 @@ class Report::Learner < ActiveRecord::Base
     # We need to populate these field
     self.num_answerables = report_util.embeddables.size
     self.num_answered = report_util.saveables.count { |s| s.answered? }
+    self.num_submitted = report_util.saveables.count { |s| s.submitted? }
     self.num_correct = report_util.saveables.count { |s|
       (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false
     }
@@ -78,7 +79,7 @@ class Report::Learner < ActiveRecord::Base
     # AU: We'll use a serialized column to store a hash, for now
     answers_hash = {}
     report_util.saveables.each do |s|
-      hash = {:answer => s.answer, :answered => s.answered? }
+      hash = {:answer => s.answer, :answered => s.answered?, :submitted => s.submitted? }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
       if hash[:answer].is_a? Hash
         if hash[:answer][:blob]
@@ -145,6 +146,7 @@ class Report::Learner < ActiveRecord::Base
     else
       self.num_answerables = 0
       self.num_answered = 0
+      self.num_submitted = 0
       self.num_correct = 0
       self.complete_percent = 99.9
       self.last_run = Time.now
@@ -172,7 +174,7 @@ class Report::Learner < ActiveRecord::Base
     elsif assignable.is_a? ::Activity
       activities = [assignable]
     end
-    
+
     activities.each do|activity|
       complete_percent = report_util.complete_percent(activity)
       report_learner_activity = Report::LearnerActivity.find_or_create_by_learner_id_and_activity_id(self.learner.id, activity.id)
@@ -180,5 +182,5 @@ class Report::Learner < ActiveRecord::Base
       report_learner_activity.save!
     end
   end
-  
+
 end

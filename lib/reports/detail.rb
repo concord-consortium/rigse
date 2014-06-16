@@ -125,7 +125,7 @@ class Reports::Detail < Reports::Excel
         correctable = runnable.reportable_elements.select {|r| r[:embeddable].respond_to? :correctable? }
         # <=================================================>
         total_assessments = l.num_answerables
-        assess_completed = l.num_answered
+        assess_completed = l.num_submitted
         # <=================================================>
         total_by_container = get_containers(runnable).inject(0) { |a,b| a + b.reportable_elements.size}
         assess_percent = percent(assess_completed, total_assessments)
@@ -139,16 +139,16 @@ class Reports::Detail < Reports::Excel
         all_answers = []
         get_containers(runnable).each do |container|
           # <=================================================>
-          reportables = container.reportable_elements.map {|re| re[:embeddable] }
-          answers = reportables.map{|r| l.answers["#{r.class.to_s}|#{r.id}"] || default_answer_for(r) }
+          reportables = container.reportable_elements.map { |re| re[:embeddable] }
+          answers = reportables.map { |r| l.answers["#{r.class.to_s}|#{r.id}"] || default_answer_for(r) }
           #Bellow is bad, it gets the answers in the wrong order!
           #answers = @report_utils[l.offering].saveables(:learner => l, :embeddables => reportables )
-          answered_answers = answers.select{|s| s[:answered]  }
-          correct_answers  = answers.select{|s| s[:is_correct]}
+          submitted_answers = answers.select { |s| s[:submitted] }
+          correct_answers  = answers.select { |s| s[:is_correct] }
           # <=================================================>
           # TODO: weed out answers with no length, or which are empty
-          row.concat [answered_answers.size, percent(answered_answers.size, reportables.size)]
-          all_answers += answers.collect{|ans|
+          row.concat [submitted_answers.size, percent(submitted_answers.size, reportables.size)]
+          all_answers += answers.collect { |ans|
             if ans[:answer].kind_of?(Hash) && ans[:answer][:type] == "Dataservice::Blob"
               blob = ans[:answer]
               if blob[:id] && blob[:token]
