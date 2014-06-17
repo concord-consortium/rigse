@@ -163,12 +163,12 @@ class Reports::Detail < Reports::Excel
                 res = ["not answered", ""]
               end
             else
+              answer_value = ans[:answer].kind_of?(Enumerable) ? ans[:answer].map { |a| a[:answer] }.join(', ') : ans[:answer]
               case ans[:is_correct]
-                when true then res = ["(correct) #{ans[:answer]}"]
-                when nil then res = [ans[:answer]]
-                when false then res = ["(wrong) #{ans[:answer]}"]
+                when true then res = ["(correct) #{answer_value}"]
+                when nil then res = [answer_value]
+                when false then res = ["(wrong) #{answer_value}"]
               end
-              # "#{(ans[:is_correct] ? "(correct)" : "")}#{ans[:answer]}"
             end
             res << (ans[:submitted] ? "yes" : "no") if ans[:question_required]
             res
