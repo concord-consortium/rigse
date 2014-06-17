@@ -88,6 +88,10 @@ class Reports::Detail < Reports::Excel
         reportable_header_counter += 1
         answer_defs << Reports::ColumnDefinition.new(:title => 'note', :width => 25, :left_border => :none)
       end
+      if r.is_required?
+        reportable_header_counter += 1
+        answer_defs << Reports::ColumnDefinition.new(:title => 'submitted', :width => 10, :left_border => :none)
+      end
       first = false
     end # reportables
     return reportable_header_counter
@@ -149,22 +153,25 @@ class Reports::Detail < Reports::Excel
           # TODO: weed out answers with no length, or which are empty
           row.concat [submitted_answers.size, percent(submitted_answers.size, reportables.size)]
           all_answers += answers.collect { |ans|
+            res = nil
             if ans[:answer].kind_of?(Hash) && ans[:answer][:type] == "Dataservice::Blob"
               blob = ans[:answer]
               if blob[:id] && blob[:token]
                 url = "#{@blobs_url}/#{blob[:id]}/#{blob[:token]}.#{blob[:file_extension]}"
-                [Spreadsheet::Link.new(url, url), (ans[:answer][:note] || "")]
+                res = [Spreadsheet::Link.new(url, url), (ans[:answer][:note] || "")]
               else
-                ["not answered", ""]
+                res = ["not answered", ""]
               end
             else
               case ans[:is_correct]
-                when true then "(correct) #{ans[:answer]}"
-                when nil then ans[:answer]
-                when false then "(wrong) #{ans[:answer]}"
+                when true then res = ["(correct) #{ans[:answer]}"]
+                when nil then res = [ans[:answer]]
+                when false then res = ["(wrong) #{ans[:answer]}"]
               end
               # "#{(ans[:is_correct] ? "(correct)" : "")}#{ans[:answer]}"
             end
+            res << (ans[:submitted] ? "yes" : "no") if ans[:question_required]
+            res
           }.flatten
         end
         row.concat all_answers
@@ -175,8 +182,8 @@ class Reports::Detail < Reports::Excel
 
   def default_answer_for(embeddable)
     if embeddable.is_a?(Embeddable::ImageQuestion)
-      return {:answered => false, :answer => {:type => "Dataservice::Blob"}}
+      return {:answered => false, :answer => {:type => "Dataservice::Blob"}, :submitted => false, :question_required => embeddable.is_required }
     end
-    return {:answered => false, :answer => "not answered"}
+    return {:answered => false, :answer => "not answered", :submitted => false, :question_required => embeddable.is_required }
   end
 end

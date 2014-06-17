@@ -79,7 +79,7 @@ class Report::Learner < ActiveRecord::Base
     # AU: We'll use a serialized column to store a hash, for now
     answers_hash = {}
     report_util.saveables.each do |s|
-      hash = {:answer => s.answer, :answered => s.answered?, :submitted => s.submitted? }
+      hash = {:answer => s.answer, :answered => s.answered?, :submitted => s.submitted?, :question_required => s.embeddable.is_required }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
       if hash[:answer].is_a? Hash
         if hash[:answer][:blob]
