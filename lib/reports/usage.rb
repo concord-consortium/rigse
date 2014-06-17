@@ -22,7 +22,7 @@ class Reports::Usage < Reports::Excel
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
       Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
     ]
-    
+
     @runnable_start_column = {}
     @sheet_defs = [[]]
     @runnables.each do |runnable|
@@ -73,7 +73,7 @@ class Reports::Usage < Reports::Excel
         row = rows[@runnable_start_column[runnable][:sheet]]
         if (l)
           total_assessments = l.num_answerables
-          assess_completed =  l.num_answered
+          assess_completed =  l.num_submitted
           assess_percent = percent(assess_completed, total_assessments)
           last_run = l.last_run || 'never'
           row_vals = [assess_completed, assess_percent, last_run]
