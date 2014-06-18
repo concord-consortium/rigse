@@ -81,10 +81,14 @@ class Reports::Usage < Reports::Excel
             children = (get_containers(runnable) - [runnable])
             children.each do |child|
               reportables = child.reportable_elements.map {|re| re[:embeddable] }
-              answers = reportables.map{|r| l.answers["#{r.class.to_s}|#{r.id}"] || {:answered => false, :answer => "not answered"} }
-              answered_answers = answers.select {|a| a[:answered] }.size
-              row_vals << answered_answers
-              row_vals << percent(answered_answers, reportables.size)
+              answers = reportables.map{|r| l.answers["#{r.class.to_s}|#{r.id}"] || {:answered => false, :submitted => false, :answer => "not answered"} }
+              # a[:submitted] may be nil, as this hash key was added much later. Previously there was no notion
+              # of submitted question, they were only answered or not. In theory we could add DB migration that
+              # would update this hash (see answers attribute in Report::Learner), but that would be non-trivial
+              # and migration itself would be very time consuming (I've done some experiments in console).
+              submitted_answers = answers.select { |a| a[:submitted].nil? ? a[:answered] : a[:submitted] }.size
+              row_vals << submitted_answers
+              row_vals << percent(submitted_answers, reportables.size)
             end
           end
 

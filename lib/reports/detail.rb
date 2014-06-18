@@ -147,7 +147,11 @@ class Reports::Detail < Reports::Excel
           answers = reportables.map { |r| l.answers["#{r.class.to_s}|#{r.id}"] || default_answer_for(r) }
           #Bellow is bad, it gets the answers in the wrong order!
           #answers = @report_utils[l.offering].saveables(:learner => l, :embeddables => reportables )
-          submitted_answers = answers.select { |s| s[:submitted] }
+          # s[:submitted] may be nil, as this hash key was added much later. Previously there was no notion
+          # of submitted question, they were only answered or not. In theory we could add DB migration that
+          # would update this hash (see answers attribute in Report::Learner), but that would be non-trivial
+          # and migration itself would be very time consuming (I've done some experiments in console).
+          submitted_answers = answers.select { |s| s[:submitted].nil? ? s[:answered] : s[:submitted] }
           correct_answers  = answers.select { |s| s[:is_correct] }
           # <=================================================>
           # TODO: weed out answers with no length, or which are empty
