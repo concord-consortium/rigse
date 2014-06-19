@@ -26,15 +26,9 @@
             = "#{i+1}. #{choice.choice}"
           .rationale.inline_block
             = rationale
-      - if saveable.submitted_answer.size == 1 && saveable.submitted_answer.first[:answer] == 'not answered'
+      - unless saveable.submitted?
         .item.choice
           .optioncheckmark.inline_block
             = incorrect_check
           .inline_block.not_answered{:style => 'font-weight: bold;'}
-            = 'not answered'
-      - if saveable.submitted_answer.size == 1 && saveable.submitted_answer.first[:answer] == 'not submitted'
-        .item.choice
-          .optioncheckmark.inline_block
-            = incorrect_check
-          .inline_block.not_answered{:style => 'font-weight: bold;'}
-            = 'not submitted'
+            = saveable.submitted_answer.first[:answer] # should return 'not answered' or 'not submitted'
