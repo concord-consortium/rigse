@@ -2,7 +2,7 @@
   %div{:id => dom_id_for(embeddable, :item), :class => 'item'}
     %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
       - saveable = saveable_for_learner(embeddable, learner)
-      - css_style = saveable.answered? ? 'answered' : 'not_answered'
+      - css_style = saveable.submitted? ? 'answered' : 'not_answered'
       .item{:style => 'display: block;'}
         - unless embeddable.drawing_prompt.blank?
           %strong
@@ -10,10 +10,13 @@
           %br
         %strong
           = strip_tags(embeddable.prompt)
+        - if embeddable.is_required
+          %div
+            %span.tag required
       .item{:class => css_style, :style => 'display: block;'}
-        - if saveable.answered? && saveable.answer
-          %img{:src => blob_url_for(saveable.answer)}
-          .image_question_note= saveable.answer[:note]
-          %a.blob_url{:href => blob_url_for(saveable.answer)}=blob_url_for(saveable.answer)
+        - if saveable.submitted?
+          %img{:src => blob_url_for(saveable.submitted_answer)}
+          .image_question_note= saveable.submitted_answer[:note]
+          %a.blob_url{:href => blob_url_for(saveable.submitted_answer)}=blob_url_for(saveable.submitted_answer)
         - else
-          = 'not answered'
+          = saveable.submitted_answer # should return 'not submitted'

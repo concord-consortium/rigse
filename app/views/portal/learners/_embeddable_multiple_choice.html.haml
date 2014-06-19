@@ -5,12 +5,15 @@
       .item{:style => 'display: block;'}
         %strong
           != embeddable.prompt
+        - if embeddable.is_required
+          %div
+            %span.tag required
       - incorrect_check = (embeddable.has_correct_answer? ? "&#x2717;" : "&nbsp;").html_safe
       - embeddable.choices.each_with_index do |choice, i|
         - css = choice.is_correct ? 'correct' : 'incorrect'
         - check = (choice.is_correct? ? "&#x2713;" : incorrect_check).html_safe
         - rationale = ""
-        - if saveable && (answer = saveable.answer.detect{|a| a[:answer] == choice.choice})
+        - if saveable && (answer = saveable.submitted_answer.detect{|a| a[:answer] == choice.choice})
           - css << " chosen_answer"
           - rationale = answer[:rationale]
         %div{:class => "item choice #{css}"}
@@ -23,9 +26,15 @@
             = "#{i+1}. #{choice.choice}"
           .rationale.inline_block
             = rationale
-      - if saveable.answer.size == 1 && saveable.answer.first[:answer] == 'not answered'
+      - if saveable.submitted_answer.size == 1 && saveable.submitted_answer.first[:answer] == 'not answered'
         .item.choice
           .optioncheckmark.inline_block
             = incorrect_check
           .inline_block.not_answered{:style => 'font-weight: bold;'}
             = 'not answered'
+      - if saveable.submitted_answer.size == 1 && saveable.submitted_answer.first[:answer] == 'not submitted'
+        .item.choice
+          .optioncheckmark.inline_block
+            = incorrect_check
+          .inline_block.not_answered{:style => 'font-weight: bold;'}
+            = 'not submitted'
