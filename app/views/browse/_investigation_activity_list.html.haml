@@ -32,7 +32,7 @@
                     %span.messagetext{:style=>"font-weight:normal"}
                       (teacher only)
                 .activity_description
-                  = strip_tags activity.description
+                  = sanitize activity.description
                   %div.clazz_count{:id=>"activity_clazz_count_#{activity.id}"}
                     %i
                       - if(activity_count == 0)

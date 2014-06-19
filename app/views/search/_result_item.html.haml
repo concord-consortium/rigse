@@ -83,9 +83,9 @@
 .material_body
   %div
     - if current_visitor.portal_teacher && material.description_for_teacher.present?
-      = strip_tags material.description_for_teacher
+      = sanitize material.description_for_teacher
     - elsif material.description.present?
-      = strip_tags material.description
+      = sanitize material.description
   = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
   %div
     %i

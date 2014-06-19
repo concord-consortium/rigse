@@ -6,7 +6,7 @@
   %p
     %span.type= runnable_type_label(offering) + ":"
     %span.name= offering.name
-  %p.description!= strip_tags offering.description
+  %p.description!= sanitize offering.description
   .run_buttons
     =student_run_buttons(offering)
     %span.last_run= student_status.last_run_string
