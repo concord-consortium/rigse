@@ -32,9 +32,10 @@ def render(file,opts={})
   output
 end
 
-def run_remote_rake(taskname)
+def run_remote_rake(taskname, ignore_fail=false)
     run "cd #{deploy_to}/#{current_dir} && " +
-    "bundle exec rake RAILS_ENV=#{rails_env} #{taskname} --trace"
+    "bundle exec rake RAILS_ENV=#{rails_env} #{taskname} --trace" +
+    (ignore_fail ? "; true" : "")
 end
 
 #############################################################
@@ -308,6 +309,7 @@ namespace :setup do
     run_remote_rake "db:migrate"
     run_remote_rake "app:setup:default_users_roles"
     run_remote_rake "app:setup:default_project"
+    run_remote_rake "sunspot:solr:start", true
     run_remote_rake "app:setup:default_portal_resources"
   end
 
