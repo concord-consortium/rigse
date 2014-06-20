@@ -27,6 +27,7 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
       HEREDOC
       FileUtils.mkdir_p(nces_dir) unless File.exists?(nces_dir)
       Dir.chdir(nces_dir) do
+        has_curl = system("which curl")
         files = [
           'http://nces.ed.gov/ccd/data/zip/sc061bai_dat.zip',
           'http://nces.ed.gov/ccd/data/zip/sc061bkn_dat.zip',
@@ -41,7 +42,7 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
           if File.exists?(File.basename(url_str))
             puts "  data file already exists: #{File.basename(url_str)}"
           else
-            if system("which -s curl")
+            if has_curl
               cmd = "curl -s -O #{url_str}"
             else
               cmd = "wget -q -nc #{url_str}"
