@@ -17,7 +17,8 @@ set :stages, %w(
   sparks-dev sparks-staging sparks-production sparks-aws1
   learn-staging learn-production
   ngss-assessment-staging ngss-assessment-production
-  xproject-dev 
+  codap-production
+  xproject-dev
   inquiryspace-production inquiryspace-staging)
 
 set :default_stage, "development"
