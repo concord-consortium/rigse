@@ -5,8 +5,8 @@ class AuthController < ApplicationController
   def verify_logged_in
 
     if current_user.nil?
-      session[:sso_callback_params] = params;
-      session[:sso_application] = application;
+      session[:sso_callback_params] = params
+      session[:sso_application] = application
       redirect_to root_path
     end
   end
@@ -18,7 +18,6 @@ class AuthController < ApplicationController
     debugger
   end
   def authorize
-
     AccessGrant.prune!
     access_grant = current_user.access_grants.create({:client => application, :state => params[:state]}, :without_protection => true)
     redirect_to access_grant.redirect_uri_for(params[:redirect_uri])
