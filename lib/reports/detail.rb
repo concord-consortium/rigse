@@ -39,6 +39,7 @@ class Reports::Detail < Reports::Excel
       sheet_defs = @common_columns.clone
       answer_defs = []
       header_defs = [] # top level header
+      expected_answers = []
 
       # save the original assignable so we can refer to it later
       assignable = runnable
@@ -68,14 +69,19 @@ class Reports::Detail < Reports::Excel
         sheet_defs << Reports::ColumnDefinition.new(:title => "#{a.name}\nAssessments Completed", :width => 4, :left_border => :thin)
         sheet_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
 
-        reportable_header_counter = setup_sheet_runnables(a, reportable_header_counter, header_defs, answer_defs)
+        reportable_header_counter = setup_sheet_runnables(a, reportable_header_counter, header_defs, answer_defs, expected_answers)
       end #containers
 
       col_defs = sheet_defs + answer_defs + header_defs
       write_sheet_headers(@runnable_sheet[assignable], col_defs)
+
+      # Add row with expected answers.
+      expected_answers.map! { |a| a.nil? ? "" : a }
+      row = @runnable_sheet[assignable].row(@runnable_sheet[assignable].last_row_index + 1)
+      row.concat(expected_answers)
   end
 
-  def setup_sheet_runnables(container, reportable_header_counter, header_defs, answer_defs)
+  def setup_sheet_runnables(container, reportable_header_counter, header_defs, answer_defs, expected_answers)
     reportables = container.reportable_elements.map {|re| re[:embeddable]}
     first = true
 
@@ -84,6 +90,7 @@ class Reports::Detail < Reports::Excel
       reportable_header_counter += 1
       header_defs << Reports::ColumnDefinition.new(:title => container.name, :heading_row => 0, :col_index => reportable_header_counter)
       answer_defs << Reports::ColumnDefinition.new(:title => clean_text((r.respond_to?(:prompt) ? r.prompt : r.name)), :width => 25, :left_border => (first ? :thin : :none))
+      expected_answers[reportable_header_counter] = get_expected_answer(r)
       if r.is_a?(Embeddable::ImageQuestion)
         reportable_header_counter += 1
         answer_defs << Reports::ColumnDefinition.new(:title => 'note', :width => 25, :left_border => :none)
@@ -189,5 +196,10 @@ class Reports::Detail < Reports::Excel
       return {:answered => false, :answer => {:type => "Dataservice::Blob"}, :submitted => false, :question_required => embeddable.is_required }
     end
     return {:answered => false, :answer => "not answered", :submitted => false, :question_required => embeddable.is_required }
+  end
+
+  def get_expected_answer(reportable)
+    ans = reportable.respond_to?(:correct_answer) ? reportable.correct_answer : ""
+    ans.blank? ? "" : "expected: #{ans}"
   end
 end
