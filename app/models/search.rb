@@ -4,6 +4,7 @@ class Search
   attr_accessor :hits
   attr_accessor :text
   attr_accessor :material_types
+  attr_accessor :clean_material_types
   attr_accessor :sort_order
   attr_accessor :private
   attr_accessor :probe
@@ -70,9 +71,13 @@ class Search
 
 
   def initialize(opts={})
-    self.text           = Search.clean_search_terms(opts[:search_term])
-    self.domain_id      = Search.clean_domain_id(opts[:domain_id])
-    self.material_types = Search.clean_material_types(opts[:material_types])
+    self.text                 = Search.clean_search_terms(opts[:search_term])
+    self.domain_id            = Search.clean_domain_id(opts[:domain_id])
+    self.clean_material_types = Search.clean_material_types(opts[:material_types])
+    # Keep 'raw' value too, so the view can examine what was actually selected by user.
+    # TODO: if we focus on this class more, I think it would be much better to move all the
+    #       properties that are only used by form elements in view to a new, separate class.
+    self.material_types = opts[:material_types] || []
     self.results        = {}
     self.hits           = {}
     self.no_probes      = false
@@ -100,7 +105,7 @@ class Search
   def search
     self.results[:all] = []
     self.hits[:all] = []
-    self.material_types.each do |type|
+    self.clean_material_types.each do |type|
       _results = self.engine.search(SearchableModels) do |s|
         s.fulltext(self.text)
         s.any_of do |c|
@@ -171,8 +176,7 @@ class Search
   end
 
   def will_show_official
-    self.include_official if self.include_contributed
-    true
+    self.include_official
   end
 
   def will_show_contributed

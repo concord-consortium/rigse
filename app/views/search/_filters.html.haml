@@ -48,10 +48,10 @@
           .filterheader
             Material Type
           .tablecell
-            = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation',:onclick=>"materialCheckOnClick(this);"
+            = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
             = label_tag 'investigation', t(:investigation).titleize
           .tablecell
-            = check_box_tag 'material_types[]', 'Activity', @form_model.material_types.include?('Activity'),:id=>'Activity',:onclick=>"materialCheckOnClick(this);"
+            = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
             = label_tag 'activity','Activity'
           %br
           .filterheader
@@ -78,7 +78,7 @@
               %span.tip
                 These materials are written by the Concord Consortium.
           .tablecell
-            = check_box_tag 'include_contributed', '1', @form_model.will_show_contributed, :id => 'include_contributed'
+            = check_box_tag 'include_contributed', '1', params[:include_contributed], :id => 'include_contributed'
             %label.tooltip
               Authored by Community
               %span.tip

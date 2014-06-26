@@ -20,8 +20,7 @@ RailsPortal::Application.routes.draw do
 
   match "search" => 'search#index', :as => :search
 
-  get "search/index"
-  match '/search/list/filter' => 'search#show', :as => :list_filter_search, :method => :get
+  get 'search/index'
   post '/search/get_current_material_unassigned_clazzes'
   post '/search/add_material_to_clazzes'
   get 'search/unauthorized_user' => 'search#unauthorized_user'

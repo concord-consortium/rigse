@@ -1,9 +1,19 @@
+jQuery(function () {
+    jQuery('#material_search_form :input:not(#search_term)').on('change', function () {
+        console.log("CHANGE!");
+        jQuery('#material_search_form').submit();
+        $('filter_container').addClassName('disabledfilters');
+        $('search_term').addClassName('disabledGo');
+        $('go-button').addClassName('disabledGo');
+    });
+});
+
 var suggestioncount = -1;
 var ajaxRequest;
-var ajaxRequestSend = 0;
-var goButttondisabled=false;
-var animating=false;
+var goButttondisabled = false;
+var animating = false;
 var ajaxRequestCounter = 0;
+
 function select_suggestion(search_box) {
     var strSuggestiontext;
     try{
@@ -40,7 +50,6 @@ function searchsuggestions(e, oElement,bSubmit_form) {
         parameters: params,
         method : 'get'
     });
-    ajaxRequestSend = 1;
 }
 
 function addSuggestionClickHandlers() {
@@ -49,7 +58,7 @@ function addSuggestionClickHandlers() {
         elem.stopObserving('click');
         elem.observe('click', function(evt) {
             select_suggestion(elem);
-            //submitsuggestion();
+            submitsuggestion();
         });
     });
 }
@@ -170,106 +179,8 @@ function uncheckedallprobes(allChecked) {
         $('probes_overlay').style.display='none';
 }
 
-function removesuggestions() {
-    $('suggestions').remove();
-}
-
-function preventsubmit() {
-    $('prevent_submit').setValue(1);
-}
-
-function allowsubmit() {
-    $('prevent_submit').setValue(0);
-}
-
 function submitsuggestion() {
-    $('prevent_submit').setValue(0);
-    document.getElementsByName('GO')[0].click();
-}
-
-function CheckSubmitStatus() {
-    var oVal = $('prevent_submit');
-    if(oVal.value == 1) {
-        oVal.setValue(0);
-        return false;
-    } else {
-        return true;
-    }
-}
-
-function disableForm(){
-    preventsubmit();
-    $('search_term').addClassName('disabledGo');
-    $('filter_container').addClassName('disabledfilters');
-    document.getElementsByName('GO')[0].addClassName('disabledGo');
-    goButttondisabled=true;
-}
-
-function enableForm(){
-    allowsubmit();
-    $('search_term').removeClassName('disabledGo');
-    $('filter_container').removeClassName('disabledfilters');
-    document.getElementsByName('GO')[0].removeClassName('disabledGo');
-    goButttondisabled=false;
-}
-
-function abortAjaxRequest() {
-    if(ajaxRequestSend) {
-        if(ajaxRequest.transport.readyState==4)
-        {
-            ajaxRequest.transport.abort();
-        }
-        ajaxRequestSend = 0;
-        $('search_suggestions').hide();
-        if($('suggestions')) {
-            $('suggestions').remove();
-        }
-    }
-}
-
-var startUpdate = function(progress_sel,update_sel) {
-  if (typeof progress_sel == 'undefined')  { progress_sel = 'search_spinner';      }
-  if (typeof update_sel == 'undefined')    { update_sel = 'offering_list';  }
-  $(update_sel).hide();
-  $(progress_sel).show();
-};
-
-var endUpdate = function (progress_sel, update_sel) {
-  if (typeof progress_sel == 'undefined')  { progress_sel = 'search_spinner';      }
-  if (typeof update_sel == 'undefined')    { update_sel = 'offering_list';  }
-  $(update_sel).show();
-  $(progress_sel).hide();
-};
-
-
-function LoadingStart (pre,post) {
-  disableForm();
-  if (typeof pre == 'undefined' )  { pre  = startUpdate; }
-  if (typeof post == 'undefined') { post = endUpdate;  }
-  PendingRequests++;
-  pre.call();
-  if (typeof PendingQue[post] == 'undefined') {
-    PendingQue[post] = 0;
-  }
-  else {
-    PendingQue[post] = PendingQue[post] + 1;
-  }
-}
-
-function LoadingEnd (post) {
-  enableForm();
-  if (typeof post == 'undefined') { post = endUpdate;  }
-  PendingRequests--;
-  if (typeof PendingQue[post] == 'undefined') {
-    PendingQue[post] = 0;
-    //console.log("ERROR: PendingEnd called before PendingStart");
-  }
-  else {
-    PendingQue[post] = PendingQue[post] - 1;
-  }
-  if (PendingQue[post] < 1) {
-    post.call();
-  }
+    $('go-button').click();
 }
 
 function fulltrim(inputText){
@@ -306,13 +217,6 @@ function get_Assign_To_Class_Popup(material_id,material_type)
         }
     };
     new Ajax.Request(target_url, options);
-}
-
-function materialCheckOnClick(ObjId)
-{
-    if(!$('investigation').checked && !$('activity').checked && !$('external_activity').checked ){
-        $(ObjId).checked="checked";
-    }
 }
 
 var g_saveAssignToClassInProgress = false;
@@ -393,7 +297,7 @@ function submit_suggestion(search_box){
     $('suggestions').remove();
     //$('show_suggestion').writeAttribute('name','no_suggestion');
     suggestioncount = -1;
-    document.getElementsByName('GO')[0].click();
+    $('go-button').click();
 }
 
 document.observe("dom:loaded", function() {

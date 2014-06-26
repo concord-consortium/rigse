@@ -12,36 +12,21 @@ class SearchController < ApplicationController
 
   in_place_edit_for :investigation, :search_term
 
-  public
   def search_material
     search = Search.new(params.merge(:user_id => current_visitor.id))
     # TODO: This will become a check on 'material_type'
-    @investigations            = search.results[Search::InvestigationMaterial] || []
-    @investigations_count      = @investigations.size
-    @activities                = search.results[Search::ActivityMaterial] || []
-    @activities_count          = @activities.size
+    @investigations       = search.results[Search::InvestigationMaterial] || []
+    @investigations_count = @investigations.size
+    @activities           = search.results[Search::ActivityMaterial] || []
+    @activities_count     = @activities.size
     @form_model = search
   end
 
-  def index
-    search_material
-  end
+  public
 
-  def show
+  def index
+    redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
     search_material
-    if request.xhr?
-      render :update do |page|
-        page.replace_html 'offering_list', :partial => 'search/search_results',:locals=>{:investigations=>@investigations,:activities=>@activities,:external_activities=>@external_activities}
-        page << "$('suggestions').remove();"
-      end
-    else
-      respond_to do |format|
-        format.html do
-            render 'index'
-        end
-        format.js
-      end
-    end
   end
 
   def unauthorized_user
