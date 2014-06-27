@@ -7,17 +7,6 @@ jQuery(function () {
         disableAllInputs();
     });
 
-    jQuery('#probe_required').on('change', probeRequiredChanged);
-    probeRequiredChanged();
-
-    function probeRequiredChanged() {
-        var probeRequired = !!jQuery('#probe_required').is(':checked');
-        if (!probeRequired) {
-            setAllProbesSelected(false);
-        }
-        setInputsEnabled('.probes_container', probeRequired);
-    }
-
     function setInputsEnabled(selector, value) {
         var parent = jQuery(selector);
         value ? parent.removeClass('disabledfilters') : parent.addClass('disabledfilters');
@@ -43,12 +32,6 @@ function setAllProbesSelected(allChecked) {
     if (anythingModified) {
         submitForm();
     }
-}
-
-function modifyAllProbes(val) {
-    // Ignore clicks when the whole box is disabled.
-    if (!jQuery('#probe_required').is(':checked')) return;
-    setAllProbesSelected(val);
 }
 
 var suggestioncount = -1;

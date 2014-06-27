@@ -90,19 +90,15 @@
           .noprobesrequired
             = check_box_tag 'no_probes', '1', @form_model.no_probes, :id=>'probe_0', :class=>'probe_no_check'
             = label_tag 'probe_0', 'Sensors Not Necessary', :class=>'probes_label'
-          .noprobesrequired
-            = check_box_tag '', '', @form_model.probe_type.size > 0, :id=>'probe_required', :class=>'probe_no_check'
-            = label_tag 'probe_required', 'Sensor(s) Required', :class=>'probes_label'
           .probes_container.webkit_scrollbars
-
             %div
-              Select&nbsp;
+              Sensor(s) Required&nbsp;
               %span#select_all_probes
-                %a{:href => 'javascript: void(0);', :onclick=>"modifyAllProbes(true);"}all
+                %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(true);"}all
               %span
                 |
               %span#select_none_probes
-                %a{:href => 'javascript: void(0);', :onclick=>"modifyAllProbes(false);"}none
+                %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(false);"}none
             - probe_types.each do |probe|
               .tablecell
                 = check_box_tag 'probe[]',"#{probe.id}",(@form_model.probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"
