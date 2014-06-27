@@ -82,3 +82,4 @@ sis_import_data
 **/sis_import_test_data/report
 **/sis_import_test_data/report
 config/sis_import_data.yml
+activity_scores_*
