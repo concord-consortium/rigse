@@ -117,11 +117,7 @@ class Search
         s.with(:domain_id, self.domain_id) unless self.domain_id.empty?
         s.with(:grade_span, self.grade_span) unless self.grade_span.empty?
 
-        if self.no_probes
-          s.with(:no_probes, true)
-        else
-          s.with(:probe_type_ids, self.probe) unless (self.probe.empty?)
-        end
+        search_by_probes(s)
         search_by_authorship(s)
         search_by_java_requirements(s)
         s.with(:is_template, false) unless self.include_templates
@@ -183,10 +179,18 @@ class Search
     self.include_contributed
   end
 
+  def search_by_probes(search)
+    return if !self.no_probes && self.probe.empty? # no sensor filter selected, nothing to do.
+    search.any_of do |c|
+      c.with(:no_probes, true) if self.no_probes
+      c.with(:probe_type_ids, self.probe) unless (self.probe.empty?)
+    end
+  end
+
   def search_by_authorship(search)
     return if (include_official && include_contributed)
-    search.with(:is_official, true)  if (include_official)
-    search.with(:is_official, false) if (include_contributed)
+    search.with(:is_official, true)  if include_official
+    search.with(:is_official, false) if include_contributed
   end
 
   def search_by_java_requirements(search)

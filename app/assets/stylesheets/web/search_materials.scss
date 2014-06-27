@@ -184,7 +184,6 @@ search_materials{
 #select_none_probes a,#select_all_probes a{
   text-decoration:underline;
   font-weight:bold;
-  cursor:pointer;
   color:black;
 }
 .material_list .material_list_item{
@@ -210,13 +209,6 @@ search_materials{
 .material_container
 {
   width:100px;
-}
-
-.disabledGo,
-input.disabledGo
-{
-  cursor:default;
-  opacity: 0.5;
 }
 
 #search_spinner img {
@@ -264,27 +256,31 @@ vertical-align: middle;
 .messagetext{font-style:italic}
 .assigned_material_detail{margin:0;padding:0;text-transform: none;}
 .assigned_material_detail td.title{font-weight:normal;padding:0px 5px 5px 5px;vertical-align:top;text-align:left}
-.disabledfilters{
-  color:gray;
-}
 
-.disabledfilters #filtermask{
-  display:block;
-  height: 150px;
-  position: absolute;
-  width: 630px;
-  z-index:10;
-  background-color:#FBF4DA;
-  -moz-opacity: 0;
-  opacity: 0;
-  filter: alpha(opacity=0);
-}
+.disabledfilters {
+  color: gray;
 
+  & a, & input {
+    cursor: default;
+  }
 
-.disabledfilters input[type='checkbox']{
-  -moz-opacity: 0.5;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
+  & #filtermask{
+    display:block;
+    height: 150px;
+    position: absolute;
+    width: 630px;
+    z-index:10;
+    background-color:#FBF4DA;
+    -moz-opacity: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+  }
+
+  & input[type='checkbox']{
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+  }
 }
 
 .material_list_item a{text-transform: none;}
@@ -312,18 +308,6 @@ vertical-align: middle;
 {
   margin-top: 5px;
   font-size: 12px;
-}
-#probes_overlay
-{
-margin-top: -96px;
-width: 153px;
-height: 96px;
-margin-left: 1px;
-background-color: #333;
--webkit-opacity: 0.4;
--moz-opacity: 0.4;
-opacity: 0.4;
-filter: alpha(opacity=40);
 }
 
 .noprobesrequired{
