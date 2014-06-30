@@ -258,38 +258,6 @@ function setSaveAssignToClassInProgress(value)
     return;
 }
 
-function selectAllGreades(gradeObj,grades)
-{
-
-    if(gradeObj.id == 'allgrades'){
-        if($(gradeObj).checked){
-            grades.each(function(obj){
-                $(obj).checked= "checked";
-            });
-        }
-        else if(!$(gradeObj).checked){
-            grades.each(function(obj){
-                $(obj).checked= false;
-            });
-        }
-    }
-    else {
-        if(!$(gradeObj).checked){
-            $('allgrades').checked= false;
-        }
-        else{
-            allgrades_selected = true;
-            grades.each(function(obj){
-                allgrades_selected = allgrades_selected && $(obj).checked;
-
-            });
-            if(allgrades_selected){
-                $('allgrades').checked= "checked";
-            }
-        }
-    }
-}
-
 function submit_suggestion(search_box) {
     var strSuggestiontext;
     try{

@@ -208,9 +208,9 @@ class Search
 
   alias_method :probe_type, :probe
 
-  def investigation_checkedstatus; self.search.material_types.include? ::Investigation ; end
-  def activity_checkedstatus; self.search.material_types.include? ::Activity ; end
-  def external_activity_checkedstatus; self.search.material_types.include? ::Activity ; end
+  def investigation_checkedstatus; self.material_types.include? ::Investigation ; end
+  def activity_checkedstatus; self.material_types.include? ::Activity ; end
+  def external_activity_checkedstatus; self.material_types.include? ::Activity ; end
   def include_external_activities?; false; end
 
 end

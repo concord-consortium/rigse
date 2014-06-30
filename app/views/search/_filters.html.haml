@@ -37,12 +37,9 @@
             .filterheader
               Grade
             .tablecell
-              = check_box_tag 'grade_span[]',"",(@form_model.grade_span.length > 0 && (@form_model.grade_span.select{|i| i.length > 0}).eql?(grades.map{|i| i.to_s})),:id=>'allgrades',:onclick=>"selectAllGreades(this,#{grades});"
-              = label_tag 'allgrades', 'All Grades'
             -grades.each do |grade|
-
               .tablecell
-                = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade,:onclick=>"selectAllGreades(this,#{grades});"
+                = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
                 = label_tag grade, grade
         %td.materialcolumn
           .filterheader
@@ -84,7 +81,6 @@
               %span.tip
                 These materials are written by external contributors.
         %td.probescolumn
-          - no_probes_req_selected = @form_model.probe_type.include?("0")
           .filterheader
             Sensors
           .noprobesrequired
