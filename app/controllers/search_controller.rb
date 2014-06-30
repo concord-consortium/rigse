@@ -25,7 +25,7 @@ class SearchController < ApplicationController
   public
 
   def index
-    redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
+    return redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
     search_material
   end
 

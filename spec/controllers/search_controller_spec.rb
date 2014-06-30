@@ -37,8 +37,9 @@ describe SearchController do
   let(:contributed_activity) { Factory.create(:external_activity, :name => "Copy of external_1", :url => "http://concord.org", :publication_status => 'published', :is_official => false) }
 
   let(:all_investigations)    { [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines]}
-  let(:all_activities)        { [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines, external_activity1, external_activity2]}
+  let(:official_activities)   { [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines, external_activity1, external_activity2]}
   let(:contributed_activities){ [contributed_activity] }
+  let(:all_activities)        {  official_activities.concat(contributed_activities) }
   let(:investigation_results) { [] }
   let(:activity_results)      { [] }
 
@@ -58,8 +59,9 @@ describe SearchController do
     admin_project
     sign_in teacher_user
     make all_investigations
-    make all_activities
+    make official_activities
     make contributed_activities
+    make all_activities
     Sunspot.commit_if_dirty
   end
 
@@ -68,21 +70,26 @@ describe SearchController do
       it "should redirect to root" do
         student # Ensure student_user has a PortalStudent
         controller.stub!(:current_visitor).and_return(student_user)
-        post :index
+        get :index
         response.should redirect_to("/")
       end
     end
 
     describe "searching for materials" do
-      let(:post_params)      {{}}
+      let(:get_params) { {} }
       before(:each) do
-        post :index, post_params
-        assert_response :success
-        assert_template 'index'
+        get :index, get_params
       end
 
       describe "with no filter parameters" do
-        it "should show all study materials materials" do
+        it "should redirect you to search results that show only official materials" do
+          assert_response :redirect
+        end
+      end
+
+      describe "searching only official materials" do
+        let(:get_params) { {:include_official => 1} }
+        it "should show all official study materials" do
           assigns[:investigations].should_not be_nil
           assigns[:investigations_count].should be(5)
           assigns[:investigations].each do |investigation|
@@ -91,13 +98,19 @@ describe SearchController do
           assigns[:activities].should_not be_nil
           assigns[:activities_count].should be(6)
           assigns[:activities].each do |activity|
-            all_activities.should include(activity)
+            official_activities.should include(activity)
+          end
+        end
+
+        it "should not return any contributed activities" do
+          assigns[:activities].each do |activity|
+            contributed_activities.should_not include(activity)
           end
         end
       end
 
       describe "searching only investigations" do
-        let(:post_params)      {{:material_types => [Search::InvestigationMaterial]}}
+        let(:get_params) { {:material_types => [Search::InvestigationMaterial]} }
         let(:activity_results) {[]}
 
         it "should return all investigations" do
@@ -106,29 +119,29 @@ describe SearchController do
         end
 
         it "should not return any activities" do
-          post :index, post_params
+          get :index, get_params
           assigns[:activities].should be_empty
           assigns[:activities_count].should be(0)
         end
       end
 
       describe "searching only activities" do
-        let(:post_params)           {{:material_types => [Search::ActivityMaterial]}}
+        let(:get_params) {{:material_types => [Search::ActivityMaterial]}}
         it "should not include investigations" do
           assigns[:investigations].should be_empty
           assigns[:investigations_count].should be(0)
         end
         it "should return all activities" do
           assigns[:activities].should_not be_nil
-          assigns[:activities_count].should be(6)
+          assigns[:activities_count].should be(7)
           assigns[:activities].each do |activity|
             all_activities.should include(activity)
           end
         end
         describe "including contributed activities" do
-          let(:post_params) {{ :material_types => ['Activity'], :include_contributed => 1 }}
-          it  "should include contributed activities" do
-            assigns[:activities_count].should == 7
+          let(:get_params) {{ :material_types => ['Activity'], :include_contributed => 1 }}
+          it "should include contributed activities" do
+            assigns[:activities_count].should == 1
             assigns[:activities].should include(contributed_activity)
           end
         end
