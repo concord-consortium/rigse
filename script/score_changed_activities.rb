@@ -93,10 +93,20 @@ def score(activity)
   return score
 end
 
+@i = 0
+def print_progress
+  print "." if @i % 10 == 0 && @i != 0
+  print("\n%5d: " % [@i]) if @i % 500 == 0
+  @i += 1
+end
+
+puts "\nScoring #{Activity.count} activities..."
+
 CSV.open("activity_scores_#{Time.now.strftime('%Y%m%d')}.csv", "wb") do |csv|
   csv << ['ID', 'Parent ID', 'Score', 'Author', 'Activity Title', 'Generation', 'Used?']
   Activity.find_each(:batch_size => 10, :include => [:original, {:sections => { :pages => { :page_elements => :embeddable }}}]) do |a|
     next if a.investigation  # These are pre- and post- tests, generally
     csv << [a.id, a.original_id, score(a), a.user.name, a.name, calc_generation(a), used?(a)]
+    print_progress
   end
 end
