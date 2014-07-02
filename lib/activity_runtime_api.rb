@@ -55,6 +55,11 @@ class ActivityRuntimeAPI
       # update activity so external_activity.template is correctly initialzed
       # otherwise external_activity.template.is_template? won't be true
       activity.reload
+      # then reindex it manually, so Solr has correct value of :is_template attribute
+      Sunspot.index(activity)
+      # exactly the same applies to invesigation template
+      investigation.reload
+      Sunspot.index(investigation)
     end
 
     return external_activity
@@ -132,6 +137,8 @@ class ActivityRuntimeAPI
       # update investigation so external_activity.template is correctly initialzed
       # otherwise external_activity.template.is_template? won't be true
       investigation.reload
+      # then reindex it manually, so Solr has correct value of :is_template attribute
+      Sunspot.index(investigation)
     end
     return external_activity
   end
