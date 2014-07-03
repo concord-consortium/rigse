@@ -60,6 +60,7 @@ class ActivityRuntimeAPI
       # exactly the same applies to invesigation template
       investigation.reload
       Sunspot.index(investigation)
+      Sunspot.commit
     end
 
     return external_activity
@@ -139,6 +140,7 @@ class ActivityRuntimeAPI
       investigation.reload
       # then reindex it manually, so Solr has correct value of :is_template attribute
       Sunspot.index(investigation)
+      Sunspot.commit
     end
     return external_activity
   end
