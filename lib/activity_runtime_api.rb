@@ -140,6 +140,8 @@ class ActivityRuntimeAPI
       investigation.reload
       # then reindex it manually, so Solr has correct value of :is_template attribute
       Sunspot.index(investigation)
+      # exactly the same applies to activities
+      investigation.activities.each { |a| Sunspot.index(a) }
       Sunspot.commit
     end
     return external_activity
