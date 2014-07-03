@@ -46,6 +46,16 @@ end
 
 
 describe ActivityRuntimeAPI do
+  include SolrSpecHelper
+
+  before(:all) do
+    solr_setup
+    clean_solar_index
+  end
+
+  after(:all) do
+    clean_solar_index
+  end
 
   let(:name)        { "Cool Activity"                  }
   let(:description) { name                             }
@@ -209,7 +219,7 @@ describe ActivityRuntimeAPI do
       end
 
       it "should create a new activity" do
-        result = ActivityRuntimeAPI.publish_activity(new_hash,user)
+        result = ActivityRuntimeAPI.publish_activity(new_hash, user)
         result.should_not be_nil
         result.should have_multiple_choice_like "What color is the sky"
         result.should have_choice_like "blue"
@@ -218,6 +228,24 @@ describe ActivityRuntimeAPI do
         result.should_not have_choice_like "brown"
         result.should have_image_question_like "draw a picture"
         result.should have_image_question_like "now explain"
+      end
+
+      it "should cause that parent investigation and activities are recognized as templates" do
+        result = ActivityRuntimeAPI.publish_activity(new_hash, user)
+        result.template.is_template.should be_true
+        result.template.investigation.is_template.should be_true
+      end
+
+      it "should cause that parent investigation and activities are indexed in SOLR as templates" do
+        result = ActivityRuntimeAPI.publish_activity(new_hash, user)
+        Activity.search {
+          with :name, result.template.name
+          with :is_template, true
+        }.results.size.should == 1
+        Investigation.search {
+          with :name, result.template.investigation.name
+          with :is_template, true
+        }.results.size.should == 1
       end
     end
 
@@ -393,6 +421,22 @@ describe ActivityRuntimeAPI do
         result.activities[0].position.should <= result.activities[1].position
         result.activities[0].name.should == sequence_hash['activities'][0]['name']
         result.activities[1].name.should == sequence_hash['activities'][1]['name']
+      end
+
+      it "should cause that parent investigation and activities are recognized as templates" do
+        result.template.is_template.should be_true
+        result.template.activities.map { |a| a.is_template.should be_true }
+      end
+
+      it "should cause that parent investigation and activities are indexed in SOLR as templates" do
+        Investigation.search {
+          with :name, result.template.name
+          with :is_template, true
+        }.results.size.should == 1
+        Activity.search {
+          with :name, result.template.activities.map { |a| a.name }
+          with :is_template, true
+        }.results.size.should == 2
       end
     end
 
