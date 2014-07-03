@@ -185,8 +185,8 @@ describe Search do
       end
 
       describe "template items should not be included in results by default" do
-        let(:template_ivs)  { collection(:investigation, 2, public_opts.merge({:is_template => true }))}
-        let(:template_acts) { collection(:activity, 2, public_opts.merge({:is_template => true }))}
+        let(:template_ivs)  { collection(:investigation_template, 2, public_opts) }
+        let(:template_acts) { collection(:activity_template, 2, public_opts) }
         let(:materials)     { [public_items, template_ivs, template_acts].flatten }
         it "results should not include any of the template activities" do
           template_acts.each do |act|
@@ -211,7 +211,7 @@ describe Search do
       end
 
       describe "searching all items" do
-        let(:search_opts) { {:private => true } }
+        let(:search_opts) { {:private => true, :include_templates => true} }
         it "results should include 8 activities and 8 investigations" do
           # subject.results[:all].should have(16).entries
           subject.results[Search::InvestigationMaterial].should have(8).entries
@@ -260,7 +260,8 @@ describe Search do
           describe "when its a contributed activity" do
             let(:external_activity){FactoryGirl.create(:external_activity, external_act.merge(public_opts))}
             describe "when the search doesn't include contributed items" do
-              it "should not be listed in the  results" do
+              let(:search_opts) { {:include_official => true } }
+              it "should not be listed in the results" do
                 subject.results[Search::InvestigationMaterial].should_not include(external_activity)
                 subject.results[Search::ActivityMaterial].should_not include(external_activity)
               end
@@ -481,7 +482,7 @@ describe Search do
           subject.should include(:controller => "search")
           subject.should include(:grade_span => [])
           subject.should include(:investigation_page => 1)
-          subject.should include(:material_types => ["Investigation", "Activity"])
+          subject.should include(:material_types => [])
           subject.should include(:per_page => 10)
           subject.should include(:probe => [])
           subject.should include(:sort_order => "Newest")

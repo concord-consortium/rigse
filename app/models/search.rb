@@ -96,9 +96,9 @@ class Search
     self.investigation_page   = opts[:investigation_page]  || 1
     self.without_teacher_only = opts[:without_teacher_only]|| true
     self.java_requirements    = opts[:java_requirements]   || []
-    self.include_contributed  = opts[:include_contributed]
-    self.include_official     = opts[:include_official]
-    self.include_templates    = false
+    self.include_contributed  = opts[:include_contributed] || false
+    self.include_official     = opts[:include_official]    || false
+    self.include_templates    = opts[:include_templates]   || false
     self.search()
   end
 
@@ -188,9 +188,11 @@ class Search
   end
 
   def search_by_authorship(search)
-    return if (include_official && include_contributed)
-    search.with(:is_official, true)  if include_official
-    search.with(:is_official, false) if include_contributed
+    return if !include_official && !include_contributed
+    search.any_of do |c|
+      c.with(:is_official, true)  if include_official
+      c.with(:is_official, false) if include_contributed
+    end
   end
 
   def search_by_java_requirements(search)
