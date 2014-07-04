@@ -42,6 +42,8 @@ Feature: Teacher can search and filter instructional materials
     And I should wait 2 seconds
     And I should see "A Weather Underground"
     And I should see "A heat spontaneously"
+    And I should not see "Digestive System"
+    And I should not see "Bile Juice"
     And I uncheck "Temperature"
     And I should wait 2 seconds
     And I check "UVA Intensity"
@@ -56,10 +58,14 @@ Feature: Teacher can search and filter instructional materials
 
   @javascript
   Scenario: Teacher views all investigations and activities with sensors
-    When I follow "all"
+    When I follow "check all"
+    And I should wait 2 seconds
+    And I uncheck "Sensors Not Necessary"
     And I should wait 2 seconds
     Then I should see "A Weather Underground"
     And I should see "A heat spontaneously"
+    And I should not see "Digestive System"
+    And I should not see "Bile Juice"
 
 
   @javascript
@@ -70,7 +76,7 @@ Feature: Teacher can search and filter instructional materials
     And I should not see "A heat spontaneously"
     When I uncheck "Sensors Not Necessary"
     And I should wait 2 seconds
-    And I follow "none"
+    And I follow "clear"
     And I should wait 2 seconds
     And I should see "A Weather Underground"
     And I should see "A heat spontaneously"
