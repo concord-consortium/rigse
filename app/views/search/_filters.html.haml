@@ -82,19 +82,18 @@
                 These materials are written by external contributors.
         %td.probescolumn
           .filterheader
-            Sensors
+            Sensor Use
+          %span
+            %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(true);"}check all
+          %span{:style => 'color: #479492'}|
+          %span
+            %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(false);"}clear
           .noprobesrequired
-            = check_box_tag 'no_probes', '1', @form_model.no_probes, :id=>'probe_0', :class=>'probe_no_check'
-            = label_tag 'probe_0', 'Sensors Not Necessary', :class=>'probes_label'
+
           .probes_container.webkit_scrollbars
-            %div
-              Sensor(s) Required&nbsp;
-              %span#select_all_probes
-                %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(true);"}all
-              %span
-                |
-              %span#select_none_probes
-                %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(false);"}none
+            .tablecell
+              = check_box_tag 'no_probes', '1', @form_model.no_probes, :id=>'probe_0', :class=>'probe_items'
+              = label_tag 'probe_0', 'Sensors Not Necessary', :class=>'probes_label'
             - probe_types.each do |probe|
               .tablecell
                 = check_box_tag 'probe[]',"#{probe.id}",(@form_model.probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"

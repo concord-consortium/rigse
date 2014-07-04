@@ -28,7 +28,9 @@
   margin-bottom:2px;
   font-weight:bold;
   font-size:13px;
+  display: inline-block;
 }
+
 input[name='search_term'] {
 width: 300px;
 }
@@ -170,21 +172,13 @@ search_materials{
 
 .probes_container{
   overflow:auto;
-  height:95px;
+  max-height:190px;
   background-color:white;
   border: 1px solid #CCC;
   padding-left: 5px;
   }
 .probes_label{
   text-transform:none;
-}
-#select_none_probes,#select_all_probes{
- margin-bottom: 5px;
-}
-#select_none_probes a,#select_all_probes a{
-  text-decoration:underline;
-  font-weight:bold;
-  color:black;
 }
 .material_list .material_list_item{
   border-bottom: 1px solid #DDD;
@@ -238,9 +232,7 @@ vertical-align: middle;
   float:right;
   margin-right:10px;
 }
-#showHideFilters{
-  text-decoration:underline;
-}
+
 #offering_list .bookmark{
   color:#3F3F3F;
 }
@@ -308,19 +300,6 @@ vertical-align: middle;
 {
   margin-top: 5px;
   font-size: 12px;
-}
-
-.noprobesrequired{
-  margin-bottom:5px;
-}
-.noprobesrequired input[type='checkbox'],.tablecell label{
-  vertical-align:middle;
-
-}
-.noprobesrequired input[type='checkbox']
-{
-  margin:0;padding:0;
-  border:solid 1px #999;
 }
 
 .browse_material_other_data{float:left;width:170px;}

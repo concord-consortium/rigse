@@ -3,21 +3,8 @@ jQuery(function () {
         // Ignore elements that do not have name attribute. It means they won't be included
         // in GET params anyway and perhaps have only JS handlers.
         if (!jQuery(this).attr('name')) return;
-        jQuery('#material_search_form').submit();
-        disableAllInputs();
+        submitForm();
     });
-
-    function setInputsEnabled(selector, value) {
-        var parent = jQuery(selector);
-        value ? parent.removeClass('disabledfilters') : parent.addClass('disabledfilters');
-        parent.find(':input').prop('disabled', !value);
-    }
-
-    function disableAllInputs() {
-        setInputsEnabled('#filter_container', false);
-        setInputsEnabled('#search_term', false);
-        setInputsEnabled('#go-button', false);
-    }
 });
 
 function setAllProbesSelected(allChecked) {
@@ -192,7 +179,20 @@ function showHideFilters(linkElement, animationDuration) {
 }
 
 function submitForm() {
-    $('go-button').click();
+    jQuery('#material_search_form').submit();
+    // So user can see that form has been submitted and he can't modify it anymore.
+    disableAllInputs();
+
+    function setInputsEnabled(selector, value) {
+        var parent = jQuery(selector);
+        value ? parent.removeClass('disabledfilters') : parent.addClass('disabledfilters');
+        parent.find(':input').prop('disabled', !value);
+    }
+    function disableAllInputs() {
+        setInputsEnabled('#filter_container', false);
+        setInputsEnabled('#search_term', false);
+        setInputsEnabled('#go-button', false);
+    }
 }
 
 function fulltrim(inputText){
