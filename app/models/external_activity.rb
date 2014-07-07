@@ -151,6 +151,11 @@ class ExternalActivity < ActiveRecord::Base
   end
   # end methods to mimic Activity
 
+  # needed to mimic Investigation (investigations/list/filter)
+  def duplicateable?(user)
+    false
+  end
+
   # methods required by Search::SearchMaterial
   def full_title
     name
