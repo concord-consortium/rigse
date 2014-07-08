@@ -8,6 +8,9 @@ class Diy::ModelsController < ApplicationController
       sql_conditions << "(#{Diy::Model.table_name}.model_type_id = ?) and "
       sql_params << params[:model_type].to_i
     end
+    if params[:lightweight_only]
+      sql_conditions << "(#{Diy::Model.table_name}.interactive_url IS NOT NULL) and "
+    end
     @models = Diy::Model.search(params[:search], params[:page], nil, [:model_type], sql_conditions, sql_params)
 
     respond_to do |format|
