@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/diff-comparison.git
-  revision: 524e4474ee31f6be2413313ffcf52741c3eb0dac
+  revision: 1ed9dff42828abd0dfe7623b558bb7b1083257ee
   branch: master
   specs:
     diff-comparison (0.0.1)

@@ -97,4 +97,16 @@ module ActivityHelper
     status_options << "archived" if current_user.has_role?('admin')
     status_options
   end
+
+  def sorted_difference_keys(flat_differences, order)
+    flat_differences.keys.sort_by {|path|
+      idx = []
+      path.each_with_index do |p,i|
+        num = (@order[i] || []).index(p)
+        num = 9999 if num == -1 || num.nil?
+        idx << num
+      end
+      idx
+    }
+  end
 end

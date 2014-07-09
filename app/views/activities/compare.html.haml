@@ -1,0 +1,17 @@
+.activity.comparison
+  %table
+    %thead
+      %tr
+        %th Section
+        %th Customized
+        %th Original
+    %tbody
+      - odd_even = false
+      - diffs = @comparer.flat_differences
+      - sorted_difference_keys(diffs, @order).each do |path|
+        - detail = diffs[path]
+        - odd_even = !odd_even
+        %tr{:class => (odd_even ? "odd" : "even") }
+          %th= path.join(" ")
+          %td= detail[:html_left]
+          %td= detail[:html_right]

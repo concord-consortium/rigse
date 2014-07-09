@@ -10,9 +10,9 @@ class ActivitiesController < ApplicationController
     :page_layout=>:landscape,
   }
   before_filter :setup_object, :except => [:index,:browse]
-  before_filter :render_scope, :only => [:show]
+  before_filter :render_scope, :only => [:show,:compare]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:search,:browse  ,:show,:print,:create,:new,:duplicate,:export]
+  before_filter :can_edit, :except => [:index,:search,:browse  ,:show,:print,:create,:new,:duplicate,:export,:compare]
   before_filter :can_create, :only => [:new, :create,:duplicate]
 
   in_place_edit_for :activity, :name
@@ -343,6 +343,17 @@ class ActivitiesController < ApplicationController
         send_data @activity.deep_xml, :type => :xml, :filename=>"#{@activity.name}.xml"
       }
     end
+  end
+
+  def compare
+    @other_activity = Activity.find(params[:other_id])
+    left, @order = ITSI::Comparison.activity_hash_with_ordering(@activity)
+    right = ITSI::Comparison.activity_hash(@other_activity)
+    @comparer = Diff::Comparison::Comparer.new(left, right)
+    @score = @comparer.score(Diff::Comparison::Rubric.new, {:html_left => true, :html_right => true})
+    @differences = @comparer.differences
+
+    render :layout => 'layouts/compare'
   end
 
 end
