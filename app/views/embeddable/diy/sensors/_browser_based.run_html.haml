@@ -1,0 +1,77 @@
+.click_to_play.unavailable{:id => dom_id_for(diy_sensor, :click_to_play)}
+  .background
+  .text= "Click here to start the model."
+.model_interactive.unavailable{:id => dom_id_for(diy_sensor, :model_interactive)}
+  %iframe.interactive{:frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
+.model_interactive_snapshot_instructions.unavailable{:id => dom_id_for(diy_sensor, :model_interactive_snapshot_instructions)}
+  = current_project.interactive_snapshot_instructions
+.model_interactive_snapshots.unavailable{:id => dom_id_for(diy_sensor, :model_interactive_snapshots)}
+  %button.labbook_button{:id => dom_id_for(diy_sensor, :model_take_snapshot)}= "Take a Snapshot"
+  %img.labbook_button{ :id => dom_id_for(diy_sensor, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
+
+- if Labbook.enabled?
+  :javascript
+    $j("##{dom_id_for(diy_sensor, :model_open_album)}").click(function() {
+      if (#{current_user.anonymous?}) {
+        alert("You must be logged in to open the snapshot album.");
+        return false;
+      } else {
+        show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_sensor)}");
+        return false;
+      }
+    });
+
+:javascript
+  if (Object.isExtensible && Modernizr.svg) {
+    // set up click-to-play
+    $j("##{dom_id_for(diy_sensor, :click_to_play)}").removeClass('unavailable');
+    $j("##{dom_id_for(diy_sensor, :model_image)} .error").addClass('unavailable');
+
+    $j("##{dom_id_for(diy_sensor, :click_to_play)}").click(function() {
+      // If a model has already been loaded, just leave it be. It will be stopped when another model's play is clicked.
+
+      // Load this model.
+      $j("##{dom_id_for(diy_sensor, :model_interactive)}").removeClass('unavailable');
+      $j("##{dom_id_for(diy_sensor, :model_image)}").addClass('unavailable');
+      $j("##{dom_id_for(diy_sensor, :click_to_play)}").addClass('unavailable')
+      setTimeout(function() {
+        var id = "##{dom_id_for(diy_sensor, :model_interactive)} iframe";
+        // FIXME! Use the correct url.
+        $j(id).attr('src', 'https://concord-consortium.github.io/lab-grapher/examples/index.html#fake-drawable');
+        // Create the phone for this model.
+        phones[id] = createPhone(id);
+      }, 10);
+    })
+
+    if (#{Labbook.enabled?}) {
+      $j("##{dom_id_for(diy_sensor, :model_interactive_snapshot_instructions)}").removeClass('unavailable');
+      $j("##{dom_id_for(diy_sensor, :model_interactive_snapshots)}").removeClass('unavailable');
+      (function() {
+        var optCallbackFn = function(msg) {
+          var reg = /img src='([^']*)'/;
+          var match = reg.exec(msg);
+          if (match[1] != null) {
+            show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_sensor)}&todo=create&source_url=http://" + window.location.host + match[1]);
+          }
+          $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').removeClass("disabled");
+          $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').text("Take a Snapshot");
+        };
+
+        var shutterbug = new Shutterbug("##{dom_id_for(diy_sensor, :model_interactive)} iframe", null, optCallbackFn, "#{dom_id_for(diy_sensor, :model_take_snapshot)}", $j);
+        $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').click(function() {
+          if (#{current_user.anonymous?}) {
+            alert("You must be logged in to take snapshots.");
+            return false;
+          } else {
+            $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').addClass("disabled");
+            $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').text("Taking snapshot...");
+            if (shutterbug.useIframeSizeHack) {
+              shutterbug.useIframeSizeHack(true);
+            }
+            shutterbug.getDomSnapshot();
+            return false;
+          }
+        });
+      })();
+    }
+  }
