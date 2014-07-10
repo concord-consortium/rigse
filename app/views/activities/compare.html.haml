@@ -6,7 +6,11 @@
         %th Customized
         %th Original
     %tbody
-      - odd_even = false
+      %tr.odd
+        %td= ""
+        %td= link_to 'Show', polymorphic_path(@activity)
+        %td= link_to 'Show', polymorphic_path(@other_activity)
+      - odd_even = true
       - diffs = @comparer.flat_differences
       - sorted_difference_keys(diffs, @order).each do |path|
         - detail = diffs[path]

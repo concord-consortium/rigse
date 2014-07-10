@@ -35,6 +35,9 @@
             $j("##{dom_id_for(runnable, :list_item)} .preview").hide();
             $j("##{dom_id_for(runnable, :list_item)} .lightweight").show();
           }
+      - if current_user.has_role?("admin","manager","researcher") && runnable.respond_to?(:original) && runnable.original && runnable.original_id != 1
+        %a.compare{:href => compare_activities_path(runnable, runnable.original) ,  :title => "View a side-by-side comparison of this activity to the one from which it was copied."}
+          %img{:alt => "compare", :src => "/images/diy_icons/compare.png", :title => "View a side-by-side comparison of this activity to the one from which it was copied."}/
 
     .title
       = runnable.name

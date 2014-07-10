@@ -39,5 +39,6 @@
                 - cache_key = "changeable_" + cache_key if runnable.changeable? current_user
                 - cache_key = "anonymous_" + cache_key if anon
                 - cache_key = "teacher_" + cache_key if is_teacher
+                - cache_key = "comparable_" + cache_key if current_user.has_role?("admin","manager","researcher")
                 - cache(cache_key) do
                   = render :partial => 'list_item', :locals => {:runnable => runnable}

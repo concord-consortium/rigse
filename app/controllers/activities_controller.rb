@@ -15,6 +15,9 @@ class ActivitiesController < ApplicationController
   before_filter :can_edit, :except => [:index,:search,:browse  ,:show,:print,:create,:new,:duplicate,:export,:compare]
   before_filter :can_create, :only => [:new, :create,:duplicate]
 
+  include RestrictedController
+  before_filter :manager_or_researcher, :only => [:compare]
+
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
 
