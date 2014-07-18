@@ -12,25 +12,6 @@ module BookmarksHelper
     end
   end
 
-  def render_all_bookmarks
-    return if types.empty?
-    return if current_visitor.anonymous?
-    haml_tag "#bookmarks_box" do
-      haml_tag "p", :style => "padding: 10px 0px 0px 10px; font-weight: bold;" do
-        haml_concat("Bookmarks:")
-      end
-      bookmarks.each do |bookmark|
-        render_bookmark bookmark
-      end
-    end
-  end
-
-  def render_bookmark(bookmark)
-    concat(render(:partial => "bookmarks/show", :locals => {
-      :bookmark => bookmark
-    }))
-  end
-
   def render_add_bookmark_form
     clazzes = types.map {|t|t.safe_constantize}.compact
     clazzes.each do |claz|
