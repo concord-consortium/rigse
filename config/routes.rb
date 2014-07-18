@@ -167,7 +167,11 @@ constraints :id => /\d+/ do
         get :fullstatus
       end
 
-      resources :bookmarks, only: [:index], controller: "bookmarks"
+      resources :bookmarks, only: [:index], controller: "bookmarks" do
+        collection do
+          post 'add_padlet' => 'bookmarks#add_padlet', :as => 'add_padlet'
+        end
+      end
 
       collection do
         #get :manage_classes, :path => 'manage'
@@ -616,7 +620,6 @@ constraints :id => /\d+/ do
   match '/:controller(/:action(/:id))'
 
   # TODO: clean up these adhoc bookmark routes:
-  match '/bookmark/add_padlet'     => 'bookmarks#add_padlet', :as => :add_padlet
   match '/bookmark/add'            => 'bookmarks#add',        :as => :add_bookmark
   match '/bookmark/visit/:id'      => 'bookmarks#visit',      :as => :visit_bookmark
   match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark

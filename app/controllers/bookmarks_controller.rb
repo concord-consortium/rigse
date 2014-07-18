@@ -10,7 +10,8 @@ class BookmarksController < ApplicationController
   end
 
   def add_padlet
-    mark = PadletBookmark.create_for_user(current_visitor)
+    clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:clazz_id])
+    mark = PadletBookmark.create_for_user(current_visitor, clazz)
     render :update do |page|
       page.insert_html :bottom,
         "bookmarks_box",

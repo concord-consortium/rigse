@@ -2,7 +2,7 @@ class PadletBookmark < Bookmark
   default_scope :order => 'position'
   acts_as_list
 
-  def self.create_for_user(user)
+  def self.create_for_user(user, clazz = nil)
     return false if user.anonymous?
     found  = self.for_user(user)
     email  = user.email || "#{user.login}@concord.org"
@@ -17,9 +17,11 @@ class PadletBookmark < Bookmark
     if numbers.max
       count = numbers.max if (numbers.max > count)
     end
-    ordinal  = (count + 1).ordinalize
-    name   = "My #{ordinal} Padlet"
-    made   = self.create(:user => user, :name => name, :url => url)
+    ordinal = (count + 1).ordinalize
+    name = "My #{ordinal} Padlet"
+    made = self.create(:user => user, :name => name, :url => url)
+    made.clazz = clazz
+    made.save!
     return made
   end
 

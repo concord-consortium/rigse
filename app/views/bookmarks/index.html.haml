@@ -1,2 +1,4 @@
-- @bookmarks.each do |bookmark|
-  = render :partial => 'bookmarks/show', :locals => {:bookmark => bookmark}
+- render_add_bookmark_form
+#bookmarks_box
+  - @bookmarks.each do |bookmark|
+    = render :partial => 'bookmarks/show', :locals => {:bookmark => bookmark}
