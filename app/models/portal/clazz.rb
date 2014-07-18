@@ -9,7 +9,7 @@ class Portal::Clazz < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :class_name => "Portal::Offering", :foreign_key => "clazz_id",
     :order => :position
-  has_many :active_offerings, :class_name => "Portal::Offering", :foreign_key => 'clazz_id', 
+  has_many :active_offerings, :class_name => "Portal::Offering", :foreign_key => 'clazz_id',
     :conditions => { :active => true }, :order => :position
 
   has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
@@ -20,12 +20,14 @@ class Portal::Clazz < ActiveRecord::Base
 
   has_many :grade_levels, :dependent => :destroy, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
-  
+
+  has_many :bookmarks
+
   before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
   validates_presence_of :name
-  
+
   include Changeable
 
   # String constants for error messages -- Cantina-CMH 6/2/10
@@ -109,7 +111,7 @@ class Portal::Clazz < ActiveRecord::Base
   def teachers_label
     self.teachers.size > 1 ? "Teachers" : "Teacher"
   end
-  
+
   def teachers_listing
     return "no teachers" unless self.teachers.size > 0
     return self.teachers.collect { |t| t.name }.join(", ")
@@ -224,7 +226,7 @@ class Portal::Clazz < ActiveRecord::Base
   def refresh_saveable_response_objects
     self.offerings.each { |o| o.refresh_saveable_response_objects }
   end
-  
+
   def class_word_lowercase
     self.class_word.downcase! if self.class_word
   end
@@ -270,12 +272,12 @@ class Portal::Clazz < ActiveRecord::Base
       position += 1
     end
   end
-  
+
   def strip_white_space
     self.name = self.name.strip if self.name
     self.description = self.description.strip if self.description
     self.class_word = self.class_word.strip if self.class_word
   end
-  
+
 
 end

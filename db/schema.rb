@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140618090603) do
+ActiveRecord::Schema.define(:version => 20140718142506) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -165,7 +165,10 @@ ActiveRecord::Schema.define(:version => 20140618090603) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "position"
+    t.integer  "clazz_id"
   end
+
+  add_index "bookmarks", ["clazz_id"], :name => "index_bookmarks_on_clazz_id"
 
   create_table "clients", :force => true do |t|
     t.string   "name"

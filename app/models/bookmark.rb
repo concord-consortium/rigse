@@ -3,7 +3,8 @@ class Bookmark < ActiveRecord::Base
   # TODO: Its probably best not to use this type directly.
   attr_accessible :name, :url, :user_id, :user
   belongs_to :user
-  has_many   :bookmark_visits,  :dependent => :destroy
+  belongs_to :clazz, :class_name => "Portal::Clazz"
+  has_many   :bookmark_visits, :dependent => :destroy
   validates_presence_of :user
   validates_presence_of :url
   default_scope :order => 'position'
@@ -22,6 +23,11 @@ class Bookmark < ActiveRecord::Base
 
   def self.for_user(user)
     where(:user_id => user.id)
+  end
+
+  # Useful for SLQ queries.
+  def self.allowed_types_raw
+    Admin::Project.default_project.enabled_bookmark_types
   end
 
   def self.allowed_types

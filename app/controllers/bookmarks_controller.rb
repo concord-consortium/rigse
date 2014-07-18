@@ -2,8 +2,9 @@ class BookmarksController < ApplicationController
   include BookmarksHelper
 
   def index
-    @bookmarks = bookmarks
+    # This is needed so the side-menu selection works as expected.
     @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:clazz_id])
+    @bookmarks = Bookmark.where(type: Bookmark.allowed_types_raw, clazz_id: @portal_clazz)
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])
   end
