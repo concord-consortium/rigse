@@ -1,6 +1,2 @@
-%table.bookmark_visits
-  - @visits.each do |visit|
-    %tr
-      %td=link_to visit.bookmark.name, visit.bookmark.url
-      %td=visit.user.login
-      %td=visit.created_at
+- @bookmarks.each do |bookmark|
+  = render :partial => 'bookmarks/show', :locals => {:bookmark => bookmark}

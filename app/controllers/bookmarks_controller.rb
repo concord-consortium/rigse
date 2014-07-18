@@ -1,6 +1,13 @@
 class BookmarksController < ApplicationController
   include BookmarksHelper
 
+  def index
+    @bookmarks = bookmarks
+    @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:clazz_id])
+    # Save the left pane sub-menu item
+    Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])
+  end
+
   def add_padlet
     mark = PadletBookmark.create_for_user(current_visitor)
     render :update do |page|
@@ -85,7 +92,7 @@ class BookmarksController < ApplicationController
   def visits
     if current_visitor.has_role? "admin"
       @visits = BookmarkVisit.recent
-      render :index
+      render :visits
     else
       redirect_to :home
     end

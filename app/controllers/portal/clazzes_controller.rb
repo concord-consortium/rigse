@@ -36,10 +36,10 @@ class Portal::ClazzesController < ApplicationController
     else
       @offerings = @portal_clazz.offerings
     end
-    
+
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['NONE'])
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @portal_clazz }
@@ -71,10 +71,10 @@ class Portal::ClazzesController < ApplicationController
       render :partial => 'remote_form', :locals => { :portal_clazz => @portal_clazz }
       return
     end
-    
+
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP'])
-    
+
   end
 
   # POST /portal_clazzes
@@ -184,10 +184,10 @@ class Portal::ClazzesController < ApplicationController
         okToUpdate = true
         object_params = params[:portal_clazz]
         grade_levels = object_params.delete(:grade_levels)
-        
+
         clazz_investigation_id = params[:clazz_investigations]
         clazz_investigation_id_hidden = params[:clazz_investigations_hidden]
-       
+
         @portal_clazz.offerings.each do|offering|
           offering.active = false
           offering.position = clazz_investigation_id_hidden.index(offering.id.to_s) + 1
@@ -196,11 +196,11 @@ class Portal::ClazzesController < ApplicationController
               offering.active = true
             end
           end
-          
+
           offering.save
-          
+
         end
-        
+
         if Admin::Project.default_project.enable_grade_levels?
           if grade_levels
             # This logic will attempt to prevent someone from removing all grade levels from a class.
@@ -338,7 +338,7 @@ class Portal::ClazzesController < ApplicationController
     rescue
       valid_data = false
     end
-    
+
     if params[:student_id] && (!params[:student_id].empty?) && valid_data
       @student = Portal::Student.find(params[:student_id])
     end
@@ -458,13 +458,13 @@ class Portal::ClazzesController < ApplicationController
       render :partial => 'remote_form_student_roster', :locals => { :portal_clazz => @portal_clazz }
       return
     end
-    
+
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])
-    
+
   end
 
-# GET add/edit student list 
+# GET add/edit student list
   def add_new_student_popup
     if request.xhr?
       @portal_student = Portal::Student.new
@@ -474,29 +474,29 @@ class Portal::ClazzesController < ApplicationController
       return
     end
   end
-  
+
   def manage_classes
     unless current_visitor.portal_teacher
       redirect_to home_url
       return
     end
-    
+
     @teacher = current_visitor.portal_teacher;
-    
+
     if request.put?
-      
+
       # Position teacher classes
-      # and 
+      # and
       # Activate/Deactivate teacher classes
       arrTeacherClazzPosition = params['teacher_clazz_position']
-      
+
       arrActiveTeacherClazz = nil
       if (params.has_key? 'teacher_clazz')
         arrActiveTeacherClazz = params['teacher_clazz']
       else
         arrActiveTeacherClazz = []
       end
-      
+
       position = 1
       arrTeacherClazzPosition.each do |teacher_clazz_id|
         teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
@@ -510,38 +510,38 @@ class Portal::ClazzesController < ApplicationController
         teacher_clazz.save!
         position += 1;
       end
-      
+
       render(:update) { |page|
         page.replace_html 'clazz_list_container', :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => @teacher, :selects => []}
         page.replace_html 'manage_classes_panel', :partial => 'portal/clazzes/manage_clazzes_panel', :locals => {:@teacher => @teacher}
       }
       return
     end
-    
-    
-    
+
+
+
   end
-  
+
   def copy_class
-    
+
     response_value = {
       :success => true,
       :error_msg => nil
     }
-    
+
     unless current_visitor.portal_teacher
       response_value[:success] = false
       response_value[:error_msg] = "You need to be a teacher to copy classes. Please log in as a teacher and try again."
       render :json => response_value
       return
     end
-    
+
     teacher = current_visitor.portal_teacher
-    
+
     class_to_copy = Portal::Clazz.find(params[:id]);
-    
+
     params[:portal_clazz] = class_to_copy
-    
+
     new_class = Portal::Clazz.new(
         :name => params[:clazz_name],
         :class_word => params[:clazz_word],
@@ -552,62 +552,61 @@ class Portal::ClazzesController < ApplicationController
         :course => class_to_copy.course,
         :semester_id => class_to_copy.semester_id
     )
-    
+
     class_to_copy.teachers.each do |other_teacher|
       new_class.add_teacher(other_teacher)
     end
-        
+
     if(!new_class.save)
       response_value[:success] = false
       response_value[:error_msg] = new_class.errors
-      render :json => response_value      
+      render :json => response_value
       return
     end
-    
+
     class_to_copy.offerings.each do |offering|
        new_offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(new_class.id, offering.runnable_type, offering.runnable_id)
        new_offering.status = offering.status
        new_offering.active = offering.active
        new_offering.save!
     end
-    
+
     render :json => response_value
-    
+
   end
 
-  
+
   def materials
     unless current_visitor.portal_teacher
       redirect_to home_url
       return
     end
-    
+
     @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:id])
-    
+
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['MATERIALS'])
-    
+
   end
-  
-  
+
+
   def sort_offerings
     if current_visitor.portal_teacher
       params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
     end
     render :nothing => true
   end
-  
+
   def fullstatus
     unless current_visitor.portal_teacher
       redirect_to home_url
       return
     end
     @portal_clazz = Portal::Clazz.find(params[:id]);
-    
+
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
-    
+
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS'])
   end
-  
 end

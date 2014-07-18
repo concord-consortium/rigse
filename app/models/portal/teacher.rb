@@ -40,15 +40,16 @@ class Portal::Teacher < ActiveRecord::Base
   # There should be no Teachers without schools, but if there are any that predate this change,
   # it could cause problems, so it's disabled until we discuss it further. -- Cantina-CMH 6/9/10
   #validates_presence_of :schools, :message => "association cannot be empty"
-  
+
   @@LEFT_PANE_ITEM = {
     'NONE' => 0,
     'MATERIALS' => 1,
     'STUDENT_ROSTER' => 2,
     'CLASS_SETUP' => 3,
-    'FULL_STATUS' => 4
+    'FULL_STATUS' => 4,
+    'LINKS' => 5
   }
-  
+
   def self.LEFT_PANE_ITEM
     return @@LEFT_PANE_ITEM
   end
@@ -57,9 +58,9 @@ class Portal::Teacher < ActiveRecord::Base
     if current_visitor.nil? or current_visitor.portal_teacher.nil?
       return
     end
-    
+
     portal_teacher = current_visitor.portal_teacher
-    
+
     portal_teacher.save_left_pane_submenu_item(item_value)
   end
 

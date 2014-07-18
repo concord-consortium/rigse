@@ -167,6 +167,8 @@ constraints :id => /\d+/ do
         get :fullstatus
       end
 
+      resources :bookmarks, only: [:index], controller: "bookmarks"
+
       collection do
         #get :manage_classes, :path => 'manage'
         match 'manage', :to => 'clazzes#manage_classes'
