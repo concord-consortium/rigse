@@ -31,9 +31,8 @@ module BookmarksHelper
     url     = delete_bookmark_path(mark)
     confirm = "delete bookmark to #{name}"
 
-    link_to_remote( "delete",
-      {:confirm => confirm,  :url => url},
-      {:class => "button"}
+    button_to_remote( "Delete",
+      {:confirm => confirm,  :url => url}
     )
   end
 

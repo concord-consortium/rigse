@@ -5,17 +5,17 @@
   %a.link_text{:href => visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
   %div.edit{:style => "display: none;"}
     %table
-      %tr.name_field
+      %tr
         %td Name:
         %td
           %input{:name => 'name', :type => 'text', :value=>bookmark.name}
-      %tr.url_field
+      %tr
         %td Url:
         %td
           %input{:name => 'url', :type => 'text', :value=>bookmark.url}
       %tr.save_field
         %td
-          %button.save save
+          %button.save Save
         %td
           = delete_bookmark_button(bookmark)
 -if defined?(adding)

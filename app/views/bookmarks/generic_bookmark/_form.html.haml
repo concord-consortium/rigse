@@ -2,11 +2,12 @@
   = remote_form_for GenericBookmark.new, :url => add_portal_clazz_bookmarks_path, :method => :post, :remote => true do |f|
     =f.submit :value => "Add bookmark", :id => 'add_bookmark'
     .fields{ :style => "display: none" }
-      =f.label :name
-      =f.text_field  :name, :size => 15
-      %br
-      =f.label :url
-      =f.text_field  :url, :size => 15
-      %br
+      %table
+        %tr
+          %td=f.label :name
+          %td=f.text_field  :name, :size => 15
+        %tr
+          %td=f.label :url
+          %td=f.text_field  :url, :size => 15
       =f.submit :value => "Save", :id => 'save_new_bookmark'
 
