@@ -1,4 +1,9 @@
-- render_add_bookmark_form
-#bookmarks_box
-  - @bookmarks.each do |bookmark|
-    = render :partial => 'bookmarks/show', :locals => {:bookmark => bookmark}
+.maincontainer.pie
+  .container
+    .right
+      = render :partial => 'portal/clazzes/clazz_information', :locals => {:portal_clazz => @portal_clazz}
+    .header Links
+    - render_add_bookmark_form
+    #bookmarks_box
+      - @bookmarks.each do |bookmark|
+        = render :partial => 'bookmarks/show', :locals => {:bookmark => bookmark}

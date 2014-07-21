@@ -3,15 +3,14 @@ class BookmarksController < ApplicationController
 
   def index
     # This is needed so the side-menu selection works as expected.
-    @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:clazz_id])
+    @portal_clazz = get_current_clazz
     @bookmarks = Bookmark.where(type: Bookmark.allowed_types_raw, clazz_id: @portal_clazz)
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])
   end
 
   def add_padlet
-    clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:clazz_id])
-    mark = PadletBookmark.create_for_user(current_visitor, clazz)
+    mark = PadletBookmark.create_for_user(current_visitor, get_current_clazz)
     render :update do |page|
       page.insert_html :bottom,
         "bookmarks_box",
@@ -23,17 +22,13 @@ class BookmarksController < ApplicationController
   def add
     mark = GenericBookmark.new(params['generic_bookmark'])
     mark.user = current_visitor
-    if mark.save
-      render :update do |page|
-        page.replace_html "bookmark_form",
-          :partial => "bookmarks/generic_bookmark/form"
-        page.insert_html :bottom,
-          "bookmarks_box",
-          :partial => "bookmarks/show",
-          :locals => {:bookmark => mark, :adding => true}
-      end
-    else
-      render :nothing => true
+    mark.clazz = get_current_clazz
+    mark.save!
+    render :update do |page|
+      page.insert_html :bottom,
+        "bookmarks_box",
+        :partial => "bookmarks/show",
+        :locals => {:bookmark => mark, :adding => true}
     end
   end
 
@@ -98,5 +93,11 @@ class BookmarksController < ApplicationController
     else
       redirect_to :home
     end
+  end
+
+  private
+
+  def get_current_clazz()
+    Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:clazz_id])
   end
 end

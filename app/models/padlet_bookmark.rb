@@ -1,6 +1,5 @@
 class PadletBookmark < Bookmark
   default_scope :order => 'position'
-  acts_as_list
 
   def self.create_for_user(user, clazz = nil)
     return false if user.anonymous?

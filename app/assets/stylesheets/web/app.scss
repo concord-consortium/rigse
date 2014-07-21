@@ -92,9 +92,9 @@ table {
       padding-top: 10px;
       padding-left: 10px;
     }
-    td:nth-child(odd) { 
+    td:nth-child(odd) {
       width: 30%;
-      text-align: right; 
+      text-align: right;
     }
   }
 body {
@@ -317,7 +317,7 @@ body#tinymce {
   	padding: 10px 5px;
   	}
   .recent_activity_container div.right { background: #fff; }
-  .recent_activity_container div.right:nth-child(2n), 
+  .recent_activity_container div.right:nth-child(2n),
   .recent_activity_container div.right.even {
   	background: rgb(251, 244, 219) !important;
   	}}
@@ -326,7 +326,7 @@ body#tinymce {
   margin: 0;
 	padding: 0;
   width: 960px;
-  
+
   #content
   {
     padding-right: 0;
@@ -1194,7 +1194,7 @@ ul.quiet_list {
 
 .inner_page * {
   .page {
-      border: 1px solid; 
+      border: 1px solid;
       margin: 2px;
   }
   .content {
@@ -1264,7 +1264,7 @@ ul.quiet_list {
     display:inline;
     text-transform: none;
   }
-  
+
 }
 
 
@@ -1282,8 +1282,8 @@ ul.quiet_list {
 
 .manage_classes_panel
 {
-  #sortable li label{ 
-    margin: 0; 
+  #sortable li label{
+    margin: 0;
     padding: 3px 0px 0px 0px ;
     cursor:move ;
     height:auto;
@@ -1382,10 +1382,10 @@ ul.quiet_list {
   {
     width: 350px;
   }
-  
+
   td
   {
-    padding-top: 10px; 
+    padding-top: 10px;
   }
 }
 
@@ -1400,12 +1400,12 @@ table.teacher_class_table th, table.teacher_class_table td
     border: 1px solid #242323;
     padding-left:10px;
     /*text-align: center !important; /*Forcely added !important as in Action_menu_tab.scss Align Left is marked !important*/
-   
+
    .change_password
   {
     padding-left:20px;
   }
-  
+
   .remove_student
   {
     padding-left:20px;
@@ -1427,10 +1427,10 @@ table.teacher_class_table th, table.teacher_class_table td
   clear : both;
 }
 
-.classsetupform { 
+.classsetupform {
   width: 100%; text-align: left;
-  #sortable li label{ 
-    margin: 0; 
+  #sortable li label{
+    margin: 0;
     padding: 3px 0px 0px 0px ;
     cursor:move ;
     height:auto;
@@ -1473,6 +1473,8 @@ table.roster_student_list a.change_password{padding-left:10px}
 .subheader{color:#3A878B;font-size:16px;font-weight:bold}
 .labelvalue{font-weight:bold;padding-left:5px}
 .classdata{float:right;text-align:left}
+.classdata label { font-weight: normal }
+.classdata .labelvalue { font-weight: bold }
 .classsummary{padding-left: 10px;float:left;text-align:left}
 .classdata td:nth-child(odd) { padding-left: 20px; text-align: left; }
 td.title { padding-left: 20px; text-align: left; }
@@ -1518,7 +1520,7 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 
 div.atm
 {
- display:none; 
+ display:none;
 }
 
 .no_help_message{
@@ -1534,17 +1536,17 @@ div.atm
   margin-top: -110px;
   padding: 20px 0 20px 20px;
 	width: 215px;
-  
+
   form{
     margin: 0;
   	padding: 0;
     position: relative;
-    
+
     table{
       margin: 0;
       position: relative;
     	text-align: right;
-      
+
       tr.first-row
       {
         td
@@ -1572,7 +1574,7 @@ div.atm
         }
       }
       tr.third-row{
-        
+
         td{
           text-align: right;
           padding-top: 5px;
@@ -1582,7 +1584,7 @@ div.atm
       }
       }
     }
-    
+
     .login-links{
       position: relative;
       padding-top: 5px;

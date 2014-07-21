@@ -12,7 +12,6 @@
 }
 
 #bookmarks_box {
-  margin-top: 2em;
   border-top: 1px dotted #479492;
 
   .bookmark_item {
@@ -25,6 +24,7 @@
     white-space: nowrap;
     a {
       display: inline;
+      vertical-align: middle;
       padding: 4px;
       border-radius: 6px;
     }
@@ -36,7 +36,6 @@
     }
     .slide {
       cursor: move;
-      float: right;
     }
     a.link_text {
       display: inline-block;
@@ -55,10 +54,10 @@ table.bookmark_visits {
 }
 
 .bookmarks_form {
-  display: block;
+  display: inline-block;
+  vertical-align: top;
   background-color: rgba(255,255,255,0.3);
-  text-align: right;
-  padding: 1em;
+  text-align: left;
   margin: 0.5em;
   border-radius: 5px;
   font-size-size: 9px;
@@ -68,10 +67,10 @@ table.bookmark_visits {
    font-size: 9px;
   }
   input[type="button"] {
-    font-size: 10px;
+    font-size: 12px;
   }
   input[type="submit"]{
-   font-size: 10px;
+   font-size: 12px;
   }
   label {
     display: inline;
@@ -84,5 +83,8 @@ table.bookmark_visits {
     line-height: 2.1em;
     vertical-align: bottom;
     margin-bottom: 0.5em;
+  }
+  form {
+    padding: 0;
   }
 }
