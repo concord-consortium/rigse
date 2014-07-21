@@ -167,7 +167,7 @@ constraints :id => /\d+/ do
         get :fullstatus
       end
 
-      resources :bookmarks, only: [:index], controller: "bookmarks" do
+      resources :bookmarks, only: [:index], module: nil, controller: 'bookmarks' do
         collection do
           post 'add'        => 'bookmarks#add'
           post 'add_padlet' => 'bookmarks#add_padlet'
