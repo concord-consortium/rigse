@@ -2,7 +2,7 @@
   %a.control.slide ☰
   %a.control.edit ✎
   / = delete_bookmark_button(bookmark)
-  %a.link_text{:href => visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
+  %a.link_text{:href => portal_visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
   %div.edit{:style => "display: none;"}
     %table
       %tr

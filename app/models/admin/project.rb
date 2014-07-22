@@ -158,7 +158,7 @@ HEREDOC
   end
 
   def available_bookmark_types
-    Bookmark.available_types.map { |t| t.name }
+    Portal::Bookmark.available_types.map { |t| t.name }
   end
 
 

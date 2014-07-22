@@ -1,5 +1,5 @@
 #add_generic_bookmark
-  = remote_form_for GenericBookmark.new, :url => add_portal_clazz_bookmarks_path, :method => :post, :remote => true do |f|
+  = remote_form_for Portal::GenericBookmark.new, :url => add_portal_clazz_bookmarks_path, :method => :post, :remote => true do |f|
     =f.submit :value => "Add bookmark", :id => 'add_bookmark'
     .fields{ :style => "display: none" }
       %table

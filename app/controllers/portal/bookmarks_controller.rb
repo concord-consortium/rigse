@@ -1,51 +1,51 @@
-class BookmarksController < ApplicationController
-  include BookmarksHelper
+class Portal::BookmarksController < ApplicationController
+  include Portal::BookmarksHelper
 
   def index
     # This is needed so the side-menu selection works as expected.
     @portal_clazz = get_current_clazz
-    @bookmarks = Bookmark.where(type: Bookmark.allowed_types_raw, clazz_id: @portal_clazz)
+    @bookmarks = Portal::Bookmark.where(type: Portal::Bookmark.allowed_types_raw, clazz_id: @portal_clazz)
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])
   end
 
   def add_padlet
-    mark = PadletBookmark.create_for_user(current_visitor, get_current_clazz)
+    mark = Portal::PadletBookmark.create_for_user(current_visitor, get_current_clazz)
     render :update do |page|
       page.insert_html :bottom,
         "bookmarks_box",
-        :partial => "bookmarks/show",
+        :partial => "portal/bookmarks/show",
         :locals => {:bookmark => mark, :adding => true}
     end
   end
 
   def add
-    mark = GenericBookmark.new(params['generic_bookmark'])
+    mark = Portal::GenericBookmark.new(params['portal_generic_bookmark'])
     mark.user = current_visitor
     mark.clazz = get_current_clazz
     mark.save!
     render :update do |page|
       page.insert_html :bottom,
         "bookmarks_box",
-        :partial => "bookmarks/show",
+        :partial => "portal/bookmarks/show",
         :locals => {:bookmark => mark, :adding => true}
     end
   end
 
   def visit
-    mark = Bookmark.find(params['id'])
+    mark = Portal::Bookmark.find(params['id'])
     mark.record_visit(current_visitor)
     redirect_to mark.url
   end
 
   def delete
-    mark = Bookmark.find(params['id'])
+    mark = Portal::Bookmark.find(params['id'])
     dom_id = bookmark_dom_item(mark)
     if mark.changeable? current_visitor
       mark.destroy
       render :update do |page|
         page.remove dom_id
-        if PadletBookmark.user_can_make? current_visitor
+        if Portal::PadletBookmark.user_can_make? current_visitor
           page.show "padlet_form"
         end
       end
@@ -54,7 +54,7 @@ class BookmarksController < ApplicationController
 
   def sort
     ids = JSON.parse(params['ids'])
-    bookmarks = ids.map { |i| Bookmark.find(i) }
+    bookmarks = ids.map { |i| Portal::Bookmark.find(i) }
     position = 0
     bookmarks.each do |bookmark|
       if bookmark.changeable? current_visitor
@@ -67,7 +67,7 @@ class BookmarksController < ApplicationController
   end
 
   def edit
-    bookmark = Bookmark.find(params['id'])
+    bookmark = Portal::Bookmark.find(params['id'])
     if bookmark && bookmark.changeable?(current_visitor)
       %w[name url].each do |param|
         unless params[param].blank?
@@ -88,7 +88,7 @@ class BookmarksController < ApplicationController
 
   def visits
     if current_visitor.has_role? "admin"
-      @visits = BookmarkVisit.recent
+      @visits = Portal::BookmarkVisit.recent
       render :visits
     else
       redirect_to :home

@@ -1,4 +1,4 @@
-class Bookmark < ActiveRecord::Base
+class Portal::Bookmark < ActiveRecord::Base
   include Changeable
   # TODO: Its probably best not to use this type directly.
   attr_accessible :name, :url, :user_id, :user
@@ -14,7 +14,7 @@ class Bookmark < ActiveRecord::Base
   validates_format_of :url,  :with => url_regex
 
   def self.available_types
-    [PadletBookmark, GenericBookmark]
+    [Portal::PadletBookmark, Portal::GenericBookmark]
   end
 
   def self.for_project
@@ -49,6 +49,6 @@ class Bookmark < ActiveRecord::Base
   end
 
   def record_visit(user)
-    self.bookmark_visits <<  BookmarkVisit.new(:user => user)
+    self.bookmark_visits << Portal::BookmarkVisit.new(:user => user)
   end
 end

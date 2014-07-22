@@ -90,7 +90,7 @@ describe Admin::Project do
       end
 
       it "should include a generic bookmark type" do
-        should include GenericBookmark.name
+        should include Portal::GenericBookmark.name
       end
     end
 

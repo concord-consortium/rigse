@@ -5,8 +5,8 @@ CollectionSelector  = "##{CollectionsDomID}"
 ItemSelector        = "#{CollectionSelector} .bookmark_item"
 AddBookmarkSelector = "add_generic_bookmark"
 SortHandle          = "slide"
-SortUrl             = "/bookmarks/sort"
-EditUrl             = "/bookmarks/edit"
+SortUrl             = "/portal/bookmarks/sort"
+EditUrl             = "/portal/bookmarks/edit"
 
 bookmark_identify = (div) ->
   div.readAttribute('data-bookmark-id');

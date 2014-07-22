@@ -167,10 +167,10 @@ constraints :id => /\d+/ do
         get :fullstatus
       end
 
-      resources :bookmarks, only: [:index], module: nil, controller: 'bookmarks' do
+      resources :bookmarks, only: [:index] do
         collection do
-          post 'add'        => 'bookmarks#add'
-          post 'add_padlet' => 'bookmarks#add_padlet'
+          post 'add'
+          post 'add_padlet'
         end
       end
 
@@ -264,7 +264,14 @@ constraints :id => /\d+/ do
       end
     end
 
+    # TODO: clean up these adhoc bookmark routes:
+    match '/bookmark/visit/:id'      => 'bookmarks#visit',      :as => :visit_bookmark
+    match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark
+    match '/bookmark/visits'         => 'bookmarks#visits',     :as => :bookmark_visits
+    match '/bookmark/sort'           => 'bookmarks#sort',       :method => :post, :as => :sort_bookmarks
+    match '/bookmark/edit'           => 'bookmarks#edit',       :method => :post, :as => :edit_bookmark
   end
+
   match '/portal/school_selector/update' => 'portal/school_selector#update', :as => :school_selector_update
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/login' => 'home#index', :as => :login
@@ -620,14 +627,6 @@ constraints :id => /\d+/ do
   match 'authoring' => 'home#authoring', :as => :authoring
   match '/:controller(/:action(/:id))'
 
-  # TODO: clean up these adhoc bookmark routes:
-  match '/bookmark/visit/:id'      => 'bookmarks#visit',      :as => :visit_bookmark
-  match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark
-  match '/bookmark/visits'         => 'bookmarks#visits',     :as => :bookmark_visits
-  match '/bookmark/sort'           => 'bookmarks#sort',       :method => :post, :as => :sort_bookmarks
-  match '/bookmark/edit'           => 'bookmarks#edit',       :method => :post, :as => :edit_bookmark
   root :to => 'home#index'
-
-
 end
 end

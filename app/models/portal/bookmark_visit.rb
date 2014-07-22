@@ -1,4 +1,4 @@
-class BookmarkVisit < ActiveRecord::Base
+class Portal::BookmarkVisit < ActiveRecord::Base
   belongs_to :user
   belongs_to :bookmark
 
