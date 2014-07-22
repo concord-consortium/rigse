@@ -1,6 +1,7 @@
 - is_teacher = @portal_clazz.is_teacher?(current_visitor)
 - can_manage = is_teacher || current_visitor.has_role?("manager", "researcher", "admin")
 = render_portal_clazz_partial 'portal/clazzes/show'
+= render_portal_clazz_partial 'portal/clazzes/links'
 - if can_manage
   %p
     = link_to 'Manage Student Roster',
