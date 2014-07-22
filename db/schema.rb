@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140722115635) do
+ActiveRecord::Schema.define(:version => 20140722135342) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -936,10 +936,11 @@ ActiveRecord::Schema.define(:version => 20140722115635) do
     t.string   "type"
     t.string   "url"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "position"
     t.integer  "clazz_id"
+    t.boolean  "is_visible", :default => true, :null => false
   end
 
   add_index "portal_bookmarks", ["clazz_id"], :name => "index_bookmarks_on_clazz_id"
