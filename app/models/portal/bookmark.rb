@@ -1,5 +1,7 @@
 class Portal::Bookmark < ActiveRecord::Base
   include Changeable
+  self.table_name = :portal_bookmarks
+
   # TODO: Its probably best not to use this type directly.
   attr_accessible :name, :url, :user_id, :user
   belongs_to :user
