@@ -1,4 +1,4 @@
-%div.bookmark_item{:id => bookmark_dom_item(bookmark),'data-bookmark-id' => bookmark.id,'data-bookmark-name' => bookmark.name,'data-bookmark-url' => bookmark.url}
+%div.bookmark_item{ :id => bookmark_dom_item(bookmark), 'data-bookmark-id' => bookmark.id }
   %a.control.slide ☰
   %a.control.edit ✎
   / = delete_bookmark_button(bookmark)
@@ -13,6 +13,10 @@
         %td Url:
         %td
           %input{:name => 'url', :type => 'text', :value=>bookmark.url}
+      %tr
+        %td Visible:
+        %td
+          = check_box_tag('is_visible', 'true', bookmark.is_visible)
       %tr.save_field
         %td
           %button.save Save

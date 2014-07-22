@@ -1,2 +1,3 @@
 - bookmarks.each do |bookmark|
-  %a{:href => portal_visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
+  - if bookmark.is_visible
+    %a{:href => portal_visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name

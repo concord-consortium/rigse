@@ -69,16 +69,17 @@ class Portal::BookmarksController < ApplicationController
   def edit
     bookmark = Portal::Bookmark.find(params['id'])
     if bookmark && bookmark.changeable?(current_visitor)
-      %w[name url].each do |param|
+      %w[name url is_visible].each do |param|
         unless params[param].blank?
-          bookmark.update_attribute(param,params[param])
+          bookmark.update_attribute(param, params[param])
         end
       end
       if bookmark.save
         render :json => {
           id: bookmark.id,
           name: bookmark.name,
-          url: bookmark.url
+          url: bookmark.url,
+          is_visible: bookmark.is_visible
         }
         return
       end

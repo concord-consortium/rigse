@@ -1,4 +1,3 @@
-
 InstanceCounter     = 0;
 CollectionsDomID    = "bookmarks_box"
 CollectionSelector  = "##{CollectionsDomID}"
@@ -13,17 +12,16 @@ bookmark_identify = (div) ->
 
 class Bookmark
   constructor:(@div) ->
-    @id          = bookmark_identify(@div)
-    @editor      = @div.select('div.edit')[0]
-    @edit_button = @div.select('a.edit')[0]
-    @link_div    = @div.select('a.link_text')[0]
-    @save_button = @div.select('button.save')[0]
-    @name_field  = @div.select('input[name="name"]')[0]
-    @url_field   = @div.select('input[name="url"]')[0]
-    @name        = @div.readAttribute('data-bookmark-name')
-    @url         = @div.readAttribute('data-bookmark-url')
+    @id               = bookmark_identify(@div)
+    @editor           = @div.select('div.edit')[0]
+    @edit_button      = @div.select('a.edit')[0]
+    @link_div         = @div.select('a.link_text')[0]
+    @save_button      = @div.select('button.save')[0]
+    @name_field       = @div.select('input[name="name"]')[0]
+    @url_field        = @div.select('input[name="url"]')[0]
+    @is_visible_field = @div.select('input[name="is_visible"]')[0]
 
-    @editing     = false
+    @editing = false
     @save_button.observe 'click', (evt) =>
       @save()
     @edit_button.observe 'click', (evt) =>
@@ -37,18 +35,18 @@ class Bookmark
       @editor.show()
       @editing = true
 
-  update: (new_name,new_url) ->
-    @name = new_name
-    @url = new_url
-    @link_div.update(@name)
-    @link_div.writeAttribute('href',@url)
-    @name_field.setValue(@name)
-    @url_field.setValue(@url)
+  update: (new_name, new_url, new_visibility) ->
+    @link_div.update(new_name)
+    @link_div.writeAttribute('href', new_url)
+    @name_field.setValue(new_name)
+    @url_field.setValue(new_url)
+    @is_visible_field.setValue(new_visibility)
 
   save: ->
     @editing = false;
     new_name = @name_field.getValue()
-    new_url  = @url_field.getValue()
+    new_url = @url_field.getValue()
+    new_visibility = @is_visible_field.getValue() == 'true'
 
     @editor.hide();
     new Ajax.Request EditUrl,
@@ -57,13 +55,13 @@ class Bookmark
         id: @id
         name: new_name
         url: new_url
+        is_visible: new_visibility
       requestHeaders:
         Accept: 'application/json'
       onSuccess: (transport) =>
         json = transport.responseText.evalJSON(true)
-        @update(json.name, json.url)
+        @update(json.name, json.url, json.is_visible)
       onFailure: (transport) =>
-        @update(@name,@url)
         @div.highlight(startcolor: '#ff0000')
 
 
@@ -116,9 +114,6 @@ class BookmarksManager
         Accept: 'application/json'
       onSuccess: (transport) ->
         json = transport.responseText.evalJSON(true)
-
-
-
 
 document.observe "dom:loaded", ->
   window.bookmarksManager = new BookmarksManager()
