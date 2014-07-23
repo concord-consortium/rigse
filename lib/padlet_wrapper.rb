@@ -23,11 +23,26 @@ class PadletWrapper
   def initialize
     @cookies = []
     @policy_id = nil
+    authenticate # optional!
     make_wall
     make_public
   end
 
   private
+
+  def authenticate
+    # Note it's optional step. If Padlet credentials are
+    # not provided then wall will belong to anonymous user.
+    padlet_user = OPTS[:padlet_user]
+    padlet_pass = OPTS[:padlet_pass]
+    if padlet_user && padlet_pass
+      # Each request updates cookies. That's enough for authentication.
+      req(:post, AUTH_PATH, {
+        'email'    => padlet_user,
+        'password' => padlet_pass
+      })
+    end
+  end
 
   def make_wall
     response = req(:post, WALL_PATH, {})
@@ -38,6 +53,10 @@ class PadletWrapper
   end
 
   def make_public
+    # We need to be authenticated to perform this step.
+    # Note that even if we didn't authenticate explicitly (no Padlet credentials provided),
+    # wall creation caused that we have cookies set and are authenticated as 'Anonymous',
+    # actual owner of Padlet wall.
     req(:put, "#{POLICY_PATH}/#{@policy_id}", {
       'id'     => @policy_id,
       'public' => PADLET_PUBLIC_POLICY

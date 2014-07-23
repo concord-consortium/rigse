@@ -1,7 +1,14 @@
 ---
 host:  padlet.com
 
+# You can specify Padlet credentials, so each wall will belong to a given user.
+# Otherwise, walls will belong to Anonymous user (in practice it means that it
+# won't be possbile to change their settings in the future).
+# padlet_user: email@email.com
+# padlet_pass: zzzzzzz
+
 # Example for custom domain hosted padlet:
 # host:  concordconsortium.padlet.com
 # basic_auth_user: xxxxxxx
 # basic_auth_pass: yyyyyyy
+
