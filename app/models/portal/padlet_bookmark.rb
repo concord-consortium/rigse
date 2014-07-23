@@ -4,8 +4,7 @@ class Portal::PadletBookmark < Portal::Bookmark
   def self.create_for_user(user, clazz = nil)
     return false if user.anonymous?
     found  = self.for_user(user)
-    email  = user.email || "#{user.login}@concord.org"
-    padlet = PadletWrapper.make_bookmark(email,'password')
+    padlet = PadletWrapper.new
     url    = padlet.padlet_url
     count  = found.size
     numbers = found.map do |item|
