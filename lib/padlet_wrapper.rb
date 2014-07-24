@@ -9,7 +9,11 @@ class PadletWrapper
   PADLET_PUBLIC_POLICY = 4
 
   OPTS = {
-    :host => DEFAULT_HOST
+    host: DEFAULT_HOST,
+    padlet_user: nil,
+    padlet_pass: nil,
+    basic_auth_user: nil,
+    basic_auth_pass: nil
   }
   begin
     yaml_file_path = File.join(Rails.root, 'config', 'padlet.yml')
@@ -21,9 +25,10 @@ class PadletWrapper
   end
 
   def initialize
-    @cookies = []
+    @cookies = [] # used to authenticate
     @policy_id = nil
-    authenticate # optional!
+    @padlet_url = nil
+    authenticate # optional
     make_wall
     make_public
   end
@@ -37,19 +42,22 @@ class PadletWrapper
     padlet_pass = OPTS[:padlet_pass]
     if padlet_user && padlet_pass
       # Each request updates cookies. That's enough for authentication.
-      req(:post, AUTH_PATH, {
+      response = req(:post, AUTH_PATH, {
         'email'    => padlet_user,
         'password' => padlet_pass
       })
+      fail 'Padlet authentication failed' if response.response.code != "201"
     end
   end
 
   def make_wall
     response = req(:post, WALL_PATH, {})
+    p response
     body = JSON.parse(response.body)
-    @padlet_url = body['links']['doodle']
-    @policy_id  = body['privacy_policy']['id']
-    # TODO verify response
+    @padlet_url = body['links'] && body['links']['doodle']
+    @policy_id  = body['privacy_policy'] && body['privacy_policy']['id']
+    fail 'Padlet wall creation failed' if response.response.code != "201" ||
+                                          !@padlet_url || !@policy_id
   end
 
   def make_public
@@ -57,11 +65,13 @@ class PadletWrapper
     # Note that even if we didn't authenticate explicitly (no Padlet credentials provided),
     # wall creation caused that we have cookies set and are authenticated as 'Anonymous',
     # actual owner of Padlet wall.
-    req(:put, "#{POLICY_PATH}/#{@policy_id}", {
+    response = req(:put, "#{POLICY_PATH}/#{@policy_id}", {
       'id'     => @policy_id,
       'public' => PADLET_PUBLIC_POLICY
     })
-    # TODO verify response
+    body = JSON.parse(response.body)
+    fail 'Padlet wall privacy policy update failed' if response.response.code != "200" ||
+                                                       body['public'] != PADLET_PUBLIC_POLICY
   end
 
   def req(method, path, data)
@@ -80,7 +90,9 @@ class PadletWrapper
   end
 
   def save_cookies(response)
-    @cookies = response.get_fields('Set-Cookie').map! { |c|
+    resp_cookies = response.get_fields('Set-Cookie')
+    return if !resp_cookies
+    @cookies = resp_cookies.map! { |c|
       name, remainder = c.split("=", 2)
       value = remainder.split(";")[0]
       "#{name}=#{value}"
