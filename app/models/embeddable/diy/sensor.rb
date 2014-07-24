@@ -52,15 +52,12 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   end
 
   def can_run_lightweight?
-    # disabled until we can inject the prediction data into the sensor graph
-    return false
-    # url = interactive_url
-
-    # if url && !url.empty?
-    #   return true
-    # else
-    #   return false
-    # end
+    url = interactive_url
+    if url && !url.empty?
+      return true
+    else
+      return false
+    end
   end
 
   # this might be cleaner if we could extend or clone Embeddable::DataCollector somehow

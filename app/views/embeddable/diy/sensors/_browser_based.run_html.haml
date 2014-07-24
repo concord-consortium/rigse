@@ -2,12 +2,22 @@
   .background
   .text= "Click here to start the graph."
 .model_interactive.unavailable{:id => dom_id_for(diy_sensor, :model_interactive)}
-  %iframe.interactive{:frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
+  %iframe.interactive{:id => dom_id_for(diy_sensor, :interactive_iframe), :frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
 .model_interactive_snapshot_instructions.unavailable{:id => dom_id_for(diy_sensor, :model_interactive_snapshot_instructions)}
   = current_project.interactive_snapshot_instructions
 .model_interactive_snapshots.unavailable{:id => dom_id_for(diy_sensor, :model_interactive_snapshots)}
   %button.labbook_button{:id => dom_id_for(diy_sensor, :model_take_snapshot)}= "Take a Snapshot"
   %img.labbook_button{ :id => dom_id_for(diy_sensor, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
+
+- if diy_sensor.prediction_graph_id
+  :javascript
+    var prefix = "#interactive_iframe_embeddable__diy__sensor_"
+    var prediction_dom = $j(prefix + "#{diy_sensor.prediction_graph_id}")[0];
+    var sensor_dom     = $j(prefix + "#{diy_sensor.id}")[0];
+    
+    $j(document).ready(function() { 
+      connectPredictionToSensor(prediction_dom,sensor_dom); 
+    });
 
 - if Labbook.enabled?
   :javascript
