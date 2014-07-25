@@ -15,12 +15,16 @@ class Portal::BookmarksController < ApplicationController
       page.insert_html :bottom,
         "bookmarks_box",
         :partial => "portal/bookmarks/show",
-        :locals => {:bookmark => mark, :adding => true, :edit_bookmark_id => mark.id}
+        :locals => {:bookmark => mark, :new_bookmark_id => mark.id}
     end
   end
 
   def add
-    mark = Portal::GenericBookmark.new(params['portal_generic_bookmark'])
+    props = params['portal_generic_bookmark'] || {
+      name: 'My bookmark',
+      url: 'http://concord.org'
+    }
+    mark = Portal::GenericBookmark.new(props)
     mark.user = current_visitor
     mark.clazz = get_current_clazz
     mark.save!
@@ -28,7 +32,7 @@ class Portal::BookmarksController < ApplicationController
       page.insert_html :bottom,
         "bookmarks_box",
         :partial => "portal/bookmarks/show",
-        :locals => {:bookmark => mark, :adding => true}
+        :locals => {:bookmark => mark, :new_bookmark_id => mark.id}
     end
   end
 

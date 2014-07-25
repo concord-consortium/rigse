@@ -2,8 +2,6 @@ InstanceCounter    = 0;
 CollectionsDomID   = "bookmarks_box"
 CollectionSelector = "##{CollectionsDomID}"
 ItemSelector       = "#{CollectionSelector} .bookmark_item"
-AddBookmarkBtn     = "add_bookmark_button"
-AddBookmarkForm    = "add_generic_bookmark_form"
 
 SortHandle         = "slide"
 SortUrl            = "/portal/bookmarks/sort"
@@ -13,7 +11,7 @@ bookmark_identify = (div) ->
   div.readAttribute('data-bookmark-id');
 
 class Bookmark
-  constructor:(@div) ->
+  constructor:(@div, @manager) ->
     @id               = bookmark_identify(@div)
     @editor           = @div.select('div.editor')[0]
     @edit_button      = @div.select('a.edit')[0]
@@ -23,24 +21,21 @@ class Bookmark
     @url_field        = @div.select('input[name="url"]')[0]
     @is_visible_field = @div.select('input[name="is_visible"]')[0]
 
-    @editing = false
     @is_visible_field.observe 'change', (evt) =>
       @saveVisibility()
     @save_button.observe 'click', (evt) =>
       @saveForm()
     @edit_button.observe 'click', (evt) =>
-      @edit()
+      @manager.editBookmark(@id)
 
-  edit: ->
-    if @editing
-      @editor.hide()
-      @link_div.show()
-      @editing = false
-    else
+  edit: (v) ->
+    if v
       @editor.show()
       @link_div.hide()
       @name_field.focus()
-      @editing = true
+    else
+      @editor.hide()
+      @link_div.show()
 
   update: (new_name, new_url, new_visibility) ->
     @link_div.update(new_name)
@@ -50,7 +45,7 @@ class Bookmark
     @is_visible_field.setValue(new_visibility)
 
   saveForm: ->
-    @edit()
+    @edit(false)
     new_name = @name_field.getValue()
     new_url = @url_field && @url_field.getValue()
     @sendEditReq(
@@ -82,7 +77,6 @@ class BookmarksManager
   constructor: ->
     @bookmarks = {}
     @addBookmarks()
-    @setupAddBoomarkForm()
 
   addBookmarks: ->
     $$(ItemSelector).each (item) =>
@@ -94,25 +88,14 @@ class BookmarksManager
 
   bookmarkForDiv: (div) ->
     id = bookmark_identify(div)
-    @bookmarks[id] ||= @addBookMark(div)
-
-  addBookMark: (div) ->
-    new Bookmark(div)
-
-  setupAddBoomarkForm: () ->
-    add_btn = $(AddBookmarkBtn)
-    form = $(AddBookmarkForm)
-    save_btn = form.select('#save_new_bookmark')[0]
-    add_btn.observe 'click', (evt) =>
-      form.show()
-      add_btn.hide()
-      evt.preventDefault() # don't submit the form
-    save_btn.observe 'click', (evt) =>
-      form.hide()
-      add_btn.show()
+    @bookmarks[id] ||= new Bookmark(div, @)
 
   editBookmark: (id) ->
-    @bookmarks[id].edit()
+    @bookmarks[id].edit(true)
+    for own idx, mark of @bookmarks
+      if Number(idx) != Number(id)
+        mark.edit(false)
+    return
 
   orderChanged:(divs) ->
     results = $$(ItemSelector).map (div) =>

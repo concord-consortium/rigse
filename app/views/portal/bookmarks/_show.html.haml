@@ -11,13 +11,10 @@
     - if bookmark.is_a? Portal::GenericBookmark
       %input{:name => 'url', :type => 'text', :value => bookmark.url, :class => 'url-field'}
     %button.save Save
-- if defined?(adding)
+- if defined?(new_bookmark_id)
   :javascript
     if (window.bookmarksManager) {
       window.bookmarksManager.addBookmarks();
+      window.bookmarksManager.editBookmark(#{new_bookmark_id});
     }
-- if defined?(edit_bookmark_id)
-  :javascript
-    if (window.bookmarksManager) {
-      window.bookmarksManager.editBookmark(#{edit_bookmark_id});
-    }
+
