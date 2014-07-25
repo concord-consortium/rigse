@@ -11,76 +11,90 @@
   }
 }
 
-#bookmarks_box {
-  .bookmark_item {
-    margin-left: 4px;
-    margin-right: 4px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    line-height: 1em;
-    overflow: hidden;
-    white-space: nowrap;
-    input.visibility {
-      vertical-align: middle;
-      margin-right: 5px;
-    }
-    a {
-      display: inline;
-      vertical-align: middle;
-      padding: 4px;
-      border-radius: 6px;
-    }
-    a.delete {
-      @include control;
-    }
-    .control {
-      @include control;
-    }
-    .slide {
-      cursor: move;
-    }
-    a.link_text {
-      display: inline-block;
-      width: 50%;
-      white-space: nowrap;
+  .bookmarks-page {
+  #bookmarks_box {
+    .bookmark_item {
+      margin-left: 4px;
+      margin-right: 4px;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      line-height: 1em;
       overflow: hidden;
+      white-space: nowrap;
+      input.visibility {
+        vertical-align: middle;
+        margin-right: 5px;
+      }
+      a {
+        display: inline;
+        vertical-align: middle;
+        padding: 4px;
+        border-radius: 6px;
+      }
+      a.delete {
+        @include control;
+      }
+      .control {
+        @include control;
+      }
+      .slide {
+        cursor: move;
+      }
+      a.link_text {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .editor {
+        display: inline-block;
+        font-size: 13px;
+        input {
+          display: inline-block;
+          padding: 1px 3px;
+        }
+        input, button {
+          vertical-align: middle;
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  input {
+    &:focus {
+      outline: none;
+      border-color: #32C9C6;
+    }
+    &.url-field {
+      width: 250px;
+    }
+    &.name-field {
+      width: 120px;
+    }
+  }
+
+  table.bookmark_visits {
+    td {
+      padding-left:  1em;
+      padding-right: 1em;
+    }
+  }
+
+  .add_bookmark_button {
+    display: inline-block;
+    margin: 8px 6px 8px 3px;
+  }
+
+  .bookmark_form {
+    margin-right: 10px;
+    input[type=text] {
+      font-size: 12px;
     }
     table {
-      margin: 3px 0 3px 38px;
+      margin: 0 0 2px 0;
     }
-  }
-}
-
-table.bookmark_visits {
-  td {
-    padding-left:  1em;
-    padding-right: 1em;
-  }
-}
-
-.add_bookmark_button {
-  display: inline-block;
-  margin: 8px 6px 8px 3px;
-}
-
-.bookmark_form, #bookmarks_box {
-  table {
-    margin: 0;
-    width: 250px;
-  }
-  input[type=text] {
-    font-size: 12px;
-    width: 150px;
-    align: right;
-  }
-}
-
-.bookmark_form {
-  margin-right: 10px;
-  input[type=text] {
-    font-size: 12px;
-  }
-  label:after {
-    content: ":";
+    label:after {
+      content: ":";
+    }
   }
 }

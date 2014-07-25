@@ -1,27 +1,23 @@
 %div.bookmark_item{ :id => bookmark_dom_item(bookmark), 'data-bookmark-id' => bookmark.id }
   = check_box_tag('is_visible', 'true', bookmark.is_visible, :class => 'visibility', :id => nil)
+  %a.control.slide ☰
   = link_to_remote(icon('trash-o', '', :class => 'control'), { |
       :confirm => "Delete bookmark to #{bookmark.name}?", |
       :url => portal_delete_bookmark_path(bookmark) })
   %a.control.edit ✎
   %a.link_text{:href => portal_visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
-  %div.edit{:style => "display: none;"}
-    %table
-      %tr
-        %td Name:
-        %td
-          %input{:name => 'name', :type => 'text', :value=>bookmark.name}
-      = if bookmark.is_a? Portal::GenericBookmark
-        %tr
-          %td URL:
-          %td
-            %input{:name => 'url', :type => 'text', :value=>bookmark.url}
-      %tr.save_field
-        %td
-          %button.save Save
-  %a.control.slide ☰
--if defined?(adding)
+  %div.editor{:style => "display: none;"}
+    %input{:name => 'name', :type => 'text', :value => bookmark.name, :class => 'name-field'}
+    - if bookmark.is_a? Portal::GenericBookmark
+      %input{:name => 'url', :type => 'text', :value => bookmark.url, :class => 'url-field'}
+    %button.save Save
+- if defined?(adding)
   :javascript
     if (window.bookmarksManager) {
       window.bookmarksManager.addBookmarks();
+    }
+- if defined?(edit_bookmark_id)
+  :javascript
+    if (window.bookmarksManager) {
+      window.bookmarksManager.editBookmark(#{edit_bookmark_id});
     }

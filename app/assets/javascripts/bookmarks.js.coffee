@@ -15,7 +15,7 @@ bookmark_identify = (div) ->
 class Bookmark
   constructor:(@div) ->
     @id               = bookmark_identify(@div)
-    @editor           = @div.select('div.edit')[0]
+    @editor           = @div.select('div.editor')[0]
     @edit_button      = @div.select('a.edit')[0]
     @link_div         = @div.select('a.link_text')[0]
     @save_button      = @div.select('button.save')[0]
@@ -34,9 +34,12 @@ class Bookmark
   edit: ->
     if @editing
       @editor.hide()
+      @link_div.show()
       @editing = false
     else
       @editor.show()
+      @link_div.hide()
+      @name_field.focus()
       @editing = true
 
   update: (new_name, new_url, new_visibility) ->
@@ -47,10 +50,9 @@ class Bookmark
     @is_visible_field.setValue(new_visibility)
 
   saveForm: ->
-    @editing = false;
+    @edit()
     new_name = @name_field.getValue()
-    new_url = @url_field.getValue()
-    @editor.hide();
+    new_url = @url_field && @url_field.getValue()
     @sendEditReq(
       id: @id
       name: new_name
@@ -108,6 +110,9 @@ class BookmarksManager
     save_btn.observe 'click', (evt) =>
       form.hide()
       add_btn.show()
+
+  editBookmark: (id) ->
+    @bookmarks[id].edit()
 
   orderChanged:(divs) ->
     results = $$(ItemSelector).map (div) =>

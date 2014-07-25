@@ -4,8 +4,8 @@
       %table
         %tr
           %td=f.label :name
-          %td=f.text_field  :name, :size => 15, :placeholder => 'My bookmark'
+          %td=f.text_field  :name, :size => 15, :class => 'name-field', :placeholder => 'My bookmark'
         %tr
           %td=f.label :url, "URL"
-          %td=f.text_field  :url, :size => 15, :placeholder => 'http://www.example.org'
+          %td=f.text_field  :url, :size => 15, :class => 'url-field', :placeholder => 'http://www.example.org'
       =f.submit :value => "Save", :id => 'save_new_bookmark'

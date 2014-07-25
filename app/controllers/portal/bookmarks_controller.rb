@@ -15,7 +15,7 @@ class Portal::BookmarksController < ApplicationController
       page.insert_html :bottom,
         "bookmarks_box",
         :partial => "portal/bookmarks/show",
-        :locals => {:bookmark => mark, :adding => true}
+        :locals => {:bookmark => mark, :adding => true, :edit_bookmark_id => mark.id}
     end
   end
 
