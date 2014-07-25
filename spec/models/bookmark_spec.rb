@@ -8,4 +8,20 @@ describe Portal::Bookmark do
       end
     end
   end
+
+  describe "Bookmark instance" do
+    it "should preprocess provided URL" do
+      b = Portal::Bookmark.new
+      b.url = "abc.com"
+      b.url.should eql("http://abc.com")
+      b.url = "/abc.com"
+      b.url.should eql("http://abc.com")
+      b.url = "//abc.com"
+      b.url.should eql("http://abc.com")
+      b.url = "http://abc.com"
+      b.url.should eql("http://abc.com")
+      b.url = "https://abc.com"
+      b.url.should eql("https://abc.com")
+    end
+  end
 end

@@ -12,9 +12,6 @@ class Portal::Bookmark < ActiveRecord::Base
   default_scope :order => 'position'
   acts_as_list
 
-  url_regex      = /https?:\/\/(\S+)+\s*$/i
-  validates_format_of :url,  :with => url_regex
-
   def self.available_types
     [Portal::PadletBookmark, Portal::GenericBookmark]
   end
@@ -44,6 +41,13 @@ class Portal::Bookmark < ActiveRecord::Base
   def self.user_can_make?(user)
     return false if user.anonymous?
     return true if (self.is_allowed?)
+  end
+
+  def url=(url)
+    unless url =~ /https?:\/\/(\S+)+\s*$/i
+      url = "http://#{url.gsub(/^\/\/?/i, '')}"
+    end
+    write_attribute(:url, url)
   end
 
   def visits
