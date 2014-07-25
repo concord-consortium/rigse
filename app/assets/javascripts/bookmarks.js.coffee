@@ -1,11 +1,13 @@
-InstanceCounter     = 0;
-CollectionsDomID    = "bookmarks_box"
-CollectionSelector  = "##{CollectionsDomID}"
-ItemSelector        = "#{CollectionSelector} .bookmark_item"
-AddBookmarkSelector = "add_generic_bookmark"
-SortHandle          = "slide"
-SortUrl             = "/portal/bookmarks/sort"
-EditUrl             = "/portal/bookmarks/edit"
+InstanceCounter    = 0;
+CollectionsDomID   = "bookmarks_box"
+CollectionSelector = "##{CollectionsDomID}"
+ItemSelector       = "#{CollectionSelector} .bookmark_item"
+AddBookmarkBtn     = "add_bookmark_button"
+AddBookmarkForm    = "add_generic_bookmark_form"
+
+SortHandle         = "slide"
+SortUrl            = "/portal/bookmarks/sort"
+EditUrl            = "/portal/bookmarks/edit"
 
 bookmark_identify = (div) ->
   div.readAttribute('data-bookmark-id');
@@ -96,16 +98,15 @@ class BookmarksManager
     new Bookmark(div)
 
   setupAddBoomarkForm: () ->
-    form = $(AddBookmarkSelector)
-    fields = form.select('.fields')[0]
-    add_btn = form.select('#add_bookmark')[0]
+    add_btn = $(AddBookmarkBtn)
+    form = $(AddBookmarkForm)
     save_btn = form.select('#save_new_bookmark')[0]
     add_btn.observe 'click', (evt) =>
-      fields.show()
+      form.show()
       add_btn.hide()
       evt.preventDefault() # don't submit the form
     save_btn.observe 'click', (evt) =>
-      fields.hide()
+      form.hide()
       add_btn.show()
 
   orderChanged:(divs) ->

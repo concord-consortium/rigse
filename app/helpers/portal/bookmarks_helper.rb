@@ -12,16 +12,30 @@ module Portal::BookmarksHelper
     end
   end
 
-  def render_add_bookmark_form
+  def each_available_claz
     clazzes = types.map {|t|t.safe_constantize}.compact
     clazzes.each do |claz|
-      type = claz.name.demodulize.underscore
       if (claz.respond_to? :user_can_make?) && claz.user_can_make?(current_visitor)
-        bookmark = claz.new
-        haml_tag '.bookmarks_form' do
-          haml_concat(render(:partial => "portal/bookmarks/#{type}/form", :locals => {
-          :bookmark => bookmark}))
-        end
+        type = claz.name.demodulize.underscore
+        yield claz, type
+      end
+    end
+  end
+
+  def render_add_bookmark_buttons
+    each_available_claz do |claz, type|
+      haml_tag '.add_bookmark_button' do
+        haml_concat(render(:partial => "portal/bookmarks/#{type}/button"))
+      end
+    end
+  end
+
+  def render_add_bookmark_forms
+    each_available_claz do |claz, type|
+      bookmark = claz.new
+      haml_tag '.bookmark_form' do
+        haml_concat(render(:partial => "portal/bookmarks/#{type}/form", :locals => {
+        :bookmark => bookmark}))
       end
     end
   end

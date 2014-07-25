@@ -2,8 +2,10 @@
   .container
     .right
       = render :partial => 'portal/clazzes/clazz_information', :locals => {:portal_clazz => @portal_clazz}
-    .header Links
-    - render_add_bookmark_form
+    .header
+      Links
+    - render_add_bookmark_buttons
     #bookmarks_box
       - @bookmarks.each do |bookmark|
         = render :partial => 'show', :locals => {:bookmark => bookmark}
+    - render_add_bookmark_forms

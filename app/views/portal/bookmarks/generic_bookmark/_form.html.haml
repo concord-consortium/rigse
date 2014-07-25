@@ -1,13 +1,11 @@
-#add_generic_bookmark
+#add_generic_bookmark_form{ :style => "display: none" }
   = remote_form_for Portal::GenericBookmark.new, :url => add_portal_clazz_bookmarks_path, :method => :post, :remote => true do |f|
-    =f.submit :value => "Add bookmark", :id => 'add_bookmark'
-    .fields{ :style => "display: none" }
+    .fields
       %table
         %tr
           %td=f.label :name
-          %td=f.text_field  :name, :size => 15
+          %td=f.text_field  :name, :size => 15, :placeholder => 'My bookmark'
         %tr
           %td=f.label :url, "URL"
-          %td=f.text_field  :url, :size => 15
+          %td=f.text_field  :url, :size => 15, :placeholder => 'http://www.example.org'
       =f.submit :value => "Save", :id => 'save_new_bookmark'
-
