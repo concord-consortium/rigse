@@ -26,16 +26,6 @@ module Portal::BookmarksHelper
     end
   end
 
-  def delete_bookmark_button(mark)
-    name    = mark.name
-    url     = portal_delete_bookmark_path(mark)
-    confirm = "delete bookmark to #{name}"
-
-    button_to_remote( "Delete",
-      {:confirm => confirm,  :url => url}
-    )
-  end
-
   def bookmark_dom_item(mark)
     "bookmark_#{mark.type}_#{mark.id}"
   end

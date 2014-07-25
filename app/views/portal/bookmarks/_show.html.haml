@@ -1,7 +1,9 @@
 %div.bookmark_item{ :id => bookmark_dom_item(bookmark), 'data-bookmark-id' => bookmark.id }
   = check_box_tag('is_visible', 'true', bookmark.is_visible, :class => 'visibility', :id => nil)
+  = link_to_remote(icon('trash-o', '', :class => 'control'), { |
+      :confirm => "Delete bookmark to #{bookmark.name}?", |
+      :url => portal_delete_bookmark_path(bookmark) })
   %a.control.edit ✎
-  / = delete_bookmark_button(bookmark)
   %a.link_text{:href => portal_visit_bookmark_path(bookmark), :target => "_blank"}= bookmark.name
   %div.edit{:style => "display: none;"}
     %table
@@ -16,8 +18,6 @@
       %tr.save_field
         %td
           %button.save Save
-        %td
-          = delete_bookmark_button(bookmark)
   %a.control.slide ☰
 -if defined?(adding)
   :javascript
