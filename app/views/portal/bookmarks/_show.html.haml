@@ -11,10 +11,11 @@
         %td Name:
         %td
           %input{:name => 'name', :type => 'text', :value=>bookmark.name}
-      %tr
-        %td URL:
-        %td
-          %input{:name => 'url', :type => 'text', :value=>bookmark.url}
+      = if bookmark.is_a? Portal::GenericBookmark
+        %tr
+          %td URL:
+          %td
+            %input{:name => 'url', :type => 'text', :value=>bookmark.url}
       %tr.save_field
         %td
           %button.save Save
