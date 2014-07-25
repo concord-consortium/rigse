@@ -21,12 +21,16 @@ class Bookmark
     @url_field        = @div.select('input[name="url"]')[0]
     @is_visible_field = @div.select('input[name="is_visible"]')[0]
 
+    @editor_active = false
     @is_visible_field.observe 'change', (evt) =>
       @saveVisibility()
     @save_button.observe 'click', (evt) =>
       @saveForm()
     @edit_button.observe 'click', (evt) =>
-      @manager.editBookmark(@id)
+      if @editor_active
+        @edit(false)
+      else
+        @manager.editBookmark(@id)
 
   edit: (v) ->
     if v
@@ -36,6 +40,7 @@ class Bookmark
     else
       @editor.hide()
       @link_div.show()
+    @editor_active = v
 
   update: (new_name, new_url, new_visibility) ->
     @link_div.update(new_name)
