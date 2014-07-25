@@ -12,8 +12,6 @@
 }
 
 #bookmarks_box {
-  border-top: 1px dotted #479492;
-
   .bookmark_item {
     margin-left: 4px;
     margin-right: 4px;
@@ -22,6 +20,10 @@
     line-height: 1em;
     overflow: hidden;
     white-space: nowrap;
+    input.visibility {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
     a {
       display: inline;
       vertical-align: middle;
@@ -39,7 +41,7 @@
     }
     a.link_text {
       display: inline-block;
-      width: 70%;
+      width: 50%;
       white-space: nowrap;
       overflow: hidden;
     }

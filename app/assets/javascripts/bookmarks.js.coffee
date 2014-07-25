@@ -22,8 +22,10 @@ class Bookmark
     @is_visible_field = @div.select('input[name="is_visible"]')[0]
 
     @editing = false
+    @is_visible_field.observe 'change', (evt) =>
+      @saveVisibility()
     @save_button.observe 'click', (evt) =>
-      @save()
+      @saveForm()
     @edit_button.observe 'click', (evt) =>
       @edit()
 
@@ -42,20 +44,28 @@ class Bookmark
     @url_field.setValue(new_url)
     @is_visible_field.setValue(new_visibility)
 
-  save: ->
+  saveForm: ->
     @editing = false;
     new_name = @name_field.getValue()
     new_url = @url_field.getValue()
-    new_visibility = @is_visible_field.getValue() == 'true'
-
     @editor.hide();
+    @sendEditReq(
+      id: @id
+      name: new_name
+      url: new_url
+    )
+
+  saveVisibility: ->
+    new_visibility = @is_visible_field.getValue() == 'true'
+    @sendEditReq(
+      id: @id
+      is_visible: new_visibility
+    )
+
+  sendEditReq: (params) ->
     new Ajax.Request EditUrl,
       method: 'post',
-      parameters:
-        id: @id
-        name: new_name
-        url: new_url
-        is_visible: new_visibility
+      parameters: params
       requestHeaders:
         Accept: 'application/json'
       onSuccess: (transport) =>
@@ -63,7 +73,6 @@ class Bookmark
         @update(json.name, json.url, json.is_visible)
       onFailure: (transport) =>
         @div.highlight(startcolor: '#ff0000')
-
 
 class BookmarksManager
   constructor: ->
