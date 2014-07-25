@@ -113,5 +113,14 @@ class BookmarksManager
       onSuccess: (transport) ->
         json = transport.responseText.evalJSON(true)
 
+  setElemEnabled: (elementId, val) ->
+    elem = $(elementId)
+    if val
+      elem.style.opacity = 1
+      elem.enable()
+    else
+      elem.style.opacity = 0.2
+      elem.disable()
+
 document.observe "dom:loaded", ->
   window.bookmarksManager = new BookmarksManager()

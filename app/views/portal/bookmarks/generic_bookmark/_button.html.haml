@@ -1,1 +1,5 @@
-= button_to_remote('Create Bookmark', {:url => add_portal_clazz_bookmarks_path})
+= button_to_remote('Create Bookmark', { |
+    :url => add_portal_clazz_bookmarks_path, |
+    :loading => "window.bookmarksManager.setElemEnabled('create-bookmark', false);", |
+    :complete => "window.bookmarksManager.setElemEnabled('create-bookmark', true);"}, |
+    {:id => 'create-bookmark'})
