@@ -1,9 +1,9 @@
   require File.expand_path('../../spec_helper', __FILE__)
 
 describe Portal::PadletBookmark do
-  let(:bookmark_wrapper)    { mock(:padlet_url => "http://fake_padlet.com") }
+  let(:bookmark_wrapper) { mock(:padlet_url => "http://fake_padlet.com") }
   before(:each) do
-    PadletWrapper.stub!(:make_bookmark) { bookmark_wrapper }
+    PadletWrapper.stub!(:new) { bookmark_wrapper }
   end
 
   describe "Class methods" do
