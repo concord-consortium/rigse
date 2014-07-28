@@ -26,7 +26,7 @@ class Portal::Bookmark < ActiveRecord::Base
 
   # Useful for SLQ queries.
   def self.allowed_types_raw
-    Admin::Project.default_project.enabled_bookmark_types
+    Admin::Project.default_project.enabled_bookmark_types || []
   end
 
   def self.allowed_types
