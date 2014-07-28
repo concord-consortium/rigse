@@ -11,7 +11,7 @@
     };
 
     var setupCoordination = function() {
-      var events = ['sampleAdded', 'sampleRemoved'],
+      var events = ['sampleAdded', 'sampleRemoved', 'dataReset'],
           i;
       for (i = 0; i < events.length; i++) {
         _registerRelay(events[i]);
