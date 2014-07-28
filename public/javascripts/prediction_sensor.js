@@ -1,19 +1,7 @@
 (function() {
-  var verbose = true;
-  var log     = function(msg) { if(console && verbose) { console.log(msg); }};
-
   window.connectPredictionToSensor = function (pred_dom, sensor_dom) {
-
-    var predictionPhone = new iframePhone.ParentEndpoint(pred_dom, function () {
-      log("Connection with prediction Lab iframe established.");
-    });
-
-    var sensorPhone = new iframePhone.ParentEndpoint(sensor_dom, function () {
-      log("Connection with sensor Lab iframe established.");
-    });
-
-    var predictionModelLoaded = false,
-        sensorModelLoaded = false;
+    var predictionPhone = phones[pred_dom],
+        sensorPhone     = phones[sensor_dom];
 
     var _registerRelay = function(eventName) {
         predictionPhone.addListener("prediction-dataset-"+eventName, function(evt) {
@@ -30,21 +18,6 @@
       }
     };
 
-    var initializeInteractives = function() {
-      predictionPhone.addListener('modelLoaded', function(){
-        predictionModelLoaded = true;
-        if (sensorModelLoaded) {
-          setupCoordination();
-        }
-      });
-      sensorPhone.addListener('modelLoaded', function(){
-        sensorModelLoaded = true;
-        if (predictionModelLoaded) {
-          setupCoordination();
-        }
-      });
-    };
-
-    initializeInteractives();
+    setupCoordination();
   };
 })();

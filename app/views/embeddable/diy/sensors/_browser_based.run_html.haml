@@ -8,16 +8,17 @@
 .model_interactive_snapshots.unavailable{:id => dom_id_for(diy_sensor, :model_interactive_snapshots)}
   %button.labbook_button{:id => dom_id_for(diy_sensor, :model_take_snapshot)}= "Take a Snapshot"
   %img.labbook_button{ :id => dom_id_for(diy_sensor, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
-
-- if diy_sensor.prediction_graph_id
+- sensor_dom_id = "##{dom_id_for(diy_sensor, :model_interactive)} iframe";
+- if diy_sensor.graph_type == "Prediction"
   :javascript
-    var prefix = "#interactive_iframe_embeddable__diy__sensor_"
-    var prediction_dom = $j(prefix + "#{diy_sensor.prediction_graph_id}")[0];
-    var sensor_dom     = $j(prefix + "#{diy_sensor.id}")[0];
-    
-    $j(document).ready(function() { 
-      connectPredictionToSensor(prediction_dom,sensor_dom); 
-    });
+    if (Object.isExtensible && Modernizr.svg) {
+      var prediction_dom = "#{sensor_dom_id}";
+      var sensor_dom     = "##{dom_id_for(diy_sensor.prediction_graph_destinations.first, :model_interactive)} iframe";
+
+      setTimeout(function() {
+        connectPredictionToSensor(prediction_dom,sensor_dom);
+      }, 100);
+    }
 
 - if Labbook.enabled?
   :javascript
@@ -37,6 +38,9 @@
     $j("##{dom_id_for(diy_sensor, :click_to_play)}").removeClass('unavailable');
     $j("##{dom_id_for(diy_sensor, :model_image)} .error").addClass('unavailable');
 
+    // Create the phone for this model.
+    phones["#{sensor_dom_id}"] = createPhone("#{sensor_dom_id}");
+
     $j("##{dom_id_for(diy_sensor, :click_to_play)}").click(function() {
       // If a model has already been loaded, just leave it be. It will be stopped when another model's play is clicked.
 
@@ -45,13 +49,9 @@
       $j("##{dom_id_for(diy_sensor, :model_image)}").addClass('unavailable');
       $j("##{dom_id_for(diy_sensor, :click_to_play)}").addClass('unavailable')
       setTimeout(function() {
-        var id = "##{dom_id_for(diy_sensor, :model_interactive)} iframe";
-        // FIXME! Use the correct url.
-        $j(id).attr('src', "#{diy_sensor.interactive_url}");
-        // Create the phone for this model.
-        phones[id] = createPhone(id);
+        $j("#{sensor_dom_id}").attr('src', "#{diy_sensor.interactive_url}");
       }, 10);
-    })
+    });
 
     if (#{Labbook.enabled?}) {
       $j("##{dom_id_for(diy_sensor, :model_interactive_snapshot_instructions)}").removeClass('unavailable');
