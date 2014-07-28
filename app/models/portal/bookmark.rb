@@ -9,6 +9,9 @@ class Portal::Bookmark < ActiveRecord::Base
   has_many   :bookmark_visits, :dependent => :destroy
   validates_presence_of :user
   validates_presence_of :url
+  # Global filtering of scope, based on Admin Project settings. Note that {} block
+  # is required so the expression is evaluated lazily and current settings are used.
+  default_scope { where(:type => self.enabled_bookmark_types) }
   default_scope :order => 'position'
   acts_as_list
 
@@ -24,13 +27,16 @@ class Portal::Bookmark < ActiveRecord::Base
     where(:user_id => user.id)
   end
 
-  # Useful for SLQ queries.
-  def self.allowed_types_raw
-    Admin::Project.default_project.enabled_bookmark_types || []
+  def self.enabled_bookmark_types
+    # It may be overkill, but won't hurt and makes tests a bit easier
+    # (no need to mock and stub default_project).
+    proj = Admin::Project.default_project
+    return [] if !proj || !proj.enabled_bookmark_types
+    return proj.enabled_bookmark_types
   end
 
   def self.allowed_types
-    Admin::Project.default_project.enabled_bookmark_types.map {|b| b.safe_constantize}
+    self.enabled_bookmark_types.map { |b| b.safe_constantize }
   end
 
   def self.is_allowed?

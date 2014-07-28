@@ -108,7 +108,6 @@ class BookmarksManager
     @changeOrder(results)
 
   changeOrder:(array_of_ids) ->
-    console.log(array_of_ids)
     new Ajax.Request SortUrl,
       method: 'post',
       parameters:

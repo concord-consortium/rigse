@@ -1,3 +1,4 @@
-%div.class_links
-  %h3 Class Links
-  = render :partial => 'portal/bookmarks/simple_list', :locals => { :bookmarks => portal_clazz.bookmarks }
+- if portal_clazz.bookmarks.size > 0
+  %div.class_links
+    %h3 Class Links
+    = render :partial => 'portal/bookmarks/simple_list', :locals => { :bookmarks => portal_clazz.bookmarks }

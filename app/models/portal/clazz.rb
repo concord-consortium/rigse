@@ -64,7 +64,6 @@ class Portal::Clazz < ActiveRecord::Base
       @@searchable_attributes
     end
 
-
     def has_offering
       Portal::Offering.find(:all, :select => 'distinct clazz_id', :include => :clazz).collect {|p| p.clazz}
     end
@@ -278,6 +277,4 @@ class Portal::Clazz < ActiveRecord::Base
     self.description = self.description.strip if self.description
     self.class_word = self.class_word.strip if self.class_word
   end
-
-
 end

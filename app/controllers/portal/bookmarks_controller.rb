@@ -4,7 +4,7 @@ class Portal::BookmarksController < ApplicationController
   def index
     # This is needed so the side-menu selection works as expected.
     @portal_clazz = get_current_clazz
-    @bookmarks = Portal::Bookmark.where(type: Portal::Bookmark.allowed_types_raw, clazz_id: @portal_clazz)
+    @bookmarks = Portal::Bookmark.where(clazz_id: @portal_clazz)
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])
   end

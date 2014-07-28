@@ -1,27 +1,17 @@
 module Portal::BookmarksHelper
 
-  def enabled_bookmark_types
-    Portal::Bookmark.allowed_types_raw
-  end
-
   def bookmarks_enabled
-    enabled_bookmark_types.size > 0
-  end
-
-  def bookmarks
-    types = enabled_bookmark_types
-    Portal::Bookmark.find_all_by_user_id(current_visitor).select do |mark|
-      types.include? mark.type
-    end
+    Portal::Bookmark.allowed_types.size > 0
   end
 
   def each_available_claz
-    clazzes = enabled_bookmark_types.map {|t|t.safe_constantize}.compact
+    clazzes = Portal::Bookmark.allowed_types.compact
     clazzes.each do |claz|
       if (claz.respond_to? :user_can_make?) && claz.user_can_make?(current_visitor)
         type = claz.name.demodulize.underscore
         yield claz, type
       end
+
     end
   end
 
