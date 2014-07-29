@@ -1,5 +1,6 @@
 = button_to_remote('Create Padlet', { |
     :url => add_padlet_portal_clazz_bookmarks_path, |
     :loading => "window.bookmarksManager.setElemEnabled('create-padlet', false);", |
-    :complete => "window.bookmarksManager.setElemEnabled('create-padlet', true);"}, |
+    :complete => "window.bookmarksManager.setElemEnabled('create-padlet', true);", |
+    :failure => "window.alert('Padlet creation failed. Please reload the page and try again.');"}, |
     {:id => 'create-padlet'})

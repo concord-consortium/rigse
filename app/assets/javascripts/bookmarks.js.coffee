@@ -76,6 +76,7 @@ class Bookmark
         json = transport.responseText.evalJSON(true)
         @update(json.name, json.url, json.is_visible)
       onFailure: (transport) =>
+        alert "Bookmark update failed. Please reload the page and try again."
         @div.highlight(startcolor: '#ff0000')
 
 class BookmarksManager
@@ -115,7 +116,11 @@ class BookmarksManager
       requestHeaders:
         Accept: 'application/json'
       onSuccess: (transport) ->
-        json = transport.responseText.evalJSON(true)
+        # do nothing
+      onFailure: (transport) ->
+        alert "Bookmark reorder failed. Please reload the page and try again."
+        $$(ItemSelector).each (item) =>
+          item.highlight(startcolor: '#ff0000')
 
   setElemEnabled: (elementId, val) ->
     elem = $(elementId)
