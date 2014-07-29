@@ -57,14 +57,10 @@
               = link_to "Preview",run_url_for(material,{}),:class=>"button"
         %td{:width=>"130px"}
           %div{:style=>'float:right'}
-            - if link_url
-              = assign_material_link(material, "javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')")
+            - if current_visitor.portal_teacher
+              = assign_material_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')")
             - else
-              -# this is to temporarily deal with external activites which don't have a browse page
-              - if current_visitor.portal_teacher
-                = assign_material_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')")
-              - else
-                = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
+              = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
           %div{:style=>'float:right;text-align: right; margin-top: 3px;'}
             = teacher_guide_link(material)
 
