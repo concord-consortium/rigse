@@ -7,6 +7,8 @@ class PadletWrapper
   WALL_PATH = 'walls'
   POLICY_PATH = 'privacy_policies'
   PADLET_PUBLIC_POLICY = 4
+  # One of the backgrounds used by Padlet website.
+  WALL_BACKGROUND_URL = 'http://d262le4z25sx36.cloudfront.net/bg/paper.jpg'
 
   OPTS = {
     host: DEFAULT_HOST,
@@ -51,8 +53,9 @@ class PadletWrapper
   end
 
   def make_wall
-    response = req(:post, WALL_PATH, {})
-    p response
+    response = req(:post, WALL_PATH, {
+      'background' => {'url' => WALL_BACKGROUND_URL}
+    })
     body = JSON.parse(response.body)
     @padlet_url = body['links'] && body['links']['doodle']
     @policy_id  = body['privacy_policy'] && body['privacy_policy']['id']
@@ -66,7 +69,6 @@ class PadletWrapper
     # wall creation caused that we have cookies set and are authenticated as 'Anonymous',
     # actual owner of Padlet wall.
     response = req(:put, "#{POLICY_PATH}/#{@policy_id}", {
-      'id'     => @policy_id,
       'public' => PADLET_PUBLIC_POLICY
     })
     body = JSON.parse(response.body)
