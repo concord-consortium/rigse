@@ -305,7 +305,7 @@ class Activity < ActiveRecord::Base
     @return_activity.user = new_owner
     # this results in a yaml value saved in the status, but fixing it will create inconsistancies since
     # it has been this way for so long
-    @return_activity.publication_status = :draft
+    @return_activity.publication_status = "draft"
     @return_activity.is_exemplar = false
     @return_activity.is_template = false
     @return_activity.name = Activity.gen_unique_name(self.name)
