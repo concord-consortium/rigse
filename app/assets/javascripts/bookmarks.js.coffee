@@ -122,8 +122,19 @@ class BookmarksManager
         $$(ItemSelector).each (item) =>
           item.highlight(startcolor: '#ff0000')
 
-  setElemEnabled: (elementId, val) ->
-    elem = $(elementId)
+  bookmarkRequestStarted: (button_id, msg) ->
+    @setElemEnabled(button_id, false)
+    startWaiting(msg)
+
+  bookmarkRequestFinished: (button_id) ->
+    @setElemEnabled(button_id, true)
+    stopWaiting()
+
+  bookmarkRequestFailed: ->
+    alert('Bookmark creation failed. Please reload the page and try again.');
+
+  setElemEnabled: (element_id, val) ->
+    elem = $(element_id)
     if val
       elem.style.opacity = 1
       elem.enable()

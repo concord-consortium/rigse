@@ -11,7 +11,11 @@
   }
 }
 
-  .bookmarks-page {
+.bookmarks-page {
+  .wait-message {
+    margin-left: 3px;
+  }
+
   #bookmarks_box {
     .bookmark_item {
       margin-left: 4px;
