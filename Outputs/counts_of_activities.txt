@@ -30,4 +30,6 @@ other_teacher_copy:           860
   unpublished_used_general:      2
   unpublished_used_itsisu:      23
 
+number of other activities available online on portal: 466
+
 total number of activities: 4698

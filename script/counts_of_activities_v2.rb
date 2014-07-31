@@ -106,16 +106,22 @@ end
 
 puts "\n"
 
-counter = 0
-@counts.keys.sort_by{|k| k.to_s }.each do |k|  
+@portal = 0
+@counts.keys.sort_by{|k| k.to_s }.each do |k|  #sort the types alphabetically and then for each type do
   v = @counts[k]
-  counter = counter + v[:total]
+ 
+  #@counter = @counter + v[:total]
   f.puts "#{k}:           #{v[:total]}"
   v[:subs].keys.sort.each do |sk|
     sv = v[:subs][sk]
     f.puts "  #{sk}:      #{sv}"
+    if (k == :exemplar_copy or k == :other_teacher_copy) and (sk == "published_unused_general" or sk == "published_unused_itsisu" or sk == "published_used_general" or sk == "published_used_itsisu")
+      @portal += sv
+    end 
+    
   end
 end
 
-f.puts "\ntotal number of activities: #{counter}"
+f.puts "\nnumber of other activities available online on portal: #{@portal}"
+f.puts "\ntotal number of activities: #{@c}"
 f.close
