@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-
 STDOUT.sync = true
 
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
@@ -103,10 +102,10 @@ end
 puts "\nScoring #{Activity.count} activities..."
 
 CSV.open("activity_scores_#{Time.now.strftime('%Y%m%d')}.csv", "wb") do |csv|
-  csv << ['ID', 'Parent ID', 'Score', 'Author', 'Activity Title', 'Generation', 'Used?']
+  csv << ['ID', 'Parent ID', 'Score', 'Author', 'Activity Title', 'Generation', 'Used?', 'User_ID']
   Activity.find_each(:batch_size => 10, :include => [:original, {:sections => { :pages => { :page_elements => :embeddable }}}]) do |a|
     next if a.investigation  # These are pre- and post- tests, generally
-    csv << [a.id, a.original_id, score(a), a.user.name, a.name, calc_generation(a), used?(a)]
+    csv << [a.id, a.original_id, score(a), a.user.name, a.name, calc_generation(a), used?(a), a.user_id]
     print_progress
   end
 end

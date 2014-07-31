@@ -107,10 +107,10 @@ end
 puts "\nScoring #{Activity.count} activities..."
 
 CSV.open("activity_scores_#{Time.now.strftime('%Y%m%d')}.csv", "wb") do |csv|
-  csv << ['ID', 'Parent ID', 'Score', 'Author', 'Author User ID', 'Activity Title', 'Generation', 'Used?', 'Creation date', 'Grade level']
+  csv << ['ID', 'Parent ID', 'Score', 'Author', 'Author User ID', 'Activity Title', 'Generation', 'Used?', 'Creation date', 'Update date']
   Activity.find_each(:batch_size => 10, :include => [:original, {:sections => { :pages => { :page_elements => :embeddable }}}]) do |a|
     next if a.investigation  # These are pre- and post- tests, generally
-    csv << [a.id, a.original_id, score(a), a.user.name, a.user_id, a.name, calc_generation(a), used?(a), a.created_at, a.grade_level_id]
+    csv << [a.id, a.original_id, score(a), a.user.name, a.user_id, a.name, calc_generation(a), used?(a), a.created_at, a.updated_at]
     print_progress
   end
 end
