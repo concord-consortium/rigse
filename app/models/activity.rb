@@ -311,7 +311,9 @@ class Activity < ActiveRecord::Base
     @return_activity.name = Activity.gen_unique_name(self.name)
     # save without validations so the naming validation doesn't stop us from saving
     # this might result in two activities with the same name, but that will either
-    # get sorted out below or the user will need to deal with it after editing
+    # get sorted out below or the user will need to deal with it after editing.
+    # Also, disable the runnable sweeper observers until we're done.
+    RunnableSweeper.enabled_models = []
     @return_activity.save(false)
     # Check if our generated name is still unique or not
     if(!@return_activity.valid? && @return_activity.errors.invalid?(:name))
@@ -324,6 +326,10 @@ class Activity < ActiveRecord::Base
     end
     @return_activity.deep_set_user(new_owner)
     @return_activity.re_associate_prediction_graphs
+    # One more save so that the RunnableSweeper observers are triggered,
+    # and lightweight will be calculated correctly
+    RunnableSweeper.enabled_models = nil
+    @return_activity.save(false)
     return @return_activity
   end
   alias copy duplicate
