@@ -2,6 +2,9 @@
   - is_prediction = diy_sensor.graph_type =~ /prediction/i
   .model_image{:id => dom_id_for(diy_sensor, :model_image)}
     .error{:style => "color: red;"}= "This #{is_prediction ? "prediction" : "sensor"} graph can't run in the browser!"
-    =image_tag('/images/prediction_graph.png')
+    - if is_prediction
+      =image_tag('/images/prediction_graph.png')
+    - else
+      =image_tag('/images/sensor_graph.png')
   - if diy_sensor.interactive_url
     = render :partial => 'embeddable/diy/sensors/browser_based', :locals => { :diy_sensor => diy_sensor, :learner => local_assigns[:learner] }
