@@ -20,3 +20,5 @@
       %div{:style => 'font-weight: bold', :class => 'inline-block'}
         = yield :report_summary
       = render :partial => '/portal/reports/container_heading', :locals => { :indent => 0, :map => page_elements, :show_selection_controls => show_selection_controls, :offering => offering, :learners => learners}
+
+= render :partial => 'shared/labbook_ui'

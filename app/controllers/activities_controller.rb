@@ -10,10 +10,13 @@ class ActivitiesController < ApplicationController
     :page_layout=>:landscape,
   }
   before_filter :setup_object, :except => [:index,:browse]
-  before_filter :render_scope, :only => [:show]
+  before_filter :render_scope, :only => [:show,:compare]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:search,:browse  ,:show,:print,:create,:new,:duplicate,:export]
+  before_filter :can_edit, :except => [:index,:search,:browse  ,:show,:print,:create,:new,:duplicate,:export,:compare]
   before_filter :can_create, :only => [:new, :create,:duplicate]
+
+  include RestrictedController
+  before_filter :manager_or_researcher, :only => [:compare]
 
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
@@ -343,6 +346,25 @@ class ActivitiesController < ApplicationController
         send_data @activity.deep_xml, :type => :xml, :filename=>"#{@activity.name}.xml"
       }
     end
+  end
+
+  def compare
+    @other_activity = Activity.find(params[:other_id])
+    left, @order = ITSI::Comparison.activity_hash_with_ordering(@activity)
+    right = ITSI::Comparison.activity_hash(@other_activity)
+    @comparer = Diff::Comparison::Comparer.new(left, right)
+    @score = @comparer.score(Diff::Comparison::Rubric.new, {:html_left => true, :html_right => true})
+    @differences = @comparer.differences
+
+    @extra_data = []
+    # @extra_data.push({:key => '', :value => '', :other_value => ''})
+    @extra_data.push({:key => '', :value => @template.link_to('Show', polymorphic_path(@activity)), :other_value => @template.link_to('Show', polymorphic_path(@other_activity)) })
+    @extra_data.push({:key => 'ID', :value => @activity.id, :other_value => @other_activity.id})
+    @extra_data.push({:key => 'Created', :value => @activity.created_at, :other_value => @other_activity.created_at})
+    @extra_data.push({:key => 'Last Modified', :value => @activity.last_modified, :other_value => @other_activity.last_modified})
+    @extra_data.push({:key => 'Author', :value => "#{@activity.user.name_and_login} [#{@activity.user.id}]", :other_value => "#{@other_activity.user.name_and_login} [#{@other_activity.user.id}]"})
+
+    render :layout => 'layouts/compare'
   end
 
 end

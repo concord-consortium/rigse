@@ -25,6 +25,7 @@ javascripts:
   - modernizr
   - prototype-ui/prototype-ui
   - lightbox
+  - prediction_sensor
 stylesheets: 
 - base: 
   - app

@@ -27,6 +27,10 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     return "Sensor"
   end
 
+  def name
+    data_collector.name
+  end
+
   # we specify this ourself since some of the code is going to use us to generate an refering id
   #  and other parts of the code will use our data_collector
   def ot_dom_id
@@ -41,6 +45,23 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
       delegate = prototype
     end    
     @data_collector = DataCollector.new(self, delegate)
+  end
+
+  def interactive_url
+    if graph_type == "Prediction"
+      return data_collector.prediction_interactive_url
+    else
+      return data_collector.sensor_interactive_url
+    end
+  end
+
+  def can_run_lightweight?
+    url = interactive_url
+    if url && !url.empty?
+      return true
+    else
+      return false
+    end
   end
 
   # this might be cleaner if we could extend or clone Embeddable::DataCollector somehow

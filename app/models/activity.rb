@@ -86,11 +86,13 @@ class Activity < ActiveRecord::Base
 
   # delegate :saveable_types, :reportable_types, :to => :investigation
   def saveable_types
-    Investigation.saveable_types
+    extras = lightweight? ? [Saveable::Labbook] : []
+    Investigation.saveable_types + extras
   end
 
   def reportable_types
-    Investigation.reportable_types
+    extras = lightweight? ? [Embeddable::Diy::Sensor, Embeddable::Diy::EmbeddedModel] : []
+    Investigation.reportable_types + extras
   end
 
   acts_as_replicatable
@@ -305,13 +307,15 @@ class Activity < ActiveRecord::Base
     @return_activity.user = new_owner
     # this results in a yaml value saved in the status, but fixing it will create inconsistancies since
     # it has been this way for so long
-    @return_activity.publication_status = :draft
+    @return_activity.publication_status = "private"
     @return_activity.is_exemplar = false
     @return_activity.is_template = false
     @return_activity.name = Activity.gen_unique_name(self.name)
     # save without validations so the naming validation doesn't stop us from saving
     # this might result in two activities with the same name, but that will either
-    # get sorted out below or the user will need to deal with it after editing
+    # get sorted out below or the user will need to deal with it after editing.
+    # Also, disable the runnable sweeper observers until we're done.
+    RunnableSweeper.enabled_models = []
     @return_activity.save(false)
     # Check if our generated name is still unique or not
     if(!@return_activity.valid? && @return_activity.errors.invalid?(:name))
@@ -324,6 +328,10 @@ class Activity < ActiveRecord::Base
     end
     @return_activity.deep_set_user(new_owner)
     @return_activity.re_associate_prediction_graphs
+    # One more save so that the RunnableSweeper observers are triggered,
+    # and lightweight will be calculated correctly
+    RunnableSweeper.enabled_models = nil
+    @return_activity.save(false)
     return @return_activity
   end
   alias copy duplicate
@@ -386,5 +394,22 @@ class Activity < ActiveRecord::Base
       end
     end
     return true
+  end
+
+  # run through the whole activity hierarchy, since updated_at doesn't get updated
+  # when something like an embeddable gets modified.
+  def last_modified
+    most_recent = updated_at
+    sections.each do |s|
+      most_recent = s.updated_at if s.updated_at > most_recent
+      s.pages.each do |p|
+        most_recent = p.updated_at if p.updated_at > most_recent
+        p.page_elements.each do |pe|
+          most_recent = pe.updated_at if pe.updated_at > most_recent
+          most_recent = pe.embeddable.updated_at if pe.embeddable.updated_at > most_recent
+        end
+      end
+    end
+    return most_recent
   end
 end

@@ -1,4 +1,4 @@
-.action_menu
+.action_menu.collection_menu
   .action_menu_header
     .action_menu_header_left
       - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
@@ -6,8 +6,9 @@
           = text_field_tag :search, params[:search], :size => 20
         %input{ :type => "submit", :value => "Search"}
         - if collection_class == Diy::Model
+          %input{ :type => "submit", :name => 'lightweight_only', :value => "Search Browser-based Only"}
           %br
-          = select_tag :model_type, options_from_collection_for_select([Diy::ModelType.new(:name => "All model types")] + Diy::ModelType.all, "id", "name", (params[:model_type] || "0").to_i)
+          = select_tag :model_type, options_from_collection_for_select([Diy::ModelType.new(:name => "All model types")] + Diy::ModelType.all.sort_by{|mt| mt.name}, "id", "name", (params[:model_type] || "0").to_i)
       - if collection
         %p= page_entries_info collection, :entry_name => collection_class.display_name
       %p.paginator

@@ -14,6 +14,8 @@
   - if @activity.changeable?(current_user)
     = link_to 'edit', template_edit_activity_path(@activity)
     = @activity.lightweight? ? link_to('preview', polymorphic_path(@activity)) : preview_link_for(@activity, nil, :no_button => true)
+  - if current_user.has_role?("admin","manager","researcher") && @activity.respond_to?(:original) && @activity.original && @activity.original_id != 1
+    = link_to 'compare', compare_activities_path(@activity, @activity.original)
   - @activity.sections.each do |section|
     - next unless section.is_enabled?
     %h4=section.name

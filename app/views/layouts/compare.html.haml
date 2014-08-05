@@ -17,14 +17,16 @@
     :javascript
       // Don't mess with prototype...
       var $j = jQuery.noConflict();
+    %script{ :src=> "/shutterbug/shutterbug.js", :type=> "text/javascript"}
 
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
     = stylesheet_link_merged(current_theme.to_sym, {'media' => 'screen, presentation'})
+    = stylesheet_link_merged('print', {'media' => 'print'})
     = javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag("tiny_mce/tiny_mce")
-
+    = calendar_date_select_includes "silver"
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
     - if protect_against_forgery?
@@ -33,6 +35,7 @@
       = javascript_tag "var container_id = #{@container_id};"
     - if defined? @container_type && @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
+    = calendar_date_select_includes "silver"
 
     - if USING_GOOGLE_ANALYTICS
       = javascript_tag google_analytics_config
@@ -40,26 +43,27 @@
   %body
 
     #note{:style=>"display: none;"}
-    #waiter{:style=>"display: none;"}
-      please wait
-      = image_tag "ajax-loader.gif"
+    -#= yield :dynamic_js_contents
+    = render :partial => 'shared/please_wait'
+    = render :partial => 'shared/workgroup'
     #page
       / For non-visual user agents:
       #top
         %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
-    #wrapper.wrapper
+    #wrapper{ :class => "wide", :style => "width: 1500px;"}
       = render :partial => 'shared/project_header'
-      #report_content.main_content_colors
-        = yield :content_header
-        #js_flash{:style=>"display: none;"}
+      #primary{ :class => "wide"}
+        #content.main_content_colors
+          #content_header.main_content_colors
+            = yield :content_header
+          #js_flash{:style=>"display: none;"}
+          #flash
+            .padded_contents
+              - flash.each_pair do |key, message|
+                %div{:class=>"flash flash_#{key}"}= message
+          = yield :layout
 
-        #flash
-          .padded_contents
-            - flash.each_pair do |key, message|
-              %div{:class=>"flash flash_#{key}"}= message 
-        = yield :layout
       = render :partial => 'shared/footer'
       #under_footer
         - if current_user.has_role?('admin')
           = display_system_info
-

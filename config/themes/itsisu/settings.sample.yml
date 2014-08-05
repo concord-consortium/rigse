@@ -19,7 +19,7 @@ production: &prod
   :site_school: ITSISU school
   :description:
   :site_district: ITSISU district
-  :top_level_container_name: unit
+  :top_level_container_name: activity
   :site_name: ITSISU
   :default_admin_user:
     :first_name: Noah

@@ -570,6 +570,13 @@ namespace :convert do
   task :change_git_origin_url_to_concord_consortium, :roles => :app do
     run("cd #{shared_path}/cached-copy; git remote set-url origin git://github.com/concord-consortium/rigse.git")
   end
+
+  desc "Reset all activity, page, and embeddable lightweight flags"
+  task :reset_lightweight, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "bundle exec rake RAILS_ENV=#{rails_env} app:fixup:recalculate_lightweight --trace"
+  end
+
 end
 
 #

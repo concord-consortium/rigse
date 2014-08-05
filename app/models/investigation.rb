@@ -36,6 +36,8 @@ class Investigation < ActiveRecord::Base
     Embeddable::Biologica::Pedigree,
     Embeddable::Biologica::MultipleOrganism,
     Embeddable::Biologica::MeiosisView,
+    Embeddable::Diy::EmbeddedModel,
+    Embeddable::Diy::Sensor,
     Embeddable::Smartgraph::RangeQuestion ]
 
   @@embeddable_klasses.each do |klass|
@@ -271,7 +273,7 @@ class Investigation < ActiveRecord::Base
     @return_investigation.user = new_owner
     @return_investigation.name = "copy of #{self.name}"
     @return_investigation.deep_set_user(new_owner)
-    @return_investigation.publication_status = :draft
+    @return_investigation.publication_status = "draft"
     @return_investigation.offerings_count = 0
     return @return_investigation
   end

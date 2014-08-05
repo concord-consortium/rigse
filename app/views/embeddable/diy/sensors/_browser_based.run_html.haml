@@ -1,0 +1,93 @@
+.click_to_play.unavailable{:id => dom_id_for(diy_sensor, :click_to_play)}
+  .background
+  .text= "Click here to start the graph."
+.model_interactive.unavailable{:id => dom_id_for(diy_sensor, :model_interactive)}
+  %iframe.interactive{:id => dom_id_for(diy_sensor, :interactive_iframe), :frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true'}
+.model_interactive_snapshot_instructions.unavailable{:id => dom_id_for(diy_sensor, :model_interactive_snapshot_instructions)}
+  = current_project.interactive_snapshot_instructions
+.model_interactive_snapshots.unavailable{:id => dom_id_for(diy_sensor, :model_interactive_snapshots)}
+  %button.labbook_button{:id => dom_id_for(diy_sensor, :model_take_snapshot)}= "Take a Snapshot"
+  %img.labbook_button{ :id => dom_id_for(diy_sensor, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
+- sensor_dom_id = "##{dom_id_for(diy_sensor, :model_interactive)} iframe";
+- if diy_sensor.graph_type == "Prediction"
+  :javascript
+    if (Object.isExtensible && Modernizr.svg) {
+      var prediction_dom = "#{sensor_dom_id}";
+      var sensor_dom     = "##{dom_id_for(diy_sensor.prediction_graph_destinations.first, :model_interactive)} iframe";
+
+      setTimeout(function() {
+        connectPredictionToSensor(prediction_dom,sensor_dom);
+      }, 100);
+    }
+
+- if Labbook.enabled?
+  :javascript
+    $j("##{dom_id_for(diy_sensor, :model_open_album)}").click(function() {
+      if (#{current_user.anonymous?}) {
+        alert("You must be logged in to open the snapshot album.");
+        return false;
+      } else {
+        show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_sensor)}");
+        return false;
+      }
+    });
+
+:javascript
+  if (Object.isExtensible && Modernizr.svg) {
+    // set up click-to-play
+    $j("##{dom_id_for(diy_sensor, :click_to_play)}").removeClass('unavailable');
+    $j("##{dom_id_for(diy_sensor, :model_image)} .error").addClass('unavailable');
+
+    // Create the phone for this model.
+    phones["#{sensor_dom_id}"] = createPhone("#{sensor_dom_id}");
+
+    $j("##{dom_id_for(diy_sensor, :click_to_play)}").click(function() {
+      // If a model has already been loaded, just leave it be. It will be stopped when another model's play is clicked.
+
+      // Load this model.
+      $j("##{dom_id_for(diy_sensor, :model_interactive)}").removeClass('unavailable');
+      $j("##{dom_id_for(diy_sensor, :model_image)}").addClass('unavailable');
+      $j("##{dom_id_for(diy_sensor, :click_to_play)}").addClass('unavailable')
+      setTimeout(function() {
+        $j("#{sensor_dom_id}").attr('src', "#{diy_sensor.interactive_url}");
+      }, 10);
+    });
+
+    if (#{Labbook.enabled?}) {
+      $j("##{dom_id_for(diy_sensor, :model_interactive_snapshot_instructions)}").removeClass('unavailable');
+      $j("##{dom_id_for(diy_sensor, :model_interactive_snapshots)}").removeClass('unavailable');
+      (function() {
+        var optCallbackFn = function(msg) {
+          var reg = /img src='([^']*)'/;
+          var match = reg.exec(msg);
+          if (match[1] != null) {
+            show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_sensor)}&todo=create&source_url=http://" + window.location.host + match[1]);
+          }
+          $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').removeClass("disabled");
+          $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').text("Take a Snapshot");
+        };
+
+        var shutterbug = new Shutterbug("##{dom_id_for(diy_sensor, :model_interactive)} iframe", null, optCallbackFn, "#{dom_id_for(diy_sensor, :model_take_snapshot)}", $j);
+        $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').click(function() {
+          if (#{current_user.anonymous?}) {
+            alert("You must be logged in to take snapshots.");
+            return false;
+          } else {
+            $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').addClass("disabled");
+            $j('##{dom_id_for(diy_sensor, :model_take_snapshot)}').text("Taking snapshot...");
+            if (shutterbug.useIframeSizeHack) {
+              shutterbug.useIframeSizeHack(true);
+            }
+            shutterbug.getDomSnapshot();
+            return false;
+          }
+        });
+      })();
+    }
+  }
+
+- if @section && @section.name
+  :javascript
+    if (Object.isExtensible && Modernizr.svg) {
+      phones["#{sensor_dom_id}"].post('set', { name: 'clientName', value: '#{@section.name}' });
+    }

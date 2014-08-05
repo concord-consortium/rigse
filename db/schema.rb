@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140606180557) do
+ActiveRecord::Schema.define(:version => 20140711191058) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -502,6 +502,8 @@ ActiveRecord::Schema.define(:version => 20140606180557) do
     t.integer  "data_table_id"
     t.boolean  "is_digital_display",                       :default => false
     t.integer  "dd_font_size"
+    t.string   "prediction_interactive_url"
+    t.string   "sensor_interactive_url"
   end
 
   add_index "embeddable_data_collectors", ["is_prototype"], :name => "index_embeddable_data_collectors_on_is_prototype"

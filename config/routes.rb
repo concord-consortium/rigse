@@ -430,6 +430,7 @@ ActionController::Routing::Routes.draw do |map|
     :search => [:post, :get]
   }
   map.browse_activities '/activity/browse', :controller=>'activities', :action => 'browse'
+  map.compare_activities '/activities/:id/compare/:other_id', :controller=>'activities', :action => 'compare'
   #map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   #map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
 

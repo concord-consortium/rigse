@@ -53,6 +53,7 @@ class Portal::LearnersController < ApplicationController
   
   def report
     @portal_learner = Portal::Learner.find(params[:id])
+    Saveable::Labbook.request = request
     
     reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
     

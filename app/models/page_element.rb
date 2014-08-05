@@ -97,7 +97,7 @@ class PageElement < ActiveRecord::Base
     unless teacher_only? || !is_enabled?
       if embeddable.respond_to?(:reportable_elements)
         @reportable_elements = embeddable.reportable_elements
-      elsif Investigation.reportable_types.include?(embeddable.class)
+      elsif (parent.reportable_types rescue Investigation.reportable_types).include?(embeddable.class)
         @reportable_elements << {:embeddable => embeddable, :page_element => self}
       end
     end

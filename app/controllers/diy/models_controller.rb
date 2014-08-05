@@ -2,11 +2,14 @@ class Diy::ModelsController < ApplicationController
   # GET /Embeddable/embedded_models
   # GET /Embeddable/embedded_models.xml
   def index
-    sql_conditions = ""
-    sql_params = []
+    sql_conditions = "(publication_status != ?) and "
+    sql_params = ['private']
     if params[:model_type] && params[:model_type] != ""
       sql_conditions << "(#{Diy::Model.table_name}.model_type_id = ?) and "
       sql_params << params[:model_type].to_i
+    end
+    if params[:lightweight_only]
+      sql_conditions << "(#{Diy::Model.table_name}.interactive_url IS NOT NULL) and "
     end
     @models = Diy::Model.search(params[:search], params[:page], nil, [:model_type], sql_conditions, sql_params)
 
