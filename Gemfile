@@ -61,7 +61,7 @@ source "http://rubygems.org"
     gem "deep_cloneable"
   end
 
-  gem 'diff-comparison',  :git => "git://github.com/concord-consortium/diff-comparison.git", :branch => "master"
+  gem 'diff-comparison',  :git => "git://github.com/concord-consortium/diff-comparison.git", :branch => "master", :require => 'diff/comparison'
 
 group :development do
   gem "highline"
