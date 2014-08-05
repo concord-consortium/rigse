@@ -156,6 +156,7 @@ class Portal::OfferingsController < ApplicationController
 
   def report
     @offering = Portal::Offering.find(params[:id])
+    Saveable::Labbook.request = request
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
 
@@ -187,6 +188,7 @@ class Portal::OfferingsController < ApplicationController
 
   def separated_report
     @offering = Portal::Offering.find(params[:id])
+    Saveable::Labbook.request = request
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
 

@@ -36,6 +36,8 @@ class Investigation < ActiveRecord::Base
     Embeddable::Biologica::Pedigree,
     Embeddable::Biologica::MultipleOrganism,
     Embeddable::Biologica::MeiosisView,
+    Embeddable::Diy::EmbeddedModel,
+    Embeddable::Diy::Sensor,
     Embeddable::Smartgraph::RangeQuestion ]
 
   @@embeddable_klasses.each do |klass|

@@ -1,0 +1,9 @@
+%div{:class => 'question_container'}
+  %div{:id => dom_id_for(embeddable, :item), :class => 'item'}
+    %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
+      - saveable = saveable_for_learner(embeddable, learner)
+      .item{:style => 'display: block;'}
+        %strong
+          = "Labbook: #{embeddable.name rescue "#{embeddable.class} doesn't have name"}"
+      .item{:class => 'answered', :style => 'display: block;'}
+        = link_to 'Open labbook', '#', :onclick => "show_labbook('#{saveable.answer}'); return false;"

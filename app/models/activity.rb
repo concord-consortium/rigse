@@ -86,11 +86,13 @@ class Activity < ActiveRecord::Base
 
   # delegate :saveable_types, :reportable_types, :to => :investigation
   def saveable_types
-    Investigation.saveable_types
+    extras = lightweight? ? [Saveable::Labbook] : []
+    Investigation.saveable_types + extras
   end
 
   def reportable_types
-    Investigation.reportable_types
+    extras = lightweight? ? [Embeddable::Diy::Sensor, Embeddable::Diy::EmbeddedModel] : []
+    Investigation.reportable_types + extras
   end
 
   acts_as_replicatable

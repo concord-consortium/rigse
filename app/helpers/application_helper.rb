@@ -628,7 +628,7 @@ module ApplicationHelper
       reportUtil = Report::Util.factory(offering)
       questions = reportUtil.embeddables(:type => options[:type])
       type_id_lambda = lambda{|s|
-        types = Investigation.reportable_types.map{|t| t.to_s.demodulize.underscore }
+        types = (offering.runnable.reportable_types rescue Investigation.reportable_types).map{|t| t.to_s.demodulize.underscore }
         type = types.detect{|t| s.respond_to?(t) }
         if type
           type_id = "#{type}_id"
@@ -812,6 +812,24 @@ module ApplicationHelper
             }
           }
         }
+      }
+    end
+  end
+
+  def offering_details_labbook(offering, embeddable, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    display_name = (embeddable.display_name + ": ") rescue ""
+    embeddable_name = embeddable.name rescue "#{embeddable.class} doesn't have name"
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left'
+      end
+      haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
+        haml_concat("Labbook")
+      }
+      haml_tag(:div, :style => 'width: 565px; display: -moz-inline-block; display: inline-block; ') {
+        haml_tag(:div) { haml_concat(display_name + embeddable_name) }
       }
     end
   end

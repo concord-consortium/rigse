@@ -27,6 +27,10 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     return "Sensor"
   end
 
+  def name
+    data_collector.name
+  end
+
   # we specify this ourself since some of the code is going to use us to generate an refering id
   #  and other parts of the code will use our data_collector
   def ot_dom_id
