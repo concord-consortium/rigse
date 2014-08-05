@@ -356,6 +356,14 @@ class ActivitiesController < ApplicationController
     @score = @comparer.score(Diff::Comparison::Rubric.new, {:html_left => true, :html_right => true})
     @differences = @comparer.differences
 
+    @extra_data = []
+    # @extra_data.push({:key => '', :value => '', :other_value => ''})
+    @extra_data.push({:key => '', :value => @template.link_to('Show', polymorphic_path(@activity)), :other_value => @template.link_to('Show', polymorphic_path(@other_activity)) })
+    @extra_data.push({:key => 'ID', :value => @activity.id, :other_value => @other_activity.id})
+    @extra_data.push({:key => 'Created', :value => @activity.created_at, :other_value => @other_activity.created_at})
+    @extra_data.push({:key => 'Last Modified', :value => @activity.last_modified, :other_value => @other_activity.last_modified})
+    @extra_data.push({:key => 'Author', :value => "#{@activity.user.name_and_login} [#{@activity.user.id}]", :other_value => "#{@other_activity.user.name_and_login} [#{@other_activity.user.id}]"})
+
     render :layout => 'layouts/compare'
   end
 

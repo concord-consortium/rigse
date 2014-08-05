@@ -393,4 +393,21 @@ class Activity < ActiveRecord::Base
     end
     return true
   end
+
+  # run through the whole activity hierarchy, since updated_at doesn't get updated
+  # when something like an embeddable gets modified.
+  def last_modified
+    most_recent = updated_at
+    sections.each do |s|
+      most_recent = s.updated_at if s.updated_at > most_recent
+      s.pages.each do |p|
+        most_recent = p.updated_at if p.updated_at > most_recent
+        p.page_elements.each do |pe|
+          most_recent = pe.updated_at if pe.updated_at > most_recent
+          most_recent = pe.embeddable.updated_at if pe.embeddable.updated_at > most_recent
+        end
+      end
+    end
+    return most_recent
+  end
 end
