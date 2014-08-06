@@ -13,6 +13,15 @@
             = link_to "Click here", edit_user_security_questions_path(@user)
             to change the security questions you use to reset your password if you forget it.
         = link_to("Change Password", :controller => :passwords, :action=>'reset', :reset_code => 0)
+        %fieldset
+          %legend Sensors
+          .dl-link
+            :markdown
+              In order to use browser-based activities with sensors, you will need to download, install and run the
+              **[Sensor Connector](http://sensorconnector.concord.org/)** software.
+          .disclaimers
+            :markdown
+              The Sensor Connector does _not_ support **tablets** or **bluetooth devices**.
       #right-col
         = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }
 
