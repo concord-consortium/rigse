@@ -71,9 +71,9 @@ describe Portal::StudentsController do
     it "clearly shows that the student needs to login after successful create" do
       stub_user_with_params
       post :create, @params_for_creation
-      
+
       response.should redirect_to(thanks_for_sign_up_url(:type=>"student", :login=>@new_user.login))
-      
+
     end
 
     # student is not logged in, so we shouldn't display their classes!
@@ -173,6 +173,24 @@ describe Portal::StudentsController do
 
         post :create, @params_for_creation
       end
+    end
+  end
+
+  describe "GET show" do
+    let(:student) { Factory(:full_portal_student) }
+
+    it "should redirect when current user isn't an admin" do
+      get :show, id: student.id
+      expect(response).to redirect_to(:home)
+      expect(response.status).to eq(302)
+    end
+
+    it "should not redirect when current user is an admin" do
+      login_admin
+      get :show, id: student.id
+      expect(response).not_to redirect_to(:home)
+      expect(response).to be_success
+      expect(response.status).to eq(200)
     end
   end
 end
