@@ -1,6 +1,8 @@
 class Portal::StudentsController < ApplicationController
-
   include RestrictedPortalController
+
+  before_filter :manager_or_researcher, :only => [ :show ]
+
   public
 
   def index
@@ -56,7 +58,7 @@ class Portal::StudentsController < ApplicationController
   # If everything gets created or referenced correctly a Portal::StudentClass is generated.
   #
   # FIXME there is a lot of logic in here that uses :class_word to indicate this is a student
-  # registering themselves.  That makes it confusing and things break when the clazz_word is 
+  # registering themselves.  That makes it confusing and things break when the clazz_word is
   # not used when registering students.  It is also unsafe because a student could just signup
   # to a class if they new the class id
   #
@@ -108,13 +110,13 @@ class Portal::StudentsController < ApplicationController
         end
       end
     end
-    
+
     if request.xhr?
       response_value = {
         :success => true,
         :error_msg => nil
       }
-      
+
         if user_created && @portal_clazz && @portal_student
           @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
           @portal_clazz.reload
@@ -152,7 +154,7 @@ class Portal::StudentsController < ApplicationController
       respond_to do |format|
         if user_created && @portal_clazz && @portal_student #&& @grade_level
           @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
-  
+
           if params[:clazz] && params[:clazz][:class_word]
             # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
             @user.update_security_questions!(@security_questions) if current_project.use_student_security_questions
