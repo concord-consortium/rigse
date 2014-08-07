@@ -12,7 +12,7 @@ CSV.open("cohort_teachers_#{Time.now.strftime('%Y%m%d')}.csv", "wb") do |csv|
   csv << ['User ID', 'Name', 'Username', 'Email', 'District', 'School']
   Portal::Teacher.tagged_with('itsisu').each do |t|
     csv << [
-      t.id,
+      (t.user ? t.user.id : "t: #{t.id}"),
       t.name,
       (t.login rescue "??"),
       (t.email rescue "??"),
