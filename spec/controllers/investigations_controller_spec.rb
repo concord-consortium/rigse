@@ -27,9 +27,10 @@ describe InvestigationsController do
   end
 
   describe '#index' do
-    # material browsing & searching is handled search_controller.rb
-    # one idea: show only the current users list?
-    it "should material indexes display anything?"
+    it "should redirect to search page with investigations filter checked" do
+      get :index
+      expect(response).to redirect_to search_url(material_types: Search::InvestigationMaterial)
+    end
   end
 
   describe '#duplicate' do
