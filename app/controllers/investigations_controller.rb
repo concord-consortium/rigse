@@ -102,8 +102,7 @@ class InvestigationsController < AuthoringController
 
 
   def index
-    @investigations = default_search
-    @paginated_objects = @investigations
+    redirect_to search_url(material_types: Search::InvestigationMaterial)
   end
 
   def printable_index
