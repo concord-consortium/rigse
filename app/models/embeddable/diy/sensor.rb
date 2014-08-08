@@ -3,6 +3,8 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
 # caption, has_prediction
   set_table_name "embeddable_diy_sensors"
   belongs_to :user
+  has_many :page_elements, :as => :embeddable
+  has_many :pages, :through =>:page_elements
   belongs_to :prototype, :class_name => "Embeddable::DataCollector"
   validates_presence_of :prototype
   belongs_to :prediction_graph_source,
