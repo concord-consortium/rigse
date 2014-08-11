@@ -15,7 +15,7 @@ class ResourcePage < ActiveRecord::Base
     end
     text :content
     text :owner do |rp|
-      rp.user.name
+      rp.user && rp.user.name
     end
     integer :user_id
     boolean :published do
