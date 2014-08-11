@@ -89,5 +89,8 @@
 - if @section && @section.name
   :javascript
     if (Object.isExtensible && Modernizr.svg) {
+      phones["#{sensor_dom_id}"].addListener("modelLoaded", function(evt) {
+        phones["#{sensor_dom_id}"].post('set', { name: 'clientName', value: '#{@section.name}' });
+      });
       phones["#{sensor_dom_id}"].post('set', { name: 'clientName', value: '#{@section.name}' });
     }
