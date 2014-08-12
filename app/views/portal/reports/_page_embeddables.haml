@@ -16,7 +16,7 @@
       = render :partial => "portal/#{report_type}/embeddable_open_response", :locals => locals
     - elsif embeddable.kind_of? Embeddable::ImageQuestion
       = render :partial => "portal/#{report_type}/embeddable_image_question", :locals => locals
-    - elsif embeddable.kind_of?(Embeddable::Diy::EmbeddedModel) || embeddable.kind_of?(Embeddable::Diy::Sensor)
+    - elsif embeddable.kind_of?(Embeddable::Diy::EmbeddedModel) || embeddable.kind_of?(Embeddable::Diy::Sensor) || embeddable.kind_of?(Embeddable::DrawingTool)
       = render :partial => "portal/#{report_type}/embeddable_labbook", :locals => locals
     - else
       = "Unknown type of embeddable: #{embeddable.class}"
