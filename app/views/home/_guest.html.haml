@@ -1,14 +1,9 @@
-= javascript_include_tag "search_materials.js"
-- content_for :top_menu_items do
-  =link_to(TOP_LEVEL_CONTAINER_NAME_PLURAL, investigations_path)
-
 - if current_project.nil?
-  You need to create a project object for this portal. One way to do this is run 
-  %pre 
+  You need to create a project object for this portal. One way to do this is run
+  %pre
     bin/rake app:setup:new_app
 - else
-  %div
-    .padded_content
+  %div.home-page-content
     - if defined? home_page_preview_content
       - if home_page_preview_content.blank?
         - render_project_info
@@ -22,3 +17,5 @@
       - else
         - render_project_info
         = content_for :project_info
+  %div.registration-box
+    = render partial: "home/registration_box", :locals => {:portal_student => @portal_student, :portal_teacher => @portal_teacher}

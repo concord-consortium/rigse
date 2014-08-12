@@ -23,9 +23,5 @@
                 = hidden_field_tag 'commit', 'Switch'
             |
             = link_to 'Logout', destroy_user_session_path
-                       
-#nav_top
-  %span.hidden.doNotPrint
-    Navigation:
-  %ul.menu_h
-    = render :partial => 'shared/main_nav_trail'
+
+= render :partial => 'shared/main_nav_trail'

@@ -102,7 +102,12 @@ body {
     color: #fff;
     image: image-url("styles/bg-body.png");
     repeat: repeat-x; };
-  color: #3f3f3f; }
+  color: #3f3f3f;
+
+  &.main-nav-hidden {
+    background-image: image-url("styles/bg-body-no-nav.png");
+  }
+}
 
 body#tinymce {
   background-color: white !important;
@@ -327,8 +332,7 @@ body#tinymce {
 	padding: 0;
   width: 960px;
 
-  #content
-  {
+  #content {
     padding-right: 0;
   }
 }
