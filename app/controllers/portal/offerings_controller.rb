@@ -380,6 +380,11 @@ class Portal::OfferingsController < ApplicationController
           logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
         end
       end
+    when Embeddable::DrawingTool
+      saveable_drawing_tool = Saveable::DrawingTool.find_or_create_by_learner_id_and_offering_id_and_drawing_tool_id(learner.id, offering.id, embeddable.id)
+      if (saveable_drawing_tool.response_count == 0 && answer != "") || (saveable_drawing_tool.response_count > 0 && saveable_drawing_tool.answers.last.answer != answer)
+        saveable_drawing_tool.answers.create(:bundle_content_id => nil, :answer => answer)
+      end
     else
       nil
     end

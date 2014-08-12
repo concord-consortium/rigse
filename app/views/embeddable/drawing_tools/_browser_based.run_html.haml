@@ -9,6 +9,13 @@
   %button.labbook_button{:id => dom_id_for(drawing_tool, :model_take_snapshot)}= "Take a Snapshot"
   %img.labbook_button{ :id => dom_id_for(drawing_tool, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
 
+- value = nil
+- if local_assigns[:learner]
+  - if saveable = Saveable::DrawingTool.find_by_learner_id_and_drawing_tool_id(learner.id, drawing_tool.id)
+    - value = saveable.answer if saveable.answered?
+  %textarea{:type => 'text', :style=>"width: 100%; display: none ", :class=> "mceNoEditor", :name => "questions[#{dom_id_for(drawing_tool)}]", :id => dom_id_for(drawing_tool, :item, :drawing_tool_state)}
+    = value
+
 - if Labbook.enabled?
   :javascript
     $j("##{dom_id_for(drawing_tool, :model_open_album)}").click(function() {
@@ -36,7 +43,17 @@
         var drawingTool = new DrawingTool("##{dom_id_for(drawing_tool, :interactive)}");
         if (#{!!(drawing_tool.background_image_url && drawing_tool.background_image_url.length > 0)}) {
           drawingTool.setBackgroundImage("#{drawing_tool.background_image_url}");
-          // TODO Load the previous state, if any
+        }
+        // Load the previous state, if any
+        if (#{!value.nil?}) {
+          drawingTool.load(#{value});
+        }
+        // Save the state when the form is submitted
+        if (#{!!local_assigns[:learner]}) {
+          $j("form").submit(function() {
+            $j("##{dom_id_for(drawing_tool, :item, :drawing_tool_state)}").val(JSON.stringify(drawingTool.save()));
+            return true;
+          });
         }
       }, 10);
     });
