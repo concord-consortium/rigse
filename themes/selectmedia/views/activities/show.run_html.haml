@@ -1,5 +1,6 @@
 - with_format(:html) do
   = render :partial => 'shared/iframe_phone'
+  = render :partial => 'shared/drawing_tool'
 = render :partial => 'shared/form_save_warning', :locals => { :skip_warning_popup => true }
 = render :partial=> 'activities/show', :locals=>{:activity => @activity }
 %input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => 'disabled'}

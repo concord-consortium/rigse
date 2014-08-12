@@ -20,5 +20,9 @@ class Embeddable::DrawingTool < Embeddable::Embeddable
   def self.display_name
     "Drawing Response"
   end
-  
+
+  def can_run_lightweight?
+    true
+  end
+
 end
