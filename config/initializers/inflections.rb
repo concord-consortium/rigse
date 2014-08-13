@@ -10,4 +10,5 @@
 # end
 ActiveSupport::Inflector.inflections do |inflect|
     inflect.irregular 'clazz', 'clazzes'
+    inflect.acronym 'API'
 end

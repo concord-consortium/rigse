@@ -603,6 +603,17 @@ RailsPortal::Application.routes.draw do
     resources :attached_files
     resources :images
 
+    namespace :api, :defaults => {:format => :json} do
+      namespace :v1 do
+        resources :teachers
+        resources :students
+        resources :security_questions
+        resources :states
+        resources :districts
+        resources :schools
+      end
+    end
+    
     if Rails.env.cucumber? || Rails.env.test?
       match '/login/:username' => 'users#backdoor', :as => :login_backdoor
     end
