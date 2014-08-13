@@ -143,6 +143,7 @@ group :development do
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
   gem "sextant"    # adds http://localhost:9000/rails/routes in dev mode
+  gem "better_errors", "~> 1.1.0"
 end
 
 group :test do

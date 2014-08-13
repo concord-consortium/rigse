@@ -120,6 +120,9 @@ GEM
       uuidtools (~> 2.1)
     bcrypt-ruby (3.0.1)
     bcrypt-ruby (3.0.1-x86-mingw32)
+    better_errors (1.1.0)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
     builder (3.0.4)
     capistrano (2.14.1)
       highline
@@ -468,6 +471,7 @@ DEPENDENCIES
   arrayfields
   awesome_print
   aws-sdk (~> 1.8.1.2)
+  better_errors (~> 1.1.0)
   calpicker!
   capistrano (~> 2.14.1)
   capybara (~> 1.1.2)
