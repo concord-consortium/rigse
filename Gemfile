@@ -105,6 +105,7 @@ source "http://rubygems.org"
   # TODO ⬆⬆ remove this, and do something better on production deploy
 
   gem 'font-awesome-sass'
+  gem 'virtus',               "~>1.0.3"
 
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
