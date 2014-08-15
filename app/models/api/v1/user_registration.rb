@@ -11,6 +11,8 @@ class API::V1::UserRegistration
   attribute :password_confirmation, String
   attribute :email,                 String
   attribute :login,                 String
+  attribute :asked_age,             Boolean, :default => false
+  attribute :have_consent,          Boolean, :default => false
 
   validate  :user_is_valid
 
@@ -25,16 +27,16 @@ class API::V1::UserRegistration
   end
 
   def user_params
-    valid_keys = [:first_name, :last_name, :password, :password_confirmation, :email, :login]
+    valid_keys = [:first_name, :last_name, :password, :password_confirmation, :email, :login, :asked_age, :have_consent]
     self.attributes.select { |k,v| valid_keys.include? k }
   end
 
-  def user
+  def new_user
     User.new(user_params)
   end
 
   def user_is_valid
-    u = user
+    u = new_user
     return true if u.valid?
     u.errors.each do |err|
       self.errors.add err
@@ -45,17 +47,19 @@ class API::V1::UserRegistration
   def save
     if valid?
       persist!
-      true
     else
       false
     end
   end
 
-  private
+  protected
+  def persist_user
+    @user = new_user
+    @user.save!
+  end
 
   def persist!
-    @user = user
-    @user.save!
+    persist_user
   end
 
 
