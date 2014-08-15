@@ -40,4 +40,5 @@
 = require 'permission_form'
 = require 'wait_message'
 = require 'signup'
+= require 'api-urls'
 */

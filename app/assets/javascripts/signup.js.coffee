@@ -3,7 +3,7 @@
   class SignupForm
     constructor: (@selector) ->
       @$form = $(@selector)
-      @field('questions[]').getSelectOptions '/api/v1/security_questions', (data) ->
+      @field('questions[]').getSelectOptions API_V1.SECURITY_QUESTIONS, (data) ->
         res = []
         data.forEach (t) ->
           res.push val: t, text: t
@@ -46,7 +46,7 @@
     serializeAndSubmit: ->
       $.ajax(
         type: 'post'
-        url: '/api/v1/students'
+        url: API_V1.STUDENTS
         contentType: 'application/json'
         data: @$form.serializeJSON()
       ).done((data) =>
