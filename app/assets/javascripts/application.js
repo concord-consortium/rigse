@@ -29,6 +29,7 @@
 = require_tree './in_place_rich_editor'
 = require 'jquery/jquery'
 = require 'jquery_ajax_select'
+= require 'jquery.serialize-object'
 = require 'search_materials'
 = require 'student_lightbox_report'
 = require 'progress_disclosure'
