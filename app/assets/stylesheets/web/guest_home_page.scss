@@ -1,0 +1,64 @@
+.home-page-content, .registration-box {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.home-page-content {
+  width: 660px;
+  margin-right: 30px;
+}
+
+.registration-box {
+  width: 262px; /* + home-page-content width + margin should be < 960px */
+
+  form {
+    width: 100%;
+    fieldset {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+    p {
+      margin: 5px 0;
+      font-size: 14px;
+      width: 100%;
+    }
+    input[type="text"], input[type="password"] {
+      padding: 5px;
+      width: 250px;
+    }
+    optgroup {
+      font-size: 14px;
+    }
+    input[type="radio"] {
+      margin: 0 5px;
+    }
+    button, input[type="submit"] {
+      display: block;
+      margin: 0 auto;
+      padding: 7px 3px;
+      width: 250px;
+      font-size: 14px;
+    }
+    .error-field {
+      border-color: #9B1616;
+    }
+    .error-message {
+      color: #9B1616;
+      margin: 0;
+      line-height: 14px;
+    }
+  }
+
+  .success {
+    background: #BDE9D7;
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .big {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+

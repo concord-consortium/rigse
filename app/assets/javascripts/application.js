@@ -39,4 +39,5 @@
 = require 'create_status'
 = require 'permission_form'
 = require 'wait_message'
+= require 'signup'
 */
