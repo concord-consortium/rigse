@@ -18,7 +18,6 @@
       %button#continue-registration Sign Up for High Adventure Science!
 
   = field_set_tag nil, id: 'student-fieldset', class: 'hidden' do
-    -# students section
     - if current_project.allow_default_class
       %p= hidden_field_tag :class_word, Portal::Clazz.default_class.class_word
     - else
@@ -35,10 +34,21 @@
         %p= select_tag 'questions[]', nil
         %p= text_field_tag 'answers[]', nil, placeholder: 'Answer'
 
-      .group
-        = hidden_field_tag :over_18, false
-        = check_box_tag :over_18, true
-        I am 18 years old or older
+    .group
+      = hidden_field_tag :over_18, false
+      = check_box_tag :over_18, true
+      I am 18 years old or older
+
+    .group
+      %p= submit_tag 'Submit', id: 'submit-form'
+
+  = field_set_tag nil, id: 'teacher-fieldset', class: 'hidden' do
+    .group
+      %p= text_field_tag :login, nil, placeholder: 'Username'
+      %p= text_field_tag :email, nil, placeholder: 'E-mail'
+      %p= select_tag 'state', nil
+      %p= select_tag 'district', nil, class: 'hidden'
+      %p= select_tag 'school_id', nil, class: 'hidden'
 
     .group
       %p= submit_tag 'Submit', id: 'submit-form'
