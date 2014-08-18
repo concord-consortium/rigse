@@ -6,7 +6,7 @@ class API::APIController < ApplicationController
 		  	:response_type => "ERROR", 
 		  	:message => message
 	  	},
-	  	:status => 500
+	  	:status => 400
 	end
 
 	def show
