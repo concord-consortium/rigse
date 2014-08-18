@@ -30,6 +30,7 @@
 = require 'jquery/jquery'
 = require 'jquery_ajax_select'
 = require 'jquery.serialize-object'
+= require 'select2'
 = require 'search_materials'
 = require 'student_lightbox_report'
 = require 'progress_disclosure'

@@ -1,0 +1,4 @@
+/* Otherwise search input will have... red borders due to some style in app.scss */
+input[type="text"].select2-input:focus {
+  border-color: #aaa;
+}

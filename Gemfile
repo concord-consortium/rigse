@@ -94,6 +94,7 @@ source "http://rubygems.org"
   gem 'sass-rails' # if running rails 3.1 or greater
   gem 'coffee-rails' # if running rails 3.1 or greater
   gem "compass-rails"
+  gem 'select2-rails'
   gem 'uglifier'
   gem 'yui-compressor'
   gem "turbo-sprockets-rails3", "~> 0.3.6"
