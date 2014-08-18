@@ -28,7 +28,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   def valid_class_word_checker
     found = Portal::Clazz.find_by_class_word(self.class_word)
     return true if found
-    errors.add(:class_word, "uncrecognized class word")
+    errors.add(:class_word, "Unknown class word")
     return false
   end
 
