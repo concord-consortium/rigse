@@ -33,7 +33,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   end
 
   def num_required_questions
-    3
+    Admin::Project.default_project &&  Admin::Project.default_project.use_student_security_questions ? 3 : 0
   end
 
   def add_questions_error(indx)
