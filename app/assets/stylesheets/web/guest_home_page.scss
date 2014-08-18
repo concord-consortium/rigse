@@ -28,11 +28,11 @@
       padding: 5px;
       width: 250px;
     }
-    optgroup {
-      font-size: 14px;
-    }
     input[type="radio"] {
       margin: 0 5px;
+    }
+    select {
+      width: 260px;
     }
     button, input[type="submit"] {
       display: block;

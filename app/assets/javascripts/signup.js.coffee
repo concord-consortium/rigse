@@ -4,11 +4,12 @@
     constructor: (@selector) ->
       @$form = $(@selector)
       @field('questions[]').getSelectOptions API_V1.SECURITY_QUESTIONS, (data) ->
-        res = []
+        res = [{}]
         data.forEach (t) ->
           res.push val: t, text: t
         res
 
+      @setupSelectBoxes()
       @setupSchoolSelect()
 
       @el('#continue-registration').on 'click', (e) =>
@@ -78,6 +79,7 @@
         @showErrors(errors)
       )
 
+
     showErrors: (errors) ->
       @processTeacherErrors(errors) if @teacher
 
@@ -96,33 +98,33 @@
       school_id = @field('school_id')
 
       state.getSelectOptions API_V1.STATES, (data) ->
-        res = [{val: '', text: '- Select a state'}]
+        res = [{}]
         data.forEach (s) ->
           res.push val: s, text: s
         res
-      , ->
-        state.trigger 'change'
 
       state.on 'change', =>
         return if state.val() == ''
         district.getSelectOptions API_V1.DISTRICTS + "?state=#{state.val()}", (data) ->
-          res = [{val: '', text: '- Select a district'}]
+          res = [{}]
           data.forEach (d) ->
             res.push val: d.id, text: d.name
           res
         , ->
           district.removeClass 'hidden'
-          district.trigger 'change'
 
       district.on 'change', =>
         return if district.val() == ''
         school_id.getSelectOptions API_V1.SCHOOLS + "?district_id=#{district.val()}", (data) ->
-          res = [{val: '', text: '- Select a school'}]
+          res = [{}]
           data.forEach (s) ->
             res.push val: s.id, text: s.name
           res
         , ->
           school_id.removeClass 'hidden'
+
+    setupSelectBoxes: ->
+      @el('select').select2(width: "262px", minimumResultsForSearch: 10)
 
     student: ->
       @el('#student_account').is(':checked')

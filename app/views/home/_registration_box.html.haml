@@ -27,17 +27,18 @@
       .group
         .f-row Please select three questions from the menus below.
         .f-row If you forget your password, you will need to answer these questions correctly in order to receive a new one.
-        .f-row= select_tag 'questions[]', nil
+        .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
         .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
-        .f-row= select_tag 'questions[]', nil
+        .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
         .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
-        .f-row= select_tag 'questions[]', nil
+        .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
         .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
 
     .group
-      = hidden_field_tag :over_18, false
-      = check_box_tag :over_18, true
-      I am 18 years old or older
+      .f-row
+        = hidden_field_tag :over_18, false
+        = check_box_tag :over_18, true
+        I am 18 years old or older
 
     .group
       .f-row= submit_tag 'Submit', class: 'submit-form'
@@ -46,9 +47,9 @@
     .group
       .f-row= text_field_tag :login, nil, placeholder: 'Username'
       .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
-      .f-row= select_tag 'state', nil
-      .f-row= select_tag 'district', nil, class: 'hidden'
-      .f-row= select_tag 'school_id', nil, class: 'hidden'
+      .f-row= select_tag 'state', nil, 'data-placeholder' => 'Select a state'
+      .f-row= select_tag 'district', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a district'
+      .f-row= select_tag 'school_id', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a school'
 
     .group
       .f-row= submit_tag 'Submit', class: 'submit-form'

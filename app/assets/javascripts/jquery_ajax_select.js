@@ -27,10 +27,11 @@
         options.forEach(function (opt) {
           $select.append($('<option>').attr('value', opt.val).text(opt.text));
         });
+        $select.trigger('change');
       });
 
       if (typeof callback === 'function') {
-        callback();
+        callback.bind(this)();
       }
     }
 
