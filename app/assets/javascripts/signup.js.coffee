@@ -17,12 +17,12 @@
         return unless @validateBasicFields()
         @el('#common-fieldset').addClass 'hidden'
 
-        if @accountType() == 'student'
+        if @student()
           @el('#student-fieldset').removeClass 'hidden'
         else
           @el('#teacher-fieldset').removeClass 'hidden'
 
-      @el('#submit-form').on 'click', (e) =>
+      @el('.submit-form').on 'click', (e) =>
         e.preventDefault()
         @clearErrors()
         @serializeAndSubmit()
@@ -49,8 +49,22 @@
 
       return valid
 
+    processTeacherErrors: (errors) ->
+      # Note that if field is hidden, it means that user never selected
+      # previous field in state - district - school sequence.
+      if @field('district').hasClass 'hidden'
+        errors.state = 'Please select a state'
+        delete errors.school_id
+      else if @field('school_id').hasClass 'hidden'
+        errors.district = 'Please select a district'
+        delete errors.school_id
+
     serializeAndSubmit: ->
-      url = if @accountType() == 'student' then API_V1.STUDENTS else API_V1.TEACHERS
+      if @student()
+        url = API_V1.STUDENTS
+      else
+        url = API_V1.TEACHERS
+
       $.ajax(
         type: 'post'
         url: url
@@ -65,10 +79,12 @@
       )
 
     showErrors: (errors) ->
+      @processTeacherErrors(errors) if @teacher
+
       for fieldName, error of errors
-        $f = @field(fieldName)
+        $f = @field(fieldName).parent()
         $f.addClass 'error-field'
-        $f.parent().prepend "<p class=\"error-message\">#{error}<p>"
+        $f.prepend "<p class=\"error-message\">#{error}</p>"
 
     clearErrors: ->
       @$form.find('.error-field').removeClass 'error-field'
@@ -80,7 +96,7 @@
       school_id = @field('school_id')
 
       state.getSelectOptions API_V1.STATES, (data) ->
-        res = [{val: 'no-selection', text: '- Select a state'}]
+        res = [{val: '', text: '- Select a state'}]
         data.forEach (s) ->
           res.push val: s, text: s
         res
@@ -88,9 +104,9 @@
         state.trigger 'change'
 
       state.on 'change', =>
-        return if state.val() == 'no-selection'
+        return if state.val() == ''
         district.getSelectOptions API_V1.DISTRICTS + "?state=#{state.val()}", (data) ->
-          res = [{val: 'no-selection', text: '- Select a district'}]
+          res = [{val: '', text: '- Select a district'}]
           data.forEach (d) ->
             res.push val: d.id, text: d.name
           res
@@ -99,21 +115,20 @@
           district.trigger 'change'
 
       district.on 'change', =>
-        return if district.val() == 'no-selection'
+        return if district.val() == ''
         school_id.getSelectOptions API_V1.SCHOOLS + "?district_id=#{district.val()}", (data) ->
-          res = [{val: 'no-selection', text: '- Select a school'}]
+          res = [{val: '', text: '- Select a school'}]
           data.forEach (s) ->
             res.push val: s.id, text: s.name
           res
         , ->
           school_id.removeClass 'hidden'
 
-    accountType: ->
-      return 'student' if @el('#student_account').is(':checked')
-      return 'teacher'
-
     student: ->
       @el('#student_account').is(':checked')
+
+    teacher: ->
+      !@student
 
     welcomeMessage: ->
       if @student()

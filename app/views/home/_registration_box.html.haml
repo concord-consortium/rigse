@@ -1,9 +1,9 @@
 = form_tag '', :id => 'new-account-form' do
   = field_set_tag nil, id: 'common-fieldset' do
     .group
-      %p= text_field_tag :first_name, nil, placeholder: 'First Name'
-      %p= text_field_tag :last_name, nil, placeholder: 'Last Name'
-      %span
+      .f-row= text_field_tag :first_name, nil, placeholder: 'First Name'
+      .f-row= text_field_tag :last_name, nil, placeholder: 'Last Name'
+      .f-row
         I am a
         = radio_button_tag :account_type, 'student', true, id: 'student_account'
         = label_tag :student_account, ' Student'
@@ -11,28 +11,28 @@
         = label_tag :teacher_account, ' Teacher'
 
     .group
-      %p= password_field_tag :password, nil, placeholder: 'Password'
-      %p= password_field_tag :password_confirmation, nil, placeholder: 'Password Again'
+      .f-row= password_field_tag :password, nil, placeholder: 'Password'
+      .f-row= password_field_tag :password_confirmation, nil, placeholder: 'Password Again'
 
-    %group
+    .group
       %button#continue-registration Sign Up for High Adventure Science!
 
   = field_set_tag nil, id: 'student-fieldset', class: 'hidden' do
     - if current_project.allow_default_class
-      %p= hidden_field_tag :class_word, Portal::Clazz.default_class.class_word
+      .f-row= hidden_field_tag :class_word, Portal::Clazz.default_class.class_word
     - else
       .group
-        %p= text_field_tag :class_word, nil, placeholder: 'Class Word (not case sensitive)'
+        .f-row= text_field_tag :class_word, nil, placeholder: 'Class Word (not case sensitive)'
     - if current_project.use_student_security_questions
       .group
-        %p Please select three questions from the menus below.
-        %p If you forget your password, you will need to answer these questions correctly in order to receive a new one.
-        %p= select_tag 'questions[]', nil
-        %p= text_field_tag 'answers[]', nil, placeholder: 'Answer'
-        %p= select_tag 'questions[]', nil
-        %p= text_field_tag 'answers[]', nil, placeholder: 'Answer'
-        %p= select_tag 'questions[]', nil
-        %p= text_field_tag 'answers[]', nil, placeholder: 'Answer'
+        .f-row Please select three questions from the menus below.
+        .f-row If you forget your password, you will need to answer these questions correctly in order to receive a new one.
+        .f-row= select_tag 'questions[]', nil
+        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
+        .f-row= select_tag 'questions[]', nil
+        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
+        .f-row= select_tag 'questions[]', nil
+        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
 
     .group
       = hidden_field_tag :over_18, false
@@ -40,15 +40,15 @@
       I am 18 years old or older
 
     .group
-      %p= submit_tag 'Submit', id: 'submit-form'
+      .f-row= submit_tag 'Submit', class: 'submit-form'
 
   = field_set_tag nil, id: 'teacher-fieldset', class: 'hidden' do
     .group
-      %p= text_field_tag :login, nil, placeholder: 'Username'
-      %p= text_field_tag :email, nil, placeholder: 'E-mail'
-      %p= select_tag 'state', nil
-      %p= select_tag 'district', nil, class: 'hidden'
-      %p= select_tag 'school_id', nil, class: 'hidden'
+      .f-row= text_field_tag :login, nil, placeholder: 'Username'
+      .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
+      .f-row= select_tag 'state', nil
+      .f-row= select_tag 'district', nil, class: 'hidden'
+      .f-row= select_tag 'school_id', nil, class: 'hidden'
 
     .group
-      %p= submit_tag 'Submit', id: 'submit-form'
+      .f-row= submit_tag 'Submit', class: 'submit-form'

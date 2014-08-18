@@ -4,12 +4,12 @@
 }
 
 .home-page-content {
-  width: 660px;
+  width: 640px;
   margin-right: 30px;
 }
 
 .registration-box {
-  width: 262px; /* + home-page-content width + margin should be < 960px */
+  width: 280px; /* + home-page-content width + margin should be < 960px */
 
   form {
     width: 100%;
@@ -18,10 +18,11 @@
       padding: 0;
       margin: 0;
     }
-    p {
+    .f-row {
       margin: 5px 0;
+      padding: 0 5px;
       font-size: 14px;
-      width: 100%;
+      width: 262px;
     }
     input[type="text"], input[type="password"] {
       padding: 5px;
@@ -41,14 +42,19 @@
       font-size: 14px;
     }
     .group {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .error-field {
-      border-color: #9B1616;
+      border: 1px solid #F3EBEB;
+      border-radius: 6px;
+      background: #FFF6F6;
+      margin: 5px 0;
+      padding: 5px 5px;
     }
     .error-message {
       color: #9B1616;
-      margin: 0;
+      margin: 0 0 3px 0;
+      padding: 0;
       line-height: 14px;
     }
   }
