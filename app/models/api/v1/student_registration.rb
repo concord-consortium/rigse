@@ -87,6 +87,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
     user.portal_student = @student = Portal::Student.create(:user => user)
     user.portal_student.process_class_word(self.class_word)
     add_security_questions
+    user.confirm!
     return true
   end
 
