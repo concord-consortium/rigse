@@ -3,9 +3,14 @@ class Portal::OfferingsController < ApplicationController
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
   before_filter :student_teacher_admin_or_config, :only => [:answers]
+  before_filter :saveable_labbook
 
   def current_clazz
     Portal::Offering.find(params[:id]).clazz
+  end
+
+  def saveable_labbook
+    Saveable::Labbook.request = request
   end
 
   public
@@ -156,7 +161,6 @@ class Portal::OfferingsController < ApplicationController
 
   def report
     @offering = Portal::Offering.find(params[:id])
-    Saveable::Labbook.request = request
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
 
@@ -188,7 +192,6 @@ class Portal::OfferingsController < ApplicationController
 
   def separated_report
     @offering = Portal::Offering.find(params[:id])
-    Saveable::Labbook.request = request
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
 

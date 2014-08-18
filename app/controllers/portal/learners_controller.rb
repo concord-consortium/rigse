@@ -7,7 +7,8 @@ class Portal::LearnersController < ApplicationController
   before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report]
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
   before_filter :learner_teacher_admin, :only => [:show]
-  
+  before_filter :saveable_labbook
+
   def current_clazz
     Portal::Learner.find(params[:id]).offering.clazz
   end
@@ -17,7 +18,11 @@ class Portal::LearnersController < ApplicationController
       current_clazz.is_teacher?(current_user) ||
       current_user.has_role?('admin')
   end
-  
+
+  def saveable_labbook
+    Saveable::Labbook.request = request
+  end
+
   public
 
   # GET /portal/learners
@@ -53,7 +58,6 @@ class Portal::LearnersController < ApplicationController
   
   def report
     @portal_learner = Portal::Learner.find(params[:id])
-    Saveable::Labbook.request = request
     
     reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
     
