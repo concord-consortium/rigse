@@ -3,6 +3,8 @@
   class SignupForm
     constructor: (@selector) ->
       @$form = $(@selector)
+      @accountType = null
+
       @field('questions[]').getSelectOptions API_V1.SECURITY_QUESTIONS, (data) ->
         res = [{}]
         data.forEach (t) ->
@@ -18,10 +20,12 @@
         return unless @validateBasicFields()
         @el('#common-fieldset').addClass 'hidden'
 
-        if @student()
+        if @el('#student_account').is(':checked')
           @el('#student-fieldset').removeClass 'hidden'
+          @accountType = 'student'
         else
           @el('#teacher-fieldset').removeClass 'hidden'
+          @accountType = 'teacher'
 
       @el('.submit-form').on 'click', (e) =>
         e.preventDefault()
@@ -61,7 +65,7 @@
         delete errors.school_id
 
     serializeAndSubmit: ->
-      if @student()
+      if @isStudent()
         url = API_V1.STUDENTS
       else
         url = API_V1.TEACHERS
@@ -73,7 +77,7 @@
         data: @$form.serializeJSON()
       ).done((data) =>
         @$form.empty()
-        @$form.append "<div class='success'>#{@welcomeMessage()}<div>"
+        @$form.append "<div class='success'>#{@welcomeMessage(data)}<div>"
       ).fail((jqXHR) =>
         errors = JSON.parse(jqXHR.responseText).message
         @showErrors(errors)
@@ -81,12 +85,12 @@
 
 
     showErrors: (errors) ->
-      @processTeacherErrors(errors) if @teacher
+      @processTeacherErrors(errors) if @isTeacher()
 
       for fieldName, error of errors
         $f = @field(fieldName).parent()
         $f.addClass 'error-field'
-        $f.prepend "<p class=\"error-message\">#{error}</p>"
+        $f.prepend "<div class=\"error-message\">#{error}</div>"
 
     clearErrors: ->
       @$form.find('.error-field').removeClass 'error-field'
@@ -126,17 +130,17 @@
     setupSelectBoxes: ->
       @el('select').select2(width: "262px", minimumResultsForSearch: 10)
 
-    student: ->
-      @el('#student_account').is(':checked')
+    isStudent: ->
+      @accountType == 'student'
 
-    teacher: ->
-      !@student
+    isTeacher: ->
+      @accountType == 'teacher'
 
-    welcomeMessage: ->
-      if @student()
+    welcomeMessage: (data) ->
+      if @isStudent()
         "<h3>Thanks for signing up!</h3>" +
         "<p>You have successfully registered #{data.first_name} #{data.last_name} " +
-        " with the user name <span class=\"big\">#{data.username}</span>.</p>" +
+        " with the user name <span class=\"big\">#{data.login}</span>.</p>" +
         "Use this user name and password you provided to sign in.</p>"
       else
         "<h3>Thanks for signing up!</h3>" +
