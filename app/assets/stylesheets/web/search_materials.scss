@@ -205,6 +205,23 @@ search_materials{
   }
 }
 
+.landing_page {
+  width: 956px;
+  margin: 0px;
+  padding: 0px;
+  .material_list {
+    display: block;
+    border: 1px solid; 
+    width: 100%;
+    padding: 0px;
+    margin-top: 20px;
+    min-height: 200px;
+    .material_icon {
+      border: 1px solid;
+    }  
+  }
+}
+
 .material-details {
   clear: both;
   padding: 10px;

@@ -9,6 +9,12 @@ class HomeController < ApplicationController
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
+   if current_visitor.has_role? "guest"
+      @materials = [ 
+        Investigation.published.where(:is_featured => true),
+        Activity.investigation.published.where(:is_featured => true) 
+      ]
+    end
   end
   
   def readme
