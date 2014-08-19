@@ -30,7 +30,7 @@
               - else
                 %span.is_community Community
             %br
-            - if link_url.nil?
+            - if link_url.nil? or defined? hide_details
               = material.name
             - else
               = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')"
@@ -81,7 +81,8 @@
                 (Assigned to
                 = offering_clazz_names.join(", ")+")"
 .material_body
-  = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
+  - unless defined? hide_details
+    = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
   %div
     %i
       -if(material_count == 0)
