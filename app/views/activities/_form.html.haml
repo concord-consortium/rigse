@@ -13,7 +13,10 @@
   = field_set_tag 'Teacher Guide (URL)' do
     = f.text_field :teacher_guide_url, :size => 60
   = field_set_tag 'Feature On Landing Page' do
-    = f.check_box :is_featured 
+    - if current_user.has_role? 'admin','manager'
+      = f.check_box :is_featured 
+    - else
+      = f.check_box :is_featured, :disabled => true
     (check here if this activity should be displayed to anonymous users on the landing page)
   = field_set_tag 'Teacher only' do
     = f.check_box :teacher_only 

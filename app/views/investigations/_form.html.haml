@@ -11,7 +11,10 @@
         = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
       %li
         %label.right Feature On Landing Page
-        = f.check_box :is_featured
+        - if current_user.has_role? 'admin','manager'
+          = f.check_box :is_featured
+        - else
+          = f.check_box :is_featured, disabled: true
         %br
         When checked this #{t(:investigation)} will appear on the landing page, and seen by anonymous users.
       %li
