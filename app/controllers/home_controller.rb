@@ -12,6 +12,7 @@ class HomeController < ApplicationController
    if current_visitor.has_role? "guest"
       @materials = [ 
         Investigation.published.where(:is_featured => true),
+        ExternalActivity.published.where(:is_featured => true),
         Activity.investigation.published.where(:is_featured => true) 
       ]
     end
