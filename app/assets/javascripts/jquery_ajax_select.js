@@ -9,6 +9,10 @@
    * callback     - optional function that will be called when AJAX request is completed.
    */
   $.fn.getSelectOptions = function (url, formatResult, callback) {
+    var selectElements = this.filter('select');
+    // Make sure we don't send AJAX request when there are no target elements available.
+    if (selectElements.length < 1) return;
+
     $.ajax({
       type: 'get',
       url: url,
@@ -21,7 +25,7 @@
     function success (data) {
       var options = formatResult(data);
 
-      this.filter('select').each(function() {
+      selectElements.each(function() {
         var $select = $(this);
         $select.empty();
         options.forEach(function (opt) {
