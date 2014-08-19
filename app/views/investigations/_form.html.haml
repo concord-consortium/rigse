@@ -7,8 +7,13 @@
         = f.text_field :name
       // without publication status options, projects won't be able to set investigations as active...
       %li
-        %label.right Publication status
+        %label.right Publication Status
         = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
+      %li
+        %label.right Feature On Landing Page
+        = f.check_box :is_featured
+        %br
+        When checked this #{t(:investigation)} will appear on the landing page, and seen by anonymous users.
       %li
         %label.right Student Report Enabled
         = f.check_box :student_report_enabled

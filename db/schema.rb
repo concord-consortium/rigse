@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140722135342) do
+ActiveRecord::Schema.define(:version => 20140819184212) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(:version => 20140722135342) do
     t.text     "description_for_teacher"
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
+    t.boolean  "is_featured",                           :default => false
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
@@ -816,6 +817,7 @@ ActiveRecord::Schema.define(:version => 20140722135342) do
     t.text     "description_for_teacher"
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
+    t.boolean  "is_featured",                             :default => false
   end
 
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
