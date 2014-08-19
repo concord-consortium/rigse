@@ -18,11 +18,13 @@
       %button#continue-registration Sign Up for High Adventure Science!
 
   = field_set_tag nil, id: 'student-fieldset', class: 'hidden' do
+
     - if current_project.allow_default_class
       .f-row= hidden_field_tag :class_word, Portal::Clazz.default_class.class_word
     - else
       .group
         .f-row= text_field_tag :class_word, nil, placeholder: 'Class Word (not case sensitive)'
+
     - if current_project.use_student_security_questions
       .group
         .f-row Please select three questions from the menus below.
@@ -33,12 +35,6 @@
         .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
         .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
         .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
-
-    .group
-      .f-row
-        = hidden_field_tag :over_18, false
-        = check_box_tag :over_18, true
-        I am 18 years old or older
 
     .group
       .f-row= submit_tag 'Submit', class: 'submit-form'

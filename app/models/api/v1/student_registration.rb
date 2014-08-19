@@ -1,6 +1,5 @@
 class API::V1::StudentRegistration < API::V1::UserRegistration
 
-  attribute :over_18,    Boolean
   attribute :class_word, String
   attribute :questions,  Array[String]
   attribute :answers,    Array[String]
@@ -37,7 +36,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   end
 
   def add_questions_error(indx)
-    errors.add(:"questions[#{indx}]", "You must select #{num_required_questions} different questions.")
+    errors.add(:"questions[#{indx}]", "You must select #{num_required_questions} different questions")
   end
 
   def questions_checker
@@ -55,7 +54,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   end
 
   def add_answer_error(indx)
-    errors.add(:"answers[#{indx}]", "You must have #{num_required_questions} non-blank answers.")
+    errors.add(:"answers[#{indx}]", "You must have #{num_required_questions} non-blank answers")
   end
 
   def answers_checker
@@ -73,7 +72,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   def make_security_questions
     sec_questions = []
     for i in 0...num_required_questions
-      sec_questions << SecurityQuestion.new(:question => questions[i],:answer => answers[i], :user_id => user.id)
+      sec_questions << SecurityQuestion.new(:question => questions[i], :answer => answers[i], :user_id => user.id)
     end
     return sec_questions
   end
@@ -94,6 +93,5 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   def persist!
     return super && persist_student
   end
-
 
 end
