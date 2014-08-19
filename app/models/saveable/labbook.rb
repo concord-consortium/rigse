@@ -39,12 +39,7 @@ class Saveable::Labbook
   def self.saveables_for_offering(offering, learners)
     saveables = []
     runnable = offering.runnable
-    runnable.embedded_models.each do |model|
-      learners.each do |learner|
-        saveables << Saveable::Labbook.new(model, learner)
-      end
-    end
-    runnable.sensors.each do |model|
+    (runnable.embedded_models + runnable.sensors + runnable.drawing_tools).each do |model|
       learners.each do |learner|
         saveables << Saveable::Labbook.new(model, learner)
       end

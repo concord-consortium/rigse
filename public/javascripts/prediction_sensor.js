@@ -38,7 +38,11 @@
       });
     };
 
-    setupCoordination();
-    setupPeriodicSync();
+    if (predictionPhone && sensorPhone) {
+      setupCoordination();
+      setupPeriodicSync();
+    } else {
+      if (console) { console.log("Prediction or sensor iframe phone is missing! p: " + pred_dom + ", s: " + sensor_dom )}
+    }
   };
 })();

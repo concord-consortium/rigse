@@ -3,9 +3,14 @@ class Portal::OfferingsController < ApplicationController
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
   before_filter :student_teacher_admin_or_config, :only => [:answers]
+  before_filter :saveable_labbook
 
   def current_clazz
     Portal::Offering.find(params[:id]).clazz
+  end
+
+  def saveable_labbook
+    Saveable::Labbook.request = request
   end
 
   public
@@ -156,7 +161,6 @@ class Portal::OfferingsController < ApplicationController
 
   def report
     @offering = Portal::Offering.find(params[:id])
-    Saveable::Labbook.request = request
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
 
@@ -188,7 +192,6 @@ class Portal::OfferingsController < ApplicationController
 
   def separated_report
     @offering = Portal::Offering.find(params[:id])
-    Saveable::Labbook.request = request
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
 
@@ -379,6 +382,11 @@ class Portal::OfferingsController < ApplicationController
         elsif ! embeddable
           logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
         end
+      end
+    when Embeddable::DrawingTool
+      saveable_drawing_tool = Saveable::DrawingTool.find_or_create_by_learner_id_and_offering_id_and_drawing_tool_id(learner.id, offering.id, embeddable.id)
+      if (saveable_drawing_tool.response_count == 0 && answer != "") || (saveable_drawing_tool.response_count > 0 && saveable_drawing_tool.answers.last.answer != answer)
+        saveable_drawing_tool.answers.create(:bundle_content_id => nil, :answer => answer)
       end
     else
       nil

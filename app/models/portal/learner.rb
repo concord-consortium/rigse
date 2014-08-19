@@ -32,6 +32,11 @@ class Portal::Learner < ActiveRecord::Base
       find(:all).select { |question| question.answered? }.select{ |item| item.answered_correctly? }
     end
   end
+
+  def labbooks
+    # TODO Should we generate and return actual saveables?
+    []
+  end
   
   has_one :report_learner, :class_name => "Report::Learner", :foreign_key => "learner_id"
 

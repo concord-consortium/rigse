@@ -91,7 +91,7 @@ class Activity < ActiveRecord::Base
   end
 
   def reportable_types
-    extras = lightweight? ? [Embeddable::Diy::Sensor, Embeddable::Diy::EmbeddedModel] : []
+    extras = lightweight? ? [Embeddable::Diy::Sensor, Embeddable::Diy::EmbeddedModel, Embeddable::DrawingTool] : []
     Investigation.reportable_types + extras
   end
 

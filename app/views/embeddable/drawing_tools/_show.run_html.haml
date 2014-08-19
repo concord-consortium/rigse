@@ -1,0 +1,5 @@
+%div{:id => dom_id_for(drawing_tool, :details), :class => 'content', :style => "position: relative;"}
+  .model_image{:id => dom_id_for(drawing_tool, :model_image)}
+    .error{:style => "color: red;"}= "This drawing tool can't run in the browser!"
+    =image_tag('/images/drawing_tool.png')
+  = render :partial => 'embeddable/drawing_tools/browser_based', :locals => { :drawing_tool => drawing_tool, :learner => local_assigns[:learner] }

@@ -1,0 +1,7 @@
+- content_for(:extra_head) do
+  %link{ :href => "//concord-consortium.github.io/drawing-tool/drawing-tool.css", :rel=>"stylesheet"}
+
+%script{:src => "//concord-consortium.github.io/drawing-tool/vendor.js"}
+%script{:src => "/javascripts/drawing-tool.js"}
+:javascript
+  window.drawTool$ = jQuery.noConflict();

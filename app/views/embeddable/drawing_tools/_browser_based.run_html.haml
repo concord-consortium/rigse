@@ -1,0 +1,92 @@
+.click_to_play.unavailable{:id => dom_id_for(drawing_tool, :click_to_play)}
+  .background
+  .text= "Click here to start the drawing tool."
+.model_interactive.unavailable{:id => dom_id_for(drawing_tool, :model_interactive)}
+  .interactive{:id => dom_id_for(drawing_tool, :interactive)}
+.model_interactive_snapshot_instructions.unavailable{:id => dom_id_for(drawing_tool, :model_interactive_snapshot_instructions)}
+  = current_project.interactive_snapshot_instructions
+.model_interactive_snapshots.unavailable{:id => dom_id_for(drawing_tool, :model_interactive_snapshots)}
+  %button.labbook_button{:id => dom_id_for(drawing_tool, :model_take_snapshot)}= "Take a Snapshot"
+  %img.labbook_button{ :id => dom_id_for(drawing_tool, :model_open_album), :src => '/images/diy_icons/photo-album.png', :alt => 'Open Snapshot Album', :title => 'Open Snapshot Album' }
+
+- value = nil
+- if local_assigns[:learner]
+  - if saveable = Saveable::DrawingTool.find_by_learner_id_and_drawing_tool_id(learner.id, drawing_tool.id)
+    - value = saveable.answer if saveable.answered?
+  %textarea{:type => 'text', :style=>"width: 100%; display: none ", :class=> "mceNoEditor", :name => "questions[#{dom_id_for(drawing_tool)}]", :id => dom_id_for(drawing_tool, :item, :drawing_tool_state)}
+    = value
+
+- if Labbook.enabled?
+  :javascript
+    $j("##{dom_id_for(drawing_tool, :model_open_album)}").click(function() {
+      if (#{current_user.anonymous?}) {
+        alert("You must be logged in to open the snapshot album.");
+        return false;
+      } else {
+        show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, drawing_tool)}");
+        return false;
+      }
+    });
+
+:javascript
+  if (Object.isExtensible && Modernizr.svg) {
+    // set up click-to-play
+    $j("##{dom_id_for(drawing_tool, :click_to_play)}").removeClass('unavailable');
+    $j("##{dom_id_for(drawing_tool, :model_image)} .error").addClass('unavailable');
+
+    $j("##{dom_id_for(drawing_tool, :click_to_play)}").click(function() {
+      // Load this model.
+      $j("##{dom_id_for(drawing_tool, :model_interactive)}").removeClass('unavailable');
+      $j("##{dom_id_for(drawing_tool, :model_image)}").addClass('unavailable');
+      $j("##{dom_id_for(drawing_tool, :click_to_play)}").addClass('unavailable')
+      setTimeout(function() {
+        var drawingTool = new DrawingTool("##{dom_id_for(drawing_tool, :interactive)}");
+        if (#{!!(drawing_tool.background_image_url && drawing_tool.background_image_url.length > 0)}) {
+          drawingTool.setBackgroundImage("#{drawing_tool.background_image_url}");
+        }
+        // Load the previous state, if any
+        if (#{!value.nil?}) {
+          drawingTool.load(#{value});
+        }
+        // Save the state when the form is submitted
+        if (#{!!local_assigns[:learner]}) {
+          $j("form").submit(function() {
+            $j("##{dom_id_for(drawing_tool, :item, :drawing_tool_state)}").val(JSON.stringify(drawingTool.save()));
+            return true;
+          });
+        }
+      }, 10);
+    });
+
+    if (#{Labbook.enabled?}) {
+      $j("##{dom_id_for(drawing_tool, :model_interactive_snapshot_instructions)}").removeClass('unavailable');
+      $j("##{dom_id_for(drawing_tool, :model_interactive_snapshots)}").removeClass('unavailable');
+      (function() {
+        var optCallbackFn = function(msg) {
+          var reg = /img src='([^']*)'/;
+          var match = reg.exec(msg);
+          if (match[1] != null) {
+            show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, drawing_tool)}&todo=create&source_url=http://" + window.location.host + match[1]);
+          }
+          $j('##{dom_id_for(drawing_tool, :model_take_snapshot)}').removeClass("disabled");
+          $j('##{dom_id_for(drawing_tool, :model_take_snapshot)}').text("Take a Snapshot");
+        };
+
+        var shutterbug = new Shutterbug("##{dom_id_for(drawing_tool, :interactive)}", null, optCallbackFn, "#{dom_id_for(drawing_tool, :model_take_snapshot)}", $j);
+        $j('##{dom_id_for(drawing_tool, :model_take_snapshot)}').click(function() {
+          if (#{current_user.anonymous?}) {
+            alert("You must be logged in to take snapshots.");
+            return false;
+          } else {
+            $j('##{dom_id_for(drawing_tool, :model_take_snapshot)}').addClass("disabled");
+            $j('##{dom_id_for(drawing_tool, :model_take_snapshot)}').text("Taking snapshot...");
+            if (shutterbug.useIframeSizeHack) {
+              shutterbug.useIframeSizeHack(true);
+            }
+            shutterbug.getDomSnapshot();
+            return false;
+          }
+        });
+      })();
+    }
+  }
