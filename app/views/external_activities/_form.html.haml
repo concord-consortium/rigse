@@ -14,6 +14,12 @@
     = f.text_field :teacher_guide_url, :size => 60
   = field_set_tag 'Publication status' do
     = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
+  = field_set_tag 'Feature On Landing Page' do
+    - if current_user.has_role? 'admin','manager'
+      = f.check_box :is_featured 
+    - else
+      = f.check_box :is_featured, :disabled => true
+    Check if this activity should be displayed to anonymous users on the landing page
   = field_set_tag 'Student Report Enabled' do
     = f.check_box :student_report_enabled
     = t('authoring.student_report_enabled_description')
