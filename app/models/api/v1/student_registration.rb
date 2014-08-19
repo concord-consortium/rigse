@@ -4,7 +4,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   attribute :class_word, String
   attribute :questions,  Array[String]
   attribute :answers,    Array[String]
-  
+
   attr_reader :student
 
   validate  :valid_class_word_checker
@@ -14,7 +14,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   def make_login
     Portal::Student.generate_user_login(self.first_name || "john", self.last_name || "doe")
   end
-  
+
   def make_email
     Portal::Student.generate_user_email
   end
@@ -45,7 +45,7 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
     still_valid = true
     for i in 0...num_required_questions do
       q = questions[i]
-      if q.nil? or seen_questions.include? q
+      if q.blank? or seen_questions.include? q
         add_questions_error(i)
         still_valid = false
       end
