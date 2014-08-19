@@ -5,32 +5,10 @@
       @$form = $(@selector)
       @accountType = null
 
-      @field('questions[]').getSelectOptions API_V1.SECURITY_QUESTIONS, (data) ->
-        res = [{}]
-        data.forEach (t) ->
-          res.push val: t, text: t
-        res
-
       @setupSelectBoxes()
+      @setupSecurityQuestions()
       @setupSchoolSelect()
-
-      @el('#continue-registration').on 'click', (e) =>
-        e.preventDefault()
-        @clearErrors()
-        return unless @validateBasicFields()
-        @el('#common-fieldset').addClass 'hidden'
-
-        if @el('#student_account').is(':checked')
-          @el('#student-fieldset').removeClass 'hidden'
-          @accountType = 'student'
-        else
-          @el('#teacher-fieldset').removeClass 'hidden'
-          @accountType = 'teacher'
-
-      @el('.submit-form').on 'click', (e) =>
-        e.preventDefault()
-        @clearErrors()
-        @serializeAndSubmit()
+      @setupFormButtons()
 
     validateBasicFields: ->
       valid = true
@@ -88,7 +66,18 @@
       @processTeacherErrors(errors) if @isTeacher()
 
       for fieldName, error of errors
-        $f = @field(fieldName).parent()
+        indexedError = fieldName.match(/(.+)\[(\d+)\]/)
+        if indexedError
+          # Support errors defined per array element, e.g.: { question[2]: "You have to provide 3 questions!" }
+          # We have an assumption that fields definiting an array have name with
+          # brackets (e.g. question[]). So we have to parse number and select nth field.
+          fieldName = indexedError[1] + "[]"
+          elIndex = Number(indexedError[2])
+          $f = @field(fieldName).eq(elIndex)
+        else
+          $f = @field(fieldName)
+
+        $f = $f.parent()
         $f.addClass 'error-field'
         $f.prepend "<div class=\"error-message\">#{error}</div>"
 
@@ -96,39 +85,57 @@
       @$form.find('.error-field').removeClass 'error-field'
       @$form.find('.error-message').remove()
 
+    setupSelectBoxes: ->
+      @el('select').select2(width: "262px", minimumResultsForSearch: 10)
+
+    setupSecurityQuestions: ->
+      @field('questions[]').getSelectOptions API_V1.SECURITY_QUESTIONS, (data) ->
+        data.unshift undefined # we need an empty option for placeholder
+        {val: t, text: t} for t in data
+
     setupSchoolSelect: ->
       state = @field('state')
       district = @field('district')
       school_id = @field('school_id')
 
       state.getSelectOptions API_V1.STATES, (data) ->
-        res = [{}]
-        data.forEach (s) ->
-          res.push val: s, text: s
-        res
+        data.unshift undefined # we need an empty option for placeholder
+        {val: s, text: s} for s in data
 
       state.on 'change', =>
         return if state.val() == ''
         district.getSelectOptions API_V1.DISTRICTS + "?state=#{state.val()}", (data) ->
-          res = [{}]
-          data.forEach (d) ->
-            res.push val: d.id, text: d.name
-          res
+          data.unshift {} # we need an empty option for placeholder
+          {val: d.id, text: d.name} for d in data
         , ->
           district.removeClass 'hidden'
 
       district.on 'change', =>
         return if district.val() == ''
         school_id.getSelectOptions API_V1.SCHOOLS + "?district_id=#{district.val()}", (data) ->
-          res = [{}]
-          data.forEach (s) ->
-            res.push val: s.id, text: s.name
-          res
+          data.unshift {} # we need an empty option for placeholder
+          {val: s.id, text: s.name} for s in data
         , ->
           school_id.removeClass 'hidden'
 
-    setupSelectBoxes: ->
-      @el('select').select2(width: "262px", minimumResultsForSearch: 10)
+    setupFormButtons: ->
+      @el('#continue-registration').on 'click', (e) =>
+        e.preventDefault()
+        @clearErrors()
+        return unless @validateBasicFields()
+        @el('#common-fieldset').addClass 'hidden'
+
+        if @el('#student_account').is(':checked')
+          @el('#student-fieldset').removeClass 'hidden'
+          @accountType = 'student'
+        else
+          @el('#teacher-fieldset').removeClass 'hidden'
+          @accountType = 'teacher'
+
+      @el('.submit-form').on 'click', (e) =>
+        e.preventDefault()
+        @clearErrors()
+        @serializeAndSubmit()
 
     isStudent: ->
       @accountType == 'student'
