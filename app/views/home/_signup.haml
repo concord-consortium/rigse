@@ -1,4 +1,4 @@
-= form_tag '', :id => 'new-account-form' do
+= form_tag '', id: 'new-account-form', class: 'signup' do
   %h2 Sign up
   = field_set_tag nil, id: 'common-fieldset' do
     .group
@@ -16,7 +16,7 @@
       .f-row= password_field_tag :password_confirmation, nil, placeholder: 'Password Again'
 
     .group
-      %button#continue-registration= "Sign Up for #{APP_CONFIG[:site_name]}"
+      %button#continue-registration= "Sign Up for #{APP_CONFIG[:site_name]}!"
 
     .quote "I felt like I could learn a lot by playing with the interactives”
     .quote-credits - 9th grader, San Francisco, CA
@@ -35,13 +35,13 @@
         .f-row If you forget your password, you will need to answer these questions correctly in order to receive a new one.
       .group
         .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
-        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
+        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
       .group
         .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
-        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
+        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
       .group
         .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
-        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
+        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
 
     .group
       .f-row= submit_tag 'Submit', class: 'submit-form'

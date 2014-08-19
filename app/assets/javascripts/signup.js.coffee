@@ -61,7 +61,6 @@
         @showErrors(errors)
       )
 
-
     showErrors: (errors) ->
       @processTeacherErrors(errors) if @isTeacher()
 

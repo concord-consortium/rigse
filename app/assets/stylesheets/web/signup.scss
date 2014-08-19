@@ -1,0 +1,69 @@
+form.signup {
+  width: 280px;
+  margin: 2px;
+  border: 1px solid #eee;
+
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  .f-row {
+    margin: 5px 0;
+    padding: 0 5px;
+    font-size: 14px;
+  }
+  input[type="text"], input[type="password"] {
+    padding: 5px;
+    width: 255px;
+  }
+  input[type="radio"] {
+    margin: 0 5px;
+  }
+  select {
+    width: 260px;
+  }
+  button, input[type="submit"] {
+    display: block;
+    margin: 0 auto;
+    padding: 7px 3px;
+    width: 250px;
+    font-size: 16px;
+    border-radius: 0;
+  }
+  .group {
+    margin: 0 0 12px 0;
+    padding: 0;
+  }
+  .error-field {
+    background: #FFF6F6;
+    margin: 5px 0;
+    padding: 5px 5px;
+  }
+  .error-message {
+    color: #9B1616;
+    margin: 0 0 3px 0;
+    padding: 0;
+    line-height: 14px;
+  }
+
+  .quote {
+    font-style: italic;
+    font-size: 18px;
+    margin: 20px 5px 0 5px;
+  }
+  .quote-credits {
+    font-size: 13px;
+    margin: 0 5px;
+  }
+
+  .success {
+    background: #BDE9D7;
+    font-size: 15px;
+    padding: 10px;
+  }
+  .big {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
