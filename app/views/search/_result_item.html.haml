@@ -11,7 +11,7 @@
   - link_url = browse_external_activity_url(material)
   - external = true
 
-- has_activities = !material.activities.nil?
+- has_activities = material.respond_to?(:activities) && !material.activities.nil?
 
 = show_material_icon(material)
 %div
@@ -113,5 +113,5 @@
     .material-activities
       %h3 Activities
       %ul
-      - material.activities.each do |act|
-        %li= act.name
+        - material.activities.each do |act|
+          %li= act.name
