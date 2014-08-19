@@ -4,6 +4,7 @@ require 'spec_helper'
 describe API::V1::StudentRegistration do
   before(:each) do
     API::V1::StudentRegistration.any_instance.stub(:valid_class_word_checker).and_return(true)
+    API::V1::StudentRegistration.any_instance.stub(:num_required_questions).and_return(3)
   end
 
   let(:questions) { ["a","b","c"] }
