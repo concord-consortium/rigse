@@ -52,7 +52,9 @@ module SearchHelper
   end
 
   def assign_material_link(material, action, extra={})
-    link_to("Assign to a Class", action, extra.merge({:class=>"button"}))
+    if current_user && current_user.portal_teacher
+      link_to("Assign to a Class", action, extra.merge({:class=>"button"}))
+    end
   end
 
 end
