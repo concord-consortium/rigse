@@ -1,4 +1,5 @@
 = form_tag '', :id => 'new-account-form' do
+  %h2 Sign up
   = field_set_tag nil, id: 'common-fieldset' do
     .group
       .f-row= text_field_tag :first_name, nil, placeholder: 'First Name'
@@ -15,7 +16,10 @@
       .f-row= password_field_tag :password_confirmation, nil, placeholder: 'Password Again'
 
     .group
-      %button#continue-registration Sign Up for High Adventure Science!
+      %button#continue-registration= "Sign Up for #{APP_CONFIG[:site_name]}"
+
+    .quote "I felt like I could learn a lot by playing with the interactives”
+    .quote-credits - 9th grader, San Francisco, CA
 
   = field_set_tag nil, id: 'student-fieldset', class: 'hidden' do
 
@@ -29,10 +33,13 @@
       .group
         .f-row Please select three questions from the menus below.
         .f-row If you forget your password, you will need to answer these questions correctly in order to receive a new one.
+      .group
         .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
         .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
+      .group
         .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
         .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
+      .group
         .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
         .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer'
 
@@ -43,6 +50,7 @@
     .group
       .f-row= text_field_tag :login, nil, placeholder: 'Username'
       .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
+    .group
       .f-row= select_tag 'state', nil, 'data-placeholder' => 'Select a state'
       .f-row= select_tag 'district', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a district'
       .f-row= select_tag 'school_id', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a school'

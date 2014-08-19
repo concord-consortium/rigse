@@ -86,7 +86,7 @@
       @$form.find('.error-message').remove()
 
     setupSelectBoxes: ->
-      @el('select').select2(width: "262px", minimumResultsForSearch: 10)
+      @el('select').select2(width: "267px", minimumResultsForSearch: 10)
 
     setupSecurityQuestions: ->
       @field('questions[]').getSelectOptions API_V1.SECURITY_QUESTIONS, (data) ->
