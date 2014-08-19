@@ -7,9 +7,12 @@ class API::V1::TeacherRegistration < API::V1::UserRegistration
   validate  :school_id_checker
   
   def school_id_checker
-    found = Portal::School.find(self.school_id)
-    return true if found
-    self.errors.add(:school_id, "Unknown school (#{school_id})")
+    begin
+      found = Portal::School.find(self.school_id)
+      return true if found
+    rescue
+    end
+    self.errors.add(:school_id, "You must select a valid school")
   end
 
   protected
