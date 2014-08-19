@@ -38,8 +38,10 @@ class API::V1::UserRegistration
   def user_is_valid
     u = new_user
     return true if u.valid?
-    u.errors.each do |err|
-      self.errors.add err
+    u.errors.each do |field,value|
+      if self.errors[field].blank?
+        self.errors.add(field,value)
+      end
     end
     return false
   end
