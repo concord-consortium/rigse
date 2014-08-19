@@ -2,12 +2,16 @@
 - if material.parent
   - material_count = material_count + material.parent.offerings.count
 
+- external = false
 - if material.is_a? Investigation
   - link_url = browse_investigation_url(material)
 - elsif material.is_a? Activity
   - link_url = browse_activity_url(material)
 - elsif material.is_a? ExternalActivity
   - link_url = browse_external_activity_url(material)
+  - external = true
+
+- has_activities = !material.activities.nil?
 
 = show_material_icon(material)
 %div
@@ -77,11 +81,6 @@
                 (Assigned to
                 = offering_clazz_names.join(", ")+")"
 .material_body
-  %div
-    - if current_visitor.portal_teacher && material.description_for_teacher.present?
-      = sanitize material.description_for_teacher
-    - elsif material.description.present?
-      = sanitize material.description
   = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
   %div
     %i
@@ -98,3 +97,21 @@
         Required sensor(s):
       %span{:style=>"font-weight:bold;"}
         = "#{required_equipments} "
+
+%i.toggle-details.fa.fa-chevron-down
+%i.toggle-details.fa.fa-chevron-up{style: 'display: none'}
+
+.material-details{style: 'display: none'}
+  .material-description{:class => has_activities ? 'sequence' : 'activity'}
+    %h3 Description
+    - if current_visitor.portal_teacher && material.description_for_teacher.present?
+      = sanitize material.description_for_teacher
+    - elsif material.description.present?
+      = sanitize material.description
+
+  - if has_activities
+    .material-activities
+      %h3 Activities
+      %ul
+      - material.activities.each do |act|
+        %li= act.name

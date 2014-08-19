@@ -180,11 +180,61 @@ search_materials{
 .probes_label{
   text-transform:none;
 }
-.material_list .material_list_item{
+.material_list .material_list_item {
   border-bottom: 1px solid #DDD;
   padding:5px 10px 5px 10px;
   overflow:hidden;
+
+  position: relative;
+  .toggle-details {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    font-size: 20px;
+    color: #D5D5D5;
+  }
+
+  &:hover {
+    background: #f8f8f8;
+    cursor: pointer;
+
+    .toggle-details {
+      color: #A1A1A1;
+      cursor: pointer;
+    }
+  }
 }
+
+.material-details {
+  clear: both;
+  padding: 10px;
+  border-top: 1px solid #bbb;
+
+  .material-activities, .material-description {
+    display: inline-block;
+    vertical-align: top;
+  }
+  .material-description {
+    &.sequence {
+      width: 400px;
+    }
+    &.activity {
+      width: 670px;
+    }
+  }
+  .material-activities {
+    width: 255px;
+    padding-left: 10px;
+    border-left: 1px solid #bbb;
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+
 .material_list_item.last {
   border: none;
 }
