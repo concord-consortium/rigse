@@ -2,7 +2,7 @@ class API::V1::UserRegistration
   include ActiveModel::Validations
   include ActiveModel::Validations::Callbacks
   include Virtus.model
-  
+
   attr_reader :user
 
   attribute :first_name,            String
@@ -40,7 +40,7 @@ class API::V1::UserRegistration
     return true if u.valid?
     u.errors.each do |field,value|
       if self.errors[field].blank?
-        self.errors.add(field,value)
+        self.errors.add(field, u.errors.full_message(field, value))
       end
     end
     return false
