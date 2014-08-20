@@ -19,7 +19,10 @@
       = f.check_box :is_featured 
     - else
       = f.check_box :is_featured, :disabled => true
-    Check if this activity should be displayed to anonymous users on the landing page
+    This activity should be displayed to anonymous users on the landing page
+  = field_set_tag 'Has Pre And Post Tests' do
+    = f.check_box :has_pretest
+    This unit has pre- and post-tests available.
   = field_set_tag 'Student Report Enabled' do
     = f.check_box :student_report_enabled
     = t('authoring.student_report_enabled_description')
