@@ -32,7 +32,9 @@ class API::V1::UserRegistration
   end
 
   def new_user
-    User.new(user_params)
+    _user = User.new(user_params)
+    _user.skip_notifications = should_skip_email_notification
+    _user
   end
 
   def user_is_valid
@@ -55,6 +57,11 @@ class API::V1::UserRegistration
   end
 
   protected
+
+  def should_skip_email_notification
+    false
+  end
+
   def persist_user
     @user = new_user
     @user.save!

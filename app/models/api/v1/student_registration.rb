@@ -78,6 +78,11 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
   end
 
   protected
+
+  def should_skip_email_notification
+    true
+  end
+
   def add_security_questions
     user.update_security_questions!(make_security_questions)
   end
