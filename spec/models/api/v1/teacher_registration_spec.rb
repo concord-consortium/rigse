@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe API::V1::TeacherRegistration do
   let(:params) {
-     { 
+     {
         first_name: "teacher",
         last_name: "doe",
         login: "teacher_user",
@@ -12,7 +12,7 @@ describe API::V1::TeacherRegistration do
         school_id: 123
     }
   }
-  
+
   it_behaves_like 'user registration' do
     before(:each) do
       Portal::School.stub!(:find).and_return(mock_model(Portal::School))
@@ -22,14 +22,14 @@ describe API::V1::TeacherRegistration do
 
   describe "school_id validations" do
     subject { API::V1::TeacherRegistration.new(params) }
-    
+
     describe "no school found" do
       before(:each) do
         Portal::School.stub!(:find).and_return(nil)
       end
-      it { 
+      it {
         should_not be_valid
-        should have(1).error_on :"school_id" 
+        should have(1).error_on :"school_id"
       }
     end
 
@@ -37,8 +37,26 @@ describe API::V1::TeacherRegistration do
       before(:each) do
         Portal::School.stub!(:find).and_return(mock_model(Portal::School))
       end
-      it {  should be_valid }
+      it { should be_valid }
     end
   end
- end
- 
+
+  describe "teacher instance" do
+    let (:teacher) {
+      registration = API::V1::TeacherRegistration.new(params)
+      registration.save
+      registration.teacher
+    }
+
+    describe "when school is found" do
+      before(:each) do
+        Portal::School.stub!(:find).and_return(mock_model(Portal::School, id: 123))
+      end
+
+      it "should have exactly one school" do
+        expect(teacher).to have(1).schools
+        expect(teacher.school.id).to eql(123)
+      end
+    end
+  end
+end
