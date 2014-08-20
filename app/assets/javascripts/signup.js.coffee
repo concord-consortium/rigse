@@ -4,10 +4,12 @@
     constructor: (@selector) ->
       @$form = $(@selector)
       @accountType = null
+      @unknownSchool = false
 
       @setupSelectBoxes()
       @setupSecurityQuestions()
       @setupSchoolSelect()
+      @setupNewSchoolLinks()
       @setupFormButtons()
 
     validateBasicFields: ->
@@ -35,11 +37,11 @@
     processTeacherErrors: (errors) ->
       # Note that if field is hidden, it means that user never selected
       # previous field in state - district - school sequence.
-      if @field('district').hasClass 'hidden'
+      if errors.school_id && @field('district_id').hasClass 'hidden'
         errors.state = 'Please select a state'
         delete errors.school_id
-      else if @field('school_id').hasClass 'hidden'
-        errors.district = 'Please select a district'
+      else if  errors.school_id && @field('school_id').hasClass 'hidden'
+        errors.district_id = 'Please select a district'
         delete errors.school_id
 
     serializeAndSubmit: ->
@@ -52,7 +54,7 @@
         type: 'post'
         url: url
         contentType: 'application/json'
-        data: @$form.serializeJSON()
+        data: @toJSON()
       ).done((data) =>
         @$form.empty()
         @$form.append "<div class='success'>#{@welcomeMessage(data)}<div>"
@@ -60,6 +62,11 @@
         errors = JSON.parse(jqXHR.responseText).message
         @showErrors(errors)
       )
+
+    toJSON: ->
+      data = @$form.serializeObject()
+      delete data.school_name unless @unknownSchool
+      JSON.stringify(data)
 
     showErrors: (errors) ->
       @processTeacherErrors(errors) if @isTeacher()
@@ -84,6 +91,11 @@
       @$form.find('.error-field').removeClass 'error-field'
       @$form.find('.error-message').remove()
 
+    clearFieldErrors: (fieldName) ->
+      $fieldParent = @field(fieldName).parent()
+      $fieldParent.removeClass 'error-field'
+      $fieldParent.find('.error-message').remove()
+
     setupSelectBoxes: ->
       @el('select').select2(width: "267px", minimumResultsForSearch: 10)
 
@@ -94,7 +106,7 @@
 
     setupSchoolSelect: ->
       state = @field('state')
-      district = @field('district')
+      district_id = @field('district_id')
       school_id = @field('school_id')
 
       state.getSelectOptions API_V1.STATES, (data) ->
@@ -103,19 +115,24 @@
 
       state.on 'change', =>
         return if state.val() == ''
-        district.getSelectOptions API_V1.DISTRICTS + "?state=#{state.val()}", (data) ->
+        district_id.getSelectOptions API_V1.DISTRICTS + "?state=#{state.val()}", (data) ->
           data.unshift {} # we need an empty option for placeholder
           {val: d.id, text: d.name} for d in data
         , ->
-          district.removeClass 'hidden'
+          district_id.removeClass 'hidden'
 
-      district.on 'change', =>
-        return if district.val() == ''
-        school_id.getSelectOptions API_V1.SCHOOLS + "?district_id=#{district.val()}", (data) ->
+      district_id.on 'change', =>
+        return if district_id.val() == ''
+        school_id.getSelectOptions API_V1.SCHOOLS + "?district_id=#{district_id.val()}", (data) ->
           data.unshift {} # we need an empty option for placeholder
           {val: s.id, text: s.name} for s in data
-        , ->
+        , =>
           school_id.removeClass 'hidden'
+          @el('#custom-name').removeClass 'hidden'
+
+    setupNewSchoolLinks: ->
+      @el('#custom-name, #no-custom-name').on 'click', =>
+        @switchSchoolSelect()
 
     setupFormButtons: ->
       @el('#continue-registration').on 'click', (e) =>
@@ -141,6 +158,18 @@
 
     isTeacher: ->
       @accountType == 'teacher'
+
+    switchSchoolSelect: ->
+      @field('school_name').toggleClass 'hidden'
+      @field('school_id').toggleClass 'hidden'
+      @el('#no-custom-name').toggleClass 'hidden'
+      @el('#custom-name').toggleClass 'hidden'
+      @field('school_id').select2 'val', ''
+      @field('school_name').val ''
+      @clearFieldErrors 'school_id'
+      @clearFieldErrors 'school_name'
+
+      @unknownSchool = !@unknownSchool
 
     welcomeMessage: (data) ->
       if @isStudent()

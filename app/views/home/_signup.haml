@@ -52,8 +52,14 @@
       .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
     .group
       .f-row= select_tag 'state', nil, 'data-placeholder' => 'Select a state'
-      .f-row= select_tag 'district', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a district'
+      .f-row= select_tag 'district_id', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a district'
       .f-row= select_tag 'school_id', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a school'
+      - if current_project.allow_adhoc_schools
+        .f-row= text_field_tag 'school_name', nil, 'class' => 'hidden', 'placeholder' => 'School name'
+        .f-row
+          %a#custom-name.hidden I can't find my school in the list.
+        .f-row
+          %a#no-custom-name.hidden Go back to the school list.
 
     .group
       .f-row= submit_tag 'Submit', class: 'submit-form'
