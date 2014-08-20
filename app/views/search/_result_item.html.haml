@@ -12,6 +12,7 @@
   - external = true
 
 - has_activities = material.respond_to?(:activities) && !material.activities.nil?
+- has_pretest = material.respond_to?(:has_pretest) && material.has_pretest
 
 = show_material_icon(material)
 %div
@@ -109,9 +110,10 @@
       = sanitize material.description_for_teacher
     - elsif material.description.present?
       = sanitize material.description
-
-  - if has_activities
-    .material-activities
+  .material-activities
+    - if has_pretest
+      %h4 This unit has pre- and post-tests available.
+    - if has_activities
       %h3 Activities
       %ul
         - material.activities.each do |act|
