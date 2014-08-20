@@ -9,4 +9,15 @@ class API::V1::SchoolsController < API::APIController
 			render :json => @schools
 		end
 	end
+
+  def create
+    registration = API::V1::SchoolRegistration.new(params)
+    if registration.valid?
+      registration.save
+      render :json => registration.attributes
+    else
+      error(registration.errors)
+    end
+  end
+
 end
