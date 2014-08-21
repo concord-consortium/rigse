@@ -2,7 +2,7 @@
 (function ($) {
 
   $(function() {
-    $('.material_list_item').on('click', function (e) {
+    $('.toggle-details').on('click', function (e) {
       // Make sure that we don't expand material details when:
       // - user clicks a link
       // - user tries to select some text fragment (e.g. description)
@@ -10,9 +10,8 @@
       if (getSelection().toString()) return;
 
       var $this = $(this);
-      $this.find('.material-details').slideToggle(250, function () {
-        $this.find('.toggle-details').toggle();
-      });
+      $this.find('.material-details').slideToggle(250);
+      $this.find('.toggle-details-icon').toggle();
     });
   });
 

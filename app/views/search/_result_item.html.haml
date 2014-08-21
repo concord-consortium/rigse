@@ -14,107 +14,112 @@
 - has_activities = material.respond_to?(:activities) && !material.activities.nil?
 - has_pretest = material.respond_to?(:has_pretest) && material.has_pretest
 
-= show_material_icon(material)
-%div
-  %div{:style=>'overflow:hidden'}
-    %table{:width=>"100%"}
-      %tr
-        %td
-        %td
-          %span.material_header
-            %span.material_meta_data
-              - unless material.java_requirements.blank?
-                %span{:class => material.java_requirements}
-                  = t(material.java_requirements)
-              - if material.is_official
-                %span.is_official Official
-              - else
-                %span.is_community Community
-            %br
-            - if link_url.nil? or defined? hide_details
-              = material.name
-            - else
-              = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')"
-            - if current_visitor.has_role? ["admin","manager"]
-              %span.superTiny= link_to "(edit)", edit_polymorphic_url(material)
-          - if material.parent
-            %span
-              from
-              = t(:investigation)
-              ="\"#{material.parent.name}\""
-          -if material.user && (!material.user.name.nil?)
-            %div
-              %span{:style=>"font-weight:bold"}
-                ="By #{material.user.name}"
-        %td{:width=>"90px"}
-          %div{:style=>'float:right'}
-            - unless current_visitor.anonymous?
-              - unless material.teacher_only?
-                %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material.material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material.material_type}','Preview')"}Preview &#9660;
-                .Expand_Collapse{:id=>"#{material.material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
-                  .preview_link
-                    = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
-                  .preview_link{:style=>"padding-top:0px"}
-                    = link_to "As Student", run_url_for(material, {})
-              - else
-                = link_to "Preview",run_url_for(material,{:teacher_mode => true}),:class=>"button",:style=>"width:58px;text-align:center"
-            - else
-              = link_to "Preview",run_url_for(material,{}),:class=>"button"
-        %td{:width=>"130px"}
-          %div{:style=>'float:right'}
-            - if current_visitor.portal_teacher
-              = assign_material_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')")
-            - else
-              = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
-          %div{:style=>'float:right;text-align: right; margin-top: 3px;'}
-            = teacher_guide_link(material)
+.material_list_item{ :id => "search_#{material.class.name.underscore}_#{material.id}",
+                     :'data-material_name' => material.name,
+                     :'data-material_id' => material.id }
+  .main-part
+    = show_material_icon(material)
+    %div
+      %div{:style=>'overflow:hidden'}
+        %table{:width=>"100%"}
+          %tr
+            %td
+            %td
+              %span.material_header
+                %span.material_meta_data
+                  - unless material.java_requirements.blank?
+                    %span{:class => material.java_requirements}
+                      = t(material.java_requirements)
+                  - if material.is_official
+                    %span.is_official Official
+                  - else
+                    %span.is_community Community
+                %br
+                - if link_url.nil? or defined? hide_details
+                  = material.name
+                - else
+                  = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')"
+                - if current_visitor.has_role? ["admin","manager"]
+                  %span.superTiny= link_to "(edit)", edit_polymorphic_url(material)
+              - if material.parent
+                %span
+                  from
+                  = t(:investigation)
+                  ="\"#{material.parent.name}\""
+              -if material.user && (!material.user.name.nil?)
+                %div
+                  %span{:style=>"font-weight:bold"}
+                    ="By #{material.user.name}"
+            %td{:width=>"90px"}
+              %div{:style=>'float:right'}
+                - unless current_visitor.anonymous?
+                  - unless material.teacher_only?
+                    %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material.material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material.material_type}','Preview')"}Preview &#9660;
+                    .Expand_Collapse{:id=>"#{material.material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                      .preview_link
+                        = link_to "As Teacher", run_url_for(material, {:teacher_mode => true})
+                      .preview_link{:style=>"padding-top:0px"}
+                        = link_to "As Student", run_url_for(material, {})
+                  - else
+                    = link_to "Preview",run_url_for(material,{:teacher_mode => true}),:class=>"button",:style=>"width:58px;text-align:center"
+                - else
+                  = link_to "Preview",run_url_for(material,{}),:class=>"button"
+            %td{:width=>"130px"}
+              %div{:style=>'float:right'}
+                - if current_visitor.portal_teacher
+                  = assign_material_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')")
+                - else
+                  = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
+              %div{:style=>'float:right;text-align: right; margin-top: 3px;'}
+                = teacher_guide_link(material)
 
 
-      %tr
-        %td{:colspan=>3}
-          -# TODO: FIXME: After demo, figure out how to get this working..
-          -# if current_visitor.portal_teacher
-            - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
-            - offerings = material.offerings_by_clazz(teacher_clazz_ids).sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
-            - offering_clazz_names = offerings.map{|o| o.clazz.name}
-            - if ( offerings.length > 0 )
-              %span.assignedTo
-                (Assigned to
-                = offering_clazz_names.join(", ")+")"
-.material_body
-  - unless defined? hide_details
-    = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
-  %div
-    %i
-      -if(material_count == 0)
-        Not used in any class.
-      -elsif(material_count == 1)
-        Used in 1 class.
-      -else
-        Used in #{material_count} classes.
-  - required_equipments = probe_types(material).map { |p| p.name }.join(", ")
-  - unless required_equipments == ""
-    #required_equipment_container
-      %span#required_equipment
-        Required sensor(s):
-      %span{:style=>"font-weight:bold;"}
-        = "#{required_equipments} "
+          %tr
+            %td{:colspan=>3}
+              -# TODO: FIXME: After demo, figure out how to get this working..
+              -# if current_visitor.portal_teacher
+                - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
+                - offerings = material.offerings_by_clazz(teacher_clazz_ids).sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
+                - offering_clazz_names = offerings.map{|o| o.clazz.name}
+                - if ( offerings.length > 0 )
+                  %span.assignedTo
+                    (Assigned to
+                    = offering_clazz_names.join(", ")+")"
+    .material_body
+      - unless defined? hide_details
+        = link_to 'Show more details...', 'javascript:void(0)', :onclick => "browseMaterial('#{link_url}');"
+      %div
+        %i
+          -if(material_count == 0)
+            Not used in any class.
+          -elsif(material_count == 1)
+            Used in 1 class.
+          -else
+            Used in #{material_count} classes.
+      - required_equipments = probe_types(material).map { |p| p.name }.join(", ")
+      - unless required_equipments == ""
+        #required_equipment_container
+          %span#required_equipment
+            Required sensor(s):
+          %span{:style=>"font-weight:bold;"}
+            = "#{required_equipments} "
 
-%i.toggle-details.fa.fa-chevron-down
-%i.toggle-details.fa.fa-chevron-up{style: 'display: none'}
+  .toggle-details
+    %i.toggle-details-icon.fa.fa-chevron-down
+    %i.toggle-details-icon.fa.fa-chevron-up{style: 'display: none'}
 
-.material-details{style: 'display: none'}
-  .material-description{:class => has_activities ? 'sequence' : 'activity'}
-    %h3 Description
-    - if current_visitor.portal_teacher && material.description_for_teacher.present?
-      = sanitize material.description_for_teacher
-    - elsif material.description.present?
-      = sanitize material.description
-  .material-activities
-    - if has_pretest
-      %h4 Pre- and Post-tests available.
-    - if has_activities
-      %h3 Activities
-      %ul
-        - material.activities.each do |act|
-          %li= act.name
+    .material-details{style: 'display: none'}
+      .material-description{:class => has_activities || has_pretest ? 'two-cols' : 'one-col'}
+        %h3 Description
+        - if current_visitor.portal_teacher && material.description_for_teacher.present?
+          = sanitize material.description_for_teacher
+        - elsif material.description.present?
+          = sanitize material.description
+      .material-activities
+        - if has_pretest
+          %h4 Pre- and Post-tests available.
+        - if has_activities
+          %h3 Activities
+          %ul
+            - material.activities.each do |act|
+              %li= act.name

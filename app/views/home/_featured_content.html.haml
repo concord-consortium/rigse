@@ -2,5 +2,4 @@
   - @materials.each do |collection|
     - collection.each do |material|
       .material_list
-        .material_list_item{:'data-material_name' => material.name, :'data-material_id' => material.id }
-          = render :partial => 'search/result_item', :locals => { :material => material, :hide_details => true }
+        = render :partial => 'search/result_item', :locals => { :material => material, :hide_details => true }

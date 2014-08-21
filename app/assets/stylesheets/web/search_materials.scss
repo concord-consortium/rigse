@@ -79,7 +79,7 @@ width: 300px;
 }
 .material_icon{
   float:left;
-  margin:17px 10px 17px 5px;
+  margin:17px 10px 0 5px;
   padding: 0px;
   height: 167px;
   width: 200px;
@@ -182,25 +182,28 @@ search_materials{
 }
 .material_list .material_list_item {
   border-bottom: 1px solid #DDD;
-  padding:5px 10px 5px 10px;
   overflow:hidden;
 
-  position: relative;
-  .toggle-details {
-    position: absolute;
-    bottom: 6px;
-    right: 10px;
-    font-size: 20px;
-    color: #D5D5D5;
+  .main-part {
+    margin: 5px 10px 0 10px;
   }
+  .toggle-details {
+    clear: both;
+    width: 100%;
+    text-align: center;
 
-  &:hover {
-    background: #f8f8f8;
-    cursor: pointer;
-
-    .toggle-details {
-      color: #A1A1A1;
+    &:hover {
+      background: #f8f8f8;
       cursor: pointer;
+
+      & .toggle-details-icon {
+        color: #AAA;
+      }
+    }
+
+    .toggle-details-icon {
+      font-size: 22px;
+      color: #D5D5D5;
     }
   }
 }
@@ -211,38 +214,41 @@ search_materials{
   padding: 0px;
   .material_list {
     display: block;
-    border: 1px solid; 
+    border: 1px solid;
     width: 100%;
     padding: 0px;
     margin-top: 20px;
     min-height: 200px;
     .material_icon {
       border: 1px solid;
-    }  
+    }
   }
 }
 
 .material-details {
-  clear: both;
+  text-align: left;
   padding: 10px;
-  border-top: 1px solid #bbb;
+  border-top: 1px solid #ddd;
 
   .material-activities, .material-description {
     display: inline-block;
     vertical-align: top;
   }
   .material-description {
-    &.sequence {
-      width: 400px;
+    &.one-col {
+      width: 100%;
     }
-    &.activity {
-      width: 670px;
+    &.two-cols {
+      width: 60%;
     }
   }
   .material-activities {
-    width: 255px;
+    width: 37%;
     padding-left: 10px;
-    border-left: 1px solid #bbb;
+    border-left: 1px solid #ddd;
+    ul {
+      margin: 0;
+    }
     li {
       margin: 0;
       padding: 0;
