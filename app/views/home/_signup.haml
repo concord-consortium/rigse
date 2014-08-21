@@ -1,5 +1,6 @@
 = form_tag '', id: 'new-account-form', class: 'signup' do
   %h2 Sign up
+  .unknown-error
   = field_set_tag nil, id: 'common-fieldset' do
     .group
       .f-row= text_field_tag :first_name, nil, placeholder: 'First Name'

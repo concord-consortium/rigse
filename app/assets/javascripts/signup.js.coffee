@@ -65,8 +65,15 @@
         @$form.append "<div class='success'>#{@welcomeMessage(data)}<div>"
         @field('submit')
       ).fail((jqXHR) =>
-        errors = JSON.parse(jqXHR.responseText).message
-        @showErrors(errors)
+        errors = null
+        try
+          errors = JSON.parse(jqXHR.responseText).message
+        catch e
+          console.log 'Unknown error during sing up'
+        finally
+          unless typeof errors == 'object'
+            errors = 'unknown-error': 'We are sorry, something went wrong. Please reload the page and try again.'
+          @showErrors errors
       ).always( =>
         stopWaiting()
         @el('.submit-form').prop 'disabled', false
@@ -81,6 +88,10 @@
       @clearErrors()
       @processTeacherErrors(errors) if @isTeacher()
 
+      dispError = ($el, msg) =>
+        $el.addClass 'error-field'
+        $el.prepend "<div class=\"error-message\">#{msg}</div>"
+
       for fieldName, error of errors
         indexedError = fieldName.match(/(.+)\[(\d+)\]/)
         if indexedError
@@ -92,10 +103,10 @@
           $f = @field(fieldName).eq(elIndex)
         else
           $f = @field(fieldName)
+        dispError $f.parent(), error
 
-        $f = $f.parent()
-        $f.addClass 'error-field'
-        $f.prepend "<div class=\"error-message\">#{error}</div>"
+      if errors['unknown-error']
+        dispError @el('.unknown-error'), errors['unknown-error']
 
     clearErrors: ->
       @$form.find('.error-field').removeClass 'error-field'
