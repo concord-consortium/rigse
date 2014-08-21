@@ -50,6 +50,11 @@
       else
         url = API_V1.TEACHERS
 
+      # wait_message.js
+      @el('.submit-form').prop 'disabled', true
+      startWaiting 'Please wait while your account is created'
+
+
       $.ajax(
         type: 'post'
         url: url
@@ -58,9 +63,13 @@
       ).done((data) =>
         @$form.empty()
         @$form.append "<div class='success'>#{@welcomeMessage(data)}<div>"
+        @field('submit')
       ).fail((jqXHR) =>
         errors = JSON.parse(jqXHR.responseText).message
         @showErrors(errors)
+      ).always( =>
+        stopWaiting()
+        @el('.submit-form').prop 'disabled', false
       )
 
     toJSON: ->
@@ -69,6 +78,7 @@
       JSON.stringify(data)
 
     showErrors: (errors) ->
+      @clearErrors()
       @processTeacherErrors(errors) if @isTeacher()
 
       for fieldName, error of errors
@@ -150,7 +160,6 @@
 
       @el('.submit-form').on 'click', (e) =>
         e.preventDefault()
-        @clearErrors()
         @serializeAndSubmit()
 
     isStudent: ->
