@@ -84,10 +84,10 @@
       delete data.school_name unless @unknownSchool
       JSON.stringify(data)
 
-    showErrors: (errors) ->
+    showErrors: (errors, maxToShow=3) ->
       @clearErrors()
       @processTeacherErrors(errors) if @isTeacher()
-
+      errorCount = 0
       dispError = ($el, msg) =>
         $el.addClass 'error-field'
         $el.prepend "<div class=\"error-message\">#{msg}</div>"
@@ -103,7 +103,9 @@
           $f = @field(fieldName).eq(elIndex)
         else
           $f = @field(fieldName)
-        dispError $f.parent(), error
+        if (errorCount < maxToShow)
+          errorCount = errorCount + 1
+          dispError $f.parent(), error
 
       if errors['unknown-error']
         dispError @el('.unknown-error'), errors['unknown-error']
