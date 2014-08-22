@@ -3,20 +3,21 @@
   %pre
     bin/rake app:setup:new_app
 - else
-  %div.home-page-content
-    - if defined? home_page_preview_content
-      - if home_page_preview_content.blank?
-        - render_project_info
-        = content_for :project_info
-      -else
-        = home_page_preview_content.html_safe
-    - else
-      - unless current_project.home_page_content.blank?
-        - home_page_content = current_project.home_page_content
-        = home_page_content.html_safe
+  .landing-container
+    .home-page-content
+      - if defined? home_page_preview_content
+        - if home_page_preview_content.blank?
+          - render_project_info
+          = content_for :project_info
+        -else
+          = home_page_preview_content.html_safe
       - else
-        - render_project_info
-        = content_for :project_info
-  %div.signup-box
-    = render partial: "home/signup"
+        - unless current_project.home_page_content.blank?
+          - home_page_content = current_project.home_page_content
+          = home_page_content.html_safe
+        - else
+          - render_project_info
+          = content_for :project_info
+    .signup-box
+      = render partial: "home/signup"
   = render partial: "home/featured_content"  

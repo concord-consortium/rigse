@@ -1,9 +1,37 @@
-.home-page-content {
-  width: 640px;
-  margin-right: 20px;
-}
-
-.home-page-content, .signup-box {
-  display: inline-block;
-  vertical-align: top;
+.landing-container {
+    * {
+        // http://www.paulirish.com/2012/box-sizing-border-box-ftw/
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    margin: 0px;
+    padding: 0px;
+    height: 550px;
+    position: relative;
+    .home-page-content {
+        position: absolute;
+        display: inline-block;
+        top: 0px; bottom: 0px;
+        width: 640px;
+        overflow: auto;
+        // border: 1px solid #eee;
+        // border-radius: 4px;
+    }
+    .signup-box {
+        width: 300px;
+        position: absolute;
+        display: inline-block;
+        bottom: 0px;
+        top: 0px;
+        right: 0px;
+        left: 660px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        position: absolute;
+        overflow: auto;
+    }
+    .home-page-content, .signup-box {
+        display: inline-block;
+        vertical-align: top;
+    }
 }
