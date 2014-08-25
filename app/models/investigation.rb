@@ -316,21 +316,9 @@ class Investigation < ActiveRecord::Base
     end
   end
 
-
   def full_title
     full_title = self.name
     return full_title
-  end
-
-  def description_abstract(length=255)
-    description.size > length+6 ? [description[0,length-6],description[-5,5]].join("…") : description
-  end
-
-  def abstract_text
-    if abstract.blank?
-      return description_abstract
-    end
-    return abstract
   end
 
   def domain_id

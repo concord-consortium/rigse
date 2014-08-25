@@ -68,4 +68,28 @@ describe ExternalActivity do
       activity.full_title.should == valid_attributes[:name]
     end
   end
+
+  describe "abstract_text" do
+    let(:abstract)    { nil }
+    let(:big_text)    { "-xyzzy" * 255 }
+    let(:description) do 
+      "This is the description. Its text is too long to be an abstract really: #{big_text}"
+    end
+    let(:abstract)    { nil }
+    subject { ExternalActivity.create(:name => 'test', :abstract => abstract, :description => description) }
+    describe "without an abstract" do
+      let(:abstract)         { nil }
+      its(:abstract_text)    { should match /This is the description./ }
+      its(:abstract_text)    { should have_at_most(255).letters }
+    end
+    describe "without an empty abstract" do
+      let(:abstract)         { " " }
+      its(:abstract_text)    { should match /This is the description./ }
+      its(:abstract_text)    { should have_at_most(255).letters }
+    end
+    describe "without a good abstract" do
+      let(:abstract)         { "This is the abstract." }
+      its(:abstract_text)    { should match /This is the abstract./ }
+    end
+  end
 end

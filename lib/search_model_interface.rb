@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # For the purposes of searching and grouping items which appear similar to
 # end users but have different representations in the data model
 module SearchModelInterface
@@ -32,5 +33,20 @@ module SearchModelInterface
     else
       return NoJavaRequirement
     end
+  end
+
+  def description_abstract(length=255)
+    if description.blank?
+      ""
+    else
+      description.size > length+6 ? [description[0,length-6],description[-5,5]].join("…") : description
+    end
+  end
+
+  def abstract_text
+    if abstract.blank?
+      return description_abstract
+    end
+    return abstract
   end
 end
