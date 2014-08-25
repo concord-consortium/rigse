@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140820155106) do
+ActiveRecord::Schema.define(:version => 20140825183216) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -763,6 +763,7 @@ ActiveRecord::Schema.define(:version => 20140820155106) do
     t.string   "thumbnail_url"
     t.boolean  "is_featured",              :default => false
     t.boolean  "has_pretest",              :default => false
+    t.text     "abstract"
   end
 
   add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"
@@ -820,6 +821,7 @@ ActiveRecord::Schema.define(:version => 20140820155106) do
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
     t.boolean  "is_featured",                             :default => false
+    t.text     "abstract"
   end
 
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|

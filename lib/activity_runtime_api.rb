@@ -45,6 +45,7 @@ class ActivityRuntimeAPI
       external_activity = ExternalActivity.create(
         :name             => hash["name"],
         :description      => hash["description"],
+        :abstract         => hash["abstract"],
         :url              => hash["url"],
         :thumbnail_url    => hash["thumbnail_url"],
         :launch_url  => hash["launch_url"] || hash["create_url"],
@@ -121,13 +122,16 @@ class ActivityRuntimeAPI
   def self.publish_sequence(hash, user)
     external_activity = nil # Why are we initializing this? For the transaction?
     Investigation.transaction do
-      investigation = Investigation.create(:name => hash["name"], :description => hash['description'], :user => user)
+      investigation = Investigation.create(
+        :name => hash["name"], :description => hash['description'], 
+        :abstract => hash['abstract'], :user => user)
       hash['activities'].each_with_index do |act, index|
         activity_from_hash(act, investigation, user, index)
       end
       external_activity = ExternalActivity.create(
         :name             => hash["name"],
         :description      => hash["description"],
+        :abstract         => hash["abstract"],
         :url              => hash["url"],
         :thumbnail_url    => hash["thumbnail_url"],
         :launch_url       => hash["launch_url"] || hash["create_url"],
@@ -160,7 +164,7 @@ class ActivityRuntimeAPI
 
     # update the simple attributes
     [investigation, external_activity].each do |act|
-      ['name','description','thumbnail_url'].each do |attribute|
+      ['name','description','abstract', 'thumbnail_url'].each do |attribute|
         act.update_attribute(attribute,hash[attribute])
       end
     end

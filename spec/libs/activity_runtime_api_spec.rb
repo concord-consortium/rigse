@@ -59,6 +59,7 @@ describe ActivityRuntimeAPI do
 
   let(:name)        { "Cool Activity"                  }
   let(:description) { name                             }
+  let(:abstract)    { "abstract"                       }
   let(:url )        { "http://activity.com/activity/1" }
   let(:launch_url)  { "#{url}/1/sessions/"             }
   let(:existing_url){ nil }
@@ -67,6 +68,7 @@ describe ActivityRuntimeAPI do
     {
       "name" => name,
       "description" => description,
+      "abstract"    => abstract,
       "url" => url,
       "launch_url" => launch_url,
       "sections" => [
@@ -129,9 +131,10 @@ describe ActivityRuntimeAPI do
     ]
   end
 
-  let(:sequence_name) { "Many fun things" }
-  let(:sequence_desc) { "Several activities together in a sequence" }
-  let(:sequence_url)  { "http://activity.com/sequence/1" }
+  let(:sequence_name)     { "Many fun things" }
+  let(:sequence_desc)     { "Several activities together in a sequence" }
+  let(:sequence_abstract) { abstract }
+  let(:sequence_url)      { "http://activity.com/sequence/1" }
 
   let(:sequence_hash) do
     act1 = new_hash.clone
@@ -144,6 +147,7 @@ describe ActivityRuntimeAPI do
       "type" => "Sequence",
       "name" => sequence_name,
       "description" => sequence_desc,
+      "abstract" => sequence_abstract,
       "url" => sequence_url,
       "launch_url" => sequence_url,
       "activities" => [act2, act1]
@@ -408,12 +412,20 @@ describe ActivityRuntimeAPI do
     context 'when publishing a new sequence' do
       let(:result) { ActivityRuntimeAPI.publish_sequence(sequence_hash, user) }
 
-      it 'should create a new activity' do
+      it 'should create a new external activity' do
         result.should_not be_nil
         result.should be_a_kind_of(ExternalActivity)
         result.url.should == sequence_url
+        result.activities.length.should > 0
+        result.name.should == sequence_name
+        result.description.should == sequence_desc
+        result.abstract.should == sequence_abstract
+      end
+      it 'should create a new investigation' do
         result.template.should be_a_kind_of(Investigation)
         result.template.is_template.should be_true
+        result.template.description.should == sequence_desc
+        result.template.abstract.should == sequence_abstract
         result.activities.length.should > 0
       end
 
@@ -441,10 +453,13 @@ describe ActivityRuntimeAPI do
     end
 
     context 'when updating an existing sequence' do
+      let(:sequence_abstract) { "this is something new"}
       it 'should update the existing investigation details' do
         existing_sequence
         result = ActivityRuntimeAPI.update_sequence(sequence_hash)
         result.id.should == existing_sequence.id
+        result.abstract.should match /something new/
+        result.template.abstract.should match /something new/
       end
 
       it 'should update order of activities' do

@@ -110,6 +110,7 @@ Feature: External Activities can support a REST publishing api
             "url": "http://activity.com/activity/1",
             "launch_url": "http://activity.com/activity/1/sessions/",
             "description": "This activity does fun stuff.",
+            "abstract": "This is the abstract.",
             "sections": [
               {
                 "name": "Cool Activity Section 1",
@@ -203,6 +204,7 @@ Feature: External Activities can support a REST publishing api
         "type": "Sequence",
         "name": "This has a different name",
         "description": "All we did was change the name. And the description.",
+        "abstract": "The abstract was also changed",
         "url": "http://activity.com/sequence/1",
         "launch_url": "http://activity.com/sequence/1",
         "activities": [
@@ -340,6 +342,7 @@ Feature: External Activities can support a REST publishing api
       | url             | http://activity.com/sequence/1 |
       | launch_url | http://activity.com/sequence/1 |
       | description     | Several activities together in a sequence |
+      | abstract        | This is the abstract |
     And the external activity should have a template
     And the portal should create an investigation with the following attributes:
       | name            | Many fun things |
