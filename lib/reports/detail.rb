@@ -84,12 +84,15 @@ class Reports::Detail < Reports::Excel
   def setup_sheet_runnables(container, reportable_header_counter, header_defs, answer_defs, expected_answers)
     reportables = container.reportable_elements.map {|re| re[:embeddable]}
     first = true
-
+    question_counter = 0
     # Iterate Reportables
     reportables.each do |r|
+      question_counter += 1
       reportable_header_counter += 1
       header_defs << Reports::ColumnDefinition.new(:title => container.name, :heading_row => 0, :col_index => reportable_header_counter)
-      answer_defs << Reports::ColumnDefinition.new(:title => clean_text((r.respond_to?(:prompt) ? r.prompt : r.name)), :width => 25, :left_border => (first ? :thin : :none))
+      title = clean_text((r.respond_to?(:prompt) ? r.prompt : r.name))
+      title = "#{question_counter}: #{title}"
+      answer_defs << Reports::ColumnDefinition.new(:title => title, :width => 25, :left_border => (first ? :thin : :none))
       expected_answers[reportable_header_counter] = get_expected_answer(r)
       if r.is_a?(Embeddable::ImageQuestion)
         reportable_header_counter += 1
