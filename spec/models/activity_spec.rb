@@ -156,4 +156,15 @@ describe Activity do
       end
     end
   end
+
+  describe "abstract_text" do
+    let(:big_text) { "-xyzzy" * 255 }
+    let(:description) do 
+      "This is the description. Its text is too long to be an abstract really: #{big_text}"
+    end
+
+    subject { Factory.create(:activity, :description => description) }
+    its(:abstract_text)    { should match /This is the description./ }
+    its(:abstract_text)    { should have_at_most(255).letters }
+  end
 end

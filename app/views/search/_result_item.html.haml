@@ -113,8 +113,8 @@
         %h3 Description
         - if current_visitor.portal_teacher && material.description_for_teacher.present?
           = sanitize material.description_for_teacher
-        - elsif material.description.present?
-          = sanitize material.description
+        - elsif material.abstract_text.present?
+          = sanitize material.abstract_text
       .material-activities
         - if has_pretest
           %h4 Pre- and Post-tests available.

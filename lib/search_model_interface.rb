@@ -44,6 +44,7 @@ module SearchModelInterface
   end
 
   def abstract_text
+    return description_abstract unless self.respond_to?(:abstract)
     if abstract.blank?
       return description_abstract
     end
