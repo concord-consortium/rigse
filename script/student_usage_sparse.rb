@@ -36,7 +36,7 @@ end
 
 ACTIVITIES = Activity.find(:all, :conditions => "investigation_id IS NULL").sort_by {|a| display_name(a) }
 
-puts "Processing #{Portal::Learner.count} learners...\n"
+puts "Processing #{Portal::Student.count} students...\n"
 
 CSV.open("student_usage_sparse_#{Time.now.strftime('%Y%m%d')}.csv", "wb") do |csv|
   csv << (['User ID', 'User Name', 'Teacher Names', 'Class Names'] + ACTIVITIES.map{|a| display_name(a) })
