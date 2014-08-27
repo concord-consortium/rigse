@@ -1312,4 +1312,12 @@ _gaq.push(['_trackPageview']);
 CONFIG
   end
 
+  def placeholder_shim
+    <<-END_SHIM.gsub(/^\s+/,'')
+      $jq(document).ready(function() {
+          $jq('input, textarea').placeholder();
+      });
+    END_SHIM
+  end
+
 end

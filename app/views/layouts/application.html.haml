@@ -54,7 +54,7 @@
 
     - if USING_GOOGLE_ANALYTICS
       = javascript_tag google_analytics_config
-
+    = javascript_tag placeholder_shim
   %body{ :class => current_visitor.has_role?('guest') ? 'main-nav-hidden' : nil }
 
     #note{:style=>"display: none;"}
