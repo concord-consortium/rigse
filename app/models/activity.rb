@@ -278,6 +278,12 @@ class Activity < ActiveRecord::Base
     return @reportable_elements
   end
 
+  def question_number(embeddable)
+    found_index = reportable_elements.find_index { |e| e[:embeddable] == embeddable}
+    return -1 unless found_index
+    return found_index + 1
+  end
+
   def print_listing
     listing = []
     self.sections.each do |s|

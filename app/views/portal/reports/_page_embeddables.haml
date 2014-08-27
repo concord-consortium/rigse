@@ -1,7 +1,10 @@
-- page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
-  - @count = @count + 1
+- page_embeddables.each do |pe| 
+  - embeddable = pe[:embeddable]
+  - activity   = pe[:activity]
+  - question_number = activity ? activity.question_number(embeddable) : nil
   %div{:id => dom_id_for(embeddable, :content), :style => 'position: relative;', :class => 'report_embeddable'}
-    %p= "Question #{@count}"
+    -if question_number
+      %p= "Question #{question_number}"
     - if show_selection_controls
       %div{:style => 'position: absolute; left: -20px; top: 4px;'}
         = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @report_embeddable_filter.include?(embeddable), :class => "filter_checkbox"

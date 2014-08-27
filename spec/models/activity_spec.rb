@@ -167,4 +167,36 @@ describe Activity do
     its(:abstract_text)    { should match /This is the description./ }
     its(:abstract_text)    { should have_at_most(255).letters }
   end
+
+  describe "question_number" do
+    before(:each) do
+      activity_with_questions.stub!(:reportable_elements).and_return(elements)
+    end
+    let(:activity_with_questions) { activity }
+    let(:mc_question)         {Factory.create(:multiple_choice) }
+    let(:or_question)         {Factory.create(:open_response)   }
+    let(:another_or_question) {Factory.create(:open_response)   }
+    let(:elements) {[
+      {:activity => activity_with_questions, :embeddable => mc_question},
+      {:activity => activity_with_questions, :embeddable => or_question}
+    ]}
+    subject() { activity_with_questions }
+
+    it "should find the multiple choice question in the first position" do
+      subject.question_number(mc_question).should eq 1
+    end
+
+    it "should find the open response question at the second position" do
+      subject.question_number(or_question).should eq 2
+    end
+
+    it "should return -1 for questions that aren't supposed to be there... " do
+      subject.question_number(another_or_question).should eq -1
+    end
+
+    it "should return -1 when nonesense is passed in " do
+      subject.question_number("xxx").should eq -1
+    end
+  end
+  
 end

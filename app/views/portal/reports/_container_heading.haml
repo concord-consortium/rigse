@@ -1,8 +1,6 @@
 / locals: indent, map, show_selection_controls, offering, learners
 %div{:style => "padding-left: #{indent}px;"}
   - map.keys.sort_by{|container| container.position}.each do |container|
-    - if container.class == Activity
-      - @count = 0
     %div{:id => dom_id_for(container)}
       %div
         %span{:style => 'font-weight: bold;'}= container.class.to_s
