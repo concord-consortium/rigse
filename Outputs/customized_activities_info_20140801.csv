@@ -1,0 +1,471 @@
+ID,Activity Title,Author Name,Author User ID,Parent ID,Generation,Ancestor ID,Used?,Creation date,Update date,Grade Level,Parent Grade Level
+142,Weathering Rocks,ITSI-SU ITEST,10,21,2,21,TRUE,2011-05-13 03:52:39 UTC,2014-07-01 17:15:00 UTC,Elementary 5-6,Elementary 3-4
+147,Penny Warming,ITSI-SU ITEST,10,98,2,98,TRUE,2011-05-17 12:41:23 UTC,2014-07-01 17:15:00 UTC,Elementary 3-4,Middle School
+150,Water into the Air,ITSI-SU ITEST,10,98,2,98,TRUE,2011-05-17 19:29:48 UTC,2014-07-01 17:15:00 UTC,Elementary 5-6,Middle School
+183,Solar Oven (17),trisha herminghaus,14,21,2,21,FALSE,2011-05-18 15:25:32 UTC,2014-07-01 17:15:01 UTC,Elementary 5-6,Elementary 3-4
+249,Inclined planes (2),Mary Levi-Mehl,69,215,2,215,TRUE,2011-06-06 18:15:53 UTC,2014-07-01 17:15:01 UTC,Elementary 5-6,Elementary 5-6
+259,Greenhouse Effect in a Greenhouse - Science 8,Beth Richards,55,128,2,128,TRUE,2011-06-06 18:31:48 UTC,2014-07-01 17:15:01 UTC,Middle School,Middle School
+264,Fabric Friction (revised),Jennifer Burnett,62,147,3,147,FALSE,2011-06-06 18:37:12 UTC,2014-07-01 17:15:01 UTC,,Elementary 3-4
+274,State of Matter,Cody Kitzke,56,107,2,107,TRUE,2011-06-06 19:02:01 UTC,2014-07-01 17:15:01 UTC,,Middle School
+282,Building a bungee jump (2),Julia Duggin,57,17,2,17,FALSE,2011-06-06 19:36:49 UTC,2014-07-01 17:15:01 UTC,,Elementary 3-4
+283,Latent Heat  REVISED,Chris Herald,70,108,2,108,TRUE,2011-06-06 19:49:56 UTC,2014-07-01 17:15:01 UTC,Middle School,Middle School
+293,Temperature of Mixing Water (2),Renee Scott,68,112,2,112,FALSE,2011-06-07 14:57:28 UTC,2014-07-01 17:15:02 UTC,,Middle School
+335,Motion on a Ramp (5),Joan Radakovich,61,76,2,76,FALSE,2011-06-07 18:49:50 UTC,2014-07-01 17:15:02 UTC,Middle School,High School
+338,Water in Classroom Air (2),Mary Levi-Mehl,69,121,2,121,FALSE,2011-06-07 18:51:30 UTC,2014-07-01 17:15:02 UTC,Elementary 5-6,Middle School
+349,Temperature of Mixing Water (7),Jennifer Burnett,62,112,2,112,FALSE,2011-06-07 19:33:27 UTC,2014-07-01 17:15:02 UTC,,Middle School
+354,Body Temperature: Thermoregulation (Guided)(7),Deann Bartell,74,38,2,38,FALSE,2011-06-07 19:55:59 UTC,2014-07-01 17:15:02 UTC,Middle School,High School
+373,Making Waves (2),Joan Radakovich,61,103,2,103,FALSE,2011-06-08 16:01:32 UTC,2014-07-01 17:15:03 UTC,Middle School,Middle School
+399,Producers and Consumers (4),Renee Scott,68,86,2,86,FALSE,2011-06-08 19:06:51 UTC,2014-07-01 17:15:03 UTC,,Middle School
+400,Body Temperature: Thermoregulation (7) (Revised),Karen Heins,73,38,2,38,TRUE,2011-06-08 19:11:45 UTC,2014-07-01 17:15:03 UTC,,High School
+411,Measuring Surface Temperatures ,Julia Duggin,57,88,2,88,FALSE,2011-06-08 19:49:03 UTC,2014-07-01 17:15:03 UTC,,Middle School
+412,Comparing Temperatures,Julia Duggin,57,88,2,88,FALSE,2011-06-08 19:49:03 UTC,2014-07-01 17:15:03 UTC,,Middle School
+428,Water from the air (4) (revised),Mary Levi-Mehl,69,151,2,151,TRUE,2011-06-09 13:32:14 UTC,2014-07-01 17:15:03 UTC,Elementary 5-6,Elementary 5-6
+438,Pressure and Temperature (3),LaLani Brown,60,97,2,97,FALSE,2011-06-09 14:41:37 UTC,2014-07-01 17:15:03 UTC,,Middle School
+442,Diffusion and Osmosis Activity Revised,Jennifer Richmond,64,99,2,99,FALSE,2011-06-09 15:02:45 UTC,2014-07-01 17:15:03 UTC,High School,High School
+446,States of Matter -evaporation,Chris Herald,70,107,2,107,TRUE,2011-06-09 17:25:04 UTC,2014-07-01 17:15:03 UTC,Middle School,Middle School
+456,Seeing Motion - Graphing Your Own Motion,Chris Herald,70,104,2,104,TRUE,2011-06-10 13:54:38 UTC,2014-07-01 17:15:03 UTC,Middle School,Middle School
+461,Protein Biography,Zachariah Kahler,71,51,2,51,TRUE,2011-06-10 15:09:45 UTC,2014-07-01 17:15:03 UTC,,High School
+464,Transpiration (8),LaLani Brown,60,40,2,40,FALSE,2011-06-10 15:38:19 UTC,2014-07-01 17:15:03 UTC,,Middle School
+471,"How Loud, How High? ",Chris Herald,70,105,2,105,TRUE,2011-06-10 19:32:42 UTC,2014-07-01 17:15:03 UTC,Middle School,Middle School
+486,Greenhouse Effect in a Greenhouse (2),Jenny Sue Flannagan,23,128,2,128,FALSE,2011-06-15 20:03:23 UTC,2014-07-01 17:15:03 UTC,,Middle School
+487,Greenhouse Effect in a Greenhouse (2),Jenny Sue Flannagan,23,128,2,128,FALSE,2011-06-15 20:03:23 UTC,2014-07-01 17:15:03 UTC,,Middle School
+494,Phases of the moon (7),Karen Kukol,156,4,2,4,FALSE,2011-06-16 15:31:54 UTC,2014-07-01 17:15:04 UTC,,Elementary 5-6
+496,Heating Objects - Specific Heat (4),maryjane dunleavy,158,375,2,375,FALSE,2011-06-16 15:36:06 UTC,2014-07-01 17:15:04 UTC,,High School
+497,Heating Objects - Specific Heat (4),maryjane dunleavy,158,375,2,375,FALSE,2011-06-16 15:36:07 UTC,2014-07-01 17:15:04 UTC,,High School
+521,Our Solar System (3),Sabrina Shumate,258,118,2,118,FALSE,2011-06-21 14:28:11 UTC,2014-07-01 17:15:04 UTC,,Middle School
+531,Crystalline Rocks- Explaining Metamorphism (revised),Matthew Fanny,246,130,2,130,TRUE,2011-06-21 17:05:04 UTC,2014-07-01 17:15:04 UTC,High School,Middle School
+535,Animal Adaptations Revised,Adrienne Sawyer,249,132,2,132,TRUE,2011-06-21 17:07:13 UTC,2014-07-01 17:15:04 UTC,,Elementary 5-6
+537,States of Matter (5),Stephen Sawyer,257,107,2,107,TRUE,2011-06-21 17:07:52 UTC,2014-07-01 17:15:04 UTC,Middle School,Middle School
+540,Launching a Satellite (cotton),BRANDI COTTON,262,116,2,116,FALSE,2011-06-21 17:09:43 UTC,2014-07-01 17:15:04 UTC,Middle School,Middle School
+546,Temperature Versus Heat (3),Phil Dabney,263,110,2,110,FALSE,2011-06-21 17:14:30 UTC,2014-07-01 17:15:04 UTC,,Middle School
+547,Temperature Versus Heat (3),Phil Dabney,263,110,2,110,FALSE,2011-06-21 17:14:31 UTC,2014-07-01 17:15:04 UTC,,Middle School
+552,Our Solar System (Cotton),BRANDI COTTON,262,118,2,118,FALSE,2011-06-21 17:16:29 UTC,2014-07-01 17:15:04 UTC,Middle School,Middle School
+557,Tree of Life - Animals (2),Angela Lewis,254,94,2,94,FALSE,2011-06-21 17:20:09 UTC,2014-07-01 17:15:04 UTC,Middle School,Middle School
+571,Diffusion (2),Sabrina Shumate,258,100,2,100,TRUE,2011-06-21 17:34:08 UTC,2014-07-01 17:15:04 UTC,,Middle School
+572,Diffusion and Osmosis (6),Cynthia Horn,253,99,2,99,TRUE,2011-06-21 17:34:37 UTC,2014-07-01 17:15:04 UTC,High School,High School
+574,Sensing temperature (5),Terri Ciccone,259,143,2,143,FALSE,2011-06-21 17:36:49 UTC,2014-07-01 17:15:04 UTC,Elementary 3-4,Elementary 3-4
+577,"""October Sky"" Modeling",Nancy Stewart,247,116,2,116,FALSE,2011-06-21 17:40:31 UTC,2014-07-01 17:15:04 UTC,High School,Middle School
+583,Reading Temperatures ,Amy Godfrey,255,143,2,143,TRUE,2011-06-21 17:55:08 UTC,2014-07-01 17:15:04 UTC,,Elementary 3-4
+630,Crystalline Rocks (2),Matthew Fanny,246,598,2,598,FALSE,2011-06-22 14:11:25 UTC,2014-07-01 17:15:05 UTC,High School,
+653,Dissolving Salt in Water (3),Subhadra Desaraju,271,58,2,58,FALSE,2011-06-22 18:37:51 UTC,2014-07-01 17:15:05 UTC,High School,High School
+670,Life with pH(revised),Sabrina Shumate,258,398,2,398,FALSE,2011-06-23 14:07:10 UTC,2014-07-01 17:15:05 UTC,,
+681,Phases of the moon (9),Sabrina Shumate,258,4,2,4,FALSE,2011-06-23 14:55:01 UTC,2014-07-01 17:15:05 UTC,,Elementary 5-6
+703,Diffusion and Osmosis (8),Sabrina Shumate,258,99,2,99,TRUE,2011-06-23 16:52:05 UTC,2014-07-01 17:15:05 UTC,,High School
+705,Temperature of Mixing Water (16)Cotton,BRANDI COTTON,262,112,2,112,FALSE,2011-06-23 17:38:11 UTC,2014-07-01 17:15:05 UTC,Middle School,Middle School
+717,Protein Structure - From DNA to Proteins (3),Sabrina Shumate,258,51,2,51,TRUE,2011-06-23 17:57:15 UTC,2014-07-01 17:15:05 UTC,,High School
+737,Sensing temperature ,Raven Stone,267,143,2,143,FALSE,2011-06-23 18:51:26 UTC,2014-07-01 17:15:06 UTC,Elementary 5-6,Elementary 3-4
+740,Physical and Chemical Change- Revised,Subhadra Desaraju,271,602,2,602,TRUE,2011-06-23 22:07:16 UTC,2014-07-01 17:15:06 UTC,High School,
+741,Complex Sounds and Instruments (Susan Collins),Susan Collins,364,106,2,106,FALSE,2011-06-24 12:34:26 UTC,2014-07-01 17:15:06 UTC,Middle School,Middle School
+743,Reaction Rate and Surface Area ,Sabrina Shumate,258,701,2,701,FALSE,2011-06-24 13:30:30 UTC,2014-07-01 17:15:06 UTC,,High School
+746,Mixing with Water (2),Sabrina Shumate,258,57,2,57,TRUE,2011-06-24 13:58:58 UTC,2014-07-01 17:15:06 UTC,,High School
+752,What's up with the Greenhouse Effect? -  An Atmospheric Energy Budget,Matthew Fanny,246,126,2,126,FALSE,2011-06-24 14:15:45 UTC,2014-07-01 17:15:06 UTC,High School,Middle School
+755,Water from the air (Cotton),BRANDI COTTON,262,151,2,151,FALSE,2011-06-24 14:26:21 UTC,2014-07-01 17:15:06 UTC,Middle School,Elementary 5-6
+756,Exploring a Magnet's North and South Pole (2),Amy Godfrey,255,632,2,632,FALSE,2011-06-24 14:28:05 UTC,2014-07-01 17:15:06 UTC,,
+758,Greenhouse Effect in a Greenhouse (Craig Vann),Craig Vann,367,128,2,128,FALSE,2011-06-24 14:30:50 UTC,2014-07-01 17:15:06 UTC,Middle School,Middle School
+760,Dissolving and Heat ,Emily Vann,363,59,2,59,FALSE,2011-06-24 14:31:21 UTC,2014-07-01 17:15:06 UTC,Middle School,High School
+764,Water moving around over the earth (Cotton),BRANDI COTTON,262,144,2,144,FALSE,2011-06-24 14:38:07 UTC,2014-07-01 17:15:06 UTC,Middle School,Elementary 5-6
+766,Energy Balance and Atmosphere (4),Emily Vann,363,127,2,127,FALSE,2011-06-24 14:54:18 UTC,2014-07-01 17:15:06 UTC,Middle School,Middle School
+770,Gravity Rules in the Skatepark (2),Sabrina Shumate,258,75,2,75,TRUE,2011-06-24 15:03:30 UTC,2014-07-01 17:15:06 UTC,,High School
+849,Tracking a Storm (5),Scott Voogd,17,113,2,113,FALSE,2011-07-26 13:48:41 UTC,2014-07-01 17:15:07 UTC,,Middle School
+854,Pressure and Temperature (modified from #97),Marci Denney,507,97,2,97,FALSE,2011-07-26 14:53:27 UTC,2014-07-01 17:15:07 UTC,High School,Middle School
+862,Rock formation and the Rock Cycle,Mr. Benson,496,142,3,142,TRUE,2011-07-26 17:21:04 UTC,2014-07-01 17:15:07 UTC,,Elementary 5-6
+874,Our Solar System (7),Karen Wignall,499,118,2,118,FALSE,2011-07-26 19:12:20 UTC,2014-07-01 17:15:07 UTC,,Middle School
+875,Our Solar System (7),Tracy Pearson,493,118,2,118,FALSE,2011-07-26 19:12:21 UTC,2014-07-01 17:15:07 UTC,,Middle School
+890,Seasons: the changing position of the sun (4),Charity Wenham,514,2,2,2,FALSE,2011-07-26 19:21:05 UTC,2014-07-01 17:15:07 UTC,,Elementary 5-6
+892,Seasons: the changing position of the sun (6),Charity Wenham,514,2,2,2,FALSE,2011-07-26 19:21:09 UTC,2014-07-01 17:15:07 UTC,,Elementary 5-6
+893,Seasons: the changing position of the sun (6),Charity Wenham,514,2,2,2,FALSE,2011-07-26 19:21:09 UTC,2014-07-01 17:15:07 UTC,,Elementary 5-6
+895,Genes and Appearance (Heitz),Sara Heitz,517,93,2,93,TRUE,2011-07-26 19:24:17 UTC,2014-07-01 17:15:07 UTC,,Middle School
+903,States of Matter Transitions  (14),Karen Wignall,499,109,2,109,TRUE,2011-07-26 19:30:18 UTC,2014-07-01 17:15:07 UTC,High School,Middle School
+917,Phases of the moon (Gillespie-Revised),Kelsey Gillespie,515,4,2,4,FALSE,2011-07-26 19:36:48 UTC,2014-07-01 17:15:07 UTC,,Elementary 5-6
+921,Jennifer Wells   Leaf Photosynthesis (15),Jennifer Wells,523,41,2,41,TRUE,2011-07-26 19:38:32 UTC,2014-07-01 17:15:07 UTC,,Middle School
+922,Melting Ice (15),Angie Emerick,512,109,2,109,FALSE,2011-07-26 19:38:59 UTC,2014-07-01 17:15:07 UTC,High School,Middle School
+926,An Introduction to Weathering Rocks (Fernandez-Revised),jeremy fernandez,504,142,3,142,TRUE,2011-07-26 19:44:03 UTC,2014-07-01 17:15:08 UTC,,Elementary 5-6
+927,Crowley Weathering Rocks (revised),Julie Crowley,501,142,3,142,FALSE,2011-07-26 19:44:52 UTC,2014-07-01 17:15:08 UTC,,Elementary 5-6
+931,Phases of the moon (13),Linda Dearinger,498,4,2,4,FALSE,2011-07-26 19:50:33 UTC,2014-07-01 17:15:08 UTC,,Elementary 5-6
+940,Variation in Animals,Bethany Berger,519,132,2,132,FALSE,2011-07-26 20:03:55 UTC,2014-07-01 17:15:08 UTC,Middle School,Elementary 5-6
+943,Science never tasted so good! (7),Nan Kloberdanz,522,647,2,647,FALSE,2011-07-27 13:35:07 UTC,2014-07-01 17:15:08 UTC,,Middle School
+944,Science never tasted so good! (7),Nan Kloberdanz,522,647,2,647,FALSE,2011-07-27 13:35:08 UTC,2014-07-01 17:15:08 UTC,,Middle School
+945,Science never tasted so good! (8),Nan Kloberdanz,522,647,2,647,FALSE,2011-07-27 13:35:10 UTC,2014-07-01 17:15:08 UTC,,Middle School
+946,Science never tasted so good! (8),Nan Kloberdanz,522,647,2,647,FALSE,2011-07-27 13:35:12 UTC,2014-07-01 17:15:08 UTC,,Middle School
+947,Science never tasted so good! (9),Nan Kloberdanz,522,647,2,647,FALSE,2011-07-27 13:35:14 UTC,2014-07-01 17:15:08 UTC,,Middle School
+948,Science never tasted so good! (9),Nan Kloberdanz,522,647,2,647,FALSE,2011-07-27 13:35:14 UTC,2014-07-01 17:15:08 UTC,,Middle School
+949,Science never tasted so good! (10),Nan Kloberdanz,522,647,2,647,FALSE,2011-07-27 13:40:34 UTC,2014-07-01 17:15:08 UTC,,Middle School
+950,Science never tasted so good! (10),Nan Kloberdanz,522,647,2,647,FALSE,2011-07-27 13:40:34 UTC,2014-07-01 17:15:08 UTC,,Middle School
+962,Pearson Pressure and Temperature (14),Tracy Pearson,493,97,2,97,FALSE,2011-07-27 17:53:54 UTC,2014-07-01 17:15:08 UTC,,Middle School
+965,Pressure and Temperature (15),Jamey Smith,520,97,2,97,TRUE,2011-07-27 17:56:28 UTC,2014-07-01 17:15:08 UTC,,Middle School
+978,Periodic Table (4),Phil Wenzel,746,31,2,31,FALSE,2011-07-27 19:15:56 UTC,2014-07-01 17:15:08 UTC,,High School
+979,Periodic Table (4),Phil Wenzel,746,31,2,31,FALSE,2011-07-27 19:15:56 UTC,2014-07-01 17:15:08 UTC,,High School
+984,Identifying an Insect,Heather Anderson,516,13,2,13,FALSE,2011-07-28 14:22:24 UTC,2014-07-01 17:15:08 UTC,Elementary 3-4,Elementary 3-4
+986,Decompostion of Plants (7),Nan Kloberdanz,522,141,2,141,FALSE,2011-07-28 14:36:04 UTC,2014-07-01 17:15:08 UTC,,Elementary 3-4
+987,Decompostion of Plants (7),Nan Kloberdanz,522,141,2,141,FALSE,2011-07-28 14:36:05 UTC,2014-07-01 17:15:08 UTC,,Elementary 3-4
+988,Decompostion of Plants (8),Nan Kloberdanz,522,141,2,141,FALSE,2011-07-28 14:36:07 UTC,2014-07-01 17:15:08 UTC,,Elementary 3-4
+989,Decompostion of Plants (8),Nan Kloberdanz,522,141,2,141,FALSE,2011-07-28 14:36:08 UTC,2014-07-01 17:15:08 UTC,,Elementary 3-4
+995,Brine Shrimp (5),Deb Powers,511,374,2,374,FALSE,2011-07-28 15:26:52 UTC,2014-07-01 17:15:08 UTC,,Elementary 5-6
+1014,Animal Adaptations (Fernandez-Revised),jeremy fernandez,504,223,2,223,TRUE,2011-07-28 17:12:48 UTC,2014-07-01 17:15:08 UTC,,Elementary 3-4
+1015,Animal Adaptation( Crowley) (Revised),Julie Crowley,501,223,2,223,FALSE,2011-07-28 17:14:32 UTC,2014-07-01 17:15:08 UTC,Elementary 3-4,Elementary 3-4
+1019,Sprouting seeds (10),Nan Kloberdanz,522,372,2,372,FALSE,2011-07-28 17:53:45 UTC,2014-07-01 17:15:08 UTC,,Elementary 3-4
+1020,Sprouting seeds (11,Nan Kloberdanz,522,372,2,372,FALSE,2011-07-28 17:53:46 UTC,2014-07-01 17:15:08 UTC,,Elementary 3-4
+1022,Sounds (3),Bethany Berger,519,105,2,105,TRUE,2011-07-28 18:56:32 UTC,2014-07-01 17:15:08 UTC,Middle School,Middle School
+1031,"Passive Transport, Diffusion and Osmosis (10)",Lance Maffin,500,99,2,99,TRUE,2011-07-29 13:54:27 UTC,2014-07-01 17:15:08 UTC,,High School
+1033,How does the temperature of ice change as it melts? How does the temperature of water change as it boils?,Joleen Henning,495,109,2,109,FALSE,2011-07-29 14:04:01 UTC,2014-07-01 17:15:08 UTC,Middle School,Middle School
+1034,Anita Dutta Virtual Greenhouse ,anita dutta,509,193,2,193,FALSE,2011-07-29 14:04:23 UTC,2014-07-01 17:15:08 UTC,,Elementary 3-4
+1036,Protein Structure - From DNA to Proteins - Transcription and Translation LM (8),Lance Maffin,500,51,2,51,FALSE,2011-07-29 14:11:18 UTC,2014-07-01 17:15:08 UTC,,High School
+1038,How do you graph motion?,Joleen Henning,495,104,2,104,TRUE,2011-07-29 14:53:09 UTC,2014-07-01 17:15:09 UTC,Middle School,Middle School
+1040,Who has the quickest reactions?,Joleen Henning,495,91,2,91,TRUE,2011-07-29 15:27:22 UTC,2014-07-01 17:15:09 UTC,Middle School,Middle School
+1043,A Tasty Lab (2),Sherry Coop,518,963,2,963,FALSE,2011-07-29 16:40:12 UTC,2014-07-01 17:15:09 UTC,,
+1046,CoPi Making Water ,Angie Emerick,512,63,2,63,FALSE,2011-07-29 17:56:36 UTC,2014-07-01 17:15:09 UTC,High School,High School
+1047,Conductors and insulators (4),Nan Kloberdanz,522,10,2,10,FALSE,2011-07-29 17:57:53 UTC,2014-07-01 17:15:09 UTC,,Elementary 3-4
+1048,Conductors and insulators (4),Nan Kloberdanz,522,10,2,10,FALSE,2011-07-29 17:57:53 UTC,2014-07-01 17:15:09 UTC,,Elementary 3-4
+1051,Life Cycle of a Monarch Butterfly,Heather Anderson,516,13,2,13,FALSE,2011-07-29 18:23:13 UTC,2014-07-01 17:15:09 UTC,Elementary 3-4,Elementary 3-4
+1052,CoPi Stoichiometric Calculations (3),Angie Emerick,512,64,2,64,FALSE,2011-07-29 18:33:11 UTC,2014-07-01 17:15:09 UTC,High School,High School
+1057,CoPi Baggie Chemistry (2),Angie Emerick,512,54,2,54,FALSE,2011-07-29 18:48:35 UTC,2014-07-01 17:15:09 UTC,High School,High School
+1077,Meiosis (3),anita dutta,509,92,2,92,FALSE,2011-08-02 21:42:32 UTC,2014-07-01 17:15:09 UTC,,Middle School
+1078,Meiosis (3),anita dutta,509,92,2,92,FALSE,2011-08-02 21:42:32 UTC,2014-07-01 17:15:09 UTC,,Middle School
+1107,Predator and prey (13),Joan Hoeler,942,223,2,223,FALSE,2011-08-03 21:17:06 UTC,2014-07-01 17:15:09 UTC,,Elementary 3-4
+1108,Predator and prey (13),Joan Hoeler,942,223,2,223,FALSE,2011-08-03 21:17:06 UTC,2014-07-01 17:15:09 UTC,,Elementary 3-4
+1118,Seeing Motion (7),Elaine Miller,935,104,2,104,FALSE,2011-08-03 21:26:12 UTC,2014-07-01 17:15:09 UTC,,Middle School
+1119,Seeing Motion (7),Elaine Miller,935,104,2,104,FALSE,2011-08-03 21:26:12 UTC,2014-07-01 17:15:09 UTC,,Middle School
+1120,Seeing Motion (8),Elaine Miller,935,104,2,104,FALSE,2011-08-03 21:26:17 UTC,2014-07-01 17:15:09 UTC,,Middle School
+1121,Seeing Motion (8),Elaine Miller,935,104,2,104,FALSE,2011-08-03 21:26:19 UTC,2014-07-01 17:15:09 UTC,,Middle School
+1145,Making Water (2),Raphia Maglinao,940,63,2,63,FALSE,2011-08-03 21:52:40 UTC,2014-07-01 17:15:09 UTC,High School,High School
+1146,Making Water - Maglinao,Raphia Maglinao,940,63,2,63,FALSE,2011-08-03 21:52:40 UTC,2014-07-01 17:15:09 UTC,High School,High School
+1213,Introduction to Temperature Sensors,Andrea Pokrzywinski,955,143,2,143,TRUE,2011-08-04 20:49:09 UTC,2014-07-01 17:15:10 UTC,Middle School,Elementary 3-4
+1214,Rainbow Lab-revised (4),Jane Yokoyama,931,1184,3,1184,TRUE,2011-08-04 20:49:14 UTC,2014-07-01 17:15:10 UTC,,
+1245,CoPi Making Water   (2),Peggy Christensen,76,1046,3,1046,FALSE,2011-08-08 14:18:05 UTC,2014-07-01 17:15:10 UTC,High School,High School
+1246,CoPi Making Water (2),Peggy Christensen,76,1046,3,1046,FALSE,2011-08-08 14:18:06 UTC,2014-07-01 17:15:11 UTC,High School,High School
+1270,Sprouting seeds (14) Anita Dutta,anita dutta,509,967,3,967,FALSE,2011-08-11 21:01:10 UTC,2014-07-01 17:15:11 UTC,,
+1275,What material gets the hottest?,Sarah Johnston,252,147,3,147,FALSE,2011-08-12 00:27:15 UTC,2014-07-01 17:15:11 UTC,Middle School,Elementary 3-4
+1280,Wolf Sheep Predation (6),Karen McCallion,1017,44,2,44,TRUE,2011-08-17 22:51:53 UTC,2014-07-01 17:15:11 UTC,,High School
+1294,Genes and Appearance (17),anita dutta,509,93,2,93,FALSE,2011-08-27 22:17:20 UTC,2014-07-01 17:15:11 UTC,,Middle School
+1295,Genes and Appearance (17),anita dutta,509,93,2,93,FALSE,2011-08-27 22:17:21 UTC,2014-07-01 17:15:11 UTC,,Middle School
+1305,Solar Oven (22),anita dutta,509,183,3,183,FALSE,2011-08-28 05:06:34 UTC,2014-07-01 17:15:11 UTC,,Elementary 5-6
+1306,Solar Oven  (22),anita dutta,509,183,3,183,FALSE,2011-08-28 05:06:34 UTC,2014-07-01 17:15:11 UTC,,Elementary 5-6
+1330,Passive Transport (Craig Vann) (2),anita dutta,509,767,2,767,FALSE,2011-09-24 20:22:37 UTC,2014-07-01 17:15:11 UTC,,Middle School
+1335,Reaction Time (12),Sabrina Shumate,258,91,2,91,TRUE,2011-09-25 21:29:24 UTC,2014-07-01 17:15:11 UTC,,Middle School
+1336,Chlorophyll and Photosynthesis Adapted from Griffith,Carolyn Staudt,11,762,2,762,FALSE,2011-09-26 16:04:53 UTC,2014-07-01 17:15:11 UTC,High School,Elementary 5-6
+1353,Body Temperature: Thermoregulation (Heitz - Revised),Sara Heitz,517,38,2,38,TRUE,2011-10-05 21:03:24 UTC,2014-07-01 17:15:12 UTC,,High School
+1368,Solar Oven Charity and Deb,Deb Powers,511,21,2,21,FALSE,2011-10-07 02:35:11 UTC,2014-07-01 17:15:12 UTC,,Elementary 3-4
+1372,Predator and prey (16),Linda Dearinger,498,223,2,223,FALSE,2011-10-08 15:56:08 UTC,2014-07-01 17:15:12 UTC,,Elementary 3-4
+1379,Jennifer Wells  Monitoring Temperature vs. Change of Phase in Water and Salt Water - Revised (17),Jennifer Wells,523,109,2,109,TRUE,2011-10-10 03:45:10 UTC,2014-07-01 17:15:12 UTC,,Middle School
+1382,Phases of the moon (20),Becky Ruby,937,4,2,4,TRUE,2011-10-10 05:15:05 UTC,2014-07-01 17:15:12 UTC,Elementary 5-6,Elementary 5-6
+1383,Comparing Temperature in a stream,Ellen Hannan,941,1233,2,1233,FALSE,2011-10-10 22:45:26 UTC,2014-07-01 17:15:12 UTC,Middle School,
+1384,Pearson Energy Levels Revised II,Tracy Pearson,493,34,2,34,TRUE,2011-10-11 01:38:17 UTC,2014-07-01 17:15:12 UTC,,High School
+1385,Charles's Law (3) ( Michele Bifelt),Michele Bifelt,936,37,2,37,TRUE,2011-10-11 06:13:14 UTC,2014-07-01 17:15:12 UTC,High School,High School
+1388,Producers and Consumers_DeRivera_Revised,Missy DeRivera,948,86,2,86,FALSE,2011-10-11 19:07:50 UTC,2014-07-01 17:15:12 UTC,,Middle School
+1389,Energy Balance and Atmosphere (6) Williams Revised,Cheryl Williams,932,127,2,127,TRUE,2011-10-11 23:54:26 UTC,2014-07-01 17:15:12 UTC,,Middle School
+1391,Motion on a Ramp Afshan,Afshan Mohammad,933,76,2,76,TRUE,2011-10-12 23:41:23 UTC,2014-07-01 17:15:12 UTC,,High School
+1396,Revised- Penny warming (Alaska Science Standards),Katie Sandvik,946,147,3,147,TRUE,2011-10-14 20:11:02 UTC,2014-07-01 17:15:12 UTC,Elementary 5-6,Elementary 3-4
+1398,Changing environments (Gillam-11/12),David Gillam,961,224,2,224,FALSE,2011-10-14 20:53:48 UTC,2014-07-01 17:15:12 UTC,Elementary 3-4,Elementary 5-6
+1438,Body Temperature: Thermoregulation- Maine (7),Ellen Hannan,941,331,2,331,FALSE,2011-11-15 23:19:17 UTC,2014-07-01 17:15:13 UTC,Middle School,High School
+1439,Body Temperature: Craig,Ellen Hannan,941,331,2,331,TRUE,2011-11-15 23:19:18 UTC,2014-07-01 17:15:13 UTC,Middle School,High School
+1480,Making Waves in 8th Grade Science,Joleen Henning,495,103,2,103,TRUE,2012-01-13 12:09:31 UTC,2014-07-01 17:15:13 UTC,Middle School,Middle School
+1488,Wind generator (6),Ellen Hannan,941,22,2,22,TRUE,2012-01-30 16:01:25 UTC,2014-07-01 17:15:13 UTC,Elementary 3-4,Elementary 3-4
+1500,Our Solar System  (Revised Heins) (14),Karen Heins,73,118,2,118,FALSE,2012-02-02 22:21:00 UTC,2014-07-01 17:15:13 UTC,Elementary 5-6,Middle School
+1503,Making and Breaking Bonds (5),Subhadra Desaraju,271,61,2,61,TRUE,2012-02-03 20:02:58 UTC,2014-07-01 17:15:13 UTC,High School,High School
+1507,Reaction Rates Mini lab(4),Subhadra Desaraju,271,1505,3,1505,TRUE,2012-02-03 20:42:02 UTC,2014-07-01 17:15:13 UTC,High School,
+1520,Leaf Photosynthesis: Modified from Wells,Jennifer Richmond,64,921,3,921,TRUE,2012-02-06 10:32:38 UTC,2014-07-01 17:15:14 UTC,,
+1529,Meiosis (7),Rosemary Peck,7533,92,2,92,TRUE,2012-02-06 21:30:53 UTC,2014-07-01 17:15:14 UTC,,Middle School
+1530,Predator and prey (19) Gillespie Revised,Kelsey Gillespie,515,223,2,223,TRUE,2012-02-06 21:34:45 UTC,2014-07-01 17:15:14 UTC,,Elementary 3-4
+1531,Friction--Friend or Foe? (revised),Marci Denney,507,221,2,221,FALSE,2012-02-08 01:44:43 UTC,2014-07-01 17:15:14 UTC,High School,Elementary 5-6
+1534,Physical and Chemical Change-Revised (3),JUNIPER PASPULA,265,1370,4,1370,FALSE,2012-02-08 11:51:25 UTC,2014-07-01 17:15:14 UTC,High School,
+1536,Dissolving Salt in Water-Juniper,JUNIPER PASPULA,265,653,3,653,FALSE,2012-02-08 12:43:27 UTC,2014-07-01 17:15:14 UTC,High School,High School
+1540,Boiling water(20),Jane Yokoyama,931,109,2,109,TRUE,2012-02-10 02:50:30 UTC,2014-07-01 17:15:14 UTC,Middle School,Middle School
+1545,It's elementary!  (Revised with model extension),Marci Denney,507,952,2,952,FALSE,2012-02-11 18:18:57 UTC,2014-07-01 17:15:14 UTC,High School,High School
+1548,Our Solar System  (Revised Heins) (15),Karen Heins,73,1500,3,1500,FALSE,2012-02-12 21:05:07 UTC,2014-07-01 17:15:14 UTC,Elementary 5-6,Elementary 5-6
+1549,A Selection Pressure (2),Afshan Mohammad,933,48,2,48,FALSE,2012-02-12 21:13:23 UTC,2014-07-01 17:15:14 UTC,,High School
+1550,Body Temperature: Thermoregulation (8) (Revised),Karen Heins,73,400,3,400,TRUE,2012-02-12 21:27:56 UTC,2014-07-01 17:15:14 UTC,,
+1551,Our Solar System  (Revised Heins) (16),Karen Heins,73,1500,3,1500,FALSE,2012-02-12 21:30:29 UTC,2014-07-01 17:15:14 UTC,Elementary 5-6,Elementary 5-6
+1552,Conductors and insulators (7),Charity Wenham,514,10,2,10,FALSE,2012-02-12 22:52:04 UTC,2014-07-01 17:15:14 UTC,,Elementary 3-4
+1554,Pearson Physical Science Temperature Versus Heat ,Tracy Pearson,493,110,2,110,FALSE,2012-02-13 17:41:58 UTC,2014-07-01 17:15:14 UTC,,Middle School
+1557,Our Solar System  (Revised Heins) (19),Karen Heins,73,1556,5,1556,FALSE,2012-02-13 22:06:25 UTC,2014-07-01 17:15:14 UTC,Elementary 5-6,
+1559,TPLC Color Absorption and Reflection ,Erin Fitzpatrick,58,70,2,70,FALSE,2012-02-13 22:10:24 UTC,2014-07-01 17:15:14 UTC,,High School
+1560,Renewable Energy Generator Construction,Jennifer Wells,523,1488,3,1488,TRUE,2012-02-13 22:24:05 UTC,2014-07-01 17:15:14 UTC,,Elementary 3-4
+1562,Our Solar System  (Revised Heins) (20),Karen Heins,73,1557,6,1557,FALSE,2012-02-14 09:49:22 UTC,2014-07-01 17:15:14 UTC,Elementary 5-6,Elementary 5-6
+1567,Heating Objects - Specific Heat (12),Brad Simon,67,375,2,375,FALSE,2012-02-14 23:07:02 UTC,2014-07-01 17:15:14 UTC,High School,High School
+1569,Creating Waves ,Chris Herald,70,103,2,103,TRUE,2012-02-14 23:43:03 UTC,2014-07-01 17:15:14 UTC,Middle School,Middle School
+1570,Pendulums (5) create your own data table,Chris Herald,70,192,2,192,FALSE,2012-02-14 23:46:11 UTC,2014-07-01 17:15:14 UTC,Middle School,Elementary 5-6
+1584,Buildings and earthquakes (5),Becky Ruby,937,1547,3,1547,FALSE,2012-02-19 20:33:08 UTC,2014-07-01 17:15:14 UTC,Elementary 5-6,
+1586,Duggin Phases of the moon (11),Julia Duggin,57,381,3,381,FALSE,2012-02-21 11:43:03 UTC,2014-07-01 17:15:14 UTC,Elementary 5-6,
+1600,Body Temperature: Thermoregulation (7),Chris Herald,70,38,2,38,FALSE,2012-02-29 22:22:49 UTC,2014-07-01 17:15:14 UTC,Middle School,High School
+1656,"Miss Kim: How Loud, How High? ",Grace Kim,9474,105,2,105,TRUE,2012-04-10 00:14:25 UTC,2014-07-01 17:15:15 UTC,,Middle School
+1662,Inclined planes (8),Chris Herald,70,215,2,215,TRUE,2012-04-17 12:05:02 UTC,2014-07-01 17:15:15 UTC,Middle School,Elementary 5-6
+1683,Bridges (9)         Puentes (9),Sharon Padget,9825,19,2,19,TRUE,2012-04-27 09:30:03 UTC,2014-07-01 17:15:15 UTC,Elementary 3-4,Elementary 3-4
+1685,Meiosis ,anita dutta,509,92,2,92,FALSE,2012-04-30 12:43:49 UTC,2014-07-01 17:15:15 UTC,,Middle School
+1702,Respiratory Rate During Exercise (8),Kerry Boydstun,59,39,2,39,TRUE,2012-05-11 14:38:44 UTC,2014-07-01 17:15:16 UTC,,High School
+1703,Anita Dutta Virtual Greenhouse (2),Paula Klonowski,24,1034,3,1034,FALSE,2012-05-23 15:37:58 UTC,2014-07-01 17:15:16 UTC,,
+1704,Anita Dutta Virtual Greenhouse  (2),Paula Klonowski,24,1034,3,1034,FALSE,2012-05-23 15:37:58 UTC,2014-07-01 17:15:16 UTC,,
+1712,Motion down a Ramp--Keith (revised),Jaymee Keith,10334,76,2,76,TRUE,2012-05-31 21:38:07 UTC,2014-07-01 17:15:16 UTC,High School,High School
+1730,Predator and prey (24) adapted by Marci Ward,Marci Ward,10339,223,2,223,TRUE,2012-05-31 23:15:36 UTC,2014-07-01 17:15:16 UTC,,Elementary 3-4
+1741,Charles's  Law Carr(4) (Revised),Molly Carr,10332,37,2,37,FALSE,2012-06-01 18:49:41 UTC,2014-07-01 17:15:16 UTC,High School,High School
+1754,Genes and Appearance (19),Kristyn Nieder,10376,93,2,93,FALSE,2012-06-04 15:00:42 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1755,Genes and Appearance (19),Kristyn Nieder,10376,93,2,93,FALSE,2012-06-04 15:00:42 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1759,Pressure vs. Volume - Luce,Kara Luce,10381,36,2,36,TRUE,2012-06-04 16:03:34 UTC,2014-07-01 17:15:16 UTC,,High School
+1771,Heat Propagation (6),Julie Miller,26,111,2,111,FALSE,2012-06-04 17:32:21 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1772,Heat Propagation (6),Julie Miller,26,111,2,111,FALSE,2012-06-04 17:32:24 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1773,Producers and Consumers (8),Lisa Ball,10374,86,2,86,FALSE,2012-06-04 17:32:26 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1774,Producers and Consumers (8),Lisa Ball,10374,86,2,86,FALSE,2012-06-04 17:32:27 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1778,Producers and Consumers (9),Lisa Ball,10374,86,2,86,FALSE,2012-06-04 17:32:33 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1779,Producers and Consumers (9),Lisa Ball,10374,86,2,86,FALSE,2012-06-04 17:32:33 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1780,Producers and Consumers (9),Lisa Ball,10374,86,2,86,FALSE,2012-06-04 17:32:33 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1781,Producers and Consumers (10),Lisa Ball,10374,86,2,86,FALSE,2012-06-04 17:32:37 UTC,2014-07-01 17:15:16 UTC,,Middle School
+1796,Motion Lab 1: Seeing Motion (Revised),Ariane Kitchell,10384,104,2,104,TRUE,2012-06-04 17:50:15 UTC,2014-07-01 17:15:16 UTC,Middle School,Middle School
+1799,Genes and Appearance - Lab 1 - Revised,Meg Richard,10373,93,2,93,TRUE,2012-06-04 17:50:46 UTC,2014-07-01 17:15:16 UTC,Middle School,Middle School
+1805,States of Matter (SC),Shannon Collins,10377,107,2,107,FALSE,2012-06-04 17:57:58 UTC,2014-07-01 17:15:17 UTC,,Middle School
+1814,Competition (8),Rebecca Reaver,10371,87,2,87,FALSE,2012-06-04 18:25:54 UTC,2014-07-01 17:15:17 UTC,,Middle School
+1815,Adaptation/Competition2,Rebecca Reaver,10371,87,2,87,TRUE,2012-06-04 18:25:56 UTC,2014-07-01 17:15:17 UTC,,Middle School
+1835,Solar Radiation and the Atmosphere,Leslie Campbell,10369,127,2,127,FALSE,2012-06-05 17:28:48 UTC,2014-07-01 17:15:17 UTC,,Middle School
+1836,Motion on a Graph - Luce,Kara Luce,10381,1038,3,1038,TRUE,2012-06-05 17:47:38 UTC,2014-07-01 17:15:17 UTC,,Middle School
+1838,ZZZ JUNK 2!,Meg Richard,10373,223,2,223,FALSE,2012-06-05 18:40:44 UTC,2014-07-01 17:15:17 UTC,,Elementary 3-4
+1839,ZZZ JUNK 1!,Meg Richard,10373,223,2,223,FALSE,2012-06-05 18:40:45 UTC,2014-07-01 17:15:17 UTC,,Elementary 3-4
+1843,The Greenhouse Effect,Leslie Campbell,10369,128,2,128,FALSE,2012-06-05 18:51:54 UTC,2014-07-01 17:15:17 UTC,,Middle School
+1853,Greenhouse Effect in a Greenhouse - Biology,Cynthia Riedel,10378,259,3,259,FALSE,2012-06-05 19:22:07 UTC,2014-07-01 17:15:17 UTC,,Middle School
+1860,Chapter 1.3 Thinking Like a Scientist in a Virtual Greenhouse Revised,Meg Richard,10373,193,2,193,FALSE,2012-06-06 14:54:48 UTC,2014-07-01 17:15:17 UTC,Middle School,Elementary 3-4
+1862,Latent Heat (4),Amanda Clark,10382,108,2,108,FALSE,2012-06-06 15:17:14 UTC,2014-07-01 17:15:17 UTC,Middle School,Middle School
+1872,Penny warming (8),Julia Duggin,57,147,3,147,FALSE,2012-06-06 15:56:55 UTC,2014-07-01 17:15:17 UTC,,Elementary 3-4
+1880,Cellular Processes Diffusion and Osmosis - Lesson 1.4,Meg Richard,10373,99,2,99,TRUE,2012-06-06 18:04:38 UTC,2014-07-01 17:15:17 UTC,Middle School,High School
+1890,Variation in Insects 4th Grade,Ange Jones,10372,132,2,132,TRUE,2012-06-06 19:38:46 UTC,2014-07-01 17:15:17 UTC,Elementary 3-4,Elementary 5-6
+1898,Mutations are Random!,Andrew Taylor,10365,50,2,50,TRUE,2012-06-07 14:19:56 UTC,2014-07-01 17:15:17 UTC,High School,High School
+1902,Reaction Time-Reaver,Rebecca Reaver,10371,91,2,91,TRUE,2012-06-07 14:21:34 UTC,2014-07-01 17:15:17 UTC,Middle School,Middle School
+1905,States of Matter (16),Amanda Clark,10382,107,2,107,TRUE,2012-06-07 14:33:34 UTC,2014-07-01 17:15:18 UTC,Middle School,Middle School
+1921,Greenhouse Effect: How does increased Carbon Dioxide affect Temperature?,William Welch,10368,128,2,128,FALSE,2012-06-07 17:54:21 UTC,2014-07-01 17:15:18 UTC,,Middle School
+1924,What's the best way to stay cool?,Andrew Taylor,10365,129,2,129,FALSE,2012-06-07 18:20:45 UTC,2014-07-01 17:15:18 UTC,High School,Middle School
+1927,Up and down motion (4),Rebecca Reaver,10371,135,2,135,TRUE,2012-06-07 18:29:12 UTC,2014-07-01 17:15:18 UTC,Middle School,Elementary 5-6
+1943,Buildings and earthquakes (8)       Edificios y terremotos (8),Sharon Padget,9825,20,2,20,TRUE,2012-06-08 14:52:58 UTC,2014-07-01 17:15:18 UTC,Elementary 3-4,Elementary 3-4
+1946,Conductors and insulators (12)   Conductores y aislantes (12),Sharon Padget,9825,10,2,10,TRUE,2012-06-08 15:52:00 UTC,2014-07-01 17:15:18 UTC,Elementary 3-4,Elementary 3-4
+1949,Launching a Satellite (6),Valerie Frizzle,7,116,2,116,FALSE,2012-06-11 13:34:41 UTC,2014-07-01 17:15:18 UTC,,Middle School
+1953,Active Transport (9),John Giannone,10479,102,2,102,FALSE,2012-06-11 14:06:13 UTC,2014-07-01 17:15:18 UTC,,High School
+1965,Wind generator (11),sharon cardinal,10482,22,2,22,FALSE,2012-06-12 15:33:37 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+1966,Wind generator (11),sharon cardinal,10482,22,2,22,FALSE,2012-06-12 15:33:38 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+1999,Solar Oven (53),Adrienne Sawyer,249,21,2,21,FALSE,2012-06-25 13:08:15 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+2000,Solar Oven (53),Adrienne Sawyer,249,21,2,21,FALSE,2012-06-25 13:08:16 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+2002,Solar Oven (55),Adrienne Sawyer,249,21,2,21,FALSE,2012-06-25 13:08:21 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+2003,Solar Oven (55),Adrienne Sawyer,249,21,2,21,FALSE,2012-06-25 13:08:23 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+2004,Solar Oven (56),Adrienne Sawyer,249,21,2,21,FALSE,2012-06-25 13:08:27 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+2005,Solar Oven (56),Adrienne Sawyer,249,21,2,21,FALSE,2012-06-25 13:08:28 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+2006,Solar Oven (56),Adrienne Sawyer,249,21,2,21,FALSE,2012-06-25 13:08:28 UTC,2014-07-01 17:15:18 UTC,,Elementary 3-4
+2019,Radiant Energy (9),Dan Lundstrom,10790,126,2,126,FALSE,2012-06-25 20:30:14 UTC,2014-07-01 17:15:18 UTC,,Middle School
+2020,Radiant Energy (9),Dan Lundstrom,10790,126,2,126,FALSE,2012-06-25 20:30:16 UTC,2014-07-01 17:15:18 UTC,,Middle School
+2029,Solar Oven (62),Marie Hedrick,10780,21,2,21,FALSE,2012-06-25 20:36:44 UTC,2014-07-01 17:15:19 UTC,,Elementary 3-4
+2030,Solar Oven (62),dj ellis,10776,21,2,21,FALSE,2012-06-25 20:36:46 UTC,2014-07-01 17:15:19 UTC,,Elementary 3-4
+2042,Wind Generator (13) PJK,Paula Klonowski,24,22,2,22,FALSE,2012-06-26 15:01:49 UTC,2014-07-01 17:15:19 UTC,,Elementary 3-4
+2054,Wind Generator (15),Susan Westfall,10613,22,2,22,FALSE,2012-06-26 15:02:13 UTC,2014-07-01 17:15:19 UTC,,Elementary 3-4
+2056,Wind Generator (15),Susan Westfall,10613,22,2,22,FALSE,2012-06-26 15:02:14 UTC,2014-07-01 17:15:19 UTC,,Elementary 3-4
+2084,Changing environments (Weinberg 1),Jeanette Weinberg,10594,1398,3,1398,FALSE,2012-06-26 15:08:55 UTC,2014-07-01 17:15:19 UTC,Elementary 3-4,Elementary 3-4
+2102,Baggie Chemistry Revised,Kathy Turner,10593,1057,3,1057,FALSE,2012-06-26 15:20:31 UTC,2014-07-01 17:15:19 UTC,High School,High School
+2111,Power in a Simple Circuit (Sterlace 1),Jason Sterlace,10615,79,2,79,FALSE,2012-06-26 15:23:40 UTC,2014-07-01 17:15:19 UTC,,High School
+2118,Chemical Reactions (8) ,Donia Spott,7210,637,2,637,TRUE,2012-06-26 15:31:38 UTC,2014-07-01 17:15:20 UTC,Middle School,Middle School
+2123,Seeing Motion-Roscoe (15),Kristen Roscoe,10587,104,2,104,TRUE,2012-06-26 15:35:59 UTC,2014-07-01 17:15:20 UTC,High School,Middle School
+2166,Sensing Temperature (19),Elizabeth Larson,10610,143,2,143,FALSE,2012-06-26 16:32:01 UTC,2014-07-01 17:15:20 UTC,,Elementary 3-4
+2167,Sensing Temperature Larson,Elizabeth Larson,10610,143,2,143,TRUE,2012-06-26 16:32:01 UTC,2014-07-01 17:15:20 UTC,,Elementary 3-4
+2188,Changing Length of Daylight (3),Leslie Bochenski,10612,3,2,3,FALSE,2012-06-26 17:18:51 UTC,2014-07-01 17:15:20 UTC,Elementary 3-4,Elementary 5-6
+2210,Tracking a Storm (14),Amy SIepert,10596,113,2,113,FALSE,2012-06-26 17:37:16 UTC,2014-07-01 17:15:20 UTC,Elementary 3-4,Middle School
+2228,Heat of Fusion of Ice - HS Chemistry K. Turner (Revised) ,Kathy Turner,10593,109,2,109,FALSE,2012-06-26 17:50:00 UTC,2014-07-01 17:15:20 UTC,High School,Middle School
+2234,"""Hard Boiled"" (adaptation of The Raw & the Cooked) by Janeen Perry-Campbell",Janeen Perry-Campbell,10618,669,2,669,FALSE,2012-06-26 18:02:46 UTC,2014-07-01 17:15:20 UTC,,High School
+2247,Making Heat: Investigating Endothermic and Exothermic Reactions (Kapral) (revised),Anne Kapral,10599,53,2,53,TRUE,2012-06-26 18:34:31 UTC,2014-07-01 17:15:20 UTC,High School,High School
+2286,"Lights, heat and intensity",Kathy Applebee,10597,137,2,137,FALSE,2012-06-27 17:58:35 UTC,2014-07-01 17:15:21 UTC,Elementary 3-4,Elementary 5-6
+2289,Larson Create An Animal,Elizabeth Larson,10610,621,2,621,FALSE,2012-06-27 18:04:15 UTC,2014-07-01 17:15:21 UTC,,Elementary 3-4
+2292,You are my sunshine. Are you powerful enough to help me?  JWeinberg,Jeanette Weinberg,10594,138,2,138,FALSE,2012-06-27 18:13:41 UTC,2014-07-01 17:15:21 UTC,Elementary 3-4,Elementary 5-6
+2298,Energy Circuit JWeinberg ,Jeanette Weinberg,10594,10,2,10,TRUE,2012-06-27 18:31:28 UTC,2014-07-01 17:15:21 UTC,Elementary 3-4,Elementary 3-4
+2303,Larson Elementary Moon Phases (4),Elizabeth Larson,10610,4,2,4,FALSE,2012-06-28 13:10:42 UTC,2014-07-01 17:15:21 UTC,,Elementary 5-6
+2314,Water Moving Around the Earth (3) BENTLEY,Angela Bentley,10607,144,2,144,TRUE,2012-06-28 15:02:29 UTC,2014-07-01 17:15:21 UTC,Elementary 5-6,Elementary 5-6
+2319,States of Matter (18),Katie Gosney,10604,107,2,107,FALSE,2012-06-28 15:41:46 UTC,2014-07-01 17:15:21 UTC,Elementary 5-6,Middle School
+2327,Mystery Powders - Heather Reid,Heather Reid,10588,2308,2,2308,TRUE,2012-06-28 17:33:21 UTC,2014-07-01 17:15:21 UTC,Elementary 5-6,Elementary 3-4
+2344,Invertebrates: exploring earthworms and their habitat,Kathy Applebee,10597,810,2,810,FALSE,2012-06-28 18:16:40 UTC,2014-07-01 17:15:21 UTC,Elementary 5-6,Elementary 5-6
+2349,Hit the Wall (3),Amy SIepert,10596,80,2,80,FALSE,2012-06-28 18:32:44 UTC,2014-07-01 17:15:21 UTC,Elementary 3-4,High School
+2365,Virtual Greenhouse (20),Susan Westfall,10613,193,2,193,FALSE,2012-06-29 14:06:08 UTC,2014-07-01 17:15:22 UTC,,Elementary 3-4
+2379,Salinity and Density,Heather Reid,10588,2232,2,2232,TRUE,2012-06-29 14:53:49 UTC,2014-07-01 17:15:22 UTC,,Elementary 5-6
+2397,Magnets and Coils adapted JWeinberg,Jeanette Weinberg,10594,816,2,816,TRUE,2012-06-29 15:35:31 UTC,2014-07-01 17:15:22 UTC,Elementary 3-4,Elementary 3-4
+2399,Making Heat: Investigating Endothermic and Exothermic Reactions from Anne Kapral,Michelle Huber,10600,2247,3,2247,FALSE,2012-06-29 15:37:36 UTC,2014-07-01 17:15:22 UTC,High School,High School
+2400,Making Heat: Investigating Endothermic and Exothermic Reactions (2),Michelle Huber,10600,2247,3,2247,FALSE,2012-06-29 15:37:36 UTC,2014-07-01 17:15:22 UTC,High School,High School
+2402,Penny Warming_Modified,Stephanie Basl,10595,147,3,147,FALSE,2012-06-29 15:40:10 UTC,2014-07-01 17:15:22 UTC,Middle School,Elementary 3-4
+2410,Penny Warming_Revised_Spott,Donia Spott,7210,2402,4,2402,TRUE,2012-06-29 15:50:37 UTC,2014-07-01 17:15:22 UTC,Middle School,Middle School
+2422,How fast are you? (2) (Revised),Katie Gosney,10604,2408,2,2408,FALSE,2012-06-29 18:11:18 UTC,2014-07-01 17:15:22 UTC,Elementary 5-6,Elementary 5-6
+2430,Our Solar System (Gillam),David Gillam,961,118,2,118,TRUE,2012-07-12 16:28:50 UTC,2014-07-01 17:15:22 UTC,Elementary 5-6,Middle School
+2434,Changing environments (Gillam-07/12),David Gillam,961,1398,3,1398,FALSE,2012-07-12 21:09:42 UTC,2014-07-01 17:15:22 UTC,Elementary 3-4,Elementary 3-4
+2469,Motion on a Ramp (12) - Shupe (revised),Michael Shupe,11137,76,2,76,FALSE,2012-07-23 19:41:50 UTC,2014-07-01 17:15:23 UTC,,High School
+2485,Decomposition of Plants to Anayle Data(6),Sherri Riggan,11128,141,2,141,FALSE,2012-07-24 14:40:42 UTC,2014-07-01 17:15:23 UTC,,Elementary 3-4
+2502,Molecular Geometry (4) - Shupe,Michael Shupe,11137,32,2,32,FALSE,2012-07-24 15:33:01 UTC,2014-07-01 17:15:23 UTC,,High School
+2507,Who's the Hottest Student? (4),Sherri Riggan,11128,1233,2,1233,TRUE,2012-07-24 15:39:35 UTC,2014-07-01 17:15:23 UTC,,
+2513,What's in a Soil Sample?,Ms. Hemphill,11123,14,2,14,FALSE,2012-07-24 15:48:01 UTC,2014-07-01 17:15:23 UTC,,Elementary 5-6
+2521,Concentation and Heat: Rxn Kinetics,Allison Fitzwater,11142,53,2,53,FALSE,2012-07-24 16:19:43 UTC,2014-07-01 17:15:23 UTC,High School,High School
+2530,Sweat  Brink(4),Mrs. Brink,11122,134,2,134,TRUE,2012-07-24 17:00:30 UTC,2014-07-01 17:15:23 UTC,,Elementary 5-6
+2533, Elizabeth Buchholtz Building a Bungee Jump (forces and motion),Elizabeth Buchholtz,11126,17,2,17,FALSE,2012-07-24 17:15:28 UTC,2014-07-01 17:15:23 UTC,,Elementary 3-4
+2539,Baggie Chemistry (5),Linda Wright,11136,54,2,54,TRUE,2012-07-24 17:29:34 UTC,2014-07-01 17:15:24 UTC,,High School
+2558,Magnetic Fields (6)QUARKNET,Chris Herald,70,67,2,67,FALSE,2012-07-24 19:18:00 UTC,2014-07-01 17:15:24 UTC,Middle School,High School
+2559,Wind Generator (J.Green),Jim Green,11139,22,2,22,FALSE,2012-07-24 19:31:00 UTC,2014-07-01 17:15:24 UTC,,Elementary 3-4
+2568,Can Your Animal Survive?  (revised),Sherri Riggan,11128,621,2,621,FALSE,2012-07-25 13:50:23 UTC,2014-07-01 17:15:24 UTC,,Elementary 3-4
+2577,Blade Shape and Voltage,Ana Olson-Johnson,11141,22,2,22,FALSE,2012-07-25 15:02:02 UTC,2014-07-01 17:15:24 UTC,High School,Elementary 3-4
+2629,"Grow, Grow, Grow Your Seed",Ms. Hemphill,11123,1019,3,1019,TRUE,2012-07-26 14:49:32 UTC,2014-07-01 17:15:24 UTC,,
+2630,Weathering Rocks (11),Lisa Welsh,11134,142,3,142,FALSE,2012-07-26 14:59:34 UTC,2014-07-01 17:15:24 UTC,,Elementary 5-6
+2651,"Distance, Orbits, and Periods! (23)",Anne Friederich,11140,118,2,118,TRUE,2012-07-26 19:25:43 UTC,2014-07-01 17:15:25 UTC,Middle School,Middle School
+2654,Energy Levels Fitzwater (revised),Allison Fitzwater,11142,34,2,34,TRUE,2012-07-26 22:29:18 UTC,2014-07-01 17:15:25 UTC,High School,High School
+2661,Newton's Second Law (5) - Shupe,Michael Shupe,11137,696,2,696,FALSE,2012-07-27 14:25:25 UTC,2014-07-01 17:15:25 UTC,,Middle School
+2665,Pendulums (5) Brink,Mrs. Brink,11122,192,2,192,FALSE,2012-07-27 14:39:26 UTC,2014-07-01 17:15:25 UTC,,Elementary 5-6
+2668,Orbits-What's the Shape? (2) Revised,Anne Friederich,11140,2655,3,2655,TRUE,2012-07-27 15:33:01 UTC,2014-07-01 17:15:25 UTC,Middle School,
+2705,Green House Gases CO2 (Intro to ITSI-SU),Julie George,11138,1162,2,1162,TRUE,2012-08-15 11:11:46 UTC,2014-07-01 17:15:25 UTC,,
+2709,Forces - Equal and Opposite (17),Douglas Blosch,11804,83,2,83,FALSE,2012-08-16 18:41:12 UTC,2014-07-01 17:15:25 UTC,,High School
+2710,Forces - Equal and Opposite (17),Douglas Blosch,11804,83,2,83,FALSE,2012-08-16 18:41:13 UTC,2014-07-01 17:15:25 UTC,,High School
+2761,Water Moving Around the Earth AQ Ch1,Cynthia Riedel,10378,2314,3,2314,TRUE,2012-09-04 20:15:14 UTC,2014-07-01 17:15:26 UTC,,Elementary 5-6
+2771,Relative Humidity Measurement (9) Overholtzer Version 2 Activity 2771 final revised,Mary Overholtzer,764,119,2,119,TRUE,2012-09-12 19:45:13 UTC,2014-07-01 17:15:26 UTC,Middle School,Middle School
+2781,Chemical changes,Chris Herald,70,1057,3,1057,FALSE,2012-09-23 22:52:05 UTC,2014-07-01 17:15:26 UTC,Middle School,High School
+2788,"Weathering Rocks:  Igneous, Sedimentary, & Metamorphic ",Danielle Allen,14001,142,3,142,FALSE,2012-09-27 15:16:12 UTC,2014-07-01 17:15:26 UTC,Middle School,Elementary 5-6
+2799,Predator and Prey (40),Sarah Lifka,14000,223,2,223,FALSE,2012-09-27 16:32:24 UTC,2014-07-01 17:15:26 UTC,,Elementary 3-4
+2801,Predator and Prey (42),Marilyn Mestler,14006,223,2,223,FALSE,2012-09-27 16:36:49 UTC,2014-07-01 17:15:26 UTC,,Elementary 3-4
+2802,Predator and Prey (42),Marilyn Mestler,14006,223,2,223,FALSE,2012-09-27 16:36:49 UTC,2014-07-01 17:15:26 UTC,,Elementary 3-4
+2803,Predator and Prey (43),Marilyn Mestler,14006,223,2,223,FALSE,2012-09-27 16:39:14 UTC,2014-07-01 17:15:26 UTC,,Elementary 3-4
+2805,Moon Phases (11),Sarah Lifka,14000,4,2,4,FALSE,2012-09-27 16:59:46 UTC,2014-07-01 17:15:26 UTC,,Elementary 5-6
+2806,Moon Phases ,Danielle Allen,14001,4,2,4,TRUE,2012-09-27 17:18:11 UTC,2014-07-01 17:15:26 UTC,Elementary 5-6,Elementary 5-6
+2814,Temperature Versus Heat (13),Elizabeth Day,14182,110,2,110,FALSE,2012-09-27 17:47:36 UTC,2014-07-01 17:15:26 UTC,,Middle School
+2815,Temperature Versus Heat (13),Elizabeth Day,14182,110,2,110,FALSE,2012-09-27 17:47:37 UTC,2014-07-01 17:15:26 UTC,,Middle School
+2816,Changing Environments (18),Kristi Brady,14003,224,2,224,FALSE,2012-09-27 17:48:24 UTC,2014-07-01 17:15:26 UTC,Elementary 3-4,Elementary 5-6
+2817,Predator and Prey-Tracie Parker,Tracie Parker,14005,2803,3,2803,FALSE,2012-09-27 17:53:14 UTC,2014-07-01 17:15:26 UTC,,
+2825,Temperature of Mixing Water (33),Donia Spott,7210,112,2,112,TRUE,2012-10-01 21:41:02 UTC,2014-07-01 17:15:26 UTC,Middle School,Middle School
+2829,States of Matter (27),April Robbs,10366,107,2,107,TRUE,2012-10-06 16:57:05 UTC,2014-07-01 17:15:27 UTC,,Middle School
+2833,Water Moving Around the Earth (6) Overholtzer,Mary Overholtzer,764,144,2,144,TRUE,2012-10-08 01:48:44 UTC,2014-07-01 17:15:27 UTC,Middle School,Elementary 5-6
+2837,Temperature Versus Heat (15),Chris Herald,70,110,2,110,TRUE,2012-10-12 02:48:34 UTC,2014-07-01 17:15:27 UTC,Middle School,Middle School
+2848,Virtual Greenhouse Susan Westfall (revised,Susan Westfall,10613,193,2,193,FALSE,2012-10-17 21:46:23 UTC,2014-07-01 17:15:27 UTC,,Elementary 3-4
+2851,I'm Sensing a Great Motion Graph! (revised),April Robbs,10366,104,2,104,TRUE,2012-10-19 02:45:59 UTC,2014-07-01 17:15:27 UTC,Middle School,Middle School
+2852, Elizabeth Buchholtz Building a Bungee Jump (forces and motion) (2),Elizabeth Buchholtz,11126,2533,3,2533,FALSE,2012-10-19 23:53:38 UTC,2014-07-01 17:15:27 UTC,,
+2856,Motion on a Ramp:    Physics; Earth/Space C. Nelson (13),Chuck Nelson,10383,76,2,76,TRUE,2012-10-21 00:46:36 UTC,2014-07-01 17:15:27 UTC,High School,High School
+2864,Reaction Time (18)  Tiempo de reacción (18) Sharon Padget-HS Ottumwa Ottumwa Iowa,Sharon Padget,9825,91,2,91,FALSE,2012-10-21 16:47:45 UTC,2014-07-01 17:15:27 UTC,Middle School,Middle School
+2868,Predator and prey (25) adapted by Marci Ward,Marci Ward,10339,1730,3,1730,FALSE,2012-10-22 02:51:29 UTC,2014-07-01 17:15:27 UTC,,
+2869,Building Atomic Models - LKSD,Andrea Pokrzywinski,955,334,2,334,TRUE,2012-10-22 05:17:49 UTC,2014-07-01 17:15:27 UTC,High School,High School
+2875,Motion on a Ramp - Shupe (17) (revised 2),Michael Shupe,11137,76,2,76,FALSE,2012-10-22 17:18:30 UTC,2014-07-01 17:15:27 UTC,,High School
+2882,Earthquakes and Buildings,Heather Reid,10588,20,2,20,TRUE,2012-10-23 13:16:58 UTC,2014-07-01 17:15:27 UTC,,Elementary 3-4
+2894,Launching a Satellite (11),Meg O'Mahony,12596,116,2,116,FALSE,2012-10-24 13:49:42 UTC,2014-07-01 17:15:27 UTC,,Middle School
+2895,Launching a Satellite (11),Meg O'Mahony,12596,116,2,116,FALSE,2012-10-24 13:49:43 UTC,2014-07-01 17:15:27 UTC,,Middle School
+2906,Predator and prey (26) adapted by Marci Ward  (revised),Marci Ward,10339,2868,4,2868,FALSE,2012-10-28 19:03:28 UTC,2014-07-01 17:15:27 UTC,,
+2913,Timing Reaction Response to Stimuli,Cynthia Riedel,10378,91,2,91,FALSE,2012-10-31 01:58:20 UTC,2014-07-01 17:15:27 UTC,,Middle School
+2918,"Grow, Grow, Grow Your Seed (Revised)",Ms. Hemphill,11123,2629,4,2629,FALSE,2012-11-04 16:09:24 UTC,2014-07-01 17:15:27 UTC,,
+2920,Motion down a Ramp Inquiry--LKSD,Andrea Pokrzywinski,955,1712,3,1712,TRUE,2012-11-05 02:23:48 UTC,2014-07-01 17:15:27 UTC,High School,High School
+2929,Reading Temperatures - Using Thermometers VS Temp. Probes L. Welsh  (4) Revised,Lisa Welsh,11134,2639,4,2639,FALSE,2012-11-07 01:44:50 UTC,2014-07-01 17:15:28 UTC,,
+2937,Wind Power Generation and Wind Speed --Keith,Jaymee Keith,10334,22,2,22,FALSE,2012-11-11 01:43:38 UTC,2014-07-01 17:15:28 UTC,High School,Elementary 3-4
+2946,Which hand is the warmest? Primary,Ellen Hannan,941,2922,3,2922,TRUE,2012-11-13 22:09:42 UTC,2014-07-01 17:15:28 UTC,Elementary 3-4,
+2955,Revised States of Matter (Shannon Collins) ,Shannon Collins,10377,1805,3,1805,TRUE,2012-11-16 20:24:04 UTC,2014-07-01 17:15:28 UTC,,
+2967,Energy Levels (VA Standards),Kristine Schleibaum,10598,34,2,34,FALSE,2012-11-30 03:04:46 UTC,2014-07-01 17:15:28 UTC,High School,High School
+2991,Dragon Genetics Revised (30),Anne Friederich,11140,93,2,93,TRUE,2012-12-08 21:23:56 UTC,2014-07-01 17:15:28 UTC,,Middle School
+2996,Leaf Photosynthesis (24),leslie schafer,17988,41,2,41,FALSE,2012-12-17 17:31:38 UTC,2014-07-01 17:15:28 UTC,,Middle School
+2997,Leaf Photosynthesis (24),leslie schafer,17988,41,2,41,FALSE,2012-12-17 17:31:40 UTC,2014-07-01 17:15:28 UTC,,Middle School
+3007,Temperature Versus Heat Classroom Exploration,April Robbs,10366,110,2,110,FALSE,2013-01-08 02:23:05 UTC,2014-07-01 17:15:28 UTC,High School,Middle School
+3040,Leaf Photosynthesis NEMS ,Melanie Lehman,17806,41,2,41,TRUE,2013-01-18 17:43:01 UTC,2014-07-01 17:15:28 UTC,,Middle School
+3081,Charles' Law,Allison Fitzwater,11142,37,2,37,FALSE,2013-02-11 00:17:32 UTC,2014-07-01 17:15:29 UTC,High School,High School
+3082,Boyle's Law ,Allison Fitzwater,11142,36,2,36,FALSE,2013-02-11 00:40:40 UTC,2014-07-01 17:15:29 UTC,High School,High School
+3092,"Soil, moisture and plant growth",Kathy Applebee,10597,1620,2,1620,FALSE,2013-02-12 14:05:45 UTC,2014-07-01 17:15:29 UTC,Elementary 5-6,Elementary 3-4
+3101,Motion down a Ramp Inquiry-First Run Lisa Welsh (2),Lisa Welsh,11134,2920,4,2920,TRUE,2013-02-13 23:43:45 UTC,2014-07-01 17:15:29 UTC,,High School
+3103,Earthquakes Around the World (8),Amanda Clark,10382,122,2,122,FALSE,2013-02-14 16:03:21 UTC,2014-07-01 17:15:29 UTC,Middle School,Middle School
+3113,Gravity Rules:  [Physics Review For] H.S. EARTH / SPACE   C. Nelson(13)   REVISED 2-19-13,Chuck Nelson,10383,75,2,75,FALSE,2013-02-15 18:21:05 UTC,2014-07-01 17:15:29 UTC,High School,High School
+3124,Tree of Life - Overholtzer Animals (15),Mary Overholtzer,764,94,2,94,TRUE,2013-02-16 21:27:35 UTC,2014-07-01 17:15:29 UTC,Middle School,Middle School
+3132,Lighting a Bulb (8),Angela Lensch,11119,148,2,148,FALSE,2013-02-18 00:15:27 UTC,2013-02-18 00:51:13 UTC,,Elementary 3-4
+3142,Compare and Contrast Capacitors and Batteries,April Robbs,10366,98,2,98,FALSE,2013-02-19 00:30:22 UTC,2013-02-19 00:56:55 UTC,Middle School,Middle School
+3143,Meiosis and Genetics,Camden Burton,93,92,2,92,TRUE,2013-02-19 02:25:20 UTC,2013-02-24 01:25:11 UTC,High School,Middle School
+3151,Shupe - Boyle's Law (6),Michael Shupe,11137,36,2,36,FALSE,2013-02-19 19:36:41 UTC,2013-02-19 19:39:41 UTC,,High School
+3154,What's in a Soil Sample? (Revised),Ms. Hemphill,11123,2513,3,2513,FALSE,2013-02-20 03:03:00 UTC,2013-02-20 05:10:14 UTC,,
+3156,Chemical & Physical Changes,Stephanie Basl,10595,54,2,54,TRUE,2013-02-20 14:48:55 UTC,2013-02-20 22:16:35 UTC,Middle School,High School
+3157,Respiratory Rate During Exercise (26),Cynthia Riedel,10378,39,2,39,FALSE,2013-02-20 14:50:46 UTC,2013-02-20 14:52:51 UTC,,High School
+3162,Implosion,Carolyn Staudt,11,35,2,35,FALSE,2013-02-25 13:36:17 UTC,2013-09-20 02:43:53 UTC,Middle School,High School
+3164,Moon Phases NPMS,Melanie Lehman,17806,4,2,4,TRUE,2013-02-25 15:13:43 UTC,2013-02-25 15:21:49 UTC,,Elementary 5-6
+3168,Motion down a Ramp--Keith Integrated Science (revised),Jaymee Keith,10334,1712,3,1712,TRUE,2013-02-26 04:03:22 UTC,2013-02-26 04:17:27 UTC,High School,High School
+3170,Charles' Law (2)  - Shupe,Michael Shupe,11137,3081,3,3081,FALSE,2013-02-26 15:03:15 UTC,2013-02-26 15:04:32 UTC,,High School
+3171,Charles' Law (2) - Shupe adapted from Fitzwater,Michael Shupe,11137,3081,3,3081,TRUE,2013-02-26 15:56:08 UTC,2013-02-26 16:02:51 UTC,,High School
+3172,Building a Bungee Jump (19),Stephanie Hall,10591,17,2,17,FALSE,2013-02-26 20:37:06 UTC,2013-02-26 20:40:26 UTC,Elementary 3-4,Elementary 3-4
+3184,The Moon and Tides NPMS,Melanie Lehman,17806,3164,3,3164,FALSE,2013-02-28 02:24:36 UTC,2013-02-28 03:03:44 UTC,,
+3186,Collins' Heat Conduction: What's Shaking?,Shannon Collins,10377,29,2,29,TRUE,2013-02-28 16:40:30 UTC,2013-02-28 17:08:02 UTC,,High School
+3193,Knuth - Respiratory Rate During Exercise ,Amanda Knuth,11121,39,2,39,FALSE,2013-03-02 19:44:53 UTC,2013-03-02 20:04:29 UTC,High School,High School
+3195,"Stay Cool, Dude",Patricia Woodberry,10622,2220,2,2220,FALSE,2013-03-02 22:17:53 UTC,2013-03-07 00:52:31 UTC,,
+3198,Changing Environments (20),Elizabeth Buchholtz,11126,224,2,224,FALSE,2013-03-04 20:25:11 UTC,2013-03-04 20:31:54 UTC,,Elementary 5-6
+3199,Complex Inheritance,Camden Burton,93,93,2,93,TRUE,2013-03-05 23:43:56 UTC,2014-02-21 13:55:20 UTC,High School,Middle School
+3205,Introduction to Chemical Reactions,Anne Kapral,10599,2102,4,2102,TRUE,2013-03-08 12:45:48 UTC,2013-09-20 02:43:54 UTC,High School,High School
+3239,Convection in a House      La convección en una casa (2),Sharon Padget,9825,3200,3,3200,TRUE,2013-03-11 14:38:46 UTC,2013-03-11 17:24:02 UTC,Elementary 3-4,
+3245,Boyle's Law (Schleibaum),Kristine Schleibaum,10598,36,2,36,TRUE,2013-03-14 23:03:52 UTC,2013-03-14 23:15:44 UTC,High School,High School
+3251,Predator and Prey JWeinberg,Jeanette Weinberg,10594,223,2,223,FALSE,2013-03-18 20:38:18 UTC,2013-03-18 20:42:42 UTC,Elementary 3-4,Elementary 3-4
+3253,Ideal Gas Law (Schleibaum),Kristine Schleibaum,10598,35,2,35,TRUE,2013-03-19 20:03:58 UTC,2013-09-20 02:43:55 UTC,High School,High School
+3260,Protein Structure - DNA Mutations MW ITSISU (6),Andrew Taylor,10365,52,2,52,TRUE,2013-03-28 03:13:56 UTC,2013-03-28 03:40:00 UTC,High School,High School
+3275,Electrostatics (2),Valerie Frizzle,7,78,2,78,FALSE,2013-04-13 20:03:21 UTC,2013-08-31 13:35:24 UTC,,High School
+3295,Colors of Light (16),Chris Herald,70,7,2,7,FALSE,2013-04-17 18:54:56 UTC,2013-04-17 18:58:12 UTC,Middle School,Elementary 3-4
+3300,Colors of Light (18),Katie Gosney,10604,7,2,7,TRUE,2013-04-18 19:36:02 UTC,2013-04-18 19:41:12 UTC,Elementary 5-6,Elementary 3-4
+3310,Measuring Different Colors with Light,Carolyn Staudt,11,3309,3,3309,FALSE,2013-04-23 15:23:29 UTC,2013-04-23 15:38:43 UTC,Elementary 3-4,
+3311,Magnetic Fields MD 2013,Marci Denney,507,67,2,67,TRUE,2013-04-24 15:41:49 UTC,2013-04-24 15:51:30 UTC,High School,High School
+3322,Greenhouse Effect in a Greenhouse - IWMS Science 8,Beth Richards,12781,259,3,259,TRUE,2013-05-05 14:02:54 UTC,2013-05-05 14:05:46 UTC,Middle School,Middle School
+3332,Colors of Light (20)  Marci Ward,Marci Ward,10339,7,2,7,TRUE,2013-05-05 20:35:29 UTC,2013-05-07 14:29:40 UTC,,Elementary 3-4
+3335,projectile motion,Marcia Powell,474,805,2,805,TRUE,2013-05-10 14:18:54 UTC,2013-05-10 14:48:25 UTC,,
+3336,Light waves 2013 phet,Marci Denney,507,3321,3,3321,TRUE,2013-05-10 17:14:55 UTC,2013-05-16 18:18:29 UTC,High School,
+3340,Build a Greenhouse - J.Green (14),Jim Green,11139,84,2,84,TRUE,2013-05-17 11:58:49 UTC,2013-05-17 12:40:12 UTC,,Middle School
+3373,Muscle Fatigue (Purdy),Annette Purdy,4001,1236,2,1236,FALSE,2013-06-12 18:29:36 UTC,2013-10-20 21:26:10 UTC,,Elementary 5-6
+3375,Body Temperature: Thermoregulation- Maine (8),Linda Urbas,21556,331,2,331,FALSE,2013-06-12 18:36:07 UTC,2013-06-12 18:36:07 UTC,,High School
+3383,Build a Greenhouse MD Science,Linda Urbas,21556,84,2,84,FALSE,2013-06-12 19:21:03 UTC,2013-11-05 14:08:00 UTC,,Middle School
+3402,Active Transport (18) (Purdy),Annette Purdy,4001,102,2,102,TRUE,2013-06-14 18:20:08 UTC,2014-02-13 01:56:22 UTC,High School,High School
+3416,Light Bulbs (10),Donna Musick,21569,137,2,137,FALSE,2013-06-18 17:02:12 UTC,2013-06-18 17:02:12 UTC,,Elementary 5-6
+3433,Water from the Air (8) Boyd,Denie Boyd,21571,151,2,151,FALSE,2013-06-18 17:28:26 UTC,2013-10-20 23:19:27 UTC,Elementary 3-4,Elementary 5-6
+3439,Our Solar System (15)Musick,Donna Musick,21569,521,3,521,FALSE,2013-06-18 17:56:42 UTC,2013-12-17 19:11:15 UTC,Middle School,
+3490,"Green Houses, Solar Energy and Climate Change - Shauna Russell ",Shauna Russell,21567,85,2,85,FALSE,2013-06-21 13:50:18 UTC,2013-12-29 22:13:51 UTC,High School,Middle School
+3509,Why earthworms?,Carolyn Staudt,11,2344,3,2344,TRUE,2013-06-28 01:44:59 UTC,2013-06-28 02:32:41 UTC,Middle School,Elementary 5-6
+3512,Respiratory Rate During Exercise (33),Annette Purdy,4001,39,2,39,FALSE,2013-07-03 21:03:54 UTC,2013-07-23 13:49:34 UTC,,High School
+3522,Humpty Dumpty Should Not Fall!,Shawnrica James,21724,17,2,17,TRUE,2013-07-18 12:51:00 UTC,2013-07-19 03:27:18 UTC,,Elementary 3-4
+3532,Macromolecules - (Purdy),Annette Purdy,4001,94,2,94,FALSE,2013-07-20 17:28:10 UTC,2014-02-13 00:59:35 UTC,High School,Middle School
+3538,MD_Science Introduction to Probeware,Linda Urbas,21556,2368,2,2368,FALSE,2013-07-23 14:20:42 UTC,2013-10-22 01:32:49 UTC,,
+3545,Virtual Greenhouse (Limiting Factors) (24),Patty Brown,21750,193,2,193,FALSE,2013-07-24 22:53:27 UTC,2013-10-29 06:59:41 UTC,Elementary 3-4,Elementary 3-4
+3549,Seasons: Changing Length of Daylight (3),Raeann Edwards,21759,3,2,3,TRUE,2013-07-24 22:59:58 UTC,2013-10-27 21:43:12 UTC,,Elementary 5-6
+3555,Predator and Prey for 5th grade,Rebecca Himschoot,21758,223,2,223,TRUE,2013-07-24 23:26:37 UTC,2013-10-22 16:47:54 UTC,Elementary 5-6,Elementary 3-4
+3557,Wolf Sheep Predation (16),Christina Seay,21834,44,2,44,FALSE,2013-07-25 13:31:36 UTC,2013-07-25 13:31:36 UTC,,High School
+3558,Wolf Sheep Predation (16),Christina Seay,21834,44,2,44,FALSE,2013-07-25 13:31:37 UTC,2013-07-25 13:31:37 UTC,,High School
+3568,Virtual Greenhouse (24),Patty Brown,21750,193,2,193,FALSE,2013-07-25 17:41:46 UTC,2013-07-25 17:41:46 UTC,,Elementary 3-4
+3569,Virtual Greenhouse (24),Patty Brown,21750,193,2,193,FALSE,2013-07-25 17:41:47 UTC,2013-07-25 17:41:47 UTC,,Elementary 3-4
+3574,Moon Phases with Mrs. White,Kristin White,21755,4,2,4,FALSE,2013-07-25 18:05:38 UTC,2013-10-26 23:00:53 UTC,Elementary 5-6,Elementary 5-6
+3580,Seasons: Changing Length of Daylight with Mrs. White,Kristin White,21755,3,2,3,TRUE,2013-07-25 18:26:20 UTC,2014-02-16 18:57:24 UTC,Elementary 5-6,Elementary 5-6
+3581,States of Matter Phy Sci,Megan Shaw,21756,107,2,107,TRUE,2013-07-25 18:27:47 UTC,2013-10-18 22:45:18 UTC,High School,Middle School
+3615,The Sole Purpose is to Introduce Yourself! (5),Carolyn Staudt,11,3612,3,3612,FALSE,2013-07-27 22:12:29 UTC,2013-07-27 22:25:04 UTC,,
+3618,Characteristics of an insect,Jackie Kilby,5462,984,3,984,FALSE,2013-08-05 15:42:35 UTC,2014-02-11 16:08:24 UTC,,Elementary 3-4
+3636,Waves and Position Time Graphs - Physics,Megan Shaw,21756,103,2,103,TRUE,2013-08-15 22:44:37 UTC,2013-08-15 23:07:06 UTC,High School,Middle School
+3637,Straight Line Motion and Position Time Graphs,Megan Shaw,21756,104,2,104,TRUE,2013-08-15 23:08:59 UTC,2013-08-15 23:20:24 UTC,High School,Middle School
+3640,Who's the Coolest in Class?,April Robbs,10366,214,2,214,FALSE,2013-08-17 17:50:45 UTC,2013-08-17 17:53:56 UTC,Middle School,Middle School
+3662,Meiosis (15),David Roth,22497,92,2,92,FALSE,2013-08-22 17:12:51 UTC,2013-08-22 17:12:51 UTC,,Middle School
+3663,Meiosis (15) daid,David Roth,22497,92,2,92,FALSE,2013-08-22 17:12:51 UTC,2013-08-22 17:14:18 UTC,,Middle School
+3676,Gravity Rules in the Skatepark (24),Clint Barker,22565,75,2,75,FALSE,2013-08-22 21:04:35 UTC,2013-08-22 21:04:35 UTC,,High School
+3677,Gravity Rules in the Skatepark (24),Matthew Beckham,22575,75,2,75,FALSE,2013-08-22 21:04:36 UTC,2013-08-22 21:04:36 UTC,,High School
+3678,Gravity Rules in the Skatepark (24),Matthew Beckham,22575,75,2,75,FALSE,2013-08-22 21:04:36 UTC,2013-08-22 21:04:36 UTC,,High School
+3679,Gravity Rules in the Skatepark (24),Becca Heldreth,22563,75,2,75,FALSE,2013-08-22 21:04:38 UTC,2013-08-22 21:04:38 UTC,,High School
+3681,Gravity Rules in the Skatepark (26),Deedee Anderson,22573,75,2,75,FALSE,2013-08-22 21:04:57 UTC,2013-08-22 21:04:57 UTC,,High School
+3682,Gravity Rules in the Skatepark (26),Kurt Quackenbush,22569,75,2,75,FALSE,2013-08-22 21:04:58 UTC,2013-08-22 21:04:58 UTC,,High School
+3707,Temperature of Mixing Water (52),James Taylor,22604,112,2,112,FALSE,2013-08-23 16:21:33 UTC,2013-08-23 16:21:33 UTC,,Middle School
+3708,Temperature of Mixing Water (52),SHI XUEYING,22612,112,2,112,FALSE,2013-08-23 16:21:34 UTC,2013-08-23 16:21:34 UTC,,Middle School
+3709,Temperature of Mixing Water (53),pelham flagg,22609,112,2,112,FALSE,2013-08-23 16:21:36 UTC,2013-08-23 16:21:36 UTC,,Middle School
+3710,Temperature of Mixing Water (53) Flagg,pelham flagg,22609,112,2,112,FALSE,2013-08-23 16:21:36 UTC,2013-08-23 17:32:45 UTC,,Middle School
+3716,Temperature of Mixing Water (59),dev lahiri,22611,112,2,112,FALSE,2013-08-23 16:22:26 UTC,2013-08-23 16:22:26 UTC,,Middle School
+3717,Temperature of Mixing Water (59),dev lahiri,22611,112,2,112,FALSE,2013-08-23 16:22:26 UTC,2013-08-23 16:22:26 UTC,,Middle School
+3737,Temperature of Mixing Water (70),Richard Anderson,22572,112,2,112,FALSE,2013-08-23 19:41:37 UTC,2013-08-23 19:41:37 UTC,,Middle School
+3738,Temperature of Mixing Water (70),Richard Anderson,22572,112,2,112,FALSE,2013-08-23 19:41:38 UTC,2013-08-23 19:41:38 UTC,,Middle School
+3740,Temperature of Mixing Water (71),Richard Anderson,22572,112,2,112,FALSE,2013-08-23 19:41:41 UTC,2013-08-23 19:41:41 UTC,,Middle School
+3763,Sprouting radish and bean seeds  Are They Alive? (23) ,Jackie Kilby,5462,1019,3,1019,FALSE,2013-08-29 12:44:34 UTC,2013-08-30 12:32:29 UTC,,
+3780,Exploring Density  - Is the necklace gold?,Gaby Kusko,21844,2574,2,2574,FALSE,2013-09-03 01:58:58 UTC,2013-09-20 02:44:06 UTC,Middle School,High School
+3794,Hydropower Generation (6)--Keith,Jaymee Keith,10334,1632,2,1632,FALSE,2013-09-05 00:59:54 UTC,2013-09-05 03:27:23 UTC,High School,
+3795,Solar Cell Power Generation(5),Jaymee Keith,10334,138,2,138,FALSE,2013-09-05 03:30:38 UTC,2013-09-05 03:40:43 UTC,High School,Elementary 5-6
+3803,Geothermal Energy & Heat Transfer--Keith,Jaymee Keith,10334,3794,3,3794,FALSE,2013-09-07 23:36:06 UTC,2013-09-08 06:02:05 UTC,High School,High School
+3804,Biogas Generation --Keith,Jaymee Keith,10334,3794,3,3794,FALSE,2013-09-08 21:13:49 UTC,2013-09-09 00:58:34 UTC,High School,High School
+3931,Comparing temperature with primary students,Ellen Hannan,941,1233,2,1233,TRUE,2013-10-08 22:10:30 UTC,2013-10-09 16:47:55 UTC,Elementary 3-4,
+3934,Population Balance - CB,Camden Burton,93,45,2,45,TRUE,2013-10-09 02:42:49 UTC,2013-10-09 03:27:18 UTC,High School,High School
+3959,Diffusion and Osmosis (26),Annette Purdy,4001,99,2,99,FALSE,2013-10-17 01:14:00 UTC,2014-02-13 01:47:14 UTC,High School,High School
+3976,Diffusion and Osmosis (Purdy),Annette Purdy,4001,3959,3,3959,TRUE,2013-10-18 00:25:08 UTC,2014-02-13 01:00:41 UTC,High School,High School
+3985,"Leaf Photosynthesis (34)Kilby, modifed for 7th grade",Jackie Kilby,5462,41,2,41,TRUE,2013-10-20 20:32:04 UTC,2013-10-21 23:51:30 UTC,,Middle School
+3986,Moon Phases - Bowser,Sarah Bowser,79,4,2,4,TRUE,2013-10-20 20:39:59 UTC,2013-10-20 21:05:52 UTC,Elementary 5-6,Elementary 5-6
+3988,Seasons: Changing Length of Daylight (8) - Bowser,Sarah Bowser,79,3,2,3,TRUE,2013-10-20 21:33:49 UTC,2013-10-20 21:42:12 UTC,Elementary 5-6,Elementary 5-6
+3998,Comparing temperature with primary students (3),Julie Yates,7497,3931,3,3931,FALSE,2013-10-22 05:10:24 UTC,2013-10-22 05:16:06 UTC,,Elementary 3-4
+4003,Comparing salinity of saltwater ,Ellen Hannan,941,2290,2,2290,TRUE,2013-10-22 18:31:45 UTC,2013-10-23 19:35:48 UTC,Middle School,Elementary 5-6
+4096,Water in Classroom Air (41),Deb Buckley,24512,121,2,121,TRUE,2013-10-27 19:39:22 UTC,2013-10-27 19:42:49 UTC,,Middle School
+4103,4th Grade Haines Virtual Greenhouse (29),Patty Brown,21750,193,2,193,FALSE,2013-10-29 06:38:05 UTC,2013-10-29 07:00:58 UTC,Elementary 3-4,Elementary 3-4
+4106,Baggie Chemistry  at HOPE,Gaby Kusko,21844,54,2,54,FALSE,2013-10-30 00:14:34 UTC,2013-10-30 00:16:37 UTC,,High School
+4122,Moon Phases (26),Connie Tracy,21760,4,2,4,FALSE,2013-11-03 02:43:24 UTC,2013-11-03 02:51:21 UTC,Elementary 5-6,Elementary 5-6
+4172,Measuring Reaction Time,Carol Williamson,13,91,2,91,TRUE,2013-11-18 12:55:11 UTC,2013-11-18 19:28:46 UTC,Elementary 5-6,Middle School
+4192,Baggie Chemistry Phy Science,Megan Shaw,21756,54,2,54,TRUE,2013-11-25 22:51:57 UTC,2014-02-16 21:45:59 UTC,High School,High School
+4379,MIddle School  earthworm acitivity,Jackie Kilby,5462,810,2,810,TRUE,2014-02-13 16:56:21 UTC,2014-02-14 13:49:57 UTC,,Elementary 5-6
+4382,Body Temperature for primary age students,Julie Yates,7496,1439,3,1439,FALSE,2014-02-14 00:39:40 UTC,2014-02-14 00:51:52 UTC,,Middle School
+4401,Solar Cell_MD Science,Linda Urbas,21556,138,2,138,TRUE,2014-02-16 21:35:24 UTC,2014-02-17 16:51:45 UTC,,Elementary 5-6
+4402,Moon Phases (29),Brandon Johnson,27772,4,2,4,FALSE,2014-02-17 01:56:11 UTC,2014-02-17 01:59:01 UTC,Elementary 5-6,Elementary 5-6
+4406,Reflection and Transmission of Light (9),Raeann Edwards,21759,8,2,8,TRUE,2014-02-17 23:04:37 UTC,2014-02-18 00:21:46 UTC,,Elementary 3-4
+4452,Genes and Appearance (47),Sheilla Coplin,27778,93,2,93,FALSE,2014-03-04 20:04:14 UTC,2014-03-04 20:11:07 UTC,,Middle School
+4477,Voltage in a Simple Circuit--Keith,Jaymee Keith,10334,77,2,77,TRUE,2014-03-18 21:24:15 UTC,2014-03-18 21:59:28 UTC,High School,High School
+4478,Current in a Simple Circuit--Keith,Jaymee Keith,10334,79,2,79,TRUE,2014-03-18 22:16:10 UTC,2014-03-18 22:25:30 UTC,High School,High School
+4557,Greenhouse Effect in a Greenhouse - IWMS Science 14,Diane Backs,31363,3322,4,3322,TRUE,2014-04-28 02:52:24 UTC,2014-04-28 03:17:31 UTC,,Middle School
+4561,Greenhouse Effect in a Greenhouse - Backs,Diane Backs,31363,259,3,259,FALSE,2014-04-28 03:07:51 UTC,2014-04-28 03:09:43 UTC,,Middle School
+4565,Life Cycle of the Monarch Butterfly,Carolyn Staudt,11,1051,3,1051,FALSE,2014-05-04 23:40:04 UTC,2014-05-04 23:59:04 UTC,Middle School,Elementary 3-4
+4603,Reaction Rates - Revised,Stephanie Playton,10227,60,2,60,TRUE,2014-06-13 17:36:14 UTC,2014-06-13 18:06:56 UTC,,High School
+4690,Protein Structure - From DNA to Proteins (22),JUNIPER PASPULA,265,51,2,51,FALSE,2014-07-23 14:03:37 UTC,2014-07-24 15:07:58 UTC,,High School

@@ -2,7 +2,6 @@
 STDOUT.sync = true
 
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
-
 require 'csv'
 
 USED_THRESHOLD = 5

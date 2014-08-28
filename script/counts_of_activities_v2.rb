@@ -11,33 +11,34 @@ f = File.open(fname, "w")
 
 puts "\nGathering numbers of activities copied or created from scratch."
 
-def is_exemplar?(act)
+def is_exemplar?(act) 
   if act.respond_to?('is_exemplar?')
     return act.is_exemplar? && act.publication_status == "published" && act.grade_levels.size > 0 && act.subject_areas.size > 0 && act.units.size > 0
-  elsif act.respond_to?('public?')
-    return act.public? && act.user_id == 13
+  #elsif act.respond_to?('public?') # there is no public in the new portal
+  #  return act.public? && act.user_id == 13
   else
-    raise "unknown activity model!"
+    raise "unknown activity model! #{act.inspect}"
   end
 end
 
 def published?(act)
   if act.respond_to?('publication_status')
     return act.publication_status == "published"
-  elsif act.respond_to?('public?')
-    return act.public?
+  #elsif act.respond_to?('public?') #there is no public in the new portal
+  #  return act.public?
   else
-    raise "unknown activity model!"
+    raise "unknown activity model! #{act.inspect}"
   end
 end
 
 def used?(a)
   if a.respond_to?('offerings')
     return a.offerings.map {|o| o.learners.select{|l| l.bundle_logger.bundle_contents.size > 0 }.size }.sum > 5
-  elsif a.respond_to?('learners')
-    return a.learners.select {|l| l.learner_sessions.count > 0 }.size > 5
+  #elsif a.respond_to?('learners') # there is no learners in the new portal
+  #  return a.learners.select {|l| l.learner_sessions.count > 0 }.size > 5
+  else
+    return false
   end
-  return false
 end
 
 def itsi_cohort?(a)
@@ -46,7 +47,7 @@ end
 
 def timestamp(a)
   return a.created_at if a.respond_to?('created_at')
-  return a.versions.first.updated_at if a.respond_to?('versions')
+  #return a.versions.first.updated_at if a.respond_to?('versions') # I can remove this line, in the new portal we don't version activities anymore
   return nil
 end
 
@@ -77,10 +78,13 @@ def process_activities(acts)
     next if a.investigation
     #next if is_exemplar?(a)
     type = :unknown
-    if is_exemplar?(a)
+    if a.id == 1 || a.nil?
+      type = :template
+    elsif is_exemplar?(a)
       type = :exemplar
-    elsif a.respond_to?('original') || a.respond_to?('parent')
-      orig = a.respond_to?('original') ? a.original : a.parent
+    elsif a.respond_to?('original') #|| a.respond_to?('parent')
+      #orig = a.respond_to?('original') ? a.original : a.parent # original
+      orig = a.original
       if orig.nil? || orig.id == 1
         type = :original
       elsif is_exemplar?(orig)
@@ -115,7 +119,8 @@ puts "\n"
   v[:subs].keys.sort.each do |sk|
     sv = v[:subs][sk]
     f.puts "  #{sk}:      #{sv}"
-    if (k == :exemplar_copy or k == :other_teacher_copy) and (sk == "published_unused_general" or sk == "published_unused_itsisu" or sk == "published_used_general" or sk == "published_used_itsisu")
+    if (k == :exemplar_copy or k == :other_teacher_copy) and sk.start_with?('published')
+#                                                              (sk == "published_unused_general" or sk == "published_unused_itsisu" or sk == "published_used_general" or sk == "published_used_itsisu")
       @portal += sv
     end 
     

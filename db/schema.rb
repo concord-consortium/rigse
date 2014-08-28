@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140606180557) do
+ActiveRecord::Schema.define(:version => 20140711191058) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -48,25 +48,22 @@ ActiveRecord::Schema.define(:version => 20140606180557) do
     t.string   "url"
     t.text     "description"
     t.text     "states_and_provinces"
-    t.integer  "maven_jnlp_server_id"
-    t.integer  "maven_jnlp_family_id"
-    t.string   "jnlp_version_str"
     t.boolean  "snapshot_enabled"
     t.boolean  "enable_default_users"
-    t.string   "uuid",                           :limit => 36
+    t.string   "uuid",                                     :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "home_page_content"
-    t.boolean  "use_student_security_questions",               :default => false
+    t.boolean  "use_student_security_questions",                         :default => false
     t.boolean  "allow_default_class"
-    t.boolean  "enable_grade_levels",                          :default => false
+    t.boolean  "enable_grade_levels",                                    :default => false
     t.text     "custom_css"
-    t.boolean  "use_bitmap_snapshots",                         :default => false
-    t.boolean  "teachers_can_author",                          :default => true
-    t.boolean  "allow_adhoc_schools",                          :default => false
-    t.boolean  "use_periodic_bundle_uploading",                :default => false
+    t.boolean  "use_bitmap_snapshots",                                   :default => false
+    t.boolean  "teachers_can_author",                                    :default => true
+    t.boolean  "allow_adhoc_schools",                                    :default => false
     t.string   "jnlp_cdn_hostname"
-    t.integer  "pub_interval",                                 :default => 10
+    t.boolean  "use_periodic_bundle_uploading",                          :default => false
+    t.integer  "pub_interval",                                           :default => 10
     t.text     "interactive_snapshot_instructions"
     t.text     "digital_microscope_snapshot_instructions"
     t.string   "jnlp_url"
@@ -169,7 +166,7 @@ ActiveRecord::Schema.define(:version => 20140606180557) do
   end
 
   create_table "dataservice_blobs", :force => true do |t|
-    t.binary   "content",           :limit => 16777215
+    t.binary   "content",                    :limit => 16777215
     t.string   "token"
     t.integer  "bundle_content_id"
     t.datetime "created_at"
@@ -502,6 +499,8 @@ ActiveRecord::Schema.define(:version => 20140606180557) do
     t.integer  "data_table_id"
     t.boolean  "is_digital_display",                       :default => false
     t.integer  "dd_font_size"
+    t.string   "prediction_interactive_url"
+    t.string   "sensor_interactive_url"
   end
 
   add_index "embeddable_data_collectors", ["is_prototype"], :name => "index_embeddable_data_collectors_on_is_prototype"
@@ -1755,7 +1754,7 @@ ActiveRecord::Schema.define(:version => 20140606180557) do
     t.datetime "updated_at"
   end
 
-  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index", :length => {"member_id"=>nil, "member_type"=>"15"}
+  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index", :length => {"member_type"=>"15", "member_id"=>nil}
   add_index "portal_school_memberships", ["school_id"], :name => "index_portal_school_memberships_on_school_id"
 
   create_table "portal_schools", :force => true do |t|
@@ -2207,7 +2206,7 @@ ActiveRecord::Schema.define(:version => 20140606180557) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"name"=>"15", "scope_type"=>"15", "scope_id"=>nil}
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_type"=>"15", "name"=>"15", "scope_id"=>nil}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|
@@ -2230,7 +2229,7 @@ ActiveRecord::Schema.define(:version => 20140606180557) do
   end
 
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context", :length => {"context"=>"15", "taggable_id"=>nil, "taggable_type"=>"15"}
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context", :length => {"taggable_type"=>"15", "taggable_id"=>nil, "context"=>"15"}
 
   create_table "tags", :force => true do |t|
     t.string "name"
@@ -2245,6 +2244,8 @@ ActiveRecord::Schema.define(:version => 20140606180557) do
     t.datetime "updated_at"
     t.integer  "user_id"
   end
+
+  add_index "teacher_notes", ["authored_entity_id", "authored_entity_type"], :name => "idx_teacher_notes_authored_entity_id_authored_entity_type"
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40

@@ -92,11 +92,6 @@ def score(activity)
   return score
 end
 
-def level_changed?(activity)
-  
-end
-
-
 @i = 0
 def print_progress
   print "." if @i % 10 == 0 && @i != 0

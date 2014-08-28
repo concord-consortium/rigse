@@ -1,0 +1,36 @@
+exemplar:           155
+  published_unused_general:      22
+  published_unused_itsisu:      1
+  published_used_general:      131
+  published_used_itsisu:      1
+exemplar_copy:           2824
+  published_unused_general:      44
+  published_unused_itsisu:      155
+  published_used_general:      6
+  published_used_itsisu:      83
+  unpublished_unused_general:      710
+  unpublished_unused_itsisu:      1747
+  unpublished_used_general:      5
+  unpublished_used_itsisu:      74
+original:           867
+  published_unused_itsisu:      38
+  published_used_itsisu:      22
+  unpublished_unused_general:      131
+  unpublished_unused_itsisu:      647
+  unpublished_used_general:      2
+  unpublished_used_itsisu:      27
+other_teacher_copy:           860
+  published_unused_general:      3
+  published_unused_itsisu:      33
+  published_used_general:      1
+  published_used_itsisu:      20
+  unpublished_unused_general:      81
+  unpublished_unused_itsisu:      685
+  unpublished_used_general:      3
+  unpublished_used_itsisu:      34
+template:           1
+  unpublished_unused_general:      1
+
+number of other activities available online on portal: 345
+
+total number of activities: 4707
