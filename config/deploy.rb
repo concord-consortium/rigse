@@ -666,6 +666,12 @@ namespace :solr do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake sunspot:solr:stop ;true"
   end
 
+  desc "restart solr"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    stop
+    start
+  end
+
   desc "stop solr, remove data, start solr, reindex all records"
   task :hard_reindex, :roles => :app do
     stop
@@ -697,3 +703,4 @@ set(:delayed_job_args) { "--prefix '#{deploy_to}'" }
 after "deploy:stop",    "delayed_job:stop"
 after "deploy:start",   "delayed_job:start"
 after "deploy:restart", "delayed_job:restart"
+after "deploy:restart", "solr:restart"
