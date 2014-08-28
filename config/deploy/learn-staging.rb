@@ -6,4 +6,4 @@ server domain, :app, :web
 role :db, domain, :primary => true
 set :branch, "master"
 
-default_environment['PORTAL_FEATURES'] = "geniverse_wordpress geniverse_remote_auth"
+default_environment['PORTAL_FEATURES'] = "geniverse_remote_auth genigames_data"
