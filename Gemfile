@@ -70,7 +70,7 @@ source "http://rubygems.org"
   gem 'in_place_editing',      :git => 'git://github.com/concord-consortium/in_place_editing.git'
 
   gem 'dynamic_form',         "~> 1.1.4"
-  gem 'json',                 "~> 1.6.3"
+  gem 'json',                 "~> 1.7.6"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
   # this is because of the removed RAILS_ROOT constant
   # gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
@@ -124,6 +124,10 @@ end
 group :geniverse_remote_auth do
   gem "cc_portal_remote_auth", :git => "git://github.com/concord-consortium/cc_portal_remote_auth"
   # gem "cc_portal_remote_auth", :path => "../cc_portal_remote_auth"
+end
+
+group :genigames_data do
+  gem 'genigames_connector',  '0.0.4', :git => 'git://github.com/concord-consortium/genigames-connector'
 end
 
 group :development do

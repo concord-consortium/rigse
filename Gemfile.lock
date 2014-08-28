@@ -33,6 +33,15 @@ GIT
       sass (>= 3.2)
 
 GIT
+  remote: git://github.com/concord-consortium/genigames-connector
+  revision: 2df4a3e685b568edc11fe3f062f0b16113a286f4
+  specs:
+    genigames_connector (0.0.4)
+      haml (~> 3.1.4)
+      json (~> 1.7.6)
+      rails (~> 3.2.11)
+
+GIT
   remote: git://github.com/concord-consortium/haml.git
   revision: e428066e86e19f71bf9230e1fdc1a3ecf7c61447
   branch: xml-mime-type-and-ie8-keycode-fix
@@ -261,7 +270,7 @@ GEM
     jnlp (0.7.3)
       nokogiri (>= 1.4.4, <= 1.5)
     journey (1.0.4)
-    json (1.6.7)
+    json (1.7.7)
     launchy (2.0.5)
       addressable (~> 2.2.6)
     libv8 (3.16.14.3)
@@ -518,6 +527,7 @@ DEPENDENCIES
   fakeweb (~> 1.3)
   ffi-ncurses (~> 0.3.3)
   font-awesome-sass
+  genigames_connector (= 0.0.4)!
   grit (~> 2.4)
   guard-cucumber
   guard-rspec
@@ -531,7 +541,7 @@ DEPENDENCIES
   interactive_editor
   jnlp (~> 0.7.3)
   jruby-openssl (~> 0.7.4)
-  json (~> 1.6.3)
+  json (~> 1.7.6)
   launchy (~> 2.0.5)
   mysql2 (~> 0.3.15)
   net-sftp (~> 2.0)
