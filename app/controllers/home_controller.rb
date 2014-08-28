@@ -10,11 +10,7 @@ class HomeController < ApplicationController
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
    if current_visitor.has_role? "guest"
-      @materials = [ 
-        Investigation.published.where(:is_featured => true),
-        ExternalActivity.published.where(:is_featured => true),
-        Activity.investigation.published.where(:is_featured => true) 
-      ]
+      load_featured_materials
     end
   end
   
@@ -178,11 +174,20 @@ class HomeController < ApplicationController
   def preview_home_page
     @preview_home_page_content = true
     @wide_content_layout = true
-    
+    load_featured_materials
     response.headers["X-XSS-Protection"] = "0"
     
     @emulate_anonymous_user = true
     @home_page_preview_content = params[:home_page_preview_content]
+  end
+
+  protected
+  def load_featured_materials
+    @materials = [ 
+        Investigation.published.where(:is_featured => true),
+        ExternalActivity.published.where(:is_featured => true),
+        Activity.investigation.published.where(:is_featured => true) 
+    ]
   end
   
 end
