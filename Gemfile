@@ -63,9 +63,11 @@ source "http://rubygems.org"
            :branch => 'asset-pipeline-only'
   gem 'default_value_for',    "~> 2.0.1"
   gem 'exception_notification', "~> 2.5.2"
-  gem 'prototype-rails'
-  # switch to willbryant inorder to pick up some 3.1 necessary changes
-  gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/willbryant/prototype_legacy_helper.git'
+
+  # This gem now contains the prototype_legacy view helpers, and the prototype helpers.
+  # The repo name should probably be changed to prototype-rails ?
+  gem 'prototype-rails', :git => 'git://github.com/concord-consortium/prototype_legacy_helper.git'
+
   # gem "in_place_editing",     "~> 1.2.0"
   gem 'in_place_editing',      :git => 'git://github.com/concord-consortium/in_place_editing.git'
 
