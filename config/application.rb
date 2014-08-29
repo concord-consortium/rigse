@@ -100,6 +100,23 @@ module RailsPortal
         end
     end
 
+    # Set up CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".
+
+    # If CORS is allowed, then by default, we will allow CORS requests only from the origin
+    # `*.concord.org`. If we want to specify something else, use the environment variable
+    # CORS_ORIGINS, specifying multiple origins: CORS_ORIGINS="x.concord.org y.z.example.com".
+
+    # We can also set which resources we allow with the CORS_RESOURCES environment variable.
+    # By default, this is '*'
+    if ENV['PORTAL_FEATURES'] && ENV['PORTAL_FEATURES'].include?("allow_cors")
+      config.middleware.use Rack::Cors do
+        allow do
+          origins ENV['CORS_ORIGINS'] ? ENV['CORS_ORIGINS'].split(" ") : /^https?:\/\/.*\.concord.org/
+          resource ENV['CORS_RESOURCES'] || '*', headers: :any, methods: [:get, :post, :options], credentials: true
+        end
+      end
+    end
+
   end
   
   # ANONYMOUS_USER = User.find_by_login('anonymous')

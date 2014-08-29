@@ -132,6 +132,10 @@ group :genigames_data do
   gem 'genigames_connector',  '0.0.4', :git => 'git://github.com/concord-consortium/genigames-connector'
 end
 
+group :allow_cors do
+  gem 'rack-cors', :require => 'rack/cors'
+end
+
 group :development do
   gem "rake",                 "~> 0.9.2"
   gem "highline"
