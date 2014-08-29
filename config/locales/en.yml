@@ -106,24 +106,12 @@ en:
   investigation: investigation
   activerecord:
     models:
-      Investigation: InvestigationXX
-  will_paginate:
-    investigation:
-      page_entries_info:
-        single_page:
-          zero: "No investigations found"
-          one: "Showing 1 investigation"
-          other: "Showing all %{count} investigations"
-        single_page_html:
-          zero: "No investigations found"
-          one: "Showing 1 investigation"
-          other: "Showing all %{count} investigations"
-        multi_page: "Displaying investigations %{from} - %{to} of %{count} in total"
-        multi_page_html: "Displaying investigations %{from} - %{to} of %{count} in total"
+      investigation: Investigation
+
 'en-RITES':
   activerecord:
     models:
-      Investigation: Investigation
+      investigation: Investigation
   investigation: investigation
   will_paginate:
     investigation:
