@@ -949,6 +949,24 @@ in the Devise mailers, so you don't need to worry about editing them.
 
 ### Database YAML
 
+## Enabling features via environment variables
+
+Certain features of the portal are controlled via environment variables.
+
+The `PORTAL_FEATURES` environment variable can take a string of the form "feature1 feature2" to
+include the following features:
+
+* `geniverse_remote_auth`: Remote authentication
+* `allow_cors`: Allow CORS requests (see below)
+* `genigames_data`: Genigames-related student sata saving
+* `geniverse_wordpress`: Geniverse-related Wordpress connection
+
+If CORS is enable, by default it will allow any request from '*', to any route, but can
+be controlled by two additional environment variables:
+
+* `CORS_ORIGINS="x.example.com y.z.example.org"`: Sets the allowed CORS origins to a specific whitelist
+* `CORS_RESOURCES="/xyz"`: Sets the allowed CORS resources to a specific route
+
 
 ## Technical debt.
 
