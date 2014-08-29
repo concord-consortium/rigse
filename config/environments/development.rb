@@ -38,6 +38,9 @@ RailsPortal::Application.configure do
   config.i18n.fallbacks = true
 
   # split apart assets to make debugging easier
-  # config.assets.debug = true
+  # This slows things down, but its also handy for x-ray
+  # https://github.com/brentd/xray-rails 
+  # Comment out locally if you need speed.
+  config.assets.debug = true
 end
 
