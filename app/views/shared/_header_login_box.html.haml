@@ -14,8 +14,11 @@
             %td.password-box
               = f.password_field :password,:id=>'header_password',:class=>'text'
           %tr.third-row
-            %td
-            %td
-              =link_to 'Forgot login?',forgot_password_path, :id=>"link_forgot_password"
-              = f.submit "GO", :id=>"LoginSubmitButtonHeader"
+            %td{colspan: "2"}
+              %span.segmented
+                =link_to 'Forgot login?',forgot_password_path, :id=>"link_forgot_password"
+              %span.segmented
+                =link_to 'Sign Up', home_path
+              %span.segmented.last
+                = f.submit "GO", :id=>"LoginSubmitButtonHeader"
       .clear_both

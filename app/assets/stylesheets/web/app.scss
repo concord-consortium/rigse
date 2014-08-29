@@ -1603,12 +1603,15 @@ div.atm
       }
     }
 
-    .login-links{
-      position: relative;
-      padding-top: 5px;
+    .segmented {
+      padding: 0.25em 0.5em;
+      margin-right: 0.5em;
+      border-right: 1px solid #479492;
     	text-align: right;
-      a#link_forgot_password{
-        position: relative;
+      &.last {
+        padding-right: 0px;
+        margin-right: 0px;
+        border-right: none;
       }
     }
   }
