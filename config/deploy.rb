@@ -266,7 +266,8 @@ namespace :deploy do
       ln -nfs #{shared_path}/sis_import_data #{release_path}/sis_import_data &&
       ln -nfs #{shared_path}/system #{release_path}/public/system &&
       ln -nfs #{shared_path}/solr/data #{release_path}/solr/data &&
-      ln -nfs #{shared_path}/solr/pids #{release_path}/solr/pids
+      ln -nfs #{shared_path}/solr/pids #{release_path}/solr/pids &&
+      ln -nfs #{shared_path}/config/app_environment_variables.rb #{release_path}/config/app_environment_variables.rb
     CMD
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"

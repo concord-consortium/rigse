@@ -108,3 +108,4 @@ padlet.yml
 solr/data
 solr/pids
 log
+app_environment_variables.rb
