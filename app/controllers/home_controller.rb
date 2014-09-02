@@ -9,6 +9,7 @@ class HomeController < ApplicationController
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
+   @hide_signup_link = true
    if current_visitor.has_role? "guest"
       load_featured_materials
     end
