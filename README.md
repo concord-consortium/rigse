@@ -961,7 +961,7 @@ include the following features:
 * `genigames_data`: Genigames-related student sata saving
 * `geniverse_wordpress`: Geniverse-related Wordpress connection
 
-If CORS is enable, by default it will allow any request from '*', to any route, but can
+If CORS is enable, by default it will allow any request from '*.concord.org', to any route, but can
 be controlled by two additional environment variables:
 
 * `CORS_ORIGINS="x.example.com y.z.example.org"`: Sets the allowed CORS origins to a specific whitelist
