@@ -471,6 +471,23 @@ describe ActivityRuntimeAPI do
         result.activities[0].name.should == sequence_hash['activities'][0]['name']
         result.activities[1].name.should == sequence_hash['activities'][1]['name']
       end
+
+      describe 'the report_embeddable_filters' do
+        let(:offering)    { mock_model(Portal::Offering)  }
+        let(:offerings)   { [offering] }
+        let(:mock_filter) { double()   }
+        before(:each) do
+          Investigation.any_instance.stub(:offerings).and_return(offerings)
+          Activity.any_instance.stub(:offerings).and_return(offerings)
+          offering.stub!(:report_embeddable_filter).and_return(mock_filter)
+        end
+       it 'should reset the filters' do
+          existing_sequence
+          mock_filter.should_receive(:clear)
+          result = ActivityRuntimeAPI.update_sequence(sequence_hash)
+          existing_sequence.template.offerings.should == offerings
+        end
+      end
     end
   end
 end

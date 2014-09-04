@@ -26,6 +26,11 @@ class Report::EmbeddableFilter < ActiveRecord::Base
     @embeddables_internal = array
   end
   
+  def clear
+    self.update_attribute(:embeddables, [])
+    @embeddables_internal = nil
+  end
+
   def reload
     @embeddables_internal = nil
     super

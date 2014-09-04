@@ -116,6 +116,7 @@ class ActivityRuntimeAPI
     mc_cache.each_value { |v| v.destroy }
     or_cache.each_value { |v| v.destroy }
     iq_cache.each_value { |v| v.destroy }
+    remove_report_embeddable_filters(external_activity)
     return external_activity
   end
 
@@ -218,6 +219,7 @@ class ActivityRuntimeAPI
     iq_cache.each_value { |v| v.destroy }
     activity_cache.each_value { |v| v.destroy }
 
+    remove_report_embeddable_filters(external_activity)
     external_activity.reload # e.g. updates activities list in case of need
     return external_activity
   end
@@ -382,4 +384,11 @@ class ActivityRuntimeAPI
     mc.choices = new_choice_set
     mc.save
   end
+
+  def self.remove_report_embeddable_filters(external_activity)
+    template = external_activity.template
+    filters = template.offerings.map { |offering| offering.report_embeddable_filter }.compact
+    filters.each { |filter| filter.clear }
+  end
 end
+  
