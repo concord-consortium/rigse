@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140825183216) do
+ActiveRecord::Schema.define(:version => 20140908150149) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -970,6 +970,22 @@ ActiveRecord::Schema.define(:version => 20140825183216) do
 
   add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
 
+  create_table "portal_countries", :force => true do |t|
+    t.string   "name"
+    t.string   "formal_name"
+    t.string   "capital"
+    t.string   "two_letter",   :limit => 2
+    t.string   "three_letter", :limit => 3
+    t.string   "tld"
+    t.integer  "iso_id"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "portal_countries", ["iso_id"], :name => "index_portal_countries_on_iso_id"
+  add_index "portal_countries", ["name"], :name => "index_portal_countries_on_name"
+  add_index "portal_countries", ["two_letter"], :name => "index_portal_countries_on_two_letter"
+
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
     t.string   "name"
@@ -1774,6 +1790,7 @@ ActiveRecord::Schema.define(:version => 20140825183216) do
     t.string   "state",          :limit => 2
     t.string   "zipcode",        :limit => 5
     t.string   "ncessch",        :limit => 12
+    t.integer  "country_id"
   end
 
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"

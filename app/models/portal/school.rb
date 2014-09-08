@@ -6,6 +6,7 @@ class Portal::School < ActiveRecord::Base
 
   belongs_to :district, :class_name => "Portal::District", :foreign_key => "district_id"
   belongs_to :nces_school, :class_name => "Portal::Nces06School", :foreign_key => "nces_school_id"
+  belongs_to :country, :class_name => "Portal::Country", :foreign_key => "country_id"
 
   has_many :courses, :dependent => :destroy, :class_name => "Portal::Course", :foreign_key => "school_id"
   has_many :semesters, :dependent => :destroy, :class_name => "Portal::Semester", :foreign_key => "school_id"
