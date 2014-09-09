@@ -3,8 +3,6 @@
   class SignupForm
     constructor: (@selector) ->
       @$form = $(@selector)
-      @accountType = null
-      @unknownSchool = false
 
       @setupSelectBoxes()
       @setupSecurityQuestions()
@@ -32,28 +30,40 @@
         @showErrors password_confirmation: 'Passwords must match'
         valid = false
 
+      if !(@isTeacher() || @isStudent())
+        @showErrors 'account_type': 'Select account type'
+        valid = false
+
       return valid
 
-    processTeacherErrors: (errors) ->
+    prcessSchoolErrors: (errors) ->
       # Note that if field is hidden, it means that user never selected
       # previous field in state - district - school sequence.
-      if errors.school_id && @field('district_id').hasClass 'hidden'
+      if $('#custom-school').hasClass 'hidden'
+        if errors.school_name
+          errors.school_id = "Please select a school"
+          delete errors.school_name
+          delete errors.city
+          delete errors.province
+          delete errors.state
+      else if  @field('state').hasClass 'hidden'
+        # errors.city = 'Cant be blank'  These will come  from the serivce response.
+        # errors.province = 'Cant be blank'
+        # errors.school_name = 'Cant be blank'
+      else if @field('district_id').hasClass 'hidden'
         errors.state = 'Please select a state'
         delete errors.school_id
-      else if  errors.school_id && @field('school_id').hasClass 'hidden'
+      else if  @field('school_id').hasClass 'hidden'
         errors.district_id = 'Please select a district'
         delete errors.school_id
 
-    serializeAndSubmit: ->
-      if @isStudent()
-        url = API_V1.STUDENTS
-      else
-        url = API_V1.TEACHERS
+
+    serializeAndSubmit: (url)->
+      @clearErrors()
 
       # wait_message.js
       @el('.submit-form').prop 'disabled', true
       startWaiting 'Please wait while your account is created'
-
 
       $.ajax(
         type: 'post'
@@ -69,7 +79,7 @@
         try
           errors = JSON.parse(jqXHR.responseText).message
         catch e
-          console.log 'Unknown error during sing up'
+          console.log 'Unknown error during sign up'
         finally
           unless typeof errors == 'object'
             errors = 'unknown-error': 'We are sorry, something went wrong. Please reload the page and try again.'
@@ -81,13 +91,13 @@
 
     toJSON: ->
       data = @$form.serializeObject()
-      delete data.school_name unless @unknownSchool
       JSON.stringify(data)
 
     showErrors: (errors, maxToShow=3) ->
-      @clearErrors()
-      @processTeacherErrors(errors) if @isTeacher()
+      
       errorCount = 0
+      @prcessSchoolErrors(errors)
+      debugger
       dispError = ($el, msg) =>
         $el.addClass 'error-field'
         $el.prepend "<div class=\"error-message\">#{msg}</div>"
@@ -107,7 +117,7 @@
           errorCount = errorCount + 1
           dispError $f.parent(), error
 
-      if errors['unknown-error']
+      if errors && errors['unknown-error']
         dispError @el('.unknown-error'), errors['unknown-error']
 
     clearErrors: ->
@@ -128,70 +138,130 @@
         {val: t, text: t} for t in data
 
     setupSchoolSelect: ->
+      country_id = @field('country_id')
       state = @field('state')
       district_id = @field('district_id')
       school_id = @field('school_id')
 
-      state.getSelectOptions API_V1.STATES, (data) ->
-        data.unshift undefined # we need an empty option for placeholder
-        {val: s, text: s} for s in data
+      country_id.getSelectOptions API_V1.COUNTRIES, (data) ->
+        {val: c.id, text: c.name} for c in data
 
-      state.on 'change', =>
-        return if state.val() == ''
-        district_id.getSelectOptions API_V1.DISTRICTS + "?state=#{state.val()}", (data) ->
-          data.unshift {} # we need an empty option for placeholder
-          {val: d.id, text: d.name} for d in data
-        , ->
-          district_id.removeClass 'hidden'
+      country_id.on 'change', =>
+        @clearErrors()
+        @hideSchoolPicker()
+        @hideCustomSchool()
+        district_id.addClass 'hidden'
+        state.addClass 'hidden'
 
-      district_id.on 'change', =>
-        return if district_id.val() == ''
-        school_id.getSelectOptions API_V1.SCHOOLS + "?district_id=#{district_id.val()}", (data) ->
-          data.unshift {} # we need an empty option for placeholder
-          {val: s.id, text: s.name} for s in data
-        , =>
-          school_id.removeClass 'hidden'
-          @el('#custom-name').removeClass 'hidden'
+        if country_id.val() == API_V1.USA_ID 
+          @hideInternational()
+          state.getSelectOptions API_V1.STATES + "?country=#{country_id.val()}", (data) ->
+            data.unshift undefined # we need an empty option for placeholder
+            {val: s, text: s} for s in data
+          , ->
+            state.removeClass 'hidden'
+
+          state.on 'change', =>
+            return if state.val() == ''
+            district_id.getSelectOptions API_V1.DISTRICTS + "?state=#{state.val()}", (data) ->
+              data.unshift {} # we need an empty option for placeholder
+              {val: d.id, text: d.name} for d in data
+            , =>
+              district_id.removeClass 'hidden'
+
+          district_id.on 'change', =>
+            return if district_id.val() == ''
+            school_id.getSelectOptions API_V1.SCHOOLS + "?district_id=#{district_id.val()}", (data) ->
+              data.unshift {} # we need an empty option for placeholder
+              {val: s.id, text: s.name} for s in data
+            , =>
+              @showSchoolPicker()
+        else
+          @showInternational()
+          school_id.getSelectOptions API_V1.SCHOOLS + "?country_id=#{country_id.val()}", (data) ->
+            data.unshift {} # we need an empty option for placeholder
+            {val: s.id, text: s.name} for s in data
+          , =>
+            @showSchoolPicker()
+
+    showInternational: ->
+      $('.intl-only').removeClass 'hidden'
+    
+    hideInternational: ->
+      $('.intl-only').addClass 'hidden'
+
+    showDomestic: ->
+      $('.domestic-only').removeClass 'hidden'
+    
+    hideDomestic: ->
+      $('domestic-only').addClass 'hidden'
 
     setupNewSchoolLinks: ->
-      @el('#custom-name, #no-custom-name').on 'click', =>
-        @switchSchoolSelect()
+      @el('#cant-find-school').on 'click', =>
+        @showCustomSchool()
+      @el('#back-to-list').on 'click', =>
+        @showSchoolPicker()
+
+    accountType: ->
+      $("input[name=account_type]:checked").val()
+    
+    isStudent: ->
+      @accountType() == 'student'
+
+    isTeacher: ->
+      @accountType() == 'teacher'
 
     setupFormButtons: ->
       @el('#continue-registration').on 'click', (e) =>
         e.preventDefault()
         @clearErrors()
         return unless @validateBasicFields()
+        if @isStudent()
+          @showStudentForm()
+        else if @isTeacher()
+          @showTeacherForm()
+
+    showStudentForm: ->
         @el('#common-fieldset').addClass 'hidden'
+        @el('#student-fieldset').removeClass 'hidden'
+        @armSubmitHandler(API_V1.STUDENTS)
 
-        if @el('#student_account').is(':checked')
-          @el('#student-fieldset').removeClass 'hidden'
-          @accountType = 'student'
-        else
-          @el('#teacher-fieldset').removeClass 'hidden'
-          @accountType = 'teacher'
+    showTeacherForm: ->
+        @el('#common-fieldset').addClass 'hidden'
+        @el('#teacher-fieldset').removeClass 'hidden'
+        @armSubmitHandler(API_V1.TEACHERS)
 
+    armSubmitHandler: (url) ->
       @el('.submit-form').on 'click', (e) =>
         e.preventDefault()
-        @serializeAndSubmit()
+        @serializeAndSubmit(url)
 
-    isStudent: ->
-      @accountType == 'student'
-
-    isTeacher: ->
-      @accountType == 'teacher'
-
-    switchSchoolSelect: ->
-      @field('school_name').toggleClass 'hidden'
-      @field('school_id').toggleClass 'hidden'
-      @el('#no-custom-name').toggleClass 'hidden'
-      @el('#custom-name').toggleClass 'hidden'
+    clearSchoolValues: ->
       @field('school_id').select2 'val', ''
       @field('school_name').val ''
+
+    clearSchoolErrors: ->
       @clearFieldErrors 'school_id'
       @clearFieldErrors 'school_name'
 
-      @unknownSchool = !@unknownSchool
+    hideCustomSchool: ->
+      $('#custom-school').addClass 'hidden'
+
+    hideSchoolPicker: ->
+      $('#school-picker').addClass 'hidden'
+
+    showSchoolPicker: ->
+      @clearErrors()
+      @clearSchoolValues()
+      @el('#school-picker').removeClass 'hidden'
+      @hideCustomSchool()
+
+    showCustomSchool: ->
+      @clearErrors()
+      @clearSchoolValues()
+      @el('#custom-school').removeClass 'hidden'
+      @hideSchoolPicker()
+
 
     welcomeMessage: (data) ->
       if @isStudent()

@@ -3,18 +3,20 @@
   .unknown-error
   = field_set_tag nil, id: 'common-fieldset' do
     .group
-      .f-row= text_field_tag :first_name, nil, placeholder: 'First Name'
-      .f-row= text_field_tag :last_name, nil, placeholder: 'Last Name'
-      .f-row
-        I am a
-        = radio_button_tag :account_type, 'student', true, id: 'student_account'
-        = label_tag :student_account, ' Student'
-        = radio_button_tag :account_type, 'teacher', false, id: 'teacher_account'
-        = label_tag :teacher_account, ' Teacher'
+      .f-row.half= text_field_tag :first_name, nil, placeholder: 'First Name'
+      .f-row.half= text_field_tag :last_name, nil, placeholder: 'Last Name'
 
     .group
       .f-row= password_field_tag :password, nil, placeholder: 'Password'
       .f-row= password_field_tag :password_confirmation, nil, placeholder: 'Password Again'
+
+    .group
+      .f-row
+        I am a
+        = radio_button_tag :account_type, 'student', false, id: 'student_account'
+        = label_tag :student_account, ' Student'
+        = radio_button_tag :account_type, 'teacher', false, id: 'teacher_account'
+        = label_tag :teacher_account, ' Teacher'
 
     .group
       %button#continue-registration= "Sign Up for #{APP_CONFIG[:site_name]}!"
@@ -53,17 +55,25 @@
       .f-row= text_field_tag :login, nil, placeholder: 'Username'
       .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
     .group
-      .f-row= select_tag 'state', nil, 'data-placeholder' => 'Select a state'
-      .f-row= select_tag 'district_id', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a district'
-      .f-row= select_tag 'school_id', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a school'
+      .f-row= select_tag 'country_id', nil, 'data-placeholder' => 'Select a country'
+      .f-row.domestic-only= select_tag 'state', nil, 'data-placeholder' => 'Select a state', 'class' => 'hidden'
+      .f-row.deomestc-only= select_tag 'district_id', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a district'
       - if current_project.allow_adhoc_schools
-        .f-row= text_field_tag 'school_name', nil, 'class' => 'hidden', 'placeholder' => 'School name'
-        .f-row
-          %a#custom-name.hidden I can't find my school in the list.
-        .f-row
-          %a#no-custom-name.hidden Go back to the school list.
+        #school-picker.group
+          .f-row= select_tag 'school_id', nil, 'data-placeholder' => 'Select a school'
+          .f-row
+            %a#cant-find-school I can't find my school in the list.
+        #custom-school.group
+          .f-row= text_field_tag 'school_name', nil, 'placeholder' => 'School name'
+          .f-row.intl-only= text_field_tag 'province', nil, 'placeholder' => 'Province'
+          .f-row.intl-only= text_field_tag 'city', nil, 'placeholder' => 'City'
+          .f-row
+            %a#back-to-list  Go back to the school list.
+      - else
+        #school-picker.group
+          .f-row= select_tag 'school_id', nil, 'data-placeholder' => 'Select a school'
 
-    .group.bottom
+    .group
       .f-row= submit_tag 'Submit', class: 'submit-form'
 
   .group

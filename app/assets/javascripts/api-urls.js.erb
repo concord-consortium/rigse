@@ -1,6 +1,8 @@
 <% url = RailsPortal::Application.routes.url_helpers %>
 
 var API_V1 = {
+  USA_ID: "<%= Portal::Country.find_by_two_letter('US').id %>",
+  COUNTRIES: "<%= url.api_v1_countries_path %>",
   SECURITY_QUESTIONS: "<%= url.api_v1_security_questions_path %>",
   STUDENTS: "<%= url.api_v1_students_path %>",
   TEACHERS: "<%= url.api_v1_teachers_path %>",

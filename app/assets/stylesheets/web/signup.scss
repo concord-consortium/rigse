@@ -21,6 +21,10 @@ form.signup {
     padding: 0 5px;
     font-size: 14px;
   }
+  .half {
+    width: 48%;
+    display: inline-block;
+  }
   input[type="text"], input[type="password"] {
     width: 100%;
   }

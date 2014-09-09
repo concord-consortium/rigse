@@ -4,10 +4,12 @@ class API::V1::TeachersController < API::APIController
   # - 'school_id' is provided - school is expected to exist
   # - 'school_name' and 'district_id' are provided instead - school may be created in case of need
 	def create
-    if can_create_new_school(params)
-      school = get_or_register_school(params[:school_name], params[:district_id])
-      return unless school
-      params[:school_id] = school.id
+    if params[:school_id].blank?
+      if can_create_new_school(params)
+        school = register_school(params)
+        return unless school
+        params[:school_id] = school.id
+      end
     end
 
     teacher_registration = API::V1::TeacherRegistration.new(params)
@@ -22,16 +24,11 @@ class API::V1::TeachersController < API::APIController
   private
 
   def can_create_new_school(params)
-    Admin::Project.default_project.allow_adhoc_schools &&
-    params[:school_id].blank? && params.has_key?(:school_name) && params.has_key?(:district_id)
+    Admin::Project.default_project.allow_adhoc_schools && params[:school_id].blank?
   end
 
-  def get_or_register_school(school_name, district_id)
-    school = Portal::School.where(name: school_name, district_id: district_id).first
-    return school if school
-
-    # No school available, try to add new one.
-    school_registration = API::V1::SchoolRegistration.new(school_name: school_name, district_id: district_id)
+  def register_school(params)
+    school_registration = API::V1::SchoolRegistration.new(params)
     if school_registration.valid?
       school_registration.save
       return school_registration.school
