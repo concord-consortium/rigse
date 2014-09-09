@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140908150149) do
+ActiveRecord::Schema.define(:version => 20140908175805) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1791,6 +1791,7 @@ ActiveRecord::Schema.define(:version => 20140908150149) do
     t.string   "zipcode",        :limit => 5
     t.string   "ncessch",        :limit => 12
     t.integer  "country_id"
+    t.text     "city"
   end
 
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
