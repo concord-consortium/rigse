@@ -153,7 +153,7 @@
         district_id.addClass 'hidden'
         state.addClass 'hidden'
 
-        if country_id.val() == API_V1.USA_ID 
+        if country_id.val() == API_V1.USA_ID
           @hideInternational()
           state.getSelectOptions API_V1.STATES + "?country=#{country_id.val()}", (data) ->
             data.unshift undefined # we need an empty option for placeholder
@@ -222,14 +222,14 @@
           @showTeacherForm()
 
     showStudentForm: ->
-        @el('#common-fieldset').addClass 'hidden'
-        @el('#student-fieldset').removeClass 'hidden'
-        @armSubmitHandler(API_V1.STUDENTS)
+      @el('#common-fieldset').addClass 'hidden'
+      @el('#student-fieldset').removeClass 'hidden'
+      @armSubmitHandler(API_V1.STUDENTS)
 
     showTeacherForm: ->
-        @el('#common-fieldset').addClass 'hidden'
-        @el('#teacher-fieldset').removeClass 'hidden'
-        @armSubmitHandler(API_V1.TEACHERS)
+      @el('#common-fieldset').addClass 'hidden'
+      @el('#teacher-fieldset').removeClass 'hidden'
+      @armSubmitHandler(API_V1.TEACHERS)
 
     armSubmitHandler: (url) ->
       @el('.submit-form').on 'click', (e) =>
