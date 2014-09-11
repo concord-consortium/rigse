@@ -3,6 +3,11 @@
   class SignupForm
     constructor: (@selector) ->
       @$form = $(@selector)
+      @post_url = nil
+      @last_post_url = nil
+      @initializeForms()
+      @successFunction = (data) ->
+        console.log("Bad call to undefined @successFunction")
 
     initializeForms: ->
       @setupSelectBoxes()
@@ -56,7 +61,7 @@
         delete errors.school_id
 
 
-    serializeAndSubmit: (url)->
+    serializeAndSubmit: ()->
       @clearErrors()
 
       # wait_message.js
@@ -65,13 +70,11 @@
 
       $.ajax(
         type: 'post'
-        url: url
+        url: @post_url
         contentType: 'application/json'
         data: @toJSON()
       ).done((data) =>
-        @$form.empty()
-        @$form.append "<div class='success'>#{@welcomeMessage(data)}<div>"
-        @field('submit')
+        @successFunction(data)
       ).fail((jqXHR) =>
         errors = null
         try
@@ -213,17 +216,60 @@
     showStudentForm: ->
       @el('#common-fieldset').addClass 'hidden'
       @el('#student-fieldset').removeClass 'hidden'
-      @armSubmitHandler(API_V1.STUDENTS)
+      @post_url = API_V1.STUDENTS
+      @successFunction = (data) =>
+        @$form.empty()
+        @$form.append """
+          <div class='success'>
+            <h3>Thanks for signing up!</h3>
+            <p>You have successfully registered 
+            #{data.first_name} #{data.last_name}
+            with the user name <span class='big'>#{data.login}</span>.</p>
+            Use this user name and password you provided to sign in.</p>
+          </div>
+        """
+      @$form.empty()
+      @$form.append "<div class='success'>#{message}<div>"
 
     showTeacherForm: ->
       @el('#common-fieldset').addClass 'hidden'
       @el('#teacher-fieldset').removeClass 'hidden'
-      @armSubmitHandler(API_V1.TEACHERS)
+      @post_url = API_V1.TEACHERS
+      @successFunction = (data) =>
+        @$form.empty()
+        @$form.append """
+          <div class='success'>
+            <h3>Thanks for signing up!</h3>
+            <p>We're sending you an email with your activation code.</p>
+          </div>
+        """
+    showSchoolForm: ->
+      @el('#common-fieldset').addClass 'hidden'
+      @el('#teacher-fieldset').removeClass 'hidden'
+      
+    showCustomSchool: ->
+      @clearErrors()
+      @clearSchoolValues()
+      @el('#custom-school').removeClass 'hidden'
+      @hideSchoolPicker()
+      @last_post_url = @post_url
+      @post_url = API_V1.SCHOOLS
+      lastSubmitTitle = @el('.submit-form').val()
+      @setSubmitTitle("Add my school")
+      @successFunction = (data) =>
+        @post_url = @last_post_url
+        @school_id = data.school_id
+        @setSubmitTitle(lastSubmitTitle)
+        @showSchoolPicker(data.school_id)
 
-    armSubmitHandler: (url) ->
+
+    setSubmitTitle: (title) ->
+      @el('.submit-form').val(title)
+
+    armSubmitHandler: () ->
       @el('.submit-form').on 'click', (e) =>
         e.preventDefault()
-        @serializeAndSubmit(url)
+        @serializeAndSubmit()
 
     clearSchoolValues: ->
       @field('school_id').select2 'val', ''
