@@ -46,10 +46,6 @@
           delete errors.city
           delete errors.province
           delete errors.state
-      else if  @field('state').hasClass 'hidden'
-        # errors.city = 'Cant be blank'  These will come  from the serivce response.
-        # errors.province = 'Cant be blank'
-        # errors.school_name = 'Cant be blank'
       else if @field('district_id').hasClass 'hidden'
         errors.state = 'Please select a state'
         delete errors.school_id
