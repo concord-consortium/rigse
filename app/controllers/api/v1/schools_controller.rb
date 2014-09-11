@@ -5,13 +5,12 @@ class API::V1::SchoolsController < API::APIController
 		country_id  = params['country_id']
 		if district_id.blank? && country_id.blank?
 			error("param 'district_id' or 'country_id' are required for school list")
-		elsif country_id.blank?
-			@schools = Portal::School.where('district_id' => district_id).select('name, id')
-			render :json => @schools
+		elsif district_id
+			@schools = API::V1::SchoolRegistration.for_district(district_id)
 		else
-			@schools = Portal::School.where('country_id' => country_id).select('name, id')
-			render :json => @schools
+			@schools = API::V1::SchoolRegistration.for_country(country_id)
 		end
+		render :json => @schools
 	end
 
   def create
