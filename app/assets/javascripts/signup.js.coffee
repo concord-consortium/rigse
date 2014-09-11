@@ -4,11 +4,13 @@
     constructor: (@selector) ->
       @$form = $(@selector)
 
+    initializeForms: ->
       @setupSelectBoxes()
       @setupSecurityQuestions()
       @setupSchoolSelect()
       @setupNewSchoolLinks()
       @setupFormButtons()
+      @armSubmitHandler()
 
     validateBasicFields: ->
       valid = true
