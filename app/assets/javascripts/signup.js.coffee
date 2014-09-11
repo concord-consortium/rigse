@@ -297,14 +297,14 @@
         return
 
       school_id.getSelectOptions url, (data) ->
-          data.unshift {} # we need an empty option for placeholder
-          {val: s.id, text: s.name} for s in data
-        , (data) =>
-          @clearErrors()
-          @clearSchoolValues()
-          @el('#school-picker').removeClass 'hidden'
-          @hideCustomSchool()
-          @choose('school_id', item_to_select)
+        data.unshift {} # we need an empty option for placeholder
+        {val: s.id, text: s.name} for s in data
+      , (data) =>
+        @clearErrors()
+        @clearSchoolValues()
+        @el('#school-picker').removeClass 'hidden'
+        @hideCustomSchool()
+        @choose('school_id', item_to_select)
 
 
     choose: (field_name, value) ->
