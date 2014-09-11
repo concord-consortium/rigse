@@ -95,7 +95,6 @@
       
       errorCount = 0
       @prcessSchoolErrors(errors)
-      debugger
       dispError = ($el, msg) =>
         $el.addClass 'error-field'
         $el.prepend "<div class=\"error-message\">#{msg}</div>"
