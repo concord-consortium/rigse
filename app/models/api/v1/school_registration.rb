@@ -8,6 +8,7 @@ class API::V1::SchoolRegistration
   attribute :school_name, String
   attribute :district_id, Integer
   attribute :country_id, Integer
+  attribute :school_id, Integer
   attribute :state, String
   attribute :province, String
   attribute :city, String
@@ -60,6 +61,7 @@ class API::V1::SchoolRegistration
   def persist_school
     @school = new_school
     @school.save!
+    self.school_id = @school.id
   end
 
   def persist!
