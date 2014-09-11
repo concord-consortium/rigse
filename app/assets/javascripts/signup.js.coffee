@@ -153,7 +153,7 @@
         district_id.addClass 'hidden'
         state.addClass 'hidden'
 
-        if country_id.val() == API_V1.USA_ID
+        if !@international()
           @hideInternational()
           state.getSelectOptions API_V1.STATES + "?country=#{country_id.val()}", (data) ->
             data.unshift undefined # we need an empty option for placeholder
@@ -175,6 +175,8 @@
           @showInternational()
           @showSchoolPicker()
 
+    international: ->
+      !@field('school_id').val() == API_V1.USA_ID
 
     showInternational: ->
       $('.intl-only').removeClass 'hidden'
@@ -289,11 +291,11 @@
       district_id = @field('district_id').val()
       country_id  = @field('country_id').val()
       school_id   = @field('school_id')
-      if country_id 
+      if @international() && country_id
         url = "#{API_V1.SCHOOLS}?country_id=#{country_id}"
-      else if district_id
+      else if district_id && district_id != ''
         url = "#{API_V1.SCHOOLS}?district_id=#{district_id}"
-      else 
+      else
         return
 
       school_id.getSelectOptions url, (data) ->
