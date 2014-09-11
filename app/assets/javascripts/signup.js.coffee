@@ -168,19 +168,11 @@
               district_id.removeClass 'hidden'
 
           district_id.on 'change', =>
-            return if district_id.val() == ''
-            school_id.getSelectOptions API_V1.SCHOOLS + "?district_id=#{district_id.val()}", (data) ->
-              data.unshift {} # we need an empty option for placeholder
-              {val: s.id, text: s.name} for s in data
-            , =>
-              @showSchoolPicker()
+            @showSchoolPicker()
         else
           @showInternational()
-          school_id.getSelectOptions API_V1.SCHOOLS + "?country_id=#{country_id.val()}", (data) ->
-            data.unshift {} # we need an empty option for placeholder
-            {val: s.id, text: s.name} for s in data
-          , =>
-            @showSchoolPicker()
+          @showSchoolPicker()
+
 
     showInternational: ->
       $('.intl-only').removeClass 'hidden'
@@ -248,28 +240,36 @@
     hideSchoolPicker: ->
       $('#school-picker').addClass 'hidden'
 
-    showSchoolPicker: ->
-      @clearErrors()
-      @clearSchoolValues()
-      @el('#school-picker').removeClass 'hidden'
-      @hideCustomSchool()
+    showSchoolPicker: (item_to_select)->
+      district_id = @field('district_id').val()
+      country_id  = @field('country_id').val()
+      school_id   = @field('school_id')
+      if country_id 
+        url = "#{API_V1.SCHOOLS}?country_id=#{country_id}"
+      else if district_id
+        url = "#{API_V1.SCHOOLS}?district_id=#{district_id}"
+      else 
+        return
 
-    showCustomSchool: ->
-      @clearErrors()
-      @clearSchoolValues()
-      @el('#custom-school').removeClass 'hidden'
-      @hideSchoolPicker()
+      school_id.getSelectOptions url, (data) ->
+          data.unshift {} # we need an empty option for placeholder
+          {val: s.id, text: s.name} for s in data
+        , (data) =>
+          @clearErrors()
+          @clearSchoolValues()
+          @el('#school-picker').removeClass 'hidden'
+          @hideCustomSchool()
+          @choose('school_id', item_to_select)
 
 
-    welcomeMessage: (data) ->
-      if @isStudent()
-        "<h3>Thanks for signing up!</h3>" +
-        "<p>You have successfully registered #{data.first_name} #{data.last_name} " +
-        " with the user name <span class=\"big\">#{data.login}</span>.</p>" +
-        "Use this user name and password you provided to sign in.</p>"
-      else
-        "<h3>Thanks for signing up!</h3>" +
-        "<p>We're sending you an email with your activation code.</p>"
+    choose: (field_name, value) ->
+      field = @field(field_name)
+      if value
+        if (typeof field.val    == 'function')
+          field.val(value)
+        if (typeof field.select == 'function')  
+          field.select(value)
+        field.trigger('change')
 
     field: (name) ->
       @$form.find "input[name=\"#{name}\"], select[name=\"#{name}\"]"
