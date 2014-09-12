@@ -1,8 +1,8 @@
 class Portal::OfferingsController < ApplicationController
-  
+
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
-  
+
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter,:activity_report]
   before_filter :student_teacher_admin_or_config, :only => [:answers]
   before_filter :student_teacher_or_admin, :only => [:show]
@@ -187,10 +187,10 @@ class Portal::OfferingsController < ApplicationController
         reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
         @learners = reportUtil.learners
         @page_elements = reportUtil.page_elements
-        
+
         render :layout => 'report' # report.html.haml
       }
-      
+
       format.run_external_html   {
         @learners = @offering.clazz.students.map do |l|
           "name: '#{l.name}', id: #{l.id}"
@@ -198,11 +198,11 @@ class Portal::OfferingsController < ApplicationController
         cookies[:activity_name] = @offering.runnable.url
         cookies[:class] = @offering.clazz.id
         cookies[:class_students] = "[{" + @learners.join("},{") + "}]" # formatted for JSON parsing
-        
+
         redirect_to(@offering.runnable.report_url, 'popup' => true)
        }
     end
-    
+
 
   end
 
@@ -257,7 +257,7 @@ class Portal::OfferingsController < ApplicationController
     else
       embeddables = []
     end
-    
+
     if activity_report_id
       activity = ::Activity.find(activity_report_id.to_i)
       activity_embeddables = activity.page_elements.map{|pe|pe.embeddable}
@@ -265,9 +265,7 @@ class Portal::OfferingsController < ApplicationController
     else
       @report_embeddable_filter.embeddables = embeddables
     end
-    
 
-    redirect_url = report_portal_offering_url(@offering)
     respond_to do |format|
       if @report_embeddable_filter.save
           flash[:notice] = 'Report filter was successfully updated.'
@@ -277,22 +275,22 @@ class Portal::OfferingsController < ApplicationController
         format.html { redirect_to :back }
         format.xml  { render :xml => @report_embeddable_filter.errors, :status => :unprocessable_entity }
       end
-      
+
     end
   end
 
-  # report shown to students 
+  # report shown to students
   def student_report
     @offering = Portal::Offering.find(params[:id])
     @learner = @offering.learners.find_by_student_id(current_visitor.portal_student)
     if (@learner && @offering)
-      reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
+      reportUtil = Report::Util.reload_without_filters(@offering)  # force a reload of this offering without filters
       @learners = reportUtil.learners
       @page_elements = reportUtil.page_elements
       render :layout => false # student_report.html.haml
       # will render student_report.html.haml
     else
-      render :nothing => true 
+      render :nothing => true
     end
   end
 
@@ -315,7 +313,7 @@ class Portal::OfferingsController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @learners }
       format.json { render :json => @learners}
-    end  
+    end
   end
 
   def check_learner_auth
@@ -398,14 +396,14 @@ class Portal::OfferingsController < ApplicationController
     offering_collapsed = true
     teacher_id = current_visitor.portal_teacher.id
     portal_teacher_full_status = Portal::TeacherFullStatus.find_or_create_by_offering_id_and_teacher_id(params[:id],teacher_id)
-    
+
     offering_collapsed = (portal_teacher_full_status.offering_collapsed.nil?)? false : !portal_teacher_full_status.offering_collapsed
-    
+
     portal_teacher_full_status.offering_collapsed = offering_collapsed
     portal_teacher_full_status.save!
-    
+
     render :nothing=>true
-    
+
   end
 
   def get_recent_student_report

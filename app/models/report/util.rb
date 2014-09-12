@@ -17,16 +17,21 @@ class Report::Util
 
   @@cache = {}
 
-  def self.factory(offering, show_only_active_learners = true)
+  def self.factory(offering, show_only_active_learners = true, skip_filters = false)
     maintenance
     ## TODO This class should probably be thread-safe eventually
-    @@cache[offering] ||= Report::Util.new(offering, show_only_active_learners)
+    @@cache[offering] ||= Report::Util.new(offering, show_only_active_learners, skip_filters)
     return @@cache[offering]
   end
 
   def self.reload(offering)
     invalidate(offering)
     return factory(offering)
+  end
+
+  def self.reload_without_filters(offering)
+    invalidate(offering)
+    return factory(offering, true, true)
   end
 
   def self.invalidate(offering)
@@ -71,7 +76,7 @@ class Report::Util
     return results
   end
 
-  def initialize(offering_or_learner, show_only_active_learners=false,skip_filters=false)
+  def initialize(offering_or_learner, show_only_active_learners=false, skip_filters=false)
     @last_accessed = Time.now
     if offering_or_learner.kind_of?(Portal::Learner)
       @offering = offering_or_learner.offering
