@@ -47,6 +47,10 @@
         %label Teacher Guide URL
         %br
         = f.text_field :teacher_guide_url, :size => 60
+      %li
+        %label Thumbnail image URL (300 x 250 px)
+        %br
+        = f.text_field :thumbnail_url, :size => 60
 
 / = field_set_tag 'Select GSE' do
 /   = field_set_tag 'filter' do
