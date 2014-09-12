@@ -4,16 +4,15 @@
     %tr
       %td.show_border
         %b Name
-      %td.show_border 
+      %td.show_border
         %b User Name
       %td.hide_in_print
-       
+
     - student_list.each do |portal_student|
       - portal_student_clazz = portal_clazz.student_clazzes.find_by_student_id(portal_student.id)
       %tr{:id=>dom_id_for(portal_student_clazz)}
         %td.show_border
-          - student_name = portal_student.user.last_name + ", " +portal_student.user.first_name
-          = link_to student_name.truncate(33), portal_student,:title=>"#{student_name}"
+          = (portal_student.user.last_name + ", " +portal_student.user.first_name).truncate(33)
         %td.show_border{:title=>"#{portal_student.user.login}"}
           = portal_student.user.login.truncate(20)
         %td.remove.hide_in_print.action_link_container
