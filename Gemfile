@@ -147,6 +147,7 @@ group :development do
   gem "awesome_print"
   gem "interactive_editor"
   gem "pry"
+  gem "pry-debugger"
   gem "ruby-prof"
   gem "guard-spork"
   gem "guard-rspec"
