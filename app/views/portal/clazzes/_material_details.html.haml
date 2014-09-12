@@ -11,9 +11,9 @@
             %div{:style=>"float:left;padding-top:2px"}
               = "(assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
           %td{:style=>"white-space:nowrap"}
-            = link_to "Run as Teacher", run_url_for(runnable, {:teacher_mode => true}), :class=>"button pie"
+            = link_to "Run as Teacher", run_url_for(runnable, {:teacher_mode => true}), :class=>"button pie", :target=>'_blank'
             %div{:style=>"height:10px"}
-            = link_to "Run as Student", run_url_for(runnable, {}), :class=>"button pie"
+            = link_to "Run as Student", run_url_for(runnable, {}), :class=>"button pie", :target=>'_blank'
             %div{:style=>"height:10px"}
             = teacher_guide_link(runnable)
       - if runnable.is_a? Investigation
