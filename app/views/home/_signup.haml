@@ -1,80 +1,135 @@
-= form_tag '', id: 'new-account-form', class: 'signup' do
-  %h2 Sign up
-  .unknown-error
-  = field_set_tag nil, id: 'common-fieldset' do
-    .group
-      .f-row.half= text_field_tag :first_name, nil, placeholder: 'First Name'
-      .f-row.half= text_field_tag :last_name, nil, placeholder: 'Last Name'
+%div{'ng-app' => 'registrationApp'}
+  %div{'ng-controller' => "RegistrationController as regController"}
+    = form_tag '', id: 'new-account-form', class: 'signup' do
+    
+      %h2 Sign up
+      .unknown-error
+      = field_set_tag nil, "ng-show" => "regController.showPage1()" do
+        .group
+          .f-row.half
+            %input{'type'   => "text", 
+              'placeholder' => 'First Name',
+              'required'    => true,
+              'ng-model'    => 'regController.first_name'}
+          .f-row.half
+            %input{'type' => "text",  
+            'placeholder' => 'Last Name', 
+            'required'    => true,
+            'ng-model'    => 'regController.last_name'}
 
-    .group
-      .f-row= password_field_tag :password, nil, placeholder: 'Password'
-      .f-row= password_field_tag :password_confirmation, nil, placeholder: 'Password Again'
-
-    .group
-      .f-row
-        I am a
-        = radio_button_tag :account_type, 'student', false, id: 'student_account'
-        = label_tag :student_account, ' Student'
-        = radio_button_tag :account_type, 'teacher', false, id: 'teacher_account'
-        = label_tag :teacher_account, ' Teacher'
-
-    .group
-      %button#continue-registration= "Sign Up for #{APP_CONFIG[:site_name]}!"
-    .quote-box.bottom.hidden
-      .quote "I felt like I could learn a lot by playing with the interactives”
-      .quote-credits - 9th grader, San Francisco, CA
-
-  = field_set_tag nil, id: 'student-fieldset', class: 'hidden' do
-
-    - if current_project.allow_default_class
-      .f-row= hidden_field_tag :class_word, Portal::Clazz.default_class.class_word
-    - else
-      .group
-        .f-row= text_field_tag :class_word, nil, placeholder: 'Class Word (not case sensitive)'
-
-    - if current_project.use_student_security_questions
-      .group
-        %p.small
-          Please select three questions from the menus below.
-          If you forget your password, you will need to answer these questions correctly in order to receive a new one.
-      .group
-        .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
-        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
-      .group
-        .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
-        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
-      .group
-        .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
-        .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
-
-    .group.bottom
-      .f-row= submit_tag 'Submit', class: 'submit-form'
-
-  = field_set_tag nil, id: 'teacher-fieldset', class: 'hidden' do
-    .group
-      .f-row= text_field_tag :login, nil, placeholder: 'Username'
-      .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
-    .group
-      .f-row= select_tag 'country_id', nil, 'data-placeholder' => 'Select a country'
-      .f-row.domestic-only= select_tag 'state', nil, 'data-placeholder' => 'Select a state', 'class' => 'hidden'
-      .f-row.deomestc-only= select_tag 'district_id', nil, 'class' => 'hidden', 'data-placeholder' => 'Select a district'
-      - if current_project.allow_adhoc_schools
-        #school-picker.group
-          .f-row= select_tag 'school_id', nil, 'data-placeholder' => 'Select a school'
+        .group
           .f-row
-            %a#cant-find-school I can't find my school in the list.
-        #custom-school.group
-          .f-row= text_field_tag 'school_name', nil, 'placeholder' => 'School name'
-          .f-row.intl-only= text_field_tag 'province', nil, 'placeholder' => 'Province'
-          .f-row.intl-only= text_field_tag 'city', nil, 'placeholder' => 'City'
+            %input{'type'   => "password",  
+              'minLength'   => 6,
+              'required'    => true,
+              'placeholder' => 'Password', 
+              'ng-model'    =>'regController.password'}
           .f-row
-            %a#back-to-list  Go back to the school list.
-      - else
-        #school-picker.group
-          .f-row= select_tag 'school_id', nil, 'data-placeholder' => 'Select a school'
+            %input{'type'        => "password",  
+              'placeholder' => 'Confirm Password', 
+              'match'       => "regController.password",
+              'required'    => true,
+              'ng-model'    => 'regController.confirmPassword' }
 
-    .group
-      .f-row= submit_tag 'Submit', class: 'submit-form'
+        .group
+          .f-row
+            I am a
+            %span.input-group
+              %label{'for'=>'Student'} Student
+              %input{"type" => "radio", "ng-model" => "regController.registrationType", "value" => "student"}
+            %span.input-group
+              %label{'for'=>'Teacher'} Teacher
+              %input{"type" => "radio", "ng-model" => "regController.registrationType", "value" => "teacher"}
+        .group
+          %button#continue-registration{"ng-disabled" => "!regController.readyToRegister()", "ng-click" => "regController.startRegistration()"}
+            "Sign Up for #{APP_CONFIG[:site_name]}!"
+        .quote-box.bottom
+          .quote "I felt like I could learn a lot by playing with the interactives”
+          .quote-credits - 9th grader, San Francisco, CA
 
-  .group
-    .f-row.wait-message
+      = field_set_tag nil, id: 'student-fieldset', "ng-show" => "regController.showStudentPage()" do
+
+        - if current_project.allow_default_class
+          .f-row= hidden_field_tag :class_word, Portal::Clazz.default_class.class_word
+        - else
+          .group
+            .f-row= text_field_tag :class_word, nil, placeholder: 'Class Word (not case sensitive)'
+
+        - if current_project.use_student_security_questions
+          .group
+            %p.small
+              Please select three questions from the menus below.
+              If you forget your password, you will need to answer these questions correctly in order to receive a new one.
+          .group
+            .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
+            .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
+          .group
+            .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
+            .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
+          .group
+            .f-row= select_tag 'questions[]', nil, 'data-placeholder' => 'Select a question'
+            .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
+
+        .group.bottom
+          .f-row= submit_tag 'Submit', class: 'submit-form'
+
+      = field_set_tag nil, id: 'teacher-fieldset', "ng-show" => "regController.showTeacherPage()" do
+        .group
+          .f-row= text_field_tag :login, nil, placeholder: 'Username'
+          .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
+        .group
+          .f-row
+            %ui-select{"ng-model"   => "regController.country", 
+              "theme" =>  "select2" }
+              %ui-select-match{"placeholder" => "Enter a country..."}
+                {{$select.selected.name}}
+              %ui-select-choices{"repeat" => "country in regController.countries" }
+              %small
+                {{country.name}}
+                
+          / .f-row
+          /   %ui-select{"ng-model" => "regController.state", 
+          /     "name"             => "state", 
+          /     "ng-show"          => "regController.showState()" }
+          /     %option
+          /     %option{"ng-repeat" => "sate in regController.sate", "value" => "{{state}}"}
+          /       {{state}}
+
+
+          / .f-row
+          /   %ui-select{"ng-model"   => "regController.district", 
+          /     "name"             => "district", 
+          /     "ui-select2"       => true,
+          /     "data-placeholder" => "Select your district",
+          /     "ng-show"          => "regController.showDistrict()" }
+          /     %ui-select-match{"placeholder" => "Select a person in the list or search his name/age..."}
+          /       {{$select.selected.name}}
+
+          - if current_project.allow_adhoc_schools
+            #school-picker.group
+              .f-row
+                %select{"ng-model" => "regController.school", 
+                  "name"           => "school", 
+                  "ng-show"        => "regController.showSchool()", 
+                  "ng-options"     => "school.name for school in regController.schools" }
+              .f-row
+                %a#cant-find-school I can't find my school in the list.
+            #custom-school.group
+              .f-row= text_field_tag 'school_name', nil, 'placeholder' => 'School name'
+              .f-row.intl-only= text_field_tag 'province', nil, 'placeholder' => 'Province'
+              .f-row.intl-only= text_field_tag 'city', nil, 'placeholder' => 'City'
+              .f-row
+                %a#back-to-list  Go back to the school list.
+          - else
+            #school-picker.group
+              .f-row
+                %select{"ng-model" => "regController.school",
+                  "name"           => "school", 
+                  "ng-show"        => "regController.showSchool()", 
+                  "ng-options"     => "school.name for school in regController.schools" }
+
+        .group
+          .f-row= submit_tag 'Submit', class: 'submit-form'
+
+      .group
+        .f-row.wait-message

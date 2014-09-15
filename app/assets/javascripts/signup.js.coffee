@@ -1,330 +1,66 @@
-(($) ->
+angular.module("registrationApp", ["ccDirectives",'ui.select' ])
+  .controller "RegistrationController", [ '$http', ($http) ->
+    console.log("we have registered our controller")
+    self = @
+    self.$http = $http
 
-  class SignupForm
-    constructor: (@selector) ->
-      @$form = $(@selector)
-      @post_url = nil
-      @last_post_url = nil
-      @initializeForms()
-      @successFunction = (data) ->
-        console.log("Bad call to undefined @successFunction")
+    self.$http({method: 'GET', url: API_V1.COUNTRIES})
+      .success (data, status, headers, config) ->
+        self.countries = data
 
-    initializeForms: ->
-      @setupSelectBoxes()
-      @setupSecurityQuestions()
-      @setupSchoolSelect()
-      @setupNewSchoolLinks()
-      @setupFormButtons()
-      @armSubmitHandler()
+      .error (data, status) ->
+          console.log "error"
+          self.countries || =[]
 
-    validateBasicFields: ->
-      valid = true
+    self.isStudent = () ->
+      self.registrationType == "student";
 
-      if @field('first_name').val().length < 1
-        @showErrors first_name: 'Enter first name'
-        valid = false
+    self.isTeacher = () ->
+      self.registrationType == "teacher";
 
-      if @field('last_name').val().length < 1
-        @showErrors last_name: 'Enter last name'
-        valid = false
+    self.readyToRegister = () ->
+      return self.first_name && self.last_name && self.confirmPassword && self.registrationType
 
-      pass = @field('password').val()
-      if pass.length < 6
-        @showErrors password: 'Password is too short'
-        valid = false
+    self.startRegistration = () ->
+      self.didStartRegistration = true
 
-      if pass != @field('password_confirmation').val()
-        @showErrors password_confirmation: 'Passwords must match'
-        valid = false
+    self.showTeacherPage = () ->
+      return self.didStartRegistration && self.registrationType == "teacher"
 
-      if !(@isTeacher() || @isStudent())
-        @showErrors 'account_type': 'Select account type'
-        valid = false
+    self.showStudentPage = () ->
+      return self.didStartRegistration && self.registrationType == "student"
 
-      return valid
+    self.showPage1 = () ->
+      !self.didStartRegistration
 
-    prcessSchoolErrors: (errors) ->
-      # Note that if field is hidden, it means that user never selected
-      # previous field in state - district - school sequence.
-      if $('#custom-school').hasClass 'hidden'
-        if errors.school_name
-          errors.school_id = "Please select a school"
-          delete errors.school_name
-          delete errors.city
-          delete errors.province
-          delete errors.state
-      else if @field('district_id').hasClass 'hidden'
-        errors.state = 'Please select a state'
-        delete errors.school_id
-      else if  @field('school_id').hasClass 'hidden'
-        errors.district_id = 'Please select a district'
-        delete errors.school_id
+    self.showState = () ->
+      self.country == "USA"
 
+    self.showDistrict = () ->
+      self.showState() && self.state
 
-    serializeAndSubmit: ()->
-      @clearErrors()
+    self.showSchool = () ->
+      (self.showDistrict() && self.district) || (self.country != 'USA' && self.country)
+  ]
 
-      # wait_message.js
-      @el('.submit-form').prop 'disabled', true
-      startWaiting 'Please wait while your account is created'
-
-      $.ajax(
-        type: 'post'
-        url: @post_url
-        contentType: 'application/json'
-        data: @toJSON()
-      ).done((data) =>
-        @successFunction(data)
-      ).fail((jqXHR) =>
-        errors = null
-        try
-          errors = JSON.parse(jqXHR.responseText).message
-        catch e
-          console.log 'Unknown error during sign up'
-        finally
-          unless typeof errors == 'object'
-            errors = 'unknown-error': 'We are sorry, something went wrong. Please reload the page and try again.'
-          @showErrors errors
-      ).always( =>
-        stopWaiting()
-        @el('.submit-form').prop 'disabled', false
-      )
-
-    toJSON: ->
-      data = @$form.serializeObject()
-      JSON.stringify(data)
-
-    showErrors: (errors, maxToShow=3) ->
-      
-      errorCount = 0
-      @prcessSchoolErrors(errors)
-      dispError = ($el, msg) =>
-        $el.addClass 'error-field'
-        $el.prepend "<div class=\"error-message\">#{msg}</div>"
-
-      for fieldName, error of errors
-        indexedError = fieldName.match(/(.+)\[(\d+)\]/)
-        if indexedError
-          # Support errors defined per array element, e.g.: { question[2]: "You have to provide 3 questions!" }
-          # We have an assumption that fields definiting an array have name with
-          # brackets (e.g. question[]). So we have to parse number and select nth field.
-          fieldName = indexedError[1] + "[]"
-          elIndex = Number(indexedError[2])
-          $f = @field(fieldName).eq(elIndex)
-        else
-          $f = @field(fieldName)
-        if (errorCount < maxToShow)
-          errorCount = errorCount + 1
-          dispError $f.parent(), error
-
-      if errors && errors['unknown-error']
-        dispError @el('.unknown-error'), errors['unknown-error']
-
-    clearErrors: ->
-      @$form.find('.error-field').removeClass 'error-field'
-      @$form.find('.error-message').remove()
-
-    clearFieldErrors: (fieldName) ->
-      $fieldParent = @field(fieldName).parent()
-      $fieldParent.removeClass 'error-field'
-      $fieldParent.find('.error-message').remove()
-
-    setupSelectBoxes: ->
-      @el('select').select2(width: "267px", minimumResultsForSearch: 10)
-
-    setupSecurityQuestions: ->
-      @field('questions[]').getSelectOptions API_V1.SECURITY_QUESTIONS, (data) ->
-        data.unshift undefined # we need an empty option for placeholder
-        {val: t, text: t} for t in data
-
-    setupSchoolSelect: ->
-      country_id = @field('country_id')
-      state = @field('state')
-      district_id = @field('district_id')
-      school_id = @field('school_id')
-
-      country_id.getSelectOptions API_V1.COUNTRIES, (data) ->
-        {val: c.id, text: c.name} for c in data
-
-      country_id.on 'change', =>
-        @clearErrors()
-        @hideSchoolPicker()
-        @hideCustomSchool()
-        district_id.addClass 'hidden'
-        state.addClass 'hidden'
-
-        if !@international()
-          @hideInternational()
-          state.getSelectOptions API_V1.STATES + "?country=#{country_id.val()}", (data) ->
-            data.unshift undefined # we need an empty option for placeholder
-            {val: s, text: s} for s in data
-          , ->
-            state.removeClass 'hidden'
-
-          state.on 'change', =>
-            return if state.val() == ''
-            district_id.getSelectOptions API_V1.DISTRICTS + "?state=#{state.val()}", (data) ->
-              data.unshift {} # we need an empty option for placeholder
-              {val: d.id, text: d.name} for d in data
-            , =>
-              district_id.removeClass 'hidden'
-
-          district_id.on 'change', =>
-            @showSchoolPicker()
-        else
-          @showInternational()
-          @showSchoolPicker()
-
-    international: ->
-      !@field('school_id').val() == API_V1.USA_ID
-
-    showInternational: ->
-      $('.intl-only').removeClass 'hidden'
-    
-    hideInternational: ->
-      $('.intl-only').addClass 'hidden'
-
-    showDomestic: ->
-      $('.domestic-only').removeClass 'hidden'
-    
-    hideDomestic: ->
-      $('domestic-only').addClass 'hidden'
-
-    setupNewSchoolLinks: ->
-      @el('#cant-find-school').on 'click', =>
-        @showCustomSchool()
-      @el('#back-to-list').on 'click', =>
-        @showSchoolPicker()
-
-    accountType: ->
-      $("input[name=account_type]:checked").val()
-    
-    isStudent: ->
-      @accountType() == 'student'
-
-    isTeacher: ->
-      @accountType() == 'teacher'
-
-    setupFormButtons: ->
-      @el('#continue-registration').on 'click', (e) =>
-        e.preventDefault()
-        @clearErrors()
-        return unless @validateBasicFields()
-        if @isStudent()
-          @showStudentForm()
-        else if @isTeacher()
-          @showTeacherForm()
-
-    showStudentForm: ->
-      @el('#common-fieldset').addClass 'hidden'
-      @el('#student-fieldset').removeClass 'hidden'
-      @post_url = API_V1.STUDENTS
-      @successFunction = (data) =>
-        @$form.empty()
-        @$form.append """
-          <div class='success'>
-            <h3>Thanks for signing up!</h3>
-            <p>You have successfully registered 
-            #{data.first_name} #{data.last_name}
-            with the user name <span class='big'>#{data.login}</span>.</p>
-            Use this user name and password you provided to sign in.</p>
-          </div>
-        """
-      @$form.empty()
-      @$form.append "<div class='success'>#{message}<div>"
-
-    showTeacherForm: ->
-      @el('#common-fieldset').addClass 'hidden'
-      @el('#teacher-fieldset').removeClass 'hidden'
-      @post_url = API_V1.TEACHERS
-      @successFunction = (data) =>
-        @$form.empty()
-        @$form.append """
-          <div class='success'>
-            <h3>Thanks for signing up!</h3>
-            <p>We're sending you an email with your activation code.</p>
-          </div>
-        """
-    showSchoolForm: ->
-      @el('#common-fieldset').addClass 'hidden'
-      @el('#teacher-fieldset').removeClass 'hidden'
-      
-    showCustomSchool: ->
-      @clearErrors()
-      @clearSchoolValues()
-      @el('#custom-school').removeClass 'hidden'
-      @hideSchoolPicker()
-      @last_post_url = @post_url
-      @post_url = API_V1.SCHOOLS
-      lastSubmitTitle = @el('.submit-form').val()
-      @setSubmitTitle("Add my school")
-      @successFunction = (data) =>
-        @post_url = @last_post_url
-        @school_id = data.school_id
-        @setSubmitTitle(lastSubmitTitle)
-        @showSchoolPicker(data.school_id)
-
-
-    setSubmitTitle: (title) ->
-      @el('.submit-form').val(title)
-
-    armSubmitHandler: () ->
-      @el('.submit-form').on 'click', (e) =>
-        e.preventDefault()
-        @serializeAndSubmit()
-
-    clearSchoolValues: ->
-      @field('school_id').select2 'val', ''
-      @field('school_name').val ''
-
-    clearSchoolErrors: ->
-      @clearFieldErrors 'school_id'
-      @clearFieldErrors 'school_name'
-
-    hideCustomSchool: ->
-      $('#custom-school').addClass 'hidden'
-
-    hideSchoolPicker: ->
-      $('#school-picker').addClass 'hidden'
-
-    showSchoolPicker: (item_to_select)->
-      district_id = @field('district_id').val()
-      country_id  = @field('country_id').val()
-      school_id   = @field('school_id')
-      if @international() && country_id
-        url = "#{API_V1.SCHOOLS}?country_id=#{country_id}"
-      else if district_id && district_id != ''
-        url = "#{API_V1.SCHOOLS}?district_id=#{district_id}"
-      else
-        return
-
-      school_id.getSelectOptions url, (data) ->
-        data.unshift {} # we need an empty option for placeholder
-        {val: s.id, text: s.name} for s in data
-      , (data) =>
-        @clearErrors()
-        @clearSchoolValues()
-        @el('#school-picker').removeClass 'hidden'
-        @hideCustomSchool()
-        @choose('school_id', item_to_select)
-
-
-    choose: (field_name, value) ->
-      field = @field(field_name)
-      if value
-        if (typeof field.val    == 'function')
-          field.val(value)
-        if (typeof field.select == 'function')  
-          field.select(value)
-        field.trigger('change')
-
-    field: (name) ->
-      @$form.find "input[name=\"#{name}\"], select[name=\"#{name}\"]"
-
-    el: (selector) ->
-      @$form.find selector
-
-  $ ->
-    new SignupForm('#new-account-form')
-
-)(jQuery)
+angular.module('ccDirectives', [])
+  .directive 'match', () ->
+    require: 'ngModel'
+    restrict: 'A'
+    scope: 
+      match: '='
+    link: (scope, elem, attrs, ctrl) ->
+      scope.$watch 'match', (pass) ->
+        ctrl.$validate()
+        ctrl.$validators.match = (modelValue) ->
+          return (ctrl.$pristine && (angular.isUndefined(modelValue) || modelValue == "")) || modelValue == scope.match
+  .directive 'foo', () ->
+    require: 'ngModel'
+    restrict: 'A'
+    scope: 
+      foo: '='
+    link: (scope, elem, attrs, ctrl) ->
+      scope.$watch 'match', (pass) ->
+        ctrl.$validate()
+        ctrl.$validators.match = (modelValue) ->
+          return (ctrl.$pristine && (angular.isUndefined(modelValue) || modelValue == "")) || modelValue == scope.foo
