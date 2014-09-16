@@ -85,6 +85,9 @@ angular.module("registrationApp", ["ccDirectives",'ui.select' ])
       (self.showDistrict() && self.district) || (! self.isDomestic())
   ]
 
+# Custom directive to compare two fields, and assert that they
+# should match... Use like:
+#   < input 'match' => "regController.password", … >… </input>
 angular.module('ccDirectives', [])
   .directive 'match', () ->
     require: 'ngModel'
