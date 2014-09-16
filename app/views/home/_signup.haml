@@ -121,23 +121,6 @@
               %ui-select-choices{"repeat" => "schools in regController.schools | filter: {name: $select.search}" }
                 {{schools.name}}
 
-          / .f-row
-          /   %ui-select{"ng-model" => "regController.state", 
-          /     "name"             => "state", 
-          /     %option
-          /     %option{"ng-repeat" => "sate in regController.sate", "value" => "{{state}}"}
-          /       {{state}}
-
-
-          / .f-row
-          /   %ui-select{"ng-model"   => "regController.district", 
-          /     "name"             => "district", 
-          /     "ui-select2"       => true,
-          /     "data-placeholder" => "Select your district",
-          /     "ng-show"          => "regController.showDistrict()" }
-          /     %ui-select-match{"placeholder" => "Select a person in the list or search his name/age..."}
-          /       {{$select.selected.name}}
-
           - if current_project.allow_adhoc_schools
             #school-picker.group
               .f-row
