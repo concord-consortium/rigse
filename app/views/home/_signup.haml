@@ -80,17 +80,37 @@
         .group
           .f-row
             %ui-select{"ng-model"   => "regController.country", 
-              "theme" =>  "select2" }
-              %ui-select-match{"placeholder" => "Enter a country..."}
+              "theme" =>  "select2",
+              "style" =>  "width: 100%;"}
+              %ui-select-match{"placeholder" => "Select your country..."}
                 {{$select.selected.name}}
-              %ui-select-choices{"repeat" => "country in regController.countries" }
-              %small
+              %ui-select-choices{"repeat" => "country in regController.countries | filter: {name: $select.search}" }
                 {{country.name}}
+        .group
+          .f-row
+            %ui-select{"ng-model"   => "regController.state", 
+              "theme"    =>  "select2",
+              "ng-show"  => "regController.showState()",   
+              "style"    =>  "width: 100%;"}
+              %ui-select-match{"placeholder" => "Select your state..."}
+                {{$select.selected}}
+              %ui-select-choices{"repeat" => "state in regController.states | filter: $select.search" }
+                {{state}}
+        .group
+          .f-row
+            %ui-select{"ng-model"   => "regController.district", 
+              "theme"     =>  "select2",
+              "ng-show"   => "regController.showDistrict()",
+              "style"     =>  "width: 100%;"}
+              %ui-select-match{"placeholder" => "Select your district..."}
+                {{$select.selected.name}}
+              %ui-select-choices{"repeat" => "district in regController.districts | filter: {name: $select.search}" }
+                {{district.name}}
                 
+
           / .f-row
           /   %ui-select{"ng-model" => "regController.state", 
           /     "name"             => "state", 
-          /     "ng-show"          => "regController.showState()" }
           /     %option
           /     %option{"ng-repeat" => "sate in regController.sate", "value" => "{{state}}"}
           /       {{state}}

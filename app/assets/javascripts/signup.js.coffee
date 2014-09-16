@@ -1,9 +1,17 @@
+
 angular.module("registrationApp", ["ccDirectives",'ui.select' ])
+  
   .controller "RegistrationController", [ '$http', ($http) ->
     console.log("we have registered our controller")
     self = @
     self.$http = $http
-
+    self.states = ["MA","RI","CT","NH"]
+    self.districts = [
+      {id: 3, name: "Noah"},
+      {id: 4, name: "Jen"},
+      {id: 5, name: "Adam"},
+      {id: 7, name: "Sam"},
+    ]
     self.$http({method: 'GET', url: API_V1.COUNTRIES})
       .success (data, status, headers, config) ->
         self.countries = data
@@ -34,7 +42,8 @@ angular.module("registrationApp", ["ccDirectives",'ui.select' ])
       !self.didStartRegistration
 
     self.showState = () ->
-      self.country == "USA"
+      return false unless self.country
+      self.country.name == "United States"      
 
     self.showDistrict = () ->
       self.showState() && self.state
@@ -54,13 +63,3 @@ angular.module('ccDirectives', [])
         ctrl.$validate()
         ctrl.$validators.match = (modelValue) ->
           return (ctrl.$pristine && (angular.isUndefined(modelValue) || modelValue == "")) || modelValue == scope.match
-  .directive 'foo', () ->
-    require: 'ngModel'
-    restrict: 'A'
-    scope: 
-      foo: '='
-    link: (scope, elem, attrs, ctrl) ->
-      scope.$watch 'match', (pass) ->
-        ctrl.$validate()
-        ctrl.$validators.match = (modelValue) ->
-          return (ctrl.$pristine && (angular.isUndefined(modelValue) || modelValue == "")) || modelValue == scope.foo
