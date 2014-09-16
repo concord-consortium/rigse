@@ -81,6 +81,7 @@
           .f-row
             %ui-select{"ng-model"   => "regController.country", 
               "theme" =>  "select2",
+              "ng-change" =>  "regController.countrySelected()",
               "style" =>  "width: 100%;"}
               %ui-select-match{"placeholder" => "Select your country..."}
                 {{$select.selected.name}}
@@ -90,7 +91,8 @@
           .f-row
             %ui-select{"ng-model"   => "regController.state", 
               "theme"    =>  "select2",
-              "ng-show"  => "regController.showState()",   
+              "ng-show"  => "regController.showState()",
+              "ng-change" =>  "regController.stateSelected()",
               "style"    =>  "width: 100%;"}
               %ui-select-match{"placeholder" => "Select your state..."}
                 {{$select.selected}}
@@ -101,12 +103,23 @@
             %ui-select{"ng-model"   => "regController.district", 
               "theme"     =>  "select2",
               "ng-show"   => "regController.showDistrict()",
+              "ng-change" =>  "regController.districtSelected()",
               "style"     =>  "width: 100%;"}
               %ui-select-match{"placeholder" => "Select your district..."}
                 {{$select.selected.name}}
               %ui-select-choices{"repeat" => "district in regController.districts | filter: {name: $select.search}" }
                 {{district.name}}
                 
+        .group
+          .f-row
+            %ui-select{"ng-model"   => "regController.school", 
+              "theme"     =>  "select2",
+              "ng-show"   => "regController.showSchool()",
+              "style"     =>  "width: 100%;"}
+              %ui-select-match{"placeholder" => "Select your schools..."}
+                {{$select.selected.name}}
+              %ui-select-choices{"repeat" => "schools in regController.schools | filter: {name: $select.search}" }
+                {{schools.name}}
 
           / .f-row
           /   %ui-select{"ng-model" => "regController.state", 
