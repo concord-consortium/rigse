@@ -72,7 +72,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select' ])
 
     self.isDomestic = () ->
       return false unless self.country
-      self.country.name == "United States"   
+      self.country.name == "United States"
     
     self.showState = () ->
       self.isDomestic()
@@ -92,7 +92,7 @@ angular.module('ccDirectives', [])
   .directive 'match', () ->
     require: 'ngModel'
     restrict: 'A'
-    scope: 
+    scope:
       match: '='
     link: (scope, elem, attrs, ctrl) ->
       scope.$watch 'match', (pass) ->
