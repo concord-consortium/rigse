@@ -159,14 +159,6 @@ ActiveRecord::Schema.define(:version => 20140923133956) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "collaboration_memberships", :force => true do |t|
-    t.integer  "collaboration_id"
-    t.integer  "student_id"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-    t.string   "access_token"
-  end
-
   create_table "commons_licenses", :id => false, :force => true do |t|
     t.string   "code",        :null => false
     t.string   "name",        :null => false
@@ -977,6 +969,13 @@ ActiveRecord::Schema.define(:version => 20140923133956) do
   end
 
   add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
+
+  create_table "portal_collaboration_memberships", :force => true do |t|
+    t.integer  "collaboration_id"
+    t.integer  "student_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
 
   create_table "portal_collaborations", :force => true do |t|
     t.integer  "owner_id"
