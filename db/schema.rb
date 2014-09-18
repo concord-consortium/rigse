@@ -235,6 +235,7 @@ ActiveRecord::Schema.define(:version => 20140923133956) do
     t.string   "uuid",             :limit => 36
     t.text     "original_body"
     t.float    "upload_time"
+    t.integer  "collaboration_id"
   end
 
   add_index "dataservice_bundle_contents", ["bundle_logger_id"], :name => "index_dataservice_bundle_contents_on_bundle_logger_id"

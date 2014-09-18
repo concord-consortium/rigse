@@ -9,6 +9,8 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
+  belongs_to :collaboration, :class_name => "Portal::Collaboration"
+
   # TODO: this should be removed after migration to new collaboration model is finished.
   has_many :legacy_collaborations, :dependent => :destroy, :class_name => "Portal::LegacyCollaboration", :foreign_key => "bundle_content_id"
   has_many :collaborators, :through => :legacy_collaborations, :class_name => "Portal::Student", :source => :student
