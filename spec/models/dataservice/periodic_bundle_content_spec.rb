@@ -26,7 +26,7 @@ describe Dataservice::PeriodicBundleContent do
       :body => @expected_body
     }
     # disable the after_save there is observer_spec to test that specific call
-    # we might want to try out the no_peeping_toms gem to handle this 
+    # we might want to try out the no_peeping_toms gem to handle this
     # https://github.com/patmaddox/no-peeping-toms
     Dataservice::PeriodicBundleContentObserver.instance.should_receive(:after_save).any_number_of_times
     Dataservice::PeriodicBundleContentObserver.instance.should_receive(:after_create).any_number_of_times
@@ -409,9 +409,9 @@ PART
       end
       describe "basic associations" do
         it "should allow for collaborators" do
-          @bundle.collaborators << @student_a
-          @bundle.collaborators << @student_b
-          @bundle.collaborators << @student_c
+          @bundle.collaboration.students << @student_a
+          @bundle.collaboration.students << @student_b
+          @bundle.collaboration.students << @student_c
           @bundle.save
           @bundle.reload
           @bundle.should have(3).collaborators
@@ -427,8 +427,8 @@ PART
           @main_student = Factory(:portal_student)
           @clazz = mock_model(Portal::Clazz)
           @offering = mock_model(Portal::Offering, :clazz => @clazz)
-          @learner = mock_model(Portal::Learner, 
-                                :portal_student => @main_student, 
+          @learner = mock_model(Portal::Learner,
+                                :portal_student => @main_student,
                                 :offering =>@offering)
           @learner_a = mock_model(Portal::Learner)
           @contents_a = []
@@ -449,7 +449,7 @@ PART
           @bundle.bundle_logger = @bundle_logger
         end
         it "should copy the bundle contents" do
-          @bundle.collaborators << @student_a
+          @bundle.collaboration.students << @student_a
           @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
           @learner_a.should_receive(:periodic_bundle_logger).and_return(@periodic_bundle_logger)
           @learner_a.should_receive(:bundle_logger).and_return(mock_model(Dataservice::BundleLogger, {:last_non_empty_bundle_content => nil}))
