@@ -351,7 +351,11 @@ class Portal::OfferingsController < ApplicationController
             l.bundle_logger.end_bundle( { :body => "" } )
           end
         end
-        bundle_logger.in_progress_bundle.collaborators = students.compact.uniq
+
+        collaboration = Portal::Collaboration.create!(:owner => learner.student)
+        collaboration.students = students.compact.uniq
+
+        bundle_logger.in_progress_bundle.collaboration = collaboration
         bundle_logger.in_progress_bundle.save
 
         launch_event = Dataservice::LaunchProcessEvent.create(
