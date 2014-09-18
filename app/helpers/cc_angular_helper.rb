@@ -20,6 +20,7 @@ module CcAngularHelper
       haml_tag 'ui-select', opts do
         haml_tag 'ui-select-match', match_opts do
           haml_concat "{{$select.selected}}"
+        end
         haml_tag 'ui-select-choices', choice_opts do
           if display_field
             haml_concat "{{question.#{display_field}}}"
@@ -30,7 +31,4 @@ module CcAngularHelper
       end
     end
   end
-end
-
-
 end
