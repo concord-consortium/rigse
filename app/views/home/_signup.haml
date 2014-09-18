@@ -1,12 +1,11 @@
 %div{'ng-app' => 'registrationApp'}
-  %div{}
+  %div{'ng-controller' => 'RegistrationController as regCtrl'}
     = form_tag '', 
       'id' => 'new-account-form', 
       'name' => 'myform', 
-      'ng-controller' => 'RegistrationController as regCtrl', 
-      'qnValidate' => 'regCtrl.errors',
-      class: 'signup' do
-    
+      'qn-validate' => 'regCtrl.errors',
+      'class' => 'signup' do
+
       %h2 Sign up
       .unknown-error
 
@@ -17,20 +16,20 @@
               %input{'type'   => "text", 
                 'placeholder' => 'First Name',
                 'name' => 'first_name',
-                'required'    => true,
+                'ng-required'    => true,
                 'ng-model'    => 'regCtrl.first_name'}
 
             .f-row.half
               %input{'type' => "text",  
               'placeholder' => 'Last Name', 
-              'required'    => true,
+              'ng-required'    => true,
               'ng-model'    => 'regCtrl.last_name'}
 
           .group
             .f-row
               %input{'type'   => "password",  
                 'minLength'   => 6,
-                'required'    => true,
+                'ng-required'    => true,
                 'placeholder' => 'Password', 
                 'ng-model'    =>'regCtrl.password'}
 
@@ -38,8 +37,8 @@
               %input{'type'        => "password",  
                 'placeholder' => 'Confirm Password', 
                 'match'       => "regCtrl.password",
-                'required'    => true,
-                'ng-model'    => 'regCtrl.confirmPassword' }
+                'ng-required'    => true,
+                'ng-model'    => 'regCtrl.password_confirmation' }
 
           .group
             .f-row
@@ -59,10 +58,12 @@
 
         = field_set_tag nil, id: 'student-fieldset', "ng-switch-when" => "student" do
           - if current_project.allow_default_class
-            .f-row= hidden_field_tag :class_word, Portal::Clazz.default_class.class_word
+            .f-row
+              =hidden_field_tag :class_word, Portal::Clazz.default_class.class_word, "name" => "class_word", "ng-model" => "regCtrl.class_word"
           - else
             .group
-              .f-row= text_field_tag :class_word, nil, placeholder: 'Class Word (not case sensitive)'
+              .f-row
+                = text_field_tag :class_word, nil, placeholder: 'Class Word (not case sensitive)', "name" => "class_word", "ng-model" => "regCtrl.class_word"
 
           - if current_project.use_student_security_questions
             .group
@@ -71,8 +72,8 @@
                 If you forget your password, you will need to answer these questions correctly in order to receive a new one.
             .group
               .f-row
-                %ui-select{"ng-model" => "regCtrl.chosen_questions[0]", 
-                  "name" => "chosen_questions[0]",
+                %ui-select{"ng-model" => "regCtrl.questions[0]", 
+                  "name" => "questions[0]",
                   "theme" =>  "select2", 
                   "style" => "width: 95%;",
                   "ui-validate" => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
@@ -80,11 +81,16 @@
                     {{$select.selected}}
                   %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
                     {{question}}
-              .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
+              .f-row
+                %input{'type'   => "text", 
+                  'placeholder' => 'Answer (case sensitive)',
+                  'name' => 'answers[0]',
+                  'ng-required'    => true,
+                  'ng-model'    => 'regCtrl.answers[0]'}
             .group
               .f-row
-                %ui-select{"ng-model" => "regCtrl.chosen_questions[1]", 
-                  "name" => "chosen_questions[1]",
+                %ui-select{"ng-model" => "regCtrl.questions[1]", 
+                  "name" => "questions[1]",
                   "theme" =>  "select2", 
                   "style" => "width: 95%;", 
                   "ui-validate" => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
@@ -92,11 +98,16 @@
                     {{$select.selected}}
                   %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
                     {{question}}
-              .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
+              .f-row
+                %input{'type'   => "text", 
+                  'placeholder' => 'Answer (case sensitive)',
+                  'name' => 'answers[1]',
+                  'ng-required'    => true,
+                  'ng-model'    => 'regCtrl.answers[1]'}
             .group
               .f-row
-                %ui-select{"ng-model" => "regCtrl.chosen_questions[2]", 
-                  "name" => "chosen_questions[2]",
+                %ui-select{"ng-model" => "regCtrl.questions[2]", 
+                  "name" => "questions[2]",
                   "theme" =>  "select2", 
                   "style" => "width: 95%;", 
                   "ui-validate" => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
@@ -104,10 +115,17 @@
                     {{$select.selected}}
                   %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
                     {{question}}
-              .f-row= text_field_tag 'answers[]', nil, placeholder: 'Answer (case sensitive)'
+              .f-row
+                %input{'type'   => "text", 
+                  'placeholder' => 'Answer (case sensitive)',
+                  'name' => 'answers[2]',
+                  'ng-required'    => true,
+                  'ng-model'    => 'regCtrl.answers[2]'}
 
-          .group.bottom
-            .f-row= submit_tag 'Submit', class: 'submit-form'
+          .group
+            .f-row
+              %button#finsish-student{"ng-disabled" => "!regCtrl.readyToSend()", "ng-click" => "regCtrl.sendRegistration()"}
+                Submit
 
         = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
           .group

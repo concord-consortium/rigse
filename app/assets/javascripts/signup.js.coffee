@@ -1,8 +1,9 @@
-angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate' ])
+angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate'])
   .controller "RegistrationController", [ '$scope', '$http', '$log', ($scope,$http,$log) ->
     self = @
-    self.chosen_questions = []
-    self.errors = []
+    self.questions = []          # these are the ones the student has chosen
+    self.security_questions = [] # these are given to us from the server
+    self.errors = []             # server validation errors
     
     self.loadCountries = () ->
       self.loadRemoteCollection('countries')
@@ -50,9 +51,9 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate' ])
         $log.log "Error loading #{collectionName} collection"
         self[collectionName] || =[]
 
-    self.postToResource = (resourceName, params={}) ->
+    self.postToResource = (resourceName, data={}) ->
       url = API_V1[resourceName.toUpperCase()]
-      $http({method: 'POST', url: url, params: params})
+      $http({method: 'POST', url: url, data: data})
       .success (data, status, headers, config) ->
         $log.log("added #{resourceName} to #{url}")
         self[resourceName] = data
@@ -63,25 +64,37 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate' ])
         self.errors = []
         for item of errrorfields
           $log.log("Error in #{item}")
-          $log.log($scope)
-          # $log.log($scope.$from[item])
           self.errors.push {key:item, value:errrorfields[item] }
-        # self[resourceName].errors = data
 
     self.uniqueQuestions = (value) ->
-      if self.chosen_questions.indexOf(value) == -1
-        return true
-      else
-        return false
-
+      self.questions.indexOf(value) == -1 ? true : false
+        
     self.readyToRegister = () ->
-      return self.first_name && self.last_name && self.confirmPassword && self.registrationType
+      (self.first_name && self.last_name && self.password_confirmation && self.registrationType)
+
+    self.readyToSend = () ->
+      true
+
+    self.sendRegistration = () ->
+      self.postToResource 'students',self.form_params()
+
+    self.form_params = () ->
+      debugger
+      return {
+        'first_name': self.first_name
+        'last_name':  self.last_name
+        'password':   self.password,
+        'password_confirmation': self.password_confirmation,
+        'email': self.email
+        'class_word': self.class_word
+        'answers': self.answers
+        'questions': self.questions
+      }
 
     self.startRegistration = () ->
       self.didStartRegistration = true
       self.loadCountries() if self.registrationType == "teacher"
       self.loadSecurityQuestions() if self.registrationType == "student"
-      self.postToResource("#{self.registrationType}s")
 
     self.nowShowing = () ->
       return "page1" unless self.didStartRegistration
@@ -102,10 +115,15 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate' ])
       (self.showDistrict() && self.district) || (! self.isDomestic())
   ]
 
-# Custom directive to compare two fields, and assert that they
-# should match... Use like:
-#   < input 'match' => "regController.password", … >… </input>
+       
+#
+# A module to contain some of our own hand-made directives.
+#
 angular.module('ccDirectives', [])
+
+  # Custom directive to compare two fields, and assert that they
+  # should match... Use like:
+  #   < input 'match' => "regController.password", … >… </input>
   .directive 'match', () ->
     require: 'ngModel'
     restrict: 'A'
@@ -114,5 +132,33 @@ angular.module('ccDirectives', [])
     link: (scope, elem, attrs, ctrl) ->
       scope.$watch 'match', (pass) ->
         ctrl.$validate()
-        ctrl.$validators.match = (modelValue) ->
-          return (ctrl.$pristine && (angular.isUndefined(modelValue) || modelValue == "")) || modelValue == scope.match
+        ctrl.$validators.match = (valueToValidate) ->
+          return (ctrl.$pristine && (angular.isUndefined(valueToValidate) || valueToValidate == "")) || valueToValidate == scope.match
+
+
+  # Directive to explicitly set form-model errors from the controller
+  # TODO: Maybe this could be moved into a service that round-trips data & errors
+  # Use it on a whole FORM element at once like so:
+  #   <form qn-validate='some-model-where-errors-will-be-written'>
+  .directive 'qnValidate', () ->
+    link: (scope, element, attr) ->
+      form = element.inheritedData('$formController')
+      return unless form
+      
+      # validation model
+      validate = attr.qnValidate
+      
+      scope.$watch validate, (errors) ->
+        form.$serverError = { }
+        form.$serverInvalid = false
+        
+        # set $serverInvalid to true|false
+        form.$serverInvalid = (errors.length > 0)
+        # loop through errors
+        angular.forEach errors, (error, i) ->
+          form.$serverError[error.key] = { $invalid: true, message: error.value }
+          field = form[error.key]
+          if field
+            field.$setValidity('server-error', false)
+            field.$setViewValue(field.$viewValue || ' ')
+            debugger
