@@ -45,5 +45,6 @@
 = require 'wait_message'
 = require 'api-urls'
 = require 'angular_select2'
+= require 'angular_ui_validate'
 = require 'signup'
 */

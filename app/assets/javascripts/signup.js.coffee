@@ -1,13 +1,17 @@
-angular.module("registrationApp", ["ccDirectives",'ui.select' ])  
-  .controller "RegistrationController", [ '$http', ($http) ->
-    console.log("we have registered our controller")
+angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate' ])
+  .controller "RegistrationController", [ '$scope', '$http', '$log', ($scope,$http,$log) ->
     self = @
-
+    self.chosen_questions = []
+    self.errors = []
+    
     self.loadCountries = () ->
       self.loadRemoteCollection('countries')
 
     self.loadStates = () ->
       self.loadRemoteCollection('states')
+
+    self.loadSecurityQuestions = () ->
+      self.loadRemoteCollection('security_questions')
 
     self.loadDisrticts = () ->
       params = { state: self.state }
@@ -15,18 +19,16 @@ angular.module("registrationApp", ["ccDirectives",'ui.select' ])
 
     self.loadDomesticSChools = () ->
       params = { district_id : self.district.id }
-      console.log("loading domestic schools")
       self.loadRemoteCollection('schools',params)
 
     self.loadIntlSchools = () ->
-      console.log("loading international schools")
       params = { country_id : self.country.id }
       self.loadRemoteCollection('schools',params)
 
     self.countrySelected = () ->
       if self.isDomestic()
         self.loadStates()
-      else 
+      else
         self.loadIntlSchools()
 
     self.stateSelected = () ->
@@ -41,38 +43,53 @@ angular.module("registrationApp", ["ccDirectives",'ui.select' ])
       url = API_V1[collectionName.toUpperCase()]
       $http({method: 'GET', url: url, params: params})
       .success (data, status, headers, config) ->
-        console.log("loaded #{collectionName} collection from #{url}")
+        $log.log("loaded #{collectionName} collection from #{url}")
         self[collectionName] = data
 
       .error (data, status) ->
-          console.log "Error loading #{collectionName} collection"
-          self[collectionName] || =[]
+        $log.log "Error loading #{collectionName} collection"
+        self[collectionName] || =[]
 
-    self.isStudent = () ->
-      self.registrationType == "student";
+    self.postToResource = (resourceName, params={}) ->
+      url = API_V1[resourceName.toUpperCase()]
+      $http({method: 'POST', url: url, params: params})
+      .success (data, status, headers, config) ->
+        $log.log("added #{resourceName} to #{url}")
+        self[resourceName] = data
 
-    self.isTeacher = () ->
-      self.registrationType == "teacher";
+      .error (data, status) ->
+        $log.log "Error posting #{resourceName} collection"
+        errrorfields = data.message
+        self.errors = []
+        for item of errrorfields
+          $log.log("Error in #{item}")
+          $log.log($scope)
+          # $log.log($scope.$from[item])
+          self.errors.push {key:item, value:errrorfields[item] }
+        # self[resourceName].errors = data
+
+    self.uniqueQuestions = (value) ->
+      if self.chosen_questions.indexOf(value) == -1
+        return true
+      else
+        return false
 
     self.readyToRegister = () ->
       return self.first_name && self.last_name && self.confirmPassword && self.registrationType
 
     self.startRegistration = () ->
       self.didStartRegistration = true
-      self.loadCountries()
+      self.loadCountries() if self.registrationType == "teacher"
+      self.loadSecurityQuestions() if self.registrationType == "student"
+      self.postToResource("#{self.registrationType}s")
 
-    self.showTeacherPage = () ->
-      return self.didStartRegistration && self.registrationType == "teacher"
-
-    self.showStudentPage = () ->
-      return self.didStartRegistration && self.registrationType == "student"
-
-    self.showPage1 = () ->
-      !self.didStartRegistration
+    self.nowShowing = () ->
+      return "page1" unless self.didStartRegistration
+      return self.registrationType
 
     self.isDomestic = () ->
       return false unless self.country
-      self.country.name == "United States"
+      self.country.id == API_V1.USA_ID
     
     self.showState = () ->
       self.isDomestic()
