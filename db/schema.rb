@@ -162,16 +162,9 @@ ActiveRecord::Schema.define(:version => 20140923133956) do
   create_table "collaboration_memberships", :force => true do |t|
     t.integer  "collaboration_id"
     t.integer  "student_id"
-    t.string   "access_token"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
-  end
-
-  create_table "collaborations", :force => true do |t|
-    t.integer  "bundle_content_id"
-    t.integer  "student_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.string   "access_token"
   end
 
   create_table "commons_licenses", :id => false, :force => true do |t|
@@ -830,6 +823,13 @@ ActiveRecord::Schema.define(:version => 20140923133956) do
     t.string   "thumbnail_url"
     t.boolean  "is_featured",                             :default => false
     t.text     "abstract"
+  end
+
+  create_table "legacy_collaborations", :force => true do |t|
+    t.integer  "bundle_content_id"
+    t.integer  "student_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|

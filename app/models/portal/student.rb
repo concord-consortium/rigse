@@ -17,12 +17,12 @@ class Portal::Student < ActiveRecord::Base
 
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz
 
-  has_many :collaboration_memberships, :class_name => "Portal::CollaborationMembership"
-  has_many :collaborations, :through => :collaboration_memberships, :class_name => "Portal::Collaboration"
-  has_many :own_collaborations, :dependent => :destroy, :class_name => "Portal::Collaboration", :foreign_key => "student_id"
-  # TODO FIXME: collaboration model was previously used as a join model. Perhaps we want to change that and use
-  #             the new collaboration memberships model.
-  has_many :collaborative_bundles, :through => :own_collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content
+  # has_many :collaboration_memberships, :class_name => "Portal::CollaborationMembership"
+  # has_many :collaborations, :through => :collaboration_memberships, :class_name => "Portal::Collaboration"
+
+  # TODO: this should be removed after migration to new collaboration model is finished.
+  has_many :legacy_collaborations, :dependent => :destroy, :class_name => "Portal::LegacyCollaboration", :foreign_key => "student_id"
+  has_many :collaborative_bundles, :through => :legacy_collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content
 
   has_many :portal_student_permission_forms, :dependent => :destroy, :class_name => "Portal::StudentPermissionForm", :foreign_key => "portal_student_id"
 

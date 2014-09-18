@@ -9,11 +9,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
-  # TODO FIXME: Perhaps it should be just one-to-one relationship.
-  has_many :collaborations, :dependent => :destroy, :class_name => "Portal::Collaboration", :foreign_key => "bundle_content_id"
-  # TODO FIXME: collaboration model was previously used as a join model. Perhaps we want to change that and use
-  #             the new collaboration memberships model.
-  has_many :collaborators, :through => :collaborations, :class_name => "Portal::Student", :source => :student
+  # TODO: this should be removed after migration to new collaboration model is finished.
+  has_many :legacy_collaborations, :dependent => :destroy, :class_name => "Portal::LegacyCollaboration", :foreign_key => "bundle_content_id"
+  has_many :collaborators, :through => :legacy_collaborations, :class_name => "Portal::Student", :source => :student
 
   has_many :launch_process_events, :dependent => :destroy, :class_name => "Dataservice::LaunchProcessEvent", :foreign_key => "bundle_content_id", :order => "id ASC"
 
