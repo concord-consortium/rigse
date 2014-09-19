@@ -6,8 +6,17 @@ require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'envi
 
 require 'csv'
 
+USED_THRESHOLD=50
+
 def display_name(a)
   "#{a.name} [#{a.id}]"
+end
+
+def percent_complete(learner)
+  rl = learner.report_learner
+  return 100 unless rl
+  return 100 if rl.num_answerables == 0
+  return rl.num_answered.to_f / rl.num_answerables
 end
 
 def process_student(student)
@@ -23,6 +32,7 @@ def process_student(student)
   student.learners.each do |learner|
     runnable = learner.offering.runnable
     next if !runnable.is_a?(Activity)
+    next if percent_complete(learner) < USED_THRESHOLD
     idx = ACTIVITIES.index(runnable)
     if idx != -1
       used_activities[idx] = 'X'
