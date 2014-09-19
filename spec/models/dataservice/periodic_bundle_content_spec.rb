@@ -428,7 +428,7 @@ PART
           @clazz = mock_model(Portal::Clazz)
           @offering = mock_model(Portal::Offering, :clazz => @clazz)
           @learner = mock_model(Portal::Learner,
-                                :portal_student => @main_student,
+                                :student => @main_student,
                                 :offering =>@offering)
           @learner_a = mock_model(Portal::Learner)
           @contents_a = []
@@ -449,6 +449,7 @@ PART
           @bundle.bundle_logger = @bundle_logger
         end
         it "should copy the bundle contents" do
+          @bundle.collaboration.owner = @main_student
           @bundle.collaboration.students << @student_a
           @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
           @learner_a.should_receive(:periodic_bundle_logger).and_return(@periodic_bundle_logger)

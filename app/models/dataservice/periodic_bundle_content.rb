@@ -72,7 +72,12 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     return true unless self.learner && self.learner.offering
     return true unless (bundle = self.learner.bundle_logger.in_progress_bundle)
     return true unless (collabs = bundle.collaborators).size > 0
+    # Make sure that we copy data to other learners only once, when we process bundle
+    # that belongs to collaboration owner. Otherwise we would have started endless copy cycle.
+    return true unless bundle.collaboration_owner_bundle?
     collabs.each do |student|
+      # Do not replicate bundle that already exists (+ the same issue as above - endless copy cycle).
+      next if student == bundle.owner
       slearner = self.learner.offering.find_or_create_learner(student)
       new_bundle_logger = slearner.periodic_bundle_logger
 
