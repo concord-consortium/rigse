@@ -1,10 +1,13 @@
-angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate'])
-  .controller "RegistrationController", [ '$scope', '$http', '$log', ($scope,$http,$log) ->
+angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ngMessages"])
+  .controller "RegistrationController", [ '$scope', '$http', '$log', 'errorList',  ($scope, $http, $log, errorList) ->
     self = @
     self.questions = []          # these are the ones the student has chosen
     self.security_questions = [] # these are given to us from the server
-    self.errors = []             # server validation errors
+    self.serverErrors = errorList.list
     
+    self.addError = () ->
+      errorList.addError('first_name',self.last_name,'message')
+
     self.loadCountries = () ->
       self.loadRemoteCollection('countries')
 
@@ -64,11 +67,11 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate'])
         self.errors = []
         for item of errrorfields
           $log.log("Error in #{item}")
-          self.errors.push {key:item, value:errrorfields[item] }
+          errorList.addError(item, self[item], errrorfields[item])
 
     self.uniqueQuestions = (value) ->
       self.questions.indexOf(value) == -1 ? true : false
-        
+
     self.readyToRegister = () ->
       (self.first_name && self.last_name && self.password_confirmation && self.registrationType)
 
@@ -79,7 +82,6 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate'])
       self.postToResource 'students',self.form_params()
 
     self.form_params = () ->
-      debugger
       return {
         'first_name': self.first_name
         'last_name':  self.last_name
@@ -136,29 +138,58 @@ angular.module('ccDirectives', [])
           return (ctrl.$pristine && (angular.isUndefined(valueToValidate) || valueToValidate == "")) || valueToValidate == scope.match
 
 
-  # Directive to explicitly set form-model errors from the controller
-  # TODO: Maybe this could be moved into a service that round-trips data & errors
-  # Use it on a whole FORM element at once like so:
-  #   <form qn-validate='some-model-where-errors-will-be-written'>
-  .directive 'qnValidate', () ->
-    link: (scope, element, attr) ->
-      form = element.inheritedData('$formController')
-      return unless form
-      
-      # validation model
-      validate = attr.qnValidate
-      
-      scope.$watch validate, (errors) ->
-        form.$serverError = { }
-        form.$serverInvalid = false
-        
-        # set $serverInvalid to true|false
-        form.$serverInvalid = (errors.length > 0)
-        # loop through errors
-        angular.forEach errors, (error, i) ->
-          form.$serverError[error.key] = { $invalid: true, message: error.value }
-          field = form[error.key]
-          if field
-            field.$setValidity('server-error', false)
-            field.$setViewValue(field.$viewValue || ' ')
-            debugger
+  #
+  # A service to keep track of server errors assisting 
+  # With 'serverErros'
+  #
+  .service 'errorList', () ->
+    errors = {}  # field -> message
+    service =
+      list: errors
+
+      addError: (field, value, message) ->
+        errors[field] ?= {}
+        errors[field].last_val = value
+        errors[field].messages ?= []
+        if errors[field].messages.indexOf(message) == -1
+          errors[field].messages.push message
+    
+      isValid: (field, value) ->
+        error = errors[field]
+        return true unless error
+        if (value == error.last_val)
+          return false     # mark the form dirty until it chages.
+        return true
+
+    return service
+
+  .directive('serverErrors', ['errorList', (errorList) ->
+    require: 'ngModel'
+    restrict: 'A'
+    link: (scope, element, attrs, ctrl) ->
+      # when the errorList changes, change the validator
+      scope.$watch () ->
+        JSON.stringify(errorList.list[ctrl.$name]) # changes in json rep trigger
+      , () ->
+        ctrl.$validators.serverErrors = (value) ->
+          errorList.isValid(ctrl.$name, ctrl.$viewValue)
+        ctrl.$validate()
+  ])
+
+  .directive 'serverErrorMessage', ['errorList', (errorList) ->
+    restrict: 'E'
+    link: (scope, element, attrs, ctrl) ->
+      # when the errorList changes, update the messages
+      scope.$watch () ->
+        JSON.stringify(errorList.list[attrs.field]) # changes in json rep trigger
+      , () ->
+        scope.messages = []
+        if errorList.list[attrs.field] && errorList.list[attrs.field].messages.length > 0
+          scope.messages = errorList.list[attrs.field].messages
+    template: """
+      <div class='server-errors' ng-repeat='message in messages'>
+        <span ng-bind='message' />
+      </div>
+      """
+  ]
+  

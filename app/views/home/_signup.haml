@@ -1,9 +1,10 @@
 %div{'ng-app' => 'registrationApp'}
   %div{'ng-controller' => 'RegistrationController as regCtrl'}
     = form_tag '', 
+      'with-errors' => 'true',
       'id' => 'new-account-form', 
-      'name' => 'myform', 
-      'qn-validate' => 'regCtrl.errors',
+      'name' => 'signup',
+      'validate' => 'false',
       'class' => 'signup' do
 
       %h2 Sign up
@@ -16,29 +17,38 @@
               %input{'type'   => "text", 
                 'placeholder' => 'First Name',
                 'name' => 'first_name',
-                'ng-required'    => true,
+                'server-errors' => true,
                 'ng-model'    => 'regCtrl.first_name'}
-
+            
             .f-row.half
               %input{'type' => "text",  
               'placeholder' => 'Last Name', 
               'ng-required'    => true,
               'ng-model'    => 'regCtrl.last_name'}
 
+
           .group
             .f-row
               %input{'type'   => "password",  
+                'name' => 'password',
                 'minLength'   => 6,
                 'ng-required'    => true,
                 'placeholder' => 'Password', 
-                'ng-model'    =>'regCtrl.password'}
+                'ng-model'    =>'regCtrl.password'}  
+              .div{'ng-messages' => "signup.password.$error"}
+                .div{'ng-message' => "minlength","class" => "error-message"}
+                  Password is too short
 
             .f-row
               %input{'type'        => "password",  
                 'placeholder' => 'Confirm Password', 
+                'name'        => 'password_confirmation',
                 'match'       => "regCtrl.password",
                 'ng-required'    => true,
                 'ng-model'    => 'regCtrl.password_confirmation' }
+              .div{'ng-messages' => "signup.password_confirmation.$error"}
+                .div{'ng-message' => "match","class" => "error-message"}
+                  Passwords do not match
 
           .group
             .f-row
@@ -75,7 +85,6 @@
                 %ui-select{"ng-model" => "regCtrl.questions[0]", 
                   "name" => "questions[0]",
                   "theme" =>  "select2", 
-                  "style" => "width: 95%;",
                   "ui-validate" => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
                   %ui-select-match{"placeholder" => "Choose a security question ..."}
                     {{$select.selected}}
@@ -92,7 +101,6 @@
                 %ui-select{"ng-model" => "regCtrl.questions[1]", 
                   "name" => "questions[1]",
                   "theme" =>  "select2", 
-                  "style" => "width: 95%;", 
                   "ui-validate" => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
                   %ui-select-match{"placeholder" => "Choose a security question ..."}
                     {{$select.selected}}
@@ -127,7 +135,7 @@
               %button#finsish-student{"ng-disabled" => "!regCtrl.readyToSend()", "ng-click" => "regCtrl.sendRegistration()"}
                 Submit
 
-        = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
+        = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-s" => "teacher" do
           .group
             .f-row= text_field_tag :login, nil, placeholder: 'Username'
             .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
