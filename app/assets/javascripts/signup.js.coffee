@@ -70,13 +70,11 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
           errorList.addError(item, self[item], errrorfields[item])
 
     self.uniqueQuestions = (value) ->
+      return true unless value && value.length > 0
       self.questions.indexOf(value) == -1 ? true : false
 
     self.readyToRegister = () ->
       (self.first_name && self.last_name && self.password_confirmation && self.registrationType)
-
-    self.readyToSend = () ->
-      true
 
     self.sendRegistration = () ->
       self.postToResource 'students',self.form_params()
@@ -163,6 +161,37 @@ angular.module('ccDirectives', [])
 
     return service
 
+
+  .directive('goodClassword', ['$http', ($http) ->
+      require: 'ngModel',
+      link: ($scope, element, attrs, ngModel) ->
+        ngModel.$asyncValidators.goodClassword = (class_word) ->
+          return $http.get("#{API_V1.CLASSWORD}?class_word=#{class_word}");
+  ])
+
+  .directive('usernameAvail', ['$http', ($http) ->
+      require: 'ngModel',
+      link: ($scope, element, attrs, ngModel) ->
+        ngModel.$asyncValidators.usernameAvail = (username) ->
+          return $http.get("#{API_V1.LOGINS}?username=#{username}");
+  ])
+
+  .directive('emailAvail', ['$http', ($http) ->
+      require: 'ngModel',
+      link: ($scope, element, attrs, ngModel) ->
+        ngModel.$asyncValidators.usernameAvail = (email) ->
+          return $http.get("#{API_V1.EMAIL}?email=#{email}");
+  ])
+
+
+  .directive('nonBlank', [() ->
+    require: 'ngModel'
+    restrict: 'A'
+    link: (scope, element, attrs, ctrl) ->
+      ctrl.$validators.nonBlank = (value) ->
+        return !!(value && value.trim().length > 0)
+  ])
+
   .directive('serverErrors', ['errorList', (errorList) ->
     require: 'ngModel'
     restrict: 'A'
@@ -176,7 +205,7 @@ angular.module('ccDirectives', [])
         ctrl.$validate()
   ])
 
-  .directive 'serverErrorMessage', ['errorList', (errorList) ->
+  .directive('serverErrorMessage', ['errorList', (errorList) ->
     restrict: 'E'
     link: (scope, element, attrs, ctrl) ->
       # when the errorList changes, update the messages
@@ -191,5 +220,5 @@ angular.module('ccDirectives', [])
         <span ng-bind='message' />
       </div>
       """
-  ]
+  ])
   
