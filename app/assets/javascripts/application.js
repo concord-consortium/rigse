@@ -44,7 +44,8 @@
 = require 'permission_form'
 = require 'wait_message'
 = require 'api-urls'
-= require 'angular_select2'
-= require 'angular_ui_validate'
-= require 'signup'
+= require 'angular/vendor/angular_select2'
+= require 'angular/vendor/angular_ui_validate'
+= require 'angular/cc_directives'
+= require 'angular/signup'
 */

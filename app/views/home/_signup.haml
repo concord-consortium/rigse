@@ -255,9 +255,11 @@
                     {{$select.selected.name}}
                   %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
                     {{schools.name}}
-          .f-row
-            %button#finsish-teacher{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
 
+          .group
+            .f-row
+              %button#finsish-teacher{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
+                Submit
 
         %div{"ng-switch-when" => "success"}
           %div{"ng-switch" => "regCtrl.registrationType"}
