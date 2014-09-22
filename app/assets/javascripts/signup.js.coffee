@@ -187,8 +187,8 @@ angular.module('ccDirectives', [])
   .directive('emailAvail', ['$http', ($http) ->
       require: 'ngModel',
       link: ($scope, element, attrs, ngModel) ->
-        ngModel.$asyncValidators.usernameAvail = (email) ->
-          return $http.get("#{API_V1.EMAIL}?email=#{email}");
+        ngModel.$asyncValidators.emailAvail = (email) ->
+          return $http.get("#{API_V1.EMAILS}?email=#{email}");
   ])
 
 

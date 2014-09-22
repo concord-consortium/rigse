@@ -173,8 +173,37 @@
 
         = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
           .group
-            .f-row= text_field_tag :login, nil, placeholder: 'Username'
-            .f-row= text_field_tag :email, nil, placeholder: 'E-mail'
+            %input{'type'   => "text",  
+              'name' => 'login',
+              'minLength'   => 3,
+              'non-blank'    => true,
+              'placeholder' => 'login', 
+              'username-avail' => 'true',
+              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+              'ng-model'    =>'regCtrl.login'} 
+            .div{'ng-messages' => "signup.login.$error"}
+              .div{'ng-message' => "non-blank"}
+              .div{'ng-message' => "minlength","class" => "error-message"}
+                Login is too short
+              .div{'ng-message' => "usernameAvail","class" => "error-message"}
+                That login is taken
+            %br
+            %input{'type'   => "text",  
+              'name' => 'email',
+              'non-blank'    => true,
+              'placeholder' => 'email@example.com',
+              'ng-pattern' => "/\\S+@\\S+/",
+              'email-avail' => 'true',
+              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+              'ng-model'    =>'regCtrl.email'} 
+            .div{'ng-messages' => "signup.email.$error"}
+              .div{'ng-message' => "non-blank"}
+              .div{'ng-message' => "pattern","class" => "error-message"}
+                Email address must have an @ character
+              .div{'ng-message' => "minlength","class" => "error-message"}
+                Email address is too short
+              .div{'ng-message' => "emailAvail","class" => "error-message"}
+                Email belongs to an existing user
           .group
             .f-row
               %ui-select{"ng-model"   => "regCtrl.country", 
@@ -226,9 +255,10 @@
                     {{$select.selected.name}}
                   %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
                     {{schools.name}}
+          .f-row
+            %button#finsish-teacher{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
 
-          .group
-            .f-row= submit_tag 'Submit', class: 'submit-form'
+
         %div{"ng-switch-when" => "success"}
           %div{"ng-switch" => "regCtrl.registrationType"}
             %div{"ng-switch-when" => "student"}
