@@ -77,8 +77,15 @@
                 = text_field_tag :class_word, nil,  
                 "placeholder" => 'Class Word (not case sensitive)', 
                 "name" => "class_word", "ng-model" => "regCtrl.class_word", 
+                "non-blank" => true,
                 "good-classword" => true,
                 "ng-model-options" => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+
+                .div{'ng-messages' => "signup.class_word.$error"}
+                  .div{'ng-message' => "nonBlank","class" => "error-message"}
+                  .div{'ng-message' => "goodClassword","class" => "error-message"}
+                    You must enter a valid class word.
+
           - if current_project.use_student_security_questions
             .group
               %p.small
@@ -222,6 +229,18 @@
 
           .group
             .f-row= submit_tag 'Submit', class: 'submit-form'
+        %div{"ng-switch-when" => "success"}
+          %div{"ng-switch" => "regCtrl.registrationType"}
+            %div{"ng-switch-when" => "student"}
+            %h3 Thanks for signing up!
+            %p
+              You have successfully registered {{regCtrl.first_name}} {{regCtrl.last_name}}
+              with the user name
+              %span.big {{regCtrl.login}}.
+              Use this user name and password you provided to sign in.
+            %div{"ng-switch-when" => "teacher"}
+              %h3 Thanks for signing up!
+              %p We're sending you an email with your activation code.
 
       .group
         .f-row.wait-message

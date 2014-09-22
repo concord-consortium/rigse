@@ -54,13 +54,13 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         $log.log "Error loading #{collectionName} collection"
         self[collectionName] || =[]
 
-    self.postToResource = (resourceName, data={}) ->
+    self.postToResource = (resourceName, data={}, successCall, failCall) ->
       url = API_V1[resourceName.toUpperCase()]
       $http({method: 'POST', url: url, data: data})
       .success (data, status, headers, config) ->
         $log.log("added #{resourceName} to #{url}")
         self[resourceName] = data
-
+        successCall(data) if successCall
       .error (data, status) ->
         $log.log "Error posting #{resourceName} collection"
         errrorfields = data.message
@@ -68,6 +68,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         for item of errrorfields
           $log.log("Error in #{item}")
           errorList.addError(item, self[item], errrorfields[item])
+        failCall(data) if failCall
 
     self.uniqueQuestions = (value) ->
       return true unless value && value.length > 0
@@ -77,15 +78,21 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       (self.first_name && self.last_name && self.password_confirmation && self.registrationType)
 
     self.sendRegistration = () ->
-      self.postToResource 'students',self.form_params()
+      resource = "#{self.registrationType}s"
+      self.postToResource resource, self.form_params(), (data) ->
+        self.did_finish = true
+        # copy data into this controller
+        for field of data
+          self[field] = data[field]
 
     self.form_params = () ->
       return {
         'first_name': self.first_name
         'last_name':  self.last_name
-        'password':   self.password,
-        'password_confirmation': self.password_confirmation,
+        'password':   self.password
+        'password_confirmation': self.password_confirmation
         'email': self.email
+        'login': self.login
         'class_word': self.class_word
         'answers': self.answers
         'questions': self.questions
@@ -98,6 +105,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
 
     self.nowShowing = () ->
       return "page1" unless self.didStartRegistration
+      return "success" if self.did_finish
       return self.registrationType
 
     self.isDomestic = () ->
