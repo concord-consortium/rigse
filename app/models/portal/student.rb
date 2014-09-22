@@ -1,24 +1,28 @@
 class Portal::Student < ActiveRecord::Base
   self.table_name = :portal_students
-  
+
   acts_as_replicatable
-  
+
   belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_student
   belongs_to :grade_level, :class_name => "Portal::GradeLevel", :foreign_key => "grade_level_id"
-  
+
   # because of has many polymorphs, we don't need the following relationships defined
   # TODO: Schools must be queried through clazzes.
   # TODO: For now we are writing custom methods...
   # has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
   # has_many :schools, :through => :school_memberships, :class_name => "Portal::School"
-  
+
   has_many :learners, :dependent => :destroy , :class_name => "Portal::Learner", :foreign_key => "student_id"
   has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
-  
+
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz
-  
-  has_many :collaborations, :dependent => :destroy, :class_name => "Portal::Collaboration", :foreign_key => "student_id"
-  has_many :collaborative_bundles, :through => :collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content 
+
+  has_many :collaboration_memberships, :class_name => "Portal::CollaborationMembership"
+  has_many :collaborations, :through => :collaboration_memberships, :class_name => "Portal::Collaboration"
+  has_many :own_collaborations, :dependent => :destroy, :class_name => "Portal::Collaboration", :foreign_key => "student_id"
+  # TODO FIXME: collaboration model was previously used as a join model. Perhaps we want to change that and use
+  #             the new collaboration memberships model.
+  has_many :collaborative_bundles, :through => :own_collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content
 
   has_many :portal_student_permission_forms, :dependent => :destroy, :class_name => "Portal::StudentPermissionForm", :foreign_key => "portal_student_id"
 
@@ -30,15 +34,15 @@ class Portal::Student < ActiveRecord::Base
     :after_remove => :update_report_permissions
 
   [:name, :first_name, :last_name, :email, :login, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
-  
+
   include Changeable
-  
- 
+
+
   def self.generate_user_email
     hash = UUIDTools::UUID.timestamp_create.to_s
     "no-email-#{hash}@concord.org"
   end
-  
+
   def self.generate_user_login(first_name, last_name)
     # Old method, first_name + last initial
     #generated_login = "#{first_name.downcase.gsub(/[^a-z0-9]/,'')}#{last_name[0..0].downcase}"
@@ -52,7 +56,7 @@ class Portal::Student < ActiveRecord::Base
     end
     return generated_login
   end
-  
+
   def update_report_permissions(permission_form)
     report_learners = Report::Learner.where(:student_id => self.id)
     report_learners.each { |l| l.update_permission_forms; l.save }
@@ -84,7 +88,7 @@ class Portal::Student < ActiveRecord::Base
       return offerings
     end
   end
-    
+
   ##
   ## required for the accordion view
   ##
@@ -101,11 +105,11 @@ class Portal::Student < ActiveRecord::Base
       nil
     end
   end
-  
+
   def has_clazz?(clazz)
     self.clazzes.detect { |cl| cl.id == clazz.id }
   end
-  
+
   def add_clazz(clazz)
     unless self.has_clazz?(clazz)
       self.clazzes << clazz

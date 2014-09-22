@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140908175805) do
+ActiveRecord::Schema.define(:version => 20140917152457) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -157,6 +157,14 @@ ActiveRecord::Schema.define(:version => 20140908175805) do
     t.string   "app_secret"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "collaboration_memberships", :force => true do |t|
+    t.integer  "collaboration_id"
+    t.integer  "student_id"
+    t.string   "access_token"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "collaborations", :force => true do |t|

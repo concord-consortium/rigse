@@ -9,7 +9,10 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
+  # TODO FIXME: Perhaps it should be just one-to-one relationship.
   has_many :collaborations, :dependent => :destroy, :class_name => "Portal::Collaboration", :foreign_key => "bundle_content_id"
+  # TODO FIXME: collaboration model was previously used as a join model. Perhaps we want to change that and use
+  #             the new collaboration memberships model.
   has_many :collaborators, :through => :collaborations, :class_name => "Portal::Student", :source => :student
 
   has_many :launch_process_events, :dependent => :destroy, :class_name => "Dataservice::LaunchProcessEvent", :foreign_key => "bundle_content_id", :order => "id ASC"
@@ -24,16 +27,16 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   include BlobExtraction
   include SaveableExtraction
-  
+
   before_save :process_bundle
   # pagination default
   cattr_reader :per_page
   @@per_page = 5
 
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{body otml uuid}
-  
+
   class <<self
 
 
@@ -45,11 +48,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def user
     nil
   end
-  
+
   def otml
     self[:otml] || ''
   end
-  
+
   def name
     user = self.learner.student.user
     name = user.name
@@ -119,7 +122,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     self.process_blobs
     true # don't stop the callback chain.
   end
-  
+
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
@@ -129,7 +132,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       nil
     end
   end
-  
+
   def convert_otml_to_body
     # explicitly flag attributes which will change, especially otml since it has problems auto-detecting it has changed...
     self.otml_will_change!
@@ -141,7 +144,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
     self.body = self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
   end
-  
+
   def process_blobs
     # return true unless self.valid_xml
     # we want to give other callbacks a chance to run
@@ -154,7 +157,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
     return blobs_present
     # above would stop other callbacks from happening
-    # return true 
+    # return true
   end
 
   def bundle_content_return_address
@@ -167,11 +170,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
     return nil
   end
-  
+
   def otml_empty?
     !self.otml || self.otml.size <= 17
   end
-  
+
   def delayed_process_bundle
     extract_saveables
     copy_to_collaborators
@@ -185,7 +188,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     # Also create/update a Report::Learner object for reporting
     learner.report_learner.update_fields if learner
   end
-  
+
   def description
     learner_name = teacher_name = runnable_name = school_name = 'not available'
     begin
@@ -214,7 +217,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       end
     end
     <<-HEREDOC
-    This session bundle comes from learner data created on #{self.created_at} by '#{learner_name}' in '#{teacher_name}'s 
+    This session bundle comes from learner data created on #{self.created_at} by '#{learner_name}' in '#{teacher_name}'s
     class using: '#{runnable_name}' in the '#{school_name}' school.
     HEREDOC
   end
