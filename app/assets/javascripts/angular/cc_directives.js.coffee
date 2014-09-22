@@ -4,9 +4,44 @@
 #
 angular.module('ccDirectives', [])
 
-  # Custom directive to compare two fields, and assert that they
+  ##
+  ## Some async remote directives to help with
+  ## Form validations. Use like <input username-avail="true"> &etc.
+  ##
+  .directive('goodClassword', ['$http', ($http) ->
+      require: 'ngModel',
+      link: ($scope, element, attrs, ngModel) ->
+        ngModel.$asyncValidators.goodClassword = (class_word) ->
+          return $http.get("#{API_V1.CLASSWORD}?class_word=#{class_word}");
+  ])
+  .directive('usernameAvail', ['$http', ($http) ->
+      require: 'ngModel',
+      link: ($scope, element, attrs, ngModel) ->
+        ngModel.$asyncValidators.usernameAvail = (username) ->
+          return $http.get("#{API_V1.LOGINS}?username=#{username}");
+  ])
+  .directive('emailAvail', ['$http', ($http) ->
+      require: 'ngModel',
+      link: ($scope, element, attrs, ngModel) ->
+        ngModel.$asyncValidators.emailAvail = (email) ->
+          return $http.get("#{API_V1.EMAILS}?email=#{email}");
+  ])
+
+  # ng-required wasn't working the way I woudl have liked
+  # this validating directive requires the field be non-blank.
+  #   <input 'non-blank' => "regController.email", … >… </input>
+  .directive('nonBlank', [() ->
+    require: 'ngModel'
+    restrict: 'A'
+    link: (scope, element, attrs, ctrl) ->
+      ctrl.$validators.nonBlank = (value) ->
+        return !!(value && value.trim().length > 0)
+  ])
+
+
+  # Directive to compare two fields, and assert that they
   # should match... Use like:
-  #   < input 'match' => "regController.password", … >… </input>
+  #   <input 'match' => "regController.password", … >… </input>
   .directive 'match', () ->
     require: 'ngModel'
     restrict: 'A'
@@ -21,7 +56,7 @@ angular.module('ccDirectives', [])
 
   #
   # A service to keep track of server errors assisting
-  # With 'serverErros'
+  # With 'serverErrors'  (not widely used)
   #
   .service 'errorList', () ->
     errors = {}  # field -> message
@@ -44,37 +79,10 @@ angular.module('ccDirectives', [])
 
     return service
 
-
-  .directive('goodClassword', ['$http', ($http) ->
-      require: 'ngModel',
-      link: ($scope, element, attrs, ngModel) ->
-        ngModel.$asyncValidators.goodClassword = (class_word) ->
-          return $http.get("#{API_V1.CLASSWORD}?class_word=#{class_word}");
-  ])
-
-  .directive('usernameAvail', ['$http', ($http) ->
-      require: 'ngModel',
-      link: ($scope, element, attrs, ngModel) ->
-        ngModel.$asyncValidators.usernameAvail = (username) ->
-          return $http.get("#{API_V1.LOGINS}?username=#{username}");
-  ])
-
-  .directive('emailAvail', ['$http', ($http) ->
-      require: 'ngModel',
-      link: ($scope, element, attrs, ngModel) ->
-        ngModel.$asyncValidators.emailAvail = (email) ->
-          return $http.get("#{API_V1.EMAILS}?email=#{email}");
-  ])
-
-
-  .directive('nonBlank', [() ->
-    require: 'ngModel'
-    restrict: 'A'
-    link: (scope, element, attrs, ctrl) ->
-      ctrl.$validators.nonBlank = (value) ->
-        return !!(value && value.trim().length > 0)
-  ])
-
+  # Directive that compares the input to a list on the controller
+  # Could be used to report on server validation errors, but isnt'
+  # Use like:
+  #   <input 'server-errors' => "regController.email", … >… </input>
   .directive('serverErrors', ['errorList', (errorList) ->
     require: 'ngModel'
     restrict: 'A'
@@ -88,6 +96,10 @@ angular.module('ccDirectives', [])
         ctrl.$validate()
   ])
 
+  # Directive that compares the input to a list on the controller
+  # Could be used to report on server validation errors, but isnt'
+  # Use like:
+  #   <server-error-essage field='email'/> (not widely used)
   .directive('serverErrorMessage', ['errorList', (errorList) ->
     restrict: 'E'
     link: (scope, element, attrs, ctrl) ->
