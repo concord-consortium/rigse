@@ -10,7 +10,6 @@ class API::V1::SchoolRegistration
   attribute :country_id, Integer
   attribute :school_id, Integer
   attribute :state, String
-  attribute :province, String
   attribute :city, String
 
   validate  :school_is_valid
@@ -45,7 +44,7 @@ class API::V1::SchoolRegistration
   end
 
   def new_school
-    Portal::School.new(name: school_name, district_id: district_id, state: state||province, city: city, country_id: country_id)
+    Portal::School.new(name: school_name, district_id: district_id, state: state, city: city, country_id: country_id)
   end
 
   def international?
@@ -58,8 +57,6 @@ class API::V1::SchoolRegistration
     if international?
       required_non_blank[:country_id] = "Country"
       required_non_blank[:city] = "City"
-      required_non_blank[:province] = "Province"
-      required_non_blank.delete(:state)
       required_non_blank.delete(:district_id)
     end
     required_non_blank.each do |k,v| 

@@ -4,6 +4,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
     self.questions = []          # these are the ones the student has chosen
     self.security_questions = [] # these are given to us from the server
     self.serverErrors = errorList.list
+    self.editSchool = false
     
     self.addError = () ->
       errorList.addError('first_name',self.last_name,'message')
@@ -23,9 +24,9 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
 
     self.loadSchools = () ->
       if self.isDomestic()
-        loadDomesticSChools()
+        self.loadDomesticSChools()
       else
-        loadIntlSchools()
+        self.loadIntlSchools()
 
     self.loadDomesticSChools = () ->
       params = { district_id : self.district.id }
@@ -87,10 +88,11 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       self.questions.indexOf(value) == -1 ? true : false
 
     self.schoolValid = () ->
+      self.school ?= {}
       if self.isDomestic()
-        return self.school_name && self.school_name.length > 2
-      for school_prop in [self.school_name, self.school_state, self.school_city]
-        return false unless school_prop && school_prop.length > 2
+        return self.school.name && self.school.name.length > 0
+      for school_prop in [self.school.name, self.state, self.school.city]
+        return false unless school_prop && school_prop.length > 0
       return true
 
     self.readyToRegister = () ->
@@ -106,18 +108,22 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
 
     self.sendSchool = () ->
       resource = "schools"
-      data = 
+      data =
         school_name: self.school.name
         country_id: self.country.id
-        district_id: self.district.id
         state: self.state
-        province: self.province
         city: self.school.city
+      
+      data['district_id']  = self.district.id if self.district
 
-      self.postToResource resource, self.form_params(), (data) ->
-        self.school = data
-        self.editSchool = false
+      self.postToResource resource, data, (returnData) ->
+        id = returnData['school_id']
         self.loadSchools()
+        for school in self.schools
+          if school.id == $id
+            self.school = school
+        self.editSchool = false
+        
 
     self.form_params = () ->
       data = {
@@ -132,7 +138,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         'questions': self.questions
       }
       if self.school
-        data[school_id] = self.school.id
+        data['school_id'] = self.school.id
       return data
 
 
@@ -153,7 +159,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       return false unless self.country
       return false unless self.country.name == "United States"
       return true
-      
+    
     self.showState = () ->
       return self.isDomestic()
 
@@ -163,6 +169,28 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
     self.showSchool = () ->
       return false unless self.country
       (self.showDistrict() && self.district) || (! self.isDomestic())
+
+    self.disableSubmit = (form_valid) ->
+      return true if self.editSchool
+      return !form_valid
+
+    self.setEditSchool = () ->
+      self.editSchool = true
+
+    self.setPickSchool = () ->
+      self.editSchool = false
+
+    # how are we getting school info?
+    self.schoolEditmode = () ->
+      if self.editSchool
+        # full form US version
+        return "us_edit" if self.isDomestic()
+        # for form internation version
+        return "intl_edit"
+      else
+        return "dropdown"
+      debugger
+
   ]
 
  

@@ -93,6 +93,7 @@
                 If you forget your password, you will need to answer these questions correctly in order to receive a new one.
             .group
               .f-row
+                /  TODO:  Extract some helper here, because these are big!
                 %ui-select{"ng-model" => "regCtrl.questions[0]", 
                   "name" => "questions[0]",
                   "theme" =>  "select2", "width" => "95%",
@@ -179,6 +180,7 @@
               'non-blank'    => true,
               'placeholder' => 'login', 
               'username-avail' => 'true',
+              'server-errors' => true,
               'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
               'ng-model'    =>'regCtrl.login'} 
             .div{'ng-messages' => "signup.login.$error"}
@@ -187,6 +189,8 @@
                 Login is too short
               .div{'ng-message' => "usernameAvail","class" => "error-message"}
                 That login is taken
+              .div{'ng-message' => "serverErrors","class" => "error-message"}
+                Please select another email  
             %br
 
             %input{'type'   => "text",  
@@ -194,18 +198,21 @@
               'non-blank'    => true,
               'placeholder' => 'email@example.com',
               'ng-pattern' => "/\\S+@\\S+/",
+              'server-errors' => true,
               'email-avail' => 'true',
               'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
               'ng-model'    =>'regCtrl.email'} 
             .div{'ng-messages' => "signup.email.$error"}
               .div{'ng-message' => "non-blank"}
               .div{'ng-message' => "pattern","class" => "error-message"}
-                Email address must have an @ character
+                Email doesn't appear to be a valid email
               .div{'ng-message' => "minlength","class" => "error-message"}
                 Email address is too short
               .div{'ng-message' => "emailAvail","class" => "error-message"}
                 Email belongs to an existing user
-          
+              .div{'ng-message' => "serverErrors","class" => "error-message"}  
+                Email doesn't appear to be a valid email
+
           .group
             .f-row
               %ui-select{"ng-model"   => "regCtrl.country", 
@@ -239,24 +246,39 @@
                   
           .group#school-picker{"ng-show"  => "regCtrl.showSchool()"}
             - if current_project.allow_adhoc_schools
-              %div{"ng-show" => "!regCtrl.editSchool"}
-                .f-row
-                  %ui-select{"ng-model" => "regCtrl.school", "theme" => "select2", "non-blank" => true, "ng-model" => 'regCtrl.school', "name" => "school"}
-                    %ui-select-match{"placeholder" => "Select your school ..."}
-                      {{$select.selected.name}}
-                    %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
-                      {{schools.name}}
-                .f-row
-                  %a#cant-find-school{"ng-click" =>"regCtrl.editSchool=true"} 
-                    I can't find my school in the list.
-              #custom-school.group{"ng-show" => "regCtrl.editSchool"}
-                .f-row
-                  %input{'type' => "text",  'placeholder' => 'School name', 
-                    "name" => "school_name", "ng-model" => "regCtrl.school.name"}
-                %div{"ng-show" => "regCtrl.isInternational()"}
+              %div{"ng-switch" => "regCtrl.schoolEditmode()"}
+                .group{"ng-switch-when" => "dropdown"}
+                  .f-row
+                    %ui-select{"ng-model" => "regCtrl.school", 
+                    "theme" => "select2", "non-blank" => true, 
+                    "ng-model" => 'regCtrl.school', "name" => "school", "width" => "95%"}
+                      %ui-select-match{"placeholder" => "Select your school ..."}
+                        {{$select.selected.name}}
+                      %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
+                        {{schools.name}}
+                  .f-row
+                    %a#cant-find-school{"ng-click" =>"regCtrl.setEditSchool()"} 
+                      I can't find my school in the list.
+  
+                .group{"ng-switch-when" => "us_edit"}
+                  .f-row
+                    %input{'type' => "text",  'placeholder' => 'School name', 
+                      "name" => "school_name", "ng-model" => "regCtrl.school.name",
+                      "non-blank" => true }
+                  .f-row
+                    %button#add_school{"ng-disabled" => "!regCtrl.schoolValid()", "ng-click" => "regCtrl.sendSchool()"}
+                      Add my school
+                    %a#back-to-list{"ng-click" =>"regCtrl.setPickSchool()" } 
+                      Go back to the school list.
+
+                .group{"ng-switch-when" => "intl_edit"}
+                  .f-row
+                    %input{'type' => "text",  'placeholder' => 'School name', 
+                    "name" => "school_name", "ng-model" => "regCtrl.school.name",
+                    "non-blank" => true }
                   .f-row
                     %input{'type' => "text",  'placeholder' => 'Province',
-                    "name" => "school_state", "ng-model" => "regCtrl.school.state",
+                    "name" => "school_state", "ng-model" => "regCtrl.state",
                     "non-blank" => true }
                   .f-row
                     %input{'type' => "text",  'placeholder' => 'City',
@@ -265,7 +287,7 @@
                   .f-row
                     %button#add_school{"ng-disabled" => "!regCtrl.schoolValid()", "ng-click" => "regCtrl.sendSchool()"}
                       Add my school
-                  %a#back-to-list{"ng-click" =>"regCtrl.editSchool=false" } 
+                  %a#back-to-list{"ng-click" =>"regCtrl.setPickSchool()" } 
                     Go back to the school list.
             - else
               .f-row
@@ -276,7 +298,7 @@
 
           .group
             .f-row
-              %button#finsish-teacher{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
+              %button#finsish-teacher{"ng-disabled" => "regCtrl.disableSubmit(signup.$valid)", "ng-click" => "regCtrl.sendRegistration()"}
                 Sign up!
 
         %div{"ng-switch-when" => "success"}
