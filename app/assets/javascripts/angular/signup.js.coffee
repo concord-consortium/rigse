@@ -189,8 +189,6 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         return "intl_edit"
       else
         return "dropdown"
-      debugger
-
   ]
 
  
