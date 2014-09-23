@@ -124,7 +124,7 @@ class ActivityRuntimeAPI
     external_activity = nil # Why are we initializing this? For the transaction?
     Investigation.transaction do
       investigation = Investigation.create(
-        :name => hash["name"], :description => hash['description'], 
+        :name => hash["name"], :description => hash['description'],
         :abstract => hash['abstract'], :user => user)
       hash['activities'].each_with_index do |act, index|
         activity_from_hash(act, investigation, user, index)
@@ -243,21 +243,23 @@ class ActivityRuntimeAPI
     mc_cache = {} unless mc_cache.kind_of?(Hash)
     iq_cache = {} unless iq_cache.kind_of?(Hash)
 
-    hash["sections"].each do |section_data|
+    hash["sections"].each_with_index do |section_data, section_index|
       section = Section.create(
         :name => section_data["name"],
         :activity => activity,
-        :user => user
+        :user => user,
+        :position => section_index
       )
 
-      section_data["pages"].each do |page_data|
+      section_data["pages"].each_with_index do |page_data, page_index|
         page = Page.create(
           :name => page_data["name"],
           :section => section,
-          :user => user
+          :user => user,
+          :position => page_index
         )
 
-        page_data["elements"].each do |element_data|
+        page_data["elements"].each_with_index do |element_data, element_index|
           embeddable = case element_data["type"]
           when "open_response"
             existant = or_cache.delete(element_data["id"].to_s) # nil if the key doesn't exist - note the key must be string
@@ -285,8 +287,7 @@ class ActivityRuntimeAPI
             next
           end
           # Either the 'existant' or output of create_#{} has been assigned to 'embeddable'
-
-          page.add_embeddable(embeddable)
+          page.add_embeddable(embeddable, element_index)
         end
       end
     end
@@ -391,4 +392,3 @@ class ActivityRuntimeAPI
     filters.each { |filter| filter.clear }
   end
 end
-  

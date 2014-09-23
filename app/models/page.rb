@@ -17,7 +17,9 @@ class Page < ActiveRecord::Base
   #   INNER JOIN pages ON page_elements.page_id = pages.id
   #   WHERE pages.section_id = #{id}" }
 
-  has_many :page_elements, :order => :position, :dependent => :destroy
+  # Order by ID is important, see: https://www.pivotaltracker.com/story/show/79237764
+  # Some older elements in DB can have always position equal to 1.
+  has_many :page_elements, :order => 'position ASC, id ASC', :dependent => :destroy
   has_many :inner_page_pages, :dependent => :destroy, :class_name => 'Embeddable::InnerPagePage'
   has_many :inner_pages, :class_name => 'Embeddable::InnerPage', :through => :inner_page_pages
 
@@ -29,7 +31,7 @@ class Page < ActiveRecord::Base
     # Strip this embeddable type if the app isn't configured to support it
     @@element_types.reject! { |e| e == "Embeddable::RawOtml" }
   end
-  
+
   # @@element_types.each do |type|
   #   unless defined? type.dont_make_associations
   #     eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
@@ -161,10 +163,10 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def add_embeddable(embeddable)
-    page_elements << PageElement.create(:user => user, :embeddable => embeddable)
+  def add_embeddable(embeddable, position = nil)
+    page_elements << PageElement.create(:user => user, :embeddable => embeddable, :position => position)
   end
-  
+
   def add_element(element)
     element.pages << self
     element.save
@@ -252,7 +254,7 @@ class Page < ActiveRecord::Base
     end
     return @reportable_elements
   end
-  
+
   def print_listing
     []
   end
