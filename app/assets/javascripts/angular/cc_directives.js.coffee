@@ -35,7 +35,11 @@ angular.module('ccDirectives', [])
     restrict: 'A'
     link: (scope, element, attrs, ctrl) ->
       ctrl.$validators.nonBlank = (value) ->
-        return !!(value && value.trim().length > 0)
+        if value
+          if value.trim
+            return !!(value && value.trim().length > 0) # strings
+          return true # numbers, other things...
+        return false
   ])
 
 

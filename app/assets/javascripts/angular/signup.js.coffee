@@ -34,14 +34,20 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         self.loadStates()
       else
         self.loadIntlSchools()
+      delete self.state
+      delete self.district
+      delete self.school
 
     self.stateSelected = () ->
       if self.isDomestic()
         self.loadDisrticts()
+        delete self.district
+        delete self.school
 
     self.districtSelected = () ->
       if self.isDomestic()
         self.loadDomesticSChools()
+      delete self.school
 
     self.loadRemoteCollection = (collectionName, params={}) ->
       url = API_V1[collectionName.toUpperCase()]
@@ -86,7 +92,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
           self[field] = data[field]
 
     self.form_params = () ->
-      return {
+      data = {
         'first_name': self.first_name
         'last_name':  self.last_name
         'password':   self.password
@@ -97,6 +103,10 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         'answers': self.answers
         'questions': self.questions
       }
+      if self.school
+        data[school_id] = self.school.id
+      return data
+
 
     self.startRegistration = () ->
       self.didStartRegistration = true
@@ -110,10 +120,11 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
 
     self.isDomestic = () ->
       return false unless self.country
-      self.country.id == API_V1.USA_ID
-    
+      return false unless self.country.name == "United States"
+      return true
+      
     self.showState = () ->
-      self.isDomestic()
+      return self.isDomestic()
 
     self.showDistrict = () ->
       self.showState() && self.state
