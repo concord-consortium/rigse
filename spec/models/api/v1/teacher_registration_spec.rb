@@ -14,10 +14,11 @@ describe API::V1::TeacherRegistration do
   }
 
   it_behaves_like 'user registration' do
+    let(:good_params) { params }
     before(:each) do
       Portal::School.stub!(:find).and_return(mock_model(Portal::School))
+      Portal::School.stub!(:exists?).and_return(true)
     end
-    let(:good_params) { params }
   end
 
   describe "school_id validations" do
