@@ -28,25 +28,25 @@
 
           .group
             .f-row
-              %input{'type'   => "password",  
-                'name' => 'password',
-                'minLength'   => 6,
-                'non-blank'    => true,
-                'placeholder' => 'Password', 
+              %input{'type'        => "password",  
+                'name'             => 'password',
+                'minLength'        => 6,
+                'non-blank'        => true,
+                'placeholder'      => 'Password', 
                 'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-                'ng-model'    =>'regCtrl.password'}  
+                'ng-model'         =>'regCtrl.password'}  
               .div{'ng-messages' => "signup.password.$error"}
                 .div{'ng-message' => "minlength","class" => "error-message"}
                   Password is too short
 
             .f-row
               %input{'type'        => "password",  
-                'placeholder' => 'Confirm Password', 
-                'name'        => 'password_confirmation',
-                'match'       => "regCtrl.password",
-                'non-blank'    => true,
+                'placeholder'      => 'Confirm Password', 
+                'name'             => 'password_confirmation',
+                'match'            => "regCtrl.password",
+                'non-blank'        => true,
                 'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-                'ng-model'    => 'regCtrl.password_confirmation' }
+                'ng-model'         => 'regCtrl.password_confirmation' }
               .div{'ng-messages' => "signup.password_confirmation.$error"}
                 .div{'ng-message' => "match","class" => "error-message"}
                   Passwords do not match
@@ -75,13 +75,13 @@
             .group
               .f-row
                 = text_field_tag :class_word, nil,  
-                "placeholder" => 'Class Word (not case sensitive)', 
-                "name" => "class_word", "ng-model" => "regCtrl.class_word", 
-                "non-blank" => true,
-                "good-classword" => true,
-                "ng-model-options" => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+                "placeholder"       => 'Class Word (not case sensitive)', 
+                "name"              => "class_word", "ng-model" => "regCtrl.class_word", 
+                "non-blank"         => true,
+                "good-classword"    => true,
+                "ng-model-options"  => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 
-                .div{'ng-messages' => "signup.class_word.$error"}
+                .div{'ng-messages'  => "signup.class_word.$error"}
                   .div{'ng-message' => "nonBlank","class" => "error-message"}
                   .div{'ng-message' => "goodClassword","class" => "error-message"}
                     You must enter a valid class word.
@@ -92,81 +92,35 @@
                 Please select three questions from the menus below.
                 If you forget your password, you will need to answer these questions correctly in order to receive a new one.
             .group
-              .f-row
-                /  TODO:  Extract some helper here, because these are big!
-                %ui-select{"ng-model" => "regCtrl.questions[0]", 
-                  "name" => "questions[0]",
-                  "theme" =>  "select2", "width" => "95%",
-                  "ng-required" => true,
-                  "ui-validate" => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
-                  %ui-select-match{"placeholder" => "Choose a security question ..."}
-                    {{$select.selected}}
-                  %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
-                    {{question}}
-                .div{'ng-messages' => "signup['questions[0]'].$error"}
-                  .div{'ng-message' => "unique_question","class" => "error-message"}
-                    You must select 3 different questions.
-              .f-row
-                %input{'type'   => "text", 
-                  'placeholder' => 'Answer (case sensitive)',
-                  'name' => 'answers[0]',
-                  'non-blank'    => true,
-                  'server-errors'  => true,
-                  'ng-model'       => 'regCtrl.answers[0]'}
-                .div{'ng-messages' => "signup['answers[0]'].$error"}
-                  .div{'ng-message' => "serverError", "class" => "error-message"}
-                    You must provide an answer 
+              - (0..2).each do |question_number|
+                .f-row
 
-            .group
-              .f-row
-                %ui-select{"ng-model" => "regCtrl.questions[1]", 
-                  "name" => "questions[1]",
-                  "theme" =>  "select2", "width" => "95%",
-                  "non-blank" => true,
-                  "ui-validate" => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
-                  %ui-select-match{"placeholder" => "Choose a security question ..."}
-                    {{$select.selected}}
-                  %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
-                    {{question}}
-                .div{'ng-messages' => "signup['questions[1]'].$error"}
-                  .div{'ng-message' => "unique_question","class" => "error-message"}
-                    You must select 3 different questions.
-              .f-row
-                %input{'type'   => "text", 
-                  'placeholder' => 'Answer (case sensitive)',
-                  'name' => 'answers[1]',
-                  'non-blank'    => true,
-                  'server-errors'    => true,
-                  'ng-model'    => 'regCtrl.answers[1]'}
-              .div{'ng-messages' => "signup['answers[1]'].$error"}
-                .div{'ng-message' => "serverError", "class" => "error-message"}
-                  You must provide an answer 
+                  /  TODO:  Extract some helper here, because these are big!
+                  %ui-select{"ng-model"  => "regCtrl.questions[#{question_number}]", 
+                    "name"               => "questions[#{question_number}]",
+                    "theme"              =>  "select2",
+                    "non-blank"          => true,
+                    "ng-required"        => true,
+                    "ui-validate"        => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
+                    %ui-select-match{"placeholder" => "Choose a security question ..."}
+                      {{$select.selected}}
+                    %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
+                      {{question}}
+                  .div{'ng-messages' => "signup['questions[#{question_number}]'].$error"}
+                    .div{'ng-message' => "unique_question","class" => "error-message"}
+                      You must select 3 different questions.
+                .f-row
+                  %input{'type'        => "text", 
+                    'placeholder'      => 'Answer (case sensitive)',
+                    'name'             => 'answers[#{question_number}]',
+                    'non-blank'        => true,
+                    'server-errors'    => true,
+                    'ng-model'         => "regCtrl.answers[#{question_number}]"}
+                  .div{'ng-messages'   => "signup['answers[#{question_number}]'].$error"}
+                    .div{'ng-message'  => "serverError", "class" => "error-message"}
+                      You must provide an answer 
 
-            .group
-              .f-row
-                %ui-select{"ng-model" => "regCtrl.questions[2]", 
-                  "name" => "questions[2]",
-                  "theme" =>  "select2", "width" => "95%",
-                  "non-blank"    => true,
-                  "ui-validate" => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
-                  %ui-select-match{"placeholder" => "Choose a security question ..."}
-                    {{$select.selected}}
-                  %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
-                    {{question}}
-                .div{'ng-messages' => "signup['questions[2]'].$error"}
-                  .div{'ng-message' => "unique_question","class" => "error-message"}
-                    You must select 3 different questions.
-              .f-row
-                %input{'type'   => "text", 
-                  'placeholder' => 'Answer (case sensitive)',
-                  'name' => 'answers[2]',
-                  'non-blank'    => true,
-                  'server-errors'    => true,
-                  'ng-model'    => 'regCtrl.answers[2]'}
-                .div{'ng-messages' => "signup['answers[2]'].$error"}
-                  .div{'ng-message' => "serverError", "class" => "error-message"}
-                    You must provide an answer 
-
+          
           .group
             .f-row
               %button#finsish-student{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
@@ -175,15 +129,16 @@
         = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
           .group
             %input{'type'   => "text",  
-              'name' => 'login',
-              'minLength'   => 3,
-              'non-blank'    => true,
-              'placeholder' => 'login', 
-              'username-avail' => 'true',
-              'server-errors' => true,
+              'name'             => 'login',
+              'minLength'        => 3,
+              'non-blank'        => true,
+              'placeholder'      => 'login', 
+              'username-avail'   => 'true',
+              'server-errors'    => true,
               'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-              'ng-model'    =>'regCtrl.login'} 
-            .div{'ng-messages' => "signup.login.$error"}
+              'ng-model'         =>'regCtrl.login'} 
+
+            .div{'ng-messages'  => "signup.login.$error"}
               .div{'ng-message' => "non-blank"}
               .div{'ng-message' => "minlength","class" => "error-message"}
                 Login is too short
@@ -193,16 +148,17 @@
                 Please select another email  
             %br
 
-            %input{'type'   => "text",  
-              'name' => 'email',
-              'non-blank'    => true,
-              'placeholder' => 'email@example.com',
-              'ng-pattern' => "/\\S+@\\S+/",
-              'server-errors' => true,
-              'email-avail' => 'true',
+            %input{'type'        => "text",  
+              'name'             => 'email',
+              'non-blank'        => true,
+              'placeholder'      => 'email@example.com',
+              'ng-pattern'       => "/\\S+@\\S+/",
+              'server-errors'    => true,
+              'email-avail'      => 'true',
               'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-              'ng-model'    =>'regCtrl.email'} 
-            .div{'ng-messages' => "signup.email.$error"}
+              'ng-model'         =>'regCtrl.email'} 
+
+            .div{'ng-messages'  => "signup.email.$error"}
               .div{'ng-message' => "non-blank"}
               .div{'ng-message' => "pattern","class" => "error-message"}
                 Email doesn't appear to be a valid email
@@ -216,9 +172,8 @@
           .group
             .f-row
               %ui-select{"ng-model"   => "regCtrl.country", 
-                "theme" =>  "select2", "width" => "95%",
-                "ng-change" =>  "regCtrl.countrySelected()",
-                "style" =>  "width: 95%;"}
+                "theme"               =>  "select2",
+                "ng-change"           =>  "regCtrl.countrySelected()"}
                 %ui-select-match{"placeholder" => "Select your country..."}
                   {{$select.selected.name}}
                 %ui-select-choices{"repeat" => "country in regCtrl.countries | filter: {name: $select.search}" }
@@ -227,8 +182,8 @@
           .group{"ng-show" => "regCtrl.showState()"}
             .f-row
               %ui-select{"ng-model" => "regCtrl.state", 
-                "theme" =>  "select2", "width" => "95%",
-                "ng-change" =>  "regCtrl.stateSelected()"}
+                "theme"             =>  "select2",
+                "ng-change"         =>  "regCtrl.stateSelected()"}
                 %ui-select-match{"placeholder" => "Select your state..."}
                   {{$select.selected}}
                 %ui-select-choices{"repeat" => "state in regCtrl.states | filter: $select.search" }
@@ -237,8 +192,8 @@
           .group{"ng-show" => "regCtrl.showDistrict()"}
             .f-row
               %ui-select{"ng-model" => "regCtrl.district", 
-                "theme" =>  "select2", "width" => "95%",
-                "ng-change" =>  "regCtrl.districtSelected()" }
+                "theme"             =>  "select2",
+                "ng-change"         =>  "regCtrl.districtSelected()" }
                 %ui-select-match{"placeholder" => "Select your district..."}
                   {{$select.selected.name}}
                 %ui-select-choices{"repeat" => "district in regCtrl.districts | filter: {name: $select.search}" }
@@ -250,8 +205,10 @@
                 .group{"ng-switch-when" => "dropdown"}
                   .f-row
                     %ui-select{"ng-model" => "regCtrl.school", 
-                    "theme" => "select2", "non-blank" => true, 
-                    "ng-model" => 'regCtrl.school', "name" => "school", "width" => "95%"}
+                      "theme"             => "select2", 
+                      "non-blank"         => true, 
+                      "ng-model"          => 'regCtrl.school', 
+                      "name" => "school"}
                       %ui-select-match{"placeholder" => "Select your school ..."}
                         {{$select.selected.name}}
                       %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
