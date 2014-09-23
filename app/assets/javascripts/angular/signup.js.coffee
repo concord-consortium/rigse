@@ -21,6 +21,12 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       params = { state: self.state }
       self.loadRemoteCollection('districts',params)
 
+    self.loadSchools = () ->
+      if self.isDomestic()
+        loadDomesticSChools()
+      else
+        loadIntlSchools()
+
     self.loadDomesticSChools = () ->
       params = { district_id : self.district.id }
       self.loadRemoteCollection('schools',params)
@@ -33,7 +39,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       if self.isDomestic()
         self.loadStates()
       else
-        self.loadIntlSchools()
+        self.loadSchools()
       delete self.state
       delete self.district
       delete self.school
@@ -80,6 +86,13 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       return true unless value && value.length > 0
       self.questions.indexOf(value) == -1 ? true : false
 
+    self.schoolValid = () ->
+      if self.isDomestic()
+        return self.school_name && self.school_name.length > 2
+      for school_prop in [self.school_name, self.school_state, self.school_city]
+        return false unless school_prop && school_prop.length > 2
+      return true
+
     self.readyToRegister = () ->
       (self.first_name && self.last_name && self.password_confirmation && self.registrationType)
 
@@ -90,6 +103,21 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         # copy data into this controller
         for field of data
           self[field] = data[field]
+
+    self.sendSchool = () ->
+      resource = "schools"
+      data = 
+        school_name: self.school.name
+        country_id: self.country.id
+        district_id: self.district.id
+        state: self.state
+        province: self.province
+        city: self.school.city
+
+      self.postToResource resource, self.form_params(), (data) ->
+        self.school = data
+        self.editSchool = false
+        self.loadSchools()
 
     self.form_params = () ->
       data = {
@@ -118,6 +146,9 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       return "success" if self.did_finish
       return self.registrationType
 
+    self.isInternational= () ->
+      !self.isDomestic()
+
     self.isDomestic = () ->
       return false unless self.country
       return false unless self.country.name == "United States"
@@ -133,3 +164,5 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       return false unless self.country
       (self.showDistrict() && self.district) || (! self.isDomestic())
   ]
+
+ 

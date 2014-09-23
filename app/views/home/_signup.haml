@@ -169,7 +169,7 @@
           .group
             .f-row
               %button#finsish-student{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
-                Submit
+                Sign up!
 
         = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
           .group
@@ -188,6 +188,7 @@
               .div{'ng-message' => "usernameAvail","class" => "error-message"}
                 That login is taken
             %br
+
             %input{'type'   => "text",  
               'name' => 'email',
               'non-blank'    => true,
@@ -238,32 +239,45 @@
                   
           .group#school-picker{"ng-show"  => "regCtrl.showSchool()"}
             - if current_project.allow_adhoc_schools
-              .f-row
-                %ui-select{"ng-model" => "regCtrl.school", "theme" => "select2", "non-blank" => true, "ng-model" => 'regCtrl.school', "name" => "school"}
-                  %ui-select-match{"placeholder" => "Select your school ..."}
-                    {{$select.selected.name}}
-                  %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
-                    {{schools.name}}
-              .f-row
-                %a#cant-find-school I can't find my school in the list.
-              #custom-school.group
-                .f-row= text_field_tag 'school_name', nil, 'placeholder' => 'School name'
-                .f-row.intl-only= text_field_tag 'province', nil, 'placeholder' => 'Province'
-                .f-row.intl-only= text_field_tag 'city', nil, 'placeholder' => 'City'
+              %div{"ng-show" => "!regCtrl.editSchool"}
                 .f-row
-                  %a#back-to-list  Go back to the school list.
+                  %ui-select{"ng-model" => "regCtrl.school", "theme" => "select2", "non-blank" => true, "ng-model" => 'regCtrl.school', "name" => "school"}
+                    %ui-select-match{"placeholder" => "Select your school ..."}
+                      {{$select.selected.name}}
+                    %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
+                      {{schools.name}}
+                .f-row
+                  %a#cant-find-school{"ng-click" =>"regCtrl.editSchool=true"} 
+                    I can't find my school in the list.
+              #custom-school.group{"ng-show" => "regCtrl.editSchool"}
+                .f-row
+                  %input{'type' => "text",  'placeholder' => 'School name', 
+                    "name" => "school_name", "ng-model" => "regCtrl.school.name"}
+                %div{"ng-show" => "regCtrl.isInternational()"}
+                  .f-row
+                    %input{'type' => "text",  'placeholder' => 'Province',
+                    "name" => "school_state", "ng-model" => "regCtrl.school.state",
+                    "non-blank" => true }
+                  .f-row
+                    %input{'type' => "text",  'placeholder' => 'City',
+                    "name" => "school_city", "ng-model" => "regCtrl.school.city",
+                    "non-blank" => true }
+                  .f-row
+                    %button#add_school{"ng-disabled" => "!regCtrl.schoolValid()", "ng-click" => "regCtrl.sendSchool()"}
+                      Add my school
+                  %a#back-to-list{"ng-click" =>"regCtrl.editSchool=false" } 
+                    Go back to the school list.
             - else
               .f-row
-                %ui-select{"ng-model" => "regCtrl.school", "theme" =>  "select2", "width" => "95%",}
-                  %ui-select-match{"placeholder" => "Select your school ..."}
-                    {{$select.selected.name}}
+                %ui-select{"ng-model" => "regCtrl.school", "theme" => "select2", "non-blank" => true, "ng-model" => 'regCtrl.school', "name" => "school"}
+                  {{$select.selected.name}}
                   %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
                     {{schools.name}}
 
           .group
             .f-row
               %button#finsish-teacher{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
-                Submit
+                Sign up!
 
         %div{"ng-switch-when" => "success"}
           %div{"ng-switch" => "regCtrl.registrationType"}
