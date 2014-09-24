@@ -23,7 +23,8 @@ class Activity < ActiveRecord::Base
 
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
   # This block adds a has_many for each embeddable type to this model.
-  BASE_EMBEDDABLES.each do |klass|
+  # TODO We don't want Embeddable::Iframe showing up in any menus, so inject it here. It's used by LARA.
+  (BASE_EMBEDDABLES + ["Embeddable::Iframe"]).each do |klass|
       eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
       :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
       INNER JOIN page_elements ON #{klass.constantize.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass}'

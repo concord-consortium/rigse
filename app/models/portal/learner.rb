@@ -35,7 +35,13 @@ class Portal::Learner < ActiveRecord::Base
       find(:all).select { |question| question.answered? }.select{ |item| item.answered_correctly? }
     end
   end
-  
+
+  has_many :external_links, :dependent => :destroy , :class_name => "Saveable::ExternalLink" do
+    def answered
+      find(:all).select { |question| question.answered? }
+    end
+  end
+
   has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner", :foreign_key => "learner_id"
 
   has_many :lightweight_blobs, :dependent => :destroy, :class_name => "Dataservice::Blob"

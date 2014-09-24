@@ -91,6 +91,7 @@ class ActivityRuntimeAPI
     mc_cache = {}
     or_cache = {}
     iq_cache = {}
+    if_cache = {}
 
     investigation.multiple_choices.each do |multiple_choice|
       mc_cache[multiple_choice.external_id] = multiple_choice
@@ -104,18 +105,23 @@ class ActivityRuntimeAPI
       iq_cache[image_question.external_id] = image_question
     end
 
+    investigation.iframes.each do |iframe|
+      if_cache[iframe.external_id] = iframe
+    end
+
     # remove the pages and sections
     (investigation.sections + investigation.pages).each do |section|
       section.delete
     end
 
     # Update or build sections, pages and embeddables
-    build_page_components(hash, activity, user, or_cache, mc_cache, iq_cache)
+    build_page_components(hash, activity, user, or_cache, mc_cache, iq_cache, if_cache)
 
     # delete the cached items which weren't removed
     mc_cache.each_value { |v| v.destroy }
     or_cache.each_value { |v| v.destroy }
     iq_cache.each_value { |v| v.destroy }
+    if_cache.each_value { |v| v.destroy }
     remove_report_embeddable_filters(external_activity)
     return external_activity
   end
@@ -174,6 +180,7 @@ class ActivityRuntimeAPI
     mc_cache = {}
     or_cache = {}
     iq_cache = {}
+    if_cache = {}
 
     investigation.multiple_choices.each do |multiple_choice|
       mc_cache[multiple_choice.external_id] = multiple_choice
@@ -185,6 +192,10 @@ class ActivityRuntimeAPI
 
     investigation.image_questions.each do |image_question|
       iq_cache[image_question.external_id] = image_question
+    end
+
+    investigation.iframes.each do |iframe|
+      if_cache[iframe.external_id] = iframe
     end
 
     # remove the pages and sections
@@ -204,7 +215,7 @@ class ActivityRuntimeAPI
     hash['activities'].each_with_index do |new_activity, index|
       existing = activity_cache.delete(new_activity['name'])
       if existing
-        build_page_components(new_activity, existing, user, or_cache, mc_cache, iq_cache)
+        build_page_components(new_activity, existing, user, or_cache, mc_cache, iq_cache, if_cache)
         existing.investigation = investigation
         existing.position = index
         existing.save!
@@ -217,6 +228,7 @@ class ActivityRuntimeAPI
     mc_cache.each_value { |v| v.destroy }
     or_cache.each_value { |v| v.destroy }
     iq_cache.each_value { |v| v.destroy }
+    if_cache.each_value { |v| v.destroy }
     activity_cache.each_value { |v| v.destroy }
 
     remove_report_embeddable_filters(external_activity)
@@ -237,11 +249,12 @@ class ActivityRuntimeAPI
     return activity
   end
 
-  def self.build_page_components(hash, activity, user, or_cache=nil, mc_cache=nil, iq_cache=nil)
+  def self.build_page_components(hash, activity, user, or_cache=nil, mc_cache=nil, iq_cache=nil, if_cache=nil)
     # Validate caches so we don't do it repeatedly later
     or_cache = {} unless or_cache.kind_of?(Hash)
     mc_cache = {} unless mc_cache.kind_of?(Hash)
     iq_cache = {} unless iq_cache.kind_of?(Hash)
+    if_cache = {} unless if_cache.kind_of?(Hash)
 
     hash["sections"].each_with_index do |section_data, section_index|
       section = Section.create(
@@ -281,6 +294,13 @@ class ActivityRuntimeAPI
               update_image_question(element_data, existant)
             else
               create_image_question(element_data, user)
+            end
+          when "iframe_interactive"
+            existant = if_cache.delete(element_data["id"].to_s)
+            if existant
+              update_iframe(element_data, existant)
+            else
+              create_iframe(element_data, user)
             end
           else
             # We don't support this type, so skip to the next
@@ -384,6 +404,29 @@ class ActivityRuntimeAPI
     end
     mc.choices = new_choice_set
     mc.save
+  end
+
+  def self.update_iframe(if_data, existant)
+    attrs = {
+      name: if_data["name"],
+      url: if_data["url"],
+      width: if_data["native_width"],
+      height: if_data["native_height"]
+    }
+    existant.update_attributes(attrs)
+    return existant
+  end
+
+  def self.create_iframe(if_data, user)
+    attrs = {
+      name: if_data["name"],
+      url: if_data["url"],
+      width: if_data["native_width"],
+      height: if_data["native_height"],
+      external_id: if_data["id"].to_s,
+      user: user
+    }
+    Embeddable::Iframe.create(attrs)
   end
 
   def self.remove_report_embeddable_filters(external_activity)

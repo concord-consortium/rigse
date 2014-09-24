@@ -1,6 +1,6 @@
 module ResponseTypes
   def self.saveable_types
-    [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion ]
+    [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion, Saveable::ExternalLink ]
   end
 
   def saveable_types
@@ -8,7 +8,7 @@ module ResponseTypes
   end
 
   def self.reportable_types
-    [ Embeddable::OpenResponse, Embeddable::MultipleChoice, Embeddable::ImageQuestion ]
+    [ Embeddable::OpenResponse, Embeddable::MultipleChoice, Embeddable::ImageQuestion, Embeddable::Iframe ]
   end
 
   def reportable_types

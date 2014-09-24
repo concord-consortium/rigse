@@ -11,7 +11,7 @@ module Saveable::Saveable
     def embeddable_type(instance)
       @embeddable_type ||= get_embeddable_type(instance)
     end
-  def get_possible_types
+    def get_possible_types
       @possible_types = ResponseTypes.reportable_types.map{ |t|  {:klass => t, :str => t.to_s.demodulize.underscore} }
       @possible_types
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140923133956) do
+ActiveRecord::Schema.define(:version => 20140924205155) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -547,6 +547,19 @@ ActiveRecord::Schema.define(:version => 20140923133956) do
     t.integer  "preferred_height"
     t.datetime "created_at",                         :null => false
     t.datetime "updated_at",                         :null => false
+  end
+
+  create_table "embeddable_iframes", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.string   "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "url"
+    t.string   "external_id"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "embeddable_image_questions", :force => true do |t|
@@ -2145,6 +2158,26 @@ ActiveRecord::Schema.define(:version => 20140923133956) do
 
   add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id"
   add_index "roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id"
+
+  create_table "saveable_external_link_urls", :force => true do |t|
+    t.integer  "external_link_id"
+    t.integer  "bundle_content_id"
+    t.integer  "position"
+    t.string   "url"
+    t.boolean  "is_final"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "saveable_external_links", :force => true do |t|
+    t.integer  "embeddable_id"
+    t.string   "embeddable_type"
+    t.integer  "learner_id"
+    t.integer  "offering_id"
+    t.integer  "response_count"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "saveable_image_question_answers", :force => true do |t|
     t.integer  "image_question_id"

@@ -21,5 +21,7 @@
       = render :partial => "portal/#{report_type}/embeddable_open_response", :locals => locals
     - elsif embeddable.kind_of? Embeddable::ImageQuestion
       = render :partial => "portal/#{report_type}/embeddable_image_question", :locals => locals
+    - elsif embeddable.kind_of? Embeddable::Iframe
+      = render :partial => "portal/#{report_type}/embeddable_iframe", :locals => locals
     - else
       = "Unknown type of embeddable: #{embeddable.class}"

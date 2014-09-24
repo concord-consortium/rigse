@@ -848,6 +848,33 @@ module ApplicationHelper
     end
   end
 
+  def offering_details_iframe(offering, iframe, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    reportUtil = Report::Util.factory(offering)
+    total = reportUtil.learners.size
+    answered = reportUtil.saveables(:embeddable => iframe).size
+    skipped = total - answered
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left'
+      end
+      haml_tag(:div, :class => 'report_question_prompt') {
+        haml_concat(iframe.name)
+      }
+      haml_tag(:div, :class => 'report_question_summary_title') {
+        haml_tag(:div) { haml_concat("Launched") }
+        haml_tag(:div) { haml_concat("Not launched") }
+        haml_tag(:div) { haml_concat("Total") }
+      }
+      haml_tag(:div, :class => 'report_question_summary_info') {
+        haml_tag(:div) { haml_concat(answered) }
+        haml_tag(:div) { haml_concat(skipped) }
+        haml_tag(:div) { haml_concat(total) }
+      }
+    end
+  end
+
   def percent(count,max,precision = 1)
     return 0 if max < 1
     raw = (count/max.to_f)*100
