@@ -248,10 +248,16 @@
                     Go back to the school list.
             - else
               .f-row
-                %ui-select{"ng-model" => "regCtrl.school", "theme" => "select2", "non-blank" => true, "ng-model" => 'regCtrl.school', "name" => "school"}
-                  {{$select.selected.name}}
+                %ui-select{"ng-model" => "regCtrl.school", 
+                  "theme"             => "select2", 
+                  "non-blank"         => true, 
+                  "ng-model"          => 'regCtrl.school', 
+                  "name" => "school"}
+                  %ui-select-match{"placeholder" => "Select your school ..."}
+                    {{$select.selected.name}}
                   %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
                     {{schools.name}}
+              .f-row
 
           .group
             .f-row
