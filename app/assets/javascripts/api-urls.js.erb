@@ -1,10 +1,14 @@
 <% url = RailsPortal::Application.routes.url_helpers %>
 
 var API_V1 = {
+  COUNTRIES: "<%= url.api_v1_countries_path %>",
   SECURITY_QUESTIONS: "<%= url.api_v1_security_questions_path %>",
   STUDENTS: "<%= url.api_v1_students_path %>",
   TEACHERS: "<%= url.api_v1_teachers_path %>",
   STATES: "<%= url.api_v1_states_path %>",
   DISTRICTS: "<%= url.api_v1_districts_path %>",
-  SCHOOLS: "<%= url.api_v1_schools_path %>"
+  SCHOOLS: "<%= url.api_v1_schools_path %>",
+  EMAILS: "<%= url.email_available_api_v1_teachers_path	 %>",
+  LOGINS: "<%= url.login_available_api_v1_teachers_path	 %>",
+  CLASSWORD: "<%= url.check_class_word_api_v1_students_path %>"
 };

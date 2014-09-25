@@ -43,6 +43,9 @@
 = require 'create_status'
 = require 'permission_form'
 = require 'wait_message'
-= require 'signup'
 = require 'api-urls'
+= require 'angular/vendor/angular_select2'
+= require 'angular/vendor/angular_ui_validate'
+= require 'angular/cc_directives'
+= require 'angular/signup'
 */

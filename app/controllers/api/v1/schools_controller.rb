@@ -2,12 +2,15 @@ class API::V1::SchoolsController < API::APIController
 
 	def index
 		district_id = params['district_id']
-		if district_id.blank?
-			error("param 'district_id' required for school list")
+		country_id  = params['country_id']
+		if district_id.blank? && country_id.blank?
+			error("param 'district_id' or 'country_id' are required for school list")
+		elsif district_id
+			@schools = API::V1::SchoolRegistration.for_district(district_id)
 		else
-			@schools = Portal::School.where('district_id' => district_id).select('name, id')
-			render :json => @schools
+			@schools = API::V1::SchoolRegistration.for_country(country_id)
 		end
+		render :json => @schools
 	end
 
   def create
@@ -20,4 +23,10 @@ class API::V1::SchoolsController < API::APIController
     end
   end
 
+  private
+
+  def can_create_new_school(params)
+    Admin::Project.default_project.allow_adhoc_schools
+  end
+  
 end

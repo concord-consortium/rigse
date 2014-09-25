@@ -605,8 +605,18 @@ RailsPortal::Application.routes.draw do
 
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do
-        resources :teachers
-        resources :students
+        resources :countries
+        resources :teachers do
+          collection do
+            get 'email_available'
+            get 'login_available'
+          end
+        end
+        resources :students do
+          collection do
+            get 'check_class_word'
+          end
+        end
         resources :security_questions
         resources :states
         resources :districts
