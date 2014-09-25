@@ -22,19 +22,19 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       params = { state: self.state }
       self.loadRemoteCollection('districts',params)
 
-    self.loadSchools = () ->
+    self.loadSchools = (success_fn = null) ->
       if self.isDomestic()
-        self.loadDomesticSChools()
+        self.loadDomesticSchools(success_fn)
       else
-        self.loadIntlSchools()
+        self.loadIntlSchools(success_fn)
 
-    self.loadDomesticSChools = () ->
+    self.loadDomesticSchools = (success_fn = null) ->
       params = { district_id : self.district.id }
-      self.loadRemoteCollection('schools',params)
+      self.loadRemoteCollection('schools',params, success_fn)
 
-    self.loadIntlSchools = () ->
+    self.loadIntlSchools = (success_fn = null) ->
       params = { country_id : self.country.id }
-      self.loadRemoteCollection('schools',params)
+      self.loadRemoteCollection('schools',params, success_fn)
 
     self.countrySelected = () ->
       if self.isDomestic()
@@ -56,13 +56,14 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         self.loadDomesticSChools()
       delete self.school
 
-    self.loadRemoteCollection = (collectionName, params={}) ->
+    self.loadRemoteCollection = (collectionName, params={}, success_fn=null) ->
       url = API_V1[collectionName.toUpperCase()]
       $http({method: 'GET', url: url, params: params})
       .success (data, status, headers, config) ->
         $log.log("loaded #{collectionName} collection from #{url}")
         self[collectionName] = data
-
+        if success_fn
+          success_fn()
       .error (data, status) ->
         $log.log "Error loading #{collectionName} collection"
         self[collectionName] || =[]
@@ -118,11 +119,12 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
 
       self.postToResource resource, data, (returnData) ->
         id = returnData['school_id']
-        self.loadSchools()
-        for school in self.schools
-          if school.id == $id
-            self.school = school
-        self.editSchool = false
+        
+        self.loadSchools () ->
+          for school in self.schools
+            if school.id == id
+              self.school = school
+          self.editSchool = false
         
 
     self.form_params = () ->
