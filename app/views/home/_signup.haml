@@ -70,7 +70,7 @@
         = field_set_tag nil, id: 'student-fieldset', "ng-switch-when" => "student" do
           - if current_project.allow_default_class
             .f-row
-              =hidden_field_tag :class_word, Portal::Clazz.default_class.class_word, "name" => "class_word", "ng-model" => "regCtrl.class_word"
+              %initial-value{"ng-model" => "regCtrl.class_word", "value" => Portal::Clazz.default_class.class_word }
           - else
             .group
               .f-row

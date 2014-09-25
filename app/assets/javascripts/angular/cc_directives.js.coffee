@@ -120,4 +120,18 @@ angular.module('ccDirectives', [])
       </div>
       """
   ])
+
+  # Directive that sets the intial value of a model
+  # Use like:
+  #   <initial-value ng-model='email' value="foo@brar.com />
+  #
+  .directive('initialValue', [() ->
+    restrict: 'E'
+    scope:
+      ngModel: '='
+    link: (scope, element, attrs, ctrl) ->
+      scope.ngModel = attrs['value']
+    template: ""
+  ])
+
   
