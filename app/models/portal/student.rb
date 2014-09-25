@@ -50,9 +50,14 @@ class Portal::Student < ActiveRecord::Base
     # existing_users = User.find(:all, :conditions => "login RLIKE '#{generated_login}[0-9]*$'", :order => :login)
     counter = 0
     generated_login = suggested_login
-    while (User.login_exists? generated_login)
-      counter = counter + 1
-      generated_login = "#{suggested_login}#{counter}"
+    # Disable cache as we have higher chance to avoid race condition causing that the generated login
+    # is not unique. Also it's needed when we actually handle that situation (see student_registration.rb),
+    # as otherwise subsequent login generation could return the same result as previous call.
+    ActiveRecord::Base.uncached do
+      while (User.login_exists? generated_login)
+        counter = counter + 1
+        generated_login = "#{suggested_login}#{counter}"
+      end
     end
     return generated_login
   end

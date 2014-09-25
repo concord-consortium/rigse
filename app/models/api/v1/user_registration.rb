@@ -40,6 +40,10 @@ class API::V1::UserRegistration
   def user_is_valid
     u = new_user
     return true if u.valid?
+    if should_skip_login_validation
+      u.errors.delete(:login)
+      return true if u.errors.count == 0
+    end
     u.errors.each do |field,value|
       if self.errors[field].blank?
         self.errors.add(field, u.errors.full_message(field, value))
@@ -62,14 +66,17 @@ class API::V1::UserRegistration
     false
   end
 
+  def should_skip_login_validation
+    false
+  end
+
   def persist_user
     @user = new_user
-    @user.save!
+    return @user.save!
   end
 
   def persist!
-    persist_user
+    return persist_user
   end
-
 
 end
