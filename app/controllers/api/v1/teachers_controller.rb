@@ -16,7 +16,7 @@ class API::V1::TeachersController < API::APIController
   def email_available
     found = User.find_by_email(params[:email])
     if !found
-      render :json => {'message' => 'ok' }
+      render :json => {'message' => 'ok'}
     else
       error({'email' => 'address taken'})
     end
@@ -24,11 +24,11 @@ class API::V1::TeachersController < API::APIController
 
   def login_available
     found = User.find_by_login(params[:username])
-      if !found
-      render :json => {'message' => 'ok' }
+    if !found
+      render :json => {'message' => 'ok'}
     else
       error({'login' => 'username taken'})
     end
   end
-  
+
 end
