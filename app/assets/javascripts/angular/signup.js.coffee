@@ -53,7 +53,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
 
     self.districtSelected = () ->
       if self.isDomestic()
-        self.loadDomesticSChools()
+        self.loadDomesticSchools()
       delete self.school
 
     self.loadRemoteCollection = (collectionName, params={}, success_fn=null) ->
