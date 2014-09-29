@@ -146,8 +146,6 @@ group :development do
   gem "debugger", :platforms => [:mri_19]
   gem "awesome_print"
   gem "interactive_editor"
-  gem "pry"
-  gem "pry-debugger"
   gem "ruby-prof"
   gem "guard-spork"
   gem "guard-rspec"
@@ -179,7 +177,8 @@ end
 group :test, :development do
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
+  gem "pry"
+  gem "pry-debugger"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"
-
 end
