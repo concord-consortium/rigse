@@ -79,7 +79,7 @@ describe Portal::OfferingsController do
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
       @clazz = mock_model(Portal::Clazz, :is_student? => true)
-      
+
       @runnable = Factory(:page)
       @xhtml = Factory(:xhtml)
       @multiple_choice = Factory(:multiple_choice)
@@ -105,10 +105,10 @@ describe Portal::OfferingsController do
       @report_learner = mock_model(Report::Learner,
         :last_run=     => nil,
         :update_fields => nil)
-      @learner = mock_model(Portal::Learner, 
-        :id => 34, 
-        :offering => @offering, 
-        :student  => @portal_student, 
+      @learner = mock_model(Portal::Learner,
+        :id => 34,
+        :offering => @offering,
+        :student  => @portal_student,
         :report_learner => @report_learner)
       controller.stub!(:setup_portal_student).and_return(@learner)
       Portal::Offering.stub!(:find).and_return(@offering)
@@ -188,12 +188,12 @@ describe Portal::OfferingsController do
       response.body.should =~ /<input.*class='disabled'.*type='submit'/
     end
   end
-  
+
   describe "POST offering_collapsed_status" do
     before(:each) do
       @mock_semester = Factory.create(:portal_semester, :name => "Fall")
       @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
-      
+
       @admin_user = Factory.next(:admin_user)
       @manager_user = Factory.next(:manager_user)
       @researcher_user = Factory.next(:researcher_user)
@@ -216,7 +216,7 @@ describe Portal::OfferingsController do
       sign_in @manager_user
       xhr :post, :offering_collapsed_status, @params
       response.body.should be_blank
-      
+
       sign_in @researcher_user
       xhr :post, :offering_collapsed_status, @params
       response.body.should be_blank
@@ -238,14 +238,14 @@ describe Portal::OfferingsController do
       #when teacher has never expanded or collapsed before
       portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
       assert_nil(portal_teacher_full_status)
-      
+
       # after first expand
       xhr :post, :offering_collapsed_status, @params
       portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
       assert_not_nil(portal_teacher_full_status)
       assert_equal(portal_teacher_full_status.offering_collapsed, false)
       response.body.should be_blank
-      
+
       #when teacher has collapsed and expanded many times before
       xhr :post, :offering_collapsed_status, @params
       portal_teacher_full_status.reload
@@ -254,8 +254,8 @@ describe Portal::OfferingsController do
       response.body.should be_blank
     end
   end
-  
-  describe "GET report" do 
+
+  describe "GET report" do
     before(:each) do
       @mock_semester = Factory.create(:portal_semester, :name => "Fall")
       @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
@@ -276,7 +276,7 @@ describe Portal::OfferingsController do
       @page.add_embeddable(@embeddable)
       sign_in @teacher_user
     end
-    
+
     it "should show report when no filter is set" do
       @post_params = {
         :id => @offering.id,
@@ -286,7 +286,7 @@ describe Portal::OfferingsController do
       assert_equal assigns[:report_embeddable_filter], []
       response.should render_template 'layouts/report'
     end
-    
+
     it "should show report when filter is set" do
       #creating report embeddable filter
       report_embeddable=Factory.create(:open_response,:user_id=>@teacher_user.id)
@@ -300,7 +300,7 @@ describe Portal::OfferingsController do
       assert_equal assigns[:report_embeddable_filter], @offering.report_embeddable_filter.embeddables
       response.should render_template 'layouts/report'
     end
-    
+
     it "should show report for an activity when filter is set and ignore is set to false for report embeddable filter" do
       #creating report embeddable filter
       report_embeddable=Factory.create(:open_response,:user_id=>@teacher_user.id)
@@ -321,7 +321,7 @@ describe Portal::OfferingsController do
       assert_equal assigns[:offering].report_embeddable_filter.ignore, false
       response.should render_template 'layouts/report'
     end
-    
+
     it "should show report for an activity when filter is set and ignore is set to true for report embeddable filter" do
       #creating report embeddable filter
       report_embeddable=Factory.create(:open_response,:user_id=>@teacher_user.id)

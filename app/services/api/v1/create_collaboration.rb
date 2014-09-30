@@ -1,20 +1,21 @@
-class API::V1::CollaborationBuilder
+class API::V1::CreateCollaboration
   include ActiveModel::Validations
   include Virtus.model
 
+  # Input.
   attribute :offering_id, Integer
   attribute :students, Array[Hash]
   attribute :external_activity, Boolean
   attribute :owner_id, Integer
 
-  # Instance of Portal::Collaboration generated after successful save action.
+  # Instance of Portal::Collaboration generated after sucessful `call` execution.
   attr_reader :collaboration
 
   validate :owner_valid?
   validate :offering_valid?
   validate :students_valid?
 
-  def save
+  def call
     if valid?
       persist!
     else
@@ -30,7 +31,7 @@ class API::V1::CollaborationBuilder
 
   def students_valid?
     self.students.each_with_index do |s, idx|
-      if !Portal::Student.exists?(s[:id])
+      if !Portal::Student.exists?(s['id'])
         errors.add(:"students[#{idx}]", "Student does not exist")
         return false
       end
@@ -57,7 +58,7 @@ class API::V1::CollaborationBuilder
   def persist_collaboration
     @owner           = Portal::Student.find(self.owner_id)
     @offering        = Portal::Offering.find(self.offering_id)
-    @student_objects = self.students.map { |s| Portal::Student.find(s[:id]) }
+    @student_objects = self.students.map { |s| Portal::Student.find(s['id']) }
     # Make sure that owner is a collaborator, even if not provided in the list.
     @student_objects << @owner
     @student_objects = @student_objects.compact.uniq
@@ -106,8 +107,8 @@ class API::V1::CollaborationBuilder
   end
 
   def password_valid?(student_hash)
-    student_id = student_hash[:id]
-    password   = student_hash[:password]
+    student_id = student_hash['id']
+    password   = student_hash['password']
     user       = Portal::Student.find(student_id).user
     return true if User.authenticate(user.login, password)
     return false
