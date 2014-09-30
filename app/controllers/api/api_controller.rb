@@ -1,18 +1,18 @@
 class API::APIController < ApplicationController
 
-	def error(message)
-	  render :json => 
+	def error(message, status = 400)
+	  render :json =>
 	  	{
-		  	:response_type => "ERROR", 
+		  	:response_type => "ERROR",
 		  	:message => message
 	  	},
-	  	:status => 400
+	  	:status => status
 	end
 
 	def show
 		error("Show not configured for this resource")
 	end
-	
+
 	def create
 		error("create not configured for this resource")
 	end
