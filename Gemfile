@@ -22,6 +22,7 @@ source "http://rubygems.org"
 
   gem "rails",                "~> 3.2"
   gem "arrayfields"
+  gem 'strong_parameters'
   gem "httpclient",           "~> 2.2"
   gem "httparty"
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
