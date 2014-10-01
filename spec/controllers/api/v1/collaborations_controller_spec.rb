@@ -4,13 +4,14 @@ require 'spec_helper'
 describe API::V1::CollaborationsController do
   let(:student1) { Factory(:full_portal_student) }
   let(:student2) { Factory(:full_portal_student) }
-  let(:offering) { Factory(:portal_offering) }
-  let(:clazz) do
+  let(:offering) do
+    offering = Factory(:portal_offering)
     clazz = offering.clazz
     clazz.students = [student1, student2]
     clazz.save!
-    clazz
+    offering
   end
+  let(:clazz) { offering.clazz }
   let(:params) do
     {
       'offering_id' => offering.id,
@@ -30,9 +31,7 @@ describe API::V1::CollaborationsController do
 
   describe "POST #create" do
     context "with valid attributes and student is signed in" do
-      before do
-        sign_in student1.user
-      end
+      before { sign_in student1.user }
 
       it "creates a new collaboration" do
         expect(Portal::Collaboration.count).to eql(0)
@@ -63,6 +62,26 @@ describe API::V1::CollaborationsController do
         post :create, params
         expect(response.status).to eq(401) # unauthorized
         expect(Portal::Collaboration.count).to eql(0)
+      end
+    end
+  end
+
+  describe "GET #available_collaborators" do
+    context "when no user is signed in" do
+      it "returns an error" do
+        get :available_collaborators, offering_id: offering.id
+        expect(response.status).to eq(401) # unauthorized
+      end
+    end
+
+    context "when class member is signed in" do
+      before { sign_in student1.user }
+
+      it "returns students list" do
+        get :available_collaborators, offering_id: offering.id
+        expect(response.status).to eq(200)
+        expected_collaborators = [student1, student2].map { |s| {'id' => s.id, 'name' => s.name} }
+        expect(JSON.parse(response.body)).to match_array(expected_collaborators)
       end
     end
   end

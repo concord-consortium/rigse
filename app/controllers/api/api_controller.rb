@@ -9,6 +9,10 @@ class API::APIController < ApplicationController
 	  	:status => status
 	end
 
+	def unauthorized
+		error("unauthorized", 401)
+	end
+
 	def show
 		error("Show not configured for this resource")
 	end

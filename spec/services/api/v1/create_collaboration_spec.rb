@@ -5,13 +5,14 @@ describe API::V1::CreateCollaboration do
   let(:student1) { Factory(:full_portal_student) }
   let(:student2) { Factory(:full_portal_student) }
   let(:students) { [student1, student2] }
-  let(:offering) { Factory(:portal_offering) }
-  let(:clazz) do
+  let(:offering) do
+    offering = Factory(:portal_offering)
     clazz = offering.clazz
     clazz.students = [student1, student2]
     clazz.save!
-    clazz
+    offering
   end
+  let(:clazz) { offering.clazz }
   let(:params) do
     {
       'offering_id' => offering.id,

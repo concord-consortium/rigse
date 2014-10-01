@@ -277,4 +277,13 @@ class Portal::Clazz < ActiveRecord::Base
     self.description = self.description.strip if self.description
     self.class_word = self.class_word.strip if self.class_word
   end
+
+  # I'm not overwriting default as_json, as the default representation may be used somewhere
+  # (what can be tricky to find) and obviously new format could cause trouble.
+  def to_api_json
+    {
+      name: name,
+      students: students.map { |s| {:id => s.id, :name => s.name} }
+    }
+  end
 end
