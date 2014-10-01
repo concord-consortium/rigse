@@ -353,8 +353,10 @@ var Workgroup = function(_offering,_launch_url,_waiting_callback) {
 
   var check_password = function(learner, passwd, succ, fail) {
     pending_requests = pending_requests + 1;
-    new Ajax.Request(offering_check_auth_base_url.replace(/999/, offering), {
-      parameters: {'learner_id': learner.id, 'pw': passwd},
+    new Ajax.Request(API_V1.STUDENT_CHECK_PASSWORD.replace(/999/, learner.id), {
+      method: 'post',
+      contentType: 'application/json',
+      parameters: JSON.stringify({'password': passwd}),
       onSuccess: function(transport) {
         pending_requests = pending_requests - 1;
         learner.password = passwd;
