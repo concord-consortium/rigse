@@ -211,13 +211,10 @@ RailsPortal::Application.routes.draw do
           get :deactivate
           get :activate
           get :open_response_report
-          post :check_learner_auth
-          post :start
           get :multiple_choice_report
           get :report
           get :separated_report
           post :report_embeddable_filter
-          get :learners
           post :answers
           post :offering_collapsed_status
           post :get_recent_student_report
