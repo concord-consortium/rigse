@@ -620,11 +620,16 @@ RailsPortal::Application.routes.draw do
             post :check_password
           end
         end
+        resources :clazzes, :path => :classes, :only => [:show]
         resources :security_questions
         resources :states
         resources :districts
         resources :schools
-        resources :collaborations, :only => [:create]
+        resources :collaborations, :only => [:create] do
+          collection do
+            get :available_collaborators
+          end
+        end
       end
     end
 

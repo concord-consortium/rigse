@@ -7,11 +7,13 @@ var API_V1 = {
   STUDENTS: "<%= url.api_v1_students_path %>",
   STUDENT_CHECK_PASSWORD: "<%= url.check_password_api_v1_student_path(FAKE_ID) %>",
   TEACHERS: "<%= url.api_v1_teachers_path %>",
+  CLASS: "<%= url.api_v1_clazz_path(FAKE_ID) %>",
   STATES: "<%= url.api_v1_states_path %>",
   DISTRICTS: "<%= url.api_v1_districts_path %>",
   SCHOOLS: "<%= url.api_v1_schools_path %>",
   EMAILS: "<%= url.email_available_api_v1_teachers_path	 %>",
   LOGINS: "<%= url.login_available_api_v1_teachers_path	 %>",
   CLASSWORD: "<%= url.check_class_word_api_v1_students_path %>",
-  COLLABORATIONS: "<%= url.api_v1_collaborations_path %>"
+  COLLABORATIONS: "<%= url.api_v1_collaborations_path %>",
+  AVAILABLE_COLLABORATORS: "<%= url.available_collaborators_api_v1_collaborations_path %>"
 };

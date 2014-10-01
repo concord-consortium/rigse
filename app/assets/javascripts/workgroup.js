@@ -48,9 +48,6 @@ var Workgroup = function(_offering,_launch_url,_waiting_callback) {
   var launch_url         = _launch_url;
   var waiting_callback = _waiting_callback;
   var learner_id_for = function(learner) { return "_LEARNER_" + learner.id; };
-  var offering_start_base_url      = "<%= URLResolver.getUrl('start_portal_offering_path', :id => 999, :format => :json) %>";
-  var offering_learners_base_url   = "<%= URLResolver.getUrl('learners_portal_offering_path', :id => 999, :format => :json) %>";
-  var offering_check_auth_base_url = "<%= URLResolver.getUrl('check_learner_auth_portal_offering_path', :id => 999) %>";
 
   var load_dom_elems = function() {
     if (learners_list === null) {
@@ -216,8 +213,9 @@ var Workgroup = function(_offering,_launch_url,_waiting_callback) {
     loading_learners = true;
     update_ui();
     pending_requests = pending_requests + 1;
-    new Ajax.Request(offering_learners_base_url.replace(/999/,offering), {
+    new Ajax.Request(API_V1.AVAILABLE_COLLABORATORS, {
       method: 'get',
+      parameters: { offering_id: offering },
       onSuccess: function(transport) {
         learners = transport.responseJSON;
         learners = learners.sortBy(function(l) {return l.name;});
