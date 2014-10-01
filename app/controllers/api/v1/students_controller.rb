@@ -1,6 +1,6 @@
 class API::V1::StudentsController < API::APIController
 
-  # POST students
+  # POST api/v1/students
 	def create
 		registration = API::V1::StudentRegistration.new(params)
 
@@ -12,7 +12,7 @@ class API::V1::StudentsController < API::APIController
 		end
 	end
 
-  # GET students/check_class_word
+  # GET api/v1/students/check_class_word
   def check_class_word
     class_word = params.require(:class_word)
     found = Portal::Clazz.find_by_class_word(class_word)
@@ -23,13 +23,12 @@ class API::V1::StudentsController < API::APIController
     end
   end
 
-  # POST students/:id/check_password
+  # POST api/v1/students/:id/check_password
   # Why not GET like in check_class_word? We don't want to put password in URL params.
   def check_password
     student_id = params.require(:id)
     password   = params.require(:password)
-    return error({'id' => 'unknown id'}) unless Portal::Student.exists?(student_id)
-    login = Portal::Student.find(student_id).user.login
+    login      = Portal::Student.find(student_id).user.login
     return render :json => {'message' => 'ok'} if User.authenticate(login, password)
     return error({'password' => 'password incorrect'}, 401)
   end
