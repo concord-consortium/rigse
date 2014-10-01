@@ -621,9 +621,10 @@ RailsPortal::Application.routes.draw do
         resources :states
         resources :districts
         resources :schools
+        resources :collaborations, :only => [:create]
       end
     end
-    
+
     if Rails.env.cucumber? || Rails.env.test?
       match '/login/:username' => 'users#backdoor', :as => :login_backdoor
     end
