@@ -608,13 +608,16 @@ RailsPortal::Application.routes.draw do
         resources :countries
         resources :teachers do
           collection do
-            get 'email_available'
-            get 'login_available'
+            get :email_available
+            get :login_available
           end
         end
         resources :students do
           collection do
-            get 'check_class_word'
+            get :check_class_word
+          end
+          member do
+            post :check_password
           end
         end
         resources :security_questions

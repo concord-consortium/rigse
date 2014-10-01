@@ -1,9 +1,11 @@
 <% url = RailsPortal::Application.routes.url_helpers %>
+<% FAKE_ID = 999 %>
 
 var API_V1 = {
   COUNTRIES: "<%= url.api_v1_countries_path %>",
   SECURITY_QUESTIONS: "<%= url.api_v1_security_questions_path %>",
   STUDENTS: "<%= url.api_v1_students_path %>",
+  STUDENT_CHECK_PASSWORD: "<%= url.check_password_api_v1_student_path(FAKE_ID) %>",
   TEACHERS: "<%= url.api_v1_teachers_path %>",
   STATES: "<%= url.api_v1_states_path %>",
   DISTRICTS: "<%= url.api_v1_districts_path %>",
