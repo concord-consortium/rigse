@@ -12,6 +12,8 @@ class Portal::Offering < ActiveRecord::Base
 
   has_many :teacher_full_status, :dependent => :destroy, :class_name => "Portal::TeacherFullStatus", :foreign_key => "offering_id"
 
+  has_many :collaborations, :class_name => "Portal::Collaboration"
+
   [:name, :description].each { |m| delegate m, :to => :runnable }
 
   has_many :open_responses, :dependent => :destroy, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
@@ -102,7 +104,7 @@ class Portal::Offering < ActiveRecord::Base
   def run_format
     runnable.run_format
   end
-  
+
   def internal_report?
     klass = runnable.class
 
@@ -113,7 +115,7 @@ class Portal::Offering < ActiveRecord::Base
       end
     end
 
-    return [Investigation, Activity, Page].include? klass    
+    return [Investigation, Activity, Page].include? klass
   end
 
   def reportable?
@@ -149,14 +151,14 @@ class Portal::Offering < ActiveRecord::Base
     num_completed = learners_completed.count
     num_completed
   end
-  
+
   def inprogress_students_count
     student_ids = self.clazz.students.map{|item| item.id}
     learners = self.learners.select{|item| student_ids.include?(item.student_id)}
     learners_in_progress = learners.select {|item| !item.report_learner.nil? && !item.report_learner.complete_percent.nil? && item.report_learner.complete_percent > 0 &&  item.report_learner.complete_percent < 100}
     num_in_progress = 0
     num_in_progress = learners_in_progress.length
-    num_in_progress  
+    num_in_progress
   end
 
   def notstarted_students_count

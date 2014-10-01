@@ -350,7 +350,7 @@ RailsPortal::Application.routes.draw do
     post '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_name'
     get  '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_name'
 
-    # external activity return url
+    # external activity return url (:id refers learner's ID)
     post '/dataservice/external_activity_data/:id' => 'dataservice/external_activity_data#create', :as => 'external_activity_return'
 
     # A prettier version of the blob w/ token url
