@@ -7,4 +7,7 @@
         %strong
           != embeddable.name
       .item{:class => css_style, :style => 'display: block;'}
-        = link_to 'View work', saveable.answer
+        - if saveable.answered?
+          = link_to 'View work', saveable.answer
+        - else
+          No work saved.

@@ -6,4 +6,7 @@
       %div{:class => "#{css_style} learner_response_name inline_block"}
         = l.name
       %div{:class => "#{css_style} learner_response_content inline_block"}
-        = link_to "View work", saveable.answer
+        - if saveable.answered?
+          = link_to 'View work', saveable.answer
+        - else
+          No work saved.
