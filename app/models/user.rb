@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   self.token_authentication_key = "access_token"
   default_scope where(User.arel_table[:state].not_in(['disabled']))
-  
+
   def apply_omniauth(omniauth)
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
   end
@@ -20,9 +20,7 @@ class User < ActiveRecord::Base
   def self.find_for_token_authentication(conditions)
     where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[token_authentication_key], Time.now]).joins(:access_grants).select("users.*").first
   end
-  
-  
-  
+
   NO_EMAIL_STRING='no-email-'
   has_many :investigations
   has_many :resource_pages
@@ -40,12 +38,12 @@ class User < ActiveRecord::Base
   has_many :drawing_tools, :class_name => 'Embeddable::DrawingTool'
   has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
   has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
-  
+
   has_many :created_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
   has_many :updated_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
-  
+
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
-  
+
   scope :all_users, { :conditions => {}}
   scope :active, { :conditions => { :state => 'active' } }
   scope :suspended, {:conditions => { :state => 'suspended'}}
@@ -71,7 +69,7 @@ class User < ActiveRecord::Base
   attr_accessor :skip_notifications
 
   before_validation :strip_spaces
-  
+
   after_update :set_passive_users_as_pending
   after_create :set_passive_users_as_pending
 
@@ -87,7 +85,7 @@ class User < ActiveRecord::Base
   end
 
   # Validations
-  
+
   login_regex       = /\A\w[\w\.\-_@]+\z/                     # ASCII, strict
   bad_login_message = "use only letters, numbers, and .-_@ please.".freeze
 
@@ -99,8 +97,8 @@ class User < ActiveRecord::Base
   domain_tld_regex  = '(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|jobs|museum)'.freeze
   email_regex       = /\A#{email_name_regex}@#{domain_head_regex}#{domain_tld_regex}\z/i
   bad_email_message = "should look like an email address.".freeze
-  
-  
+
+
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 1..40
@@ -157,7 +155,7 @@ class User < ActiveRecord::Base
       base = "#{first.first}#{last}".downcase.gsub(/[^a-z]/, "_")
       suggestion = base
       count = 0
-      while(login_exists?(suggestion)) 
+      while(login_exists?(suggestion))
         count = count + 1
         suggestion = "#{base}#{count}"
       end
@@ -213,6 +211,15 @@ class User < ActiveRecord::Base
     u1 && u1.valid_password?(password) ? u1 : nil
   end
 
+  # Find or creates a new access token valid at given time.
+  def get_access_token_valid_at(time)
+    a_grant = access_grants.valid_at(time).first
+    return a_grant.access_token unless a_grant.nil?
+    # No token available, create new one. How bad is this? Some attributes are undefined
+    # and generally the whole creation looks different from what we do in auth_controller.
+    return access_grants.create!(access_token_expires_at: time + 1.second).access_token
+  end
+
   def active_for_authentication?
     super && user_active?
   end
@@ -237,7 +244,7 @@ class User < ActiveRecord::Base
     _fullname = "#{last_name}, #{first_name}".strip
     _fullname.empty? ? login : "#{_fullname} ( #{login} )"
   end
-  
+
   def full_name
     _fullname = "#{last_name}, #{first_name}".strip
     _fullname.empty? ? login : "#{_fullname}"
@@ -389,45 +396,45 @@ class User < ActiveRecord::Base
     self.remember_token = self.class.remember_token
     save(:validate => false)
   end
-  
+
   def forget_me
     self.forget_me!
   end
-  
+
   def set_passive_users_as_pending
     if (self.state == 'passive' && (!self.confirmation_token.nil? && self.confirmed_at.nil?))
       self.update_attribute(:state, "pending")
     end
     self.reload
   end
-  
+
   def suspend!
     self.update_attribute(:state, 'suspended')
     self.reload
   end
-  
+
   def delete!
     self.update_attribute(:state, 'disabled')
     self.update_attribute( :deleted_at, DateTime.now.utc)
     self.reload
   end
-  
+
   def unsuspend!
     user_state = "active"
-    user_state = (self.confirmation_token.nil? && self.confirmed_at.nil?)? "passive" : user_state 
-    user_state = (!self.confirmation_token.nil? && self.confirmed_at.nil?)? "pending" : user_state 
+    user_state = (self.confirmation_token.nil? && self.confirmed_at.nil?)? "passive" : user_state
+    user_state = (!self.confirmation_token.nil? && self.confirmed_at.nil?)? "pending" : user_state
     self.update_attribute(:state, user_state)
     self.reload
   end
-  
+
   def user_active?
     self.state != "suspended" && self.state != "disabled"
   end
-  
+
   protected
   def make_activation_code
     self.deleted_at = nil
     self.activation_code = self.class.make_token
   end
-  
+
 end

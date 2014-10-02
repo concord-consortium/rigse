@@ -52,9 +52,9 @@ describe User do
       end
     end
   end
-  
+
   describe 'disallows illegitimate logins:' do
-    ['', '1234567890_234567890_234567890_234567890_', 
+    ['', '1234567890_234567890_234567890_234567890_',
      "Iñtërnâtiônàlizætiøn hasn't happened to ruby 1.8 yet",
      'semicolon;', 'quote"', 'backtick`', 'percent%', 'plus+'].each do |login_str|
       it "'#{login_str}'" do
@@ -101,14 +101,14 @@ describe User do
       end
     end
   end
-  
+
   describe 'disallows illegitimate emails' do
     ['!!@nobadchars.com', 'foo@no-rep-dots..com', 'foo@badtld.xxx', 'foo@toolongtld.abcdefg',
      'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email', 'need.domain.and.tld@de',
      'r@.wk', '1234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890@gmail2.com',
      # these are technically allowed but not seen in practice:
      # Update: just saw a tick in the wild, modified validations
-     # see commit: 1e9d396b0     
+     # see commit: 1e9d396b0
      # 'tick\'@gmail.com' now allowed.
      'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
     ].each do |email_str|
@@ -287,21 +287,34 @@ describe User do
       assert_equal @user.state, 'pending'
     end
   end
-  
+
+  # Access token generation
+  describe 'generated access token' do
+    let(:quentin_token) { users(:quentin).get_access_token_valid_at(1.day.from_now) }
+    let(:aaron_token)   { users(:aaron).get_access_token_valid_at(1.day.from_now) }
+
+    it 'can be used to authenticate and get correct user' do
+      conditions = { User.token_authentication_key => quentin_token }
+      expect(User.find_for_token_authentication(conditions)).to eql(users(:quentin))
+      conditions = { User.token_authentication_key => aaron_token }
+      expect(User.find_for_token_authentication(conditions)).to eql(users(:aaron))
+    end
+  end
+
   # Security questions, currently for Students only
-  
+
   describe "security questions" do
     before(:each) do
       @user = users(:quentin)
     end
-    
+
     it "updates security questions" do
       questions = Array.new(3) { |i| SecurityQuestion.new({ :question => "test #{i}", :answer => "test" }) }
-      
+
       @user.security_questions.should be_empty
-      
+
       @user.update_security_questions!(questions)
-      
+
       @user.security_questions.size.should == 3
       questions.each do |v|
         @user.security_questions.select { |q| q.question == v.question && q.answer == v.answer }.size.should == 1

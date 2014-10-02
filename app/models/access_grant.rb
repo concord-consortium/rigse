@@ -2,9 +2,13 @@ class AccessGrant < ActiveRecord::Base
   belongs_to :user
   belongs_to :client
   before_create :generate_tokens
-  
+
   attr_accessible :access_token, :access_token_expires_at, :client_id, :code, :refresh_token, :state, :user_id
   ExpireTime = 1.week
+
+  # Returns all access grants valid at given time, ordered by expire date.
+  scope :valid_at, lambda { |time| where("access_token_expires_at > ?", time).order('access_token_expires_at DESC') }
+
   def self.prune!
     delete_all(["access_token_expires_at < ?", 1.days.ago])
   end
