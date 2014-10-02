@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141001164955) do
+ActiveRecord::Schema.define(:version => 20141001174100) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -239,6 +239,7 @@ ActiveRecord::Schema.define(:version => 20141001164955) do
   end
 
   add_index "dataservice_bundle_contents", ["bundle_logger_id"], :name => "index_dataservice_bundle_contents_on_bundle_logger_id"
+  add_index "dataservice_bundle_contents", ["collaboration_id"], :name => "index_dataservice_bundle_contents_on_collaboration_id"
 
   create_table "dataservice_bundle_loggers", :force => true do |t|
     t.datetime "created_at",            :null => false
@@ -991,12 +992,17 @@ ActiveRecord::Schema.define(:version => 20141001164955) do
     t.datetime "updated_at",       :null => false
   end
 
+  add_index "portal_collaboration_memberships", ["collaboration_id", "student_id"], :name => "index_portal_coll_mem_on_collaboration_id_and_student_id"
+
   create_table "portal_collaborations", :force => true do |t|
     t.integer  "owner_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "offering_id"
   end
+
+  add_index "portal_collaborations", ["offering_id"], :name => "index_portal_collaborations_on_offering_id"
+  add_index "portal_collaborations", ["owner_id"], :name => "index_portal_collaborations_on_owner_id"
 
   create_table "portal_countries", :force => true do |t|
     t.string   "name"
