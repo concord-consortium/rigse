@@ -37,7 +37,7 @@ describe API::V1::CollaborationsController do
         expect(Portal::Collaboration.count).to eql(0)
         post :create, params
         expect(response.status).to eq(201) # created
-        expect(Portal::Collaboration.count).to eql(1)
+        expect(JSON.parse(response.body)["id"]).to eql(Portal::Collaboration.first.id)
         expect(Portal::Collaboration.first.owner.id).to eql(params['owner_id'])
       end
     end
@@ -82,6 +82,32 @@ describe API::V1::CollaborationsController do
         expect(response.status).to eq(200)
         expected_collaborators = [student1, student2].map { |s| {'id' => s.id, 'name' => s.name} }
         expect(JSON.parse(response.body)).to match_array(expected_collaborators)
+      end
+    end
+  end
+
+  describe "GET #collaborators_endpoints" do
+    before do
+      sign_in student1.user
+      post :create, params
+      expect(response.status).to eq(201)
+      sign_out :user
+      @collaboration_id = JSON.parse(response.body)["id"]
+    end
+
+    context "when no user is signed in" do
+      it "returns an error" do
+        get :collaborators_endpoints, id: @collaboration_id
+        expect(response.status).to eq(401) # unauthorized
+      end
+    end
+
+    context "when class member is signed in" do
+      before { sign_in student1.user }
+
+      it "returns list of student data and endpoints" do
+        get :collaborators_endpoints, id: @collaboration_id
+        expect(response.status).to eq(200)
       end
     end
   end

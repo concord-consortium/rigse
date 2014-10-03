@@ -622,9 +622,12 @@ RailsPortal::Application.routes.draw do
         resources :states
         resources :districts
         resources :schools
-        resources :collaborations, :only => [:create] do
+        resources :collaborations, :only => [:create, :show] do
           collection do
             get :available_collaborators
+          end
+          member do
+            get :collaborators_endpoints
           end
         end
       end
