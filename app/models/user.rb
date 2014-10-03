@@ -211,13 +211,9 @@ class User < ActiveRecord::Base
     u1 && u1.valid_password?(password) ? u1 : nil
   end
 
-  # Find or creates a new access token valid at given time.
-  def get_access_token_valid_at(time)
-    a_grant = access_grants.valid_at(time).first
-    return a_grant.access_token unless a_grant.nil?
-    # No token available, create new one. How bad is this? Some attributes are undefined
-    # and generally the whole creation looks different from what we do in auth_controller.
-    return access_grants.create!(access_token_expires_at: time + 1.second).access_token
+  # Creates a new access token valid for given time.
+  def create_access_token_valid_for(time)
+    return access_grants.create!(access_token_expires_at: time.from_now + 1.second).access_token
   end
 
   def active_for_authentication?

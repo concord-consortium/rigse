@@ -33,7 +33,7 @@ class API::V1::ShowCollaboratorsEndpoints
         endpoint_url: external_activity_return_url(learner.id, host: self.host_with_port),
         # Access token shouldn't be shared at all. Make sure that access to this
         # service is very strict.
-        access_token: s.user.get_access_token_valid_at(ACCESS_TOKEN_EXPIRE_TIME.from_now)
+        access_token: s.user.create_access_token_valid_for(ACCESS_TOKEN_EXPIRE_TIME)
       }
     end
   end

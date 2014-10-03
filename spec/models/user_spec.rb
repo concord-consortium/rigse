@@ -290,8 +290,8 @@ describe User do
 
   # Access token generation
   describe 'generated access token' do
-    let(:quentin_token) { users(:quentin).get_access_token_valid_at(1.day.from_now) }
-    let(:aaron_token)   { users(:aaron).get_access_token_valid_at(1.day.from_now) }
+    let(:quentin_token) { users(:quentin).create_access_token_valid_for(1.day) }
+    let(:aaron_token)   { users(:aaron).create_access_token_valid_for(1.day) }
 
     it 'can be used to authenticate and get correct user' do
       conditions = { User.token_authentication_key => quentin_token }
