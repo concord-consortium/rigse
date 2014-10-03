@@ -8,6 +8,8 @@ class API::V1::CreateCollaboration
   attribute :external_activity, Boolean
   attribute :owner_id, Integer
 
+  attr_reader :result
+
   # Instance of Portal::Collaboration generated after sucessful `call` execution.
   attr_reader :collaboration
 
@@ -16,8 +18,8 @@ class API::V1::CreateCollaboration
   validate :students_valid?
 
   def call
-    if valid?
-      persist!
+    if valid? && persist!
+      @result = json_result
     else
       false
     end
@@ -55,6 +57,10 @@ class API::V1::CreateCollaboration
     return persist_collaboration
   end
 
+  def json_result
+    {id: self.collaboration.id}
+  end
+
   def persist_collaboration
     @owner           = Portal::Student.find(self.owner_id)
     @offering        = Portal::Offering.find(self.offering_id)
@@ -63,7 +69,10 @@ class API::V1::CreateCollaboration
     @student_objects << @owner
     @student_objects = @student_objects.compact.uniq
 
-    @collaboration = Portal::Collaboration.create!(:owner => @owner)
+    @collaboration = Portal::Collaboration.create!(
+      :owner => @owner,
+      :offering => @offering
+    )
     @collaboration.students = @student_objects
 
     setup_learners

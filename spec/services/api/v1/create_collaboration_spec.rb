@@ -57,7 +57,7 @@ describe API::V1::CreateCollaboration do
   describe "#call" do
     it "should generate collaboration object and return true when successful" do
       create_collaboration = API::V1::CreateCollaboration.new(params)
-      expect(create_collaboration.call).to be true
+      expect(create_collaboration.call).to be_true
       expect(create_collaboration.collaboration).to_not be_nil
     end
 
@@ -74,8 +74,12 @@ describe API::V1::CreateCollaboration do
         create_collaboration.collaboration
       end
 
-      it "should have the correct owner" do
+      it "should belong to the correct owner" do
         expect(collaboration.owner.id).to eql(params['owner_id'])
+      end
+
+      it "should belong to the correct offering" do
+        expect(collaboration.offering.id).to eql(params['offering_id'])
       end
 
       it "should have the correct students (collaborators)" do
