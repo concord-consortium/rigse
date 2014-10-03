@@ -85,7 +85,7 @@ source "http://rubygems.org"
   # to support hosting paperclip attachments on S3:
   # gem "aws-s3",               :require => "aws/s3" (for paperclip 3.x)
   gem "aws-sdk",              "~> 1.8.1.2"
-  gem "newrelic_rpm",         "~> 3.5.3.25"
+  gem "newrelic_rpm",         "~> 3.5.4"
   gem "tinymce-rails",        "~>3.5.6"
   gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
     :branch => "remove-addon-support"
