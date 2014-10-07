@@ -159,6 +159,9 @@ group :development do
   gem "sextant"    # adds http://localhost:9000/rails/routes in dev mode
   gem 'xray-rails' # shows you what is being rendered in your browser with cmd+shift+x
   gem "better_errors", "~> 1.1.0"
+  gem "rack-mini-profiler" 
+  gem "bullet"
+  gem "lol_dba"
 end
 
 group :test do
