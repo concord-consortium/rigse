@@ -26,11 +26,9 @@
 = require 'site_notices'
 = require 'lightbox'
 = require tinymce
-= require 'es5_shims'
 = require_tree './in_place_rich_editor'
 = require 'jquery/jquery'
 = require 'jquery_ajax_select'
-= require 'jquery.placeholder'
 = require 'jquery.serialize-object'
 = require 'select2'
 = require 'search_materials'
