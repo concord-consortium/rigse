@@ -2,6 +2,8 @@
  // TODO: consider moving assets from zeus into
  // package (mange_classes,instructional_materials, &etc.)
 
+= require 'prototype'
+= require 'prototype-ui/prototype-ui'
 = require 'globals'
 = require 'effects'
 = require 'dragdrop'
@@ -22,7 +24,6 @@
 = require 'workgroup'
 = require 'chosen.proto'
 = require 'pt_event_simulate'
-= require 'prototype-ui/prototype-ui'
 = require 'site_notices'
 = require 'lightbox'
 = require tinymce
@@ -42,6 +43,8 @@
 = require 'permission_form'
 = require 'wait_message'
 = require 'api-urls'
+= require 'angular'
+= require 'angular-messages'
 = require 'angular/vendor/angular_select2'
 = require 'angular/vendor/angular_ui_validate'
 = require 'angular/cc_directives'
