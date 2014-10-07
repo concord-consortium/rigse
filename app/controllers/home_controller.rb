@@ -185,9 +185,9 @@ class HomeController < ApplicationController
   protected
   def load_featured_materials
     @materials = [ 
-        Investigation.published.where(:is_featured => true),
-        ExternalActivity.published.where(:is_featured => true),
-        Activity.investigation.published.where(:is_featured => true) 
+        Investigation.published.where(:is_featured => true).includes([:activities, :user]),
+        ExternalActivity.published.where(:is_featured => true).includes([:template, :user]),
+        Activity.investigation.published.where(:is_featured => true).includes(:investigation)
     ]
   end
   
