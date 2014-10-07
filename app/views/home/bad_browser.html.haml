@@ -1,0 +1,18 @@
+#main
+  .padded_content
+    %h3= "Technical Help: Unsupported Browser"
+    %p
+    %p
+      #{APP_CONFIG[:site_name]} requires a modern browser. 
+      %br
+      Please update your browser using one of the links below:
+    %p
+      %span.browser_link
+        %a{href: "http://www.mozilla.com/firefox/", target: "_blank"}
+          Firefox
+      %span.browser_link
+        %a{href: "http://www.google.com/chrome?hl=en" , target: "_blank"}
+          Chrome
+      %span.browser_link
+        %a{href: "http://windows.microsoft.com/en-us/internet-explorer/ie-11-worldwide-languages", target: "_blank"}
+          Internet Explorer

@@ -2,6 +2,8 @@ require 'themes_for_rails'
 require 'haml'
 require 'will_paginate/array'
 
+BrowserSpecificiation = Struct.new(:browser, :version)
+
 class ApplicationController < ActionController::Base
   include Clipboard
 
@@ -30,6 +32,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   before_filter :setup_container
+  before_filter :reject_old_browsers
 
   include AuthenticatedSystem
   include RoleRequirementSystem
@@ -184,5 +187,15 @@ class ApplicationController < ActionController::Base
 
   def wide_layout_for_anonymous
     @wide_content_layout = true if current_visitor.anonymous?
+  end
+
+  def reject_old_browsers
+    user_agent = UserAgent.parse(request.user_agent)
+    min_browser = BrowserSpecificiation.new("Internet Explorer", "9.0")
+    if user_agent < min_browser
+      @wide_content_layout = true
+      @user_agent = user_agent
+      render 'home/bad_browser'
+    end
   end
 end
