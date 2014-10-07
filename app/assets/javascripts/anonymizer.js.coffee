@@ -15,9 +15,10 @@ class Anonymizer
     @fake_to_real_map  = {}
     @counter = 0;
     @anonymous  = false;
-    $(@button_select).observe 'click', (evt) =>
-      @toggle()
-      evt.stop();
+    if $(@button_select)
+      $(@button_select).observe 'click', (evt) =>
+        @toggle()
+        evt.stop();
 
   record_fake_and_real: (real_name) ->
     fake = @real_to_fake_map[real_name]
