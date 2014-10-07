@@ -147,14 +147,14 @@ class SearchController < ApplicationController
           material_parent = nil
           if runnable_type == "Investigation"
             material = ::Investigation.find(params[:material_id])
-            used_in_clazz_count = material.offerings.count
+            used_in_clazz_count = material.offerings_count
           elsif runnable_type == "Activity"
             material = ::Activity.find(params[:material_id])
             material_parent = material.parent
-            used_in_clazz_count = (material_parent)? material_parent.offerings.count : material.offerings.count
+            used_in_clazz_count = (material_parent)? material_parent.offerings_count : material.offerings_count
           elsif runnable_type == "ExternalActivity"
             material = ::ExternalActivity.find(params[:material_id])
-            used_in_clazz_count = material.offerings.count
+            used_in_clazz_count = material.offerings_count
           end
 
           if(used_in_clazz_count == 0)
@@ -170,7 +170,7 @@ class SearchController < ApplicationController
             page << "getMessagePopup('<div class=\"feedback_message\">#{runnable_type} is assigned to the selected class(es) successfully.</div>')"
             page.replace_html "material_clazz_count", class_count_desc
             if !material_parent.nil? && runnable_type == "Activity"
-              used_in_clazz_count = material.offerings.count + material.parent.offerings.count
+              used_in_clazz_count = material.offerings_count + material.parent.offerings_count
 
               if(used_in_clazz_count == 0)
                 class_count_desc = "Not used in any class."
@@ -184,7 +184,7 @@ class SearchController < ApplicationController
 
             if runnable_type == "Investigation"
               material.activities.each do|activity|
-                used_in_clazz_count = activity.offerings.count + material.offerings.count
+                used_in_clazz_count = activity.offerings_count + material.offerings_count
 
                 if(used_in_clazz_count == 0)
                   class_count_desc = "Not used in any class."
@@ -206,7 +206,7 @@ class SearchController < ApplicationController
           if clazz_ids.count > 0
             runnable_ids.each do|runnable_id|
               material = ::Activity.find(runnable_id)
-              used_in_clazz_count = material.offerings.count + material.parent.offerings.count
+              used_in_clazz_count = material.offerings_count + material.parent.offerings_count
 
               if(used_in_clazz_count == 0)
                 class_count_desc = "Not used in any class."

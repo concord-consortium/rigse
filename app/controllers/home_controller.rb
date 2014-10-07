@@ -145,7 +145,7 @@ class HomeController < ApplicationController
     
     learner_offerings = (Report::Learner.where("complete_percent > 0").where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC")).select(:offering_id).uniq
     
-    if (learner_offerings.count == 0)
+    if (learner_offerings_count == 0)
       # There are no report learners for this filter
       @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
       return
@@ -165,7 +165,7 @@ class HomeController < ApplicationController
     end
     
     
-    if (@clazz_offerings.count == 0)
+    if (@clazz_offerings_count == 0)
       @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
       return
     end

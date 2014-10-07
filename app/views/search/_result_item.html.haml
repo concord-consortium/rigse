@@ -1,6 +1,6 @@
-- material_count = material.offerings.count
+- material_count = material.offerings_count
 - if material.parent
-  - material_count = material_count + material.parent.offerings.count
+  - material_count = material_count + material.parent.offerings_count
 
 - external = false
 - if material.is_a? Investigation
