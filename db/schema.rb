@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141014105134) do
+ActiveRecord::Schema.define(:version => 20141006195946) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -24,6 +24,9 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
   end
+
+  add_index "access_grants", ["client_id"], :name => "index_access_grants_on_client_id"
+  add_index "access_grants", ["user_id"], :name => "index_access_grants_on_user_id"
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -47,6 +50,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
+  add_index "activities", ["is_featured", "publication_status"], :name => "featured_public"
+  add_index "activities", ["publication_status"], :name => "pub_status"
 
   create_table "admin_notice_user_display_statuses", :force => true do |t|
     t.integer  "user_id"
@@ -54,12 +59,18 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.boolean  "collapsed_status"
   end
 
+  add_index "admin_notice_user_display_statuses", ["user_id"], :name => "index_admin_notice_user_display_statuses_on_user_id"
+
   create_table "admin_project_vendor_interfaces", :force => true do |t|
     t.integer  "admin_project_id"
     t.integer  "probe_vendor_interface_id"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
   end
+
+  add_index "admin_project_vendor_interfaces", ["admin_project_id", "probe_vendor_interface_id"], :name => "adm_proj_interface"
+  add_index "admin_project_vendor_interfaces", ["admin_project_id"], :name => "index_admin_project_vendor_interfaces_on_admin_project_id"
+  add_index "admin_project_vendor_interfaces", ["probe_vendor_interface_id"], :name => "adm_proj_vndr_interfc"
 
   create_table "admin_projects", :force => true do |t|
     t.integer  "user_id"
@@ -97,6 +108,9 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "admin_site_notice_roles", ["notice_id"], :name => "index_admin_site_notice_roles_on_notice_id"
+  add_index "admin_site_notice_roles", ["role_id"], :name => "index_admin_site_notice_roles_on_role_id"
+
   create_table "admin_site_notice_users", :force => true do |t|
     t.integer  "notice_id"
     t.integer  "user_id"
@@ -105,6 +119,9 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "updated_at",       :null => false
   end
 
+  add_index "admin_site_notice_users", ["notice_id"], :name => "index_admin_site_notice_users_on_notice_id"
+  add_index "admin_site_notice_users", ["user_id"], :name => "index_admin_site_notice_users_on_user_id"
+
   create_table "admin_site_notices", :force => true do |t|
     t.text     "notice_html"
     t.datetime "created_at",  :null => false
@@ -112,6 +129,9 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.integer  "created_by"
     t.integer  "updated_by"
   end
+
+  add_index "admin_site_notices", ["created_by"], :name => "index_admin_site_notices_on_created_by"
+  add_index "admin_site_notices", ["updated_by"], :name => "index_admin_site_notices_on_updated_by"
 
   create_table "admin_tags", :force => true do |t|
     t.string   "scope"
@@ -140,6 +160,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
 
   create_table "author_notes", :force => true do |t|
     t.text     "body"
@@ -246,6 +268,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "updated_at",            :null => false
     t.integer  "in_progress_bundle_id"
   end
+
+  add_index "dataservice_bundle_loggers", ["in_progress_bundle_id"], :name => "index_dataservice_bundle_loggers_on_in_progress_bundle_id"
 
   create_table "dataservice_console_contents", :force => true do |t|
     t.integer  "console_logger_id"
@@ -519,6 +543,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.integer  "dd_font_size"
   end
 
+  add_index "embeddable_data_collectors", ["probe_type_id"], :name => "index_embeddable_data_collectors_on_probe_type_id"
+
   create_table "embeddable_data_tables", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",              :limit => 36
@@ -775,8 +801,12 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.boolean  "allow_collaboration",      :default => false
   end
 
+  add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
+  add_index "external_activities", ["publication_status"], :name => "pub_status"
   add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
+  add_index "external_activities", ["template_id", "template_type"], :name => "index_external_activities_on_template_id_and_template_type"
+  add_index "external_activities", ["user_id"], :name => "index_external_activities_on_user_id"
 
   create_table "external_user_domains", :force => true do |t|
     t.string   "name"
@@ -832,6 +862,9 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.boolean  "is_featured",                             :default => false
     t.text     "abstract"
   end
+
+  add_index "investigations", ["is_featured", "publication_status"], :name => "featured_public"
+  add_index "investigations", ["publication_status"], :name => "pub_status"
 
   create_table "legacy_collaborations", :force => true do |t|
     t.integer  "bundle_content_id"
@@ -917,6 +950,7 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.integer  "user_id"
   end
 
+  add_index "page_elements", ["embeddable_id", "embeddable_type"], :name => "index_page_elements_on_embeddable_id_and_embeddable_type"
   add_index "page_elements", ["embeddable_id"], :name => "index_page_elements_on_embeddable_id"
   add_index "page_elements", ["page_id"], :name => "index_page_elements_on_page_id"
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
@@ -946,6 +980,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "updated_at",      :null => false
   end
 
+  add_index "passwords", ["user_id"], :name => "index_passwords_on_user_id"
+
   create_table "portal_bookmark_visits", :force => true do |t|
     t.integer  "user_id"
     t.integer  "bookmark_id"
@@ -966,6 +1002,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
   end
 
   add_index "portal_bookmarks", ["clazz_id"], :name => "index_bookmarks_on_clazz_id"
+  add_index "portal_bookmarks", ["id", "type"], :name => "index_portal_bookmarks_on_id_and_type"
+  add_index "portal_bookmarks", ["user_id"], :name => "index_portal_bookmarks_on_user_id"
 
   create_table "portal_clazzes", :force => true do |t|
     t.string   "uuid",          :limit => 36
@@ -1053,6 +1091,7 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.string   "zipcode",          :limit => 5
   end
 
+  add_index "portal_districts", ["nces_district_id"], :name => "index_portal_districts_on_nces_district_id"
   add_index "portal_districts", ["state"], :name => "index_portal_districts_on_state"
 
   create_table "portal_grade_levels", :force => true do |t|
@@ -1094,6 +1133,7 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
   add_index "portal_learners", ["bundle_logger_id"], :name => "index_portal_learners_on_bundle_logger_id"
   add_index "portal_learners", ["console_logger_id"], :name => "index_portal_learners_on_console_logger_id"
   add_index "portal_learners", ["offering_id"], :name => "index_portal_learners_on_offering_id"
+  add_index "portal_learners", ["student_id"], :name => "index_portal_learners_on_student_id"
 
   create_table "portal_nces06_districts", :force => true do |t|
     t.string  "LEAID",  :limit => 7
@@ -1792,6 +1832,9 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.integer  "position",                       :default => 0
   end
 
+  add_index "portal_offerings", ["clazz_id"], :name => "index_portal_offerings_on_clazz_id"
+  add_index "portal_offerings", ["runnable_id", "runnable_type"], :name => "runnable"
+
   create_table "portal_permission_forms", :force => true do |t|
     t.string   "name"
     t.string   "url"
@@ -1813,6 +1856,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
   end
 
   add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
+  add_index "portal_school_memberships", ["school_id", "member_id", "member_type"], :name => "school_memberships_long_idx"
+  add_index "portal_school_memberships", ["school_id"], :name => "index_portal_school_memberships_on_school_id"
 
   create_table "portal_schools", :force => true do |t|
     t.string   "uuid",           :limit => 36
@@ -1829,6 +1874,9 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.text     "city"
   end
 
+  add_index "portal_schools", ["country_id"], :name => "index_portal_schools_on_country_id"
+  add_index "portal_schools", ["district_id"], :name => "index_portal_schools_on_district_id"
+  add_index "portal_schools", ["nces_school_id"], :name => "index_portal_schools_on_nces_school_id"
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
 
   create_table "portal_semesters", :force => true do |t|
@@ -1965,6 +2013,9 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "updated_at",          :null => false
   end
 
+  add_index "probe_device_configs", ["user_id"], :name => "index_probe_device_configs_on_user_id"
+  add_index "probe_device_configs", ["vendor_interface_id"], :name => "index_probe_device_configs_on_vendor_interface_id"
+
   create_table "probe_physical_units", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -1995,6 +2046,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "updated_at",        :null => false
   end
 
+  add_index "probe_probe_types", ["user_id"], :name => "index_probe_probe_types_on_user_id"
+
   create_table "probe_vendor_interfaces", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -2016,6 +2069,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "updated_at",  :null => false
     t.boolean  "ignore"
   end
+
+  add_index "report_embeddable_filters", ["offering_id"], :name => "index_report_embeddable_filters_on_offering_id"
 
   create_table "report_learner_activity", :force => true do |t|
     t.integer "learner_id"
@@ -2057,6 +2112,7 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
   add_index "report_learners", ["last_run"], :name => "index_report_learners_on_last_run"
   add_index "report_learners", ["learner_id"], :name => "index_report_learners_on_learner_id"
   add_index "report_learners", ["offering_id"], :name => "index_report_learners_on_offering_id"
+  add_index "report_learners", ["runnable_id", "runnable_type"], :name => "index_report_learners_on_runnable_id_and_runnable_type"
   add_index "report_learners", ["runnable_id"], :name => "index_report_learners_on_runnable_id"
   add_index "report_learners", ["school_id"], :name => "index_report_learners_on_school_id"
 
@@ -2177,6 +2233,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "updated_at",        :null => false
   end
 
+  add_index "saveable_external_link_urls", ["external_link_id"], :name => "index_saveable_external_link_urls_on_external_link_id"
+
   create_table "saveable_external_links", :force => true do |t|
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
@@ -2186,6 +2244,10 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
   end
+
+  add_index "saveable_external_links", ["embeddable_id", "embeddable_type"], :name => "svbl_xtrn_links_poly"
+  add_index "saveable_external_links", ["learner_id"], :name => "index_saveable_external_links_on_learner_id"
+  add_index "saveable_external_links", ["offering_id"], :name => "index_saveable_external_links_on_offering_id"
 
   create_table "saveable_image_question_answers", :force => true do |t|
     t.integer  "image_question_id"
@@ -2211,6 +2273,7 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.string   "uuid",              :limit => 36
   end
 
+  add_index "saveable_image_questions", ["image_question_id"], :name => "index_saveable_image_questions_on_image_question_id"
   add_index "saveable_image_questions", ["learner_id"], :name => "index_saveable_image_questions_on_learner_id"
   add_index "saveable_image_questions", ["offering_id"], :name => "index_saveable_image_questions_on_offering_id"
 
@@ -2249,6 +2312,7 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
   end
 
   add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"
+  add_index "saveable_multiple_choices", ["multiple_choice_id"], :name => "index_saveable_multiple_choices_on_multiple_choice_id"
   add_index "saveable_multiple_choices", ["offering_id"], :name => "index_saveable_multiple_choices_on_offering_id"
 
   create_table "saveable_open_response_answers", :force => true do |t|
@@ -2274,6 +2338,7 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
 
   add_index "saveable_open_responses", ["learner_id"], :name => "index_saveable_open_responses_on_learner_id"
   add_index "saveable_open_responses", ["offering_id"], :name => "index_saveable_open_responses_on_offering_id"
+  add_index "saveable_open_responses", ["open_response_id"], :name => "index_saveable_open_responses_on_open_response_id"
 
   create_table "saveable_sparks_measuring_resistance", :force => true do |t|
     t.integer  "learner_id"
@@ -2362,6 +2427,7 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
 
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
   add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+  add_index "taggings", ["tagger_id", "tagger_type"], :name => "index_taggings_on_tagger_id_and_tagger_type"
 
   create_table "tags", :force => true do |t|
     t.string "name"
@@ -2414,6 +2480,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
+  add_index "users", ["id", "type"], :name => "index_users_on_id_and_type"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+  add_index "users", ["vendor_interface_id"], :name => "index_users_on_vendor_interface_id"
 
 end
