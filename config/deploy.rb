@@ -7,7 +7,7 @@ set :stages, %w(
   rites-staging rites-production rites-ri-production
   itsisu-dev itsisu-staging itsisu-production
   smartgraphs-staging smartgraphs-production smartgraphs-aws1
-  has-dev has-staging has-production has-aws1
+  has-dev has-staging has-production has-aws1 has-load-test
   geniverse-dev geniverse-production
   geniverse-aws-testing geniverse-aws-production
   genigames-baseline-production genigames-ungamed-production
