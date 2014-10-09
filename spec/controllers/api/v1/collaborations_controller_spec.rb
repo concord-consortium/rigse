@@ -86,7 +86,7 @@ describe API::V1::CollaborationsController do
     end
   end
 
-  describe "GET #collaborators_endpoints" do
+  describe "GET #collaborators_data" do
     before do
       sign_in student1.user
       post :create, params
@@ -97,7 +97,7 @@ describe API::V1::CollaborationsController do
 
     context "when no user is signed in" do
       it "returns an error" do
-        get :collaborators_endpoints, id: @collaboration_id
+        get :collaborators_data, id: @collaboration_id
         expect(response.status).to eq(401) # unauthorized
       end
     end
@@ -106,7 +106,7 @@ describe API::V1::CollaborationsController do
       before { sign_in student1.user }
 
       it "returns list of student data and endpoints" do
-        get :collaborators_endpoints, id: @collaboration_id
+        get :collaborators_data, id: @collaboration_id
         expect(response.status).to eq(200)
       end
     end

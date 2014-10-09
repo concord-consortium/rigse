@@ -21,11 +21,11 @@ class API::V1::CollaborationsController < API::APIController
     render json: clazz.to_api_json[:students]
   end
 
-  # GET api/v1/collaborations/:id/collaborators_endpoints
-  def collaborators_endpoints
-    input = collaborators_endpoints_input
-    return unauthorized unless collaborators_endpoints_auth(input)
-    show_endpoints = API::V1::ShowCollaboratorsEndpoints.new(input)
+  # GET api/v1/collaborations/:id/collaborators_data
+  def collaborators_data
+    input = collaborators_data_input
+    return unauthorized unless collaborators_data_auth(input)
+    show_endpoints = API::V1::ShowCollaboratorsData.new(input)
     result = show_endpoints.call
     if result
       return render json: result
@@ -50,7 +50,7 @@ class API::V1::CollaborationsController < API::APIController
     }
   end
 
-  def collaborators_endpoints_input
+  def collaborators_data_input
     {
       collaboration_id: params.require(:id),
       host_with_port: request.host_with_port
@@ -70,7 +70,7 @@ class API::V1::CollaborationsController < API::APIController
 
   # FIXME: we need to be more strict about it, as this actions shows access tokens of other students!
   #        Only some special user should be allowed to show student endpoints.
-  def collaborators_endpoints_auth(input)
+  def collaborators_data_auth(input)
     return false if current_user.nil?
     collaboration = Portal::Collaboration.find(input[:collaboration_id])
     collaboration.owner == current_user.portal_student

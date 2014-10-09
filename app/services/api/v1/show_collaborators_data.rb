@@ -1,4 +1,4 @@
-class API::V1::ShowCollaboratorsEndpoints
+class API::V1::ShowCollaboratorsData
   include ActiveModel::Validations
   include Virtus.model
   include RailsPortal::Application.routes.url_helpers
