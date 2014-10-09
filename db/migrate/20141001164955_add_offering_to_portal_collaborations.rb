@@ -22,6 +22,10 @@ class AddOfferingToPortalCollaborations < ActiveRecord::Migration
   def up
     add_column :portal_collaborations, :offering_id, :integer
 
+    # Add this index temporarily, so the processing below can work reasonably fast.
+    # This index will be added permanently in the next migration.
+    add_index :dataservice_bundle_contents, :collaboration_id
+
     # Update offering_id in existing collaborations using bundle_contents.
     Portal::Learner.reset_column_information
     Dataservice::BundleLogger.reset_column_information
@@ -36,6 +40,8 @@ class AddOfferingToPortalCollaborations < ActiveRecord::Migration
       collaboration.offering = offering
       collaboration.save!
     end
+
+    remove_index :dataservice_bundle_contents, :collaboration_id
   end
 
   def down
