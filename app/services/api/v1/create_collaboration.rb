@@ -1,11 +1,13 @@
 class API::V1::CreateCollaboration
   include ActiveModel::Validations
   include Virtus.model
+  include RailsPortal::Application.routes.url_helpers
 
   # Input.
   attribute :offering_id, Integer
   attribute :students, Array[Hash]
   attribute :owner_id, Integer
+  attribute :host_with_port, String
 
   attr_reader :result
 
@@ -57,7 +59,21 @@ class API::V1::CreateCollaboration
   end
 
   def json_result
-    {id: self.collaboration.id}
+    collaborators_data_url = collaborators_data_api_v1_collaboration_url(self.collaboration, host: self.host_with_port)
+    result = {
+      id: self.collaboration.id,
+      collaborators_data_url: collaborators_data_url
+    }
+    if @offering.external_activity?
+      # Prepare ready URL for client so it can simply redirect without constructing the final URL itself.
+      external_activity_url = @offering.runnable.url
+      # Domain is needed by LARA to authenticate correctly. It's a bit redundant, domain could be obtained
+      # from collaborators_data_url, but let's be consistent with individual run where we pass domain as well.
+      external_activity_url = add_param(external_activity_url, 'domain', root_url(host: self.host_with_port))
+      external_activity_url = add_param(external_activity_url, 'collaborators_data_url', collaborators_data_url)
+      result[:external_activity_url] = external_activity_url
+    end
+    result
   end
 
   def persist_collaboration
@@ -120,6 +136,13 @@ class API::V1::CreateCollaboration
     user       = Portal::Student.find(student_id).user
     return true if User.authenticate(user.login, password)
     return false
+  end
+
+  def add_param(url, param_name, param_value)
+    uri = URI(url)
+    params = URI.decode_www_form(uri.query || []) << [param_name, param_value]
+    uri.query = URI.encode_www_form(params)
+    uri.to_s
   end
 
 end

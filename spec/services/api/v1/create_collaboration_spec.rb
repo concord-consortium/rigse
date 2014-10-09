@@ -2,6 +2,7 @@
 require 'spec_helper'
 
 describe API::V1::CreateCollaboration do
+  let(:domain)   { 'http://portal.org/' }
   let(:student1) { Factory(:full_portal_student) }
   let(:student2) { Factory(:full_portal_student) }
   let(:students) { [student1, student2] }
@@ -26,7 +27,8 @@ describe API::V1::CreateCollaboration do
           'id' => student2.id,
           'password' => 'password'
         }
-      ]
+      ],
+      'host_with_port' => domain
     }
   end
 
@@ -57,8 +59,30 @@ describe API::V1::CreateCollaboration do
   describe "#call" do
     it "should generate collaboration object and return true when successful" do
       create_collaboration = API::V1::CreateCollaboration.new(params)
-      expect(create_collaboration.call).to be_true
+      result = create_collaboration.call
+      expect(result[:id]).not_to be_nil
+      expect(result[:collaborators_data_url]).not_to be_nil
+      expect(result[:external_activity_url]).to be_nil
       expect(create_collaboration.collaboration).to_not be_nil
+    end
+
+    context "when offering is an external activity" do
+      before do
+        offering.runnable = Factory(:external_activity)
+        offering.save!
+      end
+
+      it "should also generate external activity URL" do
+        create_collaboration = API::V1::CreateCollaboration.new(params)
+        result = create_collaboration.call
+        ea_url = result[:external_activity_url]
+        expect(ea_url).not_to be_nil
+        uri = URI.parse(ea_url)
+        query = URI.decode_www_form(uri.query)
+        data_url_param = ['collaborators_data_url', result[:collaborators_data_url]]
+        domain_param = ['domain', domain]
+        expect(query).to match_array([data_url_param, domain_param])
+      end
     end
 
     it "should return false when params are incorrect, collaboration should be nil" do
