@@ -39,7 +39,7 @@ class API::V1::CollaborationsController < API::APIController
   # Input handling
 
   def create_input
-    result = params.permit(:offering_id, {students: [:id, :password]}, :external_activity)
+    result = params.permit(:offering_id, {students: [:id, :password]})
     result[:owner_id] = current_visitor.portal_student && current_visitor.portal_student.id
     result
   end

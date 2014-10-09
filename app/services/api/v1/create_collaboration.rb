@@ -5,7 +5,6 @@ class API::V1::CreateCollaboration
   # Input.
   attribute :offering_id, Integer
   attribute :students, Array[Hash]
-  attribute :external_activity, Boolean
   attribute :owner_id, Integer
 
   attr_reader :result
@@ -76,7 +75,7 @@ class API::V1::CreateCollaboration
     @collaboration.students = @student_objects
 
     setup_learners
-    setup_bundles if !self.external_activity
+    setup_bundles unless @offering.external_activity?
     return true
   end
 
