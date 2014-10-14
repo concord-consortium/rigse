@@ -22,3 +22,17 @@ namespace :deploy do
 end
 
 after 'deploy:update_code', 'deploy:has_resource_symlink'
+
+after "deploy:restart", "autoscaling:update"
+
+## Autoscale EC2 / AMI / ELB Config:
+set(:autoscaling_region, "us-east-1e")
+# use `export AWS_ACCESS_KEY_ID='xxxxx'` in your shell?
+# use `export AWS_SECRET_ACCESS_KEY='yyyy'` in your shell?
+# set(:autoscaling_access_key_id, "PUTYOURAWSACCESSKEYIDHERE")
+# set(:autoscaling_secret_access_key, "PUTYOURAWSSECRETACCESSKEYHERE")
+set(:autoscaling_instance_type, "m1.large")
+set(:autoscaling_security_groups, %w(has))
+set(:autoscaling_min_size, 2)
+set(:autoscaling_max_size, 3)
+set(:autoscaling_application, 'HasProdLB')

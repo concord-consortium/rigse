@@ -1,5 +1,13 @@
 require "bundler/capistrano"
 require 'capistrano/ext/multistage'
+require 'capistrano/cowboy'
+
+# experimental: create autoscaling instances from EC2 instance
+require "capistrano-autoscaling"
+
+
+
+
 require 'haml'
 require File.expand_path('../../lib/yaml_editor', __FILE__)
 
