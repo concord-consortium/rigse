@@ -16,7 +16,7 @@ class HomeController < ApplicationController
   end
   
   def readme
-    @document = FormattedDoc.new('README.textile')
+    @document = FormattedDoc.new('README.md')
     render :action => "formatted_doc", :layout => "technical_doc"
   end
 

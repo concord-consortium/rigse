@@ -460,8 +460,7 @@ FEATURE=features/student_can_not_see_deactivated_offerings.feature
 
 ### The Page Elements Model Part I:
 
-screencast: [The Page Elements Model Part
-I](http://screencast.com/t/8M2ISjcM)
+screencast: [The Page Elements Model PartI](http://screencast.com/t/8M2ISjcM)
 
 Install github version of railroad with aasm patches from [ddolar's
 repo](http://github.com/ddollar/railroad/tree/master)
@@ -477,8 +476,7 @@ using the dot tool.
 
 ### Page Elements Model Part II:
 
-screencast: [Page Elements Model Part
-II](http://screencast.com/t/YyqOHfItL)
+screencast: [Page Elements Model PartII](http://screencast.com/t/YyqOHfItL)
 
 Using mysql query browser to view schema:
 [Mysql
@@ -493,8 +491,7 @@ Use the generator to generate page elements eg:
 
 ### PageElement View partials:
 
-screencast: [PageElement View
-partials](http://screencast.com/t/800TVxOC)
+screencast: [PageElement View partials](http://screencast.com/t/800TVxOC)
 
 Shows the relationship between:
 * pages/show.html.haml
@@ -520,8 +517,7 @@ specifically
 
 ### Javascript use in Portal
 
-screencast: [Javascript use in
-Portal](http://screencast.com/t/z7Vkt32iTp)
+screencast: [Javascript use in Portal](http://screencast.com/t/z7Vkt32iTp)
 
 Javascript librararies we are using, and what things we have written by
 ourselves;
@@ -534,85 +530,10 @@ Other libraries
 * [tinymce](http://tinymce.moxiecode.com/)
 * [flotr](http://solutoire.com/flotr/)
 
-## Capistrano Recipies
+## Capistano Tasks:
 
-*warning*: sometimes the permissions on the shared/cache/.git directory
-get changed to be read-only for the group. So what i do to fix this is:
+- [Capistrano Deployment Recipes](doc/cap-tasks.md)
 
-    sudo chmod -R g+w ./cached-copy/
-
-
-More info on capistrano-ext/multistage deployments can be found here:
-[http://weblog.jamisbuck.org/2007/7/23/capistrano-multistage](http://weblog.jamisbuck.org/2007/7/23/capistrano-multistage)
-
-### Database recipes
-
-There are a few database oriented recipes which should cover the basic
-db-oriented tasks you might want to do.
-Here are some scenarios and how to do them. Remember, all commands are
-entered on your local machine, in the application root directory.
-
-There are 4 basic commands:
-
-* `rake db:dump`This dumps the current environment's database to db/… eg
-db/production_data.sql or db/development_data.sql
-* `rake db:load` This overwrites your current db with a sql dump from db/
-into the current environment's db, provided a dump exists for your current environment
-* `cap (production|staging|development) db:fetch_remote_db` The same as db:dump,
-except it dumps the database from whichever remote instance you chose
-* `cap (staging|development) db:push_remote_db` Same as db:load, except the remote database is overwritten
-
-**Download the production database to use locally**
-
-    cap production db:fetch_remote_db
-    cp db/production_data.sql db/development_data.sql
-    rake db:load
-
-
-**Reset the Staging or Development database with Production's version**
-
-    `cap production db:fetch_remote_db`
-    `cap staging db:push_remote_db` or
-    `cap development db:push_remote_db`
-
-**Update Staging or Development with a copy of your local database**
-
-    rake db:dump
-    cap staging db:push_remote_db  # or
-    cap developmentdb:push_remote_db
-
-**Note**: For safety, you can't push a database to production. If you
-accidentally try, you'll get a message saying you can't do that.
-
-### Deployment recipes
-
-There are three custom deployment-oriented cap tasks defined in
-config/deploy.rb One works, One sometimes works, and the first one
-**doesn't!**
-* cap deploy:from_scratch does not work.
-*** It would need to be able to let users answer questions.
-*** Instead of dropping the database, we would have to simply drop
-tables. (rails user does not have perms to drop dbs)
-* cap deploy:install_gems does seem to work, unless there are
-dependancies on the gem being installed.
-* cap deploy:shared_symlinks does work, and it links in the shared
-resources that we use. (like config/database.yml)
-
-Workarounds for cap deploy:from_scratch: I usually just end up logging
-in to otto, dropping all the tables,
-and then running the various rake tasks by hand:
-
-     rake db:migrate
-     rake rigse:setup:default_users_roles
-     rake rigse:setup:create_additional_users
-     rake rigse:setup:import_gses_from_file
-
-We should solve this one sooner rather than later.
-
-### Miscellaneous recipes
-
-**Set the gse_key field for existing GradeSpanExpectations**
-* `cap convert:set_gse_keys`
 
 ## Updating a staging server.
 
@@ -673,8 +594,7 @@ Test the staging server:
 [http://xproject.staging.concord.org/](http://xproject.staging.concord.org/)
 
 If the authors confirm that there are no blockers then let people know
-when the
-update will take place and perform these tasks on the production server.
+when the update will take place and perform these tasks on the production server.
 
 ## other Rake tasks:
 
