@@ -25,7 +25,11 @@ source "http://rubygems.org"
   gem 'strong_parameters'
   gem "httpclient",           "~> 2.2"
   gem "httparty"
+  
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
+  gem 'capistrano-autoscaling',"0.0.8", :git => "git://github.com/concord-consortium/capistrano-autoscaling.git",  :branch => "concord"
+  gem 'capistrano-cowboy'
+  
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
   gem "haml",           :git => "git://github.com/concord-consortium/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
