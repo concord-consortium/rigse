@@ -16,7 +16,7 @@ def percent_complete(learner)
   rl = learner.report_learner
   return 100 unless rl
   return 100 if rl.num_answerables == 0
-  return rl.num_answered.to_f / rl.num_answerables
+  return (rl.num_answered.to_f / rl.num_answerables) * 100
 end
 
 def process_student(student)
