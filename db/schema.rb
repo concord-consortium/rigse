@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141001174100) do
+ActiveRecord::Schema.define(:version => 20141014105134) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -772,6 +772,7 @@ ActiveRecord::Schema.define(:version => 20141001174100) do
     t.boolean  "is_featured",              :default => false
     t.boolean  "has_pretest",              :default => false
     t.text     "abstract"
+    t.boolean  "allow_collaboration",      :default => false
   end
 
   add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"
