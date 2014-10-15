@@ -20,7 +20,7 @@
     = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
   = field_set_tag 'Feature On Landing Page' do
     - if current_user.has_role? 'admin','manager'
-      = f.check_box :is_featured 
+      = f.check_box :is_featured
     - else
       = f.check_box :is_featured, :disabled => true
     This activity should be displayed to anonymous users on the landing page
@@ -34,6 +34,9 @@
     .config
       = f.check_box :popup
       Open the url in a new window
+    .config
+      = f.check_box :allow_collaboration
+      Allow students to run this activity with collaborators
     .config
       = f.check_box :append_learner_id_to_url
       Append the learner id to the url (e.g. http://foo.com/bar?learner=4)
