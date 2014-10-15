@@ -1,8 +1,7 @@
-
 #
-# A module to contain some of our own angular directives.
+# A module to contain some of our own angular directives useful for signup.
 #
-angular.module('ccDirectives', [])
+angular.module('ccSignupDirectives', [])
 
   ##
   ## Some async remote directives to help with
@@ -73,7 +72,7 @@ angular.module('ccDirectives', [])
         errors[field].messages ?= []
         if errors[field].messages.indexOf(message) == -1
           errors[field].messages.push message
-    
+
       isValid: (field, value) ->
         error = errors[field]
         return true unless error
@@ -134,4 +133,3 @@ angular.module('ccDirectives', [])
     template: ""
   ])
 
-  

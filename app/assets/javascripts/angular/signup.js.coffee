@@ -1,11 +1,11 @@
-angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ngMessages"])
-  .controller "RegistrationController", [ '$scope', '$http', '$log', 'errorList',  ($scope, $http, $log, errorList) ->
+angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'ngMessages'])
+  .controller 'RegistrationController', [ '$scope', '$http', '$log', 'errorList',  ($scope, $http, $log, errorList) ->
     self = @
     self.questions = []          # these are the ones the student has chosen
     self.security_questions = [] # these are given to us from the server
     self.serverErrors = errorList.list
     self.editSchool = false
-    
+
     self.addError = () ->
       errorList.addError('first_name',self.last_name,'message')
 
@@ -114,18 +114,18 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         country_id: self.country.id
         state: self.state
         city: self.school.city
-      
+
       data['district_id']  = self.district.id if self.district
 
       self.postToResource resource, data, (returnData) ->
         id = returnData['school_id']
-        
+
         self.loadSchools () ->
           for school in self.schools
             if school.id == id
               self.school = school
           self.editSchool = false
-        
+
 
     self.form_params = () ->
       data = {
@@ -161,7 +161,7 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
       return false unless self.country
       return false unless self.country.name == "United States"
       return true
-    
+
     self.showState = () ->
       return self.isDomestic()
 
@@ -193,4 +193,3 @@ angular.module("registrationApp", ["ccDirectives",'ui.select','ui.validate', "ng
         return "dropdown"
   ]
 
- 

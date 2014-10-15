@@ -47,6 +47,7 @@
 = require 'angular-messages'
 = require 'angular/vendor/angular_select2'
 = require 'angular/vendor/angular_ui_validate'
-= require 'angular/cc_directives'
+= require 'angular/signup_directives'
 = require 'angular/signup'
+= require 'angular/portal_app'
 */

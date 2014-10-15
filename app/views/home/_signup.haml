@@ -1,281 +1,280 @@
-%div{'ng-app' => 'registrationApp'}
-  %div{'ng-controller' => 'RegistrationController as regCtrl'}
-    = form_tag '', 
-      'with-errors' => 'true',
-      'id' => 'new-account-form', 
-      'name' => 'signup',
-      'validate' => 'false',
-      'class' => 'signup' do
+%div{'ng-controller' => 'RegistrationController as regCtrl'}
+  = form_tag '',
+    'with-errors' => 'true',
+    'id' => 'new-account-form',
+    'name' => 'signup',
+    'validate' => 'false',
+    'class' => 'signup' do
 
-      %h2 Sign up
-      .unknown-error
+    %h2 Sign up
+    .unknown-error
 
-      %div{"ng-switch" => "regCtrl.nowShowing()"}
-        = field_set_tag nil, "ng-switch-when" => "page1" do
-          .group
-            .f-row.half
-              %input{'type'   => "text", 
-                'placeholder' => 'First Name',
-                'name'        => 'first_name',
-                'non-blank'   => true,
-                'ng-model'    => 'regCtrl.first_name'}
-            
-            .f-row.half
-              %input{'type' => "text",  
-              'placeholder' => 'Last Name', 
+    %div{"ng-switch" => "regCtrl.nowShowing()"}
+      = field_set_tag nil, "ng-switch-when" => "page1" do
+        .group
+          .f-row.half
+            %input{'type'   => "text",
+              'placeholder' => 'First Name',
+              'name'        => 'first_name',
               'non-blank'   => true,
-              'ng-model'    => 'regCtrl.last_name'}
+              'ng-model'    => 'regCtrl.first_name'}
 
+          .f-row.half
+            %input{'type' => "text",
+            'placeholder' => 'Last Name',
+            'non-blank'   => true,
+            'ng-model'    => 'regCtrl.last_name'}
+
+        .group
+          .f-row
+            %input{'type'        => "password",
+              'name'             => 'password',
+              'minLength'        => 6,
+              'non-blank'        => true,
+              'placeholder'      => 'Password',
+              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+              'ng-model'         =>'regCtrl.password'}
+            .div{'ng-messages' => "signup.password.$error"}
+              .div{'ng-message' => "minlength","class" => "error-message"}
+                Password is too short
+
+          .f-row
+            %input{'type'        => "password",
+              'placeholder'      => 'Confirm Password',
+              'name'             => 'password_confirmation',
+              'match'            => "regCtrl.password",
+              'non-blank'        => true,
+              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+              'ng-model'         => 'regCtrl.password_confirmation' }
+            .div{'ng-messages' => "signup.password_confirmation.$error"}
+              .div{'ng-message' => "match","class" => "error-message"}
+                Passwords do not match
+
+        .group
+          .f-row
+            I am a
+            %span.input-group
+              %label{'for'=>'Student'} Student
+              %input{"type" => "radio", "ng-model" => "regCtrl.registrationType", "value" => "student"}
+            %span.input-group
+              %label{'for'=>'Teacher'} Teacher
+              %input{"type" => "radio", "ng-model" => "regCtrl.registrationType", "value" => "teacher"}
+        .group
+          %button#continue-registration{"ng-disabled" => "!regCtrl.readyToRegister()", "ng-click" => "regCtrl.startRegistration()"}
+            Sign Up for #{APP_CONFIG[:site_name]}!
+        .quote-box.bottom
+          .quote "I felt like I could learn a lot by playing with the interactives”
+          .quote-credits - 9th grader, San Francisco, CA
+
+      = field_set_tag nil, id: 'student-fieldset', "ng-switch-when" => "student" do
+        - if current_project.allow_default_class
+          .f-row
+            %initial-value{"ng-model" => "regCtrl.class_word", "value" => Portal::Clazz.default_class.class_word }
+        - else
           .group
             .f-row
-              %input{'type'        => "password",  
-                'name'             => 'password',
-                'minLength'        => 6,
-                'non-blank'        => true,
-                'placeholder'      => 'Password', 
-                'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-                'ng-model'         =>'regCtrl.password'}  
-              .div{'ng-messages' => "signup.password.$error"}
-                .div{'ng-message' => "minlength","class" => "error-message"}
-                  Password is too short
+              = text_field_tag :class_word, nil,
+              "placeholder"       => 'Class Word (not case sensitive)',
+              "name"              => "class_word", "ng-model" => "regCtrl.class_word",
+              "non-blank"         => true,
+              "good-classword"    => true,
+              "ng-model-options"  => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 
-            .f-row
-              %input{'type'        => "password",  
-                'placeholder'      => 'Confirm Password', 
-                'name'             => 'password_confirmation',
-                'match'            => "regCtrl.password",
-                'non-blank'        => true,
-                'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-                'ng-model'         => 'regCtrl.password_confirmation' }
-              .div{'ng-messages' => "signup.password_confirmation.$error"}
-                .div{'ng-message' => "match","class" => "error-message"}
-                  Passwords do not match
+              .div{'ng-messages'  => "signup.class_word.$error"}
+                .div{'ng-message' => "nonBlank","class" => "error-message"}
+                .div{'ng-message' => "goodClassword","class" => "error-message"}
+                  You must enter a valid class word.
 
+        - if current_project.use_student_security_questions
           .group
-            .f-row
-              I am a
-              %span.input-group
-                %label{'for'=>'Student'} Student
-                %input{"type" => "radio", "ng-model" => "regCtrl.registrationType", "value" => "student"}
-              %span.input-group
-                %label{'for'=>'Teacher'} Teacher
-                %input{"type" => "radio", "ng-model" => "regCtrl.registrationType", "value" => "teacher"}
+            %p.small
+              Please select three questions from the menus below.
+              If you forget your password, you will need to answer these questions correctly in order to receive a new one.
           .group
-            %button#continue-registration{"ng-disabled" => "!regCtrl.readyToRegister()", "ng-click" => "regCtrl.startRegistration()"}
-              Sign Up for #{APP_CONFIG[:site_name]}!
-          .quote-box.bottom
-            .quote "I felt like I could learn a lot by playing with the interactives”
-            .quote-credits - 9th grader, San Francisco, CA
-
-        = field_set_tag nil, id: 'student-fieldset', "ng-switch-when" => "student" do
-          - if current_project.allow_default_class
-            .f-row
-              %initial-value{"ng-model" => "regCtrl.class_word", "value" => Portal::Clazz.default_class.class_word }
-          - else
-            .group
+            - (0..2).each do |question_number|
               .f-row
-                = text_field_tag :class_word, nil,  
-                "placeholder"       => 'Class Word (not case sensitive)', 
-                "name"              => "class_word", "ng-model" => "regCtrl.class_word", 
-                "non-blank"         => true,
-                "good-classword"    => true,
-                "ng-model-options"  => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 
-                .div{'ng-messages'  => "signup.class_word.$error"}
-                  .div{'ng-message' => "nonBlank","class" => "error-message"}
-                  .div{'ng-message' => "goodClassword","class" => "error-message"}
-                    You must enter a valid class word.
+                /  TODO:  Extract some helper here, because these are big!
+                %ui-select{"ng-model"  => "regCtrl.questions[#{question_number}]",
+                  "name"               => "questions[#{question_number}]",
+                  "theme"              =>  "select2",
+                  "non-blank"          => true,
+                  "ng-required"        => true,
+                  "ui-validate"        => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
+                  %ui-select-match{"placeholder" => "Choose a security question ..."}
+                    {{$select.selected}}
+                  %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
+                    {{question}}
+                .div{'ng-messages' => "signup['questions[#{question_number}]'].$error"}
+                  .div{'ng-message' => "unique_question","class" => "error-message"}
+                    You must select 3 different questions.
+              .f-row
+                %input{'type'        => "text",
+                  'placeholder'      => 'Answer (case sensitive)',
+                  'name'             => 'answers[#{question_number}]',
+                  'non-blank'        => true,
+                  'server-errors'    => true,
+                  'ng-model'         => "regCtrl.answers[#{question_number}]"}
+                .div{'ng-messages'   => "signup['answers[#{question_number}]'].$error"}
+                  .div{'ng-message'  => "serverError", "class" => "error-message"}
+                    You must provide an answer
 
-          - if current_project.use_student_security_questions
-            .group
-              %p.small
-                Please select three questions from the menus below.
-                If you forget your password, you will need to answer these questions correctly in order to receive a new one.
-            .group
-              - (0..2).each do |question_number|
+
+        .group
+          .f-row
+            %button#finsish-student{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
+              Sign up!
+
+      = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
+        .group
+          %input{'type'   => "text",
+            'name'             => 'login',
+            'minLength'        => 3,
+            'non-blank'        => true,
+            'placeholder'      => 'login',
+            'username-avail'   => 'true',
+            'server-errors'    => true,
+            'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+            'ng-model'         =>'regCtrl.login'}
+
+          .div{'ng-messages'  => "signup.login.$error"}
+            .div{'ng-message' => "non-blank"}
+            .div{'ng-message' => "minlength","class" => "error-message"}
+              Login is too short
+            .div{'ng-message' => "usernameAvail","class" => "error-message"}
+              That login is taken
+            .div{'ng-message' => "serverErrors","class" => "error-message"}
+              Please select another email
+          %br
+
+          %input{'type'        => "text",
+            'name'             => 'email',
+            'non-blank'        => true,
+            'placeholder'      => 'email@example.com',
+            'ng-pattern'       => "/\\S+@\\S+/",
+            'server-errors'    => true,
+            'email-avail'      => 'true',
+            'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+            'ng-model'         =>'regCtrl.email'}
+
+          .div{'ng-messages'  => "signup.email.$error"}
+            .div{'ng-message' => "non-blank"}
+            .div{'ng-message' => "pattern","class" => "error-message"}
+              Email doesn't appear to be a valid email
+            .div{'ng-message' => "minlength","class" => "error-message"}
+              Email address is too short
+            .div{'ng-message' => "emailAvail","class" => "error-message"}
+              Email belongs to an existing user
+            .div{'ng-message' => "serverErrors","class" => "error-message"}
+              Email doesn't appear to be a valid email
+
+        .group
+          .f-row
+            %ui-select{"ng-model"   => "regCtrl.country",
+              "theme"               =>  "select2",
+              "ng-change"           =>  "regCtrl.countrySelected()"}
+              %ui-select-match{"placeholder" => "Select your country..."}
+                {{$select.selected.name}}
+              %ui-select-choices{"repeat" => "country in regCtrl.countries | filter: {name: $select.search}" }
+                {{country.name}}
+
+        .group{"ng-show" => "regCtrl.showState()"}
+          .f-row
+            %ui-select{"ng-model" => "regCtrl.state",
+              "theme"             =>  "select2",
+              "ng-change"         =>  "regCtrl.stateSelected()"}
+              %ui-select-match{"placeholder" => "Select your state..."}
+                {{$select.selected}}
+              %ui-select-choices{"repeat" => "state in regCtrl.states | filter: $select.search" }
+                {{state}}
+
+        .group{"ng-show" => "regCtrl.showDistrict()"}
+          .f-row
+            %ui-select{"ng-model" => "regCtrl.district",
+              "theme"             =>  "select2",
+              "ng-change"         =>  "regCtrl.districtSelected()" }
+              %ui-select-match{"placeholder" => "Select your district..."}
+                {{$select.selected.name}}
+              %ui-select-choices{"repeat" => "district in regCtrl.districts | filter: {name: $select.search}" }
+                {{district.name}}
+
+        .group#school-picker{"ng-show"  => "regCtrl.showSchool()"}
+          - if current_project.allow_adhoc_schools
+            %div{"ng-switch" => "regCtrl.schoolEditmode()"}
+              .group{"ng-switch-when" => "dropdown"}
                 .f-row
-
-                  /  TODO:  Extract some helper here, because these are big!
-                  %ui-select{"ng-model"  => "regCtrl.questions[#{question_number}]", 
-                    "name"               => "questions[#{question_number}]",
-                    "theme"              =>  "select2",
-                    "non-blank"          => true,
-                    "ng-required"        => true,
-                    "ui-validate"        => "{unique_question: 'regCtrl.uniqueQuestions($value)'}" }
-                    %ui-select-match{"placeholder" => "Choose a security question ..."}
-                      {{$select.selected}}
-                    %ui-select-choices{"repeat" => "question in regCtrl.security_questions" }
-                      {{question}}
-                  .div{'ng-messages' => "signup['questions[#{question_number}]'].$error"}
-                    .div{'ng-message' => "unique_question","class" => "error-message"}
-                      You must select 3 different questions.
+                  %ui-select{"ng-model" => "regCtrl.school",
+                    "theme"             => "select2",
+                    "non-blank"         => true,
+                    "ng-model"          => 'regCtrl.school',
+                    "name" => "school"}
+                    %ui-select-match{"placeholder" => "Select your school ..."}
+                      {{$select.selected.name}}
+                    %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
+                      {{schools.name}}
                 .f-row
-                  %input{'type'        => "text", 
-                    'placeholder'      => 'Answer (case sensitive)',
-                    'name'             => 'answers[#{question_number}]',
-                    'non-blank'        => true,
-                    'server-errors'    => true,
-                    'ng-model'         => "regCtrl.answers[#{question_number}]"}
-                  .div{'ng-messages'   => "signup['answers[#{question_number}]'].$error"}
-                    .div{'ng-message'  => "serverError", "class" => "error-message"}
-                      You must provide an answer 
+                  %a#cant-find-school{"ng-click" =>"regCtrl.setEditSchool()"}
+                    I can't find my school in the list.
 
-          
-          .group
-            .f-row
-              %button#finsish-student{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
-                Sign up!
-
-        = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
-          .group
-            %input{'type'   => "text",  
-              'name'             => 'login',
-              'minLength'        => 3,
-              'non-blank'        => true,
-              'placeholder'      => 'login', 
-              'username-avail'   => 'true',
-              'server-errors'    => true,
-              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-              'ng-model'         =>'regCtrl.login'} 
-
-            .div{'ng-messages'  => "signup.login.$error"}
-              .div{'ng-message' => "non-blank"}
-              .div{'ng-message' => "minlength","class" => "error-message"}
-                Login is too short
-              .div{'ng-message' => "usernameAvail","class" => "error-message"}
-                That login is taken
-              .div{'ng-message' => "serverErrors","class" => "error-message"}
-                Please select another email  
-            %br
-
-            %input{'type'        => "text",  
-              'name'             => 'email',
-              'non-blank'        => true,
-              'placeholder'      => 'email@example.com',
-              'ng-pattern'       => "/\\S+@\\S+/",
-              'server-errors'    => true,
-              'email-avail'      => 'true',
-              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-              'ng-model'         =>'regCtrl.email'} 
-
-            .div{'ng-messages'  => "signup.email.$error"}
-              .div{'ng-message' => "non-blank"}
-              .div{'ng-message' => "pattern","class" => "error-message"}
-                Email doesn't appear to be a valid email
-              .div{'ng-message' => "minlength","class" => "error-message"}
-                Email address is too short
-              .div{'ng-message' => "emailAvail","class" => "error-message"}
-                Email belongs to an existing user
-              .div{'ng-message' => "serverErrors","class" => "error-message"}  
-                Email doesn't appear to be a valid email
-
-          .group
-            .f-row
-              %ui-select{"ng-model"   => "regCtrl.country", 
-                "theme"               =>  "select2",
-                "ng-change"           =>  "regCtrl.countrySelected()"}
-                %ui-select-match{"placeholder" => "Select your country..."}
-                  {{$select.selected.name}}
-                %ui-select-choices{"repeat" => "country in regCtrl.countries | filter: {name: $select.search}" }
-                  {{country.name}}
-    
-          .group{"ng-show" => "regCtrl.showState()"}
-            .f-row
-              %ui-select{"ng-model" => "regCtrl.state", 
-                "theme"             =>  "select2",
-                "ng-change"         =>  "regCtrl.stateSelected()"}
-                %ui-select-match{"placeholder" => "Select your state..."}
-                  {{$select.selected}}
-                %ui-select-choices{"repeat" => "state in regCtrl.states | filter: $select.search" }
-                  {{state}}
-    
-          .group{"ng-show" => "regCtrl.showDistrict()"}
-            .f-row
-              %ui-select{"ng-model" => "regCtrl.district", 
-                "theme"             =>  "select2",
-                "ng-change"         =>  "regCtrl.districtSelected()" }
-                %ui-select-match{"placeholder" => "Select your district..."}
-                  {{$select.selected.name}}
-                %ui-select-choices{"repeat" => "district in regCtrl.districts | filter: {name: $select.search}" }
-                  {{district.name}}
-                  
-          .group#school-picker{"ng-show"  => "regCtrl.showSchool()"}
-            - if current_project.allow_adhoc_schools
-              %div{"ng-switch" => "regCtrl.schoolEditmode()"}
-                .group{"ng-switch-when" => "dropdown"}
-                  .f-row
-                    %ui-select{"ng-model" => "regCtrl.school", 
-                      "theme"             => "select2", 
-                      "non-blank"         => true, 
-                      "ng-model"          => 'regCtrl.school', 
-                      "name" => "school"}
-                      %ui-select-match{"placeholder" => "Select your school ..."}
-                        {{$select.selected.name}}
-                      %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
-                        {{schools.name}}
-                  .f-row
-                    %a#cant-find-school{"ng-click" =>"regCtrl.setEditSchool()"} 
-                      I can't find my school in the list.
-  
-                .group{"ng-switch-when" => "us_edit"}
-                  .f-row
-                    %input{'type' => "text",  'placeholder' => 'School name', 
-                      "name" => "school_name", "ng-model" => "regCtrl.school.name",
-                      "non-blank" => true }
-                  .f-row
-                    %button#add_school{"ng-disabled" => "!regCtrl.schoolValid()", "ng-click" => "regCtrl.sendSchool()"}
-                      Add my school
-                    %a#back-to-list{"ng-click" =>"regCtrl.setPickSchool()" } 
-                      Go back to the school list.
-
-                .group{"ng-switch-when" => "intl_edit"}
-                  .f-row
-                    %input{'type' => "text",  'placeholder' => 'School name', 
+              .group{"ng-switch-when" => "us_edit"}
+                .f-row
+                  %input{'type' => "text",  'placeholder' => 'School name',
                     "name" => "school_name", "ng-model" => "regCtrl.school.name",
                     "non-blank" => true }
-                  .f-row
-                    %input{'type' => "text",  'placeholder' => 'Province',
-                    "name" => "school_state", "ng-model" => "regCtrl.state",
-                    "non-blank" => true }
-                  .f-row
-                    %input{'type' => "text",  'placeholder' => 'City',
-                    "name" => "school_city", "ng-model" => "regCtrl.school.city",
-                    "non-blank" => true }
-                  .f-row
-                    %button#add_school{"ng-disabled" => "!regCtrl.schoolValid()", "ng-click" => "regCtrl.sendSchool()"}
-                      Add my school
-                  %a#back-to-list{"ng-click" =>"regCtrl.setPickSchool()" } 
+                .f-row
+                  %button#add_school{"ng-disabled" => "!regCtrl.schoolValid()", "ng-click" => "regCtrl.sendSchool()"}
+                    Add my school
+                  %a#back-to-list{"ng-click" =>"regCtrl.setPickSchool()" }
                     Go back to the school list.
-            - else
-              .f-row
-                %ui-select{"ng-model" => "regCtrl.school", 
-                  "theme"             => "select2", 
-                  "non-blank"         => true, 
-                  "ng-model"          => 'regCtrl.school', 
-                  "name" => "school"}
-                  %ui-select-match{"placeholder" => "Select your school ..."}
-                    {{$select.selected.name}}
-                  %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
-                    {{schools.name}}
-              .f-row
 
-          .group
+              .group{"ng-switch-when" => "intl_edit"}
+                .f-row
+                  %input{'type' => "text",  'placeholder' => 'School name',
+                  "name" => "school_name", "ng-model" => "regCtrl.school.name",
+                  "non-blank" => true }
+                .f-row
+                  %input{'type' => "text",  'placeholder' => 'Province',
+                  "name" => "school_state", "ng-model" => "regCtrl.state",
+                  "non-blank" => true }
+                .f-row
+                  %input{'type' => "text",  'placeholder' => 'City',
+                  "name" => "school_city", "ng-model" => "regCtrl.school.city",
+                  "non-blank" => true }
+                .f-row
+                  %button#add_school{"ng-disabled" => "!regCtrl.schoolValid()", "ng-click" => "regCtrl.sendSchool()"}
+                    Add my school
+                %a#back-to-list{"ng-click" =>"regCtrl.setPickSchool()" }
+                  Go back to the school list.
+          - else
             .f-row
-              %button#finsish-teacher{"ng-disabled" => "regCtrl.disableSubmit(signup.$valid)", "ng-click" => "regCtrl.sendRegistration()"}
-                Sign up!
+              %ui-select{"ng-model" => "regCtrl.school",
+                "theme"             => "select2",
+                "non-blank"         => true,
+                "ng-model"          => 'regCtrl.school',
+                "name" => "school"}
+                %ui-select-match{"placeholder" => "Select your school ..."}
+                  {{$select.selected.name}}
+                %ui-select-choices{"repeat" => "schools in regCtrl.schools | filter: {name: $select.search}" }
+                  {{schools.name}}
+            .f-row
 
-        %div{"ng-switch-when" => "success"}
-          %div{"ng-switch" => "regCtrl.registrationType"}
-            %div{"ng-switch-when" => "student"}
-              %h3 Thanks for signing up!
-              %p
-                You have successfully registered {{regCtrl.first_name}} {{regCtrl.last_name}}
-                with the user name
-                %span.big {{regCtrl.login}}.
-                Use this user name and password you provided to sign in.
-            %div{"ng-switch-when" => "teacher"}
-              %h3 Thanks for signing up!
-              %p We're sending you an email with your activation code.
+        .group
+          .f-row
+            %button#finsish-teacher{"ng-disabled" => "regCtrl.disableSubmit(signup.$valid)", "ng-click" => "regCtrl.sendRegistration()"}
+              Sign up!
 
-      .group
-        .f-row.wait-message
+      %div{"ng-switch-when" => "success"}
+        %div{"ng-switch" => "regCtrl.registrationType"}
+          %div{"ng-switch-when" => "student"}
+            %h3 Thanks for signing up!
+            %p
+              You have successfully registered {{regCtrl.first_name}} {{regCtrl.last_name}}
+              with the user name
+              %span.big {{regCtrl.login}}.
+              Use this user name and password you provided to sign in.
+          %div{"ng-switch-when" => "teacher"}
+            %h3 Thanks for signing up!
+            %p We're sending you an email with your activation code.
+
+    .group
+      .f-row.wait-message
