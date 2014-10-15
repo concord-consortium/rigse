@@ -80,7 +80,8 @@ describe API::V1::CollaborationsController do
       it "returns students list" do
         get :available_collaborators, offering_id: offering.id
         expect(response.status).to eq(200)
-        expected_collaborators = [student1, student2].map { |s| {'id' => s.id, 'name' => s.name} }
+        # Note that we do not expect student1 in the list!
+        expected_collaborators = [student2].map { |s| {'id' => s.id, 'name' => s.name} }
         expect(JSON.parse(response.body)).to match_array(expected_collaborators)
       end
     end

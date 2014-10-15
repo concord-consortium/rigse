@@ -617,7 +617,6 @@ RailsPortal::Application.routes.draw do
             post :check_password
           end
         end
-        resources :clazzes, :path => :classes, :only => [:show]
         resources :security_questions
         resources :states
         resources :districts

@@ -1,6 +1,8 @@
 class API::V1::CollaborationsController < API::APIController
 
   # POST api/v1/collaborations
+  # Note that owner of the collaboration is automatically added to its members.
+  # There is no need to provide owner's data in 'students' parameter.
   def create
     input = create_input
     return unauthorized unless create_auth(input)
@@ -14,11 +16,14 @@ class API::V1::CollaborationsController < API::APIController
   end
 
   # GET api/v1/collaborations/available_collaborators?offering_id=:id
+  # Returns all the students in the same class without student that is currently signed in.
   def available_collaborators
     input = available_collaborators_input
     return unauthorized unless available_collaborators_auth(input)
+    student_id = current_visitor.portal_student.id
     clazz = Portal::Offering.find(input[:offering_id]).clazz
-    render json: clazz.to_api_json[:students]
+    collaborators = clazz.students.select { |s| s.id != student_id }.map { |s| {:id => s.id, :name => s.name} }
+    render json: collaborators
   end
 
   # GET api/v1/collaborations/:id/collaborators_data
