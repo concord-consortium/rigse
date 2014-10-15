@@ -713,3 +713,9 @@ after "deploy:stop",    "delayed_job:stop"
 after "deploy:start",   "delayed_job:start"
 after "deploy:restart", "delayed_job:restart"
 after "deploy:restart", "solr:restart"
+
+# Make the default behavior be to NOT autoscale
+set :autoscaling_create_image, false
+set :autoscaling_create_group, false
+set :autoscaling_create_policy, false
+set :autoscaling_create_launch_configuration, false
