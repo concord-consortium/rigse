@@ -1678,3 +1678,20 @@ div.atm
   border-radius: 20px;
   border: 1px solid black;
 }
+
+@mixin control {
+  margin: 0px 0px 0px 1px;
+  padding: 0px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #dd6e0d;
+  opacity: 0.4;
+  cursor: pointer;
+  &:hover {
+    opacity: 1.0;
+  }
+}
+
+.control {
+  @include control;
+}

@@ -1,16 +1,3 @@
-@mixin control {
-  margin: 0px 0px 0px 1px;
-  padding: 0px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #dd6e0d;
-  opacity: 0.2;
-  cursor: pointer;
-  &:hover {
-    opacity: 1.0;
-  }
-}
-
 .bookmarks-page {
   .wait-message {
     margin-left: 3px;
@@ -34,12 +21,6 @@
         vertical-align: middle;
         padding: 4px;
         border-radius: 6px;
-      }
-      a.delete {
-        @include control;
-      }
-      .control {
-        @include control;
       }
       .slide {
         cursor: move;
