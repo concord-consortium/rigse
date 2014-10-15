@@ -9,11 +9,14 @@ module RunnablesHelper
   end
 
   def display_workgroups_run_link?(offering)
-    offering.runnable.is_a?(JnlpLaunchable) && use_adhoc_workgroups?
+    runnable = offering.runnable
+    return runnable.allow_collaboration if runnable.respond_to?(:allow_collaboration)
+    return true if runnable.is_a?(JnlpLaunchable) && use_adhoc_workgroups?
+    return false
   end
 
   def display_status_updates?(offering)
-    if offering.runnable.respond_to? :has_update_status? 
+    if offering.runnable.respond_to? :has_update_status?
       return offering.runnable.has_update_status?
     end
     return false
@@ -40,7 +43,18 @@ module RunnablesHelper
         haml_concat solo_label
       end
       if display_workgroups_run_link?(offering)
-        options[:class] = student_run_button_css(offering,["in_group"])
+        # Collaboration works differently for external activities and JNLP ones.
+        # Change class name so JS code can distinguish between them.
+        if offering.external_activity?
+          options[:class] = student_run_button_css(offering,["external_collaboration"])
+          # Attributes use by AngularJS code:
+          options[:'cc-setup-collaboration'] = true
+          options[:'data-offering-id'] = offering.id
+          # href is not needed, as JS client code will redirect to the proper place after communicating with API.
+          options[:href]  = ''
+        else
+          options[:class] = student_run_button_css(offering,["in_group"])
+        end
         haml_tag :a, options do
           haml_concat group_label
         end

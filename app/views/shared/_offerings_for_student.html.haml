@@ -1,12 +1,15 @@
-- active_offerings = []
-- offerings.each do |offering|
-  - if offering.runnable and offering.active then
-    - active_offerings << offering
-  
-= render :partial => 'shared/offering_for_student', :collection => active_offerings, :as => :offering
-  
+%div
+  - active_offerings = []
+  - offerings.each do |offering|
+    - if offering.runnable and offering.active then
+      - active_offerings << offering
+
+  = render :partial => 'shared/offering_for_student', :collection => active_offerings, :as => :offering
+
 - if active_offerings.length == 0
   .item
     %ul.quiet_list
       %li
         .tiny= "No offerings available."
+
+= render :partial => 'portal/offerings/collaboration_setup'
