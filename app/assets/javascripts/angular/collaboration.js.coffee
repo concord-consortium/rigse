@@ -34,7 +34,9 @@ angular.module('ccCollaboration', ['ui.select'])
     scope:
       ccStudentPassword: '='
     link: ($scope, element, attrs, ngModel) ->
-      $scope.$watch 'ccStudentPassword', (pass) ->
+      $scope.$watch 'ccStudentPassword', ->
+        # Student changed, validate again.
+        ngModel.$validate()
         ngModel.$asyncValidators.goodStudentPassword = (password) ->
           # Note that $scope.ccStudentPassword is equal to student ID.
           $http.post API_V1.STUDENT_CHECK_PASSWORD.replace(999, $scope.ccStudentPassword), {password: password}

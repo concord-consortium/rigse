@@ -21,7 +21,7 @@
     }
   }
   input[type=password] {
-    &.ng-invalid {
+    &.ng-invalid, &.ng-pending {
       background: #FFF6F6;
     }
     &.ng-valid {
