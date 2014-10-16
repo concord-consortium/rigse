@@ -36,33 +36,28 @@ module RunnablesHelper
     group_label     = opts[:group_label]|| "Run with Other Students"
     options         = popup_options_for(offering)
     options[:href]  = run_url_for(offering)
-    options[:class] = student_run_button_css(offering,["solo"])
+    options[:class] = student_run_button_css(offering, ["solo"])
 
     capture_haml do
       haml_tag :a, options do
         haml_concat solo_label
       end
       if display_workgroups_run_link?(offering)
-        # Collaboration works differently for external activities and JNLP ones.
-        # Change class name so JS code can distinguish between them.
-        if offering.external_activity?
-          options[:class] = student_run_button_css(offering,["external_collaboration"])
-          # Attributes use by AngularJS code:
-          options[:'cc-setup-collaboration'] = true
-          options[:'data-offering-id'] = offering.id
-          # href is not needed, as JS client code will redirect to the proper place after communicating with API.
-          options[:href]  = ''
-        else
-          options[:class] = student_run_button_css(offering,["in_group"])
+        options[:class] = student_run_button_css(offering, ["in_group"])
+        # These attributes use by AngularJS code, see: angular/collaboration.js.coffee
+        options[:'cc-setup-collaboration'] = true
+        options[:'data-offering-id'] = offering.id
+        # Collaboration setup works differently for external activities and JNLP ones.
+        # jnlp-url attribute lets us distinguish between them.
+        if !offering.external_activity?
+          options[:'data-jnlp-url'] = run_url_for(offering)
         end
         haml_tag :a, options do
           haml_concat group_label
         end
       end
     end
-
   end
-
 
   def runnable_type_label(component)
     runnable = component.is_a?(Portal::Offering) ? component.runnable : component

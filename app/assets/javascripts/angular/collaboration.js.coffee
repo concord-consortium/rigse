@@ -9,7 +9,7 @@ angular.module('ccCollaboration', ['ui.select'])
       # publish
       start: (collaborationParams) ->
         angular.forEach handlers, (handler) ->
-          handler(collaborationParams)
+          handler collaborationParams
       # subscribe
       onStart: (handler) ->
         handlers.push handler
@@ -25,7 +25,7 @@ angular.module('ccCollaboration', ['ui.select'])
     link: ($scope, element, attrs) ->
       element.on 'click', (event) ->
         event.preventDefault()
-        ccCollaborationSetup.start offeringId: attrs.offeringId
+        ccCollaborationSetup.start {offeringId: attrs.offeringId, jnlpUrl: attrs.jnlpUrl}
   ])
   # Validates students password, note that ID of the student should be provided, e.g.:
   # <input type="password" cc-good-student-password="123">
@@ -37,40 +37,35 @@ angular.module('ccCollaboration', ['ui.select'])
       $scope.$watch 'ccStudentPassword', (pass) ->
         ngModel.$asyncValidators.goodStudentPassword = (password) ->
           # Note that $scope.ccStudentPassword is equal to student ID.
-          $http.post(API_V1.STUDENT_CHECK_PASSWORD.replace(999, $scope.ccStudentPassword), {password: password})
+          $http.post API_V1.STUDENT_CHECK_PASSWORD.replace(999, $scope.ccStudentPassword), {password: password}
   ])
   #
   # Controllers
   #
   .controller('CollaborationController', ['$scope', '$http', '$log', 'ccCollaborationSetup', ($scope, $http, $log, ccCollaborationSetup) ->
-    ccCollaborationSetup.onStart (params) =>
-      @setDefaultState()
-      @offeringId = params.offeringId
-      @loadCollaborators()
-      $scope.$apply =>
-        @setActive true
-
-    @setDefaultState = ->
+    # Note that this methods lists and sets all the attributes (including public ones),
+    # but perhaps shouldn't be used directly in HTML template.
+    @_setDefaultState = ->
       @offeringId = null
+      # If jnlpUrl is provided, it means we are configuring Java activity.
+      @jnlpUrl = null
       @availableCollaborators = []
       @collaborators = []
       @currentCollaborator = null
       @currentPassword = null
       @runStarted = false
-
-    @cleanupCurrentCollaborator = ->
-      idx = @availableCollaborators.indexOf @currentCollaborator
-      return if idx == -1
-      @availableCollaborators.splice idx, 1
-      @currentCollaborator = null
-      @currentPassword = null
+    #
+    # Methods indented to be used by HTML template.
+    #
+    @isJavaActivity = ->
+      !!@jnlpUrl
 
     @setActive = (v) ->
       $scope.active = !!v
 
     @addCollaborator = ->
       @collaborators.push {id: @currentCollaborator.id, name: @currentCollaborator.name, password: @currentPassword}
-      @cleanupCurrentCollaborator()
+      @_cleanupCurrentCollaborator()
 
     @removeCollaborator = (collaborator) ->
       # Remove from currently selected collaborators.
@@ -91,14 +86,18 @@ angular.module('ccCollaboration', ['ui.select'])
         students: @collaborators.map (c) -> {id: c.id, password: c.password}
       }
       @runStarted = true
-      $http.post(API_V1.COLLABORATIONS, params)
-        .success (data, status, headers, config) =>
-          # Redirect and close this dialog
-          window.location.href = data.external_activity_url
-        .error (data, status) =>
-          $log.log "Error creating collaboration"
+      @_createCollaboration params
+    #
+    # Private methods
+    #
+    @_cleanupCurrentCollaborator = ->
+      idx = @availableCollaborators.indexOf @currentCollaborator
+      return if idx == -1
+      @availableCollaborators.splice idx, 1
+      @currentCollaborator = null
+      @currentPassword = null
 
-    @loadCollaborators = ->
+    @_loadCollaborators = ->
       url = API_V1.AVAILABLE_COLLABORATORS
       params = {offering_id: @offeringId}
       $http({method: 'GET', url: url, params: params})
@@ -107,7 +106,45 @@ angular.module('ccCollaboration', ['ui.select'])
         .error (data, status) =>
           $log.log "Error loading available collaborators"
 
-    # Initialization:
+    @_createCollaboration = (params) ->
+      $http.post(API_V1.COLLABORATIONS, params)
+        .success (data, status, headers, config) =>
+          @_collaborationCreated data
+        .error (data, status) =>
+          $log.log "Error creating collaboration"
+
+    @_collaborationCreated = (data) ->
+      if @isJavaActivity()
+        @_startRunStatus()
+        newUrl = @jnlpUrl
+      else
+        newUrl = data.external_activity_url
+      # Close the dialog.
+      @setActive false
+      # Finally redirect.
+      window.location.href = newUrl
+
+    @_startRunStatus = ->
+      # It's not really pretty, but let's us reuse old RunStatus code.
+      # Its constructor expects main button element (in fact one with ccSetupCollaboration
+      # directive) as an argument. See: runnables_helper.rb and run_status.js.coffee.
+      mainBtnElement = jQuery("[data-offering-id=#{@offeringId}]")[0]
+      runStatus = new OfferingRunStatus(mainBtnElement)
+      runStatus.toggleRunStatusView()
+      runStatus.trigger_status_updates()
+
+    #
+    # Initialization
+    #
+    ccCollaborationSetup.onStart (params) =>
+      # This handler is executed when a button with ccSetupCollaboration directive is clicked.
+      @_setDefaultState()
+      @offeringId = params.offeringId
+      @jnlpUrl = params.jnlpUrl
+      @_loadCollaborators()
+      $scope.$apply =>
+        @setActive true
+
     $scope.active = false
-    @setDefaultState()
+    @_setDefaultState()
   ])

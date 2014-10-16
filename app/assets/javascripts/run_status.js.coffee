@@ -38,7 +38,7 @@ class RunStatus
 
   update_status: (msg) ->
     @message_elm.update msg
-  
+
   we_are_waiting: ->
     @message_elm.addClassName 'waiting'
     @message_elm.removeClassName 'ready'
@@ -68,7 +68,7 @@ class RunStatus
           status_event = transport.responseJSON
           if (!!status_event.event_details)
             @update_status(status_event.event_details);
-          if (!!status_event && status_event.event_type == "activity_otml_requested") 
+          if (!!status_event && status_event.event_type == "activity_otml_requested")
             @we_are_ready()
           if (!!status_event && (status_event.event_type == "no_session" || status.event_type == "bundle_saved"))
             @stop_status_updates()
@@ -81,10 +81,12 @@ class RunStatus
 document.observe "dom:loaded", ->
   $$("a.button.run.solo").each (item) ->
     runstatus = new RunStatus(item)
-  $$("a.button.run.in_group").each (item) ->
-    callback = (arg) ->
-      runstatus = new RunStatus(item)
-      runstatus.toggleRunStatusView()
-      runstatus.trigger_status_updates()
-    EnableWorkgroup(item,callback)
+  # There used to be code like:
+  # $$("a.button.run.in_group").each (item) ->
+  #   (...)
+  # However now run status will be started by AngularJS code that handles
+  # collaboration setup. See: angular/collaboration.js.coffee
+
+# Expose RunStatus to global namespace as OfferingRunStatus.
+window.OfferingRunStatus = RunStatus
 
