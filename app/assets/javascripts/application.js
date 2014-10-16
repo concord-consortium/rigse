@@ -21,7 +21,6 @@
 = require 'live_validation'
 = require 'report_filter'
 = require 'pagination'
-= require 'workgroup'
 = require 'chosen.proto'
 = require 'pt_event_simulate'
 = require 'site_notices'
