@@ -1,6 +1,5 @@
 .result_material.landing_page
   - if defined?(@materials) && @materials.size > 0
-    - @materials.each do |collection|
-      - collection.each do |material|
-        .material_list
-          = render :partial => 'search/result_item', :locals => { :material => material, :hide_details => true }
+    - @materials.each do |material|
+      .material_list
+        = render :partial => 'search/result_item', :locals => { :material => material, :hide_details => true }
