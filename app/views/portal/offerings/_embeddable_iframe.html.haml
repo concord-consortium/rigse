@@ -7,6 +7,6 @@
         = l.name
       %div{:class => "#{css_style} learner_response_content inline_block"}
         - if saveable.answered?
-          = link_to 'View work', saveable.answer
+          = link_to 'View work', saveable.answer, :target => '_blank'
         - else
           No work saved.

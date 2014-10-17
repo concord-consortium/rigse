@@ -8,6 +8,6 @@
           != embeddable.name
       .item{:class => css_style, :style => 'display: block;'}
         - if saveable.answered?
-          = link_to 'View work', saveable.answer
+          = link_to 'View work', saveable.answer, :target => '_blank'
         - else
           No work saved.
