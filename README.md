@@ -81,6 +81,24 @@ executables in bin/
 
     bundle install --binstubs
 
+If you get the following error
+
+    An error occurred while installing libv8 (3.16.14.3), and Bundler cannot
+    continue.
+    Make sure that `gem install libv8 -v '3.16.14.3'` succeeds before bundling.
+
+ To resolve the error install libv8 sepratelly with --with-system-v8
+
+	gem install libv8 -v '3.16.14.3' -- --with-system-v8
+
+If you get the following error
+
+	An error occurred while installing therubyracer (0.12.1), and Bundler cannot
+	continue.
+	Make sure that `gem install therubyracer -v '0.12.1'` succeeds before bundling.
+
+Replace `gem 'therubyracer',         "~>0.12.1"` entry in the Gemfile to `gem 'therubyracer',         "~>0.10.2"`
+
 Automatic setup of application settings in the config directory, for
 example: settings.yml and database.yml
 
