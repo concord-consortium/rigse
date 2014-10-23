@@ -1,4 +1,5 @@
 class ExternalActivitiesController < ApplicationController
+  include PeerAccess
 
   before_filter :setup_object, :except => [:index, :preview_index, :publish]
   before_filter :render_scope, :only => [:show]
@@ -10,19 +11,12 @@ class ExternalActivitiesController < ApplicationController
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url
 
-  protected
-
   def only_peers
-    # TODO: we must always use SSL for peer to peer communication.
-    # or we could encrypt a known string using the shared secret as salt.
-    auth_token = ""
-    header = request.headers["Authorization"]
-    if header && header =~ /^Bearer (.*)$/
-      auth_token = $1
+    if verify_request_is_peer
+      return true
+    else
+      json_error('missing or invalid peer token', 401)
     end
-    peer_tokens = Client.all.map { |c| c.app_secret }.uniq
-    return true if peer_tokens.include?(auth_token)
-    json_error('missing or invalid peer token', 401)
   end
 
   def json_error(msg,code=422)

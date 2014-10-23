@@ -1,5 +1,5 @@
 class API::V1::CollaborationsController < API::APIController
-
+  include PeerAccess
   # POST api/v1/collaborations
   # Note that owner of the collaboration is automatically added to its members.
   # There is no need to provide owner's data in 'students' parameter.
@@ -74,12 +74,8 @@ class API::V1::CollaborationsController < API::APIController
     class_member(input)
   end
 
-  # FIXME: we need to be more strict about it, as this actions shows access tokens of other students!
-  #        Only some special user should be allowed to show student endpoints.
   def collaborators_data_auth(input)
-    return false if current_user.nil?
-    collaboration = Portal::Collaboration.find(input[:collaboration_id])
-    collaboration.owner == current_user.portal_student
+    return verify_request_is_peer
   end
 
   def class_member(input)

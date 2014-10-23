@@ -1,6 +1,14 @@
 # encoding: utf-8
 require 'spec_helper'
 
+def set_request_header(key,value)
+  request.env[key] = value
+end
+
+def set_auth_token(auth_token)
+  set_request_header("Authorization", "Bearer #{auth_token}" )
+end
+
 describe API::V1::CollaborationsController do
   let(:student1) { Factory(:full_portal_student) }
   let(:student2) { Factory(:full_portal_student) }
@@ -88,6 +96,10 @@ describe API::V1::CollaborationsController do
   end
 
   describe "GET #collaborators_data" do
+    let(:lara_token)   { 'xyzzy'                            }
+    let(:clients)      { [ mock(:app_secret => lara_token)] }
+    before(:each)      { Client.stub(:all => clients)       }
+  
     before do
       sign_in student1.user
       post :create, params
@@ -96,21 +108,33 @@ describe API::V1::CollaborationsController do
       @collaboration_id = JSON.parse(response.body)["id"]
     end
 
-    context "when no user is signed in" do
+    context "when no authentication header token is sent" do
       it "returns an error" do
         get :collaborators_data, id: @collaboration_id
         expect(response.status).to eq(401) # unauthorized
       end
     end
 
-    context "when class member is signed in" do
-      before { sign_in student1.user }
+    context "when a valid authentication header token is sent" do
+      let(:security_header_sent) { lara_token }
 
       it "returns list of student data and endpoints" do
-        get :collaborators_data, id: @collaboration_id
+        set_auth_token(security_header_sent)
+        get :collaborators_data, {id: @collaboration_id}
         expect(response.status).to eq(200)
       end
     end
+
+    context "when a non-valid authentication header token is sent" do
+      let(:security_header_sent) { "bogusvalue" }
+
+      it "returns list of student data and endpoints" do
+        set_auth_token(security_header_sent)
+        get :collaborators_data, {id: @collaboration_id}
+        expect(response.status).to eq(401)
+      end
+    end
+
   end
 
 end
