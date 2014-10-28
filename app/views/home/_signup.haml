@@ -6,7 +6,7 @@
     'validate' => 'false',
     'class' => 'signup' do
 
-    %h2 Sign up
+    %h2 Sign Up
     .unknown-error
 
     %div{"ng-switch" => "regCtrl.nowShowing()"}
@@ -62,9 +62,6 @@
         .group
           %button#continue-registration{"ng-disabled" => "!regCtrl.readyToRegister()", "ng-click" => "regCtrl.startRegistration()"}
             Sign Up for #{APP_CONFIG[:site_name]}!
-        .quote-box.bottom
-          .quote "I felt like I could learn a lot by playing with the interactives”
-          .quote-credits - 9th grader, San Francisco, CA
 
       = field_set_tag nil, id: 'student-fieldset', "ng-switch-when" => "student" do
         - if current_project.allow_default_class
@@ -123,7 +120,7 @@
         .group
           .f-row
             %button#finsish-student{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
-              Sign up!
+              Sign Up!
 
       = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
         .group
@@ -266,15 +263,18 @@
       %div{"ng-switch-when" => "success"}
         %div{"ng-switch" => "regCtrl.registrationType"}
           %div{"ng-switch-when" => "student"}
-            %h3 Thanks for signing up!
-            %p
-              You have successfully registered {{regCtrl.first_name}} {{regCtrl.last_name}}
-              with the user name
-              %span.big {{regCtrl.login}}.
-              Use this user name and password you provided to sign in.
+            %div.success_message_box
+              %h3 Thanks for signing up!
+              %p.signup-success
+                You have successfully registered {{regCtrl.first_name}} {{regCtrl.last_name}}
+                with the user name
+                %span.big {{regCtrl.login}}.
+              %p.signin-instruction
+                Use this user name and password you provided to sign in.
           %div{"ng-switch-when" => "teacher"}
-            %h3 Thanks for signing up!
-            %p We're sending you an email with your activation code.
+            %div.success_message_box
+              %h3 Thanks for signing up!
+              %p We're sending you an email with your activation code.
 
     .group
       .f-row.wait-message

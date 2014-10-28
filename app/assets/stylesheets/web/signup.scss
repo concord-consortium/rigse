@@ -49,7 +49,6 @@ form.signup {
   }
   button, input[type="submit"] {
     display: block;
-    margin: 0 auto;
     padding: 7px 3px;
     width: 250px;
     font-size: 16px;
@@ -93,21 +92,6 @@ form.signup {
     padding: 5px 2px 0px 2px;
     line-height: 14px;
   }
-  .quote-box {
-    background-color:#c3e7e5;
-    border-radius:4px;
-    margin:10px;
-    padding:20px;
-  .quote {
-      font-style:italic;
-      font-size:20px;
-      margin:0 0 20px;
-    }
-    .quote-credits {
-      font-size: 13px;
-      margin: 0 5px;
-    }
-  }
   .success {
     background: #BDE9D7;
     font-size: 15px;
@@ -123,5 +107,16 @@ form.signup {
   }
   .select2-container {
     width: 95%
+  }
+  .success_message_box{
+    background: #bcead7;
+    padding: 10px;
+  }
+  .signup-success,.signin-instruction{
+    margin-left: 5px;
+    line-height: 20px;
+  }
+  .signin-instruction{
+    margin-left: 0px;
   }
 }
