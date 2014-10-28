@@ -10,4 +10,5 @@
           %div
             %span.tag required
       .item{:class => css_style, :style => 'display: block;'}
-        != h(saveable.submitted_answer).gsub("\n", '<br/>')
+        - answer = h(saveable.submitted_answer) || ""
+        != answer.gsub("\n", '<br/>')
