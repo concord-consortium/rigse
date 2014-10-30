@@ -27,7 +27,9 @@ source "http://rubygems.org"
   gem "httparty"
   
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
-  gem 'capistrano-autoscaling',"0.0.8", :git => "git://github.com/concord-consortium/capistrano-autoscaling.git",  :branch => "concord"
+  # gem 'capistrano-autoscaling', "0.0.8.1", :path => "../capistrano-autoscaling/"
+  gem 'capistrano-autoscaling', "0.0.8.1", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
+  # gem 'capistrano-autoscaling', "~> 0.0.9git",  :git => "git://github.com/yyuu/capistrano-autoscaling.git",  :branch => "develop"
   gem 'capistrano-cowboy'
   
   gem "aasm",                 "~> 2.2.1"

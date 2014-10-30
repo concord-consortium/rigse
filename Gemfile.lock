@@ -7,11 +7,11 @@ GIT
       rails (~> 3.2.0)
 
 GIT
-  remote: git://github.com/concord-consortium/capistrano-autoscaling.git
-  revision: f836c1ec84ff20f2faaa65b8df32112b53b0531c
+  remote: git://github.com/concord-consortium/capistrano-autoscaling
+  revision: 6d5cacd8ba7b4e132cb478653812aa489ee67c11
   branch: concord
   specs:
-    capistrano-autoscaling (0.0.8)
+    capistrano-autoscaling (0.0.8.1)
       aws-sdk (>= 1.5.4)
       capistrano (< 3)
 
@@ -536,7 +536,7 @@ DEPENDENCIES
   bullet
   calpicker!
   capistrano (~> 2.14.1)
-  capistrano-autoscaling (= 0.0.8)!
+  capistrano-autoscaling (= 0.0.8.1)!
   capistrano-cowboy
   capybara (~> 1.1.2)
   capybara-mechanize (~> 0.3.0)
