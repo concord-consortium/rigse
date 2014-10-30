@@ -49,12 +49,12 @@ form.signup {
   }
   button, input[type="submit"] {
     display: block;
-    padding: 7px 3px;
-    width: 250px;
-    font-size: 16px;
-    border-radius: 4px;
-    outline: none;
-
+	padding: 7px 3px;
+	width: 264px;
+	font-size: 16px;
+	border-radius: 4px;
+	outline: none;
+	
     &:disabled {
       opacity: 0.3;
       cursor: default;
@@ -118,5 +118,12 @@ form.signup {
   }
   .signin-instruction{
     margin-left: 0px;
+  }
+  .registration-steps {
+	color: #95939C;
+    font-size: 0.9em;
+    left: 229px;
+    position: relative;
+    top: -43px;
   }
 }

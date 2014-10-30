@@ -11,6 +11,8 @@
 
     %div{"ng-switch" => "regCtrl.nowShowing()"}
       = field_set_tag nil, "ng-switch-when" => "page1" do
+        %span.registration-steps
+          Step 1 of 3
         .group
           .f-row.half
             %input{'type'   => "text",
@@ -60,10 +62,13 @@
               %label{'for'=>'Teacher'} Teacher
               %input{"type" => "radio", "ng-model" => "regCtrl.registrationType", "value" => "teacher"}
         .group
-          %button#continue-registration{"ng-disabled" => "!regCtrl.readyToRegister()", "ng-click" => "regCtrl.startRegistration()"}
-            Sign Up for #{APP_CONFIG[:site_name]}!
+          .f-row
+            %button#continue-registration{"ng-disabled" => "!regCtrl.readyToRegister()", "ng-click" => "regCtrl.startRegistration()"}
+              Sign Up for #{APP_CONFIG[:site_name]}!
 
       = field_set_tag nil, id: 'student-fieldset', "ng-switch-when" => "student" do
+        %span.registration-steps
+          Step 2 of 3
         - if current_project.allow_default_class
           .f-row
             %initial-value{"ng-model" => "regCtrl.class_word", "value" => Portal::Clazz.default_class.class_word }
@@ -123,36 +128,38 @@
               Sign Up!
 
       = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
+        %span.registration-steps
+          Step 2 of 3
         .group
-          %input{'type'   => "text",
-            'name'             => 'login',
-            'minLength'        => 3,
-            'non-blank'        => true,
-            'placeholder'      => 'login',
-            'username-avail'   => 'true',
-            'server-errors'    => true,
-            'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-            'ng-model'         =>'regCtrl.login'}
+          .f-row
+            %input{'type'   => "text",
+              'name'             => 'login',
+              'minLength'        => 3,
+              'non-blank'        => true,
+              'placeholder'      => 'login',
+              'username-avail'   => 'true',
+              'server-errors'    => true,
+              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+              'ng-model'         =>'regCtrl.login'}
 
-          .div{'ng-messages'  => "signup.login.$error"}
-            .div{'ng-message' => "non-blank"}
-            .div{'ng-message' => "minlength","class" => "error-message"}
-              Login is too short
-            .div{'ng-message' => "usernameAvail","class" => "error-message"}
-              That login is taken
-            .div{'ng-message' => "serverErrors","class" => "error-message"}
-              Please select another email
-          %br
-
-          %input{'type'        => "text",
-            'name'             => 'email',
-            'non-blank'        => true,
-            'placeholder'      => 'email@example.com',
-            'ng-pattern'       => "/\\S+@\\S+/",
-            'server-errors'    => true,
-            'email-avail'      => 'true',
-            'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-            'ng-model'         =>'regCtrl.email'}
+            .div{'ng-messages'  => "signup.login.$error"}
+              .div{'ng-message' => "non-blank"}
+              .div{'ng-message' => "minlength","class" => "error-message"}
+                Login is too short
+              .div{'ng-message' => "usernameAvail","class" => "error-message"}
+                That login is taken
+              .div{'ng-message' => "serverErrors","class" => "error-message"}
+                Please select another email
+          .f-row
+            %input{'type'        => "text",
+              'name'             => 'email',
+              'non-blank'        => true,
+              'placeholder'      => 'email@example.com',
+              'ng-pattern'       => "/\\S+@\\S+/",
+              'server-errors'    => true,
+              'email-avail'      => 'true',
+              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+              'ng-model'         =>'regCtrl.email'}
 
           .div{'ng-messages'  => "signup.email.$error"}
             .div{'ng-message' => "non-blank"}
@@ -258,9 +265,11 @@
         .group
           .f-row
             %button#finsish-teacher{"ng-disabled" => "regCtrl.disableSubmit(signup.$valid)", "ng-click" => "regCtrl.sendRegistration()"}
-              Sign up!
+              Sign Up!
 
       %div{"ng-switch-when" => "success"}
+        %span.registration-steps
+          Step 3 of 3
         %div{"ng-switch" => "regCtrl.registrationType"}
           %div{"ng-switch-when" => "student"}
             %div.success_message_box
