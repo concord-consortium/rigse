@@ -719,3 +719,4 @@ set :autoscaling_create_image, false
 set :autoscaling_create_group, false
 set :autoscaling_create_policy, false
 set :autoscaling_create_launch_configuration, false
+set(:autoscaling_require_keys, false)
