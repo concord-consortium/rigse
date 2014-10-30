@@ -38,10 +38,10 @@
                   - else
                     %span.is_community Community
                 %br
-                - if link_url.nil? or defined? hide_details
+                - if link_url.nil?
                   = material.name
                 - else
-                  = link_to "#{material.name}","javascript:void(0)", :onclick=>"browseMaterial('#{link_url}')"
+                  = link_to "#{material.name}",link_url
                 - if current_visitor.has_role? ["admin","manager"]
                   %span.superTiny= link_to "(edit)", edit_polymorphic_url(material)
               - if material.parent

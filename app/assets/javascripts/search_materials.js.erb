@@ -320,14 +320,6 @@ function checkActivityToAssign(chk_box)
     return;
 }
 
-function browseMaterial(formAction)
-{
-    var form = $("material_search_form");
-    form.action = formAction;
-    form.method = "POST";
-    form.submit();
-}
-
 function getDataForAssignToClassPopup()
 {
     var material_id = $("material_id").getValue("");
