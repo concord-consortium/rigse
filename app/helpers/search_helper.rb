@@ -50,10 +50,10 @@ module SearchHelper
               	haml_tag :img, :src => icon_url, :width=>"100%"
             	end
           	end
-					else
-          		haml_tag :img, :src => icon_url, :width=>"100%"
-        	end
-				end
+				  else
+            haml_tag :img, :src => icon_url, :width=>"100%"
+          end
+        end
       end
     end
     return output
