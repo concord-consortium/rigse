@@ -57,6 +57,20 @@ angular.module('ccSignupDirectives', [])
           return (ctrl.$pristine && (angular.isUndefined(valueToValidate) || valueToValidate == "")) || valueToValidate == scope.match
 
 
+
+  #
+  # A service to report analytics data
+  # With 'gaVirtualPageView'  (not widely used)
+  #
+  .service('gaPageView', ['$window','$log', ($window, $log) ->
+    ga_service =
+      push: (page_info) ->
+        # TODO start using new analytics package?
+        $window._gaq.push(['_trackPageview', page_info])
+        $log.log('_trackPageview' + page_info)
+    return ga_service
+  ])
+
   #
   # A service to keep track of server errors assisting
   # With 'serverErrors'  (not widely used)

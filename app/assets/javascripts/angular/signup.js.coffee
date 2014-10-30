@@ -1,5 +1,5 @@
 angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'ngMessages'])
-  .controller 'RegistrationController', [ '$scope', '$http', '$log', 'errorList',  ($scope, $http, $log, errorList) ->
+  .controller 'RegistrationController', [ '$scope', '$http', '$log', 'errorList', 'gaPageView', ($scope, $http, $log, errorList, gaPageView) ->
     self = @
     self.questions = []          # these are the ones the student has chosen
     self.security_questions = [] # these are given to us from the server
@@ -106,7 +106,8 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
         # copy data into this controller
         for field of data
           self[field] = data[field]
-
+        gaPageView.push("/thanks_for_sign_up/#{self.registrationType}/")
+        
     self.sendSchool = () ->
       resource = "schools"
       data =
@@ -148,6 +149,7 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
       self.didStartRegistration = true
       self.loadCountries() if self.registrationType == "teacher"
       self.loadSecurityQuestions() if self.registrationType == "student"
+      gaPageView.push("/begin_sign_up/#{self.registrationType}/")
 
     self.nowShowing = () ->
       return "page1" unless self.didStartRegistration
