@@ -30,7 +30,6 @@ after "deploy:restart", "autoscaling:update"
 # use `export AWS_SECRET_ACCESS_KEY='yyyy'` in your shell?
 # set(:autoscaling_access_key_id, "PUTYOURAWSACCESSKEYIDHERE")
 # set(:autoscaling_secret_access_key, "PUTYOURAWSSECRETACCESSKEYHERE")
-set :autoscaling_ec2_instance_public_dns_names, "has-template.concord.org"
 
 set :autoscaling_region, "us-east-1e"
 set :autoscaling_create_image, true
