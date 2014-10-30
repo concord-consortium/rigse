@@ -35,7 +35,7 @@ module SearchHelper
     show_message_onSearch +=" selected criteria"
   end
 
-  def show_material_icon(material)
+  def show_material_icon(material, link_url, hide_details)
     if material.material_type == "Investigation"
       icon_url = material.icon_image
     elsif material.material_type == "Activity"
@@ -43,9 +43,17 @@ module SearchHelper
     end
     output = capture_haml do
       haml_tag :div, :class => "material_icon" do
-        unless icon_url.blank?
-          haml_tag :img, :src => icon_url, :width=>"100%"
-        end
+			  unless icon_url.blank?
+					unless link_url.nil? or hide_details != nil then
+          	haml_tag :a, :onclick => "browseMaterial('#{link_url}')", :class => "thumb_link" do
+            	unless icon_url.blank?
+              	haml_tag :img, :src => icon_url, :width=>"100%"
+            	end
+          	end
+					else
+          		haml_tag :img, :src => icon_url, :width=>"100%"
+        	end
+				end
       end
     end
     return output
