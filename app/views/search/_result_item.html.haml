@@ -55,7 +55,18 @@
                     ="By #{material.user.name}"
             %td{:width=>"90px"}
               %div{:style=>'float:right'}
-                = link_to "Preview",run_url_for(material,{}),:class=>"button"
+                - unless current_visitor.anonymous? or external
+                  - unless material.teacher_only?
+                    %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material.material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material.material_type}','Preview')"}Preview &#9660;
+                    .Expand_Collapse{:id=>"#{material.material_type}#{material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
+                      .preview_link
+                        = link_to "As Teacher", run_url_for(material, {:teacher_mode => true}), target: '_blank'
+                      .preview_link{:style=>"padding-top:0px"}
+                        = link_to "As Student", run_url_for(material, {}), target: '_blank'
+                  - else
+                    = link_to "Preview",run_url_for(material,{:teacher_mode => true}),:class=>"button",:style=>"width:58px;text-align:center"
+                - else
+                  = link_to "Preview",run_url_for(material,{}),:class=>"button"
             %td{:width=>"130px"}
               %div{:style=>'float:right'}
                 - if current_visitor.portal_teacher
