@@ -43,3 +43,4 @@ set(:autoscaling_min_size, 2)
 set(:autoscaling_max_size, 5)
 set(:autoscaling_application, 'HasProdLB')
 set(:autoscaling_require_keys, true)
+set(:autoscaling_image_master_name, 'has-production') # will use 'stage' otherwise

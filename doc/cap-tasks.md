@@ -56,9 +56,9 @@ and the load balancer responds to has.portal.concord.org.
 
 As of October 30, 2014 the only servers which are should be using load-balancers in this way is has-production and has-staging.
 
-  1. Uncomment the auto-scale callback in config/deply/(server).rb or add one like this:
-  `after "deploy:restart", "autoscaling:update"`
-  2. Read the documentation here: https://github.com/concord-consortium/capistrano-autoscaling/tree/concord
+  1. Read the documentation here: https://github.com/concord-consortium/capistrano-autoscaling/tree/concord
+  2. setup the AMI source name.  This should be the Name (tag) of the EC2 instance you deploy to. It will be imaged after
+  the deploy:restart task. That image will seed the launch-configuration for the auto-scaling group.
   3. export your credentials using something like this: 
   `export AWS_ACCESS_KEY_ID='xxxx'` and
   `export AWS_SECRET_ACCESS_KEY='xxxx'`
