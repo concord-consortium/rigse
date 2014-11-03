@@ -43,6 +43,11 @@ form.signup {
   }
   input[type="radio"] {
     margin: 0 5px;
+    outline: none !important;
+    border: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    display:#fffff!important;
   }
   select {
     width: 260px;
