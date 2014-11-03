@@ -2,8 +2,8 @@
   - question_names = ["First", "Second", "Third"]
   %table.form
     %tr
-      %th Question
-      %th Answer
+      %th{:style => "text-align: left;"} Question
+      %th{:style => "text-align: left;padding-left:20px;"} Answer
     - @security_questions.each_with_index do |question, i|
       %tr
         - border = "border: 2px #FF0000 solid;" unless question.errors[:answer].empty?
@@ -11,5 +11,5 @@
           = hidden_field_tag "security_questions[question#{i}][id]", question.id
           = label_tag "security_questions[question#{i}][question_idx]", "#{question_names[i]} question:"
           = select_tag "security_questions[question#{i}][question_idx]", question.select_options.join.html_safe
-        %td
-          = text_field_tag "security_questions[question#{i}][answer]", question.answer, :style => border
+        %td{:style => "text-align: left;padding-left:30px;"}
+          = text_field_tag "security_questions[question#{i}][answer]", question.answer, :style => "margin-top:15px;"
