@@ -1,4 +1,5 @@
 - activities = search_material.activities
+- external ||= false
 .activities_container
   .activity_list_header
     %span.investigation_name
@@ -42,15 +43,7 @@
                       - else
                         Used in #{activity_count} classes.
               %td.preview
-                - unless current_visitor.anonymous?
-                  - unless activity.teacher_only?
-                    %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_Act#{activity.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{activity.id},'Act','Preview')"}Preview &#9660;
-                    .Expand_Collapse{:id=>"Act#{activity.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
-                      = render :partial => '/browse/preview', :locals => {:material => activity}
-                  - else
-                    = link_to "Preview",run_url_for(activity,{:teacher_mode => true}),:class=>"button",:style=>"width:58px;text-align:center"
-                - else
-                  = link_to "Preview",run_url_for(activity, {}),:class=>"button"
+                = render :partial => '/browse/preview', :locals => {:material => activity, :current_visitor => current_visitor, :external => external}
               %td.share_activity
                 %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_Activity#{activity.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{activity.id},'Activity','Share')"}Share &#9660;
                 .Expand_Collapse{:id=>"Activity#{activity.id}Share",:style=>"display:none",:class=>"Expand_Collapse_share"}

@@ -38,12 +38,7 @@
         .material_type
           = parent_material.model_name.titleize
       %td
-        - unless current_visitor.anonymous?
-          %a{:class => "button preview_Button Expand_Collapse_Link", :id => "ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Preview", :href=>"javascript:void(0)", :onclick=>"expandcollapseoptions(#{parent_material.id},'#{parent_material.model_name}','Preview')"}Preview &#9660;
-          .Expand_Collapse{:id=>"#{parent_material.model_name}#{parent_material.id}Preview",:style=>"display:none",:class=>"Expand_Collapse_preview"}
-            = render :partial => '/browse/preview', :locals => {:material => parent_material.material}
-        - else
-          = link_to "Preview", run_url_for(parent_material.material, {}), :class => "button"
+        = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor, :external => external}
       %td
         - if current_visitor.portal_teacher
           = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup()", :id=>"btn_Assign"
