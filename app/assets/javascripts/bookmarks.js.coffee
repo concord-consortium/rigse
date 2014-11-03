@@ -143,4 +143,4 @@ class BookmarksManager
       elem.disable()
 
 document.observe "dom:loaded", ->
-  window.bookmarksManager = new BookmarksManager()
+  window.bookmarksManager = new BookmarksManager() if $$(CollectionSelector).length
