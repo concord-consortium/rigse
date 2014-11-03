@@ -4,6 +4,9 @@
 
 set :deploy_to, "/web/staging/itsisu"
 set :branch, "itsisu-staging"
+set :default_environment, {
+  'LABBOOK_PROVIDER_URL' => 'https://labbook.concord.org/'
+}
 
 #############################################################
 #  Servers
