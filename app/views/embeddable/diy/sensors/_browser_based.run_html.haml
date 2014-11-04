@@ -22,6 +22,7 @@
 
 - if Labbook.enabled?
   :javascript
+    $j(document).ready(function() {
     $j("##{dom_id_for(diy_sensor, :model_open_album)}").click(function() {
       if (#{current_user.anonymous?}) {
         alert("You must be logged in to open the snapshot album.");
@@ -31,8 +32,10 @@
         return false;
       }
     });
+    });
 
 :javascript
+  $j(document).ready(function() {
   if (Object.isExtensible && Modernizr.svg) {
     // set up click-to-play
     $j("##{dom_id_for(diy_sensor, :click_to_play)}").removeClass('unavailable');
@@ -85,12 +88,17 @@
       })();
     }
   }
+  });
 
 - if @section && @section.name
   :javascript
-    if (Object.isExtensible && Modernizr.svg) {
-      phones["#{sensor_dom_id}"].addListener("modelLoaded", function(evt) {
-        phones["#{sensor_dom_id}"].post('set', { name: 'clientName', value: '#{@section.name}' });
-      });
-      phones["#{sensor_dom_id}"].post('set', { name: 'clientName', value: '#{@section.name}' });
-    }
+    $j(document).ready(function() {
+      if (Object.isExtensible && Modernizr.svg) {
+        setTimeout(function() {
+          phones["#{sensor_dom_id}"].addListener('modelLoaded', function(evt) {
+            phones["#{sensor_dom_id}"].post('set', { name: 'clientName', value: '#{@section.name}' });
+          });
+          phones["#{sensor_dom_id}"].post('set', { name: 'clientName', value: '#{@section.name}' });
+        }, 50);
+      }
+    });

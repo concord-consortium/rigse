@@ -15,6 +15,7 @@
 
 - if Labbook.enabled?
   :javascript
+    $j(document).ready(function() {
     $j("##{dom_id_for(diy_embedded_model, :model_open_album)}").click(function() {
       if (#{current_user.anonymous?}) {
         alert("You must be logged in to open the snapshot album.");
@@ -24,8 +25,10 @@
         return false;
       }
     });
+    });
 - if Labbook.enabled? && diy_embedded_model.diy_model.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
   :javascript
+    $j(document).ready(function() {
     $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
       if (#{current_user.anonymous?}) {
         alert("You must be logged in to take snapshots.");
@@ -38,8 +41,10 @@
     $j("##{dom_id_for(diy_embedded_model, :model_image)}").addClass('unavailable');
     $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshot_instructions)}").removeClass('unavailable');
     $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").removeClass('unavailable');
+    });
 - elsif diy_embedded_model.diy_model.interactive_url
   :javascript
+    $j(document).ready(function() {
     if (Object.isExtensible && Modernizr.svg) {
       // set up click-to-play
       $j("##{dom_id_for(diy_embedded_model, :click_to_play)}").removeClass('unavailable');
@@ -92,3 +97,4 @@
         })();
       }
     }
+    });
