@@ -38,7 +38,7 @@
         .material_type
           = parent_material.model_name.titleize
       %td
-        = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor, :external => external}
+        = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor}
       %td
         - if current_visitor.portal_teacher
           = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup()", :id=>"btn_Assign"

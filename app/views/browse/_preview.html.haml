@@ -1,3 +1,6 @@
+- external = false
+- if material.is_a? ExternalActivity
+  - external = true
 - unless current_visitor.anonymous? or external
   - unless material.teacher_only?
     %a{:class=>"button preview_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{material.material_type}#{material.id}Preview",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{material.id},'#{material.material_type}','Preview')"}Preview &#9660;
