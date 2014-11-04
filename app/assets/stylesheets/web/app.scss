@@ -797,7 +797,10 @@ input, textarea {
 
 input {
   &.text:focus, &[type='text']:focus {
-    border-color: #da5936; } }
+    border-color: #da5936; }
+    &[type='radio'] {
+      border: none;
+      background-color:#fff !important;}}
 
 textarea {
   &:focus {
@@ -1695,3 +1698,6 @@ div.atm
 .control {
   @include control;
 }
+.placeholder { 
+  color: #aaa;
+  font-size: 14px; }
