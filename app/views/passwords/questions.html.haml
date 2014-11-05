@@ -1,6 +1,6 @@
 = title_tag "Answer Your Security Questions"
-= form_tag(check_password_questions_path(@user)) do
-  %div{:id => dom_id_for(@user, :security_questions, :form), :class => "action_menu"}
+= form_tag(check_password_questions_path(@user_recovery)) do
+  %div{:id => dom_id_for(@user_recovery, :security_questions, :form), :class => "action_menu"}
     .action_menu
       .action_menu_header_left
         .padded_content
@@ -11,7 +11,7 @@
       In order to reset your password, you need to answer your security questions.
       %p
         %ul.quiet_list
-          - @user.security_questions.each_with_index do |q, i|
+          - @user_recovery.security_questions.each_with_index do |q, i|
             - field_prefix = "security_questions[question#{i}]"
             = hidden_field_tag field_prefix + "[id]", q.id
             %li= label_tag field_prefix + "[answer]", q.question, :class => "aligned"
@@ -20,7 +20,7 @@
           %ul.quiet_list
             %li= submit_tag "Submit"
 
-  / hidden_field_tag :user_id, @user.id
+  / hidden_field_tag :user_id, @user_recovery.id
 
 
 

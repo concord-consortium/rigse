@@ -3,12 +3,12 @@
 %h3= 'Please enter a new password and confirm it.'
 
 = form_for :user, :url => { :action => 'update_users_password' } do |f|
-  %div{:id => dom_id_for(@user,:form), :class =>"action_menu"}
+  %div{:id => dom_id_for(@user_reset_password,:form), :class =>"action_menu"}
     .padded_content
       = f.error_messages :header_tag => 'h4', :header_message => "Your password could not be changed.", :message => ""
 
     %fieldset
-      %legend= "Password for #{@user.name} (#{@user.login})"
+      %legend= "Password for #{@user_reset_password.name} (#{@user_reset_password.login})"
       %ul.quiet_list
         %li= f.label :password, "password", :class=>"aligned"
         %li= f.password_field :password, :live => false, :class=>"aligned"

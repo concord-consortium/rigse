@@ -4,7 +4,7 @@ class PasswordsController < ApplicationController
   end
   
   def login
-    @user = User.new
+    @user_login = User.new
   end
 
   def create_by_email
@@ -50,27 +50,27 @@ class PasswordsController < ApplicationController
       end
     end
     
-    @user = User.new
+    @user_login = User.new
     @password = Password.new unless @password
     render :action => :login
   end
   
   def questions
-    @user = User.find(params[:user_id])
+    @user_recovery = User.find(params[:user_id])
   end
   
   def check_questions
-    @user = User.find(params[:user_id])
+    @user_check_questions = User.find(params[:user_id])
     questions = params[:security_questions]
     
     ok = 0
     questions.each do |k, v|
-      ok += 1 if @user.security_questions.find(v[:id]).answer.downcase == v[:answer].to_s.downcase
+      ok += 1 if @user_check_questions.security_questions.find(v[:id]).answer.downcase == v[:answer].to_s.downcase
     end
     
     if ok == 3
       # success!
-      @password = Password.new(:user => @user, :email => @user.email)
+      @password = Password.new(:user => @user_check_questions, :email => @user_check_questions.email)
       if @password.save
         redirect_to change_password_path(@password.reset_code)
         return
@@ -79,11 +79,11 @@ class PasswordsController < ApplicationController
     
     # TODO: limit the number of wrong attempts for a single user
     flash[:error] = "Sorry, you did not answer all of your questions correctly."
-    redirect_to password_questions_path(@user.id)
+    redirect_to password_questions_path(@user_check_questions.id)
   end
 
   def reset
-    @user = find_password_user
+    @user_reset_password = find_password_user
   end
 
   def update_users_password
@@ -125,8 +125,8 @@ class PasswordsController < ApplicationController
   def find_password_user
     return current_visitor if params[:reset_code] == "0" && !current_visitor.anonymous?
     begin
-      @user = Password.find(:first, :conditions => ['reset_code = ? and expiration_date > ?', params[:reset_code], Time.now]).user
-      return @user
+      @user_find = Password.find(:first, :conditions => ['reset_code = ? and expiration_date > ?', params[:reset_code], Time.now]).user
+      return @user_find
     rescue
       flash[:notice] = 'The change password URL you visited is either invalid or expired.'
       redirect_to home_path
