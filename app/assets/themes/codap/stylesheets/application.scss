@@ -1,3 +1,12 @@
 /*
 * =require application
 */
+body {
+  background-image: url(/assets/styles/bg-body-yellow.png);
+}
+body.main-nav-hidden {
+  background-image: url(/assets/styles/bg-body-no-nav-yellow.png);
+}
+.project-header h1 {
+  background: transparent url(/assets/banners/codap.png) 0 0 no-repeat;
+}
