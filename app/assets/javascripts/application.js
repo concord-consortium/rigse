@@ -30,6 +30,7 @@
 = require 'jquery/jquery'
 = require 'jquery_ajax_select'
 = require 'jquery.serialize-object'
+= require 'jquery.placeholder.js'
 = require 'select2'
 = require 'search_materials'
 = require 'search_materials_expand'

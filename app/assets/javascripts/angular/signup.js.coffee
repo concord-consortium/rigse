@@ -10,13 +10,19 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
       errorList.addError('first_name',self.last_name,'message')
 
     self.loadCountries = () ->
-      self.loadRemoteCollection('countries')
+      callback = () ->
+        jQuery('input[placeholder], textarea[placeholder]').placeholder()
+        
+      self.loadRemoteCollection('countries', {}, callback)
 
     self.loadStates = () ->
       self.loadRemoteCollection('states')
 
     self.loadSecurityQuestions = () ->
-      self.loadRemoteCollection('security_questions')
+      callback = () ->
+        jQuery('input[placeholder], textarea[placeholder]').placeholder()
+      
+      self.loadRemoteCollection('security_questions', {}, callback)
 
     self.loadDisrticts = () ->
       params = { state: self.state }
@@ -190,6 +196,7 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
         # full form US version
         return "us_edit" if self.isDomestic()
         # for form internation version
+        jQuery('input[placeholder], textarea[placeholder]').placeholder();
         return "intl_edit"
       else
         return "dropdown"
