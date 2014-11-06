@@ -87,16 +87,17 @@ class PasswordsController < ApplicationController
   end
 
   def update_users_password
-    @user = find_password_user
-    @user.password = params[:user][:password]
-    @user.password_confirmation = params[:user][:password_confirmation]
-    @user.updating_password = true
-    @user.save
-    if @user.errors.empty?
-      flash[:notice] = "Password for #{@user.login} was successfully updated."
-      @user.require_password_reset=false
-      @user.save
-      if @user.id == current_visitor.id
+    @user_reset_password = find_password_user
+    @user_reset_password.password = params[:user_reset_password][:password]
+    @user_reset_password.password_confirmation = params[:user_reset_password][:password_confirmation]
+    @user_reset_password.updating_password = true
+    @user_reset_password.save
+    
+    if @user_reset_password.errors.empty?
+      flash[:notice] = "Password for #{@user_reset_password.login} was successfully updated."
+      @user_reset_password.require_password_reset=false
+      @user_reset_password.save
+      if @user_reset_password.id == current_visitor.id
         # force the user to login again
         logout_keeping_session!
         redirect_to login_path
