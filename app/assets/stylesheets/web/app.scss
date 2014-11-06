@@ -1141,6 +1141,16 @@ ul.quiet_list {
     position: absolute;
     width: 960px;
     z-index: 5;
+    @media
+    only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (min--moz-device-pixel-ratio: 2),
+    only screen and (-o-min-device-pixel-ratio: 2/1),
+    only screen and (min-device-pixel-ratio: 2),
+    only screen and (min-resolution: 192dpi),
+    only screen and (min-resolution: 2dppx) {
+        background: transparent image-url("styles/bg-footer@2x.png") no-repeat center bottom;
+        background-size: 970px 200px;
+    }
     p {
       font: 0.9em arial, helvetica, sans-serif;
       padding: 142px 0 0 280px;}}
