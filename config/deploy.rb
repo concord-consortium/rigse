@@ -715,6 +715,7 @@ after "deploy:restart", "delayed_job:restart"
 after "deploy:restart", "solr:restart"
 
 # Make the default behavior be to NOT autoscale
+set(:autoscaling_instance_type, "c3.large")
 set :autoscaling_create_image, false
 set :autoscaling_create_group, false
 set :autoscaling_create_policy, false
