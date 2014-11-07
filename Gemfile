@@ -86,6 +86,7 @@ source "http://rubygems.org"
   gem 'calpicker', :git => 'git://github.com/concord-consortium/calpicker'
   gem 'delayed_job',          "~> 3.0.1"
   gem 'delayed_job_active_record', "~> 0.3.2"
+  gem "delayed_job_web"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
   # to support hosting paperclip attachments on S3, and Load Balancing

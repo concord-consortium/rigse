@@ -658,4 +658,9 @@ RailsPortal::Application.routes.draw do
 
     root :to => 'home#index'
   end
+  # Web interface to show the delayed jobs for admins
+  match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post], :constraints => lambda { |request|dition
+    warden = request.env['warden']
+    warden.user && warden.user.has_role?("admin")
+  }
 end
