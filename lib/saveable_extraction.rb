@@ -39,18 +39,22 @@ module SaveableExtraction
         choices_to_process << $1.to_i if c.has_attribute?('refid') && c.get_attribute('refid') =~ /(?:embeddable__)?multiple_choice_choice_(\d+)/
         choices_to_process << $1.to_i if c.has_attribute?('local_id') && c.get_attribute('local_id') =~ /(?:embeddable__)?multiple_choice_choice_(\d+)/
       end
-      process_multiple_choice(choices_to_process.uniq.first)
+      process_multiple_choice(choices_to_process.uniq)
     end
   end
 
-  def process_multiple_choice(choice_id)
-    choice = Embeddable::MultipleChoiceChoice.find_by_id(choice_id, :include => :multiple_choice)
+  def process_multiple_choice(choice_ids)
+    choice = Embeddable::MultipleChoiceChoice.find_by_id(choice_ids.first, :include => :multiple_choice)
     multiple_choice = choice ? choice.multiple_choice : nil
-    answer = choice ? choice.choice : ""
     if multiple_choice && choice
       saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, multiple_choice.id)
-      if saveable.answers.empty? || saveable.answers.last.answer != answer
-        saveable.answers.create(:bundle_content_id => self.id, :choice_id => choice.id)
+      if saveable.answers.empty? || # we don't have any answers yet
+         saveable.answers.last.answer.size != choice_ids.size || # the number of selected choices differs
+         (saveable.answers.last.selected_choices.map{|sc| sc.choice_id} - choice_ids).size != 0 # the actual selections differ
+        saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => multiple_choice.id)
+        choice_ids.each do |choice_id|
+          Saveable::MultipleChoiceSelectedChoice.create(:choice_id => choice_id, :answer_id => saveable_answer.id)
+        end
       end
     else
       if ! choice

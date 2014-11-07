@@ -13,7 +13,11 @@
             = render :partial => "otml/ot_authoring_document_view_config"
 
   %views
-    %OTChoiceViewConfig{:objectClass => "org.concord.otrunk.ui.OTChoice", :viewClass => "org.concord.otrunk.ui.swing.OTChoiceRadioButtonView",  :useViewsAsChoices => "true"}
+    %OTChoiceViewConfig{:objectClass => "org.concord.otrunk.ui.OTChoice", :viewClass => "org.concord.otrunk.ui.swing.OTChoiceView"}
+      %radioButtonViewEntry
+        %OTChoiceViewConfig{:objectClass => "org.concord.otrunk.ui.OTChoice", :viewClass => "org.concord.otrunk.ui.swing.OTChoiceRadioButtonView",  :useViewsAsChoices => "true"}
+      %checkBoxViewEntry
+        %OTChoiceViewConfig{:objectClass => "org.concord.otrunk.ui.OTChoice", :viewClass => "org.concord.otrunk.ui.swing.OTChoiceCheckBoxView",  :useViewsAsChoices => "true"}
     - view_entries.each do |view_entry|
       %OTViewEntry{ :local_id => ot_local_id_for(view_entry[0]), :objectClass => view_entry[1], :viewClass => view_entry[2] }/
     %OTDocumentViewConfig{ :local_id => "document_view_config", :objectClass => 'org.concord.otrunk.view.document.OTDocument', :viewClass => 'org.concord.otrunk.view.document.OTDocumentView' }
