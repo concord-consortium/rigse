@@ -1,4 +1,11 @@
 module SaveableExtraction
+  
+  def logger
+    # It doesn't appear that any saveable extractors define 'logger'
+    # but we can do this as a safeguard anyway.
+    return @logger || Rails.logger
+  end
+
   def extract_everything(extractor = Otrunk::ObjectExtractor.new(self.otml))
     return unless learner
     extract_open_responses(extractor)
