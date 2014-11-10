@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+
+# this script is a monkey patching version of the original delayed_job script
+# it runs much faster because it doesn't load the rails environment until after
+# the fork. The changes should be moved into delayed_job itself and a pull 
+# request submitted.
+
+
+# this sets up bundler so we get the right version of delayed_job
+# this makes the script take ~1.3 seconds on my machine
+# this line can removed and the script will likely work, but the version of
+# the delayed_job gem will no longer be controled by bundler
+# in that case thes script takes 0.5 seconds
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'boot'))
+
+RAILS_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+
+# need to monkey patch this temporary so Delayed::Command.new(ARGV) can setup the default
+# pid folder
+module Rails
+  def self.root
+      RAILS_ROOT
+  end
+end
+
+# this is faked, because other otherwise we need to require lots of files which eventually
+# means bringing in the whole rails environment
+module Delayed
+  class Worker
+    def self.before_fork
+      @files_to_reopen = []
+      ObjectSpace.each_object(File) do |file|
+        @files_to_reopen << file unless file.closed?
+      end
+    end
+  end
+end
+
+# this is overriden to load in the environment after the process if forked since we aren't doing
+# this loading before the fork
+require 'delayed/command'
+class Delayed::Command
+  old_run = instance_method(:run)
+
+  define_method(:run) do |worker_name = nil|
+    require File.join(Rails.root, 'config', 'environment')
+    old_run.bind(self).(worker_name)
+  end
+end
+Delayed::Command.new(ARGV).daemonize
