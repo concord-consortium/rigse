@@ -1,6 +1,7 @@
 class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :content)
   include SaveableExtraction
 
+  class UnknownRespose < NameError; end
   def perform
     all_data = JSON.parse(content) rescue {}
     learner = Portal::Learner.find(learner_id)
@@ -13,21 +14,29 @@ class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :con
 
     # process the json data
     all_data.each do |student_response|
-      case student_response["type"]
-      when "open_response"
-        embeddable = template.open_responses.detect {|e| e.external_id == student_response["question_id"]}
-        internal_process_open_response(student_response, embeddable)
-      when "multiple_choice"
-        embeddable = template.multiple_choices.detect {|e| e.external_id == student_response["question_id"]}
-        internal_process_multiple_choice(student_response, embeddable)
-      when "image_question"
-        embeddable = template.image_questions.detect {|e| e.external_id == student_response["question_id"]}
-        internal_process_image_question(student_response, embeddable)
-      when "external_link"
-        if student_response["question_type"] == "iframe interactive"
-          embeddable = template.iframes.detect {|e| e.external_id == student_response["question_id"]}
-          internal_process_external_link(student_response, embeddable)
+      begin
+        case student_response["type"]
+        when "open_response"
+          embeddable = template.open_responses.detect {|e| e.external_id == student_response["question_id"]}
+          internal_process_open_response(student_response, embeddable)
+        when "multiple_choice"
+          embeddable = template.multiple_choices.detect {|e| e.external_id == student_response["question_id"]}
+          internal_process_multiple_choice(student_response, embeddable)
+        when "image_question"
+          embeddable = template.image_questions.detect {|e| e.external_id == student_response["question_id"]}
+          internal_process_image_question(student_response, embeddable)
+        when "external_link"
+          if student_response["question_type"] == "iframe interactive"
+            embeddable = template.iframes.detect {|e| e.external_id == student_response["question_id"]}
+            internal_process_external_link(student_response, embeddable)
+          end
+        else
+          raise UnknownRespose.new("type: #{student_response["type"]}\nContent: #{content}")
         end
+      # We could broaden this to StdErr, but this should catch most cases
+      # which will be NPE-like cases
+      rescue NameError => stderr
+        log_exception(stderr, learner_id, student_response)
       end
     end
     learner.report_learner.last_run = Time.now
@@ -56,6 +65,12 @@ class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :con
   # stub id method, for SaveableExtraction compatibility
   def id
     nil
+  end
+
+  protected
+  def log_exception(exception, learner_id, response)
+    Rails.logger.info("ProcessExternalActivityDataJob swallowing exception: #{exception}\n #{exception.backtrace}")
+    NewRelic::Agent.notice_error(exception, {custum_params: {learner_id: learner_id, response:response}} )
   end
 
 end
