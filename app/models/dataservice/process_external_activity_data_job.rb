@@ -2,6 +2,7 @@ class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :con
   include SaveableExtraction
 
   class UnknownRespose < NameError; end
+  class MissingAnswer  < NameError; end
   def perform
     all_data = JSON.parse(content) rescue {}
     learner = Portal::Learner.find(learner_id)
@@ -44,6 +45,9 @@ class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :con
   end
 
   def internal_process_open_response(data, embeddable)
+    if data["answer"].nil?
+      raise MissingAnswer.new("Open response is missing answer value")
+    end
     process_open_response(embeddable.id, data["answer"], data["is_final"])
   end
 
