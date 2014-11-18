@@ -27,16 +27,3 @@ after 'deploy:update_code', 'deploy:has_resource_symlink'
 # use `export AWS_SECRET_ACCESS_KEY='yyyy'` in your shell?
 # set(:autoscaling_access_key_id, "PUTYOURAWSACCESSKEYIDHERE")
 # set(:autoscaling_secret_access_key, "PUTYOURAWSSECRETACCESSKEYHERE")
-
-set :autoscaling_region, "us-east-1e"
-set :autoscaling_create_image, true
-set :autoscaling_create_group, true
-set :autoscaling_create_policy, true
-set :autoscaling_create_launch_configuration, true
-set(:autoscaling_instance_type, "c3.large")
-set(:autoscaling_security_groups, %w(has))
-set(:autoscaling_min_size, 1)
-set(:autoscaling_max_size, 2)
-set(:autoscaling_application, 'HasStagingLB')
-set(:autoscaling_require_keys, true)
-set(:autoscaling_image_master_name, 'has-staging') # will use 'stage' otherwise
