@@ -1,11 +1,19 @@
 - if activity.investigation
-  = render  :partial => 'shared/activity_header', :locals => { :activity => activity }
-  .item_collection
-    %ul#activity_sections_list.menu
-      - activity.sections.each do |section|
-        =render :partial => 'section_list_item', :locals => {:section => section}
-        -if (activity.changeable?(current_user))
-          =sortable_element :activity_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:activity_id => activity.id }}
+  %h2= activity.name
+  - activity.sections.each do |section|
+    - next unless section.is_enabled?
+    %h4=section.name
+    - @section = section
+    - section.pages.each do |page|
+      - next unless page.is_enabled?
+      - page.page_elements.each do |element|
+        - if element.is_enabled?
+          - component = element.embeddable
+          %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
+            = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element, :learner => local_assigns[:learner]}
+  %ul.page-utility
+    %li.print-this-page
+      %a{:href => '#', :onclick => 'window.print(); return false;'} Print this page
 - else
   %h2= activity.name
   - activity.sections.each do |section|
