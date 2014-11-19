@@ -6,6 +6,7 @@
     - @section = section
     - section.pages.each do |page|
       - next unless page.is_enabled?
+      %h5=page.name
       - page.page_elements.each do |element|
         - if element.is_enabled?
           - component = element.embeddable
