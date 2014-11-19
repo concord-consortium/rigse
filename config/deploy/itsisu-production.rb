@@ -9,6 +9,9 @@
 # set :gateway, "otto.concord.org"
 set :deploy_to, "/web/portal"
 set :branch, "itsisu-production"
+set :default_environment, {
+  'LABBOOK_PROVIDER_URL' => 'https://labbook.concord.org/'
+}
 
 
 #############################################################

@@ -738,11 +738,12 @@ module ApplicationHelper
     learners = reportUtil.learners
     learners.each do |learner|
       saveable = reportUtil.saveable(learner, multiple_choice)
-      answer = saveable.answer
-      answer_counts[answer] ||= 0
-      answer_counts[answer] += 1
+      saveable.answer.each do |answer|
+        answer_counts["#{answer[:choice_id]}"] ||= 0
+        answer_counts["#{answer[:choice_id]}"] += 1
+      end
     end
-    not_answered_count = answer_counts.has_key?("not answered") ? answer_counts["not answered"].to_i : 0
+    not_answered_count = answer_counts.has_key?("0") ? answer_counts["0"].to_i : 0
     all_choices = multiple_choice.choices
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -761,7 +762,7 @@ module ApplicationHelper
               haml_tag(:div, :class => "cell cellheader") { haml_concat("Count")}
             }
             all_choices.each_with_index do |choice,i|
-              answer_count = answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0
+              answer_count = answer_counts.has_key?("#{choice.id}") ? answer_counts["#{choice.id}"] : 0
               correctness = choice.is_correct ? "correct" : "incorrect"
               haml_tag(:div, :class => 'row') {
                 haml_tag(:div, :class => "cell optionlabel #{correctness}") {

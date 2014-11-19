@@ -5,7 +5,52 @@
     /   = f.text_field :name, :id => dom_id_for(multiple_choice, :item, :name_field)
     - field_set_tag 'prompt' do
       = f.text_area :prompt, :id => dom_id_for(multiple_choice, :item, :textarea), :class => 'tinymce_textarea'
-      
+
+    %fieldset{:id => dom_id_for(multiple_choice, :edit_layout)}
+      %legend
+        options
+      .options
+        .option Layout
+        %ul.menu_h
+          %li
+            %span
+              = label_tag :vertical, "Vertical:"
+              = check_box_tag :horizontal, 0, !(multiple_choice.horizontal || multiple_choice.is_likert), {:id => dom_id_for(multiple_choice, :vertical)}
+          %li
+            %span
+              = f.label :horizontal, "Horizontal:"
+              = f.check_box :horizontal, {:id => dom_id_for(multiple_choice, :horizontal)}
+          %li
+            %span
+              = f.label :is_likert, "Likert:"
+              = f.check_box :is_likert, {:id => dom_id_for(multiple_choice, :is_likert)}
+        .option{:style => "clear: both;"} Type
+        %ul.menu_h
+          %li
+            %span
+              = f.label :allow_multiple_selection, "Allow Multiple Selection:"
+              = f.check_box :allow_multiple_selection
+      :javascript
+        $j(document).ready(function() {
+          var vert = $j('##{dom_id_for(multiple_choice, :vertical)}'),
+              horiz = $j('##{dom_id_for(multiple_choice, :horizontal)}'),
+              likert = $j('##{dom_id_for(multiple_choice, :is_likert)}');
+
+          vert.click(function() {
+            horiz.prop("checked", false);
+            likert.prop("checked", false);
+          });
+
+          horiz.click(function() {
+            vert.prop("checked", false);
+            likert.prop("checked", false);
+          });
+
+          likert.click(function() {
+            horiz.prop("checked", false);
+            vert.prop("checked", false);
+          });
+        });
     %fieldset{:id => dom_id_for(multiple_choice, :edit_choices)}
       %legend 
         choices
@@ -16,3 +61,4 @@
       #choices
         - f.fields_for :choices do |choice_form|
           = render :partial => "edit_choice", :locals => {:multiple_choice => multiple_choice, :form => choice_form}
+

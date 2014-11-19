@@ -94,4 +94,13 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     true
   end
 
+  def selection_ui
+    # Radio buttons = 0, check boxes = 1
+    if self.allow_multiple_selection
+      "1"
+    else
+      "0"
+    end
+  end
+
 end

@@ -4,21 +4,22 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
   belongs_to :multiple_choice,  :class_name => 'Saveable::MultipleChoice', :counter_cache => :response_count
   belongs_to :bundle_content, :class_name => 'Dataservice::BundleContent'
   
-  belongs_to :choice, :class_name => 'Embeddable::MultipleChoiceChoice'
+  has_many :selected_choices, :order => :choice_id, :class_name => 'Saveable::MultipleChoiceSelectedChoice', :foreign_key => :answer_id, :dependent => :destroy
 
   acts_as_list :scope => :multiple_choice_id
   
   def answer
-    if choice
-      choice.choice
+    if selected_choices.size > 0
+      selected_choices.compact.select{|sc| sc.choice }.map{|sc| {:choice_id => sc.choice.id, :answer => sc.choice.choice, :correct => sc.choice.is_correct} }
     else
-      "not answered"
+      [{:answer => "not answered", :choice_id => 0}]
     end
   end
   
   def answered_correctly?
-    if choice
-      choice.is_correct
+    if selected_choices.size > 0
+      choices = selected_choices.compact.select{|sc| sc.choice }.map{|sc| sc.choice.is_correct}
+      !(choices.size == 0 || choices.include?(false))
     else
       false
     end

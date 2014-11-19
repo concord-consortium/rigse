@@ -9,10 +9,10 @@
           = embeddable.prompt
       - embeddable.choices.each_with_index do |choice, i|
         - css = choice.is_correct ? 'correct' : 'incorrect'
-        - if saveable && choice.choice == saveable.answer
+        - if saveable && (answer = saveable.answer.detect{|a| a[:answer] == choice.choice})
           - css << " chosen_answer"
-        .item{:class => css, :style => 'display: block;'}
+        %div{:class => "item choice #{css}"}
           = "#{i+1}. #{choice.choice}"
-      - if saveable.answer == 'not answered'
-        .item{:class => 'not_answered', :style => 'font-weight: bold;'}
+      - if saveable.answer.size == 1 && saveable.answer.first[:answer] == 'not answered'
+        .item.choice.not_answered{:style => 'font-weight: bold;'}
           = 'not answered'

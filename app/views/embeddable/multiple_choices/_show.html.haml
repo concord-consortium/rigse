@@ -1,5 +1,9 @@
 %div{:id => dom_id_for(multiple_choice, :details), :class => 'content'}
   = wrap_edit_link_around_content(multiple_choice, options={:complete => mce_init_string}) do
     = multiple_choice.prompt
-    - multiple_choice.choices.each do |choice|
-      = render :partial => "embeddable/multiple_choices/show_choice", :locals => {:multiple_choice => multiple_choice, :choice => choice}
+    .choices{:style => (multiple_choice.is_likert ? 'display: table; table-layout: fixed; width: 100%;' : '')}
+      - multiple_choice.choices.each do |choice|
+        - if multiple_choice.is_likert
+          = render :partial => "embeddable/multiple_choices/show_choice_likert", :locals => {:multiple_choice => multiple_choice, :choice => choice}
+        - else
+          = render :partial => "embeddable/multiple_choices/show_choice", :locals => {:multiple_choice => multiple_choice, :choice => choice, :horizontal => multiple_choice.horizontal}

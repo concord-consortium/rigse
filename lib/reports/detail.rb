@@ -135,6 +135,11 @@ class Reports::Detail < Reports::Excel
               blob = ans[:answer]
               url = "#{@blobs_url}/#{blob[:id]}/#{blob[:token]}.#{blob[:file_extension]}"
               Spreadsheet::Link.new url, url
+            elsif ans[:answer].kind_of?(Array)
+              correct = nil
+              combined_answer = ans[:answer].map {|ap| ap[:answer] }.join('; ')
+              ans[:answer].each {|ap| correct ||= ap[:correct] }
+              correct.nil? ? combined_answer : [combined_answer, correct]
             else
               ans[:is_correct].nil? ? ans[:answer] : [ans[:answer], ans[:is_correct]]
             end

@@ -369,12 +369,16 @@ class Portal::OfferingsController < ApplicationController
         saveable_open_response.answers.create(:bundle_content_id => nil, :answer => answer)
       end
     when Embeddable::MultipleChoice
-      choice = parse_embeddable(answer)
-      answer = choice ? choice.choice : ""
-      if embeddable && choice
+      choices = answer.map{|a| parse_embeddable(a) }.compact
+      if embeddable
         saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(learner.id, offering.id, embeddable.id)
-        if saveable.answers.empty? || saveable.answers.last.answer != answer
-          saveable.answers.create(:bundle_content_id => nil, :choice_id => choice.id)
+        if saveable.answers.empty? || # we don't have any answers yet
+           saveable.answers.last.answer.size != choices.size || # the number of selected choices differs
+           (saveable.answers.last.selected_choices - choices).size != 0 # the actual selections differ
+          saveable_answer = saveable.answers.create(:bundle_content_id => nil, :multiple_choice_id => embeddable.id)
+          choices.each do |choice|
+            Saveable::MultipleChoiceSelectedChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)
+          end
         end
       else
         if ! choice

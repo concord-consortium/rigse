@@ -1,10 +1,16 @@
 %div{:id => dom_id_for(multiple_choice, :details), :class => 'content'}
   = multiple_choice.prompt
-  - current_answer = nil
+  - current_answers = []
   - if local_assigns[:learner]
     - if saveable = Saveable::MultipleChoice.find_by_learner_id_and_multiple_choice_id(learner.id, multiple_choice.id)
-      - current_answer = saveable.answers.last.choice if saveable.answered?
-  - multiple_choice.choices.each do |choice|
-    - selected = (current_answer == choice) ? true : false
-    - with_format(:html) do
-      = render :partial => "embeddable/multiple_choices/show_choice", :locals => {:multiple_choice => multiple_choice, :choice => choice, :selected => selected}
+      - current_answers = saveable.answers.last.selected_choices.map{|sc| sc.choice} if saveable.answered?
+  .choices{:style => (multiple_choice.is_likert ? 'display: table; table-layout: fixed; width: 100%;' : '')}
+    - if multiple_choice.allow_multiple_selection
+      = hidden_field_tag "questions[#{dom_id_for(multiple_choice)}][]", "nothing"
+    - multiple_choice.choices.each do |choice|
+      - selected = current_answers.include?(choice)
+      - with_format(:html) do
+        - if multiple_choice.is_likert
+          = render :partial => "embeddable/multiple_choices/show_choice_likert", :locals => {:multiple_choice => multiple_choice, :choice => choice, :selected => selected}
+        - else
+          = render :partial => "embeddable/multiple_choices/show_choice", :locals => {:multiple_choice => multiple_choice, :choice => choice, :selected => selected, :horizontal => multiple_choice.horizontal}
