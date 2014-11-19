@@ -1,5 +1,5 @@
 %div#search_form
-  %form#search_form_form
+  = form_tag('permission_forms', :method => :get) do
     / TODO: Add cohort filtering here some other day.
     = search_field :form, :name
     = submit_tag "Search"
