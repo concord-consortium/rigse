@@ -40,7 +40,7 @@
       $j("##{dom_id_for(drawing_tool, :model_image)}").addClass('unavailable');
       $j("##{dom_id_for(drawing_tool, :click_to_play)}").addClass('unavailable')
       setTimeout(function() {
-        var drawingTool = new DrawingTool("##{dom_id_for(drawing_tool, :interactive)}");
+        var drawingTool = new DrawingTool("##{dom_id_for(drawing_tool, :interactive)}", {width: 720});
         if (#{!!(drawing_tool.background_image_url && drawing_tool.background_image_url.length > 0)}) {
           drawingTool.setBackgroundImage("#{drawing_tool.background_image_url}");
         }
