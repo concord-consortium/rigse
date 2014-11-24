@@ -209,6 +209,12 @@ class ActivitiesController < ApplicationController
       @activity.update_attributes(params[:activity])
       @activity.is_template = false
     end
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @activity.cohort_list = (params[:cohorts] || [])
+    end
+
     respond_to do |format|
       if @activity.save
         format.js  # render the js file
@@ -227,6 +233,12 @@ class ActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @activity = Activity.find(params[:id])
+    if params[:update_cohorts] && !cancel
+      # set the cohort tags
+      @activity.cohort_list = (params[:cohorts] || [])
+      @activity.save
+    end
+
     if request.xhr?
       if cancel || @activity.update_attributes(params[:activity])
         render :partial => 'shared/activity_header', :locals => { :activity => @activity }
