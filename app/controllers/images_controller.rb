@@ -60,11 +60,24 @@ class ImagesController < ApplicationController
   # POST /images
   # POST /images.xml
   def create
-    params[:image][:user_id] = current_user.id.to_s
-    @image = Image.new(params[:image])
+    pars = params[:image]
+    pars[:user_id] = current_user.id.to_s
+    img_pars = {:image => pars.delete(:image)}
+    valid_image = false
+    if img_pars[:image]
+      # Periodically, the attribution isn't appended to the image when using a single-step create, so
+      # do it in two steps -- the metadata first, then save the actual image file.
+      @image = Image.create!(pars) rescue nil
+      if @image && @image.update_attributes(img_pars)
+        valid_image = true
+      end
+    else
+      @image = Image.new(pars)
+      @image.check_image_presence
+    end
 
     respond_to do |format|
-      if @image.save
+      if valid_image
         flash[:notice] = 'Image was successfully created.'
         format.html { redirect_to(@image) }
         format.xml  { render :xml => @image, :status => :created, :location => @image }
