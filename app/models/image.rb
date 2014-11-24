@@ -5,8 +5,6 @@ class Image < ActiveRecord::Base
                                         :attributed => {:geometry => "650x400>"}},
                       :processors => [:attributor_append, :thumbnail]
 
-  before_create :check_image_presence
-  before_save :check_image_presence
   before_image_post_process :clean_image_filename
 
   validates_presence_of :user_id, :name, :publication_status
