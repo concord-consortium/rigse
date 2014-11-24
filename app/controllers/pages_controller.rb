@@ -176,6 +176,12 @@ class PagesController < ApplicationController
   def create
     @page = Page.create(params[:page])
     @page.user = current_user
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @page.cohort_list = (params[:cohorts] || [])
+    end
+
     respond_to do |format|
       if @page.save
         format.js
@@ -192,6 +198,12 @@ class PagesController < ApplicationController
   # PUT /page/1
   # PUT /page/1.xml
   def update
+    if params[:update_cohorts]
+      # set the cohort tags
+      @page.cohort_list = (params[:cohorts] || [])
+      @page.save
+    end
+
     respond_to do |format|
       if @page.update_attributes(params[:page])
         flash[:notice] = 'Page was successfully updated.'
