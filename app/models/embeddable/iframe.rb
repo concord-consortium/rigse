@@ -24,6 +24,17 @@ class Embeddable::Iframe < ActiveRecord::Base
 
   send_update_events_to :investigations
 
+  # other code expects all embeddables to respond to is_required and is_required?
+  # Iframe embeddables can't be required, so we always return
+  # false here.
+  def is_required
+    false
+  end
+
+  def is_required?
+    false
+  end
+
   def investigations
     invs = []
     self.pages.each do |page|
