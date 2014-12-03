@@ -7,6 +7,28 @@
     %p
       Can't find the information you need here? Contact technical support using our 
       %a{:href => '/help_requests', :target => '_blank'} technical support contact form.
+  %div#required_software
+    %h4
+      Required Software
+    %p
+      You will need the following software versions in order to successfully use all of the available activities:
+    %h5= link_to 'Sensor Connector', 'http://sensorconnector.concord.org/'
+    %ul
+      %li
+        %span.os Windows:
+        %span.version 20141119-1244
+      %li
+        %span.os OS X:
+        %span.version 20141119-1430
+    %h5= link_to 'CC Launcher', 'http://static.concord.org/installers/cc_launcher_installer.dmg'
+    %ul
+      %li
+        %span.os Windows:
+        %span.version not needed
+      %li
+        %span.os OS X:
+        %span.version 20140915.235654-475
+
   %ul
     %li
       %a{:href => "#getstarted"} Four steps to Getting Started
@@ -51,7 +73,7 @@
             %a{:href=>"#save-activity"} Save Activity
           %li
             %a{:href=>"#customizing-activity"} Customizing an Activity
-  %hr/
+  %hr{:style => "clear: both;"}/
   %h4#getstarted
     Four steps to Getting Started
     %h5#launchportal
