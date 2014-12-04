@@ -12,22 +12,21 @@
       Required Software
     %p
       You will need the following software versions in order to successfully use all of the available activities:
-    %h5= link_to 'Sensor Connector', 'http://sensorconnector.concord.org/'
-    %ul
-      %li
-        %span.os Windows:
-        %span.version 20141119-1244
-      %li
-        %span.os OS X:
-        %span.version 20141119-1430
-    %h5= link_to 'CC Launcher', 'http://static.concord.org/installers/cc_launcher_installer.dmg'
-    %ul
-      %li
-        %span.os Windows:
-        %span.version not needed
-      %li
-        %span.os OS X:
-        %span.version 20140915.235654-475
+    %h5.section= link_to 'Sensor Connector', 'http://sensorconnector.concord.org/'
+    .os-versions
+      %span.os Windows:
+      %span.version 20141119-1244
+      %span.os OS X:
+      %span.version 20141119-1430
+    %h5.section= link_to 'CC Launcher', 'http://static.concord.org/installers/cc_launcher_installer.dmg'
+    .os-versions
+      %span.os Windows:
+      %span.version not needed
+      %span.os OS X
+      %span.os.sub 10.8 and older:
+      %span.version not needed
+      %span.os.sub 10.9 and newer:
+      %span.version 20140915.235654-475
 
   %ul
     %li
