@@ -294,7 +294,7 @@ GEM
     json (1.7.7)
     launchy (2.0.5)
       addressable (~> 2.2.6)
-    libv8 (3.16.14.3)
+    libv8 (3.16.14.7)
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
     listen (0.7.3)
