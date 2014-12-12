@@ -176,6 +176,17 @@ class ApplicationController < ActionController::Base
     end
     return redirect_path
   end
+  
+  def after_sign_out_path_for(resource)
+    redirect_url = "#{params[:redirect_uri]}?re_login=true&provider=#{params[:provider]}"
+    if params[:re_login]
+      session[:sso_callback_params] = nil
+      session[:sso_application] = nil
+      redirect_url 
+    else
+      root_path  
+    end
+  end
 
   def set_locale
     # Set locale according to theme
