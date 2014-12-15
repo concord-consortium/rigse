@@ -82,8 +82,9 @@ module SaveableExtraction
       end
     else
       if ! choice
-        logger.error("Missing Embeddable::MultipleChoiceChoice id: #{choice_id}")
-      elsif ! multiple_choice
+        logger.error("Missing Embeddable::MultipleChoiceChoice id: #{choice_ids.join(",")}")
+      end
+      if ! multiple_choice
         logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
       end
     end
