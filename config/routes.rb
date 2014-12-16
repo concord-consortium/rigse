@@ -377,8 +377,8 @@ RailsPortal::Application.routes.draw do
           post :toggle_notice_display
           #post :manage_classes_save, :as => 'manage_save'
         end
-
       end
+      get '/learner_detail/:id.:format' => 'learner_details#show',  :as => :learner_detail
     end
 
     namespace :otrunk_example do
