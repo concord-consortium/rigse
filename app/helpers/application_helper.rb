@@ -918,7 +918,6 @@ module ApplicationHelper
   end
 
   def lara_report_link(offering)
-    haml_concat "BOO"
     if offering.runnable.kind_of?(ExternalActivity)
       url      = offering.runnable.url
       uri      = URI.parse(url)
