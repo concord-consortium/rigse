@@ -928,7 +928,7 @@ module ApplicationHelper
       learners = URI.escape(learners)
       report_url = "#{uri.scheme}://#{uri.host}:#{uri.port}/runs/details?learners=#{learners}&students=#{students}"
       haml_concat " | "
-      haml_concat link_to("LARA Run report", report_url)
+      haml_concat link_to("LARA Run report", report_url, {:target => "_blank"} )
     end
   end
 
