@@ -917,6 +917,21 @@ module ApplicationHelper
     end
   end
 
+  def lara_report_link(offering)
+    haml_concat "BOO"
+    if offering.runnable.kind_of?(ExternalActivity)
+      url      = offering.runnable.url
+      uri      = URI.parse(url)
+      learners = offering.learner_ids.join(",")
+      students = offering.learners.map { |l| "#{l.id}:#{l.user.login}" }.join(",")
+      students = URI.escape(students)
+      learners = URI.escape(learners)
+      report_url = "#{uri.scheme}://#{uri.host}:#{uri.port}/runs/details?learners=#{learners}&students=#{students}"
+      haml_concat " | "
+      haml_concat link_to("LARA Run report", report_url)
+    end
+  end
+
   def menu_for_offering(offering, opts = {})
     options = {
       :omit_delete => true,
@@ -935,6 +950,7 @@ module ApplicationHelper
           if !report_link.blank?
             haml_concat " | #{report_link}"
           end
+          lara_report_link(offering)
           haml_concat " | "
 
           if offering.active?
