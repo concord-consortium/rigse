@@ -4,7 +4,7 @@
 -# isn't included here
 %h3= @portal_teacher.name
 
-School: #{@portal_teacher.school.name}
+School: #{@portal_teacher.school ? @portal_teacher.school.name : "no school"}
 
 %h4 Classes
 %ul
