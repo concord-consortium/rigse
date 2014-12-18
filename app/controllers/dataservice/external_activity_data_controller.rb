@@ -1,5 +1,6 @@
 class Dataservice::ExternalActivityDataController < ApplicationController
-
+  include PeerAccess
+  
   private
   def can_create(learner)
     # allow admins and managers to re-post learner data
@@ -7,7 +8,15 @@ class Dataservice::ExternalActivityDataController < ApplicationController
     return true if (current_visitor.has_role? "admin")
     return true if (current_visitor.has_role? "manager")
     return true if (current_visitor == learner.user )
-    raise ActionController::RoutingError.new('Not Allowed')
+    return true if verify_request_is_peer
+    raise_auth_error(learner)
+  end
+
+  def raise_auth_error(learner)
+    learner_deets = LearnerDetail.new(learner)
+    visitor = current_visitor ? current_visitor.name : 'anonymous'
+    error_string = "Auth error for #{visitor} - #{learner_deets}"
+    raise ActionController::RoutingError.new(error_string)
   end
 
   public
