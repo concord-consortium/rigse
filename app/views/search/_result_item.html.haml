@@ -55,6 +55,10 @@
                 %div
                   %span{:style=>"font-weight:bold"}
                     ="By #{material.user.name}"
+            - if (material.is_a? ExternalActivity) && (current_visitor.has_role? 'admin')
+              %td{:width=>"90px"}
+                %div{:style=>'float:right'}
+                  = link_to "Edit in iframe", matedit_external_activity_url(material,:iFrame => true), :class=>"button", :target => "_blank"
             - if (material.is_a? ExternalActivity) && ((current_visitor.portal_teacher && current_visitor.portal_teacher.user_id == material.user_id) or current_visitor.has_role? 'admin')
               %td{:width=>"90px"}
                 %div{:style=>'float:right'}
