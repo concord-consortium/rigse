@@ -246,5 +246,15 @@ class ExternalActivitiesController < ApplicationController
     flash[:notice] ="Copied #{@original.name}"
     redirect_to url_for(@external_activity)
   end
+  
+  def matedit
+    @uri = URI.parse(@external_activity.url + '/edit')
+    @uri.query = {
+      :domain => root_url
+    }.to_query
+    if params[:iFrame] == "false"
+      redirect_to @uri.to_s
+    end
+  end
 
 end

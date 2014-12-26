@@ -440,5 +440,15 @@ class InvestigationsController < AuthoringController
     rep.run_report(sio) if rep
     return sio
   end
+  
+  def matedit
+    @uri = URI.parse(@investigation.url + '/edit')
+    @uri.query = {
+      :domain => root_url
+    }.to_query
+    if params[:iFrame] == "false"
+      redirect_to @uri.to_s
+    end
+  end
 
 end
