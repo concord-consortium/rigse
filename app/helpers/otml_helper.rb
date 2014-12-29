@@ -269,11 +269,16 @@ module OtmlHelper
     else
       vendor_interface = Probe::VendorInterface.find_by_short_name("vernier_goio")
     end
-    # note the .otml on the end of the name, this makes this work even when the current 'format' is dynamic_otml
-    # this approach only works will single levels of format changes, for nested partials look at:
-    # http://stackoverflow.com/questions/339130/how-do-i-render-a-partial-of-a-different-format-in-rails
-    result = render :partial => "otml/ot_interface_manager", :formats => [:otml], :locals => { :vendor_interface => vendor_interface }
-    return result
+
+    if vendor_interface
+      # note the formats option, this makes this work even when the current 'format' is dynamic_otml
+      result = render :partial => "otml/ot_interface_manager", :formats => [:otml], :locals => { :vendor_interface => vendor_interface }
+      return result
+    else
+      # in a portal that doesn't have the sensor configurations setup correctly, the vendor interface can
+      # be nil. Instead of failing we just skip the ot_interface_manager section all together
+      return ""
+    end
   end
 
   def ot_navigation_history_service
