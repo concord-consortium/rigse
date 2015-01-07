@@ -517,7 +517,6 @@ RailsPortal::Application.routes.draw do
         get :print
         post :delete_activity
         get :export
-        get :matedit
       end
     end
 
