@@ -4,7 +4,7 @@ class ExternalActivitiesController < ApplicationController
   before_filter :setup_object, :except => [:index, :preview_index, :publish]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export,:publish,:republish]
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export,:publish,:republish,:copy,:matedit]
   before_filter :can_create, :only => [:new, :create, :duplicate, :publish]
   before_filter :only_peers, :only => [:republish]
   in_place_edit_for :external_activity, :name
@@ -255,6 +255,14 @@ class ExternalActivitiesController < ApplicationController
     if params[:iFrame] == "false"
       redirect_to @uri.to_s
     end
+  end
+  
+  def copy
+    @uri = URI.parse(@external_activity.url + '/duplicate')
+    @uri.query = {
+      :domain => root_url
+    }.to_query
+    redirect_to @uri.to_s
   end
 
 end

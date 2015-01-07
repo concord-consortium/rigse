@@ -561,6 +561,7 @@ RailsPortal::Application.routes.draw do
       member do
         get :duplicate
         get :matedit
+        get :copy
       end
     end
 
