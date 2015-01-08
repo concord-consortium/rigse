@@ -89,12 +89,10 @@ class ActivityRuntimeAPI
       end
     end
 
-    #external_activity.update_attribute('author_email',hash['author_email'])
     ['author_email', 'is_locked'].each do |attribute|
       external_activity.update_attribute(attribute,hash[attribute])
     end
     
-    investigation.update_attribute('author_email',hash['author_email'])
     # save the embeddables
     mc_cache = {}
     or_cache = {}
@@ -139,8 +137,7 @@ class ActivityRuntimeAPI
     Investigation.transaction do
       investigation = Investigation.create(
         :name => hash["name"], :description => hash['description'],
-        :abstract => hash['abstract'], :user => user,
-        :author_email => hash["author_email"])
+        :abstract => hash['abstract'], :user => user)
       hash['activities'].each_with_index do |act, index|
         activity_from_hash(act, investigation, user, index)
       end
@@ -182,11 +179,11 @@ class ActivityRuntimeAPI
 
     # update the simple attributes
     [investigation, external_activity].each do |act|
-      ['name','description','abstract', 'thumbnail_url','author_email'].each do |attribute|
+      ['name','description','abstract', 'thumbnail_url'].each do |attribute|
         act.update_attribute(attribute,hash[attribute])
       end
     end
-
+    external_activity.update_attribute('author_email',hash['author_email'])
     # save the embeddables
     mc_cache = {}
     or_cache = {}
