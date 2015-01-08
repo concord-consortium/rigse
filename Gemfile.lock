@@ -51,6 +51,16 @@ GIT
       rails (~> 3.2.11)
 
 GIT
+  remote: git://github.com/concord-consortium/geniverse-portal-integration
+  revision: dd002544e6092ba10bf7f0ae0c1c0d348c205f46
+  specs:
+    geniverse_portal_integration (0.0.4)
+      haml (~> 3.1.4)
+      json (~> 1.7.6)
+      rails (~> 3.2.19)
+      spreadsheet (>= 0.7.3)
+
+GIT
   remote: git://github.com/concord-consortium/haml.git
   revision: e428066e86e19f71bf9230e1fdc1a3ecf7c61447
   branch: xml-mime-type-and-ie8-keycode-fix
@@ -576,6 +586,7 @@ DEPENDENCIES
   ffi-ncurses (~> 0.3.3)
   font-awesome-sass
   genigames_connector (= 0.0.4)!
+  geniverse_portal_integration!
   grit (~> 2.4)
   guard-cucumber
   guard-rspec

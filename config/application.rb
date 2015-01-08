@@ -117,10 +117,10 @@ module RailsPortal
     # We can also set which resources we allow with the CORS_RESOURCES environment variable.
     # By default, this is '*'
     if ENV['PORTAL_FEATURES'] && ENV['PORTAL_FEATURES'].include?("allow_cors")
-      config.middleware.use Rack::Cors do
+      config.middleware.insert_before 0, Rack::Cors do
         allow do
           origins ENV['CORS_ORIGINS'] ? ENV['CORS_ORIGINS'].split(" ") : /^https?:\/\/.*\.concord.org/
-          resource ENV['CORS_RESOURCES'] || '*', headers: :any, methods: [:get, :post, :options], credentials: true
+          resource ENV['CORS_RESOURCES'] || '*', headers: :any, expose: ['Location'], methods: [:get, :post, :options], credentials: true
         end
       end
     end

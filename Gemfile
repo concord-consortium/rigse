@@ -137,6 +137,11 @@ group :geniverse_remote_auth do
   # gem "cc_portal_remote_auth", :path => "../cc_portal_remote_auth"
 end
 
+group :geniverse_backend do
+  gem "geniverse_portal_integration", :git => "git://github.com/concord-consortium/geniverse-portal-integration"
+  # gem "geniverse_portal_integration", :path => "../geniverse-portal-integration"
+end
+
 group :genigames_data do
   gem 'genigames_connector',  '0.0.4', :git => 'git://github.com/concord-consortium/genigames-connector'
 end
