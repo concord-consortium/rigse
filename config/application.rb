@@ -120,7 +120,7 @@ module RailsPortal
       config.middleware.insert_before 0, Rack::Cors do
         allow do
           origins ENV['CORS_ORIGINS'] ? ENV['CORS_ORIGINS'].split(" ") : /^https?:\/\/.*\.concord.org/
-          resource ENV['CORS_RESOURCES'] || '*', headers: :any, expose: ['Location'], methods: [:get, :post, :options], credentials: true
+          resource ENV['CORS_RESOURCES'] || '*', headers: :any, expose: ['Location'], methods: [:get, :post, :put, :options], credentials: true
         end
       end
     end
