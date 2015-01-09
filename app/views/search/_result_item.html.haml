@@ -44,7 +44,7 @@
                 - else
                   = link_to "#{material.name}",link_url
                 - if current_visitor.has_role? ["admin","manager"]
-                  %span.superTiny= link_to "(edit)", edit_polymorphic_url(material)
+                  %span.superTiny= link_to "(edit options)", edit_polymorphic_url(material)
               - if material.parent
                 %span
                   from
