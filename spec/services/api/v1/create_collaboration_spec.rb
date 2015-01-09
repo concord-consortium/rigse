@@ -28,7 +28,7 @@ describe API::V1::CreateCollaboration do
           'password' => 'password'
         }
       ],
-      'host_with_port' => domain
+      'host_with_port' => URI(domain).host
     }
   end
 
