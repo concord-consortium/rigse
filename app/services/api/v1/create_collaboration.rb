@@ -11,7 +11,7 @@ class API::V1::CreateCollaboration
 
   attr_reader :result
 
-  # Instance of Portal::Collaboration generated after sucessful `call` execution.
+  # Instance of Portal::Collaboration generated after successful `call` execution.
   attr_reader :collaboration
 
   validate :owner_valid?
@@ -67,8 +67,7 @@ class API::V1::CreateCollaboration
     if @offering.external_activity?
       # Prepare ready URL for client so it can simply redirect without constructing the final URL itself.
       external_activity_url = @offering.runnable.url
-      # Domain is needed by LARA to authenticate correctly. It's a bit redundant, domain could be obtained
-      # from collaborators_data_url, but let's be consistent with individual run where we pass domain as well.
+      # Domain is needed by LARA to authenticate correctly.
       external_activity_url = add_param(external_activity_url, 'domain', root_url(host: self.host_with_port))
       external_activity_url = add_param(external_activity_url, 'collaborators_data_url', collaborators_data_url)
       result[:external_activity_url] = external_activity_url

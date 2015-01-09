@@ -3,8 +3,6 @@ class API::V1::ShowCollaboratorsData
   include Virtus.model
   include RailsPortal::Application.routes.url_helpers
 
-  ACCESS_TOKEN_EXPIRE_TIME = 1.day
-
   # Input
   attribute :collaboration_id, Integer
   attribute :host_with_port, String
@@ -30,10 +28,7 @@ class API::V1::ShowCollaboratorsData
         learner_id: learner.id,
         # This URL can be used by external activity system to publish back
         # student answers.
-        endpoint_url: external_activity_return_url(learner.id, host: self.host_with_port),
-        # Access token shouldn't be shared at all. Make sure that access to this
-        # service is very strict.
-        access_token: s.user.create_access_token_valid_for(ACCESS_TOKEN_EXPIRE_TIME)
+        endpoint_url: external_activity_return_url(learner.id, host: self.host_with_port)
       }
     end
   end
