@@ -61,7 +61,7 @@
               %td{:width=>"60px"}
                 %div{:style=>'float:right'}
                   = link_to "Edit", edit_url, :class=>"button", :target => "_blank"
-            - if external
+            - if external && current_user
               - if material.is_locked != true or material.author_email == current_visitor.email or current_visitor.has_role? 'admin'
                 %td{:width=>"65px"}
                   %div{:style=>'float:right'}
