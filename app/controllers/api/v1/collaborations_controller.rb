@@ -33,7 +33,7 @@ class API::V1::CollaborationsController < API::APIController
     show_endpoints = API::V1::ShowCollaboratorsData.new(input)
     result = show_endpoints.call
     if result
-      return render json: result
+      render json: result
     else
       error(show_endpoints.errors)
     end
@@ -47,6 +47,7 @@ class API::V1::CollaborationsController < API::APIController
     result = params.permit(:offering_id, {students: [:id, :password]})
     result[:owner_id] = current_visitor.portal_student && current_visitor.portal_student.id
     result[:host_with_port] = request.host_with_port
+    result[:protocol] = request.protocol
     result
   end
 
@@ -59,7 +60,8 @@ class API::V1::CollaborationsController < API::APIController
   def collaborators_data_input
     {
       collaboration_id: params.require(:id),
-      host_with_port: request.host_with_port
+      host_with_port: request.host_with_port,
+      protocol: request.protocol
     }
   end
 
@@ -75,7 +77,7 @@ class API::V1::CollaborationsController < API::APIController
   end
 
   def collaborators_data_auth(input)
-    return verify_request_is_peer
+    verify_request_is_peer
   end
 
   def class_member(input)

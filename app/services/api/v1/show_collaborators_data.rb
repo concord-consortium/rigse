@@ -6,6 +6,7 @@ class API::V1::ShowCollaboratorsData
   # Input
   attribute :collaboration_id, Integer
   attribute :host_with_port, String
+  attribute :protocol, String
 
   # Output
   attr_reader :result
@@ -23,12 +24,10 @@ class API::V1::ShowCollaboratorsData
       {
         name: s.user.name,
         email: s.user.email,
-        # Not sure why this is needed, but currently LARA expects that value
-        # for regular activity run.
+        # Not sure why this is needed, but currently LARA expects that value for regular activity run.
         learner_id: learner.id,
-        # This URL can be used by external activity system to publish back
-        # student answers.
-        endpoint_url: external_activity_return_url(learner.id, host: self.host_with_port)
+        # This URL can be used by external activity system to publish back  student answers.
+        endpoint_url: external_activity_return_url(learner.id, protocol: self.protocol, host: self.host_with_port)
       }
     end
   end

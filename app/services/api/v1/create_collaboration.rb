@@ -8,6 +8,7 @@ class API::V1::CreateCollaboration
   attribute :students, Array[Hash]
   attribute :owner_id, Integer
   attribute :host_with_port, String
+  attribute :protocol, String
 
   attr_reader :result
 
@@ -29,7 +30,7 @@ class API::V1::CreateCollaboration
   def owner_valid?
     return true if Portal::Student.exists?(self.owner_id)
     errors.add(:owner_id, "Collaboration can be created only by student")
-    return false
+    false
   end
 
   def students_valid?
@@ -43,23 +44,25 @@ class API::V1::CreateCollaboration
         return false
       end
     end
-    return true
+    true
   end
 
   def offering_valid?
     return true if Portal::Offering.exists?(self.offering_id)
     errors.add(:offering_id, "Unknown offering ID")
-    return false
+    false
   end
 
   private
 
   def persist!
-    return persist_collaboration
+    persist_collaboration
   end
 
   def json_result
-    collaborators_data_url = collaborators_data_api_v1_collaboration_url(self.collaboration, host: self.host_with_port)
+    collaborators_data_url = collaborators_data_api_v1_collaboration_url(self.collaboration,
+                                                                         protocol: self.protocol,
+                                                                         host:     self.host_with_port)
     result = {
       id: self.collaboration.id,
       collaborators_data_url: collaborators_data_url
@@ -68,7 +71,8 @@ class API::V1::CreateCollaboration
       # Prepare ready URL for client so it can simply redirect without constructing the final URL itself.
       external_activity_url = @offering.runnable.url
       # Domain is needed by LARA to authenticate correctly.
-      external_activity_url = add_param(external_activity_url, 'domain', root_url(host: self.host_with_port))
+      external_activity_url = add_param(external_activity_url, 'domain', root_url(protocol: self.protocol,
+                                                                                  host:     self.host_with_port))
       external_activity_url = add_param(external_activity_url, 'collaborators_data_url', collaborators_data_url)
       result[:external_activity_url] = external_activity_url
     end
@@ -91,7 +95,7 @@ class API::V1::CreateCollaboration
 
     setup_learners
     setup_bundles unless @offering.external_activity?
-    return true
+    true
   end
 
   def setup_learners
@@ -134,7 +138,7 @@ class API::V1::CreateCollaboration
     password   = student_hash['password']
     user       = Portal::Student.find(student_id).user
     return true if User.authenticate(user.login, password)
-    return false
+    false
   end
 
   def add_param(url, param_name, param_value)

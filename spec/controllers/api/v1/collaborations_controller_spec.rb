@@ -128,7 +128,7 @@ describe API::V1::CollaborationsController do
     context "when a non-valid authentication header token is sent" do
       let(:security_header_sent) { "bogusvalue" }
 
-      it "returns list of student data and endpoints" do
+      it "returns an error" do
         set_auth_token(security_header_sent)
         get :collaborators_data, {id: @collaboration_id}
         expect(response.status).to eq(401)

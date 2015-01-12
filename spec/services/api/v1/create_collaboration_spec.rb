@@ -2,7 +2,8 @@
 require 'spec_helper'
 
 describe API::V1::CreateCollaboration do
-  let(:domain)   { 'http://portal.org/' }
+  let(:protocol) { 'https://' }
+  let(:domain)   { "#{protocol}portal.org/" }
   let(:student1) { Factory(:full_portal_student) }
   let(:student2) { Factory(:full_portal_student) }
   let(:students) { [student1, student2] }
@@ -28,6 +29,7 @@ describe API::V1::CreateCollaboration do
           'password' => 'password'
         }
       ],
+      'protocol' => protocol,
       'host_with_port' => URI(domain).host
     }
   end
@@ -64,6 +66,22 @@ describe API::V1::CreateCollaboration do
       expect(result[:collaborators_data_url]).not_to be_nil
       expect(result[:external_activity_url]).to be_nil
       expect(create_collaboration.collaboration).to_not be_nil
+    end
+
+    describe "should respect protocol" do
+      subject do
+        create_collaboration = API::V1::CreateCollaboration.new(params)
+        result = create_collaboration.call
+        result[:collaborators_data_url]
+      end
+      describe "http" do
+        let (:protocol) { 'http://' }
+        it { should start_with(domain) }
+      end
+      describe "https" do
+        let (:protocol) { 'https://' }
+        it { should start_with(domain) }
+      end
     end
 
     context "when offering is an external activity" do
