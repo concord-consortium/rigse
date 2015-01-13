@@ -52,7 +52,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/geniverse-portal-integration
-  revision: e23bf8a6d176316f4b96dc1774721d9a8d6e8424
+  revision: 95bde30fe170b0c252f5463dc723351bcf6348f4
   specs:
     geniverse_portal_integration (0.0.6)
       haml (~> 3.1.4)
