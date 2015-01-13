@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/cc_portal_remote_auth
-  revision: 7618fb0462577da07f6ca7206707b709045c9ae1
+  revision: 8fdaefc7b8162cc89edc432f0afb8bc9e086e2bd
   specs:
     cc_portal_remote_auth (0.0.3)
       devise (~> 2.1.0)
