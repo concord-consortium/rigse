@@ -46,7 +46,7 @@ class Portal::OfferingsController < ApplicationController
         render 'pages/show', :layout => "layouts/run"
       }
 
-      format.run_external_html   {
+      format.run_resource_html   {
          if learner = setup_portal_student
            cookies[:save_path] = @offering.runnable.save_path
            cookies[:learner_id] = learner.id
@@ -191,7 +191,7 @@ class Portal::OfferingsController < ApplicationController
         render :layout => 'report' # report.html.haml
       }
 
-      format.run_external_html   {
+      format.run_resource_html   {
         @learners = @offering.clazz.students.map do |l|
           "name: '#{l.name}', id: #{l.id}"
         end

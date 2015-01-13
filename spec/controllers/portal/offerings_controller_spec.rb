@@ -52,7 +52,7 @@ describe Portal::OfferingsController do
     it "saves learner data in the cookie" do
       @runnable.append_learner_id_to_url = false
 
-      get :show, :id => @offering.id, :format => 'run_external_html'
+      get :show, :id => @offering.id, :format => 'run_resource_html'
       response.cookies["save_path"].should == @offering.runnable.save_path
       response.cookies["learner_id"].should == @learner.id.to_s
       response.cookies["student_name"].should == "#{@user.first_name} #{@user.last_name}"
@@ -65,7 +65,7 @@ describe Portal::OfferingsController do
     it "appends the learner id to the url" do
       @runnable.append_learner_id_to_url = true
       # @runnable.stub!(:append_learner_id_to_url).and_return(true)
-      get :show, :id => @offering.id, :format => 'run_external_html'
+      get :show, :id => @offering.id, :format => 'run_resource_html'
       response.should redirect_to(@runnable_opts[:url] + "?learner=#{@learner.id}")
     end
   end

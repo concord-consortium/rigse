@@ -20,7 +20,7 @@ development: &id003
   :site_district: SmartGraphs District
   :site_name: SmartGraphs
   :site_url: http://smartgraphs.dev.concord.org
-  :runnable_mime_type: run_external_html
+  :runnable_mime_type: run_resource_html
   :runnables_use: browser
   :default_admin_user:
     :first_name: Aaron

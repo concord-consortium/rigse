@@ -111,7 +111,7 @@ class ExternalActivitiesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
-      format.run_external_html   { redirect_to(@external_activity.url) }
+      format.run_resource_html   { redirect_to(@external_activity.url) }
       format.xml  { render :xml => @external_activity }
     end
   end
