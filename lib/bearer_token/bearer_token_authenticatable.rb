@@ -7,7 +7,6 @@ module BearerTokenAuthenticatable
 
     def authenticate!
       resource = mapping.to.find_for_token_authentication(mapping.to.token_authentication_key => token_value)
-      Rails.logger.warn "resource: #{resource}"
       return fail(:invalid_token) unless resource
 
       if validate(resource)
@@ -20,7 +19,6 @@ module BearerTokenAuthenticatable
 
     def token_value
       header = request.headers["Authorization"]
-      Rails.logger.warn "header: #{header}"
       if header && header =~ /^Bearer (.*)$/
         $1
       else
