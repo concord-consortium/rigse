@@ -37,7 +37,7 @@
         .title
           = parent_material.title
         .material_type
-          = parent_material.model_name.titleize
+          = parent_material.model_name == "ExternalActivity" ? material.template_type.titleize : parent_material.model_name.titleize
       %td{:style=>'padding-top:0'}
         %div{:style=>'float:left;padding:3px'}
           = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor}
