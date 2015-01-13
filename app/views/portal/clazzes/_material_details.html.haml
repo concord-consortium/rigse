@@ -4,16 +4,14 @@
     %div
       %table.investigationdata{:width=>"100%"}
         %tr
-          %td.subheader= runnable.class.display_name + ':'
+          %td.subheader= (runnable.class.display_name == 'External Activity' ? 'Activity' : runnable.class.display_name) + ':'
           %td
             %div{:style=>"float:left;font-size:16px;font-weight:bold;"}
               = current_offering.name
             %div{:style=>"float:left;padding-top:2px"}
               = "(assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
           %td{:style=>"white-space:nowrap"}
-            = link_to "Run as Teacher", run_url_for(runnable, {:teacher_mode => true}), :class=>"button pie", :target=>'_blank'
-            %div{:style=>"height:10px"}
-            = link_to "Run as Student", run_url_for(runnable, {}), :class=>"button pie", :target=>'_blank'
+            = render :partial => '/browse/preview', :locals => {:material => runnable, :current_visitor => current_visitor}
             %div{:style=>"height:10px"}
             = teacher_guide_link(runnable)
       - if runnable.is_a? Investigation
