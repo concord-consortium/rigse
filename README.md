@@ -931,7 +931,6 @@ should be written for it.
 * a default css file with blank selectors for common rails elements
 
 
-
 ## Copy & Paste Guide:
 
     git clone git@github.com:concord-consortium/rigse.git ./xproject
@@ -953,3 +952,8 @@ should be written for it.
     rake db:dump
     ruby script/server -e production
 (end)
+
+
+## License
+
+CC Rails Portal is released under the [MIT License](LICENSE).
