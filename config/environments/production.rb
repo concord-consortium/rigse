@@ -79,5 +79,5 @@ RailsPortal::Application.configure do
   
   # Generate digests for assets' URLs.
   config.assets.digest = true
-  config.action_mailer.default_url_options = {:protocol => 'https', :host => APP_CONFIG[:host] }
+  config.action_mailer.default_url_options = {:protocol => APP_CONFIG[:protocol], :host => APP_CONFIG[:host] }
 end

@@ -15,7 +15,7 @@ RailsPortal::Application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
-  config.action_mailer.default_url_options = {:protocol => 'https', :host => APP_CONFIG[:host] }
+  config.action_mailer.default_url_options = {:protocol => APP_CONFIG[:protocol], :host => APP_CONFIG[:host] }
   config.action_mailer.delivery_method = :test
   config.action_mailer.raise_delivery_errors = false
   

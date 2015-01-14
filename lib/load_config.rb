@@ -12,7 +12,9 @@ app_config = {
   :host => nil
 }.merge(app_config)
 
-app_config[:host] = app_config[:site_url].gsub("http://","").gsub("https://","")
+site_url = URI.parse(app_config[:site_url])
+app_config[:protocol] = site_url.scheme 
+app_config[:host] = site_url.to_s.gsub("http://","").gsub("https://","")
 
 USING_RITES = app_config[:theme] && (app_config[:theme] == 'default' || app_config[:theme] == 'rites')
 NOT_USING_RITES = !USING_RITES
