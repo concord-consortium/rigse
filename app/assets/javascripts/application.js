@@ -51,4 +51,5 @@
 = require 'angular/signup'
 = require 'angular/collaboration'
 = require 'angular/portal_app'
+= require 'external_activities/matedit'
 */
