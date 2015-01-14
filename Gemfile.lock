@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/cc_portal_remote_auth
-  revision: b556e301b0f0d0ced5c69cd72d2100869d3313fe
+  revision: 8fdaefc7b8162cc89edc432f0afb8bc9e086e2bd
   specs:
     cc_portal_remote_auth (0.0.3)
       devise (~> 2.1.0)
@@ -49,6 +49,16 @@ GIT
       haml (~> 3.1.4)
       json (~> 1.7.6)
       rails (~> 3.2.11)
+
+GIT
+  remote: git://github.com/concord-consortium/geniverse-portal-integration
+  revision: 95bde30fe170b0c252f5463dc723351bcf6348f4
+  specs:
+    geniverse_portal_integration (0.0.6)
+      haml (~> 3.1.4)
+      json (~> 1.7.6)
+      rails (~> 3.2.19)
+      spreadsheet (>= 0.7.3)
 
 GIT
   remote: git://github.com/concord-consortium/haml.git
@@ -576,6 +586,7 @@ DEPENDENCIES
   ffi-ncurses (~> 0.3.3)
   font-awesome-sass
   genigames_connector (= 0.0.4)!
+  geniverse_portal_integration!
   grit (~> 2.4)
   guard-cucumber
   guard-rspec

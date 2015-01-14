@@ -155,6 +155,7 @@ class SearchController < ApplicationController
           elsif runnable_type == "ExternalActivity"
             material = ::ExternalActivity.find(params[:material_id])
             used_in_clazz_count = material.offerings_count
+            runnable_display_name = material.template_type
           end
 
           if(used_in_clazz_count == 0)
@@ -167,7 +168,7 @@ class SearchController < ApplicationController
 
           if clazz_ids.count > 0
             page << "close_popup()"
-            page << "getMessagePopup('<div class=\"feedback_message\">#{runnable_type} is assigned to the selected class(es) successfully.</div>')"
+            page << "getMessagePopup('<div class=\"feedback_message\">#{runnable_type == "ExternalActivity" ? runnable_display_name : runnable_type} is assigned to the selected class(es) successfully.</div>')"
             page.replace_html "material_clazz_count", class_count_desc
             if !material_parent.nil? && runnable_type == "Activity"
               used_in_clazz_count = material.offerings_count + material.parent.offerings_count

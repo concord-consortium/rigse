@@ -207,7 +207,7 @@ describe RunnablesHelper do
 
     it "should render a link for an External Activity" do
       ext_act = stub_model(ExternalActivity, :name => "Fetching Wood", :template_type => "Investigation")
-      helper.run_link_for(ext_act).should be_link_like("http://test.host/external_activities/#{ext_act.id}.run_external_html",
+      helper.run_link_for(ext_act).should be_link_like("http://test.host/external_activities/#{ext_act.id}.run_resource_html",
                                                        "run_link rollover",
                                                        asset_path("run.png"))
     end

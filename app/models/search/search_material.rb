@@ -47,7 +47,7 @@ class Search::SearchMaterial
     self.title = material.full_title
     self.description = material.description
     self.description_for_teacher = material.description_for_teacher
-    self.assign_btn_text = "Assign #{self.model_name.titleize}"
+    self.assign_btn_text = (material.is_a? ::ExternalActivity) ? "Assign" : "Assign #{self.model_name.titleize}"
     self.icon_image_url = material.icon_image || "search/#{self.model_name.downcase}.gif"
     self.activities = (material.respond_to?(:activities)) ? material.activities : nil
     self.selected_activities = []
@@ -66,7 +66,7 @@ class Search::SearchMaterial
 
     self.other_data[:probe_types] = self.probe_types(material)
     self.other_data[:required_equipments] = self.other_data[:probe_types].map { |p| p.name }.join(", ")
-
+    
     if material.is_a? ::Investigation
 
       self.url = {:only_path => false, :controller => 'investigations', :action => 'show', :id => self.id}

@@ -51,7 +51,9 @@ class ActivityRuntimeAPI
         :launch_url  => hash["launch_url"] || hash["create_url"],
         :template         => activity,
         :publication_status => "published",
-        :user => user
+        :user => user,
+        :author_email => hash["author_email"],
+        :is_locked => hash["is_locked"]
       )
       # update activity so external_activity.template is correctly initialzed
       # otherwise external_activity.template.is_template? won't be true
@@ -87,6 +89,10 @@ class ActivityRuntimeAPI
       end
     end
 
+    ['author_email', 'is_locked'].each do |attribute|
+      external_activity.update_attribute(attribute,hash[attribute])
+    end
+    
     # save the embeddables
     mc_cache = {}
     or_cache = {}
@@ -144,7 +150,9 @@ class ActivityRuntimeAPI
         :launch_url       => hash["launch_url"] || hash["create_url"],
         :template         => investigation,
         :publication_status => "published",
-        :user => user
+        :user => user,
+        :author_email => hash["author_email"],
+        :is_locked => hash["is_locked"]
       )
       # update investigation so external_activity.template is correctly initialzed
       # otherwise external_activity.template.is_template? won't be true
@@ -175,7 +183,7 @@ class ActivityRuntimeAPI
         act.update_attribute(attribute,hash[attribute])
       end
     end
-
+    external_activity.update_attribute('author_email',hash['author_email'])
     # save the embeddables
     mc_cache = {}
     or_cache = {}

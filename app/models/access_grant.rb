@@ -10,7 +10,8 @@ class AccessGrant < ActiveRecord::Base
   scope :valid_at, lambda { |time| where("access_token_expires_at > ?", time).order('access_token_expires_at DESC') }
 
   def self.prune!
-    delete_all(["access_token_expires_at < ?", 1.days.ago])
+    # We need to delete tokens that have expired...
+    delete_all(["access_token_expires_at < ?", 1.minute.ago])
   end
 
   def self.authenticate(code, application_id)

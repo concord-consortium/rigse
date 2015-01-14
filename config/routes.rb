@@ -138,7 +138,7 @@ RailsPortal::Application.routes.draw do
           post :show
         end
       end
-      resources :external_activities do
+      resources :external_activities, path: 'resources' do
         member do
           post :show
         end
@@ -517,7 +517,6 @@ RailsPortal::Application.routes.draw do
         get :print
         post :delete_activity
         get :export
-        get :matedit
       end
     end
 
@@ -554,13 +553,14 @@ RailsPortal::Application.routes.draw do
     match '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list, :method => :get
     match '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :method => :post, :version => /v\d+/
     match '/external_activities/republish/:version' => 'external_activities#republish', :as => :external_activity_republish, :method => :post, :version => /v\d+/
-    resources :external_activities do
+    resources :external_activities, path: 'resources' do
       collection do
         post :publish
       end
       member do
         get :duplicate
         get :matedit
+        get :copy
       end
     end
 
@@ -660,4 +660,9 @@ RailsPortal::Application.routes.draw do
 
     root :to => 'home#index'
   end
+  # Web interface to show the delayed jobs for admins
+  match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post], :constraints => lambda { |request|
+    warden = request.env['warden']
+    warden.user && warden.user.has_role?("admin")
+  }
 end

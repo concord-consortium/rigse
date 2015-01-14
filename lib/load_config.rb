@@ -12,7 +12,7 @@ app_config = {
   :host => nil
 }.merge(app_config)
 
-app_config[:host] = app_config[:site_url].gsub("http://","")
+app_config[:host] = app_config[:site_url].gsub("http://","").gsub("https://","")
 
 USING_RITES = app_config[:theme] && (app_config[:theme] == 'default' || app_config[:theme] == 'rites')
 NOT_USING_RITES = !USING_RITES

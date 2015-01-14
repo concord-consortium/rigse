@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141014105134) do
+ActiveRecord::Schema.define(:version => 20150102094208) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -799,6 +799,8 @@ ActiveRecord::Schema.define(:version => 20141014105134) do
     t.boolean  "has_pretest",              :default => false
     t.text     "abstract"
     t.boolean  "allow_collaboration",      :default => false
+    t.string   "author_email"
+    t.boolean  "is_locked"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
