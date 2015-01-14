@@ -29,13 +29,11 @@
   %div
     %table.material_detail
       %tr
-        %td.title= "#{t(:investigation).titleize}:"
         %td
           = investigation_name
 - if activity_name.length > 0
   %table.material_detail
     %tr
-      %td.title Activity: 
       %td 
         = activity_name.html_safe
     %tr
