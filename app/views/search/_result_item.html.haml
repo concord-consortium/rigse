@@ -70,7 +70,7 @@
                 %td{:width=>"70px"}
                   %div{:style=>'float:right'}
                     = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"
-            - unless material.teacher_guide_url.blank? && (current_user && (current_user.has_role? "admin"))
+            - if material.teacher_guide_url || current_visitor.portal_teacher
               %td{:width=>"130px"}
                 %div{:style=>'float:right'}
                   - if current_visitor.portal_teacher
