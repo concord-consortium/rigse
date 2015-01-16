@@ -57,23 +57,28 @@
             %td{:width=>"90px"}
               %div{:style=>'float:right'}
                 = render :partial => '/browse/preview', :locals => {:material => material, :current_visitor => current_visitor}
+            - if (material.is_a? ExternalActivity) && (current_visitor.has_role? 'admin')
+              %td{:width=>"110px"}
+                %div{:style=>'float:right'}
+                  = link_to "Edit in iframe", matedit_external_activity_url(material,:iFrame => true), :class=>"button", :target => "_blank"
             - if (material.is_a? ExternalActivity) && (current_visitor.id == material.user_id or material.author_email == current_visitor.email or current_visitor.has_role? 'admin')
               %td{:width=>"60px"}
                 %div{:style=>'float:right'}
                   = link_to "Edit", edit_url, :class=>"button", :target => "_blank"
             - if external && current_user
               - if material.is_locked != true or material.author_email == current_visitor.email or current_visitor.has_role? 'admin'
-                %td{:width=>"65px"}
+                %td{:width=>"70px"}
                   %div{:style=>'float:right'}
                     = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"
-            %td{:width=>"130px"}
-              %div{:style=>'float:right'}
-                - if current_visitor.portal_teacher
-                  = assign_material_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')")
-                - else
-                  = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
-              %div{:style=>'float:right;text-align: right; margin-top: 3px;'}
-                = teacher_guide_link(material)
+            - if material.teacher_guide_url || current_visitor.portal_teacher
+              %td{:width=>"130px"}
+                %div{:style=>'float:right'}
+                  - if current_visitor.portal_teacher
+                    = assign_material_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')")
+                  - else
+                    = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
+                %div{:style=>'float:right;text-align: right; margin-top: 3px;'}
+                  = teacher_guide_link(material)
 
 
           %tr

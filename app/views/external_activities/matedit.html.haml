@@ -1,0 +1,12 @@
+- @wide_content_layout = true
+#Activity_edit_container
+  .action_menu
+    .action_menu_header_left
+      %h3.menu
+        %span.component_title 
+        #{@external_activity.name} Editing
+    .action_menu_header_right
+      = link_to "Edit Resource Availability", "javascript:void(0)",:onclick=>"get_edit_resource_popup(#{@external_activity.id})", :class=>"button"
+  -#messgeedit This is edit lara activity page
+  #iframe_container
+    %iframe{:id => "Edit_in_Lara",:src =>"#{@uri}",:width => "1000",:height => "800",:style => "border :0;"}
