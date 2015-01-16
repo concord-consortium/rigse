@@ -37,15 +37,16 @@
         .title
           = parent_material.title
         .material_type
-          = parent_material.model_name == "ExternalActivity" ? material.template_type.titleize : parent_material.model_name.titleize
+          = parent_material.model_name == "ExternalActivity" ? material.template_type ? material.template_type.titleize : "Activity" : parent_material.model_name.titleize
       %td{:style=>'padding-top:0'}
         %div{:style=>'float:left;padding:3px'}
           = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor}
-        - if (material.is_a? ExternalActivity) && (current_visitor.id == material.user_id or material.author_email == current_visitor.email or current_visitor.has_role? 'admin')
-          %div{:style=>'float:left;padding:3px'}
-            = link_to "Edit", matedit_external_activity_url(material,:iFrame => false), :class=>"button", :target => "_blank"
-        - if external && (current_user && !current_user.portal_student) 
-          - if material.is_locked != true or material.author_email == current_visitor.email or current_visitor.has_role? 'admin'
+        -if external
+          - if material.template_type && ((current_visitor.has_role? 'admin','manager') || (material.author_email == current_visitor.email && (current_visitor.has_role? 'author')))
+            %div{:style=>'float:left;padding:3px'}
+              = link_to "Edit", matedit_external_activity_url(material,:iFrame => false), :class=>"button", :target => "_blank"
+        -if external
+          - if material.template_type && ((current_visitor.has_role? 'admin','manager') || (material.is_locked && (material.author_email == current_visitor.email && (current_visitor.has_role? 'author'))) || (!material.is_locked && (current_visitor.has_role? 'author')))
             %div{:style=>'float:left;padding:3px'}
               = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"  
         %div{:style=>'float:left;padding:3px'}
