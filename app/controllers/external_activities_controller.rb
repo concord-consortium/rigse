@@ -131,7 +131,7 @@ class ExternalActivitiesController < ApplicationController
   def edit
     @external_activity = ExternalActivity.find(params[:id])
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :external_activity => @external_activity }
+      render :partial => 'form'
     end
   end
 

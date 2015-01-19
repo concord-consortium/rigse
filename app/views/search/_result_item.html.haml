@@ -44,7 +44,9 @@
                 - else
                   = link_to "#{material.name}",link_url
                 - if current_visitor.has_role? ["admin","manager"]
-                  %span.superTiny= link_to "(edit options)", edit_polymorphic_url(material)
+                  %span.superTiny= link_to "(edit&nbsp;options)".html_safe, edit_polymorphic_url(material)
+                - if external && material.template_type && (current_visitor.has_role? 'admin')
+                  %span.superTiny= link_to "(Edit&nbsp;in&nbsp;iframe)".html_safe, matedit_external_activity_url(material,:iFrame => true), :target => "_blank"
               - if material.parent
                 %span
                   from
@@ -57,10 +59,6 @@
             %td{:width=>"90px"}
               %div{:style=>'float:right'}
                 = render :partial => '/browse/preview', :locals => {:material => material, :current_visitor => current_visitor}
-            - if external && material.template_type && (current_visitor.has_role? 'admin')
-              %td{:width=>"110px"}
-                %div{:style=>'float:right'}
-                  = link_to "Edit in iframe", matedit_external_activity_url(material,:iFrame => true), :class=>"button", :target => "_blank"
             -if external
               - if material.template_type && ((current_visitor.has_role? 'admin','manager') || (material.author_email == current_visitor.email && (current_visitor.has_role? 'author')))
                 %td{:width=>"60px"}
