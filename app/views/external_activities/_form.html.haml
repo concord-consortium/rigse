@@ -47,6 +47,10 @@
       .config
         = f.check_box :is_official
         Designate this as an "official" Concord activity in lists
+    - if (current_visitor.has_role? 'admin') &&  (@external_activity.template_type == "Activity")
+      .config
+        = f.check_box :is_locked
+        Do not allow to copy this activity.
   = field_set_tag 'Save Path' do
     = f.text_field :save_path
   = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }
