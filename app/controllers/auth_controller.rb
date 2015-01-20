@@ -50,13 +50,15 @@ class AuthController < ApplicationController
       :provider => 'concord_id',
       :id => current_user.id.to_s,
       :info => {
-         :email      => current_user.email,
+        :email      => current_user.email,
       },
       :extra => {
-         :first_name => current_user.first_name,
-         :last_name  => current_user.last_name,
-         :full_name  => current_user.name,
-         :username   => current_user.login
+        :first_name => current_user.first_name,
+        :last_name  => current_user.last_name,
+        :full_name  => current_user.name,
+        :username   => current_user.login,
+        :user_id    => current_user.id,
+        :domain     => request.host_with_port
       }
     }
 
