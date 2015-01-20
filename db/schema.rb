@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150102094208) do
+ActiveRecord::Schema.define(:version => 20150120071039) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1022,6 +1022,7 @@ ActiveRecord::Schema.define(:version => 20150102094208) do
     t.datetime "updated_at",                                     :null => false
     t.string   "section"
     t.boolean  "default_class",               :default => false
+    t.boolean  "logging",                     :default => false
   end
 
   add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
