@@ -74,6 +74,8 @@ class API::V1::CreateCollaboration
       external_activity_url = add_param(external_activity_url, 'domain', root_url(protocol: self.protocol,
                                                                                   host:     self.host_with_port))
       external_activity_url = add_param(external_activity_url, 'collaborators_data_url', collaborators_data_url)
+      
+      external_activity_url = add_param(external_activity_url, 'logging', @offering.clazz.logging)
       result[:external_activity_url] = external_activity_url
     end
     result

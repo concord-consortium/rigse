@@ -65,7 +65,8 @@ class Portal::OfferingsController < ApplicationController
            uri.query = {
              :domain => root_url,
              :externalId => learner.id,
-             :returnUrl => external_activity_return_url(learner.id)
+             :returnUrl => external_activity_return_url(learner.id),
+             :logging => @offering.clazz.logging
            }.to_query
            redirect_to(uri.to_s)
          else
