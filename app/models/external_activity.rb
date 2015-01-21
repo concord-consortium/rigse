@@ -136,6 +136,11 @@ class ExternalActivity < ActiveRecord::Base
   def material_type
     template_type ? template_type : 'Activity'
   end
+  
+  def display_name
+    return template.display_name if template
+    return ExternalActivity.display_name
+  end
 
   # methods to mimic Activity
   def teacher_only
