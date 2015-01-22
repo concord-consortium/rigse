@@ -42,11 +42,11 @@
         %div{:style=>'float:left;padding:3px'}
           = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor}
         -if external
-          - if material.template_type && ((current_visitor.has_role? 'admin','manager') || (material.author_email == current_visitor.email && (current_visitor.has_role? 'author')))
+          - if material.launch_url  && ((current_visitor.has_role? 'admin','manager') || (material.author_email == current_visitor.email && (current_visitor.has_role? 'author')))
             %div{:style=>'float:left;padding:3px'}
               = link_to "Edit", matedit_external_activity_url(material,:iFrame => false), :class=>"button", :target => "_blank"
         -if external
-          - if material.template_type && ((current_visitor.has_role? 'admin','manager') || (material.is_locked && (material.author_email == current_visitor.email && (current_visitor.has_role? 'author'))) || (!material.is_locked && (current_visitor.has_role? 'author')))
+          - if material.launch_url  && ((current_visitor.has_role? 'admin','manager') || (material.is_locked && (material.author_email == current_visitor.email && (current_visitor.has_role? 'author'))) || (!material.is_locked && (current_visitor.has_role? 'author')))
             %div{:style=>'float:left;padding:3px'}
               = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"  
         %div{:style=>'float:left;padding:3px'}
