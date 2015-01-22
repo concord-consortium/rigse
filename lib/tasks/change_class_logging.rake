@@ -23,7 +23,7 @@ def update_logging(status,classids)
   end
 end
 
-namespace :protal_class_logging do
+namespace :portal_class_logging do
   require 'highline/import'
 
   desc "enable logging for classes"
