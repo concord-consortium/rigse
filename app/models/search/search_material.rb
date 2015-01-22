@@ -47,7 +47,7 @@ class Search::SearchMaterial
     self.title = material.full_title
     self.description = material.description
     self.description_for_teacher = material.description_for_teacher
-    self.assign_btn_text = (material.is_a? ::ExternalActivity) ? "Assign" : "Assign #{self.model_name.titleize}"
+    self.assign_btn_text = (material.is_a? ::ExternalActivity) ? "Assign" : "Assign #{material.display_name}"
     self.icon_image_url = material.icon_image || "search/#{self.model_name.downcase}.gif"
     self.activities = (material.respond_to?(:activities)) ? material.activities : nil
     self.selected_activities = []
