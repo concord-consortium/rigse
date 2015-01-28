@@ -53,8 +53,7 @@ source "http://rubygems.org"
   gem 'rdoc',                 "~> 3.6.1"
   gem 'json',                 "~> 1.5.1"
   gem 'calendar_date_select'
-  gem 'shutterbug',  :git => "git://github.com/concord-consortium/shutterbug.git", :tag => "v0.2.4"
-  
+
   gem "newrelic_rpm",         "~> 3.5.3.25"
   #git "/Users/npaessel/lab/ruby/deep_cloneable", :branch => "cloneable_assocations" do
   git "git://github.com/concord-consortium/deep_cloneable.git", :branch => "cloneable_assocations" do

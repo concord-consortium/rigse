@@ -70,16 +70,13 @@
         $j("##{dom_id_for(diy_embedded_model, :model_interactive_snapshots)}").removeClass('unavailable');
         (function() {
           var optCallbackFn = function(msg) {
-            var reg = /img src='([^']*)'/;
-            var match = reg.exec(msg);
-            if (match[1] != null) {
-              show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}&todo=create&source_url=http://" + window.location.host + match[1]);
+            if (msg !== null) {
+              show_labbook("#{Labbook.url(local_assigns[:learner] || current_user, request, diy_embedded_model)}&todo=create&source_url=" + msg);
             }
             $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').removeClass("disabled");
             $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').text("Take a Snapshot");
           };
 
-          var shutterbug = new Shutterbug("##{dom_id_for(diy_embedded_model, :model_interactive)} iframe", null, optCallbackFn, "#{dom_id_for(diy_embedded_model, :model_take_snapshot)}", $j);
           $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').click(function() {
             if (#{current_user.anonymous?}) {
               alert("You must be logged in to take snapshots.");
@@ -87,10 +84,7 @@
             } else {
               $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').addClass("disabled");
               $j('##{dom_id_for(diy_embedded_model, :model_take_snapshot)}').text("Taking snapshot...");
-              if (shutterbug.useIframeSizeHack) {
-                shutterbug.useIframeSizeHack(true);
-              }
-              shutterbug.getDomSnapshot();
+              Shutterbug.snapshot({ selector: "##{dom_id_for(diy_embedded_model, :model_interactive)} iframe", done: optCallbackFn, server: '//snapshot.concord.org/shutterbug' });
               return false;
             }
           });

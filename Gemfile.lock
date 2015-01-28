@@ -20,15 +20,6 @@ GIT
     diff-comparison (0.0.1)
       diff-lcs (~> 1.2)
 
-GIT
-  remote: git://github.com/concord-consortium/shutterbug.git
-  revision: 8dd7279d76fc32b2baf3759313e3419c057cbf91
-  tag: v0.2.4
-  specs:
-    shutterbug (0.2.4)
-      fog
-      rack
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -92,23 +83,11 @@ GEM
       chronic
     diff-lcs (1.2.5)
     email_spec (0.3.5)
-    excon (0.6.6)
     factory_girl (1.2.3)
     fakeweb (1.2.8)
     fastercsv (1.5.0)
     ffi (1.0.9)
     ffi (1.0.9-x86-mingw32)
-    fog (0.9.0)
-      builder
-      excon (~> 0.6.1)
-      formatador (>= 0.1.3)
-      json
-      mime-types
-      net-scp (>= 1.0.4)
-      net-ssh (>= 2.1.4)
-      nokogiri (>= 1.4.4)
-      ruby-hmac
-    formatador (0.2.5)
     gherkin (2.4.21)
       json (>= 1.4.6)
     gherkin (2.4.21-x86-mingw32)
@@ -208,7 +187,6 @@ GEM
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
-    ruby-hmac (0.4.0)
     ruby-ole (1.2.11.1)
     ruby_parser (2.0.6)
       sexp_processor (~> 3.0)
@@ -295,7 +273,6 @@ DEPENDENCIES
   rspec (~> 1.3.0)
   rspec-rails (~> 1.3.2)
   ruby-debug
-  shutterbug!
   spork
   spreadsheet
   syntax (~> 1.0)

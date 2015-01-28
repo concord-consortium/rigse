@@ -12,7 +12,6 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
-require 'shutterbug'
 require 'omniauth'
 
 Rails::Initializer.run do |config|
@@ -33,14 +32,6 @@ Rails::Initializer.run do |config|
   #   run ActionController::Dispatcher.new
   
   config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
-  config.middleware.use Shutterbug::Rackapp do |conf|
-    conf.phantom_bin_path = "/usr/bin/phantomjs"
-  end
-  # config.middleware.use Shutterbug::Rackapp do |conf|
-  #   conf.uri_prefix = "http://shutterbug.herokuapp.com/"
-  #   conf.path_prefix = "/shutterbug"
-  #   conf.phantom_bin_path = "/app/vendor/phantomjs/bin/phantomjs"
-  # end
 
   if ENV['SCHOOLOGY_CONSUMER_KEY'] && ENV['SCHOOLOGY_CONSUMER_SECRET']
     config.middleware.use OmniAuth::Builder do
