@@ -106,3 +106,11 @@ document.observe("dom:loaded", function() {
 		}
 	}
 });
+
+Ajax.Responders.register({
+  onException:function(request) {
+  	if(request.transport.status == 401 && request.transport.response == "Not Teacher") {
+  		msgPopupDescriptionText();
+  	}
+  }
+});

@@ -215,12 +215,12 @@ function get_Assign_To_Class_Popup(material_id,material_type)
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         title:"Assign Materials to a Class"
     };
-    list_lightbox=new Lightbox(lightboxConfig);
     var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_clazzes_path') %>";
      var options = {
         method: 'post',
         parameters : {'material_type':material_type,'material_id':material_id},
         onSuccess: function(transport) {
+            list_lightbox=new Lightbox(lightboxConfig);
             var text = transport.responseText;
             text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
             list_lightbox.handle.setContent("<div id='windowcontent' style='padding:10px'>" + text + "</div>");
@@ -354,7 +354,10 @@ function getMessagePopup(message)
         height: 150,
         closeOnNextPopup: true,
         type: Lightbox.type.ALERT,
-        content: content
+        content: content,
+        callback: function(){
+    	    location.reload();
+        }
     };
 
     g_messageModal = new Lightbox(lightboxConfig);

@@ -1,12 +1,21 @@
 class SearchController < ApplicationController
 
   before_filter :teacher_only, :only => [:index, :show]
-
+  before_filter :check_if_teacher, :only => [:get_current_material_unassigned_clazzes, :add_material_to_clazzes]
+  
   protected
 
   def teacher_only
     if current_visitor.portal_student
       redirect_to(:root)
+    end
+  end
+  
+   def check_if_teacher
+    if current_visitor.portal_teacher.nil? && request.xhr?
+      respond_to do |format|
+        format.js { render :json => "Not Teacher",:status => 401 }
+      end
     end
   end
 
