@@ -6,6 +6,7 @@ if File.exists?(config_file)
     c.each do |key,val|
       Paperclip::Attachment.default_options[key.to_sym] = val
     end
+    Paperclip::Attachment.default_options[:s3_protocol] = APP_CONFIG[:protocol]
 else
   Rails.logger.info("no configuration file for Paperclip. Using defaults. (no s3 storage)")
 end
