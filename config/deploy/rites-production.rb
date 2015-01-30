@@ -3,13 +3,13 @@
 #############################################################
 
 set :deploy_to, "/web/portal"
-set :branch, "master"
+set :branch, "rites-production"
 
 #############################################################
 #  Servers
 #############################################################
 
-set :domain, "rites-investigations.concord.org"
+set :domain, "ritesportal.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
 # DISABLE SOME OF THE DESTRUCTIVE DB TASKS
