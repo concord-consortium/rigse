@@ -41,13 +41,20 @@ class GenerateCollaborationsUsingLegacyCollaborations < ActiveRecord::Migration
     Portal::CollaborationMembership.reset_column_information
     Portal::Collaboration.reset_column_information
 
-    Dataservice::BundleContent.find_each do |bundle|
-      collaborators = bundle.collaborators
-      next if collaborators.size == 0
-      owner_id = bundle.bundle_logger.learner.student.id
-      collaboration = Portal::Collaboration.create(:owner_id => owner_id)
-      collaboration.students = collaborators
-      bundle.update_attributes!(:collaboration_id => collaboration.id)
+    # decrease batch size for tempormental hosts.
+    # eagerly load associations to be faster
+    Dataservice::BundleContent.find_each(
+    :include => [
+       {:bundle_logger => {:learner => :student}},
+       :collaborators
+     ], :batch_size => 250) do |bundle|
+       collaborators = bundle.collaborators
+       next if collaborators.size == 0
+       next if bundle.bundle_logger.learner.nil?
+       owner_id = bundle.bundle_logger.learner.student.id
+       collaboration = Portal::Collaboration.create(:owner_id => owner_id)
+       collaboration.students = collaborators
+       bundle.update_attributes!(:collaboration_id => collaboration.id)
     end
   end
 
