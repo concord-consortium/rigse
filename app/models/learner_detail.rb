@@ -39,9 +39,9 @@ class LearnerDetail
     self.activity_url    = lookup "offering.runnable.url"
     self.valid_token     = "✖"
     if token = _fetch_token
-      self.token_expires = time_ago_in_words(token.access_token_expires_at)
+      self.token_expires = time_ago_in_words(token.access_token_expires_at) if token.access_token_expires_at
       self.token         = token.access_token
-      self.valid_token   = "✔" if token.access_token_expires_at > Time.now
+      self.valid_token   = "✔" if (token.access_token_expires_at && token.access_token_expires_at > Time.now)
     end
     self.updated_at = time_ago_in_words(self.updated_at) if self.updated_at
     self.last_run = time_ago_in_words(self.last_run) if self.last_run
