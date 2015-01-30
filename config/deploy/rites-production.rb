@@ -9,7 +9,7 @@ set :branch, "rites-production"
 #  Servers
 #############################################################
 
-set :domain, "ritesportal.concord.org"
+set :domain, "investigate.ritesproject.net"
 server domain, :app, :web
 role :db, domain, :primary => true
 # DISABLE SOME OF THE DESTRUCTIVE DB TASKS
