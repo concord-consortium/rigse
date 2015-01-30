@@ -206,7 +206,7 @@ class ApplicationController < ActionController::Base
     if user_agent < min_browser
       @wide_content_layout = true
       @user_agent = user_agent
-      render 'home/bad_browser'
+      render 'home/bad_browser', :layout => "old_browser"
     end
   end
 end
