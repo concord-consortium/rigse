@@ -14,6 +14,11 @@
     = f.text_field :teacher_guide_url, :size => 60
   = field_set_tag 'Thumbnail image URL (300 x 250 px)' do
     = f.text_field :thumbnail_url, :size => 60
+  = field_set_tag 'Publication Status' do
+    = f.select :publication_status, Activity.publication_states.map {|s| s.to_s}
+    #br
+    If this Activity is part of a #{Investigation.display_name} and the #{Investigation.display_name}'s publication_status is 'published',
+    then this Activity will be published too regardless of the publication status here.
   = field_set_tag 'Feature On Landing Page' do
     - if current_user.has_role? 'admin','manager'
       = f.check_box :is_featured 
