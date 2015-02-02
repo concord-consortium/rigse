@@ -38,6 +38,8 @@ set :autoscaling_create_policy, true
 set :autoscaling_create_launch_configuration, true
 
 set(:autoscaling_instance_type, "c3.large")
+# us-east-1d doesn't support the SSD volume time that we need so the regions are set explicitly here
+set(:autoscaling_availability_zones, ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1e"])
 set(:autoscaling_security_groups, %w(has))
 set(:autoscaling_min_size, 1)
 set(:autoscaling_max_size, 5)
