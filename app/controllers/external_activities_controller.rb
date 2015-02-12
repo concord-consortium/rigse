@@ -251,7 +251,7 @@ class ExternalActivitiesController < ApplicationController
     @uri = URI.parse(@external_activity.url + '/edit')
     @uri.query = {
       :domain => root_url,
-      :portal_uid => current_visitor.id
+      :domain_uid => current_visitor.id
     }.to_query
     if params[:iFrame] == "false"
       redirect_to @uri.to_s
