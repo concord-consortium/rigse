@@ -261,7 +261,8 @@ class ExternalActivitiesController < ApplicationController
   def copy
     @uri = URI.parse(@external_activity.url + '/duplicate')
     @uri.query = {
-      :domain => root_url
+      :domain => root_url,
+      :domain_uid => current_visitor.id
     }.to_query
     redirect_to @uri.to_s
   end
