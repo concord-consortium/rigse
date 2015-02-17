@@ -31,4 +31,4 @@
   %h4= link_to "Create #{Image.display_name}", images_path, :class => 'button'
   
 %div{:style=> "margin: 1em; padding: 1em;"}
-  %h4= link_to "Author Feedback Sets", "//authoring.staging.concord.org/c_rater/score_mappings?domain=#{root_url}&domain_uid=#{current_visitor.id}", :class => 'button',:target => "_blank"
+  %h4= link_to "Author Feedback Sets", "#{APP_CONFIG[:authoring_site_url]}/c_rater/score_mappings?domain=#{root_url}&domain_uid=#{current_visitor.id}", :class => 'button',:target => "_blank"
