@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
   add_index "activities", ["name"], :name => "index_activities_on_name"
-  add_index "activities", ["publication_status"], :name => "index_activities_on_publication_status", :length => {"publication_status"=>"10"}
+  add_index "activities", ["publication_status", "is_exemplar"], :name => "index_activities_on_publication_status_and_is_exemplar", :length => {"publication_status"=>"10", "is_exemplar"=>nil}
   add_index "activities", ["user_id"], :name => "index_activities_on_user_id"
 
   create_table "admin_project_vendor_interfaces", :force => true do |t|
@@ -48,25 +48,22 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
     t.string   "url"
     t.text     "description"
     t.text     "states_and_provinces"
-    t.integer  "maven_jnlp_server_id"
-    t.integer  "maven_jnlp_family_id"
-    t.string   "jnlp_version_str"
     t.boolean  "snapshot_enabled"
     t.boolean  "enable_default_users"
-    t.string   "uuid",                           :limit => 36
+    t.string   "uuid",                                     :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "home_page_content"
-    t.boolean  "use_student_security_questions",               :default => false
+    t.boolean  "use_student_security_questions",                         :default => false
     t.boolean  "allow_default_class"
-    t.boolean  "enable_grade_levels",                          :default => false
+    t.boolean  "enable_grade_levels",                                    :default => false
     t.text     "custom_css"
-    t.boolean  "use_bitmap_snapshots",                         :default => false
-    t.boolean  "teachers_can_author",                          :default => true
-    t.boolean  "allow_adhoc_schools",                          :default => false
-    t.boolean  "use_periodic_bundle_uploading",                :default => false
+    t.boolean  "use_bitmap_snapshots",                                   :default => false
+    t.boolean  "teachers_can_author",                                    :default => true
+    t.boolean  "allow_adhoc_schools",                                    :default => false
+    t.boolean  "use_periodic_bundle_uploading",                          :default => false
     t.string   "jnlp_cdn_hostname"
-    t.integer  "pub_interval",                                 :default => 10
+    t.integer  "pub_interval",                                           :default => 10
     t.text     "interactive_snapshot_instructions"
     t.text     "digital_microscope_snapshot_instructions"
     t.string   "jnlp_url"
@@ -169,7 +166,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
   end
 
   create_table "dataservice_blobs", :force => true do |t|
-    t.binary   "content",           :limit => 16777215
+    t.binary   "content",                    :limit => 16777215
     t.string   "token"
     t.integer  "bundle_content_id"
     t.datetime "created_at"
@@ -250,9 +247,9 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   create_table "dataservice_periodic_bundle_parts", :force => true do |t|
     t.integer  "periodic_bundle_logger_id"
-    t.boolean  "delta",                                         :default => true
+    t.boolean  "delta",                                           :default => true
     t.string   "key"
-    t.text     "value",                     :limit => 16777215
+    t.text     "value",                     :limit => 2147483647
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -296,7 +293,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
     t.integer  "height"
     t.integer  "width"
     t.integer  "version"
-    t.datetime "updated_at",         :default => '2011-05-12 10:23:34'
+    t.datetime "updated_at",         :default => '2015-02-27 18:16:44'
     t.string   "interactive_url"
     t.string   "interactive_scale",  :default => "1.0"
     t.integer  "interactive_width",  :default => 690
@@ -637,7 +634,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   create_table "embeddable_multiple_choices", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",                     :limit => 36
     t.string   "name"
     t.text     "description"
     t.text     "prompt"
@@ -2244,7 +2241,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"name"=>"15", "scope_type"=>"15", "scope_id"=>nil}
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_id"=>nil, "scope_type"=>"15", "name"=>"15"}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|
@@ -2267,7 +2264,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
   end
 
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context", :length => {"context"=>"15", "taggable_id"=>nil, "taggable_type"=>"15"}
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context", :length => {"taggable_id"=>nil, "taggable_type"=>"15", "context"=>"15"}
 
   create_table "tags", :force => true do |t|
     t.string "name"

@@ -112,10 +112,11 @@ class Admin::Project < ActiveRecord::Base
       attributes = {
         :name => name,
         :url => url,
+        :jnlp_url => 'http://google.com',
         :user => User.site_admin,
         :enable_default_users => enable_default_users,
         :states_and_provinces => states_and_provinces,
-        :snapshot_enabled => snapshot_enabled
+        :snapshot_enabled => false
       }
       unless project = Admin::Project.find_by_name_and_url(name, url)
         project = Admin::Project.create!(attributes)
@@ -123,7 +124,7 @@ class Admin::Project < ActiveRecord::Base
       project.user = User.site_admin
       project.enable_default_users = enable_default_users
       project.states_and_provinces = states_and_provinces
-      project.snapshot_enabled = snapshot_enabled
+      project.snapshot_enabled = false
       project.save!
       active_grades = APP_CONFIG[:active_grades]
       if ActiveRecord::Base.connection.table_exists?('portal_grades')
