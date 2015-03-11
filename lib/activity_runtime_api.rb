@@ -418,6 +418,7 @@ class ActivityRuntimeAPI
     attrs = {
       name: if_data["name"],
       url: if_data["url"],
+      display_in_iframe: if_data["display_in_iframe"],
       width: if_data["native_width"],
       height: if_data["native_height"]
     }
@@ -429,6 +430,7 @@ class ActivityRuntimeAPI
     attrs = {
       name: if_data["name"],
       url: if_data["url"],
+      display_in_iframe: if_data["display_in_iframe"],
       width: if_data["native_width"],
       height: if_data["native_height"],
       external_id: if_data["id"].to_s,

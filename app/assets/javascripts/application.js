@@ -52,4 +52,5 @@
 = require 'angular/collaboration'
 = require 'angular/portal_app'
 = require 'external_activities/matedit'
+= require 'iframeable-link'
 */

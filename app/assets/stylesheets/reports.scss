@@ -109,6 +109,13 @@ $incorrect_color: #ffdddd;
   .learner_response_rationale {
     width: 255px;
     vertical-align: top; }
+
+  .external-link-iframe {
+    display: block;
+    max-width: 470px;
+    max-height: 350px;
+    margin-bottom: 5px;
+  }
 }
 
 .tag {

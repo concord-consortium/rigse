@@ -7,6 +7,13 @@
         = l.name
       %div{:class => "#{css_style} learner_response_content inline_block"}
         - if saveable.answered?
-          = link_to 'View work', saveable.answer, :target => '_blank'
+          - if saveable.display_in_iframe
+            -# See: iframeable-link.coffee
+            = link_to 'View work', '#', :class => 'iframeable-link',
+                                        'data-iframe-src' => saveable.answer,
+                                        'data-iframe-width' => saveable.width,
+                                        'data-iframe-height' => saveable.height
+          - else
+            = link_to 'View work', saveable.answer, :target => '_blank'
         - else
           No work saved.
