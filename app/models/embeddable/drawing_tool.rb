@@ -25,4 +25,13 @@ class Embeddable::DrawingTool < Embeddable::Embeddable
     true
   end
 
+  def export_as_lara_activity
+    {
+      :bg_source => "Drawing",
+      :bg_url => self.background_image_url,
+      :drawing_prompt => self.description,
+      :name => self.name,
+      :type => "Embeddable::ImageQuestion"
+    }
+  end
 end

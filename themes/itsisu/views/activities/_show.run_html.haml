@@ -33,6 +33,9 @@
   %ul.page-utility
     %li.print-this-page
       %a{:href => '#', :onclick => 'window.print(); return false;'} Print this page
+  - if current_user && current_user.has_role?("admin")
+    %span.export-as-lara-activity
+      = link_to 'Export', export_as_lara_activity_activity_path(@activity), :title => 'Export as a Lightweight Activity', :rel => 'tooltip'
 
 - with_format(:html) do
   = render :partial => 'shared/labbook_ui'

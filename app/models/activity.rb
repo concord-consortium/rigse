@@ -221,7 +221,21 @@ class Activity < ActiveRecord::Base
   end
 
 
-
+  def export_as_lara_activity
+    page_position = 1
+    activity_json = self.as_json(:only => [:name,
+                                        :description])
+    activity_json[:pages] = []
+    self.pages.each do |page|
+      if page.is_enabled 
+        activity_json[:pages] << page.export_as_lara_activity(page_position) 
+        page_position += 1
+      end
+    end
+    activity_json[:type] = "LightweightActivity"
+    activity_json[:export_site] = "ITSI"
+    return activity_json
+  end
 
   def deep_xml
     self.to_xml(

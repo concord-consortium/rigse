@@ -66,6 +66,16 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     end
   end
 
+  def export_as_lara_activity
+      {
+        :name => self.name,
+        :native_height => 435,
+        :native_width => 576,
+        :url => self.interactive_url,
+        :type => "MwInteractive"
+      }
+  end
+
   # this might be cleaner if we could extend or clone Embeddable::DataCollector somehow
   class DataCollector
     def initialize(sensor, delegate)

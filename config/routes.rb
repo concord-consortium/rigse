@@ -424,6 +424,7 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get,
     :export => :get,
+    :export_as_lara_activity => :get,
     :destroy => :post,
     :template_edit => :get
   }, :collection => {

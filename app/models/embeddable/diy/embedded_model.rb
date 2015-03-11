@@ -29,4 +29,14 @@ class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
     end
   end
 
+  def export_as_lara_activity
+   {
+      :name => self.name,
+      :native_height => self.diy_model.interactive_height,
+      :native_width => self.diy_model.interactive_width,
+      :url => self.diy_model.interactive_url,
+      :type => "MwInteractive"
+    }
+  end
+
 end
