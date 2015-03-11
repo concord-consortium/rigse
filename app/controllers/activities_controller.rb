@@ -360,6 +360,16 @@ class ActivitiesController < ApplicationController
     end
   end
 
+  def export_as_lara_activity
+    if logged_in? && current_user.has_role?("admin")
+      activity_json = @activity.export_as_lara_activity.to_json
+      send_data activity_json, :type => :json, :disposition => "attachment", :filename => "#{@activity.name}_version_1.json"
+    else
+      flash[:error] = "You're not authorized to do this"
+      redirect_to(:back)
+    end
+  end
+
   def compare
     @other_activity = Activity.find(params[:other_id])
     left, @order = ITSI::Comparison.activity_hash_with_ordering(@activity)

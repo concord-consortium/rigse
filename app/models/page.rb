@@ -293,4 +293,48 @@ class Page < ActiveRecord::Base
     end
     return true
   end
+
+  def export_as_lara_activity(position)
+
+    page_json = {
+      :name => self.name,
+      :position => position,
+      :interactives => [],
+      :embeddables => [],
+      :layout => "l-full-width",
+      :embeddable_display_mode => 'stacked',
+      :sidebar_title => "Did you know?"
+    }
+
+    page_description = self.description
+
+    self.page_elements.each do |page_element|
+      if page_element.is_enabled
+        case page_element.embeddable_type
+        when "Embeddable::Diy::Section"
+          page_json[:show_introduction] = true
+          page_json[:text] = page_element.embeddable.description || page_description
+
+        when "Embeddable::OpenResponse"
+          page_json[:show_info_assessment] = true
+          page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
+
+        when "Embeddable::DrawingTool"
+          page_json[:show_info_assessment] = true
+          page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
+
+        when "Embeddable::Diy::Sensor"
+          page_json[:show_interactive] = true
+          page_json[:interactives] << page_element.embeddable.export_as_lara_activity
+
+        when "Embeddable::Diy::EmbeddedModel"
+          page_json[:show_interactive] = true
+          page_json[:interactives] << page_element.embeddable.export_as_lara_activity
+        else
+          puts "hi"
+        end
+      end
+    end
+    return page_json
+  end
 end

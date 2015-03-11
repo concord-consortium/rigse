@@ -71,4 +71,11 @@ class Embeddable::OpenResponse < Embeddable::Embeddable
     true
   end
 
+  def export_as_lara_activity
+    {
+      :name => self.name,
+      :prompt => self.prompt,
+      :type => "Embeddable::OpenResponse"
+    }
+  end
 end
