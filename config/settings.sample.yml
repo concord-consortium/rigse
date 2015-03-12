@@ -8,6 +8,7 @@ development: &non_production_settings
     :first_name: Stephen
     :last_name: Bannasch
   :enable_default_users: true
+  :jnlp_url: http://jars.dev.concord.org/dev3/org/concord/maven-jnlp/itsisu-otrunk/itsisu-otrunk-0.1.0-20121127.152823-c.jnlp
   :include_otrunk_examples: false
   :site_district: Rails Portal-district
   :site_school: Rails Portal-school
@@ -57,6 +58,7 @@ staging:
   :description: ""
   :default_admin_user: *default_admin_user
   :enable_default_users: true
+  :jnlp_url: http://jars.dev.concord.org/dev3/org/concord/maven-jnlp/itsisu-otrunk/itsisu-otrunk-0.1.0-20121127.152823-c.jnlp
   :include_otrunk_examples: false
   :states_and_provinces: *states_and_provinces
   :active_school_levels: *active_school_levels
@@ -81,6 +83,7 @@ production:
   :description: ""
   :default_admin_user: *default_admin_user
   :enable_default_users: false
+  :jnlp_url: http://jars.dev.concord.org/dev3/org/concord/maven-jnlp/itsisu-otrunk/itsisu-otrunk-0.1.0-20121127.152823-c.jnlp
   :include_otrunk_examples: false
   :states_and_provinces: *states_and_provinces
   :active_school_levels: *active_school_levels

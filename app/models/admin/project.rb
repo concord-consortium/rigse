@@ -108,11 +108,11 @@ class Admin::Project < ActiveRecord::Base
       name, url = default_project_name_url
       states_and_provinces = APP_CONFIG[:states_and_provinces]
       enable_default_users = APP_CONFIG[:enable_default_users]
-
+      jnlp_url = APP_CONFIG[:jnlp_url]
       attributes = {
         :name => name,
         :url => url,
-        :jnlp_url => 'http://google.com',
+        :jnlp_url => jnlp_url,
         :user => User.site_admin,
         :enable_default_users => enable_default_users,
         :states_and_provinces => states_and_provinces,
