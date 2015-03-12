@@ -2,6 +2,7 @@ class Search
   attr_accessor :engine
   attr_accessor :results
   attr_accessor :hits
+  attr_accessor :total_entries
   attr_accessor :text
   attr_accessor :material_types
   attr_accessor :clean_material_types
@@ -80,6 +81,7 @@ class Search
     self.material_types = opts[:material_types] || []
     self.results        = {}
     self.hits           = {}
+    self.total_entries  = {}
     self.no_probes      = false
 
     self.user_id        = opts[:user_id]
@@ -105,6 +107,7 @@ class Search
   def search
     self.results[:all] = []
     self.hits[:all] = []
+    self.total_entries[:all] = 0
     self.clean_material_types.each do |type|
       _results = self.engine.search(SearchableModels) do |s|
         s.fulltext(self.text)
@@ -139,8 +142,10 @@ class Search
       end
       self.results[:all] += _results.results
       self.hits[:all]    += _results.hits
+      self.total_entries[:all] += _results.results.total_entries
       self.results[type] = _results.results
       self.hits[type]    = _results.hits
+      self.total_entries[type] = _results.results.total_entries
     end
   end
 

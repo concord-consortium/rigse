@@ -12,20 +12,22 @@ module SearchHelper
   end
 
   def build_onSearch_message(form_model)
+    investigations_count = form_model.total_entries['Investigation'] || 0
+    activities_count = form_model.total_entries['Activity'] || 0
     show_message_onSearch= ""
-    if @investigations_count == 1
-      show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)'>#{t(:investigation)}</a>"
-    elsif @investigations_count > 0
-      show_message_onSearch += "#{@investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)''>#{t(:investigation).pluralize}</a>"
+    if investigations_count == 1
+      show_message_onSearch += "#{investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)'>#{t(:investigation)}</a>"
+    elsif investigations_count > 0
+      show_message_onSearch += "#{investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)''>#{t(:investigation).pluralize}</a>"
     end
 
-    if @activities_count > 0 && @investigations_count > 0
+    if activities_count > 0 && investigations_count > 0
       show_message_onSearch += ","
     end
-    if @activities_count == 1
-      show_message_onSearch += " #{@activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activity</a>"
-    elsif @activities_count > 0
-      show_message_onSearch += " #{@activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activities</a>"
+    if activities_count == 1
+      show_message_onSearch += " #{activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activity</a>"
+    elsif activities_count > 0
+      show_message_onSearch += " #{activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activities</a>"
     end
 
     show_message_onSearch +=" matching"
