@@ -158,7 +158,7 @@ The following codes were calculated from the school's corresponding GSLO and GSH
 
       HEREDOC
       
-      portal_school_field_names = [:name, :uuid, :state, :leaid_schoolnum, :zipcode, :district_id, :nces_school_id]
+      portal_school_field_names = [:name, :uuid, :state, :ncessch, :zipcode, :district_id, :nces_school_id]
       portal_district_field_names = [:name, :uuid, :state, :leaid, :zipcode, :nces_district_id]
       import_options = { :validate => false }
 

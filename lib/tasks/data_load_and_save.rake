@@ -192,7 +192,7 @@ namespace :db do
               klass.destroy_all
               klass.reset_column_information
 
-              puts "Loading #{tbl}..." 
+              puts "Loading #{tbl}... "
               table_path = "#{tbl}.yaml"
               YAML.load_file(table_path).each do |fixture|
                 data = {}
@@ -204,7 +204,8 @@ namespace :db do
                     data[c.name] = user_id
                   end
                 end
-                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
+                column_keys = data.keys.join(",").sub(",key",",`key`")
+                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{column_keys}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
               end        
             rescue StandardError => e
               puts e
