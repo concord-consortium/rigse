@@ -8,6 +8,8 @@ module SearchModelInterface
     ## add before_save hooks
     clazz.class_eval do
       acts_as_taggable_on :cohorts
+      acts_as_taggable_on :grade_levels
+      acts_as_taggable_on :subject_areas
     end
   end
 

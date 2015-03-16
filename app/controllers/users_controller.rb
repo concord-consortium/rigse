@@ -153,10 +153,22 @@ class UsersController < ApplicationController
           @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
 
           # set the cohort tags if we have a teacher
-          if @user.portal_teacher && params[:update_cohorts]
-            cohorts = params[:cohorts] ? params[:cohorts] : []
-            @user.portal_teacher.cohort_list = cohorts
-            @user.portal_teacher.save
+          if @user.portal_teacher 
+            if params[:update_cohorts]
+              cohorts = params[:cohorts] ? params[:cohorts] : []
+              @user.portal_teacher.cohort_list = cohorts
+              @user.portal_teacher.save
+            end
+            if params[:update_grade_levels]
+              grade_levels = params[:grade_levels] ? params[:grade_levels] : []
+              @user.portal_teacher.grade_level_list = grade_levels
+              @user.portal_teacher.save
+            end
+            if params[:update_subject_areas]
+              subject_areas = params[:subject_areas] ? params[:subject_areas] : []
+              @user.portal_teacher.subject_area_list = subject_areas
+              @user.portal_teacher.save
+            end
           end
 
           flash[:notice] = "User: #{@user.name} was successfully updated."

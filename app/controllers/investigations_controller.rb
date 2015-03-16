@@ -232,6 +232,17 @@ class InvestigationsController < AuthoringController
     end
     @investigation = Investigation.new(params[:investigation])
     @investigation.user = current_visitor
+
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @investigation.grade_level_list = (params[:grade_levels] || [])     
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @investigation.subject_area_list = (params[:subject_areas] || [])
+    end
+
     respond_to do |format|
       if @investigation.save
         flash[:notice] = "#{Investigation.display_name} was successfully created."
@@ -284,6 +295,18 @@ class InvestigationsController < AuthoringController
   def update
     @investigation = Investigation.find(params[:id])
     update_gse
+
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @investigation.grade_level_list = (params[:grade_levels] || [])     
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @investigation.subject_area_list = (params[:subject_areas] || [])
+      @investigation.save
+    end
+
     if request.xhr?
       if cancel || @investigation.update_attributes(params[:investigation])
         render :partial => 'shared/investigation_header', :locals => { :investigation => @investigation }

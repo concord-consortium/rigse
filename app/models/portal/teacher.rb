@@ -3,6 +3,8 @@ class Portal::Teacher < ActiveRecord::Base
 
   acts_as_replicatable
   acts_as_taggable_on :cohorts
+  acts_as_taggable_on :grade_levels
+  acts_as_taggable_on :subject_areas
 
   belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_teacher
   belongs_to :domain, :class_name => 'RiGse::Domain'

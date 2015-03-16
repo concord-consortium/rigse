@@ -146,6 +146,16 @@ class ExternalActivitiesController < ApplicationController
       @external_activity.cohort_list = (params[:cohorts] || [])
     end
 
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @external_activity.grade_level_list = (params[:grade_levels] || [])     
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @external_activity.subject_area_list = (params[:subject_areas] || [])
+    end
+
     respond_to do |format|
       if @external_activity.save
         format.js  # render the js file
@@ -168,6 +178,18 @@ class ExternalActivitiesController < ApplicationController
     if params[:update_cohorts]
       # set the cohort tags
       @external_activity.cohort_list = (params[:cohorts] || [])
+      @external_activity.save
+    end
+
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @external_activity.grade_level_list = (params[:grade_levels] || [])
+      @external_activity.save
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @external_activity.subject_area_list = (params[:subject_areas] || [])
       @external_activity.save
     end
 

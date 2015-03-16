@@ -34,5 +34,7 @@
   = field_set_tag 'Show Score' do
     = f.check_box :show_score
     #{t('authoring.show_score_description')} (this only applies if this activity is assigned individually)
+  = render :partial => 'shared/grade_levels_edit', :locals => { :object => @activity }
+  = render :partial => 'shared/subject_areas_edit', :locals => { :object => @activity }
 
 = javascript_tag("focus_first_field();");

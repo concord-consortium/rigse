@@ -149,6 +149,17 @@ class ActivitiesController < ApplicationController
   def create
     @activity = Activity.new(params[:activity])
     @activity.user = current_visitor
+
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @activity.grade_level_list = (params[:grade_levels] || [])     
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @activity.subject_area_list = (params[:subject_areas] || [])
+    end
+
     respond_to do |format|
       if @activity.save
         format.js  # render the js file
@@ -167,6 +178,19 @@ class ActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @activity = Activity.find(params[:id])
+    
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @activity.grade_level_list = (params[:grade_levels] || [])
+      @activity.save
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @activity.subject_area_list = (params[:subject_areas] || [])
+      @activity.save
+    end
+
     if request.xhr?
       if cancel || @activity.update_attributes(params[:activity])
         render :partial => 'shared/activity_header', :locals => { :activity => @activity }
