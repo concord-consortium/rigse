@@ -66,6 +66,16 @@ class ResourcePagesController < ApplicationController
       @resource_page.cohort_list = (params[:cohorts] || [])
     end
 
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @resource_page.grade_level_list = (params[:grade_levels] || [])     
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @resource_page.subject_area_list = (params[:subject_areas] || [])
+    end
+
     unless @resource_page.save
       render :action => 'new' and return
     end
@@ -82,6 +92,18 @@ class ResourcePagesController < ApplicationController
     if params[:update_cohorts]
       # set the cohort tags
       @resource_page.cohort_list = (params[:cohorts] || [])
+      @resource_page.save
+    end
+
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @resource_page.grade_level_list = (params[:grade_levels] || [])
+      @resource_page.save
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @resource_page.subject_area_list = (params[:subject_areas] || [])
       @resource_page.save
     end
 

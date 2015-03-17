@@ -34,6 +34,10 @@
     - if current_visitor.has_role?("admin", "manager")
       %p
         %i= "Cohorts: #{resource_page.cohort_list.join(", ")}"
+      %p
+        %i= "Grade Levels: #{resource_page.grade_level_list.join(", ")}"
+      %p
+        %i= "Subject Areas: #{resource_page.subject_area_list.join(", ")}"
     %p
       %i= updated_time_text(resource_page)
     %p

@@ -57,6 +57,12 @@ class ResourcePage < ActiveRecord::Base
     string  :cohorts, :multiple => true do
       cohort_list
     end
+    string  :grade_levels, :multiple => true do
+      grade_level_list
+    end
+    string  :subject_areas, :multiple => true do
+      subject_area_list
+    end
   end
 
   belongs_to :user
@@ -143,6 +149,8 @@ class ResourcePage < ActiveRecord::Base
   accepts_nested_attributes_for :attached_files
 
   acts_as_taggable_on :cohorts
+  acts_as_taggable_on :grade_levels
+  acts_as_taggable_on :subject_areas
 
   class <<self
     def can_be_created_by?(user)

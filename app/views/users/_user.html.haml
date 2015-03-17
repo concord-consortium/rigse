@@ -38,5 +38,15 @@
           - user.portal_teacher.cohort_list.each do |c| 
             %li
               = c
+          %li
+            Grade Levels: 
+          - user.portal_teacher.grade_level_list.each do |g| 
+            %li
+              = g
+          %li
+            Subject Areas: 
+          - user.portal_teacher.subject_area_list.each do |s| 
+            %li
+              = s
       %li
         Status: #{user.state}
