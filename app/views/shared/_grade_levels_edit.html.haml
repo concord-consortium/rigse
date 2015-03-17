@@ -1,0 +1,11 @@
+-# Expects locals: object
+- if object && object.respond_to?("grade_level_list") && current_visitor.has_role?("admin", "manager")
+  = field_set_tag 'Grade Levels' do
+    .aligned
+      = hidden_field_tag :update_grade_levels, "true"
+      %ul.menu_h
+        - Admin::Tag.find_all_by_scope("grade_levels").each do |admin_tag|
+          %li
+            - label_str = "grade_levels_#{admin_tag.tag.underscore}"
+            = label_tag label_str, admin_tag.tag
+            = check_box_tag "grade_levels[]", admin_tag.tag, object.grade_level_list.include?(admin_tag.tag), :id => label_str
