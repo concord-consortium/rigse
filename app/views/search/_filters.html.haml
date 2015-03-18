@@ -98,5 +98,11 @@
               .tablecell
                 = check_box_tag 'probe[]',"#{probe.id}",(@form_model.probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"
                 = label_tag "probe_#{probe.id}","#{probe.name}",:class=>"probes_label"
+      %tr
+        %td{:colspan => "3"}
+          = render :partial=>"search/grade_levels_filter"
+      %tr
+        %td{:colspan => "3"}
+          = render :partial=>"search/subject_areas_filter"
 = render :partial=>"search/customize_filters"
 
