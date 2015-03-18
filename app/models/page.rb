@@ -317,7 +317,7 @@ class Page < ActiveRecord::Base
         case page_element.embeddable_type
         when "Embeddable::Diy::Section"
           page_json[:show_introduction] = true
-          page_json[:text] = page_element.embeddable.description || page_description
+          page_json[:text] = page_element.embeddable.content
 
         when "Embeddable::OpenResponse"
           page_json[:show_info_assessment] = true
