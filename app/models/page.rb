@@ -332,7 +332,7 @@ class Page < ActiveRecord::Base
           page_json[:show_interactive] = true
           page_json[:interactives] << page_element.embeddable.export_as_lara_activity
           if page_element.embeddable.diy_model.model_type.name == "Digital Microscope"
-            labbook_export[:custom_action_label] = "Upload Image"
+            labbook_export[:custom_action_label] = "Take a Snapshot"
             labbook_export[:action_type] = 0 # upload mode
           end
           page_json[:embeddables] << labbook_export
