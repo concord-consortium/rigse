@@ -307,13 +307,17 @@ class Page < ActiveRecord::Base
     }
 
     page_description = self.description
-
+    labbook_export = {
+      :action_type => 1, #snapshot mode
+      :name => "Labbook album",
+      :type => "Embeddable::Labbook"
+    }
     self.page_elements.each do |page_element|
       if page_element.is_enabled
         case page_element.embeddable_type
         when "Embeddable::Diy::Section"
           page_json[:show_introduction] = true
-          page_json[:text] = page_element.embeddable.description || page_description
+          page_json[:text] = page_element.embeddable.content
 
         when "Embeddable::OpenResponse"
           page_json[:show_info_assessment] = true
@@ -324,14 +328,16 @@ class Page < ActiveRecord::Base
           page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
 
         when "Embeddable::Diy::Sensor"
-          page_json[:show_interactive] = true
-          page_json[:interactives] << page_element.embeddable.export_as_lara_activity
-
         when "Embeddable::Diy::EmbeddedModel"
           page_json[:show_interactive] = true
           page_json[:interactives] << page_element.embeddable.export_as_lara_activity
+          if page_element.embeddable.diy_model.model_type.name == "Digital Microscope"
+            labbook_export[:custom_action_label] = "Take a Snapshot"
+            labbook_export[:action_type] = 0 # upload mode
+          end
+          page_json[:embeddables] << labbook_export
         else
-          puts "hi"
+          puts "Type not supported"
         end
       end
     end
