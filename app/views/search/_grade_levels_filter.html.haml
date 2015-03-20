@@ -1,12 +1,9 @@
-- grade_levels = ExternalActivity.all_grade_levels
-- grade_levels = grade_levels.merge(Activity.all_grade_levels)
-- grade_levels = grade_levels.merge(Investigation.all_grade_levels)
-- if grade_levels.size > 0
-  %br
-    .filterheader 
-      Grade Levels
-    .grade_levels_container.tablecell
-      - grade_levels.each do |grade_level|
-        .checkbox-label      
-          = check_box_tag 'grade_levels[]', grade_level,  @form_model.grade_levels.include?(grade_level),:id=>"grade_level_#{grade_level}", :class => 'check-box-left-margin'
-          = label_tag "grade_level_#{grade_level}", grade_level
+- grade_level_groups = authored_grade_level_groupes
+- if grade_level_groups.size > 0
+  .filterheader 
+    Grade Levels
+  .grade_levels_container
+    - grade_level_groups.each do |grade_level_group|
+      .tablecell
+        = check_box_tag 'grade_levels[]', grade_level_group,  @form_model.grade_levels.include?(grade_level_group),:id=>"grade_level_#{grade_level_group}", :class => 'check-box-left-margin'
+        = label_tag "grade_level_#{grade_level_group}", grade_level_group

@@ -45,6 +45,10 @@ class Search
   NoGradeSpan     = NoDomainID = AnyProbeType =[]
   NoProbeRequired = ["0"]
 
+  def self.grade_level_groups
+    { 'k-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"] }
+  end
+
   def self.clean_search_terms (term)
     return NoSearchTerm if (term.nil? || term.blank?)
     # http://rubular.com/r/ML9V9EMCKh (include apostrophe)
@@ -219,7 +223,7 @@ class Search
     return if grade_levels.size < 1
     search.any_of do |s|
       grade_levels.each do |g|
-        s.with(:grade_levels, g)
+        s.with(:grade_levels, Search.grade_level_groups[g])
       end
     end
   end
