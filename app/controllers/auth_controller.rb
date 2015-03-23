@@ -1,5 +1,6 @@
 class AuthController < ApplicationController
   before_filter :verify_logged_in, :except => [:access_token]
+  skip_before_filter :authenticate_user!, :only => [:authorize]  # this is handled by verify_logged_in
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
   def verify_logged_in
