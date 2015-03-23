@@ -1,6 +1,6 @@
 .click_to_play.unavailable{:id => dom_id_for(diy_embedded_model, :click_to_play)}
   .background
-  .text= "Click here to start the model."
+  .text= "Click here to start the interactive."
 .model_interactive.unavailable{:id => dom_id_for(diy_embedded_model, :model_interactive)}
   - if diy_embedded_model.diy_model.interactive_url
     %iframe.interactive{:frameborder => 'no', :mozallowfullscreen=>'true', :webkitallowfullscreen=>'true', :allowfullscreen=>'true', :style => interactive_style(diy_embedded_model.diy_model)}
