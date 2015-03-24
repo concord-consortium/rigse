@@ -307,12 +307,15 @@ class Page < ActiveRecord::Base
     }
 
     page_description = self.description
-    labbook_export = {
-      :action_type => 1, #snapshot mode
-      :name => "Labbook album",
-      :type => "Embeddable::Labbook"
-    }
+    default_project = Admin::Project.default_project
     self.page_elements.each do |page_element|
+      labbook_export = {
+        :action_type => 1, #snapshot mode
+        :name => "Labbook album",
+        :type => "Embeddable::Labbook",
+        :prompt => default_project.interactive_snapshot_instructions,
+        :custom_action_label => nil
+      }
       if page_element.is_enabled
         case page_element.embeddable_type
         when "Embeddable::Diy::Section"
@@ -328,13 +331,21 @@ class Page < ActiveRecord::Base
           page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
 
         when "Embeddable::Diy::Sensor"
-        when "Embeddable::Diy::EmbeddedModel"
           page_json[:show_interactive] = true
           page_json[:interactives] << page_element.embeddable.export_as_lara_activity
-          if page_element.embeddable.diy_model.model_type.name == "Digital Microscope"
+          page_json[:show_info_assessment] = true
+          page_json[:embeddables] << labbook_export
+
+        when "Embeddable::Diy::EmbeddedModel"
+          if page_element.embeddable.diy_model.model_type.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
             labbook_export[:custom_action_label] = "Take a Snapshot"
             labbook_export[:action_type] = 0 # upload mode
+            labbook_export[:prompt] = default_project.digital_microscope_snapshot_instructions
+          else
+            page_json[:show_interactive] = true
+            page_json[:interactives] << page_element.embeddable.export_as_lara_activity
           end
+          page_json[:show_info_assessment] = true
           page_json[:embeddables] << labbook_export
         else
           puts "Type not supported"
