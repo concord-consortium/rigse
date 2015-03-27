@@ -41,10 +41,11 @@
               .tablecell
                 = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
                 = label_tag grade, grade
-        %td.subject_areas_columns
-          = render :partial=>"search/subject_areas_filter"
-        %td.grade_levels_columns
-          = render :partial=>"search/grade_levels_filter"
+
+        = render :partial=>"search/subject_areas_filter"
+
+        = render :partial=>"search/grade_levels_filter"
+
         %td.materialcolumn
           .filterheader
             Material Type

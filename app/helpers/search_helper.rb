@@ -66,14 +66,15 @@ module SearchHelper
       link_to("Assign to a Class", action, extra.merge({:class=>"button"}))
     end
   end
-  
-  # return the grade_level_groups for which materials are authored
+
+# convert hash to array
   def authored_grade_level_groupes
-    grade_levels = ExternalActivity.all_grade_levels
-    grade_levels = grade_levels.merge(Activity.all_grade_levels)
-    grade_levels = grade_levels.merge(Investigation.all_grade_levels)
-    @authored_grade_level_groups = Search.grade_level_groups.keys.select do |grade_level_group|
-     (Search.grade_level_groups[grade_level_group] & grade_levels.to_a).size > 0
+    authored_grade_level_groups = []
+    @form_model.availabe_grade_level_groups.each do |grade_level_group_key,grade_level_group_value|
+      if grade_level_group_value == 1
+        authored_grade_level_groups << grade_level_group_key
+      end
     end
+    return authored_grade_level_groups
   end
 end

@@ -46,7 +46,7 @@ class Investigation < ActiveRecord::Base
     string  :cohorts, :multiple => true do
       cohort_list
     end
-    string  :grade_levels, :multiple => true do
+    string  :grade_level_groups, :multiple => true do
       grade_level_list
     end
     string  :subject_areas, :multiple => true do
@@ -320,24 +320,6 @@ class Investigation < ActiveRecord::Base
         i.destroy
       end
     end
-  end
-
-  # return grade levels that the portal has activities for
-  def self.all_grade_levels
-    grade_levels = Set.new []
-    self.all.each do |investigation|
-      grade_levels.merge(investigation.grade_level_list)
-    end
-    grade_levels
-  end
-  
-  # return subject areas that the portal has activities for
-  def self.all_subject_areas
-    subject_areas = Set.new []
-    self.all.each do |investigation|
-      subject_areas.merge(investigation.subject_area_list)
-    end
-    subject_areas
   end
 
   def full_title

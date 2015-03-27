@@ -59,7 +59,7 @@ class ExternalActivity < ActiveRecord::Base
     string  :cohorts, :multiple => true do
       cohort_list
     end
-    string  :grade_levels, :multiple => true do
+    string  :grade_level_groups, :multiple => true do
       grade_level_list
     end
     string  :subject_areas, :multiple => true do
@@ -191,24 +191,6 @@ class ExternalActivity < ActiveRecord::Base
 
   def report_format
     :run_resource_html
-  end
-
-  # return grade levels that the portal has activities for
-  def self.all_grade_levels
-    grade_levels = Set.new []
-    self.all.each do |external_activity|
-      grade_levels.merge(external_activity.grade_level_list)
-    end
-    grade_levels
-  end
-
-  # return subject areas that the portal has activities for
-  def self.all_subject_areas
-    subject_areas = Set.new []
-    self.all.each do |external_activity|
-      subject_areas.merge(external_activity.subject_area_list)
-    end
-    subject_areas
   end
 
   private

@@ -99,7 +99,7 @@ class Activity < ActiveRecord::Base
     string  :cohorts, :multiple => true do
       cohort_list
     end
-    string  :grade_levels, :multiple => true do
+    string  :grade_level_groups, :multiple => true do
       grade_level_list
     end
     string  :subject_areas, :multiple => true do
@@ -321,20 +321,4 @@ class Activity < ActiveRecord::Base
     return external_activities.compact.length > 0
   end
 
-  # return grade levels that the portal has activities for
-  def self.all_grade_levels
-    grade_levels = Set.new []
-    self.all.each do |activity|
-      grade_levels.merge(activity.grade_level_list)
-    end
-    grade_levels
-  end
-  # return subject areas that the portal has activities for
-  def self.all_subject_areas
-    subject_areas = Set.new []
-    self.all.each do |activity|
-      subject_areas.merge(activity.subject_area_list)
-    end
-    subject_areas
-  end
 end

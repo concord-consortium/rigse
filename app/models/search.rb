@@ -21,8 +21,10 @@ class Search
   attr_accessor :include_official
   attr_accessor :include_templates
   attr_accessor :java_requirements
-  attr_accessor :grade_levels
+  attr_accessor :grade_level_groups
   attr_accessor :subject_areas
+  attr_accessor :availabe_subject_areas
+  attr_accessor :availabe_grade_level_groups
 
   SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
   InvestigationMaterial   = "Investigation"
@@ -46,7 +48,7 @@ class Search
   NoProbeRequired = ["0"]
 
   def self.grade_level_groups
-    { 'k-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"] }
+    { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"] }
   end
 
   def self.clean_search_terms (term)
@@ -84,9 +86,12 @@ class Search
     # Keep 'raw' value too, so the view can examine what was actually selected by user.
     # TODO: if we focus on this class more, I think it would be much better to move all the
     #       properties that are only used by form elements in view to a new, separate class.
-    self.material_types = opts[:material_types] || []
-    self.grade_levels   = opts[:grade_levels] || []
-    self.subject_areas   = opts[:subject_areas] || []
+    self.material_types              = opts[:material_types] || []
+    self.grade_level_groups          = opts[:grade_level_groups] || []
+    self.subject_areas               = opts[:subject_areas] || []
+    self.availabe_subject_areas      = []
+    self.availabe_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
+    
     self.results        = {}
     self.hits           = {}
     self.total_entries  = {}
@@ -149,6 +154,17 @@ class Search
         elsif (type==Search::InvestigationMaterial)
           s.paginate(:page => self.investigation_page, :per_page => self.per_page)
         end
+
+        s.facet :subject_areas
+
+        s.facet :grade_level_groups do 
+          Search.grade_level_groups.each do |key, value|
+            row(key) do
+              with(:grade_level_groups, value)
+            end
+          end
+        end
+
       end
       self.results[:all] += _results.results
       self.hits[:all]    += _results.hits
@@ -156,13 +172,19 @@ class Search
       self.results[type] = _results.results
       self.hits[type]    = _results.hits
       self.total_entries[type] = _results.results.total_entries
+      _results.facet(:subject_areas).rows.each do |facet|
+        self.availabe_subject_areas << facet.value
+      end
+      _results.facet(:grade_level_groups).rows.each do |facet|
+        self.availabe_grade_level_groups[facet.value] = 1
+      end
     end
   end
 
   def params
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
-      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements, :grade_levels, :subject_areas]
+      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements, :grade_level_groups, :subject_areas]
     keys.each do |key|
       value = self.send key
       if value
@@ -220,10 +242,10 @@ class Search
   end
 
   def search_by_grade_levels(search)
-    return if grade_levels.size < 1
+    return if grade_level_groups.size < 1
     search.any_of do |s|
-      grade_levels.each do |g|
-        s.with(:grade_levels, Search.grade_level_groups[g])
+      grade_level_groups.each do |g|
+        s.with(:grade_level_groups, Search.grade_level_groups[g])
       end
     end
   end
