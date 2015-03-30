@@ -59,7 +59,7 @@ class ExternalActivity < ActiveRecord::Base
     string  :cohorts, :multiple => true do
       cohort_list
     end
-    string  :grade_level_groups, :multiple => true do
+    string  :grade_levels, :multiple => true do
       grade_level_list
     end
     string  :subject_areas, :multiple => true do

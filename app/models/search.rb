@@ -114,7 +114,27 @@ class Search
     self.include_contributed  = opts[:include_contributed] || false
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
+    self.fetch_availabe_grade_subject_areas()
     self.search()
+  end
+
+  def fetch_availabe_grade_subject_areas
+    results = self.engine.search([Investigation, Activity, ExternalActivity]) do |s|
+      s.facet :subject_areas
+      s.facet :grade_levels do 
+        Search.grade_level_groups.each do |key, value|
+          row(key) do
+            with(:grade_levels, value)
+          end
+        end
+      end
+    end
+    results.facet(:subject_areas).rows.each do |facet|
+      self.availabe_subject_areas << facet.value
+    end
+    results.facet(:grade_levels).rows.each do |facet|
+      self.availabe_grade_level_groups[facet.value] = 1
+    end
   end
 
   def search
@@ -155,16 +175,6 @@ class Search
           s.paginate(:page => self.investigation_page, :per_page => self.per_page)
         end
 
-        s.facet :subject_areas
-
-        s.facet :grade_level_groups do 
-          Search.grade_level_groups.each do |key, value|
-            row(key) do
-              with(:grade_level_groups, value)
-            end
-          end
-        end
-
       end
       self.results[:all] += _results.results
       self.hits[:all]    += _results.hits
@@ -172,12 +182,6 @@ class Search
       self.results[type] = _results.results
       self.hits[type]    = _results.hits
       self.total_entries[type] = _results.results.total_entries
-      _results.facet(:subject_areas).rows.each do |facet|
-        self.availabe_subject_areas << facet.value
-      end
-      _results.facet(:grade_level_groups).rows.each do |facet|
-        self.availabe_grade_level_groups[facet.value] = 1
-      end
     end
   end
 
@@ -245,7 +249,7 @@ class Search
     return if grade_level_groups.size < 1
     search.any_of do |s|
       grade_level_groups.each do |g|
-        s.with(:grade_level_groups, Search.grade_level_groups[g])
+        s.with(:grade_levels, Search.grade_level_groups[g])
       end
     end
   end
