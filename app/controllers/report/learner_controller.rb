@@ -4,12 +4,14 @@ class Report::LearnerController < ApplicationController
   before_filter :setup,
       :only => [
       :index,
+      :logs_query,
       :update_learners
     ]
 
   before_filter :manager_or_researcher,
     :only => [
       :index,
+      :logs_query,
       :update_learners
     ]
 
@@ -24,12 +26,16 @@ class Report::LearnerController < ApplicationController
     @button_texts = {
       :apply => 'Apply Filters',
       :usage => 'Usage Report',
-      :details => 'Details Report'
+      :details => 'Details Report',
+      :logs_query => 'Log Manager Query'
     }
 
     # commit"=>"update learners"
-    if params['commit'] =~ /update learners/i
+    if params[:commit] =~ /update learners/i
       update_learners
+    elsif params[:commit] == @button_texts[:logs_query]
+      redirect_to learner_logs_query_path(request.GET.except(:commit))
+      return
     end
 
     # helper model to limit learner selections:
@@ -65,11 +71,17 @@ class Report::LearnerController < ApplicationController
       report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
       report.run_report(sio)
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
-    end
+    end      
+
   end
 
   def index
     # renders views/report/learner/index.html.haml
+  end
+
+  def logs_query
+    @remote_endpoints = @select_learners.map { |l| external_activity_return_url(l.id) }
+    render :layout => false
   end
   
   def updated_at
