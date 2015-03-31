@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150311233313) do
+ActiveRecord::Schema.define(:version => 20150330140747) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -843,6 +843,20 @@ ActiveRecord::Schema.define(:version => 20150311233313) do
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
     t.integer  "jnlp_session_id"
+  end
+
+  create_table "interactives", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "url"
+    t.float    "width"
+    t.float    "height"
+    t.float    "scale"
+    t.string   "image_url"
+    t.integer  "user_ids"
+    t.string   "credits"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "investigations", :force => true do |t|

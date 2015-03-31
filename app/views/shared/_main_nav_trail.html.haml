@@ -12,6 +12,7 @@
         - anon_can_browse = current_project ? current_project.anonymous_can_browse_materials : true
         - unless current_visitor.only_a_student? || (current_visitor.anonymous? && !anon_can_browse)
           %li.trail= link_to 'Browse Instructional Materials' , search_path
+          %li.trail= link_to 'Interactives' , interactives_path
         - if current_visitor.has_role?('admin', 'manager','researcher')
           %li.trail= link_to 'Admin', admin_path
 

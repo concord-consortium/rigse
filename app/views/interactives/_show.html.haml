@@ -1,0 +1,36 @@
+%div{:id => dom_id_for(interactive, :details), :class => 'content'}
+  - if interactive.url && !interactive.url.empty?
+    %span{:style => "margin-left: 15px;"}
+      = link_to 'Run Interactive', interactive.url, :target => 'new'
+  %p
+    %h2= interactive.name
+  - if interactive.image_url
+    - style = show_thumbnail ? "float: right" : ""
+    %div{:style => style}
+      - if (show_thumbnail)
+        =image_tag(interactive.image_url, :size => '100x100')
+      - else
+        =image_tag(interactive.image_url)
+  %p= interactive.description
+  %p
+    %b Author:
+    - if interactive.user
+      = interactive.user.first_name + " " + interactive.user.last_name
+    %br
+    %b Credits:
+    = interactive.credits
+    %br
+    -# %b interactive type:
+    -# = interactive.interactive_type.name
+    %br
+    - if interactive.url
+      %br
+      %b Interactive URL:
+      = interactive.url
+      %br
+      %b Interactive Scale:
+      = interactive.scale
+      %br
+      %b Interactive Size:
+      = "#{interactive.width} x #{interactive.height}"
+  %div{:style => "clear:both"}

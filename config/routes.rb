@@ -602,6 +602,8 @@ RailsPortal::Application.routes.draw do
     resources :attached_files
     resources :images
 
+    resources :interactives
+
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do
         resources :countries
