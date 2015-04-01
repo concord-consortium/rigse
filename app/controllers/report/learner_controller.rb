@@ -87,7 +87,7 @@ class Report::LearnerController < ApplicationController
   end
 
   def logs_query
-    @remote_endpoints = @select_learners.map { |l| external_activity_return_url(l.id) }
+    @remote_endpoints = @select_learners.map { |l| external_activity_return_url(l.learner_id) }
     render :layout => false
   end
 
@@ -135,9 +135,9 @@ class Report::LearnerController < ApplicationController
     # ~2k characters, so this should allow querying several hundred learners
     # before requests start failing because the URL is too long.)
 
-    sample_learner = @select_learners.first
-    prefix = external_activity_return_url(sample_learner.id).match("(.*)" + sample_learner.id.to_s)[1]
-    learner_ids = @select_learners.map { |l| l.id }
+    sample_learner_id = @select_learners.first.learner_id
+    prefix = external_activity_return_url(sample_learner_id).match("(.*)" + sample_learner_id.to_s)[1]
+    learner_ids = @select_learners.map { |l| l.learner_id }
 
     redirect_to(codap_url + "?moreGames=" + CGI::escape([{
       :name => "LogMgr",
