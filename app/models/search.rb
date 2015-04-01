@@ -21,6 +21,10 @@ class Search
   attr_accessor :include_official
   attr_accessor :include_templates
   attr_accessor :java_requirements
+  attr_accessor :grade_level_groups
+  attr_accessor :subject_areas
+  attr_accessor :availabe_subject_areas
+  attr_accessor :availabe_grade_level_groups
 
   SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
   InvestigationMaterial   = "Investigation"
@@ -42,6 +46,10 @@ class Search
   NoSearchTerm    = nil
   NoGradeSpan     = NoDomainID = AnyProbeType =[]
   NoProbeRequired = ["0"]
+
+  def self.grade_level_groups
+    { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"] }
+  end
 
   def self.clean_search_terms (term)
     return NoSearchTerm if (term.nil? || term.blank?)
@@ -78,7 +86,12 @@ class Search
     # Keep 'raw' value too, so the view can examine what was actually selected by user.
     # TODO: if we focus on this class more, I think it would be much better to move all the
     #       properties that are only used by form elements in view to a new, separate class.
-    self.material_types = opts[:material_types] || []
+    self.material_types              = opts[:material_types] || []
+    self.grade_level_groups          = opts[:grade_level_groups] || []
+    self.subject_areas               = opts[:subject_areas] || []
+    self.availabe_subject_areas      = []
+    self.availabe_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
+    
     self.results        = {}
     self.hits           = {}
     self.total_entries  = {}
@@ -101,7 +114,27 @@ class Search
     self.include_contributed  = opts[:include_contributed] || false
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
+    self.fetch_availabe_grade_subject_areas()
     self.search()
+  end
+
+  def fetch_availabe_grade_subject_areas
+    results = self.engine.search([Investigation, Activity, ExternalActivity]) do |s|
+      s.facet :subject_areas
+      s.facet :grade_levels do 
+        Search.grade_level_groups.each do |key, value|
+          row(key) do
+            with(:grade_levels, value)
+          end
+        end
+      end
+    end
+    results.facet(:subject_areas).rows.each do |facet|
+      self.availabe_subject_areas << facet.value
+    end
+    results.facet(:grade_levels).rows.each do |facet|
+      self.availabe_grade_level_groups[facet.value] = 1
+    end
   end
 
   def search
@@ -123,6 +156,8 @@ class Search
         search_by_probes(s)
         search_by_authorship(s)
         search_by_java_requirements(s)
+        search_by_grade_levels(s)
+        search_by_subject_areas(s)
         s.with(:is_template, false) unless self.include_templates
 
         if (!self.private && self.user_id)
@@ -139,6 +174,7 @@ class Search
         elsif (type==Search::InvestigationMaterial)
           s.paginate(:page => self.investigation_page, :per_page => self.per_page)
         end
+
       end
       self.results[:all] += _results.results
       self.hits[:all]    += _results.hits
@@ -152,7 +188,7 @@ class Search
   def params
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
-      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements]
+      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements, :grade_level_groups, :subject_areas]
     keys.each do |key|
       value = self.send key
       if value
@@ -205,6 +241,24 @@ class Search
     search.any_of do |s|
       java_requirements.each do |r|
         s.with(:java_requirements, r)
+      end
+    end
+  end
+
+  def search_by_grade_levels(search)
+    return if grade_level_groups.size < 1
+    search.any_of do |s|
+      grade_level_groups.each do |g|
+        s.with(:grade_levels, Search.grade_level_groups[g])
+      end
+    end
+  end
+
+  def search_by_subject_areas(search)
+    return if subject_areas.size < 1
+    search.any_of do |s|
+      subject_areas.each do |g|
+        s.with(:subject_areas, g)
       end
     end
   end

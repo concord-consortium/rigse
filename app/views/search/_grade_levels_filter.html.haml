@@ -1,0 +1,10 @@
+- grade_level_groups = authored_grade_level_groupes
+- if grade_level_groups.size > 0
+  %td.grade_levels_columns
+    .filterheader 
+      Grade Levels
+    .grade_levels_container
+      - grade_level_groups.each do |grade_level_group|
+        .tablecell
+          = check_box_tag 'grade_level_groups[]', grade_level_group,  @form_model.grade_level_groups.include?(grade_level_group),:id=>"grade_level_#{grade_level_group}", :class => 'check-box-left-margin'
+          = label_tag "grade_level_#{grade_level_group}", grade_level_group
