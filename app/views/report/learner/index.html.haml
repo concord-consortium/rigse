@@ -46,6 +46,8 @@
     = submit_tag @button_texts[:usage]
     = submit_tag @button_texts[:details]
     = submit_tag @button_texts[:logs_query]
+    - unless @no_log_manager
+      = submit_tag @button_texts[:log_manager]
 
 :javascript
   new Chosen($('schools'));
