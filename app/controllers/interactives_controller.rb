@@ -10,6 +10,22 @@ class InteractivesController < ApplicationController
   def create
     @interactive = Interactive.new(params[:interactive])
     @interactive.user = current_visitor
+    
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @interactive.grade_level_list = (params[:grade_levels] || [])     
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @interactive.subject_area_list = (params[:subject_areas] || [])
+    end
+
+    if params[:update_model_types]
+      # set the subject_area tags
+      @interactive.model_type_list = (params[:model_types] || [])
+    end
+
     respond_to do |format|
       if @interactive.save
         format.js  # render the js file
@@ -34,6 +50,24 @@ class InteractivesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @interactive = Interactive.find(params[:id])
+
+    if params[:update_grade_levels]
+      # set the grade_level tags
+      @interactive.grade_level_list = (params[:grade_levels] || [])
+      @interactive.save
+    end
+
+    if params[:update_subject_areas]
+      # set the subject_area tags
+      @interactive.subject_area_list = (params[:subject_areas] || [])
+      @interactive.save
+    end
+
+    if params[:update_model_types]
+      # set the subject_area tags
+      @interactive.model_type_list = (params[:model_types] || [])
+      @interactive.save
+    end
 
     if request.xhr?
       if cancel || @interactive.update_attributes(params[:interactive])

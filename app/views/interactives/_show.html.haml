@@ -19,10 +19,18 @@
     %br
     %b Credits:
     = interactive.credits
-    %br
-    -# %b interactive type:
-    -# = interactive.interactive_type.name
-    %br
+    - if interactive.model_type_list.length > 0
+      %br
+      %b Model type:
+      = interactive.model_type_list.join(',')
+    - if interactive.grade_level_list.length > 0
+      %br
+      %b Grade Levels:
+      = interactive.grade_level_list.join(',')
+    - if interactive.subject_area_list.length > 0
+      %br
+      %b Subject Areas:
+      = interactive.subject_area_list.join(',')
     - if interactive.url
       %br
       %b Interactive URL:
