@@ -101,7 +101,7 @@ class Reports::Excel
     learners = student.learners
     learners.reject! { |l| l.offering.nil? || l.offering.clazz.nil? || l.offering.runnable.nil? }
     learners.sort! { |a,b|
-      aname = clazz_name_for(a.offering) 
+      aname = clazz_name_for(a.offering)
       bname = clazz_name_for(b.offering)
       aname <=> bname
     }
@@ -111,7 +111,7 @@ class Reports::Excel
     name = thing.school ? (thing.school.name || "School #{thing.school.name}") : "No School"
     return name
   end
-  
+
   def clazz_name_for(offering)
     name = offering.clazz ? (offering.clazz.name || "Class: #{offering.clazz.id}") : "No Class"
     return name

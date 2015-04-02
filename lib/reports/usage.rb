@@ -13,7 +13,7 @@ class Reports::Usage < Reports::Excel
     # stud.id, class, school, user.id, username, student name, teachers
     @shared_column_defs = [
       Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
-      Reports::ColumnDefinition.new(:title => "Class ID",   :width => 10),
+      Reports::ColumnDefinition.new(:title => "Class ID",     :width => 10),
       Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
       Reports::ColumnDefinition.new(:title => "School",       :width => 25),
       Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),

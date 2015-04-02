@@ -41,7 +41,7 @@ class Report::LearnerController < ApplicationController
       return
     end
 
-    @no_log_manager = APP_CONFIG[:codap_url].nil? || APP_CONFIG[:log_manager_data_interactive_url].nil? 
+    @no_log_manager = APP_CONFIG[:codap_url].nil? || APP_CONFIG[:log_manager_data_interactive_url].nil?
 
     # helper model to limit learner selections:
     @learner_selector = Report::Learner::Selector.new(params)
@@ -103,8 +103,8 @@ class Report::LearnerController < ApplicationController
           render :json => {:modification_time => modification_time }
         end
       end
-   
-    else 
+
+    else
       render :nothing => true
     end
   end
