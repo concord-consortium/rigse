@@ -11,17 +11,7 @@ class Reports::Usage < Reports::Excel
       #Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50 )
     #]
     # stud.id, class, school, user.id, username, student name, teachers
-    @shared_column_defs = [
-      Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
-      Reports::ColumnDefinition.new(:title => "Class ID",     :width => 10),
-      Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
-      Reports::ColumnDefinition.new(:title => "School",       :width => 25),
-      Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
-      Reports::ColumnDefinition.new(:title => "Perm. Forms",  :width => 25),
-      Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
-      Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
-      Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
-    ]
+    @shared_column_defs = common_header
 
     @runnable_start_column = {}
     @sheet_defs = [[]]

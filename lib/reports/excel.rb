@@ -143,6 +143,7 @@ class Reports::Excel
   def report_learner_info_cells(report_learner)
     return [
       report_learner.student_id,
+      report_learner.learner_id,
       report_learner.class_id,
       report_learner.class_name,
       report_learner.school_name,
@@ -152,7 +153,21 @@ class Reports::Excel
       report_learner.student_name,
       report_learner.teachers_name
     ]
+  end
 
+  def common_header
+    return [
+      Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
+      Reports::ColumnDefinition.new(:title => "Learner ID",   :width => 10),
+      Reports::ColumnDefinition.new(:title => "Class ID",     :width => 10),
+      Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
+      Reports::ColumnDefinition.new(:title => "School",       :width => 25),
+      Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
+      Reports::ColumnDefinition.new(:title => "Perm. Forms",  :width => 25),
+      Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
+      Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
+      Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50)
+    ]
   end
 
   def get_containers(runnable)
