@@ -7,4 +7,4 @@
           %li
             - label_str = "model_types_#{admin_tag.tag.underscore}"
             = label_tag label_str, admin_tag.tag
-            = check_box_tag "model_types[]", admin_tag.tag, object.model_type_list.include?(admin_tag.tag), :id => label_str
+            = radio_button_tag "model_types[]", admin_tag.tag, object.model_type_list.include?(admin_tag.tag), :id => label_str
