@@ -15,6 +15,7 @@ class Search
   attr_accessor :without_teacher_only
   attr_accessor :activity_page
   attr_accessor :investigation_page
+  attr_accessor :interactive_page
   attr_accessor :per_page
   attr_accessor :user_id
   attr_accessor :include_contributed
@@ -114,6 +115,7 @@ class Search
 
     self.activity_page        = opts[:activity_page]       || 1
     self.investigation_page   = opts[:investigation_page]  || 1
+    self.interactive_page     = opts[:interactive_page]    || 1
     self.without_teacher_only = opts[:without_teacher_only]|| true
     self.java_requirements    = opts[:java_requirements]   || []
     self.include_contributed  = opts[:include_contributed] || false
@@ -208,6 +210,7 @@ class Search
       search_by_subject_areas(s)
       search_by_model_types(s)
       search_by_authorship(s)
+      s.paginate(:page => self.interactive_page, :per_page => self.per_page)
     end
     self.results[:all] += search.results
     self.hits[:all]    += search.hits

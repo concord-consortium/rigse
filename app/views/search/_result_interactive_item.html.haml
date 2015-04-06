@@ -34,3 +34,11 @@
             %td{:width=>"90px"}
               %div{:style=>'float:right'}
                 = render :partial => '/browse/preview', :locals => {:material => material, :current_visitor => current_visitor}
+  .toggle-details
+    %i.toggle-details-icon.fa.fa-chevron-down
+    %i.toggle-details-icon.fa.fa-chevron-up{style: 'display: none'}
+
+    .material-details{style: 'display: none'}
+      .material-description{:class => 'one-col'}
+        %h3 Description
+        = material.description
