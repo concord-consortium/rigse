@@ -35,11 +35,11 @@ class Interactive < ActiveRecord::Base
   end
 
   def teacher_only
-    false
+    true
   end
   
   def teacher_only?
-    false
+    true
   end
 
   def display_name
