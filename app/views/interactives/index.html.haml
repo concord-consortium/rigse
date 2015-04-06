@@ -28,4 +28,4 @@
                 %li.menu=link_to 'edit', edit_interactive_path(interactive), :class => 'edit'
                 %li.menu=link_to 'delete', interactive, :class => 'delete', :data => { :confirm => "Are you sure you want to delete interactive #{interactive.id}" }, :method => :delete
         %div{:id => dom_id_for(interactive, :details), :class => 'tiny'}
-          %p =render :partial => 'show',:locals => {:interactive => interactive, :show_thumbnail => true}
+          %p=render :partial => 'show',:locals => {:interactive => interactive, :show_thumbnail => true}
