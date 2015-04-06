@@ -1,9 +1,9 @@
 = form_for(@interactive) do |f|
   = f.error_messages
   = edit_menu_for(@interactive, f)
-  = field_set_tag 'interactive Name' do
+  = field_set_tag 'Interactive Name' do
     = f.text_field :name
-  = field_set_tag 'interactive Description' do
+  = field_set_tag 'Interactive Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   = field_set_tag 'Publication Status' do
     = f.select :publication_status, Interactive.publication_states.map {|s| s.to_s}

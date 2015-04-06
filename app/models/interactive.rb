@@ -1,6 +1,7 @@
 class Interactive < ActiveRecord::Base
   include Publishable
-
+  include Changeable
+  
   attr_accessible :name, :description, :url, :width, :height, :scale, :image_url, :credits, :publication_status
   belongs_to :user
 

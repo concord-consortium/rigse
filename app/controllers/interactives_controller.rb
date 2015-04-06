@@ -47,6 +47,17 @@ class InteractivesController < ApplicationController
     @interactive = Interactive.find(params[:id])
   end
 
+  def destroy
+    @interactive = Interactive.find(params[:id])
+    @interactive.destroy
+    @redirect = params[:redirect]
+    respond_to do |format|
+      format.html { redirect_back_or(activities_url) }
+      format.js
+      format.xml  { head :ok }
+    end
+  end
+
   def update
     cancel = params[:commit] == "Cancel"
     @interactive = Interactive.find(params[:id])
