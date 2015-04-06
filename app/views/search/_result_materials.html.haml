@@ -1,0 +1,14 @@
+- partial_template = type == 'Interactives' ? 'result_interactive_item' : 'result_item'
+.materials_container.investigations
+  .material_list_header
+    ="#{material_class.display_name.pluralize}"
+  %p.border_top= page_entries_info materials, :model => material_class.display_name
+  = will_paginate materials, :param_name => param_name, :params => @form_model.params.merge(:type => type)
+
+  %table.result_material{ :cellpadding => 0, :cellspacing => 0 }
+    %tr
+      %td.material_list
+        - materials.each do |material|
+          = render :partial => partial_template, :locals => { :material => material }
+  %br
+  = will_paginate materials, :param_name => param_name, :params => @form_model.params.merge(:type => type)

@@ -49,6 +49,11 @@ en:
         zero: resource pages
         one: resource page
         other: resource page
+      Interactive : Resource Page
+      interactive:
+        zero: interactives
+        one: interactive
+        other: interactives
   investigation: sequence
   activity: activity
   recent_activity:

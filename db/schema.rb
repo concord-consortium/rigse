@@ -849,14 +849,15 @@ ActiveRecord::Schema.define(:version => 20150330140747) do
     t.string   "name"
     t.text     "description"
     t.string   "url"
-    t.float    "width"
-    t.float    "height"
+    t.integer  "width"
+    t.integer  "height"
     t.float    "scale"
     t.string   "image_url"
-    t.integer  "user_ids"
+    t.integer  "user_id"
     t.string   "credits"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.string   "publication_status"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "investigations", :force => true do |t|

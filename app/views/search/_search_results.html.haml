@@ -10,7 +10,10 @@
     = hidden_field_tag "search_term", @search_term
     = hidden_field_tag "investigation_page", @investigation_page
     = hidden_field_tag "activity_page", @activity_page
+    = hidden_field_tag "interactive_page", @interactive_page
     - if investigations && !investigations.empty?
-      = render :partial => 'search/result_investigation', :locals => { :materials => investigations, :type => 'Investigations' }
+      = render :partial => 'search/result_materials', :locals => { :materials => investigations, :type => 'Investigations', :material_symbol => :investigation, :material_class => Investigation, :param_name => 'investigation_page'}
     - if activities && !activities.empty?
-      = render :partial => 'search/result_activity', :locals => { :materials => activities, :type => 'Activities' }
+      = render :partial => 'search/result_materials', :locals => { :materials => activities, :type => 'Activities', :material_symbol => :activity, :material_class => Activity, :param_name => 'activity_page' }
+    - if interactives && !interactives.empty?
+      = render :partial => 'search/result_materials', :locals => { :materials => interactives, :type => 'Interactives', :material_symbol => :interactive, :material_class => Interactive, :param_name => 'interactive_page' }

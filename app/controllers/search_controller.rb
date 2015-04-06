@@ -28,6 +28,8 @@ class SearchController < ApplicationController
     @investigations_count = @investigations.size
     @activities           = search.results[Search::ActivityMaterial] || []
     @activities_count     = @activities.size
+    @interactives         = search.results[Search::InteractiveMaterial] || []
+    @interactives_count   = @interactives.size
     @form_model = search
   end
 

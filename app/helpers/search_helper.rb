@@ -38,9 +38,9 @@ module SearchHelper
   end
 
   def show_material_icon(material, link_url, hide_details)
-    if material.material_type == "Investigation"
-      icon_url = material.icon_image
-    elsif material.material_type == "Activity"
+    if material.material_type == "Interactive"
+      icon_url = material.image_url
+    else
       icon_url = material.icon_image
     end
     output = capture_haml do

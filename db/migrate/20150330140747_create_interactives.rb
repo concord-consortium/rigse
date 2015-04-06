@@ -4,12 +4,13 @@ class CreateInteractives < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.string :url
-      t.float :width
-      t.float :height
+      t.integer :width
+      t.integer :height
       t.float :scale
       t.string :image_url
-      t.integer :user_ids
+      t.integer :user_id
       t.string :credits
+      t.string :publication_status
       t.timestamps
     end
   end

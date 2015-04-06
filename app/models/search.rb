@@ -23,12 +23,15 @@ class Search
   attr_accessor :java_requirements
   attr_accessor :grade_level_groups
   attr_accessor :subject_areas
+  attr_accessor :model_types
   attr_accessor :availabe_subject_areas
   attr_accessor :availabe_grade_level_groups
+  attr_accessor :available_model_types 
 
   SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
   InvestigationMaterial   = "Investigation"
   ActivityMaterial        = "Activity"
+  InteractiveMaterial     = "Interactive"
   AllMaterials            = [InvestigationMaterial, ActivityMaterial]
 
   Newest       = 'Newest'
@@ -91,6 +94,8 @@ class Search
     self.subject_areas               = opts[:subject_areas] || []
     self.availabe_subject_areas      = []
     self.availabe_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
+    self.model_types                 = opts[:model_types] || nil
+    self.available_model_types       = []
     
     self.results        = {}
     self.hits           = {}
@@ -114,12 +119,23 @@ class Search
     self.include_contributed  = opts[:include_contributed] || false
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
+    self.fetch_available_model_types()
     self.fetch_availabe_grade_subject_areas()
     self.search()
+    self.search_interactive()
   end
-
+  
+  def fetch_available_model_types
+    results = self.engine.search([Interactive]) do |s|
+      s.facet :model_types
+    end
+    results.facet(:model_types).rows.each do |facet|
+      self.available_model_types << facet.value
+    end
+  end
+  
   def fetch_availabe_grade_subject_areas
-    results = self.engine.search([Investigation, Activity, ExternalActivity]) do |s|
+    results = self.engine.search([Investigation, Activity, ExternalActivity, Interactive]) do |s|
       s.facet :subject_areas
       s.facet :grade_levels do 
         Search.grade_level_groups.each do |key, value|
@@ -185,10 +201,26 @@ class Search
     end
   end
 
+  def search_interactive
+    search = Interactive.search do |s|
+      s.fulltext(self.text)
+      search_by_grade_levels(s)
+      search_by_subject_areas(s)
+      search_by_model_types(s)
+      search_by_authorship(s)
+    end
+    self.results[:all] += search.results
+    self.hits[:all]    += search.hits
+    self.total_entries[:all] += search.results.total_entries
+    self.results["Interactive"] = search.results
+    self.hits["Interactive"]    = search.hits
+    self.total_entries["Interactive"] = search.results.total_entries
+  end
+
   def params
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
-      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements, :grade_level_groups, :subject_areas]
+      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements, :grade_level_groups, :subject_areas, :model_types]
     keys.each do |key|
       value = self.send key
       if value
@@ -260,6 +292,13 @@ class Search
       subject_areas.each do |g|
         s.with(:subject_areas, g)
       end
+    end
+  end
+
+  def search_by_model_types(search)
+    return if model_types.nil? || model_types == "None"
+    search.any_of do |s|
+      s.with(:model_types, model_types)
     end
   end
 

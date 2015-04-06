@@ -42,8 +42,22 @@
                 = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
                 = label_tag grade, grade
 
-        = render :partial=>"search/subject_areas_filter"
-
+        %td
+          = render :partial=>"search/subject_areas_filter"
+          .filterheader
+            Authorship
+          .tablecell
+            = check_box_tag 'include_official', '1', @form_model.will_show_official, :id => 'include_official'
+            %label.tooltip
+              Official
+              %span.tip
+                These materials are written by the Concord Consortium.
+          .tablecell
+            = check_box_tag 'include_contributed', '1', params[:include_contributed], :id => 'include_contributed'
+            %label.tooltip
+              Authored by Community
+              %span.tip
+                These materials are written by external contributors.
         = render :partial=>"search/grade_levels_filter"
 
         %td.materialcolumn
@@ -55,6 +69,9 @@
           .tablecell
             = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
             = label_tag 'activity','Activity'
+          .tablecell
+            = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
+            = label_tag 'interactive','Interactive'
           %br
           .filterheader
             Material Properties
@@ -72,19 +89,9 @@
                 These materials download a file to your computer, and start using Java Web Start.
           %br
           .filterheader
-            Authorship
+            Interactive Types
           .tablecell
-            = check_box_tag 'include_official', '1', @form_model.will_show_official, :id => 'include_official'
-            %label.tooltip
-              Official
-              %span.tip
-                These materials are written by the Concord Consortium.
-          .tablecell
-            = check_box_tag 'include_contributed', '1', params[:include_contributed], :id => 'include_contributed'
-            %label.tooltip
-              Authored by Community
-              %span.tip
-                These materials are written by external contributors.
+            = render :partial=>"search/model_types_filter"
         %td.probescolumn
           .filterheader
             Sensor Use
