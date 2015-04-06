@@ -14,6 +14,7 @@ module SearchHelper
   def build_onSearch_message(form_model)
     investigations_count = form_model.total_entries['Investigation'] || 0
     activities_count = form_model.total_entries['Activity'] || 0
+    interactives_count = form_model.total_entries['Interactive'] || 0
     show_message_onSearch= ""
     if investigations_count == 1
       show_message_onSearch += "#{investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)'>#{t(:investigation)}</a>"
@@ -28,6 +29,15 @@ module SearchHelper
       show_message_onSearch += " #{activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activity</a>"
     elsif activities_count > 0
       show_message_onSearch += " #{activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activities</a>"
+    end
+
+    if interactives_count > 0 && activities_count > 0 && investigations_count > 0
+      show_message_onSearch += ","
+    end
+    if interactives_count == 1
+      show_message_onSearch += " #{interactives_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"interactives_bookmark\").offsetTop)'>interactive</a>"
+    elsif interactives_count > 0
+      show_message_onSearch += " #{interactives_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"interactives_bookmark\").offsetTop)'>interactives</a>"
     end
 
     show_message_onSearch +=" matching"
