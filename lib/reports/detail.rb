@@ -139,7 +139,7 @@ class Reports::Detail < Reports::Excel
         row = sheet.row(sheet.last_row_index + 1)
         assess_completed = "#{assess_completed}/#{total_assessments}(#{total_by_container})"
         assess_correct = "#{l.num_correct}/#{correctable.size}"
-        row[0, 3] =  report_learner_info_cells(l) + [assess_completed, assess_percent, assess_correct, last_run]
+        row[0, 3] =  report_learner_info_cells([l]) + [assess_completed, assess_percent, assess_correct, last_run]
 
         all_answers = []
         get_containers(runnable).each do |container|

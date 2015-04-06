@@ -51,7 +51,7 @@ class Reports::Usage < Reports::Excel
     iterate_with_status(student_learners.keys) do |student_class|
       student_id = student_class[0]
       learners = student_learners[student_class]
-      learner_info = report_learner_info_cells(learners.first)
+      learner_info = report_learner_info_cells(learners)
       rows = []
       @sheets.each do |sheet|
         row = sheet.row(sheet.last_row_index + 1)
