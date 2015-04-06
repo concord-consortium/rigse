@@ -1,6 +1,32 @@
 class InteractivesController < ApplicationController
   def index
-    @interactives = Interactive.paginate(:page => params[:page], :per_page => 30) 
+    search_params = {
+      :material_types     => [Search::InteractiveMaterial],
+      :activity_page      => params[:page],
+      :per_page           => 30,
+      :user_id            => current_visitor.id,
+      :grade_span         => params[:grade_span],
+      :private            => current_visitor.has_role?('admin'),
+      :search_term        => params[:search]
+    }
+
+    s = Search.new(search_params)
+    @interactives = s.results[Search::InteractiveMaterial]
+
+    if params[:mine_only]
+      @interactives = @interactives.reject { |i| i.user.id != current_visitor.id }
+    end
+
+    if request.xhr?
+      render :partial => 'interactives/runnable_list', :locals => {:interactives => @interactives, :paginated_objects =>@interactives}
+    else
+      respond_to do |format|
+        format.html do
+          render 'index'
+        end
+        format.js
+      end
+    end
   end
   
   def new
