@@ -27,7 +27,7 @@
           = link_to item.name, item
     = link_to "Create #{ExternalActivity.display_name}", new_external_activity_path, :class => 'button'
 
-- if current_visitor.has_role?('admin') || current_visitor.resource_pages.present?
+- if current_visitor.has_role?('admin')
   %div{:style=> "margin: 1em; padding: 1em;"}
     %h4= "#{Interactive.display_name.pluralize} you've authored"
     %ul

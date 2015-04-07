@@ -11,7 +11,7 @@
         = will_paginate @interactives
     .action_menu_header_right
       %ul.menu
-        -unless current_visitor.anonymous?
+        -if current_visitor.has_role?('admin')
           %li= link_to 'create interactive', new_interactive_path
         %li= toggle_all 'interactive descriptions'
 

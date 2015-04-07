@@ -1,4 +1,7 @@
 class InteractivesController < ApplicationController
+  
+  before_filter :admin_only, :except => [:index,:show]
+
   def index
     search_params = {
       :material_types     => [Search::InteractiveMaterial],
@@ -123,6 +126,14 @@ class InteractivesController < ApplicationController
           format.xml  { render :xml => @interactive.errors, :status => :unprocessable_entity }
         end
       end
+    end
+  end
+
+  protected
+  def admin_only
+    unless current_visitor.has_role?('admin')
+      flash[:notice] = "Please log in as an administrator"
+      redirect_to(:home)
     end
   end
 end
