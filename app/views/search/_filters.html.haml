@@ -21,8 +21,6 @@
             = order_check_box(Search::Newest, "Newest", @form_model.sort_order)
           %div
             = order_check_box(Search::Alphabetical, "Alphabetical", @form_model.sort_order)
-          %div
-            = order_check_box(Search::Popularity, "Popularity", @form_model.sort_order)
         - if scientific_domains.size > 0
           %td.domaincolumn
             .filterheader
