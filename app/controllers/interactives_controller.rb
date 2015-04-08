@@ -8,7 +8,6 @@ class InteractivesController < ApplicationController
       :activity_page      => params[:page],
       :per_page           => 30,
       :user_id            => current_visitor.id,
-      :grade_span         => params[:grade_span],
       :private            => current_visitor.has_role?('admin'),
       :search_term        => params[:search]
     }

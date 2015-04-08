@@ -11,6 +11,7 @@ class Interactive < ActiveRecord::Base
 
   searchable do
     string :name
+    text :name
     text :description
     string  :grade_levels, :multiple => true do
       grade_level_list
