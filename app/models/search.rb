@@ -29,11 +29,11 @@ class Search
   attr_accessor :availabe_grade_level_groups
   attr_accessor :available_model_types 
 
-  SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
+  SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity, Interactive]
   InvestigationMaterial   = "Investigation"
   ActivityMaterial        = "Activity"
   InteractiveMaterial     = "Interactive"
-  AllMaterials            = [InvestigationMaterial, ActivityMaterial]
+  AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial]
 
   Newest       = 'Newest'
   Oldest       = 'Oldest'
@@ -124,7 +124,6 @@ class Search
     self.fetch_available_model_types()
     self.fetch_availabe_grade_subject_areas()
     self.search()
-    self.search_interactive()
   end
   
   def fetch_available_model_types
@@ -191,6 +190,9 @@ class Search
           s.paginate(:page => self.activity_page, :per_page => self.per_page)
         elsif (type==Search::InvestigationMaterial)
           s.paginate(:page => self.investigation_page, :per_page => self.per_page)
+        elsif (type==Search::InteractiveMaterial)
+		  search_by_model_types(s)
+          s.paginate(:page => self.interactive_page, :per_page => self.per_page)
         end
 
       end
@@ -201,23 +203,6 @@ class Search
       self.hits[type]    = _results.hits
       self.total_entries[type] = _results.results.total_entries
     end
-  end
-
-  def search_interactive
-    search = Interactive.search do |s|
-      s.fulltext(self.text)
-      search_by_grade_levels(s)
-      search_by_subject_areas(s)
-      search_by_model_types(s)
-      search_by_authorship(s)
-      s.paginate(:page => self.interactive_page, :per_page => self.per_page)
-    end
-    self.results[:all] += search.results
-    self.hits[:all]    += search.hits
-    self.total_entries[:all] += search.results.total_entries
-    self.results["Interactive"] = search.results
-    self.hits["Interactive"]    = search.hits
-    self.total_entries["Interactive"] = search.results.total_entries
   end
 
   def params
@@ -299,7 +284,7 @@ class Search
   end
 
   def search_by_model_types(search)
-    return if model_types.nil? || model_types == "None"
+    return if model_types.nil? || model_types == "All"
     search.any_of do |s|
       s.with(:model_types, model_types)
     end
