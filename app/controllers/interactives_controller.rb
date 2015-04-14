@@ -128,6 +128,42 @@ class InteractivesController < ApplicationController
     end
   end
 
+  def import_model_library
+    if request.post?
+      respond_to do |format|
+        begin
+          model_library = JSON.parse( params['import'].read, :symbolize_names => true )
+          Interactive.transaction do
+            model_library[:models].each do |model|
+              new_admin_tag = {:scope => "model_types", :tag => model[:model_type]}
+              if Admin::Tag.fetch_tag(new_admin_tag).size == 0
+                admin_tag = Admin::Tag.new({:scope => "model_types", :tag => model[:model_type]})
+                admin_tag.save!
+              end
+              interactive = Interactive.new(model.except(:model_type))
+              interactive.user = current_visitor
+              interactive.publication_status = "draft"
+              interactive.model_type_list.add(model[:model_type])
+              if interactive.save!
+                format.js { render :js => "window.location.href = 'interactives';" }
+              else
+                format.js { render :json => { :error =>"Import Failed"}, :status => 500 }
+              end
+            end
+          end
+        rescue => e
+          format.js  { render :json => { :error =>"JSON Parser Error"}, :status => 500 }
+        end
+      end
+    else
+      @message = params[:message] || ''
+      respond_to do |format|
+        format.js { render :json => { :html => render_to_string('import_model_library')}, :content_type => 'text/json' }
+        format.html
+      end
+    end
+  end
+
   protected
   def admin_only
     unless current_visitor.has_role?('admin')

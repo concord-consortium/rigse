@@ -16,6 +16,10 @@ class Admin::Tag < ActiveRecord::Base
       name = options[:scope]
       tags = Admin::Tag.like(name)
     end
+
+    def fetch_tag(options)
+      Admin::Tag.where(scope: options[:scope], tag: options[:tag])
+    end
   end
 
   def name

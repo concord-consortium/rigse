@@ -602,7 +602,12 @@ RailsPortal::Application.routes.draw do
     resources :attached_files
     resources :images
 
-    resources :interactives
+    resources :interactives do
+      collection do
+        get :import_model_library
+        post :import_model_library
+      end
+    end
 
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do
