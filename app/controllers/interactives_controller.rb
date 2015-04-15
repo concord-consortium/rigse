@@ -180,7 +180,7 @@ class InteractivesController < ApplicationController
       }
     end
     model_library = {:models => model_library }
-    send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "#itsi_model_library.json"
+    send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "portal_interactives_library.json"
   end
 
   protected
