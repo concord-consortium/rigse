@@ -21,7 +21,7 @@ class Report::Learner::Selector
     @all_runnables         = Investigation.published + Investigation.assigned +
                              ::Activity.directly_published + ::Activity.assigned +
                              ExternalActivity.published + ExternalActivity.assigned
-    @all_runnables         = @all_runnables.uniq.sort_by { |i| i.name.downcase }
+    @all_runnables         = @all_runnables.uniq.sort_by { |i| i.name ? i.name.downcase : ""}
 
     @start_date            = options['start_date']
     @end_date              = options['end_date']
