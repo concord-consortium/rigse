@@ -14,6 +14,7 @@
         -if current_visitor.has_role?('admin')
           %li= link_to 'create interactive', new_interactive_path
         %li= toggle_all 'interactive descriptions'
+        %li= link_to 'Export Interactives', export_model_library_interactives_path
 
 .item_collection
   %ul.quiet_list

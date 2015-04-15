@@ -164,6 +164,25 @@ class InteractivesController < ApplicationController
     end
   end
 
+  def export_model_library
+    model_library = []
+    Interactive.all.each do |m|
+      model_library << {
+        :name => m.name,
+        :description => m.description,
+        :url => m.url,
+        :width => m.width,
+        :height => m.height,
+        :scale => m.scale,
+        :image_url => m.image_url,
+        :credits => m.credits,
+        :model_type => m.model_type_list[0]
+      }
+    end
+    model_library = {:models => model_library }
+    send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "#itsi_model_library.json"
+  end
+
   protected
   def admin_only
     unless current_visitor.has_role?('admin')

@@ -606,6 +606,7 @@ RailsPortal::Application.routes.draw do
       collection do
         get :import_model_library
         post :import_model_library
+        get :export_model_library
       end
     end
 
