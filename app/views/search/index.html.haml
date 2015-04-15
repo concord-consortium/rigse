@@ -12,7 +12,7 @@
           #search_suggestions
         %td
           .go_button.button
-            = submit_tag :GO, :name => '', :id => 'go-button'
+            = submit_tag :GO, :name => '', :id => 'go-button', :onclick => 'submitForm()'
     = render :partial=>"search/filters"
   = hidden_field 'prevent','submit',:value=>"0"
   #results
