@@ -124,4 +124,30 @@ class Diy::ModelsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  def export
+    if logged_in? && current_user.has_role?("admin")
+      model_library = []
+      Diy::Model.all.each do |m|
+        if m.interactive_url && !m.interactive_url.empty?
+          model_library << {
+            :name => m.name,
+            :description => m.description,
+            :url => m.interactive_url,
+            :width => m.interactive_width,
+            :height => m.interactive_height,
+            :scale => m.interactive_scale,
+            :image_url => m.image_url,
+            :credits => m.credits,
+            :model_type => m.model_type.name
+          }
+        end
+      end
+      model_library = {:models => model_library }
+      send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "itsi_model_library.json"
+    else
+      flash[:error] = "You're not authorized to do this"
+      redirect_to(:back)
+    end
+  end
 end

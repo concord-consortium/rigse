@@ -39,7 +39,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.namespace(:diy) do |diy|
     diy.resources :model_types, :member => { :destroy => :post }
-    diy.resources :models, :member => { :destroy => :post }
+    diy.resources :models, :member => { :destroy => :post }, :collection => {:export => :get}
   end
 
   map.namespace(:embeddable) do |embeddable|

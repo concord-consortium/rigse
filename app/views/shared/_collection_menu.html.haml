@@ -1,3 +1,4 @@
+- show_export ||= false
 .action_menu.collection_menu
   .action_menu_header
     .action_menu_header_left
@@ -17,3 +18,5 @@
       %ul.menu
         %li= link_to "create #{collection_class.display_name}", :controller => collection_class.name.underscore.pluralize, :action => :new
         %li= toggle_all "#{collection_class.display_name} descriptions"
+        - if show_export
+          %li= link_to "export #{collection_class.display_name.pluralize}", :controller => collection_class.name.underscore.pluralize, :action => :export
