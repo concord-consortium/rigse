@@ -126,7 +126,7 @@ class Diy::ModelsController < ApplicationController
   end
 
   def export
-    if logged_in? && current_user.has_role?("admin")
+    if logged_in? && current_user.has_role?("admin", "manager")
       model_library = []
       Diy::Model.all.each do |m|
         if m.interactive_url && !m.interactive_url.empty?

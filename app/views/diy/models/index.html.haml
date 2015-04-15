@@ -1,4 +1,5 @@
-= render :partial => 'shared/collection_menu', :locals => { :collection => @models, :collection_class => Diy::Model, :show_export => true }
+- show_export = logged_in? && current_user.has_role?("admin", "manager")
+= render :partial => 'shared/collection_menu', :locals => { :collection => @models, :collection_class => Diy::Model, :show_export => show_export }
 - @models.each do |model|
   = render :partial => 'shared/embeddable_container', :locals=> {:component => model, 
       :overrides => {:display_name => "Model #{model.id}: #{model.name}", :link_title => true}}
