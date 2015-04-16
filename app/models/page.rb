@@ -321,7 +321,7 @@ class Page < ActiveRecord::Base
         when "Embeddable::Diy::Section"
           content = page_element.embeddable.content
           page_json[:show_introduction] = true
-          page_json[:text] = content == "</html>" ? "" : content
+          page_json[:text] = content == "<html />" ? "" : content
 
         when "Embeddable::OpenResponse"
           page_json[:show_info_assessment] = true
