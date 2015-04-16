@@ -57,7 +57,7 @@ RailsPortal::Application.configure do
   config.assets.precompile += %w(
     print.css
     otml.css
-    project.css
+    settings.css
     jquery/jquery.js
     pie/PIE.js
     calendar_date_select/calendar_date_select.js

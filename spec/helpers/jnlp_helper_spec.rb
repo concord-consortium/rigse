@@ -4,13 +4,13 @@ describe JnlpHelper do
   subject { Object.new().extend(JnlpHelper) }
 
   describe "pub_interval" do
-    describe "uses project seconds settings" do
-      it "should be 30000 when the project says 30" do
-        Admin::Project.stub(:pub_interval).and_return(30)
+    describe "uses seconds in settings" do
+      it "should be 30000 when the settings say 30" do
+        Admin::Settings.stub(:pub_interval).and_return(30)
         subject.pub_interval.should == 30000
       end
-      it "should be 10000 when the project says 10" do
-        Admin::Project.stub(:pub_interval).and_return(10)
+      it "should be 10000 when the settings say 10" do
+        Admin::Settings.stub(:pub_interval).and_return(10)
         subject.pub_interval.should == 10000
       end
     end
@@ -19,7 +19,7 @@ describe JnlpHelper do
   describe "system_properties" do
     describe "with pub enabled, and a learner" do
       before :each do
-        @project = Admin::Project.new(:pub_interval => 10,
+        @settings = Admin::Settings.new(:pub_interval => 10,
           :use_periodic_bundle_uploading => true)
         @student = mock()
         @user = Factory(:user)
@@ -28,7 +28,7 @@ describe JnlpHelper do
         @learner = mock(:student => @student, :periodic_bundle_logger => pbl)
       end
       it "should include the update interval as a property" do
-        subject.stub(:current_project => @project)
+        subject.stub(:current_settings => @settings)
         subject.stub(:current_visitor => @user)
         subject.stub(:dataservice_periodic_bundle_logger_periodic_bundle_contents_url).and_return("URL")
         subject.stub(:dataservice_periodic_bundle_logger_session_end_notification_url).and_return("URL")

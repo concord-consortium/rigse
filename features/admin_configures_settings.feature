@@ -76,7 +76,7 @@ Feature: Admin configures project settings
     Then I should see the sites name
     When I follow "edit project"
     Then I should see "Custom stylesheet for OTML:"
-    When I fill in "admin_project[custom_css]" with ".testing_css_class_here {position:relative; padding:5px;}"
+    When I fill in "admin_settings[custom_css]" with ".testing_css_class_here {position:relative; padding:5px;}"
     And I save the project
     Then I should see ".testing_css_class_here"
     
@@ -108,7 +108,7 @@ Feature: Admin configures project settings
     And am on the admin projects page
     And I follow "edit project"
     And I choose "Use custom help page HTML"
-    And I fill in "admin_project[custom_help_page_html]" with "Creating Help Page"
+    And I fill in "admin_settings[custom_help_page_html]" with "Creating Help Page"
     And I save the project
     And am on the admin projects page
     And I press "Preview Custom Help Page"
@@ -117,7 +117,7 @@ Feature: Admin configures project settings
     When am on the admin projects page
     And I follow "edit project"
     And I choose "Use external help URL"
-    And I fill in "admin_project[external_url]" with "www.google.com"
+    And I fill in "admin_settings[external_url]" with "www.google.com"
     And I save the project
     And am on the admin projects page
     And I press "Preview External Help URL"
@@ -130,7 +130,7 @@ Feature: Admin configures project settings
     And I login as an admin
     And am on the admin projects page
     When I follow "edit project"
-    And I fill in "admin_project[home_page_content]" with "Creating Home Page"
+    And I fill in "admin_settings[home_page_content]" with "Creating Home Page"
     And I save the project
     And I log out
     And am on the my home page
@@ -142,7 +142,7 @@ Feature: Admin configures project settings
     And I login as an admin
     And am on the admin projects page
     When I follow "edit project"
-    And I fill in "admin_project[home_page_content]" with "Creating Home Page"
+    And I fill in "admin_settings[home_page_content]" with "Creating Home Page"
     And I save the project
     And I press "Preview Home Page"
     Then the newly opened window should have content "Creating Home Page"
@@ -156,7 +156,7 @@ Feature: Admin configures project settings
     And I login as an admin
     And am on the admin projects page
     When I follow "edit project"
-    And I fill in "admin_project[home_page_content]" with "Creating Home Page"
+    And I fill in "admin_settings[home_page_content]" with "Creating Home Page"
     And I save the project
     And am on the admin projects page
     And I press "Preview Home Page"

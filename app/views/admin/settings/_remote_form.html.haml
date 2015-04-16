@@ -1,0 +1,2 @@
+= remote_form_for(admin_settings, :before => "if(validate_settings_form_help_page_settings(this)){tinyMCE.triggerSave(true,true)}else return false", :update => dom_id_for(admin_settings)) do |f|
+  = render :partial => "form", :locals => { :admin_settings => admin_settings, :f => f  }

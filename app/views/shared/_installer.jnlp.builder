@@ -24,7 +24,7 @@ end
 
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 # hard code the codebase because the jar file versions are also hardcoded
-xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostname.presence || 'jars.dev.concord.org'}/dev4") { 
+xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_settings.jnlp_cdn_hostname.presence || 'jars.dev.concord.org'}/dev4") { 
   jnlp_information(xml, local_assigns[:learner])
   xml.security {
     xml << "    <all-permissions />"
@@ -63,12 +63,12 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_project.jnlp_cdn_hostna
     xml.property :name=> "jnlp.install_if_not_found", :value => "true"
 
     # include wrapped_jnlp so we know what jnlp to install from
-    xml.property :name=> "jnlp.wrapped_jnlp", :value => current_project.jnlp_url
+    xml.property :name=> "jnlp.wrapped_jnlp", :value => current_settings.jnlp_url
 
     xml.property :name=> "jnlp.jnlp2shell.static_www", :value => "true"
     # if the cdn is set then tell jnlp2shell to use that as a mirror
-    if current_project.jnlp_cdn_hostname.present?
-      xml.property :name=> "jnlp.jnlp2shell.mirror_host", :value => current_project.jnlp_cdn_hostname
+    if current_settings.jnlp_cdn_hostname.present?
+      xml.property :name=> "jnlp.jnlp2shell.mirror_host", :value => current_settings.jnlp_cdn_hostname
     end
   }
 

@@ -1,14 +1,14 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-describe Admin::Project do
+describe Admin::Settings do
   before(:each) do
-    @new_valid_project = Admin::Project.new(
+    @new_valid_settings = Admin::Settings.new(
       :active => true
     )
   end
 
   it "should create a new instance given valid attributes" do
-    @new_valid_project.should be_valid
+    @new_valid_settings.should be_valid
   end
 
 
@@ -16,20 +16,20 @@ describe Admin::Project do
     describe "default value" do
       it "should be 5 minutes" do
         five_min = 300
-        @new_valid_project.pub_interval.should == five_min
+        @new_valid_settings.pub_interval.should == five_min
       end
     end
 
     describe "less than minimum interval" do
       it "should fail validations" do
-        @new_valid_project.pub_interval = Admin::Project::MinPubInterval - 1
-        @new_valid_project.should_not be_valid
-        puts @new_valid_project.errors
+        @new_valid_settings.pub_interval = Admin::Settings::MinPubInterval - 1
+        @new_valid_settings.should_not be_valid
+        puts @new_valid_settings.errors
       end
     end
 
   end
-  describe "a projects list of enabled vendor interfaces" do
+  describe "a list of enabled vendor interfaces" do
 
     before(:all) do
       # Currently all the probe configuration models including vendor_interfaces are loaded
@@ -48,23 +48,23 @@ describe Admin::Project do
     end
 
     it "should exist" do
-      @new_valid_project.enabled_vendor_interfaces.should_not be_nil
+      @new_valid_settings.enabled_vendor_interfaces.should_not be_nil
     end
 
     it "should initially have all the existant vendor interfaces" do
-      @new_valid_project.enabled_vendor_interfaces.should have(@num_interfaces).things
+      @new_valid_settings.enabled_vendor_interfaces.should have(@num_interfaces).things
       @all_interfaces.each do |interface|
-        @new_valid_project.enabled_vendor_interfaces.should include(interface)
+        @new_valid_settings.enabled_vendor_interfaces.should include(interface)
       end
     end
 
     it "should allow removing vendor interfaces" do
       interface_to_remove = Probe::VendorInterface.find(:first)
-      @new_valid_project.save # delete throws an exception if our model doesn't have an id
-      @new_valid_project.enabled_vendor_interfaces.delete(interface_to_remove)
-      @new_valid_project.enabled_vendor_interfaces.should have(@num_interfaces -1).things
-      @new_valid_project.reload
-      @new_valid_project.enabled_vendor_interfaces.should have(@num_interfaces -1).things
+      @new_valid_settings.save # delete throws an exception if our model doesn't have an id
+      @new_valid_settings.enabled_vendor_interfaces.delete(interface_to_remove)
+      @new_valid_settings.enabled_vendor_interfaces.should have(@num_interfaces -1).things
+      @new_valid_settings.reload
+      @new_valid_settings.enabled_vendor_interfaces.should have(@num_interfaces -1).things
     end
 
     describe "custom_css" do
@@ -72,18 +72,18 @@ describe Admin::Project do
         @css =  ".testing {position:relative; padding:5px;}"
       end
       it "it should allow for custom css" do
-        @new_valid_project.custom_css = @css
-        @new_valid_project.should be_valid
-        @new_valid_project.should be_using_custom_css
+        @new_valid_settings.custom_css = @css
+        @new_valid_settings.should be_valid
+        @new_valid_settings.should be_using_custom_css
       end
       it "not be using custom css by default" do
-        @new_valid_project.should_not be_using_custom_css
+        @new_valid_settings.should_not be_using_custom_css
       end
     end
 
 
     describe "#available_bookmark_types" do
-      subject  { @new_valid_project.available_bookmark_types }
+      subject  { @new_valid_settings.available_bookmark_types }
 
       it "should return an array" do
         should be_kind_of Array
@@ -95,7 +95,7 @@ describe Admin::Project do
     end
 
     describe "#enabled_bookmark_types" do
-      subject  { @new_valid_project.enabled_bookmark_types }
+      subject  { @new_valid_settings.enabled_bookmark_types }
       it "should return an array" do
         should be_kind_of Array
       end
@@ -110,7 +110,7 @@ describe Admin::Project do
 
   describe "class methods" do
     before(:each) do
-      @clazz = Admin::Project
+      @clazz = Admin::Settings
       APP_CONFIG[:test_value_true] = true
       APP_CONFIG[:test_value_false] = false
       APP_CONFIG[:test_value_nil] = nil
@@ -154,15 +154,15 @@ describe Admin::Project do
     end
 
     describe "teachers_can_author" do
-      let(:active_project) { mock() }
-      it "should return true if the current project allows teachers to author" do
-        @clazz.should_receive(:default_project).and_return(active_project)
-        active_project.should_receive(:teachers_can_author).and_return(true)
+      let(:active_settings) { mock() }
+      it "should return true if the current settings allows teachers to author" do
+        @clazz.should_receive(:default_settings).and_return(active_settings)
+        active_settings.should_receive(:teachers_can_author).and_return(true)
         @clazz.teachers_can_author?.should == true
       end
-      it "should return false if the current project dissalows teachers authoring" do
-        @clazz.should_receive(:default_project).and_return(active_project)
-        active_project.should_receive(:teachers_can_author).and_return(false)
+      it "should return false if the current settings dissalows teachers authoring" do
+        @clazz.should_receive(:default_settings).and_return(active_settings)
+        active_settings.should_receive(:teachers_can_author).and_return(false)
         @clazz.teachers_can_author?.should == false
       end
     end

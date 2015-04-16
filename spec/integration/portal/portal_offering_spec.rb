@@ -2,7 +2,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe "Portal::Offering" do
   before(:each) do
-    generate_default_project_and_jnlps_with_factories
+    generate_default_settings_and_jnlps_with_factories
     @learner = Factory(:full_portal_learner)
     @user = @learner.student.user
     @user.save!

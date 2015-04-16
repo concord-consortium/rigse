@@ -6,13 +6,13 @@ describe SecurityQuestionsController do
   before(:each) do
     @student = Factory.create(:portal_student, :user => Factory.create(:confirmed_user))
     sign_in @student.user
-    @test_project = mock("project",:name=> "Test Project")
-    @test_project.should_receive(:use_student_security_questions).and_return(true)
-    @test_project.stub!(:require_user_consent?).and_return(false)
-    @test_project.stub!(:help_type).and_return('no help')
-    @test_project.stub!(:enabled_bookmark_types).and_return([])
-    @test_project.stub!(:anonymous_can_browse_materials).and_return(true)
-    Admin::Project.stub(:default_project).and_return(@test_project)
+    @test_settings = mock("settings",:name=> "Test Settings")
+    @test_settings.should_receive(:use_student_security_questions).and_return(true)
+    @test_settings.stub!(:require_user_consent?).and_return(false)
+    @test_settings.stub!(:help_type).and_return('no help')
+    @test_settings.stub!(:enabled_bookmark_types).and_return([])
+    @test_settings.stub!(:anonymous_can_browse_materials).and_return(true)
+    Admin::Settings.stub(:default_settings).and_return(@test_settings)
   end
 
   describe "GET edit" do

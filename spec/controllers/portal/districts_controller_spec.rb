@@ -15,7 +15,7 @@ describe Portal::DistrictsController do
   end
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_settings_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
     login_admin
     @district = mock_district 

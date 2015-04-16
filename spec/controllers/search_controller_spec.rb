@@ -5,7 +5,7 @@ describe SearchController do
 
   def make(let); end
 
-  let(:admin_project)   { Factory.create(:admin_project, :include_external_activities => false) }
+  let(:admin_settings)   { Factory.create(:admin_settings, :include_external_activities => false) }
 
   let(:mock_semester)   { Factory.create(:portal_semester, :name => "Fall") }
   let(:mock_school)     { Factory.create(:portal_school, :semesters => [mock_semester]) }
@@ -56,7 +56,7 @@ describe SearchController do
   end
 
   before(:each) do
-    admin_project
+    admin_settings
     sign_in teacher_user
     make all_investigations
     make official_activities

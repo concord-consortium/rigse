@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "/admin/projects/show.html.haml" do
+describe "/admin/settings/show.html.haml" do
   include ApplicationHelper
 
   before(:each) do
     @pub_interval = 30000;
-    @project = Admin::Project.new(:pub_interval => @pub_interval)
-    assign(:admin_project,@project)
+    @settings = Admin::Settings.new(:pub_interval => @pub_interval)
+    assign(:admin_settings,@settings)
     view.stub!(:current_visitor).and_return(Factory.next(:admin_user))
     render
   end

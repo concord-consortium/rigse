@@ -99,7 +99,7 @@ module RailsPortal
       puts "Didn't start observers because you are running: rake db:migrate"
     else
         begin
-          config.active_record.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"admin/project_observer", :"dataservice/periodic_bundle_content_observer"
+          config.active_record.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"admin/settings_observer", :"dataservice/periodic_bundle_content_observer"
         rescue
           # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
           puts "Couldn't start observers #{$!} ... but continuing process anyway"
