@@ -74,6 +74,8 @@ class Interactive < ActiveRecord::Base
     end
   end
 
+  scope :published, where(publication_status: 'published')
+
   def is_template
     false
   end

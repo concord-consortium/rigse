@@ -1,6 +1,6 @@
 class InteractivesController < ApplicationController
   
-  before_filter :admin_only, :except => [:index,:show]
+  before_filter :admin_only, :except => [:index, :show, :export_model_library]
 
   def index
     search_params = {
@@ -172,7 +172,7 @@ class InteractivesController < ApplicationController
 
   def export_model_library
     model_library = []
-    Interactive.all.each do |m|
+    Interactive.published.each do |m|
       model_library << {
         :name => m.name,
         :description => m.description,
