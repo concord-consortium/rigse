@@ -135,20 +135,26 @@ class InteractivesController < ApplicationController
           model_library = JSON.parse( params['import'].read, :symbolize_names => true )
           Interactive.transaction do
             model_library[:models].each do |model|
-              new_admin_tag = {:scope => "model_types", :tag => model[:model_type]}
-              if Admin::Tag.fetch_tag(new_admin_tag).size == 0
-                admin_tag = Admin::Tag.new({:scope => "model_types", :tag => model[:model_type]})
-                admin_tag.save!
-              end
+
               interactive = Interactive.new(model.except(:model_type))
               interactive.user = current_visitor
               interactive.publication_status = "draft"
-              interactive.model_type_list.add(model[:model_type])
+
+              if model[:model_type]
+                new_admin_tag = {:scope => "model_types", :tag => model[:model_type]}
+                if Admin::Tag.fetch_tag(new_admin_tag).size == 0
+                  admin_tag = Admin::Tag.new({:scope => "model_types", :tag => model[:model_type]})
+                  admin_tag.save!
+                end
+                interactive.model_type_list.add(model[:model_type])
+              end
+
               if interactive.save!
                 format.js { render :js => "window.location.href = 'interactives';" }
               else
                 format.js { render :json => { :error =>"Import Failed"}, :status => 500 }
               end
+
             end
           end
         rescue => e
