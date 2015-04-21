@@ -116,14 +116,12 @@ class Report::LearnerController < ApplicationController
 
   def log_manager
     if @no_log_manager
-      flash[:alert] = "This portal is not configured to open the Log Manager"
-      redirect_to request.GET.except(:commit)
+      alert_and_reload "This portal is not configured to open the Log Manager"
       return
     end
 
     if @select_learners.length == 0
-      flash[:alert] = "No learners meet the criteria you selected"
-      redirect_to request.GET.except(:commit)
+      alert_and_reload "No learners meet the criteria you selected"
       return
     end
 
@@ -159,23 +157,19 @@ class Report::LearnerController < ApplicationController
     end
 
     if learners.length == 0
-      # TODO create alert_and_redirect method
-      flash[:alert] = "No learners meet the criteria you selected"
-      redirect_to request.GET.except(:commit)
+      alert_and_reload "No learners meet the criteria you selected"
       return
     end
 
     if authoring_sites.length == 0
-     flash[:alert] = "None of the selected learners performed external activities"
-     redirect_to request.GET.except(:commit)
+      alert_and_reload "None of the selected learners performed external activities"
       return
     end
 
     # TODO: instead of refusing the request, modify the arg_block_bouncer to contain a list of the selected
     # authoring sites, with a submit button for each site (and disable the javascript auto-submit)
     if authoring_sites.uniq.count > 1
-      flash[:alert] = "The selected learners' arg block activity occurred on more than one authoring site. Try limiting your request to activities hosted on just one authoring site."
-      redirect_to request.GET.except(:commit)
+      alert_and_reload "The selected learners' arg block activity occurred on more than one authoring site. Try limiting your request to activities hosted on just one authoring site."
       return
     end
 
@@ -185,6 +179,11 @@ class Report::LearnerController < ApplicationController
     end
 
     render :arg_block_bouncer, :layout => false
+  end
+
+  def alert_and_reload(message)
+    flash[:alert] = message
+    redirect_to request.GET.except(:commit)
   end
 
 end
