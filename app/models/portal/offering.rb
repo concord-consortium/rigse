@@ -14,7 +14,7 @@ class Portal::Offering < ActiveRecord::Base
 
   has_many :collaborations, :class_name => "Portal::Collaboration"
 
-  [:name, :description].each { |m| delegate m, :to => :runnable }
+  [:name, :description, :icon_image].each { |m| delegate m, :to => :runnable }
 
   has_many :open_responses, :dependent => :destroy, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
     def answered
