@@ -173,6 +173,7 @@ group :development do
   gem "rack-mini-profiler" 
   gem "bullet"
   gem "lol_dba"
+  gem "pry-debugger"
 end
 
 group :test, :cucumber do
@@ -195,7 +196,6 @@ group :test, :cucumber, :development do
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   gem "pry"
-  gem "pry-debugger"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"
 end

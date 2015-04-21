@@ -6,6 +6,8 @@ rvm:
 before_script:
   - cp config/database.travis.yml config/database.yml
   - cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
+  - cp config/settings.sample.yml config/settings.yml
+  - cp config/initializers/site_keys.rb.sample config/initializers/site_keys.rb
   - mysql -e 'create database rigse_test;'
   - RAILS_ENV=test bundle exec rake db:migrate db:test:prepare
   - RAILS_ENV=cucumber bundle exec rake db:test:prepare_cucumber

@@ -7,8 +7,6 @@
 require 'rubygems'
 require 'spork'
 
-require 'spork/ext/ruby-debug'
-
 Rails.env = 'cucumber' if defined?(Rails)
 ENV['RAILS_ENV'] = 'cucumber'
 
