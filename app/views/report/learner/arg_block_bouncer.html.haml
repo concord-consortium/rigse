@@ -1,0 +1,9 @@
+%form{ :action => @report_url, :method => "post" }
+  - @remote_endpoints.each do |endpoint|
+    %input{ :type => "hidden", :name => "endpoint", :value => endpoint }/
+  %input{ :type => "submit", :value => "Get Report" }
+
+:javascript
+  window.onload = function() {
+  	document.forms[0].submit();
+  }

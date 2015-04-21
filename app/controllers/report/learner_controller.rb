@@ -29,6 +29,7 @@ class Report::LearnerController < ApplicationController
       :apply => 'Apply Filters',
       :usage => 'Usage Report',
       :details => 'Details Report',
+      :arg_block => 'Arg Block Report',
       :logs_query => 'Log Manager Query',
       :log_manager => 'Open in Log Manager'
     }
@@ -76,6 +77,8 @@ class Report::LearnerController < ApplicationController
       report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
       report.run_report(sio)
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
+    elsif params[:commit] == @button_texts[:arg_block]
+      arg_block(@select_learners)
     elsif params[:commit] == @button_texts[:log_manager]
       log_manager
     end
@@ -147,6 +150,41 @@ class Report::LearnerController < ApplicationController
       },
       :url => data_interactive_url + "?" + { :rep => prefix, :ids => learner_ids.join('-') }.to_param
     }].to_json))
+  end
+
+  def arg_block(learners)
+    authoring_sites = learners.select { |l| l.runnable_type == "ExternalActivity" }.map do |learner|
+      uri = URI(learner.runnable.url)
+      "#{uri.scheme}://#{uri.host}:#{uri.port}"
+    end
+
+    if learners.length == 0
+      # TODO create alert_and_redirect method
+      flash[:alert] = "No learners meet the criteria you selected"
+      redirect_to request.GET.except(:commit)
+      return
+    end
+
+    if authoring_sites.length == 0
+     flash[:alert] = "None of the selected learners performed external activities"
+     redirect_to request.GET.except(:commit)
+      return
+    end
+
+    # TODO: instead of refusing the request, modify the arg_block_bouncer to contain a list of the selected
+    # authoring sites, with a submit button for each site (and disable the javascript auto-submit)
+    if authoring_sites.uniq.count > 1
+      flash[:alert] = "The selected learners' arg block activity occurred on more than one authoring site. Try limiting your request to activities hosted on just one authoring site."
+      redirect_to request.GET.except(:commit)
+      return
+    end
+
+    @report_url = "#{authoring_sites.first}/c_rater/argumentation_blocks/report"
+    @remote_endpoints = learners.map do |learner|
+      external_activity_return_url(learner.learner_id)
+    end
+
+    render :arg_block_bouncer, :layout => false
   end
 
 end
