@@ -175,7 +175,7 @@ group :development do
   gem "lol_dba"
 end
 
-group :test do
+group :test, :cucumber do
   gem "selenium-webdriver", "2.40.0"
   gem "cucumber",           "~> 1.1.9"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
@@ -191,7 +191,7 @@ group :test do
   gem "capybara-mechanize", "~> 0.3.0"
 end
 
-group :test, :development do
+group :test, :cucumber, :development do
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   gem "pry"

@@ -16,10 +16,10 @@ module RailsPortal
       # TODO: Should we just die here otherwise?
       puts "please create the file #{app_environment_variables}, or set ENV"
     end
-    extra_groups = {:assets => %w(development test)}
+    extra_groups = {:assets => %w(development test cucumber)}
     if ENV['PORTAL_FEATURES'] && !ENV['PORTAL_FEATURES'].empty?
       ENV['PORTAL_FEATURES'].split(/\s+/).each do |feature|
-        extra_groups[feature.to_sym] = %w(development test production)
+        extra_groups[feature.to_sym] = %w(development test cucumber production)
         puts "enabling portal feature: #{feature}"
       end
     end

@@ -9,6 +9,8 @@ describe HomeController do
     @test_project.stub!(:require_user_consent?).and_return(false)
     @test_project.stub!(:help_type).and_return('no help')
     @test_project.stub!(:anonymous_can_browse_materials).and_return(true)
+    @test_project.stub!(:allow_default_class).and_return(false)
+    @test_project.stub!(:allow_adhoc_schools).and_return(false)
     controller.stub(:before_render) {
       response.template.stub(:current_project).and_return(@test_project)
     }

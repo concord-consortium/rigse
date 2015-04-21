@@ -15,7 +15,7 @@ describe "Portal::Offering" do
     within("div.header-login-box") do
       fill_in("Username", :with => @user.login)
       fill_in("Password", :with => 'password')
-      click_button("GO")
+      click_button("Log In")
     end
   end
 
@@ -80,7 +80,7 @@ describe "Portal::Offering" do
         session_cookie_string = cookie_service_node.xpath("void/object/void/string/text()")[1].to_s
         config_session_id = session_cookie_string[/\=([^;]*);/, 1]
         header_session_string = page.driver.response.headers["Set-Cookie"]
-        header_session_id = header_session_string[/\=([^;]*);/, 1]
+        header_session_id = header_session_string[/#{Rails.application.config.session_options[:key]}\=([^;]*);/, 1]
         header_session_id.should == config_session_id
       end
 

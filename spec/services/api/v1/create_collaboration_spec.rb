@@ -99,7 +99,8 @@ describe API::V1::CreateCollaboration do
         query = URI.decode_www_form(uri.query)
         data_url_param = ['collaborators_data_url', result[:collaborators_data_url]]
         domain_param = ['domain', domain]
-        expect(query).to match_array([data_url_param, domain_param])
+        logging_param = ["logging", "false"]
+        expect(query).to match_array([data_url_param, domain_param, logging_param])
       end
     end
 

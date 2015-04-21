@@ -1,0 +1,25 @@
+sudo: false # see: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+language: ruby
+rvm:
+  - "1.9.3"
+
+before_script:
+  - cp config/database.travis.yml config/database.yml
+  - cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
+  - mysql -e 'create database rigse_test;'
+  - RAILS_ENV=test bundle exec rake db:migrate db:test:prepare
+  - RAILS_ENV=cucumber bundle exec rake db:test:prepare_cucumber
+  - RAILS_ENV=cucumber bundle exec rake db:migrate
+
+# uncomment this line if your project needs to run something other than `rake`:
+script: RAILS_ENV=test bundle exec rake spec && RAILS_ENV=cucumber bundle exec rake cucumber
+
+cache: bundler
+
+bundler_args: --without development
+
+# blacklist - these branches aren't feature branches and shouldn't be getting direct commits
+# branches:
+#   except:
+#     - staging
+#     - production

@@ -41,9 +41,9 @@ en:
         other: activities
       ExternalActivity : External Activity
       external_activity:
-        zero: activities
-        one: activity
-        other: activities
+        zero: external activities
+        one: external activity
+        other: external activities
       ResourcePage : Resource Page
       resource_page:
         zero: resource pages
