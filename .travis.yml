@@ -2,6 +2,9 @@ sudo: false # see: http://docs.travis-ci.com/user/workers/container-based-infras
 language: ruby
 rvm:
   - "1.9.3"
+env:
+  - RAILS_ENV=test TEST_SUITE=spec
+  - RAILS_ENV=cucumber TEST_SUITE=cucumber
 
 before_script:
   - cp config/database.travis.yml config/database.yml
@@ -9,13 +12,10 @@ before_script:
   - cp config/settings.sample.yml config/settings.yml
   - cp config/sis_import_data.sample.yml config/sis_import_data.yml
   - cp config/initializers/site_keys.rb.sample config/initializers/site_keys.rb
-  - mysql -e 'create database rigse_test;'
-  - RAILS_ENV=test bundle exec rake db:migrate db:test:prepare
-  - RAILS_ENV=cucumber bundle exec rake db:test:prepare_cucumber
-  - RAILS_ENV=cucumber bundle exec rake db:migrate
+  - bundle exec rake db:test:prepare
 
 # uncomment this line if your project needs to run something other than `rake`:
-script: RAILS_ENV=test bundle exec rake spec && RAILS_ENV=cucumber bundle exec rake cucumber
+script: bundle exec rake $TEST_SUITE
 
 cache: bundler
 
