@@ -15,3 +15,8 @@ add_project_setting_tag('@lightweight', :use_jnlps, false)
     add_project_setting_tag("@enable_#{tag_name}", setting, true)
     add_project_setting_tag("@disable_#{tag_name}", setting, false)
   }
+
+AfterStep('@pause') do
+  print "Press Return to continue"
+  STDIN.getc
+end

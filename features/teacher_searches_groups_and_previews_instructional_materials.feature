@@ -13,19 +13,18 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And the following external activities exist:
       | name        | user    | url               |
       | Google Home | author  | http://google.com |
-    And I login with username: teacher password: password
+    And I am logged in with the username teacher
     And I am on the search instructional materials page
 
 
   @javascript
   Scenario: Teacher should be on materials preview page to assign materials
     When I follow the "Assign to a Class" link for the investigation "differential calculus"
-    Then I should be on the preview investigation page for the investigation "differential calculus"
-    And I should see "differential calculus"
+    Then I should see "Select Class(es)"
     And I am on the search instructional materials page
     And I should see "Instructional Materials"
     And I follow the "Assign to a Class" link for the activity "differential calculus"
-    Then I should be on the preview activity page for the activity "differential calculus"
+    Then I should see "Select Class(es)"
     And I am on the search instructional materials page
     And I should see "Instructional Materials"
     And I follow investigation link "differential calculus" on the search instructional materials page
@@ -37,6 +36,10 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should be on the preview activity page for the activity "differential calculus"
     And I should see "differential calculus"
     And I am on the search instructional materials page
+
+  @javascript
+  @wip
+  Scenario: Teacher should be able to see more details about materials
     When I follow the "Show more details..." link for the investigation "differential calculus"
     Then I should be on the preview investigation page for the investigation "differential calculus"
     And I should see "differential calculus"
@@ -165,6 +168,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
 
 
   @javascript
+  @wip
   Scenario: Teacher can sort search activities on the basis of popularity
     When the Activity "intersecting lines" is assigned to the class "Physics"
     And the Activity "intersecting lines" is assigned to the class "Geography"

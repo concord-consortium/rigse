@@ -83,11 +83,11 @@ Feature: Teacher manages instructional materials of a class
     Then I should see "No students have registered for this class yet"
     
   Scenario: Teacher should be able to run investigation as teacher
-    When I follow "Run as Teacher" for the investigation "Aerodynamics"
+    When I follow "As Teacher" for the investigation "Aerodynamics"
     Then I receive a file for download with a filename like "_investigation_"
     
   Scenario: Teacher should be able to run investigation as student
-    When I follow "Run as Student" for the investigation "Aerodynamics"
+    When I follow "As Student" for the investigation "Aerodynamics"
     Then I receive a file for download with a filename like "_investigation_"
     
   Scenario: Teacher should be able to run the activity
