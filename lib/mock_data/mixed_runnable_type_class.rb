@@ -10,7 +10,7 @@ module MockData
         Factory(:activity, :name => "Activity Sample",
             :sections => (1 .. 3).map{|number| Factory(:section, :name => "Section #{number}")}
           ),
-        Factory(:page, :name => "Page Sample"),
+        # Factory(:page, :name => "Page Sample"),
         Factory(:external_activity, :name => "External Activity Sample"),
         Factory(:external_activity, :name => "External Activity with internal reporting Sample",
           :template => Factory(:activity, :name => "Backing Activity for External Activity")),

@@ -295,7 +295,7 @@ class Portal::StudentsController < ApplicationController
       respond_to do |format|
         if (@portal_clazz && @student)
           flash[:notice] = 'Successfully registered for class.'
-          format.html { redirect_to(@student) }
+          format.html { redirect_to home_path }
         else
           @student = Portal::Student.new
           format.html { render :action => 'register' }

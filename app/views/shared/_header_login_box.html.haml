@@ -16,7 +16,7 @@
           %tr.third-row
             %td{colspan: "2"}
               %span.segmented
-                =link_to 'Can’t log in?',forgot_password_path, :id=>"link_forgot_password"
+                =link_to "Can't log in?",forgot_password_path, :id=>"link_forgot_password"
               - unless defined? @hide_signup_link
                 %span.segmented
                   =link_to 'Sign Up', home_path

@@ -216,6 +216,20 @@ class ResourcePage < ActiveRecord::Base
     end
   end
 
+  # methods to mimic Activity
+  def teacher_only
+    false
+  end
+
+  def teacher_only?
+    false
+  end
+
+  def parent
+    nil
+  end
+  # end methods to mimic Activity
+
   def display_name
     res = []
     res << "[#{self.publication_status.upcase}]" if %w(draft private).include?(self.publication_status)

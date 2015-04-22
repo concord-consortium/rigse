@@ -23,7 +23,7 @@ module SearchModelInterface
   end
 
   def offerings_by_clazz(clazz_ids)
-    self.offerings.find(:clazz_id => clazz_ids)
+    self.offerings.find_all_by_clazz_id(clazz_ids)
   end
 
   def java_requirements

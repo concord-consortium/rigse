@@ -210,7 +210,7 @@ class SearchController < ApplicationController
             end
             #page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
           else
-            page << "$('error_message').update('Select atleast one class to assign this #{runnable_type}');$('error_message').show()"
+            page << "$('error_message').update('Select at least one class to assign this #{runnable_type}');$('error_message').show()"
           end
         else
           if clazz_ids.count > 0
@@ -231,7 +231,7 @@ class SearchController < ApplicationController
             page.replace_html "clazz_summary_data", {:partial => 'material_assign_summary', :locals=>{:summary_data=>assign_summary_data}}
             page << "setPopupHeight()"
           else
-            page << "$('error_message').update('Select atleast one class to assign this #{runnable_type}');$('error_message').show()"
+            page << "$('error_message').update('Select at least one class to assign this #{runnable_type}');$('error_message').show()"
           end
 
         end

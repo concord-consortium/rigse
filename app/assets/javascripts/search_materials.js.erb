@@ -5,6 +5,8 @@ jQuery(function () {
         if (!jQuery(this).attr('name')) return;
         submitForm();
     });
+
+    jQuery('#go-button').click(function() { submitForm(); });
 });
 
 function setAllProbesSelected(allChecked) {
@@ -328,7 +330,7 @@ function getDataForAssignToClassPopup()
     var material_type = $("assign_material_type").getValue("");
     if(material_id.length <= 0)
     {
-        var message = "<div class='feedback_message'>Please select atleast one activity to assign to a class.</div>";
+        var message = "<div class='feedback_message'>Please select at least one activity to assign to a class.</div>";
         getMessagePopup(message);
         return;
     }
