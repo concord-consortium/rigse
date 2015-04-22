@@ -35,9 +35,6 @@ end
  
 Spork.each_run do
   RailsPortal::Application.reload_routes!
-  require 'hirb'
-  Hirb.enable :pager=>false
-  Hirb.enable :formatter=>false
   
   # By default, any exception happening in your Rails application will bubble up
   # to Cucumber so that your scenario will fail. This is a different from how 
