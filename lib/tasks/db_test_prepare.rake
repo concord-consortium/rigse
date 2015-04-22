@@ -1,5 +1,6 @@
 namespace :db do
   namespace :test do
+
     def load_common_data
       Rake::Task['db:backup:load_probe_configurations'].invoke
       Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
@@ -8,10 +9,8 @@ namespace :db do
     desc 'after completing db:test:prepare load probe configurations'
     task :prepare do
       Rails.env = ENV['RAILS_ENV'] = (ENV['RAILS_ENV'] == 'cucumber' ? 'cucumber' : 'test')
-      Rake::Task['db:drop'].invoke
-      Rake::Task['db:create'].invoke
-      Rake::Task['db:schema:load'].invoke
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations[Rails.env])
+      ActiveRecord::Base.establish_connection Rails.env.to_sym
+
       load_common_data
 
       if Rails.env == 'cucumber'
@@ -20,6 +19,12 @@ namespace :db do
         Rake::Task['app:setup:create_default_data'].invoke
       end
     end
+
+    desc "prepare db for feature"
+    task :prepare_cucumber do
+      Rails.env = ENV['RAILS_ENV'] = 'cucumber'
+      Rake::Task['db:test:prepare'].invoke
+    end
+
   end
 end
-

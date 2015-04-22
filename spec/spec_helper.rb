@@ -71,7 +71,7 @@ Spork.each_run do
       puts "Rails.env: #{Rails.env}"
       puts "Database: #{ActiveRecord::Base.connection.current_database}"
       puts
-      exit
+      exit 1
     end
   else
     puts
@@ -81,7 +81,7 @@ Spork.each_run do
     puts "Rails.env: #{Rails.env}"
     puts "Database: #{ActiveRecord::Base.connection.current_database}"
     puts
-    exit
+    exit 1
   end
 
   require 'factory_girl'
