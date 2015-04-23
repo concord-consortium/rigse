@@ -18,6 +18,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
 
 
   @javascript
+  @with_mysql_failures
   Scenario: Teacher should be on materials preview page to assign materials
     When I follow the "Assign to a Class" link for the investigation "differential calculus"
     Then I should see "Select Class(es)"
