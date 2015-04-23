@@ -15,7 +15,7 @@ describe Embeddable::LabBookSnapshotsController do
   describe "in addition a labbook snapshot controller" do
 
     before(:each) do
-      generate_default_project_and_jnlps_with_mocks
+      generate_default_settings_and_jnlps_with_mocks
       @mock_model = mock_model(Embeddable::LabBookSnapshot,
                               :target_element => nil,
                               :uuid => "12",
@@ -24,7 +24,7 @@ describe Embeddable::LabBookSnapshotsController do
     
     describe "with bitmap snapshots enabled" do 
       before(:each) do
-        @mock_project.stub!(:use_bitmap_snapshots?).and_return(true)
+        @mock_settings.stub!(:use_bitmap_snapshots?).and_return(true)
       end
 
       it "the LabbookBundle should not scale drawTools" do
@@ -50,7 +50,7 @@ describe Embeddable::LabBookSnapshotsController do
 
     describe "with bitmap snapshots disabled" do 
       before(:each) do
-        @mock_project.stub!(:use_bitmap_snapshots?).and_return(false)
+        @mock_settings.stub!(:use_bitmap_snapshots?).and_return(false)
       end
 
       it "the LabbookBundle should not scale drawTools" do

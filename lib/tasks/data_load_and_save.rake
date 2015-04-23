@@ -33,7 +33,7 @@ end
 def interesting_tables
   tables = ActiveRecord::Base.connection.tables.sort
   tables.reject! do |tbl|
-    %w{schema_migrations sessions roles_users admin_projects}.include?(tbl)
+    %w{schema_migrations sessions roles_users admin_settings}.include?(tbl)
   end
   tables
 end

@@ -358,7 +358,7 @@ RailsPortal::Application.routes.draw do
     match 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/ }, :format => 'blob'
 
     namespace :admin do
-      resources :projects
+      resources :settings
       resources :tags
       resources :permission_forms do
         member do
@@ -649,7 +649,7 @@ RailsPortal::Application.routes.draw do
     match '/test_exception' => 'home#test_exception', :as => :test_exception
     match '/' => 'home#index'
     match '/requirements' => 'home#requirements', :as => :requirements
-    match '/stylesheets/project.css' => 'home#project_css', :as => :project_css
+    match '/stylesheets/settings.css' => 'home#settings_css', :as => :settings_css
     match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
     match '/admin' => 'home#admin', :as => :admin
     match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data

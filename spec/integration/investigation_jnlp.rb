@@ -2,7 +2,7 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 describe "Investigation" do
   it "returns a valid jnlp file" do
-    generate_default_project_and_jnlps_with_factories
+    generate_default_settings_and_jnlps_with_factories
     investigation = Factory(:investigation)
 
     visit investigation_path(:id => investigation.id, :format => :jnlp)

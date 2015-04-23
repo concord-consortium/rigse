@@ -5,7 +5,7 @@ Feature: Teacher navigates using left pane
   In order to make navigation more effective
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And I login with username: teacher
     

@@ -29,10 +29,10 @@ class Portal::Bookmark < ActiveRecord::Base
 
   def self.enabled_bookmark_types
     # It may be overkill, but won't hurt and makes tests a bit easier
-    # (no need to mock and stub default_project).
-    proj = Admin::Project.default_project
-    return [] if !proj || !proj.enabled_bookmark_types
-    return proj.enabled_bookmark_types
+    # (no need to mock and stub default_settings).
+    settings = Admin::Settings.default_settings
+    return [] if !settings || !settings.enabled_bookmark_types
+    return settings.enabled_bookmark_types
   end
 
   def self.allowed_types

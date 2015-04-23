@@ -2,16 +2,16 @@ require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelpe
 
 describe InvestigationsController do
   before(:each) do
-    @current_project = mock(
-      :name => "test project",
+    @current_settings = mock(
+      :name => "test settings",
       :using_custom_css? => false,
       :use_student_security_questions => false,
       :use_bitmap_snapshots? => false,
       :require_user_consent? => false)
-    Admin::Project.stub!(:default_project).and_return(@current_project)
+    Admin::Settings.stub!(:default_settings).and_return(@current_settings)
     controller.stub(:before_render) {
       response.template.stub(:net_logo_package_name).and_return("blah")
-      response.template.stub_chain(:current_project).and_return(@current_project);
+      response.template.stub_chain(:current_settings).and_return(@current_settings);
     }
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })

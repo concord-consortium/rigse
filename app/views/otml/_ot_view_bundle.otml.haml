@@ -2,7 +2,7 @@
   %frame
     %OTFrame{ :useScrollPane => use_scroll_pane, :width => body_width + left_nav_panel_width, :height => height, :title => h(title) }
   %modes
-    %OTViewMode{:name => "student"}      
+    %OTViewMode{:name => "student"}
     - if authoring
       %OTViewMode{:name => "authoring"}
         %map
@@ -23,5 +23,5 @@
     %OTDocumentViewConfig{ :local_id => "document_view_config", :objectClass => 'org.concord.otrunk.view.document.OTDocument', :viewClass => 'org.concord.otrunk.view.document.OTDocumentView' }
       %cssBlocks
         %OTCssText{ :local_id => ot_local_id_for('otml_css'), :src => otml_css_path }/
-        - if current_project.using_custom_css?
-          %OTCssText{ :local_id => ot_local_id_for('project_css'), :src => otml_project_css_path }/
+        - if current_settings.using_custom_css?
+          %OTCssText{ :local_id => ot_local_id_for('settings_css'), :src => otml_settings_css_path }/

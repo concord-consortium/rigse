@@ -4,7 +4,7 @@ Feature: Investigations can be searched
   I want to sort the investigations list
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     Given The theme is "rites"
     And the following empty investigations exist:

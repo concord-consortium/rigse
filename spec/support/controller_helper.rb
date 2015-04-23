@@ -37,8 +37,8 @@ suppress_warnings {
 #
 # Factory Generators
 #
-def generate_default_project_and_jnlps_with_factories
-  @admin_project = Factory.create(:admin_project)
+def generate_default_settings_and_jnlps_with_factories
+  @admin_settings = Factory.create(:admin_settings)
   generate_default_school_resources_with_factories
 end
 
@@ -66,9 +66,9 @@ class ArrayOfVersionedJnlpUrls < Array
   end
 end
 
-# Generates a mock project and associated jnlp resources
-def generate_default_project_and_jnlps_with_mocks
-  @mock_project = mock_model(Admin::Project,
+# Generates a mock settings and associated jnlp resources
+def generate_default_settings_and_jnlps_with_mocks
+  @mock_settings = mock_model(Admin::Settings,
     :active                         => true,
     :home_page_content              => nil,
     :use_student_security_questions => false,
@@ -83,8 +83,8 @@ def generate_default_project_and_jnlps_with_mocks
     :enabled_bookmark_types         => []
   )
 
-  Admin::Project.stub!(:default_project).and_return(@mock_project)
-  @mock_project
+  Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
+  @mock_settings
 end
 
 def generate_portal_resources_with_mocks

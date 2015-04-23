@@ -4,7 +4,7 @@ Feature: Student can not see deactivated offerings
   I do not want to see deactivated offerings
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And I am logged in with the username teacher
     And the student "monty" belongs to class "class_with_no_students"
     And the resource page "NewestResource" is assigned to the class "class_with_no_students"

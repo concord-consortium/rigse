@@ -56,9 +56,9 @@ describe OtmlHelper do
 
   # this is *not* an asset URL. There is a named route in routes.rb
   # this test is just here as documentation
-  describe "otml_project_css_path" do
-    it "should return /stylesheets/project.css (always)" do
-      otml_project_css_path.should eql("/stylesheets/project.css")
+  describe "otml_settings_css_path" do
+    it "should return /stylesheets/settings.css (always)" do
+      otml_settings_css_path.should eql("/stylesheets/settings.css")
     end
 
   end

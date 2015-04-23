@@ -12,7 +12,7 @@ describe Embeddable::SoundGraphersController do
     render_views 
     
     before(:each) do
-      generate_default_project_and_jnlps_with_mocks
+      generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
       @display_mode = Embeddable::SoundGrapher.valid_display_modes.first
       @max_frequency = Embeddable::SoundGrapher.valid_max_frequencies.first

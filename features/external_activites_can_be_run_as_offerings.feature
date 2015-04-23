@@ -4,7 +4,7 @@ Feature: External Activities can be run as offerings
   I want to run an External Activity that has been assigned to me
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     
   Scenario: External Activity offerings are runnable

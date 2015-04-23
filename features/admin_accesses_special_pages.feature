@@ -5,7 +5,7 @@ Feature: Admin can access various admin pages
   I need to access various admin pages
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
   @enable_gses

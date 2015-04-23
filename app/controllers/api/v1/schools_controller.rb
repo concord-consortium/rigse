@@ -26,7 +26,7 @@ class API::V1::SchoolsController < API::APIController
   private
 
   def can_create_new_school(params)
-    Admin::Project.default_project.allow_adhoc_schools
+    Admin::Settings.default_settings.allow_adhoc_schools
   end
   
 end

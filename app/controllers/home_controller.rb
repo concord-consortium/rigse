@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   include RestrictedController
   before_filter :manager_or_researcher, :only => ['admin']
 
-  caches_page   :project_css
+  caches_page   :settings_css
   theme "rites"
   
   def index
@@ -55,10 +55,10 @@ class HomeController < ApplicationController
     raise 'This is a test. This is only a test.'
   end
 
-  def project_css
-    @project = Admin::Project.default_project
-    if @project.using_custom_css?
-      render :text => @project.custom_css
+  def settings_css
+    @settings = Admin::Settings.default_settings
+    if @settings.using_custom_css?
+      render :text => @settings.custom_css
     else
       render :nothing => true, :status => 404
     end

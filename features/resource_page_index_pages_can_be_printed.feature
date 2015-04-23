@@ -4,7 +4,7 @@ Feature: Resource Page index pages can be printed
   I want to print the resource page index page
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And I am logged in with the username teacher
     

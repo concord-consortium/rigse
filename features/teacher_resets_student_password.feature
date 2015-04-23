@@ -4,7 +4,7 @@ Feature: Teacher can reset a students password
   I want to reset their password
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
   @javascript

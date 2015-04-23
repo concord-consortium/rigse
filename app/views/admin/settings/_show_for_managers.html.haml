@@ -1,0 +1,12 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div{ :id => dom_id_for(admin_settings), :class => "container_element" }
+  = show_menu_for(admin_settings, options)
+
+  %div{:id => dom_id_for(admin_settings, :item), :class => 'item'}
+    %div{:id => dom_id_for(admin_settings, :details), :class => 'content'}
+      = wrap_edit_link_around_content(admin_settings, {:complete => mce_init_string}) do
+        %h4= h(admin_settings.name)
+        .form_like
+          = field_set_tag 'Home Page Content' do
+            %p= admin_settings.home_page_content.html_safe unless admin_settings.home_page_content.nil?
+          = render :partial => 'custom_css', :locals => { :admin_settings => admin_settings }

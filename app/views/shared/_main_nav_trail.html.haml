@@ -9,15 +9,15 @@
       - unless @emulate_anonymous_user
         - if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
           %li.trail=link_to('Authoring', authoring_path)
-        - anon_can_browse = current_project ? current_project.anonymous_can_browse_materials : true
+        - anon_can_browse = current_settings ? current_settings.anonymous_can_browse_materials : true
         - unless current_visitor.only_a_student? || (current_visitor.anonymous? && !anon_can_browse)
           %li.trail= link_to 'Browse Instructional Materials' , search_path
         - if current_visitor.has_role?('admin', 'manager','researcher')
           %li.trail= link_to 'Admin', admin_path
 
       - #A developer can load home page without initializing data in database
-      - if current_project
-        - case current_project.help_type
+      - if current_settings
+        - case current_settings.help_type
         - when 'external url'
           %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
         - when 'help custom html'

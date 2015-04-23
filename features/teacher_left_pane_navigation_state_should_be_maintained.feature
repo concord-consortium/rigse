@@ -1,7 +1,7 @@
 Feature: Class state should be saved
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And I am logged in with the username teacher
   

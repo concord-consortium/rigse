@@ -56,7 +56,7 @@ class Image < ActiveRecord::Base
   @@searchable_attributes = %w{name attribution}
   class <<self
     def can_be_created_by?(user)
-      user.has_role?('admin', 'manager', 'researcher', 'author') || (Admin::Project.default_project.teachers_can_author? && user.portal_teacher)
+      user.has_role?('admin', 'manager', 'researcher', 'author') || (Admin::Settings.default_settings.teachers_can_author? && user.portal_teacher)
     end
 
     def searchable_attributes

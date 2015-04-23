@@ -1,0 +1,6 @@
+= javascript_include_tag "preview_home_page.js" # include javascript to preview home page
+= javascript_include_tag('preview_help_page.js')
+= javascript_include_tag 'settings_form'
+- unless @manager_role
+  = render :partial => 'shared/collection_menu', :locals => { :collection => @admin_settings, :collection_class => Admin::Settings }
+= render :partial => 'show', :collection => @admin_settings, :as => :admin_settings

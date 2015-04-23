@@ -25,7 +25,7 @@ describe Embeddable::DataCollectorsController do
 
   describe "the data store for a prediction graph" do
     before(:each) do
-      generate_default_project_and_jnlps_with_mocks
+      generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
       @mock_table = mock_model(Embeddable::DataTable,
         :is_numeric? => true,
@@ -66,7 +66,7 @@ describe Embeddable::DataCollectorsController do
 
   describe "digital display only" do
     before(:each) do
-      generate_default_project_and_jnlps_with_mocks
+      generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
       @font_size = 23
       @graph = Embeddable::DataCollector.create(
@@ -85,7 +85,7 @@ describe Embeddable::DataCollectorsController do
   describe "with multiple_graphable_enabled" do
     include OtmlHelper
     before(:each) do
-      generate_default_project_and_jnlps_with_mocks
+      generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
     end
     before(:each) do
@@ -109,7 +109,7 @@ describe Embeddable::DataCollectorsController do
   describe "without multiple_graphable_enabled" do
     include OtmlHelper
     before(:each) do
-      generate_default_project_and_jnlps_with_mocks
+      generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
     end
     before(:each) do

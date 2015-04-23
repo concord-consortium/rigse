@@ -3,8 +3,8 @@
 # also includes a few samples of how to instantiate singletons like
 # Anonymous and Admin users...
 # Many factory calls chain other factory calls to create dependant objects.
-# couldn' get that to work for admin_projects though! 
-# ( Factory(:admin_projects) throws an error. )
+# couldn' get that to work for admin_settings though! 
+# ( Factory(:admin_settings) throws an error. )
 
 
 # The following lines were needed to get cucumber started,
@@ -15,5 +15,5 @@
 # anon =  Factory.next :anonymous_user
 # admin = Factory.next :admin_user 
 # device_config = Factory.create(:device_config)
-# Admin::Project.create_or_update_default_project_from_settings_yml
+# Admin::Settings.create_or_update_default_settings_from_settings_yml
 # puts "done."
