@@ -6,6 +6,11 @@ require File.expand_path('../../lib/load_config', __FILE__)
 
 module RailsPortal
   class Application < Rails::Application
+    # Use RSpec when generating tests, not test_unit
+    config.generators do |g|
+      g.test_framework :rspec
+    end
+
     config.assets.enabled = true
     # Bundler.require(:default, Rails.env) if defined?(Bundler)
     # Fixes a Compass bug, per http://stackoverflow.com/questions/6005361/sass-import-error-in-rails-3-app-file-to-import-not-found-or-unreadable-comp?rq=1
