@@ -178,6 +178,35 @@ class Report::LearnerController < ApplicationController
       external_activity_return_url(learner.learner_id)
     end
 
+    # TODO - don't forget this part!
+    #
+    # learners = learners.reject { |l| l.permission_forms.strip.empty? }
+    #
+
+    # intentionally leave out student name - results should be semi-anonymized
+    headers = [:permission_forms, :teachers_name, :school_name, :class_name, :class_id, :student_id, :remote_endpoint]
+    sort_by_indices = [:teachers_name, :school_name, :class_id, :student_id].map { |key| headers.find_index(key) }
+
+    rows = learners.map do |learner|
+      headers.map do |header|
+        header == :remote_endpoint ? external_activity_return_url(learner.learner_id) : learner.send(header)
+      end
+    end
+
+    group_by_indices = headers.reject { |header| header == :remote_endpoint }.map { |key| headers.find_index(key) }
+    remote_endpoints_by_bucket = rows.group_by { |row| row.values_at(* group_by_indices) }
+    remote_endpoints_by_bucket.keys.each do |key|
+      remote_endpoints_by_bucket[key] = remote_endpoints_by_bucket[key].map &:last
+    end
+
+    rows = remote_endpoints_by_bucket.keys.map {|key| key + [remote_endpoints_by_bucket[key]]}
+    rows = rows.sort_by! { |row| row.values_at(* sort_by_indices) }
+
+    @arg_block_data = {
+      :headers => headers,
+      :rows => rows
+    }
+
     render :arg_block_bouncer, :layout => false
   end
 
