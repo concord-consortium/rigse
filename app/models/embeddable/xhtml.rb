@@ -44,4 +44,12 @@ class Embeddable::Xhtml < ActiveRecord::Base
     true
   end
 
+  def export_as_lara_activity
+    {
+      :content => content,
+      :name => name,
+      :type => "Embeddable::Xhtml"
+    }
+  end
+
 end

@@ -348,6 +348,14 @@ class Page < ActiveRecord::Base
           end
           page_json[:show_info_assessment] = true
           page_json[:embeddables] << labbook_export
+
+        when "Embeddable::Xhtml"
+          page_json[:show_info_assessment] = true
+          page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
+
+        when "Embeddable::MultipleChoice"
+          page_json[:show_info_assessment] = true
+          page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
         else
           puts "Type not supported"
         end

@@ -103,4 +103,29 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     end
   end
 
+  def export_as_lara_activity
+    layout = self.is_likert ? "likert" : self.horizontal ? "horizontal" : "vertical"
+    mc_export = {
+      :custom => false,
+      :enable_check_answer => false,
+      :give_prediction_feedback => false,
+      :is_prediction => false,
+      :multi_answer => self.allow_multiple_selection,
+      :name => self.name,
+      :prediction_feedback => "",
+      :prompt => self.prompt,
+      :show_as_menu => false,
+      :layout => layout,
+      :type => "Embeddable::MultipleChoice"
+    }
+
+    mc_export[:choices] = []
+
+    self.choices.each do |choice|
+      mc_export[:choices] << choice.export_as_lara_activity
+    end
+
+    return mc_export
+  end
+
 end

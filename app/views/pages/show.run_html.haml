@@ -1,3 +1,6 @@
+- if current_user && current_user.has_role?("admin")
+  %span.export-as-lara-activity
+    = link_to 'Export', export_as_lara_activity_page_path(@page), :title => 'Export as a Lightweight Activity', :rel => 'tooltip'
 = render :partial => 'shared/form_save_warning', :locals => { :skip_warning_popup => true }
 = render :partial=> 'pages/show', :locals=>{:page => @page }
 %input{:type => 'submit', :name => 'Submit', :value => 'Submit', :class => 'disabled'}

@@ -247,9 +247,9 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   create_table "dataservice_periodic_bundle_parts", :force => true do |t|
     t.integer  "periodic_bundle_logger_id"
-    t.boolean  "delta",                                           :default => true
+    t.boolean  "delta",                                         :default => true
     t.string   "key"
-    t.text     "value",                     :limit => 2147483647
+    t.text     "value",                     :limit => 16777215
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -293,7 +293,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
     t.integer  "height"
     t.integer  "width"
     t.integer  "version"
-    t.datetime "updated_at",         :default => '2015-02-27 18:16:44'
+    t.datetime "updated_at",         :default => '2015-04-16 16:26:52'
     t.string   "interactive_url"
     t.string   "interactive_scale",  :default => "1.0"
     t.integer  "interactive_width",  :default => 690
@@ -2241,7 +2241,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_id"=>nil, "scope_type"=>"15", "name"=>"15"}
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_id"=>nil, "name"=>"15", "scope_type"=>"15"}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|
