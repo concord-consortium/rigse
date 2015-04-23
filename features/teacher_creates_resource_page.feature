@@ -4,7 +4,7 @@ Feature: A teacher creates a resource page
   So that students can see it.
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
   Scenario: The teacher creates a resource page

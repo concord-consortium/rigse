@@ -4,7 +4,7 @@ Feature: Student runs html activity
   I want to "run" the activity
 
   Background:
-    Given the most basic default project
+    Given the most basic default settings
     And the database has been seeded
     And a simple activity with a multiple choice exists
     And the activity "simple activity" is assigned to the class "My Class"

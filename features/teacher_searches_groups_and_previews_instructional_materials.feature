@@ -5,11 +5,11 @@ Feature: Teacher can search instructional materials grouped by material type, so
   In order to find suitable study materials for the class
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And "differential calculus" has been updated recently
     And The materials have been indexed
-    Given the default project has include external activities enabled
+    Given the default settings has include external activities enabled
     And the following external activities exist:
       | name        | user    | url               |
       | Google Home | author  | http://google.com |

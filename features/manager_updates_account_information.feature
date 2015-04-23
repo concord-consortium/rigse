@@ -5,7 +5,7 @@ Feature: A manager updates account information for another user
   I want to update a users account information
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
   Scenario Outline: Managers can change a users email address

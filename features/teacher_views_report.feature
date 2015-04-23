@@ -5,7 +5,7 @@ Feature: Teacher views report
   I want to see a report of their work
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     
   Scenario: A teacher views a report of an investigation

@@ -5,7 +5,7 @@ Feature: Teacher can search and assign instructional materials to a class
   In order to provide study materials to the students from the class
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And I am logged in with the username teacher
     

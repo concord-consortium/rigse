@@ -5,7 +5,7 @@ Feature: User logs in using header login box to use the portal
   In order to use the portal
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     
     
