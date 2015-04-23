@@ -3,7 +3,7 @@
 # belongs_to :user, :class_name => "User", :foreign_key => "user_id"
 # belongs_to :domain
 # 
-# has_many :offerings, :as => :runnable, :class_name => "Portal::Offering"
+# has_many :offerings, :through => :clazzes
 # 
 # has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
 # has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
