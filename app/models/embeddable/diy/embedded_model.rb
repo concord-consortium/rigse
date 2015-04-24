@@ -35,7 +35,9 @@ class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
       :native_height => self.diy_model.interactive_height,
       :native_width => self.diy_model.interactive_width,
       :url => self.diy_model.interactive_url,
-      :type => "MwInteractive"
+      :type => "MwInteractive",
+      :click_to_play => true,
+      :image_url => self.diy_model.interactive_url
     }
   end
 

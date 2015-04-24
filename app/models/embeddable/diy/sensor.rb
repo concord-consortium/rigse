@@ -57,6 +57,14 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     end
   end
 
+  def image_url
+    if graph_type == "Prediction"
+      return "/images/prediction_graph.png"
+    else
+      return "/images/sensor_graph.png"
+    end
+  end  
+
   def can_run_lightweight?
     url = interactive_url
     if url && !url.empty?
@@ -72,7 +80,9 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
         :native_height => 435,
         :native_width => 576,
         :url => self.interactive_url,
-        :type => "MwInteractive"
+        :type => "MwInteractive",
+        :click_to_play => true,
+        :image_url => self.image_url
       }
   end
 
