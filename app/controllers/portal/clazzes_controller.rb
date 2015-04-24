@@ -31,7 +31,7 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
-    if current_project.allow_default_class
+    if current_settings.allow_default_class
       @offerings = @portal_clazz.offerings_with_default_classes(current_visitor)
     else
       @offerings = @portal_clazz.offerings
@@ -100,7 +100,7 @@ class Portal::ClazzesController < ApplicationController
       okToCreate = false
     end
 
-    if okToCreate and Admin::Project.default_project.enable_grade_levels?
+    if okToCreate and Admin::Settings.default_settings.enable_grade_levels?
       grade_levels.each do |name, v|
         grade = Portal::Grade.find_or_create_by_name(name)
         @portal_clazz.grades << grade if grade
@@ -201,7 +201,7 @@ class Portal::ClazzesController < ApplicationController
 
         end
 
-        if Admin::Project.default_project.enable_grade_levels?
+        if Admin::Settings.default_settings.enable_grade_levels?
           if grade_levels
             # This logic will attempt to prevent someone from removing all grade levels from a class.
             grades_to_add = []

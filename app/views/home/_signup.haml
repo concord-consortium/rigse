@@ -69,7 +69,7 @@
       = field_set_tag nil, id: 'student-fieldset', "ng-switch-when" => "student" do
         %span.registration-steps
           Step 2 of 3
-        - if current_project.allow_default_class
+        - if current_settings.allow_default_class
           .f-row
             %initial-value{"ng-model" => "regCtrl.class_word", "value" => Portal::Clazz.default_class.class_word }
         - else
@@ -87,7 +87,7 @@
                 .div{'ng-message' => "goodClassword","class" => "error-message"}
                   You must enter a valid class word.
 
-        - if current_project.use_student_security_questions
+        - if current_settings.use_student_security_questions
           .group
             %p.small
               Please select three questions from the menus below.
@@ -203,7 +203,7 @@
                 {{district.name}}
 
         .group#school-picker{"ng-show"  => "regCtrl.showSchool()"}
-          - if current_project.allow_adhoc_schools
+          - if current_settings.allow_adhoc_schools
             %div{"ng-switch" => "regCtrl.schoolEditmode()"}
               .group{"ng-switch-when" => "dropdown"}
                 .f-row

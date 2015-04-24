@@ -4,7 +4,7 @@ Feature: An author creates an investigation
   So that students can take it.
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
   Scenario: The author creates an investigation

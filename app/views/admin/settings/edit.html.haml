@@ -1,0 +1,3 @@
+= javascript_include_tag('preview_help_page.js')
+= form_for(@admin_settings, :before => "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => 'form', :locals => { :admin_settings => @admin_settings, :f => f }

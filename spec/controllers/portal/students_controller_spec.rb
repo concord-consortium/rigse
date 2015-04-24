@@ -4,10 +4,10 @@ describe Portal::StudentsController do
   render_views
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_settings_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
-    Admin::Project.stub!(:default_project).and_return(@mock_project)
-    @mock_project.stub!(:allow_default_class).and_return(true)
+    Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
+    @mock_settings.stub!(:allow_default_class).and_return(true)
   end
 
   describe "POST create" do
@@ -110,7 +110,7 @@ describe Portal::StudentsController do
 
     describe "security questions" do
       before(:each) do
-        @mock_project.stub!(:use_student_security_questions).and_return(true)
+        @mock_settings.stub!(:use_student_security_questions).and_return(true)
       end
 
       it "creates security questions when given valid parameters" do
@@ -141,8 +141,8 @@ describe Portal::StudentsController do
         Portal::Student.count(:all).should == current_student_count
       end
 
-      it "does not check for security questions when they are not enabled in the project" do
-        @mock_project.stub!(:use_student_security_questions).and_return(false)
+      it "does not check for security questions when they are not enabled in the settings" do
+        @mock_settings.stub!(:use_student_security_questions).and_return(false)
         stub_user_with_params
 
         SecurityQuestion.should_not_receive(:errors_for_questions_list!)

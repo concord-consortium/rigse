@@ -254,21 +254,21 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
 
     #######################################################################
     #
-    # Create the default project.
+    # Create the default settings.
     #
     #######################################################################
-    desc "create a default project"
-    task :default_project => :environment do
-      project = Admin::Project.first
-      if project.nil?
-        project = Admin::Project.create(:active => true)
+    desc "create a default settings"
+    task :default_settings => :environment do
+      settings = Admin::Settings.first
+      if settings.nil?
+        settings = Admin::Settings.create(:active => true)
       end
     end
 
 
     #######################################################################
     #
-    # Create default portal resources: project, district, school, course, and class, investigation and grades
+    # Create default portal resources: settings, district, school, course, and class, investigation and grades
     #
     #######################################################################
     desc "Create default portal resources"
@@ -304,8 +304,8 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         grade.insert_at(i)
       end
 
-      # make a default project if it doesn't exist
-      Rake::Task['app:setup:default_project'].invoke
+      # make a default settings if it doesn't exist
+      Rake::Task['app:setup:default_settings'].invoke
 
       # make a default district and school
       site_district = Portal::District.find_or_create_by_name(APP_CONFIG[:site_district])

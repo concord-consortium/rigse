@@ -121,7 +121,7 @@ describe Image do
     subject { Image }
     describe "can_be_created_by" do
       before(:each) do
-        Admin::Project.stub_chain(:default_project, :teachers_can_author?).and_return(true)
+        Admin::Settings.stub_chain(:default_settings, :teachers_can_author?).and_return(true)
       end
 
 

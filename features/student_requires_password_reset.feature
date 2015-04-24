@@ -5,7 +5,7 @@ Feature: Student requires a password reset
   I am forced to change my password if my account was created for me.
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     Given the following students exist:
       | login            | password          | require_password_reset |

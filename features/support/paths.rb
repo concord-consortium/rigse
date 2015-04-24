@@ -25,10 +25,10 @@ module NavigationHelpers
       '/portal/students/signup'
     when /to the link tool/
       '/linktool'
-    when /the current project edit page/
-      "/admin/projects/#{Admin::Project.default_project.id}/edit"
-    when /the current project show page/
-      "/admin/projects/#{Admin::Project.default_project.id}/show"
+    when /the current settings edit page/
+      "/admin/settings/#{Admin::Settings.default_settings.id}/edit"
+    when /the current settings show page/
+      "/admin/settings/#{Admin::Settings.default_settings.id}/show"
     when /the create investigation page/
       "/investigations/new"
     when /the create resource page page/
@@ -112,7 +112,7 @@ module NavigationHelpers
       investigation = Investigation.find_by_name($1)
       offering = Portal::Offering.find_by_runnable_id investigation.id
       "/portal/offerings/#{offering.id}/report"
-    when /the Project Help Page/
+    when /the Help Page/
       "/help"
     when /the preview investigation page for the investigation "(.*)"/
       investigation_id = Investigation.find_by_name($1).id

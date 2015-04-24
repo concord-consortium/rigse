@@ -4,8 +4,8 @@ describe Portal::LearnersController do
 
   describe "GET config" do
     before(:each) do
-      @controller.stub!(:current_project).and_return(
-        mock(:project,
+      @controller.stub!(:current_settings).and_return(
+        mock(:settings,
           :use_periodic_bundle_uploading? => false,
           :use_student_security_questions => false,
           :require_user_consent? => false)

@@ -266,6 +266,6 @@ class Portal::SchoolSelector
       acceptable_fields << [:district] if self.country
     end
     acceptable_fields << :school if self.district
-    Admin::Project.default_project.allow_adhoc_schools && acceptable_fields.include?(field)
+    Admin::Settings.default_settings.allow_adhoc_schools && acceptable_fields.include?(field)
   end
 end

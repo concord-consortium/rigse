@@ -6,7 +6,7 @@ describe UsersController do
   render_views
   
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_settings_and_jnlps_with_mocks
     logout_user
   end
 

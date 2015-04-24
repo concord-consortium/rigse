@@ -4,26 +4,26 @@ describe HelpController do
   
   before(:each) do
       @admin_user = Factory.next(:admin_user)
-      @test_project = Factory.create(:admin_project, :user => @admin_user, :id=> 1)
+      @test_settings = Factory.create(:admin_settings, :user => @admin_user, :id=> 1)
       login_admin
-      Admin::Project.stub(:default_project).and_return(@test_project)
+      Admin::Settings.stub(:default_settings).and_return(@test_settings)
   end
   
   describe "GET index" do
     it "should render no help page template when help type is no help" do
-      @test_project.help_type = 'no help'
+      @test_settings.help_type = 'no help'
       get :index
       assert_template 'help/no_help_page'
     end
     it "should redirect to external url when help type is external url" do
-      @test_project.external_url = 'www.concord.org'
-      @test_project.help_type = 'external url'
+      @test_settings.external_url = 'www.concord.org'
+      @test_settings.help_type = 'external url'
       get :index
       response.should redirect_to 'www.concord.org'
     end
     it "should render index template when help type is help custom html" do
-      @test_project.custom_help_page_html = '<b>Help page</b>'
-      @test_project.help_type = 'help custom html'
+      @test_settings.custom_help_page_html = '<b>Help page</b>'
+      @test_settings.help_type = 'help custom html'
       get :index
       assert_equal assigns[:help_page_content], '<b>Help page</b>'
       assert_template 'index'
@@ -41,35 +41,35 @@ describe HelpController do
     end
     
     it "should render no help page template when help type is no help and preview is from summary page." do
-      @test_project.help_type = 'no help'
-      @test_project.save!
-      @test_project.reload
+      @test_settings.help_type = 'no help'
+      @test_settings.save!
+      @test_settings.reload
       @post_params = {
-          :preview_help_page_from_summary_page => "#{@test_project.id}"
+          :preview_help_page_from_summary_page => "#{@test_settings.id}"
         }
       get :preview_help_page, @post_params
       assert_template 'help/no_help_page'
     end
     
     it "should redirect to external url when help type is external url and preview is from summary page." do
-      @test_project.external_url = 'www.concord.org'
-      @test_project.help_type = 'external url'
-      @test_project.save!
-      @test_project.reload
+      @test_settings.external_url = 'www.concord.org'
+      @test_settings.help_type = 'external url'
+      @test_settings.save!
+      @test_settings.reload
       @post_params = {
-          :preview_help_page_from_summary_page => "#{@test_project.id}"
+          :preview_help_page_from_summary_page => "#{@test_settings.id}"
         }
       get :preview_help_page, @post_params
       response.should redirect_to 'www.concord.org'
     end
     
     it "should render preview_help_page template when help type is help custom html and preview is from summary page." do
-      @test_project.custom_help_page_html = '<b>Help page</b>'
-      @test_project.help_type = 'help custom html'
-      @test_project.save!
-      @test_project.reload
+      @test_settings.custom_help_page_html = '<b>Help page</b>'
+      @test_settings.help_type = 'help custom html'
+      @test_settings.save!
+      @test_settings.reload
       @post_params = {
-          :preview_help_page_from_summary_page => "#{@test_project.id}"
+          :preview_help_page_from_summary_page => "#{@test_settings.id}"
         }
       get :preview_help_page, @post_params
       assert_equal assigns[:help_page_content], '<b>Help page</b>'

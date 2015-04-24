@@ -16,7 +16,7 @@ module MockData
     delete_default_schools
     delete_default_grade_levels
     delete_default_districts
-    delete_default_projects
+    delete_default_settings
   end #end of reset_default_data
   
   
@@ -204,15 +204,15 @@ module MockData
     end
   end
   
-  def self.delete_default_projects
+  def self.delete_default_settings
     puts <<-HEREDOC
     
-    Deleting default projects
+    Deleting default settings
     
     HEREDOC
     
-    admin_projects = Admin::Project.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
-    admin_projects.each do |s|
+    admin_settings = Admin::Settings.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
+    admin_settings.each do |s|
       s.destroy
     end
   end

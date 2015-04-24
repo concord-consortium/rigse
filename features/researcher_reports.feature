@@ -6,7 +6,7 @@ Feature: Investigations can be reported on
   Which will support the funding of future projects
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
     # for the sake of visual clarity, all correct answers are 'a'

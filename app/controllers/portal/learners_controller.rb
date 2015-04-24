@@ -159,7 +159,7 @@ class Portal::LearnersController < ApplicationController
           bundle_post_url = nil
           properties['otrunk.view.user_data_warning'] = 'true'
         end
-        if current_project.use_periodic_bundle_uploading?
+        if current_settings.use_periodic_bundle_uploading?
           bundle_get_url = dataservice_periodic_bundle_logger_url(@portal_learner.periodic_bundle_logger, :format => :bundle)
           bundle_post_url = nil
         end

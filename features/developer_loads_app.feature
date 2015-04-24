@@ -6,5 +6,5 @@ Feature: A developer loads home page without initializing data in database
   @no-seeds
   Scenario: A developer looks at the home page
     Given I am on the home page
-    Then I should see "You need to create a project object"
+    Then I should see "You need to create a settings object"
 

@@ -1,27 +1,27 @@
 Given /^grade levels for classes is enabled$/ do
-  project = Admin::Project.default_project
-  project.enable_grade_levels = true
-  project.save
+  settings = Admin::Settings.default_settings
+  settings.enable_grade_levels = true
+  settings.save
 end
 
 Given /^member registration is (.+)$/ do |member_registration|
-  project = Admin::Project.default_project
+  settings = Admin::Settings.default_settings
   state = case member_registration
   when 'enabled' then true
   when 'disabled' then false
   else Raise "member registration must be 'enabled' or 'disabled' in features"
   end
-  project.enable_member_registration = state
-  project.save
+  settings.enable_member_registration = state
+  settings.save
 end
 
 When /^an admin sets the jnlp CDN hostname to "([^"]*)"$/ do |cdn_hostname|
   admin = User.find_by_login('admin')
   login_as(admin.login)
-  visit admin_projects_path
-  click_link "edit project"
-  fill_in "admin_project[jnlp_cdn_hostname]", :with => cdn_hostname
-  # we turn on the opportunisitc installer inorder to test the most functionality
+  visit admin_settings_path
+  click_link "edit settings"
+  fill_in "admin_settings[jnlp_cdn_hostname]", :with => cdn_hostname
+  # we turn on the opportunistic installer in order to test the most functionality
   check "Use JavaClientLauncher"
   click_button "Save"
   page.should have_no_button("Save")
@@ -70,9 +70,9 @@ Then /^the non installer jnlp codebase should not start with "([^"]*)"$/ do |cod
   Capybara.current_driver = original_driver
 end
 
-When /^I create a new project with the description "([^"]*)"$/ do |description|
-  click_link "create Project"
-  fill_in "admin_project[description]", :with => description
+When /^I create new settings with the description "([^"]*)"$/ do |description|
+  click_link "create Settings"
+  fill_in "admin_settings[description]", :with => description
   click_button "Save"
   page.should have_no_button("Save")
 end
@@ -95,12 +95,12 @@ Then /^(?:|I )activate the user from user list by searching "([^"]*)"$/ do |sear
   end
 end
 
-Then /^(?:|I )should see "([^"]*)" in the input box of external URL for help page on projects page$/ do |url|
-  step_text = "I should see the xpath \"//input[@name='admin_project[external_url]' and @value = '#{url}']\""
+Then /^(?:|I )should see "([^"]*)" in the input box of external URL for help page on settings page$/ do |url|
+  step_text = "I should see the xpath \"//input[@name='admin_settings[external_url]' and @value = '#{url}']\""
   step step_text
 end
 
-When /^I save the project$/ do
+When /^I save the settings$/ do
   click_button "Save"
   page.should have_no_button("Save")
 end 

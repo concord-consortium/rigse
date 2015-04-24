@@ -51,7 +51,7 @@ class SearchController < ApplicationController
 
   def setup_material_type
     @material_type = param_find(:material_types, (params[:method] == :get)) ||
-      (current_project.include_external_activities? ? ['investigation','activity','external_activity'] : ['investigation','activity'])
+      (current_settings.include_external_activities? ? ['investigation','activity','external_activity'] : ['investigation','activity'])
   end
 
 

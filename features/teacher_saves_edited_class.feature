@@ -5,7 +5,7 @@ Feature: Teacher edits and saves class information
   In order to keep my classes updated
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And the classes "Mathematics" are in a school named "VJTI"
     And I am logged in with the username teacher

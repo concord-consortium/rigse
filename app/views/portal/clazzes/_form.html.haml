@@ -31,8 +31,7 @@
               Class Word:
             %td
               = f.text_field :class_word, :size => 24
-        
-        
+
         - if portal_clazz.new_record?
           %tr
             - schools = []
@@ -42,8 +41,8 @@
               - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
             %td.title= label_tag :school, 'School: ', :class=>"right"
             %td= f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
-         
-        - if Admin::Project.default_project.enable_grade_levels?
+
+        - if Admin::Settings.default_settings.enable_grade_levels?
           %tr
             %td.title
               Grade Levels: 
@@ -78,6 +77,6 @@
                 = link_to "Cancel", home_url 
               - else
                 = link_to "Cancel", materials_portal_clazz_url(portal_clazz)
-            
+
       = f.hidden_field :teacher_id
       = f.hidden_field :id

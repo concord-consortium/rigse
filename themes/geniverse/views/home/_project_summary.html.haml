@@ -1,5 +1,5 @@
-- unless current_project.home_page_content.blank?
-  - home_page_content = current_project.home_page_content
+- unless current_settings.home_page_content.blank?
+  - home_page_content = current_settings.home_page_content
   = home_page_content.html_safe
 - else
   Geniverse

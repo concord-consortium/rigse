@@ -75,7 +75,7 @@ class Portal::StudentsController < ApplicationController
       errors << [:class_word, "must be a valid class word."]
     end
     # Only do this check if the student is signing themselves up. Everything else will work silently if these values are not set.
-    if current_project.use_student_security_questions && params[:clazz] &&params[:clazz][:class_word]
+    if current_settings.use_student_security_questions && params[:clazz] &&params[:clazz][:class_word]
       @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions])
       sq_errors = SecurityQuestion.errors_for_questions_list!(@security_questions)
       if sq_errors && sq_errors.size > 0
@@ -84,7 +84,7 @@ class Portal::StudentsController < ApplicationController
     end
 
     # Only do this check if the student is signing themselves up.
-    if current_project.require_user_consent? && params[:clazz] && params[:clazz][:class_word]
+    if current_settings.require_user_consent? && params[:clazz] && params[:clazz][:class_word]
       if params[:user][:of_consenting_age]
         @user.asked_age = true
       else
@@ -103,7 +103,7 @@ class Portal::StudentsController < ApplicationController
       user_created = @user.save
       if user_created
         @user.confirm!
-        if current_project.allow_default_class || @grade_level.nil?
+        if current_settings.allow_default_class || @grade_level.nil?
           @portal_student = Portal::Student.create(:user_id => @user.id)
         else
           @portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
@@ -157,7 +157,7 @@ class Portal::StudentsController < ApplicationController
 
           if params[:clazz] && params[:clazz][:class_word]
             # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
-            @user.update_security_questions!(@security_questions) if current_project.use_student_security_questions
+            @user.update_security_questions!(@security_questions) if current_settings.use_student_security_questions
             format.html { redirect_to thanks_for_sign_up_url(:type=>"student",:login=>"#{@portal_student.user.login}") }
           else
             msg = <<-EOF
@@ -174,7 +174,7 @@ class Portal::StudentsController < ApplicationController
             @user.errors.add(e[0],e[1]);
           end
           if params[:clazz] && params[:clazz][:class_word]
-            if current_project.use_student_security_questions
+            if current_settings.use_student_security_questions
               @security_questions = SecurityQuestion.fill_array(@security_questions)
             end
             format.html { render :action => "signup" }

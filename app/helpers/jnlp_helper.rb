@@ -20,7 +20,7 @@ module JnlpHelper
   end
 
   def pub_interval
-    return Admin::Project.pub_interval * 1000
+    return Admin::Settings.pub_interval * 1000
   end
 
   def system_properties(options={})
@@ -28,7 +28,7 @@ module JnlpHelper
       ['jnlp.otrunk.view.export_image', 'true'],
       ['jnlp.otrunk.view.status', 'true'],
     ]
-    version = "#{current_project.jnlp_url}"[/\/([^\/]*)\.jnlp/, 1]
+    version = "#{current_settings.jnlp_url}"[/\/([^\/]*)\.jnlp/, 1]
     sysprops << ['jnlp.maven.jnlp.version', version] unless version.nil?
     if options[:authoring]
       additional_properties = [
@@ -42,7 +42,7 @@ module JnlpHelper
       additional_properties = [
         ['jnlp.otrunk.view.mode', 'student'],
       ]
-      if current_project.use_periodic_bundle_uploading?
+      if current_settings.use_periodic_bundle_uploading?
         # make sure the periodic bundle logger exists, just in case
         l = options[:learner]
         if l.student.user == current_visitor

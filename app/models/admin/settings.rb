@@ -1,9 +1,9 @@
 require 'fileutils'
 
-class Admin::Project < ActiveRecord::Base
+class Admin::Settings < ActiveRecord::Base
   MinPubInterval     = 10   # 10 second update seems close to too fast.
   DefaultPubInterval = 300  # default is five minues
-  self.table_name = "admin_projects"
+  self.table_name = "admin_settings"
 
   serialize :enabled_bookmark_types, Array
 
@@ -11,8 +11,8 @@ class Admin::Project < ActiveRecord::Base
 
   belongs_to :user
 
-  has_many :project_vendor_interfaces, :dependent => :destroy , :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
-  has_many :enabled_vendor_interfaces, :through => :project_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
+  has_many :settings_vendor_interfaces, :dependent => :destroy , :class_name => "Admin::SettingsVendorInterface", :foreign_key => "admin_settings_id"
+  has_many :enabled_vendor_interfaces, :through => :settings_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
 
   acts_as_replicatable
 
@@ -60,7 +60,7 @@ class Admin::Project < ActiveRecord::Base
   end
 
   def display_type
-    self.default_project? ? 'Default ' : ''
+    self.default_settings? ? 'Default ' : ''
   end
 
   class <<self
@@ -68,30 +68,30 @@ class Admin::Project < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    # Admin::Project.default_project
-    def default_project
-      proj = find_by_active(true)
-      if ! proj
-        # no active projects try finding the first project
-        proj = first
-        if proj
-          logger.warn("No active project found for using the first project")
+    # Admin::Settings.default_settings
+    def default_settings
+      settings = find_by_active(true)
+      if ! settings
+        # no active settings; try finding the first settings
+        settings = first
+        if settings
+          logger.warn("No active settings found for using the first settings")
         else
           logger.warn("No projects found")
         end
       end
-      proj
+      settings
     end
 
     def summary_info
-      default_project ? default_project.summary_info : "no default project defined"
+      default_settings ? default_settings.summary_info : "no default settings defined"
     end
 
     def pub_interval
-      default_project ? default_project.pub_interval : DefaultPubInterval
+      default_settings ? default_settings.pub_interval : DefaultPubInterval
     end
     def notify_missing_setting(symbol)
-      logger.warn("undefined configuartion setting in config/setttings.yml: #{symbol.to_s}")
+      logger.warn("undefined configuration setting in config/setttings.yml: #{symbol.to_s}")
     end
 
     def settings_for(symbol)
@@ -111,14 +111,14 @@ class Admin::Project < ActiveRecord::Base
     end
 
     def teachers_can_author?
-      default = default_project
+      default = default_settings
       return default.teachers_can_author if default
       return false
     end
 
   end
 
-  def default_project?
+  def default_settings?
     active
   end
 

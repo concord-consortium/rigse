@@ -1,8 +1,8 @@
 module ApplicationHelper
   include Clipboard
 
-  def current_project
-    @_project ||= Admin::Project.default_project
+  def current_settings
+    @_settings ||= Admin::Settings.default_settings
   end
 
   def top_level_container_name
@@ -50,7 +50,7 @@ module ApplicationHelper
 
   def display_system_info
     commit = git_repo_info rescue {:branch => "<b>Error loading git info!</b>"}
-    jnlp = current_project.jnlp_url || "#"
+    jnlp = current_settings.jnlp_url || "#"
     info = <<-HEREDOC
 <span class="tiny menu_h">
   #{commit[:branch]}
@@ -1317,7 +1317,7 @@ module ApplicationHelper
   end
 
   def settings_for(key)
-    Admin::Project.settings_for(key)
+    Admin::Settings.settings_for(key)
   end
 
   # this appears to not be used in master right now
@@ -1352,6 +1352,11 @@ _gaq.push(['_trackPageview']);
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 CONFIG
+  end
+
+  # This fixes an error in polymorphic_url brought on because the Admin::Settings model name is plural.
+  def admin_settings_index_path(*args)
+    admin_settings_path
   end
 
 end
