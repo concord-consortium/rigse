@@ -156,8 +156,17 @@ class Report::LearnerController < ApplicationController
       "#{uri.scheme}://#{uri.host}:#{uri.port}"
     end
 
+
+
+    # TODO - don't forget this part!
+    #
+    # learners = learners.reject { |l| l.permission_forms.strip.empty? }
+    #
+
+
+
     if learners.length == 0
-      alert_and_reload "No learners meet the criteria you selected"
+      alert_and_reload "No learners with signed permission forms meet the criteria you selected"
       return
     end
 
@@ -178,32 +187,35 @@ class Report::LearnerController < ApplicationController
       external_activity_return_url(learner.learner_id)
     end
 
-    # TODO - don't forget this part!
-    #
-    # learners = learners.reject { |l| l.permission_forms.strip.empty? }
-    #
-
     # intentionally leave out student name - results should be semi-anonymized
-    headers = [:permission_forms, :teachers_name, :school_name, :class_name, :class_id, :student_id, :remote_endpoint]
-    sort_by_indices = [:teachers_name, :school_name, :class_id, :student_id].map { |key| headers.find_index(key) }
+    columns = [:permission_forms, :teachers_name, :school_name, :class_name, :class_id, :student_id, :remote_endpoint]
+    sort_by_indices = [:teachers_name, :school_name, :class_id, :student_id].map { |key| columns.find_index(key) }
 
     rows = learners.map do |learner|
-      headers.map do |header|
-        header == :remote_endpoint ? external_activity_return_url(learner.learner_id) : learner.send(header)
+      columns.map do |column|
+        # except for remote_endpoint, column names are just names of Report::Learner instance methods
+        column == :remote_endpoint ? external_activity_return_url(learner.learner_id) : learner.send(column)
       end
     end
 
-    group_by_indices = headers.reject { |header| header == :remote_endpoint }.map { |key| headers.find_index(key) }
-    remote_endpoints_by_bucket = rows.group_by { |row| row.values_at(* group_by_indices) }
-    remote_endpoints_by_bucket.keys.each do |key|
-      remote_endpoints_by_bucket[key] = remote_endpoints_by_bucket[key].map &:last
+    remote_endpoint_index = columns.find_index(:remote_endpoint)
+
+    # Several Report::Learners may correspond to the same (student, class, school) combination. We want to emit
+    # one row per (student, class, school) combination, with the entry in the :remote_endpoint column being
+    # an array of all remote_endpoints corresponding to that row. (remote_endpoints are 1:1 with Report::Learners)
+    group_by_indices = columns.reject { |column| column == :remote_endpoint }.map { |key| columns.find_index(key) }
+    remote_endpoints_by_row = rows.group_by { |row| row.values_at(* group_by_indices) }
+    remote_endpoints_by_row.keys.each do |key|
+      remote_endpoints_by_row[key] = remote_endpoints_by_row[key].map do |row|
+        row[remote_endpoint_index]
+      end
     end
 
-    rows = remote_endpoints_by_bucket.keys.map {|key| key + [remote_endpoints_by_bucket[key]]}
+    rows = remote_endpoints_by_row.keys.map {|key| key + [remote_endpoints_by_row[key]]}
     rows = rows.sort_by! { |row| row.values_at(* sort_by_indices) }
 
-    @arg_block_data = {
-      :headers => headers,
+    @arg_block_buckets = {
+      :columns => columns,
       :rows => rows
     }
 
