@@ -156,14 +156,7 @@ class Report::LearnerController < ApplicationController
       "#{uri.scheme}://#{uri.host}:#{uri.port}"
     end
 
-
-
-    # TODO - don't forget this part!
-    #
-    # learners = learners.reject { |l| l.permission_forms.strip.empty? }
-    #
-
-
+    learners = learners.reject { |l| l.permission_forms.strip.empty? }
 
     if learners.length == 0
       alert_and_reload "No learners with signed permission forms meet the criteria you selected"
