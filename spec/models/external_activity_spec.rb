@@ -9,13 +9,14 @@ describe ExternalActivity do
       :publication_status => "value for publication_status",
       :is_official => true,
       :url => "http://www.concord.org/"
-    } }
+  } }
 
   it "should create a new instance given valid attributes" do
     ExternalActivity.create!(valid_attributes)
   end
 
   describe "url transforms" do
+    let(:activity) { ExternalActivity.create!(valid_attributes)}
     let(:learner) { mock_model(Portal::Learner, :id => 34) }
 
     it "should default to not appending the learner id to the url" do
@@ -49,6 +50,7 @@ describe ExternalActivity do
   end
 
   describe '#material_type override' do
+    let (:activity) { ExternalActivity.create!(valid_attributes) }
     let (:real_activity) { Activity.create!( :name => "test activity", :description => "new decription" ) }
     let (:investigation) { Investigation.create!(:name => "test investigation", :description => "new decription") }
 
@@ -61,6 +63,7 @@ describe ExternalActivity do
   end
 
   describe '#full_title' do
+    let (:activity) { ExternalActivity.create!(valid_attributes) }
     it 'should return external activity name (compatibility with regular activities and sequences)' do
       activity.full_title.should == valid_attributes[:name]
     end
@@ -69,7 +72,7 @@ describe ExternalActivity do
   describe "abstract_text" do
     let(:abstract)    { nil }
     let(:big_text)    { "-xyzzy" * 255 }
-    let(:description) do 
+    let(:description) do
       "This is the description. Its text is too long to be an abstract really: #{big_text}"
     end
     let(:abstract)    { nil }
@@ -91,7 +94,7 @@ describe ExternalActivity do
   end
 
   describe "project support" do
-    let (:activity) { Factory.create(:external_activity) }
+    let (:activity) { FactoryGirl.create(:external_activity) }
     let (:project) { FactoryGirl.create(:project) }
 
     it "can be assigned to a project" do
