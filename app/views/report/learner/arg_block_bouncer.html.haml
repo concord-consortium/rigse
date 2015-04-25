@@ -5,4 +5,7 @@
 :javascript
   window.onload = function() {
   	document.forms[0].submit();
+  	window.setTimeout(function() {
+  	  window.history.back();
+  	}, 1000);
   }
