@@ -71,6 +71,9 @@ class ExternalActivity < ActiveRecord::Base
 
   belongs_to :template, :polymorphic => true
 
+  has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material
+  has_many :projects, :class_name => "Admin::Project", :through => :project_materials
+
   acts_as_replicatable
 
 

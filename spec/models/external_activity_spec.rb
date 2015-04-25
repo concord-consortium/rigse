@@ -16,7 +16,6 @@ describe ExternalActivity do
   end
 
   describe "url transforms" do
-    let(:activity) { ExternalActivity.create!(valid_attributes)}
     let(:learner) { mock_model(Portal::Learner, :id => 34) }
 
     it "should default to not appending the learner id to the url" do
@@ -50,7 +49,6 @@ describe ExternalActivity do
   end
 
   describe '#material_type override' do
-    let (:activity) { ExternalActivity.create!(valid_attributes) }
     let (:real_activity) { Activity.create!( :name => "test activity", :description => "new decription" ) }
     let (:investigation) { Investigation.create!(:name => "test investigation", :description => "new decription") }
 
@@ -63,7 +61,6 @@ describe ExternalActivity do
   end
 
   describe '#full_title' do
-    let (:activity) { ExternalActivity.create!(valid_attributes) }
     it 'should return external activity name (compatibility with regular activities and sequences)' do
       activity.full_title.should == valid_attributes[:name]
     end
@@ -90,6 +87,16 @@ describe ExternalActivity do
     describe "without a good abstract" do
       let(:abstract)         { "This is the abstract." }
       its(:abstract_text)    { should match /This is the abstract./ }
+    end
+  end
+
+  describe "project support" do
+    let (:activity) { Factory.create(:external_activity) }
+    let (:project) { FactoryGirl.create(:project) }
+
+    it "can be assigned to a project" do
+      activity.projects << project
+      expect(activity.projects.count).to eql(1)
     end
   end
 end
