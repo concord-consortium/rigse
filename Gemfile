@@ -158,6 +158,7 @@ group :development do
   gem "hirb"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
   gem "debugger", :platforms => [:mri_19]
+  gem "pry-debugger"
   gem "awesome_print"
   gem "interactive_editor"
   gem "ruby-prof"
@@ -173,7 +174,7 @@ group :development do
   gem "rack-mini-profiler" 
   gem "bullet"
   gem "lol_dba"
-  gem "pry-debugger"
+  gem "spring-commands-rspec"
 end
 
 group :test, :cucumber do
