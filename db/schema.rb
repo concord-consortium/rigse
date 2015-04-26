@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150425131537) do
+ActiveRecord::Schema.define(:version => 20150426111104) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -68,6 +68,10 @@ ActiveRecord::Schema.define(:version => 20150425131537) do
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
+
+  add_index "admin_project_materials", ["material_id", "material_type"], :name => "admin_proj_mat_mat_idx"
+  add_index "admin_project_materials", ["project_id", "material_id", "material_type"], :name => "admin_proj_mat_proj_mat_idx"
+  add_index "admin_project_materials", ["project_id"], :name => "admin_proj_mat_proj_idx"
 
   create_table "admin_projects", :force => true do |t|
     t.string   "name"
