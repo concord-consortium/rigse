@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'views/shared_examples/projects_listing_spec'
 
 describe "/external_activities/edit.html.haml" do
   let(:ext_act) { Factory.create(:external_activity, :url => 'http://activities.com') }
@@ -19,4 +20,6 @@ describe "/external_activities/edit.html.haml" do
     render
     assert_select "input[id=?]", 'external_activity_is_official', false
   end
+
+  include_examples 'projects listing'
 end
