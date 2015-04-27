@@ -360,6 +360,7 @@ RailsPortal::Application.routes.draw do
     namespace :admin do
       resources :settings
       resources :tags
+      resources :projects
       resources :permission_forms do
         member do
           post :update_forms

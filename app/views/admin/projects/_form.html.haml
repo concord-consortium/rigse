@@ -1,0 +1,8 @@
+.item
+  = edit_menu_for project, f, omit_cancel: true
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          = f.text_field :name
