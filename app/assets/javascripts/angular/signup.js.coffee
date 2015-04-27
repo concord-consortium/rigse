@@ -2,6 +2,7 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
   .controller 'RegistrationController', [ '$scope', '$http', '$log', 'errorList', 'gaPageView', ($scope, $http, $log, errorList, gaPageView) ->
     self = @
     self.questions = []          # these are the ones the student has chosen
+    self.answers   = []          # these are the ones the student has chosen
     self.security_questions = [] # these are given to us from the server
     self.serverErrors = errorList.list
     self.editSchool = false

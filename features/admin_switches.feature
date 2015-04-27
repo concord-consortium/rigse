@@ -5,7 +5,7 @@ Feature: Admin switches to a different user
   I want to switch to a different user
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     
   @javascript

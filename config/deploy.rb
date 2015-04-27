@@ -317,15 +317,15 @@ namespace :setup do
     run_remote_rake "db:create"
     run_remote_rake "db:migrate"
     run_remote_rake "app:setup:default_users_roles"
-    run_remote_rake "app:setup:default_project"
+    run_remote_rake "app:setup:default_settings"
     run_remote_rake "sunspot:solr:start", true
     run_remote_rake "app:setup:default_portal_resources"
   end
 
    # 2013_04_01 NP:
   desc "ensure that one default project exists"
-  task :create_default_project, :roles => :app do
-    run_remote_rake "app:setup:default_project"
+  task :create_default_settings, :roles => :app do
+    run_remote_rake "app:setup:default_settings"
   end
 
   desc "setup the NCES districts: download and configure NCES districts"

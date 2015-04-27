@@ -22,14 +22,14 @@ module Delayed::Worker::Scaler
     def up
       if workers == 0 && ((Time.now - @@last_start) > 30)
         @@last_start = Time.now
-        Rush::Box.new[Rails.root].bash("script/delayed_job start -i #{process_tag}", :background => true, :env => {:RAILS_ENV => 'production'})
+        Rush::Box.new[Rails.root].bash("script/delayed_job start -i #{process_tag}", :background => true, :env => {:RAILS_ENV => Rails.env})
       end
       true
     end
 
     def down
       if jobs.count == 0 and workers > 0
-        Rush::Box.new[Rails.root].bash("script/delayed_job stop -i #{process_tag}", :background => true, :env => {:RAILS_ENV => 'production'})
+        Rush::Box.new[Rails.root].bash("script/delayed_job stop -i #{process_tag}", :background => true, :env => {:RAILS_ENV => Rails.env})
       end
       true
     end

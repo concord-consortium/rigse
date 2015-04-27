@@ -21,7 +21,7 @@
       %td= password_field :user, :password_confirmation, {:live => false}
     
     - if signup 
-      - if current_project.allow_default_class
+      - if current_settings.allow_default_class
         = hidden_field :clazz, :class_word, {:value => Portal::Clazz.default_class.class_word}
       - else
         %tr
@@ -31,13 +31,13 @@
           - value = portal_clazz ? portal_clazz.class_word : 'class word'
           %td= text_field :clazz, :class_word, {:live => false}
         
-      - if current_project.use_student_security_questions
+      - if current_settings.use_student_security_questions
         %tr
           %td{:colspan => '2'}
             = render :partial => "security_questions/header"
             = render :partial => "security_questions/fields"
 
-      - if current_project.require_user_consent?
+      - if current_settings.require_user_consent?
         %tr
           %td{:colspan => '2', :style=> "text-align: left;"}
             = render :partial => "shared/consent/ask_for_consent"

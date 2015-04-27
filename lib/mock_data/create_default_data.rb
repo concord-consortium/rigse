@@ -29,17 +29,17 @@ module MockData
   def self.create_default_users
     puts
     puts
-    admin_info = DEFAULT_DATA[:admin_project]
-    project = Admin::Project.find_by_uuid(admin_info[:uuid])
-    if project
-      project.active = false
-      project.save!
+    admin_info = DEFAULT_DATA[:admin_settings]
+    settings = Admin::Settings.find_by_uuid(admin_info[:uuid])
+    if settings
+      settings.active = false
+      settings.save!
       puts
-      puts 'Updated default project'
+      puts 'Updated default settings'
     else
-      Admin::Project.create!(admin_info)
+      Admin::Settings.create!(admin_info)
       puts
-      puts 'Generated default project'
+      puts 'Generated default settings'
     end
     
     puts

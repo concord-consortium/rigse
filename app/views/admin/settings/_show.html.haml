@@ -1,0 +1,164 @@
+- if @additional_partials && @additional_partials.length > 0
+  - @additional_partials.each do |p|
+    = render :partial => p, :locals => { :admin_settings => admin_settings }
+%script
+  helpLink = $('help')
+  - if admin_settings.help_type == 'no help'
+    helpLink.parentNode.style.display = "none"
+  - else
+    helpLink.href = "javascript: void(0)"
+    helpLink.onclick = function(){window.open('/help/index','help_page','height = 700 width = 800')}
+    helpLink.parentNode.style.display = ""
+- if @manager_role
+  = render :partial => 'show_for_managers', :locals => { :admin_settings => admin_settings }
+- else
+  - options = { :complete => mce_init_string, :omit_delete => true }
+  %div{ :id => dom_id_for(admin_settings), :class => "container_element" }
+    = show_menu_for(admin_settings, options)
+
+    %div{:id => dom_id_for(admin_settings, :item), :class => 'item'}
+      %div{:id => dom_id_for(admin_settings, :details), :class => 'content'}
+        = wrap_edit_link_around_content(admin_settings, options={:complete => mce_init_string}) do
+          %h4= h(admin_settings.name)
+          %p
+            %ul.menu_v
+              %li
+                Settings Active:
+                %b
+                  - if admin_settings.active
+                    Yes
+                  - else
+                    No
+                (This option determines is these settings are used for portal settings.)
+              %li
+                Student Security Questions:
+                %b
+                  - if admin_settings.use_student_security_questions
+                    enabled.
+                  - else
+                    disabled.
+                (This option will allow students to reset their own passwords.)
+              %li
+                Default Class:
+                %b
+                  - if admin_settings.allow_default_class
+                    enabled.
+                  - else
+                    disabled.
+                (This option will allow students to register without a class word.)
+              %li
+                Grade Levels for Classes:
+                %b
+                  - if admin_settings.enable_grade_levels?
+                    enabled.
+                  - else
+                    disabled.
+                (This option will allow teachers to select grade levels during class creation.)
+              %li
+                Use Bitmaps in Labbook Exclusively:
+                %b
+                  - if admin_settings.use_bitmap_snapshots?
+                    Yes
+                  - else
+                    No
+                (This option insures that all labbook entries are treated like simple images.)
+              %li
+                Teachers can author:
+                - if admin_settings.teachers_can_author?
+                  %b
+                    Yes
+                  (Teachers are considered authors by default.)
+                - else
+                  %b
+                    No
+                  (Teachers are not considered authors by default and can only author when given the "author" role.)
+              %li
+                Teachers can create schools:
+                - if admin_settings.allow_adhoc_schools?
+                  %b
+                    Yes
+                  (Teachers can create their own schools when registering.)
+                - else
+                  %b
+                    No
+                  (Teachers must choose their school from a list when registering.)
+              %li
+                Ask users to sign
+                consent form:
+                - if admin_settings.require_user_consent?
+                  %b
+                    Yes
+                  (Users will be asked for consent to use their data in reports.)
+                - else
+                  %b
+                    No
+                  (Users will not be asked for consent to use their data in reports.)
+              %li
+                Use periodic bundle uploading:
+                - if admin_settings.use_periodic_bundle_uploading?
+                  %b
+                    Yes
+                  (User data will be uploaded in smaller chunks at intervals throughout the session.)
+                - else
+                  %b
+                    No
+                  (User data will be uploaded in one large chunk at the end of the session.)
+              %li
+                PUB interval seconds:
+                %b
+                  = admin_settings.pub_interval
+                (This option changes the rate at which student data is sent to the
+                server if periodic bundle uploading is trurned on)
+              %li
+                Include External Activities in class materials search:
+                - if admin_settings.include_external_activities?
+                  %b
+                    Yes
+                  (External Activities will appear in the materials search, and be assignable to classes.)
+                - else
+                  %b
+                    No
+                  (External Activities will not appear in the materials search.)
+              %li
+                Anonymous can browse instructional materials:
+                - if admin_settings.anonymous_can_browse_materials?
+                  %b
+                    Yes
+                  (Browse Instructional Materials link will appear in the navbar for anonymous users.)
+                - else
+                  %b
+                    No
+                  (Browse Instructional Materials link will not appear in the navbar for anonymous users.)
+              %li
+                Enabled Bookmark Types:
+                = admin_settings.enabled_bookmark_types.join(', ')
+              = content_for "admin_settings_show_#{admin_settings.id || 'new'}"
+
+            = field_set_tag '<b>Jnlp</b>'.html_safe do
+              %p
+                Jnlp URL:
+                = admin_settings.jnlp_url
+              %p
+                Jnlp CDN Hostname:
+                = admin_settings.jnlp_cdn_hostname
+            = field_set_tag 'Settings Description' do
+              %p= admin_settings.description.html_safe
+            - home_page_content = admin_settings.home_page_content
+            - unless home_page_content.nil?
+              %input{:type=>"button", :value=>"Preview Home Page", :onclick=>"preview_home_page(null, '#{ERB::Util.url_encode(home_page_content)}');", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
+            %br
+            - case admin_settings.help_type
+            - when 'external url'
+              - external_url = admin_settings.external_url
+              %input{:type=>"button", :value=>"Preview External Help URL" ,:onclick =>"window.open('#{external_url}','HelpPage','height = 700 width = 800, resizable = yes, scrollbars = yes')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+            - when 'help custom html'
+              - settings_id = admin_settings.id
+              - settings_id =  settings_id.to_s
+              %input{:type=>"button", :value=>"Preview Custom Help Page" ,:onclick =>"openPreviewHelpPage(false,'',false,'#{settings_id}')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+            - when 'no help'
+              %br
+              %b
+                No Help Page
+            %br
+            %br
+            = render :partial => 'custom_css', :locals => { :admin_settings => admin_settings }

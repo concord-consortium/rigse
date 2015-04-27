@@ -7,16 +7,7 @@ class Reports::Detail < Reports::Excel
     @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
 
     # stud.id, class, school, user.id, username, student name, teachers, completed, %completed, last_run
-    @common_columns = [
-      Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
-      Reports::ColumnDefinition.new(:title => "Class ID",     :width => 10),
-      Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
-      Reports::ColumnDefinition.new(:title => "School",       :width => 25),
-      Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
-      Reports::ColumnDefinition.new(:title => "Perm. Forms",  :width => 25),
-      Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
-      Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
-      Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
+    @common_columns = common_header + [
       Reports::ColumnDefinition.new(:title => "# Completed", :width => 10, :left_border => :thin),
       Reports::ColumnDefinition.new(:title => "% Completed", :width => 10),
       Reports::ColumnDefinition.new(:title => "# Correct",   :width => 10),
@@ -148,7 +139,7 @@ class Reports::Detail < Reports::Excel
         row = sheet.row(sheet.last_row_index + 1)
         assess_completed = "#{assess_completed}/#{total_assessments}(#{total_by_container})"
         assess_correct = "#{l.num_correct}/#{correctable.size}"
-        row[0, 3] =  report_learner_info_cells(l) + [assess_completed, assess_percent, assess_correct, last_run]
+        row[0, 3] =  report_learner_info_cells([l]) + [assess_completed, assess_percent, assess_correct, last_run]
 
         all_answers = []
         get_containers(runnable).each do |container|

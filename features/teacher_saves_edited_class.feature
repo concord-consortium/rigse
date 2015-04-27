@@ -5,7 +5,7 @@ Feature: Teacher edits and saves class information
   In order to keep my classes updated
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And the classes "Mathematics" are in a school named "VJTI"
     And I am logged in with the username teacher
@@ -34,10 +34,16 @@ Feature: Teacher edits and saves class information
   @dialog
   @javascript
   Scenario: Teacher can remove teacher from the class edit page
+    When I follow remove image for the teacher name "Peterson Taylor"
+    And accept the dialog
+    Then I should not see "Peterson Taylor"
+    
+  @dialog
+  @javascript
+  Scenario: Teacher can remove themselves as teacher from the class edit page
     When I follow remove image for the teacher name "John Nash"
     And accept the dialog
-    Then I should not see "John Nash"
-    
+    Then I should see "You have been successfully removed from class: Mathematics"
     
   @javascript
   Scenario: Teacher saves class setup information

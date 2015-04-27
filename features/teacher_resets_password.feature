@@ -5,7 +5,7 @@ Feature: Teacher resets password
   I want to reset my password
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
   @javascript
@@ -31,7 +31,7 @@ Feature: Teacher resets password
     When I click the first link in the email
     Then I should see "Your account was successfully confirmed. You are now signed in."
     Given I am an anonymous user
-    And I follow "Forgot login?"
+    And I follow "link_forgot_password"
     When I fill in "login" with "login" within content box in change password page
     And I press "Submit" within content box in change password page
     Then I should see "A link to change your password has been sent to example@example.com."
@@ -43,5 +43,3 @@ Feature: Teacher resets password
     And I fill in "confirm password" with "password2" within content box in change password page
     And I press "Submit" within content box in change password page
     Then I should see "Password for login was successfully updated."
-    
-    

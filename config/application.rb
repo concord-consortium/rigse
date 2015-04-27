@@ -16,10 +16,10 @@ module RailsPortal
       # TODO: Should we just die here otherwise?
       puts "please create the file #{app_environment_variables}, or set ENV"
     end
-    extra_groups = {:assets => %w(development test)}
+    extra_groups = {:assets => %w(development test cucumber)}
     if ENV['PORTAL_FEATURES'] && !ENV['PORTAL_FEATURES'].empty?
       ENV['PORTAL_FEATURES'].split(/\s+/).each do |feature|
-        extra_groups[feature.to_sym] = %w(development test production)
+        extra_groups[feature.to_sym] = %w(development test cucumber production)
         puts "enabling portal feature: #{feature}"
       end
     end
@@ -99,7 +99,7 @@ module RailsPortal
       puts "Didn't start observers because you are running: rake db:migrate"
     else
         begin
-          config.active_record.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"admin/project_observer", :"dataservice/periodic_bundle_content_observer"
+          config.active_record.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"admin/settings_observer", :"dataservice/periodic_bundle_content_observer"
         rescue
           # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
           puts "Couldn't start observers #{$!} ... but continuing process anyway"

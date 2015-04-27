@@ -1,0 +1,44 @@
+<html>
+<meta charset="utf-8">
+<style type="text/css">
+    /* Enable one-gesture copy/paste by hiding Bullet and XRay */
+    div {
+        display: none;
+    }
+</style>
+<head>
+<title>Learner Logs Query</title>
+</head>
+<body>
+
+<% # The <pre> contents are all JSON, but from our persective it's an undefined blob of text we
+   # have to insert @remote_endpoints into
+%>
+
+<pre>
+{
+    "filter": [
+        {
+            "key": "run_remote_endpoint",
+            <% # use ERB to avoid having to convert whole <pre> contents to a hash just to prettify it %>
+            "list": [
+                <% @remote_endpoints.each_with_index do |r, i| %>
+                "<%= r %>"<%= i + 1 < @remote_endpoints.length ? ',' : '' %>
+                <% end %>
+            ],
+            "remove": false,
+            "filter_type": "string"
+        }
+    ],
+    "filter_having_keys": {
+        "keys_list": []
+    },
+    "measures": [],
+    "child_query": {
+        "filter": [],
+        "add_child_data": true
+    }
+}
+</pre>
+</body>
+</html>

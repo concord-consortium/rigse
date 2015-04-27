@@ -20,7 +20,7 @@
 
 %div
   - unless @back_url.nil?
-    = link_to "&larr; return to search".html_safe, @back_url,:class=>"return_link"
+    = link_to "&larr; return to search".html_safe, @back_url,:class=>"return_link",:title=>"return to search"
     %br
     %br
 

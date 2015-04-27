@@ -19,7 +19,7 @@ def login_with_ui_as(username, password)
   within(".header-login-box") do
     fill_in("header_login", :with => username)
     fill_in("header_password", :with => password)
-    click_button("GO")
+    click_button("Log In")
     @cuke_current_username = username
   end
   user = User.find_by_login(username)

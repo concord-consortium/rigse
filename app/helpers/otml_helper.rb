@@ -292,7 +292,7 @@ module OtmlHelper
         haml_concat ot_view_bundle(options)
         haml_concat ot_interface_manager
         haml_concat ot_script_engine_bundle
-        use_bitmap = Admin::Project.default_project.use_bitmap_snapshots? ? 'false' : 'true'
+        use_bitmap = Admin::Settings.default_settings.use_bitmap_snapshots? ? 'false' : 'true'
         button_label = "Save and Close"
         haml_tag(
           :OTLabbookBundle, {
@@ -352,11 +352,11 @@ module OtmlHelper
     end
   end
 
-  def otml_project_css_path
+  def otml_settings_css_path
     # this is a weird hard-wired route
     # its here because I think its only used for the 
-    # match '/stylesheets/project.css' => 'home#project_css', :as => :project_css
-    "/stylesheets/project.css"
+    # match '/stylesheets/settings.css' => 'home#settings_css', :as => :settings_css
+    "/stylesheets/settings.css"
   end
 
 end

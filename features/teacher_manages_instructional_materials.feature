@@ -5,7 +5,7 @@ Feature: Teacher manages instructional materials of a class
   In order to make my class more effective
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And I am logged in with the username teacher
     And I go to Instructional Materials page for "My Class"
@@ -83,11 +83,11 @@ Feature: Teacher manages instructional materials of a class
     Then I should see "No students have registered for this class yet"
     
   Scenario: Teacher should be able to run investigation as teacher
-    When I follow "Run as Teacher" for the investigation "Aerodynamics"
+    When I follow "As Teacher" for the investigation "Aerodynamics"
     Then I receive a file for download with a filename like "_investigation_"
     
   Scenario: Teacher should be able to run investigation as student
-    When I follow "Run as Student" for the investigation "Aerodynamics"
+    When I follow "As Student" for the investigation "Aerodynamics"
     Then I receive a file for download with a filename like "_investigation_"
     
   Scenario: Teacher should be able to run the activity

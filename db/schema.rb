@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150330140747) do
+ActiveRecord::Schema.define(:version => 20150416144322) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -61,18 +61,7 @@ ActiveRecord::Schema.define(:version => 20150330140747) do
 
   add_index "admin_notice_user_display_statuses", ["user_id"], :name => "index_admin_notice_user_display_statuses_on_user_id"
 
-  create_table "admin_project_vendor_interfaces", :force => true do |t|
-    t.integer  "admin_project_id"
-    t.integer  "probe_vendor_interface_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-  end
-
-  add_index "admin_project_vendor_interfaces", ["admin_project_id", "probe_vendor_interface_id"], :name => "adm_proj_interface"
-  add_index "admin_project_vendor_interfaces", ["admin_project_id"], :name => "index_admin_project_vendor_interfaces_on_admin_project_id"
-  add_index "admin_project_vendor_interfaces", ["probe_vendor_interface_id"], :name => "adm_proj_vndr_interfc"
-
-  create_table "admin_projects", :force => true do |t|
+  create_table "admin_settings", :force => true do |t|
     t.integer  "user_id"
     t.text     "description"
     t.string   "uuid",                           :limit => 36
@@ -100,6 +89,17 @@ ActiveRecord::Schema.define(:version => 20150330140747) do
     t.boolean  "anonymous_can_browse_materials",               :default => true
     t.string   "jnlp_url"
   end
+
+  create_table "admin_settings_vendor_interfaces", :force => true do |t|
+    t.integer  "admin_settings_id"
+    t.integer  "probe_vendor_interface_id"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "admin_settings_vendor_interfaces", ["admin_settings_id", "probe_vendor_interface_id"], :name => "adm_proj_interface"
+  add_index "admin_settings_vendor_interfaces", ["admin_settings_id"], :name => "index_admin_project_vendor_interfaces_on_admin_project_id"
+  add_index "admin_settings_vendor_interfaces", ["probe_vendor_interface_id"], :name => "adm_proj_vndr_interfc"
 
   create_table "admin_site_notice_roles", :force => true do |t|
     t.integer  "notice_id"

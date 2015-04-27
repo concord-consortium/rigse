@@ -1,0 +1,7 @@
+= javascript_include_tag "preview_home_page.js" # include javascript to preview home page
+= javascript_include_tag('preview_help_page.js')
+= javascript_include_tag 'settings_form'
+%h1 New admin_settings
+
+= form_for(@admin_settings,:html=>{:onsubmit=>"if(validate_settings_form_help_page_settings(this)){tinyMCE.triggerSave(true,true)}else return false"}) do |f|
+  = render :partial => 'form', :locals => { :admin_settings => @admin_settings, :f => f }

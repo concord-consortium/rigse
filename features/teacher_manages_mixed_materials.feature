@@ -5,7 +5,7 @@ Feature: Teacher manages a mix instructional materials of a class
   In order to make my class more effective
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And the mixed runnable types class exists
     And I am logged in with the username teacher

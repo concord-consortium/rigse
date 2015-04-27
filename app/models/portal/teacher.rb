@@ -67,7 +67,7 @@ class Portal::Teacher < ActiveRecord::Base
   end
 
   def self.can_author?
-    return Admin::Project.teachers_can_author?
+    return Admin::Settings.teachers_can_author?
   end
 
   def self.update_authoring_roles

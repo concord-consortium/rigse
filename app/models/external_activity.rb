@@ -22,10 +22,6 @@ class ExternalActivity < ActiveRecord::Base
       ea.publication_status == 'published'
     end
 
-    boolean :teacher_only do
-      false
-    end
-
     integer :offerings_count
     boolean :is_official
     boolean :is_template do
@@ -37,7 +33,6 @@ class ExternalActivity < ActiveRecord::Base
     boolean :no_probes do
       true
     end
-
 
     boolean :teacher_only do
       # Useful in Activity and Investigation; stubbed here

@@ -1,15 +1,19 @@
 class Report::LearnerController < ApplicationController
 
+  require 'cgi'
+
   include RestrictedController
   before_filter :setup,
       :only => [
       :index,
+      :logs_query,
       :update_learners
     ]
 
   before_filter :manager_or_researcher,
     :only => [
       :index,
+      :logs_query,
       :update_learners
     ]
 
@@ -24,13 +28,20 @@ class Report::LearnerController < ApplicationController
     @button_texts = {
       :apply => 'Apply Filters',
       :usage => 'Usage Report',
-      :details => 'Details Report'
+      :details => 'Details Report',
+      :logs_query => 'Log Manager Query',
+      :log_manager => 'Open in Log Manager'
     }
 
     # commit"=>"update learners"
-    if params['commit'] =~ /update learners/i
+    if params[:commit] =~ /update learners/i
       update_learners
+    elsif params[:commit] == @button_texts[:logs_query]
+      redirect_to learner_logs_query_path(request.GET.except(:commit))
+      return
     end
+
+    @no_log_manager = APP_CONFIG[:codap_url].nil? || APP_CONFIG[:log_manager_data_interactive_url].nil?
 
     # helper model to limit learner selections:
     @learner_selector = Report::Learner::Selector.new(params)
@@ -65,13 +76,21 @@ class Report::LearnerController < ApplicationController
       report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
       report.run_report(sio)
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
+    elsif params[:commit] == @button_texts[:log_manager]
+      log_manager
     end
+
   end
 
   def index
     # renders views/report/learner/index.html.haml
   end
-  
+
+  def logs_query
+    @remote_endpoints = @select_learners.map { |l| external_activity_return_url(l.learner_id) }
+    render :layout => false
+  end
+
   def updated_at
     learner = Report::Learner.find_by_user_id_and_offering_id(current_visitor.id,params[:id])
     if learner
@@ -84,11 +103,50 @@ class Report::LearnerController < ApplicationController
           render :json => {:modification_time => modification_time }
         end
       end
-   
-    else 
+
+    else
       render :nothing => true
     end
   end
 
-end
+  private
 
+  def log_manager
+    if @no_log_manager
+      flash[:alert] = "This portal is not configured to open the Log Manager"
+      redirect_to request.GET.except(:commit)
+      return
+    end
+
+    if @select_learners.length == 0
+      flash[:alert] = "No learners meet the criteria you selected"
+      redirect_to request.GET.except(:commit)
+      return
+    end
+
+    codap_url = APP_CONFIG[:codap_url]
+    data_interactive_url = APP_CONFIG[:log_manager_data_interactive_url]
+
+    # We'll let the Log Manager construct the query on run_remote_endpoint. In
+    # order to do so, we provide the appropriate prefix for
+    # run_remote_endpoints, and all the ids In the interest of URL-length
+    # sanity, the ids are passed as a single string, joined by a delimiter
+    # ('-') that is not percent encoded. (The practical URL length limit is
+    # ~2k characters, so this should allow querying several hundred learners
+    # before requests start failing because the URL is too long.)
+
+    sample_learner_id = @select_learners.first.learner_id
+    prefix = external_activity_return_url(sample_learner_id).match("(.*)" + sample_learner_id.to_s)[1]
+    learner_ids = @select_learners.map { |l| l.learner_id }
+
+    redirect_to(codap_url + "?moreGames=" + CGI::escape([{
+      :name => "LogMgr",
+      :dimensions => {
+        :width => 600,
+        :height => 800
+      },
+      :url => data_interactive_url + "?" + { :rep => prefix, :ids => learner_ids.join('-') }.to_param
+    }].to_json))
+  end
+
+end

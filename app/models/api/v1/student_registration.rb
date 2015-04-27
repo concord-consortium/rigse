@@ -72,8 +72,8 @@ class API::V1::StudentRegistration < API::V1::UserRegistration
 
   def make_security_questions
     sec_questions = []
-    for i in 0...num_required_questions
-      sec_questions << SecurityQuestion.new(:question => questions[i], :answer => answers[i][1], :user_id => user.id)
+    for i in 0...([num_required_questions, questions.length].max)
+      sec_questions << SecurityQuestion.new(:question => questions[i], :answer => answers[i], :user_id => user.id)
     end
     return sec_questions
   end

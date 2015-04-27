@@ -173,10 +173,11 @@ group :development do
   gem "rack-mini-profiler" 
   gem "bullet"
   gem "lol_dba"
+  gem "pry-debugger"
 end
 
-group :test do
-  gem "selenium-webdriver", "2.40.0"
+group :test, :cucumber do
+  gem "selenium-webdriver", "2.45.0"
   gem "cucumber",           "~> 1.1.9"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
@@ -191,11 +192,10 @@ group :test do
   gem "capybara-mechanize", "~> 0.3.0"
 end
 
-group :test, :development do
+group :test, :cucumber, :development do
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   gem "pry"
-  gem "pry-debugger"
   # TODO: Use spork or not?
   gem "spork",              "~> 0.9.0.rc9"
 end

@@ -86,6 +86,7 @@ describe RunnablesHelper do
     describe "for an external activity offering" do
       describe "when the external activity template is nil" do
         it "should include the word investigation (or sequence)" do
+          runnable.template_type.should be_nil
           subject.should == t('activerecord.models.ExternalActivity')
         end
       end
@@ -207,7 +208,7 @@ describe RunnablesHelper do
 
     it "should render a link for an External Activity" do
       ext_act = stub_model(ExternalActivity, :name => "Fetching Wood", :template_type => "Investigation")
-      helper.run_link_for(ext_act).should be_link_like("http://test.host/external_activities/#{ext_act.id}.run_resource_html",
+      helper.run_link_for(ext_act).should be_link_like("http://test.host/eresources/#{ext_act.id}.run_resource_html",
                                                        "run_link rollover",
                                                        asset_path("run.png"))
     end

@@ -82,8 +82,7 @@
 
           %tr
             %td{:colspan=>3}
-              -# TODO: FIXME: After demo, figure out how to get this working..
-              -# if current_visitor.portal_teacher
+              - if current_visitor.portal_teacher
                 - teacher_clazz_ids = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}.map{|item| item.clazz_id}
                 - offerings = material.offerings_by_clazz(teacher_clazz_ids).sort{|a,b| teacher_clazz_ids.index(a.clazz_id) <=> teacher_clazz_ids.index(b.clazz_id)}
                 - offering_clazz_names = offerings.map{|o| o.clazz.name}

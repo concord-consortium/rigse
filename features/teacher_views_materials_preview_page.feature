@@ -5,9 +5,9 @@ Feature: Teacher can search and assign instructional materials to a class
   In order to provide study materials to the students from the class
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
-    And I login with username: teacher password: password
+    And I am logged in with the username teacher
     
     
   @javascript
@@ -92,12 +92,12 @@ Feature: Teacher can search and assign instructional materials to a class
     And I follow investigation link "Mechanics" on the search instructional materials page
     And the check box for the activity "Mechanics" should be checked
     And the check box for the activity "Fluid Mechanics" should be checked
-    And I follow "← return to search"
+    And I follow "return to search"
     Then I should be on the search instructional materials page
     And I follow activity link "Fluid Mechanics" on the search instructional materials page
     And the check box for the activity "Fluid Mechanics" should be checked
     And the check box for the activity "Mechanics" should not be checked
-    And I follow "← return to search"
+    And I follow "return to search"
     Then I should be on the search instructional materials page
     
     
@@ -107,7 +107,7 @@ Feature: Teacher can search and assign instructional materials to a class
     And I follow "Assign Investigation"
     And I check "Mathematics"
     And I follow "Save"
-    And I should see "Investigation is assigned to the selected class(es) successfully." within the lightbox in focus
+    And I should see "Mechanics is assigned to the selected class(es) successfully." within the lightbox in focus
     And I go to Instructional Materials page for "Mathematics"
     Then I should see "Mechanics"
     
@@ -122,7 +122,7 @@ Feature: Teacher can search and assign instructional materials to a class
     And "Mechanics" should appear before "Fluid Mechanics"
     When I check "Physics"
     And I follow "Save"
-    And I should see "Activity is assigned to the selected class(es) successfully." within the lightbox in focus
+    And I should see "Fluid Mechanics is assigned to the selected class(es) successfully." within the lightbox in focus
     And I go to Instructional Materials page for "Physics"
     Then I should see "Fluid Mechanics"
     
@@ -135,7 +135,7 @@ Feature: Teacher can search and assign instructional materials to a class
     And I uncheck "Quantum Mechanics" from the investigation preview page
     And I uncheck "Circular Motion" from the investigation preview page
     And I follow "Assign Individual Activities"
-    Then I should see "Please select atleast one activity to assign to a class" within the lightbox in focus
+    Then I should see "Please select at least one activity to assign to a class" within the lightbox in focus
     
     
   @javascript
@@ -192,12 +192,12 @@ Feature: Teacher can search and assign instructional materials to a class
     When I am on the the preview investigation page for the investigation "Mechanics"
     And I follow "Assign Investigation"
     And I follow "Save" within the lightbox in focus
-    Then I should see "Select atleast one class to assign this Investigation" within the lightbox in focus
+    Then I should see "Select at least one class to assign this Investigation" within the lightbox in focus
     And I am on the the preview investigation page for the investigation "Mechanics"
     And I uncheck "Mechanics" from the investigation preview page
     And I follow "Assign Individual Activities"
     And I follow "Save" within the lightbox in focus
-    Then I should see "Select atleast one class to assign this Activity" within the lightbox in focus
+    Then I should see "Select at least one class to assign this Activity" within the lightbox in focus
     
     
   @javascript
@@ -205,7 +205,7 @@ Feature: Teacher can search and assign instructional materials to a class
     When the following classes exist:
           | name        | teacher               | semester |
           | New Class   | teacher_with_no_class | Fall     |
-    And I login with username: teacher_with_no_class password: password
+    And I am logged in with the username teacher_with_no_class
     And I am on the the preview investigation page for the investigation "differential calculus"
     And I follow "Assign Investigation"
     And I check "clazz_id[]"
@@ -221,7 +221,7 @@ Feature: Teacher can search and assign instructional materials to a class
     When the following classes exist:
           | name        | teacher               | semester |
           | New Class   | teacher_with_no_class | Fall     |
-    And I login with username: teacher_with_no_class password: password
+    And I am logged in with the username teacher_with_no_class
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
     And I check "clazz_id[]"
@@ -237,7 +237,7 @@ Feature: Teacher can search and assign instructional materials to a class
     When the following classes exist:
           | name        | teacher               | semester |
           | New Class   | teacher_with_no_class | Fall     |
-    And I login with username: teacher_with_no_class password: password
+    And I am logged in with the username teacher_with_no_class
     And I go to the Manage Class Page
     And I uncheck "teacher_clazz[]"
     And I should wait 2 seconds

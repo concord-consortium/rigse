@@ -69,12 +69,12 @@ describe Admin::SiteNoticesController do
   describe "Post new notice" do
     before(:each) do
       @post_params = {
-        :notice_html =>"notice text should contain atleast one non white space characters",
+        :notice_html =>"notice text should contain at least one non white space characters",
         :role => @all_role_ids
       }
     end
 
-    it("should create a notice with some text and atleast one role selected") do
+    it("should create a notice with some text and at least one role selected") do
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_not_nil(notice)
@@ -138,7 +138,7 @@ describe Admin::SiteNoticesController do
         :id => @notice.id
       }
     end
-    it("should create a notice if and only if notice contains a non white space character and atleast one role is selected") do
+    it("should create a notice if and only if notice contains a non white space character and at least one role is selected") do
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_not_nil(notice)

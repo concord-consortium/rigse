@@ -5,7 +5,7 @@ Feature: A manager updates account information for another user
   I want to update a users account information
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
   Scenario Outline: Managers can change a users email address
@@ -28,8 +28,8 @@ Feature: A manager updates account information for another user
     And I am on the user list page
     And I click "Reset Password" for user: "<userlogin>"
     Then I should see "Password for <username> (<userlogin>)"
-    When I fill in "user_password" with "<new_password>"
-    And I fill in "user_password_confirmation" with "<new_password>"
+    When I fill in "user_reset_password_password" with "<new_password>"
+    And I fill in "user_reset_password_password_confirmation" with "<new_password>"
     And I press "Submit"
     Then I should be on user list
     When I log out

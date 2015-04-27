@@ -1,0 +1,17 @@
+---
+development: &development
+  encoding: utf8
+  adapter: mysql2
+  username: travis
+  database: rigse_dev
+test: &test
+  encoding: utf8
+  adapter: mysql2
+  username: travis
+  database: rigse_test
+cucumber: &cucumber
+  encoding: utf8
+  adapter: mysql2
+  username: travis
+  database: rigse_test
+production: *development

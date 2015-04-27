@@ -154,7 +154,7 @@ class ResourcePage < ActiveRecord::Base
 
   class <<self
     def can_be_created_by?(user)
-      user.has_role?('admin', 'manager', 'researcher', 'author') || (Admin::Project.default_project.teachers_can_author? && user.portal_teacher)
+      user.has_role?('admin', 'manager', 'researcher', 'author') || (Admin::Settings.default_settings.teachers_can_author? && user.portal_teacher)
     end
 
     def searchable_attributes
@@ -215,6 +215,20 @@ class ResourcePage < ActiveRecord::Base
       resource_pages
     end
   end
+
+  # methods to mimic Activity
+  def teacher_only
+    false
+  end
+
+  def teacher_only?
+    false
+  end
+
+  def parent
+    nil
+  end
+  # end methods to mimic Activity
 
   def display_name
     res = []

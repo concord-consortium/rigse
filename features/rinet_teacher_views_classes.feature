@@ -9,7 +9,7 @@ their imported classes. (because it comes from SIS)
   So that I can assign investigations to them
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
 
   @pending
   Scenario: Rinet Teachers can view their classes

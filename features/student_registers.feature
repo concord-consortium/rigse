@@ -5,7 +5,7 @@ Feature: Student registers to use the portal
   In order to access my classes
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     
   Scenario: Anonymous user signs up as student
@@ -95,7 +95,7 @@ Feature: Student registers to use the portal
     
     
   Scenario: Student under 18 registered when student consent is enabled
-    Given the default project has student consent enabled
+    Given the default settings has student consent enabled
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |
@@ -118,7 +118,7 @@ Feature: Student registers to use the portal
     
     
   Scenario: Student over 18 registers and gives consent
-    Given the default project has student consent enabled
+    Given the default settings has student consent enabled
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |
@@ -142,7 +142,7 @@ Feature: Student registers to use the portal
     
     
   Scenario: Student over 18 registered and doesn't give consent
-    Given the default project has student consent enabled
+    Given the default settings has student consent enabled
     And the following classes exist:
       | name       | teacher |
       | Test Class | teacher |

@@ -4,7 +4,7 @@ Feature: Teacher runs student jnlps
   I want to run a students jnlp
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And the student "student" belongs to class "Class_with_no_assignment"
     And the investigation "Aerodynamics" is assigned to the class "Class_with_no_assignment"

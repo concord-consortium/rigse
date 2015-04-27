@@ -1,0 +1,9 @@
+%b
+  Home Page Content
+%br
+(This is the text that gets displayed on the front page of the portal, before a user has logged in.
+%br
+Clear everything from this editor and save the settings to reset the content to default.)
+- home_page_text_area_id = dom_id_for(admin_settings, :home_page_content, :textarea)
+= f.text_area :home_page_content, :id => home_page_text_area_id, :class => 'mceNoEditor'
+%input{:type=>"button", :value=>"Preview Home Page", :onclick=>"preview_home_page('#{home_page_text_area_id}', null);", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}

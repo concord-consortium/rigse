@@ -101,7 +101,7 @@ Then /^the portal should respond with a "([^"]*)" status and location$/ do |stat
   page.status_code.to_s.should == status
   location = page.response_headers["Location"]
   location.should_not be_nil
-  location.should match(/http:\/\/www.example.com\/external_activities\/\d+/)
+  location.should match(/http:\/\/www.example.com\/eresources\/\d+/)
 end
 
 Then /^the external activity should have a template$/ do

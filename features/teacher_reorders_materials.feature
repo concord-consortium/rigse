@@ -4,7 +4,7 @@ Feature: Teacher reorders materials assigned to the class
   should be able reorder them 
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded 
     
   @javascript

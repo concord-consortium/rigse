@@ -1,4 +1,4 @@
-- if current_project.nil?
+- if current_settings.nil?
   You need to create a project object for this portal. One way to do this is run
   %pre
     bin/rake app:setup:new_app
@@ -12,8 +12,8 @@
         -else
           = home_page_preview_content.html_safe
       - else
-        - unless current_project.home_page_content.blank?
-          - home_page_content = current_project.home_page_content
+        - unless current_settings.home_page_content.blank?
+          - home_page_content = current_settings.home_page_content
           = home_page_content.html_safe
         - else
           - render_project_info

@@ -101,7 +101,7 @@ class Reports::Excel
     learners = student.learners
     learners.reject! { |l| l.offering.nil? || l.offering.clazz.nil? || l.offering.runnable.nil? }
     learners.sort! { |a,b|
-      aname = clazz_name_for(a.offering) 
+      aname = clazz_name_for(a.offering)
       bname = clazz_name_for(b.offering)
       aname <=> bname
     }
@@ -111,7 +111,7 @@ class Reports::Excel
     name = thing.school ? (thing.school.name || "School #{thing.school.name}") : "No School"
     return name
   end
-  
+
   def clazz_name_for(offering)
     name = offering.clazz ? (offering.clazz.name || "Class: #{offering.clazz.id}") : "No Class"
     return name
@@ -140,9 +140,12 @@ class Reports::Excel
     "#{learner.student.user.first_name} #{learner.student.user.last_name}"
   end
 
-  def report_learner_info_cells(report_learner)
+  def report_learner_info_cells(report_learners)
+    report_learner = report_learners.first
+
     return [
       report_learner.student_id,
+      report_learners.map { |l| l.learner_id }.join(", "),
       report_learner.class_id,
       report_learner.class_name,
       report_learner.school_name,
@@ -152,7 +155,21 @@ class Reports::Excel
       report_learner.student_name,
       report_learner.teachers_name
     ]
+  end
 
+  def common_header
+    return [
+      Reports::ColumnDefinition.new(:title => "Student ID",    :width => 10),
+      Reports::ColumnDefinition.new(:title => "Learner ID(s)", :width => 10),
+      Reports::ColumnDefinition.new(:title => "Class ID",      :width => 10),
+      Reports::ColumnDefinition.new(:title => "Class",         :width => 25),
+      Reports::ColumnDefinition.new(:title => "School",        :width => 25),
+      Reports::ColumnDefinition.new(:title => "UserID",        :width => 25),
+      Reports::ColumnDefinition.new(:title => "Perm. Forms",   :width => 25),
+      Reports::ColumnDefinition.new(:title => "Username",      :width => 25),
+      Reports::ColumnDefinition.new(:title => "Student Name",  :width => 25),
+      Reports::ColumnDefinition.new(:title => "Teachers",      :width => 50)
+    ]
   end
 
   def get_containers(runnable)

@@ -4,7 +4,7 @@ Feature: Teacher can reset a students password
   I want to reset their password
 
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
   @javascript
@@ -16,8 +16,8 @@ Feature: Teacher can reset a students password
     Then I should see "Change Password"
     When I click "Change Password"
     Then I should see "You must set a new password"
-    When I fill in "user_password" with "new_password"
-    And I fill in "user_password_confirmation" with "new_password"
+    When I fill in "password" with "new_password"
+    And I fill in "confirm password" with "new_password"
     And I press "Submit"
     Then I should see "Class Name : Class_with_no_students"
     When I log out

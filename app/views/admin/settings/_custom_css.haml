@@ -1,0 +1,6 @@
+- if admin_settings.using_custom_css?
+  = field_set_tag 'Custom CSS for OTML' do
+    %code.tiny
+      = admin_settings.custom_css
+- else
+  %b No Custom CSS for OTML

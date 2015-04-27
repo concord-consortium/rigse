@@ -28,9 +28,9 @@ describe Portal::OfferingsController do
 
   describe "External Activities Offering" do
     before(:each) do
-      generate_default_project_and_jnlps_with_mocks
+      generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
-      Admin::Project.stub!(:default_project).and_return(@mock_project)
+      Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
       @clazz = mock_model(Portal::Clazz, :is_student? => true)
@@ -73,9 +73,9 @@ describe Portal::OfferingsController do
   describe "run_html offering" do
     render_views
     before(:each) do
-      generate_default_project_and_jnlps_with_mocks
+      generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
-      Admin::Project.stub!(:default_project).and_return(@mock_project)
+      Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
       @clazz = mock_model(Portal::Clazz, :is_student? => true)

@@ -37,14 +37,14 @@ describe Portal::ClazzesController do
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course })
 
     @controller.stub(:before_render) {
-      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+      response.template.stub_chain(:current_settings, :name).and_return("Test Settings")
     }
-    @mock_project = mock_model(Admin::Project, :name => "Test Project")
-    @mock_project.stub(:enable_grade_levels?).and_return(true)
-    @mock_project.stub(:allow_default_class).and_return(false)
-    @mock_project.stub(:use_student_security_questions).and_return(false)
-    @mock_project.stub!(:require_user_consent?).and_return(false)
-    Admin::Project.stub(:default_project).and_return(@mock_project)
+    @mock_settings = mock_model(Admin::Settings, :name => "Test Settings")
+    @mock_settings.stub(:enable_grade_levels?).and_return(true)
+    @mock_settings.stub(:allow_default_class).and_return(false)
+    @mock_settings.stub(:use_student_security_questions).and_return(false)
+    @mock_settings.stub!(:require_user_consent?).and_return(false)
+    Admin::Settings.stub(:default_settings).and_return(@mock_settings)
   end
 
   describe "GET show" do
@@ -284,7 +284,7 @@ describe Portal::ClazzesController do
     end
 
     [:admin_user, :authorized_teacher_user].each do |user|
-      it "should populate the schools list with the project default school if the current user does not belong to any schools" do
+      it "should populate the schools list with the settings default school if the current user does not belong to any schools" do
         sign_in_symbol user
 
         get :new
@@ -450,7 +450,7 @@ describe Portal::ClazzesController do
     end
 
     it "should let me create a class with no grade levels when grade levels are disabled" do
-      @mock_project.stub(:enable_grade_levels?).and_return(false)
+      @mock_settings.stub(:enable_grade_levels?).and_return(false)
       @post_params[:portal_clazz].delete(:grade_levels)
 
       sign_in @authorized_teacher_user
@@ -500,7 +500,7 @@ describe Portal::ClazzesController do
     end
 
     it "should let me update a class with no grade levels when grade levels are disabled" do
-      @mock_project.stub(:enable_grade_levels?).and_return(false)
+      @mock_settings.stub(:enable_grade_levels?).and_return(false)
       @post_params[:portal_clazz].delete(:grade_levels)
 
       sign_in @authorized_teacher_user
@@ -829,18 +829,18 @@ describe Portal::ClazzesController do
 
   describe "Post add new student popup" do
     it "should show a popup to add a new student" do
-      #creating real objects for project and making it current project
+      #creating real objects for settings and making it current settings
       #A related example http://stackoverflow.com/questions/5223247/rspec-error-mock-employee-1-received-unexpected-messageto-ary-withno-args
-      @mock_project = Admin::Project.new
-      @mock_project.home_page_content = nil
-      @mock_project.use_student_security_questions = true
-      @mock_project.use_bitmap_snapshots = true
-      @mock_project.allow_adhoc_schools = true
-      @mock_project.require_user_consent = true
-      @mock_project.allow_default_class = true
-      @mock_project.jnlp_cdn_hostname = ''
-      @mock_project.save!
-      Admin::Project.stub(:default_project).and_return(@mock_project)
+      @mock_settings = Admin::Settings.new
+      @mock_settings.home_page_content = nil
+      @mock_settings.use_student_security_questions = true
+      @mock_settings.use_bitmap_snapshots = true
+      @mock_settings.allow_adhoc_schools = true
+      @mock_settings.require_user_consent = true
+      @mock_settings.allow_default_class = true
+      @mock_settings.jnlp_cdn_hostname = ''
+      @mock_settings.save!
+      Admin::Settings.stub(:default_settings).and_return(@mock_settings)
       
       sign_in @authorized_teacher_user
       

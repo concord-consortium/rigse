@@ -6,7 +6,7 @@ Feature: Teacher adds a new student
   
   
   Background:
-    Given The default project and jnlp resources exist using factories
+    Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And the classes "Mathematics,Physics" are in a school named "Harvard"
     

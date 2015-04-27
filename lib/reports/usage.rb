@@ -11,17 +11,7 @@ class Reports::Usage < Reports::Excel
       #Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50 )
     #]
     # stud.id, class, school, user.id, username, student name, teachers
-    @shared_column_defs = [
-      Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
-      Reports::ColumnDefinition.new(:title => "Class ID",   :width => 10),
-      Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
-      Reports::ColumnDefinition.new(:title => "School",       :width => 25),
-      Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
-      Reports::ColumnDefinition.new(:title => "Perm. Forms",  :width => 25),
-      Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
-      Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
-      Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
-    ]
+    @shared_column_defs = common_header
 
     @runnable_start_column = {}
     @sheet_defs = [[]]
@@ -61,7 +51,7 @@ class Reports::Usage < Reports::Excel
     iterate_with_status(student_learners.keys) do |student_class|
       student_id = student_class[0]
       learners = student_learners[student_class]
-      learner_info = report_learner_info_cells(learners.first)
+      learner_info = report_learner_info_cells(learners)
       rows = []
       @sheets.each do |sheet|
         row = sheet.row(sheet.last_row_index + 1)
