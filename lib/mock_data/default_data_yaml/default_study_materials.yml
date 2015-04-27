@@ -646,3 +646,21 @@ external_activities:
     user: teacher
     url: /mock_html/test-external-activity.html
     uuid: 00000000-0000-0000-0000-000000000181
+
+materials_collections:
+  collection_1:
+    name: Collection 1
+    description: 00000000-0000-0000-0000-000000000182
+    items_count: 0
+  collection_2:
+    name: Collection 2
+    description: 00000000-0000-0000-0000-000000000183
+    items_count: 2
+  collection_3:
+    name: Collection 3
+    description: 00000000-0000-0000-0000-000000000184
+    items_count: 6
+  collection_4:
+    name: Collection 4
+    description: 00000000-0000-0000-0000-000000000185
+    items_count: 0

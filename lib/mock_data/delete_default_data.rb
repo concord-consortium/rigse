@@ -17,6 +17,7 @@ module MockData
     delete_default_grade_levels
     delete_default_districts
     delete_default_settings
+    delete_default_materials_collections
   end #end of reset_default_data
   
   
@@ -214,6 +215,19 @@ module MockData
     admin_settings = Admin::Settings.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     admin_settings.each do |s|
       s.destroy
+    end
+  end
+
+  def self.delete_default_materials_collections
+    puts <<-HEREDOC
+
+    Deleting default materials collections
+
+    HEREDOC
+
+    materials_collections = MaterialsCollection.where('description LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
+    materials_collections.each do |m|
+      m.destroy
     end
   end
 

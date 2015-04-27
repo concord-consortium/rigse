@@ -1468,4 +1468,15 @@ module MockData
     end
   end # end add_image_question_answer
   
+  def self.create_default_materials_collections
+    MaterialsCollection.destroy_all
+    DEFAULT_DATA[:materials_collections].each do |key, mc|
+      if (mc[:items_count] > 0)
+        Factory.create(:materials_collection_with_items, items_count: mc[:items_count], name: mc[:name], description: mc[:description])
+      else
+        Factory.create(:materials_collection, name: mc[:name], description: mc[:description])
+      end
+    end
+    puts "Generated Materials Collections"
+  end
 end # end of MockData

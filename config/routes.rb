@@ -383,6 +383,13 @@ RailsPortal::Application.routes.draw do
       get '/learner_detail/:id.:format' => 'learner_details#show',  :as => :learner_detail
     end
 
+    resources :materials_collections do
+      member do
+        post :sort_materials
+        post :remove_material
+      end
+    end
+
     namespace :otrunk_example do
       resources :otrunk_imports
       resources :otml_categories

@@ -1,0 +1,31 @@
+.material_items {
+  background-color: #eeeeee;
+
+  ul {
+    margin: 0;
+  }
+
+  .material_item {
+    list-style-type: none;
+    margin-left: 5px;
+    clear: both;
+    &:hover {
+      background-color: white;
+    }
+  }
+
+  .material_item_handle {
+    display: inline-block;
+    color: #999999;
+    cursor: ns-resize;
+  }
+
+  .material_item_content {
+    display: inline-block;
+    margin-left: 10px;
+  }
+
+  .material_item_remove_link {
+    float: right;
+  }
+}

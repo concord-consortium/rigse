@@ -8,7 +8,7 @@
   - elsif material.is_a? ::Activity
     - investigation_name = ""
     - external_activity_name = ""
-    - parent_name = (material.parent)? material.parent.name : ""
+    - parent_name = (material.parent) ? material.parent.name : ""
     - activity_name = material.name
     - existing_collections = []
     - if material.parent
@@ -17,10 +17,10 @@
     - investigation_name = ""
     - activity_name = ""
     - external_activity_name = material.name
-    - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>material.parent.id,:material_type=>"ExternalActivity"})
+    - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>material.id,:material_type=>"ExternalActivity"})
 - else
   - investigation_name = ""
-  - parent_name = (@material[0].parent)? @material[0].parent.name : ""
+  - parent_name = (@material[0].parent) ? @material[0].parent.name : ""
   - activity_name = @material.collect{|item| item.name}.join('<br/>')
 
 - activity_name = activity_name || ""
