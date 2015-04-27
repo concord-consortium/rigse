@@ -35,7 +35,12 @@ class SearchController < ApplicationController
 
   def index
     return redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
-    search_material
+    begin
+      search_material
+    rescue => e
+      ExceptionNotifier.notify_exception(e, :env => request.env, :data => {:message => "Search is broken!"})
+      render :search_unavailable
+    end
   end
 
   def unauthorized_user
