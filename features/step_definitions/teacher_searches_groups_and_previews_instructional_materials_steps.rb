@@ -111,7 +111,7 @@ Then /^the search results should be paginated on the search instructional materi
 end
 
 And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do |link, material_type, material_name|
-  material_item_div = find(:xpath, "//div[@class='materials_container #{material_type.pluralize}']//div[@data-material_name='#{material_name}']")
+  material_item_div = find(:xpath, "//div[@class='#{material_type.pluralize} materials_container']//div[@data-material_name='#{material_name}']")
   within(material_item_div) do
     step_text = "I follow \"#{link}\""
     step step_text
