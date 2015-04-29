@@ -59,9 +59,9 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
 
   def image_url
     if graph_type == "Prediction"
-      return "/images/prediction_graph.png"
+      return "http://itsisu.concord.org/share/model_images/prediction_graph.png"
     else
-      return "/images/sensor_graph.png"
+      return "http://itsisu.concord.org/share/model_images/sensor_graph.png"
     end
   end  
 

@@ -363,8 +363,7 @@ class ActivitiesController < ApplicationController
   def export_as_lara_activity
     if logged_in? && current_user.has_role?("admin")
       activity_json = @activity.export_as_lara_activity
-      activity_json[:layout] = 1 #single-page layout,
-      activity_json[:theme_id] = 3 #ITSI theme
+      activity_json[:layout] = 1 #single-page layout
       send_data activity_json.to_json, :type => :json, :disposition => "attachment", :filename => "#{@activity.name}_version_1.json"
     else
       flash[:error] = "You're not authorized to do this"
