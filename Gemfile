@@ -107,7 +107,6 @@ source "http://rubygems.org"
   gem 'uglifier'
   gem 'yui-compressor'
   gem "turbo-sprockets-rails3", "~> 0.3.6"
-  gem "factory_girl",           "~> 2.0.5"
 #      ⬆         ⬆  needed for setup tasks in production and dev :(
 
   gem 'sunspot_rails'
@@ -161,9 +160,7 @@ group :development do
   gem "awesome_print"
   gem "interactive_editor"
   gem "ruby-prof"
-  gem "guard-spork"
-  gem "guard-rspec"
-  gem "guard-cucumber"
+  gem "spring"  # automatic rails application preloader (similar to Spork)
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
@@ -177,8 +174,11 @@ group :development do
 end
 
 group :test, :cucumber do
+  gem "spring-commands-cucumber"
+  gem "spring-commands-rspec"
+  gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
   gem "selenium-webdriver", "2.45.0"
-  gem "cucumber",           "~> 1.1.9"
+  gem "cucumber",           "~> 1.2.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
   gem "capybara",           "~> 1.1.2"
@@ -190,12 +190,14 @@ group :test, :cucumber do
   gem "delorean",           "~> 1.1"
   gem "webmock",            "~> 1.11.0", :require => false
   gem "capybara-mechanize", "~> 0.3.0"
+  gem 'capybara-screenshot'
 end
 
 group :test, :cucumber, :development do
+  gem "guard",              "~> 1.8.3"
+  gem "guard-rspec"
+  gem "guard-cucumber",     "~> 1.2.2"
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   gem "pry"
-  # TODO: Use spork or not?
-  gem "spork",              "~> 0.9.0.rc9"
 end
