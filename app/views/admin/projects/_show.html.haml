@@ -3,4 +3,9 @@
 
   %div{id: dom_id_for(project, :item), class: 'item'}
     %div{id: dom_id_for(project, :details), class: 'content'}
-      = wrap_edit_link_around_content project
+      = wrap_edit_link_around_content project do
+        %p
+          %ul.menu_v
+            %li
+              Name:
+              =h(project.name)

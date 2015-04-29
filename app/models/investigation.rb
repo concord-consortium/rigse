@@ -52,6 +52,9 @@ class Investigation < ActiveRecord::Base
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+    string :projects, :multiple => true do
+      projects.map { |p| p.name }.compact
+    end
   end
 
   belongs_to :user
