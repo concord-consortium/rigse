@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'views/shared_examples/projects_listing_spec'
 
 describe "/investigations/edit.html.haml" do
   before(:each) do

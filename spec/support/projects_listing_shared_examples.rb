@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-shared_examples 'projects listing' do
+shared_examples_for 'projects listing' do
   let (:project_name) { 'project foo bar test' }
   before(:each) do
     FactoryGirl.create(:project, name: project_name)

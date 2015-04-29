@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'views/shared_examples/projects_listing_spec'
 
 describe "/external_activities/edit.html.haml" do
   let(:ext_act) { Factory.create(:external_activity, :url => 'http://activities.com') }
