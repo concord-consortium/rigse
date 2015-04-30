@@ -54,4 +54,7 @@
 = require 'angular/portal_app'
 = require 'external_activities/matedit'
 = require 'iframeable-link'
+= require 'react'
+= require 'react_ujs'
+= require 'components'
 */
