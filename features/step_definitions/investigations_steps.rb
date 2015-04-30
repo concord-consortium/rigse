@@ -408,8 +408,8 @@ And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to domain "([^
       :grade_span_expectation => grade_span_expection
     }
       
-  @published = []
-  @drafts = []
+  @published ||= []
+  @drafts ||= []
   
   published = Factory.create(:investigation, investigation)
   published.name << " (published) "
@@ -417,10 +417,10 @@ And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to domain "([^
   published.save
   @published << published.reload
   Factory.create(:activity, :investigation_id => published.id , :name => activity_name)
-  draft = Factory.create(:investigation, investigation)
-  draft.name << " (draft) "
-  draft.save
-  @drafts << draft.reload
+  # draft = Factory.create(:investigation, investigation)
+  # draft.name << " (draft) "
+  # draft.save
+  # @drafts << draft.reload
   
 end
 
