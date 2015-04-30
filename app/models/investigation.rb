@@ -112,7 +112,7 @@ class Investigation < ActiveRecord::Base
     INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
     WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0" }
 
-  has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material
+  has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
 
   acts_as_replicatable

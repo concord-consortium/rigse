@@ -10,7 +10,7 @@ class Admin::Project < ActiveRecord::Base
     @@searchable_attributes
   end
 
-  has_many :project_materials
+  has_many :project_materials, dependent: :destroy
   has_many :activities, through: :project_materials, source: :material, source_type: 'Activity'
   has_many :investigations, through: :project_materials, source: :material, source_type: 'Investigation'
   has_many :external_activities, through: :project_materials, source: :material, source_type: 'ExternalActivity'
