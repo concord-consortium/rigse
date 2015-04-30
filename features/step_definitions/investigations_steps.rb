@@ -412,9 +412,9 @@ And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to domain "([^
   @drafts ||= []
   
   published = Factory.create(:investigation, investigation)
-  published.name << " (published) "
+  # published.name << " (published) "
   published.publish!
-  published.save
+  # published.save
   @published << published.reload
   Factory.create(:activity, :investigation_id => published.id , :name => activity_name)
   # draft = Factory.create(:investigation, investigation)
