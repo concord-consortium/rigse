@@ -78,6 +78,10 @@
                     = assign_material_link(material, url_for({ :controller => '/search', :action => 'unauthorized_user' }))
                 %div{:style=>'float:right;text-align: right; margin-top: 3px;'}
                   = teacher_guide_link(material)
+            - if current_visitor.has_role? "admin"
+              %td{:width=>"130px"}
+                %div{:style=>'float:right'}
+                  = assign_material_collection_link(material, "javascript:void(0)", :onclick=>"get_Assign_To_Collection_Popup(#{material.id},'#{material.class.to_s}')")
 
 
           %tr

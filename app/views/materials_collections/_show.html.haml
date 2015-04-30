@@ -1,0 +1,9 @@
+- display_name = "#{materials_collection.name}"
+- options = { :hide_componenent_name => true, :display_name => display_name, :success => "jQuery('##{dom_id_for(materials_collection, :accordion_toggle)}.accordion_toggle_closed').click(); #{mce_init_string}" }
+= accordion_for(materials_collection, show_menu_for(materials_collection, options), 'accordion') do
+  %div{:id => dom_id_for(materials_collection, :item), :class => 'item'}
+    %div{:id => dom_id_for(materials_collection, :details), :class => 'content'}
+      = wrap_edit_link_around_content(materials_collection, {:complete => mce_init_string}) do
+        %h4= h(materials_collection.name)
+        %p= materials_collection.description.html_safe
+        = render :partial => 'materials_in_collection', :locals => { :materials_collection => materials_collection }

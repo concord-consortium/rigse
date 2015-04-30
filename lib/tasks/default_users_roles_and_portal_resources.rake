@@ -63,6 +63,7 @@ namespace :app do
     task :create_default_assignments_for_class => [:environment, :create_default_study_materials] do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
       MockData.create_default_assignments_for_class
+      MockData.create_default_materials_collections
     end
     
     desc "This task creats default learners."

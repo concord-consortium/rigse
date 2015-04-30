@@ -1,0 +1,21 @@
+.material_items
+  - if materials_collection.materials_collection_items.size > 0
+    - elements_container_id = dom_id_for(materials_collection, :materials)
+    %ul{:id => elements_container_id}
+      - materials_collection.materials_collection_items.each do |mci|
+        - material = mci.material
+        %li.material_item{id: "materials_collection_item_#{mci.id}"}
+          .material_item_handle
+            %i.fa.fa-bars
+          .material_item_content
+            = link_to material.name, material
+          .material_item_remove_link
+            - title = "Remove #{material.name} from the collection '#{materials_collection.name}'"
+            - confirm = "#{title}?"
+            - url = remove_material_materials_collection_path(materials_collection, :materials_collection_item_id => mci.id)
+            - success = "jQuery('#materials_collection_item_#{mci.id}').remove();"
+            = remote_link_button "delete.png", :url => url, :submit => "materials_collection_item_#{mci.id}", :confirm => confirm, :name => 'remove material', :title => title, :method => :post, :success => success
+    - url = sort_materials_materials_collection_path(materials_collection)
+    = sortable_element elements_container_id, :url => url, :handle=> "material_item_handle", :constraint => :vertical, :scroll => "window"
+  - else
+    %p No materials have been added to this collection.

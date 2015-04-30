@@ -201,3 +201,10 @@ When /^(?:|I )close the newly opened window$/ do
     page.execute_script "window.close();"
   end
 end
+
+require 'securerandom'
+When /^I take a screenshot(?: as "([^"]*)")?/ do |file|
+  file = "tmp/#{SecureRandom.hex(4)}.png" unless file
+  page.driver.browser.save_screenshot file
+  puts "snapshot taken: #{file}"
+end
