@@ -49,5 +49,5 @@ class CommonsLicense < ActiveRecord::Base
     end
   end
 
-  self.load_all_from_yaml!
+  self.load_all_from_yaml! rescue nil
 end
