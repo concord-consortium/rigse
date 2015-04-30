@@ -17,11 +17,12 @@ before_script:
   - cp config/sis_import_data.sample.yml config/sis_import_data.yml
   - cp config/initializers/site_keys.rb.sample config/initializers/site_keys.rb
   - mysql -e "create database rigse_test;"
-  - bundle exec rake db:migrate
-  - bundle exec rake db:test:prepare
+  - bundle exec spring rake db:schema:load
+  - bundle exec spring rake db:migrate
+  - bundle exec spring rake db:test:prepare
 
 # uncomment this line if your project needs to run something other than `rake`:
-script: bundle exec rake $TEST_SUITE
+script: bundle exec spring rake $TEST_SUITE
 
 cache: bundler
 
