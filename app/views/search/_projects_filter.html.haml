@@ -4,4 +4,4 @@
   - @form_model.available_projects.each do |project|
     .tablecell
       = check_box_tag 'projects[]', project, @form_model.projects.include?(project), id: "project_#{project}", class: 'check-box-left-margin'
-      = label_tag 'project_#{project}', project
+      = label_tag "project_#{project}", project

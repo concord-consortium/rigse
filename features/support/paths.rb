@@ -120,6 +120,8 @@ module NavigationHelpers
     when /the preview activity page for the activity "(.*)"/
       activity_id = Activity.find_by_name($1).id
       "/browse/activities/#{activity_id}"
+    when /the projects index page/
+      "/admin/projects"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
