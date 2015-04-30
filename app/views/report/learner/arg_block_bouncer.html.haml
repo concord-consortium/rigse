@@ -1,0 +1,11 @@
+%form{ :action => @report_url, :method => "post" }
+  %input{ :type => "hidden", :name => "arg_block_buckets", :value => @arg_block_buckets.to_json }/
+  %input{ :type => "submit", :value => "Get Report" }
+
+:javascript
+  window.onload = function() {
+  	document.forms[0].submit();
+  	window.setTimeout(function() {
+  	  window.history.back();
+  	}, 1000);
+  }
