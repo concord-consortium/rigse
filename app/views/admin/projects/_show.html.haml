@@ -8,4 +8,8 @@
           %ul.menu_v
             %li
               Name:
-              =h(project.name)
+              = project.name
+            - if project.landing_page_slug
+              %li
+                Landing page:
+                %a{href: project_page_url(project.landing_page_slug)}= project_page_url(project.landing_page_slug)

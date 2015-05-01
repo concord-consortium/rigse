@@ -29,8 +29,9 @@ Feature: Admin can work with projects
     And I should see "1 project"
     And I should see "Project was successfully created."
     And I should see "My new project"
-    When I visit the route /new-project
-    Then I should see "New project FooBar!"
+    When I click "/new-project"
+    Then I should be on the route /new-project
+    And I should see "New project FooBar!"
 
   Scenario: Admin creates a new project providing invalid params
     When I am on the projects index page
