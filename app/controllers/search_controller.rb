@@ -41,7 +41,7 @@ class SearchController < ApplicationController
     begin
       search_material
     rescue => e
-      ExceptionNotifier.notify_exception(e, :env => request.env, :data => {:message => "Search is broken!"})
+      ExceptionNotifier::Notifier.exception_notification(request.env, e).deliver
       render :search_unavailable
     end
   end
