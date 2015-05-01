@@ -1,0 +1,88 @@
+{
+  "id": 1,
+  "name": "Will the air be clean enough to breathed?",
+  "description": "In this lesson, students explore the sources and flow of pollutants through the atmosphere. Students use models to run experiments testing the effects of wind, rain, solar radiation, and geography on air quality.",
+  "class_name_underscored": "external_activity",
+  "icon_url": "http://resources.has.concord.org/resources/thumbnails/air.png",
+  "java_requirements": null,
+  "is_official": true,
+  "browse_link": {
+    "url": "/browse/eresources/82"
+  },
+  "edit_link": {
+    "url": "???",
+    "text": "Edit"
+  },
+  "launch_link": {
+    "url": "???",
+    "text": "Launch"
+  },
+  "preview_link": {
+    "url": "/eresources/82.run_resource_html",
+    "text": "Preview",
+    "target": "_blank"
+  },
+  "external_edit_link": {
+    "url": "???",
+    "text": "External Edit"
+  },
+  "external_copy_link": {
+    "url": "???",
+    "text": "External Copy"
+  },
+  "assign_material_link": {
+    "url": "???",
+    "text": "Assign to class"
+  },
+  "teacher_guide_link": {
+    "url": "???",
+    "text": "Teacher Guide"
+  },
+  "assign_collection_link": {
+    "url": "???",
+    "text": "Add to Collection"
+  },
+  "assigned_classes": [
+    "Class 1",
+    "Class 2",
+    "Class 3"
+  ],
+  "class_usage_text": "???",
+  "required_equipment": "???",
+  "has_activities": true,
+  "has_pretest": true,
+
+  "activities": [
+    {
+      "id": 1,
+      "name": "Measuring air quality"
+    },
+    {
+      "id": 2,
+      "name": "Measuring air quality"
+    },
+    {
+      "id": 3,
+      "name": "Measuring air quality"
+    },
+    {
+      "id": 4,
+      "name": "Measuring air quality"
+    },
+    {
+      "id": 5,
+      "name": "Measuring air quality"
+    }
+  ],
+
+  "parent": {
+    "id": 10,
+    "name": null
+  },
+
+  "user": {
+    "id": 1,
+    "name": "Sarah Pryputniewicz"
+  }
+
+}

@@ -1,0 +1,83 @@
+<div className='material_list_item' data-material_id={material.id} data-material_name={material.name} id={'search_' + material.class_name_underscored + '_' + material.id }>
+  <div className='main-part'>
+    <div className='material_icon'>
+      <a className='thumb_link' href={material.browse_link}>
+        <img src={material.icon_url} width='100%' />
+      </a>
+    </div>
+    <div>
+      <div style={{overflow: "hidden"}}>
+        <table width='100%'>
+          <tr>
+            <td></td>
+            <td>
+              <span className='material_header'>
+                <span className='material_meta_data'>
+                  <span className={material.java_requirements ? 'JavaRequirement' : 'NoJavaRequirement'}>
+                    {material.java_requirements ? material.java_requirements : 'Runs in browser'}
+                  </span>
+                  <span className='is_official'>
+                    { material.is_official ? 'Official' : 'Community' }
+                  </span>
+                </span>
+                <br>
+                  <a href={material.browse_link}>{material.name}</a>
+                  {material.edit_link}
+                  {material.launch_link}
+                </br>
+              </span>
+              <span>
+                from
+                Sequence "{material.parent.name}"
+              </span>
+              <div>
+                <span style={{fontWeight: 'bold'}}>
+                  By {material.user.name}
+                </span>
+              </div>
+            </td>
+            <td width='90px'>
+              { [material.preview_link, material.external_edit_link, material.external_copy_link, material.assign_material_link, material.teacher_guide_link, material.assign_collection_link ].map(function(link) {
+                  if (link) {
+                    return <div style={{float: 'right'}}><a href={link.url} className={'button'} target={link.target}>{link.text}</a></div>;
+                  } else {
+                    return '';
+                  }
+                })
+              }
+            </td>
+          </tr>
+          <tr>
+            <td colspan='3'>
+              <span className='assignedTo'>
+                (Assigned to {material.assigned_classes.join(', ')})
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div className='material_body'>
+      <div>
+        <i>
+          {material.class_usage_text}
+        </i>
+      </div>
+      {material.required_equipment}
+    </div>
+  </div>
+  <div className='toggle-details'>
+    <i className='toggle-details-icon fa fa-chevron-down'></i>
+    <i className='toggle-details-icon fa fa-chevron-up' style={{display: 'none'}}></i>
+    <div className='material-details' style={{display: 'none'}}>
+      <div className={ 'material-description ' + (material.has_activities || material.has_pretest) ? "two-cols" : "one-col"}>
+        <h3>Description</h3>
+        {material.description}
+      </div>
+      <div className='material-activities'>
+        { material.has_pretest ? <h4>Pre- and Post-tests available.</h4> : "" }
+        { material.has_activities ? <div><h3>Activities</h3><ul>{material.activities.map(function(o) { return <li key={o.id}>{o.name}</li>; })}</ul></div> : "" }
+      </div>
+    </div>
+  </div>
+</div>

@@ -56,5 +56,5 @@
 = require 'iframeable-link'
 = require 'react'
 = require 'react_ujs'
-= require 'components'
+= require 'component'
 */
