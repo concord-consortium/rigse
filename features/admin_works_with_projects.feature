@@ -22,11 +22,15 @@ Feature: Admin can work with projects
     When I am on the projects index page
     And I click "create Project"
     And I fill in "admin_project[name]" with "My new project"
+    And I fill in "admin_project[landing_page_slug]" with "new-project"
+    And I fill in "admin_project[landing_page_content]" with "<h1>New project FooBar!</h1>"
     And I press "Save"
     Then I should be on the projects index page
     And I should see "1 project"
     And I should see "Project was successfully created."
     And I should see "My new project"
+    When I visit the route /new-project
+    Then I should see "New project FooBar!"
 
   Scenario: Admin creates a new project providing invalid params
     When I am on the projects index page
