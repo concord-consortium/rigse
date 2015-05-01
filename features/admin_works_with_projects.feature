@@ -39,6 +39,9 @@ Feature: Admin can work with projects
 
   Scenario: Admin adds materials to a project
     Given the default projects exist using factories
+    And the following simple investigations exist:
+      | name              | description           | user   |
+      | testing fast cars | how fast can cars go? | author |
     When I am on the search instructional materials page
     And I search for "testing fast cars" on the search instructional materials page
     And I follow the "portal settings" link for the investigation "testing fast cars"

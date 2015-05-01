@@ -676,4 +676,8 @@ RailsPortal::Application.routes.draw do
     warden = request.env['warden']
     warden.user && warden.user.has_role?("admin")
   }
+
+  # Custom project page. This route should be always at the very bottom,
+  # so the custom page URL can't overwrite another resource URL!
+  get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page
 end

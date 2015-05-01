@@ -1,6 +1,12 @@
 class Admin::ProjectsController < ApplicationController
   include RestrictedController
-  before_filter :admin_only
+  before_filter :admin_only, except: [:landing_page]
+
+  # GET /:landing_page_slug
+  def landing_page
+    project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
+    @landing_page_content = project.landing_page_content
+  end
 
   # GET /admin/projects
   def index
@@ -42,8 +48,11 @@ class Admin::ProjectsController < ApplicationController
     @project = Admin::Project.find(params[:id])
 
     if request.xhr?
-      @project.update_attributes(params[:admin_project])
-      render :partial => 'show', :locals => { :project => @project }
+      if @project.update_attributes(params[:admin_project])
+        render :partial => 'show', :locals => { :project => @project }
+      else
+        render :partial => 'remote_form', :locals => { :project => @project }, :status => 400
+      end
     else
       if @project.update_attributes(params[:admin_project])
         redirect_to @project, :notice => 'Project was successfully updated.'

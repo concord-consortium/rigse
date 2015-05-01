@@ -25,4 +25,30 @@ describe Admin::Project do
     project.external_activities << ext_act
     expect(project.external_activities.count).to eql(1)
   end
+
+
+  describe "#name" do
+    it "should be required" do
+      expect(Admin::Project.new(name: 'n').valid?).to be_true
+      expect(Admin::Project.new(name: '').valid?).to be_false
+      expect(Admin::Project.new().valid?).to be_false
+    end
+  end
+
+  describe "#landing_page_slug" do
+    it "should be optional" do
+      expect(Admin::Project.new(name: 'n').valid?).to be_true
+      expect(Admin::Project.new(name: 'n', landing_page_slug: '').valid?).to be_true
+    end
+
+    it "should be limited to lower case letters, digits and '-' character" do
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug').valid?).to be_true
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug-2').valid?).to be_true
+      expect(Admin::Project.new(name: 'n', landing_page_slug: '3-valid-slug').valid?).to be_true
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'Invalid-slug').valid?).to be_false
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid/slug').valid?).to be_false
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid.slug').valid?).to be_false
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid:slug').valid?).to be_false
+    end
+  end
 end
