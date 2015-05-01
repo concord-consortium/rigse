@@ -11,7 +11,6 @@ module RailsPortal
       g.test_framework :rspec
     end
 
-    config.assets.enabled = true
     # Bundler.require(:default, Rails.env) if defined?(Bundler)
     # Fixes a Compass bug, per http://stackoverflow.com/questions/6005361/sass-import-error-in-rails-3-app-file-to-import-not-found-or-unreadable-comp?rq=1
     app_environment_variables = File.join(Rails.root, 'config', 'app_environment_variables.rb')
@@ -130,7 +129,31 @@ module RailsPortal
       end
     end
 
+    config.assets.enabled = true
+    config.assets.precompile += %w(
+      print.css
+      otml.css
+      clazzes_nav.js
+      instructional_materials.js
+      jquery/jquery.js
+      pie/PIE.js
+      calpicker/calendar_date_select.js
+      calpicker/silver.css
+      contentflow_configured.css
+      contentflow_configured.js
+      web/search_materials.css
+    )
+
+    # pre-compile any fonts in the assets/ directory as well
+    config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
+
+    # add in the current theme's application.css
+    # a proc is used here so the APP_CONFIG is available
+    config.assets.precompile << Proc.new do |path|
+      path == "APP_CONFIG[:theme]/stylesheets/application.css"
+    end
+
   end
-  
+
   # ANONYMOUS_USER = User.find_by_login('anonymous')
 end
