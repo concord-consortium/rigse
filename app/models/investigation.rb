@@ -69,6 +69,9 @@ class Investigation < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
+  has_many :materials_collection_items, :dependent => :destroy, :as => :material
+  has_many :materials_collections, :through => :materials_collection_items
+
   has_many :external_activities, :as => :template
 
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb

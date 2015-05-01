@@ -1,0 +1,4 @@
+.search_materials
+  %h2 Search is currently unavailable at this time. Please try again later.
+  - if current_visitor.has_role?('admin')
+    %h4 This is usually caused when the Solr background process is not running.

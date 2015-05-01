@@ -1,0 +1,6 @@
+= render :partial => 'list_show', :locals=> { :materials_collection => @materials_collection }
+
+:javascript
+  jQuery(document).ready(function() {
+    jQuery('##{dom_id_for(@materials_collection, :accordion_toggle)}.accordion_toggle_closed').click();
+  });

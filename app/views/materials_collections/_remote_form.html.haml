@@ -1,0 +1,2 @@
+= remote_form_for(materials_collection, :update => dom_id_for(materials_collection, :wrapper), :html => { :onsubmit => 'tinyMCE.triggerSave()' }, :complete => "jQuery('##{dom_id_for(materials_collection, :accordion_toggle)}.accordion_toggle_closed').click();") do |f|
+  = render :partial => "form", :locals => { :materials_collection => materials_collection, :f => f  }

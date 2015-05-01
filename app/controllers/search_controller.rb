@@ -1,8 +1,11 @@
 class SearchController < ApplicationController
 
+  include RestrictedController
+
   before_filter :teacher_only, :only => [:index, :show]
   before_filter :check_if_teacher, :only => [:get_current_material_unassigned_clazzes, :add_material_to_clazzes]
-  
+  before_filter :admin_only, :only => [:get_current_material_unassigned_collections, :add_material_to_collections]
+
   protected
 
   def teacher_only
@@ -10,8 +13,8 @@ class SearchController < ApplicationController
       redirect_to(:root)
     end
   end
-  
-   def check_if_teacher
+
+  def check_if_teacher
     if current_visitor.portal_teacher.nil? && request.xhr?
       respond_to do |format|
         format.js { render :json => "Not Teacher",:status => 401 }
@@ -35,7 +38,12 @@ class SearchController < ApplicationController
 
   def index
     return redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
-    search_material
+    begin
+      search_material
+    rescue => e
+      ExceptionNotifier.notify_exception(e, :env => request.env, :data => {:message => "Search is broken!"})
+      render :search_unavailable
+    end
   end
 
   def unauthorized_user
@@ -177,7 +185,7 @@ class SearchController < ApplicationController
 
           if clazz_ids.count > 0
             page << "close_popup()"
-            page << "getMessagePopup('<div class=\"feedback_message\"><b>#{material.name}</b> is assigned to the selected class(es) successfully.</div>')"
+            page << "getMessagePopup('<div class=\"feedback_message\"><b>#{material.name.gsub("'","\\'")}</b> is assigned to the selected class(es) successfully.</div>')"
             page.replace_html "material_clazz_count", class_count_desc
             if !material_parent.nil? && runnable_type == "Activity"
               used_in_clazz_count = material.offerings_count + material.parent.offerings_count
@@ -239,4 +247,88 @@ class SearchController < ApplicationController
     end
   end
 
+  def get_current_material_unassigned_collections
+    material_type = params[:material_type]
+    material_ids = params[:material_id]
+    material_ids = material_ids.split(',')
+
+    @collections = MaterialsCollection.includes(:materials_collection_items).all
+
+    if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation
+      @material = [find_material(material_type, params[:material_id])]
+      @assigned_collections = @collections.select{|c| _collection_has_materials(c, @material) }
+    else
+      @material = material_ids.collect{|a| ::Activity.find(a)}
+      @assigned_collections = []
+    end
+
+    @unassigned_collections = @collections - @assigned_collections
+
+    render :partial => 'material_unassigned_collections'
+  end
+
+  def add_material_to_collections
+    collection_ids = params[:materials_collection_id] || []
+    runnable_ids = params[:material_id].split(',')
+    runnable_type = params[:material_type].classify
+    assign_summary_data = []
+
+    collection_ids.each do|collection_id|
+      already_assigned_material_names = []
+      newly_assigned_material_names = []
+      collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
+      runnable_ids.each do|runnable_id|
+        collection_items = collection.materials_collection_items
+        item = collection_items.find_by_material_id_and_material_type(runnable_id,runnable_type)
+        if item.nil?
+          item = MaterialsCollectionItem.find_or_create_by_materials_collection_id_and_material_type_and_material_id(collection.id,runnable_type,runnable_id)
+          if item.position.nil?
+            item.position = collection_items.length
+            item.save
+          end
+          newly_assigned_material_names << collection.name
+        else
+          already_assigned_material_names << collection.name
+        end
+      end
+      assign_summary_data << [collection.name, newly_assigned_material_names,already_assigned_material_names]
+    end
+
+    if request.xhr?
+      render :update do |page|
+        materials = []
+        if runnable_ids.length == 1
+          if runnable_type == "Investigation"
+            materials.push ::Investigation.find(params[:material_id])
+          elsif runnable_type == "Activity"
+            materials.push ::Activity.find(params[:material_id])
+          elsif runnable_type == "ExternalActivity"
+            materials.push ::ExternalActivity.find(params[:material_id])
+          end
+        else
+          runnable_ids.each do |id|
+            materials.push ::Activity.find(id)
+          end
+        end
+
+        if collection_ids.count > 0
+          material_names = materials.map {|m| "<b>#{m.name}</b>" }.join(", ").gsub("'","\\'")
+          page << "close_popup()"
+          page << "getMessagePopup('<div class=\"feedback_message\">#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully.</div>')"
+        else
+          page << "$('error_message').update('Select at least one collection to assign this #{runnable_type}');$('error_message').show()"
+        end
+      end
+    end
+  end
+
+  private
+
+  def _collection_has_materials(collection, materials)
+    items = collection.materials_collection_items.map{|i| [i.material_type, i.material_id] }
+    material_items = materials.map {|m| [m.class.to_s, m.id] }
+
+    has_them_all = (material_items - items).empty? && (material_items & items).length == material_items.length
+    return has_them_all
+  end
 end

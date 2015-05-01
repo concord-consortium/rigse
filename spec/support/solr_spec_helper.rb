@@ -34,7 +34,7 @@ module SolrSpecHelper
   # http://www.dzone.com/snippets/install-and-test-solrsunspot
   def solr_setup
     unless $sunspot
-      ::WebMock.disable_net_connect!(:allow => ["localhost:8981"])
+      ::WebMock.disable_net_connect!(:allow => ["localhost:8981","codeclimate.com"])
       $sunspot = Sunspot::Rails::Server.new
 
       pid = fork do

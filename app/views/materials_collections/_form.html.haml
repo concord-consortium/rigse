@@ -1,0 +1,11 @@
+.item
+  = edit_menu_for(materials_collection, f, { :omit_cancel => true })
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          =f.text_field :name
+        %li
+          Description:
+          =f.text_area :description

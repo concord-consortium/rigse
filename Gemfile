@@ -191,6 +191,7 @@ group :test, :cucumber do
   gem "webmock",            "~> 1.11.0", :require => false
   gem "capybara-mechanize", "~> 0.3.0"
   gem 'capybara-screenshot'
+  gem "codeclimate-test-reporter", require: nil
 end
 
 group :test, :cucumber, :development do

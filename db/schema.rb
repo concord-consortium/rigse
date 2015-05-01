@@ -863,6 +863,21 @@ ActiveRecord::Schema.define(:version => 20150426111104) do
     t.integer  "jnlp_session_id"
   end
 
+  create_table "interactives", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "url"
+    t.integer  "width"
+    t.integer  "height"
+    t.float    "scale"
+    t.string   "image_url"
+    t.integer  "user_id"
+    t.string   "credits"
+    t.string   "publication_status"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
   create_table "investigations", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                      :limit => 36
@@ -894,6 +909,28 @@ ActiveRecord::Schema.define(:version => 20150426111104) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
+
+  create_table "materials_collection_items", :force => true do |t|
+    t.integer  "materials_collection_id"
+    t.string   "material_type"
+    t.integer  "material_id"
+    t.integer  "position"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "materials_collection_items", ["material_id", "material_type", "position"], :name => "material_idx"
+  add_index "materials_collection_items", ["materials_collection_id", "position"], :name => "materials_collection_idx"
+
+  create_table "materials_collections", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "project_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "materials_collections", ["project_id"], :name => "index_materials_collections_on_project_id"
 
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
     t.integer "otml_category_id"
