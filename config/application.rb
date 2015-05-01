@@ -134,14 +134,25 @@ module RailsPortal
       print.css
       otml.css
       clazzes_nav.js
+      student_roster.js
+      class_setup_info.js
+      manage_classes.js
+      full_status.js
       instructional_materials.js
+      preview_home_page.js
+      preview_help_page.js
+      share_material.js
+      settings_form.js
       jquery/jquery.js
       pie/PIE.js
       calpicker/calendar_date_select.js
       calpicker/silver.css
       contentflow_configured.css
       contentflow_configured.js
+      contentflow_report_fix.js
       web/search_materials.css
+      readme.css
+      print.css
     )
 
     # pre-compile any fonts in the assets/ directory as well

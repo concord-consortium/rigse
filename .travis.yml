@@ -27,7 +27,7 @@ before_script:
   - ./bin/rake db:schema:load
   - ./bin/rake db:migrate
   - ./bin/rake db:test:prepare
-  - ./bin/rake assets:precompile:all
+  - RAILS_GROUPS=assets ./bin/rake assets:precompile:all
 
 # uncomment this line if your project needs to run something other than `rake`:
 script: ./bin/rake $TEST_SUITE
