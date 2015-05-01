@@ -45,6 +45,7 @@ development: &non_production_settings
       - code
   :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
   :password_for_default_users: password
+  :use_gse: false
 
 test:
   <<: *non_production_settings
