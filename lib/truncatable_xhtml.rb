@@ -88,11 +88,11 @@ module TruncatableXhtml
     /<br>/i => "<br/>"
   }
 
-  REPLACEMENT_MAP=DEFAULT_REPLACEABLES
-
   ## for ITSI carolyn might want everything
   if (APP_CONFIG[:dont_sanitize_xhtml])
     REPLACEMENT_MAP = {}
+  else
+    REPLACEMENT_MAP=DEFAULT_REPLACEABLES
   end
   
   ##
