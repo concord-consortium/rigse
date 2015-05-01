@@ -679,5 +679,5 @@ RailsPortal::Application.routes.draw do
 
   # Custom project page. This route should be always at the very bottom,
   # so the custom page URL can't overwrite another resource URL!
-  get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page
+  get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page, :constraints => { :landing_page_slug => /[a-z0-9\-]+/ }
 end

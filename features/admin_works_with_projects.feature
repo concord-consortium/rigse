@@ -28,6 +28,30 @@ Feature: Admin can work with projects
     And I should see "Project was successfully created."
     And I should see "My new project"
 
+  Scenario: Admin creates a new project providing invalid params
+    When I am on the projects index page
+    And I click "create Project"
+    And I press "Save"
+    And I should see "there are errors"
+    And I should see "Name can't be blank"
+    And I fill in "admin_project[name]" with "My new project"
+    And I fill in "admin_project[landing_page_slug]" with "slug"
+    And I press "Save"
+    Then I should be on the projects index page
+    And I should see "Project was successfully created."
+    And I should see "My new project"
+    When I click "create Project"
+    And I fill in "admin_project[landing_page_slug]" with "slug"
+    And I press "Save"
+    Then I should see "there are errors"
+    And I should see "Name can't be blank"
+    And I should see "Landing page slug has already been taken"
+    When I fill in "admin_project[landing_page_slug]" with "invalid/slug"
+    And I press "Save"
+    Then I should see "there are errors"
+    And I should see "Name can't be blank"
+    And I should see "Landing page slug only allows lower case letters, digits and '-' character"
+
   @javascript
   Scenario: Admin edits existing project
     Given the default projects exist using factories
@@ -36,6 +60,21 @@ Feature: Admin can work with projects
     When I fill in "admin_project[name]" with "New project name"
     And I press "Save"
     Then I should see "New project name"
+
+  @javascript
+  Scenario: Admin edits existing project providing invalid params
+    Given the default projects exist using factories
+    And I am on the projects index page
+    When I click on the edit link for project "project 2"
+    And I fill in "admin_project[name]" with ""
+    And I press "Save"
+    Then I should see "there are errors"
+    And I should see "Name can't be blank"
+    When I fill in "admin_project[name]" with "new project 2"
+    And I fill in "admin_project[landing_page_slug]" with "project-1"
+    And I press "Save"
+    Then I should see "there are errors"
+    And I should see "Landing page slug has already been taken"
 
   Scenario: Admin adds materials to a project
     Given the default projects exist using factories

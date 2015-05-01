@@ -41,6 +41,15 @@ describe Admin::Project do
       expect(Admin::Project.new(name: 'n', landing_page_slug: '').valid?).to be_true
     end
 
+    it "should be unique (except from nil or empty string)" do
+      expect(Admin::Project.create(name: 'n', landing_page_slug: 'test').valid?).to be_true
+      expect(Admin::Project.create(name: 'n', landing_page_slug: 'test').valid?).to be_false
+      expect(Admin::Project.create(name: 'n', landing_page_slug: '').valid?).to be_true
+      expect(Admin::Project.create(name: 'n', landing_page_slug: '').valid?).to be_true
+      expect(Admin::Project.create(name: 'n').valid?).to be_true
+      expect(Admin::Project.create(name: 'n').valid?).to be_true
+    end
+
     it "should be limited to lower case letters, digits and '-' character" do
       expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug').valid?).to be_true
       expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug-2').valid?).to be_true

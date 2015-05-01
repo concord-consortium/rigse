@@ -1,7 +1,7 @@
 Given /^the default projects exist using factories$/ do
-  Factory.create(:project, name: 'project 1')
-  Factory.create(:project, name: 'project 2')
-  Factory.create(:project, name: 'project 3')
+  Factory.create(:project, name: 'project 1', landing_page_slug: 'project-1')
+  Factory.create(:project, name: 'project 2', landing_page_slug: 'project-2')
+  Factory.create(:project, name: 'project 3', landing_page_slug: 'project-3')
 end
 
 Given /^the following investigations are assigned to projects:$/ do |material_table|

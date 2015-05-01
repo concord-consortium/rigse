@@ -20,9 +20,6 @@ require 'spec_helper'
 
 describe Admin::ProjectsController do
   before(:each) do
-    @admin_user = Factory.next(:admin_user)
-    controller.stub!(:current_visitor).and_return(@admin_user)
-
     login_admin
   end
 
@@ -147,6 +144,33 @@ describe Admin::ProjectsController do
     it "redirects to the projects list" do
       delete :destroy, {:id => project.to_param}
       response.should redirect_to(admin_projects_url)
+    end
+  end
+
+  describe "GET landing page" do
+    let (:slug) { 'foo-bar-proj' }
+
+    context "there is a project matching the slug" do
+      before(:each) do
+        project.update_attributes!(landing_page_slug: slug, landing_page_content: '<h1>Foo bar content</h1>')
+      end
+      it "renders landing page template" do
+        get :landing_page, {:landing_page_slug => slug}
+        expect(response).to render_template("landing_page")
+      end
+
+      it "works for anonymous user" do
+        login_anonymous
+        get :landing_page, {:landing_page_slug => slug}
+        expect(response).to render_template("landing_page")
+      end
+    end
+
+    context "there is no project matching the slug" do
+      it "renders landing page template" do
+        get :landing_page, {:landing_page_slug => slug}
+        expect(response.status).to eq(404)
+      end
     end
   end
 end
