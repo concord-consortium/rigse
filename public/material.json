@@ -3,7 +3,9 @@
   "name": "Will the air be clean enough to breathed?",
   "description": "In this lesson, students explore the sources and flow of pollutants through the atmosphere. Students use models to run experiments testing the effects of wind, rain, solar radiation, and geography on air quality.",
   "class_name_underscored": "external_activity",
-  "icon_url": "http://resources.has.concord.org/resources/thumbnails/air.png",
+  "icon": {
+    "url": "http://resources.has.concord.org/resources/thumbnails/air.png"
+  },
   "java_requirements": null,
   "is_official": true,
   "browse_link": {
@@ -47,8 +49,11 @@
     "Class 2",
     "Class 3"
   ],
-  "class_usage_text": "???",
-  "required_equipment": "???",
+  "class_count": 10,
+  "sensors": [
+    "temperature",
+    "force (10N)"
+  ],
   "has_activities": true,
   "has_pretest": true,
 
@@ -77,7 +82,8 @@
 
   "parent": {
     "id": 10,
-    "name": null
+    "type": "Sequence",
+    "name": "Parent sequence"
   },
 
   "user": {
