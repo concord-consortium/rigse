@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150416144322) do
+ActiveRecord::Schema.define(:version => 20150423185430) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -891,6 +891,28 @@ ActiveRecord::Schema.define(:version => 20150416144322) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
+
+  create_table "materials_collection_items", :force => true do |t|
+    t.integer  "materials_collection_id"
+    t.string   "material_type"
+    t.integer  "material_id"
+    t.integer  "position"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "materials_collection_items", ["material_id", "material_type", "position"], :name => "material_idx"
+  add_index "materials_collection_items", ["materials_collection_id", "position"], :name => "materials_collection_idx"
+
+  create_table "materials_collections", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "project_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "materials_collections", ["project_id"], :name => "index_materials_collections_on_project_id"
 
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
     t.integer "otml_category_id"

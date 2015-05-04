@@ -1,0 +1,92 @@
+- if @material.length == 1
+  - material = @material[0]
+  - if material.is_a? ::Investigation
+    - investigation_name = material.name
+    - activity_name = ""
+    - external_activity_name = ""
+    - existing_collections = nil
+  - elsif material.is_a? ::Activity
+    - investigation_name = ""
+    - external_activity_name = ""
+    - parent_name = (material.parent) ? material.parent.name : ""
+    - activity_name = material.name
+    - existing_collections = []
+    - if material.parent
+      - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>material.parent.id,:material_type=>"Investigation"})
+  - elsif material.is_a? ::ExternalActivity
+    - investigation_name = ""
+    - activity_name = ""
+    - external_activity_name = material.name
+    - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>material.id,:material_type=>"ExternalActivity"})
+- else
+  - investigation_name = ""
+  - parent_name = (@material[0].parent) ? @material[0].parent.name : ""
+  - activity_name = @material.collect{|item| item.name}.join('<br/>')
+
+- activity_name = activity_name || ""
+- external_activity_name = external_activity_name || ""
+- if investigation_name.length > 0
+  %div
+    %table.material_detail
+      %tr
+        %td
+          = investigation_name
+- if activity_name.length > 0
+  %table.material_detail
+    %tr
+      %td
+        = activity_name.html_safe
+    %tr
+      %td.title Part&nbsp;Of:
+      %td
+        = parent_name
+- if external_activity_name.length > 0
+  %div
+    %table.material_detail
+      %tr
+        %td
+          = external_activity_name
+%br
+#collection_summary_data
+  - if @collections.length > 0
+    - if @unassigned_collections.length > 0
+      %div{:id=> "error_message",:style=>"display:none;padding-left: 5px;color:red;font-size:14px"}
+      %div.assign_class_header Select Collection(s)
+      %form{:id=>"add_material_form"}
+        .unassigned_collections_container.webkit_scrollbars
+          %table.material_detail{:width=>"100%"}
+            - @unassigned_collections.each do|collection|
+              %tr
+                %td.check_box
+                  = check_box_tag 'materials_collection_id[]',collection.id,nil, :id => 'materials_collection_' + collection.id.to_s,:class =>"unassigned_activity_collection"
+                %td
+                  = label_tag 'materials_collection_' + collection.id.to_s, collection.name,:class=>"materials_collection_name"
+                  - if existing_collections && existing_collections.find_by_id(collection.id)
+                    %br
+                    (Already assigned as part of "#{parent_name}")
+    - else
+      .messagetext{:style=>"padding-left:5px"} This material is assigned to all the collections.
+    - if @assigned_collections.length > 0
+      %br
+      %br
+      .already_assigned_collection_header Already assigned to the following collection(s)
+      %div{:style=>"padding:5px"}
+        .assigned_collections_container.webkit_scrollbars
+          %table.assigned_material_detail{:width=>"100%"}
+            - @assigned_collections.each do|collection|
+              %tr
+                %td.assigned_collections_material
+                  = collection.name
+  - else
+    .messagetext{:style=>"padding-left:5px"} You don't have any active collections. Once you have created your collection(s) you will be able to assign materials to them.
+  %br
+  %table.collectiondata
+    %tr
+      %td
+        - if @unassigned_collections.length > 0
+          = link_to_remote "Save", :condition => 'validateSaveAssignToCollection()', :before => 'setSaveAssignToCollectionInProgress(true)', :complete => 'setSaveAssignToCollectionInProgress(false)', :url => {:action=>'add_material_to_collections', :material_id => @material.collect{|a| a.id}.join(','),:material_type => @material[0].class.to_s}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
+          &nbsp;&nbsp;
+          = link_to "Cancel", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()"
+        - else
+          = link_to "OK", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()",:class=>"button",:style=>"margin-right: 215px;"
+  %div{:style=>"clear:both"}

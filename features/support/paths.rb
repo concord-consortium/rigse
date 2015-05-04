@@ -120,6 +120,11 @@ module NavigationHelpers
     when /the preview activity page for the activity "(.*)"/
       activity_id = Activity.find_by_name($1).id
       "/browse/activities/#{activity_id}"
+    when /the materials collection index page/
+      "/materials_collections"
+    when /the show page for materials collection "([^"]+)"/
+      collection = MaterialsCollection.find_by_name($1).id
+      "/materials_collections/#{collection}"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

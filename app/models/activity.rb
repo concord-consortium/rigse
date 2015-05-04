@@ -8,6 +8,9 @@ class Activity < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
+  has_many :materials_collection_items, :dependent => :destroy, :as => :material
+  has_many :materials_collections, :through => :materials_collection_items
+
   has_many :learner_activities, :dependent => :destroy, :class_name => "Report::LearnerActivity"
 
   has_many :external_activities, :as => :template

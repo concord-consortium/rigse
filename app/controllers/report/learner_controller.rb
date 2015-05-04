@@ -29,6 +29,7 @@ class Report::LearnerController < ApplicationController
       :apply => 'Apply Filters',
       :usage => 'Usage Report',
       :details => 'Details Report',
+      :arg_block => 'Arg Block Report',
       :logs_query => 'Log Manager Query',
       :log_manager => 'Open in Log Manager'
     }
@@ -76,6 +77,8 @@ class Report::LearnerController < ApplicationController
       report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
       report.run_report(sio)
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
+    elsif params[:commit] == @button_texts[:arg_block]
+      arg_block(@select_learners)
     elsif params[:commit] == @button_texts[:log_manager]
       log_manager
     end
@@ -113,14 +116,12 @@ class Report::LearnerController < ApplicationController
 
   def log_manager
     if @no_log_manager
-      flash[:alert] = "This portal is not configured to open the Log Manager"
-      redirect_to request.GET.except(:commit)
+      alert_and_reload "This portal is not configured to open the Log Manager"
       return
     end
 
     if @select_learners.length == 0
-      flash[:alert] = "No learners meet the criteria you selected"
-      redirect_to request.GET.except(:commit)
+      alert_and_reload "No learners meet the criteria you selected"
       return
     end
 
@@ -147,6 +148,76 @@ class Report::LearnerController < ApplicationController
       },
       :url => data_interactive_url + "?" + { :rep => prefix, :ids => learner_ids.join('-') }.to_param
     }].to_json))
+  end
+
+  def arg_block(learners)
+    authoring_sites = learners.select { |l| l.runnable_type == "ExternalActivity" }.map do |learner|
+      uri = URI(learner.runnable.url)
+      "#{uri.scheme}://#{uri.host}:#{uri.port}"
+    end
+
+    learners = learners.reject { |l| l.permission_forms.strip.empty? }
+
+    if learners.length == 0
+      alert_and_reload "No learners with signed permission forms meet the criteria you selected"
+      return
+    end
+
+    if authoring_sites.length == 0
+      alert_and_reload "None of the selected learners performed external activities"
+      return
+    end
+
+    # TODO: instead of refusing the request, modify the arg_block_bouncer to contain a list of the selected
+    # authoring sites, with a submit button for each site (and disable the javascript auto-submit)
+    if authoring_sites.uniq.count > 1
+      alert_and_reload "The selected learners' arg block activity occurred on more than one authoring site. Try limiting your request to activities hosted on just one authoring site."
+      return
+    end
+
+    @report_url = "#{authoring_sites.first}/c_rater/argumentation_blocks/report"
+    @remote_endpoints = learners.map do |learner|
+      external_activity_return_url(learner.learner_id)
+    end
+
+    # intentionally leave out student name - results should be semi-anonymized
+    columns = [:permission_forms, :teachers_name, :school_name, :class_name, :class_id, :student_id, :remote_endpoint]
+    sort_by_indices = [:teachers_name, :school_name, :class_id, :student_id].map { |key| columns.find_index(key) }
+
+    rows = learners.map do |learner|
+      columns.map do |column|
+        # except for remote_endpoint, column names are just names of Report::Learner instance methods
+        column == :remote_endpoint ? external_activity_return_url(learner.learner_id) : learner.send(column)
+      end
+    end
+
+    remote_endpoint_index = columns.find_index(:remote_endpoint)
+
+    # Several Report::Learners may correspond to the same (student, class, school) combination. We want to emit
+    # one row per (student, class, school) combination, with the entry in the :remote_endpoint column being
+    # an array of all remote_endpoints corresponding to that row. (remote_endpoints are 1:1 with Report::Learners)
+    group_by_indices = columns.reject { |column| column == :remote_endpoint }.map { |key| columns.find_index(key) }
+    remote_endpoints_by_row = rows.group_by { |row| row.values_at(* group_by_indices) }
+    remote_endpoints_by_row.keys.each do |key|
+      remote_endpoints_by_row[key] = remote_endpoints_by_row[key].map do |row|
+        row[remote_endpoint_index]
+      end
+    end
+
+    rows = remote_endpoints_by_row.keys.map {|key| key + [remote_endpoints_by_row[key]]}
+    rows = rows.sort_by! { |row| row.values_at(* sort_by_indices) }
+
+    @arg_block_buckets = {
+      :columns => columns,
+      :rows => rows
+    }
+
+    render :arg_block_bouncer, :layout => false
+  end
+
+  def alert_and_reload(message)
+    flash[:alert] = message
+    redirect_to request.GET.except(:commit)
   end
 
 end

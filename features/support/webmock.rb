@@ -4,4 +4,4 @@ require 'webmock/cucumber'
 # when doing the javascript scenarios. I tried making this conditional
 # on the javascript scenarios, but there were still cases of cleanup that
 # failed when scenarios alternated between javascript and not
-WebMock.disable_net_connect!(:allow_localhost => true)
+WebMock.disable_net_connect!(:allow_localhost => true, :allow => ["codeclimate.com"])

@@ -61,9 +61,9 @@ Feature: Teacher can search and assign instructional materials to a class
     
     
   Scenario: Teacher should be able to see different properties of materials
-    And the investigation "Digestive System" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
+    When the investigation "Digestive System 2" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
     And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
-    And I am on the the preview investigation page for the investigation "Digestive System"
+    And I am on the the preview investigation page for the investigation "Digestive System 2"
     Then I should see "Biological Science"
     And I should see "10-11"
     And I am on the the preview investigation page for the investigation "A Weather Underground"

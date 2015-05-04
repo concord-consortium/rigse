@@ -33,6 +33,7 @@
 = require 'jquery.placeholder.js'
 = require 'select2'
 = require 'search_materials'
+= require 'search_materials_add_to_collection'
 = require 'search_materials_expand'
 = require 'student_lightbox_report'
 = require 'progress_disclosure'

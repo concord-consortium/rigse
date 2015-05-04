@@ -77,6 +77,12 @@ module SearchHelper
     end
   end
 
+  def assign_material_collection_link(material, action, extra={})
+    if current_user && current_user.has_role?("admin")
+      link_to("Add to Collection", action, extra.merge({:class=>"button"}))
+    end
+  end
+
 # convert hash to array
   def authored_grade_level_groupes
     authored_grade_level_groups = []
