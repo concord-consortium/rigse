@@ -8,6 +8,7 @@ SearchResultItem = React.createClass
           <MaterialInfo material={material} />
           <MaterialBody material={material} />
         </div>
+        <MaterialDetails material={material} />
       </div>
     )`
 
