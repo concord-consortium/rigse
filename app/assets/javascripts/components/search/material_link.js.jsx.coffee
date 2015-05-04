@@ -2,7 +2,7 @@ MaterialLink = React.createClass
   render: ->
     link = @props.link
     return `(
-      <div style={{float: 'right'}}><a href={link.url} className={'button'} target={link.target}>{link.text}</a></div>
+      <div key={link.url} style={{float: 'right'}}><a href={link.url} className={'button'} target={link.target}>{link.text}</a></div>
     )`
 
 MaterialLinks = React.createClass
