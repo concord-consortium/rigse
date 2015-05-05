@@ -198,5 +198,14 @@ describe Activity do
       subject.question_number("xxx").should eq -1
     end
   end
-  
+
+  describe "project support" do
+    let (:activity) { Factory.create(:external_activity) }
+    let (:project) { FactoryGirl.create(:project) }
+
+    it "can be assigned to a project" do
+      activity.projects << project
+      expect(activity.projects.count).to eql(1)
+    end
+  end
 end

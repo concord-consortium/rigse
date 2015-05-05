@@ -52,6 +52,9 @@ class Investigation < ActiveRecord::Base
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+    string :projects, :multiple => true do
+      projects.map { |p| p.name }.compact
+    end
   end
 
   belongs_to :user
@@ -111,6 +114,9 @@ class Investigation < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id AND sections.teacher_only = 0
     INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
     WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0" }
+
+  has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
+  has_many :projects, :class_name => "Admin::Project", :through => :project_materials
 
   acts_as_replicatable
 

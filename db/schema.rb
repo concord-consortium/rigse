@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150423185430) do
+ActiveRecord::Schema.define(:version => 20150501092316) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -60,6 +60,28 @@ ActiveRecord::Schema.define(:version => 20150423185430) do
   end
 
   add_index "admin_notice_user_display_statuses", ["user_id"], :name => "index_admin_notice_user_display_statuses_on_user_id"
+
+  create_table "admin_project_materials", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "material_id"
+    t.string   "material_type"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "admin_project_materials", ["material_id", "material_type"], :name => "admin_proj_mat_mat_idx"
+  add_index "admin_project_materials", ["project_id", "material_id", "material_type"], :name => "admin_proj_mat_proj_mat_idx"
+  add_index "admin_project_materials", ["project_id"], :name => "admin_proj_mat_proj_idx"
+
+  create_table "admin_projects", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.string   "landing_page_slug"
+    t.text     "landing_page_content"
+  end
+
+  add_index "admin_projects", ["landing_page_slug"], :name => "index_admin_projects_on_landing_page_slug", :unique => true
 
   create_table "admin_settings", :force => true do |t|
     t.integer  "user_id"

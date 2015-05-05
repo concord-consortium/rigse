@@ -1,9 +1,7 @@
 -if @form_model.availabe_subject_areas.size > 0
-  %td.subject_areas_columns
-    .filterheader 
-      Subject Areas
-    .subject_areas_container
-      - @form_model.availabe_subject_areas.uniq.each do |subject_area|
-        .tablecell
-          = check_box_tag 'subject_areas[]', subject_area,  @form_model.subject_areas.include?(subject_area),:id=>"subject_area_#{subject_area}", :class => 'check-box-left-margin'
-          = label_tag 'subject_area_#{subject_area}', subject_area
+  .filterheader
+    Subject Areas
+  - @form_model.availabe_subject_areas.each do |subject_area|
+    .tablecell
+      = check_box_tag 'subject_areas[]', subject_area,  @form_model.subject_areas.include?(subject_area),:id=>"subject_area_#{subject_area}", :class => 'check-box-left-margin'
+      = label_tag 'subject_area_#{subject_area}', subject_area

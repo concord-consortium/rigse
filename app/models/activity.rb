@@ -24,6 +24,9 @@ class Activity < ActiveRecord::Base
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
+  has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
+  has_many :projects, :class_name => "Admin::Project", :through => :project_materials
+
   # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
   # This block adds a has_many for each embeddable type to this model.
   # TODO We don't want Embeddable::Iframe showing up in any menus, so inject it here. It's used by LARA.
@@ -107,6 +110,9 @@ class Activity < ActiveRecord::Base
     end
     string  :subject_areas, :multiple => true do
       subject_area_list
+    end
+    string :projects, :multiple => true do
+      projects.map { |p| p.name }.compact
     end
   end
 
