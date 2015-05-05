@@ -867,21 +867,6 @@ ActiveRecord::Schema.define(:version => 20150501092316) do
     t.integer  "jnlp_session_id"
   end
 
-  create_table "interactives", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.string   "url"
-    t.integer  "width"
-    t.integer  "height"
-    t.float    "scale"
-    t.string   "image_url"
-    t.integer  "user_id"
-    t.string   "credits"
-    t.string   "publication_status"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-  end
-
   create_table "investigations", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                      :limit => 36
