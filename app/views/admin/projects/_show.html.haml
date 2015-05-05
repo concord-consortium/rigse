@@ -1,0 +1,15 @@
+%div{id: dom_id_for(project), class: 'container_element'}
+  = show_menu_for project, omit_delete: true
+
+  %div{id: dom_id_for(project, :item), class: 'item'}
+    %div{id: dom_id_for(project, :details), class: 'content'}
+      = wrap_edit_link_around_content project do
+        %p
+          %ul.menu_v
+            %li
+              Name:
+              = project.name
+            - if project.landing_page_slug
+              %li
+                Landing page:
+                %a{href: project_page_url(project.landing_page_slug)}= project_page_url(project.landing_page_slug)

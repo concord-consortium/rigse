@@ -515,6 +515,16 @@ describe Investigation do
       its(:abstract_text)    { should match /This is the abstract./ }
     end
   end
+
+  describe "project support" do
+    let (:investigation) { Factory.create(:investigation) }
+    let (:project) { FactoryGirl.create(:project) }
+
+    it "can be assigned to a project" do
+      investigation.projects << project
+      expect(investigation.projects.count).to eql(1)
+    end
+  end
 end
 
 

@@ -19,4 +19,6 @@ describe "/external_activities/edit.html.haml" do
     render
     assert_select "input[id=?]", 'external_activity_is_official', false
   end
+
+  include_examples 'projects listing'
 end

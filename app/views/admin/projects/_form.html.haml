@@ -1,0 +1,20 @@
+.item{}
+  = edit_menu_for project, f, omit_cancel: true
+  .content
+    - if project.errors.any?
+      %p
+        %ul.menu_v.error-explanation
+          %li Project can't be saved, there are errors in form:
+          - project.errors.full_messages.each do |msg|
+            %li= msg
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          = f.text_field :name
+        %li
+          Landing page slug:
+          = f.text_field :landing_page_slug
+        %li
+          Landing page content:
+          = f.text_area :landing_page_content, class: 'mceNoEditor'
