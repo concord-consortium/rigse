@@ -641,6 +641,9 @@ RailsPortal::Application.routes.draw do
             get :collaborators_data
           end
         end
+        namespace :search do
+          get :search
+        end
       end
     end
 
