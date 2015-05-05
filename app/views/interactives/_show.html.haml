@@ -4,7 +4,7 @@
       = link_to 'Run Interactive', interactive.url, :target => 'new'
   %p
     %h2= interactive.name
-  - if interactive.image_url
+  - unless interactive.image_url.nil? || interactive.image_url.blank?
     - style = show_thumbnail ? "float: right" : ""
     %div{:style => style}
       - if (show_thumbnail)

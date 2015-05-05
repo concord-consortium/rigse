@@ -37,7 +37,7 @@
           = link_to interactive.display_name, interactive_path(interactive)
     = link_to "Create #{Interactive.display_name}", new_interactive_path, :class => 'button'
     %div{:style=> "margin: 1em; padding: 1em;"}
-    = link_to "Import #{Interactive.display_name.pluralize}", "", :class => 'button', :onclick => "import_model_library_popup()"
+    = link_to "Import #{Interactive.display_name.pluralize}", "", :id => 'import-model-library-popup', :class => 'button'
 
 %div{:style=> "margin: 1em; padding: 1em;"}
   %h4= link_to "Create #{Image.display_name}", images_path, :class => 'button'

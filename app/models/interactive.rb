@@ -2,13 +2,14 @@ class Interactive < ActiveRecord::Base
   include Publishable
   include Changeable
   include SearchModelInterface
-
+  
+  acts_as_taggable_on :model_types
+  
   attr_accessible :name, :description, :url, :width, :height, :scale, :image_url, :credits, :publication_status
+  alias_attribute :icon_image, :image_url
   belongs_to :user
 
-  #acts_as_taggable_on :grade_levels
-  #acts_as_taggable_on :subject_areas
-  acts_as_taggable_on :model_types
+  before_validation :smart_add_url_protocol
 
   searchable do
     text :name
@@ -35,7 +36,11 @@ class Interactive < ActiveRecord::Base
     end
 
     boolean :is_official
-    boolean :is_template
+
+    boolean :is_template do
+      false
+    end
+
     integer :probe_type_ids, :multiple => true do
       nil
     end
@@ -58,8 +63,12 @@ class Interactive < ActiveRecord::Base
     integer :domain_id do
       nil
     end
-    string  :material_type
-    string  :java_requirements
+
+    string  :material_type do 
+      "Interactive"
+    end
+
+    #string  :java_requirements
     string  :cohorts, :multiple => true do
       cohort_list
     end
@@ -76,28 +85,30 @@ class Interactive < ActiveRecord::Base
 
   scope :published, where(publication_status: 'published')
 
-  def is_template
-    false
-  end
-
   def is_official
     true
   end
 
-  def material_type
-   'Interactive'
-  end
-
-  def teacher_only
-    true
-  end
-  
   def teacher_only?
     true
   end
 
   def display_name
     self.name
+  end
+
+  protected
+
+  def safe_url(url)
+    unless url.blank? || url[/\Ahttp:\/\//] || url[/\Ahttps:\/\//] || url[/\A\/\//]
+      url = "//#{url}"
+    end
+    url
+  end
+
+  def smart_add_url_protocol
+    self.url = safe_url(self.url)
+    self.image_url = safe_url(self.image_url)
   end
 
 end

@@ -48,11 +48,7 @@ module SearchHelper
   end
 
   def show_material_icon(material, link_url, hide_details)
-    if material.material_type == "Interactive"
-      icon_url = material.image_url
-    else
-      icon_url = material.icon_image
-    end
+    icon_url = material.icon_image
     output = capture_haml do
       haml_tag :div, :class => "material_icon" do
 			  unless icon_url.blank?
