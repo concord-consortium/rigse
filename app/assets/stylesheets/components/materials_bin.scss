@@ -1,0 +1,30 @@
+.materials-bin {
+  margin: 5px;
+}
+
+.mb-column {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.mb-cell {
+  padding: 5px;
+  border: 1px #fff solid;
+  background: rgba(139, 194, 188, 0.3);
+
+  &.mb-hidden {
+    display: none;
+  }
+
+  &.mb-selected {
+    background: rgba(139, 194, 188, 0.67);
+  }
+}
+
+.mb-material {
+  background: rgba(139, 194, 188, 0.87);
+}
+
+.mb-clickable:hover {
+  cursor: pointer;
+}
