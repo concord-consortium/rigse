@@ -1,13 +1,26 @@
 MaterialInfo = React.createClass
   render: ->
     material = @props.material
-    links = [material.preview_link, material.external_edit_link, material.external_copy_link, material.assign_material_link, material.teacher_guide_link, material.assign_collection_link]
+    for own key,link of material.links
+      link.key = key
+
+    links = []
+    links.push material.links.preview           if material.links.preview
+    links.push material.links.external_edit     if material.links.external_edit
+    links.push material.links.external_copy     if material.links.external_copy
+    links.push material.links.teacher_guide     if material.links.teacher_guide
+    links.push material.links.assign_material   if material.links.assign_material
+    links.push material.links.assign_collection if material.links.assign_collection
     return `(
       <div>
         <div style={{overflow: "hidden"}}>
           <table width='100%'>
             <tr>
-              <td></td>
+              <td>
+                <MaterialLinks links={links} />
+              </td>
+            </tr>
+            <tr>
               <td>
                 <MaterialHeader material={material} />
                 { material.parent ? <span>from {material.parent.type} "{material.parent.name}"</span> : '' }
@@ -17,12 +30,9 @@ MaterialInfo = React.createClass
                   </span>
                 </div>
               </td>
-              <td width='90px'>
-                <MaterialLinks links={links} />
-              </td>
             </tr>
             <tr>
-              <td colspan='3'>
+              <td>
                 { material.assigned_classes && material.assigned_classes.length > 0 ?
                   <span className='assignedTo'>(Assigned to {material.assigned_classes.join(', ')})</span>
                   :
