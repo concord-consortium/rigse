@@ -6,41 +6,29 @@ module React
     private
 
     def search_results_data
+      results = []
+      @search.results.each do |type,values|
+        next if type == :all
+        results.push group_data(type.downcase, values)
+      end
       return {
-        results: [
-          {
-            type: 'investigations',
-            header: view_context.t(:investigation).pluralize.titleize,
-            count: @investigations_count,
-            materials: materials_data(@investigations),
-            pagination: {
-              current_page: @investigations.current_page,
-              total_pages: @investigations.total_pages,
-              start_item: @investigations.offset + 1,
-              end_item: @investigations.offset +  @investigations.length,
-              total_items: @investigations.total_entries,
-              params: {
-                type: 'inv'
-              }
-            }
-          },
-          {
-            type: 'activities',
-            header: view_context.t(:activity).pluralize.titleize,
-            count: @activities_count,
-            materials: materials_data(@activities),
-            pagination: {
-              current_page: @activities.current_page,
-              total_pages: @activities.total_pages,
-              start_item: @activities.offset + 1,
-              end_item: @activities.offset +  @activities.length,
-              total_items: @activities.total_entries,
-              params: {
-                type: 'act'
-              }
-            }
-          }
-        ]
+        results: results
+      }
+    end
+
+    def group_data(type, collection, params={})
+      {
+        type: type.to_s.pluralize,
+        header: view_context.t(type).pluralize.titleize,
+        materials: materials_data(collection),
+        pagination: {
+          current_page: collection.current_page,
+          total_pages: collection.total_pages,
+          start_item: collection.offset + 1,
+          end_item: collection.offset + collection.length,
+          total_items: collection.total_entries,
+          per_page: collection.per_page
+        }
       }
     end
 
@@ -173,7 +161,8 @@ module React
           links[:external_edit_iframe] = {
             url: matedit_external_activity_url(material, iFrame: true),
             text: "(edit&nbsp;in&nbsp;iframe)",
-            target: '_blank'
+            target: '_blank',
+            className: ''
           }
         end
       end
@@ -198,7 +187,8 @@ module React
       if current_visitor.has_role?('admin','manager')
         links[:edit] = {
           text: "(portal&nbsp;settings)",
-          url: edit_polymorphic_url(material)
+          url: edit_polymorphic_url(material),
+          className: ''
         }
       end
 

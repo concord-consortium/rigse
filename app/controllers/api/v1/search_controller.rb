@@ -17,13 +17,7 @@ class API::V1::SearchController < API::APIController
   private
 
   def search_material(opts)
-    search = Search.new(opts)
-    # TODO: This will become a check on 'material_type'
-    @investigations       = search.results[Search::InvestigationMaterial] || []
-    @investigations_count = @investigations.size
-    @activities           = search.results[Search::ActivityMaterial] || []
-    @activities_count     = @activities.size
-    @form_model = search
+    @search = Search.new(opts)
   end
 
 end
