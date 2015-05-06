@@ -1,5 +1,7 @@
 .materials-bin {
+  white-space: nowrap;
   margin: 5px;
+  background: rgba(216, 216, 216, 0.2);
 }
 
 .mb-hidden {
@@ -7,7 +9,8 @@
 }
 
 .mb-selected {
-  background: rgba(139, 194, 188, 0.67);
+  color: #166971 !important;
+  background: #cfe3e3 !important;
 }
 
 .mb-column {
@@ -18,7 +21,6 @@
 .mb-cell {
   padding: 10px;
   margin: 1px;
-  background: rgba(216, 216, 216, 0.3);
 }
 
 .mb-category {
@@ -30,21 +32,22 @@
 }
 
 .mb-collection {
+  white-space: normal;
+  width: 450px;
   padding-bottom: 15px;
 
   &:not(:last-child) {
     margin-bottom: 5px;
     border-bottom: 1px solid #fff;
   }
+}
 
-  .mb-collection-name {
-    font-size: 15px;
-    margin-bottom: 8px;
-  }
+.mb-collection-name {
+  font-size: 15px;
+  margin-bottom: 8px;
 }
 
 .mb-material {
-  white-space: nowrap;
   padding: 8px;
 
   .mb-material-links {

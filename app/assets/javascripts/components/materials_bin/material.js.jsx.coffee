@@ -15,11 +15,15 @@ window.MaterialClass = React.createClass
     (div {className: 'mb-material'},
       (span {className: 'mb-material-links'},
         if data.description?
-          (a {className: 'mb-toggle-info', href: '', onClick: @toggleDescription}, 'Info ')
+          (a {className: 'mb-toggle-info', href: '', onClick: @toggleDescription},
+            (span {className: 'mb-toggle-info-text'}, 'Info ')
+          )
         if data.links? && data.links.preview?
-          (a {className: 'mb-run', href: data.links.preview.url, target: '_blank'}, 'Run')
+          (a {className: 'mb-run', href: data.links.preview.url, target: '_blank'},
+            (span {className: 'mb-run-text'}, 'Run')
+          )
       )
-      (span {}, data.name)
+      (span {className: 'mb-material-name'}, data.name)
       (MaterialDescription
         description: data.description
         visible: @state.descriptionVisible
