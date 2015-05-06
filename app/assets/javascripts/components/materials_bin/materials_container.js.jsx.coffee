@@ -1,45 +1,44 @@
 {div} = React.DOM
 
 window.MatarialsContainerClass = React.createClass
+  propTypes:
+    collections: React.PropTypes.array.isRequired
+    visible: React.PropTypes.bool
+
   getInitialState: ->
-    {collectionsData: []}
+    {collectionsData: null}
 
   componentDidMount: ->
-    # Fake data for now, in the future it will be obtained using AJAX.
-    @setState collectionsData: [
-      {
-        "name": "Collection 1",
-        "materials": [
-          {
-            "name": "Will the air be clean enough to breathe?"
-          },
-          {
-            "name": "Are the cars fast enough?"
-          }
-        ]
-      },
-      {
-        "name": "Collection 2",
-        "materials": [
-          {
-            "name": "Foo?"
-          },
-          {
-            "name": "Bar?"
-          }
-        ]
-      }
-    ]
+    # Download data only if component is visibile.
+    @fetchCollectionsData() if @props.visible
+
+  componentWillReceiveProps: (nextProps) ->
+    # Download data only if component is going to be visibile.
+    @fetchCollectionsData() if nextProps.visible
+
+  fetchCollectionsData: ->
+    # Don't download data if it's been already done.
+    return if @state.collectionsData?
+    jQuery.ajax
+      url: API_V1.MATERIALS_COLLECTION_DATA
+      data:
+        id: @props.collections
+      dataType: 'json'
+      success: (data) =>
+        @setState collectionsData: data if @isMounted()
 
   getVisibilityClass: ->
     unless @props.visible then 'mb-hidden' else ''
 
   render: ->
     className = "mb-cell #{@getVisibilityClass()}"
-    (div {className: className},
-      for collection in @state.collectionsData
-        (MaterialsCollection {name: collection.name, materials: collection.materials})
-    )
+    if @state.collectionsData?
+      (div {className: className},
+        for collection in @state.collectionsData
+          (MaterialsCollection {name: collection.name, materials: collection.materials})
+      )
+    else
+      (div {})
 
 window.MaterialsContainer = React.createFactory MatarialsContainerClass
 
