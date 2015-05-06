@@ -1,7 +1,7 @@
 /- locals = {:search_name => @name, :investigations => @investigations,:activities => @activities, :sort_order => @sort_order}
 = javascript_include_tag "share_material"
 .search_materials
-  %form{:id => 'material_search_form',:url => search_url, :onkeypress => 'return event.keyCode!=13'}
+  %form{:id => 'material_search_form', :onkeypress => 'return event.keyCode!=13'}
     %table.search_table{:cellpadding=>0,:cellspacing=>0,:style=>'margin-bottom:0px'}
       %tr
         %td
@@ -16,6 +16,34 @@
     = render :partial=>"search/filters"
   = hidden_field 'prevent','submit',:value=>"0"
   #results
-  .search_resultscontainer
-    #offering_list
-      = render :partial => 'search/search_results', :locals => { :investigations => @investigations, :activities => @activities }
+    .search_resultscontainer
+      No results found!
+
+:javascript
+  jQuery(document).ready(function() {
+    var dest = '#results .search_resultscontainer';
+
+    window.renderSearchResults = function(results) {
+      React.render(React.createElement(SearchResults, results), jQuery(dest)[0]);
+      enableAllInputs();
+    }
+
+    jQuery('#material_search_form').on('submit', function(event) {
+      event.preventDefault();
+      jQuery(dest).html('Finding materials...');
+
+      var url = '#{api_v1_search_search_path}?' + jQuery(this).serialize();
+
+      if (window.history) {
+        window.history.replaceState({}, 'Materials Search' , url)
+      }
+
+      jQuery.ajax({
+        dataType: "json",
+        url: url,
+        success: window.renderSearchResults
+      });
+    });
+
+    jQuery('#material_search_form').submit();
+  });

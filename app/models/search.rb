@@ -115,7 +115,7 @@ class Search
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
     self.fetch_availabe_grade_subject_areas()
-    self.search()
+    self.search() unless opts[:skip_search]
   end
 
   def fetch_availabe_grade_subject_areas
