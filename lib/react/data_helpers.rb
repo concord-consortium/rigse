@@ -88,7 +88,7 @@ module React
           sensors: view_context.probe_types(material).map { |p| p.name },
           has_activities: has_activities,
           has_pretest: has_pretest,
-          activities: material.activities.map{|a| {id: a.id, name: a.name} },
+          activities: has_activities ? material.activities.map{|a| {id: a.id, name: a.name} } : [],
           parent: parent_data,
           user: user_data
         }
