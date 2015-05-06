@@ -9,7 +9,7 @@ describe ExternalActivity do
       :publication_status => "value for publication_status",
       :is_official => true,
       :url => "http://www.concord.org/"
-    } }
+  } }
 
   it "should create a new instance given valid attributes" do
     ExternalActivity.create!(valid_attributes)
@@ -72,7 +72,7 @@ describe ExternalActivity do
   describe "abstract_text" do
     let(:abstract)    { nil }
     let(:big_text)    { "-xyzzy" * 255 }
-    let(:description) do 
+    let(:description) do
       "This is the description. Its text is too long to be an abstract really: #{big_text}"
     end
     let(:abstract)    { nil }
@@ -90,6 +90,16 @@ describe ExternalActivity do
     describe "without a good abstract" do
       let(:abstract)         { "This is the abstract." }
       its(:abstract_text)    { should match /This is the abstract./ }
+    end
+  end
+
+  describe "project support" do
+    let (:activity) { FactoryGirl.create(:external_activity) }
+    let (:project) { FactoryGirl.create(:project) }
+
+    it "can be assigned to a project" do
+      activity.projects << project
+      expect(activity.projects.count).to eql(1)
     end
   end
 end

@@ -42,9 +42,12 @@
                 = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
                 = label_tag grade, grade
 
-        = render :partial=>"search/subject_areas_filter"
-
-        = render :partial=>"search/grade_levels_filter"
+        %td
+          = render :partial => "search/projects_filter"
+        %td
+          = render :partial => "search/subject_areas_filter"
+          %br
+          = render :partial => "search/grade_levels_filter"
 
         %td.materialcolumn
           .filterheader

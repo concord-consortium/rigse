@@ -23,8 +23,10 @@ class Search
   attr_accessor :java_requirements
   attr_accessor :grade_level_groups
   attr_accessor :subject_areas
+  attr_accessor :projects
   attr_accessor :availabe_subject_areas
   attr_accessor :availabe_grade_level_groups
+  attr_accessor :available_projects
 
   SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
   InvestigationMaterial   = "Investigation"
@@ -89,7 +91,9 @@ class Search
     self.material_types              = opts[:material_types] || []
     self.grade_level_groups          = opts[:grade_level_groups] || []
     self.subject_areas               = opts[:subject_areas] || []
+    self.projects                    = opts[:projects] || []
     self.availabe_subject_areas      = []
+    self.available_projects          = []
     self.availabe_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
     
     self.results        = {}
@@ -114,11 +118,11 @@ class Search
     self.include_contributed  = opts[:include_contributed] || false
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
-    self.fetch_availabe_grade_subject_areas()
+    self.fetch_availabe_grade_subject_areas_projects()
     self.search() unless opts[:skip_search]
   end
 
-  def fetch_availabe_grade_subject_areas
+  def fetch_availabe_grade_subject_areas_projects
     results = self.engine.search([Investigation, Activity, ExternalActivity]) do |s|
       s.facet :subject_areas
       s.facet :grade_levels do 
@@ -128,13 +132,19 @@ class Search
           end
         end
       end
+      s.facet :projects
     end
     results.facet(:subject_areas).rows.each do |facet|
       self.availabe_subject_areas << facet.value
     end
+    availabe_subject_areas.uniq!
     results.facet(:grade_levels).rows.each do |facet|
       self.availabe_grade_level_groups[facet.value] = 1
     end
+    results.facet(:projects).rows.each do |facet|
+      self.available_projects << facet.value
+    end
+    available_projects.uniq!
   end
 
   def search
@@ -158,6 +168,7 @@ class Search
         search_by_java_requirements(s)
         search_by_grade_levels(s)
         search_by_subject_areas(s)
+        search_by_projects(s)
         s.with(:is_template, false) unless self.include_templates
 
         if (!self.private && self.user_id)
@@ -188,7 +199,8 @@ class Search
   def params
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
-      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements, :grade_level_groups, :subject_areas]
+      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements,
+      :grade_level_groups, :subject_areas, :projects]
     keys.each do |key|
       value = self.send key
       if value
@@ -259,6 +271,15 @@ class Search
     search.any_of do |s|
       subject_areas.each do |g|
         s.with(:subject_areas, g)
+      end
+    end
+  end
+
+  def search_by_projects(search)
+    return if projects.size < 1
+    search.any_of do |s|
+      projects.each do |g|
+        s.with(:projects, g)
       end
     end
   end
