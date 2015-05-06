@@ -29,7 +29,12 @@ class SearchController < ApplicationController
   def index
     return redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
     opts = params.merge(:user_id => current_visitor.id, :skip_search => true)
-    @form_model = Search.new(opts)
+    begin
+      @form_model = Search.new(opts)
+    rescue => e
+      ExceptionNotifier::Notifier.exception_notification(request.env, e).deliver
+      render :search_unavailable
+    end
   end
 
   def unauthorized_user
