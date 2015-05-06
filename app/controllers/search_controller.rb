@@ -24,26 +24,12 @@ class SearchController < ApplicationController
 
   in_place_edit_for :investigation, :search_term
 
-  def search_material
-    search = Search.new(params.merge(:user_id => current_visitor.id))
-    # TODO: This will become a check on 'material_type'
-    @investigations       = search.results[Search::InvestigationMaterial] || []
-    @investigations_count = @investigations.size
-    @activities           = search.results[Search::ActivityMaterial] || []
-    @activities_count     = @activities.size
-    @form_model = search
-  end
-
   public
 
   def index
     return redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
-    begin
-      search_material
-    rescue => e
-      ExceptionNotifier::Notifier.exception_notification(request.env, e).deliver
-      render :search_unavailable
-    end
+    opts = params.merge(:user_id => current_visitor.id, :skip_search => true)
+    @form_model = Search.new(opts)
   end
 
   def unauthorized_user
