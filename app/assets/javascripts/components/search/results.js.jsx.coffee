@@ -15,10 +15,14 @@ SearchResults = React.createClass
       for i in [(@props.results.length-1)..1] by -1
         message.splice(i, 0, `<span>, </span>`)
     all_results = @props.results.map (group)-> `<SearchResultGroup group={group} key={group.type} />`
+    if jQuery('#search_term').val().length > 0
+      search_term = " search term \"#{jQuery('#search_term').val()}\" and"
+    else
+      search_term = ''
     return `(
       <div id='offering_list'>
         <p style={{fontWeight: 'bold'}}>
-          {message} matching selected criteria
+          {message} matching{search_term} selected criteria
         </p>
         <div className={'results_container'}>
           {all_results}

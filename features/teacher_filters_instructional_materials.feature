@@ -31,7 +31,7 @@ Feature: Teacher can search and filter instructional materials
 
   @javascript
   Scenario: Teacher views all investigations and activities for all grades
-    I should wait 2 seconds
+    When I wait 2 seconds
     Then I should see "Digestive System"
     And I should see "Bile Juice"
 

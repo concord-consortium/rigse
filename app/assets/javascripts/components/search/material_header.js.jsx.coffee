@@ -14,9 +14,7 @@ MaterialHeader = React.createClass
           </span>
         </span>
         <br />
-        { material.links.browse ? <a href={material.links.browse.url}>{material.name}</a> : '' }
-        {edit_link}
-        {iframe_edit_link}
+        { material.links.browse ? <a href={material.links.browse.url}>{material.name}</a> : '{material.name}' } {edit_link} {iframe_edit_link}
       </span>
     )`
 

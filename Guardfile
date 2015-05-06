@@ -6,6 +6,7 @@ at_exit { `spring stop` }
 guard :cucumber,
   command_prefix: 'spring',
   bundler: false,
+  keep_failed: false,
   all_after_pass: false,
   all_on_start: false    do
     watch(%r{^features/.+\.feature$})
@@ -16,6 +17,7 @@ guard :rspec,
   spring: true,
   bundler: false,
   cli: "--color --format nested --fail-fast --drb",
+  failed_mode: :none,
   all_after_pass: false,
   all_on_start: false    do
     watch(%r{^spec/.+_spec\.rb$})

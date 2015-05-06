@@ -132,7 +132,11 @@ When /^(?:|I )debug$/ do
   0
 end
 
-When /^I wait (\d+) second[s]?$/ do |seconds|
+When /^I wait (?:for )?(\d+) second(?:s)?$/ do |seconds|
+  sleep(seconds.to_i)
+end
+
+Then /^I should wait (?:for )?(\d+) second(?:s)?/ do |seconds|
   sleep(seconds.to_i)
 end
 
@@ -155,10 +159,6 @@ end
 
 Then /^I should not see the button "([^"]*)"$/ do |button| 
   page.should have_no_button(button)
-end
-
-Then /^(?:|I )should wait ([0-9]+) seconds/ do |seconds|
-  sleep(seconds.to_i)
 end
 
 Given /^PENDING/ do

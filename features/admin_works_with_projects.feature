@@ -81,6 +81,7 @@ Feature: Admin can work with projects
     Then I should see "there are errors"
     And I should see "Landing page slug has already been taken"
 
+  @javascript
   Scenario: Admin adds materials to a project
     Given the default projects exist using factories
     And the following simple investigations exist:
@@ -88,7 +89,7 @@ Feature: Admin can work with projects
       | testing fast cars | how fast can cars go? | author |
     When I am on the search instructional materials page
     And I search for "testing fast cars" on the search instructional materials page
-    And I follow the "portal settings" link for the investigation "testing fast cars"
+    And I follow the "(portal settings)" link for the investigation "testing fast cars"
     Then I should see "Projects"
     And I should see "project 1"
     And I should see "project 2"

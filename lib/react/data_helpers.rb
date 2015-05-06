@@ -160,7 +160,7 @@ module React
         if current_visitor.has_role?('admin')
           links[:external_edit_iframe] = {
             url: matedit_external_activity_url(material, iFrame: true),
-            text: "(edit&nbsp;in&nbsp;iframe)",
+            text: "(edit in iframe)",
             target: '_blank',
             className: ''
           }
@@ -186,7 +186,7 @@ module React
 
       if current_visitor.has_role?('admin','manager')
         links[:edit] = {
-          text: "(portal&nbsp;settings)",
+          text: "(portal settings)",
           url: edit_polymorphic_url(material),
           className: ''
         }
