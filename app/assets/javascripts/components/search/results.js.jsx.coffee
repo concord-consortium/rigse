@@ -1,10 +1,16 @@
 SearchResults = React.createClass
-  scrollTo: (event)->
-    console.log(event)
-    window.scrollTo(0,$("activities_bookmark").offsetTop)
+  generateScrollTo: (type)->
+    return (event)->
+      window.scrollTo(0,$("#{type}_bookmark").offsetTop)
 
   render: ->
-    message =  (@props.results.map (group)-> `<span>{group.pagination.total_items} <GenericLink link={{url: 'javascript:void(0)', onclick: this.scrollTo, text: group.header, className: ''}} /></span>`)
+    message =  @props.results.map (group)=>
+      link = {url: 'javascript:void(0)', onclick: @generateScrollTo(group.type), text: group.header, className: ''}
+      return `(
+        <span>
+          {group.pagination.total_items} <GenericLink link={link} />
+        </span>
+      )`
     if @props.results.length > 1
       for i in [(@props.results.length-1)..1] by -1
         message.splice(i, 0, `<span>, </span>`)
