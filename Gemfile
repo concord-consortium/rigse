@@ -46,7 +46,7 @@ source "http://rubygems.org"
   gem "prawn",                "~> 0.12.0"
   gem 'prawn_rails',          "~> 0.0.6"
 
-  gem "grit",                 "~> 2.4"
+  gem "grit",                 "~> 2.5"
   gem "open4",                "~> 1.0"
   gem "jnlp",                 "~> 0.7.3"
   # # use a merge of ghazel and tracksimple ar-extensions forks
@@ -155,7 +155,7 @@ group :development do
   gem "wirble"
   gem "what_methods"
   gem "hirb"
-  gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
+  gem "ruby-debug",   :platforms => [:mri_18]
   gem "debugger", :platforms => [:mri_19]
   gem "pry-debugger"
   gem "awesome_print"
@@ -177,11 +177,14 @@ group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
   gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
-  gem "selenium-webdriver", "2.45.0"
   gem "cucumber",           "~> 1.2.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
-  gem "capybara",           "~> 1.1.2"
+  gem "capybara",           "~> 2.4.4"
+  # Alternatives for the capybara javascript driver
+  gem "selenium-webdriver", "2.45.0"  # Requires Firefox to be installed
+  gem "capybara-webkit",    "~> 1.5.1"  # Requires Qt (with dev packages) to be installed
+  # gem "poltergeist",        "~> 1.6.0"  # Requires PhantomJS to be installed
   gem "rspec",              "~> 2.11.0"
   gem "rspec-rails",        "~> 2.11.0"
   gem "email_spec",         "~> 1.2.1"
@@ -189,7 +192,7 @@ group :test, :cucumber do
   gem "ci_reporter",        "~> 1.7.0"
   gem "delorean",           "~> 1.1"
   gem "webmock",            "~> 1.11.0", :require => false
-  gem "capybara-mechanize", "~> 0.3.0"
+  gem "capybara-mechanize", "~> 1.4.0"
   gem 'capybara-screenshot'
   gem "codeclimate-test-reporter", require: nil
   gem "connection_pool"
