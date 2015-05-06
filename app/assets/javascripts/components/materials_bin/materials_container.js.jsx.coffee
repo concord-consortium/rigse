@@ -46,8 +46,8 @@ window.MaterialsContainer = React.createFactory MatarialsContainerClass
 
 MaterialsCollection = React.createFactory React.createClass
   render: ->
-    (div {},
-      (div {}, @props.name)
+    (div {className: 'mb-collection'},
+      (div {className: 'mb-collection-name'}, @props.name)
       for material in @props.materials
-        (Material material)
+        (Material material: material)
     )

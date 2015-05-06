@@ -24,25 +24,11 @@ window.MaterialsBinClass = React.createClass
     state
 
   handleCellClick: (column, row) ->
-    @state.selectedCategories[column] = row
     # Unselect all the cells that are to the right of modified column.
-    @state.selectedCategories.length = column + 1
-    @setState @state
-
-#    # Another approach (requires React.addons):
-#    # TODO: is it better? What's the difference?
-#    action = {}
-#    if @isCategorySelected column, row
-#      action[column] = $set: null # unselect
-#    else
-#      action[column] = $set: row # select
-#
-#    # Unselect all the cells that are to the right of modified column.
-#    Object.keys(@state.selectedCategories).forEach (c) ->
-#      action[c] = $set: null if c > column
-#
-#    newState = React.addons.update @state, selectedCategories: action
-#    @setState newState
+    newCat = @state.selectedCategories.slice 0, column + 1
+    # Select clicked category
+    newCat[column] = row
+    @setState selectedCategories: newCat
 
   isCategorySelected: (column, row) ->
     @state.selectedCategories[column] == row
@@ -67,6 +53,7 @@ window.MaterialsBinClass = React.createClass
                      row: rowIdx
                      visible: visible
                      selected: selected
+                     customClass: cell.className
                    else
                      collections: cell.collections
                      visible: visible
@@ -91,6 +78,7 @@ window.MaterialsBinClass = React.createClass
                   selected: cell.selected
                   column: cell.column
                   row: cell.row
+                  customClass: cell.customClass
                   handleClick: @handleCellClick
                 },
                 cell.category
@@ -118,7 +106,7 @@ MaterialsCategory = React.createFactory React.createClass
     @props.handleClick @props.column, @props.row
 
   render: ->
-    className = "mb-cell mb-clickable #{@getVisibilityClass()} #{@getSelectionClass()}"
+    className = "mb-cell mb-category mb-clickable #{@props.customClass} #{@getVisibilityClass()} #{@getSelectionClass()}"
     (div {className: className, onClick: @handleClick},
       @props.children
     )
