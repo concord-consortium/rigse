@@ -21,7 +21,10 @@
 
 :javascript
   jQuery(document).ready(function() {
-    var dest = '#results .search_resultscontainer';
+    var dest = '#results .search_resultscontainer',
+        apiBase = '#{api_v1_search_search_path}?',
+        searchBase = '#{search_path}?';
+
 
     window.renderSearchResults = function(results) {
       React.render(React.createElement(SearchResults, results), jQuery(dest)[0]);
@@ -32,15 +35,17 @@
       event.preventDefault();
       jQuery(dest).html('Finding materials...');
 
-      var url = '#{api_v1_search_search_path}?' + jQuery(this).serialize();
+      var query = jQuery(this).serialize();
 
       if (window.history) {
-        window.history.replaceState({}, 'Materials Search' , url)
+        window.history.replaceState({}, 'Materials Search' , searchBase + query);
+      } else {
+        // TODO Handle IE 9?
       }
 
       jQuery.ajax({
         dataType: "json",
-        url: url,
+        url: apiBase + query,
         success: window.renderSearchResults
       });
     });
