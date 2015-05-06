@@ -65,6 +65,29 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     end
   end  
 
+  def build_graph_url
+    params = {
+      :interactive => interactive_url
+    }
+    if graph_type == "Prediction"
+      params[:globalStateKey] = self.page_elements[0].page.section.name
+    else
+      prediction_graph = fetch_connected_prediction
+      if prediction_graph.page_elements[0].is_enabled
+        params[:globalStateKey] = prediction_graph.page_elements[0].page.section.name
+        params[:loadOnly] = true
+        params[:datasetName] = "sensor-dataset"
+      else
+        return interactive_url
+      end
+    end
+    url = "//models-resources.concord.org/dataset-sync-wrapper/index.html?#{params.to_query}"
+  end
+
+  def fetch_connected_prediction
+    Embeddable::Diy::Sensor.find(self.prediction_graph_id)
+  end
+
   def can_run_lightweight?
     url = interactive_url
     if url && !url.empty?
@@ -79,7 +102,7 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
         :name => self.name,
         :native_height => 435,
         :native_width => 576,
-        :url => self.interactive_url,
+        :url => self.build_graph_url,
         :type => "MwInteractive",
         :click_to_play => true,
         :image_url => self.image_url
