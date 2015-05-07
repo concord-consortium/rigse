@@ -208,6 +208,7 @@ GEM
       sass (~> 3.1)
     compass-rails (1.0.3)
       compass (>= 0.12.2, < 0.14)
+    connection_pool (2.2.0)
     crack (0.3.2)
     cucumber (1.2.5)
       builder (>= 2.1.2)
