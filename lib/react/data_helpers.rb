@@ -207,7 +207,7 @@ module React
     def assigned_clazz_names(material)
       return [] unless current_visitor.portal_teacher
       offerings = current_visitor.portal_teacher.offerings.select{|o| o.runnable == material }
-      offering_clazz_names = offerings.sort{|a,b| a.clazz.position <=> b.clazz.position}.map{|o| o.clazz.name}
+      offering_clazz_names = offerings.map{|o| o.clazz.name}
       return offering_clazz_names
     end
   end
