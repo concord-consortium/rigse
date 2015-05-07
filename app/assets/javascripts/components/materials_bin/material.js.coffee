@@ -18,11 +18,14 @@ window.MaterialClass = React.createClass
     Portal.assignMaterialToCollection @props.material.id, @props.material.class_name
     e.preventDefault()
 
+  hasDescription: ->
+    @props.material.description? && @props.material.description != ''
+
   render: ->
     data = @props.material
     (div {className: 'mb-material'},
       (span {className: 'mb-material-links'},
-        if data.description? && data.description != ''
+        if @hasDescription()
           (a {className: 'mb-toggle-info', href: '', onClick: @toggleDescription},
             (span {className: 'mb-toggle-info-text'}, 'Info')
           )
@@ -40,10 +43,11 @@ window.MaterialClass = React.createClass
           )
       )
       (span {className: 'mb-material-name'}, data.name)
-      (MaterialDescription
-        description: data.description
-        visible: @state.descriptionVisible
-      )
+      if @hasDescription()
+        (MaterialDescription
+          description: data.description
+          visible: @state.descriptionVisible
+        )
     )
 
 window.Material = React.createFactory MaterialClass
