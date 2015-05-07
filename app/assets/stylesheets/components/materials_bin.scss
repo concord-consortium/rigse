@@ -45,6 +45,7 @@
 .mb-collection-name {
   font-size: 15px;
   margin-bottom: 8px;
+  vertical-align: middle;
 }
 
 .mb-material {
@@ -53,8 +54,12 @@
   .mb-material-links {
     margin-right: 10px;
 
-    a:focus {
-      color: #479492;
+    a {
+      margin: 0 2px;
+      vertical-align: middle;
+      &:focus {
+        color: #479492;
+      }
     }
   }
 

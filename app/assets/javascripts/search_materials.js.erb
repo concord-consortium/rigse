@@ -384,3 +384,9 @@ function msgPopupDescriptionText() {
     var popupMessage = "Please log-in or <a href='/pick_signup'>register</a> as a teacher to assign this material.";
     getMessagePopup(popupMessage);
 }
+
+// Export assignMaterialToClass to Portal namespace.
+// `className` is either: 'ExternalActivity', 'Activity' or 'Investigation'.
+Portal.assignMaterialToClass = function(id, className) {
+    get_Assign_To_Class_Popup(id, className);
+};

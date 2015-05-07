@@ -10,11 +10,12 @@ class API::V1::MaterialsCollectionsController < API::APIController
   #   - ?own_investigations=true - returns 'fake' collection with own investigations
   #   - ?own_materials=true - returns 'fake' collection with own materials (sum of all categories above)
   def data
-    collections = collections_by_ids(Array(params[:id]))
-    collections += [own_materials]           if params[:own_materials]
-    collections += [own_external_activities] if params[:own_external_activities]
-    collections += [own_activities]          if params[:own_activities]
-    collections += [own_investigations]      if params[:own_investigations]
+    collections = []
+    collections += collections_by_ids(Array(params[:id])) if params[:id]
+    collections += [own_materials]                        if params[:own_materials]
+    collections += [own_external_activities]              if params[:own_external_activities]
+    collections += [own_activities]                       if params[:own_activities]
+    collections += [own_investigations]                   if params[:own_investigations]
     render json: collections
   end
 

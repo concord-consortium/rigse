@@ -18,6 +18,10 @@
     get isAuthor() {
       return "#{current_visitor.has_role?('author')}" === "true";
     },
+    get isTeacher() {
+      // portal_teacher can return nil which is interpolated to "" string.
+      return "#{current_visitor.portal_teacher}" != "";
+    },
     get isStudent() {
       // portal_student can return nil which is interpolated to "" string.
       return "#{current_visitor.portal_student}" != "";

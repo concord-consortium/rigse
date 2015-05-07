@@ -16,7 +16,7 @@ module React
       }
     end
 
-    def group_data(type, collection, params={})
+    def group_data(type, collection)
       {
         type: type.to_s.pluralize,
         header: view_context.t(type).pluralize.titleize,
@@ -64,6 +64,7 @@ module React
           id: material.id,
           name: material.name,
           description: (current_visitor.portal_teacher && material.description_for_teacher.present? ? view_context.sanitize(material.description_for_teacher) : view_context.sanitize(material.description)),
+          class_name: material.class.name,
           class_name_underscored: material.class.name.underscore,
           icon: {
             url: (material.respond_to?(:icon_image) ? material.icon_image : nil),
