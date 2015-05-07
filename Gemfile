@@ -194,6 +194,7 @@ group :test, :cucumber do
   gem "capybara-mechanize", "~> 0.3.0"
   gem 'capybara-screenshot'
   gem "codeclimate-test-reporter", require: nil
+  gem "connection_pool"
 end
 
 group :test, :cucumber, :development do
