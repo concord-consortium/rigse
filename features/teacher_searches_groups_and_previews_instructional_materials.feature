@@ -86,6 +86,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
 
 
   @javascript
+  @with_mysql_failures
   Scenario: Teacher can see number classes to which activities are assigned on the search page
     When the Investigation "Geometry" is assigned to the class "Physics"
     When the Activity "parallel lines" is assigned to the class "Physics"
@@ -138,6 +139,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
 
 
   @javascript
+  @with_mysql_failures
   Scenario: Teacher can sort search results for investigations on the basis of creation date
     When I create investigations "differential calculus" before "integral calculus" by date
     And I search for "calculus" on the search instructional materials page
