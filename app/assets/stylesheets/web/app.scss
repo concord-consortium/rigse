@@ -194,7 +194,7 @@ body#tinymce {
   margin: 0;
   text-indent: -999em;
   &.itsisu {
-    background: transparent image-url("banners/itsisu.png") 0 0 no-repeat }
+    background: transparent image-url("new/banners/itsisu.png") 0 0 no-repeat }
   &.geniverse {
     background: transparent image-url("banners/geniverse.png") 0 0 no-repeat; }
   &.genigames {
@@ -205,8 +205,8 @@ body#tinymce {
     background: transparent image-url("banners/interactions.png") 0 0 no-repeat; }
   &.inquiryspace {
     background: transparent image-url("banners/inquiryspace.png") 0 0 no-repeat; }
-  &.loops {
-    background: white image-url("new/banners/loops.png") 0 0 no-repeat; }
+  // &.loops {
+  //   background: white image-url("new/banners/loops.png") 0 0 no-repeat; }
   &.smartgraphs {
     background: transparent image-url("banners/smartgraphs.png") 0 0 no-repeat; }
   &.rites {
@@ -1728,7 +1728,6 @@ div.atm
 .placeholder { color: #d0d0d0; }
 ::-webkit-input-placeholder { color: #d0d0d0; }
 input:-moz-placeholder, textarea:-moz-placeholder { color: #d0d0d0; }
-
 
 .model_library_popup_container{
   margin: 10px 20px;

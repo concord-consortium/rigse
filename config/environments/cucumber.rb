@@ -10,6 +10,9 @@ RailsPortal::Application.configure do
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
+  # Don't automatically compile assets on the fly, to better simulate production
+  config.assets.compile = false
+
   # Show full error reports and disable caching
   config.consider_all_requests_local        = true
   config.action_controller.perform_caching  = false
