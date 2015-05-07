@@ -79,3 +79,6 @@ window.MaterialsBinClass = React.createClass
     )
 
 window.MaterialsBin = React.createFactory MaterialsBinClass
+
+Portal.renderMaterialsBin = (definition, selectorOrElement) ->
+  React.render MaterialsBin(materials: definition), jQuery(selectorOrElement)[0]
