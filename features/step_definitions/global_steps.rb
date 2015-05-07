@@ -165,24 +165,15 @@ Given /^PENDING/ do
   pending
 end
 
-When /^(?:|I )accept the dialog$/ do 
-  page.driver.browser.switch_to.alert.accept
-end
-
-When /^(?:|I )dismiss the dialog$/ do 
-  page.driver.browser.switch_to.alert.dismiss
-end
-
-Then /^(?:|I )need to confirm "([^"]*)"$/ do |text|
-  # currently confirmations like this are done with dialogs
-  dialog_text = page.driver.browser.switch_to.alert.text
-  dialog_text.should == text
-  page.driver.browser.switch_to.alert.accept
+When /^Expecting a dialog which I will (accept|dismiss) (.*)$/ do |acceptance, nextStep|
+  handle_js_dialog(acceptance == 'accept') do
+    step nextStep
+  end
 end
 
 When /^the newly opened window (should|should not) have content "(.*)"$/ do |present, content|
   step 'I wait 2 seconds'
-  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+  within_window(page.driver.browser.window_handles.last) do
     case present
       when "should"
       page.should have_content(content)
@@ -197,7 +188,7 @@ When /^Help link should not appear in the top navigation bar$/ do
 end
 
 When /^(?:|I )close the newly opened window$/ do
-  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
+  within_window(page.driver.browser.window_handles.last) do
     page.execute_script "window.close();"
   end
 end

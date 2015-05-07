@@ -17,8 +17,7 @@ Feature: An author deletes parts of an investigation
     And I am logged in with the username author
     And I show the first section of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
-    When I follow "delete"
-    And accept the dialog
+    When Expecting a dialog I will accept I follow "delete"
     And I should wait 2 seconds
     Then I should not see "Page: testing fast cars"
 
@@ -32,7 +31,6 @@ Feature: An author deletes parts of an investigation
     And I am logged in with the username author
     And I go to the first page of the "Test" investigation
     Then I should see "Text: "
-    When I follow "delete text"
-    And accept the dialog
+    When Expecting a dialog I will accept I follow "delete text"
     And I should wait 2 seconds
     Then I should not see "Text: "

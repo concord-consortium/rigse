@@ -60,8 +60,7 @@ Feature: Users can view notices created by project staff
   Scenario: Users can dismiss a notice without affecting other users
     When I am logged in with the username manager
     And am on the my home page
-    And I follow "x"
-    And accept the dialog
+    And Expecting a dialog I will accept I follow "x"
     And I wait 2 seconds
     And I should not see "Notice for all users"
     # Notice should not be visible on revisiting the home page

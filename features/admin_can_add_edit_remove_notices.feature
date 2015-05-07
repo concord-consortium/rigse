@@ -30,8 +30,7 @@ Feature: Admin can add, edit and remove notices
   @dialog
   @javascript
   Scenario: Admin can remove notices
-    When I follow "Delete Notice"
-    And accept the dialog
+    When Expecting a dialog I will accept I follow "Delete Notice"
     And am on the my home page
     Then I should not see "Notice for admin"
     
@@ -63,8 +62,7 @@ Feature: Admin can add, edit and remove notices
   @dialog
   @javascript
   Scenario: Admin is shown a message if there are no notices
-    When I follow "Delete Notice"
-    And accept the dialog
+    When Expecting a dialog I will accept I follow "Delete Notice"
     Then I should see "You have no notices."
     
     

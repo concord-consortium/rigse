@@ -34,15 +34,13 @@ Feature: Teacher edits and saves class information
   @dialog
   @javascript
   Scenario: Teacher can remove teacher from the class edit page
-    When I follow remove image for the teacher name "Peterson Taylor"
-    And accept the dialog
+    When Expecting a dialog I will accept I follow remove image for the teacher name "Peterson Taylor"
     Then I should not see "Peterson Taylor"
     
   @dialog
   @javascript
   Scenario: Teacher can remove themselves as teacher from the class edit page
-    When I follow remove image for the teacher name "John Nash"
-    And accept the dialog
+    When Expecting a dialog I will accept I follow remove image for the teacher name "John Nash"
     Then I should see "You have been successfully removed from class: Mathematics"
     
   @javascript

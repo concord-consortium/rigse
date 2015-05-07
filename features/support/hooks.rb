@@ -20,3 +20,7 @@ AfterStep('@pause') do
   print "Press Return to continue"
   STDIN.getc
 end
+
+Before do
+  page.driver.allow_url("ajax.googleapis.com") if page.driver.respond_to? :allow_url
+end

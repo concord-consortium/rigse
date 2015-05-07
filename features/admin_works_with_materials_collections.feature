@@ -91,22 +91,19 @@ Feature: Admin can work with materials collections
   Scenario: Admin removes materials from a Materials Collection
     When I am on the materials collection index page
     And I open the accordion for the materials collection "Collection 3"
-    And I click remove on the 1st material in the materials collection "Collection 3"
-    And I accept the dialog
+    And Expecting a dialog which I will accept I click remove on the 1st material in the materials collection "Collection 3"
     And I wait 1 second
     Then I should only see 5 materials in the materials collection "Collection 3"
 
   @javascript
   Scenario: Admin deletes existing Materials Collection
     When I am on the materials collection index page
-    And I click on the delete link for materials collection "Collection 2"
-    And I accept the dialog
+    And Expecting a dialog which I will accept I click on the delete link for materials collection "Collection 2"
     And I wait 1 second
     Then I should not see "Collection 2"
 
   @javascript
   Scenario: Admin cancels deleting existing Materials Collection
     When I am on the materials collection index page
-    And I click on the delete link for materials collection "Collection 1"
-    And I dismiss the dialog
+    And Expecting a dialog I will dismiss I click on the delete link for materials collection "Collection 1"
     Then I should see "Collection 1"

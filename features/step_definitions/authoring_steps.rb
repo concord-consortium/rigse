@@ -94,8 +94,9 @@ When /^I copy the embeddable "([^"]*)"(?: by clicking on the (title|content))$/ 
   elem.click
 
   show_actions_menu
-  click_link("copy Text: content goes here ...")
-  page.driver.browser.switch_to.alert.dismiss
+  handle_js_dialog(false) do
+    click_link("copy Text: content goes here ...")
+  end
   page.execute_script("$('actions_menu').hide()")
 end
 

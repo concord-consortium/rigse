@@ -42,6 +42,28 @@ include RSpec::Mocks::Methods
 # so we can use things like dom_id_for
 include ApplicationHelper
 
+def handle_js_dialog(accept=true)
+  if Capybara.javascript_driver == :selenium
+    yield
+    @dialog_text = page.driver.browser.switch_to.alert.text
+    accept ? page.driver.browser.switch_to.alert.dismiss : page.driver.browser.switch_to.alert.dismiss
+  else
+    begin
+      page.execute_script "window.original_confirm_function = window.confirm"
+      page.execute_script "window.confirmMsg = null"
+      page.execute_script "window.confirm = function(msg) { window.confirmMsg = msg; return #{!!accept}; }"
+      yield
+      @dialog_text = page.evaluate_script "window.confirmMsg"
+    ensure
+      page.execute_script "window.confirm = window.original_confirm_function"
+    end
+  end
+end
+
+def get_dialog_text
+  @dialog_text
+end
+
 # share the db connections between the test thread and the server thread to fix MySQL errors in tests
 class ActiveRecord::Base
   mattr_accessor :shared_connection
