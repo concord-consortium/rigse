@@ -45,6 +45,9 @@
       event.preventDefault();
       jQuery(dest).html('Finding materials...');
 
+      // Reset our current page numbers
+      jQuery("#investigation_page").val(1);
+      jQuery("#activity_page").val(1);
       var query = jQuery(this).serialize();
 
       window.updateSearchUrl(query);
