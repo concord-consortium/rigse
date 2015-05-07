@@ -60,6 +60,9 @@ class ExternalActivity < ActiveRecord::Base
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+    string :projects, :multiple => true do
+      projects.map { |p| p.name }.compact
+    end
   end
 
   belongs_to :user
@@ -73,6 +76,9 @@ class ExternalActivity < ActiveRecord::Base
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
   belongs_to :template, :polymorphic => true
+
+  has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
+  has_many :projects, :class_name => "Admin::Project", :through => :project_materials
 
   acts_as_replicatable
 

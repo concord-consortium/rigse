@@ -1,0 +1,14 @@
+-# Expects locals: object
+- if object && object.respond_to?('projects') && current_visitor.has_role?('admin', 'manager')
+  = field_set_tag 'Projects' do
+    .aligned
+      %ul.menu_h
+        - prop_name = "#{object.class.name.underscore}[project_ids][]"
+        -# Hidden field handles a case when all checkboxes are unchecked.
+        = hidden_field_tag prop_name
+        - project_assigned = Hash[object.projects.map { |p| [p.id, true ] }]
+        - Admin::Project.all.each do |project|
+          %li
+            - label_str = "project_#{project.id}"
+            = label_tag label_str, project.name
+            = check_box_tag prop_name, project.id, project_assigned[project.id], id: label_str

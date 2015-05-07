@@ -18,6 +18,4 @@
       - if current_visitor.has_role?("admin", "manager")
         = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
       = render :partial => 'shared/cohorts_edit', :locals => { :object => @user.portal_teacher }
-      = render :partial => 'shared/grade_levels_edit', :locals => { :object => @user.portal_teacher }
-      = render :partial => 'shared/subject_areas_edit', :locals => { :object => @user.portal_teacher }
       = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }

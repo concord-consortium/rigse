@@ -41,7 +41,8 @@
                 = label_tag grade, grade
 
         %td
-          = render :partial=>"search/subject_areas_filter"
+          = render :partial => "search/projects_filter"
+          %br
           .filterheader
             Authorship
           .tablecell
@@ -56,7 +57,10 @@
               Authored by Community
               %span.tip
                 These materials are written by external contributors.
-        = render :partial=>"search/grade_levels_filter"
+        %td
+          = render :partial => "search/subject_areas_filter"
+          %br
+          = render :partial => "search/grade_levels_filter"
 
         %td.materialcolumn
           .filterheader
