@@ -44,25 +44,30 @@ window.MaterialsBinClass = React.createClass
       columnIdx = 0 unless columnIdx?
       visible = true unless visible?
       columns[columnIdx] = [] unless columns[columnIdx]?
-      array.forEach (cell) =>
+      array.forEach (cellDef) =>
         rowIdx = columns[columnIdx].length
         selected = @isCategorySelected columnIdx, rowIdx
-        cellData = if cell.category
-                     category: cell.category
-                     column: columnIdx
-                     row: rowIdx
-                     visible: visible
-                     selected: selected
-                     customClass: cell.className
-                   else
-                     collections: cell.collections
-                     visible: visible
-                     
-        columns[columnIdx].push cellData
-        if cell.children
+        columns[columnIdx].push if cellDef.category
+                                  (MaterialsCategory {
+                                      visible: visible
+                                      selected: selected
+                                      column: columnIdx
+                                      row: rowIdx
+                                      customClass: cellDef.className
+                                      loginRequired: cellDef.loginRequired
+                                      handleClick: @handleCellClick
+                                    },
+                                    cellDef.category
+                                  )
+                                 else
+                                  (MaterialsContainer
+                                    visible: visible
+                                    collections: cellDef.collections
+                                  )
+        if cellDef.children
           # Recursively go to children array, add its elements to column + 1
           # and mark them visible only if current cell is selected.
-          fillColumns cell.children, columnIdx + 1, selected
+          fillColumns cellDef.children, columnIdx + 1, selected
 
     fillColumns @props.materials
     columns
@@ -70,43 +75,7 @@ window.MaterialsBinClass = React.createClass
   render: ->
     (div {className: 'materials-bin'},
       for column in @_getColumns()
-        (div {className: 'mb-column'},
-          for cell in column
-            if cell.category
-              (MaterialsCategory {
-                  visible: cell.visible
-                  selected: cell.selected
-                  column: cell.column
-                  row: cell.row
-                  customClass: cell.customClass
-                  handleClick: @handleCellClick
-                },
-                cell.category
-              )
-            else
-              (MaterialsContainer
-                visible: cell.visible
-                collections: cell.collections
-              )
-        )
+        (div {className: 'mb-column'}, column)
     )
 
 window.MaterialsBin = React.createFactory MaterialsBinClass
-
-# Helper components:
-
-MaterialsCategory = React.createFactory React.createClass
-  getVisibilityClass: ->
-    unless @props.visible then 'mb-hidden' else ''
-
-  getSelectionClass: ->
-    if @props.selected then 'mb-selected' else ''
-
-  handleClick: ->
-    @props.handleClick @props.column, @props.row
-
-  render: ->
-    className = "mb-cell mb-category mb-clickable #{@props.customClass} #{@getVisibilityClass()} #{@getSelectionClass()}"
-    (div {className: className, onClick: @handleClick},
-      @props.children
-    )

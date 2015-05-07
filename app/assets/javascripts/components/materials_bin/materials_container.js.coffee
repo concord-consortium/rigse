@@ -21,8 +21,7 @@ window.MatarialsContainerClass = React.createClass
     return if @state.collectionsData?
     jQuery.ajax
       url: Portal.API_V1.MATERIALS_COLLECTION_DATA
-      data:
-        id: @props.collections
+      data: @props.collections
       dataType: 'json'
       success: (data) =>
         @setState collectionsData: data if @isMounted()
@@ -32,22 +31,12 @@ window.MatarialsContainerClass = React.createClass
 
   render: ->
     className = "mb-cell #{@getVisibilityClass()}"
-    if @state.collectionsData?
-      (div {className: className},
+    (div {className: className},
+      if @state.collectionsData?
         for collection in @state.collectionsData
           (MaterialsCollection {name: collection.name, materials: collection.materials})
-      )
-    else
-      (div {})
+      else
+        (div {}, 'Loading...')
+    )
 
 window.MaterialsContainer = React.createFactory MatarialsContainerClass
-
-# Helper components:
-
-MaterialsCollection = React.createFactory React.createClass
-  render: ->
-    (div {className: 'mb-collection'},
-      (div {className: 'mb-collection-name'}, @props.name)
-      for material in @props.materials
-        (Material material: material)
-    )

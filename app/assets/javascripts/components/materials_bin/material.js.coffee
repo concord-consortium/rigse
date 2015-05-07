@@ -14,7 +14,7 @@ window.MaterialClass = React.createClass
     data = @props.material
     (div {className: 'mb-material'},
       (span {className: 'mb-material-links'},
-        if data.description?
+        if data.description? && data.description != ''
           (a {className: 'mb-toggle-info', href: '', onClick: @toggleDescription},
             (span {className: 'mb-toggle-info-text'}, 'Info ')
           )
