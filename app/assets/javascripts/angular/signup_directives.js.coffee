@@ -11,19 +11,19 @@ angular.module('ccSignupDirectives', [])
       require: 'ngModel',
       link: ($scope, element, attrs, ngModel) ->
         ngModel.$asyncValidators.goodClassword = (class_word) ->
-          return $http.get("#{API_V1.CLASSWORD}?class_word=#{class_word}");
+          return $http.get("#{Portal.API_V1.CLASSWORD}?class_word=#{class_word}");
   ])
   .directive('usernameAvail', ['$http', ($http) ->
       require: 'ngModel',
       link: ($scope, element, attrs, ngModel) ->
         ngModel.$asyncValidators.usernameAvail = (username) ->
-          return $http.get("#{API_V1.LOGINS}?username=#{username}");
+          return $http.get("#{Portal.API_V1.LOGINS}?username=#{username}");
   ])
   .directive('emailAvail', ['$http', ($http) ->
       require: 'ngModel',
       link: ($scope, element, attrs, ngModel) ->
         ngModel.$asyncValidators.emailAvail = (email) ->
-          return $http.get("#{API_V1.EMAILS}?email=#{email}");
+          return $http.get("#{Portal.API_V1.EMAILS}?email=#{email}");
   ])
 
   # ng-required wasn't working the way I woudl have liked

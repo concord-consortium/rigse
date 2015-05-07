@@ -20,7 +20,7 @@ window.MatarialsContainerClass = React.createClass
     # Don't download data if it's been already done.
     return if @state.collectionsData?
     jQuery.ajax
-      url: API_V1.MATERIALS_COLLECTION_DATA
+      url: Portal.API_V1.MATERIALS_COLLECTION_DATA
       data:
         id: @props.collections
       dataType: 'json'
