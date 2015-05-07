@@ -16,7 +16,7 @@ MaterialLink = React.createClass
   render: ->
     link = @props.link
     return `(
-      <div key={link.key} style={{float: 'right'}}><GenericLink link={link} /></div>
+      <div key={link.key} style={{float: 'right', marginRight: '5px'}}><GenericLink link={link} /></div>
     )`
 
 MaterialDropdownLink = React.createClass
