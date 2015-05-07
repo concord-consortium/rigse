@@ -291,7 +291,8 @@ And /^I receive a file for download with a filename like "(.+)"$/ do |filename|
   pattern = "filename=(.*?)#{Regexp.escape(filename)}(.*?)"
   pattern = Regexp.compile(pattern)
 
-  page.response_headers['Content-Disposition'].should =~ pattern
+  headers = page.response_headers['Content-Disposition'] rescue pending("response_headers is unsupported by the current page driver")
+  headers.should =~ pattern
 end
 
 And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor_id|
