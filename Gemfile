@@ -157,6 +157,7 @@ group :development do
   gem "hirb"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
   gem "debugger", :platforms => [:mri_19]
+  gem "pry-debugger"
   gem "awesome_print"
   gem "interactive_editor"
   gem "ruby-prof"
@@ -170,7 +171,6 @@ group :development do
   gem "rack-mini-profiler" 
   gem "bullet"
   gem "lol_dba"
-  gem "pry-debugger"
 end
 
 group :test, :cucumber do
@@ -192,6 +192,7 @@ group :test, :cucumber do
   gem "capybara-mechanize", "~> 0.3.0"
   gem 'capybara-screenshot'
   gem "codeclimate-test-reporter", require: nil
+  gem "connection_pool"
 end
 
 group :test, :cucumber, :development do

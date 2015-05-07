@@ -26,8 +26,8 @@ class Search
   attr_accessor :subject_areas
   attr_accessor :projects
   attr_accessor :model_types
-  attr_accessor :availabe_subject_areas
-  attr_accessor :availabe_grade_level_groups
+  attr_accessor :available_subject_areas
+  attr_accessor :available_grade_level_groups
   attr_accessor :available_model_types 
   attr_accessor :available_projects
 
@@ -96,9 +96,9 @@ class Search
     self.grade_level_groups          = opts[:grade_level_groups] || []
     self.subject_areas               = opts[:subject_areas] || []
     self.projects                    = opts[:projects] || []
-    self.availabe_subject_areas      = []
+    self.available_subject_areas      = []
     self.available_projects          = []
-    self.availabe_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
+    self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
     self.model_types                 = opts[:model_types] || nil
     self.available_model_types       = []
     
@@ -126,7 +126,7 @@ class Search
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
     self.fetch_available_model_types()
-    self.fetch_availabe_grade_subject_areas_projects()
+    self.fetch_available_grade_subject_areas_projects()
     self.search()
   end
 
@@ -139,7 +139,7 @@ class Search
     end
   end
   
-  def fetch_availabe_grade_subject_areas_projects
+  def fetch_available_grade_subject_areas_projects
     results = self.engine.search([Investigation, Activity, ExternalActivity]) do |s|
       s.facet :subject_areas
       s.facet :grade_levels do 
@@ -152,11 +152,11 @@ class Search
       s.facet :projects
     end
     results.facet(:subject_areas).rows.each do |facet|
-      self.availabe_subject_areas << facet.value
+      self.available_subject_areas << facet.value
     end
-    availabe_subject_areas.uniq!
+    available_subject_areas.uniq!
     results.facet(:grade_levels).rows.each do |facet|
-      self.availabe_grade_level_groups[facet.value] = 1
+      self.available_grade_level_groups[facet.value] = 1
     end
     results.facet(:projects).rows.each do |facet|
       self.available_projects << facet.value

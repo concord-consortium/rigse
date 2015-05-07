@@ -18,7 +18,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
 
 
   @javascript
-  @with_mysql_failures
   Scenario: Teacher should be on materials preview page to assign materials
     When I follow the "Assign to a Class" link for the investigation "differential calculus"
     Then I should see "Select Class(es)"
@@ -99,12 +98,14 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Anonymous user can preview investigation
     When I log out
     And I go to the search instructional materials page
+    And I wait 2 seconds
     Then I should preview investigation "Geometry" on the search instructional materials page
 
 
   Scenario: Anonymous user can preview activity
     When I log out
     And I go to the search instructional materials page
+    And I wait 2 seconds
     Then I should preview activity "differential calculus" on the search instructional materials page
 
 

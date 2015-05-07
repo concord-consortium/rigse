@@ -43,13 +43,16 @@ include RSpec::Mocks::Methods
 # so we can use things like dom_id_for
 include ApplicationHelper
 
-AfterStep("@with_mysql_failures") do
-  sleep 1
-end
+# share the db connections between the test thread and the server thread to fix MySQL errors in tests
+class ActiveRecord::Base
+  mattr_accessor :shared_connection
+  @@shared_connection = nil
 
-AfterStep do
-  sleep 0.2
+  def self.connection
+    @@shared_connection || ConnectionPool::Wrapper.new(:size => 1) { retrieve_connection }
+  end
 end
+ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how 

@@ -82,7 +82,7 @@ module SearchHelper
 # convert hash to array
   def authored_grade_level_groupes
     authored_grade_level_groups = []
-    @form_model.availabe_grade_level_groups.each do |grade_level_group_key,grade_level_group_value|
+    @form_model.available_grade_level_groups.each do |grade_level_group_key,grade_level_group_value|
       if grade_level_group_value == 1
         authored_grade_level_groups << grade_level_group_key
       end
