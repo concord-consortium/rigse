@@ -55,6 +55,8 @@ MaterialDescription = React.createFactory React.createClass
     unless @props.visible then 'mb-hidden' else ''
 
   render: ->
-    (div {className: "mb-material-description #{@getVisibilityClass()}"},
-      @props.description
+    (div
+      className: "mb-material-description #{@getVisibilityClass()}"
+      # It's already sanitized by server!
+      dangerouslySetInnerHTML: {__html: @props.description}
     )
