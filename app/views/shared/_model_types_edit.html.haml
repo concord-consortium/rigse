@@ -1,0 +1,11 @@
+- if object && object.respond_to?("model_type_list") && current_visitor.has_role?("admin", "manager")
+  = field_set_tag 'Model Types' do
+    .aligned
+      = hidden_field_tag :update_model_types, "true"
+      %ul.menu_h
+        - Admin::Tag.find_all_by_scope("model_types").each do |admin_tag|
+          - if admin_tag.tag
+            %li
+              - label_str = "model_types_#{admin_tag.tag.underscore}"
+              = label_tag label_str, admin_tag.tag
+              = radio_button_tag "model_types[]", admin_tag.tag, object.model_type_list.include?(admin_tag.tag), :id => label_str

@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   has_many :investigations
   has_many :resource_pages
   has_many :activities
+  has_many :interactives
   has_many :sections
   has_many :pages
   has_many :external_activities

@@ -14,7 +14,7 @@ tinyMCE.init({
     auto_resize : true,
     remove_script_host : false,
     relative_urls : false,
-    content_css : "#{stylesheet_path('otml.css')}, #{stylesheet_path('settings.css')}",
+    content_css : "#{stylesheet_path('otml.css')}, #{settings_css_path}",
     gecko_spellcheck : true,
     theme_advanced_resizing : true,
     theme_advanced_resizing_use_cookie : true,

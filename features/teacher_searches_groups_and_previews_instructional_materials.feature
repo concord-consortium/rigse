@@ -18,7 +18,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
 
 
   @javascript
-  @with_mysql_failures
   Scenario: Teacher should be on materials preview page to assign materials
     When I follow the "Assign to a Class" link for the investigation "differential calculus"
     Then I should see "Select Class(es)"
@@ -104,6 +103,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Anonymous user can preview investigation
     When I log out
     And I go to the search instructional materials page
+    And I wait 2 seconds
     Then I should preview investigation "Geometry" on the search instructional materials page
 
 
@@ -111,6 +111,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Anonymous user can preview activity
     When I log out
     And I go to the search instructional materials page
+    And I wait 2 seconds
     Then I should preview activity "differential calculus" on the search instructional materials page
 
 
@@ -162,34 +163,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
     When I follow "Newest" in Sort By on the search instructional materials page
     And I wait 2 seconds
     Then "parallel lines" should appear before "graphs and lines"
-
-
-  @javascript
-  @with_mysql_failures
-  Scenario: Teacher can sort search investigations on the basis of popularity
-    When the Investigation "differential calculus" is assigned to the class "Physics"
-    And the Investigation "differential calculus" is assigned to the class "Geography"
-    And the Investigation "differential calculus" is assigned to the class "Mathematics"
-    And the Investigation "integral calculus" is assigned to the class "Mathematics"
-    And the Investigation "integral calculus" is assigned to the class "Geography"
-    And I follow "Popularity" in Sort By on the search instructional materials page
-    And I wait 2 seconds
-    And I search for "calculus" on the search instructional materials page
-    Then "differential calculus" should appear before "integral calculus"
-
-
-  @javascript
-  @wip
-  @with_mysql_failures
-  Scenario: Teacher can sort search activities on the basis of popularity
-    When the Activity "intersecting lines" is assigned to the class "Physics"
-    And the Activity "intersecting lines" is assigned to the class "Geography"
-    And the Activity "intersecting lines" is assigned to the class "Mathematics"
-    And the Activity "parallel lines" is assigned to the class "Mathematics"
-    And the Activity "parallel lines" is assigned to the class "Geography"
-    And I follow "Popularity" in Sort By on the search instructional materials page
-    And I wait 2 seconds
-    Then "intersecting lines" should appear before "parallel lines"
 
 
   @javascript

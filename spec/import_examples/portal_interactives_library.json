@@ -1,0 +1,13 @@
+{
+  "models": [{
+    "name": "Conduction C - Temperature Difference",
+    "description": "Explore the effect of temperature difference on the amount of heat flow.",
+    "url": "https://lab.concord.org/embeddable.html#interactives/itsi/energy2d/conduction-temperature-difference.json",
+    "width": 690,
+    "height": 400,
+    "scale": 1.0,
+    "image_url": "http://itsisu.concord.org/share/model_images/12.png",
+    "credits": "Charles Xie",
+    "model_type": "model_type_5"
+  }]
+}

@@ -49,34 +49,15 @@ RailsPortal::Application.configure do
   config.active_support.deprecation = :notify
 
   #### Asset Pipeline:  #####
-  
+  # Production servers may not compile missing assets. (missed by precompile)
+  # Requires asset helper gems in production bundle
+  config.assets.compile = true
+
   # Minify/uglify/compress assets from the pipeline
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :yui
-  config.assets.precompile += %w(
-    print.css
-    otml.css
-    settings.css
-    jquery/jquery.js
-    pie/PIE.js
-    calendar_date_select/calendar_date_select.js
-    calendar_date_select/silver.css
-    contentflow_configured.css
-    contentflow_configured.js
-    web/search_materials.css
-    )
 
-  # add in the current theme's application.css
-  # a proc is used here so the APP_CONFIG is available
-  config.assets.precompile << Proc.new do |path|
-    path == "APP_CONFIG[:theme]/stylesheets/application.css"
-  end
-
-  # Production servers may compile missing assets. (missed by precompile)
-  # Requires asset helper gems in production bundle
-  config.assets.compile = true
-  
   # Generate digests for assets' URLs.
   config.assets.digest = true
   config.action_mailer.default_url_options = {:protocol => APP_CONFIG[:protocol], :host => APP_CONFIG[:host] }

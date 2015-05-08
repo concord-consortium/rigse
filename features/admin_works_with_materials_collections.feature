@@ -54,13 +54,14 @@ Feature: Admin can work with materials collections
     Then I should see "My new Collection edits"
 
   @javascript
-  @with_mysql_failures
   Scenario: Admin re-orders materials in a Materials Collection
     When I am on the materials collection index page
     And I open the accordion for the materials collection "Collection 3"
     And I drag the 3rd material in the materials collection "Collection 3" to the top
+    And I wait 1 second
     Then the previously moved material in the materials collection "Collection 3" should be first
     When I drag the 2nd material in the materials collection "Collection 3" to the bottom
+    And I wait 1 second
     Then the previously moved material in the materials collection "Collection 3" should be last
 
   @javascript
@@ -92,6 +93,7 @@ Feature: Admin can work with materials collections
     And I open the accordion for the materials collection "Collection 3"
     And I click remove on the 1st material in the materials collection "Collection 3"
     And I accept the dialog
+    And I wait 1 second
     Then I should only see 5 materials in the materials collection "Collection 3"
 
   @javascript
