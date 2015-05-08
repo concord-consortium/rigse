@@ -161,9 +161,6 @@ class ExternalActivity < ActiveRecord::Base
     false
   end
 
-  def parent
-    nil
-  end
   # end methods to mimic Activity
 
   # needed to mimic Investigation (investigations/list/filter)

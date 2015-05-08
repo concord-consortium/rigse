@@ -29,7 +29,7 @@ en:
       "portal/clazz": Class
       "portal/nces06_district" : "NCES District"
       "portal/nces06_school" : "NCES School"
-      Investigation: Sequence
+      Investigation: Sequence!!!!!
       investigation:
         zero: sequences
         one: sequence
@@ -39,23 +39,24 @@ en:
         zero: activities
         one: activity
         other: activities
-      ExternalActivity : External Activity
+      ExternalActivity: External Activity
       external_activity:
         zero: external activities
         one: external activity
         other: external activities
-      ResourcePage : Resource Page
+      ResourcePage: Resource Page
       resource_page:
         zero: resource pages
         one: resource page
         other: resource page
-      Interactive : Resource Page
+      Interactive: Interactive
       interactive:
         zero: interactives
         one: interactive
         other: interactives
   investigation: sequence
   activity: activity
+  interactive: interactive
   recent_activity:
     no_offerings: 'You need to assign investigations to your classes.'
     no_students:  'You have not yet assigned students to your classes.'

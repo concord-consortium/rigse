@@ -198,10 +198,6 @@ class Investigation < ActiveRecord::Base
      300
   end
 
-  def parent
-    return nil
-  end
-
   def children
     return activities
   end

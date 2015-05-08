@@ -37,9 +37,13 @@ module React
 
       materials.each do |material|
         parent_data = nil
+        material_count = nil
 
-        material_count = material.offerings_count
-        if material.parent
+        if material.respond_to?(:offerings_count)
+          material_count = material.offerings_count
+        end
+
+        if material.respond_to?(:parent) && material.parent
           material_count = material_count + material.parent.offerings_count
 
           parent_data = {
@@ -60,10 +64,13 @@ module React
           }
         end
 
+        description = material.respond_to?(:description_for_teacher) && current_visitor.portal_teacher && material.description_for_teacher.present? ?
+            view_context.sanitize(material.description_for_teacher) : view_context.sanitize(material.description)
+
         mat_data = {
           id: material.id,
           name: material.name,
-          description: (current_visitor.portal_teacher && material.description_for_teacher.present? ? view_context.sanitize(material.description_for_teacher) : view_context.sanitize(material.description)),
+          description: description,
           class_name: material.class.name,
           class_name_underscored: material.class.name.underscore,
           icon: {
