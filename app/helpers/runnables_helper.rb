@@ -75,6 +75,10 @@ module RunnablesHelper
   end
 
   def run_url_for(component, params = {}, format = nil)
+    if component.instance_of? Interactive
+      return component.url
+    end
+
     format ||= component.run_format
 
     # this is where we pull in extra parameters for the url, like skip_installer

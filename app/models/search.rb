@@ -15,6 +15,7 @@ class Search
   attr_accessor :without_teacher_only
   attr_accessor :activity_page
   attr_accessor :investigation_page
+  attr_accessor :interactive_page
   attr_accessor :per_page
   attr_accessor :user_id
   attr_accessor :include_contributed
@@ -24,14 +25,17 @@ class Search
   attr_accessor :grade_level_groups
   attr_accessor :subject_areas
   attr_accessor :projects
-  attr_accessor :availabe_subject_areas
-  attr_accessor :availabe_grade_level_groups
+  attr_accessor :model_types
+  attr_accessor :available_subject_areas
+  attr_accessor :available_grade_level_groups
+  attr_accessor :available_model_types 
   attr_accessor :available_projects
 
-  SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity]
+  SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity, Interactive]
   InvestigationMaterial   = "Investigation"
   ActivityMaterial        = "Activity"
-  AllMaterials            = [InvestigationMaterial, ActivityMaterial]
+  InteractiveMaterial     = "Interactive"
+  AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial]
 
   Newest       = 'Newest'
   Oldest       = 'Oldest'
@@ -92,9 +96,11 @@ class Search
     self.grade_level_groups          = opts[:grade_level_groups] || []
     self.subject_areas               = opts[:subject_areas] || []
     self.projects                    = opts[:projects] || []
-    self.availabe_subject_areas      = []
+    self.available_subject_areas      = []
     self.available_projects          = []
-    self.availabe_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
+    self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
+    self.model_types                 = opts[:model_types] || nil
+    self.available_model_types       = []
     
     self.results        = {}
     self.hits           = {}
@@ -113,16 +119,27 @@ class Search
 
     self.activity_page        = opts[:activity_page]       || 1
     self.investigation_page   = opts[:investigation_page]  || 1
+    self.interactive_page     = opts[:interactive_page]    || 1
     self.without_teacher_only = opts[:without_teacher_only]|| true
     self.java_requirements    = opts[:java_requirements]   || []
     self.include_contributed  = opts[:include_contributed] || false
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
-    self.fetch_availabe_grade_subject_areas_projects()
+    self.fetch_available_model_types()
+    self.fetch_available_grade_subject_areas_projects()
     self.search()
   end
 
-  def fetch_availabe_grade_subject_areas_projects
+  def fetch_available_model_types
+    results = self.engine.search([Interactive]) do |s|
+      s.facet :model_types
+    end
+    results.facet(:model_types).rows.each do |facet|
+      self.available_model_types << facet.value
+    end
+  end
+  
+  def fetch_available_grade_subject_areas_projects
     results = self.engine.search([Investigation, Activity, ExternalActivity]) do |s|
       s.facet :subject_areas
       s.facet :grade_levels do 
@@ -135,11 +152,11 @@ class Search
       s.facet :projects
     end
     results.facet(:subject_areas).rows.each do |facet|
-      self.availabe_subject_areas << facet.value
+      self.available_subject_areas << facet.value
     end
-    availabe_subject_areas.uniq!
+    available_subject_areas.uniq!
     results.facet(:grade_levels).rows.each do |facet|
-      self.availabe_grade_level_groups[facet.value] = 1
+      self.available_grade_level_groups[facet.value] = 1
     end
     results.facet(:projects).rows.each do |facet|
       self.available_projects << facet.value
@@ -184,6 +201,9 @@ class Search
           s.paginate(:page => self.activity_page, :per_page => self.per_page)
         elsif (type==Search::InvestigationMaterial)
           s.paginate(:page => self.investigation_page, :per_page => self.per_page)
+        elsif (type==Search::InteractiveMaterial)
+		  search_by_model_types(s)
+          s.paginate(:page => self.interactive_page, :per_page => self.per_page)
         end
 
       end
@@ -200,7 +220,7 @@ class Search
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
       :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements,
-      :grade_level_groups, :subject_areas, :projects]
+      :grade_level_groups, :subject_areas, :projects, :model_types]
     keys.each do |key|
       value = self.send key
       if value
@@ -281,6 +301,13 @@ class Search
       projects.each do |g|
         s.with(:projects, g)
       end
+    end
+  end
+
+  def search_by_model_types(search)
+    return if model_types.nil? || model_types == "All"
+    search.any_of do |s|
+      s.with(:model_types, model_types)
     end
   end
 

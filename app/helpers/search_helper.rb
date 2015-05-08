@@ -14,6 +14,7 @@ module SearchHelper
   def build_onSearch_message(form_model)
     investigations_count = form_model.total_entries['Investigation'] || 0
     activities_count = form_model.total_entries['Activity'] || 0
+    interactives_count = form_model.total_entries['Interactive'] || 0
     show_message_onSearch= ""
     if investigations_count == 1
       show_message_onSearch += "#{investigations_count}  <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"investigations_bookmark\").offsetTop)'>#{t(:investigation)}</a>"
@@ -30,6 +31,15 @@ module SearchHelper
       show_message_onSearch += " #{activities_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"activities_bookmark\").offsetTop)'>activities</a>"
     end
 
+    if interactives_count > 0 && activities_count > 0 && investigations_count > 0
+      show_message_onSearch += ","
+    end
+    if interactives_count == 1
+      show_message_onSearch += " #{interactives_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"interactives_bookmark\").offsetTop)'>interactive</a>"
+    elsif interactives_count > 0
+      show_message_onSearch += " #{interactives_count} <a href='javascript:void(0)' onclick='window.scrollTo(0,$(\"interactives_bookmark\").offsetTop)'>interactives</a>"
+    end
+
     show_message_onSearch +=" matching"
     if (form_model && form_model.text)
       show_message_onSearch +=" search term \"#{form_model.text}\" and"
@@ -38,11 +48,7 @@ module SearchHelper
   end
 
   def show_material_icon(material, link_url, hide_details)
-    if material.material_type == "Investigation"
-      icon_url = material.icon_image
-    elsif material.material_type == "Activity"
-      icon_url = material.icon_image
-    end
+    icon_url = material.icon_image
     output = capture_haml do
       haml_tag :div, :class => "material_icon" do
 			  unless icon_url.blank?
@@ -76,7 +82,7 @@ module SearchHelper
 # convert hash to array
   def authored_grade_level_groupes
     authored_grade_level_groups = []
-    @form_model.availabe_grade_level_groups.each do |grade_level_group_key,grade_level_group_value|
+    @form_model.available_grade_level_groups.each do |grade_level_group_key,grade_level_group_value|
       if grade_level_group_value == 1
         authored_grade_level_groups << grade_level_group_key
       end

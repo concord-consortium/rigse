@@ -1,0 +1,5 @@
+- options = @form_model.available_model_types.uniq
+- options.unshift('All')
+- model_types = params[:model_types]
+- default_select = model_types.nil? ? "All" : model_types
+= select_tag :model_types, options_for_select(options, default_select)

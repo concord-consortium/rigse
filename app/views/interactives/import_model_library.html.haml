@@ -1,0 +1,7 @@
+.model_library_popup_container
+  = form_tag import_model_library_interactives_path, :remote => true, :multipart => true, :id => "import_model_library" do 
+    =file_field 'import', 'import', accept: 'application/json', class: 'import_file'
+    %input{:class => "import button", :type => "button", :id => "import-model-library-post-json", :value => "Import"} 
+    = link_to "Cancel", "#", :id => "close-model-library-popup"
+    .message
+      =@message

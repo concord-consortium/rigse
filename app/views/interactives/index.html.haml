@@ -1,0 +1,32 @@
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      = form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
+        = content_tag :label do
+          = text_field_tag :search, params[:search], :size => 30
+        %input{ :type => "submit", :value => "Search"}
+      - if @interactives
+        %p= page_entries_info @interactives
+      %p.paginator
+        = will_paginate @interactives
+    .action_menu_header_right
+      %ul.menu
+        -if current_visitor.has_role?('admin')
+          %li= link_to 'create interactive', new_interactive_path
+        %li= toggle_all 'interactive descriptions'
+        %li= link_to 'Export Interactives', export_model_library_interactives_path
+
+.item_collection
+  %ul.quiet_list
+    - @interactives.each do |interactive|
+      %div{ :id => dom_id_for(interactive, :item), :class => 'item' }
+        %div.action_menu
+          %div.action_menu_header_left
+            = link_to_container(interactive)
+          %div.action_menu_header_right
+            %ul.menu
+              - if (interactive.changeable?(current_visitor))
+                %li.menu=link_to 'edit', edit_interactive_path(interactive), :class => 'edit'
+                %li.menu=link_to 'delete', interactive, :class => 'delete', :data => { :confirm => "Are you sure you want to delete interactive #{interactive.id}" }, :method => :delete
+        %div{:id => dom_id_for(interactive, :details), :class => 'tiny'}
+          %p=render :partial => 'show',:locals => {:interactive => interactive, :show_thumbnail => true}

@@ -1,0 +1,44 @@
+%div{:id => dom_id_for(interactive, :details), :class => 'content'}
+  - if interactive.url && !interactive.url.empty?
+    %span{:style => "margin-left: 15px;"}
+      = link_to 'Run Interactive', interactive.url, :target => 'new'
+  %p
+    %h2= interactive.name
+  - unless interactive.image_url.nil? || interactive.image_url.blank?
+    - style = show_thumbnail ? "float: right" : ""
+    %div{:style => style}
+      - if (show_thumbnail)
+        =image_tag(interactive.image_url, :size => '100x100')
+      - else
+        =image_tag(interactive.image_url)
+  %p= raw interactive.description
+  %p
+    %b Author:
+    - if interactive.user
+      = interactive.user.first_name + " " + interactive.user.last_name
+    %br
+    %b Credits:
+    = raw interactive.credits
+    - if interactive.model_type_list.length > 0
+      %br
+      %b Model type:
+      = interactive.model_type_list.join(',')
+    - if interactive.grade_level_list.length > 0
+      %br
+      %b Grade Levels:
+      = interactive.grade_level_list.join(',')
+    - if interactive.subject_area_list.length > 0
+      %br
+      %b Subject Areas:
+      = interactive.subject_area_list.join(',')
+    - if interactive.url
+      %br
+      %b Interactive URL:
+      = interactive.url
+      %br
+      %b Interactive Scale:
+      = interactive.scale
+      %br
+      %b Interactive Size:
+      = "#{interactive.width} x #{interactive.height}"
+  %div{:style => "clear:both"}
