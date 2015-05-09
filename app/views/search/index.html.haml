@@ -27,12 +27,6 @@
         apiBase = '#{api_v1_search_search_path}?',
         searchBase = '#{search_path}?';
 
-
-    window.renderSearchResults = function(results) {
-      React.render(React.createElement(SearchResults, results), jQuery(dest)[0]);
-      enableAllInputs();
-    }
-
     window.updateSearchUrl = function(query) {
       if (window.history) {
         window.history.replaceState({}, 'Materials Search' , searchBase + query);
@@ -55,7 +49,10 @@
       jQuery.ajax({
         dataType: "json",
         url: apiBase + query,
-        success: window.renderSearchResults
+        success: function(results) {
+          window.renderSearchResults(results, dest);
+          enableAllInputs();
+        }
       });
     });
 

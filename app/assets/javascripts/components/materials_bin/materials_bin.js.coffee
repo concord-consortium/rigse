@@ -48,7 +48,7 @@ window.MaterialsBinClass = React.createClass
         rowIdx = columns[columnIdx].length
         selected = @isCategorySelected columnIdx, rowIdx
         columns[columnIdx].push if cellDef.category
-                                  (MaterialsCategory {
+                                  (MBMaterialsCategory {
                                       visible: visible
                                       selected: selected
                                       column: columnIdx
@@ -60,7 +60,7 @@ window.MaterialsBinClass = React.createClass
                                     cellDef.category
                                   )
                                  else
-                                  (MaterialsContainer
+                                  (MBMaterialsContainer
                                     visible: visible
                                     collections: cellDef.collections
                                   )

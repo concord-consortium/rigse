@@ -1,11 +1,11 @@
 {div} = React.DOM
 
-window.MaterialsCollectionClass = React.createClass
+window.MBMaterialsCollectionClass = React.createClass
   render: ->
     (div {className: 'mb-collection'},
       (div {className: 'mb-collection-name'}, @props.name)
       for material in @props.materials
-        (Material material: material)
+        (MBMaterial material: material)
     )
 
-window.MaterialsCollection = React.createFactory MaterialsCollectionClass
+window.MBMaterialsCollection = React.createFactory MBMaterialsCollectionClass

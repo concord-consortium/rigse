@@ -1,6 +1,6 @@
 {div} = React.DOM
 
-window.MatarialsContainerClass = React.createClass
+window.MBMatarialsContainerClass = React.createClass
   propTypes:
     collections: React.PropTypes.array.isRequired
     visible: React.PropTypes.bool
@@ -39,4 +39,4 @@ window.MatarialsContainerClass = React.createClass
         (div {}, 'Loading...')
     )
 
-window.MaterialsContainer = React.createFactory MatarialsContainerClass
+window.MBMaterialsContainer = React.createFactory MBMatarialsContainerClass

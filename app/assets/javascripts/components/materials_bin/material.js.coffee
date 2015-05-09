@@ -1,6 +1,6 @@
 {div, span, a} = React.DOM
 
-window.MaterialClass = React.createClass
+window.MBMaterialClass = React.createClass
   getInitialState: ->
     {
       descriptionVisible: false
@@ -44,17 +44,17 @@ window.MaterialClass = React.createClass
       )
       (span {className: 'mb-material-name'}, data.name)
       if @hasDescription()
-        (MaterialDescription
+        (MBMaterialDescription
           description: data.description
           visible: @state.descriptionVisible
         )
     )
 
-window.Material = React.createFactory MaterialClass
+window.MBMaterial = React.createFactory MBMaterialClass
 
 # Helper components:
 
-MaterialDescription = React.createFactory React.createClass
+MBMaterialDescription = React.createFactory React.createClass
   getVisibilityClass: ->
     unless @props.visible then 'mb-hidden' else ''
 
