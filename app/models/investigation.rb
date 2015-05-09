@@ -198,12 +198,15 @@ class Investigation < ActiveRecord::Base
      300
   end
 
+  def parent
+    nil
+  end
+
   def children
-    return activities
+    activities
   end
 
   include TreeNode
-
 
   def deep_xml
     self.to_xml(

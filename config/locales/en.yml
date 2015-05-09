@@ -29,7 +29,7 @@ en:
       "portal/clazz": Class
       "portal/nces06_district" : "NCES District"
       "portal/nces06_school" : "NCES School"
-      Investigation: Sequence!!!!!
+      Investigation: Sequence
       investigation:
         zero: sequences
         one: sequence
