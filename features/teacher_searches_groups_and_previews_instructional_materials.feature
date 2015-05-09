@@ -65,10 +65,10 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Teacher can see classes in which materials are assigned on the search page
     When the Investigation "differential calculus" is assigned to the class "Physics"
     And I search for "differential calculus" on the search instructional materials page
-    Then I should see "(Assigned to Physics)"
+    Then I should see "Assigned to Physics"
     When the Activity "Fluid Mechanics" is assigned to the class "Physics"
     And I search for "Fluid Mechanics" on the search instructional materials page
-    Then I should see "(Assigned to Physics)"
+    Then I should see "Assigned to Physics"
 
 
   @javascript

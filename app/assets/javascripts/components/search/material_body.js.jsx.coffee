@@ -1,4 +1,4 @@
-{div, i} = React.DOM
+{div, i, span} = React.DOM
 
 MaterialBody = React.createClass
   renderMaterialUsage: ->

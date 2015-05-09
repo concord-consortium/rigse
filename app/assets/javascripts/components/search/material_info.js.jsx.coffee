@@ -29,7 +29,7 @@ MaterialInfo = React.createClass
   renderClassInfo: ->
     assignedClassess = @props.material.assigned_classes
     if assignedClassess? and assignedClassess.length > 0
-      (span {className: 'assignedTo'}, "Assigned to #{assignedClassess.join(', ')}")
+      (span {className: 'assignedTo'}, "(Assigned to #{assignedClassess.join(', ')})")
 
   render: ->
     (div {},
