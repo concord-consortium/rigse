@@ -1,4 +1,4 @@
-GenericLink = React.createClass
+window.GenericLinkClass = React.createClass
   wrapOnclick: (str)->
     return ->
       eval(str)
@@ -12,11 +12,13 @@ GenericLink = React.createClass
       <a href={link.url} className={link.className} target={link.target} onClick={link.onclick} dangerouslySetInnerHTML={{__html: link.text}} />
     )`
 
+window.GenericLink = React.createFactory GenericLinkClass
+
 MaterialLink = React.createClass
   render: ->
     link = @props.link
     return `(
-      <div key={link.key} style={{float: 'right', marginRight: '5px'}}><GenericLink link={link} /></div>
+      <div key={link.key} style={{float: 'right', marginRight: '5px'}}><GenericLinkClass link={link} /></div>
     )`
 
 MaterialDropdownLink = React.createClass
@@ -32,18 +34,18 @@ MaterialDropdownLink = React.createClass
   render: ->
     link = @props.link
     @expandedText = link.expandedText
-    options = link.options.map (item)-> `<div className='preview_link'><GenericLink link={item} /></div>`
+    options = link.options.map (item)-> `<div className='preview_link'><GenericLinkClass link={item} /></div>`
     link.onclick = @handleClick
     return `(
       <div key={link.key} style={{float: 'right'}}>
-        <GenericLink link={link} />
+        <GenericLinkClass link={link} />
         <div className='Expand_Collapse Expand_Collapse_preview' style={{display: 'none'}}>
           {options}
         </div>
       </div>
     )`
 
-MaterialLinks = React.createClass
+MaterialLinksClass = React.createClass
   render: ->
     links =  @props.links.map (link)->
       if link?
@@ -60,7 +62,4 @@ MaterialLinks = React.createClass
       </div>
     )`
 
-
-window.GenericLink = GenericLink
-window.MaterialLink = MaterialLink
-window.MaterialLinks = MaterialLinks
+window.MaterialLinks = React.createFactory MaterialLinksClass

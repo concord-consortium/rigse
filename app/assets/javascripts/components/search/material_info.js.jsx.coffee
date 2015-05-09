@@ -1,5 +1,7 @@
+{div, table, tr, td, span} = React.DOM
+
 MaterialInfo = React.createClass
-  render: ->
+  renderLinks: ->
     material = @props.material
     for own key,link of material.links
       link.key = key
@@ -11,38 +13,41 @@ MaterialInfo = React.createClass
     links.push material.links.teacher_guide     if material.links.teacher_guide
     links.push material.links.assign_material   if material.links.assign_material
     links.push material.links.assign_collection if material.links.assign_collection
-    return `(
-      <div>
-        <div style={{overflow: "hidden"}}>
-          <table width='100%'>
-            <tr>
-              <td>
-                <MaterialLinks links={links} />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <MaterialHeader material={material} />
-                { material.parent ? <span>from {material.parent.type} "{material.parent.name}"</span> : '' }
-                <div>
-                  <span style={{fontWeight: 'bold'}}>
-                    By {material.user.name}
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                { material.assigned_classes && material.assigned_classes.length > 0 ?
-                  <span className='assignedTo'>(Assigned to {material.assigned_classes.join(', ')})</span>
-                  :
-                  ''
-                }
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    )`
+
+    (MaterialLinks {links: links})
+
+  renderParentInfo: ->
+    if @props.material.parent
+      (span {}, "from #{@props.material.parent.type} \"#{@props.material.parent.name}\"")
+
+  renderAuthorInfo: ->
+    if @props.material.user
+      (div {},
+        (span {style: {fontWeight: 'bold'}}, "By #{@props.material.user.name}")
+      )
+
+  renderClassInfo: ->
+    assignedClassess = @props.material.assigned_classes
+    if assignedClassess? and assignedClassess.length > 0
+      (span {className: 'assignedTo'}, "Assigned to #{assignedClassess.join(', ')}")
+
+  render: ->
+    (div {},
+      (div {style: {overflow: 'hidden'}},
+        (table {width: '100%'},
+          (tr {}, (td {},
+            @renderLinks()
+          ))
+          (tr {}, (td {},
+            (MaterialHeader {material: @props.material})
+            @renderParentInfo()
+            @renderAuthorInfo()
+          ))
+          (tr {}, (td {},
+            @renderClassInfo()
+          ))
+        )
+      )
+    )
 
 window.MaterialInfo = MaterialInfo

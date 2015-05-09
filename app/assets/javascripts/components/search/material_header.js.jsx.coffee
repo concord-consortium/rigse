@@ -1,8 +1,8 @@
-MaterialHeader = React.createClass
+MaterialHeaderClass = React.createClass
   render: ->
     material = @props.material
-    edit_link = if material.links.edit? then `<span className={'superTiny'}><GenericLink link={material.links.edit} /></span>` else ''
-    iframe_edit_link = if material.links.external_edit_iframe? then `<span className={'superTiny'}><GenericLink link={material.links.external_edit_iframe} /></span>` else ''
+    edit_link = if material.links.edit? then `<span className={'superTiny'}><GenericLinkClass link={material.links.edit} /></span>` else ''
+    iframe_edit_link = if material.links.external_edit_iframe? then `<span className={'superTiny'}><GenericLinkClass link={material.links.external_edit_iframe} /></span>` else ''
     return `(
       <span className='material_header'>
         <span className='material_meta_data'>
@@ -18,4 +18,4 @@ MaterialHeader = React.createClass
       </span>
     )`
 
-window.MaterialHeader = MaterialHeader
+window.MaterialHeader = React.createFactory MaterialHeaderClass

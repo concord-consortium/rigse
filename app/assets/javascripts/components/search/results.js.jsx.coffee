@@ -8,7 +8,7 @@ SearchResults = React.createClass
       link = {url: 'javascript:void(0)', onclick: @generateScrollTo(group.type), text: group.header, className: ''}
       return `(
         <span>
-          {group.pagination.total_items} <GenericLink link={link} />
+          {group.pagination.total_items} <GenericLinkClass link={link} />
         </span>
       )`
     if @props.results.length > 1
