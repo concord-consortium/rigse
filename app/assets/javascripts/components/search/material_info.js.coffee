@@ -1,6 +1,6 @@
 {div, table, tr, td, span} = React.DOM
 
-MaterialInfo = React.createClass
+window.SMaterialInfoClass = React.createClass
   renderLinks: ->
     material = @props.material
     for own key,link of material.links
@@ -14,7 +14,7 @@ MaterialInfo = React.createClass
     links.push material.links.assign_material   if material.links.assign_material
     links.push material.links.assign_collection if material.links.assign_collection
 
-    (MaterialLinks {links: links})
+    (SMaterialLinks {links: links})
 
   renderParentInfo: ->
     if @props.material.parent
@@ -39,7 +39,7 @@ MaterialInfo = React.createClass
             @renderLinks()
           ))
           (tr {}, (td {},
-            (MaterialHeader {material: @props.material})
+            (SMaterialHeader {material: @props.material})
             @renderParentInfo()
             @renderAuthorInfo()
           ))
@@ -50,4 +50,4 @@ MaterialInfo = React.createClass
       )
     )
 
-window.MaterialInfo = MaterialInfo
+window.SMaterialInfo = React.createFactory SMaterialInfoClass

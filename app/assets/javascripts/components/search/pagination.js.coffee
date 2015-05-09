@@ -1,4 +1,6 @@
-Pagination = React.createClass
+{div} = React.DOM
+
+window.SPaginationClass = React.createClass
   componentDidMount: ->
     return if @props.info.total_pages < 2 # don't display pagination if there's only 1 page
     node = jQuery(React.findDOMNode(@))
@@ -45,9 +47,7 @@ Pagination = React.createClass
             return ""
 
   render: ->
-    return `(
-      <div className='pagination'>
-      </div>
-    )`
+    (div {className: 'pagination'})
 
-window.Pagination = Pagination
+window.SPagination = React.createFactory SPaginationClass
+

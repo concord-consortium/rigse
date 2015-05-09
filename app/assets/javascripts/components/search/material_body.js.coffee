@@ -1,6 +1,6 @@
 {div, i, span} = React.DOM
 
-MaterialBody = React.createClass
+window.SMaterialBodyClass = React.createClass
   renderMaterialUsage: ->
     classCount = @props.material.class_count
     if classCount?
@@ -29,4 +29,4 @@ MaterialBody = React.createClass
       @renderRequiredSensors()
     )
 
-window.MaterialBody = MaterialBody
+window.SMaterialBody = React.createFactory SMaterialBodyClass
