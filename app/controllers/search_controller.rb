@@ -207,7 +207,6 @@ class SearchController < ApplicationController
 
               end
             end
-            #page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
           else
             page << "$('error_message').update('Select at least one class to assign this #{runnable_type}');$('error_message').show()"
           end
