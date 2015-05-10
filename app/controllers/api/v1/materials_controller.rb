@@ -1,6 +1,11 @@
 class API::V1::MaterialsController < API::APIController
   include React::DataHelpers
 
+  # GET /api/v1/materials/own
+  def own
+    render json: materials_data(current_visitor.materials)
+  end
+
   # GET /api/v1/materials/featured
   def featured
     materials =

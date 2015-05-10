@@ -63,6 +63,7 @@ window.MaterialsBinClass = React.createClass
                                   (MBMaterialsContainer
                                     visible: visible
                                     collections: cellDef.collections
+                                    ownMaterials: cellDef.ownMaterials
                                   )
         if cellDef.children
           # Recursively go to children array, add its elements to column + 1

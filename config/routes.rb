@@ -651,6 +651,7 @@ RailsPortal::Application.routes.draw do
           end
         end
         namespace :materials do
+          get :own
           get :featured
         end
         namespace :materials_collections do
