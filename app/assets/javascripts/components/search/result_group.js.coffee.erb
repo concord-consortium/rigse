@@ -42,14 +42,7 @@ window.SearchResultGroupClass = React.createClass
       (SPaginationInfo {info: group.pagination})
     )
     (SPagination {info: group.pagination, onSelect: onSelect})
-    (table {className: 'result_material', cellPadding: '0', cellSpacing: '0'},
-      (tr {},
-        (td {className: 'material_list'},
-          for material in group.materials
-            (SearchResultItem {material: material, key: material.id})
-        )
-      )
-    )
+    (SMaterialList {materials: group.materials})
     (br {})
     (SPagination {info: group.pagination, onSelect: onSelect})
    )

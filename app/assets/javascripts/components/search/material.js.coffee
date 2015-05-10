@@ -1,6 +1,6 @@
 {div} = React.DOM
 
-window.SearchResultItemClass = React.createClass
+window.SMaterialClass = React.createClass
   render: ->
     material = @props.material
     (div {
@@ -17,4 +17,4 @@ window.SearchResultItemClass = React.createClass
       (SMaterialDetails {material: material})
     )
 
-window.SearchResultItem = React.createFactory SearchResultItemClass
+window.SMaterial = React.createFactory SMaterialClass

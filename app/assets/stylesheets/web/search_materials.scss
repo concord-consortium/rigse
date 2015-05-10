@@ -87,9 +87,6 @@ width: 300px;
 .material_type{
   width:120px;
 }
-.material_list{
-  width:450px;
-}
 .material_button {
   margin-right:6px;
   margin-top: 2px;
@@ -202,24 +199,18 @@ search_materials{
       color: #D5D5D5;
     }
   }
+  span, a {
+    margin: 0 1px;
+  }
 }
 
-div.material_list:nth-child(even)>.material_list_item {
+.material_list .material_list_item:nth-child(even) {
   background-color: #f9eec1;
 }
 
-div.material_list:nth-child(odd)>.material_list_item {
+.material_list .material_list_item:nth-child(odd) {
   background-color: #FFFBED;
 }
-
-td.material_list .material_list_item:nth-child(even) {
-  background-color: #f9eec1;
-}
-
-td.material_list .material_list_item:nth-child(odd) {
-  background-color: #FFFBED;
-}
-
 
 .landing_page {
   width: 956px;
