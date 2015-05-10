@@ -1,8 +1,6 @@
 {div, p, table, tr, td, br} = React.DOM
 
 window.SearchResultGroupClass = React.createClass
-  apiBase: "<%= RailsPortal::Application.routes.url_helpers.api_v1_search_search_path %>?"
-
   getInitialState: ->
     jQuery.extend({loading: false}, @props)
 
@@ -21,7 +19,8 @@ window.SearchResultGroupClass = React.createClass
 
       jQuery.ajax
         dataType: "json"
-        url: @apiBase + query
+        url: Portal.API_V1.SEARCH
+        data: query
         success: (response) => @updateState(response)
 
       @setState({loading: true})
@@ -30,8 +29,8 @@ window.SearchResultGroupClass = React.createClass
     @replaceState({group: groupData.results[0]})
 
   renderLoading: ->
-    (p {className: 'border_top'},
-      (p {className: 'border_top'}, 'Finding materials...')
+    (div {className: 'border_top'},
+      (p {}, 'Finding materials...')
     )
 
   renderResults: ->
