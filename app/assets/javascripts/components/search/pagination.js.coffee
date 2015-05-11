@@ -46,6 +46,8 @@ window.SPaginationClass = React.createClass
           else
             return ""
 
+  shouldComponentUpdate: -> false
+
   render: ->
     (div {className: 'pagination'})
 
