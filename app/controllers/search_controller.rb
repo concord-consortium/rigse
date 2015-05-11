@@ -24,24 +24,13 @@ class SearchController < ApplicationController
 
   in_place_edit_for :investigation, :search_term
 
-  def search_material
-    search = Search.new(params.merge(:user_id => current_visitor.id))
-    # TODO: This will become a check on 'material_type'
-    @investigations       = search.results[Search::InvestigationMaterial] || []
-    @investigations_count = @investigations.size
-    @activities           = search.results[Search::ActivityMaterial] || []
-    @activities_count     = @activities.size
-    @interactives         = search.results[Search::InteractiveMaterial] || []
-    @interactives_count   = @interactives.size
-    @form_model = search
-  end
-
   public
 
   def index
     return redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
+    opts = params.merge(:user_id => current_visitor.id, :skip_search => true)
     begin
-      search_material
+      @form_model = Search.new(opts)
     rescue => e
       ExceptionNotifier::Notifier.exception_notification(request.env, e).deliver
       render :search_unavailable
@@ -218,7 +207,6 @@ class SearchController < ApplicationController
 
               end
             end
-            #page.replace_html "search_#{runnable_type.downcase}_#{runnable_id}", {:partial => 'result_item', :locals=>{:material=>material}}
           else
             page << "$('error_message').update('Select at least one class to assign this #{runnable_type}');$('error_message').show()"
           end

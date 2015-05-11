@@ -1,0 +1,21 @@
+- fake_id = 999
+:javascript
+  Portal.API_V1 = {
+    COUNTRIES: "#{api_v1_countries_path}",
+    SECURITY_QUESTIONS: "#{api_v1_security_questions_path}",
+    STUDENTS: "#{api_v1_students_path}",
+    STUDENT_CHECK_PASSWORD: "#{check_password_api_v1_student_path(fake_id)}",
+    TEACHERS: "#{api_v1_teachers_path}",
+    STATES: "#{api_v1_states_path}",
+    DISTRICTS: "#{api_v1_districts_path}",
+    SCHOOLS: "#{api_v1_schools_path}",
+    EMAILS: "#{email_available_api_v1_teachers_path}",
+    LOGINS: "#{login_available_api_v1_teachers_path}",
+    CLASSWORD: "#{check_class_word_api_v1_students_path}",
+    COLLABORATIONS: "#{api_v1_collaborations_path}",
+    AVAILABLE_COLLABORATORS: "#{available_collaborators_api_v1_collaborations_path}",
+    MATERIALS_FEATURED: "#{api_v1_materials_featured_path}",
+    MATERIALS_OWN: "#{api_v1_materials_own_path}",
+    MATERIALS_COLLECTION_DATA: "#{api_v1_materials_collections_data_path}",
+    SEARCH: "#{api_v1_search_search_path}"
+  };

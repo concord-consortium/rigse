@@ -43,7 +43,6 @@
 = require 'create_status'
 = require 'permission_form'
 = require 'wait_message'
-= require 'api-urls'
 = require 'angular'
 = require 'angular-messages'
 = require 'angular/vendor/angular_select2'
@@ -54,4 +53,7 @@
 = require 'angular/portal_app'
 = require 'external_activities/matedit'
 = require 'iframeable-link'
+= require 'react'
+= require 'react_ujs'
+= require 'component'
 */

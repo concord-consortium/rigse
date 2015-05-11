@@ -64,7 +64,7 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
       delete self.school
 
     self.loadRemoteCollection = (collectionName, params={}, success_fn=null) ->
-      url = API_V1[collectionName.toUpperCase()]
+      url = Portal.API_V1[collectionName.toUpperCase()]
       $http({method: 'GET', url: url, params: params})
       .success (data, status, headers, config) ->
         $log.log("loaded #{collectionName} collection from #{url}")
@@ -76,7 +76,7 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
         self[collectionName] || =[]
 
     self.postToResource = (resourceName, data={}, successCall, failCall) ->
-      url = API_V1[resourceName.toUpperCase()]
+      url = Portal.API_V1[resourceName.toUpperCase()]
       $http({method: 'POST', url: url, data: data})
       .success (data, status, headers, config) ->
         $log.log("added #{resourceName} to #{url}")

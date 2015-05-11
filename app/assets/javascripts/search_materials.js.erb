@@ -5,8 +5,6 @@ jQuery(function () {
         if (!jQuery(this).attr('name')) return;
         submitForm();
     });
-
-    jQuery('#go-button').click(function() { submitForm(); });
 });
 
 function setAllProbesSelected(allChecked) {
@@ -180,21 +178,26 @@ function showHideFilters(linkElement, animationDuration) {
     return true;
 }
 
+function setInputsEnabled(selector, value) {
+    var parent = jQuery(selector);
+    value ? parent.removeClass('disabledfilters') : parent.addClass('disabledfilters');
+    parent.find(':input').prop('disabled', !value);
+}
+function disableAllInputs() {
+    setInputsEnabled('#filter_container', false);
+    setInputsEnabled('#search_term', false);
+    setInputsEnabled('#go-button', false);
+}
+function enableAllInputs() {
+    setInputsEnabled('#filter_container', true);
+    setInputsEnabled('#search_term', true);
+    setInputsEnabled('#go-button', true);
+}
+
 function submitForm() {
     jQuery('#material_search_form').submit();
     // So user can see that form has been submitted and he can't modify it anymore.
     disableAllInputs();
-
-    function setInputsEnabled(selector, value) {
-        var parent = jQuery(selector);
-        value ? parent.removeClass('disabledfilters') : parent.addClass('disabledfilters');
-        parent.find(':input').prop('disabled', !value);
-    }
-    function disableAllInputs() {
-        setInputsEnabled('#filter_container', false);
-        setInputsEnabled('#search_term', false);
-        setInputsEnabled('#go-button', false);
-    }
 }
 
 function fulltrim(inputText){
@@ -379,3 +382,9 @@ function msgPopupDescriptionText() {
     var popupMessage = "Please log-in or <a href='/pick_signup'>register</a> as a teacher to assign this material.";
     getMessagePopup(popupMessage);
 }
+
+// Export assignMaterialToClass to Portal namespace.
+// `className` is either: 'ExternalActivity', 'Activity' or 'Investigation'.
+Portal.assignMaterialToClass = function(id, className) {
+    get_Assign_To_Class_Popup(id, className);
+};

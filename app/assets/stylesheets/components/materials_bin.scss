@@ -1,0 +1,67 @@
+.materials-bin {
+  white-space: nowrap;
+}
+
+.mb-hidden {
+  display: none;
+}
+
+.mb-selected {
+  color: #166971 !important;
+  background: #cfe3e3 !important;
+}
+
+.mb-column {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.mb-cell {
+  padding: 10px;
+  margin: 1px;
+  background: #f4f4f4;
+}
+
+.mb-category {
+  font-size: 15px;
+}
+
+.mb-clickable:hover {
+  cursor: pointer;
+}
+
+.mb-collection {
+  white-space: normal;
+  width: 450px;
+  padding-bottom: 15px;
+
+  &:not(:last-child) {
+    margin-bottom: 5px;
+    border-bottom: 1px solid #fff;
+  }
+}
+
+.mb-collection-name {
+  font-size: 15px;
+  margin-bottom: 8px;
+  vertical-align: middle;
+}
+
+.mb-material {
+  padding: 8px;
+
+  .mb-material-links {
+    margin-right: 10px;
+
+    a {
+      margin: 0 2px;
+      vertical-align: middle;
+    }
+  }
+
+  .mb-material-description {
+    margin-top: 3px;
+    padding: 5px;
+    border: 1px solid #ccc;
+  }
+}

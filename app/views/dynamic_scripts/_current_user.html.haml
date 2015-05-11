@@ -1,0 +1,38 @@
+:javascript
+  Portal.currentUser = {
+    get isAnonymous() {
+      return "#{current_visitor.anonymous?}" === "true";
+    },
+    get isLoggedIn() {
+      return !this.isAnonymous;
+    },
+    get isAdmin() {
+      return "#{current_visitor.has_role?('admin')}" === "true";
+    },
+    get isManager() {
+      return "#{current_visitor.has_role?('manager')}" === "true";
+    },
+    get isResearcher() {
+      return "#{current_visitor.has_role?('researcher')}" === "true";
+    },
+    get isAuthor() {
+      return "#{current_visitor.has_role?('author')}" === "true";
+    },
+    get isTeacher() {
+      // portal_teacher can return nil which is interpolated to "" string.
+      return "#{current_visitor.portal_teacher}" != "";
+    },
+    get isStudent() {
+      // portal_student can return nil which is interpolated to "" string.
+      return "#{current_visitor.portal_student}" != "";
+    },
+    get firstName() {
+      return "#{current_visitor.first_name}";
+    },
+    get lastName() {
+      return "#{current_visitor.last_name}";
+    },
+    get fullName() {
+      return "#{current_visitor.full_name}";
+    }
+  };

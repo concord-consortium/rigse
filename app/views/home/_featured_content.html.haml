@@ -1,5 +1,4 @@
-.result_material.landing_page
-  - if defined?(@materials) && @materials.size > 0
-    - @materials.each do |material|
-      .material_list
-        = render :partial => 'search/result_item', :locals => { :material => material, :hide_details => true }
+- if @show_featured_materials
+  .result_material.landing_page
+  :javascript
+    Portal.renderFeaturedMaterials('.result_material.landing_page');

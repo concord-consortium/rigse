@@ -199,15 +199,14 @@ class Investigation < ActiveRecord::Base
   end
 
   def parent
-    return nil
+    nil
   end
 
   def children
-    return activities
+    activities
   end
 
   include TreeNode
-
 
   def deep_xml
     self.to_xml(

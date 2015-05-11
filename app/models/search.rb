@@ -127,7 +127,7 @@ class Search
     self.include_templates    = opts[:include_templates]   || false
     self.fetch_available_model_types()
     self.fetch_available_grade_subject_areas_projects()
-    self.search()
+    self.search() unless opts[:skip_search]
   end
 
   def fetch_available_model_types

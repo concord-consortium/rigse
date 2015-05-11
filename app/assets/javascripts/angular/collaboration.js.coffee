@@ -39,7 +39,7 @@ angular.module('ccCollaboration', ['ui.select'])
         ngModel.$validate()
         ngModel.$asyncValidators.goodStudentPassword = (password) ->
           # Note that $scope.ccStudentPassword is equal to student ID.
-          $http.post API_V1.STUDENT_CHECK_PASSWORD.replace(999, $scope.ccStudentPassword), {password: password}
+          $http.post Portal.API_V1.STUDENT_CHECK_PASSWORD.replace(999, $scope.ccStudentPassword), {password: password}
   ])
   #
   # Controllers
@@ -100,7 +100,7 @@ angular.module('ccCollaboration', ['ui.select'])
       @currentPassword = null
 
     @_loadCollaborators = ->
-      url = API_V1.AVAILABLE_COLLABORATORS
+      url = Portal.API_V1.AVAILABLE_COLLABORATORS
       params = {offering_id: @offeringId}
       $http({method: 'GET', url: url, params: params})
         .success (data, status, headers, config) =>
@@ -109,7 +109,7 @@ angular.module('ccCollaboration', ['ui.select'])
           $log.log "Error loading available collaborators"
 
     @_createCollaboration = (params) ->
-      $http.post(API_V1.COLLABORATIONS, params)
+      $http.post(Portal.API_V1.COLLABORATIONS, params)
         .success (data, status, headers, config) =>
           @_collaborationCreated data
         .error (data, status) =>

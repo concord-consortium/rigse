@@ -1,7 +1,7 @@
 /- locals = {:search_name => @name, :investigations => @investigations,:activities => @activities, :sort_order => @sort_order}
 = javascript_include_tag "share_material"
 .search_materials
-  %form{:id => 'material_search_form',:url => search_url, :onkeypress => 'return event.keyCode!=13'}
+  %form{:id => 'material_search_form', :onkeypress => 'return event.keyCode!=13'}
     %table.search_table{:cellpadding=>0,:cellspacing=>0,:style=>'margin-bottom:0px'}
       %tr
         %td
@@ -14,8 +14,47 @@
           .go_button.button
             = submit_tag :GO, :name => '', :id => 'go-button'
     = render :partial=>"search/filters"
+    = hidden_field_tag 'investigation_page', (@form_model.investigation_page rescue 1)
+    = hidden_field_tag 'activity_page', (@form_model.activity_page rescue 1)
   = hidden_field 'prevent','submit',:value=>"0"
   #results
-  .search_resultscontainer
-    #offering_list
-      = render :partial => 'search/search_results', :locals => { :investigations => @investigations, :activities => @activities, :interactives => @interactives }
+    .search_resultscontainer
+      No results found!
+
+:javascript
+  jQuery(document).ready(function() {
+    var dest = '#results .search_resultscontainer',
+        apiBase = '#{api_v1_search_search_path}?',
+        searchBase = '#{search_path}?';
+
+    window.updateSearchUrl = function(query) {
+      if (window.history) {
+        window.history.replaceState({}, 'Materials Search' , searchBase + query);
+      } else {
+        // TODO Handle IE 9?
+      }
+    }
+
+    jQuery('#material_search_form').on('submit', function(event) {
+      event.preventDefault();
+      jQuery(dest).html('Finding materials...');
+
+      // Reset our current page numbers
+      jQuery("#investigation_page").val(1);
+      jQuery("#activity_page").val(1);
+      var query = jQuery(this).serialize();
+
+      window.updateSearchUrl(query);
+
+      jQuery.ajax({
+        dataType: "json",
+        url: apiBase + query,
+        success: function(results) {
+          window.renderSearchResults(results, dest);
+          enableAllInputs();
+        }
+      });
+    });
+
+    jQuery('#material_search_form').submit();
+  });

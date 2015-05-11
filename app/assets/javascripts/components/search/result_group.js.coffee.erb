@@ -1,0 +1,67 @@
+{div, p, table, tr, td, br} = React.DOM
+
+window.SearchResultGroupClass = React.createClass
+  getInitialState: ->
+    jQuery.extend({loading: false}, @props)
+
+  onPaginationSelect: (page) ->
+    if page isnt @state.group.pagination.current_page
+      jQuery("##{@pageParam}").val(page)
+      query = jQuery('#material_search_form').serialize()
+
+      window.updateSearchUrl(query)
+
+      # strip out all material_types[] params
+      query = query.replace(/(^|&)material_types(\[|%5B)(\]|%5D)=[^&]*/, '')
+
+      # add back the one for this group's material type
+      query += "&material_types[]=#{@materialType}"
+
+      jQuery.ajax
+        dataType: "json"
+        url: Portal.API_V1.SEARCH
+        data: query
+        success: (response) => @updateState(response)
+
+      @setState({loading: true})
+
+  updateState: (groupData) ->
+    @replaceState({group: groupData.results[0]})
+
+  renderLoading: ->
+    (div {className: 'border_top'},
+      (p {}, 'Finding materials...')
+    )
+
+  renderResults: ->
+   group = @state.group
+   onSelect = (page) => @onPaginationSelect(page)
+   (div {},
+    (p {className: 'border_top'},
+      (SPaginationInfo {info: group.pagination})
+    )
+    (SPagination {info: group.pagination, onSelect: onSelect})
+    (SMaterialsList {materials: group.materials})
+    (br {})
+    (SPagination {info: group.pagination, onSelect: onSelect})
+   )
+
+  render: ->
+    group = @state.group
+    switch group.type
+      when 'investigations'
+        @materialType = 'Investigation'
+        @pageParam = 'investigation_page'
+      else
+        @materialType = 'Activity'
+        @pageParam = 'activity_page'
+
+    (div {id: "#{group.type}_bookmark", className: "materials_container #{group.type}"},
+      (div {className: 'material_list_header'}, group.header)
+      if @state.loading
+        @renderLoading()
+      else
+        @renderResults()
+    )
+
+window.SearchResultGroup = React.createFactory SearchResultGroupClass

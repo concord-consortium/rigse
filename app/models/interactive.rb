@@ -6,7 +6,7 @@ class Interactive < ActiveRecord::Base
   acts_as_taggable_on :model_types
   
   attr_accessible :name, :description, :url, :width, :height, :scale, :image_url, :credits, :publication_status
-  alias_attribute :icon_image, :image_url
+  alias_attribute :thumbnail_url, :image_url
   belongs_to :user
 
   before_validation :smart_add_url_protocol
