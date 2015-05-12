@@ -47,6 +47,9 @@
       .config
         = f.check_box :is_official
         Designate this as an "official" Concord activity in lists
+      .config
+        = f.check_box :logging
+        Enable logging on this activity (for activities that support it)
     - if current_visitor.has_role? 'admin'
       .config
         = f.check_box :is_locked
