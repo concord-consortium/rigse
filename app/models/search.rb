@@ -20,6 +20,7 @@ class Search
   attr_accessor :user_id
   attr_accessor :include_contributed
   attr_accessor :include_official
+  attr_accessor :include_mine
   attr_accessor :include_templates
   attr_accessor :java_requirements
   attr_accessor :grade_level_groups
@@ -123,6 +124,7 @@ class Search
     self.without_teacher_only = opts[:without_teacher_only]|| true
     self.java_requirements    = opts[:java_requirements]   || []
     self.include_contributed  = opts[:include_contributed] || false
+    self.include_mine         = opts[:include_mine]        || false
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
     self.fetch_available_model_types()
@@ -172,8 +174,8 @@ class Search
       _results = self.engine.search(SearchableModels) do |s|
         s.fulltext(self.text)
         s.any_of do |c|
-          c.with(:published, true)
-          c.with(:published, [true, false]) if self.private
+          c.with(:published, true) unless self.include_mine
+          c.with(:published, [true, false]) if self.private || !self.include_mine
           c.with(:user_id, self.user_id)
         end
         s.with(:material_type, type)
@@ -219,7 +221,7 @@ class Search
   def params
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
-      :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements,
+      :per_page, :include_contributed,:include_mine, :investigation_page, :activity_page, :java_requirements,
       :grade_level_groups, :subject_areas, :projects, :model_types]
     keys.each do |key|
       value = self.send key
