@@ -1742,3 +1742,18 @@ input:-moz-placeholder, textarea:-moz-placeholder { color: #d0d0d0; }
     color:#f00;
   }
 }
+
+.action_menu.reset_password {
+  li {
+    margin-bottom: 0.5em;
+  }
+  .aligned {
+    ul {
+      margin : 1.5em 0 0 1em;
+      li {
+        float: left;
+        margin-right: 2em;
+      }
+    }
+  }
+}

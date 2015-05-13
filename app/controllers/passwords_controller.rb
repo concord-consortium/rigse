@@ -87,12 +87,17 @@ class PasswordsController < ApplicationController
   end
 
   def update_users_password
+    if params[:commit] == "Cancel"
+      redirect_to(session[:return_to] || root_path)
+      return
+    end
+
     @user_reset_password = find_password_user
     @user_reset_password.password = params[:user_reset_password][:password]
     @user_reset_password.password_confirmation = params[:user_reset_password][:password_confirmation]
     @user_reset_password.updating_password = true
     @user_reset_password.save
-    
+
     if @user_reset_password.errors.empty?
       flash[:notice] = "Password for #{@user_reset_password.login} was successfully updated."
       @user_reset_password.require_password_reset=false
