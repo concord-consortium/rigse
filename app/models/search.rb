@@ -175,7 +175,7 @@ class Search
         s.fulltext(self.text)
         s.any_of do |c|
           c.with(:published, true) unless self.include_mine
-          c.with(:published, [true, false]) if self.private || !self.include_mine
+          c.with(:published, [true, false]) if self.private
           c.with(:user_id, self.user_id)
         end
         s.with(:material_type, type)
