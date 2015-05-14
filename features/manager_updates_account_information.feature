@@ -30,7 +30,7 @@ Feature: A manager updates account information for another user
     Then I should see "Password for <username> (<userlogin>)"
     When I fill in "user_reset_password_password" with "<new_password>"
     And I fill in "user_reset_password_password_confirmation" with "<new_password>"
-    And I press "Submit"
+    And I press "Save"
     Then I should be on user list
     When I log out
     And I login with username: <userlogin> password: <new_password>
