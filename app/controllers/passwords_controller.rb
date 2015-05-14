@@ -87,6 +87,11 @@ class PasswordsController < ApplicationController
   end
 
   def update_users_password
+    if params[:commit] == "Cancel"
+      redirect_to session[:return_to]
+      return
+    end
+
     @user_reset_password = find_password_user
     @user_reset_password.password = params[:user_reset_password][:password]
     @user_reset_password.password_confirmation = params[:user_reset_password][:password_confirmation]

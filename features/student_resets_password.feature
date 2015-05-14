@@ -20,6 +20,6 @@ Feature: Student resets passwordAnd
     When I fill in "security_questions[question2][answer]" with "chocolate"
     And I press "Submit"
     Then I should see "Please enter a new password and confirm it."
-    When I press "Submit"
+    When I press "Save"
     Then I should see "Your password could not be changed."
     And I should see "Password can't be blank"

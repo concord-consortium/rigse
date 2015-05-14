@@ -39,7 +39,7 @@ Feature: Teacher resets password
     And I open the email with subject "You have requested to change your password"
     When I click the first link in the email
     Then I should see "Please enter a new password and confirm it."
-    And I fill in "password" with "password2" within content box in change password page
-    And I fill in "confirm password" with "password2" within content box in change password page
-    And I press "Submit" within content box in change password page
+    And I fill in "New Password" with "password2" within content box in change password page
+    And I fill in "Confirm New Password" with "password2" within content box in change password page
+    And I press "Save" within content box in change password page
     Then I should see "Password for login was successfully updated."
