@@ -37,8 +37,10 @@ module Materials
           }
         end
 
+        # abstract_text is provided by SearchModelInterface and it fallbacks to normal description
+        # if there is no abstract defined. It also truncates description in case of need.
         description = material.respond_to?(:description_for_teacher) && current_visitor.portal_teacher && material.description_for_teacher.present? ?
-            view_context.sanitize(material.description_for_teacher) : view_context.sanitize(material.description)
+            view_context.sanitize(material.description_for_teacher) : view_context.sanitize(material.abstract_text)
 
         mat_data = {
           id: material.id,
