@@ -1,5 +1,5 @@
 class API::V1::MaterialsCollectionsController < API::APIController
-  include React::DataHelpers
+  include Materials::DataHelpers
 
   # GET /api/v1/materials_collections/data?<params>id=:id OR GET /api/v1/materials_collections/data?id[]=:id1&id[]=:id2
   # Always returns ARRAY of collections (even if single collection is returned).

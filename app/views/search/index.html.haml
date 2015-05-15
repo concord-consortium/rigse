@@ -16,6 +16,7 @@
     = render :partial=>"search/filters"
     = hidden_field_tag 'investigation_page', (@form_model.investigation_page rescue 1)
     = hidden_field_tag 'activity_page', (@form_model.activity_page rescue 1)
+    = hidden_field_tag 'interactive_page', (@form_model.interactive_page rescue 1)
   = hidden_field 'prevent','submit',:value=>"0"
   #results
     .search_resultscontainer
@@ -42,6 +43,7 @@
       // Reset our current page numbers
       jQuery("#investigation_page").val(1);
       jQuery("#activity_page").val(1);
+      jQuery("#interactive_page").val(1);
       var query = jQuery(this).serialize();
 
       window.updateSearchUrl(query);

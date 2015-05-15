@@ -1,36 +1,9 @@
-module React
+module Materials
   module DataHelpers
     # This module expects to be included into a controller, so that view_context resolves
     # to something that provides all the various view helpers.
 
     private
-
-    def search_results_data
-      results = []
-      @search.results.each do |type,values|
-        next if type == :all
-        results.push group_data(type.downcase, values)
-      end
-      return {
-        results: results
-      }
-    end
-
-    def group_data(type, collection)
-      {
-        type: type.to_s.pluralize,
-        header: view_context.t(type).pluralize.titleize,
-        materials: materials_data(collection),
-        pagination: {
-          current_page: collection.current_page,
-          total_pages: collection.total_pages,
-          start_item: collection.offset + 1,
-          end_item: collection.offset + collection.length,
-          total_items: collection.total_entries,
-          per_page: collection.per_page
-        }
-      }
-    end
 
     def materials_data(materials)
       data = []
@@ -84,14 +57,14 @@ module React
           sensors: view_context.probe_types(material).map { |p| p.name },
           has_activities: has_activities,
           has_pretest: has_pretest,
-          activities: has_activities ? material.activities.map{|a| {id: a.id, name: a.name} } : [],
+          activities: has_activities ? material.activities.map{ |a| {id: a.id, name: a.name} } : [],
           parent: parent_data,
           user: user_data
         }
 
         data.push mat_data
       end
-      return data
+      data
     end
 
     def links_for_material(material)
@@ -103,6 +76,8 @@ module React
       elsif material.is_a? ExternalActivity
         browse_url = browse_external_activity_url(material)
         external = true
+      elsif material.is_a? Interactive
+        browse_url = interactive_url(material)
       end
 
       links = {
@@ -113,14 +88,14 @@ module React
 
       if current_visitor.anonymous? or external
         links[:preview] = {
-          url: view_context.run_url_for(material,{}),
+          url: view_context.run_url_for(material, {}),
           text: 'Preview',
           target: '_blank'
         }
       else
         if material.teacher_only?
           links[:preview] = {
-            url: view_context.run_url_for(material,{:teacher_mode => true}),
+            url: view_context.run_url_for(material, {:teacher_mode => true}),
             text: 'Preview',
             target: '_blank'
           }
@@ -184,14 +159,6 @@ module React
         end
       end
 
-      if current_visitor.portal_teacher
-        links[:assign_material] = {
-          text: "Assign to a Class",
-          url: "javascript:void(0)",
-          onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')"
-        }
-      end
-
       if current_visitor.has_role?('admin','manager')
         links[:edit] = {
           text: "(portal settings)",
@@ -200,7 +167,15 @@ module React
         }
       end
 
-      if current_visitor.has_role?('admin')
+      if current_visitor.portal_teacher && material.respond_to?(:offerings)
+        links[:assign_material] = {
+            text: "Assign to a Class",
+            url: "javascript:void(0)",
+            onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}')"
+        }
+      end
+
+      if current_visitor.has_role?('admin') && material.respond_to?(:materials_collections)
         links[:assign_collection] = {
           text: "Add to Collection",
           url: "javascript:void(0)",
@@ -208,14 +183,13 @@ module React
         }
       end
 
-      return links
+      links
     end
 
     def assigned_clazz_names(material)
       return [] unless current_visitor.portal_teacher
-      offerings = current_visitor.portal_teacher.offerings.select{|o| o.runnable == material }
-      offering_clazz_names = offerings.map{|o| o.clazz.name}
-      return offering_clazz_names
+      offerings = current_visitor.portal_teacher.offerings.select { |o| o.runnable == material }
+      offerings.map { |o| o.clazz.name }
     end
   end
 end
