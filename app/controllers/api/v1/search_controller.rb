@@ -5,8 +5,8 @@ class API::V1::SearchController < API::APIController
     opts = params.merge(:user_id => current_visitor.id)
     opts[:include_official] = true if request.query_parameters.empty?
     begin
-      search = Search.new(opts)
-      render json: search_results_data(search)
+      @search = Search.new(opts)
+      render json: search_results_data
     rescue => e
       ExceptionNotifier::Notifier.exception_notification(request.env, e).deliver
       error('Search unavailable')
@@ -15,9 +15,9 @@ class API::V1::SearchController < API::APIController
 
   private
 
-  def search_results_data(search)
+  def search_results_data
     results = []
-    search.results.each do |type, values|
+    @search.results.each do |type, values|
       next if type == :all
       results.push group_data(type.downcase, values)
     end
