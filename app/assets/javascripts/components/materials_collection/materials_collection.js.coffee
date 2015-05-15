@@ -26,7 +26,7 @@ window.MaterialsCollectionClass = React.createClass
   renderTruncationToggle: ->
     return if @state.materials.length <= @props.limit
     chevron = if @state.truncated then 'down' else 'up'
-    text = if @state.truncated then ' Show more' else ' Show less'
+    text = if @state.truncated then ' show all materials' else ' show less'
     (a {className: 'mc-truncate', onClick: @toggle, href: ''},
       (i {className: "fa fa-chevron-#{chevron}"})
       (span {className: 'mc-truncate-text'}, text)
