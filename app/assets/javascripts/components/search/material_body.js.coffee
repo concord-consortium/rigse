@@ -18,7 +18,7 @@ window.SMaterialBodyClass = React.createClass
   renderRequiredSensors: ->
     sensors = @props.material.sensors
     if sensors? and sensors.length > 0
-      (div {class: 'required_equipment_container'},
+      (div {className: 'required_equipment_container'},
         (span {}, 'Required sensor(s):')
         (span {style: {fontWeight: 'bold'}}, sensors.join(', '))
       )

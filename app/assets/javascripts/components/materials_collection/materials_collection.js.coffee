@@ -1,4 +1,4 @@
-{div, span, a} = React.DOM
+{div, span, a, i} = React.DOM
 
 window.MaterialsCollectionClass = React.createClass
   getInitialState: ->
@@ -24,13 +24,12 @@ window.MaterialsCollectionClass = React.createClass
       @state.materials
 
   renderTruncationToggle: ->
+    return if @state.materials.length <= @props.limit
+    chevron = if @state.truncated then 'down' else 'up'
+    text = if @state.truncated then ' Show more' else ' Show less'
     (a {className: 'mc-truncate', onClick: @toggle, href: ''},
-      (span {},
-        if @state.truncated
-          'Show all materials in this collection'
-        else
-          'Hide materials'
-      )
+      (i {className: "fa fa-chevron-#{chevron}"})
+      (span {className: 'mc-truncate-text'}, text)
     )
 
   render: ->
@@ -41,5 +40,5 @@ window.MaterialsCollectionClass = React.createClass
 
 window.MaterialsCollection = React.createFactory MaterialsCollectionClass
 
-Portal.renderMaterialsCollection = (collectionId, limit, selectorOrElement) ->
+Portal.renderMaterialsCollection = (collectionId, selectorOrElement, limit = Infinity) ->
   React.render MaterialsCollection(collection: collectionId, limit: limit), jQuery(selectorOrElement)[0]
