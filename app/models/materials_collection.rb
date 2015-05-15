@@ -19,27 +19,24 @@ class MaterialsCollection < ActiveRecord::Base
 
   # We can't do has_many :through on a polymorphic join, so emulate it...
   # materials_collection_items.map { |mi| mi.material } is simpler, but it
-  # hits database N times.
-  # Implementation below hits database only MATERIAL_TYPES.count times.
-  def materials
-    materials = materials_by_type
-    materials_collection_items.map { |mi| materials[mi.material_type][mi.material_id] }
-  end
-
-  # This is slow, hits database N times.
-  def materials_filtered_by_cohorts(allowed_cohorts)
-    materials.select do |m|
-      # Second part of the condition is intersection between two arrays.
-      m.cohort_list.empty? || !(m.cohort_list & allowed_cohorts).empty?
-    end
+  # hits database N times. Implementation below hits database only MATERIAL_TYPES.count times.
+  # If `allowed_cohorts` argument is provided, resulting list will be limited to materials that:
+  #  - are assigned to one of the provided cohorts
+  #  - are assigned to any cohort
+  def materials(allowed_cohorts = nil)
+    materials = materials_by_type(allowed_cohorts)
+    # .compact removes nils if some materials were filtered out due to provided cohorts list.
+    materials_collection_items.map { |mi| materials[mi.material_type][mi.material_id] }.compact
   end
 
   private
 
-  def materials_by_type
+  def materials_by_type(allowed_cohorts)
     materials = {}
     MATERIAL_TYPES.each do |type|
-      materials[type.to_s] = materials_of_type(type).index_by(&:id)
+       mat = materials_of_type(type)
+       mat = mat.filtered_by_cohorts(allowed_cohorts) if allowed_cohorts
+       materials[type.to_s] = mat.index_by(&:id)
     end
     materials
   end
