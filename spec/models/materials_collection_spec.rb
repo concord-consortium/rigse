@@ -31,6 +31,7 @@ describe MaterialsCollection do
       it "should return only materials that are assigned to the same cohort or not assigned to any cohort" do
         expect(collection.materials(["foo"])).to eql(materials.select { |m| m.cohort_list.empty? || m.cohort_list.include?("foo") })
         expect(collection.materials(["bar"])).to eql(materials.select { |m| m.cohort_list.empty? || m.cohort_list.include?("bar") })
+        expect(collection.materials(["foo", "bar"])).to eql(materials.select { |m| m.cohort_list.empty? || m.cohort_list.include?("foo") ||  m.cohort_list.include?("bar") })
         expect(collection.materials(["nonexistent-cohort"])).to eql(materials.select { |m| m.cohort_list.empty? })
       end
     end
