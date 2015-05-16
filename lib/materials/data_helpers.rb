@@ -53,6 +53,7 @@ module Materials
           },
           requires_java: material.java_requirements == SearchModelInterface::JNLPJavaRequirement,
           is_official: material.is_official,
+          publication_status: material.publication_status,
           links: links_for_material(material),
           assigned_classes: assigned_clazz_names(material),
           class_count: material_count,
