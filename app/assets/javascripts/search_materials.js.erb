@@ -5,6 +5,13 @@ jQuery(function () {
         if (!jQuery(this).attr('name')) return;
         submitForm();
     });
+
+    // hide the search suggestions on any click other than in the search box input
+    jQuery('body').on('click', function (e) {
+        if (e.target.name !== 'search_term') {
+            jQuery('#search_suggestions').hide();
+        }
+    })
 });
 
 function setAllProbesSelected(allChecked) {
@@ -198,6 +205,9 @@ function submitForm() {
     jQuery('#material_search_form').submit();
     // So user can see that form has been submitted and he can't modify it anymore.
     disableAllInputs();
+
+    // hide the search suggestions
+    jQuery('#search_suggestions').hide();
 }
 
 function fulltrim(inputText){
@@ -361,7 +371,7 @@ function getMessagePopup(message)
         type: Lightbox.type.ALERT,
         content: content,
         callback: function(){
-    	    location.reload();
+            location.reload();
         }
     };
 
