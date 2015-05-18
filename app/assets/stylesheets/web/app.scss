@@ -1757,3 +1757,32 @@ input:-moz-placeholder, textarea:-moz-placeholder { color: #d0d0d0; }
     }
   }
 }
+
+
+.classes_school_listing {
+  
+  margin-top:25px;
+
+  tbody {
+    tr:nth-child(even){
+      background-color: #f9eec1;
+    }
+    tr:nth-child(odd){
+      background-color: #FFFBED;
+    }
+  }
+
+  td{
+    padding: 5px 20px;
+  }
+
+  thead{
+    h4{
+      font-weight:bold;
+    }
+    tr{
+      background: #F1ECE9;
+    }
+  }
+
+}

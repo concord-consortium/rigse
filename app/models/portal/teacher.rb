@@ -106,6 +106,10 @@ class Portal::Teacher < ActiveRecord::Base
     self.schools = ids.map { |i| Portal::School.find(i)}
   end
 
+  def school_names
+    schools.map { |s| s.name }
+  end
+
   ##
   ##
   ##
