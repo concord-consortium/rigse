@@ -1,3 +1,4 @@
+@import "compass";
 /* browser reset */
 
 body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt, blockquote, button, fieldset, legend, label, input, textarea, form {
@@ -834,8 +835,7 @@ button {
   font: 12px / 1 Arial, Helvetica, sans-serif;
   padding: 4px 14px;
   /* CSS 3 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  @include background-image(linear-gradient(#f3951d, #dd6e0d));
   border-radius: 12px;
   /* Opera 10.5, IE 9 */
   -moz-border-radius: 12px;
@@ -851,8 +851,7 @@ input {
     font: 12px / 1 Arial, Helvetica, sans-serif;
     padding: 4px 14px;
     /* CSS 3 */
-    background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-    background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+    @include background-image(linear-gradient(#f3951d, #dd6e0d));
     border-radius: 12px;
     /* Opera 10.5, IE 9 */
     -moz-border-radius: 12px;
@@ -868,8 +867,7 @@ a.button {
   font: 12px / 1 Arial, Helvetica, sans-serif;
   padding: 4px 14px;
   /* CSS 3 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  @include background-image(linear-gradient(#f3951d, #dd6e0d));
   border-radius: 12px;
   /* Opera 10.5, IE 9 */
   -moz-border-radius: 12px;
@@ -880,21 +878,18 @@ a.button {
 button:hover {
   background: #f3951d;
   /* CSS 3 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-  background: -moz-linear-gradient(top, #f3951d, #dd6e0d); }
+  @include background-image(linear-gradient(#f3951d, #dd6e0d)); }
 
 input {
   &[type=button]:hover, &.button.over, &[type=submit]:hover {
     background: #f3951d;
     /* CSS 3 */
-    background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-    background: -moz-linear-gradient(top, #f3951d, #dd6e0d); } }
+    @include background-image(linear-gradient(#f3951d, #dd6e0d)); } }
 
 a.button:hover, button.over {
   background: #f3951d;
   /* CSS 3 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-  background: -moz-linear-gradient(top, #f3951d, #dd6e0d); }
+  @include background-image(linear-gradient(#f3951d, #dd6e0d)); }
 
 .container_element {
   .action_menu {
@@ -1397,8 +1392,7 @@ ul.quiet_list {
   font: 12px / 1 Arial, Helvetica, sans-serif;
   padding: 4px 5px;
   /* CSS 3 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  @include background-image(linear-gradient(#f3951d, #dd6e0d));
   _background: #f6f2e2;
   border-radius: 12px;
   /* Opera 10.5, IE 9 */

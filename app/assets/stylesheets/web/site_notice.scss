@@ -1,3 +1,4 @@
+@import "compass";
 #admin_notice_listing_container{
   padding-bottom:30px
 }
@@ -70,14 +71,13 @@
 
 a.create_notice, a.create_notice:visited, a.create_notice:active {
   float: right;
-  background: -moz-linear-gradient(center top , #F3951D, #DD6E0D) repeat scroll 0 0 transparent;
+  @include background-image(linear-gradient(#f3951d, #dd6e0d));
   border-radius: 12px 12px 12px 12px;
   color: #FFFFFF;
   font-weight: normal;
   margin: 7px 0;
   padding: 3px 7px;
   text-align: center;
-  background: -webkit-gradient(linear, left top, left bottom,from(#F3951D), to(#DD6E0D));
   -webkit-border-radius: 12px;
 }
 
@@ -138,14 +138,13 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
 
 a.notice_expand_collapse, a.notice_expand_collapse:visited, a.notice_expand_collapse:active{
     float:right;
-    background: -moz-linear-gradient(center top , #F3951D, #DD6E0D) repeat scroll 0 0 transparent;
+    @include background-image(linear-gradient(#f3951d, #dd6e0d));
     border-radius: 12px 12px 12px 12px;
     color: #FFFFFF;
     font-weight: normal;
     margin: 7px 0;
     padding: 3px 7px;
     text-align: center; 
-    background: -webkit-gradient(linear, left top, left bottom,from(#F3951D), to(#DD6E0D));
     -webkit-border-radius: 12px;    
 }
 
