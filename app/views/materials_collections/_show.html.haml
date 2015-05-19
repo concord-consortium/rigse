@@ -1,4 +1,4 @@
-- display_name = "#{materials_collection.name}"
+- display_name = "#{materials_collection.name}#{materials_collection.project ? " (#{materials_collection.project.name})" : ""}"
 - options = { :hide_componenent_name => true, :display_name => display_name, :success => "jQuery('##{dom_id_for(materials_collection, :accordion_toggle)}.accordion_toggle_closed').click(); #{mce_init_string}" }
 = accordion_for(materials_collection, show_menu_for(materials_collection, options), 'accordion') do
   %div{:id => dom_id_for(materials_collection, :item), :class => 'item'}

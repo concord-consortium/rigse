@@ -14,6 +14,7 @@ class Admin::Project < ActiveRecord::Base
   has_many :activities, through: :project_materials, source: :material, source_type: 'Activity'
   has_many :investigations, through: :project_materials, source: :material, source_type: 'Investigation'
   has_many :external_activities, through: :project_materials, source: :material, source_type: 'ExternalActivity'
+  has_many :materials_collections
 
   validates :name, presence: true
   validates :landing_page_slug, uniqueness: true, allow_nil: true

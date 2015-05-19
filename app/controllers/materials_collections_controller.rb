@@ -124,6 +124,6 @@ class MaterialsCollectionsController < ApplicationController
     # params.require(:person).permit(:name, :age)
     # Also, you can specialize this method with per-user checking of permissible attributes.
     def materials_collection_params
-      params.require(:materials_collection).permit(:description, :name)
+      params.require(:materials_collection).permit(:description, :name, :project_id)
     end
 end
