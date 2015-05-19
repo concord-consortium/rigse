@@ -5,6 +5,8 @@
         = content_tag :label do
           = text_field_tag :search, params[:search], :size => 20
         %input{ :type => "submit", :value => "Search"}
+        - if defined? extra_collection_search_fields
+          %p= extra_collection_search_fields
       - if collection
         %p= page_entries_info collection, :model => collection_class.display_name
       %p.paginator
