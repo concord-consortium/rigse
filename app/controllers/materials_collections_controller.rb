@@ -5,7 +5,9 @@ class MaterialsCollectionsController < ApplicationController
   # GET /materials_collections
   # GET /materials_collections.json
   def index
-    @materials_collections = MaterialsCollection.search(params[:search], params[:page], nil)
+    # restrict search to project_id if provided
+    filtered = params[:project_id].to_s.length > 0 ? MaterialsCollection.where({:project_id => params[:project_id]}) : MaterialsCollection
+    @materials_collections = filtered.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb
