@@ -280,7 +280,7 @@ GEM
     fattr (2.2.1)
     ffi (1.9.8)
     ffi (1.9.8-x86-mingw32)
-    font-awesome-sass (4.1.0)
+    font-awesome-sass (4.3.2.1)
       sass (~> 3.2)
     formatador (0.2.5)
     gherkin (2.11.8)
@@ -473,7 +473,7 @@ GEM
     ruby-prof (0.12.1-x86-mingw32)
     ruby-rc4 (0.1.5)
     rubyzip (1.1.0)
-    sass (3.4.13)
+    sass (3.3.14)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -674,6 +674,7 @@ DEPENDENCIES
   ruby-ole (~> 1.2.11.2)
   ruby-prof
   rush!
+  sass (~> 3.3.14)
   sass-rails
   select2-rails
   selenium-webdriver (= 2.45.0)
