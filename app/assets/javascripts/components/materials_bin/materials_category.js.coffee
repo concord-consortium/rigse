@@ -11,7 +11,7 @@ window.MBMaterialsCategoryClass = React.createClass
     if @props.selected then 'mb-selected' else ''
 
   handleClick: ->
-    @props.handleClick @props.column, @props.row
+    @props.handleClick @props.column, @props.slug
 
   render: ->
     className = "mb-cell mb-category mb-clickable #{@props.customClass} #{@getVisibilityClass()} #{@getSelectionClass()}"
