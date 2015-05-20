@@ -13,6 +13,10 @@
 
     != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     != stylesheet_link_tag 'print', {'media' => 'print'}
+
+    / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
+    = render :partial => 'dynamic_scripts/all'
+
     != javascript_include_tag 'application'
     = calpicker_includes "silver"
     
