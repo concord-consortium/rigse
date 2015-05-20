@@ -3,6 +3,6 @@
     Projects
   - @form_model.available_projects.each do |project|
     .tablecell
-      = check_box_tag 'projects[]', project, @form_model.projects.include?(project), id: "project_#{project}", class: 'check-box-left-margin'
-      = label_tag "project_#{project}", project
+      = check_box_tag 'project_ids[]', project[:id], @form_model.project_ids.include?(project[:id].to_s), id: "project_#{project[:id]}", class: 'check-box-left-margin'
+      = label_tag "project_#{project[:id]}", project[:name]
   %br

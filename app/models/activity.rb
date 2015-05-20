@@ -111,9 +111,7 @@ class Activity < ActiveRecord::Base
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
-    string :projects, :multiple => true do
-      projects.map { |p| p.name }.compact
-    end
+    integer :project_ids, :multiple => true, :references => Admin::Project
   end
 
   send_update_events_to :investigation

@@ -24,7 +24,7 @@ class Search
   attr_accessor :java_requirements
   attr_accessor :grade_level_groups
   attr_accessor :subject_areas
-  attr_accessor :projects
+  attr_accessor :project_ids
   attr_accessor :model_types
   attr_accessor :available_subject_areas
   attr_accessor :available_grade_level_groups
@@ -95,8 +95,8 @@ class Search
     self.material_types              = opts[:material_types] || []
     self.grade_level_groups          = opts[:grade_level_groups] || []
     self.subject_areas               = opts[:subject_areas] || []
-    self.projects                    = opts[:projects] || []
-    self.available_subject_areas      = []
+    self.project_ids                 = opts[:project_ids] || []
+    self.available_subject_areas     = []
     self.available_projects          = []
     self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
     self.model_types                 = opts[:model_types] || nil
@@ -149,7 +149,7 @@ class Search
           end
         end
       end
-      s.facet :projects
+      s.facet :project_ids
     end
     results.facet(:subject_areas).rows.each do |facet|
       self.available_subject_areas << facet.value
@@ -158,8 +158,8 @@ class Search
     results.facet(:grade_levels).rows.each do |facet|
       self.available_grade_level_groups[facet.value] = 1
     end
-    results.facet(:projects).rows.each do |facet|
-      self.available_projects << facet.value
+    results.facet(:project_ids).rows.each do |facet|
+      self.available_projects << {id: facet.value, name: facet.instance.name}
     end
     available_projects.uniq!
   end
@@ -220,7 +220,7 @@ class Search
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
       :per_page, :include_contributed, :investigation_page, :activity_page, :java_requirements,
-      :grade_level_groups, :subject_areas, :projects, :model_types]
+      :grade_level_groups, :subject_areas, :project_ids, :model_types]
     keys.each do |key|
       value = self.send key
       if value
@@ -296,10 +296,10 @@ class Search
   end
 
   def search_by_projects(search)
-    return if projects.size < 1
+    return if project_ids.size < 1
     search.any_of do |s|
-      projects.each do |g|
-        s.with(:projects, g)
+      project_ids.each do |g|
+        s.with(:project_ids, g)
       end
     end
   end
