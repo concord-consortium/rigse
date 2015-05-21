@@ -38,5 +38,5 @@ window.SearchResultsClass = React.createClass
 
 window.SearchResults = React.createFactory SearchResultsClass
 
-window.renderSearchResults = (results, dest) ->
-  React.render SearchResults(results), jQuery(dest)[0]
+Portal.renderSearchResults = (results, dest) ->
+  React.render SearchResults(results: results), jQuery(dest)[0]
