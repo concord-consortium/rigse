@@ -74,7 +74,7 @@ describe API::V1::SearchController do
       end
 
       describe "with no filter parameters" do
-        it "should return search results that show only official materials" do
+        it "should return search results that show all the materials" do
           assigns[:search].should_not be_nil
           assigns[:search].results[Search::InvestigationMaterial].should_not be_nil
           assigns[:search].results[Search::InvestigationMaterial].length.should be(5)
@@ -82,9 +82,9 @@ describe API::V1::SearchController do
             all_investigations.should include(investigation)
           end
           assigns[:search].results[Search::ActivityMaterial].should_not be_nil
-          assigns[:search].results[Search::ActivityMaterial].length.should be(6)
+          assigns[:search].results[Search::ActivityMaterial].length.should be(7)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
-            official_activities.should include(activity)
+            all_activities.should include(activity)
           end
         end
       end

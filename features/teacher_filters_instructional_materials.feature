@@ -17,21 +17,18 @@ Feature: Teacher can search and filter instructional materials
   @javascript
   Scenario: Teacher should be able to filter the search results on the basis of domains
     When I check "Biological Science"
-    And I should wait 2 seconds
     Then I should see "Digestive System"
 
 
   @javascript
   Scenario: Teacher should be able to filter the search results on the basis of grades
     When I check "10-11"
-    And I should wait 2 seconds
     Then I should see "Digestive System"
     And I should see "Bile Juice"
 
 
   @javascript
   Scenario: Teacher views all investigations and activities for all grades
-    When I wait 2 seconds
     Then I should see "Digestive System"
     And I should see "Bile Juice"
 
@@ -39,19 +36,15 @@ Feature: Teacher can search and filter instructional materials
   @javascript
   Scenario: Teacher should be able to filter the search results on the basis of probes
     When I check "Temperature"
-    And I should wait 2 seconds
     And I should see "A Weather Underground"
     And I should see "A heat spontaneously"
     And I should not see "Digestive System"
     And I should not see "Bile Juice"
     And I uncheck "Temperature"
-    And I should wait 2 seconds
     And I check "UVA Intensity"
-    And I should wait 2 seconds
     Then I should not see "A Weather Underground"
     And I should not see "A heat spontaneously"
     And I check "Temperature"
-    And I should wait 2 seconds
     And I should see "A Weather Underground"
     And I should see "A heat spontaneously"
 
@@ -59,9 +52,7 @@ Feature: Teacher can search and filter instructional materials
   @javascript
   Scenario: Teacher views all investigations and activities with sensors
     When I follow "check all"
-    And I should wait 2 seconds
     And I uncheck "Sensors Not Necessary"
-    And I should wait 2 seconds
     Then I should see "A Weather Underground"
     And I should see "A heat spontaneously"
     And I should not see "Digestive System"
@@ -71,12 +62,9 @@ Feature: Teacher can search and filter instructional materials
   @javascript
   Scenario: Teacher views investigations and activities without sensors
     When I check "Sensors Not Necessary"
-    And I should wait 2 seconds
     Then I should not see "A Weather Underground"
     And I should not see "A heat spontaneously"
     When I uncheck "Sensors Not Necessary"
-    And I should wait 2 seconds
     And I follow "clear"
-    And I should wait 2 seconds
     And I should see "A Weather Underground"
     And I should see "A heat spontaneously"
