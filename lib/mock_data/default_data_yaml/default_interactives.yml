@@ -1,0 +1,162 @@
+interactives:
+  interactive_1:
+    name: Interactive 1
+    description: 00000000-0000-0000-0000-000000000186
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/1-ceramicforces.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: K, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+    subject_areas: Math, Physics, Chemistry, Earth And Space Science, Biology
+    model_types: Molecular Workbench
+
+  interactive_2:
+    name: Interactive 2
+    description: 00000000-0000-0000-0000-000000000187
+    url: https://lab.concord.org/embeddable.html#interactives/sam/diffusion/2-temperature.json
+    image_url: http://itsisu.concord.org/share/model_images/665.png
+    user: admin
+    publication_status: published
+    grade_levels: K
+    subject_areas: Math
+    model_types: Evolution Readiness
+
+  interactive_3:
+    name: Interactive 3
+    description: 00000000-0000-0000-0000-000000000188
+    url: https://lab.concord.org/embeddable.html#interactives/sam/diffusion/3-mass.json
+    image_url: http://itsisu.concord.org/share/model_images/666.png
+    user: admin
+    publication_status: published
+    grade_levels: "1"
+    subject_areas: Physics
+    model_types: PhET
+
+  interactive_4:
+    name: Interactive 4
+    description: 00000000-0000-0000-0000-000000000189
+    url: https://lab.concord.org/embeddable.html#interactives/sam/diffusion/4-semipermeable.json
+    image_url: http://itsisu.concord.org/share/model_images/668.png
+    user: admin
+    publication_status: published
+    grade_levels: "2"
+    subject_areas: Chemistry
+    model_types: Custom OTrunk
+
+  interactive_5:
+    name: Interactive 5
+    description: 00000000-0000-0000-0000-000000000190
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/1-ceramicforces.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "3"
+    subject_areas: Earth And Space Science
+    model_types: Video
+
+  interactive_6:
+    name: Interactive 6
+    description: 00000000-0000-0000-0000-000000000191
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/2-temperature.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "4"
+    subject_areas: Chemistry
+    model_types: ISENSE
+
+  interactive_7:
+    name: Interactive 7
+    description: 00000000-0000-0000-0000-000000000192
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/3-mass.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "5"
+    subject_areas: Biology
+    model_types: Molecular Workbench
+
+  interactive_8:
+    name: Interactive 8
+    description: 00000000-0000-0000-0000-000000000193
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/4-semipermeable.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "6"
+    subject_areas: Math
+    model_types: Evolution Readiness
+
+  interactive_9:
+    name: Interactive 9
+    description: 00000000-0000-0000-0000-000000000194
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/1-ceramicforces.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "7"
+    subject_areas: Physics
+    model_types: PhET
+
+  interactive_10:
+    name: Interactive 10
+    description: 00000000-0000-0000-0000-000000000195
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/2-temperature.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "8"
+    subject_areas: Chemistry
+    model_types: Custom OTrunk
+
+  interactive_11:
+    name: Interactive 11
+    description: 00000000-0000-0000-0000-000000000196
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/3-mass.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "9"
+    subject_areas: Earth And Space Science
+    model_types: Video
+
+  interactive_12:
+    name: Interactive 12
+    description: 00000000-0000-0000-0000-000000000197
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/4-semipermeable.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "10"
+    subject_areas: Chemistry
+    model_types: ISENSE
+
+  interactive_13:
+    name: Interactive 13
+    description: 00000000-0000-0000-0000-000000000198
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/1-ceramicforces.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "11"
+    subject_areas: Biology
+    model_types: Molecular Workbench
+
+  interactive_14:
+    name: Interactive 14
+    description: 00000000-0000-0000-0000-000000000199
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/2-temperature.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published
+    grade_levels: "12"
+    subject_areas: Math
+    model_types: Evolution Readiness
+
+  interactive_15:
+    name: Interactive 15
+    description: 00000000-0000-0000-0000-000000000200
+    url: https://lab.concord.org/embeddable.html#interactives/visual/recycling/3-mass.json
+    image_url: http://itsisu.concord.org/share/model_images/690.png
+    user: admin
+    publication_status: published

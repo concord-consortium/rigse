@@ -140,7 +140,7 @@ class Search
   end
   
   def fetch_available_grade_subject_areas_projects
-    results = self.engine.search([Investigation, Activity, ExternalActivity]) do |s|
+    results = self.engine.search([Investigation, Activity, ExternalActivity, Interactive]) do |s|
       s.facet :subject_areas
       s.facet :grade_levels do 
         Search.grade_level_groups.each do |key, value|
