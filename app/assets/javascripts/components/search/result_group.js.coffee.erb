@@ -12,7 +12,7 @@ window.SearchResultGroupClass = React.createClass
       window.updateSearchUrl(query)
 
       # strip out all material_types[] params
-      query = query.replace(/(^|&)material_types(\[|%5B)(\]|%5D)=[^&]*/, '')
+      query = query.replace(/(^|&)material_types(\[|%5B)(\]|%5D)=[^&]*/g, '')
 
       # add back the one for this group's material type
       query += "&material_types[]=#{@materialType}"

@@ -28,7 +28,7 @@
         apiBase = '#{api_v1_search_search_path}?',
         searchBase = '#{search_path}?';
 
-    updateSearchUrl = function(query) {
+    window.updateSearchUrl = function(query) {
       if (window.history) {
         window.history.replaceState({}, 'Materials Search' , searchBase + query);
       } else {
@@ -46,7 +46,7 @@
       jQuery("#interactive_page").val(1);
       var query = jQuery(this).serialize();
 
-      updateSearchUrl(query);
+      window.updateSearchUrl(query);
 
       jQuery.ajax({
         dataType: "json",
