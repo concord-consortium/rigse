@@ -15,11 +15,11 @@ window.MaterialsBinClass = React.createClass
             addSlugs item.children
     addSlugs @props.materials
 
-    # selectedSlugs[2] returns value of row that is selected in column 2 (or falsy value if nothing is selected).
-    # E.g. selectedSlugs = [1, 3, 2] means that:
-    # - the second row is selected (idx = 1) in the first column,
-    # - the fourth row is selected (idx = 3) in the second column,
-    # - the third row is selected (idx = 2) in the third column.
+    # selectedSlugs[X] returns a slug that is selected in column X (or falsy value if nothing is selected).
+    # E.g. selectedSlugs = ['category-a', 'subcategory-b', 'category-c'] means that:
+    # - 'category-a' is selected in the first column,
+    # - 'category-b' is selected in the second column,
+    # - 'category-c' is selected in the third column.
     selectedSlugs: @selectFirstSlugs()
 
   componentWillMount: ->
