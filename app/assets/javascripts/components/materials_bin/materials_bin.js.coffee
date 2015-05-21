@@ -5,33 +5,61 @@ window.MaterialsBinClass = React.createClass
     materials: React.PropTypes.array.isRequired
 
   getInitialState: ->
-    state = {
-      # selectedCategories[2] returns value of row that is selected in column 2 (or falsy value if nothing is selected).
-      # E.g. selectedCategories = [1, 3, 2] means that:
-      # - the second row is selected (idx = 1) in the first column,
-      # - the fourth row is selected (idx = 3) in the second column,
-      # - the third row is selected (idx = 2) in the third column.
-      selectedCategories: []
-    }
-    # Initially select first category in every column.
-    column = 0
-    array = @props.materials
-    while array[0].children
-      state.selectedCategories[column] = 0
-      array = array[0].children
-      column++
+    # it is usually very bad form in React to modify props but we will look the other way this time
+    # otherwise we need to clone the array just to add the slug
+    addSlugs = (list) =>
+      for item in list
+        if item.category
+          item.slug = @generateSlug item.category
+          if item.children
+            addSlugs item.children
+    addSlugs @props.materials
 
-    state
+    # selectedSlugs[X] returns a slug that is selected in column X (or falsy value if nothing is selected).
+    # E.g. selectedSlugs = ['category-a', 'subcategory-b', 'category-c'] means that:
+    # - 'category-a' is selected in the first column,
+    # - 'category-b' is selected in the second column,
+    # - 'category-c' is selected in the third column.
+    selectedSlugs: @selectFirstSlugs()
 
-  handleCellClick: (column, row) ->
+  componentWillMount: ->
+    # check the hash at startup and for each change
+    (jQuery window).on 'hashchange', @checkHash.bind @
+    @checkHash()
+
+  componentWillUnmount: ->
+    (jQuery window).off 'hashchange', @checkHash
+
+  selectFirstSlugs: ->
+    selectedSlugs =  []
+    list = @props.materials
+    while list?[0]?.slug?
+      selectedSlugs.push list[0].slug
+      list = list[0].children
+    selectedSlugs
+
+  checkHash: ->
+    hash = jQuery.trim window.location.hash.substr 1
+    selectedSlugs = if hash.length > 0 then (hash.split '|') else @selectFirstSlugs()
+    @setState selectedSlugs: selectedSlugs
+
+  handleCellClick: (column, slug) ->
     # Unselect all the cells that are to the right of modified column.
-    newCat = @state.selectedCategories.slice 0, column + 1
-    # Select clicked category
-    newCat[column] = row
-    @setState selectedCategories: newCat
+    newSlugs = @state.selectedSlugs.slice 0, column + 1
+    # Select clicked slug
+    newSlugs[column] = slug
+    window.location.hash = newSlugs.join '|'
 
-  isCategorySelected: (column, row) ->
-    @state.selectedCategories[column] == row
+  isSlugSelected: (column, slug) ->
+    @state.selectedSlugs[column] is slug
+
+  generateSlug: (name) ->
+    @_isSlugTaken = {} unless @_isSlugTaken?
+    slug = name.toLowerCase().replace /\W/g, '-'
+    while @_isSlugTaken[slug]
+      slug += '-'
+    @_isSlugTaken[slug] = true
+    slug
 
   # Transforms @props.materials hash into array of arrays representing columns and their rows.
   # Raw form of @props.materials doesn't work well with table view.
@@ -45,14 +73,13 @@ window.MaterialsBinClass = React.createClass
       visible = true unless visible?
       columns[columnIdx] = [] unless columns[columnIdx]?
       array.forEach (cellDef) =>
-        rowIdx = columns[columnIdx].length
-        selected = @isCategorySelected columnIdx, rowIdx
+        selected = @isSlugSelected columnIdx, cellDef.slug
         columns[columnIdx].push if cellDef.category
                                   (MBMaterialsCategory {
                                       visible: visible
                                       selected: selected
                                       column: columnIdx
-                                      row: rowIdx
+                                      slug: cellDef.slug
                                       customClass: cellDef.className
                                       loginRequired: cellDef.loginRequired
                                       handleClick: @handleCellClick
