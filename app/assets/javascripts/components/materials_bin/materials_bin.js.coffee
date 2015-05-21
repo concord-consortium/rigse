@@ -10,7 +10,7 @@ window.MaterialsBinClass = React.createClass
     addSlugs = (list) =>
       for item in list
         if item.category
-          item.slug = item.category.toLowerCase().replace /\W/g, '-'
+          item.slug = @generateSlug item.category
           if item.children
             addSlugs item.children
     addSlugs @props.materials
@@ -52,6 +52,14 @@ window.MaterialsBinClass = React.createClass
 
   isSlugSelected: (column, slug) ->
     @state.selectedSlugs[column] is slug
+
+  generateSlug: (name) ->
+    @_isSlugTaken = {} unless @_isSlugTaken?
+    slug = name.toLowerCase().replace /\W/g, '-'
+    while @_isSlugTaken[slug]
+      slug += '-'
+    @_isSlugTaken[slug] = true
+    slug
 
   # Transforms @props.materials hash into array of arrays representing columns and their rows.
   # Raw form of @props.materials doesn't work well with table view.
