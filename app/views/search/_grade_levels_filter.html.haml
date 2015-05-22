@@ -4,5 +4,6 @@
     Grade Levels
   - grade_level_groups.each do |grade_level_group|
     .tablecell
-      = check_box_tag 'grade_level_groups[]', grade_level_group,  @form_model.grade_level_groups.include?(grade_level_group),:id=>"grade_level_#{grade_level_group}", :class => 'check-box-left-margin'
-      = label_tag "grade_level_#{grade_level_group}", grade_level_group
+      - id = "grade_level_#{grade_level_group.squish.downcase.tr(" ","_")}"
+      = check_box_tag 'grade_level_groups[]', grade_level_group,  @form_model.grade_level_groups.include?(grade_level_group),:id => id, :class => 'check-box-left-margin'
+      = label_tag id, grade_level_group

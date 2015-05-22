@@ -57,6 +57,7 @@ namespace :app do
     task :create_default_study_materials => [:environment, :create_default_classes] do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
       MockData.create_default_study_materials
+      MockData.create_default_interactives
     end
     
     desc "Create default assignments for classes"

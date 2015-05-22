@@ -1469,6 +1469,8 @@ module MockData
   end # end add_image_question_answer
   
   def self.create_default_materials_collections
+    puts
+    puts
     MaterialsCollection.destroy_all
     DEFAULT_DATA[:materials_collections].each do |key, mc|
       if (mc[:items_count] > 0)
@@ -1478,5 +1480,44 @@ module MockData
       end
     end
     puts "Generated Materials Collections"
+  end
+
+  def self.create_tag(scope, tag, interactive)
+    if tag
+      new_admin_tag = {:scope => scope.to_s, :tag => tag}
+      if Admin::Tag.fetch_tag(new_admin_tag).size == 0
+        admin_tag = Admin::Tag.new(new_admin_tag)
+        admin_tag.save!
+      end
+      interactive.send("#{scope.to_s.chop}_list").add(tag)
+      interactive.save!
+    end
+  end
+
+  def self.create_default_interactives
+    puts
+    puts
+    count = 0
+    Interactive.destroy_all
+    Admin::Tag.destroy_all
+    DEFAULT_DATA[:interactives].each do |key, interactive|
+      new_interactive = Factory.create(:interactive, name: interactive[:name], description: interactive[:description], url: interactive[:url], image_url: interactive[:image_url], publication_status: interactive[:publication_status])
+      user_login = interactive[:user]
+      user = @default_users.find{|u| u.login == user_login}
+      new_interactive.user_id = user.id
+      create_tag(:model_types, interactive[:model_types], new_interactive) if interactive[:model_types]
+      if interactive[:grade_levels]
+        interactive[:grade_levels].split(', ').each do |gl|
+          create_tag(:grade_levels, gl, new_interactive)  
+        end
+      end
+      if interactive[:subject_areas]
+        interactive[:subject_areas].split(', ').each do |sa|
+          create_tag(:subject_areas, sa, new_interactive)
+        end
+      end
+      count += 1
+    end
+    puts "Generated #{count} Interactives"
   end
 end # end of MockData
