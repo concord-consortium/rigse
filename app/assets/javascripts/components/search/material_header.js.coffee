@@ -13,9 +13,12 @@ window.SMaterialHeaderClass = React.createClass
     (span {className: 'material_header'},
       (span {className: 'material_meta_data'},
         @renderJavaReq()
-        (span {className: 'is_official'},
-          if material.is_official then 'Official' else 'Community'
-        )
+        if material.is_official
+          (span {className: 'is_official'}, 'Official')
+        else
+          (span {className: 'is_community'}, 'Community')
+        if material.publication_status != 'published'
+          (span {className: 'publication_status'}, material.publication_status)
       )
       (br {})
       if material.links.browse?

@@ -1,3 +1,4 @@
+@import "compass";
 $answered_color: white;
 $not_answered_color: #cccccc;
 $correct_color: #ddffdd;
@@ -125,8 +126,7 @@ $incorrect_color: #ffdddd;
   font: 12px / 1 Arial, Helvetica, sans-serif;
   padding: 1px 2px !important;
   /* CSS 3 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#CEB3DA), to(#8A7E91));
-  background: -moz-linear-gradient(top, #CEB3DA, #8A7E91);
+  @include background-image(linear-gradient(#CEB3DA, #8A7E91));
   border-radius: 4px;
   /* Opera 10.5, IE 9 */
   -moz-border-radius: 4px;

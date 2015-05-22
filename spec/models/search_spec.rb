@@ -347,6 +347,20 @@ describe Search do
               ].flatten
             end
 
+            describe "not a teacher" do
+              let(:teacher) { nil }
+
+              describe "Searching all material types" do
+
+                it "Includes all only blank sequences" do
+                  subject.results[Search::InvestigationMaterial].should have(1).items
+                end
+                it "Includes blank activities and blank externals" do
+                  subject.results[Search::ActivityMaterial].should have(2).items
+                end
+              end
+            end
+
             describe "not in a cohort" do
               let(:teacher_cohorts) { [] }
 

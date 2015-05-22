@@ -3,5 +3,6 @@
     Subject Areas
   - @form_model.available_subject_areas.uniq.each do |subject_area|
     .tablecell
-      = check_box_tag 'subject_areas[]', subject_area,  @form_model.subject_areas.include?(subject_area),:id=>"subject_area_#{subject_area}", :class => 'check-box-left-margin'
-      = label_tag 'subject_area_#{subject_area}', subject_area
+      - id = "subject_area_#{subject_area.squish.downcase.tr(" ","_")}"
+      = check_box_tag 'subject_areas[]', subject_area,  @form_model.subject_areas.include?(subject_area),:id => id, :class => 'check-box-left-margin'
+      = label_tag id, subject_area

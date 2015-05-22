@@ -233,6 +233,11 @@ class InvestigationsController < AuthoringController
     @investigation = Investigation.new(params[:investigation])
     @investigation.user = current_visitor
 
+    if params[:update_cohorts]
+      # set the cohort tags
+      @investigation.cohort_list = (params[:cohorts] || [])
+    end
+
     if params[:update_grade_levels]
       # set the grade_level tags
       @investigation.grade_level_list = (params[:grade_levels] || [])     
@@ -296,9 +301,16 @@ class InvestigationsController < AuthoringController
     @investigation = Investigation.find(params[:id])
     update_gse
 
+    if params[:update_cohorts]
+      # set the cohort tags
+      @investigation.cohort_list = (params[:cohorts] || [])
+      @investigation.save
+    end
+
     if params[:update_grade_levels]
       # set the grade_level tags
-      @investigation.grade_level_list = (params[:grade_levels] || [])     
+      @investigation.grade_level_list = (params[:grade_levels] || [])
+      @investigation.save
     end
 
     if params[:update_subject_areas]

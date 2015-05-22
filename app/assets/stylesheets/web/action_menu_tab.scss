@@ -89,6 +89,10 @@ a.rollover:hover {
       margin-right: 5px; }
     p {
       clear: both; } }
+    select {
+      padding: 3px;
+      margin: 5px;
+    }
   .action_menu_header_right {
     background: transparent;
     float: right;
@@ -110,8 +114,7 @@ a.rollover:hover {
           margin: 7px 0;
           padding: 3px 7px;
           /* CSS3 */
-          background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-          background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+          @include background-image(linear-gradient(#f3951d, #dd6e0d));
           -moz-border-radius: 12px;
           -webkit-border-radius: 12px;
           border-radius: 12px; }

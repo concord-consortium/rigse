@@ -4,9 +4,17 @@
 -# isn't included here
 %h3= @portal_teacher.name
 
-School: #{@portal_teacher.school ? @portal_teacher.school.name : "no school"}
-
-%h4 Classes
-%ul
-  - @portal_teacher.clazzes.each do |clazz|
-    %li=link_to clazz.name, clazz
+%table.classes_school_listing
+  %thead
+    %tr
+      %td
+        %h4 Classes
+      %td
+        %h4 Schools
+  %tbody
+    - @portal_teacher.clazzes.each do |clazz|
+      %tr
+        %td
+          =link_to clazz.name, clazz
+        %td
+          =clazz.school.name

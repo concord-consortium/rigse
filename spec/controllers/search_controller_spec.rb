@@ -74,6 +74,13 @@ describe SearchController do
         response.should redirect_to("/")
       end
     end
+
+    describe "when there are no query parameters" do
+      it "should redirect to ?include_official=1" do
+        get :index
+        response.should redirect_to action: :index, include_official: '1'
+      end
+    end
   end
 
   describe "Post get_current_material_unassigned_clazzes" do

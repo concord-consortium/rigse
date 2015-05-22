@@ -102,7 +102,8 @@ source "http://rubygems.org"
 # group :assets do
   gem 'sass-rails' # if running rails 3.1 or greater
   gem 'coffee-rails' # if running rails 3.1 or greater
-  gem "compass-rails"
+  gem "compass-rails",          "~> 2.0.4"
+  gem "compass-blueprint"
   gem 'select2-rails'
   gem 'uglifier'
   gem 'yui-compressor'
@@ -113,6 +114,7 @@ source "http://rubygems.org"
   gem 'sunspot_solr' # optional pre-packaged Solr distribution
   # TODO ⬆⬆ remove this, and do something better on production deploy
 
+  gem 'sass', '~> 3.3.14'  # font-awesome-sass doesn't seem compatible with newer sass :(
   gem 'font-awesome-sass'
   gem 'virtus',               "~>1.0.3"
 

@@ -10,20 +10,27 @@ module SearchModelInterface
       acts_as_taggable_on :cohorts
       acts_as_taggable_on :grade_levels
       acts_as_taggable_on :subject_areas
+
+      # Fast way to find all materials that are in `allowed_cohorts` OR they are not assigned to any cohort.
+      scope :filtered_by_cohorts, ->(allowed_cohorts = []) do
+        joins("LEFT OUTER JOIN taggings ON #{table_name}.id = taggings.taggable_id AND taggings.taggable_type = '#{name}' AND taggings.context = 'cohorts'")
+          .joins("LEFT OUTER JOIN tags ON tags.id = taggings.tag_id")
+          .where("tags.name IN (?) OR tags.name IS NULL", allowed_cohorts)
+      end
     end
   end
 
   def material_type
-    return self.class.name.to_s
+    self.class.name.to_s
   end
 
   # TODO: We intend to support icons for activities. Until that's a real attribute, have this stub method.
   def icon_image
-    self.respond_to?(:thumbnail_url) && !self.thumbnail_url.blank? ? self.thumbnail_url : nil
+    respond_to?(:thumbnail_url) && !self.thumbnail_url.blank? ? self.thumbnail_url : nil
   end
 
   def offerings_by_clazz(clazz_ids)
-    self.offerings.find_all_by_clazz_id(clazz_ids)
+    offerings.find_all_by_clazz_id(clazz_ids)
   end
 
   def java_requirements
@@ -46,10 +53,7 @@ module SearchModelInterface
   end
 
   def abstract_text
-    return description_abstract unless self.respond_to?(:abstract)
-    if abstract.blank?
-      return description_abstract
-    end
-    return abstract
+    return abstract if respond_to?(:abstract) && abstract.present?
+    description_abstract
   end
 end

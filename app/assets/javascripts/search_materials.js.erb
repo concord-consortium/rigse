@@ -5,6 +5,13 @@ jQuery(function () {
         if (!jQuery(this).attr('name')) return;
         submitForm();
     });
+
+    // hide the search suggestions on any click other than in the search box input
+    jQuery('body').on('click', function (e) {
+        if (e.target.name !== 'search_term') {
+            jQuery('#search_suggestions').hide();
+        }
+    })
 });
 
 function setAllProbesSelected(allChecked) {
@@ -178,26 +185,10 @@ function showHideFilters(linkElement, animationDuration) {
     return true;
 }
 
-function setInputsEnabled(selector, value) {
-    var parent = jQuery(selector);
-    value ? parent.removeClass('disabledfilters') : parent.addClass('disabledfilters');
-    parent.find(':input').prop('disabled', !value);
-}
-function disableAllInputs() {
-    setInputsEnabled('#filter_container', false);
-    setInputsEnabled('#search_term', false);
-    setInputsEnabled('#go-button', false);
-}
-function enableAllInputs() {
-    setInputsEnabled('#filter_container', true);
-    setInputsEnabled('#search_term', true);
-    setInputsEnabled('#go-button', true);
-}
-
 function submitForm() {
     jQuery('#material_search_form').submit();
-    // So user can see that form has been submitted and he can't modify it anymore.
-    disableAllInputs();
+    // hide the search suggestions
+    jQuery('#search_suggestions').hide();
 }
 
 function fulltrim(inputText){
@@ -361,7 +352,7 @@ function getMessagePopup(message)
         type: Lightbox.type.ALERT,
         content: content,
         callback: function(){
-    	    location.reload();
+            location.reload();
         }
     };
 

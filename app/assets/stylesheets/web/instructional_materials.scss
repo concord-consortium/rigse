@@ -1,3 +1,5 @@
+@import "compass";
+
 .scrollertab{
   padding:5px 2px 5px 2px;
   border:0;
@@ -17,9 +19,7 @@
 }
 
 .tab{
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#aaa));
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffaaaaaa);
-  background: -moz-linear-gradient(top, #fff, #aaa);
+  @include background-image(linear-gradient(#fff, #aaa));
   -moz-border-radius: 8px 8px 0px 0px; -webkit-border-radius: 8px 8px 0px 0px;-khtml-border-radius: 8px 8px 0px 0px;border-radius: 8px 8px 0px 0px;
   padding:5px;
   border:solid 1px #666;
@@ -28,10 +28,9 @@
   cursor:pointer;
   white-space:nowrap;
 }
+
 .selected_tab{
-  background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#666));
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff999999, endColorstr=#ff666666);
-  background: -moz-linear-gradient(top, #999, #666);
+  @include background-image(linear-gradient(#999, #666));
   -moz-border-radius:  8px 8px 0px 0px; -webkit-border-radius:  8px 8px 0px 0px;-khtml-border-radius:  8px 8px 0px 0px;border-radius:  8px 8px 0px 0px;
   padding:5px;
   border:solid 1px #666;
@@ -122,8 +121,7 @@
   font: 12px / 1 Arial, Helvetica, sans-serif;
   padding: 4px 14px;
   /* CSS 3 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d));
-  background: -moz-linear-gradient(top, #f3951d, #dd6e0d);
+  @include background-image(linear-gradient(#f3951d, #dd6e0d));
   border-radius: 12px;
   /* Opera 10.5, IE 9 */
   -moz-border-radius: 12px;
@@ -139,7 +137,7 @@
 
 #oTabcontainer{
   overflow:hidden;
-  width:645px;
+  width:642px;
   float:left;
 }
 

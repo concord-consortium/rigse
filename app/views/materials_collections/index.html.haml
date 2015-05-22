@@ -1,2 +1,3 @@
-= render :partial => 'shared/collection_menu', :locals => { :collection => @materials_collections, :collection_class => MaterialsCollection }
+- extra_search_fields = select_tag :project_id, options_from_collection_for_select(Admin::Project.order("name ASC"), "id", "name", selected: params[:project_id]), prompt: "Select project..."
+= render :partial => 'shared/collection_menu', :locals => { :collection => @materials_collections, :collection_class => MaterialsCollection, :extra_collection_search_fields => extra_search_fields }
 = render :partial => 'list_show', :collection => @materials_collections, :as => :materials_collection

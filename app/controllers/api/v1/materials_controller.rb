@@ -1,5 +1,5 @@
 class API::V1::MaterialsController < API::APIController
-  include React::DataHelpers
+  include Materials::DataHelpers
 
   # GET /api/v1/materials/own
   def own

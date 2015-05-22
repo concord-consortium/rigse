@@ -15,10 +15,10 @@ Feature: Teacher can reset a students password
     And I am on "Student Roster" page for "Class_with_no_students"
     Then I should see "Change Password"
     When I click "Change Password"
-    Then I should see "You must set a new password"
-    When I fill in "password" with "new_password"
-    And I fill in "confirm password" with "new_password"
-    And I press "Submit"
+    Then I should see "Change Password"
+    When I fill in "New Password" with "new_password"
+    And I fill in "Confirm New Password" with "new_password"
+    And I press "Save"
     Then I should see "Class Name : Class_with_no_students"
     When I log out
     And I login with username: student password: new_password

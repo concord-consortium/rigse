@@ -25,7 +25,8 @@ window.SMaterialDetailsClass = React.createClass
       (div {className: 'material-details', style: {display: 'none'}},
         (div {className: @getMaterialDescClass()},
           (h3 {}, 'Description')
-          material.description
+          # It's already sanitized by server!
+          (div {dangerouslySetInnerHTML: {__html: material.description}})
         )
         (div {className: 'material-activities'},
           if material.has_pretest

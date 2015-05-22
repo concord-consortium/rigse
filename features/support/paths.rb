@@ -127,6 +127,14 @@ module NavigationHelpers
     when /the show page for materials collection "([^"]+)"/
       collection = MaterialsCollection.find_by_name($1).id
       "/materials_collections/#{collection}"
+    when /the interactives index page/
+      "/interactives"
+    when /the show page for interactive "([^"]+)"/
+      interactive = Interactive.find_by_name($1).id
+      "/interactives/#{interactive}"
+    when /the edit page of interactive "([^"]+)"/
+      interactive = Interactive.find_by_name($1).id
+      "/interactives/#{interactive}/edit"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

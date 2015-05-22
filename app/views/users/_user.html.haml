@@ -38,5 +38,9 @@
           - user.portal_teacher.cohort_list.each do |c| 
             %li
               = c
+          %li
+            Schools: 
+            %li
+              = "#{user.portal_teacher.school_names.join(', ')}"
       %li
         Status: #{user.state}

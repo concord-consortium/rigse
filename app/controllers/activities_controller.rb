@@ -150,6 +150,11 @@ class ActivitiesController < ApplicationController
     @activity = Activity.new(params[:activity])
     @activity.user = current_visitor
 
+    if params[:update_cohorts]
+      # set the cohort tags
+      @activity.cohort_list = (params[:cohorts] || [])
+    end
+
     if params[:update_grade_levels]
       # set the grade_level tags
       @activity.grade_level_list = (params[:grade_levels] || [])     
@@ -178,6 +183,12 @@ class ActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @activity = Activity.find(params[:id])
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @activity.cohort_list = (params[:cohorts] || [])
+      @activity.save
+    end
     
     if params[:update_grade_levels]
       # set the grade_level tags
