@@ -46,7 +46,6 @@ development: &non_production_settings
   :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
   :password_for_default_users: password
   :use_gse: false
-  :nces_school_url: http://nces.ed.gov/ccd/schoolsearch/school_detail.asp
 
 test:
   <<: *non_production_settings
@@ -83,7 +82,6 @@ staging:
       - justifyleft,justifycenter,justifyright
       - code
   :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
-  :nces_school_url: http://nces.ed.gov/ccd/schoolsearch/school_detail.asp
 
 production:
   :site_name: Rails Portal
@@ -113,4 +111,3 @@ production:
       - justifyleft,justifycenter,justifyright
       - code
   :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
-  :nces_school_url: http://nces.ed.gov/ccd/schoolsearch/school_detail.asp
