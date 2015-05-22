@@ -1,7 +1,7 @@
 %div{:id=>"action_menu_wrapper"}
   %div{ :id => dom_id_for(user, :item), :class => 'item' }
     %div.action_menu
-      %div.action_menu_header_left   
+      %div.action_menu_header_left
         =link_to name_for_component(user), user
       %div.action_menu_header_right
         %ul.menu
@@ -20,7 +20,7 @@
               = form_for user, :url => switch_user_path(user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
                 = hidden_field_tag 'user[id]', user.id
                 = hidden_field_tag 'commit', 'Switch'
-                
+
     %div{:id => dom_id_for(user, :details), :class => 'tiny'}
       %ul.menu_h
         %li
@@ -30,16 +30,18 @@
           email:
           = user.email
         %li
-          Roles: 
+          Roles:
           = user.roles.map{|r| r.title.capitalize}.join(', ')
+          Projects:
+          = user.projects.map{|p| p.name}.sort().join(', ')
         - if user.portal_teacher
           %li
-            Cohorts: 
-          - user.portal_teacher.cohort_list.each do |c| 
+            Cohorts:
+          - user.portal_teacher.cohort_list.each do |c|
             %li
               = c
           %li
-            Schools: 
+            Schools:
             %li
               = "#{user.portal_teacher.school_names.join(', ')}"
       %li
