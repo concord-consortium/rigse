@@ -9,7 +9,7 @@ window.MBMaterialsCollectionClass = React.createClass
     (div {className: 'mb-collection'},
       (div {className: 'mb-collection-name'}, @props.name)
       @renderTeacherGuide()
-      for material in @props.materials
+      for material in @props.materials or []
         (MBMaterial material: material)
     )
 
