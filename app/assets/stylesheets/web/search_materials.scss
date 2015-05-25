@@ -49,6 +49,12 @@ width: 300px;
   margin:0px 0px 15px 15px;
   float:left;
   font-size:12px;
+  td{
+    padding-right:5px;
+    table{
+      margin:0;
+    }
+  }
 }
 .assignedTo
 {
@@ -493,3 +499,9 @@ label.tooltip {
 }
 .callout {z-index:20;position:absolute;top:30px;border:0;left:-12px;}
 .superTiny {font-size:9px;}
+
+.authored_by_me{
+  input{
+    vertical-align: middle;
+  }
+}
