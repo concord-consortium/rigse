@@ -7,7 +7,7 @@ window.MaterialsCollectionClass = React.createClass
 
   componentDidMount: ->
     jQuery.ajax
-      url: Portal.API_V1.MATERIALS_COLLECTION_DATA
+      url: Portal.API_V1.MATERIALS_BIN_COLLECTIONS
       data: id: @props.collection
       dataType: 'json'
       success: (data) =>

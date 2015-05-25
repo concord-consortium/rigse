@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe API::V1::MaterialsCollectionsController do
+describe API::V1::MaterialsBinController do
   let(:collection) { FactoryGirl.create(:materials_collection) }
   let(:ext_act) { FactoryGirl.create_list(:external_activity, 3) }
   let(:act) { FactoryGirl.create_list(:activity, 3) }
@@ -21,10 +21,10 @@ describe API::V1::MaterialsCollectionsController do
     end
   end
 
-  describe 'GET data' do
+  describe 'GET collections' do
     context 'when user is not assigned to any cohorts' do
       it 'should return materials that are not assigned to any cohorts' do
-        get :data, id: collection.id
+        get :collections, id: collection.id
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
         expect(results.length).to eql(1)
@@ -43,7 +43,7 @@ describe API::V1::MaterialsCollectionsController do
         teacher.cohort_list = ["foo"]
         teacher.save!
 
-        get :data, id: collection.id
+        get :collections, id: collection.id
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
         expect(results.length).to eql(1)

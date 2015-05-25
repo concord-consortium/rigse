@@ -654,8 +654,10 @@ RailsPortal::Application.routes.draw do
           get :own
           get :featured
         end
-        namespace :materials_collections do
-          get :data
+        namespace :materials_bin do
+          get :collections
+          get :unofficial_materials
+          get :unofficial_materials_authors
         end
         namespace :search do
           get :search

@@ -1,6 +1,6 @@
 {div} = React.DOM
 
-window.MBMatarialsContainerClass = React.createClass
+window.MBMaterialsContainerClass = React.createClass
   propTypes:
     # Provide collections array OR ownMaterials: true
     collections: React.PropTypes.array
@@ -8,7 +8,7 @@ window.MBMatarialsContainerClass = React.createClass
     visible: React.PropTypes.bool
 
   getInitialState: ->
-    {collectionsData: null}
+    collectionsDatacollectionsData: null
 
   componentDidMount: ->
     # Download data only if component is visibile.
@@ -28,7 +28,7 @@ window.MBMatarialsContainerClass = React.createClass
 
   fetchCollectionsData: ->
     jQuery.ajax
-      url: Portal.API_V1.MATERIALS_COLLECTION_DATA
+      url: Portal.API_V1.MATERIALS_BIN_COLLECTIONS
       data: id: @props.collections.map (c) -> c.id
       dataType: 'json'
       success: (data) =>
@@ -62,4 +62,4 @@ window.MBMatarialsContainerClass = React.createClass
         (div {}, 'Loading...')
     )
 
-window.MBMaterialsContainer = React.createFactory MBMatarialsContainerClass
+window.MBMaterialsContainer = React.createFactory MBMaterialsContainerClass
