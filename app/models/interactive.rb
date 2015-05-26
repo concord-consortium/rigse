@@ -68,7 +68,7 @@ class Interactive < ActiveRecord::Base
       "Interactive"
     end
 
-    #string  :java_requirements
+    string  :java_requirements
     string  :cohorts, :multiple => true do
       cohort_list
     end
