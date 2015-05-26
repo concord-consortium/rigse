@@ -1,0 +1,8 @@
+%fieldset
+  %legend
+    Projects
+  %ul.menu_h
+    - projects.each do |p|
+      %li
+        = p.name
+        = check_box_tag "user[project_ids][]", p.id, @user.projects.include?(p)
