@@ -1,7 +1,9 @@
+fetchDataMixin = require 'components/materials_bin/fetch_data_mixin'
+
 {div} = React.DOM
 
 window.MBMaterialsByAuthorClass = React.createClass
-  mixins: [MBFetchDataMixin]
+  mixins: [fetchDataMixin]
   # --- MBFetchDataMixin config ---
   dataUrl: Portal.API_V1.MATERIALS_BIN_UNOFFICIAL_MATERIALS_AUTHORS
   dataStateKey: 'authors'

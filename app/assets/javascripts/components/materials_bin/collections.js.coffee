@@ -1,7 +1,9 @@
+fetchDataMixin = require 'components/materials_bin/fetch_data_mixin'
+
 {div} = React.DOM
 
 window.MBCollectionsClass = React.createClass
-  mixins: [MBFetchDataMixin]
+  mixins: [fetchDataMixin]
   # --- MBFetchDataMixin config ---
   dataStateKey: 'collectionsData'
   dataUrl: Portal.API_V1.MATERIALS_BIN_COLLECTIONS
