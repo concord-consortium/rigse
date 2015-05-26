@@ -157,6 +157,8 @@ GEM
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
+    browserify-rails (0.9.1)
+      sprockets (~> 2.2)
     builder (3.0.4)
     bullet (4.14.0)
       activesupport (>= 3.0.0)
@@ -591,6 +593,7 @@ DEPENDENCIES
   awesome_print
   aws-sdk (~> 1.55.0)
   better_errors (~> 1.1.0)
+  browserify-rails (~> 0.9.1)
   bullet
   calpicker!
   capistrano (~> 2.14.1)
