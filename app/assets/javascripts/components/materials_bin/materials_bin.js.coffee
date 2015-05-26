@@ -86,13 +86,14 @@ window.MaterialsBinClass = React.createClass
                                     },
                                     cellDef.category
                                   )
-                                 else if cellDef.collections or cellDef.ownMaterials
-                                  (MBMaterialsContainer
+                                else if cellDef.collections
+                                  (MBCollections
                                     visible: visible
                                     collections: cellDef.collections
-                                    ownMaterials: cellDef.ownMaterials
                                   )
-                                 else if cellDef.materialsByAuthor
+                                else if cellDef.ownMaterials
+                                  (MBOwnMaterials visible: visible)
+                                else if cellDef.materialsByAuthor
                                   (MBMaterialsByAuthor visible: visible)
         if cellDef.children
           # Recursively go to children array, add its elements to column + 1

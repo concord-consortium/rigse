@@ -1,15 +1,15 @@
-# Fetches defined data when component is visible (when @props.visible == true).
-# Data is saved under @state[@dataStateName].
+# Fetches remote data when component is visible (when @props.visible == true).
+# Data is saved under @state[@dataStateKey].
 # Client class has to define:
-#  - .dataUrl property
-#  - .dataStateName property (string), name of the state attr which stores downloaded data
+#  - .dataUrl property (string)
+#  - .dataStateKey property (string), name of the state key under which data is saved
 # but it can also define:
-#  - .requestParams property (hash, argument of jQuery.ajax)
-#  - .processData() method that processes raw AJAX response before state is updated
+#  - .requestParams property (hash), argument of jQuery.ajax
+#  - .processData() (method), it can process raw AJAX response before state is updated
 window.MBFetchDataMixin =
   getInitialState: ->
     state = {}
-    state[@dataStateName] = null
+    state[@dataStateKey] = null
     state
 
   componentDidMount: ->
@@ -22,7 +22,7 @@ window.MBFetchDataMixin =
 
   fetchData: ->
     # Don't download data if it's been already done.
-    return if @state[@dataStateName]?
+    return if @state[@dataStateKey]?
     params = if @requestParams? then @requestParams() else {}
     jQuery.ajax
       url: @dataUrl
@@ -32,7 +32,7 @@ window.MBFetchDataMixin =
         if @isMounted()
           newState = {}
           # Use @processData method if defined.
-          newState[@dataStateName] = if @processData? then @processData(data) else data
+          newState[@dataStateKey] = if @processData? then @processData(data) else data
           @setState newState
 
   getVisibilityClass: ->

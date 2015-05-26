@@ -3,7 +3,7 @@
 window.MBUserMaterialsContainerClass = React.createClass
   mixins: [MBFetchDataMixin]
   # --- MBFetchDataMixin config ---
-  dataStateName: 'materials'
+  dataStateKey: 'materials'
   dataUrl: Portal.API_V1.MATERIALS_BIN_UNOFFICIAL_MATERIALS
   requestParams: ->
     user_id: @props.userId

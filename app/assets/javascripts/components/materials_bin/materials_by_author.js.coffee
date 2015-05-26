@@ -4,7 +4,7 @@ window.MBMaterialsByAuthorClass = React.createClass
   mixins: [MBFetchDataMixin]
   # --- MBFetchDataMixin config ---
   dataUrl: Portal.API_V1.MATERIALS_BIN_UNOFFICIAL_MATERIALS_AUTHORS
-  dataStateName: 'authors'
+  dataStateKey: 'authors'
   # ---
 
   render: ->
