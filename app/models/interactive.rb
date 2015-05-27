@@ -2,12 +2,15 @@ class Interactive < ActiveRecord::Base
   include Publishable
   include Changeable
   include SearchModelInterface
-  
+
   acts_as_taggable_on :model_types
-  
-  attr_accessible :name, :description, :url, :width, :height, :scale, :image_url, :credits, :publication_status
+
+  attr_accessible :name, :description, :url, :width, :height, :scale, :image_url, :credits, :publication_status, :project_ids
   alias_attribute :thumbnail_url, :image_url
   belongs_to :user
+
+  has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
+  has_many :projects, :class_name => "Admin::Project", :through => :project_materials
 
   before_validation :smart_add_url_protocol
 
@@ -81,6 +84,7 @@ class Interactive < ActiveRecord::Base
     string  :model_types, :multiple => true do
       model_type_list
     end
+    integer :project_ids, :multiple => true, :references => Admin::Project
   end
 
   scope :published, where(publication_status: 'published')
