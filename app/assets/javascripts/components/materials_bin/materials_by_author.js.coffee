@@ -13,6 +13,7 @@ window.MBMaterialsByAuthorClass = React.createClass
       if @state.authors?
         for author in @state.authors
           (MBUserMaterials
+            key: author.id
             name: author.name
             userId: author.id
           )
