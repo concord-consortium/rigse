@@ -175,6 +175,15 @@ class Investigation < ActiveRecord::Base
 
   scope :ordered_by, lambda { |order| { :order => order } }
 
+  scope :is_template, ->(v) do
+    joins(['LEFT OUTER JOIN activities ON investigations.id = activities.investigation_id',
+           'LEFT OUTER JOIN external_activities',
+           'ON (external_activities.template_id = activities.id AND external_activities.template_type = "Activity")',
+           'OR (external_activities.template_id = investigations.id AND external_activities.template_type = "Investigation")'])
+        .where("external_activities.id IS #{v ? 'NOT' : ''} NULL")
+        .uniq
+  end
+
   include Changeable
   include Noteable # convenience methods for notes...
 
