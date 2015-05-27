@@ -29,8 +29,8 @@ window.MBMaterialClass = React.createClass
           (a {className: 'mb-toggle-info', href: '', onClick: @toggleDescription},
             (span {className: 'mb-toggle-info-text'}, 'Info')
           )
-        if data.links? && data.links.preview?
-          (a {className: 'mb-run', href: data.links.preview.url, target: '_blank'},
+        if data.preview_url?
+          (a {className: 'mb-run', href: data.preview_url, target: '_blank'},
             (span {className: 'mb-run-text'}, 'Run')
           )
         if Portal.currentUser.isTeacher
