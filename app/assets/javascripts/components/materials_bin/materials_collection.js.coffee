@@ -9,8 +9,8 @@ window.MBMaterialsCollectionClass = React.createClass
     (div {className: 'mb-collection'},
       (div {className: 'mb-collection-name'}, @props.name)
       @renderTeacherGuide()
-      for material in @props.materials
-        (MBMaterial material: material)
+      for material in @props.materials or []
+        (MBMaterial key: "#{material.class_name}#{material.id}", material: material)
     )
 
 window.MBMaterialsCollection = React.createFactory MBMaterialsCollectionClass
