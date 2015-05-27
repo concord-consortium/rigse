@@ -447,10 +447,6 @@ class User < ActiveRecord::Base
     self.state != "suspended" && self.state != "disabled"
   end
 
-  def materials
-    external_activities + activities + investigations
-  end
-
   protected
   def make_activation_code
     self.deleted_at = nil
