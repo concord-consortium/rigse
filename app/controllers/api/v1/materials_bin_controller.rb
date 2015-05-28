@@ -25,6 +25,7 @@ class API::V1::MaterialsBinController < API::APIController
     # Only external activities can be unofficial at the moment.
     materials = ExternalActivity.filtered_by_cohorts(allowed_cohorts)
                                 .where(user_id: user_id, is_official: false)
+                                .order('name ASC')
     render json: materials_data(materials)
   end
 
@@ -38,6 +39,7 @@ class API::V1::MaterialsBinController < API::APIController
                               .group(:user_id)
                               .includes(:user)
                               .map { |e| {id: e.user.id, name: e.user.name} }
+                              .sort_by { |u| u[:name] }
     render json: authors
   end
 
