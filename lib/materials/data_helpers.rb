@@ -55,6 +55,7 @@ module Materials
           is_official: material.is_official,
           publication_status: material.publication_status,
           links: links_for_material(material),
+          preview_url: view_context.run_url_for(material, (material.teacher_only? ? {:teacher_mode => true} : {})),
           assigned_classes: assigned_clazz_names(material),
           class_count: material_count,
           sensors: view_context.probe_types(material).map { |p| p.name },
