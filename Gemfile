@@ -25,13 +25,13 @@ source "http://rubygems.org"
   gem 'strong_parameters'
   gem "httpclient",           "~> 2.2"
   gem "httparty"
-  
+
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
   # gem 'capistrano-autoscaling', "0.0.8.3", :path => "../capistrano-autoscaling/"
   gem 'capistrano-autoscaling', "0.0.8.5", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
   # gem 'capistrano-autoscaling', "~> 0.0.9git",  :git => "git://github.com/yyuu/capistrano-autoscaling.git",  :branch => "develop"
   gem 'capistrano-cowboy'
-  
+
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
   gem "haml",           :git => "git://github.com/concord-consortium/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
@@ -172,7 +172,7 @@ group :development do
   gem "sextant"    # adds http://localhost:9000/rails/routes in dev mode
   gem 'xray-rails' # shows you what is being rendered in your browser with cmd+shift+x
   gem "better_errors", "~> 1.1.0"
-  gem "rack-mini-profiler" 
+  gem "rack-mini-profiler"
   gem "bullet"
   gem "lol_dba"
 end
@@ -206,4 +206,8 @@ group :test, :cucumber, :development do
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   gem "pry"
+end
+
+group :test, :development do
+  gem 'jasmine'
 end

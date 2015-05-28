@@ -6,6 +6,7 @@ rvm:
 env:
   matrix:
   - RAILS_ENV=test TEST_SUITE=spec
+  - RAILS_ENV=test TEST_SUITE=jasmine:ci
   - RAILS_ENV=cucumber TEST_SUITE=cucumber
   global:
   - secure: fBn66dqLiQa0W1eDAV/ZZKgA4K3OogG9WG/9lyd81csj9YGtHnE91YlzHLH25oyMWg53nGYEcUlLnPYFw7mqdFJ48AJ5sMaplIqmBMmb9OnpUpYc1sds3wvi81TmTAT0ColdBtgdSBCjIPTr2AuieBJgR8dqPpT/uXg30meZg/g=
