@@ -124,7 +124,7 @@ describe Activity do
     let (:page_element) { Factory.create(:page_element, :page => page, :embeddable => embeddable_data_collectors) }
   end
 
-  describe "#is_template" do
+  describe "#is_template method" do
     let(:investigation_with_template)    { mock_model(Investigation, :external_activities =>[1,2,3])}
     let(:investigation_without_template) { mock_model(Investigation, :external_activities =>[] )}
     let(:investigation)        { nil }
@@ -154,6 +154,28 @@ describe Activity do
           it { should be_false }
         end
       end
+    end
+  end
+
+  describe '#is_template scope' do
+    before(:each) do
+      e1 = Factory.create(:external_activity)
+      e2 = Factory.create(:external_activity)
+      i = Factory.create(:investigation, external_activities: [e2])
+      @a1 = Factory.create(:activity)
+      @a2 = Factory.create(:activity, external_activities: [e1])
+      @a3 = Factory.create(:activity, investigation: i)
+    end
+
+    it 'should return activities which are not templates if provided argument is false' do
+      expect(Activity.is_template(false).count).to eql(1)
+      expect(Activity.is_template(false).first).to eql(@a1)
+    end
+
+    it 'should return activities which are templates if provided argument is true' do
+      expect(Activity.is_template(true).count).to eql(2)
+      expect(Activity.is_template(true).first).to eql(@a2)
+      expect(Activity.is_template(true).last).to eql(@a3)
     end
   end
 

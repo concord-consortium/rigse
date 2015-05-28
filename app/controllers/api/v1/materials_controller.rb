@@ -2,8 +2,13 @@ class API::V1::MaterialsController < API::APIController
   include Materials::DataHelpers
 
   # GET /api/v1/materials/own
+  # Template materials are not listed.
   def own
-    render json: materials_data(current_visitor.materials)
+    # Filter out template objects.
+    materials = current_visitor.external_activities +
+                current_visitor.activities.is_template(false) +
+                current_visitor.investigations.is_template(false)
+    render json: materials_data(materials)
   end
 
   # GET /api/v1/materials/featured
