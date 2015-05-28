@@ -13,3 +13,7 @@
               %li
                 Landing page:
                 %a{href: project_page_url(project.landing_page_slug)}= project_page_url(project.landing_page_slug)
+            - if !project.links.empty?
+              %li
+                Links:
+                = raw project.links.collect { |link| link_to link.name, link.href }.join(", ")

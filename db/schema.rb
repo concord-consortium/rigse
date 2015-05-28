@@ -61,6 +61,14 @@ ActiveRecord::Schema.define(:version => 20150529083926) do
 
   add_index "admin_notice_user_display_statuses", ["user_id"], :name => "index_admin_notice_user_display_statuses_on_user_id"
 
+  create_table "admin_project_links", :force => true do |t|
+    t.integer  "project_id"
+    t.text     "name"
+    t.text     "href"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "admin_project_materials", :force => true do |t|
     t.integer  "project_id"
     t.integer  "material_id"

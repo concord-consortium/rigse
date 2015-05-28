@@ -122,7 +122,7 @@ body#tinymce {
 
 #wrapper {
   clear: both;
-	min-height: 100%;
+  min-height: 100%;
   height: auto !important;
   height: 100%;
   margin: 0 auto;
@@ -260,6 +260,30 @@ body#tinymce {
   li#home {
     border: none; } }
 
+#nav_top_more_menu {
+  position: absolute;
+  top: 0;
+  background-color: #f8ac1a;
+  padding: 5px;
+
+  ul {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+    li {
+      border: none;
+      color: #555555;
+      font-size: 1em;
+      font-weight: bold;
+      margin: 5px 10px;
+      text-transform: uppercase;
+      a {
+        color: #416962;
+      }
+    }
+  }
+}
+
 /* SHARE AND PRINT LINKS */
 .page-utility {
   list-style-type: none;
@@ -319,18 +343,18 @@ body#tinymce {
   padding: 0;
   width: 730px;
   div.right {
-  	margin: 0;
-  	padding: 10px 5px;
-  	}
+    margin: 0;
+    padding: 10px 5px;
+    }
   .recent_activity_container div.right { background: #fff; }
   .recent_activity_container div.right:nth-child(2n),
   .recent_activity_container div.right.even {
-  	background: rgb(251, 244, 219) !important;
-  	}}
+    background: rgb(251, 244, 219) !important;
+    }}
 
 #primary.wide {
   margin: 0;
-	padding: 0;
+  padding: 0;
   width: 960px;
 
   #content {
@@ -615,9 +639,9 @@ li.item_selectable {
   margin: 20px 0 0 -945px;
   padding: 10px 0 30px;
   width: 200px;
-	-moz-border-radius: 12px;
-	-webkit-border-radius: 12px;
-	border-radius: 12px;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
   h2 {
     color: #555555;
     font: bold 1.3em Arial, Helvetica, sans-serif !important;
@@ -1121,17 +1145,17 @@ ul.quiet_list {
 /* FOOTER */
 #footer {
   background: transparent image-url("styles/bg-footer-gradient.png") repeat-x left bottom;
-	clear: both;
+  clear: both;
   color: #3f3f3f;
   height: 200px;
-	padding-top: 20px;
-	position: relative;
-	width: 100%;
-	a { border-bottom: dotted 1px #479492; }
+  padding-top: 20px;
+  position: relative;
+  width: 100%;
+  a { border-bottom: dotted 1px #479492; }
   .footer-inner {
     background: transparent image-url("styles/bg-footer.png") no-repeat center bottom;
-	  height: 200px;
-	  left: 50%;
+    height: 200px;
+    left: 50%;
     margin: 0 0 0 -480px;
     position: absolute;
     width: 960px;
@@ -1573,21 +1597,21 @@ div.atm
 
 .header-login-box{
   float: right;
-	font-size: .9em;
+  font-size: .9em;
   height: 70px;
   margin-top: -110px;
   padding: 20px 0 20px 20px;
-	width: 215px;
+  width: 215px;
 
   form{
     margin: 0;
-  	padding: 0;
+    padding: 0;
     position: relative;
 
     table{
       margin: 0;
       position: relative;
-    	text-align: right;
+      text-align: right;
 
       tr.first-row
       {
@@ -1631,7 +1655,7 @@ div.atm
       padding: 0.25em 0.5em;
       margin-right: 0.5em;
       border-right: 1px solid #479492;
-    	text-align: right;
+      text-align: right;
       &.last {
         padding-right: 0px;
         margin-right: 0px;
@@ -1643,17 +1667,17 @@ div.atm
 
 .welcome-box{
   float: right;
-	font-size: 1em;
+  font-size: 1em;
   height: 90px;
   margin: -120px 20px 0 0;
   padding: 20px 0 0;
   position: relative;
-	text-align: right;
-	width: 215px;
+  text-align: right;
+  width: 215px;
   table{
     height: 90px;
-  	margin: 0;
-  	padding: 0;
+    margin: 0;
+    padding: 0;
     tr{
         td.logout-link{
         padding-left: 20px;
@@ -1754,7 +1778,7 @@ input:-moz-placeholder, textarea:-moz-placeholder { color: #d0d0d0; }
 
 
 .classes_school_listing {
-  
+
   margin-top:25px;
 
   tbody {
