@@ -24,7 +24,7 @@ window.MaterialsBinClass = React.createClass
 
   componentWillMount: ->
     # check the hash at startup and for each change
-    (jQuery window).on 'hashchange', @checkHash.bind @
+    (jQuery window).on 'hashchange', @checkHash
     @checkHash()
 
   componentWillUnmount: ->
@@ -74,8 +74,10 @@ window.MaterialsBinClass = React.createClass
       columns[columnIdx] = [] unless columns[columnIdx]?
       array.forEach (cellDef) =>
         selected = @isSlugSelected columnIdx, cellDef.slug
+        rowIdx = columns[columnIdx].length
         columns[columnIdx].push if cellDef.category
                                   (MBMaterialsCategory {
+                                      key: rowIdx
                                       visible: visible
                                       selected: selected
                                       column: columnIdx
@@ -88,13 +90,14 @@ window.MaterialsBinClass = React.createClass
                                   )
                                 else if cellDef.collections
                                   (MBCollections
+                                    key: rowIdx
                                     visible: visible
                                     collections: cellDef.collections
                                   )
                                 else if cellDef.ownMaterials
-                                  (MBOwnMaterials visible: visible)
+                                  (MBOwnMaterials key: rowIdx, visible: visible)
                                 else if cellDef.materialsByAuthor
-                                  (MBMaterialsByAuthor visible: visible)
+                                  (MBMaterialsByAuthor key: rowIdx, visible: visible)
         if cellDef.children
           # Recursively go to children array, add its elements to column + 1
           # and mark them visible only if current cell is selected.
@@ -105,8 +108,8 @@ window.MaterialsBinClass = React.createClass
 
   render: ->
     (div {className: 'materials-bin'},
-      for column in @_getColumns()
-        (div {className: 'mb-column'}, column)
+      for column, idx in @_getColumns()
+        (div {key: idx, className: 'mb-column'}, column)
     )
 
 window.MaterialsBin = React.createFactory MaterialsBinClass

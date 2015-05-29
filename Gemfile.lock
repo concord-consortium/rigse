@@ -129,7 +129,6 @@ GEM
       tzinfo (~> 0.3.29)
     activerecord-import (0.2.9)
       activerecord (~> 3.0)
-      activerecord (~> 3.0)
     activeresource (3.2.19)
       activemodel (= 3.2.19)
       activesupport (= 3.2.19)
@@ -317,6 +316,12 @@ GEM
     ice_nine (0.11.0)
     interactive_editor (0.0.10)
       spoon (>= 0.0.1)
+    jasmine (2.3.0)
+      jasmine-core (~> 2.3)
+      phantomjs
+      rack (>= 1.2.1)
+      rake
+    jasmine-core (2.3.4)
     jnlp (0.7.3)
       nokogiri (>= 1.4.4, <= 1.5)
     journey (1.0.4)
@@ -378,6 +383,7 @@ GEM
     pdf-reader (1.1.1)
       Ascii85 (~> 1.0.0)
       ruby-rc4
+    phantomjs (1.9.8.0)
     polyglot (0.3.5)
     posix-spawn (0.3.6)
     pr_geohash (1.0.0)
@@ -643,6 +649,7 @@ DEPENDENCIES
   httpclient (~> 2.2)
   in_place_editing!
   interactive_editor
+  jasmine
   jnlp (~> 0.7.3)
   jruby-openssl (~> 0.7.4)
   json (~> 1.7.6)

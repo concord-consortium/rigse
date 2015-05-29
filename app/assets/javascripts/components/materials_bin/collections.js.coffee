@@ -17,6 +17,7 @@ window.MBCollectionsClass = React.createClass
       if @state.collectionsData?
         for collection, idx in @state.collectionsData
           (MBMaterialsCollection
+            key: idx
             name: collection.name
             materials: collection.materials
             # Merge extra properties that can be provided in collections array.

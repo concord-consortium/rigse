@@ -15,12 +15,12 @@ class UsersController < ApplicationController
       :account_report
     ]
   after_filter :store_location, :only => [:index]
-  
+
   def changeable_filter
     @user = User.find(params[:id])
     redirect_home unless @user.changeable?(current_visitor)
   end
-  
+
   def new
     #This method is called when a user tries to register as a member
     @user = User.new
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
       format.xml  { render :xml => @users }
     end
   end
-  
+
   # GET /users/1
   # GET /users/1.xml
   def show
@@ -51,6 +51,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     @roles = Role.all
+    @projects = Admin::Project.all_sorted
     unless @user.changeable?(current_visitor)
       flash[:warning]  = "You need to be logged in first."
       redirect_to login_url
@@ -60,6 +61,7 @@ class UsersController < ApplicationController
   def preferences
     @user = User.find(params[:id])
     @roles = Role.all
+    @projects = Admin::Project.all_sorted
     unless @user.changeable?(current_visitor)
       flash[:warning]  = "You need to be logged in first."
       redirect_to login_url
@@ -103,12 +105,12 @@ class UsersController < ApplicationController
           users[ar] ||= []
           users[ar].sort! { |a, b| a.last_name.downcase <=> b.last_name.downcase }
         end
-        @user_list = [ 
+        @user_list = [
           { :name => 'recent' ,   :users => recent_users     } ,
           { :name => 'guest',     :users => [User.anonymous] } ,
           { :name => 'regular',   :users => users[:regular]  } ,
           { :name => 'students',  :users => users[:student]  } ,
-          { :name => 'teachers',  :users => users[:teacher]  } 
+          { :name => 'teachers',  :users => users[:teacher]  }
         ]
         if users[:default_users] && users[:default_users].size > 0
           @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
@@ -135,7 +137,7 @@ class UsersController < ApplicationController
       end
     end
   end
-  
+
   def update
     if params[:commit] == "Cancel"
       # FIXME: ugly hack
@@ -150,7 +152,8 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       respond_to do |format|
         if @user.update_attributes(params[:user])
-          @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
+          @user.set_role_ids(params[:user][:role_ids] || [])
+          @user.set_project_ids(params[:user][:project_ids] || [])
 
           # set the cohort tags if we have a teacher
           if @user.portal_teacher && params[:update_cohorts]
@@ -169,15 +172,16 @@ class UsersController < ApplicationController
           end
           format.xml  { head :ok }
         else
-          # need the roles instance variable for the edit template
+          # need the roles and projects instance variables for the edit template
           @roles = Role.all
+          @projects = Admin::Project.all_sorted
           format.html { render :action => "edit" }
           format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
         end
       end
     end
   end
-  
+
   def interface
     # Select the probeware vendor and interface to use when generating jnlps and otml
     # files. This redult is saved in a session variable and if the user is logged-in
@@ -234,21 +238,21 @@ class UsersController < ApplicationController
     rep.run_report(sio)
     send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "accounts-report.xls" )
   end
-  
+
   def reset_password
     p = Password.new(:user_id => params[:id])
     p.save(:validate => false) # we don't need the user to have a valid email address...
     session[:return_to] = request.referer
     redirect_to change_password_path(:reset_code => p.reset_code)
   end
-  
+
   def backdoor
     sign_out :user
     user = User.find_by_login!(params[:username])
     sign_in user
     head :ok
   end
-  
+
   #Used for activation of users by a manager/admin
   def confirm
     if current_visitor && current_visitor.has_role?('admin', 'manager')
