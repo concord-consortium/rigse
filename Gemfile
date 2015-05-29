@@ -107,7 +107,7 @@ source "http://rubygems.org"
   gem 'select2-rails'
   gem 'uglifier'
   gem 'yui-compressor'
-  gem "turbo-sprockets-rails3", "~> 0.3.6"
+  gem "turbo-sprockets-rails3", "~> 0.3.14"
 #      ⬆         ⬆  needed for setup tasks in production and dev :(
 
   gem 'sunspot_rails'
