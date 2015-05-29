@@ -1,8 +1,9 @@
 fetchDataMixin = require 'components/materials_bin/fetch_data_mixin'
+MaterialsCollection = React.createFactory require 'components/materials_bin/materials_collection'
 
 {div} = React.DOM
 
-window.MBCollectionsClass = React.createClass
+module.exports = React.createClass
   mixins: [fetchDataMixin]
   # --- MBFetchDataMixin config ---
   dataStateKey: 'collectionsData'
@@ -16,7 +17,7 @@ window.MBCollectionsClass = React.createClass
     (div {className: className},
       if @state.collectionsData?
         for collection, idx in @state.collectionsData
-          (MBMaterialsCollection
+          (MaterialsCollection
             key: idx
             name: collection.name
             materials: collection.materials
@@ -26,5 +27,3 @@ window.MBCollectionsClass = React.createClass
       else
         (div {}, 'Loading...')
     )
-
-window.MBCollections = React.createFactory MBCollectionsClass

@@ -1,2 +1,3 @@
 //= require ./jquery.paging
-//= require_tree ./components
+//= require_tree ./components/search
+require('components/helper_api');

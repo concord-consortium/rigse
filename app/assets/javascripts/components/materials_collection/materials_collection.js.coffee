@@ -1,6 +1,6 @@
 {div, span, a, i} = React.DOM
 
-window.MaterialsCollectionClass = React.createClass
+module.exports = React.createClass
   getInitialState: ->
     materials: []
     truncated: true
@@ -37,8 +37,3 @@ window.MaterialsCollectionClass = React.createClass
       (SMaterialsList {materials: @getMaterialsList()})
       @renderTruncationToggle()
     )
-
-window.MaterialsCollection = React.createFactory MaterialsCollectionClass
-
-Portal.renderMaterialsCollection = (collectionId, selectorOrElement, limit = Infinity) ->
-  React.render MaterialsCollection(collection: collectionId, limit: limit), jQuery(selectorOrElement)[0]

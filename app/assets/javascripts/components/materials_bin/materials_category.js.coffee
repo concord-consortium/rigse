@@ -1,6 +1,6 @@
 {div} = React.DOM
 
-window.MBMaterialsCategoryClass = React.createClass
+module.exports = React.createClass
   hideForAnonymous: ->
     @props.loginRequired && Portal.currentUser.isAnonymous
 
@@ -19,4 +19,3 @@ window.MBMaterialsCategoryClass = React.createClass
       @props.children
     )
 
-window.MBMaterialsCategory = React.createFactory MBMaterialsCategoryClass

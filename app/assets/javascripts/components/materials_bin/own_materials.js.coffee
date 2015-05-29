@@ -1,8 +1,9 @@
 fetchDataMixin = require 'components/materials_bin/fetch_data_mixin'
+MaterialsCollection = React.createFactory require 'components/materials_bin/materials_collection'
 
 {div} = React.DOM
 
-window.MBOwnMaterialsClass = React.createClass
+module.exports = React.createClass
   mixins: [fetchDataMixin]
   # --- MBFetchDataMixin config ---
   dataStateKey: 'materials'
@@ -13,12 +14,10 @@ window.MBOwnMaterialsClass = React.createClass
     className = "mb-cell #{@getVisibilityClass()}"
     (div {className: className},
       if @state.materials?
-        (MBMaterialsCollection
+        (MaterialsCollection
           name: 'My activities'
           materials: @state.materials
         )
       else
         (div {}, 'Loading...')
     )
-
-window.MBOwnMaterials = React.createFactory MBOwnMaterialsClass

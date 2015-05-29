@@ -1,6 +1,8 @@
+Material = React.createFactory require 'components/materials_bin/material'
+
 {div, a} = React.DOM
 
-window.MBMaterialsCollectionClass = React.createClass
+module.exports = React.createClass
   renderTeacherGuide: ->
     if Portal.currentUser.isTeacher and @props.teacherGuideUrl?
       (a {href: @props.teacherGuideUrl, target: '_blank'}, 'Teacher Guide')
@@ -10,7 +12,5 @@ window.MBMaterialsCollectionClass = React.createClass
       (div {className: 'mb-collection-name'}, @props.name)
       @renderTeacherGuide()
       for material in @props.materials or []
-        (MBMaterial key: "#{material.class_name}#{material.id}", material: material)
+        (Material key: "#{material.class_name}#{material.id}", material: material)
     )
-
-window.MBMaterialsCollection = React.createFactory MBMaterialsCollectionClass
