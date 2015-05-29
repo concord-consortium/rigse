@@ -1,6 +1,7 @@
 class Activity < ActiveRecord::Base
   include JnlpLaunchable
   include TagDefaults
+  include ActionController::UrlWriter
   MUST_HAVE_NAME = "Your activity must have a name."
   MUST_HAVE_DESCRIPTION = "Please give your activity a description."
   MUST_HAVE_UNIQUE_NAME = "Activity '%{value}' already exists. Please pick a unique name."
@@ -234,6 +235,9 @@ class Activity < ActiveRecord::Base
     end
     activity_json[:type] = "LightweightActivity"
     activity_json[:export_site] = "ITSI"
+    activity_json[:username] = self.user.login
+    activity_json[:user_email] = self.user.email
+    activity_json[:user_page_url] = user_url(self.user,:host => "//localhost:3000".gsub("http://","").gsub("https://","").gsub("//",""))
     return activity_json
   end
 
