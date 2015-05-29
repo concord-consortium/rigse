@@ -28,6 +28,31 @@ describe User do
       @user.reload
       assert_equal @user.state, 'pending'
     end
+
+    describe '[default project support]' do
+      let(:settings) { Factory.create(:admin_settings) }
+      before(:each) do
+        Admin::Settings.stub!(:default_settings).and_return(settings)
+      end
+
+      describe 'when default project is not specified in portal settings' do
+        it 'has empty list of projects' do
+          @creating_user.call
+          expect(@user.projects.length).to eql(0)
+        end
+      end
+
+      describe 'when default project is specified in portal settings' do
+        let(:project) { Factory.create(:project) }
+        let(:settings) { Factory.create(:admin_settings, default_project: project) }
+
+        it 'is added to the default project' do
+          @creating_user.call
+          expect(@user.projects.length).to eql(1)
+          expect(@user.projects[0]).to eql(project)
+        end
+      end
+    end
   end
 
   #

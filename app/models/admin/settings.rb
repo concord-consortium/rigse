@@ -11,6 +11,8 @@ class Admin::Settings < ActiveRecord::Base
 
   belongs_to :user
 
+  belongs_to :default_project, :class_name => "Admin::Project"
+
   has_many :settings_vendor_interfaces, :dependent => :destroy , :class_name => "Admin::SettingsVendorInterface", :foreign_key => "admin_settings_id"
   has_many :enabled_vendor_interfaces, :through => :settings_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
 
@@ -77,7 +79,7 @@ class Admin::Settings < ActiveRecord::Base
         if settings
           logger.warn("No active settings found for using the first settings")
         else
-          logger.warn("No projects found")
+          logger.warn("No settings found")
         end
       end
       settings

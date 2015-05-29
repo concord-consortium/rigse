@@ -81,6 +81,7 @@ class User < ActiveRecord::Base
 
   after_update :set_passive_users_as_pending
   after_create :set_passive_users_as_pending
+  after_create :add_to_default_project
 
   # strip leading and trailing spaces from names, login and email
   def strip_spaces
@@ -422,6 +423,13 @@ class User < ActiveRecord::Base
       self.update_attribute(:state, "pending")
     end
     self.reload
+  end
+
+  def add_to_default_project
+    default_project = Admin::Settings.default_settings && Admin::Settings.default_settings.default_project
+    if default_project
+      self.projects << default_project
+    end
   end
 
   def suspend!
