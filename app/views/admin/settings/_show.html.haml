@@ -47,6 +47,11 @@
                     disabled.
                 (This option will allow students to register without a class word.)
               %li
+                Default Project:
+                %b
+                  = admin_settings.default_project ? admin_settings.default_project.name : 'none'
+                (This option will cause that new users will be automatically added to the selected project.)
+              %li
                 Grade Levels for Classes:
                 %b
                   - if admin_settings.enable_grade_levels?
@@ -131,7 +136,7 @@
                   (Browse Instructional Materials link will not appear in the navbar for anonymous users.)
               %li
                 Enabled Bookmark Types:
-                = admin_settings.enabled_bookmark_types.join(', ')
+                %b= admin_settings.enabled_bookmark_types.join(', ')
               = content_for "admin_settings_show_#{admin_settings.id || 'new'}"
 
             = field_set_tag '<b>Jnlp</b>'.html_safe do
