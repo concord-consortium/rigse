@@ -2,6 +2,7 @@
  // TODO: consider moving assets from zeus into
  // package (mange_classes,instructional_materials, &etc.)
 
+= require 'portal-namespace'
 = require 'prototype'
 = require 'prototype-ui/prototype-ui'
 = require 'globals'

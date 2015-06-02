@@ -14,7 +14,7 @@ window.MBMaterialsCategoryClass = React.createClass
     @props.handleClick @props.column, @props.slug
 
   render: ->
-    className = "mb-cell mb-category mb-clickable #{@props.customClass} #{@getVisibilityClass()} #{@getSelectionClass()}"
+    className = "mb-cell mb-category mb-clickable #{@props.customClass || ''} #{@getVisibilityClass()} #{@getSelectionClass()}"
     (div {className: className, onClick: @handleClick},
       @props.children
     )
