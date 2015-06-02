@@ -118,6 +118,8 @@ Rails::Initializer.run do |config|
   #   config.has_many_polymorphs_options = opts
   # end
 
+  config.gem 'delayed_job', :version => '~>2.0.4'
+
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')

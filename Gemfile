@@ -6,6 +6,8 @@ source "http://rubygems.org"
   else
     gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
   end
+  gem 'delayed_job',          "~> 2.0.4"
+  gem 'daemons',              "~> 1.0.10"
 
   platforms :jruby do
     gem "rake",                            "~>10.0.0"
