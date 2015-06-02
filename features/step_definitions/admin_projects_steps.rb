@@ -4,7 +4,7 @@ Given /^the default projects exist using factories$/ do
   Factory.create(:project, name: 'project 3', landing_page_slug: 'project-3')
 end
 
-Given /^the project "([^"]+)" has landing page "([^"]+)" and slug "([^"]+)"$/ do |name, page_cont, slug|
+Given /^the project "([^"]+)" has slug "([^"]+)" and landing page$/ do |name, slug, page_cont|
   Factory.create(:project, name: name, landing_page_slug: slug, landing_page_content: page_cont)
 end
 
