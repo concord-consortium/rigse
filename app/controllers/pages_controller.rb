@@ -342,7 +342,10 @@ class PagesController < ApplicationController
           :name => @page.activity.name,
           :description => @page.activity.description,
           :export_site => "ITSI",
-          :layout => 1 #single-page layout
+          :layout => 1, #single-page layout
+          :username => @page.user.login,
+          :user_email => @page.user.email,
+          :user_page_url => @page.user.user_page_url
       }
       activity_json[:pages] = [@page.export_as_lara_activity(0)]
       send_data activity_json.to_json, :type => :json, :disposition => "attachment", :filename => "#{@page.name}_version_1.json"

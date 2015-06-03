@@ -234,6 +234,9 @@ class Activity < ActiveRecord::Base
     end
     activity_json[:type] = "LightweightActivity"
     activity_json[:export_site] = "ITSI"
+    activity_json[:username] = self.user.login
+    activity_json[:user_email] = self.user.email
+    activity_json[:user_page_url] = self.user.user_page_url
     return activity_json
   end
 

@@ -45,6 +45,7 @@ class User < ActiveRecord::Base
   include Authentication::ByPassword
   include Authentication::ByCookieToken
   include Authorization::AasmRoles
+  include ActionController::UrlWriter
 
   attr_accessor :skip_notifications
 
@@ -332,6 +333,10 @@ class User < ActiveRecord::Base
 
   def updating_password?
     updating_password
+  end
+
+  def user_page_url
+    user_url(self,:host => APP_CONFIG[:site_url].gsub("http://","").gsub("https://","").gsub("//",""))
   end
 
   protected
