@@ -82,6 +82,9 @@ class Portal::StateOrProvince
     'WA' => 'Washington',
     'WV' => 'West Virginia',
     'WI' => 'Wisconsin',
-    'WY' => 'Wyoming'
+    'WY' => 'Wyoming',
+    'AP' => 'U.S. Armed Forces - Pacific',
+    'AE' => 'U.S. Armed Forces - Europe'
+
   }
 end

@@ -39,4 +39,7 @@ RailsPortal::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # Enable add-ons
+  config.react.addons = true
 end

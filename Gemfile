@@ -123,6 +123,8 @@ source "http://rubygems.org"
   gem 'react-rails', '~> 1.0'
   gem 'browserify-rails', '~> 0.9.1'
 
+  gem 'nested_form'
+
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:

@@ -18,3 +18,20 @@
         %li
           Landing page content:
           = f.text_area :landing_page_content, class: 'mceNoEditor'
+        %li
+          Links:
+        = nested_form_for project do |f|
+          = f.fields_for :links do |link_form|
+            %li
+              %table
+                %tr
+                  %td{ :style => "padding-right: 10px" } Name:
+                  %td
+                    = link_form.text_field :name
+                %tr
+                  %td URL:
+                  %td
+                    = link_form.text_field :href
+              = link_form.link_to_remove "Remove this link"
+          %li
+            = f.link_to_add "Add a link", :links

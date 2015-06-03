@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150522145711) do
+ActiveRecord::Schema.define(:version => 20150529083926) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -60,6 +60,14 @@ ActiveRecord::Schema.define(:version => 20150522145711) do
   end
 
   add_index "admin_notice_user_display_statuses", ["user_id"], :name => "index_admin_notice_user_display_statuses_on_user_id"
+
+  create_table "admin_project_links", :force => true do |t|
+    t.integer  "project_id"
+    t.text     "name"
+    t.text     "href"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "admin_project_materials", :force => true do |t|
     t.integer  "project_id"
@@ -119,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20150522145711) do
     t.integer  "pub_interval",                                 :default => 10
     t.boolean  "anonymous_can_browse_materials",               :default => true
     t.string   "jnlp_url"
+    t.integer  "default_project_id"
   end
 
   create_table "admin_settings_vendor_interfaces", :force => true do |t|
