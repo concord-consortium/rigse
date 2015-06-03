@@ -24,6 +24,9 @@ class Admin::Project < ActiveRecord::Base
   has_many :project_users, class_name: 'Admin::ProjectUser'
   has_many :users, :through => :project_users
 
+  has_many :links, class_name: 'Admin::ProjectLink', :dependent => :destroy
+  accepts_nested_attributes_for :links, :reject_if => lambda { |link| link[:name].blank? or link[:href].blank? }, :allow_destroy => true
+
   validates :name, presence: true
   validates :landing_page_slug, uniqueness: true, allow_nil: true
   validates :landing_page_slug, format: { with: /\A[a-z0-9\-]*\z/,

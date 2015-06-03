@@ -4,8 +4,8 @@ class Admin::ProjectsController < ApplicationController
 
   # GET /:landing_page_slug
   def landing_page
-    project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
-    @landing_page_content = project.landing_page_content
+    @project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
+    @landing_page_content = @project.landing_page_content
   end
 
   # GET /admin/projects
@@ -21,6 +21,7 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects/new
   def new
     @project = Admin::Project.new
+    @project.links.build
   end
 
   # GET /admin/projects/1/edit

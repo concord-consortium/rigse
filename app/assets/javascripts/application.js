@@ -56,4 +56,6 @@
 = require 'react'
 = require 'react_ujs'
 = require 'component'
+= require 'jquery_nested_form'
+= require 'main_nav_more_menu'
 */

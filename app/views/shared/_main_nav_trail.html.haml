@@ -14,6 +14,9 @@
           %li.trail= link_to 'Browse Instructional Materials' , search_path
         - if current_visitor.has_role?('admin', 'manager','researcher')
           %li.trail= link_to 'Admin', admin_path
+        - if !local_assigns[:project].nil? && !project.links.empty?
+          - project.links.each do |link|
+            %li.trail= link_to link.name, link.href
 
       - #A developer can load home page without initializing data in database
       - if current_settings
