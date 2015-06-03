@@ -770,6 +770,7 @@ ActiveRecord::Schema.define(:version => 20150529104344) do
     t.integer  "job_id"
     t.datetime "job_finished_at"
     t.string   "file_path"
+    t.integer  "export_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -1780,7 +1781,7 @@ ActiveRecord::Schema.define(:version => 20150529104344) do
     t.datetime "updated_at"
   end
 
-  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index", :length => {"member_type"=>"15", "member_id"=>nil}
+  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index", :length => {"member_id"=>nil, "member_type"=>"15"}
   add_index "portal_school_memberships", ["school_id"], :name => "index_portal_school_memberships_on_school_id"
 
   create_table "portal_schools", :force => true do |t|
@@ -2264,7 +2265,7 @@ ActiveRecord::Schema.define(:version => 20150529104344) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_type"=>"15", "scope_id"=>nil, "name"=>"15"}
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_id"=>nil, "scope_type"=>"15", "name"=>"15"}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|
@@ -2287,7 +2288,7 @@ ActiveRecord::Schema.define(:version => 20150529104344) do
   end
 
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context", :length => {"context"=>"15", "taggable_id"=>nil, "taggable_type"=>"15"}
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context", :length => {"taggable_id"=>nil, "taggable_type"=>"15", "context"=>"15"}
 
   create_table "tags", :force => true do |t|
     t.string "name"

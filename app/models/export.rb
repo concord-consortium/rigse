@@ -1,5 +1,8 @@
 class Export < ActiveRecord::Base
   
+  EXPORT_TYPE_SCHOOL_DISTRICT = 0
+  EXPORT_TYPE_USER = 1
+  
   def working?
     job_id.present?
   end

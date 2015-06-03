@@ -4,6 +4,7 @@ class CreateExports < ActiveRecord::Migration
       t.integer :job_id
       t.datetime :job_finished_at
       t.string :file_path
+      t.integer :export_type
       t.timestamps
     end
   end

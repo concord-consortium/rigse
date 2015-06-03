@@ -474,8 +474,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :exports, :member => {
     :download => :get
   },:collection => {
-      :export_status => :get,
-      :generate_school_district_json => :get
+      :export_school_district_status => :get,
+      :generate_school_district_json => :get,
+      :generate_user_json => :get,
+      :export_user_status => :get
     }
 
   # Home Controller

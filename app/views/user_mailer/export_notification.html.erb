@@ -1,6 +1,6 @@
 Your export has been created.
 
-Username: <%= @user.login %>
+<%= @user.login %>,
 <% url = APP_CONFIG[:site_url] + download_export_path(@export)%>
 Click 
   <%= link_to 'here', url%>

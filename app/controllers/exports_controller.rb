@@ -1,5 +1,5 @@
 class ExportsController < ApplicationController
-  
+
   before_filter :admin_only
 
   def index
@@ -7,33 +7,54 @@ class ExportsController < ApplicationController
   end
 
   def generate_school_district_json
-    last_export = Export.last
+    last_export = Export.find(:last, :conditions => [ "export_type = ?", Export::EXPORT_TYPE_SCHOOL_DISTRICT])
     if last_export.nil? || last_export.finished?
       export = Export.create!()
-      job = Delayed::Job.enqueue GenerateJSON.new(export.id, current_user.id)
+      job = Delayed::Job.enqueue GenerateSchoolDistrictJSON.new(export.id, current_user.id)
       export.update_attribute(:job_id, job.id)
+      export.update_attribute(:export_type, Export::EXPORT_TYPE_SCHOOL_DISTRICT)
     end
-    redirect_to :action => "export_status"
+    redirect_to :action => "export_school_district_status"
   end
 
-  def export_status
-    @export_list = Export.all
-    @last_export = Export.last
+  def generate_user_json
+    last_export = Export.find(:last, :conditions => [ "export_type = ?", Export::EXPORT_TYPE_USER])
+    if last_export.nil? || last_export.finished?
+      export = Export.create!()
+      job = Delayed::Job.enqueue GenerateUserJSON.new(export.id, current_user.id)
+      export.update_attribute(:job_id, job.id)
+      export.update_attribute(:export_type, Export::EXPORT_TYPE_USER)
+    end
+    redirect_to :action => "export_user_status"
+  end
+
+  def export_school_district_status
+    @export_list = Export.find(:all, :conditions => [ "export_type = ?", Export::EXPORT_TYPE_SCHOOL_DISTRICT])
+    @last_export = Export.find(:last, :conditions => [ "export_type = ?", Export::EXPORT_TYPE_SCHOOL_DISTRICT])
+    render "exports/export_status", :locals => {:export_type => Export::EXPORT_TYPE_SCHOOL_DISTRICT}
+  end
+
+  def export_user_status
+    @export_list = Export.find(:all, :conditions => [ "export_type = ?", Export::EXPORT_TYPE_USER])
+    @last_export = Export.find(:last, :conditions => [ "export_type = ?", Export::EXPORT_TYPE_USER])
+    render "exports/export_status", :locals => {:export_type => Export::EXPORT_TYPE_USER}
   end
 
   def download
     @export = Export.find(params[:id])
+    filename = @export.export_type == Export::EXPORT_TYPE_USER ? "export_users.json" : "export_schools_and_districts.json"
     send_data File.read("#{Rails.root}/#{@export.file_path}"),
-      :filename => "export_schools_and_districts.json",
+      :filename => filename,
       :type => "application/json",
       :x_sendfile => true
   end
 
   def destroy
     @export = Export.find(params[:id])
+    redirect_action = @export.export_type == Export::EXPORT_TYPE_USER ? "export_user_status" : "export_school_district_status"
     File.delete("#{Rails.root}/#{@export.file_path}")
     @export.destroy
-    redirect_to :action => "export_status"
+    redirect_to :action => redirect_action
   end
 
   protected

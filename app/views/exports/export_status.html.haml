@@ -1,8 +1,16 @@
-<h1>Export Schools and Districts</h1>
+- if export_type ==  Export::EXPORT_TYPE_SCHOOL_DISTRICT
+  -heading = "<h1>Export Schools and Districts</h1>"
+  -genereate_json_path = generate_school_district_json_exports_path
+-else
+  -heading = "<h1>Export Users</h1>"
+  -genereate_json_path = generate_user_json_exports_path
+
+=heading
 
 - if @export_list.empty?
   No exports found, click 
-  = link_to 'here', generate_school_district_json_exports_path 
+  
+  = link_to 'here', genereate_json_path 
   to start exporting.
 -else
   - unless @last_export.finished?
@@ -33,7 +41,7 @@
                 %td
                   = link_to 'Delete', export_path(export), :confirm => "Are you sure?", :method => :delete 
     Click 
-    = link_to 'here', generate_school_district_json_exports_path 
+    = link_to 'here', genereate_json_path 
     to start a new export.
 
 
