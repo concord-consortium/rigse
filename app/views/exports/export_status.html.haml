@@ -1,0 +1,64 @@
+- if export_type ==  Export::EXPORT_TYPE_SCHOOL_DISTRICT
+  -heading = "<h1>Export Schools and Districts</h1>"
+  -genereate_json_path = generate_school_district_json_exports_path
+-else
+  -heading = "<h1>Export Users</h1>"
+  -genereate_json_path = generate_user_json_exports_path
+
+=heading
+
+- if @export_list.empty?
+  No exports found, click 
+  
+  = link_to 'here', genereate_json_path 
+  to start exporting.
+-else
+  - unless @last_export.finished?
+    .progress_message
+      Export in progress. You will receive a download link on your registered email after the export is complete.
+  .export_schools_and_districts 
+    %table
+      %thead
+        %tr
+          %td
+            Sr.no
+          %td
+            Exported on
+          %td
+            Download Link
+          %td
+            Delete      
+        %tbody
+          - @export_list.each_with_index do |export, index|      
+            - unless export.job_finished_at.nil?
+              %tr
+                %td
+                  = index+1
+                %td
+                  = export.job_finished_at
+                %td
+                  = link_to 'Download', download_export_path(export)
+                %td
+                  = link_to 'Delete', export_path(export), :confirm => "Are you sure?", :method => :delete 
+    Click 
+    = link_to 'here', genereate_json_path 
+    to start a new export.
+
+
+  %style(type="text/css") 
+    :sass 
+      .progress_message
+        color: #548e16
+        border: solid 1px #26722d
+        background-color: #e8ffe7
+        padding: 3px
+
+      .export_schools_and_districts 
+        table
+          thead
+            td
+              font-weight: bold
+          td
+            padding: 5px
+            text-align: center
+            border: solid 1px #aaa

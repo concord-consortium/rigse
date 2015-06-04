@@ -653,3 +653,9 @@ after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:create_asset_packages'
 after 'deploy:create_asset_packages', 'deploy:cleanup'
 after 'installer:create', 'deploy:restart'
+
+
+set(:delayed_job_args) { "--prefix '#{deploy_to}'" }
+after "deploy:stop",    "delayed_job:stop"
+after "deploy:start",   "delayed_job:start"
+after "deploy:restart", "delayed_job:restart"

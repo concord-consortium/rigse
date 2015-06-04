@@ -10,6 +10,14 @@ class UserMailer < ActionMailer::Base
     @subject << 'Your account has been activated!'
     @body[:url] = APP_CONFIG[:site_url]
   end
+
+  def export_notification(user, export)
+    setup_email(user)
+    @export = export
+    subject = @export.export_type == Export::EXPORT_TYPE_USER ? "Your users export is ready!" : "Your schools and districts export is ready!"
+    @subject << subject
+    @body[:url] = APP_CONFIG[:site_url]
+  end
   
   protected
   

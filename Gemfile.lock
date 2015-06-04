@@ -78,7 +78,11 @@ GEM
     cucumber-rails (0.3.2)
       cucumber (>= 0.8.0)
     culerity (0.2.15)
+    daemons (1.0.10)
     database_cleaner (0.6.7)
+    delayed_job (2.0.8)
+      activesupport (~> 2.0)
+      daemons (= 1.0.10)
     delorean (1.0.1)
       chronic
     diff-lcs (1.2.5)
@@ -234,8 +238,10 @@ DEPENDENCIES
   compass (~> 0.10.0)
   cucumber (~> 0.10.0)
   cucumber-rails (~> 0.3.2)
+  daemons (~> 1.0.10)
   database_cleaner (~> 0.6.6)
   deep_cloneable!
+  delayed_job (~> 2.0.4)
   delorean
   diff-comparison!
   email_spec (= 0.3.5)

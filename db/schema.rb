@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141107185058) do
+ActiveRecord::Schema.define(:version => 20150529104344) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
   add_index "activities", ["name"], :name => "index_activities_on_name"
-  add_index "activities", ["publication_status", "is_exemplar"], :name => "index_activities_on_publication_status_and_is_exemplar", :length => {"publication_status"=>"10", "is_exemplar"=>nil}
+  add_index "activities", ["publication_status", "is_exemplar"], :name => "index_activities_on_publication_status_and_is_exemplar", :length => {"is_exemplar"=>nil, "publication_status"=>"10"}
   add_index "activities", ["user_id"], :name => "index_activities_on_user_id"
 
   create_table "admin_project_vendor_interfaces", :force => true do |t|
@@ -256,6 +256,21 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index"
   add_index "dataservice_periodic_bundle_parts", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "diy_model_types", :force => true do |t|
     t.string  "name"
@@ -747,6 +762,15 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
     t.string   "name"
     t.text     "description"
     t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "exports", :force => true do |t|
+    t.integer  "job_id"
+    t.datetime "job_finished_at"
+    t.string   "file_path"
+    t.integer  "export_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -2241,7 +2265,7 @@ ActiveRecord::Schema.define(:version => 20141107185058) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_id"=>nil, "name"=>"15", "scope_type"=>"15"}
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_id"=>nil, "scope_type"=>"15", "name"=>"15"}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|

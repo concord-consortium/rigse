@@ -471,6 +471,15 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :images
   map.list_filter_image '/images/list/filter', :controller => 'images', :action => 'index', :method => :post
 
+  map.resources :exports, :member => {
+    :download => :get
+  },:collection => {
+      :export_school_district_status => :get,
+      :generate_school_district_json => :get,
+      :generate_user_json => :get,
+      :export_user_status => :get
+    }
+
   # Home Controller
   map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
   map.readme '/readme', :controller => 'home', :action => 'readme'
@@ -490,6 +499,7 @@ ActionController::Routing::Routes.draw do |map|
   # map. ':controller/:action/:id.:format'
   map.schoology_cookie '/misc/schoology_cookie', :controller => 'misc', :action => 'schoology_cookie'
 
+  map.export_schools_and_districts '/export_schools_and_districts', :controller => 'Exports' , :action => 'generate_school_district_json'
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
