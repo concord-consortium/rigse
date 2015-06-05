@@ -14,9 +14,6 @@
           %li.trail= link_to 'Browse Instructional Materials' , search_path
         - if current_visitor.has_role?('admin', 'manager','researcher')
           %li.trail= link_to 'Admin', admin_path
-        - if !local_assigns[:project].nil? && !project.links.empty?
-          - project.links.each do |link|
-            %li.trail= link_to link.name, link.href
 
       - #A developer can load home page without initializing data in database
       - if current_settings
@@ -27,3 +24,7 @@
           %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
         - when 'no help'
           %li.trail{:style=>"display:none"}=link_to'Help', 'javascript: void(0)', :id=>'help'
+
+        - current_visitor.projects.each do |project|
+          - project.links.each do |link|
+            %li.trail= link_to link.name, link.href
