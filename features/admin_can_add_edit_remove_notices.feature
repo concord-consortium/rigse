@@ -1,3 +1,4 @@
+@javascript
 Feature: Admin can add, edit and remove notices
 
   As an admin
