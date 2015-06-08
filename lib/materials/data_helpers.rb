@@ -5,6 +5,12 @@ module Materials
 
     private
 
+    # The main difference between this sanitization method and one provided by Rails natively is
+    # is that Sanitize module *always* returns valid HTML input.
+    def safe_sanitize(html_fragment)
+      Sanitize.fragment(html_fragment, Sanitize::Config::BASIC)
+    end
+
     def materials_data(materials)
       data = []
 
@@ -39,8 +45,10 @@ module Materials
 
         # abstract_text is provided by SearchModelInterface and it fallbacks to normal description
         # if there is no abstract defined. It also truncates description in case of need.
+        # Note that we can't use native #sanitize method provided by Rails, as it doesn't guarantee that
+        # output is a valid HTML. Invalid HTML can totally break React view components.
         description = material.respond_to?(:description_for_teacher) && current_visitor.portal_teacher && material.description_for_teacher.present? ?
-            view_context.sanitize(material.description_for_teacher) : view_context.sanitize(material.abstract_text)
+            safe_sanitize(material.description_for_teacher) : safe_sanitize(material.abstract_text)
 
         mat_data = {
           id: material.id,
