@@ -20,7 +20,7 @@ jQuery(function () {
   $moreMenuList = jQuery("<ul>");
   $moreMenu.append($moreMenuList);
 
-  $menuItems = $topMenu.find("li");
+  $menuItems = $topMenu.find("li").filter(":not(.hide-menu-item)")
   $menuItems.each(function () {
     var $menuItem = jQuery(this),
         $moreMenuItem = $menuItem.clone().removeClass("trail").css({

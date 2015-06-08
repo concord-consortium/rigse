@@ -24,8 +24,5 @@
             |
             = link_to 'Logout', destroy_user_session_path
 
-- if defined? project
-  = render :partial => 'shared/main_nav_trail', :locals => {:project => project}
-- else
-  = render :partial => 'shared/main_nav_trail'
+= render :partial => 'shared/main_nav_trail'
 
