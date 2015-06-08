@@ -215,6 +215,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/public/installers"
     run "mkdir -p #{shared_path}/config/initializers"
     run "mkdir -p #{shared_path}/system/attachments" # paperclip file attachment location
+    run "mkdir -p #{shared_path}/pids"
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
     run "touch #{shared_path}/config/installer.yml"
