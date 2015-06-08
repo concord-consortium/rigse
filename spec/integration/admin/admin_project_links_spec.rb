@@ -9,6 +9,13 @@ end
 
 describe "Admin::ProjectLinks" do
   before(:each) do
+    # My guess is that Capybara RSpec are not configured property
+    # which means that the session is not bering reset between tests
+    Capybara.reset_sessions!
+
+    # prepare to log in as this user
+    visit "/"
+
     # create user
     @user = Factory(:user)
     @user.save!
@@ -22,13 +29,6 @@ describe "Admin::ProjectLinks" do
     @project = Factory(:project, {
       :landing_page_slug => "test-project"
     })
-
-    # My guess is that Capybara RSpec are not configured property
-    # which means that the session is not bering reset between tests
-    Capybara.reset_sessions!
-
-    # log in as this user
-    visit "/"
 
     within("div.header-login-box") do
       fill_in("Username", :with => @user.login)
