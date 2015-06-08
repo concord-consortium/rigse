@@ -1,9 +1,9 @@
-{div, table, tr, td, span} = React.DOM
+{div, table, tbody, tr, td, span} = React.DOM
 
 window.SMaterialInfoClass = React.createClass
   renderLinks: ->
     material = @props.material
-    for own key,link of material.links
+    for own key, link of material.links
       link.key = key
 
     links = []
@@ -35,17 +35,19 @@ window.SMaterialInfoClass = React.createClass
     (div {},
       (div {style: {overflow: 'hidden'}},
         (table {width: '100%'},
-          (tr {}, (td {},
-            @renderLinks()
-          ))
-          (tr {}, (td {},
-            (SMaterialHeader {material: @props.material})
-            @renderParentInfo()
-            @renderAuthorInfo()
-          ))
-          (tr {}, (td {},
-            @renderClassInfo()
-          ))
+          (tbody {},
+            (tr {}, (td {},
+              @renderLinks()
+            ))
+            (tr {}, (td {},
+              (SMaterialHeader {material: @props.material})
+              @renderParentInfo()
+              @renderAuthorInfo()
+            ))
+            (tr {}, (td {},
+              @renderClassInfo()
+            ))
+          )
         )
       )
     )

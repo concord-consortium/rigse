@@ -3,11 +3,11 @@
 window.SMaterialLinksClass = React.createClass
   render: ->
     (div {},
-      for link in @props.links
+      for link, idx in @props.links
         if link.type is 'dropdown'
-          (SMaterialDropdownLink {link: link})
+          (SMaterialDropdownLink {key: idx, link: link})
         else
-          (SMaterialLink {link: link})
+          (SMaterialLink {key: idx, link: link})
     )
 
 window.SMaterialLinks = React.createFactory SMaterialLinksClass
@@ -56,8 +56,8 @@ window.SMaterialDropdownLinkClass = React.createClass
     (div {key: link.key, style: {float: 'right'}},
       (SGenericLink {link: link})
       (div {className: 'Expand_Collapse Expand_Collapse_preview', style: {display: 'none'}},
-        for item in link.options
-          (div {className: 'preview_link'},
+        for item, idx in link.options
+          (div {key: idx, className: 'preview_link'},
             (SGenericLink {link: item})
           )
       )
