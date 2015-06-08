@@ -23,6 +23,10 @@ describe "Admin::ProjectLinks" do
       :landing_page_slug => "test-project"
     })
 
+    # My guess is that Capybara RSpec are not configured property
+    # which means that the session is not bering reset between tests
+    Capybara.reset_sessions!
+
     # log in as this user
     visit "/"
 
