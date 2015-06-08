@@ -9,9 +9,13 @@ end
 
 describe "Admin::ProjectLinks" do
   before(:each) do
-    # My guess is that Capybara RSpec are not configured property
-    # which means that the session is not bering reset between tests
+    # this doesn't seem to work, the server still delivers a page that shows
+    # an admin user logged in
     Capybara.reset_sessions!
+
+    # tried to signout any serverside login state (SC: I don't understand how this works)
+    # however this method is only available in the controllers
+    # sign_out :user
 
     # prepare to log in as this user
     visit "/"
