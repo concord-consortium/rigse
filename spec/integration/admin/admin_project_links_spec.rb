@@ -1,7 +1,7 @@
 =begin
 
 This spec file is causing a failure so I'm disabling it for now
-
+=end
 require File.expand_path("../../../spec_helper", __FILE__)
 
 Factory.define :project_link, class: Admin::ProjectLink do |f|
@@ -13,6 +13,10 @@ describe "Admin::ProjectLinks" do
     @user = Factory(:user)
     @user.save!
     @user.confirm!
+
+    puts "User count: #{User.count}"
+    puts "new user id: #{@user.id}"
+    puts "new user roles: #{@user.roles.map{|role| role.title}.join(', ')}"
 
     # create project
     @project = Factory(:project, {
@@ -57,5 +61,3 @@ describe "Admin::ProjectLinks" do
     end
   end
 end
-
-=end
