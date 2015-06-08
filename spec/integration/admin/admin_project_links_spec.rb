@@ -7,7 +7,7 @@ require File.expand_path("../../../spec_helper", __FILE__)
 Factory.define :project_link, class: Admin::ProjectLink do |f|
 end
 
-describe "Admin::ProjectLinks" do
+describe "Admin::ProjectLinks", :type => :feature do
   before(:each) do
     # this doesn't seem to work, the server still delivers a page that shows
     # an admin user logged in
