@@ -213,3 +213,7 @@ end
 group :test, :development do
   gem 'jasmine'
 end
+
+group :assets do
+  gem "jquery-fileupload-rails"
+end

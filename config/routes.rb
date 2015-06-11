@@ -621,6 +621,15 @@ RailsPortal::Application.routes.draw do
       end
     end
 
+    resources :imports do
+      collection do
+        get :import_school_district_status
+        post :import_school_district_json
+        post :import_user_json
+        get :import_user_status
+      end
+    end
+
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do
         resources :countries

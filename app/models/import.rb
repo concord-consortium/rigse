@@ -1,0 +1,24 @@
+class Import < ActiveRecord::Base
+  
+  IMPORT_TYPE_SCHOOL_DISTRICT = 0
+  IMPORT_TYPE_USER = 1
+
+  scope :in_progress, lambda{|import_type| where(job_finished_at: nil, import_type: import_type)} 
+  
+  def working?
+    job_id.present?
+  end
+
+  def finished?
+    job_finished_at.present?
+  end
+
+  def in_progress
+    working? && !finished?
+  end
+
+  def send_mail(user)
+    UserMailer.deliver_export_notification(user,self)
+  end
+
+end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150529083926) do
+ActiveRecord::Schema.define(:version => 20150605110809) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -875,6 +875,17 @@ ActiveRecord::Schema.define(:version => 20150529083926) do
     t.string   "license_code"
     t.integer  "width",              :default => 0
     t.integer  "height",             :default => 0
+  end
+
+  create_table "imports", :force => true do |t|
+    t.integer  "job_id"
+    t.datetime "job_finished_at"
+    t.integer  "import_type"
+    t.text     "duplicate_data"
+    t.integer  "progress"
+    t.integer  "total_imports"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "installer_reports", :force => true do |t|

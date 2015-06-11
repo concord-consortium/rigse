@@ -1,0 +1,142 @@
+-heading = @import_type == Import::IMPORT_TYPE_SCHOOL_DISTRICT ? "Importing Schools and Districts" : "Imporing Users"
+%h1
+  =heading
+-if @imports_progress.size > 0
+  -@imports_progress.each do |import_progress|
+    .progress-wrap.finished{id: "progress-wrap-#{import_progress[:id]}"}
+      .progress-bar
+        .progress-status
+      %div
+        Import in progress:
+        %span.progress-percentage
+      .progress-complete Import Successfull
+-else
+  .import
+    Choose JSON file to upload and click on import
+    = form_tag import_school_district_json_imports_path, :method => :post, :remote => true, :multipart => true, :id => "import" do |f|
+      .info
+        %table
+          %tr
+            %td 
+              =file_field 'import', 'import', accept: 'application/json', class: 'import_file'
+      %input{:class => "import-submit", :type => "button", :id => "import-post-json", :value => "Import"} 
+
+    %script{:id => 'template-upload',:type => 'text/x-tmpl'}
+    .upload{:id => 'upload_div'}
+      .progress
+        .bar
+
+
+
+%style(type="text/css") 
+  :sass
+    .progress-wrap
+      .progress-bar
+        width: 400px
+        border: 1px solid #0B6B08
+        padding: 1px
+        border-radius: 3px
+        .progress-status
+          background-color: #EFA967
+          width: 0%
+          height: 15px
+          border-radius: 3px
+
+      .progress-complete
+        display: none
+        margin-bottom: 30px
+      .progress-percentage
+        font-weight: bold
+    .finished
+      display: none
+
+:javascript  
+
+  jQuery(function(){
+
+    var targetUrl = "/imports/import_school_district_status"
+    var timer;
+
+    function updateProgress(progressData){      
+      jQuery.each(progressData["progress"], function(index,data){
+        $progressWrap = jQuery("#progress-wrap-" + data["id"]);
+        progress = data["progress"]
+        total = data["total"]
+        percent = Math.round((progress / total) * 100);
+        if(progress < total){
+          $progressWrap.removeClass("finished")
+          $progressWrap.find(".progress-status").width(percent+"%")
+          $progressWrap.find(".progress-percentage").text(percent+"%")
+        } else if(progress == total){
+          $progressWrap.find(".progress-bar").hide();
+          $progressWrap.find(".progress-percentage").hide();
+          $progressWrap.find(".progress-complete").show();
+          clearInterval(timer);
+        }
+      });
+      jQuery(".finished").remove();
+      if(progressData["progress"].length == 0){
+        clearInterval(timer);
+      }
+    }
+
+    timer = setInterval(function(){
+      jQuery.ajax({
+       url:targetUrl,
+        success: function(progressData) {
+          console.log(progressData);
+          updateProgress(progressData)
+        },
+        error: function(transport) { 
+          alert("error");
+        } 
+      });
+    },2000);
+
+    // jQuery("body").on("click", "#import-post-json" , function() {
+    //   filedata = new FormData()
+    //   filedata.append('import', jQuery('input[type=file]')[0].files[0])
+    //   var options = {
+    //     url:"/imports/import_school_district_json",
+    //     type: 'POST',
+    //     data: filedata,
+    //     cache: false,
+    //     processData: false,
+    //     contentType: false,
+    //     success: function(transport) {
+    //       location.reload();
+    //     },
+    //     error: function(transport) { 
+    //       alert("error");
+    //     }
+    //   }
+    //   jQuery.ajax(options);
+    // });
+
+
+    jQuery("#import").fileupload({
+      replaceFileInput: false,
+      autoUpload: false,
+      add: function(e, data) {
+        data.context = jQuery(tmpl("upload_div", data.files[0]));
+        jQuery(".import-submit").unbind('click').on('click', function(e){
+          e.preventDefault();
+          data.submit();
+        });
+      },
+      progress: function(e, data) {
+        var progress;
+        if (data) {
+          progress = parseInt(data.loaded / data.total * 100, 10);
+          jQuery('.progress').css('display','block');
+          return jQuery('.bar').css('width', progress + '%');
+        }
+      },
+      done:function(e, data){
+        location.reload();
+      }
+    });
+
+  });
+
+
