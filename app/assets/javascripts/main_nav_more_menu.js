@@ -15,6 +15,11 @@ jQuery(function () {
       $window = jQuery(window),
       $moreMenu, $menuItems, $moreLink, $moreItem;
 
+  // no menu, no work to do...
+  if ($topMenu.length === 0) {
+    return;
+  }
+
   // create a more menu with all the current menu items
   $moreMenu = jQuery("<div>").attr("id", "nav_top_more_menu").hide();
   $moreMenuList = jQuery("<ul>");
