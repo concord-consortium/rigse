@@ -1,8 +1,7 @@
-Your export has been created.
-
-<%= @user.login %>,
 <% url = APP_CONFIG[:site_url] + download_export_path(@export)%>
-Click 
-  <%= link_to 'here', url%>
-to download.
+Hi <%= @user.login %>,
+
+Your export has been created. Click on the link below to download the <%= @export.export_type == Export::EXPORT_TYPE_USER ? "users" : "schools and districts" %> export.
+
+<%=url%>
 
