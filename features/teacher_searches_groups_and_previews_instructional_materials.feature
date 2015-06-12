@@ -17,7 +17,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I am on the search instructional materials page
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher should be on materials preview page to assign materials
     When I follow the "Assign to a Class" link for the investigation "differential calculus"
     Then I should see "Select Class(es)"
@@ -37,7 +37,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should be on the preview activity page for the activity "differential calculus"
     And I should see "differential calculus"
 
-  @javascript
+  @javascript  @search
   @wip
   Scenario: Teacher should be able to see more details about materials
     When I follow the "differential calculus" link for the investigation "differential calculus"
@@ -49,7 +49,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I should see "differential calculus"
 
 
-  @javascript
+  @javascript  @search
   Scenario: Teacher should be on materials preview page to preview materials
     When I follow the "Preview" link for the investigation "differential calculus"
     Then I should see "As Teacher"
@@ -60,7 +60,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I should see "As Student"
 
 
-  @javascript
+  @javascript @search
   @with_mysql_failures
   Scenario: Teacher can see classes in which materials are assigned on the search page
     When the Investigation "differential calculus" is assigned to the class "Physics"
@@ -71,7 +71,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should see "Assigned to Physics"
 
 
-  @javascript
+  @javascript @search
   @with_mysql_failures
   Scenario: Teacher can see number classes to which investigations are assigned on the search page
     When the Investigation "differential calculus" is assigned to the class "Physics"
@@ -84,7 +84,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should see "Used in 3 classes."
 
 
-  @javascript
+  @javascript @search
   @with_mysql_failures
   Scenario: Teacher can see number classes to which activities are assigned on the search page
     When the Investigation "Geometry" is assigned to the class "Physics"
@@ -99,7 +99,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should see "Used in 4 classes."
 
 
-  @javascript
+  @javascript @search @search
   Scenario: Anonymous user can preview investigation
     When I log out
     And I go to the search instructional materials page
@@ -107,7 +107,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should preview investigation "Geometry" on the search instructional materials page
 
 
-  @javascript
+  @javascript @search
   Scenario: Anonymous user can preview activity
     When I log out
     And I go to the search instructional materials page
@@ -115,19 +115,19 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should preview activity "differential calculus" on the search instructional materials page
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher can see search suggestions
     When I enter search text "Radioactivity" on the search instructional materials page
     Then I should see search suggestions for "Radioactivity" on the search instructional materials page
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher can search instructional materials
     When I search for "Venn Diagram" on the search instructional materials page
     Then I should see search results for "Venn Diagram" on the search instructional materials page
 
 
-  @javascript
+  @javascript @search
   @pending
   Scenario: Teacher can sort search results alphabetically
     When I search for "lines" on the search instructional materials page
@@ -139,7 +139,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then "differential calculus" should appear before "integral calculus"
 
 
-  @javascript
+  @javascript @search
   @with_mysql_failures
   Scenario: Teacher can sort search results for investigations on the basis of creation date
     When I create investigations "differential calculus" before "integral calculus" by date
@@ -152,7 +152,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then "differential calculus" should appear before "integral calculus"
 
 
-  @javascript
+  @javascript @search
   @with_mysql_failures
   Scenario: Teacher can sort search results for activities on the basis of creation date
     When I create activities "parallel lines" before "graphs and lines" by date
@@ -165,7 +165,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then "parallel lines" should appear before "graphs and lines"
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher should be able to see grouped search results on the basis of material type
     When I enter search text "Geometry" on the search instructional materials page
     And I uncheck "Sequence"
@@ -187,7 +187,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I should not see "Geometry"
 
 
-  @javascript
+  @javascript @search
   Scenario: Search results should be paginated
     When I search for "is a great" on the search instructional materials page
     Then the search results should be paginated on the search instructional materials page
