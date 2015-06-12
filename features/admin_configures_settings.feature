@@ -7,14 +7,14 @@ Feature: Admin configures settings
   Scenario: Admin views settings without setting up jnlps
     Given the most basic default settings
     And the database has been seeded
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     Then I should see the sites name
     
   @javascript
   Scenario: Admin edits settings without setting up jnlps
     Given the most basic default settings
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     When I follow "edit settings"
     Then I should see the button "Save"
@@ -22,7 +22,7 @@ Feature: Admin configures settings
   @javascript
   Scenario: Admin edits settings with jnlps
     Given The default settings and jnlp resources exist using factories
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     When I follow "edit settings"
     Then I should see the button "Save"
@@ -37,7 +37,7 @@ Feature: Admin configures settings
   @javascript
   Scenario: Admin enables default class
     Given The default settings and jnlp resources exist using factories
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     Then I should see the sites name
     And I should see "Default Class: disabled"
@@ -71,7 +71,7 @@ Feature: Admin configures settings
   @javascript
   Scenario: Admin modifies css for otml
     Given The default settings and jnlp resources exist using factories
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     Then I should see the sites name
     When I follow "edit settings"
@@ -85,7 +85,7 @@ Feature: Admin configures settings
   @javascript
   Scenario: Admin configures bitmap snapshots
     Given The default settings and jnlp resources exist using factories
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     Then I should see the sites name
     When I follow "edit settings"
@@ -96,7 +96,7 @@ Feature: Admin configures settings
     
   Scenario: Admin creates a new settings
     Given The default settings and jnlp resources exist using factories
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     When I create new settings with the description "test settings"
     Then I should see "test settings"
@@ -104,7 +104,7 @@ Feature: Admin configures settings
   @javascript
   Scenario: Admin should preview Help page from admin settings page
     Given The default settings and jnlp resources exist using factories
-    When I login as an admin
+    When I am logged in with the username admin
     And am on the admin settings page
     And I follow "edit settings"
     And I choose "Use custom help page HTML"
@@ -127,7 +127,7 @@ Feature: Admin configures settings
   @javascript
   Scenario: Admin edits the home page HTML
     Given the most basic default settings
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     When I follow "edit settings"
     And I fill in "admin_settings[home_page_content]" with "Creating Home Page"
@@ -139,7 +139,7 @@ Feature: Admin configures settings
   @javascript
   Scenario: Admin can preview edited home page
     Given the most basic default settings
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     When I follow "edit settings"
     And I fill in "admin_settings[home_page_content]" with "Creating Home Page"
@@ -153,7 +153,7 @@ Feature: Admin configures settings
   @javascript
   Scenario: Admin can preview the home page from admin settings page
     Given the most basic default settings
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     When I follow "edit settings"
     And I fill in "admin_settings[home_page_content]" with "Creating Home Page"
