@@ -91,6 +91,7 @@ Feature: Admin can work with materials collections
   Scenario: Admin removes materials from a Materials Collection
     When I am on the materials collection index page
     And I open the accordion for the materials collection "Collection 3"
+    And I wait 1 second
     And I click remove on the 1st material in the materials collection "Collection 3"
     And I accept the dialog
     And I wait 1 second
