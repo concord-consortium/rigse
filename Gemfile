@@ -183,7 +183,6 @@ end
 group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
-  gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
   gem "selenium-webdriver", "~> 2.46.2"
   gem "cucumber",           "~> 1.2.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
@@ -203,6 +202,8 @@ group :test, :cucumber do
 end
 
 group :test, :cucumber, :development do
+  # this is included in development so the mock data can be loaded into the dev database
+  gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
   gem "guard",              "~> 1.8.3"
   gem "guard-rspec"
   gem "guard-cucumber",     "~> 1.2.2"
