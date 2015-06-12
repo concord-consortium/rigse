@@ -35,6 +35,13 @@ begin
       t.cucumber_opts = 'features --format progress'
     end
 
+    Cucumber::Rake::Task.new({:javascript => 'db:test:prepare_cucumber'}, 'Run just the features requiring javascript') do |t|
+      t.binary = vendored_cucumber_bin
+      t.fork = true # You may get faster startup if you set this to false
+      t.profile = 'default'
+      t.cucumber_opts = 'features --format progress --tags @javascript'
+    end
+
     desc 'Run all features'
     task :all => [:ok, :wip]
 
