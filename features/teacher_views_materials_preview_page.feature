@@ -85,7 +85,7 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I should be able to share activity "Fluid Mechanics"
     
     
-  @javascript
+  @javascript @search
   Scenario: Teacher should be able return on search page
     When I am on the search instructional materials page
     And I search for "Mechanics" on the search instructional materials page

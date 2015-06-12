@@ -23,6 +23,7 @@ Feature: Teacher manages instructional materials of a class
     When I follow "Manage Materials"
     Then I should be on the class edit page for "My Class"
     
+  @search
   Scenario: Teacher can click button to Add new materials
     When I follow "Assign Materials"
     Then I should be on the search instructional materials page
