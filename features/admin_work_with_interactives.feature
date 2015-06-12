@@ -53,13 +53,12 @@ Feature: Admin can work with interactives
     And I should see "Grade Levels: gl_K"
     And I should see "Subject Areas: sa_Math"
 
-    @javascript
     Scenario: Removing tags from Interactives
       Given I am on the edit page of interactive "Interactive 1"
       When under "Grade Levels" I uncheck "12"
       And under "Subject Areas" I uncheck "Biology"
       And I press "Save"
-      Then I should not see "12"
+      Then I should not see "12" within #primary
       And I should not see "Biology"
 
     @javascript @search
