@@ -9,11 +9,14 @@ namespace :ci do
     Cucumber::Rake::Task.new(:cucumber) do |t|
       t.cucumber_opts = opts
     end
-    Cucumber::Rake::Task.new(:cucumber_with_javascript) do |t|
-         t.cucumber_opts = opts + " --tags @javascript"
-    end
     Cucumber::Rake::Task.new(:cucumber_without_javascript) do |t|
          t.cucumber_opts = opts + " --tags ~@javascript"
+    end
+    Cucumber::Rake::Task.new(:cucumber_javascript) do |t|
+         t.cucumber_opts = opts + " --tags @javascript --tags ~@search"
+    end
+    Cucumber::Rake::Task.new(:cucumber_search) do |t|
+         t.cucumber_opts = opts + " --tags @javascript --tags @search"
     end
   end
 
