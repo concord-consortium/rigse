@@ -64,7 +64,7 @@ Feature: Admin can work with materials collections
     And I wait 1 second
     Then the previously moved material in the materials collection "Collection 3" should be last
 
-  @javascript
+  @javascript @search
   Scenario: Admin adds materials to a Materials Collection
     Given the following simple investigations exist:
       | name              | description           | user   |

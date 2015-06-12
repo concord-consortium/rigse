@@ -81,7 +81,7 @@ Feature: Admin can work with projects
     Then I should see "there are errors"
     And I should see "Landing page slug has already been taken"
 
-  @javascript
+  @javascript @search
   Scenario: Admin adds materials to a project
     Given the default projects exist using factories
     And the following simple investigations exist:
@@ -101,7 +101,7 @@ Feature: Admin can work with projects
     Then I should see "Projects"
     Then I should see "project 1"
 
-  @javascript
+  @javascript @search
   Scenario: Admin filters search results based on projects
     Given the default projects exist using factories
     And the following investigations are assigned to projects:

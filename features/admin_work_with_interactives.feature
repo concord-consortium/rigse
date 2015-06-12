@@ -28,7 +28,7 @@ Feature: Admin can work with interactives
     Then I should be on the show page for interactive "New Interactive"
     And I should see "Interactive was successfully created."
     And I should see "Run Interactive"
-  
+
   @javascript
   Scenario: Taging Interactives
     Given the following Admin::tag records exist:
@@ -62,13 +62,13 @@ Feature: Admin can work with interactives
       Then I should not see "12"
       And I should not see "Biology"
 
-    @javascript
+    @javascript @search
     Scenario: Admin can see search suggestions
       Given I am on the search instructional materials page
       When I enter search text "Interactive 1" on the search instructional materials page
       Then I should see search suggestions for "Interactive 1" on the search instructional materials page
 
-    @javascript
+    @javascript @search
     Scenario: Admin can sort search results alphabetically
       Given I am on the search instructional materials page
       When I search for "Interactive" on the search instructional materials page
@@ -76,7 +76,7 @@ Feature: Admin can work with interactives
       Then "Interactive 1" should appear before "Interactive 11"
       And "Interactive 11" should appear before "Interactive 2"
 
-    @javascript
+    @javascript @search
     Scenario: Admin can sort search results for interactive on the basis of creation date
       Given I am on the search instructional materials page
       When I create interactive "Interactive 1" before "Interactive 2" by date
@@ -88,7 +88,7 @@ Feature: Admin can work with interactives
       And I wait 2 seconds
       Then "Interactive 2" should appear before "Interactive 1"
 
-    @javascript
+    @javascript @search
     Scenario: Admin should be able to see grouped search results on the basis of material type
       Given I am on the search instructional materials page
       When I enter search text "Geometry" on the search instructional materials page
@@ -122,7 +122,7 @@ Feature: Admin can work with interactives
       And I should not see "Nuclear Energy is a great material"
       And I should not see "Geometry"
 
-    @javascript
+    @javascript @search
     Scenario: User can search Interactives using Subject Areas
       Given I am on the search instructional materials page      
       When I check "Earth and Space Science" under "Subject Areas" filter
@@ -153,7 +153,7 @@ Feature: Admin can work with interactives
       When I uncheck "Biology" under "Subject Areas" filter
       Then I should see "Interactive 15"
 
-    @javascript
+    @javascript @search
     Scenario: User can search Interactives using grade levels
       Given I am on the search instructional materials page      
       When I check "K-2" under "Grade Levels" filter
@@ -186,7 +186,7 @@ Feature: Admin can work with interactives
       When I uncheck "5-6" under "Grade Levels" filter
       And I should see "Interactive 15"
 
-    @javascript
+    @javascript @search
     Scenario: User can search Interactives using grade levels and subject areas
       Given I am on the search instructional materials page
       When I check "3-4" under "Grade Levels" filter
@@ -196,7 +196,7 @@ Feature: Admin can work with interactives
       And I should not see "Interactive 11"
       And I should not see "Interactive 6"
 
-    @javascript
+    @javascript @search
     Scenario: User can search Interactives using model types
       Given I am on the search instructional materials page      
       When I select "Molecular Workbench" under "Model Types" filter
