@@ -184,7 +184,7 @@ group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
   gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
-  gem "selenium-webdriver", "2.45.0"
+  gem "selenium-webdriver", "~> 2.46.2"
   gem "cucumber",           "~> 1.2.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
