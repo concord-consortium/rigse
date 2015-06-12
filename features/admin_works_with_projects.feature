@@ -7,7 +7,7 @@ Feature: Admin can work with projects
   Background:
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
-    And I login as an admin
+    And I am logged in with the username admin
 
   Scenario: Admin accesses projects
     Given the default projects exist using factories
