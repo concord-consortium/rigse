@@ -1,4 +1,3 @@
-@javascript
 Feature: Admin can add, edit and remove notices
 
   As an admin
@@ -8,9 +7,7 @@ Feature: Admin can add, edit and remove notices
   Background:
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
-    And I login as an admin
-    And I create a notice "Notice for admin" for the roles "Admin"
-    
+    And I am logged in with the username admin
     
   @javascript
   Scenario: Admin can add a notice
@@ -18,24 +15,25 @@ Feature: Admin can add, edit and remove notices
     And am on the my home page
     Then I should see "Notice for users"
     
-    
   @javascript
   Scenario: Admin can edit notices
+    Given a notice "Notice for admin" for roles "Admin"
+    And am on the site notices index page
     When I follow "Edit"
     And I fill "Edited notice for users" in the tinyMCE editor with id "notice_html"
     And I press "Update Notice"
     And am on the my home page
     Then I should see "Edited notice for users"
     
-    
   @dialog
   @javascript
   Scenario: Admin can remove notices
+    Given a notice "Notice for admin" for roles "Admin"
+    And am on the site notices index page
     When I follow "Delete Notice"
     And accept the dialog
     And am on the my home page
     Then I should not see "Notice for admin"
-    
     
   @javascript
   Scenario: Admin cannot publish blank notices or without selecting any roles
@@ -43,9 +41,8 @@ Feature: Admin can add, edit and remove notices
     Then I should see "Notice text is blank"
     And I should see "No role is selected"
     
-    
-  @javascript
   Scenario: Admin can cancel notice creation or editing
+    Given a notice "Notice for admin" for roles "Admin"
     When I go to the admin create notice page
     And I follow "Cancel"
     Then I should be on "the site notices index page"
@@ -53,19 +50,13 @@ Feature: Admin can add, edit and remove notices
     And I follow "Cancel"
     Then I should be on "the site notices index page"
     
-    
-  @javascript
   Scenario: Anonymous users cannot create notice page
     When I am an anonymous user
     And I try to go to the admin create notice page
     Then I should be on "my home page"
     
-    
-  @dialog
-  @javascript
   Scenario: Admin is shown a message if there are no notices
-    When I follow "Delete Notice"
-    And accept the dialog
+    When I am on the site notices index page
     Then I should see "You have no notices."
     
     

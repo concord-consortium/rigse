@@ -39,3 +39,15 @@ Given /^a notice for all roles "(.*)"/ do |notice_html|
     site_notice_role.save!
   end
 end
+
+Given /^a notice "(.*)" for roles "(.+)"/ do |notice_html, selected_roles|
+  # use a factory to make a genric notice with this text
+  notice = Factory :site_notice, notice_html: notice_html
+
+  selected_roles.split(',').each do |role_name|
+    site_notice_role = Admin::SiteNoticeRole.new
+    site_notice_role.admin_site_notice = notice
+    site_notice_role.role = Role.find_by_title(role_name.strip.downcase.to_s)
+    site_notice_role.save!
+  end
+end
