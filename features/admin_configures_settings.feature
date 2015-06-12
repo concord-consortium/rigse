@@ -102,29 +102,6 @@ Feature: Admin configures settings
     Then I should see "test settings"
     
   @javascript
-  Scenario: Admin should preview Help page from admin settings page
-    Given The default settings and jnlp resources exist using factories
-    When I am logged in with the username admin
-    And am on the admin settings page
-    And I follow "edit settings"
-    And I choose "Use custom help page HTML"
-    And I fill in "admin_settings[custom_help_page_html]" with "Creating Help Page"
-    And I save the settings
-    And am on the admin settings page
-    And I press "Preview Custom Help Page"
-    Then the newly opened window should have content "Creating Help Page"
-    And I close the newly opened window
-    When am on the admin settings page
-    And I follow "edit settings"
-    And I choose "Use external help URL"
-    And I fill in "admin_settings[external_url]" with "www.google.com"
-    And I save the settings
-    And am on the admin settings page
-    And I press "Preview External Help URL"
-    Then the newly opened window should have content "google"
-    And I close the newly opened window
-    
-  @javascript
   Scenario: Admin edits the home page HTML
     Given the most basic default settings
     And I am logged in with the username admin
@@ -149,17 +126,3 @@ Feature: Admin configures settings
     And the newly opened window should have content "Username"
     And the newly opened window should have content "Password"
     And I close the newly opened window
-    
-  @javascript
-  Scenario: Admin can preview the home page from admin settings page
-    Given the most basic default settings
-    And I am logged in with the username admin
-    And am on the admin settings page
-    When I follow "edit settings"
-    And I fill in "admin_settings[home_page_content]" with "Creating Home Page"
-    And I save the settings
-    And am on the admin settings page
-    And I press "Preview Home Page"
-    Then the newly opened window should have content "Creating Home Page"
-    And I close the newly opened window
-    
