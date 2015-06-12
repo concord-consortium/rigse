@@ -57,6 +57,7 @@ Feature: Admin can work with materials collections
   Scenario: Admin re-orders materials in a Materials Collection
     When I am on the materials collection index page
     And I open the accordion for the materials collection "Collection 3"
+    And I wait 1 second
     And I drag the 3rd material in the materials collection "Collection 3" to the top
     And I wait 1 second
     Then the previously moved material in the materials collection "Collection 3" should be first
