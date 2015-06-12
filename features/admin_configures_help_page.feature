@@ -31,7 +31,7 @@ Feature: Admin configures help page
     And I follow "Help" within the top navigation bar
     Then the newly opened window should have content "Google"
     And I close the newly opened window
-    And I am on the search instructional materials page
+    And I am on my home page
     And I follow "Help" within the top navigation bar
     Then the newly opened window should have content "Google"
     And I close the newly opened window
