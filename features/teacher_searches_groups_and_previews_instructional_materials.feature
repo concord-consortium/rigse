@@ -103,16 +103,16 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Anonymous user can preview investigation
     When I log out
     And I go to the search instructional materials page
-    And I wait 2 seconds
-    Then I should preview investigation "Geometry" on the search instructional materials page
+    Then I should see "Geometry"
+    And I should preview investigation "Geometry" on the search instructional materials page
 
 
   @javascript @search
   Scenario: Anonymous user can preview activity
     When I log out
     And I go to the search instructional materials page
-    And I wait 2 seconds
-    Then I should preview activity "differential calculus" on the search instructional materials page
+    Then I should see "differential calculus"
+    And I should preview activity "differential calculus" on the search instructional materials page
 
 
   @javascript @search
