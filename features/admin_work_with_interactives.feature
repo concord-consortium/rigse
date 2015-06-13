@@ -150,6 +150,7 @@ Feature: Admin can work with interactives
       And I should not see "Interactive 9"
       And I should not see "Interactive 15"
       When I uncheck "Biology" under "Subject Areas" filter
+      And I enter search text "Interactive 15" on the search instructional materials page
       Then I should see "Interactive 15"
 
     @javascript @search
@@ -183,6 +184,7 @@ Feature: Admin can work with interactives
       And I should not see "Interactive 6"
       And I should not see "Interactive 15"
       When I uncheck "5-6" under "Grade Levels" filter
+      And I enter search text "Interactive 15" on the search instructional materials page
       And I should see "Interactive 15"
 
     @javascript @search

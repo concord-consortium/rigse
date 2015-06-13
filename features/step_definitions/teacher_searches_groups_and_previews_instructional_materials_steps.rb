@@ -39,15 +39,14 @@ Then /^(?:|I )should preview activity "(.+)" on the search instructional materia
 end
 
 When /^(?:|I )search for "(.+)" on the search instructional materials page$/ do |search_text|
-  step_text = "I fill in \"search_term\" with \"#{search_text}\""
-  step step_text
-  step 'I press "GO"'
+  fill_in("search_term", :with => search_text)
+  click_button("GO")
+  old_wait_time = Capybara.default_wait_time
   page.should have_content("matching search term \"#{search_text}\"")
 end
 
 When /^(?:|I )enter search text "(.+)" on the search instructional materials page$/ do |search_text|
-  step_text = "I fill in \"search_term\" with \"#{search_text}\""
-  step step_text
+  fill_in("search_term", :with => search_text)
   step 'I should wait 2 seconds'
 end
 
