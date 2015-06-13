@@ -106,8 +106,6 @@ Then /^I can view a report for materials in the mixed runnable type class$/ do
   offering_names = @mixed_runnable_type_clazz.offerings.map{|o| o.name}
 
   offering_names.each { |name| 
-    puts "Checking materials tab for #{name}"
-
     # it starts out with the first tab selected so we don't need to click in that case
     if name != offering_names.first
       step "I click the tab of Instructional Materials with text \"#{name}\""
