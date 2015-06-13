@@ -464,7 +464,7 @@ describe Investigation do
     end # deleting broken investigations
   end
 
-  describe "#is_template" do
+  describe "#is_template method" do
     let(:investigation)        { nil }
     let(:external_activities)  { [] }
     let(:activity_externals)    { [] }
@@ -491,6 +491,29 @@ describe Investigation do
       end
     end  
   end
+
+  describe '#is_template scope' do
+    before(:each) do
+      e1 = Factory.create(:external_activity)
+      e2 = Factory.create(:external_activity)
+      a = Factory.create(:activity, external_activities: [e2])
+      @i1 = Factory.create(:investigation)
+      @i2 = Factory.create(:investigation, external_activities: [e1])
+      @i3 = Factory.create(:investigation, activities: [a])
+    end
+
+    it 'should return investigations which are not templates if provided argument is false' do
+      expect(Investigation.is_template(false).count).to eql(1)
+      expect(Investigation.is_template(false).first).to eql(@i1)
+    end
+
+    it 'should return investigations which are templates if provided argument is true' do
+      expect(Investigation.is_template(true).count).to eql(2)
+      expect(Investigation.is_template(true).first).to eql(@i2)
+      expect(Investigation.is_template(true).last).to eql(@i3)
+    end
+  end
+
 
   describe "abstract_text" do
     let(:abstract)    { nil }

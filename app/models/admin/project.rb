@@ -10,11 +10,22 @@ class Admin::Project < ActiveRecord::Base
     @@searchable_attributes
   end
 
+  def self.all_sorted
+    self.order("name ASC")
+  end
+
   has_many :project_materials, dependent: :destroy
   has_many :activities, through: :project_materials, source: :material, source_type: 'Activity'
   has_many :investigations, through: :project_materials, source: :material, source_type: 'Investigation'
   has_many :external_activities, through: :project_materials, source: :material, source_type: 'ExternalActivity'
+  has_many :interactives, through: :project_materials, source: :material, source_type: 'Interactive'
   has_many :materials_collections
+
+  has_many :project_users, class_name: 'Admin::ProjectUser'
+  has_many :users, :through => :project_users
+
+  has_many :links, class_name: 'Admin::ProjectLink', :dependent => :destroy
+  accepts_nested_attributes_for :links, :reject_if => lambda { |link| link[:name].blank? or link[:href].blank? }, :allow_destroy => true
 
   validates :name, presence: true
   validates :landing_page_slug, uniqueness: true, allow_nil: true

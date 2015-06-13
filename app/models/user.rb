@@ -48,6 +48,9 @@ class User < ActiveRecord::Base
   has_many :created_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
   has_many :updated_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
 
+  has_many :project_users, class_name: 'Admin::ProjectUser'
+  has_many :projects, :through => :project_users
+
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
   scope :all_users, { :conditions => {}}
@@ -78,6 +81,7 @@ class User < ActiveRecord::Base
 
   after_update :set_passive_users_as_pending
   after_create :set_passive_users_as_pending
+  after_create :add_to_default_project
 
   # strip leading and trailing spaces from names, login and email
   def strip_spaces
@@ -306,6 +310,17 @@ class User < ActiveRecord::Base
     self == User.anonymous
   end
 
+  def set_project_ids(project_ids)
+    all_projects = Admin::Project.all
+    all_projects.each do |project|
+      if project_ids.find { |id| id.to_i == project.id }
+        projects << project if !projects.include? project
+      else
+        projects.delete project
+      end
+    end
+  end
+
   # Class method for returning the memoized anonymous user
   #
   # If you have deleted and recreated the Anonymous user
@@ -410,6 +425,13 @@ class User < ActiveRecord::Base
     self.reload
   end
 
+  def add_to_default_project
+    default_project = Admin::Settings.default_settings && Admin::Settings.default_settings.default_project
+    if default_project
+      self.projects << default_project
+    end
+  end
+
   def suspend!
     self.update_attribute(:state, 'suspended')
     self.reload
@@ -431,10 +453,6 @@ class User < ActiveRecord::Base
 
   def user_active?
     self.state != "suspended" && self.state != "disabled"
-  end
-
-  def materials
-    external_activities + activities + investigations
   end
 
   protected

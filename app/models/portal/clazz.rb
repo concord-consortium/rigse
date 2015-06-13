@@ -24,6 +24,7 @@ class Portal::Clazz < ActiveRecord::Base
   has_many :bookmarks
 
   before_validation :class_word_lowercase
+  before_validation :class_word_strip
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
   validates_presence_of :name
@@ -228,6 +229,10 @@ class Portal::Clazz < ActiveRecord::Base
 
   def class_word_lowercase
     self.class_word.downcase! if self.class_word
+  end
+
+  def class_word_strip
+    self.class_word.strip! if self.class_word
   end
 
   # NOTE: this should only be called by offerings_with_default_classes

@@ -6,7 +6,10 @@ Feature: User can visit custom project landing page
   Background:
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
-    And the project "FooBar" has landing page "Hello, <span id='foo-bar'></span><script>jQuery('#foo-bar').text('it is FooBar page!');</script>" and slug "foo-bar"
+    And the project "FooBar" has slug "foo-bar" and landing page
+      """
+      Hello, <span id='foo-bar'></span><script>jQuery('#foo-bar').text('it is FooBar page!');</script>
+      """
 
   @javascript
   Scenario: Logged in user vists projects landing page

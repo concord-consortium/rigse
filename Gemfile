@@ -25,13 +25,13 @@ source "http://rubygems.org"
   gem 'strong_parameters'
   gem "httpclient",           "~> 2.2"
   gem "httparty"
-  
+
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
   # gem 'capistrano-autoscaling', "0.0.8.3", :path => "../capistrano-autoscaling/"
   gem 'capistrano-autoscaling', "0.0.8.5", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
   # gem 'capistrano-autoscaling', "~> 0.0.9git",  :git => "git://github.com/yyuu/capistrano-autoscaling.git",  :branch => "develop"
   gem 'capistrano-cowboy'
-  
+
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
   gem "haml",           :git => "git://github.com/concord-consortium/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
@@ -122,6 +122,9 @@ source "http://rubygems.org"
 
   gem 'react-rails', '~> 1.0'
 
+  gem 'nested_form'
+  gem 'sanitize'
+
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:
@@ -172,7 +175,7 @@ group :development do
   gem "sextant"    # adds http://localhost:9000/rails/routes in dev mode
   gem 'xray-rails' # shows you what is being rendered in your browser with cmd+shift+x
   gem "better_errors", "~> 1.1.0"
-  gem "rack-mini-profiler" 
+  gem "rack-mini-profiler"
   gem "bullet"
   gem "lol_dba"
 end
@@ -180,8 +183,7 @@ end
 group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
-  gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
-  gem "selenium-webdriver", "2.45.0"
+  gem "selenium-webdriver", "~> 2.46.2"
   gem "cucumber",           "~> 1.2.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
@@ -200,10 +202,16 @@ group :test, :cucumber do
 end
 
 group :test, :cucumber, :development do
+  # this is included in development so the mock data can be loaded into the dev database
+  gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
   gem "guard",              "~> 1.8.3"
   gem "guard-rspec"
   gem "guard-cucumber",     "~> 1.2.2"
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.0.5"
   gem "pry"
+end
+
+group :test, :development do
+  gem 'jasmine'
 end

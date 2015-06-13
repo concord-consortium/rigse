@@ -10,80 +10,72 @@
       %p
         %ul.menu_v
           %li
-            %b
             = f.label :active, "Mark these settings as active:", :style => "display:inline;"
             = f.check_box :active
             %br
             (The first settings marked active will be used for the portal settings.)
           %li
-            %b
-              Enable Student Security Questions:
+            Enable Student Security Questions:
             = f.check_box :use_student_security_questions
             %br
             (This option will allow students to reset their own passwords.)
           %li
-            %b
             = f.label :allow_default_class, "Enable Default Class:", :style => "display:inline;"
             = f.check_box :allow_default_class
             %br
             (This option will allow students to reset their own passwords.)
           %li
-            %b
+            = f.label :default_project_id,  "Default Project:"
+            = f.collection_select(:default_project_id, Admin::Project.all, :id, :name, {include_blank: 'none'})
+            %br
+            (This option will cause that new users will be automatically added to the selected project.)
+          %li
             = f.label :enable_grade_levels, "Enable Grade Levels for Classes:", :style => "display:inline;"
             = f.check_box :enable_grade_levels
             %br
             (This option will allow teachers to select grade levels during class creation.)
           %li
-            %b
             = f.label :use_bitmap_snapshots, "Use Bitmaps in Labbook Exclusively:", :style => "display:inline;"
             = f.check_box :use_bitmap_snapshots
             %br
             (This option insures that all labbook entries are treated like simple images.)
           %li
-            %b
             = f.label :teachers_can_author, "Teachers can author:", :style => "display:inline;"
             = f.check_box :teachers_can_author
             %br
             (This option changes whether or not teachers are considered authors by default.)
           %li
-            %b
             = f.label :allow_adhoc_schools, "Teachers can create schools:", :style => "display:inline;"
             = f.check_box :allow_adhoc_schools
             %br
             (This option changes whether or not teachers can create schools)
           %li
-            %b
             = f.label :require_user_consent, "Require Users Consent:", :style => "display:inline;"
             = f.check_box :require_user_consent
             %br
             (This option changes whether or not users will be asked for consent to use their data)
           %li
-            %b
             = f.label :use_periodic_bundle_uploading, "Use Periodic Bundle Uploading:", :style => "display:inline;"
             = f.check_box :use_periodic_bundle_uploading
             %br
             (This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
           %li
-            %b
             = f.label :pub_interval, "PUB Interval seconds:", :style => "display:inline;"
             = f.text_field :pub_interval, :size=>4
             %br
             ([ minimum value: #{Admin::Settings::MinPubInterval} ] This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
           %li
-            %b
             = f.label :include_external_activities, "Include External Activities in class materials search:", :style => "display:inline;"
             = f.check_box :include_external_activities
             %br
             (This option changes whether or not External Activities will appear in the class materials search)
           %li
-            %b
             = f.label :anonymous_can_browse_materials, "Anonymous can browse instructional materials:", :style => "display:inline;"
             = f.check_box :anonymous_can_browse_materials
             %br
             (This option changes whether or not Browse Instructional Materials will appear in the nav bar for anonymous users.)
           %li
-            %b
-              = f.label :enabled_bookmark_types,  "Enabled bookmark types"
+            = f.label :enabled_bookmark_types,  "Enabled bookmark types"
             = f.select(:enabled_bookmark_types, admin_settings.available_bookmark_types.map { |b| [b,b]}, {},{ :class => ".chzn-select", :multiple => true})
           = content_for "admin_settings_form_#{admin_settings.id || 'new'}"
       = field_set_tag '<b>Jnlp</b>'.html_safe do

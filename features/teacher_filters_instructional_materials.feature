@@ -14,26 +14,26 @@ Feature: Teacher can search and filter instructional materials
     And I am on the search instructional materials page
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher should be able to filter the search results on the basis of domains
     When I check "Biological Science"
     Then I should see "Digestive System"
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher should be able to filter the search results on the basis of grades
     When I check "10-11"
     Then I should see "Digestive System"
     And I should see "Bile Juice"
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher views all investigations and activities for all grades
     Then I should see "Digestive System"
     And I should see "Bile Juice"
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher should be able to filter the search results on the basis of probes
     When I check "Temperature"
     And I should see "A Weather Underground"
@@ -49,7 +49,7 @@ Feature: Teacher can search and filter instructional materials
     And I should see "A heat spontaneously"
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher views all investigations and activities with sensors
     When I follow "check all"
     And I uncheck "Sensors Not Necessary"
@@ -59,7 +59,7 @@ Feature: Teacher can search and filter instructional materials
     And I should not see "Bile Juice"
 
 
-  @javascript
+  @javascript @search
   Scenario: Teacher views investigations and activities without sensors
     When I check "Sensors Not Necessary"
     Then I should not see "A Weather Underground"

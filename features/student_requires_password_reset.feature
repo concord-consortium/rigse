@@ -42,6 +42,6 @@ Feature: Student requires a password reset
     When I fill in "New Password" with "xyzzypizza"
     When I fill in "Confirm New Password" with "xyzzypizza"
     And I press "Save"
-    Then I should be on the login page
+    Then I should see "Classes and Offerings"
     And I should see "Password for student_password was successfully updated."
 

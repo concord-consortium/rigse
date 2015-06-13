@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150512135423) do
+ActiveRecord::Schema.define(:version => 20150612095239) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -61,6 +61,14 @@ ActiveRecord::Schema.define(:version => 20150512135423) do
 
   add_index "admin_notice_user_display_statuses", ["user_id"], :name => "index_admin_notice_user_display_statuses_on_user_id"
 
+  create_table "admin_project_links", :force => true do |t|
+    t.integer  "project_id"
+    t.text     "name"
+    t.text     "href"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "admin_project_materials", :force => true do |t|
     t.integer  "project_id"
     t.integer  "material_id"
@@ -72,6 +80,15 @@ ActiveRecord::Schema.define(:version => 20150512135423) do
   add_index "admin_project_materials", ["material_id", "material_type"], :name => "admin_proj_mat_mat_idx"
   add_index "admin_project_materials", ["project_id", "material_id", "material_type"], :name => "admin_proj_mat_proj_mat_idx"
   add_index "admin_project_materials", ["project_id"], :name => "admin_proj_mat_proj_idx"
+
+  create_table "admin_project_users", :id => false, :force => true do |t|
+    t.integer "project_id"
+    t.integer "user_id"
+  end
+
+  add_index "admin_project_users", ["project_id", "user_id"], :name => "admin_proj_user_uniq_idx", :unique => true
+  add_index "admin_project_users", ["project_id"], :name => "index_admin_project_users_on_project_id"
+  add_index "admin_project_users", ["user_id"], :name => "index_admin_project_users_on_user_id"
 
   create_table "admin_projects", :force => true do |t|
     t.string   "name"
@@ -110,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20150512135423) do
     t.integer  "pub_interval",                                 :default => 10
     t.boolean  "anonymous_can_browse_materials",               :default => true
     t.string   "jnlp_url"
+    t.integer  "default_project_id"
   end
 
   create_table "admin_settings_vendor_interfaces", :force => true do |t|

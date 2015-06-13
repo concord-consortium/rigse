@@ -204,7 +204,7 @@ namespace :db do
                     data[c.name] = user_id
                   end
                 end
-                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
+                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.collect {|value| "`#{value}`"}.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
               end        
             rescue StandardError => e
               puts e

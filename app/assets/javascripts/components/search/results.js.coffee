@@ -6,14 +6,14 @@ window.SearchResultsClass = React.createClass
       window.scrollTo 0, $("#{type}_bookmark").offsetTop
 
   renderMessage: ->
-    message = for group in @props.results
+    message = for group, idx in @props.results
       link = {url: 'javascript:void(0)', onclick: @generateScrollTo(group.type), text: group.header, className: ''}
-      (span {},
-        group.pagination.total_items, ' ', (SGenericLink {link: link})
+      (span {key: group.type},
+        group.pagination.total_items
+        ' '
+        (SGenericLink {link: link})
+        if idx != @props.results.length - 1 then ', ' else ''
       )
-    if @props.results.length > 1
-      for i in [(@props.results.length - 1)..1] by -1
-        message.splice i, 0, (span {}, ', ')
     message
 
   renderAllResults: ->

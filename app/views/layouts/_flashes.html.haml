@@ -1,7 +1,14 @@
-- unless flash[:notice].blank?
+- unless (flash[:notice].blank? && flash[:warning].blank?)
   #flash
     .padded_contents
-      %div{:class=>"flash flash_notice"}= flash[:notice]
+      %div.flash{:class => flash[:notice] ? "notice" : "warning"}
+        - if flash[:notice] 
+          = flash[:notice]
+        - else 
+          = flash[:warning]
+        %span.close
+          %i.fa.fa-times
+
 - [:error, :important,:alert].each do |key|
   - unless flash[key].blank?
     - encoded_msg = URI::encode("#{flash[key]}")
@@ -9,3 +16,32 @@
       document.whenReady( function() {
         Lightbox.flash(decodeURIComponent("#{key}"), decodeURIComponent("#{encoded_msg}"));
       });
+  %style{:type => "text/css"}
+    :sass
+      .flash
+        &.notice,&.warning
+          font-weight: bold
+          padding: 2px 10px
+          margin-bottom: 5px
+
+        &.notice
+          color: #548E16
+          border: solid 1px #26722D
+          background-color: #E8FFE7
+
+        &.warning
+          color: #A26710
+          border: solid 1px #A26710
+          background-color: #FCF7E2
+
+        span.close
+          float: right
+          cursor: pointer
+          margin-left: 15px
+
+:javascript
+jQuery(function() {
+    jQuery('.flash span.close').click(function(){
+        jQuery('.flash').hide();
+    });
+});

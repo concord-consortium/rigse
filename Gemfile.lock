@@ -129,7 +129,6 @@ GEM
       tzinfo (~> 0.3.29)
     activerecord-import (0.2.9)
       activerecord (~> 3.0)
-      activerecord (~> 3.0)
     activeresource (3.2.19)
       activemodel (= 3.2.19)
       activesupport (= 3.2.19)
@@ -222,6 +221,7 @@ GEM
       sprockets (< 2.13)
     connection_pool (2.2.0)
     crack (0.3.2)
+    crass (1.0.2)
     cucumber (1.2.5)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
@@ -315,6 +315,12 @@ GEM
     ice_nine (0.11.0)
     interactive_editor (0.0.10)
       spoon (>= 0.0.1)
+    jasmine (2.3.0)
+      jasmine-core (~> 2.3)
+      phantomjs
+      rack (>= 1.2.1)
+      rake
+    jasmine-core (2.3.4)
     jnlp (0.7.3)
       nokogiri (>= 1.4.4, <= 1.5)
     journey (1.0.4)
@@ -346,9 +352,10 @@ GEM
       webrobots (>= 0.0.9, < 0.2)
     method_source (0.8.2)
     mime-types (1.25.1)
-    multi_json (1.11.0)
+    multi_json (1.11.1)
     multi_xml (0.5.1)
     mysql2 (0.3.15)
+    nested_form (0.3.2)
     net-http-digest_auth (1.3)
     net-http-persistent (2.8)
     net-scp (1.0.4)
@@ -361,6 +368,8 @@ GEM
     newrelic_rpm (3.5.8.72)
     nokogiri (1.5.0)
     nokogiri (1.5.0-x86-mingw32)
+    nokogumbo (1.4.1)
+      nokogiri
     ntlm-http (0.1.1)
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
@@ -376,6 +385,7 @@ GEM
     pdf-reader (1.1.1)
       Ascii85 (~> 1.0.0)
       ruby-rc4
+    phantomjs (1.9.8.0)
     polyglot (0.3.5)
     posix-spawn (0.3.6)
     pr_geohash (1.0.0)
@@ -472,7 +482,11 @@ GEM
     ruby-prof (0.12.1)
     ruby-prof (0.12.1-x86-mingw32)
     ruby-rc4 (0.1.5)
-    rubyzip (1.1.0)
+    rubyzip (1.1.7)
+    sanitize (4.0.0)
+      crass (~> 1.0.2)
+      nokogiri (>= 1.4.4)
+      nokogumbo (= 1.4.1)
     sass (3.3.14)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
@@ -480,7 +494,7 @@ GEM
       tilt (~> 1.3)
     select2-rails (3.5.9)
       thor (~> 0.14)
-    selenium-webdriver (2.45.0)
+    selenium-webdriver (2.46.2)
       childprocess (~> 0.5)
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
@@ -640,12 +654,14 @@ DEPENDENCIES
   httpclient (~> 2.2)
   in_place_editing!
   interactive_editor
+  jasmine
   jnlp (~> 0.7.3)
   jruby-openssl (~> 0.7.4)
   json (~> 1.7.6)
   launchy (~> 2.0.5)
   lol_dba
   mysql2 (~> 0.3.15)
+  nested_form
   net-sftp (~> 2.0)
   newrelic_rpm (~> 3.5.4)
   nokogiri (~> 1.5.0)
@@ -674,10 +690,11 @@ DEPENDENCIES
   ruby-ole (~> 1.2.11.2)
   ruby-prof
   rush!
+  sanitize
   sass (~> 3.3.14)
   sass-rails
   select2-rails
-  selenium-webdriver (= 2.45.0)
+  selenium-webdriver (~> 2.46.2)
   sextant
   spreadsheet (~> 0.7.3)
   spring

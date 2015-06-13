@@ -7,50 +7,41 @@ Feature: Users can view notices created by project staff
   Background:
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
-    And I login as an admin
-    And I create the following notices:
-      | notice_html          | roles                                   |
-      | Notice for all users | Admin,Member,Researcher,Author,Manager  |
+    And a notice for all roles "Notice for all users"
     
     
-  @javascript
   Scenario: Member roles should see notices
-    When I login with username: teacher password: password
+    When I am logged in with the username teacher
     And am on the my home page
     Then I should see "Notice for all users"
     
     
-  @javascript
   Scenario: Admin roles should see notices
-    When I login as an admin
+    And I am logged in with the username admin
     And am on the my home page
     Then I should see "Notice for all users"
     
     
-  @javascript
   Scenario: Author roles should see notices
     And I am logged in with the username author
     And am on the my home page
     Then I should see "Notice for all users"
     
     
-  @javascript
   Scenario: Manager roles should see notices
     And I am logged in with the username manager
     And am on the my home page
     Then I should see "Notice for all users"
     
     
-  @javascript
   Scenario: Researcher roles should see notices
     And I am logged in with the username researcher
     And am on the my home page
     Then I should see "Notice for all users"
     
     
-  @javascript
   Scenario: Students should not see notices
-    And I login with username: student password: password
+    And I am logged in with the username student
     And am on the my home page
     Then I should not see "Notice for all users"
     

@@ -7,7 +7,7 @@ Feature: Admin views districts
   Background:
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
-    And I login as an admin
+    And I am logged in with the username admin
 
   Scenario: admin see a list of districts
     When I am on the districts page
