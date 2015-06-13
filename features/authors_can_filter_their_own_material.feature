@@ -17,7 +17,7 @@ Feature: Author can filter their own material
     When I am on the search instructional materials page
     Then I should see "authored by me"
 
-  @javascript
+  @javascript @search
   Scenario: Authors can filter Interactive using authored by me
     Given the following users exist:
       | login    | password | roles  |
@@ -40,7 +40,7 @@ Feature: Author can filter their own material
     And I should not see "interactive_1"
 
 
-  @javascript
+  @javascript @search
   Scenario: Authors can filter External Activity using authored by me
     Given the following users exist:
       | login    | password | roles |
