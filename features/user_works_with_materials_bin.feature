@@ -105,7 +105,7 @@ Feature: User works with materials bin
     Then I should see "My activities"
     And some materials should be visible
 
-  @javascript @pending
+  @javascript
   Scenario: User can see materials grouped by authors
     Given I am logged in with the username teacher
     And user "foobar" authored unofficial material "ext act"
