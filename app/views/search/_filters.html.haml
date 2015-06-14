@@ -39,7 +39,10 @@
               .tablecell
                 = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
                 = label_tag grade, grade
-
+        %td
+          = render :partial => "search/subject_areas_filter"
+          %br
+          = render :partial => "search/grade_levels_filter"
         %td
           = render :partial => "search/projects_filter"
           .filterheader
@@ -57,59 +60,79 @@
               %span.tip
                 These materials are written by external contributors.
         %td
-          = render :partial => "search/subject_areas_filter"
-          %br
-          = render :partial => "search/grade_levels_filter"
+          %table{style: "margin:0"}
+            %tr
+              %td.materialcolumn
+                .filterheader
+                  Material Type
+                .tablecell
+                  = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
+                  = label_tag 'investigation', t(:investigation).titleize
+                .tablecell
+                  = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
+                  = label_tag 'activity','Activity'
+                .tablecell
+                  = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
+                  = label_tag 'interactive','Interactive'
+                %br
+                .filterheader
+                  Material Properties
+                .tablecell
+                  = check_box_tag 'java_requirements[]', SearchModelInterface::NoJavaRequirement, @form_model.runs_in_browser, :id => 'runs_in_browser'
+                  %label.tooltip
+                    Runs In Browser
+                    %span.tip
+                      These materials do not launch a Java webstart application.
+                .tablecell
+                  = check_box_tag 'java_requirements[]', SearchModelInterface::JNLPJavaRequirement, @form_model.requires_download, :id => 'requires_download'
+                  %label.tooltip
+                    Requires Download
+                    %span.tip
+                      These materials download a file to your computer, and start using Java Web Start.
+                %br
+                .filterheader
+                  Interactive Types
+                .tablecell
+                  = render :partial=>"search/model_types_filter"
+              %td.probescolumn
+                .filterheader
+                  Sensor Use
+                %span
+                  %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(true);"}check all
+                %span{:style => 'color: #479492'}|
+                %span
+                  %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(false);"}clear
+                .noprobesrequired
 
-        %td.materialcolumn
-          .filterheader
-            Material Type
-          .tablecell
-            = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
-            = label_tag 'investigation', t(:investigation).titleize
-          .tablecell
-            = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
-            = label_tag 'activity','Activity'
-          .tablecell
-            = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
-            = label_tag 'interactive','Interactive'
-          %br
-          .filterheader
-            Material Properties
-          .tablecell
-            = check_box_tag 'java_requirements[]', SearchModelInterface::NoJavaRequirement, @form_model.runs_in_browser, :id => 'runs_in_browser'
-            %label.tooltip
-              Runs In Browser
-              %span.tip
-                These materials do not launch a Java webstart application.
-          .tablecell
-            = check_box_tag 'java_requirements[]', SearchModelInterface::JNLPJavaRequirement, @form_model.requires_download, :id => 'requires_download'
-            %label.tooltip
-              Requires Download
-              %span.tip
-                These materials download a file to your computer, and start using Java Web Start.
-          %br
-          .filterheader
-            Interactive Types
-          .tablecell
-            = render :partial=>"search/model_types_filter"
-        %td.probescolumn
-          .filterheader
-            Sensor Use
-          %span
-            %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(true);"}check all
-          %span{:style => 'color: #479492'}|
-          %span
-            %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(false);"}clear
-          .noprobesrequired
+                .probes_container.webkit_scrollbars
+                  .tablecell
+                    = check_box_tag 'no_probes', '1', @form_model.no_probes, :id=>'probe_0', :class=>'probe_items'
+                    = label_tag 'probe_0', 'Sensors Not Necessary', :class=>'probes_label'
+                  - probe_types.each do |probe|
+                    .tablecell
+                      = check_box_tag 'probe[]',"#{probe.id}",(@form_model.probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"
+                      = label_tag "probe_#{probe.id}","#{probe.name}",:class=>"probes_label"
+          - unless current_visitor.anonymous?            
+            %br
+            .authored_by_me
+              = check_box_tag 'include_mine', '1', params[:include_mine], :id => 'include_mine', :class => 'include_mine'
+              %label.tooltip.filterheader{:for => "include_mine", :class => 'include_mine'}
+                Find only Materials authored by me
 
-          .probes_container.webkit_scrollbars
-            .tablecell
-              = check_box_tag 'no_probes', '1', @form_model.no_probes, :id=>'probe_0', :class=>'probe_items'
-              = label_tag 'probe_0', 'Sensors Not Necessary', :class=>'probes_label'
-            - probe_types.each do |probe|
-              .tablecell
-                = check_box_tag 'probe[]',"#{probe.id}",(@form_model.probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"
-                = label_tag "probe_#{probe.id}","#{probe.name}",:class=>"probes_label"       
 = render :partial=>"search/customize_filters"
 
+
+:javascript 
+  
+  jQuery(function(){
+    var authoredByMe = jQuery("#include_mine"),
+        includeMine = jQuery(".include_mine"),
+        includeOfficial = jQuery("#include_official"),
+        includeCommunity = jQuery("#include_contributed");
+    includeMine.on("mousedown",function() {
+      if(!authoredByMe.is(":checked")) {
+        includeOfficial.prop('checked', false);
+        includeCommunity.prop('checked', false);
+      }
+    });
+  });
