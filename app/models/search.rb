@@ -173,11 +173,13 @@ class Search
     self.clean_material_types.each do |type|
       _results = self.engine.search(SearchableModels) do |s|
         s.fulltext(self.text)
+        # default list: published, plus all those authored by the current user
         s.any_of do |c|
-          c.with(:published, true) unless self.include_mine
+          c.with(:published, true)
           c.with(:published, [true, false]) if self.private
           c.with(:user_id, self.user_id)
         end
+        s.with(:user_id, self.user_id) if self.include_mine
         s.with(:material_type, type)
         s.with(:domain_id, self.domain_id) unless self.domain_id.empty?
         s.with(:grade_span, self.grade_span) unless self.grade_span.empty?
