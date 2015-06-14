@@ -13,6 +13,8 @@
               Welcome
               = "#{current_visitor.name}"
             %br
+            - if current_settings && ((current_settings.help_type == 'external url') || (current_settings.help_type == 'help custom html'))
+              = link_to 'Help | ', 'javascript: void(0)', :onclick => "window.open('/help','help_page','height = 700, width = 800, resizable = yes, scrollbars = yes');"
             = link_to 'My Preferences', preferences_user_path(current_visitor)
             - if @original_user != current_visitor
               |
