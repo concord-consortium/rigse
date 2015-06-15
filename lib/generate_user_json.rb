@@ -8,7 +8,7 @@ class GenerateUserJSON < Struct.new(:export_id,:user_id)
       next if user.portal_student
       user_data = user.as_json(:only => [:first_name,:last_name,:login,:email])
       user_data[:teacher] = user.portal_teacher ? true : false
-      user_data[:school] = user.school ? user.school.as_json(:only => [:name,:nces_school_id,:state]) : nil
+      user_data[:school] = user.school ? user.school.as_json(:only => [:name,:ncessch,:state]) : nil
       user_data[:school][:district] = user.school.district.as_json(:only => [:name,:leaid]) if user.school
       user_data[:user_page_url] = user.user_page_url
       user_data[:roles] = []

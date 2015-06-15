@@ -2,14 +2,14 @@ class GenerateSchoolDistrictJSON < Struct.new(:export_id,:user_id)
   def perform
     export = Export.find(export_id)
     user = User.find(user_id)
-    sql = "SELECT portal_schools.name, portal_schools.description, portal_schools.state, portal_schools.zipcode, portal_schools.ncessch, portal_schools.nces_school_id, portal_districts.uuid
+    sql = "SELECT portal_schools.name, portal_schools.description, portal_schools.state, portal_schools.zipcode, portal_schools.ncessch, portal_districts.uuid
            FROM portal_schools
            INNER JOIN portal_districts
            ON portal_schools.district_id = portal_districts.id;"
     records_array = ActiveRecord::Base.connection.select_all(sql)
     export_data = {:schools => records_array }
 
-    sql = "SELECT name, description, state, zipcode, leaid, uuid, nces_district_id
+    sql = "SELECT name, description, state, zipcode, leaid, uuid
            FROM portal_districts;"
     records_array = ActiveRecord::Base.connection.select_all(sql)
     export_data[:districts] = records_array
