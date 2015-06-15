@@ -62,4 +62,11 @@ class ImportSchoolsAndDistricts < Struct.new(:import, :content_path)
     import.update_attribute(:job_finished_at, Time.current)
     File.delete(content_path) if File.exist?(content_path)
   end
+
+  def error(job, exception)
+    import.update_attribute(:progress, -1)
+    job.destroy
+    File.delete(content_path) if File.exist?(content_path)
+  end
+
 end

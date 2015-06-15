@@ -1,4 +1,9 @@
--heading = @import_type == Import::IMPORT_TYPE_SCHOOL_DISTRICT ? "Importing Schools and Districts" : "Imporing Users"
+-if @import_type == Import::IMPORT_TYPE_SCHOOL_DISTRICT
+  -heading = "Import Schools and Districts"
+  -url_path = import_school_district_json_imports_path
+-else
+  -heading = "Import Users"
+  -url_path = import_user_json_imports_path
 %h1
   =heading
 -if @imports_progress.size > 0
@@ -6,14 +11,20 @@
     .progress-wrap.finished{id: "progress-wrap-#{import_progress[:id]}"}
       .progress-bar
         .progress-status
-      %div
+      %div.progress-percentage
         Import in progress:
-        %span.progress-percentage
-      .progress-complete Import Successfull
+        %span
+      .progress-complete 
+        .flash.notice
+          Import Successful
+        .new-import
+          Click 
+          =link_to "here", url_for 
+          to start a new Import.
 -else
   .import
-    Choose JSON file to upload and click on import
-    = form_tag import_school_district_json_imports_path, :method => :post, :remote => true, :multipart => true, :id => "import" do |f|
+    Choose a JSON file to import
+    = form_tag url_path , :method => :post, :remote => true, :multipart => true, :id => "import" do |f|
       .info
         %table
           %tr
@@ -22,14 +33,18 @@
       %input{:class => "import-submit", :type => "button", :id => "import-post-json", :value => "Import"} 
 
     %script{:id => 'template-upload',:type => 'text/x-tmpl'}
-    .upload{:id => 'upload_div'}
-      .progress
+    .upload-wrap{:id => 'upload_div'}
+      .upload-progress.upload
         .bar
+      %div.upload-progress-message.upload
+        Please wait while your file is being uploaded.
 
 
 
 %style(type="text/css") 
   :sass
+    #import
+      padding: 0
     .progress-wrap
       .progress-bar
         width: 400px
@@ -41,21 +56,46 @@
           width: 0%
           height: 15px
           border-radius: 3px
-
       .progress-complete
         display: none
         margin-bottom: 30px
+        .new-import
+          margin-top: 10px
       .progress-percentage
-        font-weight: bold
+        span
+          font-weight: bold
     .finished
       display: none
+
+    .upload-wrap
+      margin-top: 10px
+      .upload-progress
+        width: 400px
+        border: 1px solid #0B6B08
+        padding: 1px
+        border-radius: 3px
+        background-color: #FFCC99
+      .upload
+        display: none
+        .bar
+          background-color: #E78014
+          width: 0%
+          height: 10px
+          border-radius: 3px
 
 :javascript  
 
   jQuery(function(){
 
-    var targetUrl = "/imports/import_school_district_status"
+    var targetUrl = window.location.pathname
     var timer;
+    
+    function hideProgress($progressWrap){
+      $progressWrap.find(".progress-bar").hide();
+      $progressWrap.find(".progress-percentage").hide();
+      $progressWrap.find(".progress-complete").show();
+      clearInterval(timer);
+    }
 
     function updateProgress(progressData){      
       jQuery.each(progressData["progress"], function(index,data){
@@ -63,20 +103,22 @@
         progress = data["progress"]
         total = data["total"]
         percent = Math.round((progress / total) * 100);
-        if(progress < total){
-          $progressWrap.removeClass("finished")
-          $progressWrap.find(".progress-status").width(percent+"%")
-          $progressWrap.find(".progress-percentage").text(percent+"%")
-        } else if(progress == total){
-          $progressWrap.find(".progress-bar").hide();
-          $progressWrap.find(".progress-percentage").hide();
-          $progressWrap.find(".progress-complete").show();
-          clearInterval(timer);
+        if (progress == -1){
+          if(!alert('Error occured while importing')){window.location.reload();}
+        }
+        if(progress){
+          if(progress < total){
+            $progressWrap.removeClass("finished")
+            $progressWrap.find(".progress-status").width(percent+"%")
+            $progressWrap.find(".progress-percentage span").text(percent+"%")
+          } else if(progress == total){
+            hideProgress($progressWrap);
+          }
         }
       });
       jQuery(".finished").remove();
       if(progressData["progress"].length == 0){
-        clearInterval(timer);
+        hideProgress(jQuery(".progress-wrap"));
       }
     }
 
@@ -93,31 +135,16 @@
       });
     },2000);
 
-    // jQuery("body").on("click", "#import-post-json" , function() {
-    //   filedata = new FormData()
-    //   filedata.append('import', jQuery('input[type=file]')[0].files[0])
-    //   var options = {
-    //     url:"/imports/import_school_district_json",
-    //     type: 'POST',
-    //     data: filedata,
-    //     cache: false,
-    //     processData: false,
-    //     contentType: false,
-    //     success: function(transport) {
-    //       location.reload();
-    //     },
-    //     error: function(transport) { 
-    //       alert("error");
-    //     }
-    //   }
-    //   jQuery.ajax(options);
-    // });
-
 
     jQuery("#import").fileupload({
       replaceFileInput: false,
       autoUpload: false,
       add: function(e, data) {
+        type = /.json$/
+        if(!type.test(data.files[0].name)){
+          alert("#{file.name} is not a json file.");
+          this.reset();
+        }
         data.context = jQuery(tmpl("upload_div", data.files[0]));
         jQuery(".import-submit").unbind('click').on('click', function(e){
           e.preventDefault();
@@ -128,7 +155,7 @@
         var progress;
         if (data) {
           progress = parseInt(data.loaded / data.total * 100, 10);
-          jQuery('.progress').css('display','block');
+          jQuery('.upload').show();
           return jQuery('.bar').css('width', progress + '%');
         }
       },

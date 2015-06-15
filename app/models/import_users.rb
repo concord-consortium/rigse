@@ -10,21 +10,38 @@ class ImportUsers < Struct.new(:import, :content_path)
 
     content_hash[:users].each_with_index do |user, index|      
       puts "user #{index}"
-      new_user = nil
-      user_exist = User.where(email: user[:email]).size > 0 || User.where(login: user[:login]).size > 0
-      unless user_exist
-        new_user = User.create!({
-          :email => user[:email],
-          :login => user[:login],
-          :last_name => user[:last_name],
-          :first_name => user[:first_name],
-          :password => "password", 
-          :password_confirmation => "password",
-          :require_password_reset => true
-        });
+      new_user = User.find_or_create_by_login({
+        :email => user[:email],
+        :login => user[:login],
+        :last_name => user[:last_name],
+        :first_name => user[:first_name],
+        :password => "password", #default password
+        :password_confirmation => "password",
+        :require_password_reset => true
+      }){|u| u.skip_notifications = true}
+      if new_user.new_record?
+        user[:roles].each do |role|
+          new_user.add_role(role)
+        end
+        if user[:teacher]
+          district = Portal::District.find_by_name_and_leaid(user[:school][:district][:name],user[:school][:district][:leaid]) 
+          if district
+            school = Portal::School.find(:first, :conditions => {name: user[:school][:name], state: user[:school][:state], ncessch: user[:school][:ncessch], district_id: district.id})
+          else
+            school = Portal::School.find(:first, :conditions => {name: user[:school][:name], state: user[:school][:state], ncessch: user[:school][:ncessch]})
+          end
+          portal_teacher = Portal::Teacher.new do |t|
+            t.user = new_user
+            t.schools << school if school
+          end
+          user[:cohorts].each do |cohort|
+            portal_teacher.cohort_list.add(cohort)
+          end
+        end
       else
         duplicate_users << user 
       end
+      user_for_lara << user[:email]
       import.update_attribute(:progress, (index + 1))
     end
 
@@ -38,12 +55,16 @@ class ImportUsers < Struct.new(:import, :content_path)
     end
 
     uri = URI.parse("#{APP_CONFIG[:authoring_site_url]}/import/import_users")
-
-    response = HTTParty.post(uri.to_s,
-      :body => {:user => user_for_lara},
-      :headers => {"Content-Type" => 'application/json'})
+    response = HTTParty.post(uri.to_s, :body => {:portal_users => user_for_lara}.to_json, :headers => {"Content-Type" => 'application/json'})
 
     import.update_attribute(:duplicate_data, path)
     import.update_attribute(:job_finished_at, Time.current)
+    File.delete(content_path) if File.exist?(content_path)
+  end
+
+  def error(job, exception)
+    import.update_attribute(:progress, -1)
+    job.destroy
+    File.delete(content_path) if File.exist?(content_path)
   end
 end

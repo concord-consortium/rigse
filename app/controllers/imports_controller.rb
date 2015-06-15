@@ -3,21 +3,24 @@ class ImportsController < ApplicationController
   before_filter :admin_only
 
   def import_school_district_json
-    
     file_data = params[:import][:import].read 
-    #begin
+    begin
       json_data = JSON.parse file_data, :symbolize_names => true
-    #rescue => e
-      #flash[:warning] = "Invalid JSON"
-      #redirect_to :action => "import_school_district_status"
-    #end  
+      if json_data[:districts].nil? || json_data[:schools].nil?
+        raise "Invalid JSON"
+      end
+    rescue => e
+      flash[:warning] = "Invalid JSON"
+      redirect_to :action => "import_school_district_status" 
+      return
+    end
     name = "upload_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
     directory = "public/json"
     path = File.join(directory, name)
     dir = File.dirname(path)
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
     File.open(path, "w") do |f|
-      f.write(params[:import][:import].read)
+      f.write(file_data)
     end    
     import = Import.create!()
     job = Delayed::Job.enqueue ImportSchoolsAndDistricts.new(import, path)
@@ -27,13 +30,24 @@ class ImportsController < ApplicationController
   end
 
   def import_user_json
+    file_data = params[:import][:import].read
+    begin
+      json_data = JSON.parse file_data, :symbolize_names => true
+      if json_data[:users].nil?
+        raise "Invalid JSON"
+      end
+    rescue => e
+      flash[:error] = "Invalid JSON"
+      redirect_to :action => "import_user_status"
+      return
+    end
     name = "upload_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
     directory = "public/json"
     path = File.join(directory, name)
     dir = File.dirname(path)
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
     File.open(path, "w") do |f|
-      f.write(params[:import][:import].read)
+      f.write(file_data)
     end
     import = Import.create!()
     job = Delayed::Job.enqueue ImportUsers.new(import, path)
@@ -52,6 +66,7 @@ class ImportsController < ApplicationController
         progress: import_in_progress.progress,
         total: import_in_progress.total_imports
       }
+      import_in_progress.destroy if import_in_progress.progress == -1
     end
     if request.xhr?
       render :json => {:progress => @imports_progress}
@@ -67,9 +82,10 @@ class ImportsController < ApplicationController
     imports_in_progress.each_with_index do |import_in_progress, index|
       @imports_progress << {
         id: import_in_progress.id,        
-        a: import_in_progress.progress,
-        b: import_in_progress.total_imports
+        progress: import_in_progress.progress,
+        total: import_in_progress.total_imports
       }
+      import_in_progress.destroy if import_in_progress.progress == -1
     end
     if request.xhr?
       render :json => {:progress => @imports_progress}
