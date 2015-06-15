@@ -20,3 +20,9 @@ AfterStep('@pause') do
   print "Press Return to continue"
   STDIN.getc
 end
+
+include SolrSpecHelper
+Before('@search') do
+  clean_solar_index
+  reindex_all
+end

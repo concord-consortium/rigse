@@ -15,12 +15,17 @@ jQuery(function () {
       $window = jQuery(window),
       $moreMenu, $menuItems, $moreLink, $moreItem;
 
+  // no menu, no work to do...
+  if ($topMenu.length === 0) {
+    return;
+  }
+
   // create a more menu with all the current menu items
   $moreMenu = jQuery("<div>").attr("id", "nav_top_more_menu").hide();
   $moreMenuList = jQuery("<ul>");
   $moreMenu.append($moreMenuList);
 
-  $menuItems = $topMenu.find("li");
+  $menuItems = $topMenu.find("li").filter(":not(.hide-menu-item)")
   $menuItems.each(function () {
     var $menuItem = jQuery(this),
         $moreMenuItem = $menuItem.clone().removeClass("trail").css({

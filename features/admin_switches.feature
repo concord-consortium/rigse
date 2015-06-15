@@ -10,13 +10,13 @@ Feature: Admin switches to a different user
     
   @javascript
   Scenario: Admin switches to student
-    When I login as an admin
+    And I am logged in with the username admin
     And I switch to "Joe Switchuser" in the user list by searching "Switchuser"
     Then I should see "Welcome Joe Switchuser"
     
   @javascript
   Scenario: Admin switches back to admin
-    When I login as an admin
+    And I am logged in with the username admin
     And I switch to "Joe Switchuser" in the user list by searching "Switchuser"
     Then I should see "Welcome Joe Switchuser"
     And I follow "Switch Back"

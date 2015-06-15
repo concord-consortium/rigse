@@ -4,7 +4,7 @@
     .aligned
       = hidden_field_tag :update_subject_areas, "true"
       %ul.menu_h
-        - Admin::Tag.find_all_by_scope("subject_areas").each do |admin_tag|
+        - Admin::Tag.find_all_by_scope("subject_areas").sort_by {|sub| sub[:tag].downcase}.each do |admin_tag|
           %li
             - label_str = "subject_areas_#{admin_tag.tag.underscore}"
             = label_tag label_str, admin_tag.tag

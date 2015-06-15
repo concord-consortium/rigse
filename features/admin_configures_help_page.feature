@@ -7,7 +7,7 @@ Feature: Admin configures help page
   Background:
     Given the most basic default settings
     And the database has been seeded
-    And I login as an admin
+    And I am logged in with the username admin
     And am on the admin settings page
     When I follow "edit settings"
   
@@ -31,7 +31,7 @@ Feature: Admin configures help page
     And I follow "Help" within the top navigation bar
     Then the newly opened window should have content "Google"
     And I close the newly opened window
-    And I am on the search instructional materials page
+    And I am on my home page
     And I follow "Help" within the top navigation bar
     Then the newly opened window should have content "Google"
     And I close the newly opened window
@@ -81,8 +81,8 @@ Feature: Admin configures help page
     And I fill in "admin_settings[external_url]" with ""
     And I press "Preview External Help URL"
     Then I should see "Please enter a valid external help URL." within the lightbox in focus
-    
- @javascript
+
+  @javascript
   Scenario: Admin should be allowed to remove help page link
     When I choose "No help link"
     And I save the settings

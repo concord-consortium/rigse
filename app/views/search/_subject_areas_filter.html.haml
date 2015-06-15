@@ -1,7 +1,7 @@
 -if @form_model.available_subject_areas.size > 0
   .filterheader
     Subject Areas
-  - @form_model.available_subject_areas.uniq.each do |subject_area|
+  - @form_model.available_subject_areas.uniq.sort_by { |sub| sub.downcase }.each do |subject_area|
     .tablecell
       - id = "subject_area_#{subject_area.squish.downcase.tr(" ","_")}"
       = check_box_tag 'subject_areas[]', subject_area,  @form_model.subject_areas.include?(subject_area),:id => id, :class => 'check-box-left-margin'

@@ -7,7 +7,9 @@ env:
   matrix:
   - RAILS_ENV=test TEST_SUITE=spec
   - RAILS_ENV=test TEST_SUITE=jasmine:ci
-  - RAILS_ENV=cucumber TEST_SUITE=cucumber
+  - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_without_javascript
+  - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_javascript
+  - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_search
   global:
   - secure: fBn66dqLiQa0W1eDAV/ZZKgA4K3OogG9WG/9lyd81csj9YGtHnE91YlzHLH25oyMWg53nGYEcUlLnPYFw7mqdFJ48AJ5sMaplIqmBMmb9OnpUpYc1sds3wvi81TmTAT0ColdBtgdSBCjIPTr2AuieBJgR8dqPpT/uXg30meZg/g=
   - secure: ebGYa+ExFODy1+aVIrppCkyuO/z4RLBHQ8oGE7+h4a3Hdzxx4kSvfRt3nIeklMpTBt0M55hpY/MnZxHt1N0fhSkqfjeJrsYaagatBXezPiW34ZZCbS2E/pJ3pYiL2zzZS3hER30oGGNthYXuU3LI8gjLL8NHXvg5dxrHVaQeD1M=
