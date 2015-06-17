@@ -8,35 +8,45 @@ class ImportUsers < Struct.new(:import, :content_path)
 
     import.update_attribute(:total_imports, total_users_count)
 
-    content_hash[:users].each_with_index do |user, index|      
-      puts "user #{index}"
-      new_user = User.find_or_create_by_login({
-        :email => user[:email],
-        :login => user[:login],
-        :last_name => user[:last_name],
-        :first_name => user[:first_name],
-        :password => "password", #default password
-        :password_confirmation => "password",
-        :require_password_reset => true
-      }){|u| u.skip_notifications = true}
-      if new_user.new_record?
+    content_hash[:users].each_with_index do |user, index|
+      new_user = User.find_by_login(user[:login]) || User.find_by_login(user[:email])
+      unless new_user
+        new_user = User.create({
+          :email => user[:email],
+          :login => user[:login],
+          :last_name => user[:last_name],
+          :first_name => user[:first_name],
+          :password => "password", #default password
+          :password_confirmation => "password",
+          :require_password_reset => true
+          
+        }){|u| u.skip_notifications = true}
+        new_user.confirm!
         user[:roles].each do |role|
           new_user.add_role(role)
         end
         if user[:teacher]
-          district = Portal::District.find_by_name_and_leaid(user[:school][:district][:name],user[:school][:district][:leaid]) 
-          if district
-            school = Portal::School.find(:first, :conditions => {name: user[:school][:name], state: user[:school][:state], ncessch: user[:school][:ncessch], district_id: district.id})
-          else
-            school = Portal::School.find(:first, :conditions => {name: user[:school][:name], state: user[:school][:state], ncessch: user[:school][:ncessch]})
+          if user[:school]
+            if user[:school][:district]
+              district_params = {}
+              district_params[:name] = user[:school][:district][:name]
+              district_params[:leaid] = user[:school][:district][:leaid]
+              district = Portal::District.find(:first, :conditions => district_params)
+            end
+            school_params = {}
+            school_params[:name] = user[:school][:name] if user[:school][:name]
+            school_params[:state] = user[:school][:state] if user[:school][:state]
+            school_params[:ncessch] = user[:school][:ncessch] if user[:school][:ncessch]
+            school_params[:district_id] = district.id if district
+            school = Portal::School.find(:first, :conditions => school_params)
           end
-          portal_teacher = Portal::Teacher.new do |t|
-            t.user = new_user
-            t.schools << school if school
-          end
+          portal_teacher = Portal::Teacher.new 
+          portal_teacher.user = new_user
+          portal_teacher.schools << school if school
           user[:cohorts].each do |cohort|
             portal_teacher.cohort_list.add(cohort)
           end
+          portal_teacher.save!
         end
       else
         duplicate_users << user 
@@ -50,16 +60,17 @@ class ImportUsers < Struct.new(:import, :content_path)
     path = File.join(directory, name)
     dir = File.dirname(path)
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
-    File.open(path, "a") do |f|
+    File.open(path, "w") do |f|
       f.write({:duplicate_users => duplicate_users}.to_json)
     end
-
-    uri = URI.parse("#{APP_CONFIG[:authoring_site_url]}/import/import_users")
-    response = HTTParty.post(uri.to_s, :body => {:portal_users => user_for_lara}.to_json, :headers => {"Content-Type" => 'application/json'})
 
     import.update_attribute(:duplicate_data, path)
     import.update_attribute(:job_finished_at, Time.current)
     File.delete(content_path) if File.exist?(content_path)
+
+    uri = URI.parse("http://127.0.0.1:3001/import/import_users")
+    response = HTTParty.post(uri.to_s, :body => {:portal_users => user_for_lara}.to_json, :headers => {"Content-Type" => 'application/json'})
+   
   end
 
   def error(job, exception)

@@ -10,8 +10,7 @@ class ImportsController < ApplicationController
         raise "Invalid JSON"
       end
     rescue => e
-      flash[:warning] = "Invalid JSON"
-      redirect_to :action => "import_school_district_status" 
+      redirect_to import_school_district_status_imports_path({:message => "Invalid JSON"})
       return
     end
     name = "upload_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
@@ -37,8 +36,7 @@ class ImportsController < ApplicationController
         raise "Invalid JSON"
       end
     rescue => e
-      flash[:error] = "Invalid JSON"
-      redirect_to :action => "import_user_status"
+      redirect_to import_user_status_imports_path({:message => "Invalid JSON"})
       return
     end
     name = "upload_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
@@ -69,7 +67,11 @@ class ImportsController < ApplicationController
       import_in_progress.destroy if import_in_progress.progress == -1
     end
     if request.xhr?
-      render :json => {:progress => @imports_progress}
+      if params[:message]
+        render :json => {:error => params[:message]}, :status => 500
+      else
+        render :json => {:progress => @imports_progress}
+      end
     else
       render "imports/import_status"
     end
@@ -88,10 +90,21 @@ class ImportsController < ApplicationController
       import_in_progress.destroy if import_in_progress.progress == -1
     end
     if request.xhr?
-      render :json => {:progress => @imports_progress}
+      if params[:message]
+        render :json => {:error => params[:message]}, :status => 500
+      else
+        render :json => {:progress => @imports_progress}
+      end
     else
       render "imports/import_status"
     end
+  end
+
+  def download
+    send_data File.read("#{Rails.root}/public/json/duplicate_users.json"),
+      :filename => "duplicate_users.json",
+      :type => "application/json",
+      :x_sendfile => true
   end
 
   protected

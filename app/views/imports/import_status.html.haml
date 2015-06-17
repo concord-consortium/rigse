@@ -21,6 +21,10 @@
           Click 
           =link_to "here", url_for 
           to start a new Import.
+
+          Click 
+          =link_to "here", download_imports_url
+          to download the list of duplicate users.
 -else
   .import
     Choose a JSON file to import
@@ -38,8 +42,6 @@
         .bar
       %div.upload-progress-message.upload
         Please wait while your file is being uploaded.
-
-
 
 %style(type="text/css") 
   :sass
@@ -161,6 +163,9 @@
       },
       done:function(e, data){
         location.reload();
+      },
+      error:function(e, data){
+        if(!alert('Invalid JSON')){window.location.reload();}
       }
     });
 

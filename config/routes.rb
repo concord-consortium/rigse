@@ -627,6 +627,7 @@ RailsPortal::Application.routes.draw do
         post :import_school_district_json
         post :import_user_json
         get :import_user_status
+        get :download
       end
     end
 

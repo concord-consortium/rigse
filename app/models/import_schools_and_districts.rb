@@ -10,8 +10,7 @@ class ImportSchoolsAndDistricts < Struct.new(:import, :content_path)
 
     import.update_attribute(:total_imports, total_imports_count)
 
-    content_hash[:districts].each_with_index do |district, index|      
-      puts "district #{index}"
+    content_hash[:districts].each_with_index do |district, index|
       nces_district = nil
       if district[:leaid]
         nces_district = Portal::Nces06District.find(:first, :conditions => ["LEAID = ?", "#{district[:leaid]}"]);
@@ -36,7 +35,6 @@ class ImportSchoolsAndDistricts < Struct.new(:import, :content_path)
       district_index = index + 1
     end
     content_hash[:schools].each_with_index do |school, index|
-      puts "schools #{index}"
       nces_school= nil
       if school[:ncessch]
         nces_school = Portal::Nces06School.find(:first, :conditions => ["NCESSCH = ?", "#{school[:ncessch]}"])
