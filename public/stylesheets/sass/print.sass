@@ -89,7 +89,7 @@ h4, .content, .editable_block
         font:
           size: 0.9em
 
-/* FORMS
+/* FORMS */
 input
   border: 1px solid #242323
 
@@ -115,7 +115,7 @@ table
         width: 30%
         text-align: right
 
-/* CANVAS, FLOTR
+/* CANVAS, FLOTR */
 canvas, .flotr-overlay, .data_collector, .flotr-axis-title
   clear: both
   display: block
@@ -126,21 +126,21 @@ canvas, .flotr-overlay, .data_collector, .flotr-axis-title
 canvas, .flotr-labels div, .flotr-legend, .flotr-legend-bg
   margin: 0 0 0 -100px !important
   
-/* FORCE DISPLAY OF ALL ACTIVITY LIST PANES
+/* FORCE DISPLAY OF ALL ACTIVITY LIST PANES */
 .show_section
   display: block !important
 .activity .action a
   clear: both
   display: block
   
-/* HIDE "CHROME", NAVIGATION, AND OTHER PERIPHERAL ELEMENTS
+/* HIDE "CHROME", NAVIGATION, AND OTHER PERIPHERAL ELEMENTS */
 #header, #userlinks, #nav_top, #project-signin, #element_nav_menu, #page_nav_menu, #section_nav_menu, #print_button, #secondary, #footer_left, .project-header, .page-utility, .send-to-friend, .share-it, .login-area, .hidden, .LV_valid, .doNotPrint, .activity-chart-navigation
   display: none
 
-/* APPEND HREF URL AS TEXT NEXT TO LINKS
-a:link:after
-  color: #06c
-  content: " (" attr(href) ")"
+/* APPEND HREF URL AS TEXT NEXT TO LINKS */
+// a:link:after
+//   color: #06c
+//   content: " (" attr(href) ")"
 
 .model_image
   &.unavailable
@@ -152,4 +152,11 @@ a:link:after
   display: none
 
 .model_interactive_snapshots
+  display: none
+
+#student_add_dropdown
+  display: none
+
+/* Hide all Chosen pulldowns */
+.chzn-done, .chzn-container
   display: none
