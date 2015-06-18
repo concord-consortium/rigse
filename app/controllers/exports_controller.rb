@@ -43,16 +43,24 @@ class ExportsController < ApplicationController
   def download
     @export = Export.find(params[:id])
     filename = @export.export_type == Export::EXPORT_TYPE_USER ? "export_users.json" : "export_schools_and_districts.json"
-    send_data File.read("#{Rails.root}/#{@export.file_path}"),
-      :filename => filename,
-      :type => "application/json",
-      :x_sendfile => true
+    path_to_file = "#{Rails.root}/#{@export.file_path}"
+    if File.exist?(path_to_file)
+      data = File.read(path_to_file)
+      send_data data,
+        :filename => filename,
+        :type => "application/json",
+        :x_sendfile => true
+    else
+      flash[:error] = "File not exist."
+      redirect_to(:back)
+    end
   end
 
   def destroy
     @export = Export.find(params[:id])
     redirect_action = @export.export_type == Export::EXPORT_TYPE_USER ? "export_user_status" : "export_school_district_status"
-    File.delete("#{Rails.root}/#{@export.file_path}")
+    path_to_file = "#{Rails.root}/#{@export.file_path}"
+    File.delete(path_to_file) if File.exist?(path_to_file)
     @export.destroy
     redirect_to :action => redirect_action
   end
