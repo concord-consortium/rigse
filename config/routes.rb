@@ -375,8 +375,7 @@ ActionController::Routing::Routes.draw do |map|
     :preview => :get,
     :print => :get,
     :duplicate => :get,
-    :template_edit => :get,
-    :export_as_lara_activity => :get
+    :template_edit => :get
   }
   map.list_filter_page '/page/list/filter', :controller => 'pages', :action => 'index', :method => :post
 

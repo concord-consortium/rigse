@@ -5,6 +5,8 @@ class Activity < ActiveRecord::Base
   MUST_HAVE_DESCRIPTION = "Please give your activity a description."
   MUST_HAVE_UNIQUE_NAME = "Activity '%{value}' already exists. Please pick a unique name."
 
+  ITSI_EDITOR_MODE = 1 # editor mode id for itsi style authoring.
+
   belongs_to :user
   belongs_to :investigation
   belongs_to :original, :class_name => "Activity"
@@ -227,16 +229,15 @@ class Activity < ActiveRecord::Base
                                         :description])
     activity_json[:pages] = []
     self.pages.each do |page|
-      if page.is_enabled 
-        activity_json[:pages] << page.export_as_lara_activity(page_position) 
-        page_position += 1
-      end
+      activity_json[:pages] << page.export_as_lara_activity(page_position) 
+      page_position += 1
     end
     activity_json[:type] = "LightweightActivity"
     activity_json[:export_site] = "ITSI"
     activity_json[:username] = self.user.login
     activity_json[:user_email] = self.user.email
     activity_json[:user_page_url] = self.user.user_page_url
+    activity_json[:editor_mode] = Activity::ITSI_EDITOR_MODE
     return activity_json
   end
 

@@ -303,7 +303,8 @@ class Page < ActiveRecord::Base
       :embeddables => [],
       :layout => "l-full-width",
       :embeddable_display_mode => 'stacked',
-      :sidebar_title => "Did you know?"
+      :sidebar_title => "Did you know?",
+      :is_hidden => !self.is_enabled
     }
 
     page_description = self.description
@@ -316,49 +317,44 @@ class Page < ActiveRecord::Base
         :prompt => default_project.interactive_snapshot_instructions,
         :custom_action_label => nil
       }
-      if page_element.is_enabled
-        case page_element.embeddable_type
-        when "Embeddable::Diy::Section"
-          content = page_element.embeddable.content
-          page_json[:show_introduction] = true
-          page_json[:text] = content == "<html />" ? "" : content
+      case page_element.embeddable_type
+      when "Embeddable::Diy::Section"
+        content = page_element.embeddable.content
+        page_json[:show_introduction] = true
+        page_json[:text] = content == "<html />" ? "" : content
 
-        when "Embeddable::OpenResponse"
-          page_json[:show_info_assessment] = true
-          page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
+      when "Embeddable::OpenResponse", "Embeddable::DrawingTool", "Embeddable::Xhtml", "Embeddable::MultipleChoice"
+        page_json[:show_info_assessment] = true
+        embeddable = page_element.embeddable.export_as_lara_activity
+        embeddable[:is_hidden] = !page_element.is_enabled
+        page_json[:embeddables] << embeddable
 
-        when "Embeddable::DrawingTool"
-          page_json[:show_info_assessment] = true
-          page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
+      when "Embeddable::Diy::Sensor"
+        page_json[:show_interactive] = true
+        interactive = page_element.embeddable.export_as_lara_activity
+        interactive[:is_hidden] = !page_element.is_enabled
+        page_json[:interactives] << interactive
+        page_json[:show_info_assessment] = true
+        labbook_export[:is_hidden] = !page_element.is_enabled
+        page_json[:embeddables] << labbook_export
 
-        when "Embeddable::Diy::Sensor"
-          page_json[:show_interactive] = true
-          page_json[:interactives] << page_element.embeddable.export_as_lara_activity
-          page_json[:show_info_assessment] = true
-          page_json[:embeddables] << labbook_export
-
-        when "Embeddable::Diy::EmbeddedModel"
-          if page_element.embeddable.diy_model.model_type.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
-            labbook_export[:custom_action_label] = "Take a Snapshot"
-            labbook_export[:action_type] = 0 # upload mode
-            labbook_export[:prompt] = default_project.digital_microscope_snapshot_instructions
-          else
-            page_json[:show_interactive] = true
-            page_json[:interactives] << page_element.embeddable.export_as_lara_activity
-          end
-          page_json[:show_info_assessment] = true
-          page_json[:embeddables] << labbook_export
-
-        when "Embeddable::Xhtml"
-          page_json[:show_info_assessment] = true
-          page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
-
-        when "Embeddable::MultipleChoice"
-          page_json[:show_info_assessment] = true
-          page_json[:embeddables] << page_element.embeddable.export_as_lara_activity
+      when "Embeddable::Diy::EmbeddedModel"
+        if page_element.embeddable.diy_model.model_type.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
+          labbook_export[:custom_action_label] = "Take a Snapshot"
+          labbook_export[:action_type] = 0 # upload mode
+          labbook_export[:prompt] = default_project.digital_microscope_snapshot_instructions
         else
-          puts "Type not supported"
+          page_json[:show_interactive] = true
+          interactive = page_element.embeddable.export_as_lara_activity
+          interactive[:is_hidden] = !page_element.is_enabled
+          page_json[:interactives] << interactive
         end
+        page_json[:show_info_assessment] = true
+        labbook_export[:is_hidden] = !page_element.is_enabled
+        page_json[:embeddables] << labbook_export
+
+      else
+        puts "Type not supported"
       end
     end
     return page_json

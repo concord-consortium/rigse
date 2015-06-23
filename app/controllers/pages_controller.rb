@@ -334,24 +334,4 @@ class PagesController < ApplicationController
       end
     end
   end
-
-  def export_as_lara_activity
-    if logged_in? && current_user.has_role?("admin")
-      activity_json = {
-          :type => "LightweightActivity",
-          :name => @page.activity.name,
-          :description => @page.activity.description,
-          :export_site => "ITSI",
-          :layout => 1, #single-page layout
-          :username => @page.user.login,
-          :user_email => @page.user.email,
-          :user_page_url => @page.user.user_page_url
-      }
-      activity_json[:pages] = [@page.export_as_lara_activity(0)]
-      send_data activity_json.to_json, :type => :json, :disposition => "attachment", :filename => "#{@page.name}_version_1.json"
-    else
-      flash[:error] = "You're not authorized to do this"
-      redirect_to(:back)
-    end
-  end
 end

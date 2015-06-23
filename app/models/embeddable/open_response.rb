@@ -75,7 +75,8 @@ class Embeddable::OpenResponse < Embeddable::Embeddable
     {
       :name => self.name,
       :prompt => self.prompt,
-      :type => "Embeddable::OpenResponse"
+      :type => "Embeddable::OpenResponse",
+      :default_text => self.default_response
     }
   end
 end
