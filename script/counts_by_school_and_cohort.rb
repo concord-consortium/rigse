@@ -14,7 +14,8 @@ TIME_THRESHOLDS = {
   "May 2010 - Apr 2012" => {:start => Time.gm(2010,5,1), :finish => Time.gm(2012,4,30,23,59,59)},
   "May 2012 - Apr 2013" => {:start => Time.gm(2012,5,1), :finish => Time.gm(2013,4,30,23,59,59)},
   "May 2013 - Apr 2014" => {:start => Time.gm(2013,5,1), :finish => Time.gm(2014,4,30,23,59,59)},
-  "May 2014 - Apr 2015" => {:start => Time.gm(2014,5,1), :finish => Time.gm(2015,4,30,23,59,59)}
+  "May 2014 - Apr 2015" => {:start => Time.gm(2014,5,1), :finish => Time.gm(2015,4,30,23,59,59)},
+  "May 2015 - Apr 2016" => {:start => Time.gm(2015,5,1), :finish => Time.gm(2016,4,30,23,59,59)}
 }
 
 def process_school_data(all_users, type, active, school_data, list_dupes = false)
@@ -140,7 +141,7 @@ data.each do |school, s_data|
 end
 
 File.open("counts-by-school-and-cohort.csv","w") do |file|
-  file.write("State,District,School,Cohort,Teachers,Active Teachers,#{TIME_THRESHOLDS.keys.map{|y| "#{y.to_s} Teachers"}.join(",")},Students,Active Students,#{TIME_THRESHOLDS.keys.map{|y| "#{y.to_s} Students"}.join(",")},Notable Teachers,#{TIME_THRESHOLDS.keys.map{|y| "Notable #{y.to_s} Teachers"}.join(",")}\n")
+  file.write("State,District,School,Cohort,Teachers,Active Teachers,#{TIME_THRESHOLDS.keys.sort.map{|y| "#{y.to_s} Teachers"}.join(",")},Students,Active Students,#{TIME_THRESHOLDS.keys.sort.map{|y| "#{y.to_s} Students"}.join(",")},Notable Teachers,#{TIME_THRESHOLDS.keys.sort.map{|y| "Notable #{y.to_s} Teachers"}.join(",")}\n")
   data.each do |school, s_data|
     # s_data is [cohort][type][active]
     dist = school.district
@@ -149,7 +150,8 @@ File.open("counts-by-school-and-cohort.csv","w") do |file|
     out = %!"#{state}","#{dist_name}","#{school.name}",!
     s_data.each do |cohort, c_data|
       time_teacher_counts = time_student_counts = time_teacher_dupes = ""
-      TIME_THRESHOLDS.each do |yr,thr|
+      TIME_THRESHOLDS.keys.sort.each do |yr|
+        thr = TIME_THRESHOLDS[yr]
         time_teacher_counts += %!#{c_data[:teachers][yr][:count]},!
         time_student_counts += %!#{c_data[:students][yr][:count]},!
         time_teacher_dupes += %!"#{c_data[:teachers][yr][:dupes]}",!
@@ -162,12 +164,13 @@ File.open("counts-by-school-and-cohort.csv","w") do |file|
 end
 
 File.open("counts-by-state-and-cohort.csv","w") do |file|
-  file.write("State,Cohort,Teachers,Active Teachers,#{TIME_THRESHOLDS.keys.map{|y| "#{y.to_s} Teachers"}.join(",")},Students,Active Students,#{TIME_THRESHOLDS.keys.map{|y| "#{y.to_s} Students"}.join(",")},Notable Teachers,#{TIME_THRESHOLDS.keys.map{|y| "Notable #{y.to_s} Teachers"}.join(",")}\n")
+  file.write("State,Cohort,Teachers,Active Teachers,#{TIME_THRESHOLDS.keys.sort.map{|y| "#{y.to_s} Teachers"}.join(",")},Students,Active Students,#{TIME_THRESHOLDS.keys.sort.map{|y| "#{y.to_s} Students"}.join(",")},Notable Teachers,#{TIME_THRESHOLDS.keys.sort.map{|y| "Notable #{y.to_s} Teachers"}.join(",")}\n")
   state_data.each do |state, s_data|
     # s_data is [cohort][type][active]
     s_data.each do |cohort, c_data|
       time_teacher_counts = time_student_counts = time_teacher_dupes = ""
-      TIME_THRESHOLDS.each do |yr,thr|
+      TIME_THRESHOLDS.keys.sort.each do |yr,thr|
+        thr = TIME_THRESHOLDS[yr]
         dupes_sym = (yr.to_s + "_dupes").to_sym
         time_teacher_counts += %!#{c_data[:teachers][yr]},!
         time_student_counts += %!#{c_data[:students][yr]},!
