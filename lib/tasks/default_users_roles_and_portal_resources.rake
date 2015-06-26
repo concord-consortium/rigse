@@ -270,20 +270,15 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
 
     #######################################################################
     #
-    # Create default portal resources: settings, district, school, course, and class, investigation and grades
+    # Create default portal resources: settings, district, school, grades
     #
     #######################################################################
     desc "Create default portal resources"
     task :default_portal_resources => :environment do
 
-      # some constants that should probably be moved to settings.yml
-      DEFAULT_CLASS_NAME = 'Fun with Investigations'
-
       author_user = User.find_by_login('author')
       teacher_user = User.find_by_login('teacher')
       student_user = User.find_by_login('student')
-
-      default_investigation = DefaultRunnable.create_default_runnable_for_user(author_user)
 
       grades_in_order = [
         grade_k  = Portal::Grade.find_or_create_by_name(:name => 'K',  :description => 'kindergarten'),
@@ -320,95 +315,6 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # start with two semesters
       site_school_fall_semester = Portal::Semester.find_or_create_by_name_and_school_id('Fall', site_school.id)
       site_school_spring_semester = Portal::Semester.find_or_create_by_name_and_school_id('Spring', site_school.id)
-
-      # default course
-      # This model is currently underdeveloped and not implemented into the app properly
-      # Use the default class name for now
-      site_school_default_course = Portal::Course.find_or_create_by_name_and_school_id(DEFAULT_CLASS_NAME, site_school.id)
-      site_school_default_course.grades << grade_9
-
-      # default_school_teacher = teacher_user.portal_teacher.find_or_create_by_school_id(site_school.id)
-      unless default_school_teacher = teacher_user.portal_teacher
-        default_school_teacher = Portal::Teacher.create!(:user_id => teacher_user.id)
-      end
-      default_school_teacher.grades << grade_9
-
-      site_school.portal_teachers << default_school_teacher
-
-      # default_school_teacher.courses << site_school_default_course
-
-      # default class
-      attributes = {
-        :name => DEFAULT_CLASS_NAME,
-        :course_id => site_school_default_course.id,
-        :semester_id => site_school_fall_semester.id,
-        :teacher_id => default_school_teacher.id,
-        :class_word => 'abc123',
-        :description => 'This is a default class created for the default school ... etc'
-      }
-      unless default_course_class =
-        Portal::Clazz.find_by_class_word(attributes[:class_word]) ||
-        Portal::Clazz.find_by_name_and_teacher_id(attributes[:name], attributes[:teacher_id])
-        default_course_class = Portal::Clazz.create!(attributes)
-      else
-        default_course_class.update_attributes!(attributes)
-      end
-      default_course_class.status = 'open'
-      default_course_class.teacher = default_school_teacher
-      default_course_class.save!
-
-      # default offering
-      attributes = {
-        :clazz_id => default_course_class.id,
-        :runnable_id => default_investigation.id,
-        :runnable_type => default_investigation.class.name
-      }
-      unless offering = Portal::Offering.find(:first, :conditions => attributes)
-        offering = Portal::Offering.create!(attributes)
-      end
-      offering.status = 'active'
-      offering.save
-
-      # default student
-      attributes = {
-        :user_id => student_user.id,
-        :grade_level_id => grade_9.id
-      }
-      unless default_student = Portal::Student.find(:first, :conditions => attributes)
-        default_student = Portal::Student.create!(attributes)
-      end
-      default_student.student_clazzes.delete_all
-      default_student.clazzes << default_course_class
-      site_school.add_member(default_student)
-      #
-      # default_student = student_user.student || student_user.student.create!
-      #
-      # To make a new learner you need an existing student and offering -- presumably
-      # an offering that the student is not already a learner in.
-      #
-      # >> u = User.find_by_login('student'); s = u.portal_student; o = Portal::Offering.find(:first)
-      # => #<Portal::Offering id: 51, uuid: "5158a04a-888a-11de-8336-001ff3caa767", status: "active", clazz_id: 7, runnable_id: 510, runnable_type: "Investigation", created_at: "2009-08-14 04:24:12", updated_at: "2009-08-14 04:24:12">
-      # >> a = { :student_id => s.id, :offering_id => o.id }; default_learner = Portal::Learner.find(:first, :conditions => a)
-      # => nil
-      # >> l = o.learners.create(:student => s)
-      # => #<Portal::Learner id: 238, uuid: "fc3a0a62-88df-11de-872e-001ff3caa767", student_id: 1, offering_id: 51, created_at: "2009-08-14 14:37:26", updated_at: "2009-08-14 14:37:26", bundle_logger_id: nil, console_logger_id: nil>
-      #
-      # When moving from older versions of learner objects (before 20090814)
-      # to newer ones check whether the learner has defined valid_loggers?
-      # and if not, use the instance method Learner#create_new_loggers to create
-      # them
-      #
-      attributes = {
-        :student_id => default_student.id,
-        :offering_id => offering.id
-      }
-      if default_learner = Portal::Learner.find(:first, :conditions => attributes)
-        unless default_learner.valid_loggers?
-          default_learner.create_new_loggers
-        end
-      else
-        offering.learners.create(:student => default_student)
-      end
     end
 
 
