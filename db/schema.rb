@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150612095239) do
+ActiveRecord::Schema.define(:version => 20150616170608) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -851,15 +851,6 @@ ActiveRecord::Schema.define(:version => 20150612095239) do
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
   add_index "external_activities", ["template_id", "template_type"], :name => "index_external_activities_on_template_id_and_template_type"
   add_index "external_activities", ["user_id"], :name => "index_external_activities_on_user_id"
-
-  create_table "external_user_domains", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.string   "server_url"
-    t.string   "uuid"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
 
   create_table "images", :force => true do |t|
     t.integer  "user_id"
@@ -2524,33 +2515,31 @@ ActiveRecord::Schema.define(:version => 20150612095239) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "login",                   :limit => 40
-    t.string   "first_name",              :limit => 100, :default => ""
-    t.string   "last_name",               :limit => 100, :default => ""
-    t.string   "email",                   :limit => 128, :default => "",        :null => false
-    t.string   "encrypted_password",      :limit => 128, :default => "",        :null => false
-    t.string   "password_salt",                          :default => "",        :null => false
+    t.string   "login",                  :limit => 40
+    t.string   "first_name",             :limit => 100, :default => ""
+    t.string   "last_name",              :limit => 100, :default => ""
+    t.string   "email",                  :limit => 128, :default => "",        :null => false
+    t.string   "encrypted_password",     :limit => 128, :default => "",        :null => false
+    t.string   "password_salt",                         :default => "",        :null => false
     t.string   "remember_token"
     t.string   "confirmation_token"
-    t.string   "state",                                  :default => "passive", :null => false
+    t.string   "state",                                 :default => "passive", :null => false
     t.datetime "remember_created_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
-    t.string   "uuid",                    :limit => 36
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+    t.string   "uuid",                   :limit => 36
+    t.datetime "created_at",                                                   :null => false
+    t.datetime "updated_at",                                                   :null => false
     t.integer  "vendor_interface_id"
-    t.boolean  "default_user",                           :default => false
-    t.boolean  "site_admin",                             :default => false
-    t.string   "type"
-    t.integer  "external_user_domain_id"
+    t.boolean  "default_user",                          :default => false
+    t.boolean  "site_admin",                            :default => false
     t.string   "external_id"
-    t.boolean  "require_password_reset",                 :default => false
-    t.boolean  "of_consenting_age",                      :default => false
-    t.boolean  "have_consent",                           :default => false
-    t.boolean  "asked_age",                              :default => false
+    t.boolean  "require_password_reset",                :default => false
+    t.boolean  "of_consenting_age",                     :default => false
+    t.boolean  "have_consent",                          :default => false
+    t.boolean  "asked_age",                             :default => false
     t.string   "reset_password_token"
-    t.integer  "sign_in_count",                          :default => 0
+    t.integer  "sign_in_count",                         :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -2560,7 +2549,7 @@ ActiveRecord::Schema.define(:version => 20150612095239) do
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
-  add_index "users", ["id", "type"], :name => "index_users_on_id_and_type"
+  add_index "users", ["id"], :name => "index_users_on_id_and_type"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
   add_index "users", ["vendor_interface_id"], :name => "index_users_on_vendor_interface_id"
 
