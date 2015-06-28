@@ -495,18 +495,6 @@ namespace :convert do
 
   # Thursday October 8, 2009
 
-  desc "Create default users, roles, district, school, course, and class, and greade_levels"
-  task :default_users_roles, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:default_users_roles --trace"
-  end
-
-  desc "Create default portal resources: district, school, course, and class, investigation and grades"
-  task :default_portal_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:default_portal_resources --trace"
-  end
-
   desc "Create districts and schools from NCES records for States listed in settings.yml"
   task :create_districts_and_schools_from_nces_data, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
