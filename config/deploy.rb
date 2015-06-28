@@ -314,12 +314,8 @@ end
 namespace :setup do
   desc "ensure that the database exists, is migrated and has default users, roles, projects, etc"
   task :init_database, :roles => :app do
-    run_remote_rake "db:create"
-    run_remote_rake "db:migrate"
-    run_remote_rake "app:setup:default_users_roles"
-    run_remote_rake "app:setup:default_settings"
+    run_remote_rake "db:setup"
     run_remote_rake "sunspot:solr:start", true
-    run_remote_rake "app:setup:default_portal_resources"
   end
 
    # 2013_04_01 NP:
