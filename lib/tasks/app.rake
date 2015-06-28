@@ -57,46 +57,7 @@ namespace :app do
         end
       end
     end
-    
-    #######################################################################
-    #
-    # Regenerate the REST_AUTH_SITE_KEY 
-    #
-    #######################################################################
-    desc "regenerate the REST_AUTH_SITE_KEY -- all passwords will become invalid"
-    task :regenerate_rest_auth_site_key => :environment do
-      
-      require 'uuidtools'
-      
-      puts <<-HEREDOC
 
-This task will re-generate a REST_AUTH_SITE_KEY and update
-the file config/initializers/site_keys.rb.
-
-Completing this will invalidate existing passwords. Users will
-need to complete the "forgot password" process to revalidate
-their passwords even though their actual password hasn't changed.
-
-If the application is running it will need to be restarted for
-this change to take effect.
-
-      HEREDOC
-      
-      if HighLine.new.agree("Do you want to do this?  (y/n) ")
-        site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
-        site_key = UUIDTools::UUID.timestamp_create.to_s
-
-        site_keys_rb = <<-HEREDOC
-REST_AUTH_SITE_KEY = '#{site_key}'
-REST_AUTH_DIGEST_STRETCHES = 10
-        HEREDOC
-
-        File.open(site_keys_path, 'w') {|f| f.write site_keys_rb }
-        FileUtils.chmod 0660, site_keys_path
-      end
-    end
-    
-    
     #######################################################################
     #
     # Setup a new instance

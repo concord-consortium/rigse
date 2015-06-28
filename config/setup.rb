@@ -646,43 +646,6 @@ def check_for_log_development_log
 end
 
 #
-# check for config/initializers/site_keys.rb
-#
-def check_for_config_initializers_site_keys_rb
-  site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
-
-  unless file_exists_and_is_not_empty?(site_keys_path)
-    unless @options[:quiet]
-      puts <<-HEREDOC
-
-  The Rails site keys authentication tokens file does not yet exist:
-
-    new #{site_keys_path} created.
-
-    If you have copied a production database from another app instance you will
-    need to have the same site keys authentication tokens in order for the existing
-    User passwords to work.
-
-    If you have ssh access to the production deploy site you can install a copy
-    with this capistrano task:
-
-      cap production db:copy_remote_site_keys
-
-      HEREDOC
-    end
-
-    site_key = UUIDTools::UUID.timestamp_create.to_s
-
-    site_keys_rb = <<-HEREDOC
-    REST_AUTH_SITE_KEY         = '#{site_key}'
-    REST_AUTH_DIGEST_STRETCHES = 10
-    HEREDOC
-
-    File.open(site_keys_path, 'w') {|f| f.write site_keys_rb }
-  end
-end
-
-#
 # update config/database.yml
 #
 def update_config_database_yml
@@ -1086,7 +1049,6 @@ check_for_config_settings_yml
 check_for_config_sis_import_data_yml
 check_for_config_mailer_yml
 check_for_log_development_log
-check_for_config_initializers_site_keys_rb
 update_config_database_yml
 update_config_settings_yml
 update_config_sis_import_data_yml
