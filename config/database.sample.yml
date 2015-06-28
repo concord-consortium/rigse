@@ -3,7 +3,7 @@ development:
   encoding: utf8
   adapter: mysql2
   username: root
-  database: rites_development
+  database: portal_development
   password: '*****'
   pool: 5
 
@@ -11,7 +11,7 @@ test:
   encoding: utf8
   adapter: mysql2
   username: root
-  database: rites_test
+  database: portal_test
   password: '*****'
   pool: 5
 
@@ -19,7 +19,7 @@ cucumber:
   encoding: utf8
   adapter: mysql2
   username: root
-  database: rites_cucumber
+  database: portal_cucumber
   password: '*****'
   pool: 5
 
@@ -27,7 +27,7 @@ staging:
   encoding: utf8
   adapter: mysql2
   username: root
-  database: rites_staging
+  database: portal_staging
   password: 
   pool: 5
 
@@ -35,6 +35,6 @@ production:
   encoding: utf8
   adapter: mysql2
   username: root
-  database: rites_production
+  database: portal_production
   password: '*****'
   pool: 5
