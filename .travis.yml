@@ -24,7 +24,6 @@ before_script:
   - cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
   - cp config/settings.sample.yml config/settings.yml
   - cp config/sis_import_data.sample.yml config/sis_import_data.yml
-  - cp config/initializers/site_keys.rb.sample config/initializers/site_keys.rb
   - mysql -e "create database rigse_test;"
   - bundle exec spring binstub --all
   - ./bin/rake db:schema:load
