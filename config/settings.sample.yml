@@ -7,10 +7,10 @@ development: &non_production_settings
   :log_manager_data_interactive_url: //cc-log-manager.herokuapp.com/di
   :description: ""
   :default_admin_user: &default_admin_user
-    :login: stephen
-    :email: stephen.bannasch@gmail.com
-    :first_name: Stephen
-    :last_name: Bannasch
+    :login: admin
+    :email: admin@concord.org
+    :first_name: Admin
+    :last_name: Admin
   :include_otrunk_examples: false
   :site_district: Rails Portal-district
   :site_school: Rails Portal-school
