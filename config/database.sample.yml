@@ -23,15 +23,7 @@ cucumber:
   password: '*****'
   pool: 5
 
-staging: 
-  encoding: utf8
-  adapter: mysql2
-  username: root
-  database: portal_staging
-  password: 
-  pool: 5
-
-production: 
+production:
   encoding: utf8
   adapter: mysql2
   username: root
