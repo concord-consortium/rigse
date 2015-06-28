@@ -29,7 +29,7 @@ development: &non_production_settings
     - "11"
     - "12"
   :active_grades: *active_grades
-  :theme: default
+  :theme: learn
   :help_email: rails-portal@concord.org
   :dont_sanitize_xhtml: true
   :tiny_mce:
