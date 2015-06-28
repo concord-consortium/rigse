@@ -73,11 +73,6 @@ def create_default_users
     teacher_user = User.find_or_create_by_login(:login => 'teacher',
       :first_name => 'Valerie', :last_name => 'Frizzle',
       :email => 'teacher@concord.org',
-      :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
-
-    student_user = User.find_or_create_by_login(:login => 'student',
-      :first_name => 'Jackie', :last_name => 'Demeter',
-      :email => 'student@concord.org',
       :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
   ]
 
