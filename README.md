@@ -8,21 +8,6 @@ Setup
 ### Prerequisites
 
 Working git, ruby or jruby, and rubgems, wget
-Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when
-deploying …)
-TODO: understand why running capistrano requires haml…
-
-### Install
-
-The latest setup scripts have been tested with 1.4.0RC1 of JRuby, you
-will need a running mysql
-server and a mysql username/password with enough permissions to create
-and drop the
-database you intend to use with RITES.
-
-#### RVM, Bundler, & Gem Dependencies
-
--   [Maintaining gem dependencies](doc/gem-dependencies.textile)
 
 #### Updating to a newer codebase.
 
@@ -33,10 +18,6 @@ database you intend to use with RITES.
 
 -   [Extensions to core classes applied at application
     startup](doc/core-extensions.textile)
-
-#### Setting up a Hudson CI project
-
--   [Setting up a Hudson CI project](doc/hudson-ci.textile)
 
 #### GIT
 
@@ -212,83 +193,6 @@ For now the best thing to do is to copy an existing theme. eg:
 
     # then pass arguments to setup.
     ruby ./config/setup.rb  -t <new_theme_name>
-
-
-### when deploying to a new server
-
-1. create required directories on your server eg:
-    1. /web/production/APP_NAME/shared/log
-    1. /web/production/APP_NAME/shared/config
-    1. /web/production/APP_NAME/shared/initializers
-    1. /web/production/APP_NAME/releases
-1. put configuration files in /web/production/APP_NAME/shared/config
-    1. at a minimum you need database.yml
-1. modify the deploy recipies
-1. deploy cap deploy ( it will fail, but it will get far enough to make
-some of the other things below possible)
-1. run ruby config/setup.rb on the server
-1. comment out the one line in config/initializers/rites.rb
-1. make sure config/nces_data isn't there
-1. run RAILS_ENV=production rake rigse:setup:new_rites_app
-
-
-*there's a bunch more that needs to go here*
-
-## Copying the production database to a development environment
-
-If you have ssh access to a portal instance running on a server you can
-get a copy of the database on
-your local development instance with the following steps:
-
-In the code below *stage* means a capistrano stage that identifies a
-remote server. For example **xproject-dev**.
-
-     cap <stage> db:fetch_remote_db
-     RAILS_ENV=production jruby -S rake db:load
-
-If the codebase on your development system has moved forward you may
-need to run additional tasks such as:
-
-    RAILS_ENV=production jruby  -S rake db:migrate
-    RAILS_ENV=production jruby -S rake
-    rigse:setup:default_portal_resources
-    RAILS_ENV=production jruby  -S rake
-    portal:setup:create_districts_and_schools_from_nces_data
-
-
-The task: `default_users_roles_and_portal_resources` is last on that
-list because code changes may have added additional and necessary
-default model initialization.
-
-In order for the same passwords to work you will also need to have the
-same *pepper* in your local config/settings.yml as on the server you
-copied the production data from.
-
-Recreating a new portal instance from scratch from an existing
-application.
-
-    rake db:drop:all
-    git clean -fXd
-    jruby config/setup.rb
-    jruby  -S rake gems:install
-    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
-
-The ' -fxd' parameters to to git clean:
-
-* -d: Remove untracked directories in addition to untracked files.
-* -X: Remove only files ignored by git.
-* -f: force removal
-
-### Setting up a local JNLP Web Start servlet
-
-You can also setup a local jnlp web start server for a development
-environment with less dependence on outside services.
-
-* [Setup a Full SAIL Stack on Mac OS 10.5](https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5*)
-has several sections with useful information:
-
-* [Install Jnlp Servlet and build associated WAR file with jnlp and
-jars](https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-4InstallJnlpServletandbuildassociatedWARfilewithjnlpandjars)
 
 ## NCES District and School Tables
 
