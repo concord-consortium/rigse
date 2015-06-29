@@ -28,7 +28,9 @@ In a new terminal start the Solr
 
     rake sunspot:solr:run
 
-#### Issues
+Now open your browser to [http://localhost:3000](http://localhost:3000)
+
+#### Setup Issues
 
 If you get the following error
 
@@ -47,6 +49,8 @@ If you get the following error
 	Make sure that `gem install therubyracer -v '0.12.1'` succeeds before bundling.
 
 Replace `gem 'therubyracer',         "~>0.12.1"` entry in the Gemfile to `gem 'therubyracer',         "~>0.10.2"`
+
+#### Tests
 
 After getting the server running it's good to confirm that all the tests
 pass before changing any code.
