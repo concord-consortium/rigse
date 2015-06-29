@@ -9,11 +9,6 @@ Setup
 
 Working git, ruby or jruby, and rubgems, wget
 
-#### Updating to a newer codebase.
-
--   Example of [updating an older instance to to newer
-    code](doc/updating_an_older_instance.md)
-
 #### Core Extensions
 
 -   [Extensions to core classes applied at application
@@ -100,8 +95,8 @@ For now the best thing to do is to copy an existing theme. eg:
     cp -r ./app/assets/themes/<old_theme_name>
     ./app/assets/themes/<new_theme_name>
 
-    # then pass arguments to setup.
-    ruby ./config/setup.rb  -t <new_theme_name>
+    # finally change the theme setting in your config/settings.yml
+    open config/settings.yml
 
 ## NCES District and School Tables
 
@@ -568,19 +563,12 @@ Forgotten password comes setup, so you don't have to mess around setting
 it up with every project.
 
 Devise uses the *pepper* parameter within settings.yml to encrypt user
-passwords. The *pepper* is
-generated automatically when first setting up the app. It is also
-generated if not existing or is
-blank when updating the app using the command:
-
-    ruby config/setup.rb -y -q  -t default
+passwords. A default *pepper* is provided in settings.samles.yml
+You need to change this when deploying to a public server.
 
 Devise is also setup to use user activation. Users which require
 activation are sent emails
 automatically.
-
-_RESTful Authentication is no longer integrated with the project. It
-has been replaced with Devise. _
 
 ## Uses the Database for Sessions
 
@@ -742,30 +730,6 @@ should be written for it.
 * rails.png is already deleted
 * a few changes have been made to the default views
 * a default css file with blank selectors for common rails elements
-
-
-## Copy & Paste Guide:
-
-    git clone git@github.com:concord-consortium/rigse.git ./xproject
-    cd xproject
-    echo 'rvm use 1.8.7@xproject-portal --create' > .rvmrc;
-    cd ..
-    cd xproject
-
-    gem install bundler
-    bundle install
-
-    ruby config/setup.rb -n "Cross Project Portal"  -D xproject -u <dbuser> -p <password> -t xproject  --states none -y -q  -f
-
-    RAILS_ENV=production rake db:create:all
-    RAILS_ENV=production rake db:migrate:reset
-    RAILS_ENV=production rake app:setup:new_app
-
-    rake db:test:prepare
-    rake db:dump
-    ruby script/server -e production
-(end)
-
 
 ## License
 
