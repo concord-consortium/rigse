@@ -8,78 +8,29 @@ Setup
 ### Prerequisites
 
 Working git, ruby or jruby, and rubgems, wget
-Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when
-deploying …)
-TODO: understand why running capistrano requires haml…
-
-### Install
-
-The latest setup scripts have been tested with 1.4.0RC1 of JRuby, you
-will need a running mysql
-server and a mysql username/password with enough permissions to create
-and drop the
-database you intend to use with RITES.
-
-#### RVM, Bundler, & Gem Dependencies
-
--   [Maintaining gem dependencies](doc/gem-dependencies.textile)
-
-#### Updating to a newer codebase.
-
--   Example of [updating an older instance to to newer
-    code](doc/updating_an_older_instance.md)
 
 #### Core Extensions
 
 -   [Extensions to core classes applied at application
     startup](doc/core-extensions.textile)
 
-#### Setting up a Hudson CI project
+#### Simple Getting Started
 
--   [Setting up a Hudson CI project](doc/hudson-ci.textile)
+    bundle install
+    cp config/database.sample.yml config/database.yml (need to fix the mysql password and/or user)
+    cp config/settings.sample.yml config/settings.yml
+    cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
+    cp config/sis_import_data.sample.yml config/sis_import_data.yml
+    rake db:setup
+    rails s
 
-#### GIT
+In a new terminal start the Solr
 
-In the example below we use the xproject theme and also as the name of
-the directory and
-the prefix of the names for the databases that will be created in mysql.
+    rake sunspot:solr:run
 
-If you are a committer in this repo:
+Now open your browser to [http://localhost:3000](http://localhost:3000)
 
-    git clone git@github.com:concord-consortium/rigse.git xproject
-
-If you are not a committer:
-
-    git clone git://github.com/concord-consortium/rigse.git xproject
-
-Change to the project directory:
-
-    cd xproject
-
-Setup rvm to use Ruby 1.9.3-p125 and a gemset named xproject
-(newer versions of 1.9.3 ought to work as well)
-
-    rvm use 1.9.3-p125
-    rvm gemset create xproject
-
-Make an `.rvmrc` file so rvm will use this ruby gemset combo
-automatically when you change to this directory:
-
-    echo "rvm use 1.9.3-p125@xproject" > .rvmrc
-
-Test out the `.rvmrc` file and start using the gemset
-
-    cd ..;cd xproject
-
-Install [bundler](http://gembundler.com/)
-(typically rvm will install bundler for you when you install ruby)
-
-    gem install bundler
-
-Install the precise versions of the required gems and put the
-executables in bin/
-
-    bundle install --binstubs
+#### Setup Issues
 
 If you get the following error
 
@@ -99,90 +50,28 @@ If you get the following error
 
 Replace `gem 'therubyracer',         "~>0.12.1"` entry in the Gemfile to `gem 'therubyracer',         "~>0.10.2"`
 
-Automatic setup of application settings in the config directory, for
-example: settings.yml and database.yml
-
-    ruby config/setup.rb --name "Cross Project Portal" --database xproject --user <dbuser> --password <password> --theme xproject --states none --yes --quiet --force
-
-The option `--states none` means that only a single virtual district and
-school will be created.
-
-If you leave this option out the default is to create portals instances
-for all the districts and schools in Massachusetts.
-
-You can also supply a comma-delimited list of two character
-abbreviations for states or provinces:
-
-    --states RI,CT
-
-The options `-y -q -f` to setup mean:
-
--   `-y` automatically answer 'yes' to accept default values
--   `-q` use 'quieter' console output
--   `-f` force an update of the existing settings.yml and database.yml
-    if they exist
-
-Setup database.
-
-If this fails it is probably due to a bad mysql gem install, check out
-the [RVM page on database
-integration](https://rvm.beginrescueend.com/integration/databases/) for
-help. You might get a warning if the databases already exist.
-
-    RAILS_ENV=development rake db:create:all
-    RAILS_ENV=development rake db:migrate:reset
-    RAILS_ENV=development rake db:backup:load_probe_configurations
-
-Start solr (requires Java, on Mac OS X this command should cause a installating prompt to appear)
-
-    RAILS_ENV=development rake sunspot:solr:start
-
-Setup application resources
-
-    RAILS_ENV=development rake app:setup:create_default_data
-
-Save a copy of the development database to make subsequent clean starts
-much quicker (bypassing rake app:setup:new_app).
-
-* Saves database to: db/development_data.sql
-* can be reloaded later with: rake db:load
-* note: in default setup created by config.rb above the development and production database is the same
-
-    rake db:dump
-
-This project uses the rails [asset pipeline](http://guides.rubyonrails.org/asset_pipeline.html)
-to manage static assets, and JS & CSS files. There are rake commands for compiling these assets,
-but they should run automatically when on 'cap deploy' because capistrano knows about the asset pipeline.
-
-You may also run the asset packing task manually however:
-
-    rake assets:clean # Remove compiled assets
-    rake assets:precompile # Compile all the assets named in
-    config.assets.precompile
-
-This will build all the assets within the project.
-
-Start server and open [http://localhost:3000](http://localhost:3000)
-
-    rails s -edevelopment
-
-You can read this documentation at:
-[http://localhost:3000/readme](http://localhost:3000/readme)
+#### Tests
 
 After getting the server running it's good to confirm that all the tests
 pass before changing any code.
 
-Prepare a database for use when running the tests:
+Prepare a database for use when running the spec tests:
 
     rake db:test:prepare
 
 Run the rspec unit tests:
 
-    rake spec
+    rspec spec/
+
+Prepare a database for use when running the cucumber tests:
+
+    RAILS_ENV=cucumber rake db:create
+    RAILS_ENV=cucumber rake db:schema:load
+    rake db:test:prepare_cucumber
 
 Run the cucumber integration tests:
 
-    rake cucumber
+    cucumber features/
 
 All these tests should pass. If you add features make sure and add tests
 for these new features.
@@ -210,85 +99,8 @@ For now the best thing to do is to copy an existing theme. eg:
     cp -r ./app/assets/themes/<old_theme_name>
     ./app/assets/themes/<new_theme_name>
 
-    # then pass arguments to setup.
-    ruby ./config/setup.rb  -t <new_theme_name>
-
-
-### when deploying to a new server
-
-1. create required directories on your server eg:
-    1. /web/production/APP_NAME/shared/log
-    1. /web/production/APP_NAME/shared/config
-    1. /web/production/APP_NAME/shared/initializers
-    1. /web/production/APP_NAME/releases
-1. put configuration files in /web/production/APP_NAME/shared/config
-    1. at a minimum you need database.yml
-1. modify the deploy recipies
-1. deploy cap deploy ( it will fail, but it will get far enough to make
-some of the other things below possible)
-1. run ruby config/setup.rb on the server
-1. comment out the one line in config/initializers/rites.rb
-1. make sure config/nces_data isn't there
-1. run RAILS_ENV=production rake rigse:setup:new_rites_app
-
-
-*there's a bunch more that needs to go here*
-
-## Copying the production database to a development environment
-
-If you have ssh access to a portal instance running on a server you can
-get a copy of the database on
-your local development instance with the following steps:
-
-In the code below *stage* means a capistrano stage that identifies a
-remote server. For example **xproject-dev**.
-
-     cap <stage> db:fetch_remote_db
-     RAILS_ENV=production jruby -S rake db:load
-
-If the codebase on your development system has moved forward you may
-need to run additional tasks such as:
-
-    RAILS_ENV=production jruby  -S rake db:migrate
-    RAILS_ENV=production jruby -S rake
-    rigse:setup:default_portal_resources
-    RAILS_ENV=production jruby  -S rake
-    portal:setup:create_districts_and_schools_from_nces_data
-
-
-The task: `default_users_roles_and_portal_resources` is last on that
-list because code changes may have added additional and necessary
-default model initialization.
-
-In order for the same passwords to work you will also need to have the
-same *pepper* in your local config/settings.yml as on the server you
-copied the production data from.
-
-Recreating a new portal instance from scratch from an existing
-application.
-
-    rake db:drop:all
-    git clean -fXd
-    jruby config/setup.rb
-    jruby  -S rake gems:install
-    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
-
-The ' -fxd' parameters to to git clean:
-
-* -d: Remove untracked directories in addition to untracked files.
-* -X: Remove only files ignored by git.
-* -f: force removal
-
-### Setting up a local JNLP Web Start servlet
-
-You can also setup a local jnlp web start server for a development
-environment with less dependence on outside services.
-
-* [Setup a Full SAIL Stack on Mac OS 10.5](https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5*)
-has several sections with useful information:
-
-* [Install Jnlp Servlet and build associated WAR file with jnlp and
-jars](https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-4InstallJnlpServletandbuildassociatedWARfilewithjnlpandjars)
+    # finally change the theme setting in your config/settings.yml
+    open config/settings.yml
 
 ## NCES District and School Tables
 
@@ -755,19 +567,12 @@ Forgotten password comes setup, so you don't have to mess around setting
 it up with every project.
 
 Devise uses the *pepper* parameter within settings.yml to encrypt user
-passwords. The *pepper* is
-generated automatically when first setting up the app. It is also
-generated if not existing or is
-blank when updating the app using the command:
-
-    ruby config/setup.rb -y -q  -t default
+passwords. A default *pepper* is provided in settings.samles.yml
+You need to change this when deploying to a public server.
 
 Devise is also setup to use user activation. Users which require
 activation are sent emails
 automatically.
-
-_RESTful Authentication is no longer integrated with the project. It
-has been replaced with Devise. _
 
 ## Uses the Database for Sessions
 
@@ -929,30 +734,6 @@ should be written for it.
 * rails.png is already deleted
 * a few changes have been made to the default views
 * a default css file with blank selectors for common rails elements
-
-
-## Copy & Paste Guide:
-
-    git clone git@github.com:concord-consortium/rigse.git ./xproject
-    cd xproject
-    echo 'rvm use 1.8.7@xproject-portal --create' > .rvmrc;
-    cd ..
-    cd xproject
-
-    gem install bundler
-    bundle install
-
-    ruby config/setup.rb -n "Cross Project Portal"  -D xproject -u <dbuser> -p <password> -t xproject  --states none -y -q  -f
-
-    RAILS_ENV=production rake db:create:all
-    RAILS_ENV=production rake db:migrate:reset
-    RAILS_ENV=production rake app:setup:new_app
-
-    rake db:test:prepare
-    rake db:dump
-    ruby script/server -e production
-(end)
-
 
 ## License
 
