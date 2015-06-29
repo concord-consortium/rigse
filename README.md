@@ -19,48 +19,21 @@ Working git, ruby or jruby, and rubgems, wget
 -   [Extensions to core classes applied at application
     startup](doc/core-extensions.textile)
 
-#### GIT
+#### Simple Getting Started
 
-In the example below we use the xproject theme and also as the name of
-the directory and
-the prefix of the names for the databases that will be created in mysql.
+    bundle install
+    cp config/database.sample.yml config/database.yml (need to fix the mysql password and/or user)
+    cp config/settings.sample.yml config/settings.yml
+    cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
+    cp config/sis_import_data.sample.yml config/sis_import_data.yml
+    rake db:setup
+    rails s
 
-If you are a committer in this repo:
+In a new terminal start the Solr
 
-    git clone git@github.com:concord-consortium/rigse.git xproject
+    rake sunspot:solr:run
 
-If you are not a committer:
-
-    git clone git://github.com/concord-consortium/rigse.git xproject
-
-Change to the project directory:
-
-    cd xproject
-
-Setup rvm to use Ruby 1.9.3-p125 and a gemset named xproject
-(newer versions of 1.9.3 ought to work as well)
-
-    rvm use 1.9.3-p125
-    rvm gemset create xproject
-
-Make an `.rvmrc` file so rvm will use this ruby gemset combo
-automatically when you change to this directory:
-
-    echo "rvm use 1.9.3-p125@xproject" > .rvmrc
-
-Test out the `.rvmrc` file and start using the gemset
-
-    cd ..;cd xproject
-
-Install [bundler](http://gembundler.com/)
-(typically rvm will install bundler for you when you install ruby)
-
-    gem install bundler
-
-Install the precise versions of the required gems and put the
-executables in bin/
-
-    bundle install --binstubs
+#### Issues
 
 If you get the following error
 
@@ -80,90 +53,26 @@ If you get the following error
 
 Replace `gem 'therubyracer',         "~>0.12.1"` entry in the Gemfile to `gem 'therubyracer',         "~>0.10.2"`
 
-Automatic setup of application settings in the config directory, for
-example: settings.yml and database.yml
-
-    ruby config/setup.rb --name "Cross Project Portal" --database xproject --user <dbuser> --password <password> --theme xproject --states none --yes --quiet --force
-
-The option `--states none` means that only a single virtual district and
-school will be created.
-
-If you leave this option out the default is to create portals instances
-for all the districts and schools in Massachusetts.
-
-You can also supply a comma-delimited list of two character
-abbreviations for states or provinces:
-
-    --states RI,CT
-
-The options `-y -q -f` to setup mean:
-
--   `-y` automatically answer 'yes' to accept default values
--   `-q` use 'quieter' console output
--   `-f` force an update of the existing settings.yml and database.yml
-    if they exist
-
-Setup database.
-
-If this fails it is probably due to a bad mysql gem install, check out
-the [RVM page on database
-integration](https://rvm.beginrescueend.com/integration/databases/) for
-help. You might get a warning if the databases already exist.
-
-    RAILS_ENV=development rake db:create:all
-    RAILS_ENV=development rake db:migrate:reset
-    RAILS_ENV=development rake db:backup:load_probe_configurations
-
-Start solr (requires Java, on Mac OS X this command should cause a installating prompt to appear)
-
-    RAILS_ENV=development rake sunspot:solr:start
-
-Setup application resources
-
-    RAILS_ENV=development rake app:setup:create_default_data
-
-Save a copy of the development database to make subsequent clean starts
-much quicker (bypassing rake app:setup:new_app).
-
-* Saves database to: db/development_data.sql
-* can be reloaded later with: rake db:load
-* note: in default setup created by config.rb above the development and production database is the same
-
-    rake db:dump
-
-This project uses the rails [asset pipeline](http://guides.rubyonrails.org/asset_pipeline.html)
-to manage static assets, and JS & CSS files. There are rake commands for compiling these assets,
-but they should run automatically when on 'cap deploy' because capistrano knows about the asset pipeline.
-
-You may also run the asset packing task manually however:
-
-    rake assets:clean # Remove compiled assets
-    rake assets:precompile # Compile all the assets named in
-    config.assets.precompile
-
-This will build all the assets within the project.
-
-Start server and open [http://localhost:3000](http://localhost:3000)
-
-    rails s -edevelopment
-
-You can read this documentation at:
-[http://localhost:3000/readme](http://localhost:3000/readme)
-
 After getting the server running it's good to confirm that all the tests
 pass before changing any code.
 
-Prepare a database for use when running the tests:
+Prepare a database for use when running the spec tests:
 
     rake db:test:prepare
 
 Run the rspec unit tests:
 
-    rake spec
+    rspec spec/
+
+Prepare a database for use when running the cucumber tests:
+
+    RAILS_ENV=cucumber rake db:create
+    RAILS_ENV=cucumber rake db:schema:load
+    rake db:test:prepare_cucumber
 
 Run the cucumber integration tests:
 
-    rake cucumber
+    cucumber features/
 
 All these tests should pass. If you add features make sure and add tests
 for these new features.
