@@ -174,7 +174,6 @@ class InteractivesController < ApplicationController
     model_library = []
     Interactive.published.each do |m|
       model_library << {
-        :id => m.id,
         :name => m.name,
         :description => m.description,
         :url => m.url,
