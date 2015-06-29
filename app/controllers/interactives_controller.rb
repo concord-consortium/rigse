@@ -1,5 +1,5 @@
 class InteractivesController < ApplicationController
-  
+
   before_filter :admin_only, :except => [:index, :show, :export_model_library]
 
   def index
@@ -30,18 +30,18 @@ class InteractivesController < ApplicationController
       end
     end
   end
-  
+
   def new
     @interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)
   end
-  
+
   def create
     @interactive = Interactive.new(params[:interactive])
     @interactive.user = current_visitor
-    
+
     if params[:update_grade_levels]
       # set the grade_level tags
-      @interactive.grade_level_list = (params[:grade_levels] || [])     
+      @interactive.grade_level_list = (params[:grade_levels] || [])
     end
 
     if params[:update_subject_areas]
@@ -67,7 +67,7 @@ class InteractivesController < ApplicationController
     end
   end
 
-  def show 
+  def show
     @interactive = Interactive.find(params[:id])
   end
 
@@ -174,6 +174,7 @@ class InteractivesController < ApplicationController
     model_library = []
     Interactive.published.each do |m|
       model_library << {
+        :id => m.id,
         :name => m.name,
         :description => m.description,
         :url => m.url,
