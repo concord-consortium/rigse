@@ -322,7 +322,7 @@ class Portal::StudentsController < ApplicationController
     @class_word = params[:clazz][:class_word]
     render :update do |page|
       page.remove "invalid_word"
-      page.insert_html :top, "word_form", :partial => "confirmation",
+      page.insert_html :before, "word_form", :partial => "confirmation",
         :locals => {:class_word => @class_word,
                     :clazz      => @portal_clazz,
                     :portal_student => Portal::Student.new}
