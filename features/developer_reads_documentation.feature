@@ -15,10 +15,6 @@ Feature: A developer reads technical documentation about the software
     Given I am on /doc/core-extensions.textile
     Then I should see "Extensions to Existing Ruby Classes"
 
-  Scenario: A developer looks at a markdown formatted document in the doc directory
-    Given I am on /doc/updating_an_older_instance.md
-    Then I should see "Updating an older portal instance to master"
-
   Scenario: A developer tries to read documentation that doesn't exist
     Given I am on /doc/does_not_exist.md
     Then I should see "Technical document: does_not_exist.md not found"

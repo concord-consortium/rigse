@@ -13,7 +13,7 @@ require File.expand_path('../../lib/yaml_editor', __FILE__)
 
 set :stages, %w(
   rites-staging rites-production rites-ri-production
-  itsisu-dev itsisu-staging itsisu-production
+  itsi-master-staging
   smartgraphs-staging smartgraphs-production smartgraphs-aws1
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
@@ -310,12 +310,8 @@ end
 namespace :setup do
   desc "ensure that the database exists, is migrated and has default users, roles, projects, etc"
   task :init_database, :roles => :app do
-    run_remote_rake "db:create"
-    run_remote_rake "db:migrate"
-    run_remote_rake "app:setup:default_users_roles"
-    run_remote_rake "app:setup:default_settings"
+    run_remote_rake "db:setup"
     run_remote_rake "sunspot:solr:start", true
-    run_remote_rake "app:setup:default_portal_resources"
   end
 
    # 2013_04_01 NP:
@@ -488,18 +484,6 @@ namespace :convert do
   end
 
   # Thursday October 8, 2009
-
-  desc "Create default users, roles, district, school, course, and class, and greade_levels"
-  task :default_users_roles, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:default_users_roles --trace"
-  end
-
-  desc "Create default portal resources: district, school, course, and class, investigation and grades"
-  task :default_portal_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:default_portal_resources --trace"
-  end
 
   desc "Create districts and schools from NCES records for States listed in settings.yml"
   task :create_districts_and_schools_from_nces_data, :roles => :app do
