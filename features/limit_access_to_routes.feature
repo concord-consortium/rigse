@@ -64,8 +64,6 @@ In NO case should the system allow:
       | /portal/districts             |
       | /portal/grades                |
       | /portal/learners              |
-      | /portal/external_user_domains |
-      | /portal/external_users        |
       | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |
@@ -94,8 +92,6 @@ In NO case should the system allow:
       | /portal/districts             |
       | /portal/grades                |
       | /portal/learners              |
-      | /portal/external_user_domains |
-      | /portal/external_users        |
       | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |

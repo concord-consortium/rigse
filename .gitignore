@@ -89,11 +89,6 @@ resources/rinet_test_data/02/test/users_updated.csv
 users_created.csv
 users_error*
 users_updated.csv
-sis_import_data
-**/sis_import_test_data/*/*/report
-**/sis_import_test_data/report
-**/sis_import_test_data/report
-config/sis_import_data.yml
 *.sublime-project
 *.sublime-workspace
 config/paperclip.yml

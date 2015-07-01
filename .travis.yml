@@ -23,7 +23,6 @@ before_script:
   - cp config/database.travis.yml config/database.yml
   - cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
   - cp config/settings.sample.yml config/settings.yml
-  - cp config/sis_import_data.sample.yml config/sis_import_data.yml
   - mysql -e "create database rigse_test;"
   - bundle exec spring binstub --all
   - ./bin/rake db:schema:load

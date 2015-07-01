@@ -92,7 +92,6 @@ def generate_portal_resources_with_mocks
   @mock_school = mock_model(Portal::School)
   @mock_grade = mock_model(Portal::Grade)
   @mock_grade_level = mock_model(Portal::GradeLevel)
-  @mock_external_user = mock_model(ExternalUser)
   # @mock_grade ||= mock_model(Portal::Grade, stubs)
   # @mock_grade_level ||= mock_model(Portal::GradeLevel, stubs)
 end

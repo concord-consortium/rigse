@@ -20,7 +20,6 @@ Working git, ruby or jruby, and rubgems, wget
     cp config/database.sample.yml config/database.yml (need to fix the mysql password and/or user)
     cp config/settings.sample.yml config/settings.yml
     cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
-    cp config/sis_import_data.sample.yml config/sis_import_data.yml
     rake db:setup
     rails s
 

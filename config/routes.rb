@@ -251,10 +251,6 @@ RailsPortal::Application.routes.draw do
 
       resources :teachers
 
-      resources :external_user_domains
-
-      resources :external_users
-
       resources :nces06_districts
 
       resources :nces06_schools do
@@ -312,11 +308,6 @@ RailsPortal::Application.routes.draw do
     match '/users/reports/account_report' => 'users#account_report', :as => :users_account_report, :method => :get
     resources :passwords
     #resource :session
-
-    resources :external_user_domains do
-      resources :external_users
-      resources :external_sessions
-    end
 
     namespace :dataservice do
       resources :blobs
