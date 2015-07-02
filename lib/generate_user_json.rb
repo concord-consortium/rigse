@@ -10,7 +10,7 @@ class GenerateUserJSON < Struct.new(:export_id,:user_id)
       user_data[:teacher] = user.portal_teacher ? true : false
       user_data[:school] = user.school ? user.school.as_json(:only => [:name,:ncessch,:state]) : nil
       if user.school
-        user_data[:school][:url] = "http://itsi-aws.staging.concord.org/portal/schools/#{user.school.id}"
+        user_data[:school][:url] = "#{APP_CONFIG[:site_url]}/portal/schools/#{user.school.id}"
         user_data[:school][:district] = user.school.district.as_json(:only => [:name,:leaid,:state])
       end
       user_data[:user_page_url] = user.user_page_url
@@ -29,6 +29,9 @@ class GenerateUserJSON < Struct.new(:export_id,:user_id)
       end
       users_json[:users] << user_data
     end
+
+    users_json[:portal_name] = APP_CONFIG[:site_url]
+
     name = "users_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
     directory = "public/json"
     path = File.join(directory, name)
