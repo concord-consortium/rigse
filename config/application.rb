@@ -28,12 +28,12 @@ module RailsPortal
       end
     end
     Bundler.require(*Rails.groups(extra_groups)) if defined?(Bundler)
-  
+
     config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
     config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories
 
     config.filter_parameters << :password << :password_confirmation
-    
+
     # Subvert the cookies_only=true session policy for requests ending in ".config"
     config.middleware.insert_before("ActionDispatch::Cookies", "Rack::ConfigSessionCookies")
 
@@ -51,14 +51,14 @@ module RailsPortal
     #   use Rack::MethodOverride
     #   use Rack::Head
     #   run ActionController::Dispatcher.new
-    
+
     config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     # See Rails::Configuration for more options.
-  
+
     # Skip frameworks you're not going to use. To use Rails without a database
     # you must remove the Active Record framework.
     # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
@@ -69,35 +69,35 @@ module RailsPortal
     # These cause problems with irb. Left in for reference
     # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
     # config.gem 'rspec', :lib => 'spec', :version => '1.1.11'
-    # Only load the plugins named here, in the order given. By default, all plugins 
+    # Only load the plugins named here, in the order given. By default, all plugins
     # in vendor/plugins are loaded in alphabetical order.
     # :all can be used as a placeholder for all plugins not explicitly named
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-  
+
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{::Rails.root.to_s}/extras )
     # Force all environments to use the same logger level
     # (by default production uses :info, the others :debug)
     # config.log_level = :debug
-  
+
     # Make Time.zone default to the specified zone, and make Active Record store time values
     # in the database in UTC, and return them converted to the specified local zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Comment line to use default local time.
     config.time_zone = 'UTC'
-  
+
     # Set the default location for page caching
     config.action_controller.page_cache_directory = ::Rails.root.to_s + '/public'
-  
+
     config.react.variant = :development
 
     # Use SQL instead of Active Record's schema dumper when creating the test database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
     # like if you have constraints or database-specific column types
     # config.active_record.schema_format = :sql
-  
+
     # Activate observers that should always be running
     # Please note that observers generated using script/generate observer need to have an _observer suffix
-  
+
     # ... observers are now started in config/initializers/observers.rb
     # Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
     # if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
@@ -114,16 +114,23 @@ module RailsPortal
         end
     end
 
-    # Set up CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".
+    config.middleware.insert_before 0, Rack::Cors do
 
-    # If CORS is allowed, then by default, we will allow CORS requests only from the origin
-    # `*.concord.org`. If we want to specify something else, use the environment variable
-    # CORS_ORIGINS, specifying multiple origins: CORS_ORIGINS="x.concord.org y.z.example.com".
+      # always allow export access to the model library
+      allow do
+        origins '*'
+        resource '/interactives/export_model_library', :headers => :any, :methods => :get
+      end
 
-    # We can also set which resources we allow with the CORS_RESOURCES environment variable.
-    # By default, this is '*'
-    if ENV['PORTAL_FEATURES'] && ENV['PORTAL_FEATURES'].include?("allow_cors")
-      config.middleware.insert_before 0, Rack::Cors do
+      # Set up custom CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".
+
+      # If CORS is allowed, then by default, we will allow CORS requests only from the origin
+      # `*.concord.org`. If we want to specify something else, use the environment variable
+      # CORS_ORIGINS, specifying multiple origins: CORS_ORIGINS="x.concord.org y.z.example.com".
+
+      # We can also set which resources we allow with the CORS_RESOURCES environment variable.
+      # By default, this is '*'
+      if ENV['PORTAL_FEATURES'] && ENV['PORTAL_FEATURES'].include?("allow_cors")
         allow do
           origins ENV['CORS_ORIGINS'] ? ENV['CORS_ORIGINS'].split(" ") : /^https?:\/\/.*\.concord.org/
           resource ENV['CORS_RESOURCES'] || '*', headers: :any, expose: ['Location'], methods: [:get, :post, :put, :options], credentials: true
