@@ -628,6 +628,10 @@ RailsPortal::Application.routes.draw do
         post :import_user_json
         get :import_user_status
         get :download
+        get :import_activity_status
+        post :import_activity
+        get :import_activity_progress
+        get :activity_clear_job
       end
     end
 

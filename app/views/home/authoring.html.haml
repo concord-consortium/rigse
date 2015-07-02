@@ -1,4 +1,5 @@
-= javascript_include_tag "import_model_library.js" 
+= javascript_include_tag "import_model_library.js"
+= javascript_include_tag "import_progress.js"
 %h2
   Authoring
 
@@ -38,6 +39,9 @@
     = link_to "Create #{Interactive.display_name}", new_interactive_path, :class => 'button'
     %div{:style=> "margin: 1em; padding: 1em;"}
     = link_to "Import #{Interactive.display_name.pluralize}", "", :id => 'import-model-library-popup', :class => 'button'
+
+    %div{:style=> "margin: 1em; padding: 1em;"}
+    =link_to "Import #{ExternalActivity.display_name}", "javascript:void(0);", :id => 'import_activity', :class => 'button'
 
 %div{:style=> "margin: 1em; padding: 1em;"}
   %h4= link_to "Create #{Image.display_name}", images_path, :class => 'button'

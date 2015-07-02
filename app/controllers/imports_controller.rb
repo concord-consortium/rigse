@@ -97,6 +97,43 @@ class ImportsController < ApplicationController
       :x_sendfile => true
   end
 
+  def import_activity_status
+    respond_to do |format|
+      format.js { render :json => { :html => render_to_string('import_activity_status')}, :content_type => 'text/json' }
+      format.html
+    end
+  end
+
+  def import_activity
+    begin 
+      json_object = JSON.parse "#{params['import_activity_form'].read}", :symbolize_names => true
+      req_url = "#{request.protocol}#{request.host_with_port}"
+      import = Import.create!()
+      job = Delayed::Job.enqueue ImportExternalActivity.new(import,json_object,req_url,current_visitor.id)
+      import.update_attribute(:job_id, job.id)
+      import.update_attribute(:import_type, Import::IMPORT_TYPE_ACTIVITY)
+      import.update_attribute(:user_id, current_visitor.id)
+      redirect_to action: :import_activity_progress
+    rescue => e
+      render :json => {:error => "Import failed."}
+    end
+  end
+
+  def import_activity_progress
+    if request.xhr?
+      @import_activity = Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::IMPORT_TYPE_ACTIVITY).last
+      render :json => {:progress => @import_activity ? @import_activity.progress : @import_activity}
+    end
+  end
+
+  def activity_clear_job
+    if request.xhr?
+      import_activity = Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::IMPORT_TYPE_ACTIVITY).last
+      import_activity.destroy
+    end
+    render :nothing => true
+  end
+
   protected
   def admin_only
     unless current_visitor.has_role?('admin')

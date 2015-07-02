@@ -236,6 +236,7 @@ class ExternalActivitiesController < ApplicationController
         @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
       end
       head :created, :location => @external_activity
+      response.body = {:activity_id => @external_activity.id}.to_json
     rescue StandardError => e
       json_error(e)
     end
@@ -248,6 +249,7 @@ class ExternalActivitiesController < ApplicationController
     begin
       @external_activity = ActivityRuntimeAPI.republish(json)
       head :created, :location => @external_activity
+      response.body = {:activity_id => @external_activity.id}.to_json
     rescue StandardError => e
       json_error(e)
     end

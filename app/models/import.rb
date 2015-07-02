@@ -2,6 +2,7 @@ class Import < ActiveRecord::Base
   
   IMPORT_TYPE_SCHOOL_DISTRICT = 0
   IMPORT_TYPE_USER = 1
+  IMPORT_TYPE_ACTIVITY = 2
 
   scope :in_progress, lambda{|import_type| where(job_finished_at: nil, import_type: import_type)} 
   
