@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable, :bearer_token_authenticatable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
-  devise :omniauthable, :omniauth_providers => [:schoology]
+  devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
   self.token_authentication_key = "access_token"
   default_scope where(User.arel_table[:state].not_in(['disabled']))
 
