@@ -10,12 +10,6 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     build_resource
 
-    if session[:omniauth] && @user.errors[:email][0] =~ /has already been taken/
-      user = User.find_by_email(@user.email)
-      # Link Accounts - if via social connect
-      return redirect_to link_accounts_url(user.id)
-    end
-
     # normal processing
     super
     session[:omniauth] = nil unless @user.new_record?

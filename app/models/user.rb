@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable, :bearer_token_authenticatable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
+  devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
   self.token_authentication_key = "access_token"
   default_scope where(User.arel_table[:state].not_in(['disabled']))
 
@@ -187,6 +188,48 @@ class User < ActiveRecord::Base
     # return the user who is the site administrator
     def site_admin
       User.find_by_email(APP_CONFIG[:default_admin_user][:email])
+    end
+
+    def find_for_omniauth(auth, signed_in_resource=nil)
+      authentication = Authentication.find_by_provider_and_uid auth.provider, auth.uid
+      if authentication
+        # Since we're not planning to access the provider on behalf of the user,
+        # don't bother storing tokens for now.
+        # update the authentication token for this user to make sure it stays fresh
+        # authentication.update_attribute(:token, auth.credentials.token)
+        return authentication.user
+      end
+
+      # there is no authentication for this provider and uid
+      # see if we should create a new authentication for an existing user
+      # or make a whole new user
+      email = auth.info.email || "#{Devise.friendly_token[0,20]}@example.com"
+
+      # the devise validatable model enforces unique emails, so no need find_all
+      existing_user_by_email = User.find_by_email email
+
+      if existing_user_by_email
+        if existing_user_by_email.authentications.find_by_provider auth.provider
+          throw "Can't have duplicate email addresses: #{email}. " +
+                "There is an user with an authentication for this provider #{auth.provider} " +
+                "and the same email already."
+        end
+        # There is no authentication for this provider and user
+        user = existing_user_by_email
+      else
+        # no user with this email, so make a new user with a random password
+        user = User.create(
+          email:    email,
+          password: User.get_random_password
+        )
+      end
+      # create new authentication for this user that we found or created
+      user.authentications.create(
+        provider: auth.provider,
+        uid:      auth.uid
+        # token:    auth.credentials.token
+      )
+      user
     end
   end
 
