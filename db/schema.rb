@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150612095239) do
+ActiveRecord::Schema.define(:version => 20150627071610) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -877,6 +877,25 @@ ActiveRecord::Schema.define(:version => 20150612095239) do
     t.integer  "height",             :default => 0
   end
 
+  create_table "import_duplicate_users", :force => true do |t|
+    t.string  "login"
+    t.string  "email"
+    t.integer "duplicate_by"
+    t.text    "data"
+    t.integer "user_id"
+    t.integer "import_id"
+  end
+
+  create_table "import_school_district_mappings", :force => true do |t|
+    t.integer "district_id"
+    t.string  "import_district_uuid"
+  end
+
+  create_table "import_user_school_mappings", :force => true do |t|
+    t.integer "school_id"
+    t.string  "import_school_url"
+  end
+
   create_table "imports", :force => true do |t|
     t.integer  "job_id"
     t.datetime "job_finished_at"
@@ -884,8 +903,10 @@ ActiveRecord::Schema.define(:version => 20150612095239) do
     t.text     "duplicate_data"
     t.integer  "progress"
     t.integer  "total_imports"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.integer  "user_id"
+    t.text     "upload_data",     :limit => 2147483647
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
   end
 
   create_table "installer_reports", :force => true do |t|

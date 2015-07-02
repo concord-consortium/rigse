@@ -13,16 +13,10 @@ class ImportsController < ApplicationController
       redirect_to import_school_district_status_imports_path({:message => "Invalid JSON"})
       return
     end
-    name = "upload_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
-    directory = "public/json"
-    path = File.join(directory, name)
-    dir = File.dirname(path)
-    FileUtils.mkdir_p(dir) unless File.directory?(dir)
-    File.open(path, "w") do |f|
-      f.write(file_data)
-    end    
     import = Import.create!()
-    job = Delayed::Job.enqueue ImportSchoolsAndDistricts.new(import, path)
+    import.upload_data = file_data
+    import.save!
+    job = Delayed::Job.enqueue ImportSchoolsAndDistricts.new(import.id)
     import.update_attribute(:job_id, job.id)
     import.update_attribute(:import_type, Import::IMPORT_TYPE_SCHOOL_DISTRICT)
     redirect_to :action => "import_school_district_status"
@@ -39,16 +33,10 @@ class ImportsController < ApplicationController
       redirect_to import_user_status_imports_path({:message => "Invalid JSON"})
       return
     end
-    name = "upload_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
-    directory = "public/json"
-    path = File.join(directory, name)
-    dir = File.dirname(path)
-    FileUtils.mkdir_p(dir) unless File.directory?(dir)
-    File.open(path, "w") do |f|
-      f.write(file_data)
-    end
     import = Import.create!()
-    job = Delayed::Job.enqueue ImportUsers.new(import, path)
+    import.upload_data = file_data
+    import.save!
+    job = Delayed::Job.enqueue ImportUsers.new(import.id)
     import.update_attribute(:job_id, job.id)
     import.update_attribute(:import_type, Import::IMPORT_TYPE_USER)
     redirect_to :action => "import_user_status"
@@ -79,10 +67,10 @@ class ImportsController < ApplicationController
 
   def import_user_status
     @import_type = Import::IMPORT_TYPE_USER
-    imports_in_progress = Import.in_progress(Import::IMPORT_TYPE_USER)
-    @imports_progress = []
-    imports_in_progress.each_with_index do |import_in_progress, index|
-      @imports_progress << {
+    @imports_in_progress = Import.in_progress(Import::IMPORT_TYPE_USER)
+    imports_progress = []
+    @imports_in_progress.each_with_index do |import_in_progress, index|
+      imports_progress << {
         id: import_in_progress.id,        
         progress: import_in_progress.progress,
         total: import_in_progress.total_imports
@@ -93,7 +81,7 @@ class ImportsController < ApplicationController
       if params[:message]
         render :json => {:error => params[:message]}, :status => 500
       else
-        render :json => {:progress => @imports_progress}
+        render :json => {:progress => imports_progress}
       end
     else
       render "imports/import_status"
@@ -101,7 +89,9 @@ class ImportsController < ApplicationController
   end
 
   def download
-    send_data File.read("#{Rails.root}/public/json/duplicate_users.json"),
+    import_id = Import.find(:last, :conditions => {:import_type => Import::IMPORT_TYPE_USER})
+    duplicate_users = ImportDuplicateUser.find(:all, :conditions => {:import_id => import_id, :duplicate_by => ImportDuplicateUser::DUPLICATE_BY_LOGIN_AND_EMAIL})
+    send_data duplicate_users.to_json,
       :filename => "duplicate_users.json",
       :type => "application/json",
       :x_sendfile => true
