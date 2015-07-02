@@ -102,6 +102,13 @@ class PasswordsController < ApplicationController
       flash[:notice] = "Password for #{@user_reset_password.login} was successfully updated."
       @user_reset_password.require_password_reset=false
       @user_reset_password.save
+
+      imported_user = @user_reset_password.imported_user
+      if imported_user
+        imported_user.is_verified = true unless imported_user.is_verified
+        imported_user.save
+      end
+
       if @user_reset_password.id == current_visitor.id
         #re-sign-in user
         sign_in @user_reset_password, :bypass => true

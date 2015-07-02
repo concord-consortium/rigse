@@ -137,6 +137,7 @@ class User < ActiveRecord::Base
 
   has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
+  has_one :imported_user, :dependent => :destroy, :class_name => "ImportedUser", :inverse_of => :user
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
 
@@ -453,6 +454,17 @@ class User < ActiveRecord::Base
 
   def user_active?
     self.state != "suspended" && self.state != "disabled"
+  end
+
+  def self.verified_ITSI_user?(login)
+    user = User.find_by_login(login)
+    imported_user = user.imported_user if user
+    importing_portal = imported_user.importing_portal if imported_user
+    #assuming for now ITSI portal will be the only entry in importing portal
+    if importing_portal && importing_portal.portal_url == APP_CONFIG[:import_site_url]
+      return imported_user.is_verified
+    end
+    return true
   end
 
   protected

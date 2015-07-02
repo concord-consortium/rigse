@@ -3,6 +3,8 @@ class ImportUsers < Struct.new(:import_id)
     import = Import.find(import_id)
     content_hash = JSON.parse(import.upload_data, :symbolize_names => true)
     total_users_count = content_hash[:users].size
+    importing_portal = ImportingPortal.find(:first, :conditions => {:portal_url => content_hash[:portal_name]})
+    importing_portal = importing_portal || ImportingPortal.create({:portal_url => content_hash[:portal_name]})
     import.update_attribute(:total_imports, total_users_count)
     content_hash[:users].each_with_index do |user, index|
       new_user = User.find_by_email(user[:email])
@@ -33,6 +35,10 @@ class ImportUsers < Struct.new(:import_id)
         user[:roles].each do |role|
           new_user.add_role(role)
         end
+        new_user.imported_user = ImportedUser.create({
+          :user_url => user[:user_page_url],
+          :importing_portal_id => importing_portal.id
+        })
         if user[:teacher]
           if user[:school]
             if user[:school][:url]
