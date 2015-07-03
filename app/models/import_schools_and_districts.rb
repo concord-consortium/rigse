@@ -8,7 +8,7 @@ class ImportSchoolsAndDistricts < Struct.new(:import_id)
     us_country = Portal::Country.find(:first, :conditions =>{:two_letter => "US"})
     district_index = 0
     batch_size = 500
-    total_batches = (total_districts_count/batch_size).ceil
+    total_batches = (total_districts_count/batch_size.to_f).ceil
     start_index = 0
     end_index = batch_size - 1
 
@@ -45,7 +45,7 @@ class ImportSchoolsAndDistricts < Struct.new(:import_id)
       end
     }
 
-    total_batches = (total_schools_count/batch_size).ceil
+    total_batches = (total_schools_count/batch_size.to_f).ceil
     
     0.upto(total_batches-1){|batch_index|
       start_index = batch_index * batch_size
@@ -65,7 +65,7 @@ class ImportSchoolsAndDistricts < Struct.new(:import_id)
             school_params = {}
             school_params[:name] = school_name
             school_params[:state] = school[:state] if school[:state]
-            school_params[:district_id] = school_district.id if school_district
+            school_params[:district_id] = school_district.district_id if school_district
             school_params[:ncessch] = school[:ncessch] if school[:ncessch]
             existing_school = Portal::School.find(:first ,:conditions => school_params)        
             new_school = existing_school || Portal::School.create(school_params)

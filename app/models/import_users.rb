@@ -4,7 +4,7 @@ class ImportUsers < Struct.new(:import_id)
     content_hash = JSON.parse(import.upload_data, :symbolize_names => true)
     total_users_count = content_hash[:users].size
     batch_size = 500
-    total_batches = (total_users_count/batch_size).ceil
+    total_batches = (total_users_count/batch_size.to_f).ceil
     start_index = 0
     end_index = batch_size - 1
     importing_portal = ImportingPortal.find(:first, :conditions => {:portal_url => content_hash[:portal_name]})
