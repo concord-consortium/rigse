@@ -3,7 +3,7 @@
     .message
       To provide you access to your account we need to verify the following details.
     %div{'ng-controller' => 'RegistrationController as regCtrl'}
-      = form_tag '/itsi_login/itsi_user_authentication',
+      = form_tag confirmation_user_imported_login_path,
         'with-errors' => 'true',
         'id' => 'itsi-confirm',
         'name' => 'itsi-confirm',
