@@ -91,10 +91,15 @@ class ImportsController < ApplicationController
   def download
     user_import = Import.find(:last, :conditions => {:import_type => Import::IMPORT_TYPE_USER})
     duplicate_users = ImportDuplicateUser.find(:all, :conditions => {:import_id => user_import.id})
-    send_data duplicate_users.to_json,
-      :filename => "duplicate_users.json",
-      :type => "application/json",
-      :x_sendfile => true
+    if duplicate_users.length == 0
+      flash[:alert] = "No duplicate users found in the import."
+      redirect_to :back
+    else
+      send_data duplicate_users.to_json,
+        :filename => "duplicate_users.json",
+        :type => "application/json",
+        :x_sendfile => true
+    end
   end
 
   def import_activity_status
