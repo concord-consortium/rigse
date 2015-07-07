@@ -909,7 +909,6 @@ ActiveRecord::Schema.define(:version => 20150707062145) do
     t.integer  "job_id"
     t.datetime "job_finished_at"
     t.integer  "import_type"
-    t.text     "duplicate_data"
     t.integer  "progress"
     t.integer  "total_imports"
     t.integer  "user_id"

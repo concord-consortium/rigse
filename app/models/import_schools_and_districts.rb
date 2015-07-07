@@ -36,6 +36,7 @@ class ImportSchoolsAndDistricts < Struct.new(:import_id)
               new_district = existing_district || Portal::District.create(district_params)
               new_district.description = district[:description]
               new_district.zipcode = district[:zipcode]
+              new_district.save!
             end
             new_map = ImportSchoolDistrictMapping.find(:first, :conditions => {:district_id => new_district.id, :import_district_uuid => district[:uuid]})
             new_map = new_map || ImportSchoolDistrictMapping.create({:district_id => new_district.id, :import_district_uuid => district[:uuid]})
@@ -72,6 +73,7 @@ class ImportSchoolsAndDistricts < Struct.new(:import_id)
             new_school.description = school[:description]
             new_school.zipcode = school[:zipcode]
             new_school.country = us_country unless school[:state] == "XX" || school[:state].nil?
+            new_school.save!
           end
           new_map = ImportUserSchoolMapping.find(:first, :conditions => {:school_id => new_school.id, :import_school_url => school[:school_url]})
           new_map = new_map || ImportUserSchoolMapping.create({:school_id => new_school.id, :import_school_url => school[:school_url]})
