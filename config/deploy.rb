@@ -13,7 +13,7 @@ require File.expand_path('../../lib/yaml_editor', __FILE__)
 
 set :stages, %w(
   rites-staging rites-production rites-ri-production
-  itsisu-dev itsisu-staging itsisu-production
+  itsi-master-staging
   smartgraphs-staging smartgraphs-production smartgraphs-aws1
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
@@ -229,7 +229,6 @@ namespace :deploy do
       mkdir -p #{shared_path}/config &&
       mkdir -p #{shared_path}/log &&
       mkdir -p #{shared_path}/pids &&
-      mkdir -p #{shared_path}/sis_import_data &&
       mkdir -p #{shared_path}/config/nces_data &&
       mkdir -p #{shared_path}/public/otrunk-examples &&
       mkdir -p #{shared_path}/public/installers &&
@@ -240,7 +239,6 @@ namespace :deploy do
       touch #{shared_path}/config/database.yml &&
       touch #{shared_path}/config/settings.yml &&
       touch #{shared_path}/config/installer.yml &&
-      touch #{shared_path}/config/sis_import_data.yml &&
       touch #{shared_path}/config/mailer.yml &&
       touch #{shared_path}/config/initializers/site_keys.rb &&
       touch #{shared_path}/config/initializers/subdirectory.rb &&
@@ -264,14 +262,12 @@ namespace :deploy do
       ln -nfs #{shared_path}/config/aws_s3.yml #{release_path}/config/aws_s3.yml &&
       ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml &&
       ln -nfs #{shared_path}/config/padlet.yml #{release_path}/config/padlet.yml &&
-      ln -nfs #{shared_path}/config/sis_import_data.yml #{release_path}/config/sis_import_data.yml &&
       ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml &&
       ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb &&
       ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb &&
       ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples &&
       ln -nfs #{shared_path}/public/installers #{release_path}/public/installers &&
       ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data &&
-      ln -nfs #{shared_path}/sis_import_data #{release_path}/sis_import_data &&
       ln -nfs #{shared_path}/system #{release_path}/public/system &&
       ln -nfs #{shared_path}/solr/data #{release_path}/solr/data &&
       ln -nfs #{shared_path}/solr/pids #{release_path}/solr/pids &&
@@ -314,12 +310,8 @@ end
 namespace :setup do
   desc "ensure that the database exists, is migrated and has default users, roles, projects, etc"
   task :init_database, :roles => :app do
-    run_remote_rake "db:create"
-    run_remote_rake "db:migrate"
-    run_remote_rake "app:setup:default_users_roles"
-    run_remote_rake "app:setup:default_settings"
+    run_remote_rake "db:setup"
     run_remote_rake "sunspot:solr:start", true
-    run_remote_rake "app:setup:default_portal_resources"
   end
 
    # 2013_04_01 NP:
@@ -378,12 +370,6 @@ namespace :import do
   task :reload_probe_configurations, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "bundle exec rake RAILS_ENV=#{rails_env} db:backup:load_probe_configurations --trace"
-  end
-
-  desc "Import RINET data"
-  task :import_sis_import_data, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-    "bundle exec rake RAILS_ENV=#{rails_env} app:import:rinet --trace"
   end
 
   desc "Restore couchdb from S3"
@@ -498,18 +484,6 @@ namespace :convert do
   end
 
   # Thursday October 8, 2009
-
-  desc "Create default users, roles, district, school, course, and class, and greade_levels"
-  task :default_users_roles, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:default_users_roles --trace"
-  end
-
-  desc "Create default portal resources: district, school, course, and class, investigation and grades"
-  task :default_portal_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:default_portal_resources --trace"
-  end
 
   desc "Create districts and schools from NCES records for States listed in settings.yml"
   task :create_districts_and_schools_from_nces_data, :roles => :app do
@@ -648,20 +622,6 @@ namespace :installer do
     %x[cp config/installer.yml.mine config/installer.yml]
   end
 
-end
-
-namespace 'account_data' do
-  desc 'upload_csv_for_district: copy the local csv import files to remote for district (set district=whatever)'
-  task 'upload_csv_for_district' do
-    district = ENV['district']
-    if district
-      domain = ENV['domain'] || 'rinet_sakai'
-      district_root = File.join('sis_import_data','districts',domain, 'csv')
-      from_dir = File.join('sis_import_data','districts',domain, 'csv',district)
-      to_dir   = File.join(deploy_to,current_dir,'sis_import_data','districts',domain, 'csv')
-      upload(from_dir, to_dir, :via => :scp, :recursive => true)
-    end
-  end
 end
 
 # Tasks to interact with Solr and SunSpot

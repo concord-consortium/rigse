@@ -73,7 +73,37 @@ class MiscController < ActionController::Base
     end
   end
 
+  def preflight
+    session['preflighted'] = '1'
+    render layout: :basic
+  end
+
+  def auth_check
+    send("check_#{params[:provider]}")
+  end
+
   private
+
+  def check_schoology
+    provider = params[:provider]
+    uid = nil
+    if params[:realm] && params[:realm_id] && params[:realm] == "user"
+      uid = params[:realm_id]
+    end
+    generic_check(provider, uid)
+  end
+
+  # Checks if the current user is the same one as provided.
+  # If not, authenticate the user through the provider.
+  def generic_check(provider, uid=nil)
+    if uid
+      if current_user == (Authentication.find_by_provider_and_uid(provider, uid).user rescue nil)
+        redirect_to(root_path)
+        return
+      end
+    end
+    redirect_to "/users/auth/#{provider}"
+  end
 
   def get_banner_asset(name)
     ActionController::Base.helpers.asset_paths.asset_for("new/banners/#{name}.png", nil)

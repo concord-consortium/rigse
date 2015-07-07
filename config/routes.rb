@@ -1,20 +1,15 @@
 RailsPortal::Application.routes.draw do
 
-  devise_for :users, :controllers => { :registrations => 'registrations'}
-  # omniauth client stuff
-  match '/auth/:provider/callback', :to => 'authentications#create'
-  match '/auth/failure', :to => 'authentications#failure'
+  devise_for :users, :controllers => { :registrations => 'registrations', :omniauth_callbacks => "authentications" }
+
+  # Client stuff
+  match '/auth/:provider/check' => 'misc#auth_check', method: :get
 
   # Provider stuff
   match '/auth/concord_id/authorize' => 'auth#authorize'
   match '/auth/concord_id/access_token' => 'auth#access_token'
   match '/auth/concord_id/user' => 'auth#user'
   match '/oauth/token' => 'auth#access_token'
-
-  # Account linking
-  match 'authentications/:user_id/link' => 'authentications#link', :as => :link_accounts
-  match 'authentications/:user_id/add' => 'authentications#add', :as => :add_account
-
 
   root :to => "home#index"
 
@@ -251,10 +246,6 @@ RailsPortal::Application.routes.draw do
 
       resources :teachers
 
-      resources :external_user_domains
-
-      resources :external_users
-
       resources :nces06_districts
 
       resources :nces06_schools do
@@ -312,11 +303,6 @@ RailsPortal::Application.routes.draw do
     match '/users/reports/account_report' => 'users#account_report', :as => :users_account_report, :method => :get
     resources :passwords
     #resource :session
-
-    resources :external_user_domains do
-      resources :external_users
-      resources :external_sessions
-    end
 
     namespace :dataservice do
       resources :blobs

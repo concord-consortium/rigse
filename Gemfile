@@ -19,6 +19,7 @@ source "http://rubygems.org"
   gem "devise",               "~>2.1.0"
   gem 'devise-encryptable'
   gem 'omniauth'
+  gem 'omniauth-oauth'  # for schoology integration
 
   gem "rails",                "~> 3.2"
   gem "arrayfields"
@@ -125,6 +126,9 @@ source "http://rubygems.org"
   gem 'nested_form'
   gem 'sanitize'
 
+  # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
+  gem 'rack-cors', :require => 'rack/cors'
+
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:
@@ -150,10 +154,6 @@ end
 
 group :genigames_data do
   gem 'genigames_connector',  '0.0.4', :git => 'git://github.com/concord-consortium/genigames-connector'
-end
-
-group :allow_cors do
-  gem 'rack-cors', :require => 'rack/cors'
 end
 
 group :development do

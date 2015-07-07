@@ -29,7 +29,7 @@ window.SearchResultsClass = React.createClass
   render: ->
     (div {id: 'offering_list'},
       (p {style: {fontWeight: 'bold'}},
-        @renderMessage(), ' matching ', @renderSearchTerm(), ' slected criteria'
+        @renderMessage(), ' matching ', @renderSearchTerm(), ' selected criteria'
       )
       (div {className: 'results_container'},
         @renderAllResults()
