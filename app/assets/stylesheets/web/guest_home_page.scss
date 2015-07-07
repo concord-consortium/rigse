@@ -29,7 +29,11 @@
         border-radius: 4px;
         position: absolute;
         .message {
-            padding: 5px 10px 0px 10px;
+            padding: 5px 5px 20px 5px;
+            .message-text {
+                background: #fbf4db;
+                padding: 5px;
+            }
         }
     }
     .home-page-content, .signup-box {

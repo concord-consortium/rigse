@@ -1,4 +1,4 @@
-form.signup,form.itsi_confirm {
+form.signup,form.imported_confirm {
   display: absolute;
   margin: auto;
   top: 0; left: 0; bottom: 0; right: 0;
@@ -128,7 +128,7 @@ form.signup,form.itsi_confirm {
   }
 }
 
-form.itsi_confirm{
+form.imported_confirm{
   input[type="text"] {
     width: 90%;
     margin-left: 5px;

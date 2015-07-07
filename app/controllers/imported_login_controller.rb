@@ -1,9 +1,9 @@
 class ImportedLoginController < ApplicationController
 
-  def confirmation_user
+  def confirm_user
   end
 
-  def imported_user_authentication
+  def imported_user_validation
     user = User.find_by_login(params[:login])
 
     unless user
@@ -22,7 +22,7 @@ class ImportedLoginController < ApplicationController
       	if params[:state] == user.school.state
           sign_in_user(user)
         else
-          flash[:error] = 'Invalid username,country or state.'
+          flash[:error] = 'Invalid username, country or state.'
           invalid_user
         end
       elsif country && params[:country] == country.name
@@ -45,7 +45,7 @@ class ImportedLoginController < ApplicationController
   end
 
   def invalid_user
-  	redirect_to :action => 'confirmation_user'
+  	redirect_to :action => 'confirm_user'
   end
 
 end

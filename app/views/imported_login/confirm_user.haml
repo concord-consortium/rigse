@@ -1,17 +1,15 @@
 .landing-container
   .signup-box
     .message
-      To provide you access to your account we need to verify the following details.
+      .message-text
+        Welcome to the updated portal. Your account needs to be upgraded. Please enter your country and state information, then reset your password.
     %div{'ng-controller' => 'RegistrationController as regCtrl'}
-      = form_tag confirmation_user_imported_login_path,
+      = form_tag imported_user_validation_imported_login_path,
         'with-errors' => 'true',
-        'id' => 'itsi-confirm',
-        'name' => 'itsi-confirm',
+        'id' => 'imported-confirm',
+        'name' => 'imported-confirm',
         'validate' => 'false',
-        'class' => 'itsi_confirm' do
-
-        %h2 ITSI user confirmation
-        .error
+        'class' => 'imported_confirm' do
 
         .group
           %input{:name =>'login', :type => "text", :placeholder => "username", :value => session[:login] ? session[:login] : "", :required => "true"}
@@ -41,12 +39,12 @@
                 {{state}}
         = hidden_field_tag "state", "{{regCtrl.state}}"
         %br
-        %input{:class => "import-submit", :type => "submit", :id => "itsi-confirm", :value => "Submit"}
+        %input{:class => "import-submit", :type => "submit", :id => "imported-confirm", :value => "Submit"}
 
 :javascript
 
   jQuery(function(){
-    var form = jQuery('#itsi-confirm'),
+    var form = jQuery('#imported-confirm'),
     angular_scope = angular.element(form).scope();
     angular_scope.regCtrl.loadCountries();
 
@@ -59,7 +57,7 @@
 
       if (jQuery("#state")[0].value == "") {
         if (jQuery("#country")[0].value == "United States") {
-          jQuery(".error").html("Please select your state.");
+          jQuery(".error-state").html("Please select your state.");
           event.preventDefault();
           return;
         }
