@@ -1,5 +1,7 @@
 .landing-container
   .signup-box
+    .message
+      To provide you access to your account we need to verify the following details.
     %div{'ng-controller' => 'RegistrationController as regCtrl'}
       = form_tag '/itsi_login/itsi_user_authentication',
         'with-errors' => 'true',
@@ -12,7 +14,7 @@
         .error
 
         .group
-          %input{:name =>'login', :type => "text", :placeholder => "login", :required => "true"}
+          %input{:name =>'login', :type => "text", :placeholder => "username", :value => session[:login] ? session[:login] : "", :required => "true"}
 
         .group
           .f-row

@@ -20,6 +20,7 @@ class CustomFailure < Devise::FailureApp
   def respond
     if params[:user]
       unless User.verified_imported_user?(params[:user][:login])
+        session[:login] = params[:user][:login]
         redirect_to confirmation_user_imported_login_path and return
       end
     end

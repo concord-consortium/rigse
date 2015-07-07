@@ -7,16 +7,17 @@ class ImportedLoginController < ApplicationController
     user = User.find_by_login(params[:login])
 
     unless user
-      flash[:error] = 'Invalid login.'
+      flash[:error] = 'Invalid username.'
       invalid_user and return
     end
 
     if User.verified_imported_user?(params[:login])
-      flash[:error] = 'Invalid login.'
+      flash[:error] = 'Invalid username.'
       invalid_user
     end
 
-    if user.school
+    if user.school && user.school.country
+      country = user.school.country
       if params[:country] == "United States"
       	if params[:state] == user.school.state
           sign_in_user(user)
@@ -24,7 +25,7 @@ class ImportedLoginController < ApplicationController
           flash[:error] = 'Invalid username,country or state.'
           invalid_user
         end
-      elsif params[:country] == user.school.country.name
+      elsif country && params[:country] == country.name
         sign_in_user(user)
       else
       	flash[:error] = 'Invalid username or country.'

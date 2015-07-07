@@ -28,6 +28,9 @@
         border: 1px solid #eee;
         border-radius: 4px;
         position: absolute;
+        .message {
+            padding: 5px 10px 0px 10px;
+        }
     }
     .home-page-content, .signup-box {
         display: inline-block;

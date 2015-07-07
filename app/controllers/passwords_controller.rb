@@ -88,7 +88,7 @@ class PasswordsController < ApplicationController
 
   def update_users_password
     if params[:commit] == "Cancel"
-      redirect_to session[:return_to]
+      redirect_to session[:return_to] || root_path
       return
     end
 
