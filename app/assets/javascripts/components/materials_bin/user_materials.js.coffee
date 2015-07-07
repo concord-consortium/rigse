@@ -1,6 +1,8 @@
+UserMaterialsContainer = React.createFactory require 'components/materials_bin/user_materials_container'
+
 {div, span} = React.DOM
 
-window.MBUserMaterialsClass = React.createClass
+module.exports = React.createClass
   getInitialState: ->
     materialsVisible: false
 
@@ -17,7 +19,5 @@ window.MBUserMaterialsClass = React.createClass
         ' '
         @props.name
       )
-      (MBUserMaterialsContainer userId: @props.userId, visible: @state.materialsVisible)
+      (UserMaterialsContainer userId: @props.userId, visible: @state.materialsVisible)
     )
-
-window.MBUserMaterials = React.createFactory MBUserMaterialsClass

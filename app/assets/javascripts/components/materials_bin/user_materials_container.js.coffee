@@ -1,7 +1,10 @@
+fetchDataMixin = require 'components/materials_bin/fetch_data_mixin'
+MaterialsCollection = React.createFactory require 'components/materials_bin/materials_collection'
+
 {div} = React.DOM
 
-window.MBUserMaterialsContainerClass = React.createClass
-  mixins: [MBFetchDataMixin]
+module.exports = React.createClass
+  mixins: [fetchDataMixin]
   # --- MBFetchDataMixin config ---
   dataStateKey: 'materials'
   dataUrl: Portal.API_V1.MATERIALS_BIN_UNOFFICIAL_MATERIALS
@@ -12,9 +15,7 @@ window.MBUserMaterialsContainerClass = React.createClass
   render: ->
     (div {className: @getVisibilityClass()},
       if @state.materials
-        (MBMaterialsCollection materials: @state.materials)
+        (MaterialsCollection materials: @state.materials)
       else
         (div {}, 'Loading...')
     )
-
-window.MBUserMaterialsContainer = React.createFactory MBUserMaterialsContainerClass

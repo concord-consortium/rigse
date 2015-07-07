@@ -1,6 +1,11 @@
+MaterialsCategory = React.createFactory require 'components/materials_bin/materials_category'
+Collections = React.createFactory require 'components/materials_bin/collections'
+OwnMaterials = React.createFactory require 'components/materials_bin/own_materials'
+MaterialsByAuthor = React.createFactory require 'components/materials_bin/materials_by_author'
+
 {div} = React.DOM
 
-window.MaterialsBinClass = React.createClass
+module.exports = React.createClass
   propTypes:
     materials: React.PropTypes.array.isRequired
 
@@ -76,7 +81,7 @@ window.MaterialsBinClass = React.createClass
         selected = @isSlugSelected columnIdx, cellDef.slug
         rowIdx = columns[columnIdx].length
         columns[columnIdx].push if cellDef.category
-                                  (MBMaterialsCategory {
+                                  (MaterialsCategory {
                                       key: rowIdx
                                       visible: visible
                                       selected: selected
@@ -89,15 +94,15 @@ window.MaterialsBinClass = React.createClass
                                     cellDef.category
                                   )
                                 else if cellDef.collections
-                                  (MBCollections
+                                  (Collections
                                     key: rowIdx
                                     visible: visible
                                     collections: cellDef.collections
                                   )
                                 else if cellDef.ownMaterials
-                                  (MBOwnMaterials key: rowIdx, visible: visible)
+                                  (OwnMaterials key: rowIdx, visible: visible)
                                 else if cellDef.materialsByAuthor
-                                  (MBMaterialsByAuthor key: rowIdx, visible: visible)
+                                  (MaterialsByAuthor key: rowIdx, visible: visible)
         if cellDef.children
           # Recursively go to children array, add its elements to column + 1
           # and mark them visible only if current cell is selected.
@@ -111,8 +116,3 @@ window.MaterialsBinClass = React.createClass
       for column, idx in @_getColumns()
         (div {key: idx, className: 'mb-column'}, column)
     )
-
-window.MaterialsBin = React.createFactory MaterialsBinClass
-
-Portal.renderMaterialsBin = (definition, selectorOrElement) ->
-  React.render MaterialsBin(materials: definition), jQuery(selectorOrElement)[0]

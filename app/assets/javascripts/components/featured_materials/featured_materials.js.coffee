@@ -1,6 +1,6 @@
 {div} = React.DOM
 
-window.FeaturedMaterialsClass = React.createClass
+module.exports = React.createClass
   getInitialState: ->
     materials: []
 
@@ -14,10 +14,3 @@ window.FeaturedMaterialsClass = React.createClass
 
   render: ->
     (SMaterialsList {materials: @state.materials})
-
-window.FeaturedMaterials = React.createFactory FeaturedMaterialsClass
-
-Portal.renderFeaturedMaterials = (selectorOrElement) ->
-  query = window.location.search
-  query = query.slice(1) if query[0] == '?'
-  React.render FeaturedMaterials(queryString: query), jQuery(selectorOrElement)[0]

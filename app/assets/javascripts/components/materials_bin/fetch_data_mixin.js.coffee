@@ -6,7 +6,8 @@
 # but it can also define:
 #  - .requestParams property (hash), argument of jQuery.ajax
 #  - .processData() (method), it can process raw AJAX response before state is updated
-window.MBFetchDataMixin =
+
+module.exports =
   getInitialState: ->
     state = {}
     state[@dataStateKey] = null

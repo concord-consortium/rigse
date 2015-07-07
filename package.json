@@ -1,0 +1,14 @@
+{
+  "name": "rigse",
+  "description": "CC Rails Portal Activity Authoring, Deployment, and Reporting System",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/concord-consortium/rigse.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "browserify": "^6.3.4",
+    "browserify-incremental": "^1.5.0",
+    "coffeeify": "^0.6.0"
+  }
+}

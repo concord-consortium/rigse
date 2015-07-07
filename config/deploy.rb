@@ -305,6 +305,11 @@ namespace :deploy do
   #   # run "cd #{deploy_to}/current && bundle exec compass compile --sass-dir public/stylesheets/scss/ --css-dir public/stylesheets/ -s compact --force"
   #   run "cd #{deploy_to}/current && bundle exec rake assets:precompile --trace"
   # end
+
+  desc "install npm packages"
+  task :npm_install, :roles => :app do
+    run "cd #{release_path} && npm install"
+  end
 end
 
 namespace :setup do
@@ -322,10 +327,10 @@ namespace :setup do
 
   desc "setup the NCES districts: download and configure NCES districts"
   task :districts, :roles => :app do
-    run_remote_rake "portal:setup:download_nces_data --trace"  
+    run_remote_rake "portal:setup:download_nces_data --trace"
     run_remote_rake "portal:setup:import_nces_from_files --trace"
     run_remote_rake "portal:setup:create_districts_and_schools_from_nces_data --trace"
-  end 
+  end
 end
 
 #############################################################
@@ -673,6 +678,9 @@ after "deploy:stop",    "delayed_job:stop"
 after "deploy:start",   "delayed_job:start"
 after "deploy:restart", "delayed_job:restart"
 after "deploy:restart", "solr:restart"
+
+# Install NPM modules before assets compilation (browserify_rails)
+before 'deploy:assets:precompile', 'deploy:npm_install'
 
 # Make the default behavior be to NOT autoscale
 set(:autoscaling_instance_type, "c3.large")

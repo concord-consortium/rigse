@@ -1,6 +1,17 @@
 {div, span, a} = React.DOM
 
-window.MBMaterialClass = React.createClass
+MaterialDescription = React.createFactory React.createClass
+  getVisibilityClass: ->
+    unless @props.visible then 'mb-hidden' else ''
+
+  render: ->
+    (div
+      className: "mb-material-description #{@getVisibilityClass()}"
+      # It's already sanitized by server!
+      dangerouslySetInnerHTML: {__html: @props.description}
+    )
+
+module.exports = React.createClass
   getInitialState: ->
     {
       descriptionVisible: false
@@ -44,23 +55,8 @@ window.MBMaterialClass = React.createClass
       )
       (span {className: 'mb-material-name'}, data.name)
       if @hasDescription()
-        (MBMaterialDescription
+        (MaterialDescription
           description: data.description
           visible: @state.descriptionVisible
         )
-    )
-
-window.MBMaterial = React.createFactory MBMaterialClass
-
-# Helper components:
-
-MBMaterialDescription = React.createFactory React.createClass
-  getVisibilityClass: ->
-    unless @props.visible then 'mb-hidden' else ''
-
-  render: ->
-    (div
-      className: "mb-material-description #{@getVisibilityClass()}"
-      # It's already sanitized by server!
-      dangerouslySetInnerHTML: {__html: @props.description}
     )

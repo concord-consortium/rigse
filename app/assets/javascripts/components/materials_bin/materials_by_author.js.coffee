@@ -1,7 +1,10 @@
+fetchDataMixin = require 'components/materials_bin/fetch_data_mixin'
+UserMaterials = React.createFactory require 'components/materials_bin/user_materials'
+
 {div} = React.DOM
 
-window.MBMaterialsByAuthorClass = React.createClass
-  mixins: [MBFetchDataMixin]
+module.exports = React.createClass
+  mixins: [fetchDataMixin]
   # --- MBFetchDataMixin config ---
   dataUrl: Portal.API_V1.MATERIALS_BIN_UNOFFICIAL_MATERIALS_AUTHORS
   dataStateKey: 'authors'
@@ -12,7 +15,7 @@ window.MBMaterialsByAuthorClass = React.createClass
     (div {className: className},
       if @state.authors?
         for author in @state.authors
-          (MBUserMaterials
+          (UserMaterials
             key: author.id
             name: author.name
             userId: author.id
@@ -21,4 +24,3 @@ window.MBMaterialsByAuthorClass = React.createClass
         (div {}, 'Loading...')
     )
 
-window.MBMaterialsByAuthor = React.createFactory MBMaterialsByAuthorClass
