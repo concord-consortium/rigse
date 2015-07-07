@@ -10,12 +10,13 @@
         'validate' => 'false',
         'class' => 'itsi_confirm' do
 
-        %h2 ITSI confirmation
+        %h2 ITSI user confirmation
         .error
 
         .group
           %input{:name =>'login', :type => "text", :placeholder => "username", :value => session[:login] ? session[:login] : "", :required => "true"}
 
+        .error-country
         .group
           .f-row
             %ui-select{"ng-model"   => "regCtrl.country",
@@ -28,6 +29,7 @@
 
         = hidden_field_tag "country", "{{regCtrl.country.name}}"
 
+        .error-state
         .group{"ng-show" => "regCtrl.showState()"}
           .f-row
             %ui-select{"ng-model" => "regCtrl.state",
@@ -49,16 +51,15 @@
     angular_scope.regCtrl.loadCountries();
 
     form.on('submit', function(event) {
-      debugger
       if (jQuery("#country")[0].value == "") {
-        jQuery(".error").html("Select country.");
+        jQuery(".error-country").html("Please select your country.");
         event.preventDefault();
         return;
       }
 
       if (jQuery("#state")[0].value == "") {
         if (jQuery("#country")[0].value == "United States") {
-          jQuery(".error").html("Select state.");
+          jQuery(".error").html("Please select your state.");
           event.preventDefault();
           return;
         }
