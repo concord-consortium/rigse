@@ -5,12 +5,15 @@ class ImportExternalActivity < Struct.new(:import,:activity_json,:portal_url,:cu
 
     begin
       Timeout.timeout(60) {
+        client = Client.find(:first, :conditions => {:domain => APP_CONFIG[:authoring_site_url]})
+        auth_token = 'Bearer %s' % client.app_secret
       	response = HTTParty.post(uri.to_s,
 	      :body => {
 	        :portal_url => portal_url,
 	        :activity => activity_json,
-	        :domain_uid => current_visitor_id}.to_json,
-	      :headers => {"Content-Type" => 'application/json'})
+	        :domain_uid => current_visitor_id
+          }.to_json,
+	      :headers => {"Content-Type" => 'application/json', "Authorization" => auth_token})
 
 	    if response.code == 200 #successful
 	      activity_data = JSON.parse response.headers['data'], :symbolize_names => true
@@ -23,6 +26,9 @@ class ImportExternalActivity < Struct.new(:import,:activity_json,:portal_url,:cu
             #give author role to creator of activity
 	        user = User.find_by_email(activity_json[:user_email])
 	        user.add_role("author") if user
+        else
+          import.update_attribute(:job_finished_at, Time.current)
+          import.update_attribute(:progress, -1)  
 	      end
 	    else
 	      import.update_attribute(:job_finished_at, Time.current)
