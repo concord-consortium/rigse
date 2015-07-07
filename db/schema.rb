@@ -900,11 +900,8 @@ ActiveRecord::Schema.define(:version => 20150627071610) do
     t.string  "user_url"
     t.boolean "is_verified"
     t.integer "user_id"
-    t.integer "importing_portal_id"
-  end
-
-  create_table "importing_portals", :force => true do |t|
-    t.string "portal_url"
+    t.string  "importing_domain"
+    t.integer "import_id"
   end
 
   create_table "imports", :force => true do |t|

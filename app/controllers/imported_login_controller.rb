@@ -1,9 +1,9 @@
-class ItsiLoginController < ApplicationController
+class ImportedLoginController < ApplicationController
 
   def confirmation_user
   end
 
-  def itsi_user_authentication
+  def imported_user_authentication
     user = User.find_by_login(params[:login])
 
     unless user
@@ -11,7 +11,7 @@ class ItsiLoginController < ApplicationController
       invalid_user and return
     end
 
-    if User.verified_ITSI_user?(params[:login])
+    if User.verified_imported_user?(params[:login])
       flash[:error] = 'Invalid login.'
       invalid_user
     end

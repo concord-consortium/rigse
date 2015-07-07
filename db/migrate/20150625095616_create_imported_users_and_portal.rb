@@ -5,17 +5,13 @@ class CreateImportedUsersAndPortal < ActiveRecord::Migration
       t.string     :user_url
       t.boolean    :is_verified
       t.integer    :user_id
-      t.integer    :importing_portal_id
-    end
-
-    create_table :importing_portals do |t|
-      t.string     :portal_url
+      t.string     :importing_domain
+      t.integer    :import_id
     end
 
   end
 
   def down
   	drop_table :imported_users
-  	drop_table :importing_portals
   end
 end

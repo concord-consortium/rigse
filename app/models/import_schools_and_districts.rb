@@ -71,7 +71,7 @@ class ImportSchoolsAndDistricts < Struct.new(:import_id)
             new_school = existing_school || Portal::School.create(school_params)
             new_school.description = school[:description]
             new_school.zipcode = school[:zipcode]
-            new_school.country = us_country if school[:state] != "XX"
+            new_school.country = us_country unless school[:state] == "XX" || school[:state].nil?
           end
           new_map = ImportUserSchoolMapping.find(:first, :conditions => {:school_id => new_school.id, :import_school_url => school[:school_url]})
           new_map = new_map || ImportUserSchoolMapping.create({:school_id => new_school.id, :import_school_url => school[:school_url]})

@@ -67,10 +67,10 @@ class ImportsController < ApplicationController
 
   def import_user_status
     @import_type = Import::IMPORT_TYPE_USER
-    @imports_in_progress = Import.in_progress(Import::IMPORT_TYPE_USER)
-    imports_progress = []
-    @imports_in_progress.each_with_index do |import_in_progress, index|
-      imports_progress << {
+    imports_in_progress = Import.in_progress(Import::IMPORT_TYPE_USER)
+    @imports_progress = []
+    imports_in_progress.each_with_index do |import_in_progress, index|
+      @imports_progress << {
         id: import_in_progress.id,        
         progress: import_in_progress.progress,
         total: import_in_progress.total_imports
@@ -81,7 +81,7 @@ class ImportsController < ApplicationController
       if params[:message]
         render :json => {:error => params[:message]}, :status => 500
       else
-        render :json => {:progress => imports_progress}
+        render :json => {:progress => @imports_progress}
       end
     else
       render "imports/import_status"
@@ -89,8 +89,8 @@ class ImportsController < ApplicationController
   end
 
   def download
-    import_id = Import.find(:last, :conditions => {:import_type => Import::IMPORT_TYPE_USER})
-    duplicate_users = ImportDuplicateUser.find(:all, :conditions => {:import_id => import_id, :duplicate_by => ImportDuplicateUser::DUPLICATE_BY_LOGIN_AND_EMAIL})
+    user_import = Import.find(:last, :conditions => {:import_type => Import::IMPORT_TYPE_USER})
+    duplicate_users = ImportDuplicateUser.find(:all, :conditions => {:import_id => user_import.id})
     send_data duplicate_users.to_json,
       :filename => "duplicate_users.json",
       :type => "application/json",

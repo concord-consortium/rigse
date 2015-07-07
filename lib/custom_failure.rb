@@ -18,8 +18,10 @@ class CustomFailure < Devise::FailureApp
 
   # You need to override respond to eliminate recall
   def respond
-    unless User.verified_ITSI_user?(params[:user][:login])
-      redirect_to confirmation_user_itsi_login_path and return
+    if params[:user]
+      unless User.verified_imported_user?(params[:user][:login])
+        redirect_to confirmation_user_imported_login_path and return
+      end
     end
     if http_auth?
       http_auth

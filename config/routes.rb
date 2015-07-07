@@ -635,8 +635,8 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    match '/itsi_login/confirmation_user'    => 'itsi_login#confirmation_user',  :as => :confirmation_user_itsi_login, :method => :get
-    match '/itsi_login/itsi_user_authentication'    => 'itsi_login#itsi_user_authentication',  :as => :itsi_user_authentication_itsi_login, :method => :post
+    match '/imported_login/confirmation_user'    => 'imported_login#confirmation_user',  :as => :confirmation_user_imported_login, :method => :get
+    match '/imported_login/imported_user_authentication'    => 'imported_login#imported_user_authentication',  :as => :imported_user_authentication_imported_login, :method => :post
 
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do

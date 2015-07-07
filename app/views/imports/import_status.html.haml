@@ -8,7 +8,7 @@
   -user_import = true
 %h1
   =heading
-.progress-wrap.finished
+.progress-wrap{:class =>  @imports_progress.length == 0 ? "finished" : ""}
   .progress-bar
     .progress-status
   %div.progress-percentage
@@ -18,30 +18,32 @@
     .flash.notice
       Import Successful
     .new-import
-      Click 
-      =link_to "here", url_for 
-      to start a new Import.
-      -if user_import
+      %p
         Click 
-        =link_to "here", download_imports_url
-        to download the list of duplicate users.
+        =link_to "here", url_for 
+        to start a new Import.
+        -if user_import
+          %p
+            Click 
+            =link_to "here", download_imports_url
+            to download the list of duplicate users.
+- if @imports_progress.length == 0
+  .import
+    Choose a JSON file to import
+    = form_tag url_path , :method => :post, :remote => true, :multipart => true, :id => "import" do |f|
+      .info
+        %table
+          %tr
+            %td 
+              =file_field 'import', 'import', accept: 'application/json', class: 'import_file'
+      %input{:class => "import-submit", :type => "button", :id => "import-post-json", :value => "Import"} 
 
-.import
-  Choose a JSON file to import
-  = form_tag url_path , :method => :post, :remote => true, :multipart => true, :id => "import" do |f|
-    .info
-      %table
-        %tr
-          %td 
-            =file_field 'import', 'import', accept: 'application/json', class: 'import_file'
-    %input{:class => "import-submit", :type => "button", :id => "import-post-json", :value => "Import"} 
-
-  %script{:id => 'template-upload',:type => 'text/x-tmpl'}
-  .upload-wrap{:id => 'upload_div'}
-    .upload-progress.upload
-      .bar
-    %div.upload-progress-message.upload
-      Please wait while your file is being uploaded.
+    %script{:id => 'template-upload',:type => 'text/x-tmpl'}
+    .upload-wrap{:id => 'upload_div'}
+      .upload-progress.upload
+        .bar
+      %div.upload-progress-message.upload
+        Please wait while your file is being uploaded.
 
 %style(type="text/css") 
   :sass
@@ -89,23 +91,26 @@
 
   jQuery(function(){
 
-    var targetUrl = window.location.pathname
+    var targetUrl = window.location.pathname,
+        $progressWrap = jQuery(".progress-wrap"),
+        $import = jQuery(".import")
     var timer;
     
     function hideProgress($progressWrap){
-      $progressWrap.find(".progress-bar").hide();
-      $progressWrap.find(".progress-percentage").hide();
-      $progressWrap.find(".progress-complete").show();
+      if(!$progressWrap.hasClass("finished")){
+        $progressWrap.find(".progress-bar").hide();
+        $progressWrap.find(".progress-percentage").hide();
+        $progressWrap.find(".progress-complete").show();
+      }
       clearInterval(timer);
     }
 
     function updateProgress(progressData){
       if(progressData["progress"].length == 0){
-        hideProgress(jQuery(".progress-wrap"));
+        hideProgress($progressWrap);
         return;
       }
       var data = progressData["progress"][0],
-          $progressWrap = jQuery(".progress-wrap"),
           progress = data["progress"],
           total = data["total"],
           percent = Math.round((progress / total) * 100);
@@ -114,9 +119,9 @@
       }
       if(progress){
         if(progress < total){
-          $progressWrap.removeClass("finished")
-          $progressWrap.find(".progress-status").width(percent+"%")
-          $progressWrap.find(".progress-percentage span").text(percent+"%")
+          $progressWrap.removeClass("finished");          
+          $progressWrap.find(".progress-status").width(percent+"%");
+          $progressWrap.find(".progress-percentage span").text(percent+"%");
         } else if(progress == total){
           hideProgress($progressWrap);
         }
@@ -160,8 +165,8 @@
         }
       },
       done:function(e, data){
-        jQuery(".progress-wrap").removeClass("finished");
-        jQuery(".import").hide();
+        $progressWrap.removeClass("finished");
+        $import.hide();
         updateProgress(data.response().result);
         poll();
       },
@@ -169,7 +174,7 @@
         if(!alert('Invalid JSON')){window.location.reload();}
       }
     });
-
+    poll();
   });
 
 

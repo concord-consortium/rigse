@@ -3,12 +3,10 @@ class ImportUsers < Struct.new(:import_id)
     import = Import.find(import_id)
     content_hash = JSON.parse(import.upload_data, :symbolize_names => true)
     total_users_count = content_hash[:users].size
-    batch_size = 500
+    batch_size = 250
     total_batches = (total_users_count/batch_size.to_f).ceil
     start_index = 0
     end_index = batch_size - 1
-    importing_portal = ImportingPortal.find(:first, :conditions => {:portal_url => content_hash[:portal_name]})
-    importing_portal = importing_portal || ImportingPortal.create({:portal_url => content_hash[:portal_name]})
     import.update_attribute(:total_imports, total_users_count)
     
     0.upto(total_batches-1){|batch_index|
@@ -17,28 +15,16 @@ class ImportUsers < Struct.new(:import_id)
       ActiveRecord::Base.transaction do
         start_index.upto(end_index){|index|
           user = content_hash[:users][index]
-          new_user = User.find_by_email(user[:email])
+          new_user = User.find_by_email(user[:email]) || User.find_by_login(user[:login])
           unless new_user
-            new_user = User.find_by_login(user[:login])
-            duplicate_user = nil
-            if new_user
-              new_index = ImportDuplicateUser.find_all_by_login(user[:login]).count + 1
-              user[:login] = "#{user[:login]}-#{new_index}"
-              duplicate_user = ImportDuplicateUser.create({
-                :login => user[:login],
-                :email => user[:email],
-                :duplicate_by => ImportDuplicateUser::DUPLICATE_BY_LOGIN_AND_EMAIL,
-                :data => user,
-                :import_id => import.id
-              })
-            end
+            password = Devise.friendly_token[0,20]
             new_user = User.create({
               :email => user[:email],
               :login => user[:login],
               :last_name => user[:last_name],
               :first_name => user[:first_name],
-              :password => "password", #default password
-              :password_confirmation => "password",
+              :password => password,
+              :password_confirmation => password,
               :require_password_reset => true
             }){|u| u.skip_notifications = true}
             new_user.confirm!
@@ -47,8 +33,10 @@ class ImportUsers < Struct.new(:import_id)
             end
             new_user.imported_user = ImportedUser.create({
               :user_url => user[:user_page_url],
-              :importing_portal_id => importing_portal.id
+              :importing_domain => content_hash[:portal_name],
+              :import_id => import_id
             })
+            new_user.save!
             if user[:teacher]
               if user[:school]
                 if user[:school][:url]
@@ -66,12 +54,8 @@ class ImportUsers < Struct.new(:import_id)
               end
               portal_teacher.save!
             end
-            if duplicate_user
-              duplicate_user.user_id = new_user.id
-              duplicate_user.save!
-            end
           else
-            duplicate_by = new_user.login == user[:login] ? ImportDuplicateUser::DUPLICATE_BY_LOGIN_AND_EMAIL : ImportDuplicateUser::DUPLICATE_BY_EMAIL
+            duplicate_by = new_user.login == user[:login] ? ImportDuplicateUser::DUPLICATE_BY_LOGIN : new_user.email == user[:email] ? ImportDuplicateUser::DUPLICATE_BY_EMAIL : ImportDuplicateUser::DUPLICATE_BY_LOGIN_AND_EMAIL
             ImportDuplicateUser.create({
               :login => user[:login], 
               :email => user[:email], 
