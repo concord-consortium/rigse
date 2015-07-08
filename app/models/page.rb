@@ -297,7 +297,7 @@ class Page < ActiveRecord::Base
   def export_as_lara_activity(position)
 
     page_json = {
-      :name => self.name,
+      :name => self.section.name,
       :position => position,
       :interactives => [],
       :embeddables => [],
