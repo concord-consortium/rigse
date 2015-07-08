@@ -22,13 +22,13 @@ class ImportedLoginController < ApplicationController
       	if params[:state] == user.school.state
           sign_in_user(user)
         else
-          flash[:error] = 'Invalid username, country or state.'
+          flash[:error] = 'Invalid country or state.'
           invalid_user
         end
       elsif country && params[:country] == country.name
         sign_in_user(user)
       else
-      	flash[:error] = 'Invalid username or country.'
+      	flash[:error] = 'Invalid country.'
         invalid_user
       end
     else
