@@ -97,8 +97,8 @@ class User < ActiveRecord::Base
 
   # Validations
 
-  login_regex       = /\A\w[\w\.\-_@]+\z/                     # ASCII, strict
-  bad_login_message = "use only letters, numbers, and .-_@ please.".freeze
+  login_regex       = /\A\w[\w\.\-\+_@]+\z/                     # ASCII, strict
+  bad_login_message = "use only letters, numbers, and +.-_@ please.".freeze
 
   name_regex        = /\A[^[:cntrl:]\\<>\/&]*\z/              # Unicode, permissive
   bad_name_message  = "avoid non-printing characters and \\&gt;&lt;&amp;/ please.".freeze
