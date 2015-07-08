@@ -1602,6 +1602,7 @@ div.atm
   margin-top: -110px;
   padding: 20px 0 20px 20px;
   width: 215px;
+  overflow: visible;
 
   form{
     margin: 0;
@@ -1639,27 +1640,26 @@ div.atm
           }
         }
       }
-      tr.third-row{
+    }
 
-        td{
-          text-align: right;
-          padding-top: 5px;
-          input#LoginSubmitButtonHeader{
-          position: relative;
-        }
-      }
+    .login-buttons{
+      position: absolute;
+      right: 0;
+      width: 975px;
+      text-align: right;
+      padding-top: 5px;
+      input#LoginSubmitButtonHeader {
+        position: relative;
       }
     }
 
     .segmented {
       padding: 0.25em 0.5em;
-      margin-right: 0.5em;
-      border-right: 1px solid #479492;
+      border-left: 1px solid #479492;
       text-align: right;
-      &.last {
-        padding-right: 0px;
-        margin-right: 0px;
-        border-right: none;
+      &.first {
+        padding-left: 0px;
+        border-left: none;
       }
     }
   }

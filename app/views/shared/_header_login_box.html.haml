@@ -13,13 +13,15 @@
               = f.label :password, "Password", :for=>"header_password"
             %td.password-box
               = f.password_field :password,:id=>'header_password',:class=>'text'
-          %tr.third-row
-            %td{colspan: "2"}
-              %span.segmented
-                =link_to "Can't log in?",forgot_password_path, :id=>"link_forgot_password"
-              - unless defined? @hide_signup_link
-                %span.segmented
-                  =link_to 'Sign Up', home_path
-              %span.segmented.last
-                = f.submit "Log In", :id=>"LoginSubmitButtonHeader"
+      .login-buttons
+        %span.segmented.first
+          =link_to "Can't log in?",forgot_password_path, :id=>"link_forgot_password"
+        - unless defined? @hide_signup_link
+          %span.segmented
+            =link_to 'Sign Up', home_path
+        %span.segmented
+          = f.submit "Log In", :id=>"LoginSubmitButtonHeader"
+        - Devise.omniauth_providers.each do |provider|
+          %span.segmented
+            = link_to "Log In with #{provider.to_s.titleize}", omniauth_authorize_path('user', provider), class: 'button'
       .clear_both
