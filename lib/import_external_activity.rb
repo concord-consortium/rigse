@@ -22,6 +22,7 @@ class ImportExternalActivity < Struct.new(:import,:activity_json,:portal_url,:cu
 	        import.update_attribute(:progress, 100)
 	        import_activity = ExternalActivity.find(activity_data[:external_activity_id])
 	        import_activity.cohort_list = activity_json[:cohort_list]
+            import_activity.publication_status = activity_json[:publication_status].nil? ? "published" : activity_json[:publication_status] == "published" ? "published" : "private"
 	        import_activity.save
             #give author role to creator of activity
 	        user = User.find_by_email(activity_json[:user_email])
