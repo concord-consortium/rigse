@@ -218,10 +218,17 @@ class User < ActiveRecord::Base
         user = existing_user_by_email
       else
         # no user with this email, so make a new user with a random password
-        user = User.create(
+        pw = Devise.friendly_token.first(12)
+        user = User.create!(
+          login:    email,
           email:    email,
-          password: User.get_random_password
+          first_name: auth.extra.first_name,
+          last_name:  auth.extra.last_name,
+          password: pw,
+          password_confirmation: pw,
+          skip_notifications: true
         )
+        user.confirm!
       end
       # create new authentication for this user that we found or created
       user.authentications.create(
