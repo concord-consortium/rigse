@@ -158,3 +158,7 @@ create_roles
 create_default_users
 create_grades
 create_settings
+
+# populate Countries table
+Portal::Country.from_csv_file
+
