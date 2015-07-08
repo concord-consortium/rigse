@@ -15,15 +15,7 @@ class GenerateSchoolDistrictJSON < Struct.new(:export_id,:user_id)
            ORDER BY leaid desc;"
     records_array = ActiveRecord::Base.connection.select_all(sql)
     export_data[:districts] = records_array
-    name = "portal_schools_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
-    directory = "public/json"
-    path = File.join(directory, name)
-    dir = File.dirname(path)
-    FileUtils.mkdir_p(dir) unless File.directory?(dir)
-    File.open(path, "w") do |f|
-      f.write(export_data.to_json)
-    end
-    export.update_attribute(:file_path, path)
+    export.update_attribute(:export_data, export_data.to_json)
     export.update_attribute(:job_finished_at, Time.current)
     export.send_mail(user)
   end

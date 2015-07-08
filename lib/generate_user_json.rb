@@ -32,15 +32,7 @@ class GenerateUserJSON < Struct.new(:export_id,:user_id)
 
     users_json[:portal_name] = APP_CONFIG[:site_url]
 
-    name = "users_#{UUIDTools::UUID.timestamp_create.hexdigest}.json"
-    directory = "public/json"
-    path = File.join(directory, name)
-    dir = File.dirname(path)
-    FileUtils.mkdir_p(dir) unless File.directory?(dir)
-    File.open(path, "w") do |f|
-      f.write(users_json.to_json)
-    end
-    export.update_attribute(:file_path, path)
+    export.update_attribute(:export_data, users_json.to_json)
     export.update_attribute(:job_finished_at, Time.current)
     export.send_mail(email_user)
   end
