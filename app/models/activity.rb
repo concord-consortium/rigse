@@ -238,6 +238,7 @@ class Activity < ActiveRecord::Base
     activity_json[:user_email] = self.user.email
     activity_json[:user_page_url] = self.user.user_page_url
     activity_json[:editor_mode] = Activity::ITSI_EDITOR_MODE
+    activity_json[:publication_status] = self.publication_status
     return activity_json
   end
 
