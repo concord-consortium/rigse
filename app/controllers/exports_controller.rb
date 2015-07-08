@@ -47,18 +47,6 @@ class ExportsController < ApplicationController
       :filename => filename,
       :type => "application/json",
       :x_sendfile => true
-    #filename = @export.export_type == Export::EXPORT_TYPE_USER ? "export_users.json" : "export_schools_and_districts.json"
-    #path_to_file = "#{Rails.root}/#{@export.file_path}"
-    #if File.exist?(path_to_file)
-      #data = File.read(path_to_file)
-      #send_data data,
-        #:filename => filename,
-        #:type => "application/json",
-        #:x_sendfile => true
-    #else
-      #flash[:error] = "File not exist."
-      #redirect_to(:back)
-    #end
   end
 
   def destroy
