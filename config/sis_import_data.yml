@@ -1,0 +1,51 @@
+---
+development:
+  host: portfolio.ri.net
+  username: concord
+  password: ! '*****'
+  external_domain_url: http://moleman.concord.org/
+  districts:
+  - '06'
+  - '07'
+  - '16'
+  - '17'
+  - '39'
+test:
+  host: portfolio.ri.net
+  username: concord
+  password: ! '*****'
+  external_domain_url: http://moleman.concord.org/
+  districts: &24951120
+  - '06'
+  - '07'
+  - '16'
+  - '17'
+  - '39'
+cucumber:
+  host: portfolio.ri.net
+  username: concord
+  password: ! '*****'
+  external_domain_url: http://moleman.concord.org/
+  districts: *24951120
+staging:
+  host: portfolio.ri.net
+  username: concord
+  password: ! '*****'
+  external_domain_url: http://test.portfolio.ri.net/
+  districts:
+  - '06'
+  - '07'
+  - '16'
+  - '17'
+  - '39'
+production:
+  host: portfolio.ri.net
+  username: concord
+  password: ! '*****'
+  external_domain_url: http://portfolio.ri.net/
+  districts:
+  - '06'
+  - '07'
+  - '16'
+  - '17'
+  - '39'

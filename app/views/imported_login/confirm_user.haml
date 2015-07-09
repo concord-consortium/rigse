@@ -1,0 +1,66 @@
+.landing-container
+  .signup-box
+    .message
+      .message-text
+        Welcome to the updated portal. Your account needs to be upgraded. Please enter your country and state information, then reset your password.
+    %div{'ng-controller' => 'RegistrationController as regCtrl'}
+      = form_tag imported_user_validation_imported_login_path,
+        'with-errors' => 'true',
+        'id' => 'imported-confirm',
+        'name' => 'imported-confirm',
+        'validate' => 'false',
+        'class' => 'imported_confirm' do
+
+        .group
+          %input{:name =>'login', :type => "text", :placeholder => "username", :value => session[:login] ? session[:login] : "", :required => "true"}
+
+        .error-country
+        .group
+          .f-row
+            %ui-select{"ng-model"   => "regCtrl.country",
+              "theme"               =>  "select2",
+              "ng-change"           =>  "regCtrl.countrySelected()"}
+              %ui-select-match{"placeholder" => "Select your country..."}
+                {{$select.selected.name}}
+              %ui-select-choices{"repeat" => "country in regCtrl.countries | filter: {name: $select.search}" }
+                {{country.name}}
+
+        = hidden_field_tag "country", "{{regCtrl.country.name}}"
+
+        .error-state
+        .group{"ng-show" => "regCtrl.showState()"}
+          .f-row
+            %ui-select{"ng-model" => "regCtrl.state",
+              "theme"             =>  "select2",
+              "ng-change"         =>  "regCtrl.stateSelected()"}
+              %ui-select-match{"placeholder" => "Select your state..."}
+                {{$select.selected}}
+              %ui-select-choices{"repeat" => "state in regCtrl.states | filter: $select.search" }
+                {{state}}
+        = hidden_field_tag "state", "{{regCtrl.state}}"
+        %br
+        %input{:class => "import-submit", :type => "submit", :id => "imported-confirm", :value => "Submit"}
+
+:javascript
+
+  jQuery(function(){
+    var form = jQuery('#imported-confirm'),
+    angular_scope = angular.element(form).scope();
+    angular_scope.regCtrl.loadCountries();
+
+    form.on('submit', function(event) {
+      if (jQuery("#country")[0].value == "") {
+        jQuery(".error-country").html("Please select your country.");
+        event.preventDefault();
+        return;
+      }
+
+      if (jQuery("#state")[0].value == "") {
+        if (jQuery("#country")[0].value == "United States") {
+          jQuery(".error-state").html("Please select your state.");
+          event.preventDefault();
+          return;
+        }
+      }
+    });
+  });

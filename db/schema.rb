@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150616170608) do
+ActiveRecord::Schema.define(:version => 20150707062145) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -219,6 +219,7 @@ ActiveRecord::Schema.define(:version => 20150616170608) do
     t.string   "app_secret"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "site_url"
   end
 
   create_table "commons_licenses", :id => false, :force => true do |t|
@@ -866,6 +867,45 @@ ActiveRecord::Schema.define(:version => 20150616170608) do
     t.string   "license_code"
     t.integer  "width",              :default => 0
     t.integer  "height",             :default => 0
+  end
+
+  create_table "import_duplicate_users", :force => true do |t|
+    t.string  "login"
+    t.string  "email"
+    t.integer "duplicate_by"
+    t.text    "data"
+    t.integer "user_id"
+    t.integer "import_id"
+  end
+
+  create_table "import_school_district_mappings", :force => true do |t|
+    t.integer "district_id"
+    t.string  "import_district_uuid"
+  end
+
+  create_table "import_user_school_mappings", :force => true do |t|
+    t.integer "school_id"
+    t.string  "import_school_url"
+  end
+
+  create_table "imported_users", :force => true do |t|
+    t.string  "user_url"
+    t.boolean "is_verified"
+    t.integer "user_id"
+    t.string  "importing_domain"
+    t.integer "import_id"
+  end
+
+  create_table "imports", :force => true do |t|
+    t.integer  "job_id"
+    t.datetime "job_finished_at"
+    t.integer  "import_type"
+    t.integer  "progress"
+    t.integer  "total_imports"
+    t.integer  "user_id"
+    t.text     "upload_data",     :limit => 2147483647
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
   end
 
   create_table "installer_reports", :force => true do |t|

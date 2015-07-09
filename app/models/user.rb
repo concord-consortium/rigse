@@ -138,6 +138,7 @@ class User < ActiveRecord::Base
 
   has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
+  has_one :imported_user, :dependent => :destroy, :class_name => "Import::ImportedUser", :inverse_of => :user
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
 
@@ -263,7 +264,7 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :remember_me,
-                  :vendor_interface_id, :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state
+                  :vendor_interface_id, :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state, :require_password_reset
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
@@ -503,6 +504,13 @@ class User < ActiveRecord::Base
 
   def user_active?
     self.state != "suspended" && self.state != "disabled"
+  end
+
+  def self.verified_imported_user?(login)
+    user = User.find_by_login(login)
+    imported_user = user.imported_user if user
+    return imported_user.is_verified if imported_user
+    return true
   end
 
   protected

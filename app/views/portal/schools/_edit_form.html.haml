@@ -8,7 +8,7 @@
 
       = field_set_tag 'District' do
         .aligned
-          = portal_school.district.name
+          = portal_school.district.name if portal_school.district
 
       = field_set_tag 'School' do
         .aligned

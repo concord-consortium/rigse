@@ -1,0 +1,12 @@
+.import
+  = form_tag import_activity_imports_path, :remote => true, :multipart => true, :id => "import_activity_form" do
+    .info
+      %table
+        %tr
+          %td
+            =file_field 'import', 'import', accept: 'application/json', class: 'import_file'
+    .butto
+      %input{:class => "import button", :type => "button", :id => "import-activity-post-json", :value => "Import"}
+      %a.button{:href => "javascript:void(0)",:onclick => "close_popup()"}
+        cancel
+    -#= hidden_field_tag 'authenticity_token', form_authenticity_token

@@ -607,6 +607,23 @@ RailsPortal::Application.routes.draw do
       end
     end
 
+    resources :imports do
+      collection do
+        get :import_school_district_status
+        post :import_school_district_json
+        post :import_user_json
+        get :import_user_status
+        get :download
+        get :import_activity_status
+        post :import_activity
+        get :import_activity_progress
+        get :activity_clear_job
+      end
+    end
+
+    match '/imported_login/confirm_user'    => 'imported_login#confirm_user',  :as => :confirm_user_imported_login, :method => :get
+    match '/imported_login/imported_user_validation'    => 'imported_login#imported_user_validation',  :as => :imported_user_validation_imported_login, :method => :post
+
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do
         resources :countries
