@@ -1,4 +1,4 @@
-class ImportedUser < ActiveRecord::Base
+class Import::ImportedUser < ActiveRecord::Base
   self.table_name = :imported_users
   attr_accessible :user_url,:is_verified,:importing_domain,:import_id
 

@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
 
   has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
-  has_one :imported_user, :dependent => :destroy, :class_name => "ImportedUser", :inverse_of => :user
+  has_one :imported_user, :dependent => :destroy, :class_name => "Import::ImportedUser", :inverse_of => :user
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
 

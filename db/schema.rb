@@ -219,7 +219,7 @@ ActiveRecord::Schema.define(:version => 20150707062145) do
     t.string   "app_secret"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.string   "domain"
+    t.string   "site_url"
   end
 
   create_table "commons_licenses", :id => false, :force => true do |t|

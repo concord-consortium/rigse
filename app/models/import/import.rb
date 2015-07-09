@@ -1,4 +1,4 @@
-class Import < ActiveRecord::Base
+class Import::Import < ActiveRecord::Base
   
   IMPORT_TYPE_SCHOOL_DISTRICT = 0
   IMPORT_TYPE_USER = 1

@@ -1,6 +1,6 @@
-class ImportUsers < Struct.new(:import_id)
+class Import::ImportUsers < Struct.new(:import_id)
   def perform
-    import = Import.find(import_id)
+    import = Import::Import.find(import_id)
     content_hash = JSON.parse(import.upload_data, :symbolize_names => true)
     total_users_count = content_hash[:users].size
     batch_size = 250
@@ -31,7 +31,7 @@ class ImportUsers < Struct.new(:import_id)
             user[:roles].each do |role|
               new_user.add_role(role)
             end
-            new_user.imported_user = ImportedUser.create({
+            new_user.imported_user = Import::ImportedUser.create({
               :user_url => user[:user_page_url],
               :importing_domain => content_hash[:portal_name],
               :import_id => import_id
@@ -40,7 +40,7 @@ class ImportUsers < Struct.new(:import_id)
             if user[:teacher]
               if user[:school]
                 if user[:school][:url]
-                  user_school_map = ImportUserSchoolMapping.find(:first, :conditions => {:import_school_url => user[:school][:url]})
+                  user_school_map = Import::UserSchoolMapping.find(:first, :conditions => {:import_school_url => user[:school][:url]})
                   if user_school_map
                     school = Portal::School.find(:first, :conditions => {:id => user_school_map.school_id})
                   end
@@ -72,8 +72,9 @@ class ImportUsers < Struct.new(:import_id)
   end
 
   def error(job, exception)
+    p exception
     job.destroy
-    import = Import.find(import_id)
+    import = Import::Import.find(import_id)
     import.update_attribute(:progress, -1)
   end
 end

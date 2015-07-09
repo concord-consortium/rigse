@@ -13,12 +13,12 @@ class ImportsController < ApplicationController
       redirect_to import_school_district_status_imports_path({:message => "Invalid JSON"})
       return
     end
-    import = Import.create!()
+    import = Import::Import.create!()
     import.upload_data = file_data
     import.save!
-    job = Delayed::Job.enqueue ImportSchoolsAndDistricts.new(import.id)
+    job = Delayed::Job.enqueue Import::ImportSchoolsAndDistricts.new(import.id)
     import.update_attribute(:job_id, job.id)
-    import.update_attribute(:import_type, Import::IMPORT_TYPE_SCHOOL_DISTRICT)
+    import.update_attribute(:import_type, Import::Import::IMPORT_TYPE_SCHOOL_DISTRICT)
     redirect_to :action => "import_school_district_status"
   end
 
@@ -33,18 +33,18 @@ class ImportsController < ApplicationController
       redirect_to import_user_status_imports_path({:message => "Invalid JSON"})
       return
     end
-    import = Import.create!()
+    import = Import::Import.create!()
     import.upload_data = file_data
     import.save!
-    job = Delayed::Job.enqueue ImportUsers.new(import.id)
+    job = Delayed::Job.enqueue Import::ImportUsers.new(import.id)
     import.update_attribute(:job_id, job.id)
-    import.update_attribute(:import_type, Import::IMPORT_TYPE_USER)
+    import.update_attribute(:import_type, Import::Import::IMPORT_TYPE_USER)
     redirect_to :action => "import_user_status"
   end
 
   def import_school_district_status
-    @import_type = Import::IMPORT_TYPE_SCHOOL_DISTRICT
-    imports_in_progress = Import.in_progress(Import::IMPORT_TYPE_SCHOOL_DISTRICT)
+    @import_type = Import::Import::IMPORT_TYPE_SCHOOL_DISTRICT
+    imports_in_progress = Import::Import.in_progress(Import::Import::IMPORT_TYPE_SCHOOL_DISTRICT)
     @imports_progress = []
     imports_in_progress.each_with_index do |import_in_progress, index|
       @imports_progress << {
@@ -66,8 +66,8 @@ class ImportsController < ApplicationController
   end
 
   def import_user_status
-    @import_type = Import::IMPORT_TYPE_USER
-    imports_in_progress = Import.in_progress(Import::IMPORT_TYPE_USER)
+    @import_type = Import::Import::IMPORT_TYPE_USER
+    imports_in_progress = Import::Import.in_progress(Import::Import::IMPORT_TYPE_USER)
     @imports_progress = []
     imports_in_progress.each_with_index do |import_in_progress, index|
       @imports_progress << {
@@ -89,8 +89,8 @@ class ImportsController < ApplicationController
   end
 
   def download
-    user_import = Import.find(:last, :conditions => {:import_type => Import::IMPORT_TYPE_USER})
-    duplicate_users = ImportDuplicateUser.find(:all, :conditions => {:import_id => user_import.id})
+    user_import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_USER})
+    duplicate_users = Import::DuplicateUser.find(:all, :conditions => {:import_id => user_import.id})
     if duplicate_users.length == 0
       flash[:alert] = "No duplicate users found in the import."
       redirect_to :back
@@ -113,10 +113,10 @@ class ImportsController < ApplicationController
     begin 
       json_object = JSON.parse "#{params['import_activity_form'].read}", :symbolize_names => true
       req_url = "#{request.protocol}#{request.host_with_port}"
-      import = Import.create!()
+      import = Import::Import.create!()
       job = Delayed::Job.enqueue ImportExternalActivity.new(import,json_object,req_url,current_visitor.id)
       import.update_attribute(:job_id, job.id)
-      import.update_attribute(:import_type, Import::IMPORT_TYPE_ACTIVITY)
+      import.update_attribute(:import_type, Import::Import::IMPORT_TYPE_ACTIVITY)
       import.update_attribute(:user_id, current_visitor.id)
       redirect_to action: :import_activity_progress
     rescue => e
@@ -126,14 +126,14 @@ class ImportsController < ApplicationController
 
   def import_activity_progress
     if request.xhr?
-      @import_activity = Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::IMPORT_TYPE_ACTIVITY).last
+      @import_activity = Import::Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::Import::IMPORT_TYPE_ACTIVITY).last
       render :json => {:progress => @import_activity ? @import_activity.progress : @import_activity}
     end
   end
 
   def activity_clear_job
     if request.xhr?
-      import_activity = Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::IMPORT_TYPE_ACTIVITY).last
+      import_activity = Import::Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::Import::IMPORT_TYPE_ACTIVITY).last
       import_activity.destroy
     end
     render :nothing => true
