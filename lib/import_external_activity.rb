@@ -25,9 +25,13 @@ class ImportExternalActivity < Struct.new(:import,:activity_json,:portal_url,:cu
             import_activity.publication_status = activity_json[:publication_status].nil? ? "published" : activity_json[:publication_status] == "published" ? "published" : "private"
             #give author role to creator of activity
             user = User.find_by_email(activity_json[:user_email])
-            user.add_role("author") if user
-            import_activity.user = user
+            if user
+              user.add_role("author")
+              import_activity.user = user
+            end
             import_activity.save!
+            Sunspot.index(import_activity)
+            Sunspot.commit
           else
             import.update_attribute(:job_finished_at, Time.current)
             import.update_attribute(:progress, -1)  
