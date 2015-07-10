@@ -73,13 +73,9 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
       params[:globalStateKey] = self.page_elements[0].page.section.name
     else
       prediction_graph = fetch_connected_prediction
-      if prediction_graph.page_elements[0].is_enabled
-        params[:globalStateKey] = prediction_graph.page_elements[0].page.section.name
-        params[:loadOnly] = true
-        params[:datasetName] = "sensor-dataset"
-      else
-        return interactive_url
-      end
+      params[:globalStateKey] = prediction_graph.page_elements[0].page.section.name
+      params[:loadOnly] = true
+      params[:datasetName] = "sensor-dataset"
     end
     url = "//models-resources.concord.org/dataset-sync-wrapper/index.html?#{params.to_query}"
   end
