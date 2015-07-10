@@ -1,13 +1,11 @@
-class ImportExternalActivity < Struct.new(:import,:activity_json,:portal_url,:current_visitor_id)
+class Import::ImportExternalActivity < Struct.new(:import,:activity_json,:portal_url,:auth_url,:current_visitor_id)
 
   def perform
-    uri = URI.parse("#{APP_CONFIG[:authoring_site_url]}/import/import_portal_activity")
-
     begin
       Timeout.timeout(60) {
         client = Client.find(:first, :conditions => {:site_url => APP_CONFIG[:authoring_site_url]})
         auth_token = 'Bearer %s' % client.app_secret
-        response = HTTParty.post(uri.to_s,
+        response = HTTParty.post(auth_url,
         :body => {
           :portal_url => portal_url,
           :activity => activity_json,

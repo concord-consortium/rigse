@@ -1,4 +1,4 @@
-class ImportedLoginController < ApplicationController
+class Import::ImportedLoginController < ApplicationController
 
   def confirm_user
   end

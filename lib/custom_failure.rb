@@ -21,7 +21,7 @@ class CustomFailure < Devise::FailureApp
     if params[:user]
       unless User.verified_imported_user?(params[:user][:login])
         session[:login] = params[:user][:login]
-        redirect_to confirm_user_imported_login_path and return
+        redirect_to import_confirm_user_imported_login_path and return
       end
     end
     if http_auth?

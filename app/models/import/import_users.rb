@@ -55,8 +55,8 @@ class Import::ImportUsers < Struct.new(:import_id)
               portal_teacher.save!
             end
           else
-            duplicate_by = new_user.login == user[:login] ? ImportDuplicateUser::DUPLICATE_BY_LOGIN : new_user.email == user[:email] ? ImportDuplicateUser::DUPLICATE_BY_EMAIL : ImportDuplicateUser::DUPLICATE_BY_LOGIN_AND_EMAIL
-            ImportDuplicateUser.create({
+            duplicate_by = new_user.login == user[:login] ? Import::DuplicateUser::DUPLICATE_BY_LOGIN : new_user.email == user[:email] ? Import::DuplicateUser::DUPLICATE_BY_EMAIL : Import::DuplicateUser::DUPLICATE_BY_LOGIN_AND_EMAIL
+            Import::DuplicateUser.create({
               :login => user[:login], 
               :email => user[:email], 
               :duplicate_by => duplicate_by, 
