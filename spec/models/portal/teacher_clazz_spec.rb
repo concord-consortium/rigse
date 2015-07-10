@@ -64,19 +64,19 @@ describe Portal::TeacherClazz do
       teacher.clazzes.should_not include(clazz)
     end
   end
-  
+
   describe "preserving leagacy one to many mapping for teachers <= clazzes" do
+      let(:teacher)        { Factory :portal_teacher, {:clazzes => []} }
+      let(:clazz)          { Factory :portal_clazz  }
+      let(:second_teacher) { Factory :portal_teacher, {:clazzes => []} }
+
     it "clazz.teacher=@teacher assignment should make @teacher a teacher of clazz" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
       clazz.teacher = teacher
       teacher.reload
       teacher.clazzes.should include(clazz)
     end
-    
+
     it "clazz.teacher=@teacher assignment shouldn't make a duplicate teacher entry" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
       clazz.teacher = teacher
       clazz.teacher = teacher
       clazz.teacher = teacher
@@ -84,23 +84,28 @@ describe Portal::TeacherClazz do
       teacher.clazzes.should include(clazz)
       teacher.clazzes.should have(1).things
     end
-    
+
     it "clazz.teacher reader should return the first teacher if there is one" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      second_teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
       clazz.teacher = teacher
       clazz.teacher = second_teacher
       teacher.reload
       clazz.reload
       clazz.teacher.should == teacher
     end
-    
+
+    it "clazz.techers can be reordered" do
+      clazz.teacher = second_teacher
+      clazz.teacher = teacher
+      clazz.teacher_clazzes[1].move_to_top
+      clazz.reload
+      clazz.teacher.should eq teacher
+    end
+
     it "clazz.teacher should return nil if there isn't a teacher" do
       clazz = Factory :portal_clazz
       clazz.teacher.should be_nil
     end
-    
+
   end
-  
+
 end
