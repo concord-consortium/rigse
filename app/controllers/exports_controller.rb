@@ -1,6 +1,6 @@
 class ExportsController < ApplicationController
 
-  before_filter :admin_only
+  before_filter :admin_only, :except => [:download]
 
   def index
     redirect_to :action => "export_status"
@@ -52,8 +52,6 @@ class ExportsController < ApplicationController
   def destroy
     @export = Export.find(params[:id])
     redirect_action = @export.export_type == Export::EXPORT_TYPE_USER ? "export_user_status" : "export_school_district_status"
-    path_to_file = "#{Rails.root}/#{@export.file_path}"
-    File.delete(path_to_file) if File.exist?(path_to_file)
     @export.destroy
     redirect_to :action => redirect_action
   end
