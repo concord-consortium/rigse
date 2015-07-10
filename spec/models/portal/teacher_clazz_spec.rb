@@ -86,10 +86,17 @@ describe Portal::TeacherClazz do
     end
     
     it "clazz.teacher reader should return the first teacher if there is one" do
+      # TODO: Perhaps this test should be removed. Do we really care which
+      # teacher is displayed? Its an edge case anyway.
       teacher = Factory :portal_teacher, {:clazzes => []}
       second_teacher = Factory :portal_teacher, {:clazzes => []}
       clazz = Factory :portal_clazz
       clazz.teacher = teacher
+      teacher.reload # We need to do this because of how the hacky before_save
+                     # positioning that happens.
+                     # NOTE: This position is used in too many ways.
+                     # Its used to position the teacher in the class, and
+                     # The class within the teachers class list.
       clazz.teacher = second_teacher
       teacher.reload
       clazz.reload
