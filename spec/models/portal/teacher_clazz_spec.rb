@@ -85,17 +85,6 @@ describe Portal::TeacherClazz do
       teacher.clazzes.should have(1).things
     end
     
-    it "clazz.teacher reader should return the first teacher if there is one" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      second_teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
-      clazz.teacher = teacher
-      clazz.teacher = second_teacher
-      teacher.reload
-      clazz.reload
-      clazz.teacher.should == teacher
-    end
-    
     it "clazz.teacher should return nil if there isn't a teacher" do
       clazz = Factory :portal_clazz
       clazz.teacher.should be_nil
