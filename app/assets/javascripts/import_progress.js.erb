@@ -13,7 +13,7 @@ function import_activity_status() {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         title:"Import Activity"
     },
-    target_url = "<%= URLResolver.getUrl('import_activity_status_imports_path') %>",
+    target_url = "<%= URLResolver.getUrl('import_activity_status_import_imports_path') %>",
     options = {
       url:target_url,
       method: 'get',
@@ -40,7 +40,7 @@ function importActivityPostJson() {
     jQuery("#oErrMsgDiv").html("Import in progress please wait...<br><i class='wait-icon fa fa-spinner fa-spin'></i>");
     filedata = new FormData()
     filedata.append('import_activity_form', jQuery('input[type=file]')[0].files[0])
-    var targetUrl = "<%= URLResolver.getUrl("import_activity_imports_path") %>"
+    var targetUrl = "<%= URLResolver.getUrl("import_activity_import_imports_path") %>"
     var options = {
       url:targetUrl,
       type: 'POST',
@@ -61,7 +61,7 @@ function importActivityPostJson() {
 };
 
 function import_job_status(){
-    var targetUrl = "<%= URLResolver.getUrl("import_activity_progress_imports_path") %>";
+    var targetUrl = "<%= URLResolver.getUrl("import_activity_progress_import_imports_path") %>";
     var timer;
 
     timer = setInterval(function(){
@@ -95,7 +95,7 @@ function import_job_status(){
 
 function delete_job(){
     jQuery.ajax({
-      url:"<%= URLResolver.getUrl("activity_clear_job_imports_path") %>",
+      url:"<%= URLResolver.getUrl("activity_clear_job_import_imports_path") %>",
       success: function(progressData) {
         console.log("job deleted");
       },

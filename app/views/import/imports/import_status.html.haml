@@ -1,10 +1,10 @@
 -if @import_type == Import::Import::IMPORT_TYPE_SCHOOL_DISTRICT
   -heading = "Import Schools and Districts"
-  -url_path = import_school_district_json_imports_path
+  -url_path = import_school_district_json_import_imports_path
   -user_import = false
 -else
   -heading = "Import Users"
-  -url_path = import_user_json_imports_path
+  -url_path = import_user_json_import_imports_path
   -user_import = true
 %h1
   =heading
@@ -25,7 +25,7 @@
         -if user_import
           %p
             Click 
-            =link_to "here", download_imports_url
+            =link_to "here", download_import_imports_url
             to download the list of duplicate users.
 - if @imports_progress.length == 0
   .import
@@ -93,8 +93,8 @@
 
     var targetUrl = window.location.pathname,
         $progressWrap = jQuery(".progress-wrap"),
-        $import = jQuery(".import")
-    var timer;
+        $import = jQuery(".import"),
+        timer;
     
     function hideProgress($progressWrap){
       if(!$progressWrap.hasClass("finished")){
@@ -147,7 +147,7 @@
       add: function(e, data) {
         type = /.json$/
         if(!type.test(data.files[0].name)){
-          alert("#{file.name} is not a json file.");
+          alert(data.files[0].name  + " is not a json file.");
           this.reset();
         }
         data.context = jQuery(tmpl("upload_div", data.files[0]));

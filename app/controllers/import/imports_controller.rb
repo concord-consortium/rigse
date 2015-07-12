@@ -1,4 +1,4 @@
-class ImportsController < ApplicationController
+class Import::ImportsController < ApplicationController
 
   before_filter :admin_only
 
@@ -10,7 +10,7 @@ class ImportsController < ApplicationController
         raise "Invalid JSON"
       end
     rescue => e
-      redirect_to import_school_district_status_imports_path({:message => "Invalid JSON"})
+      redirect_to import_school_district_status_import_imports_path({:message => "Invalid JSON"})
       return
     end
     import = Import::Import.create!()
@@ -30,7 +30,7 @@ class ImportsController < ApplicationController
         raise "Invalid JSON"
       end
     rescue => e
-      redirect_to import_user_status_imports_path({:message => "Invalid JSON"})
+      redirect_to import_user_status_import_imports_path({:message => "Invalid JSON"})
       return
     end
     import = Import::Import.create!()
@@ -61,7 +61,7 @@ class ImportsController < ApplicationController
         render :json => {:progress => @imports_progress}
       end
     else
-      render "imports/import_status"
+      render "import/imports/import_status"
     end
   end
 
@@ -71,7 +71,7 @@ class ImportsController < ApplicationController
     @imports_progress = []
     imports_in_progress.each_with_index do |import_in_progress, index|
       @imports_progress << {
-        id: import_in_progress.id,        
+        id: import_in_progress.id,
         progress: import_in_progress.progress,
         total: import_in_progress.total_imports
       }
@@ -84,7 +84,7 @@ class ImportsController < ApplicationController
         render :json => {:progress => @imports_progress}
       end
     else
-      render "imports/import_status"
+      render "import/imports/import_status"
     end
   end
 
@@ -113,8 +113,9 @@ class ImportsController < ApplicationController
     begin 
       json_object = JSON.parse "#{params['import_activity_form'].read}", :symbolize_names => true
       req_url = "#{request.protocol}#{request.host_with_port}"
+      auth_url = get_authoring_url
       import = Import::Import.create!()
-      job = Delayed::Job.enqueue ImportExternalActivity.new(import,json_object,req_url,current_visitor.id)
+      job = Delayed::Job.enqueue Import::ImportExternalActivity.new(import,json_object,req_url,auth_url,current_visitor.id)
       import.update_attribute(:job_id, job.id)
       import.update_attribute(:import_type, Import::Import::IMPORT_TYPE_ACTIVITY)
       import.update_attribute(:user_id, current_visitor.id)
@@ -145,5 +146,10 @@ class ImportsController < ApplicationController
       flash[:notice] = "Please log in as an administrator"
       redirect_to(:home)
     end
+  end
+  def get_authoring_url
+    auth_uri = URI.parse("#{APP_CONFIG[:authoring_site_url]}/import/import_portal_activity").to_s
+    auth_uri.sub!(/\A\/\//,request.protocol)
+    auth_uri
   end
 end
