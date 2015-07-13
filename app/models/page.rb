@@ -336,6 +336,7 @@ class Page < ActiveRecord::Base
         page_json[:interactives] << interactive
         page_json[:show_info_assessment] = true
         labbook_export[:is_hidden] = !page_element.is_enabled
+        labbook_export[:interactive_ref_id] = page_element.embeddable.id
         page_json[:embeddables] << labbook_export
 
       when "Embeddable::Diy::EmbeddedModel"
@@ -348,6 +349,7 @@ class Page < ActiveRecord::Base
           interactive = page_element.embeddable.export_as_lara_activity
           interactive[:is_hidden] = !page_element.is_enabled
           page_json[:interactives] << interactive
+          labbook_export[:interactive_ref_id] = page_element.embeddable.id
         end
         page_json[:show_info_assessment] = true
         labbook_export[:is_hidden] = !page_element.is_enabled

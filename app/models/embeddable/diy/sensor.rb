@@ -51,9 +51,9 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
 
   def interactive_url
     if graph_type == "Prediction"
-      return data_collector.prediction_interactive_url
+      return "http://lab.concord.org/embeddable-dev.html#interactives/itsi/sensor/prediction-prediction.json"
     else
-      return data_collector.sensor_interactive_url
+      return "http://lab.concord.org/embeddable-dev.html#interactives/itsi/sensor/sensor-connector.json"
     end
   end
 
@@ -101,7 +101,8 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
         :url => self.build_graph_url,
         :type => "MwInteractive",
         :click_to_play => true,
-        :image_url => self.image_url
+        :image_url => self.image_url,
+        :ref_id => id
       }
   end
 

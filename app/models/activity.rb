@@ -223,7 +223,7 @@ class Activity < ActiveRecord::Base
   end
 
 
-  def export_as_lara_activity
+  def export_as_lara_activity(activity_type)
     page_position = 1
     activity_json = self.as_json(:only => [:name,
                                         :description])
@@ -237,8 +237,11 @@ class Activity < ActiveRecord::Base
     activity_json[:username] = self.user.login
     activity_json[:user_email] = self.user.email
     activity_json[:user_page_url] = self.user.user_page_url
-    activity_json[:editor_mode] = Activity::ITSI_EDITOR_MODE
+    if activity_type != "prepost"
+      activity_json[:editor_mode] = Activity::ITSI_EDITOR_MODE
+    end
     activity_json[:publication_status] = self.publication_status
+    activity_json[:theme_name] = "ITSI"
     return activity_json
   end
 

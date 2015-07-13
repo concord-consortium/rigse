@@ -37,7 +37,8 @@ class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
       :url => self.diy_model.interactive_url,
       :type => "MwInteractive",
       :click_to_play => true,
-      :image_url => self.diy_model.image_url
+      :image_url => self.diy_model.image_url,
+      :ref_id => id
     }
   end
 
