@@ -8,13 +8,13 @@ class Portal::TeacherClazz < ActiveRecord::Base
   default_scope :order => 'position ASC'
   
   [:name, :description].each { |m| delegate m, :to => :clazz }
-  
-  # def before_validation
-  #   # Portal::TeacherClazz.count(:conditions => "`clazz_id` = '#{self.clazz_id}' AND `teacher_id` = '#{self.teacher_id}'") == 0
-  #   sc = Portal::TeacherClazz.find(:first, :conditions => "`clazz_id` = '#{self.clazz_id}' AND `teacher_id` = '#{self.teacher_id}'")
-  #   self.id = sc.id
-  # end
-  
+
+  # NOTE: Here position is being set relative to the teacher.
+  # In clazzes_controller#manage_classes position is being explicitly set.
+  # There is a conflict about how we want to scope 'position'.
+  # The controller wants to scope it to clazz, which should be the
+  # right way to do it. This is a hack is to support the 'default' teacher.
+  # It should be reconsidered.
   before_save do |teacher_clazz|
     if teacher_clazz.id.nil?
       position = teacher_clazz.teacher.teacher_clazzes.length + 1
