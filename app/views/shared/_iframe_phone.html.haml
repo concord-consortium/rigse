@@ -13,7 +13,9 @@
           var phone = phones[phoneId];
           phone.post({type: 'stop'});
         }
-      }, []);
+      });
+
+      phone.post('listenForDispatchEvent', {eventName: 'play'});
     }, 10);
   }
 
