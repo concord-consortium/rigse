@@ -2,7 +2,7 @@ class Diy::ModelType < ActiveRecord::Base
   set_table_name "diy_model_types"
 
   belongs_to :user
-  has_many :models, :as => :embeddable, :class_name => "Diy::Model"
+  has_many :models, :foreign_key => :model_type_id, :class_name => "Diy::Model"
   validates_presence_of :name
   #validates_format_of :otrunk_object_class, :with =>/\AOT/
   #validates_format_of :otrunk_view_class, :with =>/\AOT/
