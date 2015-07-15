@@ -96,7 +96,9 @@
         var lightboxConfig = {
             type: Lightbox.type.ALERT,
             title: title,
-            content: content
+            content: content,
+            width:370,
+            height: 160
         };
         var lightbox = new Lightbox(lightboxConfig);
         return lightbox;

@@ -13,7 +13,7 @@ class Import::ImportedLoginController < ApplicationController
 
     if User.verified_imported_user?(params[:login])
       flash[:error] = 'Invalid username.'
-      invalid_user
+      invalid_user and return
     end
 
     if user.school && user.school.country
@@ -22,17 +22,20 @@ class Import::ImportedLoginController < ApplicationController
       	if params[:state] == user.school.state
           sign_in_user(user)
         else
-          flash[:error] = 'Invalid country or state.'
+          send_mail(user, "Invalid country or state.")
+          #flash[:error] = 'Invalid country or state.'
           invalid_user
         end
       elsif country && params[:country] == country.name
         sign_in_user(user)
       else
-      	flash[:error] = 'Invalid country.'
+        send_mail(user, "Invalid country.")
+      	#flash[:error] = 'Invalid country.'
         invalid_user
       end
     else
-      flash[:error] = "Please contact Portal administrator at <a href='mailto:#{APP_CONFIG[:help_email]}'>#{APP_CONFIG[:help_email]}</a> to reset your password."
+      send_mail(user, nil)
+      #flash[:error] = "Please contact Portal administrator at <a href='mailto:#{APP_CONFIG[:help_email]}'>#{APP_CONFIG[:help_email]}</a> to reset your password."
       invalid_user
     end
   end
@@ -46,6 +49,17 @@ class Import::ImportedLoginController < ApplicationController
 
   def invalid_user
   	redirect_to :action => 'confirm_user'
+  end
+
+  def send_mail(user, message)
+    @password = Password.new(:user => user, :email => user.email)
+    if @password.save
+      PasswordMailer.imported_password_reset(@password).deliver
+      message = "<p>#{message}<p><p>Your account activation has been sent to your email address. Please check your email and click the link you find there from ITSI.</p>"
+    else
+      flash[:error] = "This account has not set a valid email address. Please contact your school manager to access your account."
+    end
+    flash[:alert] = message
   end
 
 end
