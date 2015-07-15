@@ -242,6 +242,8 @@ class Activity < ActiveRecord::Base
     end
     activity_json[:publication_status] = self.publication_status
     activity_json[:theme_name] = "ITSI"
+    activity_json[:grade_levels] = self.grade_levels.map { |tc| tc.name }
+    activity_json[:subject_areas] = self.subject_areas.map { |tc| tc.name }
     return activity_json
   end
 
