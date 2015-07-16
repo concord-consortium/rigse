@@ -49,9 +49,7 @@ class Import::ImportUsers < Struct.new(:import_id)
               portal_teacher = Portal::Teacher.new 
               portal_teacher.user = new_user
               portal_teacher.schools << school if school
-              user[:cohorts].each do |cohort|
-                portal_teacher.cohort_list.add(cohort)
-              end
+              add_new_admin_tag(portal_teacher, "cohort", user[:cohorts]) if user[:cohorts]
               portal_teacher.save!
             end
           else
@@ -76,5 +74,16 @@ class Import::ImportUsers < Struct.new(:import_id)
     job.destroy
     import = Import::Import.find(import_id)
     import.update_attribute(:progress, -1)
+  end
+
+  def add_new_admin_tag(user, tag_type, tag_list)
+    tag_list.each do |tag|
+      new_admin_tag = {:scope => "#{tag_type}s", :tag => tag}
+      if Admin::Tag.fetch_tag(new_admin_tag).size == 0
+        admin_tag = Admin::Tag.new(new_admin_tag)
+        admin_tag.save!
+      end
+      user.send("#{tag_type}_list").add(tag)
+    end
   end
 end
