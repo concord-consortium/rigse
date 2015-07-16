@@ -29,7 +29,6 @@ class Embeddable::DrawingTool < Embeddable::Embeddable
     {
       :bg_source => "Drawing",
       :bg_url => self.background_image_url,
-      :drawing_prompt => self.description,
       :name => self.name,
       :type => "Embeddable::ImageQuestion"
     }
