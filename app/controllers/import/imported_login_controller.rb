@@ -22,14 +22,14 @@ class Import::ImportedLoginController < ApplicationController
       	if params[:state] == user.school.state
           sign_in_user(user)
         else
-          send_mail(user, "Invalid country or state.")
+          send_mail(user, "You have entered an invalid country or state.")
           #flash[:error] = 'Invalid country or state.'
           invalid_user
         end
       elsif country && params[:country] == country.name
         sign_in_user(user)
       else
-        send_mail(user, "Invalid country.")
+        send_mail(user, "You have entered an invalid country.")
       	#flash[:error] = 'Invalid country.'
         invalid_user
       end
