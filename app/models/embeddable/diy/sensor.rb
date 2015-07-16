@@ -51,9 +51,9 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
 
   def interactive_url
     if graph_type == "Prediction"
-      return "http://lab.concord.org/embeddable-dev.html#interactives/itsi/sensor/prediction-prediction.json"
+      return data_collector.prediction_interactive_url
     else
-      return "http://lab.concord.org/embeddable-dev.html#interactives/itsi/sensor/sensor-connector.json"
+      return data_collector.sensor_interactive_url
     end
   end
 

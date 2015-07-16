@@ -1,6 +1,6 @@
 class ExportsController < ApplicationController
 
-  before_filter :admin_only, :except => [:download]
+  before_filter :admin_only
 
   def index
     redirect_to :action => "export_status"
