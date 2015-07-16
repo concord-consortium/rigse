@@ -239,9 +239,13 @@ class Activity < ActiveRecord::Base
     activity_json[:user_page_url] = self.user.user_page_url
     if activity_type != "prepost"
       activity_json[:editor_mode] = Activity::ITSI_EDITOR_MODE
+      activity_json[:theme_name] = "ITSI"
+      activity_json[:publication_status] = self.publication_status
+    else
+      activity_json[:name] = self.pages[0].name
+      activity_json[:theme_name] = "ITSI-SURVEY"
+      activity_json[:publication_status] = self.pages[0].publication_status
     end
-    activity_json[:publication_status] = self.publication_status
-    activity_json[:theme_name] = "ITSI"
     activity_json[:grade_levels] = self.grade_levels.map { |tc| tc.name }
     activity_json[:subject_areas] = self.subject_areas.map { |tc| tc.name }
     return activity_json
