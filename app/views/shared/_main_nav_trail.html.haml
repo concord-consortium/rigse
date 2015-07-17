@@ -27,4 +27,4 @@
 
       - current_visitor.projects.each do |project|
         - project.links.each do |link|
-          %li.trail= link_to link.name, link.href
+          %li.trail.project_link= link_to link.name, link.href

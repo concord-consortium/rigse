@@ -255,6 +255,9 @@ body#tinymce {
     margin: 0;
     padding: 0 10px 0;
     text-transform: uppercase; }
+  li.project_link {
+    display: none;
+  }
   li + li {
     border-left: solid 1px #416962; }
   li#home {

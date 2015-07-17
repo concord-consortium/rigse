@@ -286,7 +286,8 @@ class ExternalActivitiesController < ApplicationController
     @uri = URI.parse(@external_activity.url + '/duplicate')
     @uri.query = {
       :domain => root_url,
-      :domain_uid => current_visitor.id
+      :domain_uid => current_visitor.id,
+      :add_to_portal => root_url
     }.to_query
     redirect_to @uri.to_s
   end

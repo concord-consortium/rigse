@@ -7,7 +7,8 @@ jQuery(function () {
       rightArrow = "&#x25B6;",
       downArrow = "&#x25BC;",
       moreMenuVisible = false,
-      $topMenu = jQuery("#nav_top ul.menu_h"),
+      $topMenu = jQuery("#nav_top"),
+      $topMenuItems = jQuery("#nav_top ul.menu_h"),
       topMenuWidth = $topMenu.width(),
       topMenuHeight = $topMenu.height(),
       menuItemWidths = [],
@@ -16,7 +17,7 @@ jQuery(function () {
       $moreMenu, $menuItems, $moreLink, $moreItem;
 
   // no menu, no work to do...
-  if ($topMenu.length === 0) {
+  if ($topMenuItems.length === 0) {
     return;
   }
 
@@ -25,7 +26,7 @@ jQuery(function () {
   $moreMenuList = jQuery("<ul>");
   $moreMenu.append($moreMenuList);
 
-  $menuItems = $topMenu.find("li").filter(":not(.hide-menu-item)")
+  $menuItems = $topMenuItems.find("li").filter(":not(.hide-menu-item)")
   $menuItems.each(function () {
     var $menuItem = jQuery(this),
         $moreMenuItem = $menuItem.clone().removeClass("trail").css({
@@ -45,29 +46,16 @@ jQuery(function () {
     showMoreMenu(!moreMenuVisible);
   })
   $moreItem = jQuery("<li>").addClass("trail").append($moreLink).hide();
-  $topMenu.append($moreItem);
+  $topMenuItems.append($moreItem);
 
   // listen for window changes to compute the layout and layout at startup
   $window.on("resize", layoutMoreMenu);
   layoutMoreMenu();
 
   function layoutMoreMenu() {
-    var windowWidth = $window.width(),
-        leftOffset = $topMenu.offset().left,
+    var leftOffset = $topMenu.offset().left,
         itemVisible = true,
-        maxItemRight = windowWidth - moreItemWidth - showMoreMargin;
-
-    // if all the original menu items can show then hide the more menu and we are done
-    if (topMenuWidth + showMoreMargin < windowWidth) {
-      if ($moreItem.is(":visible")) {
-        $menuItems.each(function () {
-          jQuery(this).show();
-        });
-        $moreItem.hide();
-        showMoreMenu(false);
-      }
-      return;
-    }
+        maxItemRight = Math.min($window.width(), leftOffset + topMenuWidth) - moreItemWidth - showMoreMargin;
 
     // walk down the items and show/hide them based on their offset
     $menuItems.each(function (index) {
