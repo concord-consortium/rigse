@@ -19,9 +19,9 @@ class Import::ImportExternalActivity < Struct.new(:import,:activity_json,:portal
             import.update_attribute(:job_finished_at, Time.current)
             import.update_attribute(:progress, 100)
             import_activity = ExternalActivity.find(activity_data[:external_activity_id])
-            add_new_admin_tag(import_activity,"cohort", activity_json[:cohorts]) if activity_json[:cohorts]
-            add_new_admin_tag(import_activity,"grade_level", activity_json[:grade_levels]) if activity_json[:grade_levels]
-            add_new_admin_tag(import_activity,"subject_area", activity_json[:subject_areas]) if activity_json[:subject_areas]
+            Admin::Tag.add_new_admin_tags(import_activity,"cohort", activity_json[:cohorts]) if activity_json[:cohorts]
+            Admin::Tag.add_new_admin_tags(import_activity,"grade_level", activity_json[:grade_levels]) if activity_json[:grade_levels]
+            Admin::Tag.add_new_admin_tags(import_activity,"subject_area", activity_json[:subject_areas]) if activity_json[:subject_areas]
             import_activity.publication_status = activity_json[:publication_status].nil? ? "published" : activity_json[:publication_status] == "published" ? "published" : "private"
             #give author role to creator of activity
             user = User.find_by_email(activity_json[:user_email])
@@ -55,16 +55,5 @@ class Import::ImportExternalActivity < Struct.new(:import,:activity_json,:portal
     p exception
     import.update_attribute(:job_finished_at, Time.current)
     import.update_attribute(:progress, -1)
-  end
-
-  def add_new_admin_tag(import_activity, tag_type, tag_list)
-    tag_list.each do |tag|
-      new_admin_tag = {:scope => "#{tag_type}s", :tag => tag}
-      if Admin::Tag.fetch_tag(new_admin_tag).size == 0
-        admin_tag = Admin::Tag.new(new_admin_tag)
-        admin_tag.save!
-      end
-      import_activity.send("#{tag_type}_list").add(tag)
-    end
   end
 end
