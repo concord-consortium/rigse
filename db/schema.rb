@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150707062145) do
+ActiveRecord::Schema.define(:version => 20150714113815) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -906,6 +906,7 @@ ActiveRecord::Schema.define(:version => 20150707062145) do
     t.text     "upload_data",     :limit => 2147483647
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
+    t.text     "import_data"
   end
 
   create_table "installer_reports", :force => true do |t|

@@ -619,6 +619,10 @@ RailsPortal::Application.routes.draw do
           post :import_activity
           get :import_activity_progress
           get :activity_clear_job
+          post :batch_import
+          get :batch_import_status
+          get :failed_batch_import
+          get :batch_import_data
         end
       end
       match '/imported_login/confirm_user'    => 'imported_login#confirm_user',  :as => :confirm_user_imported_login, :method => :get
