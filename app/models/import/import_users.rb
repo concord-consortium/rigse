@@ -71,9 +71,11 @@ class Import::ImportUsers < Struct.new(:import_id)
     import.update_attribute(:job_finished_at, Time.current)
   end
 
+  def max_attempts
+    1
+  end
+
   def error(job, exception)
-    p exception
-    job.destroy
     import = Import::Import.find(import_id)
     import.update_attribute(:progress, -1)
   end
