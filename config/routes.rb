@@ -425,10 +425,12 @@ ActionController::Routing::Routes.draw do |map|
     :duplicate => :get,
     :export => :get,
     :export_as_lara_activity => :get,
+    :export_json => :get,
     :destroy => :post,
     :template_edit => :get
   }, :collection => {
-    :search => [:post, :get]
+    :search => [:post, :get],
+    :export_all_activity_urls => :get
   }
   map.browse_activities '/activity/browse', :controller=>'activities', :action => 'browse'
   map.compare_activities '/activities/:id/compare/:other_id', :controller=>'activities', :action => 'compare'

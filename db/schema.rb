@@ -1781,7 +1781,7 @@ ActiveRecord::Schema.define(:version => 20150708103848) do
     t.datetime "updated_at"
   end
 
-  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index", :length => {"member_id"=>nil, "member_type"=>"15"}
+  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index", :length => {"member_type"=>"15", "member_id"=>nil}
   add_index "portal_school_memberships", ["school_id"], :name => "index_portal_school_memberships_on_school_id"
 
   create_table "portal_schools", :force => true do |t|
@@ -2265,7 +2265,7 @@ ActiveRecord::Schema.define(:version => 20150708103848) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_type"=>"15", "scope_id"=>nil, "name"=>"15"}
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"scope_id"=>nil, "name"=>"15", "scope_type"=>"15"}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|

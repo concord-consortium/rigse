@@ -223,32 +223,35 @@ class Activity < ActiveRecord::Base
   end
 
 
-  def export_as_lara_activity(activity_type)
+  def export_as_lara_activity(options)
     page_position = 1
     activity_json = self.as_json(:only => [:name,
                                         :description])
     activity_json[:pages] = []
-    self.pages.each do |page|
-      activity_json[:pages] << page.export_as_lara_activity(page_position) 
-      page_position += 1
-    end
+
     activity_json[:type] = "LightweightActivity"
     activity_json[:export_site] = "ITSI"
     activity_json[:username] = self.user.login
     activity_json[:user_email] = self.user.email
     activity_json[:user_page_url] = self.user.user_page_url
-    if activity_type != "prepost"
+    if options["activity_type"] != "prepost"
+      self.pages.each do |page|
+        activity_json[:pages] << page.export_as_lara_activity(page_position) 
+        page_position += 1
+      end
       activity_json[:editor_mode] = Activity::ITSI_EDITOR_MODE
       activity_json[:theme_name] = "ITSI"
       activity_json[:publication_status] = self.publication_status
       activity_json[:grade_levels] = self.grade_levels.map { |tc| tc.name }
       activity_json[:subject_areas] = self.subject_areas.map { |tc| tc.name }
     else
-      activity_json[:name] = self.pages[0].name
+      test_page = Page.find(options["page_id"])
+      activity_json[:pages] << test_page.export_as_lara_activity(page_position)
+      activity_json[:name] = test_page.name
       activity_json[:theme_name] = "ITSI-SURVEY"
-      activity_json[:publication_status] = self.pages[0].publication_status
-      activity_json[:grade_levels] = self.pages[0].grade_levels.map { |tc| tc.name }
-      activity_json[:subject_areas] = self.pages[0].subject_areas.map { |tc| tc.name }
+      activity_json[:publication_status] = test_page.publication_status
+      activity_json[:grade_levels] = test_page.grade_levels.map { |tc| tc.name }
+      activity_json[:subject_areas] = test_page.subject_areas.map { |tc| tc.name }
     end
     return activity_json
   end

@@ -7,6 +7,9 @@
   .button.bins= link_to "show only browser-based activities", activities_path(:lightweight_only => "true")
 -if current_user_can_author
   .button.bins= link_to "create #{Activity.display_name}", new_activity_path
+- if logged_in? && current_user.has_role?("admin")
+  .button.bins= link_to "export all #{Activity.display_name} urls", export_all_activity_urls_activities_path
+
 - bin_params = {:user => current_user}
 - bin_params[:activities] = activities if defined? activities
 - bin_params[:lightweight_only] = lightweight_only if defined? lightweight_only

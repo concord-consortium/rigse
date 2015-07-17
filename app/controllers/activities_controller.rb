@@ -12,7 +12,7 @@ class ActivitiesController < ApplicationController
   before_filter :setup_object, :except => [:index,:browse]
   before_filter :render_scope, :only => [:show,:compare]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:search,:browse  ,:show,:print,:create,:new,:duplicate,:export,:compare]
+  before_filter :can_edit, :except => [:index,:search,:browse  ,:show,:print,:create,:new,:duplicate,:export,:export_json,:compare]
   before_filter :can_create, :only => [:new, :create,:duplicate]
 
   include RestrictedController
@@ -362,13 +362,55 @@ class ActivitiesController < ApplicationController
 
   def export_as_lara_activity
     if logged_in? && current_user.has_role?("admin")
-      activity_json = @activity.export_as_lara_activity(params["activity_type"])
-      activity_json[:layout] = 1 #single-page layout
+      activity_json = export_json
       send_data activity_json.to_json, :type => :json, :disposition => "attachment", :filename => "#{@activity.name}_version_1.json"
     else
       flash[:error] = "You're not authorized to do this"
       redirect_to(:back)
     end
+  end
+
+  def export_all_activity_urls
+    base_path = "#{request.protocol}#{request.host_with_port}/activities/"
+    if logged_in? && current_user.has_role?("admin")
+      data = []
+      #add activites
+      exportables = Activity.find(:all, :conditions => {:publication_status => ["published","private","archived"]})
+      exportables.each do |exportable|
+        data << {
+          :activity_id => exportable.id,
+          :activity_name => "#{exportable.name}", 
+          :activity_url => "#{base_path}#{exportable.id}"
+        }
+      end
+      # all tests
+      Page.published.each do |page|
+        exportable = page.activity
+        data << {
+          :activity_id => exportable.id, 
+          :activity_name => "#{exportable.name}", 
+          :activity_url => "#{base_path}#{exportable.id}",
+          :page_id => page.id
+        }
+      end
+      filename = "activity_urls.json"
+      send_data data.to_json,
+        :filename => filename,
+        :type => "application/json",
+        :x_sendfile => true
+    else
+      flash[:alert] = "You're not authorized to do this"
+      redirect_to(:back)
+    end
+  end
+
+  def export_json
+    activity_json = @activity.export_as_lara_activity(params)
+    activity_json[:layout] = 1
+    respond_to do |format|
+      format.json  { render :json => activity_json }
+    end
+    activity_json
   end
 
   def compare
