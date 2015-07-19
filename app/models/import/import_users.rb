@@ -49,9 +49,7 @@ class Import::ImportUsers < Struct.new(:import_id)
               portal_teacher = Portal::Teacher.new 
               portal_teacher.user = new_user
               portal_teacher.schools << school if school
-              user[:cohorts].each do |cohort|
-                portal_teacher.cohort_list.add(cohort)
-              end
+              Admin::Tag.add_new_admin_tags(portal_teacher, "cohort", user[:cohorts]) if user[:cohorts]
               portal_teacher.save!
             end
           else

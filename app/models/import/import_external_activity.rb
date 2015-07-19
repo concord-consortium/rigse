@@ -19,7 +19,9 @@ class Import::ImportExternalActivity < Struct.new(:import,:activity_json,:portal
             import.update_attribute(:job_finished_at, Time.current)
             import.update_attribute(:progress, 100)
             import_activity = ExternalActivity.find(activity_data[:external_activity_id])
-            import_activity.cohort_list = activity_json[:cohort_list]
+            Admin::Tag.add_new_admin_tags(import_activity,"cohort", activity_json[:cohorts]) if activity_json[:cohorts]
+            Admin::Tag.add_new_admin_tags(import_activity,"grade_level", activity_json[:grade_levels]) if activity_json[:grade_levels]
+            Admin::Tag.add_new_admin_tags(import_activity,"subject_area", activity_json[:subject_areas]) if activity_json[:subject_areas]
             import_activity.publication_status = activity_json[:publication_status].nil? ? "published" : activity_json[:publication_status] == "published" ? "published" : "private"
             #give author role to creator of activity
             user = User.find_by_email(activity_json[:user_email])
