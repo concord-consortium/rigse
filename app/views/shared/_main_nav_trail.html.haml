@@ -23,6 +23,7 @@
         - when 'no help'
           %li.trail.hide-menu-item{:style=>"display:none"}=link_to'Help', 'javascript: void(0)', :id=>'help'
 
-      - current_visitor.projects.each do |project|
-        - project.links.each do |link|
-          %li.trail.project_link= link_to link.name, link.href
+      - if current_visitor.has_role?('admin', 'author')
+        - current_visitor.projects.each do |project|
+          - project.links.each do |link|
+            %li.trail.project_link= link_to link.name, link.href
