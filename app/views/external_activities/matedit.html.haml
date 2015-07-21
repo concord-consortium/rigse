@@ -3,10 +3,27 @@
   .action_menu
     .action_menu_header_left
       %h3.menu
-        %span.component_title 
+        %span.component_title
         #{@external_activity.name} Editing
     .action_menu_header_right
       = link_to "Edit Resource Availability", "javascript:void(0)",:onclick=>"get_edit_resource_popup(#{@external_activity.id})", :class=>"button"
   -#messgeedit This is edit lara activity page
   #iframe_container
     %iframe{:id => "Edit_in_Lara",:src =>"#{@uri}",:width => "1000",:height => "800",:style => "border :0;"}
+
+  :javascript
+    var $iframe = jQuery("#Edit_in_Lara");
+    $iframe.on('load', function () {
+
+      // tell the iframe site manager we need the poller
+      $iframe[0].contentWindow.postMessage({iframed_site_manager: {need_height_poller: true}}, '*');
+
+      // listen for iframe site manager messages
+      jQuery(window).on('message', function (e) {
+        var data = e.originalEvent.data ? e.originalEvent.data.iframed_site_manager : null;
+        if (data && data.iframe_height) {
+          $iframe.css('height', data.iframe_height + 'px');
+        }
+      })
+    });
+
