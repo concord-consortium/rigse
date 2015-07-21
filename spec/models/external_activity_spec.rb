@@ -102,4 +102,49 @@ describe ExternalActivity do
       expect(activity.projects.count).to eql(1)
     end
   end
+
+  describe "external" do
+    let(:lara_launch_url_attributes) { {
+        :user_id => 1,
+        :uuid => "value for uuid",
+        :name => "value for name",
+        :description => "value for description",
+        :publication_status => "value for publication_status",
+        :is_official => true,
+        :url => "http://www.concord.org/",
+        :template_type => "Activity",
+        :launch_url => "http://learn.concord.org/"
+    } }
+    let(:activity) { ExternalActivity.create!(lara_launch_url_attributes)}
+
+    it "activities from LARA should return true for lara_activity?" do
+      expect(activity.lara_activity?).to be true
+    end
+    it "activities from LOCAL_LARA_DOMAIN should return true for lara_activity?" do
+      ENV["LOCAL_LARA_DOMAIN"] = "localhost"
+      activity.launch_url = "http://localhost/"
+      expect(activity.lara_activity?).to be true
+      ENV.delete "LOCAL_LARA_DOMAIN"
+    end
+    it "activities from non-LARA sources should return false for lara_activity?" do
+      activity.launch_url = "http://somewhere.org/"
+      expect(activity.lara_activity?).to be false
+    end
+    it "investigations from LARA should return false for lara_activity?" do
+      activity.template_type = "Investigation"
+      expect(activity.lara_activity?).to be false
+    end
+    it "investigations from LOCAL_LARA_DOMAIN should return false for lara_activity?" do
+      ENV["LOCAL_LARA_DOMAIN"] = "localhost"
+      activity.template_type = "Investigation"
+      activity.launch_url = "http://localhost/"
+      expect(activity.lara_activity?).to be false
+      ENV.delete "LOCAL_LARA_DOMAIN"
+    end
+    it "investigations from non-LARA sources should return false for lara_activity?" do
+      activity.template_type = "Investigation"
+      activity.launch_url = "http://somewhere.org/"
+      expect(activity.lara_activity?).to be false
+    end
+  end
 end
