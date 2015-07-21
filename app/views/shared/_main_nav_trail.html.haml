@@ -4,7 +4,6 @@
       Navigation:
     %ul.menu_h
       %li#home.trail= link_to 'Home', home_path
-      %li.trail= link_to 'About', about_path
       = render :partial => 'shared/extra_nav'
       - unless @emulate_anonymous_user
         - anon_can_browse = current_settings ? current_settings.anonymous_can_browse_materials : true
@@ -13,8 +12,14 @@
         - if current_visitor.has_role?('admin', 'manager','researcher')
           %li.trail= link_to 'Admin', admin_path
 
+      - if current_visitor.has_role?('admin') || current_visitor.portal_teacher
+        - current_visitor.projects.each do |project|
+          - project.links.each do |link|
+            %li.trail.project_link= link_to link.name, link.href
+
+      %li.trail= link_to 'About', about_path
       - #A developer can load home page without initializing data in database
-      - if current_settings
+      - if current_settings && (current_visitor.has_role?('admin') || current_visitor.portal_teacher)
         - case current_settings.help_type
         - when 'external url'
           %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
@@ -23,7 +28,3 @@
         - when 'no help'
           %li.trail.hide-menu-item{:style=>"display:none"}=link_to'Help', 'javascript: void(0)', :id=>'help'
 
-      - if current_visitor.has_role?('admin', 'author')
-        - current_visitor.projects.each do |project|
-          - project.links.each do |link|
-            %li.trail.project_link= link_to link.name, link.href
