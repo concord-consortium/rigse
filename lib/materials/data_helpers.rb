@@ -64,6 +64,7 @@ module Materials
           publication_status: material.publication_status,
           links: links_for_material(material),
           preview_url: view_context.run_url_for(material, (material.teacher_only? ? {:teacher_mode => true} : {})),
+          edit_url: view_context.matedit_external_activity_url(material, iFrame: true),
           assigned_classes: assigned_clazz_names(material),
           class_count: material_count,
           sensors: view_context.probe_types(material).map { |p| p.name },

@@ -25,6 +25,10 @@ window.MBMaterialClass = React.createClass
     data = @props.material
     (div {className: 'mb-material'},
       (span {className: 'mb-material-links'},
+        if @props.isOwnMaterial
+          (a {className: 'mb-edit', href: data.edit_url, target: '_blank', title: 'Edit this activity'},
+            (span {className: 'mb-edit-text'}, 'Edit')
+          )
         if @hasDescription()
           (a {className: 'mb-toggle-info', href: '', onClick: @toggleDescription, title: 'View activity description'},
             (span {className: 'mb-toggle-info-text'}, 'Info')
