@@ -7,8 +7,6 @@
       %li.trail= link_to 'About', about_path
       = render :partial => 'shared/extra_nav'
       - unless @emulate_anonymous_user
-        - if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
-          %li.trail=link_to('Authoring', authoring_path)
         - anon_can_browse = current_settings ? current_settings.anonymous_can_browse_materials : true
         - unless current_visitor.only_a_student? || (current_visitor.anonymous? && !anon_can_browse)
           %li.trail= link_to 'Browse Instructional Materials' , search_path
