@@ -379,19 +379,21 @@ class ActivitiesController < ApplicationController
       exportables.each do |exportable|
         data << {
           :activity_id => exportable.id,
-          :activity_name => "#{exportable.name}", 
+          :activity_name => exportable.name, 
           :activity_url => "#{base_path}#{exportable.id}"
         }
       end
       # all tests
       Page.published.each do |page|
         exportable = page.activity
-        data << {
-          :activity_id => exportable.id, 
-          :activity_name => "#{exportable.name}", 
-          :activity_url => "#{base_path}#{exportable.id}",
-          :page_id => page.id
-        }
+        if exportable
+          data << {
+            :activity_id => exportable.id, 
+            :activity_name => exportable.name, 
+            :activity_url => "#{base_path}#{exportable.id}",
+            :page_id => page.id
+          }
+        end
       end
       filename = "activity_urls.json"
       send_data data.to_json,
