@@ -144,7 +144,7 @@ class ExternalActivity < ActiveRecord::Base
   def material_type
     template_type ? template_type : 'Activity'
   end
-  
+
   def display_name
     return template.display_name if template
     return ExternalActivity.display_name
@@ -193,6 +193,22 @@ class ExternalActivity < ActiveRecord::Base
 
   def report_format
     :run_resource_html
+  end
+
+  def launch_domain
+    begin
+      URI.parse(launch_url).host
+    rescue
+      ""
+    end
+  end
+
+  def lara_launch_domain?
+    (launch_domain.start_with? "learn.") or (launch_domain == ENV['LOCAL_LARA_DOMAIN'])
+  end
+
+  def lara_activity?
+    material_type == 'Activity' && lara_launch_domain?
   end
 
   private
