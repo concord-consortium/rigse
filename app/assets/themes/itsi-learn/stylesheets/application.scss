@@ -1,0 +1,27 @@
+/*
+* =require application
+*/
+
+.project-header h1 {
+  background: transparent image-url("banners/itsi-portal-banner.jpg") 0 0px no-repeat;
+}
+.welcome-box {
+  td {
+    background-color: rgba(0, 0, 0, 0.25);
+    color: #fff;
+    padding: 20px;
+
+    a {
+      color: #fff;
+    }
+  }
+}
+.header-login-box {
+  background-color: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  padding: 20px;
+
+  a {
+    color: #fff;
+  }
+}
