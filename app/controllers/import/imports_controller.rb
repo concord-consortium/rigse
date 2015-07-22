@@ -179,7 +179,15 @@ class Import::ImportsController < ApplicationController
   end
 
   def batch_import
-    json_object = JSON.parse "#{params['import']['import'].read}", :symbolize_names => true
+    begin
+      json_object = JSON.parse "#{params['import']['import'].read}", :symbolize_names => true
+      if json_object.class.name != "Array" || json_object.size < 1
+        raise "Invalid JSON"
+      end
+    rescue => e
+      redirect_to import_user_status_import_imports_path({:message => "Invalid JSON"})
+      return
+    end
     req_url = "#{request.protocol}#{request.host_with_port}"
     auth_url = get_authoring_url
     import = Import::Import.create!()
