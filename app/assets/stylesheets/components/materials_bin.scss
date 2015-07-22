@@ -69,4 +69,64 @@
     padding: 5px;
     border: 1px solid #ccc;
   }
+
+  .mb-toggle-info {
+    background: image-url('components/materials_bin/itsi_info.png') no-repeat;
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+  }
+  .mb-toggle-info-text {
+    display: none;
+  }
+
+  .mb-run {
+    background: image-url('components/materials_bin/itsi_run.png') no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+  }
+  .mb-run-text {
+    display: none;
+  }
+
+  .mb-edit {
+    background: image-url('components/materials_bin/itsi_edit.png') no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+  }
+  .mb-edit-text {
+    display: none;
+  }
+
+  .mb-copy {
+    background: image-url('components/materials_bin/itsi_copy.png') no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+  }
+  .mb-copy-text {
+    display: none;
+  }
+
+  .mb-assign-to-class {
+    background: image-url('components/materials_bin/itsi_assign_to_class.png') no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+  }
+  .mb-assign-to-class-text {
+    display: none;
+  }
+
+  .mb-assign-to-collection {
+    background: image-url('components/materials_bin/itsi_assign_to_collection.png') no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+  }
+  .mb-assign-to-collection-text {
+    display: none;
+  }
 }

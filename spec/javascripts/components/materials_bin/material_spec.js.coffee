@@ -22,14 +22,12 @@ describe 'MBMaterialClass', ->
     result = renderStatic MBMaterialClass, material: {}
     expect(result).not.toEqual jasmine.stringMatching 'mb-assign-to-class'
 
-    Portal.currentUser.isTeacher = true
-    result = renderStatic MBMaterialClass, material: {}
+    result = renderStatic MBMaterialClass, material: {assign_to_class_url: 'http://assign.to.class'}
     expect(result).toEqual jasmine.stringMatching 'mb-assign-to-class'
 
   it 'renders assign to collection link only if user is a teacher', ->
     result = renderStatic MBMaterialClass, material: {}
     expect(result).not.toEqual jasmine.stringMatching 'mb-assign-to-collection'
 
-    Portal.currentUser.isAdmin = true
-    result = renderStatic MBMaterialClass, material: {}
+    result = renderStatic MBMaterialClass, material: {assign_to_collection_url: 'http://assign.to.collection'}
     expect(result).toEqual jasmine.stringMatching 'mb-assign-to-collection'
