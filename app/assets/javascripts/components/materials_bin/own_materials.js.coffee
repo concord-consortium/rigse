@@ -14,7 +14,6 @@ window.MBOwnMaterialsClass = React.createClass
         (MBMaterialsCollection
           name: 'My activities'
           materials: @state.materials
-          isOwnMaterial: true
         )
       else
         (div {}, 'Loading...')

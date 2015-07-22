@@ -25,9 +25,13 @@ window.MBMaterialClass = React.createClass
     data = @props.material
     (div {className: 'mb-material'},
       (span {className: 'mb-material-links'},
-        if @props.isOwnMaterial
+        if data.edit_url?
           (a {className: 'mb-edit', href: data.edit_url, target: '_blank', title: 'Edit this activity'},
             (span {className: 'mb-edit-text'}, 'Edit')
+          )
+        if data.copy_url?
+          (a {className: 'mb-copy', href: data.copy_url, target: '_blank', title: 'Make your own version of this activity'},
+            (span {className: 'mb-copy-text'}, 'Copy')
           )
         if @hasDescription()
           (a {className: 'mb-toggle-info', href: '', onClick: @toggleDescription, title: 'View activity description'},
@@ -37,12 +41,12 @@ window.MBMaterialClass = React.createClass
           (a {className: 'mb-run', href: data.preview_url, target: '_blank', title: 'Run this activity in the browser'},
             (span {className: 'mb-run-text'}, 'Run')
           )
-        if Portal.currentUser.isTeacher
-          (a {className: 'mb-assign-to-class', href: '', onClick: @assignToClass, title: 'Assign this activity to a class'},
+        if data.assign_to_class_url?
+          (a {className: 'mb-assign-to-class', href: data.assign_to_class_url, onClick: @assignToClass, title: 'Assign this activity to a class'},
             (span {className: 'mb-assign-to-class-text'}, 'Assign to class')
           )
-        if Portal.currentUser.isAdmin
-          (a {className: 'mb-assign-to-collection', href: '', onClick: @assignToCollection, title: 'Assign this activity to a collection'},
+        if data.assign_to_collection_url?
+          (a {className: 'mb-assign-to-collection', href: data.assign_to_collection_url, onClick: @assignToCollection, title: 'Assign this activity to a collection'},
             (span {className: 'mb-assign-to-collection-text'}, 'Assign to collection')
           )
       )
