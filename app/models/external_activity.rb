@@ -60,6 +60,9 @@ class ExternalActivity < ActiveRecord::Base
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+    string  :sensors, :multiple => true do
+      sensor_list
+    end
     integer :project_ids, :multiple => true, :references => Admin::Project
   end
 
