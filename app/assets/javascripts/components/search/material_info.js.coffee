@@ -8,7 +8,10 @@ window.SMaterialInfoClass = React.createClass
 
     links = []
     links.push material.links.preview           if material.links.preview
-    links.push material.links.external_edit     if material.links.external_edit
+    if material.lara_activity_or_sequence
+      links.push material.links.external_lara_edit if material.links.external_lara_edit
+    else
+      links.push material.links.external_edit if material.links.external_edit
     links.push material.links.external_copy     if material.links.external_copy
     links.push material.links.teacher_guide     if material.links.teacher_guide
     links.push material.links.assign_material   if material.links.assign_material

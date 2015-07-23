@@ -74,6 +74,7 @@ module Materials
           has_activities: has_activities,
           has_pretest: has_pretest,
           activities: has_activities ? material.activities.map{ |a| {id: a.id, name: a.name} } : [],
+          lara_activity_or_sequence: material.respond_to?(:lara_activity_or_sequence?) ? material.lara_activity_or_sequence? : false,
           parent: parent_data,
           user: user_data
         }
@@ -145,6 +146,11 @@ module Materials
         if current_visitor.has_role?('admin','manager') || (material.author_email == current_visitor.email)
           links[:external_edit] = {
             url: matedit_external_activity_url(material, iFrame: false),
+            text: "Edit",
+            target: '_blank'
+          }
+          links[:external_lara_edit] = {
+            url: matedit_external_activity_url(material, iFrame: true),
             text: "Edit",
             target: '_blank'
           }
