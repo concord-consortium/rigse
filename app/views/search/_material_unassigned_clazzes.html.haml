@@ -34,52 +34,53 @@
 - if activity_name.length > 0
   %table.material_detail
     %tr
-      %td 
+      %td
         = activity_name.html_safe
     %tr
-      %td.title Part&nbsp;Of: 
-      %td 
+      %td.title Part&nbsp;Of:
+      %td
         = parent_name
 - if external_activity_name.length > 0
   %div
     %table.material_detail
       %tr
-        %td 
+        %td
           = external_activity_name
 %br
 #clazz_summary_data
-  - if @teacher_active_clazzes_count > 0
-    - if @unassigned_clazzes.length > 0
-      %div{:id=> "error_message",:style=>"display:none;padding-left: 5px;color:red;font-size:14px"}
-      %div.assign_class_header Select Class(es)
-      %form{:id=>"add_material_form"}
-        .unassigned_classes_container.webkit_scrollbars
-          %table.material_detail{:width=>"100%"}
-            - @unassigned_clazzes.each do|clazz|
-              %tr
-                %td.check_box
-                  = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s,:class =>"unassigned_activity_class"
-                  
-                %td 
-                  = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
-                  - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
-                    %br
-                    (Already assigned as part of "#{parent_name}")
+  #scrollable_clazz_summary_data
+    - if @teacher_active_clazzes_count > 0
+      - if @unassigned_clazzes.length > 0
+        %div{:id=> "error_message",:style=>"display:none;padding-left: 5px;color:red;font-size:14px"}
+        %div.assign_class_header Select Class(es)
+        %form{:id=>"add_material_form"}
+          .unassigned_classes_container.webkit_scrollbars
+            %table.material_detail{:width=>"100%"}
+              - @unassigned_clazzes.each do|clazz|
+                %tr
+                  %td.check_box
+                    = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s,:class =>"unassigned_activity_class"
+
+                  %td
+                    = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
+                    - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
+                      %br
+                      (Already assigned as part of "#{parent_name}")
+      - else
+        .messagetext{:style=>"padding-left:5px"} This material is assigned to all the classes.
+      - if @assigned_clazzes.length > 0
+        %br
+        %br
+        .already_assign_class_header Already assigned to the following class(es)
+        %div{:style=>"padding:5px"}
+          .assigned_classes_container.webkit_scrollbars
+            %table.assigned_material_detail{:width=>"100%"}
+              - @assigned_clazzes.each do|clazz|
+                %tr
+                  %td.assigned_clazzes_material
+                    = clazz.name
     - else
-      .messagetext{:style=>"padding-left:5px"} This material is assigned to all the classes.
-    - if @assigned_clazzes.length > 0
-      %br
-      %br
-      .already_assign_class_header Already assigned to the following class(es)
-      %div{:style=>"padding:5px"}
-        .assigned_classes_container.webkit_scrollbars
-          %table.assigned_material_detail{:width=>"100%"}
-            - @assigned_clazzes.each do|clazz|
-              %tr
-                %td.assigned_clazzes_material
-                  = clazz.name
-  - else
-    .messagetext{:style=>"padding-left:5px"} You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them.
+      .messagetext{:style=>"padding-left:5px"} You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them.
   %br
   %table.classdata
     %tr

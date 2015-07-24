@@ -48,37 +48,38 @@
           = external_activity_name
 %br
 #collection_summary_data
-  - if @collections.length > 0
-    - if @unassigned_collections.length > 0
-      %div{:id=> "error_message",:style=>"display:none;padding-left: 5px;color:red;font-size:14px"}
-      %div.assign_class_header Select Collection(s)
-      %form{:id=>"add_material_form"}
-        .unassigned_collections_container.webkit_scrollbars
-          %table.material_detail{:width=>"100%"}
-            - @unassigned_collections.each do|collection|
-              %tr
-                %td.check_box
-                  = check_box_tag 'materials_collection_id[]',collection.id,nil, :id => 'materials_collection_' + collection.id.to_s,:class =>"unassigned_activity_collection"
-                %td
-                  = label_tag 'materials_collection_' + collection.id.to_s, collection.name,:class=>"materials_collection_name"
-                  - if existing_collections && existing_collections.find_by_id(collection.id)
-                    %br
-                    (Already assigned as part of "#{parent_name}")
+  #scrollable_collection_summary_data
+    - if @collections.length > 0
+      - if @unassigned_collections.length > 0
+        %div{:id=> "error_message",:style=>"display:none;padding-left: 5px;color:red;font-size:14px"}
+        %div.assign_class_header Select Collection(s)
+        %form{:id=>"add_material_form"}
+          .unassigned_collections_container.webkit_scrollbars
+            %table.material_detail{:width=>"100%"}
+              - @unassigned_collections.each do|collection|
+                %tr
+                  %td.check_box
+                    = check_box_tag 'materials_collection_id[]',collection.id,nil, :id => 'materials_collection_' + collection.id.to_s,:class =>"unassigned_activity_collection"
+                  %td
+                    = label_tag 'materials_collection_' + collection.id.to_s, collection.name,:class=>"materials_collection_name"
+                    - if existing_collections && existing_collections.find_by_id(collection.id)
+                      %br
+                      (Already assigned as part of "#{parent_name}")
+      - else
+        .messagetext{:style=>"padding-left:5px"} This material is assigned to all the collections.
+      - if @assigned_collections.length > 0
+        %br
+        %br
+        .already_assigned_collection_header Already assigned to the following collection(s)
+        %div{:style=>"padding:5px"}
+          .assigned_collections_container.webkit_scrollbars
+            %table.assigned_material_detail{:width=>"100%"}
+              - @assigned_collections.each do|collection|
+                %tr
+                  %td.assigned_collections_material
+                    = collection.name
     - else
-      .messagetext{:style=>"padding-left:5px"} This material is assigned to all the collections.
-    - if @assigned_collections.length > 0
-      %br
-      %br
-      .already_assigned_collection_header Already assigned to the following collection(s)
-      %div{:style=>"padding:5px"}
-        .assigned_collections_container.webkit_scrollbars
-          %table.assigned_material_detail{:width=>"100%"}
-            - @assigned_collections.each do|collection|
-              %tr
-                %td.assigned_collections_material
-                  = collection.name
-  - else
-    .messagetext{:style=>"padding-left:5px"} You don't have any active collections. Once you have created your collection(s) you will be able to assign materials to them.
+      .messagetext{:style=>"padding-left:5px"} You don't have any active collections. Once you have created your collection(s) you will be able to assign materials to them.
   %br
   %table.collectiondata
     %tr
