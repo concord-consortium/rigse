@@ -211,6 +211,14 @@ class ExternalActivity < ActiveRecord::Base
     material_type == 'Activity' && lara_launch_domain?
   end
 
+  def lara_sequence?
+    material_type == 'Investigation' && lara_launch_domain?
+  end
+
+  def lara_activity_or_sequence?
+    lara_activity? || lara_sequence?
+  end
+
   private
 
   def append_query(uri, query_str)

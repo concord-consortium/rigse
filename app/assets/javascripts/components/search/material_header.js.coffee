@@ -29,7 +29,7 @@ window.SMaterialHeaderClass = React.createClass
         (span {className: 'superTiny'},
           (SGenericLink {link: material.links.edit})
         )
-      if material.links.external_edit_iframe?
+      if material.links.external_edit_iframe? and not material.lara_activity_or_sequence
         (span {className: 'superTiny'},
           (SGenericLink {link: material.links.external_edit_iframe})
         )
