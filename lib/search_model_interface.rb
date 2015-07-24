@@ -10,6 +10,7 @@ module SearchModelInterface
       acts_as_taggable_on :cohorts
       acts_as_taggable_on :grade_levels
       acts_as_taggable_on :subject_areas
+      acts_as_taggable_on :sensors
 
       # Fast way to find all materials that are in `allowed_cohorts` OR they are not assigned to any cohort.
       scope :filtered_by_cohorts, ->(allowed_cohorts = []) do

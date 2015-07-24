@@ -131,7 +131,7 @@ class ExternalActivitiesController < ApplicationController
   def edit
     @external_activity = ExternalActivity.find(params[:id])
     if request.xhr?
-      render :partial => 'form'
+      render :partial => (params['use_short_form'] ? 'short_form' : 'form')
     end
   end
 
@@ -154,6 +154,11 @@ class ExternalActivitiesController < ApplicationController
     if params[:update_subject_areas]
       # set the subject_area tags
       @external_activity.subject_area_list = (params[:subject_areas] || [])
+    end
+
+    if params[:update_sensors]
+      # set the sensor tags
+      @external_activity.sensor_list = (params[:sensors] || [])
     end
 
     respond_to do |format|
@@ -190,6 +195,12 @@ class ExternalActivitiesController < ApplicationController
     if params[:update_subject_areas]
       # set the subject_area tags
       @external_activity.subject_area_list = (params[:subject_areas] || [])
+      @external_activity.save
+    end
+
+    if params[:update_sensors]
+      # set the sensor tags
+      @external_activity.sensor_list = (params[:sensors] || [])
       @external_activity.save
     end
 
