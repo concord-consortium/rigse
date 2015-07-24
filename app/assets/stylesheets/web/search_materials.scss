@@ -505,3 +505,9 @@ label.tooltip {
     vertical-align: middle;
   }
 }
+
+#scrollable_collection_summary_data,
+#scrollable_clazz_summary_data {
+  max-height: 500px;
+  overflow: auto;
+}

@@ -242,7 +242,7 @@ class SearchController < ApplicationController
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
 
-    @collections = MaterialsCollection.includes(:materials_collection_items).all
+    @collections = MaterialsCollection.includes(:materials_collection_items).order(:name).all
 
     if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation
       @material = [find_material(material_type, params[:material_id])]
