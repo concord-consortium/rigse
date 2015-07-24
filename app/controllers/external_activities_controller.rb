@@ -148,7 +148,7 @@ class ExternalActivitiesController < ApplicationController
 
     if params[:update_grade_levels]
       # set the grade_level tags
-      @external_activity.grade_level_list = (params[:grade_levels] || [])     
+      @external_activity.grade_level_list = (params[:grade_levels] || [])
     end
 
     if params[:update_subject_areas]
@@ -270,7 +270,7 @@ class ExternalActivitiesController < ApplicationController
     flash[:notice] ="Copied #{@original.name}"
     redirect_to url_for(@external_activity)
   end
-  
+
   def matedit
     @uri = ssl_if_we_are(URI.parse("#{@external_activity.url}/edit"))
     @uri.query = {
@@ -281,13 +281,20 @@ class ExternalActivitiesController < ApplicationController
       redirect_to @uri.to_s
     end
   end
-  
+
   def copy
+    # create a redirect url with a template parameter that LARA can replace with the remotely published activity_id
+    redirect_uri = URI.parse(matedit_external_activity_url(999).sub!('999', ':activity_id'))
+    redirect_uri.query = {
+      :iFrame => true
+    }.to_query
+
     @uri = URI.parse(@external_activity.url + '/duplicate')
     @uri.query = {
       :domain => root_url,
       :domain_uid => current_visitor.id,
-      :add_to_portal => root_url
+      :add_to_portal => root_url,
+      :redirect_on_success => redirect_uri.to_s
     }.to_query
     redirect_to @uri.to_s
   end
