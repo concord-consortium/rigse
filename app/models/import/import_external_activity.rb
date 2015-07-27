@@ -25,9 +25,9 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
           activity[:success] = true
         end
         import_object.destroy
-        import.update_attribute(:progress, index+1)
         #change import status of activity in db
         import.update_attribute(:import_data,data_json)
+        import.update_attribute(:progress, index+1)
       end
       import.update_attribute(:job_finished_at,Time.current)
     end

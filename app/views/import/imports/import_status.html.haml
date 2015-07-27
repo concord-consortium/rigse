@@ -162,10 +162,11 @@
     }
 
     function updateSuccess(total,progress,success){
+      var failed = (progress - success) < 0 ? 0 : (progress - success);
       $progressWrap.find(".batch-import").show();
       $progressWrap.find(".total-imports").html("Total imports : " + total);
       $progressWrap.find(".successful").html("Success : " + success);
-      $progressWrap.find(".failed").html("Failed : " + (progress - success));
+      $progressWrap.find(".failed").html("Failed : " + failed);
     }
 
     function getSuccess(){
