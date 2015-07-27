@@ -198,24 +198,16 @@ class ExternalActivity < ActiveRecord::Base
     :run_resource_html
   end
 
-  def launch_domain
-    begin
-      URI.parse(launch_url).host
-    rescue
-      ""
-    end
-  end
-
-  def lara_launch_domain?
-    (launch_domain.start_with? "learn.") or (launch_domain == ENV['LOCAL_LARA_DOMAIN'])
+  def has_launch_url?
+    !launch_url.blank?
   end
 
   def lara_activity?
-    material_type == 'Activity' && lara_launch_domain?
+    material_type == 'Activity' && has_launch_url?
   end
 
   def lara_sequence?
-    material_type == 'Investigation' && lara_launch_domain?
+    material_type == 'Investigation' && has_launch_url?
   end
 
   def lara_activity_or_sequence?
