@@ -6,6 +6,12 @@ class Activity < ActiveRecord::Base
   MUST_HAVE_UNIQUE_NAME = "Activity '%{value}' already exists. Please pick a unique name."
 
   ITSI_EDITOR_MODE = 1 # editor mode id for itsi style authoring.
+  GRADE_LEVEL_FOR_PORTAL = {
+    "High School"=>["9", "10", "11", "12"], 
+    "Middle School"=>["6", "7", "8"], 
+    "Elementary 5-6"=>["5", "6"], 
+    "Elementary 3-4"=>["3", "4"]
+  }
 
   belongs_to :user
   belongs_to :investigation
@@ -242,7 +248,7 @@ class Activity < ActiveRecord::Base
       activity_json[:editor_mode] = Activity::ITSI_EDITOR_MODE
       activity_json[:theme_name] = "ITSI"
       activity_json[:publication_status] = self.publication_status
-      activity_json[:grade_levels] = self.grade_levels.map { |tc| tc.name }
+      activity_json[:grade_levels] = self.grade_levels.map { |tc| Activity::GRADE_LEVEL_FOR_PORTAL[tc.name] }.flatten.compact
       activity_json[:subject_areas] = self.subject_areas.map { |tc| tc.name }
     else
       test_page = Page.find(options["page_id"])
@@ -250,7 +256,7 @@ class Activity < ActiveRecord::Base
       activity_json[:name] = test_page.name
       activity_json[:theme_name] = "ITSI-SURVEY"
       activity_json[:publication_status] = test_page.publication_status
-      activity_json[:grade_levels] = test_page.grade_levels.map { |tc| tc.name }
+      activity_json[:grade_levels] = test_page.grade_levels.map { |tc| Activity::GRADE_LEVEL_FOR_PORTAL[tc.name] }.flatten.compact
       activity_json[:subject_areas] = test_page.subject_areas.map { |tc| tc.name }
     end
     return activity_json
