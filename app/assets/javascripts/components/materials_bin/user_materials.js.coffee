@@ -17,7 +17,7 @@ window.MBUserMaterialsClass = React.createClass
         ' '
         @props.name
       )
-      (MBUserMaterialsContainer userId: @props.userId, visible: @state.materialsVisible)
+      (MBUserMaterialsContainer userId: @props.userId, visible: @state.materialsVisible, assignToSpecificClass: @props.assignToSpecificClass)
     )
 
 window.MBUserMaterials = React.createFactory MBUserMaterialsClass

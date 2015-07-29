@@ -661,6 +661,7 @@ RailsPortal::Application.routes.draw do
         namespace :materials do
           get :own
           get :featured
+          post :assign_to_class
         end
         namespace :materials_bin do
           get :collections

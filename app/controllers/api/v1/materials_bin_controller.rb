@@ -11,7 +11,7 @@ class API::V1::MaterialsBinController < API::APIController
     collection_by_id = MaterialsCollection.where(id: params[:id]).index_by { |mc| mc.id.to_s }
     collections = Array(params[:id]).map do |id|
       col = collection_by_id[id]
-      materials_collection_data(col.name, col.materials(allowed_cohorts))
+      materials_collection_data(col.name, col.materials(allowed_cohorts), params[:assigned_to_class])
     end
     render json: collections
   end
@@ -26,7 +26,7 @@ class API::V1::MaterialsBinController < API::APIController
     materials = ExternalActivity.filtered_by_cohorts(allowed_cohorts)
                                 .where(user_id: user_id, is_official: false)
                                 .order('name ASC')
-    render json: materials_data(materials)
+    render json: materials_data(materials, params[:assigned_to_class])
   end
 
   # GET /api/v1/materials_bin/unofficial_materials_authors
@@ -50,10 +50,10 @@ class API::V1::MaterialsBinController < API::APIController
     current_visitor.portal_teacher ? current_visitor.portal_teacher.cohort_list : []
   end
 
-  def materials_collection_data(name, materials)
+  def materials_collection_data(name, materials, assigned_to_class)
     {
         name: name,
-        materials: materials_data(materials)
+        materials: materials_data(materials, assigned_to_class)
     }
   end
 end
