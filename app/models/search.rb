@@ -29,7 +29,7 @@ class Search
   attr_accessor :model_types
   attr_accessor :available_subject_areas
   attr_accessor :available_grade_level_groups
-  attr_accessor :available_model_types 
+  attr_accessor :available_model_types
   attr_accessor :available_projects
 
   SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity, Interactive]
@@ -102,7 +102,7 @@ class Search
     self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
     self.model_types                 = opts[:model_types] || nil
     self.available_model_types       = []
-    
+
     self.results        = {}
     self.hits           = {}
     self.total_entries  = {}
@@ -140,11 +140,11 @@ class Search
       self.available_model_types << facet.value
     end
   end
-  
+
   def fetch_available_grade_subject_areas_projects
     results = self.engine.search([Investigation, Activity, ExternalActivity, Interactive]) do |s|
       s.facet :subject_areas
-      s.facet :grade_levels do 
+      s.facet :grade_levels do
         Search.grade_level_groups.each do |key, value|
           row(key) do
             with(:grade_levels, value)
@@ -161,7 +161,7 @@ class Search
       self.available_grade_level_groups[facet.value] = 1
     end
     results.facet(:project_ids).rows.each do |facet|
-      self.available_projects << {id: facet.value, name: facet.instance.name}
+      self.available_projects << {id: facet.value, name: facet.instance.name, landing_page_slug: facet.instance.landing_page_slug}
     end
     available_projects.uniq!
   end
@@ -206,7 +206,7 @@ class Search
         elsif (type==Search::InvestigationMaterial)
           s.paginate(:page => self.investigation_page, :per_page => self.per_page)
         elsif (type==Search::InteractiveMaterial)
-		  search_by_model_types(s)
+          search_by_model_types(s)
           s.paginate(:page => self.interactive_page, :per_page => self.per_page)
         end
 

@@ -368,14 +368,16 @@ vertical-align: middle;
   border:solid 1px #999;
 }
 
-.tablecell input[type='checkbox'],.tablecell label{
+.tablecell input[type='checkbox'],.tablecell label,.tablecell img{
   vertical-align:middle;
-
 }
 .tablecell input[type='checkbox']
 {
   margin:0;padding:0;
   border:solid 1px #999;
+}
+.tablecell img {
+  margin-left: 5px;
 }
 
 .required_equipment_container
