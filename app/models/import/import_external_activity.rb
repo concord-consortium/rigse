@@ -20,7 +20,7 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
         activity_url = activity[:activity_url] + "/export_json.json"
         activity_url = activity_url + "?activity_type=prepost&page_id=#{activity[:page_id]}" if activity[:page_id]
         activity_json = get_json(activity_url)
-        import_object = import_activity(activity_json,import_object)
+        import_object = import_activity(activity_json,import_object,activity[:activity_url])
         if import_object.progress == 100
           activity[:success] = true
         end
@@ -51,7 +51,7 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
     return activity_json if activity_json
   end
 
-  def import_activity(activity_json,import_object)
+  def import_activity(activity_json,import_object,imported_activity_url=nil)
     begin
       Timeout.timeout(90) {
         client = Client.find(:first, :conditions => {:site_url => APP_CONFIG[:authoring_site_url]})
@@ -60,6 +60,7 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
         :body => {
           :portal_url => portal_url,
           :activity => activity_json,
+          :imported_activity_url => imported_activity_url,
           :domain_uid => current_visitor_id
           }.to_json,
         :headers => {"Content-Type" => 'application/json', "Authorization" => auth_token})
@@ -85,7 +86,7 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
             Sunspot.commit
           else
             import_object.update_attribute(:job_finished_at, Time.current)
-            import_object.update_attribute(:progress, -1)  
+            import_object.update_attribute(:progress, -1)
           end
         else
           import_object.update_attribute(:job_finished_at, Time.current)
