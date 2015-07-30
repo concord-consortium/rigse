@@ -135,6 +135,16 @@
                     No
                   (Search link will not appear in the navbar for anonymous users.)
               %li
+                Show Collections menu:
+                - if admin_settings.show_collections_menu?
+                  %b
+                    Yes
+                  (Collections menu will appear in the navbar if there is more than 1 project.)
+                - else
+                  %b
+                    No
+                  (Collections menu will appear in the navbar.)
+              %li
                 Enabled Bookmark Types:
                 %b= admin_settings.enabled_bookmark_types.join(', ')
               = content_for "admin_settings_show_#{admin_settings.id || 'new'}"

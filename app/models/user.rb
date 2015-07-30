@@ -483,6 +483,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def projects_with_landing_pages
+    self.projects.where("landing_page_slug <> ''")
+  end
+
   def suspend!
     self.update_attribute(:state, 'suspended')
     self.reload

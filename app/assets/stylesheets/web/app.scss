@@ -263,11 +263,12 @@ body#tinymce {
   li#home {
     border: none; } }
 
-#nav_top_more_menu {
+#nav_top_more_menu, #collections_menu {
   position: absolute;
   top: 0;
   background-color: #f8ac1a;
   padding: 5px;
+  display: none;
 
   ul {
     padding: 0;
@@ -285,6 +286,16 @@ body#tinymce {
       }
     }
   }
+}
+
+#collections_menu {
+  z-index: 100;
+}
+
+.collections_menu_arrow {
+  margin-left: 5px;
+  width: 10px;
+  display: inline-block;
 }
 
 /* SHARE AND PRINT LINKS */

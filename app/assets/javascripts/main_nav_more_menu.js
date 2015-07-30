@@ -29,7 +29,7 @@ jQuery(function () {
   $menuItems = $topMenuItems.find("li").filter(":not(.hide-menu-item)")
   $menuItems.each(function () {
     var $menuItem = jQuery(this),
-        $moreMenuItem = $menuItem.clone().removeClass("trail").css({
+        $moreMenuItem = $menuItem.clone().removeClass("trail").addClass('more-link').css({
           color: '#416992',
           textTransform: 'uppercase'
         });
@@ -80,6 +80,7 @@ jQuery(function () {
     // move the more menu to under the more item
     if (itemVisible) {
       $moreItem.hide();
+      showMoreMenu(false);
     }
     else {
       $moreItem.show();
