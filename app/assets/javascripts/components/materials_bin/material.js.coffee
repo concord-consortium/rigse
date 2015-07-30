@@ -1,10 +1,15 @@
-{div, span, a} = React.DOM
+{div, span, a, input} = React.DOM
 
 window.MBMaterialClass = React.createClass
   getInitialState: ->
     {
       descriptionVisible: false
+      assigned: @props.material.assigned
     }
+
+  assignToSpecificClass: (e) ->
+    Portal.assignMaterialToSpecificClass e.target.checked, @props.assignToSpecificClass, @props.material.id, @props.material.class_name
+    @setState assigned: e.target.checked
 
   toggleDescription: (e) ->
     @setState descriptionVisible: not @state.descriptionVisible
@@ -25,6 +30,8 @@ window.MBMaterialClass = React.createClass
     data = @props.material
     (div {className: 'mb-material'},
       (span {className: 'mb-material-links'},
+        if @props.assignToSpecificClass
+          (input {type: 'checkbox', onChange: @assignToSpecificClass, checked: @state.assigned})
         if data.edit_url?
           (a {className: 'mb-edit', href: data.edit_url, target: '_blank', title: 'Edit this activity'},
             (span {className: 'mb-edit-text'}, 'Edit')
@@ -41,7 +48,7 @@ window.MBMaterialClass = React.createClass
           (a {className: 'mb-run', href: data.preview_url, target: '_blank', title: 'Run this activity in the browser'},
             (span {className: 'mb-run-text'}, 'Run')
           )
-        if data.assign_to_class_url?
+        if not @props.assignToSpecificClass and data.assign_to_class_url?
           (a {className: 'mb-assign-to-class', href: data.assign_to_class_url, onClick: @assignToClass, title: 'Assign this activity to a class'},
             (span {className: 'mb-assign-to-class-text'}, 'Assign to class')
           )

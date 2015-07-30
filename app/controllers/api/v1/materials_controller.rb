@@ -8,7 +8,7 @@ class API::V1::MaterialsController < API::APIController
     materials = current_visitor.external_activities +
                 current_visitor.activities.is_template(false) +
                 current_visitor.investigations.is_template(false)
-    render json: materials_data(materials)
+    render json: materials_data(materials, params[:assigned_to_class])
   end
 
   # GET /api/v1/materials/featured
@@ -39,7 +39,50 @@ class API::V1::MaterialsController < API::APIController
     else
       materials.shuffle!
     end
-    
-    render json: materials_data(materials)
+
+    render json: materials_data(materials, params[:assigned_to_class])
+  end
+
+  def assign_to_class
+    # only add/delete if assign parameter exists to avoid deleting data on a bad request
+    status = 200
+    if params[:assign].present?
+      portal_clazz = Portal::Clazz.find(params[:class_id])
+
+      # allow only admins and the class teacher to assign
+      allow = current_visitor.has_role?('admin') || portal_clazz.is_teacher?(current_visitor)
+
+      if allow
+        portal_offering = portal_clazz.offerings.find_by_runnable_id_and_runnable_type(params[:material_id], params[:material_type])
+        if params[:assign]
+          if portal_offering.nil?
+            offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(portal_clazz.id, params[:material_type], params[:material_id])
+            if offering.position == 0
+              offering.position = portal_clazz.offerings.length
+              offering.save
+            end
+            prefix = "Assigned"
+          else
+            prefix = "Skipped assigning"
+          end
+        else
+          if portal_offering
+            portal_offering.delete
+            prefix = "Removed"
+          else
+            prefix = "Skipped removing"
+          end
+        end
+      else
+        prefix = "You are not allowed to assign/remove"
+        status = 403 # unauthorized
+      end
+      message = "#{prefix} #{params[:material_type]} with id of #{params[:material_id]} in class #{portal_clazz.id}"
+    else
+      message = "Missing assign parameter"
+      status = 400 # bad request
+    end
+
+    render json: {:message => message}, :status => status
   end
 end

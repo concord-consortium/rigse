@@ -6,7 +6,11 @@ window.MBCollectionsClass = React.createClass
   dataStateKey: 'collectionsData'
   dataUrl: Portal.API_V1.MATERIALS_BIN_COLLECTIONS
   requestParams: ->
-    id: @props.collections.map (c) -> c.id
+    if @props.assignToSpecificClass
+      id: @props.collections.map (c) -> c.id
+      assigned_to_class: @props.assignToSpecificClass
+    else
+      id: @props.collections.map (c) -> c.id
   # ---
 
   render: ->
@@ -20,6 +24,7 @@ window.MBCollectionsClass = React.createClass
             materials: collection.materials
             # Merge extra properties that can be provided in collections array.
             teacherGuideUrl: @props.collections[idx].teacherGuideUrl
+            assignToSpecificClass: @props.assignToSpecificClass
           )
       else
         (div {}, 'Loading...')

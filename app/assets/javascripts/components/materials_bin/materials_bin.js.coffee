@@ -85,6 +85,7 @@ window.MaterialsBinClass = React.createClass
                                       customClass: cellDef.className
                                       loginRequired: cellDef.loginRequired
                                       handleClick: @handleCellClick
+                                      assignToSpecificClass: @props.assignToSpecificClass
                                     },
                                     cellDef.category
                                   )
@@ -93,11 +94,12 @@ window.MaterialsBinClass = React.createClass
                                     key: rowIdx
                                     visible: visible
                                     collections: cellDef.collections
+                                    assignToSpecificClass: @props.assignToSpecificClass
                                   )
                                 else if cellDef.ownMaterials
-                                  (MBOwnMaterials key: rowIdx, visible: visible)
+                                  (MBOwnMaterials key: rowIdx, visible: visible, assignToSpecificClass: @props.assignToSpecificClass)
                                 else if cellDef.materialsByAuthor
-                                  (MBMaterialsByAuthor key: rowIdx, visible: visible)
+                                  (MBMaterialsByAuthor key: rowIdx, visible: visible, assignToSpecificClass: @props.assignToSpecificClass)
         if cellDef.children
           # Recursively go to children array, add its elements to column + 1
           # and mark them visible only if current cell is selected.
@@ -114,5 +116,8 @@ window.MaterialsBinClass = React.createClass
 
 window.MaterialsBin = React.createFactory MaterialsBinClass
 
-Portal.renderMaterialsBin = (definition, selectorOrElement) ->
-  React.render MaterialsBin(materials: definition), jQuery(selectorOrElement)[0]
+Portal.renderMaterialsBin = (definition, selectorOrElement, queryString = null) ->
+  queryString = window.location.search if queryString is null
+  matches = queryString.match(/assign_to_class=(\d+)/)
+  assignToSpecificClass = if matches then matches[1] else null
+  React.render MaterialsBin({materials: definition, assignToSpecificClass: assignToSpecificClass}), jQuery(selectorOrElement)[0]
