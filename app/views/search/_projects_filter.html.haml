@@ -6,4 +6,6 @@
     .tablecell
       = check_box_tag 'project_ids[]', project[:id], @form_model.project_ids.include?(project[:id].to_s), id: "project_#{project[:id]}", class: 'check-box-left-margin'
       = label_tag "project_#{project[:id]}", project[:name]
+      - if project[:landing_page_slug]
+        = link_to image_tag("external_link.png", border: 0), project[:landing_page_slug], title: "Visit #{project[:name]} project page", target: "_blank"
   %br
