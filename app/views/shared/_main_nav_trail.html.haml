@@ -5,7 +5,7 @@
     %span.hidden.doNotPrint
       Navigation:
     %ul.menu_h
-      %li#home.trail= link_to 'Home', home_path
+      %li#home.trail= link_to 'Home', current_visitor.has_active_classes? ? recent_activity_path : home_path
       = render :partial => 'shared/extra_nav'
       - unless @emulate_anonymous_user
         - anon_can_browse = current_settings ? current_settings.anonymous_can_browse_materials : true
