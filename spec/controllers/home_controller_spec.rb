@@ -11,6 +11,7 @@ describe HomeController do
     @test_settings.stub!(:anonymous_can_browse_materials).and_return(true)
     @test_settings.stub!(:allow_default_class).and_return(false)
     @test_settings.stub!(:allow_adhoc_schools).and_return(false)
+    @test_settings.stub!(:show_collections_menu).and_return(false)
     controller.stub(:before_render) {
       response.template.stub(:current_settings).and_return(@test_settings)
     }
@@ -25,9 +26,9 @@ describe HomeController do
 
     @test_settings.should_receive(:home_page_content).at_least(:once).and_return(content)
     @test_settings.stub(:name).and_return("Test Settings")
-    
+
     get :index
-    
+
     response.body.should include(content)
   end
 

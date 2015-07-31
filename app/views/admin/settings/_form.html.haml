@@ -75,6 +75,9 @@
             %br
             (This option changes whether or not Search will appear in the nav bar for anonymous users.)
           %li
+            = f.label :show_collections_menu, "Show Collections Menu:", :style => "display:inline;"
+            = f.check_box :show_collections_menu
+          %li
             = f.label :enabled_bookmark_types,  "Enabled bookmark types"
             = f.select(:enabled_bookmark_types, admin_settings.available_bookmark_types.map { |b| [b,b]}, {},{ :class => ".chzn-select", :multiple => true})
           = content_for "admin_settings_form_#{admin_settings.id || 'new'}"

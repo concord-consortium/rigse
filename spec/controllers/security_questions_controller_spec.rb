@@ -12,6 +12,7 @@ describe SecurityQuestionsController do
     @test_settings.stub!(:help_type).and_return('no help')
     @test_settings.stub!(:enabled_bookmark_types).and_return([])
     @test_settings.stub!(:anonymous_can_browse_materials).and_return(true)
+    @test_settings.stub!(:show_collections_menu).and_return(false)
     Admin::Settings.stub(:default_settings).and_return(@test_settings)
   end
 

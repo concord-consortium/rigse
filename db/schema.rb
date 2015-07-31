@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150724113107) do
+ActiveRecord::Schema.define(:version => 20150730183058) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -128,6 +128,7 @@ ActiveRecord::Schema.define(:version => 20150724113107) do
     t.boolean  "anonymous_can_browse_materials",               :default => true
     t.string   "jnlp_url"
     t.integer  "default_project_id"
+    t.boolean  "show_collections_menu",                        :default => false
   end
 
   create_table "admin_settings_vendor_interfaces", :force => true do |t|
@@ -1948,7 +1949,6 @@ ActiveRecord::Schema.define(:version => 20150724113107) do
   end
 
   add_index "portal_offerings", ["clazz_id"], :name => "index_portal_offerings_on_clazz_id"
-  add_index "portal_offerings", ["runnable_id", "runnable_type"], :name => "runnable"
 
   create_table "portal_permission_forms", :force => true do |t|
     t.string   "name"
@@ -1972,7 +1972,6 @@ ActiveRecord::Schema.define(:version => 20150724113107) do
 
   add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
   add_index "portal_school_memberships", ["school_id", "member_id", "member_type"], :name => "school_memberships_long_idx"
-  add_index "portal_school_memberships", ["school_id"], :name => "index_portal_school_memberships_on_school_id"
 
   create_table "portal_schools", :force => true do |t|
     t.string   "uuid",           :limit => 36
@@ -2542,7 +2541,6 @@ ActiveRecord::Schema.define(:version => 20150724113107) do
 
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
   add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
-  add_index "taggings", ["tagger_id", "tagger_type"], :name => "index_taggings_on_tagger_id_and_tagger_type"
 
   create_table "tags", :force => true do |t|
     t.string "name"

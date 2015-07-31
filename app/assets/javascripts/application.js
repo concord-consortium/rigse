@@ -61,4 +61,5 @@
 = require 'component'
 = require 'jquery_nested_form'
 = require 'main_nav_more_menu'
+= require 'main_nav_collections_menu'
 */
