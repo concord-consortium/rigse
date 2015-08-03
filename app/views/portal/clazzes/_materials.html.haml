@@ -19,17 +19,7 @@
       %br.clearboth
       - if clazz_offerings.length > 0
         %div.clearboth
-          %div.scrollertab.tableft
-            &#9664;
-          %div{:id=>"oTabcontainer"}
-            %table{:border=>0,:cellpadding=>0,:cellspacing=>0}
-              %tr
-                - clazz_offerings.each do |offering|
-                  %td
-                    .tab{:id=>"material_tab_#{offering.id}", :title=>"#{offering.name}"}
-                      = offering.name
-          %div.scrollertab.tabright
-            &#9654;
+          =select_tag('material_select', options_for_select(clazz_offerings.map { |o| [o.name, "material_tab_#{o.id}_data"] }))
         .data_container_header.clearboth
           &nbsp;
         %div.data_container

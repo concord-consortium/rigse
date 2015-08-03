@@ -8,26 +8,31 @@ Then /^A report window opens of offering "(.+)"$/ do |offering|
   end
 end
 
-And /^(?:|I )click the tab of Instructional Materials with text "(.+)"$/ do |text|
+And /^(?:|I )select the option of Instructional Materials with text "(.+)"$/ do |text|
   script_text = "
-    var arrTabs = $$('#oTabcontainer div.tab');
-    arrTabs = arrTabs.concat( $$('#oTabcontainer div.selected_tab') );
-    var strTabText = null;
-    for (var i = 0; i < arrTabs.length; i++)
-    {
-      strTabText = arrTabs[i].innerHTML.stripTags().strip();
-      if (strTabText == '#{text}')
+    var materialOptions = $$('select#material_select > option'),
+        materialSelect = $$('select#material_select');
+    for (var i = 0; i < materialOptions.length; i++) {
+      if (materialOptions[i].innerHTML.stripTags().strip() == '#{text}')
       {
-        arrTabs[i].simulate('click');
+        materialSelect[0].value = materialOptions[i].value;
+        if (document.createEvent) {
+          var evt = document.createEvent('HTMLEvents');
+          evt.initEvent('change', true, true);
+          materialSelect[0].dispatchEvent(evt);
+        }
+        else if (element.fireEvent) {
+            return materialSelect[0].fireEvent('onChange');
+        }
         return true;
       }
     }
     return false;
   "
   result = page.execute_script(script_text)
-  
+
    raise 'Tab switch failed' if result == false
-  
+
 end
 
 And /^(?:|I )should see progress bars for the students$/ do
@@ -46,7 +51,7 @@ And /^(?:|I )should see progress bars for the students$/ do
     }
     return bProgressBarWidthIncreased;
   ")
-  
+
    raise 'Progress bar fail' if result == false
 
 end

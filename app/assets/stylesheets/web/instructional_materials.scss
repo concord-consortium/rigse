@@ -130,7 +130,7 @@
   text-align:center;
   color:white
   /* Saf3+, Chrome */ }
-  
+
 .linkbutton > a{
   color:White;
 }
@@ -228,7 +228,7 @@
   text-align: left;
   vertical-align:top;
   width:90px;
-  
+
 }
 .investigation_activities {
   vertical-align:top;
@@ -338,4 +338,10 @@ th.activity.expand_collapse_text div.progressbar_container {height:20px;padding-
 .msg_popup_ok_button
 {
   margin-left:180px;
+}
+
+select#material_select {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 5px;
 }

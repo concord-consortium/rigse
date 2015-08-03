@@ -1,42 +1,10 @@
-function showInstructionalMaterial(oMaterialTab){
-    setTableHeaders(1);
-    var oSelectedTab = $$('.selected_tab')[0];
-    if(oSelectedTab){
-        oSelectedTab.removeClassName('selected_tab');
-        oSelectedTab.addClassName('tab');
-        $(oSelectedTab.id + "_data").hide();
-    }
-    
-    oMaterialTab.removeClassName('tab');
-    oMaterialTab.addClassName('selected_tab');
-    $(oMaterialTab.id + "_data").show();
-    
-    setTableHeaders();
-}
-
-function startScroll(direction,size){
-    oTimer = setInterval(function(){ 
-        var scroller = document.getElementById('oTabcontainer');
-        if (direction == 'l') {
-            scroller.scrollLeft -= size;
-        }
-        else if (direction == 'r') {
-            scroller.scrollLeft += size;
-        }
-    },20);
-}
-
-function stopScroll(){
-    clearTimeout(oTimer);
-}
-
 function showHideActivityButtons(investigation_id, oLink){
     var bVisible = false;
     $$('.activitybuttoncontainer_'+investigation_id).each(function(oButtonContainer){
         oButtonContainer.toggle();
         bVisible = bVisible || oButtonContainer.getStyle('display')=='none';
     });
-    
+
     var strLinkText = "";
     var strExpandCollapseText = "";
     if(bVisible){
@@ -47,7 +15,7 @@ function showHideActivityButtons(investigation_id, oLink){
         strLinkText = "Hide Activities";
         strExpandCollapseText = "-";
     }
-    
+
     $('oExpandCollapseText_'+investigation_id).update(strExpandCollapseText);
     oLink.update(strLinkText);
 }
@@ -60,7 +28,7 @@ function showHideActivityDetails(investigation_id, oLink, strURL){
         oButtonContainer.toggle();
         bVisible = bVisible || oButtonContainer.getStyle('display')=='none';
     });
-    
+
     var strLinkText = "";
     var strExpandCollapseText = "";
     if(bVisible){
@@ -71,40 +39,31 @@ function showHideActivityDetails(investigation_id, oLink, strURL){
         strLinkText = "Hide detail";
         strExpandCollapseText = "-";
     }
-    
+
     $('oExpandCollapseText_'+investigation_id).update(strExpandCollapseText);
     oLink.update(strLinkText);
-    
+
     if($('DivHideShowDetail'+investigation_id).children.length === 0)
         new Ajax.Request(strURL, {asynchronous:true, evalScripts:true, method:'post'});
-    
+
     setRecentActivityTableHeaders(null,investigation_id);
 }
 
 
-function setSelectedTab(strTabID){
-    $(strTabID).simulate('click');
-    $$('.scrollertab').each(function(oTab){
-        var strDirection = oTab.hasClassName('tableft')? "l" : "r";
-        oTab.observe('mouseover',function(){
-            startScroll(strDirection,5);
-        });
-        oTab.observe('mouseout',stopScroll);
-    });
-}
-
+// handle the material select
 document.observe("dom:loaded", function() {
-    var arrTabs = $$('#oTabcontainer .tab');
-    arrTabs.each(function(oTab){
-        oTab.observe('click',function(){
-            showInstructionalMaterial(oTab);
+    var materialSelect = $$("select#material_select");
+    if (materialSelect.length > 0) {
+        var dataContainers = $$('.data_container > div');
+        if (dataContainers.length > 0) {
+            $(dataContainers[0]).show();
+        }
+        materialSelect.each(function(oSelect){
+            oSelect.observe('change', function() {
+                dataContainers.each(Element.hide);
+                $($(this).getValue()).show();
+            });
         });
-    });
-    setTableHeaders(1);
-    if (arrTabs.length > 0)
-    {
-        var strTabID = arrTabs[0].id;
-        setSelectedTab(strTabID);
     }
 
 });
@@ -126,7 +85,7 @@ function setTableHeaders(iDefaultWidth)
             oChild.setStyle({'width':iWidth+'px'});
         }
     });
-    
+
     $$("th.expand_collapse_text > div.progressbar_container").each(function(oTitle){
         oTitle.setStyle({'display':''});
     });
@@ -149,7 +108,7 @@ function setRecentActivityTableHeaders(iDefaultWidth,offering_id)
             oChild.setStyle({'width':iWidth+'px'});
         }
     });
-    
+
     $$("th.expand_collapse_text > div.progressbar_container").each(function(oTitle){
         oTitle.setStyle({'display':''});
     });
@@ -167,7 +126,7 @@ function openReportLinkPopup(descriptionText)
         content: popupHtml,
         type: Lightbox.type.ALERT
     });
-    
+
     return;
 }
 
