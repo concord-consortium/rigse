@@ -7,9 +7,9 @@
       = f.error_messages
     .right
       = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
-      .header Instructional Materials
+      .header Instructional Materials for #{portal_clazz.name}
       %br
-      %table.classdata
+      %table.classdata.classdata-buttons
         %tr
           %td
             = link_to 'Manage Materials', edit_portal_clazz_url(portal_clazz), :class=>"button pie"
