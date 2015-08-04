@@ -24,16 +24,16 @@ And /^I move "(.+)" to the top of the list with id "(.+)"$/ do|sortable_name, id
                             break;
                           }
                        }
-                       var listFirstChild = arrListChildren[0]; 
+                       var listFirstChild = arrListChildren[0];
                        if(offeringToMove && offeringToMove != listFirstChild)
                        {
                         sortableList.removeChild(offeringToMove);
                         sortableList.insertBefore(offeringToMove,listFirstChild);
                        }
-                       
+
                        "
                      )
-end  
+end
 
 And /^the Manage class list state starts saving$/ do
   page.execute_script("SaveManageClassListState();")
@@ -53,7 +53,7 @@ Then /^"(.+)" should be the first on the list with id "(.+)"$/ do|class_name, id
                                  {
                                     bSortSuccess = true;
                                  }
-                                 return bSortSuccess; 
+                                 return bSortSuccess;
                               ")
   raise 'Not first on the list' if result == false
 end
@@ -68,9 +68,9 @@ Then /^"(.+)" should be the last on the list with id "(.+)"$/ do|class_name, id_
                                  {
                                     bSortSuccess = true;
                                  }
-                                 return bSortSuccess; 
+                                 return bSortSuccess;
                               ")
-  raise 'Not last on the list' if result == false                                
+  raise 'Not last on the list' if result == false
 end
 
 
@@ -89,10 +89,10 @@ end
 
 And /^there should be no student in "(.+)"$/ do |class_name|
   click_link(class_name)
-  page.has_content?('No students registered for this class yet.')  
+  page.has_content?('No students registered for this class yet.')
 end
 
-Given /^the mixed runnable types class exists$/ do 
+Given /^the mixed runnable types class exists$/ do
   require 'mock_data'
   @mixed_runnable_type_clazz = MockData.load_mixed_runnable_type_class
   @mixed_runnable_type_clazz.teachers << User.find_by_login("teacher").portal_teacher
@@ -105,15 +105,15 @@ Then /^I can view a report for materials in the mixed runnable type class$/ do
 
   offering_names = @mixed_runnable_type_clazz.offerings.map{|o| o.name}
 
-  offering_names.each { |name| 
+  offering_names.each { |name|
     # it starts out with the first tab selected so we don't need to click in that case
     if name != offering_names.first
-      step "I click the tab of Instructional Materials with text \"#{name}\""
+      step "I select the option of Instructional Materials with text \"#{name}\""
     end
 
     if first('a', :text => "Run Report", :visible => true)
       click_link("Run Report")
-      new_window=page.driver.browser.window_handles.last 
+      new_window=page.driver.browser.window_handles.last
       page.within_window new_window do
         page.should have_content("Report")
       end

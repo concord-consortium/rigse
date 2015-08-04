@@ -146,6 +146,15 @@ Then /^(?:|I )should see "([^"]*)" (\d+) times?$/ do |text, count|
   (page.find(:xpath, '//body').text.split(text).length - 1).should == count.to_i
 end
 
+Then /^(?:|I )should see an option for "([^"]*)" in (.*[^:])$/ do |option, select_name|
+  select = selector_for(select_name)
+  if page.respond_to? :should
+    page.should have_select(select, :with_options => [option])
+  else
+    assert page.has_select?(select, :with_options => [option])
+  end
+end
+
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
   if page.respond_to? :should
     page.should have_content(text)
@@ -227,7 +236,7 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label
     end
   end
 end
- 
+
 Then /^(?:|I )should be on (.+)$/ do |page_name|
   # often path_to does a DB lookup, and often this is called while the page is still loading
   # since there is only a single DB connection this can result in 2 threads trying to use the same connection at once
@@ -251,8 +260,8 @@ Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
   query = URI.parse(current_url).query
   actual_params = query ? CGI.parse(query) : {}
   expected_params = {}
-  expected_pairs.rows_hash.each_pair{|k,v| expected_params[k] = v.split(',')} 
-  
+  expected_pairs.rows_hash.each_pair{|k,v| expected_params[k] = v.split(',')}
+
   if actual_params.respond_to? :should
     actual_params.should == expected_params
   else
@@ -268,10 +277,10 @@ end
 And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
   page.execute_script("
     var bSuccess = false;
-    
+
     var strDropdownId = '#{dropdown_id}_chzn';
-    var arrListItems =  Prototype.Selector.select('#'+ strDropdownId +'> div.chzn-drop > ul.chzn-results > li');    
-    
+    var arrListItems =  Prototype.Selector.select('#'+ strDropdownId +'> div.chzn-drop > ul.chzn-results > li');
+
     for (var i = 0; i < arrListItems.length; i++)
     {
       if (arrListItems[i].innerHTML.stripTags().strip() == '#{label}')
@@ -281,7 +290,7 @@ And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
         break;
       }
     }
-    
+
     return bSuccess;
   ")
 end
