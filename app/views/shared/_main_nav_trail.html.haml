@@ -1,4 +1,4 @@
-- show_collections_menu = (current_settings ? current_settings.show_collections_menu : false) && (current_visitor.has_role?('admin') || current_visitor.portal_teacher) && (current_visitor.projects_with_landing_pages.length > 0)
+- show_collections_menu = (current_settings ? current_settings.show_collections_menu : false) && (current_visitor.has_role?('admin') || current_visitor.portal_teacher) && (Admin::Project.with_landing_pages.length > 0)
 
 - unless current_visitor.has_role?('guest')
   #nav_top
