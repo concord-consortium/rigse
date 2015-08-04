@@ -1,0 +1,22 @@
+- projects_with_landing_pages = Admin::Project.with_landing_pages
+- if projects_with_landing_pages.length > 0
+  %div.project_cards
+    %h3 Collections
+    %div
+      Click on one of the projects below to learn more about it or
+      =link_to "search for materials", search_path
+      to use in your class.
+
+    - projects_with_landing_pages.each do |project_with_landing_page|
+      %div.project_card
+        - if project_with_landing_page.project_card_image_url.present?
+          =link_to image_tag(project_with_landing_page.project_card_image_url), project_page_url(project_with_landing_page.landing_page_slug)
+        %div.project_card_footer
+          %div.project_card_title
+            =project_with_landing_page.name
+          - if project_with_landing_page.project_card_description.present?
+            %div.project_card_blurb
+              =project_with_landing_page.project_card_description
+          %div.project_card_learn_more
+            =link_to "Learn More", project_page_url(project_with_landing_page.landing_page_slug)
+

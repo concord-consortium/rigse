@@ -38,4 +38,4 @@
   #collections_menu
     %ul
       - Admin::Project.with_landing_pages.each do |project|
-        %li= link_to project.name, "/#{project.landing_page_slug}"
+        %li= link_to project.name, project_page_url(project.landing_page_slug)
