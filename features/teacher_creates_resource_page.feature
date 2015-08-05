@@ -41,21 +41,6 @@ Feature: A teacher creates a resource page
     Then I should see "draft page A"
     And I should see "draft page B"
 
-  Scenario: The teacher can see their resource pages on the homepage
-    Given the following teachers exist:
-      | login         | password        |
-      | teacherA      | teacher         |
-    And the following resource pages exist:
-      | name              | publication_status  | user      |
-      | published page A  | published           | teacherA  |
-      | draft page A      | draft               | teacherA  |
-      | private page A    | private             | teacherA  |
-    And I am logged in with the username teacherA
-    When I am on the homepage
-    Then I should see "published page A"
-    And I should see "private page A"
-    Then I should see "draft page A"
-
   Scenario: The teacher can search for resource pages
     Given the following teachers exist:
       | login         | password        |

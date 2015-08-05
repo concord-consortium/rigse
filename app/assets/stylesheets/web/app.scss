@@ -1823,5 +1823,40 @@ p.school_description {
   margin-bottom : 0;
 }
 
+.project_cards {
+  .project_card {
+    float: left;
+    width: 220px;
+    margin: 10px;
+    background-color: #eee;
 
+    img {
+      border: 0;
+    }
+    .project_card_footer {
+      padding: 10px;
+      font-family: Verdana, sans-serif;
+
+      .project_card_title {
+        margin: 0 10px 10px 10px;
+        font-size: 18px;
+        color: #e16a3e;
+      }
+      .project_card_blurb {
+        margin: 10px;
+        font-size: 14px;
+      }
+      .project_card_learn_more {
+        margin: 10px;
+        font-size: 12px;
+        float: right;
+      }
+
+    }
+  }
+
+  .project_card:hover {
+    background-color: #ccc;
+  }
+}
 

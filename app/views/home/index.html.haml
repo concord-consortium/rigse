@@ -7,9 +7,10 @@
 - if @portal_student
   - role_partials << "student"
 
-/ reorder author to the end
-- if role_partials.delete("author")
-  - role_partials << "author"
+/ remove author
+- role_partials.delete("author")
 
 - role_partials.each do |role|
   = render :partial => role
+
+= render :partial => "project_cards"

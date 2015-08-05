@@ -3,14 +3,18 @@
 -# in more than one school. They think that their account is locked
 -# into just one school.
 %h3= "Welcome, #{teacher.name}"
-%p
-  To get started, 
-  =link_to("create a class",new_portal_clazz_path) + "."
-  Once you have created your class(es) you will be able to assign 
-  = t(:investigation).pluralize.capitalize
-  to your students.
+- if current_user.has_active_classes?
+  %p
+    Your classes are listed in the left-hand column on this page.
+- else
+  %p
+    To get started,
+    =link_to("create a class",new_portal_clazz_path) + "."
+    Once you have created your class(es) you will be able to assign
+    = t(:investigation).pluralize.capitalize
+    to your students.
 
-%p
-  Your classes will be listed in the left-hand column on this page. Click on the class name to assign 
-  = "#{t(:investigation).pluralize.capitalize}."
+  %p
+    Your classes will be listed in the left-hand column on this page. Click on the class name to assign
+    = "#{t(:investigation).pluralize.capitalize}."
 

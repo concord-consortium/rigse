@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150730183058) do
+ActiveRecord::Schema.define(:version => 20150805141107) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -92,10 +92,12 @@ ActiveRecord::Schema.define(:version => 20150730183058) do
 
   create_table "admin_projects", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
     t.string   "landing_page_slug"
     t.text     "landing_page_content"
+    t.string   "project_card_image_url"
+    t.string   "project_card_description"
   end
 
   add_index "admin_projects", ["landing_page_slug"], :name => "index_admin_projects_on_landing_page_slug", :unique => true

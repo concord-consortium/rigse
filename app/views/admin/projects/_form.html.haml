@@ -19,6 +19,12 @@
           Landing page content:
           = f.text_area :landing_page_content, class: 'mceNoEditor'
         %li
+          Project card image url:
+          = f.text_field :project_card_image_url
+        %li
+          Project card description:
+          = f.text_area :project_card_description
+        %li
           Links:
         = nested_form_for project do |f|
           = f.fields_for :links do |link_form|
