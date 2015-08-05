@@ -237,13 +237,18 @@ class Activity < ActiveRecord::Base
 
     activity_json[:type] = "LightweightActivity"
     activity_json[:export_site] = "ITSI"
+    activity_json[:is_official] = self.is_exemplar
     activity_json[:username] = self.user.login
     activity_json[:user_email] = self.user.email
     activity_json[:user_page_url] = self.user.user_page_url
+    activity_cohorts = []
     if options["activity_type"] != "prepost"
       self.pages.each do |page|
         activity_json[:pages] << page.export_as_lara_activity(page_position) 
         page_position += 1
+        page.cohorts.each do |coh|
+          activity_cohorts << coh.name
+        end
       end
       activity_json[:editor_mode] = Activity::ITSI_EDITOR_MODE
       activity_json[:theme_name] = "ITSI"
@@ -258,7 +263,11 @@ class Activity < ActiveRecord::Base
       activity_json[:publication_status] = test_page.publication_status
       activity_json[:grade_levels] = test_page.grade_levels.map { |tc| Activity::GRADE_LEVEL_FOR_PORTAL[tc.name] }.flatten.compact
       activity_json[:subject_areas] = test_page.subject_areas.map { |tc| tc.name }
+      test_page.cohorts.each do |coh|
+        activity_cohorts << coh.name
+      end
     end
+    activity_json[:cohorts] = activity_cohorts.uniq if activity_cohorts.size > 0
     return activity_json
   end
 
