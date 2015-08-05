@@ -62,4 +62,5 @@
 = require 'jquery_nested_form'
 = require 'main_nav_more_menu'
 = require 'main_nav_collections_menu'
+= require 'poll_to_update_student_data_percentages'
 */

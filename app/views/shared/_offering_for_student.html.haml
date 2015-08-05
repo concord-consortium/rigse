@@ -10,7 +10,7 @@
           - if offering.icon_image
             %img{:src => offering.icon_image, :width => '100%'}
       %td
-        .offering_for_student
+        .offering_for_student{ :data => { :offering_id => offering.id }}
           %p
             %span.type= runnable_type_label(offering) + ":"
             %span.name= offering.name
@@ -27,11 +27,10 @@
                 Please wait while your activity loads
                 %span.wait_counter
           .status_graphs
-            - if student_status.never_run
-              .not_run
-                You haven't started this yet.
-            - else
-              - percentage = student_status.complete_percent
+            .not_run{style: "display: #{student_status.never_run ? 'block' : 'none'}"}
+              You haven't started this yet.
+            - percentage = student_status.complete_percent
+            .run_graph{style: "display: #{student_status.never_run ? 'none' : 'block'}"}
               %table.status_graphs
                 %tr.summary
                   %td.disclosure_widget

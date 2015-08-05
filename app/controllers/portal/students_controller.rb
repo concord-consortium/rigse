@@ -5,6 +5,14 @@ class Portal::StudentsController < ApplicationController
 
   public
 
+  def status
+    result = Portal::Student.find(params[:id]).status
+    respond_to do |format|
+      format.xml { render :xml => result }
+      format.json { render :json => result }
+    end
+  end
+
   def index
     @portal_students = Portal::Student.all
 
