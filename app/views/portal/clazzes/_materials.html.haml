@@ -28,3 +28,5 @@
         %div.messagetext= t('class_materials.no_assignments')
       = f.hidden_field :teacher_id
       = f.hidden_field :id
+:javascript
+  new Chosen($('material_select'));
