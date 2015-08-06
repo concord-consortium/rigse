@@ -60,6 +60,19 @@ class Portal::Student < ActiveRecord::Base
     return generated_login
   end
 
+  def status
+    report_learners = Report::Learner.where(:student_id => self.id).map do |learner|
+      {
+        :offering_id => learner.offering_id,
+        :complete_percent => learner.complete_percent,
+        :last_run => learner.last_run_string
+      }
+    end
+    {
+      :report_learners => report_learners
+    }
+  end
+
   def update_report_permissions(permission_form)
     report_learners = Report::Learner.where(:student_id => self.id)
     report_learners.each { |l| l.update_permission_forms; l.save }

@@ -34,6 +34,19 @@ class Report::Learner < ActiveRecord::Base
     return true
   end
 
+  def last_run_string(opts={})
+    return Report::Learner.build_last_run_string(last_run, opts)
+  end
+
+  def self.build_last_run_string(last_run, opts={})
+    not_run_str = "not yet started" || opts[:not_run]
+    prefix      = "Last run"        || opts[:prefix]
+    format      = "%b %d, %Y"       || opts[:format]
+
+    return not_run_str if !last_run
+    return "#{prefix} #{last_run.strftime(format)}"
+  end
+
   def calculate_last_run
     bundle_logger = self.learner.bundle_logger
     pub_logger = self.learner.periodic_bundle_logger

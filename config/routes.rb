@@ -25,7 +25,6 @@ RailsPortal::Application.routes.draw do
   match '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report, :method => :get
   match '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report, :method => :get
 
-
   post "help/preview_help_page"
   post "home/preview_home_page"
 
@@ -237,6 +236,7 @@ RailsPortal::Application.routes.draw do
         member do
           get :ask_consent
           put :update_consent
+          get :status
         end
       end
 

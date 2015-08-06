@@ -83,6 +83,14 @@ Then /^I should not see the run link for "([^"]*)"$/ do | runnable_name |
   page.should_not have_content(runnable_name)
 end
 
+Then /^I should see a link to generate a report of my work$/ do
+  page.should have_selector("div.run_graph", text: /generate a report of my work/i, visible: true)
+end
+
+Then /^I should not see a link to generate a report of my work$/ do
+  page.should_not have_selector("div.run_graph", text: /generate a report of my work/i, visible: true)
+end
+
 Given /^the student report is disabled for the (activity|investigation|external activity) "([^"]+)"$/ do |type, name|
   material = nil
   case type
