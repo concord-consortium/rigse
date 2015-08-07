@@ -352,6 +352,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def role_names
+    roles.select(:title).all.map { |role| role.title }
+  end
+
   def make_user_a_member
     self.add_role('member')
   end

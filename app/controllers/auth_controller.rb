@@ -59,6 +59,7 @@ class AuthController < ApplicationController
         :full_name  => current_user.name,
         :username   => current_user.login,
         :user_id    => current_user.id,
+        :roles      => current_user.role_names,
         :domain     => request.host_with_port
       }
     }
