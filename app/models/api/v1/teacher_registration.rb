@@ -17,6 +17,13 @@ class API::V1::TeacherRegistration < API::V1::UserRegistration
     user.portal_teacher = @teacher = Portal::Teacher.new(:user => user)
     @teacher.schools << Portal::School.find(self.school_id)
     @teacher.save!
+
+    # add is_author to teachers if portal setting is true
+    settings = Admin::Settings.default_settings
+    if settings && settings.auto_set_teachers_as_authors
+      user.add_role("author")
+    end
+
     # We need to send / receive confirmation email before: user.confirm!
     return true
   end

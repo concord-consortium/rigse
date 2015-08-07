@@ -12,6 +12,7 @@ describe HomeController do
     @test_settings.stub!(:allow_default_class).and_return(false)
     @test_settings.stub!(:allow_adhoc_schools).and_return(false)
     @test_settings.stub!(:show_collections_menu).and_return(false)
+    @test_settings.stub!(:auto_set_teachers_as_authors).and_return(false)
     controller.stub(:before_render) {
       response.template.stub(:current_settings).and_return(@test_settings)
     }
