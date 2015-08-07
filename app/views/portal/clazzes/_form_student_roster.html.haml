@@ -24,7 +24,7 @@
             - if !current_settings.allow_default_class
               = student_add_dropdown(portal_clazz)
             - else
-              "If a student already has an account, ask the student to enter the Class Word above"
+              "Please register students or have them self-register with the class word in order to add them to this class"
           %td.hide_in_print{:style=>"text-align:right"}
             - add_student_url = new_portal_student_path(:clazz_id => portal_clazz.id)
             = link_to "Register and add new student", "#", :title => "Add a student to #{portal_clazz.name}",:class=>"button", :onClick=>"get_Add_Register_Student_Popup(\"#{add_student_url}\")"
