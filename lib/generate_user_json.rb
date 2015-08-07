@@ -5,9 +5,10 @@ class GenerateUserJSON < Struct.new(:export_id,:user_id)
     users_json = {}
     users_json[:users] = []
     User.find_each do |user|
-      next if user.portal_student || user.state == "pending"
+      is_portal_teacher = user.portal_teacher ? true : false
+      next if (user.portal_student && !is_portal_teacher) || user.state == "pending"
       user_data = user.as_json(:only => [:first_name,:last_name,:login,:email])
-      user_data[:teacher] = user.portal_teacher ? true : false
+      user_data[:teacher] = is_portal_teacher
       user_data[:school] = user.school ? user.school.as_json(:only => [:name,:ncessch,:state]) : nil
       if user.school
         user_data[:school][:url] = "#{APP_CONFIG[:site_url]}/portal/schools/#{user.school.id}"
