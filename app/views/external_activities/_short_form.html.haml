@@ -1,5 +1,6 @@
 = form_for(@external_activity) do |f|
   = f.error_messages
+  = hidden_field(:redirect_to, :url, :value => redirect_to)
   = edit_menu_for(@external_activity, f)
   = field_set_tag 'Publication status' do
     = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
