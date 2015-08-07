@@ -145,6 +145,16 @@
                     No
                   (Collections menu will appear in the navbar.)
               %li
+                Auto set new teachers as authors:
+                - if admin_settings.auto_set_teachers_as_authors?
+                  %b
+                    Yes
+                  (Teachers will automatically become authors when they register.)
+                - else
+                  %b
+                    No
+                  (Teachers will not automatically become authors when they register.)
+              %li
                 Enabled Bookmark Types:
                 %b= admin_settings.enabled_bookmark_types.join(', ')
               = content_for "admin_settings_show_#{admin_settings.id || 'new'}"

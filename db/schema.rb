@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150805141107) do
+ActiveRecord::Schema.define(:version => 20150807134029) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(:version => 20150805141107) do
     t.string   "jnlp_url"
     t.integer  "default_project_id"
     t.boolean  "show_collections_menu",                        :default => false
+    t.boolean  "auto_set_teachers_as_authors",                 :default => false
   end
 
   create_table "admin_settings_vendor_interfaces", :force => true do |t|
