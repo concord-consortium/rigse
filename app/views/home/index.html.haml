@@ -13,4 +13,5 @@
 - role_partials.each do |role|
   = render :partial => role
 
-= render :partial => "project_cards"
+- if !@portal_student
+  = render :partial => "project_cards"
