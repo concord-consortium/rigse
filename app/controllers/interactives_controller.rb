@@ -138,7 +138,7 @@ class InteractivesController < ApplicationController
 
               interactive = Interactive.new(model.except(:model_type))
               interactive.user = current_visitor
-              interactive.publication_status = "draft"
+              interactive.publication_status = "published"
 
               if model[:model_type]
                 new_admin_tag = {:scope => "model_types", :tag => model[:model_type]}
