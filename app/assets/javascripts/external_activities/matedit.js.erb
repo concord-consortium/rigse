@@ -9,7 +9,7 @@ function get_edit_resource_popup(external_activity_id, popup_options){
     var target_url = "<%= URLResolver.getUrl('edit_external_activity_path',:id => 999) %>";
     target_url = target_url.replace('999',external_activity_id);
     if (popup_options && popup_options.use_short_form) {
-      target_url += "?use_short_form=1"
+      target_url += "?use_short_form=1&redirect_to=" + window.location
     }
     var options = {
         method: 'get',

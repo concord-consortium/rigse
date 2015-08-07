@@ -131,7 +131,7 @@ class ExternalActivitiesController < ApplicationController
   def edit
     @external_activity = ExternalActivity.find(params[:id])
     if request.xhr?
-      render :partial => (params['use_short_form'] ? 'short_form' : 'form')
+      render :partial => (params['use_short_form'] ? 'short_form' : 'form'), :locals => {:redirect_to => params['redirect_to']}
     end
   end
 
@@ -214,7 +214,12 @@ class ExternalActivitiesController < ApplicationController
       respond_to do |format|
         if @external_activity.update_attributes(params[:external_activity])
           flash[:notice] = 'ExternalActivity was successfully updated.'
-          format.html { redirect_to(@external_activity) }
+          if params.has_key?(:redirect_to) && params[:redirect_to].has_key?(:url)
+            redirect_url = params[:redirect_to][:url]
+          else
+            redirect_url = @external_activity
+          end
+          format.html { redirect_to(redirect_url) }
           format.xml  { head :ok }
         else
           format.html { render :action => "edit" }
