@@ -257,6 +257,8 @@ class Activity < ActiveRecord::Base
       activity_json[:subject_areas] = self.subject_areas.map { |tc| tc.name }
     else
       test_page = Page.find(options["page_id"])
+      #Mark published pre/post tests as official during export
+      activity_json[:is_official] = true if test_page.publication_status == "published"
       activity_json[:pages] << test_page.export_as_lara_activity(page_position)
       activity_json[:name] = test_page.name
       activity_json[:theme_name] = "ITSI-SURVEY"
