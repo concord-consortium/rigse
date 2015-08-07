@@ -152,8 +152,19 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       respond_to do |format|
         if @user.update_attributes(params[:user])
-          @user.set_role_ids(params[:user][:role_ids] || [])
-          @user.set_project_ids(params[:user][:project_ids] || [])
+
+          # This update method is shared with admins using users/edit and users using users/preferences.
+          # Since the values are checkboxes we can't use the absense of them to denote there are no
+          # roles or projects in the form since unchecked checkboxes are not part of the post body.
+          # We also can't just rely on the current user role as they may be changing their own preferences
+          if current_visitor.has_role?("admin", "manager")
+            if params[:user][:has_roles_in_form]
+              @user.set_role_ids(params[:user][:role_ids] || [])
+            end
+            if params[:user][:has_projects_in_form]
+              @user.set_project_ids(params[:user][:project_ids] || [])
+            end
+          end
 
           # set the cohort tags if we have a teacher
           if @user.portal_teacher && params[:update_cohorts]
