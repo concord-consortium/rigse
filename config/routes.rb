@@ -171,6 +171,7 @@ RailsPortal::Application.routes.draw do
         end
 
         collection do
+          get :info
           #get :manage_classes, :path => 'manage'
           match 'manage', :to => 'clazzes#manage_classes'
           #post :manage_classes_save, :as => 'manage_save'

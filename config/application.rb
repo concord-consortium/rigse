@@ -116,10 +116,12 @@ module RailsPortal
 
     config.middleware.insert_before 0, Rack::Cors do
 
-      # always allow export access to the model library
       allow do
         origins '*'
+        # always allow export access to the model library
         resource '/interactives/export_model_library', :headers => :any, :methods => :get
+        # always allow access to the class#info
+        resource '/portal/classes/info', :headers => :any, :methods => :get
       end
 
       # Set up custom CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".

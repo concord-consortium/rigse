@@ -609,4 +609,36 @@ class Portal::ClazzesController < ApplicationController
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS'])
   end
+
+  # this is used by the iSENSE interactive and app inorder to get information
+  # about the class given the class_word. It does not require authorization
+  # because the user needs to know the classword.
+  # Most of this information is already available just by signing up as a student
+  # and entering in the class word.
+  def info
+    # look up the class with the class word and return a json object
+    clazz = Portal::Clazz.find_by_class_word(params[:class_word])
+
+    if clazz
+      state = nil
+      if school = clazz.school
+        state = school.state
+      end
+
+      render :json => {
+        :uri => url_for(clazz),
+        :name => clazz.name,
+        :state => state,
+        :teachers => clazz.teachers.map{|teacher|
+          {
+            :id => url_for(teacher.user),
+            :first_name => teacher.user.first_name,
+            :last_name => teacher.user.last_name
+          }
+        }
+      }
+    else
+      render :json => {:error => "No class found"}, :status => :not_found
+    end
+  end
 end
