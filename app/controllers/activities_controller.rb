@@ -384,8 +384,7 @@ class ActivitiesController < ApplicationController
         }
       end
       # all tests
-      pages = Page.find(:all, :conditions => {:publication_status => ["published","private"]})
-      pages.each do |page|
+      Page.published.each do |page|
         exportable = page.activity
         if exportable
           data << {
