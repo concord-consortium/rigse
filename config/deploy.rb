@@ -13,7 +13,7 @@ require File.expand_path('../../lib/yaml_editor', __FILE__)
 
 set :stages, %w(
   rites-staging rites-production rites-ri-production
-  itsi-master-staging
+  itsi-master-staging itsi-master-import
   smartgraphs-staging smartgraphs-production smartgraphs-aws1
   has-dev has-staging has-production has-aws1
   geniverse-dev geniverse-production
