@@ -54,7 +54,7 @@ class API::V1::MaterialsController < API::APIController
 
       if allow
         portal_offering = portal_clazz.offerings.find_by_runnable_id_and_runnable_type(params[:material_id], params[:material_type])
-        if params[:assign]
+        if params[:assign].to_s == "1"
           if portal_offering.nil?
             offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(portal_clazz.id, params[:material_type], params[:material_id])
             if offering.position == 0
