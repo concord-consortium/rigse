@@ -1,8 +1,12 @@
+- imported_user = user.imported_user
 %div{:id=>"action_menu_wrapper"}
   %div{ :id => dom_id_for(user, :item), :class => 'item' }
     %div.action_menu
       %div.action_menu_header_left
         =link_to name_for_component(user), user
+        - if imported_user
+          %span.tiny{:style=>"font-weight:normal"}
+            (Imported)
       %div.action_menu_header_right
         %ul.menu
           - if (user.changeable?(current_visitor))
@@ -46,3 +50,5 @@
               = "#{user.portal_teacher.school_names.join(', ')}"
       %li
         Status: #{user.state}
+        - if imported_user
+          = "(#{imported_user.is_verified ? "verified" : "not-verfied"})"
