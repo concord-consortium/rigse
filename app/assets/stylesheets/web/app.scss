@@ -108,6 +108,24 @@ body {
   &.main-nav-hidden {
     background-image: image-url("styles/bg-body-no-nav.png");
   }
+
+  .hide-from-all-visitors {
+    display: none !important;
+  }
+  $role-list: guest member admin manager researcher author;
+  @each $role in $role-list {
+    &.#{$role}-visitor {
+      .show-to-#{$role}-visitor {
+        display: block !important;
+      }
+      .show-inline-to-#{$role}-visitor {
+        display: inline !important;
+      }
+      .hide-from-#{$role}-visitor {
+        display: none !important;
+      }
+    }
+  }
 }
 
 body#tinymce {
