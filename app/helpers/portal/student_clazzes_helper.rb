@@ -45,6 +45,8 @@ module Portal::StudentClazzesHelper
         </span>
         #{make_chosen('student_id_selector')}
       EOF
+    elsif clazz.students.size == 0
+        span_tag = span_tag + "Please register students or have them self-register with the class word in order to add them to this class"
     end
     return "#{span_tag}</span>".html_safe
   end

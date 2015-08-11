@@ -67,5 +67,5 @@ Feature: Teacher adds a new student
     When the student "student" belongs to class "Physics"
     When I login with username: teacher
     And I am on "Student Roster" page for "Mathematics"
-    Then I should see "Please register students or have them self-register with the class word in order to add them to this class"
+    Then I should see "If a student already has an account, ask the student to enter the Class Word above"
     And I should not see "Search for registered student"
