@@ -57,6 +57,7 @@ en:
   investigation: sequence
   activity: activity
   interactive: interactive
+  material: material
   recent_activity:
     no_offerings: 'You need to assign investigations to your classes.'
     no_students:  'You have not yet assigned students to your classes.'
@@ -145,3 +146,11 @@ en:
   class_materials:
     no_assignments: "Currently, this class is engaged in Geniverse."
 
+'en-ITSI-LEARN':
+  material: activity
+  offerings_for_class:
+    no_materials: "No activities assigned to this class."
+  class_full_status:
+    no_assignments: "No activities assigned to this class."
+  class_materials:
+    no_assignments: "No activities assigned to this class."

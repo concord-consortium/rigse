@@ -205,11 +205,12 @@ function close_popup()
 
 
 
-function get_Assign_To_Class_Popup(material_id,material_type)
+function get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_text)
 {
+    lightbox_material_text = lightbox_material_text || "Materials";
     var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
-        title:"Assign Materials to a Class"
+        title:"Assign " + lightbox_material_text + " to a Class"
     };
     var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_clazzes_path') %>";
      var options = {
@@ -318,7 +319,7 @@ function checkActivityToAssign(chk_box)
     return;
 }
 
-function getDataForAssignToClassPopup()
+function getDataForAssignToClassPopup(lightbox_material_text)
 {
     var material_id = $("material_id").getValue("");
     var material_type = $("assign_material_type").getValue("");
@@ -328,7 +329,7 @@ function getDataForAssignToClassPopup()
         getMessagePopup(message);
         return;
     }
-    get_Assign_To_Class_Popup(material_id,material_type);
+    get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_text);
 }
 
 var g_messageModal = null;
@@ -376,6 +377,6 @@ function msgPopupDescriptionText() {
 
 // Export assignMaterialToClass to Portal namespace.
 // `className` is either: 'ExternalActivity', 'Activity' or 'Investigation'.
-Portal.assignMaterialToClass = function(id, className) {
-    get_Assign_To_Class_Popup(id, className);
+Portal.assignMaterialToClass = function(id, className, lightbox_material_text) {
+    get_Assign_To_Class_Popup(id, className, lightbox_material_text);
 };
