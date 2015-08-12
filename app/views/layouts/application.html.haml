@@ -57,7 +57,7 @@
     - if USING_GOOGLE_ANALYTICS
       = javascript_tag google_analytics_config
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
-  %body{:class => current_visitor.has_role?('guest') ? 'main-nav-hidden' : nil, :'ng-app' => 'cc-portal'}
+  %body{:class => current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }.unshift(current_visitor.has_role?('guest') ? 'main-nav-hidden' : '').join(' ').squish, :'ng-app' => 'cc-portal'}
 
     #note{:style=>"display: none;"}
     = content_for :lightboxes
