@@ -8,7 +8,7 @@
       = f.error_messages
     .right
       = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
-      .header Instructional #{material_text} for #{portal_clazz.name}
+      .header #{t('instructional_materials')} for #{portal_clazz.name}
       %br
       %table.classdata.classdata-buttons
         %tr
