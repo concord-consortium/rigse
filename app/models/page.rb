@@ -346,6 +346,7 @@ class Page < ActiveRecord::Base
           # We want to point to a special upload a photo model that is
           # basically invisible, and LARA treats this URL specially
           interactive = {
+            :type => "MwInteractive",
             # click to play makes it look weird but it isn't easy to fix so we are going to have to leave it
             # it isn't easy to fix because the ITSI authoring system currently doesn't mess with click_to_play
             :click_to_play => true,
