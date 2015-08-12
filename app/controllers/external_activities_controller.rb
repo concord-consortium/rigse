@@ -249,7 +249,7 @@ class ExternalActivitiesController < ApplicationController
       head :created, :location => @external_activity
       response.body = {:activity_id => @external_activity.id}.to_json
     rescue StandardError => e
-      json_error(e)
+      json_error(e.inspect)
     end
   end
 
@@ -262,7 +262,7 @@ class ExternalActivitiesController < ApplicationController
       head :created, :location => @external_activity
       response.body = {:activity_id => @external_activity.id}.to_json
     rescue StandardError => e
-      json_error(e)
+      json_error(e.inspect)
     end
   end
 
