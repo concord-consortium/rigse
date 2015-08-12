@@ -1,9 +1,10 @@
 
-function get_Assign_To_Collection_Popup(material_id,material_type)
+function get_Assign_To_Collection_Popup(material_id,material_type, lightbox_material_text)
 {
+    lightbox_material_text = lightbox_material_text || "Materials";
     var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
-        title:"Assign Materials to a Collection"
+        title:"Assign " + lightbox_material_text + " to a Collection"
     };
     var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_collections_path') %>";
      var options = {
@@ -50,7 +51,7 @@ function setSaveAssignToCollectionInProgress(value)
     return;
 }
 
-function getDataForAssignToCollectionPopup()
+function getDataForAssignToCollectionPopup(lightbox_material_text)
 {
     var material_id = $("material_id").getValue("");
     var material_type = $("assign_material_type").getValue("");
@@ -60,13 +61,13 @@ function getDataForAssignToCollectionPopup()
         getMessagePopup(message);
         return;
     }
-    get_Assign_To_Collection_Popup(material_id,material_type);
+    get_Assign_To_Collection_Popup(material_id,material_type, lightbox_material_text);
 }
 
 // Export assignMaterialToClass to Portal namespace.
 // `className` is either: 'ExternalActivity', 'Activity' or 'Investigation'.
-Portal.assignMaterialToCollection = function(id, className) {
-    get_Assign_To_Collection_Popup(id, className);
+Portal.assignMaterialToCollection = function(id, className, lightbox_material_text) {
+    get_Assign_To_Collection_Popup(id, className, lightbox_material_text);
 };
 
 Portal.assignMaterialToSpecificClass = function(assign, classId, materialId, materialClassName) {

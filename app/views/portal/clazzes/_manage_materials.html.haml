@@ -1,11 +1,13 @@
+-material_text = t('material')
+- instructional_materials = t('instructional_materials')
 %tr
   %td{:colspan=>2}
     %br
-    .subheader Manage Instructional Materials
+    .subheader Manage #{instructional_materials}
     %div
-      Uncheck the material that you do not want to appear on the list of assigned materials that students
-      see for this class. Drag and drop the material names below to reorder them for students. The new
-      order will also be reflected in the tabs on your Instructional Materials page.
+      Uncheck the #{material_text} that you do not want to appear on the list of assigned #{material_text.pluralize} that students
+      see for this class. Drag and drop the #{material_text} names below to reorder them for students. The new
+      order will also be reflected in the tabs on your #{instructional_materials} page.
 %tr
   %td{:colspan=>2}
     = render :partial => 'shared/offerings_for_clazz', :locals => {:offerings => portal_clazz.offerings}

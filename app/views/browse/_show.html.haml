@@ -51,7 +51,7 @@
               = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"  
         %div{:style=>'float:left;padding:3px'}
           - if current_visitor.portal_teacher
-            = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup()", :id=>"btn_Assign"
+            = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup('#{t('material').pluralize.capitalize}')", :id=>"btn_Assign"
           - else
             = link_to parent_material.assign_btn_text, 'javascript:void(0)',:onclick=>"msgPopupDescriptionText()", :id=>"btn_Assign", :class=>"button"
         %div{:style=>'float:left;padding:3px',:class=>"share"}
