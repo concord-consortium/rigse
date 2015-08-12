@@ -359,8 +359,6 @@ class Page < ActiveRecord::Base
             :native_width => 2000,
             :save_state => false,
             :url => "//models-resources.concord.org/itsi/upload_photo/index.html",
-            # don't set the type since this is a fake model
-            :type => nil,
             :ref_id => page_element.embeddable.id
           }
           labbook_export[:custom_action_label] = "Take a Snapshot"
