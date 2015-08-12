@@ -335,24 +335,44 @@ class Page < ActiveRecord::Base
         interactive[:is_hidden] = !page_element.is_enabled
         page_json[:interactives] << interactive
         page_json[:show_info_assessment] = true
-        labbook_export[:is_hidden] = !page_element.is_enabled
+        # ITSI style authoring does not change the labbook is_hidden property
+        labbook_export[:is_hidden] = false
         labbook_export[:interactive_ref_id] = page_element.embeddable.id
         page_json[:embeddables] << labbook_export
 
       when "Embeddable::Diy::EmbeddedModel"
+        page_json[:show_interactive] = true
         if page_element.embeddable.diy_model.model_type.otrunk_object_class == "org.concord.otrunk.ui.OTBrowseableImage"
+          # We want to point to a special upload a photo model that is
+          # basically invisible, and LARA treats this URL specially
+          interactive = {
+            # click to play makes it look weird but it isn't easy to fix so we are going to have to leave it
+            # it isn't easy to fix because the ITSI authoring system currently doesn't mess with click_to_play
+            :click_to_play => true,
+            :has_report_url => false,
+            :image_url => "//models-resources.concord.org/itsi/upload_photo/transparent.png",
+            :name => "Upload photo",
+            :native_height => 1,
+            # we use this to get a crazy aspect ration that makes the interactive mostly disappear
+            # however the click_to_play setting makes it visible again
+            :native_width => 2000,
+            :save_state => false,
+            :url => "//models-resources.concord.org/itsi/upload_photo/index.html",
+            # don't set the type since this is a fake model
+            :type => nil,
+            :ref_id => page_element.embeddable.id
+          }
           labbook_export[:custom_action_label] = "Take a Snapshot"
           labbook_export[:action_type] = 0 # upload mode
           labbook_export[:prompt] = default_project.digital_microscope_snapshot_instructions
         else
-          page_json[:show_interactive] = true
           interactive = page_element.embeddable.export_as_lara_activity
-          interactive[:is_hidden] = !page_element.is_enabled
-          page_json[:interactives] << interactive
-          labbook_export[:interactive_ref_id] = page_element.embeddable.id
         end
+        interactive[:is_hidden] = !page_element.is_enabled
+        page_json[:interactives] << interactive
+        labbook_export[:interactive_ref_id] = page_element.embeddable.id
         page_json[:show_info_assessment] = true
-        labbook_export[:is_hidden] = !page_element.is_enabled
+        labbook_export[:is_hidden] = false
         page_json[:embeddables] << labbook_export
 
       else
