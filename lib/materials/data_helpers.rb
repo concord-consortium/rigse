@@ -16,9 +16,9 @@ module Materials
 
       if assigned_to_class
         portal_clazz = Portal::Clazz.find(assigned_to_class)
-        assigned_materials = portal_clazz.offerings.map { |offering| "#{offering.runnable_type}::#{offering.runnable_id}" }
+        active_assigned_materials = portal_clazz.active_offerings.map { |offering| "#{offering.runnable_type}::#{offering.runnable_id}" }
       else
-        assigned_materials = []
+        active_assigned_materials = []
       end
 
       materials.each do |material|
@@ -84,7 +84,7 @@ module Materials
           lara_activity_or_sequence: material.respond_to?(:lara_activity_or_sequence?) ? material.lara_activity_or_sequence? : false,
           parent: parent_data,
           user: user_data,
-          assigned: assigned_materials.include?("#{material.class.name}::#{material.id}")
+          assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}")
         }
 
         data.push mat_data
