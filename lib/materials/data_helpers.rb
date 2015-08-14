@@ -72,7 +72,7 @@ module Materials
           links: links_for_material(material),
           preview_url: view_context.run_url_for(material, (material.teacher_only? ? {:teacher_mode => true} : {})),
           edit_url: material.changeable?(current_visitor) ? view_context.matedit_external_activity_url(material, iFrame: true) : nil,
-          copy_url: current_visitor.portal_teacher ? view_context.copy_external_activity_url(material) : nil,
+          copy_url: external_copyable(material) ? view_context.copy_external_activity_url(material) : nil,
           assign_to_class_url: current_visitor.portal_teacher && material.respond_to?(:offerings) ? "javascript:get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}')" : nil,
           assign_to_collection_url: current_visitor.has_role?('admin') && material.respond_to?(:materials_collections) ? "javascript:get_Assign_To_Collection_Popup(#{material.id},'#{material.class.to_s}')" : nil,
           assigned_classes: assigned_clazz_names(material),
@@ -90,6 +90,12 @@ module Materials
         data.push mat_data
       end
       data
+    end
+
+    def external_copyable(material)
+      return current_visitor.has_role?('admin','manager') ||
+             (!material.is_locked && current_visitor.has_role?('author')) ||
+             material.author_email == current_visitor.email
     end
 
     def links_for_material(material)
@@ -163,7 +169,7 @@ module Materials
             target: '_blank'
           }
         end
-        if current_visitor.has_role?('admin','manager') || (!material.is_locked && current_visitor.has_role?('author')) || material.author_email == current_visitor.email
+        if external_copyable(material)
           links[:external_copy] = {
             url: copy_external_activity_url(material),
             text: "Copy",
