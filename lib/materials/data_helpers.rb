@@ -93,6 +93,14 @@ module Materials
     end
 
     def external_copyable(material)
+      if !(material.is_a? ExternalActivity)
+        return false;
+      end
+
+      if material.launch_url.blank?
+        return false;
+      end
+
       return current_visitor.has_role?('admin','manager') ||
              (!material.is_locked && current_visitor.has_role?('author')) ||
              material.author_email == current_visitor.email
