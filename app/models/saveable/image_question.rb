@@ -42,4 +42,13 @@ class Saveable::ImageQuestion < ActiveRecord::Base
     blob = Dataservice::Blob.for_learner_and_url(self.learner, url)
     self.answers.create(:blob  => blob, :note => note, :is_final => is_final)
   end
+
+  def current_feedback
+    if answered?
+      answers.last.feedback
+    else
+      nil
+    end
+  end
+
 end

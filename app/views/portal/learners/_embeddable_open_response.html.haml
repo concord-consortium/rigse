@@ -12,3 +12,5 @@
       .item{:class => css_style, :style => 'display: block;'}
         - answer = h(saveable.submitted_answer) || ""
         != answer.gsub("\n", '<br/>')
+        = feedback_div(saveable.answers.last)
+

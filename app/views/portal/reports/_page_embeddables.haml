@@ -1,4 +1,4 @@
-- page_embeddables.each do |pe| 
+- page_embeddables.each do |pe|
   - embeddable = pe[:embeddable]
   - activity   = pe[:activity]
   - question_number = activity ? activity.question_number(embeddable) : nil
@@ -9,7 +9,7 @@
       %div{:style => 'position: absolute; left: -20px; top: 4px;'}
         = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @report_embeddable_filter.include?(embeddable), :class => "filter_checkbox"
     - report_type = "offerings"
-    - locals = {:embeddable => embeddable, :offering => offering }
+    - locals = {:embeddable => embeddable, :offering => offering, :question_number => question_number}
     - if learners.kind_of?(Array)
       - locals[:learners] = learners
     - else

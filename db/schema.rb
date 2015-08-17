@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150807134029) do
+ActiveRecord::Schema.define(:version => 20150824085214) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2348,6 +2348,7 @@ ActiveRecord::Schema.define(:version => 20150807134029) do
     t.boolean  "is_final"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
+    t.text     "feedback"
   end
 
   add_index "saveable_external_link_urls", ["external_link_id"], :name => "index_saveable_external_link_urls_on_external_link_id"
@@ -2376,6 +2377,7 @@ ActiveRecord::Schema.define(:version => 20150807134029) do
     t.text     "note"
     t.string   "uuid",              :limit => 36
     t.boolean  "is_final"
+    t.text     "feedback"
   end
 
   add_index "saveable_image_question_answers", ["image_question_id", "position"], :name => "i_q_id_and_position_index"
@@ -2402,6 +2404,7 @@ ActiveRecord::Schema.define(:version => 20150807134029) do
     t.datetime "updated_at",                       :null => false
     t.string   "uuid",               :limit => 36
     t.boolean  "is_final"
+    t.text     "feedback"
   end
 
   add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
@@ -2440,6 +2443,7 @@ ActiveRecord::Schema.define(:version => 20150807134029) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.boolean  "is_final"
+    t.text     "feedback"
   end
 
   add_index "saveable_open_response_answers", ["open_response_id", "position"], :name => "o_r_id_and_position_index"

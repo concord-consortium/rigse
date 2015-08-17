@@ -9,5 +9,6 @@
       .item{:class => css_style, :style => 'display: block;'}
         - if saveable.answered?
           = link_to 'View work', saveable.answer, :target => '_blank'
+          = feedback_div(saveable.answers.last)
         - else
           No work saved.

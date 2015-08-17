@@ -34,4 +34,13 @@ class Saveable::SaveableStandin
   def submitted?
     false
   end
+
+  def current_feedback
+    nil
+  end
+
+  def answers
+    []
+  end
+
 end

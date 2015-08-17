@@ -1,4 +1,5 @@
-= accordion_for(embeddable, offering_details_image_question(offering, embeddable), nil, {:show_hide_text => "show responses"}) do
+- feedback_options = {:show_button => true, :offering_id => offering.id, :question_number => question_number}
+= accordion_for(embeddable, offering_details_image_question(offering, embeddable), nil, {:show_hide_text => "show responses", :feedback_options => feedback_options}) do
   - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
     - saveable = saveable_for_learner(embeddable, l)
     - css_style = saveable.submitted? ? 'answered' : 'not_answered'
@@ -10,5 +11,6 @@
           %img{:src => blob_url_for(saveable.submitted_answer)}
           .image_question_note= saveable.submitted_answer[:note]
           .blob_url= [blob_url_for(saveable.submitted_answer)]
+          = feedback_link(embeddable, feedback_options, l.id, saveable.answers.last)
         -else
           = saveable.submitted_answer # should return 'not submitted'

@@ -289,6 +289,36 @@ module ApplicationHelper
     end
   end
 
+  def feedback_button(model, options)
+    capture_haml do
+      haml_tag(:div, :class => 'feedback_button') {
+        haml_tag(:button, 'Feedback', :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}});")
+      }
+    end
+  end
+
+  def feedback_link(model, options, learner_id, last_answer)
+    id = "feedback_#{options[:question_number]}_#{learner_id}"
+    capture_haml do
+      haml_tag(:div, :class => 'feedback_link') {
+        haml_concat "Feedback: "
+          haml_tag(:a, feedback_text(last_answer), :id => id, :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}, learner_id: #{learner_id}});")
+      }
+    end
+  end
+
+  def feedback_div(last_answer)
+    capture_haml do
+      haml_tag(:div, :class => 'learner_feedback') {
+        haml_concat feedback_text(last_answer)
+      }
+    end
+  end
+
+  def feedback_text(last_answer)
+    (last_answer.nil? or last_answer.feedback.nil? or last_answer.feedback.empty?) ? 'No Feedback' : last_answer.feedback
+  end
+
   def accordion_for(model, title, dom_prefix='', options={})
     show_hide_text = options[:show_hide_text]
     capture_haml do
@@ -301,10 +331,17 @@ module ApplicationHelper
           haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle' do
             haml_tag :span, :class => "accordion_show_hide_text" do
               haml_concat show_hide_text
+              if options[:feedback_options] && options[:feedback_options][:show_button]
+                haml_concat feedback_button(model, options[:feedback_options])
+              end
             end
           end
         else
-          haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle'
+          haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle' do
+            if options[:feedback_options] && options[:feedback_options][:show_button]
+              haml_concat feedback_button(model, options[:feedback_options])
+            end
+          end
         end
 
         unless options[:usage_count].blank?
@@ -314,6 +351,7 @@ module ApplicationHelper
         end
 
         haml_tag :div, :class => 'empty_break'
+
         haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_content"), :class => 'accordion_content', :style=>'display: none;' do
           if block_given?
             yield
@@ -681,6 +719,7 @@ module ApplicationHelper
     skipped = total - answered
     answers_map = answered_saveables.sort_by { |s| [s.learner.last_name, s.learner.first_name] }.map do |sa|
       {
+        id: sa.id,
         name: sa.learner.name,
         note: sa.answer[:note],
         image_url: dataservice_blob_raw_url(:id => sa.answer[:blob].id, :token => sa.answer[:blob].token)

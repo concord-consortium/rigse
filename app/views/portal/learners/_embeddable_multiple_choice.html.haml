@@ -32,3 +32,4 @@
             = incorrect_check
           .inline_block.not_answered{:style => 'font-weight: bold;'}
             = saveable.submitted_answer.first[:answer] # should return 'not answered' or 'not submitted'
+      = feedback_div(saveable.answers.last)

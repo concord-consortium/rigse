@@ -18,5 +18,6 @@
           %img{:src => blob_url_for(saveable.submitted_answer)}
           .image_question_note= saveable.submitted_answer[:note]
           %a.blob_url{:href => blob_url_for(saveable.submitted_answer)}=blob_url_for(saveable.submitted_answer)
+          = feedback_div(saveable.answers.last)
         - else
           = saveable.submitted_answer # should return 'not submitted'
