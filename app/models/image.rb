@@ -64,12 +64,18 @@ class Image < ActiveRecord::Base
     end
 
     def search_list(options)
+      sortMapping  = {
+        'Newest'       => "updated_at DESC",
+        'Oldest'       => :updated_at,
+        'Alphabetical' => :name,
+      }
+
       name = options[:name]
       name_matches = Image.like(name)
       images = options[:only_current_users] ? name_matches.by_user(options[:user]) : name_matches.visible_to_user(options[:user])
 
       unless options[:sort_order].blank?
-        images = images.ordered_by(options[:sort_order])
+        images = images.order(sortMapping[options[:sort_order]])
       end
 
       if options[:paginate]
