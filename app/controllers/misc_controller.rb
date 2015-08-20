@@ -55,14 +55,37 @@ class MiscController < ActionController::Base
       "COUNT(DISTINCT portal_learners.id) AS active_learners, " +
       "COUNT(DISTINCT portal_learners.student_id) AS active_students, " +
       "COUNT(DISTINCT portal_offerings.runnable_id, portal_offerings.runnable_type) AS active_runnables, " +
-      "COUNT(DISTINCT portal_teachers.id) AS active_teachers " +
+      "COUNT(DISTINCT portal_teachers.id) AS active_teachers, " +
+      "COUNT(DISTINCT portal_schools.id) AS active_schools " +
       "FROM portal_teachers " +
       "INNER JOIN portal_teacher_clazzes ON portal_teacher_clazzes.teacher_id = portal_teachers.id " +
       "INNER JOIN portal_clazzes ON portal_clazzes.id = portal_teacher_clazzes.clazz_id " +
+      "INNER JOIN portal_courses ON portal_courses.id = portal_clazzes.course_id " +
+      "INNER JOIN portal_schools ON portal_schools.id = portal_courses.school_id " +
       "INNER JOIN portal_offerings ON portal_offerings.clazz_id = portal_clazzes.id " +
       "INNER JOIN portal_learners ON portal_learners.offering_id = portal_offerings.id " +
-      "INNER JOIN dataservice_bundle_loggers ON dataservice_bundle_loggers.id = portal_learners.bundle_logger_id " +
-      "INNER JOIN dataservice_bundle_contents ON dataservice_bundle_contents.bundle_logger_id = dataservice_bundle_loggers.id"
+      "INNER JOIN report_learners ON report_learners.learner_id = portal_learners.id " +
+      "WHERE report_learners.last_run is not null"
+      )
+    stats.merge!(result)
+
+    result = ActiveRecord::Base.connection.select_one(
+      "SELECT COUNT(DISTINCT portal_schools.id) AS class_schools, " +
+      "COUNT(DISTINCT portal_teachers.id) AS class_teachers " +
+      "FROM portal_teachers " +
+      "INNER JOIN portal_teacher_clazzes ON portal_teacher_clazzes.teacher_id = portal_teachers.id " +
+      "INNER JOIN portal_clazzes ON portal_clazzes.id = portal_teacher_clazzes.clazz_id " +
+      "INNER JOIN portal_courses ON portal_courses.id = portal_clazzes.course_id " +
+      "INNER JOIN portal_schools ON portal_schools.id = portal_courses.school_id"
+      )
+    stats.merge!(result)
+
+    result = ActiveRecord::Base.connection.select_one(
+      "SELECT COUNT(DISTINCT portal_schools.id) AS teacher_schools " +
+      "FROM portal_teachers " +
+      "INNER JOIN portal_school_memberships ON " +
+        "(portal_teachers.id = portal_school_memberships.member_id AND portal_school_memberships.member_type = 'Portal::Teacher') " +
+      "INNER JOIN portal_schools ON portal_schools.id = portal_school_memberships.school_id"
       )
     stats.merge!(result)
 
