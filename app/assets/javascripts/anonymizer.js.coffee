@@ -10,6 +10,7 @@ class Anonymizer
   constructor: ->
     @selector      = ".learner_response_name"
     @alt_selector  = "div.user"
+    @feedback_selector = "div.feedback_link"
     @button_select = "anonymize_button"
     @real_to_fake_map  = {}
     @fake_to_real_map  = {}
@@ -43,6 +44,7 @@ class Anonymizer
     $$(@alt_selector).each (item) =>
       fake_name = trim(item.textContent)
       item.textContent = @fake_to_real_map[fake_name]
+    $$(@feedback_selector).each (Element.show)
 
   anonymize: ->
     @anonymous = true
@@ -52,6 +54,7 @@ class Anonymizer
     $$(@alt_selector).each (item) =>
       real_name = trim(item.textContent)
       item.textContent = @real_to_fake_map[real_name]
+    $$(@feedback_selector).each (Element.hide)
 
   toggle: ->
     if @anonymous
