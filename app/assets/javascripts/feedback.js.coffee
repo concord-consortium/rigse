@@ -92,7 +92,7 @@ ScoreBox = React.createFactory React.createClass
     percentage = Math.round((@state.score / @props.maxScore) * 100)
     (div {},
       (input {ref: 'score', type: 'text', value: @state.score, onChange: @changed, disabled: @props.disabled})
-      if not isNaN percentage
+      if isFinite(percentage) and not isNaN(percentage)
         (div {}, "#{percentage}%")
     )
 
