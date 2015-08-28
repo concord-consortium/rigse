@@ -75,9 +75,30 @@ FeedbackPopupStudentItem = React.createFactory React.createClass
   render: ->
     (a {href: "#", ref: 'link', onClick: @scrollToStudent}, @props.learner_name)
 
-FeedbackTextarea = React.createFactory React.createClass
+ScoreBox = React.createFactory React.createClass
 
-  displayName: 'FeedbackTextarea'
+  displayName: 'ScoreBox'
+
+  getInitialState: ->
+    score: @props.score
+
+  changed: (e) ->
+    value = (e.target.value + String.fromCharCode(e.keyCode)).replace /^\D/g, ''
+    intValue = parseInt value, 10
+    @setState score: if isNaN intValue then '' else intValue
+    @props.changed? if isNaN intValue then null else intValue
+
+  render: ->
+    percentage = Math.round((@state.score / @props.maxScore) * 100)
+    (div {},
+      (input {ref: 'score', type: 'text', value: @state.score, onChange: @changed, disabled: @props.disabled})
+      if not isNaN percentage
+        (div {}, "#{percentage}%")
+    )
+
+FeedbackArea = React.createFactory React.createClass
+
+  displayName: 'FeedbackArea'
 
   getInitialState: ->
     value: @props.answer.current_feedback
@@ -91,7 +112,15 @@ FeedbackTextarea = React.createFactory React.createClass
     @props.setDirty true
 
   render: ->
-    (textarea {ref: 'feedback', id: "feedback_textarea_#{@props.answer.learner_id}", value: @state.value, onChange: @feedbackChanged, placeholder: 'Your feedback...'})
+    disabled = (@props.maxScore is 0) or (@props.maxScore is null)
+    (div {},
+      (div {className: 'feedback_score_value'},
+        (div {}, 'Score')
+        (ScoreBox {score: @props.answer.score, disabled: disabled, maxScore: @props.maxScore})
+      )
+      (div {}, 'Feedback')
+      (textarea {ref: 'feedback', id: "feedback_textarea_#{@props.answer.learner_id}", value: @state.value, onChange: @feedbackChanged, placeholder: 'Your feedback...'})
+    )
 
 FeedbackPopup = React.createFactory React.createClass
 
@@ -101,6 +130,7 @@ FeedbackPopup = React.createFactory React.createClass
     loading: true
     dirty: false
     saveMessage: null
+    maxScore: null
 
   componentDidUpdate: ->
     #(React.findDOMNode @refs.feedback).focus() if @refs.feedback
@@ -174,8 +204,15 @@ FeedbackPopup = React.createFactory React.createClass
     jQuery(".ui-window .content").animate({scrollTop: top}, 250)
     jQuery("#feedback_textarea_#{learner_id}").focus()
 
+  maxScoreChanged: (score) ->
+    @setState maxScore: score
+
   renderHeader: (firstAnswer) ->
     (div {className: 'feedback_header'},
+      (div {className: 'feedback_score_value'},
+        (div {}, 'Max. Score')
+        (ScoreBox {score: @state.maxScore, changed: @maxScoreChanged})
+      )
       (div {className: 'feedback_question_number'}, "Question #{firstAnswer.question_number}")
       if firstAnswer.question.prompt?
         (div {className: 'feedback_prompt', dangerouslySetInnerHTML: {__html: firstAnswer.question.prompt}})
@@ -258,7 +295,7 @@ FeedbackPopup = React.createFactory React.createClass
                           (li {}, (PreviousAnswerAndFeedbackItem {answer: answer, item: answerAndFeedback}))
                       )
                     )
-                  (FeedbackTextarea {key: i, answer: answer, setDirty: @setDirty})
+                  (FeedbackArea {key: i, answer: answer, setDirty: @setDirty, maxScore: @state.maxScore})
                 )
               else
                 (div {className: 'feedback_not_answered'}, 'This question has not been answered.')

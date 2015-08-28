@@ -219,9 +219,8 @@ $incorrect_color: #ffdddd;
     margin: 0 5px;
 
     textarea {
-      width: 690px;
+      width: 620px;
       height: 60px;
-      margin-top: 10px;
     }
   }
   .feedback_buttons {
@@ -247,6 +246,13 @@ $incorrect_color: #ffdddd;
 
     .feedback_options_label {
       margin-left: 10px;
+    }
+  }
+  .feedback_score_value {
+    float: right;
+
+    input {
+      width: 50px;
     }
   }
   .feedback_header {
