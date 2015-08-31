@@ -308,15 +308,21 @@ module ApplicationHelper
   end
 
   def feedback_div(last_answer)
-    capture_haml do
-      haml_tag(:div, :class => 'learner_feedback') {
-        haml_concat feedback_text(last_answer)
-      }
+    if has_feedback(last_answer)
+      capture_haml do
+        haml_tag(:div, :class => 'learner_feedback') {
+          haml_concat feedback_text(last_answer)
+        }
+      end
     end
   end
 
+  def has_feedback(last_answer)
+    !(last_answer.nil? or last_answer.feedback.nil? or last_answer.feedback.empty?)
+  end
+
   def feedback_text(last_answer)
-    (last_answer.nil? or last_answer.feedback.nil? or last_answer.feedback.empty?) ? 'No Feedback' : last_answer.feedback
+    has_feedback(last_answer) ? last_answer.feedback : 'No Feedback'
   end
 
   def accordion_for(model, title, dom_prefix='', options={})
