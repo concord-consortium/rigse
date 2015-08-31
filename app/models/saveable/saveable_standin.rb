@@ -43,4 +43,8 @@ class Saveable::SaveableStandin
     []
   end
 
+  def score
+    nil
+  end
+
 end

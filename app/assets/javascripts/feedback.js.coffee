@@ -57,7 +57,7 @@ PreviousAnswerAndFeedbackItem = React.createFactory React.createClass
     )
 
   render: ->
-    switch @props.answer.saveable_type
+    switch @props.answer.embeddable_type.split('::')[1]
       when 'ImageQuestion' then @renderImageAnswerFeedback @props.item
       when 'OpenResponse' then @renderOpenResponseAnswerFeedback @props.item
       when 'MultipleChoice' then @renderMultipleChoiceAnswerFeedback @props.item
@@ -111,12 +111,15 @@ FeedbackArea = React.createFactory React.createClass
       dirty: true
     @props.setDirty true
 
+  scoreChanged: (newScore) ->
+    @props.answer.new_score = newScore
+
   render: ->
     disabled = (@props.maxScore is 0) or (@props.maxScore is null)
     (div {},
       (div {className: 'feedback_score_value'},
         (div {}, 'Score')
-        (ScoreBox {score: @props.answer.score, disabled: disabled, maxScore: @props.maxScore})
+        (ScoreBox {score: @props.answer.score, disabled: disabled, maxScore: @props.maxScore, changed: @scoreChanged})
       )
       (div {}, 'Feedback')
       (textarea {ref: 'feedback', id: "feedback_textarea_#{@props.answer.learner_id}", value: @state.value, onChange: @feedbackChanged, placeholder: 'Your feedback...'})
@@ -156,32 +159,40 @@ FeedbackPopup = React.createFactory React.createClass
           answers: answers
           withAnswers: withAnswers
           withoutAnswers: withoutAnswers
+          maxScore: answers[0]?.max_score
         if @props.options.learner_id
           setTimeout (=> @scrollToStudent @props.options.learner_id), 0
 
   save: ->
-    ajaxData = []
+    answers = []
     updateAnswer = []
     for answer in @state.answers
       if answer.new_feedback? and answer.new_feedback isnt answer.current_feedback
-        ajaxData.push
+        answers.push
           saveable_id: answer.saveable_id
-          saveable_type: answer.saveable_type
+          embeddable_type: answer.embeddable_type
           new_feedback: answer.new_feedback
+          new_score: answer.new_score
         updateAnswer.push answer
 
-    if ajaxData.length > 0
+    if answers.length > 0
+      debugger
       @setState saveMessage: 'Saving...'
       jQuery.ajax
         type: 'post'
         url: "/portal/offerings/#{@props.options.offering_id}/update_feedback.json"
         dataType: 'json',
         contentType: 'application/json',
-        data: JSON.stringify {answers: ajaxData}
+        data: JSON.stringify
+          answers: answers
+          max_score: @state.maxScore
+          embeddable_type: answers[0].embeddable_type
+          embeddable_id: answers[0].embeddable_id
         success: =>
           for answer in updateAnswer
             jQuery("#feedback_#{answer.question_number}_#{answer.learner_id}").html(answer.new_feedback.escapeHTML())
             answer.current_feedback = answer.new_feedback
+            answer.score = answer.new_score
           @setState dirty: false
           @close()
         error: =>
@@ -205,7 +216,9 @@ FeedbackPopup = React.createFactory React.createClass
     jQuery("#feedback_textarea_#{learner_id}").focus()
 
   maxScoreChanged: (score) ->
-    @setState maxScore: score
+    @setState
+      maxScore: score
+      dirty: true
 
   renderHeader: (firstAnswer) ->
     (div {className: 'feedback_header'},
@@ -281,7 +294,7 @@ FeedbackPopup = React.createFactory React.createClass
               (div {className: 'feedback-student-name', id: "feedback_for_student_#{answer.learner_id}"}, answer.learner_name)
               if answer.answer?
                 (div {},
-                  switch answer.saveable_type
+                  switch answer.embeddable_type.split('::')[1]
                     when 'ImageQuestion' then @renderImageAnswer answer
                     when 'OpenResponse' then @renderOpenResponseAnswer answer
                     when 'MultipleChoice' then @renderMultipleChoiceAnswer answer

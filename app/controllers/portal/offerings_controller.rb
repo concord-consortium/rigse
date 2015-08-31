@@ -195,7 +195,7 @@ class Portal::OfferingsController < ApplicationController
 
       format.json {
         reportUtil = Report::Util.reload(@offering)
-        render :json => { :report => extract_offering_report_json(reportUtil.page_elements, reportUtil.learners) }, :content_type => 'text/json'
+        render :json => { :report => extract_offering_report_json(@offering, reportUtil.page_elements, reportUtil.learners) }, :content_type => 'text/json'
       }
 
       format.run_resource_html   {
@@ -390,7 +390,7 @@ class Portal::OfferingsController < ApplicationController
 
   private
 
-  def extract_offering_report_json(page_elements, learners, level = 0)
+  def extract_offering_report_json(offering, page_elements, learners, level = 0)
     if level == 0
       learners = learners.sort_by{|learner| [learner.last_name, learner.first_name]}
     end
@@ -404,12 +404,15 @@ class Portal::OfferingsController < ApplicationController
           activity   = pe[:activity]
           question_number = activity ? activity.question_number(embeddable) : nil
 
+          embeddable_type = embeddable.class.name
+
+          metadata = offering.metadata.for_embeddable embeddable
+          max_score = metadata.nil? ? nil : metadata.max_score
+
           learners.map do |l|
             reportUtil = Report::Util.factory(l.offering)
             saveable = reportUtil.saveable(l, embeddable)
             submitted_answer = saveable.submitted_answer
-
-            saveable_type = embeddable.class.name.split('::')[1]
 
             question = {
               prompt: embeddable.respond_to?("prompt") ? embeddable[:prompt] : nil,
@@ -419,7 +422,7 @@ class Portal::OfferingsController < ApplicationController
             previous_answers_and_feedback = saveable.answers[0..-2].select{ |a| a.feedback != nil }.map{ |a| {answer: a.answer, feedback: a.feedback}}
 
             answer = saveable.answered? ? submitted_answer : nil
-            if saveable_type == 'ImageQuestion'
+            if embeddable_type == 'Embeddable::ImageQuestion'
               if answer != nil
                 answer = dataservice_blob_raw_url(:id => answer[:blob].id, :token => answer[:blob].token)
               end
@@ -428,11 +431,24 @@ class Portal::OfferingsController < ApplicationController
               end
             end
 
-            {question_number: question_number, question: question, learner_id: l.id, learner_name: l.name, saveable_id: saveable.respond_to?('id') ? saveable.id : 0, saveable_type: saveable_type, answer: answer, current_feedback: saveable.current_feedback, previous_answers_and_feedback: previous_answers_and_feedback}
+            {
+              question_number: question_number,
+              question: question,
+              learner_id: l.id,
+              learner_name: l.name,
+              saveable_id: saveable.respond_to?('id') ? saveable.id : 0,
+              answer: answer,
+              current_feedback: saveable.current_feedback,
+              previous_answers_and_feedback: previous_answers_and_feedback,
+              embeddable_type: embeddable_type,
+              embeddable_id: embeddable.id,
+              max_score: max_score,
+              score: saveable.score
+            }
           end
         end
       else
-        extract_offering_report_json(children, learners, level + 1)
+        extract_offering_report_json(offering, children, learners, level + 1)
       end
     end
     if level == 0
