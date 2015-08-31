@@ -1,11 +1,11 @@
-{div, button, span, input, img, textarea, a, iframe, ol, li} = React.DOM
+{div, button, span, input, img, textarea, a, iframe, ol, li, select, option} = React.DOM
 
 # this is the only "exported" function - the rest of the code is automatically wrapped in a IIFE by CoffeeScript
 window.get_feedback_popup = (options) ->
 
   lightbox = new Lightbox
     content: "<div id='windowcontent' style='padding:10px'><div id='feedback_popup'></div></div>",
-    title: "Feedback"
+    title: "Feedback: Question #{options.question_number}"
 
   React.render FeedbackPopup({options: options, lightbox: lightbox}), document.getElementById("feedback_popup")
 
@@ -24,7 +24,7 @@ PreviousAnswerAndFeedbackItem = React.createFactory React.createClass
     @setState show: not @state.show
 
   renderShowHide: ->
-    (a {href: '#', className: 'feedback_showhide', onClick: @toggleShow}, if @state.show then 'Hide' else 'Show')
+    (a {href: '#', className: 'feedback_showhide', onClick: @toggleShow}, if @state.show then 'Hide' else "Show - #{@props.item.date}")
 
   renderImageAnswerFeedback: (item) ->
     (span {},
@@ -33,27 +33,33 @@ PreviousAnswerAndFeedbackItem = React.createFactory React.createClass
           (a {href: item.answer, target: '_blank'},
             (img {src: item.answer})
           )
+          (div {className: 'feedback-text'}, "#{item.feedback} (#{item.date})")
         )
       @renderShowHide()
-      (span {}, " -> #{item.feedback}")
     )
 
   renderOpenResponseAnswerFeedback: (item) ->
-    (span {}, "#{item.answer} -> #{item.feedback}")
+    (span {},
+      item.answer
+      (div {className: 'inline-feedback-text'}, "#{item.feedback} (#{item.date})")
+    )
 
   renderMultipleChoiceAnswerFeedback: (item) ->
     answers = for answer in item.answer
       answer.answer
-    (span {}, "#{answers.join(', ')} -> #{item.feedback}")
+    (span {},
+      answers.join(', ')
+      (div {className: 'inline-feedback-text'}, "#{item.feedback} (#{item.date})")
+    )
 
   renderIFrameAnswerFeedback: (item) ->
     (span {},
       if @state.show
         (div {className: 'feedback_answer'},
           (iframe {src: answer.answer})
+          (div {className: 'feedback-text'}, "#{item.feedback} (#{item.date})")
         )
       @renderShowHide()
-      (span {}, " -> #{item.feedback}")
     )
 
   render: ->
@@ -64,16 +70,49 @@ PreviousAnswerAndFeedbackItem = React.createFactory React.createClass
       when 'Iframe' then @renderIFrameAnswerFeedback @props.item
       else 'Unknown answer type!'
 
-FeedbackPopupStudentItem = React.createFactory React.createClass
+FeedbackPopupGroupSelectRadio = React.createFactory React.createClass
 
-  displayName: 'FeedbackPopupStudentItem'
+  displayName: 'FeedbackPopupGroupSelectRadio'
 
-  scrollToStudent: (e) ->
-    e.preventDefault()
-    @props.scrollToStudent @props.learner_id
+  radioSelected: ->
+    @props.radioSelected @props.value
 
   render: ->
-    (a {href: "#", ref: 'link', onClick: @scrollToStudent}, @props.learner_name)
+    (input {type: 'radio', name: 'groupType', value: @props.value, checked: @props.value is @props.groupType, onChange: @radioSelected}, @props.children)
+
+FeedbackPopupGroupSelect = React.createFactory React.createClass
+
+  displayName: 'FeedbackPopupGroupSelect'
+
+  getInitialState: ->
+    selectedStudent: 0
+
+  selectSelected: ->
+    learnerId = (React.findDOMNode @refs.select).value
+    @props.scrollToGroup learnerId if learnerId
+    @setState selectedStudent: learnerId
+
+  radioSelected: (groupType) ->
+    @setState selectedStudent: 0
+    @props.selectGroupType groupType
+
+  render: ->
+    groups = @props.groups[@props.selectedGroupType]
+    (div {className: 'feedback-student-list'},
+      (span {className: 'feedback-student-list-view-answer'}, 'View answer by:')
+      if groups.length > 0
+        (select {ref: 'select', value: @state.selectedStudent, onChange: @selectSelected},
+          (option {value: 0}, 'Select a student or group...')
+          for group in groups
+            (option {value: group.id}, group.name)
+        )
+      else
+        (span {}, @state.emptyListMessage or 'No students were found')
+
+      (span {className: 'feedback-student-list-show'}, 'Show:')
+      (FeedbackPopupGroupSelectRadio {value: 'needsFeedback', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'Students Who Need Feedback')
+      (FeedbackPopupGroupSelectRadio {value: 'all', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'All Students')
+    )
 
 ScoreBox = React.createFactory React.createClass
 
@@ -93,7 +132,7 @@ ScoreBox = React.createFactory React.createClass
     (div {},
       (input {ref: 'score', type: 'text', value: @state.score, onChange: @changed, disabled: @props.disabled})
       if isFinite(percentage) and not isNaN(percentage)
-        (div {}, "#{percentage}%")
+        (div {className: 'feedback-score-percentage'}, "(#{percentage}%)")
     )
 
 FeedbackArea = React.createFactory React.createClass
@@ -114,15 +153,29 @@ FeedbackArea = React.createFactory React.createClass
   scoreChanged: (newScore) ->
     @props.answer.new_score = newScore
 
+  copyMostRecentFeedback: (e) ->
+    e.preventDefault()
+    if @props.answer.previous_answers_and_feedback.length > 0
+      @setState value: @props.answer.previous_answers_and_feedback.slice(-1)[0].feedback
+
   render: ->
     disabled = (@props.maxScore is 0) or (@props.maxScore is null)
     (div {},
-      (div {className: 'feedback_score_value'},
-        (div {}, 'Score')
-        (ScoreBox {score: @props.answer.score, disabled: disabled, maxScore: @props.maxScore, changed: @scoreChanged})
+      (div {className: 'feedback_label'},
+        'Feedback'
+        if @props.answer.previous_answers_and_feedback.length > 0
+          (span {},
+            ' ('
+            (a {href: '#', onClick: @copyMostRecentFeedback}, 'copy most recent')
+            ')'
+          )
       )
-      (div {}, 'Feedback')
       (textarea {ref: 'feedback', id: "feedback_textarea_#{@props.answer.learner_id}", value: @state.value, onChange: @feedbackChanged, placeholder: 'Your feedback...'})
+      if @props.allowScoring
+        (div {className: 'feedback_score_value'},
+          (div {}, 'Score')
+          (ScoreBox {score: @props.answer.score, disabled: disabled, maxScore: @props.maxScore, changed: @scoreChanged})
+        )
     )
 
 FeedbackPopup = React.createFactory React.createClass
@@ -131,9 +184,15 @@ FeedbackPopup = React.createFactory React.createClass
 
   getInitialState: ->
     loading: true
+    error: null
     dirty: false
     saveMessage: null
+    groups:
+      all: []
+      needsFeedback: []
+    selectedGroupType: 'needsFeedback'
     maxScore: null
+    allowScoring: false
 
   componentDidUpdate: ->
     #(React.findDOMNode @refs.feedback).focus() if @refs.feedback
@@ -143,30 +202,44 @@ FeedbackPopup = React.createFactory React.createClass
     jQuery.ajax
       type: 'get'
       url: "/portal/offerings/#{@props.options.offering_id}/report.json"
+      error: =>
+        @setState error: 'Unable to load report data'
       success: (data) =>
-        answers = []
-        withAnswers = []
-        withoutAnswers = []
+        groupsByAnswer = {}
         for answer in data.report
           if answer.question_number is @props.options.question_number
-            answers.push answer
-            if answer.answer?
-              withAnswers.push answer
-            else
-              withoutAnswers.push answer
+            key = JSON.stringify
+              answer: answer.answer
+              current_feedback: answer.current_feedback
+              previous_answers_and_feedback: answer.previous_answers_and_feedback
+            groupsByAnswer[key] ?= []
+            groupsByAnswer[key].push answer
+
+        id = 1
+        groups =
+          all: []
+          needsFeedback: []
+        for key, answers of groupsByAnswer
+          group =
+            id: id++
+            name: (answer.learner_name for answer in answers).join ', '
+            answer: answers[0]
+            allAnswers: answers
+          groups.all.push group
+          groups.needsFeedback.push group if answer.answer and (answer.current_feedback is null or answer.current_feedback.length is 0)
+
         @setState
           loading: false
-          answers: answers
-          withAnswers: withAnswers
-          withoutAnswers: withoutAnswers
-          maxScore: answers[0]?.max_score
+          groups: groups
+          maxScore: groups.all[0]?.max_score
+
         if @props.options.learner_id
-          setTimeout (=> @scrollToStudent @props.options.learner_id), 0
+          setTimeout (=> @scrollToGroup @props.options.learner_id), 0
 
   save: ->
     answers = []
     updateAnswer = []
-    for answer in @state.answers
+    for answer in @state.groups.all
       if answer.new_feedback? and answer.new_feedback isnt answer.current_feedback
         answers.push
           saveable_id: answer.saveable_id
@@ -210,25 +283,38 @@ FeedbackPopup = React.createFactory React.createClass
     @setState
       dirty: dirty
 
-  scrollToStudent: (learner_id) ->
-    top = jQuery("#feedback_for_student_#{learner_id}").offset().top
-    jQuery(".ui-window .content").animate({scrollTop: top}, 250)
-    jQuery("#feedback_textarea_#{learner_id}").focus()
+  scrollToGroup: (groupId) ->
+    scrollArea = jQuery(".feedback-student-answers")
+    group = jQuery("#feedback_group_#{groupId}")
+    top = scrollArea.scrollTop() + group.offset().top - scrollArea.offset().top
+    scrollArea.animate({scrollTop: top}, 250)
+    group.find('textarea').focus()
 
   maxScoreChanged: (score) ->
     @setState
       maxScore: score
       dirty: true
 
+  scoreCheckboxChanged: ->
+    @setState
+      allowScoring: (React.findDOMNode @refs.scoreCheckbox).checked
+
+  selectGroupType: (groupType) ->
+    @setState selectedGroupType: groupType
+
   renderHeader: (firstAnswer) ->
     (div {className: 'feedback_header'},
-      (div {className: 'feedback_score_value'},
-        (div {}, 'Max. Score')
-        (ScoreBox {score: @state.maxScore, changed: @maxScoreChanged})
+      (div {className: 'feedback_enable_score'},
+        (div {},
+          (input {ref: 'scoreCheckbox', type: 'checkbox', onChange: @scoreCheckboxChanged}, 'Score?')
+        )
+        if @state.allowScoring
+          (div {},
+            (div {}, 'Max. Score')
+            (ScoreBox {score: @state.maxScore, changed: @maxScoreChanged})
+          )
       )
-      (div {className: 'feedback_question_number'}, "Question #{firstAnswer.question_number}")
-      if firstAnswer.question.prompt?
-        (div {className: 'feedback_prompt', dangerouslySetInnerHTML: {__html: firstAnswer.question.prompt}})
+      (div {className: 'feedback_prompt', dangerouslySetInnerHTML: {__html: if firstAnswer.question.prompt? then firstAnswer.question.prompt else '&nbsp;'}})
     )
 
   renderImageAnswer: (answer) ->
@@ -256,28 +342,15 @@ FeedbackPopup = React.createFactory React.createClass
       (iframe {src: answer.answer})
     )
 
-  renderAnswerList: (label, answers) ->
-    (div {},
-      "#{label} (#{answers.length}): "
-      if answers.length > 0
-        for answer, i in answers
-          (span {key: answer.learner_id},
-            (FeedbackPopupStudentItem {learner_id: answer.learner_id, learner_name: answer.learner_name, scrollToStudent: @scrollToStudent})
-            if i isnt answers.length - 1
-              ', '
-          )
-      else
-        "None"
-    )
-
-  renderAnswerLists: ->
-    (div {className: 'feedback-student-counts'},
-      @renderAnswerList 'Answered', @state.withAnswers
-      @renderAnswerList 'Not Answered', @state.withoutAnswers
-    )
-
   render: ->
-    if @state.loading or @state.answers.length is 0
+    if @state.error
+      (div {},
+        (div {className: 'feedback_error_message'}, @state.error)
+        (div {className: 'feedback_buttons'},
+          (button {onClick: @close}, 'Cancel')
+        )
+      )
+    else if @state.loading or @state.groups.all.length is 0
       (div {},
         (div {className: 'feedback_loading_message'}, if @state.loading then 'Loading...' else 'No answers were found for feedback.')
         (div {className: 'feedback_buttons'},
@@ -287,31 +360,40 @@ FeedbackPopup = React.createFactory React.createClass
     else
       (div {},
         (div {className: 'feedback_content', ref: 'content'},
-          @renderHeader @state.answers[0]
-          @renderAnswerLists()
-          for answer, i in @state.answers
-            (div {className: 'feedback-student-answer', key: answer.learner_id},
-              (div {className: 'feedback-student-name', id: "feedback_for_student_#{answer.learner_id}"}, answer.learner_name)
-              if answer.answer?
-                (div {},
-                  switch answer.embeddable_type.split('::')[1]
-                    when 'ImageQuestion' then @renderImageAnswer answer
-                    when 'OpenResponse' then @renderOpenResponseAnswer answer
-                    when 'MultipleChoice' then @renderMultipleChoiceAnswer answer
-                    when 'Iframe' then @renderIFrameAnswer answer
-                    else 'Unknown answer type!'
-                  if answer.previous_answers_and_feedback.length > 0
-                    (div {className: 'feedback-all-feedback'},
-                      (div {}, 'Previous feedback:')
-                      (ol {},
-                        for answerAndFeedback in answer.previous_answers_and_feedback
-                          (li {}, (PreviousAnswerAndFeedbackItem {answer: answer, item: answerAndFeedback}))
+          @renderHeader @state.groups.all[0].answer
+          (FeedbackPopupGroupSelect {groups: @state.groups, selectedGroupType: @state.selectedGroupType, selectGroupType: @selectGroupType, scrollToGroup: @scrollToGroup})
+          if @state.groups[@state.selectedGroupType].length > 0
+            (div {className: 'feedback-student-answers'},
+              for group, i in @state.groups[@state.selectedGroupType]
+                (div {id: "feedback_group_#{group.id}", className: 'feedback-student-answer', key: group.id},
+                  (div {className: 'feedback-student-name'}, group.name)
+                  if group.answer.answer?
+                    (div {},
+                      switch group.answer.embeddable_type.split('::')[1]
+                        when 'ImageQuestion' then @renderImageAnswer group.answer
+                        when 'OpenResponse' then @renderOpenResponseAnswer group.answer
+                        when 'MultipleChoice' then @renderMultipleChoiceAnswer group.answer
+                        when 'Iframe' then @renderIFrameAnswer group.answer
+                        else 'Unknown answer type!'
+                      (div {className: 'feedback_container'},
+                        (FeedbackArea {key: i, answer: group.answer, setDirty: @setDirty, maxScore: @state.maxScore, allowScoring: @state.allowScoring})
+                        if group.answer.previous_answers_and_feedback.length > 0
+                          (div {className: 'feedback-all-feedback'},
+                            (div {}, 'Previous feedback:')
+                            (ol {},
+                              for answerAndFeedback in group.answer.previous_answers_and_feedback
+                                (li {}, (PreviousAnswerAndFeedbackItem {answer: group.answer, item: answerAndFeedback}))
+                            )
+                          )
                       )
                     )
-                  (FeedbackArea {key: i, answer: answer, setDirty: @setDirty, maxScore: @state.maxScore})
+                  else
+                    (div {className: 'feedback_not_answered'}, 'This question has not been answered.')
                 )
-              else
-                (div {className: 'feedback_not_answered'}, 'This question has not been answered.')
+            )
+          else
+            (div {className: 'feedback-student-no-answers'},
+              (div {}, 'Sorry, no students were found.')
             )
         )
         if @state.saveMessage

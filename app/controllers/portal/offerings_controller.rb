@@ -419,7 +419,7 @@ class Portal::OfferingsController < ApplicationController
               drawing_prompt: embeddable.respond_to?("drawing_prompt") ? embeddable[:drawing_prompt] : nil
             }
 
-            previous_answers_and_feedback = saveable.answers[0..-2].select{ |a| a.feedback != nil }.map{ |a| {answer: a.answer, feedback: a.feedback}}
+            previous_answers_and_feedback = saveable.answers[0..-2].select{ |a| a.feedback != nil }.map{ |a| {answer: a.answer, feedback: a.feedback, date: a.updated_at.getlocal.strftime('%B %e, %Y')}}
 
             answer = saveable.answered? ? submitted_answer : nil
             if embeddable_type == 'Embeddable::ImageQuestion'
@@ -427,7 +427,7 @@ class Portal::OfferingsController < ApplicationController
                 answer = dataservice_blob_raw_url(:id => answer[:blob].id, :token => answer[:blob].token)
               end
               previous_answers_and_feedback = previous_answers_and_feedback.map do |a|
-                {answer: dataservice_blob_raw_url(:id => a[:answer][:blob].id, :token => a[:answer][:blob].token), feedback: a[:feedback]}
+                {answer: dataservice_blob_raw_url(:id => a[:answer][:blob].id, :token => a[:answer][:blob].token), feedback: a[:feedback], date: a[:date]}
               end
             end
 
