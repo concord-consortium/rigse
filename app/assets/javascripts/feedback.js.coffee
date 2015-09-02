@@ -110,8 +110,8 @@ FeedbackPopupGroupSelect = React.createFactory React.createClass
         (span {}, @state.emptyListMessage or 'No students were found')
 
       (span {className: 'feedback-student-list-show'}, 'Show:')
-      (FeedbackPopupGroupSelectRadio {value: 'needsFeedback', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'Students Who Need Feedback')
       (FeedbackPopupGroupSelectRadio {value: 'all', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'All Students')
+      (FeedbackPopupGroupSelectRadio {value: 'needsFeedback', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'Students Who Need Feedback')
     )
 
 ScoreBox = React.createFactory React.createClass
@@ -190,7 +190,7 @@ FeedbackPopup = React.createFactory React.createClass
     groups:
       all: []
       needsFeedback: []
-    selectedGroupType: 'needsFeedback'
+    selectedGroupType: 'all'
     maxScore: null
     allowScoring: false
 
@@ -216,6 +216,7 @@ FeedbackPopup = React.createFactory React.createClass
             groupsByAnswer[key] ?= []
             groupsByAnswer[key].push answer
 
+        learnerGroupId = 0
         id = 1
         groups =
           all: []
@@ -229,14 +230,19 @@ FeedbackPopup = React.createFactory React.createClass
           groups.all.push group
           groups.needsFeedback.push group if answer.answer and (answer.current_feedback is null or answer.current_feedback.length is 0)
 
+          # save the group with the requested learner
+          if @props.options.learner_id and not learnerGroupId
+            for answer in answers
+              learnerGroupId = group.id if answer.learner_id is @props.options.learner_id
+
         @setState
           loading: false
           groups: groups
           maxScore: groups.all[0]?.answer.max_score
           allowScoring: groups.all[0]?.answer.enable_score
 
-        if @props.options.learner_id
-          setTimeout (=> @scrollToGroup @props.options.learner_id), 0
+        if @props.options.learner_id and learnerGroupId
+          setTimeout (=> @scrollToGroup learnerGroupId, 0), 0
 
   save: ->
     # expand out group answers to save
@@ -295,11 +301,11 @@ FeedbackPopup = React.createFactory React.createClass
     @setState
       dirty: dirty
 
-  scrollToGroup: (groupId) ->
+  scrollToGroup: (groupId, duration=250) ->
     scrollArea = jQuery(".feedback-student-answers")
     group = jQuery("#feedback_group_#{groupId}")
     top = scrollArea.scrollTop() + group.offset().top - scrollArea.offset().top
-    scrollArea.animate({scrollTop: top}, 250)
+    scrollArea.animate({scrollTop: top}, duration)
     group.find('textarea').focus()
 
   maxScoreChanged: (score) ->

@@ -1,6 +1,7 @@
 %div{:class => 'question_container'}
   %div{:id => dom_id_for(embeddable, :item), :class => 'item'}
     %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
+      - metadata = offering.metadata.for_embeddable embeddable
       - saveable = saveable_for_learner(embeddable, learner)
       - css_style = saveable.answered? ? 'answered' : 'not_answered'
       .item{:style => 'display: block;'}
@@ -9,6 +10,6 @@
       .item{:class => css_style, :style => 'display: block;'}
         - if saveable.answered?
           = link_to 'View work', saveable.answer, :target => '_blank'
-          = feedback_div(saveable.answers.last)
+          = feedback_div(saveable, metadata)
         - else
           No work saved.

@@ -297,21 +297,27 @@ module ApplicationHelper
     end
   end
 
-  def feedback_link(model, options, learner_id, last_answer)
+  def feedback_link(model, options, learner_id, saveable, metadata)
     id = "feedback_#{options[:question_number]}_#{learner_id}"
     capture_haml do
       haml_tag(:div, :class => 'feedback_link') {
         haml_concat "Feedback: "
-          haml_tag(:a, feedback_text(last_answer), :id => id, :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}, learner_id: #{learner_id}});")
+        haml_tag(:a, feedback_text(saveable.answers.last), :id => id, :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}, learner_id: #{learner_id}});")
+        haml_concat " Score: "
+        haml_concat score_text(saveable, metadata)
       }
     end
   end
 
-  def feedback_div(last_answer)
+  def feedback_div(saveable, metadata)
+    last_answer = saveable.answers.last
     if has_feedback(last_answer)
       capture_haml do
         haml_tag(:div, :class => 'learner_feedback') {
           haml_concat feedback_text(last_answer)
+          if metadata && metadata.enable_score && !saveable.score.nil?
+            haml_concat " Score: #{score_text(saveable, metadata)}"
+          end
         }
       end
     end
@@ -323,6 +329,19 @@ module ApplicationHelper
 
   def feedback_text(last_answer)
     has_feedback(last_answer) ? last_answer.feedback : 'No Feedback'
+  end
+
+  def score_text(saveable, metadata)
+    if !metadata || !metadata.enable_score
+      'Disabled'
+    elsif saveable.score.nil?
+      'Not Scored'
+    elsif metadata.max_score
+      percentage = (saveable.score.fdiv(metadata.max_score) * 100).round
+      "#{saveable.score} out of #{metadata.max_score} (#{percentage}%)"
+    else
+      saveable.score
+    end
   end
 
   def accordion_for(model, title, dom_prefix='', options={})
