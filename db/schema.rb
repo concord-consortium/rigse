@@ -1942,9 +1942,10 @@ ActiveRecord::Schema.define(:version => 20150826142811) do
     t.integer  "offering_id"
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
+    t.boolean  "enable_score",    :default => false
     t.integer  "max_score"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
   add_index "portal_offering_embeddable_metadata", ["offering_id", "embeddable_id", "embeddable_type"], :name => "index_portal_offering_metadata", :unique => true

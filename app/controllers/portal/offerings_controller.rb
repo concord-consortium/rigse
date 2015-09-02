@@ -371,15 +371,30 @@ class Portal::OfferingsController < ApplicationController
     end
 
     offering = Portal::Offering.find(params[:id])
-    params[:answers].map do |answer|
-      clazz = "Saveable::#{answer[:saveable_type]}".constantize
-      saveable = clazz.find(answer[:saveable_id])
-      current_answer = (saveable.present? and saveable.offering_id == offering.id) ? saveable.answers.last : nil
-      if current_answer
-        current_answer.feedback = answer[:new_feedback]
-        current_answer.save
+    if params[:answers]
+      params[:answers].map do |answer|
+        clazz = "Saveable::#{answer[:embeddable_type].split('::')[1]}".constantize
+        saveable = clazz.find(answer[:saveable_id])
+        if saveable.present? and saveable.offering_id == offering.id
+          if answer[:feedback_changed]
+            current_answer = saveable.answers.last
+            if current_answer
+              current_answer.feedback = answer[:new_feedback]
+              current_answer.save
+            end
+          end
+          if answer[:score_changed]
+            saveable.score = answer[:new_score]
+            saveable.save
+          end
+        end
       end
     end
+
+    metadata = Portal::OfferingEmbeddableMetadata.find_or_create_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, params[:embeddable_id], params[:embeddable_type])
+    metadata.enable_score = params[:enable_score]
+    metadata.max_score = params[:max_score]
+    metadata.save
 
     respond_to do |format|
       format.json {
@@ -407,6 +422,7 @@ class Portal::OfferingsController < ApplicationController
           embeddable_type = embeddable.class.name
 
           metadata = offering.metadata.for_embeddable embeddable
+          enable_score = metadata.nil? ? false : metadata.enable_score
           max_score = metadata.nil? ? nil : metadata.max_score
 
           learners.map do |l|
@@ -442,6 +458,7 @@ class Portal::OfferingsController < ApplicationController
               previous_answers_and_feedback: previous_answers_and_feedback,
               embeddable_type: embeddable_type,
               embeddable_id: embeddable.id,
+              enable_score: enable_score,
               max_score: max_score,
               score: saveable.score
             }

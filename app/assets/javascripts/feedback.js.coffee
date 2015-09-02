@@ -212,6 +212,7 @@ FeedbackPopup = React.createFactory React.createClass
               answer: answer.answer
               current_feedback: answer.current_feedback
               previous_answers_and_feedback: answer.previous_answers_and_feedback
+              score: answer.score
             groupsByAnswer[key] ?= []
             groupsByAnswer[key].push answer
 
@@ -231,45 +232,56 @@ FeedbackPopup = React.createFactory React.createClass
         @setState
           loading: false
           groups: groups
-          maxScore: groups.all[0]?.max_score
+          maxScore: groups.all[0]?.answer.max_score
+          allowScoring: groups.all[0]?.answer.enable_score
 
         if @props.options.learner_id
           setTimeout (=> @scrollToGroup @props.options.learner_id), 0
 
   save: ->
+    # expand out group answers to save
     answers = []
     updateAnswer = []
-    for answer in @state.groups.all
-      if answer.new_feedback? and answer.new_feedback isnt answer.current_feedback
-        answers.push
-          saveable_id: answer.saveable_id
-          embeddable_type: answer.embeddable_type
-          new_feedback: answer.new_feedback
-          new_score: answer.new_score
-        updateAnswer.push answer
+    for group in @state.groups.all
+      feedbackChanged = group.answer.new_feedback? and group.answer.new_feedback isnt group.answer.current_feedback
+      scoreChanged = group.answer.new_score? and group.answer.new_score isnt group.answer.score
+      if feedbackChanged or scoreChanged
+        for answer in group.allAnswers
+          answers.push
+            saveable_id: answer.saveable_id
+            embeddable_type: answer.embeddable_type
+            feedback_changed: feedbackChanged
+            new_feedback: group.answer.new_feedback
+            score_changed: scoreChanged
+            new_score: group.answer.new_score
+          updateAnswer.push answer
 
-    if answers.length > 0
-      debugger
-      @setState saveMessage: 'Saving...'
-      jQuery.ajax
-        type: 'post'
-        url: "/portal/offerings/#{@props.options.offering_id}/update_feedback.json"
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify
-          answers: answers
-          max_score: @state.maxScore
-          embeddable_type: answers[0].embeddable_type
-          embeddable_id: answers[0].embeddable_id
-        success: =>
-          for answer in updateAnswer
-            jQuery("#feedback_#{answer.question_number}_#{answer.learner_id}").html(answer.new_feedback.escapeHTML())
+    firstAnswer = @state.groups.all[0].answer
+
+    @setState saveMessage: 'Saving...'
+    jQuery.ajax
+      type: 'post'
+      url: "/portal/offerings/#{@props.options.offering_id}/update_feedback.json"
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify
+        answers: answers
+        enable_score: @state.allowScoring
+        max_score: @state.maxScore
+        embeddable_type: firstAnswer.embeddable_type
+        embeddable_id: firstAnswer.embeddable_id
+      success: =>
+        for answer in updateAnswer
+          if answer.new_feedback?
+            jQuery("#feedback_#{answer.question_number}_#{answer.learner_id}").html(answer.new_feedback.escapeHTML()).show()
             answer.current_feedback = answer.new_feedback
+          if answer.new_score?
+            jQuery("#feedback_score_#{answer.question_number}_#{answer.learner_id}").html(answer.new_score).show()
             answer.score = answer.new_score
-          @setState dirty: false
-          @close()
-        error: =>
-          @setState saveMessage: 'Unable to save feedback!'
+        @setState dirty: false
+        @close()
+      error: =>
+        @setState saveMessage: 'Unable to save feedback!'
 
   cancel: ->
     if not @state.dirty or confirm('You have unsaved feedback.  Are you sure you want to leave without saving?')
@@ -298,6 +310,7 @@ FeedbackPopup = React.createFactory React.createClass
   scoreCheckboxChanged: ->
     @setState
       allowScoring: (React.findDOMNode @refs.scoreCheckbox).checked
+      dirty: true
 
   selectGroupType: (groupType) ->
     @setState selectedGroupType: groupType
@@ -306,7 +319,7 @@ FeedbackPopup = React.createFactory React.createClass
     (div {className: 'feedback_header'},
       (div {className: 'feedback_enable_score'},
         (div {},
-          (input {ref: 'scoreCheckbox', type: 'checkbox', onChange: @scoreCheckboxChanged}, 'Score?')
+          (input {ref: 'scoreCheckbox', type: 'checkbox', onChange: @scoreCheckboxChanged, checked: @state.allowScoring}, 'Score?')
         )
         if @state.allowScoring
           (div {},

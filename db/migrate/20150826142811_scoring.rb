@@ -9,6 +9,7 @@ class Scoring < ActiveRecord::Migration
       t.integer  "offering_id"
       t.integer  "embeddable_id"
       t.string   "embeddable_type"
+      t.boolean  "enable_score",  :default => false
       t.integer  "max_score"
       t.timestamps
     end
