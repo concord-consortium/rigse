@@ -298,13 +298,15 @@ module ApplicationHelper
   end
 
   def feedback_link(model, options, learner_id, saveable, metadata)
-    id = "feedback_#{options[:question_number]}_#{learner_id}"
+    feedback_id = "feedback_#{options[:question_number]}_#{learner_id}"
+    score_id = "score_#{options[:question_number]}_#{learner_id}"
+    popup_js =
     capture_haml do
       haml_tag(:div, :class => 'feedback_link') {
         haml_concat "Feedback: "
-        haml_tag(:a, feedback_text(saveable.answers.last), :id => id, :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}, learner_id: #{learner_id}});")
+        haml_tag(:a, feedback_text(saveable.answers.last), :id => feedback_id, :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}, learner_id: #{learner_id}, show_all: true});")
         haml_concat " Score: "
-        haml_concat score_text(saveable, metadata)
+        haml_tag(:a, score_text(saveable, metadata), :id => score_id, :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}, learner_id: #{learner_id}, show_all: true, focus_score: true});")
       }
     end
   end
@@ -331,6 +333,7 @@ module ApplicationHelper
     has_feedback(last_answer) ? last_answer.feedback : 'No Feedback'
   end
 
+  # NOTE: this code is replicated in feedback.js.coffee so that the score can be dynamically updated when the feedback closes
   def score_text(saveable, metadata)
     if !metadata || !metadata.enable_score
       'Disabled'

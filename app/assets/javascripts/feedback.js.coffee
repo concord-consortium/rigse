@@ -191,7 +191,7 @@ FeedbackPopup = React.createFactory React.createClass
     groups:
       all: []
       needsReview: []
-    selectedGroupType: 'needsReview'
+    selectedGroupType: if @props.options.show_all then 'all' else 'needsReview'
     maxScore: null
     allowScoring: false
 
@@ -243,7 +243,8 @@ FeedbackPopup = React.createFactory React.createClass
           allowScoring: groups.all[0]?.answer.enable_score
 
         if @props.options.learner_id and learnerGroupId
-          setTimeout (=> @scrollToGroup learnerGroupId, 0), 0
+          focusScore = @props.options.focus_score and @state.allowScoring and @state.maxScore > 0
+          setTimeout (=> @scrollToGroup learnerGroupId, 0, focusScore), 0
 
   save: ->
     # expand out group answers to save
@@ -283,7 +284,14 @@ FeedbackPopup = React.createFactory React.createClass
             jQuery("#feedback_#{answer.question_number}_#{answer.learner_id}").html(answer.new_feedback.escapeHTML()).show()
             answer.current_feedback = answer.new_feedback
           if answer.new_score?
-            jQuery("#feedback_score_#{answer.question_number}_#{answer.learner_id}").html(answer.new_score).show()
+            # any changes here should also be made to application_helper.rb#score_text
+            scoreText = if not @state.allowScoring
+              'Disabled'
+            else if answer.new_score.length is 0
+              'Not Scored'
+            else
+              "#{answer.new_score} out of #{@state.maxScore} (#{Math.round((answer.new_score / @state.maxScore) * 100)}%)"
+            jQuery("#score_#{answer.question_number}_#{answer.learner_id}").html(scoreText).show()
             answer.score = answer.new_score
         @setState dirty: false
         @close()
@@ -302,12 +310,16 @@ FeedbackPopup = React.createFactory React.createClass
     @setState
       dirty: dirty
 
-  scrollToGroup: (groupId, duration=250) ->
-    scrollArea = jQuery(".feedback-student-answers")
+  scrollToGroup: (groupId, duration=250, focusScore=false) ->
     group = jQuery("#feedback_group_#{groupId}")
-    top = scrollArea.scrollTop() + group.offset().top - scrollArea.offset().top
-    scrollArea.animate({scrollTop: top}, duration)
-    group.find('textarea').focus()
+    if group.length > 0
+      scrollArea = jQuery(".feedback-student-answers")
+      top = scrollArea.scrollTop() + group.offset().top - scrollArea.offset().top
+      scrollArea.animate({scrollTop: top}, duration)
+      if focusScore
+        group.find('input[type="text"]').focus()
+      else
+        group.find('textarea').focus()
 
   maxScoreChanged: (score) ->
     @setState
