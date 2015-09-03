@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150826142811) do
+ActiveRecord::Schema.define(:version => 20150903104556) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2371,9 +2371,10 @@ ActiveRecord::Schema.define(:version => 20150826142811) do
     t.integer  "learner_id"
     t.integer  "offering_id"
     t.integer  "response_count"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "score"
+    t.boolean  "no_written_feedback", :default => false
   end
 
   add_index "saveable_external_links", ["embeddable_id", "embeddable_type"], :name => "svbl_xtrn_links_poly"
@@ -2399,11 +2400,12 @@ ActiveRecord::Schema.define(:version => 20150826142811) do
     t.integer  "learner_id"
     t.integer  "offering_id"
     t.integer  "image_question_id"
-    t.integer  "response_count",                  :default => 0
-    t.datetime "created_at",                                     :null => false
-    t.datetime "updated_at",                                     :null => false
-    t.string   "uuid",              :limit => 36
+    t.integer  "response_count",                    :default => 0
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
+    t.string   "uuid",                :limit => 36
     t.integer  "score"
+    t.boolean  "no_written_feedback",               :default => false
   end
 
   add_index "saveable_image_questions", ["image_question_id"], :name => "index_saveable_image_questions_on_image_question_id"
@@ -2438,12 +2440,13 @@ ActiveRecord::Schema.define(:version => 20150826142811) do
   create_table "saveable_multiple_choices", :force => true do |t|
     t.integer  "learner_id"
     t.integer  "multiple_choice_id"
-    t.datetime "created_at",                                      :null => false
-    t.datetime "updated_at",                                      :null => false
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
     t.integer  "offering_id"
-    t.integer  "response_count",                   :default => 0
-    t.string   "uuid",               :limit => 36
+    t.integer  "response_count",                    :default => 0
+    t.string   "uuid",                :limit => 36
     t.integer  "score"
+    t.boolean  "no_written_feedback",               :default => false
   end
 
   add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"
@@ -2466,11 +2469,12 @@ ActiveRecord::Schema.define(:version => 20150826142811) do
   create_table "saveable_open_responses", :force => true do |t|
     t.integer  "learner_id"
     t.integer  "open_response_id"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "offering_id"
-    t.integer  "response_count",   :default => 0
+    t.integer  "response_count",      :default => 0
     t.integer  "score"
+    t.boolean  "no_written_feedback", :default => false
   end
 
   add_index "saveable_open_responses", ["learner_id"], :name => "index_saveable_open_responses_on_learner_id"

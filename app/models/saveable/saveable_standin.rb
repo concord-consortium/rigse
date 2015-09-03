@@ -47,4 +47,8 @@ class Saveable::SaveableStandin
     nil
   end
 
+  def no_written_feedback
+    false
+  end
+
 end

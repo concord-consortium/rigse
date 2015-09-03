@@ -383,8 +383,13 @@ class Portal::OfferingsController < ApplicationController
               current_answer.save
             end
           end
-          if answer[:score_changed]
-            saveable.score = answer[:new_score]
+          if answer[:score_changed] || answer[:no_written_feedback_changed]
+            if answer[:score_changed]
+              saveable.score = answer[:new_score]
+            end
+            if answer[:no_written_feedback_changed]
+              saveable.no_written_feedback = answer[:new_no_written_feedback]
+            end
             saveable.save
           end
         end
@@ -464,6 +469,7 @@ class Portal::OfferingsController < ApplicationController
               learner_name: l.name,
               saveable_id: saveable.respond_to?('id') ? saveable.id : 0,
               answer: answer,
+              no_written_feedback: !!saveable.no_written_feedback,
               current_feedback: saveable.current_feedback,
               previous_answers_and_feedback: previous_answers_and_feedback,
               embeddable_type: embeddable_type,

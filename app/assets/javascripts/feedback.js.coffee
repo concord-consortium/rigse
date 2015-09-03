@@ -132,7 +132,7 @@ ScoreBox = React.createFactory React.createClass
     percentage = Math.round((@state.score / @props.maxScore) * 100)
     (div {},
       (input {ref: 'score', type: 'text', value: @state.score, onChange: @changed, disabled: @props.disabled})
-      if isFinite(percentage) and not isNaN(percentage)
+      if isFinite(percentage) and not isNaN(percentage) and percentage > 0
         (div {className: 'feedback-score-percentage'}, "(#{percentage}%)")
     )
 
@@ -141,23 +141,37 @@ FeedbackArea = React.createFactory React.createClass
   displayName: 'FeedbackArea'
 
   getInitialState: ->
-    value: @props.answer.current_feedback
+    feedback: @props.answer.current_feedback
+    score: @props.answer.score
+    noWrittenFeedback: @props.answer.no_written_feedback
 
   feedbackChanged: ->
-    value = (React.findDOMNode @refs.feedback).value
-    @props.answer.new_feedback = value
+    feedback = (React.findDOMNode @refs.feedback).value
+    @props.answer.new_feedback = feedback
     @setState
-      value: value
+      feedback: feedback
       dirty: true
     @props.setDirty true
 
   scoreChanged: (newScore) ->
     @props.answer.new_score = newScore
+    @setState
+      score: newScore
+      dirty: true
+    @props.setDirty true
+
+  noWrittenFeedbackChanged: ->
+    checked = (React.findDOMNode @refs.noWrittenFeedback).checked
+    @props.answer.new_no_written_feedback = checked
+    @setState
+      noWrittenFeedback: checked
+      dirty: true
+    @props.setDirty true
 
   copyMostRecentFeedback: (e) ->
     e.preventDefault()
     if @props.answer.previous_answers_and_feedback.length > 0
-      @setState value: @props.answer.previous_answers_and_feedback.slice(-1)[0].feedback
+      @setState feedback: @props.answer.previous_answers_and_feedback.slice(-1)[0].feedback
 
   render: ->
     disabled = (@props.maxScore is 0) or (@props.maxScore is null)
@@ -170,12 +184,13 @@ FeedbackArea = React.createFactory React.createClass
             (a {href: '#', onClick: @copyMostRecentFeedback}, 'copy most recent')
             ')'
           )
+        (input {type: 'checkbox', ref: 'noWrittenFeedback', className: 'feedback-no-written-feedback-checkbox', checked: @state.noWrittenFeedback, onChange: @noWrittenFeedbackChanged}, 'No written feedback')
       )
-      (textarea {ref: 'feedback', id: "feedback_textarea_#{@props.answer.learner_id}", value: @state.value, onChange: @feedbackChanged, placeholder: 'Your feedback...'})
+      (textarea {ref: 'feedback', id: "feedback_textarea_#{@props.answer.learner_id}", value: @state.feedback, onChange: @feedbackChanged, placeholder: 'Your feedback...', disabled: @state.noWrittenFeedback})
       if @props.allowScoring
         (div {className: 'feedback_score_value'},
           (div {}, 'Score')
-          (ScoreBox {score: @props.answer.score, disabled: disabled, maxScore: @props.maxScore, changed: @scoreChanged})
+          (ScoreBox {score: @state.score, disabled: disabled, maxScore: @props.maxScore, changed: @scoreChanged})
         )
     )
 
@@ -253,7 +268,8 @@ FeedbackPopup = React.createFactory React.createClass
     for group in @state.groups.all
       feedbackChanged = group.answer.new_feedback? and group.answer.new_feedback isnt group.answer.current_feedback
       scoreChanged = group.answer.new_score? and group.answer.new_score isnt group.answer.score
-      if feedbackChanged or scoreChanged
+      noWrittenFeedbackChanged = group.answer.new_no_written_feedback? and group.answer.new_no_written_feedback isnt group.answer.no_written_feedback
+      if feedbackChanged or scoreChanged or noWrittenFeedbackChanged
         for answer in group.allAnswers
           answers.push
             saveable_id: answer.saveable_id
@@ -262,6 +278,8 @@ FeedbackPopup = React.createFactory React.createClass
             new_feedback: group.answer.new_feedback
             score_changed: scoreChanged
             new_score: group.answer.new_score
+            no_written_feedback_changed: noWrittenFeedbackChanged
+            new_no_written_feedback: group.answer.new_no_written_feedback
           updateAnswer.push answer
 
     firstAnswer = @state.groups.all[0].answer
@@ -280,15 +298,26 @@ FeedbackPopup = React.createFactory React.createClass
         embeddable_id: firstAnswer.embeddable_id
       success: =>
         for answer in updateAnswer
-          if answer.new_feedback?
-            jQuery("#feedback_#{answer.question_number}_#{answer.learner_id}").html(answer.new_feedback.escapeHTML()).show()
+          if answer.new_no_written_feedback?
+            answer.no_written_feedback = answer.new_no_written_feedback
+
+          feedback = if answer.no_written_feedback
+            'No written feedback selected'
+          else if answer.new_feedback?
             answer.current_feedback = answer.new_feedback
+            answer.new_feedback.escapeHTML()
+          else if answer.current_feedback?.length > 0
+            answer.current_feedback.escapeHTML()
+          else
+            'No feedback'
+          jQuery("#feedback_#{answer.question_number}_#{answer.learner_id}").html(feedback)
+
           if answer.new_score?
             # any changes here should also be made to application_helper.rb#score_text
             scoreText = if not @state.allowScoring
               'Disabled'
             else if answer.new_score.length is 0
-              'Not Scored'
+              'Not scored'
             else
               "#{answer.new_score} out of #{@state.maxScore} (#{Math.round((answer.new_score / @state.maxScore) * 100)}%)"
             jQuery("#score_#{answer.question_number}_#{answer.learner_id}").html(scoreText).show()
