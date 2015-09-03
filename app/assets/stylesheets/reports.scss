@@ -314,6 +314,10 @@ $incorrect_color: #ffdddd;
           .feedback-all-feedback {
             clear: both;
             margin-top: 20px;
+            td.feedback-bullet {
+              vertical-align: top;
+              padding-right: 5px;
+            }
             .feedback_answer {
               float: none;
             }

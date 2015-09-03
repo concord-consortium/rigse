@@ -1,4 +1,4 @@
-{div, button, span, input, img, textarea, a, iframe, ol, li, select, option} = React.DOM
+{div, button, span, input, img, textarea, a, iframe, select, option, table, tbody, tr, td} = React.DOM
 
 # this is the only "exported" function - the rest of the code is automatically wrapped in a IIFE by CoffeeScript
 window.get_feedback_popup = (options) ->
@@ -399,9 +399,16 @@ FeedbackPopup = React.createFactory React.createClass
                         if group.answer.previous_answers_and_feedback.length > 0
                           (div {className: 'feedback-all-feedback'},
                             (div {}, 'Previous feedback:')
-                            (ol {},
-                              for answerAndFeedback in group.answer.previous_answers_and_feedback
-                                (li {}, (PreviousAnswerAndFeedbackItem {answer: group.answer, item: answerAndFeedback}))
+
+                            # could not get css to align the list bullet to top so I went with a table
+                            (table {},
+                              (tbody {},
+                                for answerAndFeedback in group.answer.previous_answers_and_feedback
+                                  (tr {},
+                                    (td {className: 'feedback-bullet', dangerouslySetInnerHTML: {__html: '&#8226;'}})
+                                    (td {}, (PreviousAnswerAndFeedbackItem {answer: group.answer, item: answerAndFeedback}))
+                                  )
+                              )
                             )
                           )
                       )
