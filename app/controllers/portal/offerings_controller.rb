@@ -440,10 +440,20 @@ class Portal::OfferingsController < ApplicationController
             answer = saveable.answered? ? submitted_answer : nil
             if embeddable_type == 'Embeddable::ImageQuestion'
               if answer != nil
-                answer = dataservice_blob_raw_url(:id => answer[:blob].id, :token => answer[:blob].token)
+                answer = {
+                  url: dataservice_blob_raw_url(:id => answer[:blob].id, :token => answer[:blob].token),
+                  note: answer[:note]
+                }
               end
               previous_answers_and_feedback = previous_answers_and_feedback.map do |a|
-                {answer: dataservice_blob_raw_url(:id => a[:answer][:blob].id, :token => a[:answer][:blob].token), feedback: a[:feedback], date: a[:date]}
+                {
+                  answer: {
+                    url: dataservice_blob_raw_url(:id => a[:answer][:blob].id, :token => a[:answer][:blob].token),
+                    note: a[:answer][:note]
+                  },
+                  feedback: a[:feedback],
+                  date: a[:date]
+                }
               end
             end
 

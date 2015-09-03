@@ -30,9 +30,10 @@ PreviousAnswerAndFeedbackItem = React.createFactory React.createClass
     (span {},
       if @state.show
         (div {className: 'feedback_answer'},
-          (a {href: item.answer, target: '_blank'},
-            (img {src: item.answer})
+          (a {href: item.answer.url, target: '_blank'},
+            (img {src: item.answer.url})
           )
+          (div {className: 'feedback_drawing_note'}, item.answer.note)
           (div {className: 'feedback-text'}, "#{item.feedback} (#{item.date})")
         )
       @renderShowHide()
@@ -340,9 +341,10 @@ FeedbackPopup = React.createFactory React.createClass
     (div {className: 'feedback_answer'},
       if answer.question.drawing_prompt?
         (div {className: 'feedback_drawing_prompt', dangerouslySetInnerHTML: {__html: answer.question.drawing_prompt}})
-      (a {href: answer.answer, target: '_blank'},
-        (img {src: answer.answer})
+      (a {href: answer.answer.url, target: '_blank'},
+        (img {src: answer.answer.url})
       )
+      (div {className: 'feedback_drawing_note'}, answer.answer.note)
     )
 
   renderOpenResponseAnswer: (answer) ->
