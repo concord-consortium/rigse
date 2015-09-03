@@ -110,8 +110,8 @@ FeedbackPopupGroupSelect = React.createFactory React.createClass
         (span {}, @state.emptyListMessage or 'No students were found')
 
       (span {className: 'feedback-student-list-show'}, 'Show:')
-      (FeedbackPopupGroupSelectRadio {value: 'all', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'All Students')
-      (FeedbackPopupGroupSelectRadio {value: 'needsFeedback', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'Students Who Need Feedback')
+      (FeedbackPopupGroupSelectRadio {value: 'needsReview', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'Students that need review')
+      (FeedbackPopupGroupSelectRadio {value: 'all', groupType: @props.selectedGroupType, radioSelected: @radioSelected}, 'All students')
     )
 
 ScoreBox = React.createFactory React.createClass
@@ -189,8 +189,8 @@ FeedbackPopup = React.createFactory React.createClass
     saveMessage: null
     groups:
       all: []
-      needsFeedback: []
-    selectedGroupType: 'all'
+      needsReview: []
+    selectedGroupType: 'needsReview'
     maxScore: null
     allowScoring: false
 
@@ -220,7 +220,7 @@ FeedbackPopup = React.createFactory React.createClass
         id = 1
         groups =
           all: []
-          needsFeedback: []
+          needsReview: []
         for key, answers of groupsByAnswer
           group =
             id: id++
@@ -228,7 +228,7 @@ FeedbackPopup = React.createFactory React.createClass
             answer: answers[0]
             allAnswers: answers
           groups.all.push group
-          groups.needsFeedback.push group if answer.answer and (answer.current_feedback is null or answer.current_feedback.length is 0)
+          groups.needsReview.push group if answer.answer and (answer.current_feedback is null or answer.current_feedback.length is 0)
 
           # save the group with the requested learner
           if @props.options.learner_id and not learnerGroupId
