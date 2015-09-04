@@ -1,3 +1,17 @@
+###
+
+  TODO:
+
+  1. Add new GET endpoint in offerings_controller to only grab answeres to current question instead of the entire report
+  2. Add tests once the new GET endpoint is completed
+  3. Ask Ethan for feedback/score styling in student report
+
+  NOTE:
+
+  The report page in dev shows a rather large set of N+1 error messages.  To hide them uncomment the code at the bottom of this file.
+
+###
+
 {div, button, span, input, img, textarea, a, iframe, select, option, table, tbody, tr, td} = React.DOM
 
 # this is the only "exported" function - the rest of the code is automatically wrapped in a IIFE by CoffeeScript
@@ -505,13 +519,17 @@ FeedbackPopup = React.createFactory React.createClass
         )
         if @state.saveMessage
           (div {className: 'feedback_save_message'}, @state.saveMessage)
+        else
+          (div {className: 'feedback_save_message'}, 'Testing...')
+
         (div {className: 'feedback_buttons'},
           (button {onClick: @save, disabled: not @state.dirty}, 'Save')
           (button {onClick: @cancel}, 'Cancel')
         )
       )
 
-# TODO: remove before integrating with master
+###
+# Removed n plus 1 error div while developing
 hideNPlus1 = ->
   nPlus1 = jQuery("div[data-is-bullet-footer]")
   if nPlus1.length > 0
@@ -519,4 +537,4 @@ hideNPlus1 = ->
   else
     setTimeout hideNPlus1, 250
 setTimeout hideNPlus1, 250
-
+###

@@ -422,4 +422,11 @@ $incorrect_color: #ffdddd;
   .feedback_error_message {
     color: #f00;
   }
+  .feedback_save_message
+  {
+    position: absolute;
+    bottom: 15px;
+    left: 10px;
+    font-weight: bold;
+  }
 }
