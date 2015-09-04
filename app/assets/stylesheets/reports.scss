@@ -269,6 +269,10 @@ $incorrect_color: #ffdddd;
       overflow: auto;
       margin-top: 10px;
 
+      .feedback-summary {
+        padding: 10px;
+      }
+
       .feedback-student-answer {
         overflow: hidden;
         padding: 10px;
@@ -371,11 +375,6 @@ $incorrect_color: #ffdddd;
     }
     .feedback-student-answers > div:nth-child(even) {
       background: #f9eec1;
-    }
-    .feedback-student-no-answers {
-      div {
-        padding: 10px;
-      }
     }
 
     .feedback_score_value {

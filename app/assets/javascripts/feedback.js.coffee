@@ -194,6 +194,21 @@ FeedbackArea = React.createFactory React.createClass
         )
     )
 
+FeedbackSummary = React.createFactory React.createClass
+
+  displayName: 'FeedbackSummary'
+
+  render: ->
+    total = @props.groups.all.length
+    needsReview = @props.groups.needsReview.length
+    noAnswer = @props.groups.noAnswer.length
+
+    (div {className: 'feedback-summary'},
+      (div {}, "Students awaiting review: #{needsReview}")
+      (div {}, "Students scored/provided feedback: #{total - needsReview - noAnswer}")
+      (div {}, "Students with no answer: #{noAnswer}")
+    )
+
 FeedbackPopup = React.createFactory React.createClass
 
   displayName: 'FeedbackPopup'
@@ -265,6 +280,7 @@ FeedbackPopup = React.createFactory React.createClass
     groups =
       all: []
       needsReview: []
+      noAnswer: []
     for key, answers of groupsByAnswer
       group =
         id: id++
@@ -276,6 +292,7 @@ FeedbackPopup = React.createFactory React.createClass
       needsFeedback = ((answer.current_feedback is null or answer.current_feedback.length is 0) and not answer.no_written_feedback)
       needsScore = allowScoring and maxScore and (answer.score is null or answer.score is 0)
       groups.needsReview.push group if answer.answer and (needsFeedback or needsScore)
+      groups.noAnswer.push group if not answer.answer?
     groups
 
   save: ->
@@ -446,6 +463,7 @@ FeedbackPopup = React.createFactory React.createClass
           (FeedbackPopupGroupSelect {groups: @state.groups, selectedGroupType: @state.selectedGroupType, selectGroupType: @selectGroupType, scrollToGroup: @scrollToGroup})
           if @state.groups[@state.selectedGroupType].length > 0
             (div {className: 'feedback-student-answers'},
+              (FeedbackSummary {groups: @state.groups})
               for group, i in @state.groups[@state.selectedGroupType]
                 (div {id: "feedback_group_#{group.id}", className: 'feedback-student-answer', key: group.id},
                   (div {className: 'feedback-student-name'}, group.name)
@@ -481,8 +499,8 @@ FeedbackPopup = React.createFactory React.createClass
                 )
             )
           else
-            (div {className: 'feedback-student-no-answers'},
-              (div {}, 'Sorry, no students were found.')
+            (div {className: 'feedback-student-answers'},
+              (FeedbackSummary {groups: @state.groups})
             )
         )
         if @state.saveMessage
