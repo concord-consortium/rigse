@@ -221,54 +221,71 @@ FeedbackPopup = React.createFactory React.createClass
       error: =>
         @setState error: 'Unable to load report data'
       success: (data) =>
-        groupsByAnswer = {}
-        for answer in data.report
-          if answer.question_number is @props.options.question_number
-            key = JSON.stringify
-              answer: answer.answer
-              current_feedback: answer.current_feedback
-              previous_answers_and_feedback: answer.previous_answers_and_feedback
-              score: answer.score
-            groupsByAnswer[key] ?= []
-            groupsByAnswer[key].push answer
+        answers = @filterAnswers data.report
+        [allowScoring, maxScore] = if answers.length > 0 then [answers[0].enable_score, answers[0].max_score] else [false, null]
+        groups = @groupAnswers answers, allowScoring, maxScore
 
-        learnerGroupId = 0
-        id = 1
-        groups =
-          all: []
-          needsReview: []
-        for key, answers of groupsByAnswer
-          group =
-            id: id++
-            name: (answer.learner_name for answer in answers).join ', '
-            answer: answers[0]
-            allAnswers: answers
-          groups.all.push group
-          groups.needsReview.push group if answer.answer and (answer.current_feedback is null or answer.current_feedback.length is 0)
-
-          # save the group with the requested learner
-          if @props.options.learner_id and not learnerGroupId
-            for answer in answers
-              learnerGroupId = group.id if answer.learner_id is @props.options.learner_id
+        if @props.options.learner_id
+          learnerGroupId = 0
+          for group in groups
+            if not learnerGroupId
+              for answer in group.answers
+                learnerGroupId = group.id if answer.learner_id is @props.options.learner_id
 
         @setState
           loading: false
+          answers: answers
           groups: groups
-          maxScore: groups.all[0]?.answer.max_score
-          allowScoring: groups.all[0]?.answer.enable_score
+          maxScore: maxScore
+          allowScoring: allowScoring
 
         if @props.options.learner_id and learnerGroupId
-          focusScore = @props.options.focus_score and @state.allowScoring and @state.maxScore > 0
+          focusScore = @props.options.focus_score and allowScoring and maxScore > 0
           setTimeout (=> @scrollToGroup learnerGroupId, 0, focusScore), 0
+
+  filterAnswers: (unfilteredAnswers) ->
+    filteredAnswers = []
+    for answer in unfilteredAnswers
+      if answer.question_number is @props.options.question_number
+        filteredAnswers.push answer
+    filteredAnswers
+
+  groupAnswers: (ungroupedAnswers, allowScoring, maxScore) ->
+    groupsByAnswer = {}
+    for answer in ungroupedAnswers
+      if answer.question_number is @props.options.question_number
+        key = JSON.stringify
+          answer: answer.answer
+          current_feedback: answer.current_feedback
+          previous_answers_and_feedback: answer.previous_answers_and_feedback
+          score: answer.score
+        groupsByAnswer[key] ?= []
+        groupsByAnswer[key].push answer
+    id = 1
+    groups =
+      all: []
+      needsReview: []
+    for key, answers of groupsByAnswer
+      group =
+        id: id++
+        name: (answer.learner_name for answer in answers).join ', '
+        answer: answers[0]
+        allAnswers: answers
+      groups.all.push group
+
+      needsFeedback = ((answer.current_feedback is null or answer.current_feedback.length is 0) and not answer.no_written_feedback)
+      needsScore = allowScoring and maxScore and (answer.score is null or answer.score is 0)
+      groups.needsReview.push group if answer.answer and (needsFeedback or needsScore)
+    groups
 
   save: ->
     # expand out group answers to save
     answers = []
     updateAnswer = []
     for group in @state.groups.all
-      feedbackChanged = group.answer.new_feedback? and group.answer.new_feedback isnt group.answer.current_feedback
-      scoreChanged = group.answer.new_score? and group.answer.new_score isnt group.answer.score
-      noWrittenFeedbackChanged = group.answer.new_no_written_feedback? and group.answer.new_no_written_feedback isnt group.answer.no_written_feedback
+      feedbackChanged = group.answer.hasOwnProperty('new_feedback') and group.answer.new_feedback isnt group.answer.current_feedback
+      scoreChanged = group.answer.hasOwnProperty('new_score') and group.answer.new_score isnt group.answer.score
+      noWrittenFeedbackChanged = group.answer.hasOwnProperty('new_no_written_feedback') and group.answer.new_no_written_feedback isnt group.answer.no_written_feedback
       if feedbackChanged or scoreChanged or noWrittenFeedbackChanged
         for answer in group.allAnswers
           answers.push
@@ -298,12 +315,12 @@ FeedbackPopup = React.createFactory React.createClass
         embeddable_id: firstAnswer.embeddable_id
       success: =>
         for answer in updateAnswer
-          if answer.new_no_written_feedback?
+          if answer.hasOwnProperty('new_no_written_feedback')
             answer.no_written_feedback = answer.new_no_written_feedback
 
           feedback = if answer.no_written_feedback
             'No written feedback selected'
-          else if answer.new_feedback?
+          else if answer.hasOwnProperty('new_feedback')
             answer.current_feedback = answer.new_feedback
             answer.new_feedback.escapeHTML()
           else if answer.current_feedback?.length > 0
@@ -312,11 +329,11 @@ FeedbackPopup = React.createFactory React.createClass
             'No feedback'
           jQuery("#feedback_#{answer.question_number}_#{answer.learner_id}").html(feedback)
 
-          if answer.new_score?
+          if answer.hasOwnProperty('new_score')
             # any changes here should also be made to application_helper.rb#score_text
             scoreText = if not @state.allowScoring
               'Disabled'
-            else if answer.new_score.length is 0
+            else if answer.new_score is null or answer.new_score.length is 0
               'Not scored'
             else
               "#{answer.new_score} out of #{@state.maxScore} (#{Math.round((answer.new_score / @state.maxScore) * 100)}%)"
@@ -353,11 +370,14 @@ FeedbackPopup = React.createFactory React.createClass
   maxScoreChanged: (score) ->
     @setState
       maxScore: score
+      groups: @groupAnswers @state.answers, @state.allowScoring, score
       dirty: true
 
   scoreCheckboxChanged: ->
+    allowScoring = (React.findDOMNode @refs.scoreCheckbox).checked
     @setState
-      allowScoring: (React.findDOMNode @refs.scoreCheckbox).checked
+      allowScoring: allowScoring
+      groups: @groupAnswers @state.answers, allowScoring, @state.maxScore
       dirty: true
 
   selectGroupType: (groupType) ->
