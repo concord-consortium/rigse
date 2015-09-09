@@ -1,16 +1,19 @@
 class API::V1::StudentsController < API::APIController
 
   # POST api/v1/students
-	def create
-		registration = API::V1::StudentRegistration.new(params)
+  def create
+    registration = API::V1::StudentRegistration.new(params)
+    if !current_visitor.anonymous?
+      registration.set_user current_visitor
+    end
 
-		if registration.valid?
-			registration.save
-			render :json => registration.attributes
-		else
-			error(registration.errors)
-		end
-	end
+    if registration.valid?
+      registration.save
+      render :json => registration.attributes
+    else
+      error(registration.errors)
+    end
+  end
 
   # GET api/v1/students/check_class_word
   def check_class_word

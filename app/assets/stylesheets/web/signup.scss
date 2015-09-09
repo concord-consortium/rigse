@@ -12,7 +12,7 @@ form.signup,form.imported_confirm {
   }
   h2 {
     text-align: center;
-    margin: 5px 0;
+    margin: 20px 0 10px 0;
     padding: 0 5px;
     font-size: 20px;
   }
@@ -49,12 +49,12 @@ form.signup,form.imported_confirm {
   }
   button, input[type="submit"] {
     display: block;
-	padding: 7px 3px;
-	width: 264px;
-	font-size: 16px;
-	border-radius: 4px;
-	outline: none;
-	
+  padding: 7px 3px;
+  width: 264px;
+  font-size: 16px;
+  border-radius: 4px;
+  outline: none;
+
     &:disabled {
       opacity: 0.3;
       cursor: default;
@@ -120,7 +120,7 @@ form.signup,form.imported_confirm {
     margin-left: 0px;
   }
   .registration-steps {
-	color: #95939C;
+  color: #95939C;
     font-size: 0.9em;
     left: 229px;
     position: absolute;

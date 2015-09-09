@@ -525,6 +525,10 @@ class User < ActiveRecord::Base
     portal_teacher && (portal_teacher.teacher_clazzes.select{|tc| tc.active }).count > 0
   end
 
+  def has_portal_user_type?
+    portal_teacher || portal_student
+  end
+
   protected
   def make_activation_code
     self.deleted_at = nil

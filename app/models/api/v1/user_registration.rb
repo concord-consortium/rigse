@@ -18,6 +18,12 @@ class API::V1::UserRegistration
 
   before_validation :set_defaults
 
+  # used by oauth signup path to preset the current user
+  def set_user(user)
+    @user = user
+    @user_set = true
+  end
+
   def set_defaults
     self.password_confirmation = self.password
   end
@@ -32,7 +38,7 @@ class API::V1::UserRegistration
   end
 
   def new_user
-    _user = User.new(user_params)
+    _user = @user || User.new(user_params)
     _user.skip_notifications = should_skip_email_notification
     _user
   end
@@ -63,11 +69,11 @@ class API::V1::UserRegistration
   protected
 
   def should_skip_email_notification
-    false
+    !!@user_set
   end
 
   def should_skip_login_validation
-    false
+    !!@user_set
   end
 
   def persist_user
