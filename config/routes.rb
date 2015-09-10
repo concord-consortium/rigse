@@ -277,6 +277,7 @@ RailsPortal::Application.routes.draw do
     match '/opensession' => 'sessions#create', :as => :open_id_complete, :constraints => { :method => 'get' }
     match '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => 'get' }
     match '/thanks_for_sign_up/:type/:login' => 'users#registration_successful', :as => :thanks_for_sign_up, :type=>nil,:login=>nil
+    match '/portal/user_type_selector/' => 'portal/user_type_selector#index', :as => :portal_user_type_selector
 
     resources :users do
       member do

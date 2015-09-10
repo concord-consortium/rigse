@@ -1,4 +1,4 @@
-%div{'ng-controller' => 'RegistrationController as regCtrl'}
+%div{'ng-controller' => 'RegistrationController as regCtrl', 'ng-init' => "regCtrl.initialize({anonymous: #{current_visitor.anonymous?}})"}
   = form_tag '',
     'with-errors' => 'true',
     'id' => 'new-account-form',
@@ -6,51 +6,55 @@
     'validate' => 'false',
     'class' => 'signup' do
 
-    %h2 Sign Up
+    - if current_visitor.anonymous?
+      %h2 Sign Up
+    - else
+      %h2 Finish Signing Up
     .unknown-error
 
     %div{"ng-switch" => "regCtrl.nowShowing()"}
       = field_set_tag nil, "ng-switch-when" => "page1" do
         %span.registration-steps
           Step 1 of 3
-        .group
-          .f-row.half
-            %input{'type'   => "text",
-              'placeholder' => 'First Name',
-              'name'        => 'first_name',
+        - if current_visitor.anonymous?
+          .group
+            .f-row.half
+              %input{'type'   => "text",
+                'placeholder' => 'First Name',
+                'name'        => 'first_name',
+                'non-blank'   => true,
+                'ng-model'    => 'regCtrl.first_name'}
+
+            .f-row.half
+              %input{'type' => "text",
+              'placeholder' => 'Last Name',
               'non-blank'   => true,
-              'ng-model'    => 'regCtrl.first_name'}
+              'ng-model'    => 'regCtrl.last_name'}
 
-          .f-row.half
-            %input{'type' => "text",
-            'placeholder' => 'Last Name',
-            'non-blank'   => true,
-            'ng-model'    => 'regCtrl.last_name'}
+          .group
+            .f-row
+              %input{'type'        => "password",
+                'name'             => 'password',
+                'minLength'        => 6,
+                'non-blank'        => true,
+                'placeholder'      => 'Password',
+                'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+                'ng-model'         =>'regCtrl.password'}
+              .div{'ng-messages' => "signup.password.$error"}
+                .div{'ng-message' => "minlength","class" => "error-message"}
+                  Password is too short
 
-        .group
-          .f-row
-            %input{'type'        => "password",
-              'name'             => 'password',
-              'minLength'        => 6,
-              'non-blank'        => true,
-              'placeholder'      => 'Password',
-              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-              'ng-model'         =>'regCtrl.password'}
-            .div{'ng-messages' => "signup.password.$error"}
-              .div{'ng-message' => "minlength","class" => "error-message"}
-                Password is too short
-
-          .f-row
-            %input{'type'        => "password",
-              'placeholder'      => 'Confirm Password',
-              'name'             => 'password_confirmation',
-              'match'            => "regCtrl.password",
-              'non-blank'        => true,
-              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-              'ng-model'         => 'regCtrl.password_confirmation' }
-            .div{'ng-messages' => "signup.password_confirmation.$error"}
-              .div{'ng-message' => "match","class" => "error-message"}
-                Passwords do not match
+            .f-row
+              %input{'type'        => "password",
+                'placeholder'      => 'Confirm Password',
+                'name'             => 'password_confirmation',
+                'match'            => "regCtrl.password",
+                'non-blank'        => true,
+                'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+                'ng-model'         => 'regCtrl.password_confirmation' }
+              .div{'ng-messages' => "signup.password_confirmation.$error"}
+                .div{'ng-message' => "match","class" => "error-message"}
+                  Passwords do not match
 
         .group
           .f-row
@@ -130,47 +134,48 @@
       = field_set_tag nil, id: 'teacher-fieldset', "ng-switch-when" => "teacher" do
         %span.registration-steps
           Step 2 of 3
-        .group
-          .f-row
-            %input{'type'   => "text",
-              'name'             => 'login',
-              'minLength'        => 3,
-              'non-blank'        => true,
-              'placeholder'      => 'create username',
-              'username-avail'   => 'true',
-              'server-errors'    => true,
-              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-              'ng-model'         =>'regCtrl.login'}
+        - if current_visitor.anonymous?
+          .group
+            .f-row
+              %input{'type'   => "text",
+                'name'             => 'login',
+                'minLength'        => 3,
+                'non-blank'        => true,
+                'placeholder'      => 'create username',
+                'username-avail'   => 'true',
+                'server-errors'    => true,
+                'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+                'ng-model'         =>'regCtrl.login'}
 
-            .div{'ng-messages'  => "signup.login.$error"}
+              .div{'ng-messages'  => "signup.login.$error"}
+                .div{'ng-message' => "non-blank"}
+                .div{'ng-message' => "minlength","class" => "error-message"}
+                  Login is too short
+                .div{'ng-message' => "usernameAvail","class" => "error-message"}
+                  That login is taken
+                .div{'ng-message' => "serverErrors","class" => "error-message"}
+                  Please select another email
+            .f-row
+              %input{'type'        => "text",
+                'name'             => 'email',
+                'non-blank'        => true,
+                'placeholder'      => 'email@example.com',
+                'ng-pattern'       => "/\\S+@\\S+/",
+                'server-errors'    => true,
+                'email-avail'      => 'true',
+                'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
+                'ng-model'         =>'regCtrl.email'}
+
+            .div{'ng-messages'  => "signup.email.$error"}
               .div{'ng-message' => "non-blank"}
+              .div{'ng-message' => "pattern","class" => "error-message"}
+                Email doesn't appear to be a valid email
               .div{'ng-message' => "minlength","class" => "error-message"}
-                Login is too short
-              .div{'ng-message' => "usernameAvail","class" => "error-message"}
-                That login is taken
+                Email address is too short
+              .div{'ng-message' => "emailAvail","class" => "error-message"}
+                Email belongs to an existing user
               .div{'ng-message' => "serverErrors","class" => "error-message"}
-                Please select another email
-          .f-row
-            %input{'type'        => "text",
-              'name'             => 'email',
-              'non-blank'        => true,
-              'placeholder'      => 'email@example.com',
-              'ng-pattern'       => "/\\S+@\\S+/",
-              'server-errors'    => true,
-              'email-avail'      => 'true',
-              'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
-              'ng-model'         =>'regCtrl.email'}
-
-          .div{'ng-messages'  => "signup.email.$error"}
-            .div{'ng-message' => "non-blank"}
-            .div{'ng-message' => "pattern","class" => "error-message"}
-              Email doesn't appear to be a valid email
-            .div{'ng-message' => "minlength","class" => "error-message"}
-              Email address is too short
-            .div{'ng-message' => "emailAvail","class" => "error-message"}
-              Email belongs to an existing user
-            .div{'ng-message' => "serverErrors","class" => "error-message"}
-              Email doesn't appear to be a valid email
+                Email doesn't appear to be a valid email
 
         .group
           .f-row
@@ -273,17 +278,27 @@
         %div{"ng-switch" => "regCtrl.registrationType"}
           %div{"ng-switch-when" => "student"}
             %div.success_message_box
-              %h3 Thanks for signing up!
-              %p.signup-success
-                You have successfully registered {{regCtrl.first_name}} {{regCtrl.last_name}}
-                with the user name
-                %span.big {{regCtrl.login}}.
-              %p.signin-instruction
-                Use this user name and password you provided to sign in.
+              - if current_visitor.anonymous?
+                %h3 Thanks for signing up!
+                %p.signup-success
+                  You have successfully registered {{regCtrl.first_name}} {{regCtrl.last_name}}
+                  with the user name
+                  %span.big {{regCtrl.login}}.
+                %p.signin-instruction
+                  Use this user name and password you provided to sign in.
+              - else
+                %h3 Thanks for finishing signing up!
+                %p.signup-success
+                  You have successfully completed the registration.
+                  =link_to "Start using the site.", home_url()
           %div{"ng-switch-when" => "teacher"}
             %div.success_message_box
-              %h3 Thanks for signing up!
-              %p We're sending you an email with your activation code.
+              - if current_visitor.anonymous?
+                %h3 Thanks for signing up!
+                %p We're sending you an email with your activation code.
+              - else
+                %h3 Thanks for finishing signing up!
+                =link_to "Start using the site.", home_url()
 
     .group
       .f-row.wait-message

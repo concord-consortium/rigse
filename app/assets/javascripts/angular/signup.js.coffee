@@ -7,13 +7,16 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
     self.serverErrors = errorList.list
     self.editSchool = false
 
+    self.initialize = (options) ->
+      self.anonymous = options?.anonymous
+
     self.addError = () ->
       errorList.addError('first_name',self.last_name,'message')
 
     self.loadCountries = () ->
       callback = () ->
         jQuery('input[placeholder], textarea[placeholder]').placeholder()
-        
+
       self.loadRemoteCollection('countries', {}, callback)
 
     self.loadStates = () ->
@@ -22,7 +25,7 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
     self.loadSecurityQuestions = () ->
       callback = () ->
         jQuery('input[placeholder], textarea[placeholder]').placeholder()
-      
+
       self.loadRemoteCollection('security_questions', {}, callback)
 
     self.loadDisrticts = () ->
@@ -104,7 +107,10 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
       return true
 
     self.readyToRegister = () ->
-      (self.first_name && self.last_name && self.password_confirmation && self.registrationType)
+      if self.anonymous
+        (self.first_name && self.last_name && self.password_confirmation && self.registrationType)
+      else
+        self.registrationType
 
     self.sendRegistration = () ->
       resource = "#{self.registrationType}s"
@@ -114,7 +120,7 @@ angular.module('ccSignup', ['ccSignupDirectives', 'ui.select', 'ui.validate', 'n
         for field of data
           self[field] = data[field]
         gaPageView.push("/thanks_for_sign_up/#{self.registrationType}/")
-        
+
     self.sendSchool = () ->
       resource = "schools"
       data =

@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :original_user
   before_filter :portal_resources
+  before_filter :check_for_select_portal_user_type
   before_filter :check_for_password_reset_requirement
   before_filter :check_student_security_questions_ok
   before_filter :check_student_consent
@@ -128,7 +129,16 @@ class ApplicationController < ActionController::Base
 
   def session_sensitive_path
     path = request.env['PATH_INFO']
-    return path =~ /password|session|sign_in|sign_out|security_questions|consent|help/i
+    return path =~ /password|session|sign_in|sign_out|security_questions|consent|help|user_type_selector/i
+  end
+
+  def check_for_select_portal_user_type
+    if request.format && request.format.html? && current_visitor && current_visitor.require_portal_user_type && !current_visitor.has_portal_user_type?
+      unless session_sensitive_path
+        flash.keep
+        redirect_to portal_user_type_selector_path
+      end
+    end
   end
 
   def check_for_password_reset_requirement
