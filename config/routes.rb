@@ -218,6 +218,7 @@ RailsPortal::Application.routes.draw do
           get :activity_report
           get :student_report
           post :student_report
+          post :update_feedback
         end
       end
 

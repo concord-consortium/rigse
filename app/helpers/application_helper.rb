@@ -289,6 +289,66 @@ module ApplicationHelper
     end
   end
 
+  def feedback_button(model, options)
+    capture_haml do
+      haml_tag(:div, :class => 'feedback_button') {
+        haml_tag(:button, 'Feedback', :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}});")
+      }
+    end
+  end
+
+  def feedback_link(model, options, learner_id, saveable, metadata)
+    feedback_id = "feedback_#{options[:question_number]}_#{learner_id}"
+    score_id = "score_#{options[:question_number]}_#{learner_id}"
+    feedback_text = saveable.no_written_feedback ? 'No written feedback selected' : (has_feedback(saveable.answers.last) ? saveable.answers.last.feedback : 'No feedback')
+    capture_haml do
+      haml_tag(:div, :class => 'feedback_link') {
+        haml_concat "Feedback: "
+        haml_tag(:a, feedback_text, :id => feedback_id, :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}, learner_id: #{learner_id}, show_all: true});")
+        haml_concat " Score: "
+        haml_tag(:a, score_text(saveable, metadata), :id => score_id, :onclick => "event.preventDefault(); get_feedback_popup({model_id: #{model[:id]}, model_type: '#{model.class.name}', offering_id: #{options[:offering_id]}, question_number: #{options[:question_number]}, learner_id: #{learner_id}, show_all: true, focus_score: true});")
+      }
+    end
+  end
+
+  def feedback_div(saveable, metadata)
+    last_answer = saveable.answers.last
+    if has_feedback(last_answer) or has_score(saveable, metadata)
+      capture_haml do
+        haml_tag(:div, :class => 'learner_feedback') {
+          if !saveable.no_written_feedback
+            haml_concat last_answer.feedback
+          end
+          if has_score(saveable, metadata)
+            haml_concat " Score: #{score_text(saveable, metadata)}"
+          end
+        }
+      end
+    end
+  end
+
+  def has_feedback(last_answer)
+    !(last_answer.nil? or last_answer.feedback.nil? or last_answer.feedback.empty?)
+  end
+
+  def has_score(saveable, metadata)
+    metadata && metadata.enable_score && !saveable.score.nil?
+  end
+
+  # NOTE: this code is replicated in feedback.js.coffee so that the score can be dynamically updated when the feedback closes
+  def score_text(saveable, metadata)
+    if !metadata || !metadata.enable_score
+      'Disabled'
+    elsif saveable.score.nil?
+      'Not scored'
+    elsif metadata.max_score
+      percentage = (saveable.score.fdiv(metadata.max_score) * 100).round
+      "#{saveable.score} out of #{metadata.max_score} (#{percentage}%)"
+    else
+      saveable.score
+    end
+  end
+
   def accordion_for(model, title, dom_prefix='', options={})
     show_hide_text = options[:show_hide_text]
     capture_haml do
@@ -301,10 +361,17 @@ module ApplicationHelper
           haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle' do
             haml_tag :span, :class => "accordion_show_hide_text" do
               haml_concat show_hide_text
+              if options[:feedback_options] && options[:feedback_options][:show_button]
+                haml_concat feedback_button(model, options[:feedback_options])
+              end
             end
           end
         else
-          haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle'
+          haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle' do
+            if options[:feedback_options] && options[:feedback_options][:show_button]
+              haml_concat feedback_button(model, options[:feedback_options])
+            end
+          end
         end
 
         unless options[:usage_count].blank?
@@ -314,6 +381,7 @@ module ApplicationHelper
         end
 
         haml_tag :div, :class => 'empty_break'
+
         haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_content"), :class => 'accordion_content', :style=>'display: none;' do
           if block_given?
             yield
@@ -681,6 +749,7 @@ module ApplicationHelper
     skipped = total - answered
     answers_map = answered_saveables.sort_by { |s| [s.learner.last_name, s.learner.first_name] }.map do |sa|
       {
+        id: sa.id,
         name: sa.learner.name,
         note: sa.answer[:note],
         image_url: dataservice_blob_raw_url(:id => sa.answer[:blob].id, :token => sa.answer[:blob].token)

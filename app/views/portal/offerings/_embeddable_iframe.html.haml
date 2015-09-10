@@ -1,4 +1,6 @@
-= accordion_for(embeddable, offering_details_iframe(offering, embeddable), nil, {:show_hide_text => "show links"}) do
+- feedback_options = {:show_button => true, :offering_id => offering.id, :question_number => question_number}
+= accordion_for(embeddable, offering_details_iframe(offering, embeddable), nil, {:show_hide_text => "show links", :feedback_options => feedback_options}) do
+  - metadata = offering.metadata.for_embeddable embeddable
   - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
     - saveable = saveable_for_learner(embeddable, l)
     - css_style = (saveable.answered?) ? 'answered' : 'not_answered'
@@ -15,5 +17,6 @@
                                         'data-iframe-height' => saveable.height
           - else
             = link_to 'View work', saveable.answer, :target => '_blank'
+          = feedback_link(embeddable, feedback_options, l.id, saveable, metadata)
         - else
           No work saved.

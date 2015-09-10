@@ -1,6 +1,7 @@
 %div{:class => 'question_container'}
   %div{:id => dom_id_for(embeddable, :item), :class => 'item'}
     %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
+      - metadata = offering.metadata.for_embeddable embeddable
       - saveable = saveable_for_learner(embeddable, learner)
       - css_style = saveable.submitted? ? 'answered' : 'not_answered'
       .item{:style => 'display: block;'}
@@ -12,3 +13,5 @@
       .item{:class => css_style, :style => 'display: block;'}
         - answer = h(saveable.submitted_answer) || ""
         != answer.gsub("\n", '<br/>')
+        = feedback_div(saveable, metadata)
+

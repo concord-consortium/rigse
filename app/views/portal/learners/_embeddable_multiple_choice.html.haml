@@ -1,6 +1,7 @@
 %div{:class => 'question_container'}
   %div{:id => dom_id_for(embeddable, :item), :class => 'item'}
     %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
+      - metadata = offering.metadata.for_embeddable embeddable
       - saveable = saveable_for_learner(embeddable, learner)
       .item{:style => 'display: block;'}
         %strong
@@ -32,3 +33,4 @@
             = incorrect_check
           .inline_block.not_answered{:style => 'font-weight: bold;'}
             = saveable.submitted_answer.first[:answer] # should return 'not answered' or 'not submitted'
+      = feedback_div(saveable, metadata)

@@ -13,7 +13,8 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
       rationale_choices.compact.select { |rc| rc.choice }.map do |rc|
         data = {
           :answer => rc.choice.choice,
-          :correct => rc.choice.is_correct
+          :correct => rc.choice.is_correct,
+          :feedback => rc.answer.feedback
         }
         data[:rationale] = rc.rationale if rc.rationale
         data

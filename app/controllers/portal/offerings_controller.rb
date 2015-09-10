@@ -193,6 +193,11 @@ class Portal::OfferingsController < ApplicationController
         render :layout => 'report' # report.html.haml
       }
 
+      format.json {
+        reportUtil = Report::Util.reload(@offering)
+        render :json => { :report => extract_offering_report_json(@offering, reportUtil.page_elements, reportUtil.learners) }, :content_type => 'text/json'
+      }
+
       format.run_resource_html   {
         @learners = @offering.clazz.students.map do |l|
           "name: '#{l.name}', id: #{l.id}"
@@ -204,8 +209,6 @@ class Portal::OfferingsController < ApplicationController
         redirect_to(@offering.runnable.report_url, 'popup' => true)
        }
     end
-
-
   end
 
   def multiple_choice_report
@@ -361,7 +364,132 @@ class Portal::OfferingsController < ApplicationController
     return
   end
 
+  def update_feedback
+    if current_visitor.portal_teacher.nil?
+      render :nothing=>true
+      return
+    end
+
+    offering = Portal::Offering.find(params[:id])
+    if params[:answers]
+      params[:answers].map do |answer|
+        clazz = "Saveable::#{answer[:embeddable_type].split('::')[1]}".constantize
+        saveable = clazz.find(answer[:saveable_id])
+        if saveable.present? and saveable.offering_id == offering.id
+          if answer[:feedback_changed]
+            current_answer = saveable.answers.last
+            if current_answer
+              current_answer.feedback = answer[:new_feedback]
+              current_answer.save
+            end
+          end
+          if answer[:score_changed] || answer[:no_written_feedback_changed]
+            if answer[:score_changed]
+              saveable.score = answer[:new_score]
+            end
+            if answer[:no_written_feedback_changed]
+              saveable.no_written_feedback = answer[:new_no_written_feedback]
+            end
+            saveable.save
+          end
+        end
+      end
+    end
+
+    metadata = Portal::OfferingEmbeddableMetadata.find_or_create_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, params[:embeddable_id], params[:embeddable_type])
+    metadata.enable_score = params[:enable_score]
+    metadata.max_score = params[:max_score]
+    metadata.save
+
+    respond_to do |format|
+      format.json {
+        render :json => { :updated => true }, :content_type => 'text/json'
+      }
+    end
+  end
+
   private
+
+  def extract_offering_report_json(offering, page_elements, learners, level = 0)
+    if level == 0
+      learners = learners.sort_by{|learner| [learner.last_name, learner.first_name]}
+    end
+
+    json = page_elements.keys.sort_by{|container| container.position}.map do |container|
+
+      children = page_elements[container]
+      if children.is_a? Array
+        children.map do |pe|
+          embeddable = pe[:embeddable]
+          activity   = pe[:activity]
+          question_number = activity ? activity.question_number(embeddable) : nil
+
+          embeddable_type = embeddable.class.name
+
+          metadata = offering.metadata.for_embeddable embeddable
+          enable_score = metadata.nil? ? false : metadata.enable_score
+          max_score = metadata.nil? ? nil : metadata.max_score
+
+          learners.map do |l|
+            reportUtil = Report::Util.factory(l.offering)
+            saveable = reportUtil.saveable(l, embeddable)
+            submitted_answer = saveable.submitted_answer
+
+            question = {
+              prompt: embeddable.respond_to?("prompt") ? embeddable[:prompt] : nil,
+              drawing_prompt: embeddable.respond_to?("drawing_prompt") ? embeddable[:drawing_prompt] : nil
+            }
+
+            previous_answers_and_feedback = saveable.answers[0..-2].select{ |a| a.feedback != nil }.map{ |a| {answer: a.answer, feedback: a.feedback, date: a.updated_at.getlocal.strftime('%B %e, %Y')}}
+
+            answer = saveable.answered? ? submitted_answer : nil
+            if embeddable_type == 'Embeddable::ImageQuestion'
+              if answer != nil
+                answer = {
+                  url: dataservice_blob_raw_url(:id => answer[:blob].id, :token => answer[:blob].token),
+                  note: answer[:note]
+                }
+              end
+              previous_answers_and_feedback = previous_answers_and_feedback.map do |a|
+                {
+                  answer: {
+                    url: dataservice_blob_raw_url(:id => a[:answer][:blob].id, :token => a[:answer][:blob].token),
+                    note: a[:answer][:note]
+                  },
+                  feedback: a[:feedback],
+                  date: a[:date]
+                }
+              end
+            end
+
+            {
+              question_number: question_number,
+              question: question,
+              learner_id: l.id,
+              learner_name: l.name,
+              saveable_id: saveable.respond_to?('id') ? saveable.id : 0,
+              answer: answer,
+              no_written_feedback: !!saveable.no_written_feedback,
+              current_feedback: saveable.current_feedback,
+              previous_answers_and_feedback: previous_answers_and_feedback,
+              embeddable_type: embeddable_type,
+              embeddable_id: embeddable.id,
+              enable_score: enable_score,
+              max_score: max_score,
+              score: saveable.score
+            }
+          end
+        end
+      else
+        extract_offering_report_json(offering, children, learners, level + 1)
+      end
+    end
+    if level == 0
+      json.flatten()
+    else
+      json
+    end
+  end
 
   def parse_embeddable(dom_id)
     # make sure to support at least Embeddable::OpenResponse, Embeddable::MultipleChoice, and Embeddable::MultipleChoiceChoice
