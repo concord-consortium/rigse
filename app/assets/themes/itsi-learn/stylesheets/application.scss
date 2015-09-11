@@ -6,8 +6,11 @@
   background: transparent image-url("banners/itsi-portal-banner.jpg") 0 0px no-repeat;
 }
 .welcome-box {
+  background-color: rgba(0, 0, 0, 0.25);
+  height: 95px;
+  margin-right: 0;
+  padding: 25px 20px 0;
   td {
-    background-color: rgba(0, 0, 0, 0.25);
     color: #fff;
     padding: 20px;
 
@@ -19,9 +22,45 @@
 .header-login-box {
   background-color: rgba(0, 0, 0, 0.25);
   color: #fff;
-  padding: 20px;
+  height: 75px;
+  padding: 15px 20px 20px;
 
   a {
     color: #fff;
+  }
+  form
+    table
+      tr.first-row
+      {
+        td
+        {
+          padding-bottom: 3px;
+        }
+        td.login-box
+        {
+          padding-bottom: 3px;
+          padding-left: 10px;
+        }
+      }
+  .login-buttons{
+    padding-top: 4px;
+    .segmented{
+     border-left: none;
+    }
+    .login-links {
+      bottom: -18px;
+      display: block;
+      margin-top: 2px;
+      position: absolute;
+      right: 3px;
+      .segmented{
+        border-left: 1px solid #fff;
+        padding: 0 0.35em 0 0.5em;
+        &.first {
+          padding-left: 0px;
+          border-left: none;
+        }
+      }
+    }
   }
 }
