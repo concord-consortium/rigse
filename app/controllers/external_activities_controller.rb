@@ -305,8 +305,9 @@ class ExternalActivitiesController < ApplicationController
 
   def copy
     # create a redirect url with a template parameter that LARA can replace with the remotely published activity_id
-    # if the private parameter is enabled then set the publication status to private before editing on the redirect
-    url = params[:private] ? set_private_before_matedit_external_activity_url(999) : matedit_external_activity_url(999);
+    # an intermediate redirect is used to set the publication status to private
+    # We can't do this aways on 'matedit' because that action is used when editing an existing activity
+    url = set_private_before_matedit_external_activity_url(999)
     redirect_uri = URI.parse(url.sub!('999', ':activity_id'))
     redirect_uri.query = {
       :iFrame => true
