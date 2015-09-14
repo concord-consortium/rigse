@@ -7,7 +7,7 @@
         = form.error_messages
         = render :partial => 'form', :locals => { :f => form }
 
-        - if @user.portal_student
+        - if @user.portal_student && current_settings.use_student_security_questions
           %fieldset
             %legend Security Questions
             = link_to "Click here", edit_user_security_questions_path(@user)
