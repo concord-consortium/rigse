@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150908135317) do
+ActiveRecord::Schema.define(:version => 20150915145012) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2232,6 +2232,7 @@ ActiveRecord::Schema.define(:version => 20150908135317) do
   add_index "report_learners", ["runnable_id", "runnable_type"], :name => "index_report_learners_on_runnable_id_and_runnable_type"
   add_index "report_learners", ["runnable_id"], :name => "index_report_learners_on_runnable_id"
   add_index "report_learners", ["school_id"], :name => "index_report_learners_on_school_id"
+  add_index "report_learners", ["student_id"], :name => "index_report_learners_on_student_id"
 
   create_table "resource_pages", :force => true do |t|
     t.integer  "user_id"
