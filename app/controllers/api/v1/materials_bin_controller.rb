@@ -26,6 +26,12 @@ class API::V1::MaterialsBinController < API::APIController
     materials = ExternalActivity.filtered_by_cohorts(allowed_cohorts)
                                 .where(user_id: user_id, is_official: false)
                                 .order('name ASC')
+    if current_user.nil? || (current_user.id != user_id.to_i && current_user.does_not_have_role?('admin'))
+      materials.select!{|material|
+        material.public?
+      }
+    end
+
     render json: materials_data(materials, params[:assigned_to_class])
   end
 
