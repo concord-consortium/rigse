@@ -98,7 +98,7 @@ class MiscController < ActionController::Base
 
   def preflight
     session['preflighted'] = '1'
-    render layout: :basic
+    render layout: 'basic'
   end
 
   def auth_check
