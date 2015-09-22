@@ -28,9 +28,9 @@
       - if current_settings && (current_visitor.has_role?('admin') || current_visitor.portal_teacher)
         - case current_settings.help_type
         - when 'external url'
-          %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
+          %li.trail=link_to'Help', '/help', :id=>'help', :target=>"_blank"
         - when 'help custom html'
-          %li.trail=link_to'Help', 'javascript: void(0)', :id=>'help',:onclick=>"window.open('/help','help_page','height = 700 width = 800, resizable = yes, scrollbars = yes');"
+          %li.trail=link_to'Help', '/help', :id=>'help', :target=>"_blank"
         - when 'no help'
           %li.trail.hide-menu-item{:style=>"display:none"}=link_to'Help', 'javascript: void(0)', :id=>'help'
 
