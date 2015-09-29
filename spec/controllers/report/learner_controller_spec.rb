@@ -2,7 +2,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Report::LearnerController do
 
-  def newLearner(learner_stubs)
+  def new_learner(learner_stubs)
     learner = Factory(:full_portal_learner)
     learner_stubs.keys.each do |key|
       learner.stub(key).and_return(learner_stubs[key])
@@ -15,7 +15,7 @@ describe Report::LearnerController do
   end
 
   let(:learner_stubs)   { {}                }
-  let(:learner)         { newLearner(learner_stubs) }
+  let(:learner)         { new_learner(learner_stubs) }
   describe "A working test setup" do
     it "The learner should exist" do
       learner.should_not be_nil
@@ -42,7 +42,7 @@ describe Report::LearnerController do
       end
     end
 
-    describe "when the leraner hasn't run anything yet" do
+    describe "when the learner hasn't run anything yet" do
       let(:learner_stubs) { { last_run: nil } }
       let(:not_run_text)  { I18n.t "StudentHasntRun"}
       describe 'json format' do
