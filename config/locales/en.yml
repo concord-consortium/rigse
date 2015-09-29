@@ -76,7 +76,7 @@ en:
     description_for_teacher_description: "If this description is filled in, it will be shown in the search page when a teacher is logged in"
   JNLPJavaRequirement: Requires download
   NoJavaRequirement: Runs in browser
-
+  StudentHasntRun: Not run yet
 'en-HAS':
   activerecord:
     models:
