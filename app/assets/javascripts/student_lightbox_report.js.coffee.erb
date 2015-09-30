@@ -10,7 +10,7 @@ class LightboxReport
     @last_update_time    = 0
     @report_dom   = 'report'
     @report_elm   = $(@report_dom)
-    @close_elm    = $('lightbox_closer')    
+    @close_elm    = $('lightbox_closer')
     @interval_id  = null
     @update_interval_ms = 5 * 1000
     @rebindEvents()
@@ -46,6 +46,9 @@ class LightboxReport
             @updateReport()
             @restore_scroll_position()
           @timeout_id = setTimeout(update_func, @update_interval_ms)
+        onFailure: (transport) =>
+          @timeout_id = setTimeout(update_func, @update_interval_ms)
+    
     @timeout_id = setTimeout(update_func, @update_interval_ms)
     @rebindEvents()
 
@@ -87,11 +90,11 @@ class LightboxReport
     should_we_udpate
 
 
-    
+
   handleKedown: (e) ->
-    if (e.keyCode)    
+    if (e.keyCode)
       code = e.keyCode
-    else if (e.which) 
+    else if (e.which)
       code = e.which
     switch code
       when 27

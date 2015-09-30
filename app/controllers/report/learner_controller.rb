@@ -97,13 +97,23 @@ class Report::LearnerController < ApplicationController
   def updated_at
     learner = Report::Learner.find_by_user_id_and_offering_id(current_visitor.id,params[:id])
     if learner
-      modification_time = learner.last_run.strftime("%s")
+      last_run = learner.last_run
+      status = 400
+      hasnt_run_text  = I18n.t "StudentHasntRun"
+      json_response = { error_msg: hasnt_run_text }
+      text_response = hasnt_run_text
+      if last_run
+        status = 200
+        modification_time = last_run.strftime("%s")
+        json_response = {modification_time: modification_time }
+        text_response = modification_time
+      end
       respond_to do |format|
         format.html do
-          render :text => modification_time
+          render :text => text_response, :status => status
         end
         format.json do
-          render :json => {:modification_time => modification_time }
+          render :json => json_response, :status => status
         end
       end
 
