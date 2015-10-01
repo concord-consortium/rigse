@@ -10,7 +10,7 @@ module OmniAuth
         :http_method => :get,
         :access_token_path => "/v1/oauth/access_token",
         :request_token_path => "/v1/oauth/request_token",
-        :authorize_url => "https://www.schoology.com/oauth/authorize"
+        :authorize_url => "https://app.schoology.com/oauth/authorize"
       }
 
       # These are called after authentication has succeeded. If

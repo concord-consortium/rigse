@@ -113,6 +113,13 @@ class MiscController < ActionController::Base
     if params[:realm] && params[:realm_id] && params[:realm] == "user"
       uid = params[:realm_id]
     end
+
+    if request.referer && (host = URI(request.referer).host) && host !~ /concord\.org$/
+      session[:schoology_host] = host
+    else
+      session.delete :schoology_host
+    end
+
     generic_check(provider, uid)
   end
 

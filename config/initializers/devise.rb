@@ -208,7 +208,13 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   if ENV['SCHOOLOGY_CONSUMER_KEY'] && ENV['SCHOOLOGY_CONSUMER_SECRET']
-    config.omniauth 'schoology', ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET'], scope: 'user', strategy_class: 'OmniAuth::Strategies::Schoology'
+    SETUP_PROC = lambda do |env|
+      host = env['rack.session'][:schoology_host]
+      if host
+        env['omniauth.strategy'].options[:client_options][:authorize_url] = "https://#{host}/oauth/authorize"
+      end
+    end
+    config.omniauth 'schoology', ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET'], scope: 'user', strategy_class: 'OmniAuth::Strategies::Schoology', setup: SETUP_PROC
   end
 
   # ==> Warden configuration
