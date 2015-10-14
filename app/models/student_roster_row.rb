@@ -46,9 +46,7 @@ class StudentRosterRow
     begin
       date = self.student.user.last_sign_in_at
       return NEVER unless date
-      wordtime = "#{time_ago_in_words(date)} #{AGO}"
-      datetime = date.strftime "%Y-%m-%d %l:%M %Z"
-      wordtime
+      "#{time_ago_in_words(date)} #{AGO}"
     rescue
       NO_LAST_LOGIN
     end
