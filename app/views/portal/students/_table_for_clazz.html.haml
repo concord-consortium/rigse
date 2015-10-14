@@ -1,5 +1,8 @@
-- student_list = (students_in_class(portal_clazz.students)).sort { |a,b| (a.user.last_name.casecmp(b.user.last_name)) }
-- if student_list.length > 0
+- roster = StudentRoster.new(portal_clazz)
+- if roster.empty?
+  %br
+  .message_text No students registered for this class yet.
+- else
   %table.teacher_class_table{:width=>"100%"}
     %tr
       %td.show_border
@@ -12,22 +15,27 @@
         %b= I18n.t "RosterAssignmentsHeading"
       %td.hide_in_print
 
-    - student_list.each do |portal_student|
-      - roster_row = StudentRosterRow.new portal_student, portal_clazz
+    - roster.each do |roster_row|
       %tr{:id=>dom_id_for(roster_row.portal_student_clazz)}
         %td.show_border
           = roster_row.name
-        %td.show_border{:title=>roster_row.login}
+        %td.show_border{:title => roster_row.login}
           = roster_row.login
-        %td.show_border{:title=>"Last Login"}
+        %td.show_border{:title => I18n.t("RosterNoLastLoginHeading") }
           = roster_row.last_login
-        %td.show_border{:title=>"Assignments Started"}
+        %td.show_border{:title => I18n.t("RosterAssignmentsHeading") }
           = roster_row.assignments_started
         %td.remove.hide_in_print.action_link_container
           - if portal_clazz.changeable?(current_visitor)
-            = link_to_remote "Remove Student", :url => portal_clazz_student_clazz_url(portal_clazz, roster_row.portal_student_clazz), :confirm => "This action will remove the student: '#{portal_student.name}' from the class: #{portal_clazz.name}. \nAre you sure you want to do this?", :method => :delete, :html => {:title => "Remove #{portal_student.name} from #{portal_clazz.name}" , :class => "change_password"}
-          - if portal_student.user.changeable?(current_visitor)
-            = link_to 'Change Password', reset_password_user_path(portal_student.user),:title => "Change password for #{portal_student.name}",:class => "change_password"
-- else
-  %br
-  .message_text No students registered for this class yet.
+            = link_to_remote I18n.t("RosterRemoveStudent"),
+              :url => portal_clazz_student_clazz_url(roster_row.clazz, roster_row.portal_student_clazz),
+              :confirm => roster_row.confirm_delete_message,
+              :method => :delete,
+              :html => {  title: I18n.t("RosterRemoveStudentLong",
+                          name: roster_row.name, clazz: roster.clazz.name),
+                          class: "change_password" }
+                          
+          - if roster_row.student.user.changeable?(current_visitor)
+            = link_to 'Change Password', reset_password_user_path(roster_row.student.user),
+              :title => I18n.t("RosterChangePassword", name: roster_row.name),
+              :class => "change_password"

@@ -15,7 +15,6 @@ class StudentRosterRow
   attr_accessor :student
   attr_accessor :clazz
   attr_accessor :portal_student_clazz
-  attr_accessor :name
   attr_accessor :login
   attr_accessor :last_login
   attr_accessor :assignments_started
@@ -61,6 +60,10 @@ class StudentRosterRow
     rescue
       NO_ASSIGNMENTS
     end
+  end
+
+  def confirm_delete_message
+    I18n.t "RosterConfirmDelete", name: self.name, clazz: self.clazz.name
   end
 
 end

@@ -89,6 +89,10 @@ en:
   RosterNoAssignments: Unknown
   RosterTimeAgo: ago
   RosterNeverLoggedIn: Never
+  RosterConfirmDelete: "This action will remove the student: '%{name}' from the class: %{clazz}. \nAre you sure you want to do this?"
+  RosterRemoveStudent: "Remove Student"
+  RosterRemoveStudentLong: "Remove Student %{name} from %{clazz}"
+  RosterChangePassword: "Change password for %{name}"
 
 'en-HAS':
   activerecord:
