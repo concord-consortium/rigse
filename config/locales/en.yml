@@ -77,6 +77,19 @@ en:
   JNLPJavaRequirement: Requires download
   NoJavaRequirement: Runs in browser
   StudentHasntRun: Not run yet
+
+  RosterNameHeading: Name
+  RosterUsernameHeading: Username
+  RosterNoLastLoginHeading: Last login
+  RosterAssignmentsHeading: Assignments started
+
+  RosterNoName: No Name
+  RosterNoLogin: No Username
+  RosterNoLastLogin: Unknown
+  RosterNoAssignments: Unknown
+  RosterTimeAgo: ago
+  RosterNeverLoggedIn: Never
+
 'en-HAS':
   activerecord:
     models:

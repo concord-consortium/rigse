@@ -1495,18 +1495,21 @@ ul.quiet_list {
 
 table.teacher_class_table th, table.teacher_class_table td
 {
+    font-size: 12px;
     border: 1px solid #242323;
-    padding-left:10px;
+    padding-left: 1em;
+    padding-top: 5px;
+    padding-bottom: 5px;
     /*text-align: center !important; /*Forcely added !important as in Action_menu_tab.scss Align Left is marked !important*/
-
+  a {white-space: nowrap}
    .change_password
   {
-    padding-left:20px;
+    padding: 1em;
   }
 
   .remove_student
   {
-    padding-left:20px;
+    padding: 1em;
   }
 }
 
@@ -1561,8 +1564,8 @@ table.teacher_class_table th, table.teacher_class_table td
 #student_roster #students_listing{padding-right:0px !important}
 
 table.add_student, table.roster_student_list{margin:0;clear:both;}
-table.roster_student_list .action_link_container{width:235px;padding-left:0px}
-table.roster_student_list a.change_password{padding-left:10px}
+table.roster_student_list .action_link_container{padding-left:0px}
+table.roster_student_list a { white-space: 'nowrap'}
 
 .contentdiv{float:left;}
 .linkdiv{float:right;}
@@ -1878,4 +1881,3 @@ p.school_description {
     background-color: #ccc;
   }
 }
-
