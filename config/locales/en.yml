@@ -77,6 +77,23 @@ en:
   JNLPJavaRequirement: Requires download
   NoJavaRequirement: Runs in browser
   StudentHasntRun: Not run yet
+
+  RosterNameHeading: Name
+  RosterUsernameHeading: Username
+  RosterNoLastLoginHeading: Last login
+  RosterAssignmentsHeading: Assignments started
+
+  RosterNoName: No Name
+  RosterNoLogin: No Username
+  RosterNoLastLogin: Unknown
+  RosterNoAssignments: Unknown
+  RosterTimeAgo: ago
+  RosterNeverLoggedIn: Never
+  RosterConfirmDelete: "This action will remove the student: '%{name}' from the class: %{clazz}. \nAre you sure you want to do this?"
+  RosterRemoveStudent: "Remove Student"
+  RosterRemoveStudentLong: "Remove Student %{name} from %{clazz}"
+  RosterChangePassword: "Change password for %{name}"
+
 'en-HAS':
   activerecord:
     models:
