@@ -6,6 +6,7 @@ BrowserSpecificiation = Struct.new(:browser, :version)
 
 class ApplicationController < ActionController::Base
   include Clipboard
+  include Pundit
 
   # protect_from_forgery
   self.allow_forgery_protection = false
