@@ -1,0 +1,2 @@
+class VideoPlayerPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class SiteNoticeRolePolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class GradeSpanExpectationPolicy < ApplicationPolicy
+end

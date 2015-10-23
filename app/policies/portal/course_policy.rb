@@ -1,0 +1,2 @@
+class CoursePolicy < ApplicationPolicy
+end

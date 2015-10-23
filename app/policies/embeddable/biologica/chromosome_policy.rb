@@ -1,0 +1,2 @@
+class ChromosomePolicy < ApplicationPolicy
+end

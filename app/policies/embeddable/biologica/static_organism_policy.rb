@@ -1,0 +1,2 @@
+class StaticOrganismPolicy < ApplicationPolicy
+end

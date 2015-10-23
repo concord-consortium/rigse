@@ -1,0 +1,2 @@
+class ProbeTypePolicy < ApplicationPolicy
+end

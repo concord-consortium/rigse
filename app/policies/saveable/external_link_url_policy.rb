@@ -1,0 +1,2 @@
+class ExternalLinkUrlPolicy < ApplicationPolicy
+end

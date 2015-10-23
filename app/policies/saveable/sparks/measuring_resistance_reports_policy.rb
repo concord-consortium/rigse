@@ -1,0 +1,2 @@
+class MeasuringResistanceReportsPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class CommonsLicensePolicy < ApplicationPolicy
+end

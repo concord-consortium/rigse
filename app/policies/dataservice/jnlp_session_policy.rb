@@ -1,0 +1,2 @@
+class JnlpSessionPolicy < ApplicationPolicy
+end

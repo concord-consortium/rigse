@@ -1,0 +1,2 @@
+class OrganismPolicy < ApplicationPolicy
+end

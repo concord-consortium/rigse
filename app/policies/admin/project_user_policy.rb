@@ -1,0 +1,2 @@
+class ProjectUserPolicy < ApplicationPolicy
+end

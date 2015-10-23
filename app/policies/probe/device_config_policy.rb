@@ -1,0 +1,2 @@
+class DeviceConfigPolicy < ApplicationPolicy
+end

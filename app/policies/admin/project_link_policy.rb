@@ -1,0 +1,2 @@
+class ProjectLinkPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class BlobPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class ChromosomeZoomPolicy < ApplicationPolicy
+end

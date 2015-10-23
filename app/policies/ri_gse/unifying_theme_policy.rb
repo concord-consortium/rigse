@@ -1,0 +1,2 @@
+class UnifyingThemePolicy < ApplicationPolicy
+end

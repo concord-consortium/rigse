@@ -1,0 +1,2 @@
+class UserMailerPolicy < ApplicationPolicy
+end

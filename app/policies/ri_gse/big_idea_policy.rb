@@ -1,0 +1,2 @@
+class BigIdeaPolicy < ApplicationPolicy
+end

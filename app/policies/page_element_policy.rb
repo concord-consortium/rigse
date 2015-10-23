@@ -1,0 +1,2 @@
+class PageElementPolicy < ApplicationPolicy
+end

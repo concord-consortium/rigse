@@ -1,0 +1,2 @@
+class GradePolicy < ApplicationPolicy
+end

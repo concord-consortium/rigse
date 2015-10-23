@@ -1,0 +1,2 @@
+class AuthorNotePolicy < ApplicationPolicy
+end

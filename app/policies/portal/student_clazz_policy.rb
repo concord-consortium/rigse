@@ -1,0 +1,2 @@
+class StudentClazzPolicy < ApplicationPolicy
+end

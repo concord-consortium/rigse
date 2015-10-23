@@ -1,0 +1,2 @@
+class XhtmlPolicy < ApplicationPolicy
+end

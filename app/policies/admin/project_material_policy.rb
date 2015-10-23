@@ -1,0 +1,2 @@
+class ProjectMaterialPolicy < ApplicationPolicy
+end

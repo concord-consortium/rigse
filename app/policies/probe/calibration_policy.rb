@@ -1,0 +1,2 @@
+class CalibrationPolicy < ApplicationPolicy
+end

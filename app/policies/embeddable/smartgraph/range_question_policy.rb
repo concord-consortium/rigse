@@ -1,0 +1,2 @@
+class RangeQuestionPolicy < ApplicationPolicy
+end

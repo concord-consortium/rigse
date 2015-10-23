@@ -1,0 +1,2 @@
+class BucketLoggerPolicy < ApplicationPolicy
+end

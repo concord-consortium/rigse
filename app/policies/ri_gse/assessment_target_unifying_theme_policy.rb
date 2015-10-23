@@ -1,0 +1,2 @@
+class AssessmentTargetUnifyingThemePolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class BundleContentPolicy < ApplicationPolicy
+end

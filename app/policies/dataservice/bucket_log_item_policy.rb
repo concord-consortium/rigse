@@ -1,0 +1,2 @@
+class BucketLogItemPolicy < ApplicationPolicy
+end

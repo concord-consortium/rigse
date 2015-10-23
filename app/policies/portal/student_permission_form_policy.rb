@@ -1,0 +1,2 @@
+class StudentPermissionFormPolicy < ApplicationPolicy
+end

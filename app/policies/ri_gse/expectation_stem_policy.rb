@@ -1,0 +1,2 @@
+class ExpectationStemPolicy < ApplicationPolicy
+end

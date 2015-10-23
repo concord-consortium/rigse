@@ -1,0 +1,2 @@
+class SelectorPolicy < ApplicationPolicy
+end

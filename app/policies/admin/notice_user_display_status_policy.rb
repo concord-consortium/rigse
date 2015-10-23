@@ -1,0 +1,2 @@
+class NoticeUserDisplayStatusPolicy < ApplicationPolicy
+end

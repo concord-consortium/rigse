@@ -1,0 +1,2 @@
+class LearnerActivityPolicy < ApplicationPolicy
+end

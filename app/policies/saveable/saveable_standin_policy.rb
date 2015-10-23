@@ -1,0 +1,2 @@
+class SaveableStandinPolicy < ApplicationPolicy
+end

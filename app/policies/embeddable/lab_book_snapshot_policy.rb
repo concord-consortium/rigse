@@ -1,0 +1,2 @@
+class LabBookSnapshotPolicy < ApplicationPolicy
+end

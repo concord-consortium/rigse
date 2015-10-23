@@ -1,0 +1,2 @@
+class OtrunkImportPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class PeriodicBundleContentPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class BreedOffspringPolicy < ApplicationPolicy
+end

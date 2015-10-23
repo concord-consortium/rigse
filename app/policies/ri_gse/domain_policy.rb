@@ -1,0 +1,2 @@
+class DomainPolicy < ApplicationPolicy
+end

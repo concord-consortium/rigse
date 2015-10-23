@@ -1,0 +1,2 @@
+class SearchMaterialPolicy < ApplicationPolicy
+end

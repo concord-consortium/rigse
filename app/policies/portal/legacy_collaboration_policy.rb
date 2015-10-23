@@ -1,0 +1,2 @@
+class LegacyCollaborationPolicy < ApplicationPolicy
+end

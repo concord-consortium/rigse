@@ -1,0 +1,2 @@
+class PeriodicBundleLoggerPolicy < ApplicationPolicy
+end

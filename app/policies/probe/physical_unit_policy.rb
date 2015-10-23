@@ -1,0 +1,2 @@
+class PhysicalUnitPolicy < ApplicationPolicy
+end

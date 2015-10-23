@@ -1,0 +1,2 @@
+class PadletBookmarkPolicy < ApplicationPolicy
+end

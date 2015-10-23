@@ -1,0 +1,2 @@
+class OtmlCategoryPolicy < ApplicationPolicy
+end

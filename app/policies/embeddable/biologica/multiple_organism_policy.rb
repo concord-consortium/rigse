@@ -1,0 +1,2 @@
+class MultipleOrganismPolicy < ApplicationPolicy
+end

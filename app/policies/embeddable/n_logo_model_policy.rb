@@ -1,0 +1,2 @@
+class NLogoModelPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class ProcessExternalActivityDataJobPolicy < ApplicationPolicy
+end

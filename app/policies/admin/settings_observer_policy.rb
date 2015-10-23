@@ -1,0 +1,2 @@
+class SettingsObserverPolicy < ApplicationPolicy
+end

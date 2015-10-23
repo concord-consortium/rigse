@@ -1,0 +1,2 @@
+class PasswordPolicy < ApplicationPolicy
+end

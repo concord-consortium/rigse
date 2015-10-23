@@ -1,0 +1,2 @@
+class InnerPagePagePolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class DataFilterPolicy < ApplicationPolicy
+end

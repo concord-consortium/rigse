@@ -1,0 +1,2 @@
+class OpenResponsePolicy < ApplicationPolicy
+end

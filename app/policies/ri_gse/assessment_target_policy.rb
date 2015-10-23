@@ -1,0 +1,2 @@
+class AssessmentTargetPolicy < ApplicationPolicy
+end

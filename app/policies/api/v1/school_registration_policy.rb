@@ -1,0 +1,2 @@
+class SchoolRegistrationPolicy < ApplicationPolicy
+end

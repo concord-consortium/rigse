@@ -1,0 +1,2 @@
+class BundleContentObserverPolicy < ApplicationPolicy
+end

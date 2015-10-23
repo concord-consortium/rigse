@@ -1,0 +1,2 @@
+class DataCollectorPolicy < ApplicationPolicy
+end

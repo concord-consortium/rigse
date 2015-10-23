@@ -1,0 +1,2 @@
+class SoundGrapherPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class RawOtmlPolicy < ApplicationPolicy
+end

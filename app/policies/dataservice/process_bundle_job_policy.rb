@@ -1,0 +1,2 @@
+class ProcessBundleJobPolicy < ApplicationPolicy
+end

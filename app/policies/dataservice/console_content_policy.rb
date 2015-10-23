@@ -1,0 +1,2 @@
+class ConsoleContentPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class DrawingToolPolicy < ApplicationPolicy
+end

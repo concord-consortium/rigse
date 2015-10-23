@@ -1,0 +1,2 @@
+class ImportExternalActivityPolicy < ApplicationPolicy
+end

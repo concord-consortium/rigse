@@ -1,0 +1,2 @@
+class MultipleChoicePolicy < ApplicationPolicy
+end

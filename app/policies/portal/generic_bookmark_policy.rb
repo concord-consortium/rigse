@@ -1,0 +1,2 @@
+class GenericBookmarkPolicy < ApplicationPolicy
+end

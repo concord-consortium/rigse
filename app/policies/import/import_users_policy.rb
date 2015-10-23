@@ -1,0 +1,2 @@
+class ImportUsersPolicy < ApplicationPolicy
+end

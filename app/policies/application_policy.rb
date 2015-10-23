@@ -7,7 +7,7 @@ class ApplicationPolicy
   end
 
   def index?
-    false
+    true
   end
 
   def show?
@@ -15,23 +15,23 @@ class ApplicationPolicy
   end
 
   def create?
-    false
+    new_or_create?
   end
 
   def new?
-    create?
+    new_or_create?
   end
 
   def update?
-    false
+    update_edit_or_destroy?
   end
 
   def edit?
-    update?
+    update_edit_or_destroy?
   end
 
   def destroy?
-    false
+    update_edit_or_destroy?
   end
 
   def scope
@@ -50,4 +50,25 @@ class ApplicationPolicy
       scope
     end
   end
+
+  protected
+
+  def new_or_create?
+    not_anonymous?
+  end
+
+  def update_edit_or_destroy?
+    changeable?
+  end
+
+  def not_anonymous?
+    user && !user.anonymous?
+  end
+
+  def changeable?
+    record.changeable?(user)
+  end
+
 end
+
+

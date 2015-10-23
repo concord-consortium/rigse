@@ -1,0 +1,2 @@
+class MeiosisViewPolicy < ApplicationPolicy
+end

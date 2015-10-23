@@ -1,0 +1,2 @@
+class DuplicateUserPolicy < ApplicationPolicy
+end

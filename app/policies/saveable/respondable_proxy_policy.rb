@@ -1,0 +1,2 @@
+class RespondableProxyPolicy < ApplicationPolicy
+end

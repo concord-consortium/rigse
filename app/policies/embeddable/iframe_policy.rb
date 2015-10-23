@@ -1,0 +1,2 @@
+class IframePolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class UserSchoolMappingPolicy < ApplicationPolicy
+end

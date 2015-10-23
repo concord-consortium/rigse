@@ -1,0 +1,2 @@
+class OfferingStatusPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class SiteNoticeUserPolicy < ApplicationPolicy
+end

@@ -1,0 +1,2 @@
+class TeacherRegistrationPolicy < ApplicationPolicy
+end
