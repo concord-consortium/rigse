@@ -1,6 +1,9 @@
 class Dataservice::ConsoleContentsMetalController < ActionController::Metal
 
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::ConsoleContentsMetal
     console_content = nil
     if console_logger = Dataservice::ConsoleLogger.find(params[:id])
       body = request.body.read

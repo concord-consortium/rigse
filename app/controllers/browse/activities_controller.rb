@@ -2,6 +2,9 @@ class Browse::ActivitiesController < ApplicationController
   
   # GET /browse/activity/1
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @activity
     @back_url = request.env["HTTP_REFERER"]
     if @back_url && !@back_url.include?(request.host)
       @back_url = nil

@@ -1,12 +1,18 @@
 class API::V1::SchoolsController < API::APIController
 
 	def index
+	  # PUNDIT_REVIEW_AUTHORIZE
+	  # PUNDIT_CHECK_AUTHORIZE
+	  authorize Api::V1::School
 		district_id = params['district_id']
 		country_id  = params['country_id']
 		if district_id.blank? && country_id.blank?
 			error("param 'district_id' or 'country_id' are required for school list")
 		elsif district_id
 			@schools = API::V1::SchoolRegistration.for_district(district_id)
+	  # PUNDIT_REVIEW_SCOPE
+	  # PUNDIT_CHECK_SCOPE (found instance)
+	  @schools = policy_scope(Api::V1::School)
 		else
 			@schools = API::V1::SchoolRegistration.for_country(country_id)
 		end
@@ -14,6 +20,9 @@ class API::V1::SchoolsController < API::APIController
 	end
 
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Api::V1::School
     registration = API::V1::SchoolRegistration.new(params)
     if registration.valid?
       registration.save

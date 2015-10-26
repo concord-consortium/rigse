@@ -5,16 +5,31 @@ class Portal::LearnersController < ApplicationController
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report,:activity_report]
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report,:activity_report]
   before_filter :handle_jnlp_session, :only => [:show]
   before_filter :authorize_show, :only => [:show]
   
   def current_clazz
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Learner
+    # authorize @learner
+    # authorize Portal::Learner, :new_or_create?
+    # authorize @learner, :update_edit_or_destroy?
     Portal::Learner.find(params[:id]).offering.clazz
   end
   
   def handle_jnlp_session
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Learner
+    # authorize @learner
+    # authorize Portal::Learner, :new_or_create?
+    # authorize @learner, :update_edit_or_destroy?
     if request.format.config? && params[:jnlp_session]
       # this will only work once for this token
       if jnlp_user = Dataservice::JnlpSession.get_user_from_token(params[:jnlp_session])
@@ -44,6 +59,13 @@ class Portal::LearnersController < ApplicationController
   end
 
   def authorize_show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Learner
+    # authorize @learner
+    # authorize Portal::Learner, :new_or_create?
+    # authorize @learner, :update_edit_or_destroy?
     authorized_user = (Portal::Learner.find(params[:id]).student.user == current_visitor) ||
         current_clazz.is_teacher?(current_visitor) ||
         current_visitor.has_role?('admin')
@@ -61,6 +83,12 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners
   # GET /portal/learners.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Portal::Learner
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    @learners = policy_scope(Portal::Learner)
     @portal_learners = Portal::Learner.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -72,6 +100,13 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/1/open_response_report
   # GET /portal/learners/1/open_response_report.xml
   def open_response_report
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Learner
+    # authorize @learner
+    # authorize Portal::Learner, :new_or_create?
+    # authorize @learner, :update_edit_or_destroy?
     @portal_learner = Portal::Learner.find(params[:id])
     
     respond_to do |format|
@@ -82,6 +117,13 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/1/multiple_choice_report
   # GET /portal/learners/1/multiple_choice_report.xml
   def multiple_choice_report
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Learner
+    # authorize @learner
+    # authorize Portal::Learner, :new_or_create?
+    # authorize @learner, :update_edit_or_destroy?
     @portal_learner = Portal::Learner.find(params[:id])
     
     respond_to do |format|
@@ -91,6 +133,13 @@ class Portal::LearnersController < ApplicationController
   
 
   def report
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Learner
+    # authorize @learner
+    # authorize Portal::Learner, :new_or_create?
+    # authorize @learner, :update_edit_or_destroy?
     @portal_learner = Portal::Learner.find(params[:id])
     @activity_report_id = nil
     offering = @portal_learner.offering
@@ -123,6 +172,13 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/1/bundle_report
   # GET /portal/learners/1/bundle_report.xml
   def bundle_report
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Learner
+    # authorize @learner
+    # authorize Portal::Learner, :new_or_create?
+    # authorize @learner, :update_edit_or_destroy?
     @portal_learner = Portal::Learner.find(params[:id])
     
     respond_to do |format|
@@ -133,6 +189,9 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/1
   # GET /portal/learners/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @learner
     @portal_learner = Portal::Learner.find(params[:id])
     
     @portal_learner.console_logger = Dataservice::ConsoleLogger.create! unless @portal_learner.console_logger
@@ -180,6 +239,9 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/new
   # GET /portal/learners/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Portal::Learner
     @portal_learner = Portal::Learner.new
 
     respond_to do |format|
@@ -190,12 +252,18 @@ class Portal::LearnersController < ApplicationController
 
   # GET /portal/learners/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @learner
     @portal_learner = Portal::Learner.find(params[:id])
   end
 
   # POST /portal/learners
   # POST /portal/learners.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Portal::Learner
     @portal_learner = Portal::Learner.new(params[:learner])
 
     respond_to do |format|
@@ -213,6 +281,9 @@ class Portal::LearnersController < ApplicationController
   # PUT /portal/learners/1
   # PUT /portal/learners/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @learner
     @portal_learner = Portal::Learner.find(params[:id])
 
     respond_to do |format|
@@ -230,6 +301,9 @@ class Portal::LearnersController < ApplicationController
   # DELETE /portal/learners/1
   # DELETE /portal/learners/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @learner
     @portal_learner = Portal::Learner.find(params[:id])
     @portal_learner.destroy
 

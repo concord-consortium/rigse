@@ -1,5 +1,6 @@
 class Dataservice::BlobsController < ApplicationController
   
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_only, :except => [:show]
   
   protected
@@ -24,6 +25,12 @@ class Dataservice::BlobsController < ApplicationController
   # GET /dataservice_blobs
   # GET /dataservice_blobs.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::Blob
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    @blobs = policy_scope(Dataservice::Blob)
     @dataservice_blobs = Dataservice::Blob.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -35,6 +42,9 @@ class Dataservice::BlobsController < ApplicationController
   # GET /dataservice_blobs/1
   # GET /dataservice_blobs/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @blob
     @dataservice_blob = Dataservice::Blob.find(params[:id])
     is_authorized = is_admin? || (@dataservice_blob && @dataservice_blob.token == params[:token]) || current_visitor.has_role?('researcher')
     
@@ -65,6 +75,9 @@ class Dataservice::BlobsController < ApplicationController
   # GET /dataservice_blobs/new
   # GET /dataservice_blobs/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::Blob
     @dataservice_blob = Dataservice::Blob.new
 
     respond_to do |format|
@@ -75,12 +88,18 @@ class Dataservice::BlobsController < ApplicationController
 
   # GET /dataservice_blobs/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @blob
     @dataservice_blob = Dataservice::Blob.find(params[:id])
   end
 
   # POST /dataservice_blobs
   # POST /dataservice_blobs.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::Blob
     @dataservice_blob = Dataservice::Blob.new(params[:blob])
 
     respond_to do |format|
@@ -98,6 +117,9 @@ class Dataservice::BlobsController < ApplicationController
   # PUT /dataservice_blobs/1
   # PUT /dataservice_blobs/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @blob
     @dataservice_blob = Dataservice::Blob.find(params[:id])
 
     respond_to do |format|
@@ -115,6 +137,9 @@ class Dataservice::BlobsController < ApplicationController
   # DELETE /dataservice_blobs/1
   # DELETE /dataservice_blobs/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @blob
     @dataservice_blob = Dataservice::Blob.find(params[:id])
     @dataservice_blob.destroy
 

@@ -1,16 +1,33 @@
 class Dataservice::BucketLogItemsMetalController < ActionController::Metal
 
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::BucketLogItemsMetal
     create_with_logger(Dataservice::BucketLogger.find(params[:id]))
   end
 
   def create_by_learner
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Dataservice::BucketLogItemsMetal
+    # authorize @bucket_log_items_metal
+    # authorize Dataservice::BucketLogItemsMetal, :new_or_create?
+    # authorize @bucket_log_items_metal, :update_edit_or_destroy?
     learner = Portal::Learner.find(params[:id]) rescue nil
     bucket_logger = learner ? Dataservice::BucketLogger.find_or_create_by_learner_id(learner.id) : nil
     create_with_logger(bucket_logger)
   end
 
   def create_by_name
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Dataservice::BucketLogItemsMetal
+    # authorize @bucket_log_items_metal
+    # authorize Dataservice::BucketLogItemsMetal, :new_or_create?
+    # authorize @bucket_log_items_metal, :update_edit_or_destroy?
     bucket_logger = Dataservice::BucketLogger.find_or_create_by_name(params[:name])
     create_with_logger(bucket_logger)
   end

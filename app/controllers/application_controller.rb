@@ -16,24 +16,53 @@ class ApplicationController < ActionController::Base
   theme :get_theme
 
   def test
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Application
+    # authorize @application
+    # authorize Application, :new_or_create?
+    # authorize @application, :update_edit_or_destroy?
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
 
   def self.set_theme(name)
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Application
+    # authorize @application
+    # authorize Application, :new_or_create?
+    # authorize @application, :update_edit_or_destroy?
     @@theme = name
   end
 
   def get_theme
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Application
+    # authorize @application
+    # authorize Application, :new_or_create?
+    # authorize @application, :update_edit_or_destroy?
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
   def self.get_theme
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Application
+    # authorize @application
+    # authorize Application, :new_or_create?
+    # authorize @application, :update_edit_or_destroy?
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :setup_container
   before_filter :reject_old_browsers
 

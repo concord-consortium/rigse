@@ -5,6 +5,9 @@ class Dataservice::PeriodicBundleLoggersController < ApplicationController
   # GET /dataservice/periodic_bundle_loggers/1
   # GET /dataservice/periodic_bundle_loggers/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @periodic_bundle_logger
     @dataservice_bundle_logger = Dataservice::PeriodicBundleLogger.find(params[:id])
     eportfolio_bundle = @dataservice_bundle_logger.sail_bundle
     # FIXME How do we now associate launch process events since bundle_content != session?

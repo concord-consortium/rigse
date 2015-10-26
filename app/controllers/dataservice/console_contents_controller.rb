@@ -5,6 +5,12 @@ class Dataservice::ConsoleContentsController < ApplicationController
   # GET /dataservice_console_contents
   # GET /dataservice_console_contents.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::ConsoleContent
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    @console_contents = policy_scope(Dataservice::ConsoleContent)
     # 
     # @dataservice_console_contents = Dataservice::ConsoleContent.all
     @dataservice_console_contents = Dataservice::ConsoleContent.search(params[:search], params[:page], nil)
@@ -17,6 +23,9 @@ class Dataservice::ConsoleContentsController < ApplicationController
   # GET /dataservice_console_contents/1
   # GET /dataservice_console_contents/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @console_content
     @dataservice_console_content = Dataservice::ConsoleContent.find(params[:id])
 
     respond_to do |format|
@@ -28,6 +37,9 @@ class Dataservice::ConsoleContentsController < ApplicationController
   # GET /dataservice_console_contents/new
   # GET /dataservice_console_contents/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::ConsoleContent
     @dataservice_console_content = Dataservice::ConsoleContent.new
 
     respond_to do |format|
@@ -38,12 +50,18 @@ class Dataservice::ConsoleContentsController < ApplicationController
 
   # GET /dataservice_console_contents/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @console_content
     @dataservice_console_content = Dataservice::ConsoleContent.find(params[:id])
   end
 
   # POST /dataservice_console_contents
   # POST /dataservice_console_contents.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::ConsoleContent
     @dataservice_console_content = Dataservice::ConsoleContent.new(params[:dataservice_console_content])
 
     respond_to do |format|
@@ -61,6 +79,9 @@ class Dataservice::ConsoleContentsController < ApplicationController
   # PUT /dataservice_console_contents/1
   # PUT /dataservice_console_contents/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @console_content
     @dataservice_console_content = Dataservice::ConsoleContent.find(params[:id])
 
     respond_to do |format|
@@ -78,6 +99,9 @@ class Dataservice::ConsoleContentsController < ApplicationController
   # DELETE /dataservice_console_contents/1
   # DELETE /dataservice_console_contents/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @console_content
     @dataservice_console_content = Dataservice::ConsoleContent.find(params[:id])
     @dataservice_console_content.destroy
 

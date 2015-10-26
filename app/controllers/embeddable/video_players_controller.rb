@@ -2,7 +2,13 @@ class Embeddable::VideoPlayersController < ApplicationController
   # GET /embeddable_video_players
   # GET /embeddable_video_players.xml
   def index    
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::VideoPlayer
     @video_players = Embeddable::VideoPlayer.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    @video_players = policy_scope(Embeddable::VideoPlayer)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +20,9 @@ class Embeddable::VideoPlayersController < ApplicationController
   # GET /embeddable_video_players/1.xml
   def show
     @video_player = Embeddable::VideoPlayer.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    authorize @video_player
     if request.xhr?
       render :partial => 'show', :locals => { :video_player => @video_player }
     else
@@ -32,6 +41,9 @@ class Embeddable::VideoPlayersController < ApplicationController
   # GET /embeddable_video_players/new
   # GET /embeddable_video_players/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::VideoPlayer
     @video_player = Embeddable::VideoPlayer.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :video_player => @video_player }
@@ -46,6 +58,9 @@ class Embeddable::VideoPlayersController < ApplicationController
   # GET /embeddable_video_players/1/edit
   def edit
     @video_player = Embeddable::VideoPlayer.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    authorize @video_player
     if request.xhr?
       render :partial => 'remote_form', :locals => { :video_player => @video_player }
     else
@@ -60,6 +75,9 @@ class Embeddable::VideoPlayersController < ApplicationController
   # POST /embeddable_video_players
   # POST /embeddable_video_players.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::VideoPlayer
     @video_player = Embeddable::VideoPlayer.new(params[:embeddable_video_player])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -89,6 +107,9 @@ class Embeddable::VideoPlayersController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @video_player = Embeddable::VideoPlayer.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    authorize @video_player
     if request.xhr?
       if cancel || @video_player.update_attributes(params[:embeddable_video_player])
         render :partial => 'show', :locals => { :video_player => @video_player }
@@ -113,6 +134,9 @@ class Embeddable::VideoPlayersController < ApplicationController
   # DELETE /embeddable_video_players/1.xml
   def destroy
     @video_player = Embeddable::VideoPlayer.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    authorize @video_player
     respond_to do |format|
       format.html { redirect_to(video_players_url) }
       format.xml  { head :ok }
