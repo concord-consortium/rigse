@@ -1,6 +1,9 @@
 class Dataservice::PeriodicBundleContentsMetalController < ActionController::Metal
 
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Dataservice::PeriodicBundleContentsMetal
     bundle_content = nil
     if bundle_logger = Dataservice::PeriodicBundleLogger.find(params[:id])
       body = request.body.read

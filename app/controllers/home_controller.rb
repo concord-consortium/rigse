@@ -1,11 +1,18 @@
 class HomeController < ApplicationController
   include RestrictedController
+  # PUNDIT_CHECK_FILTERS
   before_filter :manager_or_researcher, :only => ['admin']
 
   caches_page   :settings_css
   theme "rites"
 
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Home
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    @homes = policy_scope(Home)
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]
@@ -16,11 +23,25 @@ class HomeController < ApplicationController
   end
 
   def readme
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
     @document = FormattedDoc.new('README.md')
     render :action => "formatted_doc", :layout => "technical_doc"
   end
 
   def doc
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
     if document_path = params[:document].gsub(/\.\.\//, '')
       @document = FormattedDoc.new(File.join('doc', document_path))
       render :action => "formatted_doc", :layout => "technical_doc"
@@ -28,34 +49,97 @@ class HomeController < ApplicationController
   end
 
   def pick_signup
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
   end
 
   def about
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
   end
 
   def requirements
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
   end
 
   def admin
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
   end
 
   def authoring
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
   end
 
   # view_context is a reference to the View template object
   def name_for_clipboard_data
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
     render :text=> view_context.clipboard_object_name(params)
   end
 
   def missing_installer
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
     @os = params['os']
   end
 
   def test_exception
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
     raise 'This is a test. This is only a test.'
   end
 
   def settings_css
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
     @settings = Admin::Settings.default_settings
     if @settings.using_custom_css?
       render :text => @settings.custom_css
@@ -65,6 +149,13 @@ class HomeController < ApplicationController
   end
 
   def report
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
     # two different ways to render pdfs
     respond_to do |format|
       # this method uses classes in app/pdfs to generate the pdf:
@@ -86,6 +177,13 @@ class HomeController < ApplicationController
   # end
 
   def recent_activity
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
 
     unless current_visitor.portal_teacher
       redirect_to home_url
@@ -174,6 +272,13 @@ class HomeController < ApplicationController
   end
 
   def preview_home_page
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Home
+    # authorize @home
+    # authorize Home, :new_or_create?
+    # authorize @home, :update_edit_or_destroy?
     @preview_home_page_content = true
     @wide_content_layout = true
     load_featured_materials

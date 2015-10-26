@@ -2,6 +2,12 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_organisms
   # GET /Embeddable::Biologica/biologica_organisms.xml
   def index    
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::Biologica::Organism
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    @organisms = policy_scope(Embeddable::Biologica::Organism)
     @biologica_organisms = Embeddable::Biologica::Organism.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -13,6 +19,9 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_organisms/1
   # GET /Embeddable::Biologica/biologica_organisms/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @organism
     @biologica_organism = Embeddable::Biologica::Organism.find(params[:id])
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_organism=> @biologica_organism }
@@ -31,6 +40,9 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_organisms/new
   # GET /Embeddable::Biologica/biologica_organisms/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::Biologica::Organism
     @biologica_organism = Embeddable::Biologica::Organism.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_organism=> @biologica_organism }
@@ -44,6 +56,9 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
 
   # GET /Embeddable::Biologica/biologica_organisms/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @organism
     @biologica_organism = Embeddable::Biologica::Organism.find(params[:id])
     @scope = get_scope(@biologica_organism)
     if request.xhr?
@@ -60,6 +75,9 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
   # POST /Embeddable::Biologica/biologica_organisms
   # POST /Embeddable::Biologica/biologica_organisms.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::Biologica::Organism
     @biologica_organism = Embeddable::Biologica::Organism.new(params[:biologica_organism])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -87,6 +105,9 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
   # PUT /Embeddable::Biologica/biologica_organisms/1
   # PUT /Embeddable::Biologica/biologica_organisms/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @organism
     cancel = params[:commit] == "Cancel"
     @biologica_organism = Embeddable::Biologica::Organism.find(params[:id])
     if request.xhr?
@@ -112,6 +133,9 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_organisms/1
   # DELETE /Embeddable::Biologica/biologica_organisms/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @organism
     @biologica_organism = Embeddable::Biologica::Organism.find(params[:id])
     respond_to do |format|
       format.html { redirect_to(biologica_organisms_url) }

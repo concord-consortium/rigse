@@ -1,8 +1,16 @@
 class AuthorNotesController < ApplicationController
   
+  # PUNDIT_CHECK_FILTERS
   before_filter :setup_object, :except => [:index]
   
   def setup_object
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize AuthorNote
+    # authorize @author_note
+    # authorize AuthorNote, :new_or_create?
+    # authorize @author_note, :update_edit_or_destroy?
     if params[:id]
       if valid_uuid(params[:id])
         @author_note = AuthorNote.find(:first, :conditions => ['uuid=?',params[:id]])
@@ -32,7 +40,13 @@ class AuthorNotesController < ApplicationController
   # GET /author_notes
   # GET /author_notes.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize AuthorNote
     @author_notes = AuthorNote.all
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    @author_notes = policy_scope(AuthorNote)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @author_notes }
@@ -42,6 +56,9 @@ class AuthorNotesController < ApplicationController
   # GET /author_notes/1
   # GET /author_notes/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @author_note
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @author_note }
@@ -49,6 +66,13 @@ class AuthorNotesController < ApplicationController
   end
 
   def show_author_note
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize AuthorNote
+    # authorize @author_note
+    # authorize AuthorNote, :new_or_create?
+    # authorize @author_note, :update_edit_or_destroy?
     if(@author_note.changeable?(current_visitor))
       render :update do |page|
           page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @author_note}
@@ -65,6 +89,9 @@ class AuthorNotesController < ApplicationController
   # GET /author_notes/new
   # GET /author_notes/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize AuthorNote
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @author_note }
@@ -73,6 +100,9 @@ class AuthorNotesController < ApplicationController
 
   # GET /author_notes/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @author_note
     respond_to do |format|
       format.js   { render :update do |page| 
         page.visual_effect :highlite, 'note' 
@@ -84,6 +114,9 @@ class AuthorNotesController < ApplicationController
   # POST /author_notes
   # POST /author_notes.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize AuthorNote
     if (@author_note.changeable?(current_visitor) && @author_note.update_attributes(params[:author_note]))      
       flash[:notice] = 'AuthorNote was successfully created.'
       if (request.xhr?)
@@ -100,6 +133,9 @@ class AuthorNotesController < ApplicationController
   # PUT /author_notes/1
   # PUT /author_notes/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @author_note
     if(@author_note.changeable?(current_visitor))
       if @author_note.update_attributes(params[:author_note])
         if (request.xhr?)
@@ -128,6 +164,9 @@ class AuthorNotesController < ApplicationController
   # DELETE /author_notes/1
   # DELETE /author_notes/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    authorize @author_note
     if(@author_note.changeable?(current_visitor))
       @author_note.destroy
     end

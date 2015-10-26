@@ -2,7 +2,13 @@ class Embeddable::InnerPagesController < ApplicationController
   # GET /Embeddable/inner_pages
   # GET /Embeddable/inner_pages.xml
   def index    
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::InnerPage
     @inner_pages = Embeddable::InnerPage.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    @inner_pages = policy_scope(Embeddable::InnerPage)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @inner_pages}
@@ -11,6 +17,13 @@ class Embeddable::InnerPagesController < ApplicationController
 
   
   def add_page
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Embeddable::InnerPage
+    # authorize @inner_page
+    # authorize Embeddable::InnerPage, :new_or_create?
+    # authorize @inner_page, :update_edit_or_destroy?
     @inner_page = Embeddable::InnerPage.find(params['id'])
     @new_page = Page.create
     @new_page.user = current_visitor
@@ -20,6 +33,13 @@ class Embeddable::InnerPagesController < ApplicationController
   end
   
   def delete_page
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Embeddable::InnerPage
+    # authorize @inner_page
+    # authorize Embeddable::InnerPage, :new_or_create?
+    # authorize @inner_page, :update_edit_or_destroy?
     @inner_page = Embeddable::InnerPage.find(params['id'])
     @page = Page.find(params['page_id'])
     last_number = @page.page_number
@@ -29,6 +49,13 @@ class Embeddable::InnerPagesController < ApplicationController
   end
 
   def set_page
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Embeddable::InnerPage
+    # authorize @inner_page
+    # authorize Embeddable::InnerPage, :new_or_create?
+    # authorize @inner_page, :update_edit_or_destroy?
     @inner_page = Embeddable::InnerPage.find(params['id'])
     @page = Page.find(params['page_id'])
     render :partial => "page", :locals => {:sub_page => @page, :inner_page => @inner_page}
@@ -38,6 +65,13 @@ class Embeddable::InnerPagesController < ApplicationController
   ##
   ##  
   def sort_pages
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Embeddable::InnerPage
+    # authorize @inner_page
+    # authorize Embeddable::InnerPage, :new_or_create?
+    # authorize @inner_page, :update_edit_or_destroy?
     paramlistname = params[:list_name].nil? ? 'inner_pages_pages_list' : params[:list_name]
     @inner_page = Embeddable::InnerPage.find(params['id'])
     @inner_page.sub_pages.each do |page|
@@ -56,6 +90,13 @@ class Embeddable::InnerPagesController < ApplicationController
   ## optional parameter "container" tells us what DOM ID to add our results too...
   ##
   def add_element
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Embeddable::InnerPage
+    # authorize @inner_page
+    # authorize Embeddable::InnerPage, :new_or_create?
+    # authorize @inner_page, :update_edit_or_destroy?
     @inner_page = Embeddable::InnerPage.find(params['id'])
     @page = Page.find(params['page_id'])
     @container = params['container'] || 'elements_container'
@@ -97,6 +138,9 @@ class Embeddable::InnerPagesController < ApplicationController
   # GET /Embeddable/inner_pages/1.xml
   def show
     @inner_page = Embeddable::InnerPage.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    authorize @inner_page
     @page = @inner_page.children[0]
     @teacher_mode = params['teacher_mode'] || nil
     
@@ -117,6 +161,9 @@ class Embeddable::InnerPagesController < ApplicationController
   # GET /Embeddable/inner_pages/new
   # GET /Embeddable/inner_pages/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::InnerPage
     @inner_page = Embeddable::InnerPage.new
     @inner_page.user = current_visitor
     if request.xhr?
@@ -132,6 +179,9 @@ class Embeddable::InnerPagesController < ApplicationController
   # GET /Embeddable/inner_pages/1/edit
   def edit
     @inner_page = Embeddable::InnerPage.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    authorize @inner_page
     if request.xhr?
       render :partial => 'remote_form', :locals => { :inner_page => @inner_page }
     else
@@ -146,6 +196,9 @@ class Embeddable::InnerPagesController < ApplicationController
   # POST /Embeddable/inner_pages
   # POST /Embeddable/inner_pages.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Embeddable::InnerPage
     @inner_page = Embeddable::InnerPage.new(params[:inner_page])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -175,6 +228,9 @@ class Embeddable::InnerPagesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @inner_page = Embeddable::InnerPage.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    authorize @inner_page
     if request.xhr?
       if cancel || @inner_page.update_attributes(params[:embeddable_inner_page])
         render :partial => 'show', :locals => { :inner_page => @inner_page }
@@ -199,6 +255,9 @@ class Embeddable::InnerPagesController < ApplicationController
   # DELETE /Embeddable/inner_pages/1.xml
   def destroy
     @inner_page = Embeddable::InnerPage.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    authorize @inner_page
     respond_to do |format|
       format.html { redirect_to(inner_pages_url) }
       format.xml  { head :ok }

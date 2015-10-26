@@ -7,6 +7,13 @@ class API::V1::MaterialsBinController < API::APIController
   #   - ?id=:id or ?id[]=:id1&id[]=:id2 - returns collections with given IDs
   # Note that materials are filtered by cohorts of the current visitor!
   def collections
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Api::V1::MaterialsBin
+    # authorize @materials_bin
+    # authorize Api::V1::MaterialsBin, :new_or_create?
+    # authorize @materials_bin, :update_edit_or_destroy?
     # Preserver order of collections provided by client!
     collection_by_id = MaterialsCollection.where(id: params[:id]).index_by { |mc| mc.id.to_s }
     collections = Array(params[:id]).map do |id|
@@ -20,6 +27,13 @@ class API::V1::MaterialsBinController < API::APIController
   # Returns all unofficial materials authored by given user.
   # Note that materials are filtered by cohorts of the current visitor!
   def unofficial_materials
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Api::V1::MaterialsBin
+    # authorize @materials_bin
+    # authorize Api::V1::MaterialsBin, :new_or_create?
+    # authorize @materials_bin, :update_edit_or_destroy?
     user_id = params[:user_id]
     # Note that activities and investigations are ALWAYS considered as official.
     # Only external activities can be unofficial at the moment.
@@ -38,6 +52,13 @@ class API::V1::MaterialsBinController < API::APIController
   # GET /api/v1/materials_bin/unofficial_materials_authors
   # Returns all authors of unofficial mateterials.
   def unofficial_materials_authors
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Api::V1::MaterialsBin
+    # authorize @materials_bin
+    # authorize Api::V1::MaterialsBin, :new_or_create?
+    # authorize @materials_bin, :update_edit_or_destroy?
     # Note that activities and investigations are ALWAYS considered as official.
     # Only external activities can be unofficial at the moment.
     authors = ExternalActivity.filtered_by_cohorts(allowed_cohorts)
