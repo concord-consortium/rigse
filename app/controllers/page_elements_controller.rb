@@ -4,8 +4,6 @@ class PageElementsController < ApplicationController
   # DELETE /page_elements/1.xml
   def destroy
     @page_element = PageElement.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @page_element
     @page_element.destroy
     respond_to do |format|
@@ -14,5 +12,5 @@ class PageElementsController < ApplicationController
       format.js
     end
   end
-  
+
 end

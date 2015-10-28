@@ -2,12 +2,7 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas
   # GET /RiGse/big_ideas.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::BigIdea
-    @big_ideas = RiGse::BigIdea.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @big_ideas = policy_scope(RiGse::BigIdea)
 
     respond_to do |format|
@@ -20,8 +15,6 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas/1.xml
   def show
     @big_idea = RiGse::BigIdea.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @big_idea
 
     respond_to do |format|
@@ -33,8 +26,6 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas/new
   # GET /RiGse/big_ideas/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::BigIdea
     @big_idea = RiGse::BigIdea.new
 
@@ -47,16 +38,12 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas/1/edit
   def edit
     @big_idea = RiGse::BigIdea.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @big_idea
   end
 
   # POST /RiGse/big_ideas
   # POST /RiGse/big_ideas.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::BigIdea
     @big_idea = RiGse::BigIdea.new(params[:big_idea])
 
@@ -76,8 +63,6 @@ class RiGse::BigIdeasController < ApplicationController
   # PUT /RiGse/big_ideas/1.xml
   def update
     @big_idea = RiGse::BigIdea.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @big_idea
 
     respond_to do |format|
@@ -96,8 +81,6 @@ class RiGse::BigIdeasController < ApplicationController
   # DELETE /RiGse/big_ideas/1.xml
   def destroy
     @big_idea = RiGse::BigIdea.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @big_idea
     @big_idea.destroy
 

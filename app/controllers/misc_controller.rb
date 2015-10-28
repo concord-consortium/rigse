@@ -9,13 +9,6 @@ class MiscController < ActionController::Base
   # unless you action accesses session[].
 
   def banner
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Misc
-    # authorize @misc
-    # authorize Misc, :new_or_create?
-    # authorize @misc, :update_edit_or_destroy?
     learner = (params[:learner_id] ? Portal::Learner.find(params[:learner_id]) : nil)
     if learner && learner.bundle_logger.in_progress_bundle
       launch_event = Dataservice::LaunchProcessEvent.create(
@@ -30,29 +23,15 @@ class MiscController < ActionController::Base
   end
 
   def installer_report
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Misc
-    # authorize @misc
-    # authorize Misc, :new_or_create?
-    # authorize @misc, :update_edit_or_destroy?
     body = request.body.read
     remote_ip = request.env['HTTP_X_FORWARDED_FOR'] || request.remote_ip
     success = !!(body =~ /Succeeded! Saved and loaded jar./)
-    report = InstallerReport.create(:body => body, :remote_ip => remote_ip, :success => success, 
+    report = InstallerReport.create(:body => body, :remote_ip => remote_ip, :success => success,
       :jnlp_session_id => params[:jnlp_session_id])
     render :xml => "<created/>", :status => :created
   end
 
   def stats
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Misc
-    # authorize @misc
-    # authorize Misc, :new_or_create?
-    # authorize @misc, :update_edit_or_destroy?
     stats = {}
     stats[:teachers] = Portal::Teacher.count
     stats[:students] = Portal::Student.count
@@ -118,25 +97,11 @@ class MiscController < ActionController::Base
   end
 
   def preflight
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Misc
-    # authorize @misc
-    # authorize Misc, :new_or_create?
-    # authorize @misc, :update_edit_or_destroy?
     session['preflighted'] = '1'
     render layout: 'basic'
   end
 
   def auth_check
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Misc
-    # authorize @misc
-    # authorize Misc, :new_or_create?
-    # authorize @misc, :update_edit_or_destroy?
     send("check_#{params[:provider]}")
   end
 

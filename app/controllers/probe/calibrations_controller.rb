@@ -2,12 +2,7 @@ class Probe::CalibrationsController < ApplicationController
   # GET /Probe/calibrations
   # GET /Probe/calibrations.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::Calibration
-    @calibrations = Probe::Calibration.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @calibrations = policy_scope(Probe::Calibration)
 
     respond_to do |format|
@@ -20,8 +15,6 @@ class Probe::CalibrationsController < ApplicationController
   # GET /Probe/calibrations/1.xml
   def show
     @calibration = Probe::Calibration.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @calibration
 
     respond_to do |format|
@@ -33,8 +26,6 @@ class Probe::CalibrationsController < ApplicationController
   # GET /Probe/calibrations/new
   # GET /Probe/calibrations/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::Calibration
     @calibration = Probe::Calibration.new
 
@@ -47,16 +38,12 @@ class Probe::CalibrationsController < ApplicationController
   # GET /Probe/calibrations/1/edit
   def edit
     @calibration = Probe::Calibration.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @calibration
   end
 
   # POST /Probe/calibrations
   # POST /Probe/calibrations.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::Calibration
     @calibration = Probe::Calibration.new(params[:calibration])
 
@@ -76,8 +63,6 @@ class Probe::CalibrationsController < ApplicationController
   # PUT /Probe/calibrations/1.xml
   def update
     @calibration = Probe::Calibration.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @calibration
 
     respond_to do |format|
@@ -96,8 +81,6 @@ class Probe::CalibrationsController < ApplicationController
   # DELETE /Probe/calibrations/1.xml
   def destroy
     @calibration = Probe::Calibration.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @calibration
     @calibration.destroy
 

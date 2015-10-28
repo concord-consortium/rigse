@@ -2,12 +2,7 @@ class RiGse::UnifyingThemesController < ApplicationController
   # GET /RiGse/unifying_themes
   # GET /RiGse/unifying_themes.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::UnifyingTheme
-    @unifying_themes = RiGse::UnifyingTheme.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @unifying_themes = policy_scope(RiGse::UnifyingTheme)
 
     respond_to do |format|
@@ -20,8 +15,6 @@ class RiGse::UnifyingThemesController < ApplicationController
   # GET /RiGse/unifying_themes/1.xml
   def show
     @unifying_theme = RiGse::UnifyingTheme.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @unifying_theme
 
     respond_to do |format|
@@ -33,8 +26,6 @@ class RiGse::UnifyingThemesController < ApplicationController
   # GET /RiGse/unifying_themes/new
   # GET /RiGse/unifying_themes/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::UnifyingTheme
     @unifying_theme = RiGse::UnifyingTheme.new
 
@@ -47,16 +38,12 @@ class RiGse::UnifyingThemesController < ApplicationController
   # GET /RiGse/unifying_themes/1/edit
   def edit
     @unifying_theme = RiGse::UnifyingTheme.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @unifying_theme
   end
 
   # POST /RiGse/unifying_themes
   # POST /RiGse/unifying_themes.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::UnifyingTheme
     @unifying_theme = RiGse::UnifyingTheme.new(params[:unifying_theme])
 
@@ -76,8 +63,6 @@ class RiGse::UnifyingThemesController < ApplicationController
   # PUT /RiGse/unifying_themes/1.xml
   def update
     @unifying_theme = RiGse::UnifyingTheme.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @unifying_theme
 
     respond_to do |format|
@@ -96,8 +81,6 @@ class RiGse::UnifyingThemesController < ApplicationController
   # DELETE /RiGse/unifying_themes/1.xml
   def destroy
     @unifying_theme = RiGse::UnifyingTheme.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @unifying_theme
     @unifying_theme.destroy
 

@@ -2,12 +2,7 @@ class Probe::PhysicalUnitsController < ApplicationController
   # GET /Probe/physical_units
   # GET /Probe/physical_units.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::PhysicalUnit
-    @physical_units = Probe::PhysicalUnit.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @physical_units = policy_scope(Probe::PhysicalUnit)
 
     respond_to do |format|
@@ -20,8 +15,6 @@ class Probe::PhysicalUnitsController < ApplicationController
   # GET /Probe/physical_units/1.xml
   def show
     @physical_unit = Probe::PhysicalUnit.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @physical_unit
 
     respond_to do |format|
@@ -33,8 +26,6 @@ class Probe::PhysicalUnitsController < ApplicationController
   # GET /Probe/physical_units/new
   # GET /Probe/physical_units/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::PhysicalUnit
     @physical_unit = Probe::PhysicalUnit.new
 
@@ -47,16 +38,12 @@ class Probe::PhysicalUnitsController < ApplicationController
   # GET /Probe/physical_units/1/edit
   def edit
     @physical_unit = Probe::PhysicalUnit.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @physical_unit
   end
 
   # POST /Probe/physical_units
   # POST /Probe/physical_units.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::PhysicalUnit
     @physical_unit = Probe::PhysicalUnit.new(params[:physical_unit])
 
@@ -76,8 +63,6 @@ class Probe::PhysicalUnitsController < ApplicationController
   # PUT /Probe/physical_units/1.xml
   def update
     @physical_unit = Probe::PhysicalUnit.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @physical_unit
 
     respond_to do |format|
@@ -96,8 +81,6 @@ class Probe::PhysicalUnitsController < ApplicationController
   # DELETE /Probe/physical_units/1.xml
   def destroy
     @physical_unit = Probe::PhysicalUnit.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @physical_unit
     @physical_unit.destroy
 

@@ -2,13 +2,8 @@ class OtrunkExample::OtmlCategoriesController < ApplicationController
   # GET /otrunk_example_otml_categories
   # GET /otrunk_example_otml_categories.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize OtrunkExample::OtmlCategory
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    @otml_categories = policy_scope(OtrunkExample::OtmlCategory)
-    @otrunk_example_otml_categories = OtrunkExample::OtmlCategory.all
+    @otrunk_example_otml_categories = policy_scope(OtrunkExample::OtmlCategory)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -20,8 +15,6 @@ class OtrunkExample::OtmlCategoriesController < ApplicationController
   # GET /otrunk_example_otml_categories/1.xml
   def show
     @otml_category = OtrunkExample::OtmlCategory.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @otml_category
 
     respond_to do |format|
@@ -33,8 +26,6 @@ class OtrunkExample::OtmlCategoriesController < ApplicationController
   # GET /otrunk_example_otml_categories/new
   # GET /otrunk_example_otml_categories/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize OtrunkExample::OtmlCategory
     @otml_category = OtrunkExample::OtmlCategory.new
 
@@ -47,16 +38,12 @@ class OtrunkExample::OtmlCategoriesController < ApplicationController
   # GET /otrunk_example_otml_categories/1/edit
   def edit
     @otml_category = OtrunkExample::OtmlCategory.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @otml_category
   end
 
   # POST /otrunk_example_otml_categories
   # POST /otrunk_example_otml_categories.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize OtrunkExample::OtmlCategory
     @otml_category = OtrunkExample::OtmlCategory.new(params[:otml_category])
 
@@ -76,8 +63,6 @@ class OtrunkExample::OtmlCategoriesController < ApplicationController
   # PUT /otrunk_example_otml_categories/1.xml
   def update
     @otml_category = OtrunkExample::OtmlCategory.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @otml_category
 
     respond_to do |format|
@@ -96,8 +81,6 @@ class OtrunkExample::OtmlCategoriesController < ApplicationController
   # DELETE /otrunk_example_otml_categories/1.xml
   def destroy
     @otml_category = OtrunkExample::OtmlCategory.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @otml_category
     @otml_category.destroy
 
