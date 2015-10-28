@@ -2,12 +2,7 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements
   # GET /RiGse/knowledge_statements.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::KnowledgeStatement
-    @knowledge_statements = RiGse::KnowledgeStatement.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @knowledge_statements = policy_scope(RiGse::KnowledgeStatement)
 
     respond_to do |format|
@@ -20,8 +15,6 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements/1.xml
   def show
     @knowledge_statement = RiGse::KnowledgeStatement.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @knowledge_statement
 
     respond_to do |format|
@@ -33,8 +26,6 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements/new
   # GET /RiGse/knowledge_statements/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::KnowledgeStatement
     @knowledge_statement = RiGse::KnowledgeStatement.new
 
@@ -47,16 +38,12 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements/1/edit
   def edit
     @knowledge_statement = RiGse::KnowledgeStatement.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @knowledge_statement
   end
 
   # POST /RiGse/knowledge_statements
   # POST /RiGse/knowledge_statements.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::KnowledgeStatement
     @knowledge_statement = RiGse::KnowledgeStatement.new(params[:knowledge_statement])
 
@@ -76,8 +63,6 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # PUT /RiGse/knowledge_statements/1.xml
   def update
     @knowledge_statement = RiGse::KnowledgeStatement.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @knowledge_statement
 
     respond_to do |format|
@@ -96,8 +81,6 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # DELETE /RiGse/knowledge_statements/1.xml
   def destroy
     @knowledge_statement = RiGse::KnowledgeStatement.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @knowledge_statement
     @knowledge_statement.destroy
 

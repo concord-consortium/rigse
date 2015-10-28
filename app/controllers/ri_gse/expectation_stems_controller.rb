@@ -2,12 +2,7 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems
   # GET /RiGse/expectation_stems.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::ExpectationStem
-    @expectation_stems = RiGse::ExpectationStem.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @expectation_stems = policy_scope(RiGse::ExpectationStem)
 
     respond_to do |format|
@@ -20,8 +15,6 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems/1.xml
   def show
     @expectation_stem = RiGse::ExpectationStem.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @expectation_stem
 
     respond_to do |format|
@@ -33,8 +26,6 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems/new
   # GET /RiGse/expectation_stems/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::ExpectationStem
     @expectation_stem = RiGse::ExpectationStem.new
 
@@ -47,16 +38,12 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems/1/edit
   def edit
     @expectation_stem = RiGse::ExpectationStem.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @expectation_stem
   end
 
   # POST /RiGse/expectation_stems
   # POST /RiGse/expectation_stems.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::ExpectationStem
     @expectation_stem = RiGse::ExpectationStem.new(params[:expectation_stem])
 
@@ -76,8 +63,6 @@ class RiGse::ExpectationStemsController < ApplicationController
   # PUT /RiGse/expectation_stems/1.xml
   def update
     @expectation_stem = RiGse::ExpectationStem.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @expectation_stem
 
     respond_to do |format|
@@ -96,8 +81,6 @@ class RiGse::ExpectationStemsController < ApplicationController
   # DELETE /RiGse/expectation_stems/1.xml
   def destroy
     @expectation_stem = RiGse::ExpectationStem.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @expectation_stem
     @expectation_stem.destroy
 

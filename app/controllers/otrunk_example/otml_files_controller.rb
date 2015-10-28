@@ -2,13 +2,8 @@ class OtrunkExample::OtmlFilesController < ApplicationController
   # GET /otrunk_example_otml_files
   # GET /otrunk_example_otml_files.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize OtrunkExample::OtmlFile
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    @otml_files = policy_scope(OtrunkExample::OtmlFile)
-    @otrunk_example_otml_files = OtrunkExample::OtmlFile.all
+    @otrunk_example_otml_files = policy_scope(OtrunkExample::OtmlFile)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -20,8 +15,6 @@ class OtrunkExample::OtmlFilesController < ApplicationController
   # GET /otrunk_example_otml_files/1.xml
   def show
     @otml_file = OtrunkExample::OtmlFile.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @otml_file
 
     respond_to do |format|
@@ -33,8 +26,6 @@ class OtrunkExample::OtmlFilesController < ApplicationController
   # GET /otrunk_example_otml_files/new
   # GET /otrunk_example_otml_files/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize OtrunkExample::OtmlFile
     @otml_file = OtrunkExample::OtmlFile.new
 
@@ -47,16 +38,12 @@ class OtrunkExample::OtmlFilesController < ApplicationController
   # GET /otrunk_example_otml_files/1/edit
   def edit
     @otml_file = OtrunkExample::OtmlFile.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @otml_file
   end
 
   # POST /otrunk_example_otml_files
   # POST /otrunk_example_otml_files.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize OtrunkExample::OtmlFile
     @otml_file = OtrunkExample::OtmlFile.new(params[:otml_file])
 
@@ -76,8 +63,6 @@ class OtrunkExample::OtmlFilesController < ApplicationController
   # PUT /otrunk_example_otml_files/1.xml
   def update
     @otml_file = OtrunkExample::OtmlFile.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @otml_file
 
     respond_to do |format|
@@ -96,8 +81,6 @@ class OtrunkExample::OtmlFilesController < ApplicationController
   # DELETE /otrunk_example_otml_files/1.xml
   def destroy
     @otml_file = OtrunkExample::OtmlFile.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @otml_file
     @otml_file.destroy
 

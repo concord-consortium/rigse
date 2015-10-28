@@ -2,12 +2,7 @@ class Probe::DataFiltersController < ApplicationController
   # GET /Probe/data_filters
   # GET /Probe/data_filters.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::DataFilter
-    @data_filters = Probe::DataFilter.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @data_filters = policy_scope(Probe::DataFilter)
 
     respond_to do |format|
@@ -19,10 +14,7 @@ class Probe::DataFiltersController < ApplicationController
   # GET /Probe/data_filters/1
   # GET /Probe/data_filters/1.xml
   def show
-    # PUNDIT_CHECK_FILTERS
     @data_filter = Probe::DataFilter.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @data_filter
 
     respond_to do |format|
@@ -34,8 +26,6 @@ class Probe::DataFiltersController < ApplicationController
   # GET /Probe/data_filters/new
   # GET /Probe/data_filters/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::DataFilter
     @data_filter = Probe::DataFilter.new
 
@@ -48,16 +38,12 @@ class Probe::DataFiltersController < ApplicationController
   # GET /Probe/data_filters/1/edit
   def edit
     @data_filter = Probe::DataFilter.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @data_filter
   end
 
   # POST /Probe/data_filters
   # POST /Probe/data_filters.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::DataFilter
     @data_filter = Probe::DataFilter.new(params[:data_filter])
 
@@ -77,8 +63,6 @@ class Probe::DataFiltersController < ApplicationController
   # PUT /Probe/data_filters/1.xml
   def update
     @data_filter = Probe::DataFilter.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @data_filter
 
     respond_to do |format|
@@ -97,8 +81,6 @@ class Probe::DataFiltersController < ApplicationController
   # DELETE /Probe/data_filters/1.xml
   def destroy
     @data_filter = Probe::DataFilter.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @data_filter
     @data_filter.destroy
 

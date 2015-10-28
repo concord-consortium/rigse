@@ -2,9 +2,6 @@ class Browse::ExternalActivitiesController < ApplicationController
 
   # GET /browse/external_activities/1
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @external_activity
     @back_url = request.env["HTTP_REFERER"]
     if @back_url && !@back_url.include?(request.host)
       @back_url = nil
@@ -16,6 +13,7 @@ class Browse::ExternalActivitiesController < ApplicationController
     @wide_content_layout = true
 
     material = ::ExternalActivity.find(params[:id])
+    authorize material
 
     @search_material = Search::SearchMaterial.new(material, current_visitor)
     @search_material.url = url_for(@search_material.url)
