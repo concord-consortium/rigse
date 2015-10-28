@@ -9,10 +9,10 @@ class HomeController < ApplicationController
   def index
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
-    authorize Home
+    # authorize Home
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    @homes = policy_scope(Home)
+    # @homes = policy_scope(Home)
    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
    @notices = notices_hash[:notices]
    @notice_display_type = notices_hash[:notice_display_type]

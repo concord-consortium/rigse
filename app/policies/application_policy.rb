@@ -51,8 +51,6 @@ class ApplicationPolicy
     end
   end
 
-  protected
-
   def new_or_create?
     not_anonymous?
   end
