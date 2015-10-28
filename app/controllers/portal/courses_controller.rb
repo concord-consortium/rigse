@@ -1,21 +1,16 @@
 class Portal::CoursesController < ApplicationController
-  
-  # TODO:  There need to be a lot more 
+
+  # TODO:  There need to be a lot more
   # controller filters here...
   # this only protects management actions:
   include RestrictedPortalController
-  
-  
-  public 
+
+
+  public
   # GET /portal_courses
   # GET /portal_courses.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Course
-    @courses = Portal::Course.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @courses = policy_scope(Portal::Course)
 
     respond_to do |format|
@@ -28,8 +23,6 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/1.xml
   def show
     @course = Portal::Course.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @course
 
     respond_to do |format|
@@ -41,8 +34,6 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/new
   # GET /portal_courses/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Course
     @course = Portal::Course.new
 
@@ -55,16 +46,12 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/1/edit
   def edit
     @course = Portal::Course.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @course
   end
 
   # POST /portal_courses
   # POST /portal_courses.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Course
     @course = Portal::Course.new(params[:portal_course])
 
@@ -84,8 +71,6 @@ class Portal::CoursesController < ApplicationController
   # PUT /portal_courses/1.xml
   def update
     @course = Portal::Course.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @course
 
     respond_to do |format|
@@ -104,8 +89,6 @@ class Portal::CoursesController < ApplicationController
   # DELETE /portal_courses/1.xml
   def destroy
     @course = Portal::Course.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @course
     @course.destroy
 
