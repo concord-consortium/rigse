@@ -1,17 +1,12 @@
 class Portal::SemestersController < ApplicationController
-  
+
   include RestrictedPortalController
   public
-  
+
   # GET /portal_semesters
   # GET /portal_semesters.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Semester
-    @semesters = Portal::Semester.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @semesters = policy_scope(Portal::Semester)
 
     respond_to do |format|
@@ -24,8 +19,6 @@ class Portal::SemestersController < ApplicationController
   # GET /portal_semesters/1.xml
   def show
     @semester = Portal::Semester.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @semester
 
     respond_to do |format|
@@ -37,8 +30,6 @@ class Portal::SemestersController < ApplicationController
   # GET /portal_semesters/new
   # GET /portal_semesters/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Semester
     @semester = Portal::Semester.new
 
@@ -51,16 +42,12 @@ class Portal::SemestersController < ApplicationController
   # GET /portal_semesters/1/edit
   def edit
     @semester = Portal::Semester.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @semester
   end
 
   # POST /portal_semesters
   # POST /portal_semesters.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Semester
     @semester = Portal::Semester.new(params[:portal_semester])
 
@@ -80,8 +67,6 @@ class Portal::SemestersController < ApplicationController
   # PUT /portal_semesters/1.xml
   def update
     @semester = Portal::Semester.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @semester
     respond_to do |format|
       if @semester.update_attributes(params[:portal_semester])
@@ -99,8 +84,6 @@ class Portal::SemestersController < ApplicationController
   # DELETE /portal_semesters/1.xml
   def destroy
     @semester = Portal::Semester.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @semester
     @semester.destroy
 
