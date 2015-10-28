@@ -1,2 +1,2 @@
-class ChromosomePolicy < ApplicationPolicy
+class Embeddable::Biologica::ChromosomePolicy < ApplicationPolicy
 end

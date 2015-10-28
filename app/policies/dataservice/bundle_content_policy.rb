@@ -1,2 +1,2 @@
-class BundleContentPolicy < ApplicationPolicy
+class Dataservice::BundleContentPolicy < ApplicationPolicy
 end

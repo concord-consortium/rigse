@@ -1,2 +1,2 @@
-class UnifyingThemePolicy < ApplicationPolicy
+class RiGse::UnifyingThemePolicy < ApplicationPolicy
 end

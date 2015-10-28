@@ -1,2 +1,2 @@
-class SearchMaterialPolicy < ApplicationPolicy
+class Search::SearchMaterialPolicy < ApplicationPolicy
 end

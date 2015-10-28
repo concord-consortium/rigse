@@ -1,2 +1,2 @@
-class OfferingPolicy < ApplicationPolicy
+class Portal::OfferingPolicy < ApplicationPolicy
 end

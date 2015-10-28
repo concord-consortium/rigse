@@ -1,2 +1,2 @@
-class VendorInterfacePolicy < ApplicationPolicy
+class Probe::VendorInterfacePolicy < ApplicationPolicy
 end

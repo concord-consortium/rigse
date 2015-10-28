@@ -1,2 +1,2 @@
-class TeacherPolicy < ApplicationPolicy
+class Portal::TeacherPolicy < ApplicationPolicy
 end

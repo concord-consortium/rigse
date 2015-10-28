@@ -1,2 +1,2 @@
-class CountryPolicy < ApplicationPolicy
+class Portal::CountryPolicy < ApplicationPolicy
 end

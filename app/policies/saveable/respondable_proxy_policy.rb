@@ -1,2 +1,2 @@
-class RespondableProxyPolicy < ApplicationPolicy
+class Saveable::RespondableProxyPolicy < ApplicationPolicy
 end

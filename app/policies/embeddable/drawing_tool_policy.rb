@@ -1,2 +1,2 @@
-class DrawingToolPolicy < ApplicationPolicy
+class Embeddable::DrawingToolPolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class ProcessBundleJobPolicy < ApplicationPolicy
+class Dataservice::ProcessBundleJobPolicy < ApplicationPolicy
 end

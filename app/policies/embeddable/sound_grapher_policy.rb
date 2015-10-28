@@ -1,2 +1,2 @@
-class SoundGrapherPolicy < ApplicationPolicy
+class Embeddable::SoundGrapherPolicy < ApplicationPolicy
 end

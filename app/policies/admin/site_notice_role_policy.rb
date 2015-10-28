@@ -1,2 +1,2 @@
-class SiteNoticeRolePolicy < ApplicationPolicy
+class Admin::SiteNoticeRolePolicy < ApplicationPolicy
 end

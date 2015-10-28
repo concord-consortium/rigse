@@ -1,2 +1,2 @@
-class MeasuringResistancePolicy < ApplicationPolicy
+class Saveable::Sparks::MeasuringResistancePolicy < ApplicationPolicy
 end

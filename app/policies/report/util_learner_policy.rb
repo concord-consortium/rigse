@@ -1,2 +1,2 @@
-class UtilLearnerPolicy < ApplicationPolicy
+class Report::UtilLearnerPolicy < ApplicationPolicy
 end

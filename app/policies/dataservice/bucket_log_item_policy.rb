@@ -1,2 +1,2 @@
-class BucketLogItemPolicy < ApplicationPolicy
+class Dataservice::BucketLogItemPolicy < ApplicationPolicy
 end

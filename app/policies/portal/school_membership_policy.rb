@@ -1,2 +1,2 @@
-class SchoolMembershipPolicy < ApplicationPolicy
+class Portal::SchoolMembershipPolicy < ApplicationPolicy
 end

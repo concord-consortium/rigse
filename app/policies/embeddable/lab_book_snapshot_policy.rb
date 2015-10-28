@@ -1,2 +1,2 @@
-class LabBookSnapshotPolicy < ApplicationPolicy
+class Embeddable::LabBookSnapshotPolicy < ApplicationPolicy
 end

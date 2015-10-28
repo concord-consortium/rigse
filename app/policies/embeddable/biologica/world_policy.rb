@@ -1,2 +1,2 @@
-class WorldPolicy < ApplicationPolicy
+class Embeddable::Biologica::WorldPolicy < ApplicationPolicy
 end

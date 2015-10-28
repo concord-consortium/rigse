@@ -1,2 +1,2 @@
-class RangeQuestionPolicy < ApplicationPolicy
+class Embeddable::Smartgraph::RangeQuestionPolicy < ApplicationPolicy
 end

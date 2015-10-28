@@ -1,2 +1,2 @@
-class PeriodicBundleContentObserverPolicy < ApplicationPolicy
+class Dataservice::PeriodicBundleContentObserverPolicy < ApplicationPolicy
 end

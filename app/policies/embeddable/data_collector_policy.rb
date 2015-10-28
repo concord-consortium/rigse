@@ -1,2 +1,2 @@
-class DataCollectorPolicy < ApplicationPolicy
+class Embeddable::DataCollectorPolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class EmbeddablePolicy < ApplicationPolicy
+class Embeddable::EmbeddablePolicy < ApplicationPolicy
 end

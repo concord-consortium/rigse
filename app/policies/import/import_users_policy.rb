@@ -1,2 +1,2 @@
-class ImportUsersPolicy < ApplicationPolicy
+class Import::ImportUserPolicy < ApplicationPolicy
 end

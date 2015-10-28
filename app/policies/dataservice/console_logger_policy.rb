@@ -1,2 +1,2 @@
-class ConsoleLoggerPolicy < ApplicationPolicy
+class Dataservice::ConsoleLoggerPolicy < ApplicationPolicy
 end

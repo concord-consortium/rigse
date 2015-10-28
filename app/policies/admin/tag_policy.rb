@@ -1,2 +1,2 @@
-class TagPolicy < ApplicationPolicy
+class Admin::TagPolicy < ApplicationPolicy
 end

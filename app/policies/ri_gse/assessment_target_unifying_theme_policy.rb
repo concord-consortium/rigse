@@ -1,2 +1,2 @@
-class AssessmentTargetUnifyingThemePolicy < ApplicationPolicy
+class RiGse::AssessmentTargetUnifyingThemePolicy < ApplicationPolicy
 end

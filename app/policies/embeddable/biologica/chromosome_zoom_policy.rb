@@ -1,2 +1,2 @@
-class ChromosomeZoomPolicy < ApplicationPolicy
+class Embeddable::Biologica::ChromosomeZoomPolicy < ApplicationPolicy
 end

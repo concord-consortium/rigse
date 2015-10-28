@@ -1,2 +1,2 @@
-class OfferingStatusPolicy < ApplicationPolicy
+class Report::OfferingStatusPolicy < ApplicationPolicy
 end

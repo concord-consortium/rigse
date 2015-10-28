@@ -1,2 +1,2 @@
-class OtmlCategoryPolicy < ApplicationPolicy
+class OtrunkExample::OtmlCategoryPolicy < ApplicationPolicy
 end

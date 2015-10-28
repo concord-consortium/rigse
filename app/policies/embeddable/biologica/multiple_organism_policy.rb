@@ -1,2 +1,2 @@
-class MultipleOrganismPolicy < ApplicationPolicy
+class Embeddable::Biologica::MultipleOrganismPolicy < ApplicationPolicy
 end

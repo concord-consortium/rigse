@@ -1,2 +1,2 @@
-class MwModelerPagePolicy < ApplicationPolicy
+class Embeddable::MwModelerPagePolicy < ApplicationPolicy
 end

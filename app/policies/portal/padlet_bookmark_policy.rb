@@ -1,2 +1,2 @@
-class PadletBookmarkPolicy < ApplicationPolicy
+class Portal::PadletBookmarkPolicy < ApplicationPolicy
 end

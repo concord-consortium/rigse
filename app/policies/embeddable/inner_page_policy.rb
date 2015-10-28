@@ -1,2 +1,2 @@
-class InnerPagePolicy < ApplicationPolicy
+class Embeddable::InnerPagePolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class SettingsPolicy < ApplicationPolicy
+class Admin::SettingPolicy < ApplicationPolicy
 end

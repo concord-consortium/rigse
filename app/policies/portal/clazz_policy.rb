@@ -1,2 +1,2 @@
-class ClazzPolicy < ApplicationPolicy
+class Portal::ClazzPolicy < ApplicationPolicy
 end

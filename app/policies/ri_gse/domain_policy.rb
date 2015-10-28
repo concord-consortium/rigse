@@ -1,2 +1,2 @@
-class DomainPolicy < ApplicationPolicy
+class RiGse::DomainPolicy < ApplicationPolicy
 end

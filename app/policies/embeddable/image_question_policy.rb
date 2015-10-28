@@ -1,2 +1,2 @@
-class ImageQuestionPolicy < ApplicationPolicy
+class Embeddable::ImageQuestionPolicy < ApplicationPolicy
 end

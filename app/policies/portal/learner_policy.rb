@@ -1,2 +1,2 @@
-class LearnerPolicy < ApplicationPolicy
+class Portal::LearnerPolicy < ApplicationPolicy
 end

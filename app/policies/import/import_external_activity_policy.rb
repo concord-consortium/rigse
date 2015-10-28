@@ -1,2 +1,2 @@
-class ImportExternalActivityPolicy < ApplicationPolicy
+class Import::ImportExternalActivityPolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class PermissionFormPolicy < ApplicationPolicy
+class Portal::PermissionFormPolicy < ApplicationPolicy
 end

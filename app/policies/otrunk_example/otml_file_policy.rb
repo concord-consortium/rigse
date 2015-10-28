@@ -1,2 +1,2 @@
-class OtmlFilePolicy < ApplicationPolicy
+class OtrunkExample::OtmlFilePolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class ProjectMaterialPolicy < ApplicationPolicy
+class Admin::ProjectMaterialPolicy < ApplicationPolicy
 end

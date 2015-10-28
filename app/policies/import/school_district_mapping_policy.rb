@@ -1,2 +1,2 @@
-class SchoolDistrictMappingPolicy < ApplicationPolicy
+class Import::SchoolDistrictMappingPolicy < ApplicationPolicy
 end

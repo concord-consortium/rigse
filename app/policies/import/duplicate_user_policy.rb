@@ -1,2 +1,2 @@
-class DuplicateUserPolicy < ApplicationPolicy
+class Import::DuplicateUserPolicy < ApplicationPolicy
 end

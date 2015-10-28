@@ -1,2 +1,2 @@
-class OpenResponsePolicy < ApplicationPolicy
+class Embeddable::OpenResponsePolicy < ApplicationPolicy
 end

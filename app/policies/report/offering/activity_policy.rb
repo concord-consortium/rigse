@@ -1,2 +1,2 @@
-class ActivityPolicy < ApplicationPolicy
+class Report::Offering::ActivityPolicy < ApplicationPolicy
 end

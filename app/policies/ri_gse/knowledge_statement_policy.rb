@@ -1,2 +1,2 @@
-class KnowledgeStatementPolicy < ApplicationPolicy
+class RiGse::KnowledgeStatementPolicy < ApplicationPolicy
 end

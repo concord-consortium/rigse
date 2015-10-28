@@ -1,2 +1,2 @@
-class MultipleChoiceAnswerPolicy < ApplicationPolicy
+class Saveable::MultipleChoiceAnswerPolicy < ApplicationPolicy
 end

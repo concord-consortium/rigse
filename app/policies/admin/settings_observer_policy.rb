@@ -1,2 +1,2 @@
-class SettingsObserverPolicy < ApplicationPolicy
+class Admin::SettingsObserverPolicy < ApplicationPolicy
 end

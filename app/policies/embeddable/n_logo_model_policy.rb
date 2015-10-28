@@ -1,2 +1,2 @@
-class NLogoModelPolicy < ApplicationPolicy
+class Embeddable::NLogoModelPolicy < ApplicationPolicy
 end

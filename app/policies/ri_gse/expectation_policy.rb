@@ -1,2 +1,2 @@
-class ExpectationPolicy < ApplicationPolicy
+class RiGse::ExpectationPolicy < ApplicationPolicy
 end

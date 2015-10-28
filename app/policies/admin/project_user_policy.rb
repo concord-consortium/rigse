@@ -1,2 +1,2 @@
-class ProjectUserPolicy < ApplicationPolicy
+class Admin::ProjectUserPolicy < ApplicationPolicy
 end

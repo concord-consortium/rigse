@@ -1,2 +1,2 @@
-class ProbeTypePolicy < ApplicationPolicy
+class Probe::ProbeTypePolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class Nces06DistrictPolicy < ApplicationPolicy
+class Portal::Nces06DistrictPolicy < ApplicationPolicy
 end

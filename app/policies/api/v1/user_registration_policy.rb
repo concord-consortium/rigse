@@ -1,2 +1,2 @@
-class UserRegistrationPolicy < ApplicationPolicy
+class Api::V1::UserRegistrationPolicy < ApplicationPolicy
 end

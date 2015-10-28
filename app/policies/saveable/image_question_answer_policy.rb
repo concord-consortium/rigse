@@ -1,2 +1,2 @@
-class ImageQuestionAnswerPolicy < ApplicationPolicy
+class Saveable::ImageQuestionAnswerPolicy < ApplicationPolicy
 end

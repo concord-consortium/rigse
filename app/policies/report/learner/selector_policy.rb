@@ -1,2 +1,2 @@
-class SelectorPolicy < ApplicationPolicy
+class Report::Learner::SelectorPolicy < ApplicationPolicy
 end

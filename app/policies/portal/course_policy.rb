@@ -1,2 +1,2 @@
-class CoursePolicy < ApplicationPolicy
+class Portal::CoursePolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class JnlpSessionPolicy < ApplicationPolicy
+class Dataservice::JnlpSessionPolicy < ApplicationPolicy
 end
