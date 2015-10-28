@@ -2,324 +2,212 @@
 
 ## Controllers
 
-0 of 129 done
+### Completed on first pass
 
-* activities_controller.rb
-* application_controller.rb
-* attached_files_controller.rb
-* authentications_controller.rb
-* authoring_controller.rb
-* author_notes_controller.rb
-* auth_controller.rb
-* external_activities_controller.rb
-* help_controller.rb
-* home_controller.rb
-* images_controller.rb
-* installer_reports_controller.rb
-* interactives_controller.rb
-* investigations_controller.rb
-* materials_collections_controller.rb
-* misc_controller.rb
-* misc_metal_controller.rb
-* pages_controller.rb
-* page_elements_controller.rb
-* passwords_controller.rb
-* registrations_controller.rb
-* resource_pages_controller.rb
-* search_controller.rb
-* sections_controller.rb
-* security_questions_controller.rb
-* teacher_notes_controller.rb
-* users_controller.rb
-* admin/learner_details_controller.rb
-* admin/permission_forms_controller.rb
-* admin/projects_controller.rb
-* admin/settings_controller.rb
-* admin/site_notices_controller.rb
-* admin/tags_controller.rb
-* api/api_controller.rb
-* api/v1/collaborations_controller.rb
-* api/v1/countries_controller.rb
-* api/v1/districts_controller.rb
-* api/v1/materials_bin_controller.rb
-* api/v1/materials_controller.rb
-* api/v1/schools_controller.rb
-* api/v1/search_controller.rb
-* api/v1/security_questions_controller.rb
-* api/v1/states_controller.rb
-* api/v1/students_controller.rb
-* api/v1/teachers_controller.rb
-* browse/activities_controller.rb
-* browse/external_activities_controller.rb
-* browse/investigations_controller.rb
-* dataservice/blobs_controller.rb
-* dataservice/bucket_contents_metal_controller.rb
-* dataservice/bucket_loggers_controller.rb
-* dataservice/bucket_log_items_metal_controller.rb
-* dataservice/bundle_contents_controller.rb
-* dataservice/bundle_contents_metal_controller.rb
-* dataservice/bundle_loggers_controller.rb
-* dataservice/console_contents_controller.rb
-* dataservice/console_contents_metal_controller.rb
-* dataservice/console_loggers_controller.rb
-* dataservice/external_activity_data_controller.rb
-* dataservice/periodic_bundle_contents_metal_controller.rb
-* dataservice/periodic_bundle_loggers_controller.rb
-* dataservice/periodic_bundle_loggers_metal_controller.rb
-* embeddable/biologica/breed_offsprings_controller.rb
-* embeddable/biologica/chromosomes_controller.rb
-* embeddable/biologica/chromosome_zooms_controller.rb
-* embeddable/biologica/meiosis_views_controller.rb
-* embeddable/biologica/multiple_organisms_controller.rb
-* embeddable/biologica/organisms_controller.rb
-* embeddable/biologica/pedigrees_controller.rb
-* embeddable/biologica/static_organisms_controller.rb
-* embeddable/biologica/worlds_controller.rb
-* embeddable/data_collectors_controller.rb
-* embeddable/data_tables_controller.rb
-* embeddable/drawing_tools_controller.rb
-* embeddable/image_questions_controller.rb
-* embeddable/inner_pages_controller.rb
-* embeddable/lab_book_snapshots_controller.rb
-* embeddable/multiple_choices_controller.rb
-* embeddable/mw_modeler_pages_controller.rb
-* embeddable/n_logo_models_controller.rb
-* embeddable/open_responses_controller.rb
-* embeddable/raw_otmls_controller.rb
-* embeddable/smartgraph/range_questions_controller.rb
-* embeddable/sound_graphers_controller.rb
-* embeddable/video_players_controller.rb
-* embeddable/xhtmls_controller.rb
-* import/imported_login_controller.rb
-* import/imports_controller.rb
-* otrunk_example/otml_categories_controller.rb
-* otrunk_example/otml_files_controller.rb
-* otrunk_example/otrunk_imports_controller.rb
-* otrunk_example/otrunk_view_entries_controller.rb
-* portal/bookmarks_controller.rb
-* portal/clazzes_controller.rb
-* portal/courses_controller.rb
-* portal/districts_controller.rb
-* portal/grades_controller.rb
-* portal/grade_levels_controller.rb
-* portal/learners_controller.rb
-* portal/learner_jnlp_renderer.rb
-* portal/nces06_districts_controller.rb
-* portal/nces06_schools_controller.rb
-* portal/offerings_controller.rb
-* portal/offerings_metal_controller.rb
-* portal/schools_controller.rb
-* portal/school_memberships_controller.rb
-* portal/school_selector_controller.rb
-* portal/semesters_controller.rb
-* portal/students_controller.rb
-* portal/student_clazzes_controller.rb
-* portal/subjects_controller.rb
-* portal/teachers_controller.rb
-* portal/user_type_selector_controller.rb
-* probe/calibrations_controller.rb
-* probe/data_filters_controller.rb
-* probe/device_configs_controller.rb
-* probe/physical_units_controller.rb
-* probe/probe_types_controller.rb
-* probe/vendor_interfaces_controller.rb
-* report/learner_controller.rb
-* ri_gse/assessment_targets_controller.rb
-* ri_gse/big_ideas_controller.rb
-* ri_gse/domains_controller.rb
-* ri_gse/expectations_controller.rb
-* ri_gse/expectation_stems_controller.rb
-* ri_gse/grade_span_expectations_controller.rb
-* ri_gse/knowledge_statements_controller.rb
-* ri_gse/unifying_themes_controller.rb
-* saveable/sparks/measuring_resistances_controller.rb
+* Y api/api_controller.rb
+* Y api/v1/students_controller.rb
+* Y api/v1/teachers_controller.rb
+* Y browse/external_activities_controller.rb
+* Y browse/investigations_controller.rb
+* Y dataservice/bucket_contents_metal_controller.rb
+* Y dataservice/bucket_log_items_metal_controller.rb
+* Y dataservice/bundle_contents_metal_controller.rb
+* Y dataservice/console_contents_metal_controller.rb
+* Y dataservice/periodic_bundle_contents_metal_controller.rb
+* Y misc_controller.rb
+* Y otrunk_example/otml_categories_controller.rb
+* Y otrunk_example/otml_files_controller.rb
+* Y otrunk_example/otrunk_imports_controller.rb
+* Y otrunk_example/otrunk_view_entries_controller.rb
+* Y page_elements_controller.rb
+* Y portal/school_selector_controller.rb
+* Y probe/calibrations_controller.rb
+* Y probe/data_filters_controller.rb
+* Y probe/device_configs_controller.rb
+* Y probe/physical_units_controller.rb
+* Y probe/vendor_interfaces_controller.rb
+* Y ri_gse/big_ideas_controller.rb
+* Y ri_gse/domains_controller.rb
+* Y ri_gse/expectations_controller.rb
+* Y ri_gse/expectation_stems_controller.rb
+* Y ri_gse/knowledge_statements_controller.rb
+* Y ri_gse/unifying_themes_controller.rb
+* Y saveable/sparks/measuring_resistances_controller.rb
 
-Models
+### Need to resolve PeerAccess
 
-0 of 185 done
+* Y dataservice/external_activity_data_controller.rb
 
-* access_grant.rb
-* activity.rb
-* attached_file.rb
-* authentication.rb
-* author_note.rb
-* client.rb
-* commons_license.rb
-* dataservice.rb
-* formatted_doc.rb
-* image.rb
-* installer_report.rb
-* interactive.rb
-* investigation.rb
-* investigation_observer.rb
-* learner_detail.rb
-* materials_collection.rb
-* materials_collection_item.rb
-* page.rb
-* page_element.rb
-* password.rb
-* password_mailer.rb
-* resource_page.rb
-* role.rb
-* search.rb
-* section.rb
-* security_question.rb
-* setting.rb
-* student_roster.rb
-* student_roster_row.rb
-* student_view.rb
-* teacher_note.rb
-* user.rb
-* user_mailer.rb
-* user_observer.rb
-* admin/notice_user_display_status.rb
-* admin/project.rb
-* admin/project_link.rb
-* admin/project_material.rb
-* admin/project_user.rb
-* admin/settings.rb
-* admin/settings_observer.rb
-* admin/settings_vendor_interface.rb
-* admin/site_notice.rb
-* admin/site_notice_role.rb
-* admin/site_notice_user.rb
-* admin/tag.rb
-* api/v1/school_registration.rb
-* api/v1/student_registration.rb
-* api/v1/teacher_registration.rb
-* api/v1/user_registration.rb
-* dataservice/blob.rb
-* dataservice/bucket_content.rb
-* dataservice/bucket_logger.rb
-* dataservice/bucket_log_item.rb
-* dataservice/bundle_content.rb
-* dataservice/bundle_content_observer.rb
-* dataservice/bundle_logger.rb
-* dataservice/console_content.rb
-* dataservice/console_logger.rb
-* dataservice/jnlp_session.rb
-* dataservice/launch_process_event.rb
-* dataservice/periodic_bundle_content.rb
-* dataservice/periodic_bundle_content_observer.rb
-* dataservice/periodic_bundle_logger.rb
-* dataservice/periodic_bundle_part.rb
-* dataservice/process_bundle_job.rb
-* dataservice/process_external_activity_data_job.rb
-* embeddable/biologica/breed_offspring.rb
-* embeddable/biologica/chromosome.rb
-* embeddable/biologica/chromosome_zoom.rb
-* embeddable/biologica/meiosis_view.rb
-* embeddable/biologica/multiple_organism.rb
-* embeddable/biologica/organism.rb
-* embeddable/biologica/pedigree.rb
-* embeddable/biologica/static_organism.rb
-* embeddable/biologica/world.rb
-* embeddable/data_collector.rb
-* embeddable/data_table.rb
-* embeddable/drawing_tool.rb
-* embeddable/embeddable.rb
-* embeddable/iframe.rb
-* embeddable/image_question.rb
-* embeddable/inner_page.rb
-* embeddable/inner_page_page.rb
-* embeddable/lab_book_snapshot.rb
-* embeddable/multiple_choice.rb
-* embeddable/multiple_choice_choice.rb
-* embeddable/mw_modeler_page.rb
-* embeddable/n_logo_model.rb
-* embeddable/open_response.rb
-* embeddable/raw_otml.rb
-* embeddable/smartgraph/range_question.rb
-* embeddable/sound_grapher.rb
-* embeddable/video_player.rb
-* embeddable/xhtml.rb
-* external_activity.rb
-* import/duplicate_user.rb
-* import/import.rb
-* import/imported_user.rb
-* import/import_external_activity.rb
-* import/import_schools_and_districts.rb
-* import/import_users.rb
-* import/school_district_mapping.rb
-* import/user_school_mapping.rb
-* otrunk_example/otml_category.rb
-* otrunk_example/otml_file.rb
-* otrunk_example/otrunk_import.rb
-* otrunk_example/otrunk_view_entry.rb
-* portal/bookmark.rb
-* portal/bookmark_visit.rb
-* portal/clazz.rb
-* portal/collaboration.rb
-* portal/collaboration_membership.rb
-* portal/country.rb
-* portal/course.rb
-* portal/district.rb
-* portal/generic_bookmark.rb
-* portal/grade.rb
-* portal/grade_level.rb
-* portal/learner.rb
-* portal/legacy_collaboration.rb
-* portal/nces06_district.rb
-* portal/nces06_school.rb
-* portal/offering.rb
-* portal/padlet_bookmark.rb
-* portal/permission_form.rb
-* portal/school.rb
-* portal/school_membership.rb
-* portal/school_selector.rb
-* portal/semester.rb
-* portal/state_or_province.rb
-* portal/student.rb
-* portal/student_clazz.rb
-* portal/student_permission_form.rb
-* portal/subject.rb
-* portal/teacher.rb
-* portal/teacher_clazz.rb
-* portal/teacher_full_status.rb
-* probe/calibration.rb
-* probe/data_filter.rb
-* probe/device_config.rb
-* probe/physical_unit.rb
-* probe/probe_type.rb
-* probe/vendor_interface.rb
-* report/embeddable_filter.rb
-* report/learner/activity.rb
-* report/learner/investigation.rb
-* report/learner/learner.rb
-* report/learner/section.rb
-* report/learner/selector.rb
-* report/learner.rb
-* report/learner_activity.rb
-* report/offering/activity.rb
-* report/offering/investigation.rb
-* report/offering/page.rb
-* report/offering/section.rb
-* report/offering_status.rb
-* report/offering_student_status.rb
-* report/util.rb
-* report/util_learner.rb
-* ri_gse/assessment_target.rb
-* ri_gse/assessment_target_unifying_theme.rb
-* ri_gse/big_idea.rb
-* ri_gse/domain.rb
-* ri_gse/expectation.rb
-* ri_gse/expectation_indicator.rb
-* ri_gse/expectation_stem.rb
-* ri_gse/grade_span_expectation.rb
-* ri_gse/knowledge_statement.rb
-* ri_gse/unifying_theme.rb
-* saveable/external_link.rb
-* saveable/external_link_url.rb
-* saveable/image_question.rb
-* saveable/image_question_answer.rb
-* saveable/multiple_choice.rb
-* saveable/multiple_choice_answer.rb
-* saveable/multiple_choice_rationale_choice.rb
-* saveable/open_response.rb
-* saveable/open_response_answer.rb
-* saveable/respondable_proxy.rb
-* saveable/saveable.rb
-* saveable/saveable_standin.rb
-* saveable/sparks/measuring_resistance.rb
-* saveable/sparks/measuring_resistance_reports.rb
-* search/search_material.rb
+### Need to resolve RestrictedBundleController
+
+* Y dataservice/periodic_bundle_loggers_controller.rb
+
+### Need to resolve RestrictedPortalController
+* Y portal/courses_controller.rb
+* Y portal/semesters_controller.rb
+* Y portal/student_clazzes_controller.rb
+* Y portal/subjects_controller.rb
+
+
+### Modified but needs scope work (not using search)
+
+* P api/v1/countries_controller.rb
+* P api/v1/districts_controller.rb
+* P api/v1/schools_controller.rb
+* P api/v1/security_questions_controller.rb
+* P api/v1/states_controller.rb
+* P portal/user_type_selector_controller.rb
+* P probe/probe_types_controller.rb
+
+### Modified but needs scope work (uses search)
+
+* P activities_controller.rb
+* P embeddable/biologica/breed_offsprings_controller.rb
+* P embeddable/biologica/chromosomes_controller.rb
+* P embeddable/biologica/chromosome_zooms_controller.rb
+* P embeddable/biologica/meiosis_views_controller.rb
+* P embeddable/biologica/multiple_organisms_controller.rb
+* P embeddable/biologica/organisms_controller.rb
+* P embeddable/biologica/pedigrees_controller.rb
+* P embeddable/biologica/static_organisms_controller.rb
+* P embeddable/biologica/worlds_controller.rb
+* P embeddable/data_collectors_controller.rb
+* P embeddable/data_tables_controller.rb
+* P embeddable/drawing_tools_controller.rb
+* P embeddable/image_questions_controller.rb
+* P embeddable/inner_pages_controller.rb
+* P embeddable/lab_book_snapshots_controller.rb
+* P embeddable/multiple_choices_controller.rb
+* P embeddable/mw_modeler_pages_controller.rb
+* P embeddable/n_logo_models_controller.rb
+* P embeddable/open_responses_controller.rb
+* P embeddable/raw_otmls_controller.rb
+* P embeddable/smartgraph/range_questions_controller.rb
+* P embeddable/sound_graphers_controller.rb
+* P embeddable/video_players_controller.rb
+* P embeddable/xhtmls_controller.rb
+* P resource_pages_controller.rb
+* P ri_gse/assessment_targets_controller.rb
+
+### Modified but needs filter work
+
+* P attached_files_controller.rb
+* P author_notes_controller.rb
+
+### Modified but needs filter and authorization work
+
+* P teacher_notes_controller.rb
+
+### Modified but needs scope and filter work
+
+* P admin/permission_forms_controller.rb
+* P admin/projects_controller.rb
+* P admin/settings_controller.rb
+* P admin/site_notices_controller.rb
+* P admin/tags_controller.rb
+* P dataservice/blobs_controller.rb
+* P images_controller.rb
+* P interactives_controller.rb
+* P pages_controller.rb
+* P sections_controller.rb
+
+### Modified but needs scope and authorization work
+
+* P portal/bookmarks_controller.rb
+* P ri_gse/grade_span_expectations_controller.rb
+
+### Modified but need to resolve PeerAccess and authorization
+
+* P api/v1/collaborations_controller.rb
+
+### Modified but need to resolve PeerAccess, filters and scope
+
+* P external_activities_controller.rb
+
+### Modified but needs custom error message
+
+* P browse/activities_controller.rb
+
+### Modified but need to resolve RestrictedBundleController
+
+* P dataservice/bucket_loggers_controller.rb
+
+### Modified but need to resolve RestrictedBundleController and scope
+
+* P dataservice/bundle_contents_controller.rb
+* P dataservice/bundle_loggers_controller.rb
+* P dataservice/console_contents_controller.rb
+* P dataservice/console_loggers_controller.rb
+
+### Modified but need to resolve authorization
+
+* P help_controller.rb
+* P registrations_controller.rb
+
+### Modified but need to resolve filters and authorization
+
+* P import/imports_controller.rb
+
+### Modified but need to resolve RestrictedController and filters
+
+* P installer_reports_controller.rb
+* P investigations_controller.rb
+
+### Modified but need to resolve RestrictedController and filters and scope
+
+* P materials_collections_controller.rb
+* P report/learner_controller.rb
+* P search_controller.rb
+
+### Modified but need to double check authorization
+
+* P passwords_controller.rb
+
+### Modified but need to resolve RestrictedPortalController and filters
+
+* P portal/clazzes_controller.rb
+* P portal/grades_controller.rb
+* P portal/grade_levels_controller.rb
+* P portal/offerings_controller.rb
+* P portal/school_memberships_controller.rb
+* P portal/students_controller.rb
+* P portal/teachers_controller.rb
+
+### Modified but need to resolve RestrictedPortalController and filters and scope
+
+* P portal/districts_controller.rb
+* P portal/learners_controller.rb
+* P portal/nces06_districts_controller.rb
+* P portal/nces06_schools_controller.rb
+* P portal/schools_controller.rb
+
+### Not modified after auto edit but need to resolve PeerAccess
+
+* N admin/learner_details_controller.rb
+
+### Not modified after auto edit needs authorization work
+
+* N api/v1/materials_bin_controller.rb
+* N api/v1/materials_controller.rb
+* N api/v1/search_controller.rb
+* N dataservice/periodic_bundle_loggers_metal_controller.rb
+* N home_controller.rb
+* N import/imported_login_controller.rb
+* N portal/learner_jnlp_renderer.rb
+* N portal/offerings_metal_controller.rb
+
+### Not modified after auto edit needs filter work
+
+* N authoring_controller.rb
+
+### Not modified after auto edit needs filter and authorization work
+
+* N auth_controller.rb
+* N security_questions_controller.rb
+* N users_controller.rb
+
+### Not modified after auto edit - no work needed?
+
+* N application_controller.rb
+* N authentications_controller.rb
+* N misc_metal_controller.rb
