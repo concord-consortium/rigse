@@ -1,2 +1,2 @@
-class OpenResponsePolicy < ApplicationPolicy
+class Saveable::OpenResponsePolicy < ApplicationPolicy
 end

@@ -103,23 +103,19 @@ class InvestigationsController < AuthoringController
 
 
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Investigation
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    @investigations = policy_scope(Investigation)
+    # @investigations = policy_scope(Investigation)
     redirect_to search_url(material_types: Search::InvestigationMaterial)
   end
 
   def printable_index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Investigation
     @investigations = default_search
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
-    @investigations = policy_scope(Investigation)
+    # @investigations = policy_scope(Investigation)
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
     end
@@ -132,10 +128,10 @@ class InvestigationsController < AuthoringController
     # PUNDIT_CHECK_AUTHORIZE
     authorize Investigation
     page= params[:page] || 1
-    @investigations = Investigation.published.paginate(
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
-    @investigations = policy_scope(Investigation)
+    # @investigations = policy_scope(Investigation)
+    @investigations = Investigation.published.paginate(
         :page => page || 1,
         :per_page => params[:per_page] || 20,
         :order => 'name')
@@ -148,8 +144,6 @@ class InvestigationsController < AuthoringController
   # GET /investigations/1.dynamic_otml
   # GET /investigations/1.otml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     authorize @investigation
     # display for teachers? Later we can determin via roles?
     @teacher_mode = boolean_param(:teacher_mode)
@@ -186,14 +180,7 @@ class InvestigationsController < AuthoringController
   # GET /investigations/teacher/1.otml
   # GET /investigations/teacher/1.dynamic_otml
   def teacher
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Investigation
-    # authorize @investigation
-    # authorize Investigation, :new_or_create?
-    # authorize @investigation, :update_edit_or_destroy?
-    # display for teachers? Later we can determin via roles?
+    authorize @investigation, :show
     @teacher_mode = true
     # whay doesn't this work with: respond_to do |format| ??
     if request.format == :otml
@@ -206,8 +193,6 @@ class InvestigationsController < AuthoringController
   # GET /pages/new
   # GET /pages/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Investigation
     @investigation = Investigation.new
     @investigation.user = current_visitor
@@ -233,8 +218,6 @@ class InvestigationsController < AuthoringController
   # GET /pages/1/edit
   def edit
     @investigation = Investigation.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @investigation
     if APP_CONFIG[:use_gse]
       # if there is no gse assign a default one:
@@ -259,8 +242,6 @@ class InvestigationsController < AuthoringController
   # POST /pages
   # POST /pages.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Investigation
     begin
       gse = RiGse::GradeSpanExpectation.find(params[:grade_span_expectation])
@@ -278,7 +259,7 @@ class InvestigationsController < AuthoringController
 
     if params[:update_grade_levels]
       # set the grade_level tags
-      @investigation.grade_level_list = (params[:grade_levels] || [])     
+      @investigation.grade_level_list = (params[:grade_levels] || [])
     end
 
     if params[:update_subject_areas]
@@ -344,8 +325,6 @@ class InvestigationsController < AuthoringController
   # PUT /pages/1.xml
   def update
     @investigation = Investigation.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @investigation
     update_gse
 
@@ -391,8 +370,6 @@ class InvestigationsController < AuthoringController
   # DELETE /pages/1.xml
   def destroy
     @investigation = Investigation.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @investigation
     if @investigation.changeable?(current_visitor)
       if @investigation.offerings && @investigation.offerings.size > 0
@@ -413,13 +390,7 @@ class InvestigationsController < AuthoringController
   ##
   ##
   def add_activity
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Investigation
-    # authorize @investigation
-    # authorize Investigation, :new_or_create?
-    # authorize @investigation, :update_edit_or_destroy?
+    authorize Activity, :new_or_create?
     @activity = Activity.new
     @activity.user = current_visitor
     @activity.investigation = @investigation
@@ -431,13 +402,7 @@ class InvestigationsController < AuthoringController
   ##
   ##
   def sort_activities
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Investigation
-    # authorize @investigation
-    # authorize Investigation, :new_or_create?
-    # authorize @investigation, :update_edit_or_destroy?
+    authorize @investigation, :update_edit_or_destroy?
     paramlistname = params[:list_name].nil? ? 'investigation_activities_list' : params[:list_name]
     @investigation = Investigation.find(params[:id], :include => :activities)
     @investigation.activities.each do |section|
@@ -451,14 +416,8 @@ class InvestigationsController < AuthoringController
   ##
   ##
   def delete_activity
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Investigation
-    # authorize @investigation
-    # authorize Investigation, :new_or_create?
-    # authorize @investigation, :update_edit_or_destroy?
     @activity= Activity.find(params['activity_id'])
+    authorize @activity, :destroy?
     # @activity.update_investigation_timestamp
     @activity.destroy
   end
@@ -467,14 +426,10 @@ class InvestigationsController < AuthoringController
   ##
   ##
   def duplicate
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Investigation
-    # authorize @investigation
-    # authorize Investigation, :new_or_create?
-    # authorize @investigation, :update_edit_or_destroy?
     @original = Investigation.find(params['id'])
+    # PUNDIT_REVIEW_AUTHORIZE
+    authorize @original, :show?
+    authorize Investigation, :new_or_create?
     @investigation = @original.duplicate(current_visitor)
     @investigation.save
     flash[:notice] ="Copied #{@original.name}"
@@ -482,13 +437,7 @@ class InvestigationsController < AuthoringController
   end
 
   def export
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Investigation
-    # authorize @investigation
-    # authorize Investigation, :new_or_create?
-    # authorize @investigation, :update_edit_or_destroy?
+    authorize @investigation, :show?
     respond_to do |format|
       format.xml  {
         send_data @investigation.deep_xml, :type => :xml, :filename=>"#{@investigation.name}.xml"

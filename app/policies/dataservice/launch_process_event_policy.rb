@@ -1,2 +1,2 @@
-class LaunchProcessEventPolicy < ApplicationPolicy
+class Dataservice::LaunchProcessEventPolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class BookmarkPolicy < ApplicationPolicy
+class Portal::BookmarkPolicy < ApplicationPolicy
 end

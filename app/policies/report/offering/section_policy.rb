@@ -1,2 +1,2 @@
-class SectionPolicy < ApplicationPolicy
+class Report::Offering::SectionPolicy < ApplicationPolicy
 end

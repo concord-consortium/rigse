@@ -20,7 +20,7 @@ class InteractivesController < ApplicationController
     @interactives = s.results[Search::InteractiveMaterial]
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
-    @interactives = policy_scope(Interactive)
+    # @interactives = policy_scope(Interactive)
 
     if params[:mine_only]
       @interactives = @interactives.reject { |i| i.user.id != current_visitor.id }
@@ -39,15 +39,11 @@ class InteractivesController < ApplicationController
   end
 
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Interactive
     @interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)
   end
 
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Interactive
     @interactive = Interactive.new(params[:interactive])
     @interactive.user = current_visitor
@@ -82,22 +78,16 @@ class InteractivesController < ApplicationController
 
   def show
     @interactive = Interactive.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @interactive
   end
 
   def edit
     @interactive = Interactive.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @interactive
   end
 
   def destroy
     @interactive = Interactive.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @interactive
     @interactive.destroy
     @redirect = params[:redirect]
@@ -111,8 +101,6 @@ class InteractivesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @interactive = Interactive.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @interactive
 
     if params[:update_grade_levels]

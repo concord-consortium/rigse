@@ -1,2 +1,2 @@
-class EmbeddableFilterPolicy < ApplicationPolicy
+class Report::EmbeddableFilterPolicy < ApplicationPolicy
 end

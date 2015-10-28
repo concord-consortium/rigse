@@ -1,2 +1,2 @@
-class BreedOffspringPolicy < ApplicationPolicy
+class Embeddable::Biologica::BreedOffspringPolicy < ApplicationPolicy
 end

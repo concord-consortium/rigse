@@ -1,2 +1,2 @@
-class SaveablePolicy < ApplicationPolicy
+class Saveable::SaveablePolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class AssessmentTargetPolicy < ApplicationPolicy
+class RiGse::AssessmentTargetPolicy < ApplicationPolicy
 end

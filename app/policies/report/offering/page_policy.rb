@@ -1,2 +1,2 @@
-class PagePolicy < ApplicationPolicy
+class Report::Offering::PagePolicy < ApplicationPolicy
 end

@@ -1,2 +1,2 @@
-class DeviceConfigPolicy < ApplicationPolicy
+class Probe::DeviceConfigPolicy < ApplicationPolicy
 end

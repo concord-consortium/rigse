@@ -1,2 +1,2 @@
-class CollaborationMembershipPolicy < ApplicationPolicy
+class Portal::CollaborationMembershipPolicy < ApplicationPolicy
 end

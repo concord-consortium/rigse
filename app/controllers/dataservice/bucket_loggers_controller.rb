@@ -5,10 +5,10 @@ class Dataservice::BucketLoggersController < ApplicationController
   # GET /dataservice/bucket_loggers/1
   # GET /dataservice/bucket_loggers/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @bucket_logger
     @dataservice_bucket_logger = Dataservice::BucketLogger.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @dataservice_bucket_logger
     bundle = @dataservice_bucket_logger.most_recent_content
     if @dataservice_bucket_logger.learner
       # FIXME How do we now associate launch process events since bucket_content != session?

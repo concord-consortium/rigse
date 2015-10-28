@@ -4,17 +4,14 @@ class Portal::GradesController < ApplicationController
   # PUNDIT_CHECK_FILTERS
   before_filter :admin_only
   public
-  
+
 
   # GET /portal_grades
   # GET /portal_grades.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Grade
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    @grades = policy_scope(Portal::Grade)
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @portal_grades = policy_scope(Portal::Grade)
     @portal_grades = Portal::Grade.all
 
     respond_to do |format|
@@ -26,10 +23,8 @@ class Portal::GradesController < ApplicationController
   # GET /portal_grades/1
   # GET /portal_grades/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @grade
     @portal_grade = Portal::Grade.find(params[:id])
+    authorize @portal_grade
 
     respond_to do |format|
       format.html # show.html.erb
@@ -40,8 +35,6 @@ class Portal::GradesController < ApplicationController
   # GET /portal_grades/new
   # GET /portal_grades/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Grade
     @portal_grade = Portal::Grade.new
 
@@ -53,17 +46,13 @@ class Portal::GradesController < ApplicationController
 
   # GET /portal_grades/1/edit
   def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @grade
     @portal_grade = Portal::Grade.find(params[:id])
+    authorize @portal_grade
   end
 
   # POST /portal_grades
   # POST /portal_grades.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Grade
     @portal_grade = Portal::Grade.new(params[:portal_grade])
 
@@ -82,10 +71,8 @@ class Portal::GradesController < ApplicationController
   # PUT /portal_grades/1
   # PUT /portal_grades/1.xml
   def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @grade
     @portal_grade = Portal::Grade.find(params[:id])
+    authorize @portal_grade
 
     respond_to do |format|
       if @portal_grade.update_attributes(params[:portal_grade])
@@ -102,10 +89,8 @@ class Portal::GradesController < ApplicationController
   # DELETE /portal_grades/1
   # DELETE /portal_grades/1.xml
   def destroy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @grade
     @portal_grade = Portal::Grade.find(params[:id])
+    authorize @portal_grade
     @portal_grade.destroy
 
     respond_to do |format|

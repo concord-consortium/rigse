@@ -1,2 +1,2 @@
-class GenericBookmarkPolicy < ApplicationPolicy
+class Portal::GenericBookmarkPolicy < ApplicationPolicy
 end

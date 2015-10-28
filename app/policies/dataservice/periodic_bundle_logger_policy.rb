@@ -1,2 +1,2 @@
-class PeriodicBundleLoggerPolicy < ApplicationPolicy
+class Dataservice::PeriodicBundleLoggerPolicy < ApplicationPolicy
 end

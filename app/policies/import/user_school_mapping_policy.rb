@@ -1,2 +1,2 @@
-class UserSchoolMappingPolicy < ApplicationPolicy
+class Import::UserSchoolMappingPolicy < ApplicationPolicy
 end

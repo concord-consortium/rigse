@@ -1,2 +1,2 @@
-class MeiosisViewPolicy < ApplicationPolicy
+class Embeddable::Biologica::MeiosisViewPolicy < ApplicationPolicy
 end

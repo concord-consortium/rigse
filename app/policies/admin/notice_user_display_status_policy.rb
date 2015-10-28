@@ -1,2 +1,2 @@
-class NoticeUserDisplayStatusPolicy < ApplicationPolicy
+class Admin::NoticeUserDisplayStatusPolicy < ApplicationPolicy
 end

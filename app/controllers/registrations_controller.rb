@@ -1,18 +1,14 @@
 class RegistrationsController < Devise::RegistrationsController
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Registration
-     # Building the resource with information that MAY BE available from omniauth!
-     build_resource(:first_name => session[:omniauth] && session[:omniauth]['user_info'] && session[:omniauth]['user_info']['first_name'],
-         :last_name => session[:omniauth] && session[:omniauth]['user_info'] && session[:omniauth]['user_info']['last_name'],
-         :email => session[:omniauth_email] )
-     render :new
+    # Building the resource with information that MAY BE available from omniauth!
+    build_resource(:first_name => session[:omniauth] && session[:omniauth]['user_info'] && session[:omniauth]['user_info']['first_name'],
+       :last_name => session[:omniauth] && session[:omniauth]['user_info'] && session[:omniauth]['user_info']['last_name'],
+       :email => session[:omniauth_email] )
+    render :new
   end
 
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Registration
     build_resource
 

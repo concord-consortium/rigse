@@ -1,2 +1,2 @@
-class PedigreePolicy < ApplicationPolicy
+class Embeddable::Biologica::PedigreePolicy < ApplicationPolicy
 end

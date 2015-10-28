@@ -1,2 +1,2 @@
-class ProcessExternalActivityDataJobPolicy < ApplicationPolicy
+class Dataservice::ProcessExternalActivityDataJobPolicy < ApplicationPolicy
 end

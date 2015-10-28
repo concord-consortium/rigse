@@ -1,2 +1,2 @@
-class ProjectLinkPolicy < ApplicationPolicy
+class Admin::ProjectLinkPolicy < ApplicationPolicy
 end

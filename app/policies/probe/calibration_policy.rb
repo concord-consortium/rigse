@@ -1,2 +1,2 @@
-class CalibrationPolicy < ApplicationPolicy
+class Probe::CalibrationPolicy < ApplicationPolicy
 end

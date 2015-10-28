@@ -1,2 +1,2 @@
-class PhysicalUnitPolicy < ApplicationPolicy
+class Probe::PhysicalUnitPolicy < ApplicationPolicy
 end

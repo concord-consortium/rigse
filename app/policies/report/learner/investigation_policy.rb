@@ -1,2 +1,2 @@
-class InvestigationPolicy < ApplicationPolicy
+class Report::Learner::InvestigationPolicy < ApplicationPolicy
 end

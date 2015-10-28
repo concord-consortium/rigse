@@ -1,8 +1,8 @@
 class HelpController < ApplicationController
   caches_page   :settings_css
   theme "rites"
-  
-  
+
+
   def get_help_page(help_type)
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -21,18 +21,17 @@ class HelpController < ApplicationController
       @help_page_content = current_settings.custom_help_page_html
     end
   end
-  
+
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    authorize Help
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Help
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    @helps = policy_scope(Help)
+    # @helps = policy_scope(Help)
     help_type = current_settings.help_type
     get_help_page(help_type)
   end
-  
+
   def preview_help_page
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE

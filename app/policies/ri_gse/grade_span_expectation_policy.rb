@@ -1,2 +1,2 @@
-class GradeSpanExpectationPolicy < ApplicationPolicy
+class RiGse::GradeSpanExpectationPolicy < ApplicationPolicy
 end

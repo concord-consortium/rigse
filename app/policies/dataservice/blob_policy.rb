@@ -1,2 +1,2 @@
-class BlobPolicy < ApplicationPolicy
+class Dataservice::BlobPolicy < ApplicationPolicy
 end

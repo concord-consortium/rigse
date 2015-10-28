@@ -1,2 +1,2 @@
-class ConsoleContentPolicy < ApplicationPolicy
+class Dataservice::ConsoleContentPolicy < ApplicationPolicy
 end

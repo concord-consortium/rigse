@@ -1,2 +1,2 @@
-class BigIdeaPolicy < ApplicationPolicy
+class RiGse::BigIdeaPolicy < ApplicationPolicy
 end

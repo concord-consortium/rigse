@@ -1,2 +1,2 @@
-class IframePolicy < ApplicationPolicy
+class Embeddable::IframePolicy < ApplicationPolicy
 end

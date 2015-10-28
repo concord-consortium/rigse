@@ -1,2 +1,2 @@
-class XhtmlPolicy < ApplicationPolicy
+class Embeddable::XhtmlPolicy < ApplicationPolicy
 end

@@ -5,40 +5,28 @@ class Admin::ProjectsController < ApplicationController
 
   # GET /:landing_page_slug
   def landing_page
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Admin::Project
-    # authorize @project
-    # authorize Admin::Project, :new_or_create?
-    # authorize @project, :update_edit_or_destroy?
     @project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
+    authorize @project, :show?
     @landing_page_content = @project.landing_page_content
   end
 
   # GET /admin/projects
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Admin::Project
     @projects = Admin::Project.search(params[:search], params[:page], nil)
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
-    @projects = policy_scope(Admin::Project)
+    # @projects = policy_scope(Admin::Project)
   end
 
   # GET /admin/projects/1
   def show
     @project = Admin::Project.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @project
   end
 
   # GET /admin/projects/new
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Admin::Project
     @project = Admin::Project.new
     @project.links.build
@@ -47,8 +35,6 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects/1/edit
   def edit
     @project = Admin::Project.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @project
 
     if request.xhr?
@@ -58,8 +44,6 @@ class Admin::ProjectsController < ApplicationController
 
   # POST /admin/projects
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Admin::Project
     @project = Admin::Project.new(params[:admin_project])
 
@@ -73,8 +57,6 @@ class Admin::ProjectsController < ApplicationController
   # PUT /admin/projects/1
   def update
     @project = Admin::Project.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @project
 
     if request.xhr?
@@ -94,10 +76,9 @@ class Admin::ProjectsController < ApplicationController
 
   # DELETE /admin/projects/1
   def destroy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    @project = Admin::Project.find(params[:id])
     authorize @project
-    Admin::Project.find(params[:id]).destroy
+    @project.destroy
 
     redirect_to admin_projects_url
   end

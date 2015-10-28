@@ -1,10 +1,10 @@
 class TeacherNotesController < ApplicationController
-  
+
   # PUNDIT_CHECK_FILTERS
   before_filter :setup_object, :except => [:index]
-    
+
   protected
-  
+
   def set_owner(note)
     if (! note.authored_entity.nil?)
       note.user = note.authored_entity.user
@@ -12,7 +12,7 @@ class TeacherNotesController < ApplicationController
       note.user = current_visitor
     end
   end
-  
+
   public
   def setup_object
     # PUNDIT_REVIEW_AUTHORIZE
@@ -46,7 +46,7 @@ class TeacherNotesController < ApplicationController
       set_owner @teacher_note
     end
   end
-  
+
   def show_teacher_note
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -67,17 +67,12 @@ class TeacherNotesController < ApplicationController
       end
     end
   end
-  
-  
+
+
   # GET /teacher_notes
   # GET /teacher_notes.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize TeacherNote
-    @teacher_notes = TeacherNote.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
     @teacher_notes = policy_scope(TeacherNote)
     respond_to do |format|
       format.html # index.html.erb
@@ -88,8 +83,6 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes/1
   # GET /teacher_notes/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     authorize @teacher_note
     respond_to do |format|
       format.html # show.html.erb
@@ -100,8 +93,6 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes/new
   # GET /teacher_notes/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize TeacherNote
     respond_to do |format|
       format.html # new.html.erb
@@ -111,8 +102,6 @@ class TeacherNotesController < ApplicationController
 
   # GET /teacher_notes/1/edit
   def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     authorize @teacher_note
   end
 
@@ -186,7 +175,7 @@ class TeacherNotesController < ApplicationController
         format.html { redirect_to(teacher_notes_url) }
         format.xml  { head :ok }
       end
-    else 
+    else
       respond_to do |format|
         flash[:notice] = 'You can not modify this Teachernote.'
         format.html { redirect_to(@teacher_note) }

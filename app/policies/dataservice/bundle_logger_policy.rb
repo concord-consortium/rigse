@@ -1,2 +1,2 @@
-class BundleLoggerPolicy < ApplicationPolicy
+class Dataservice::BundleLoggerPolicy < ApplicationPolicy
 end

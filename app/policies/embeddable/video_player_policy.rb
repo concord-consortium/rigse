@@ -1,2 +1,2 @@
-class VideoPlayerPolicy < ApplicationPolicy
+class Embeddable::VideoPlayerPolicy < ApplicationPolicy
 end

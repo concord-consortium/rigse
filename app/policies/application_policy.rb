@@ -51,8 +51,6 @@ class ApplicationPolicy
     end
   end
 
-  protected
-
   def new_or_create?
     not_anonymous?
   end
@@ -66,7 +64,7 @@ class ApplicationPolicy
   end
 
   def changeable?
-    record.changeable?(user)
+    user && record.respond_to?(:changeable?) ? record.changeable?(user) : true
   end
 
 end

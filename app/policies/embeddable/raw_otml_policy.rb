@@ -1,2 +1,2 @@
-class RawOtmlPolicy < ApplicationPolicy
+class Embeddable::RawOtmlPolicy < ApplicationPolicy
 end

@@ -2,8 +2,11 @@ class RiGse::DomainsController < ApplicationController
   # GET /RiGse/domains
   # GET /RiGse/domains.xml
   def index
-    authorize RiGse::Domain
-    @domains = policy_scope(RiGse::Domain)
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::Domain
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @domains = policy_scope(RiGse::Domain)
+    @domains = RiGse::Domain.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,7 +18,8 @@ class RiGse::DomainsController < ApplicationController
   # GET /RiGse/domains/1.xml
   def show
     @domain = RiGse::Domain.find(params[:id])
-    authorize @domain
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @domain
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,7 +30,8 @@ class RiGse::DomainsController < ApplicationController
   # GET /RiGse/domains/new
   # GET /RiGse/domains/new.xml
   def new
-    authorize RiGse::Domain
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::Domain
     @domain = RiGse::Domain.new
 
     respond_to do |format|
@@ -38,13 +43,15 @@ class RiGse::DomainsController < ApplicationController
   # GET /RiGse/domains/1/edit
   def edit
     @domain = RiGse::Domain.find(params[:id])
-    authorize @domain
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @domain
   end
 
   # POST /RiGse/domains
   # POST /RiGse/domains.xml
   def create
-    authorize RiGse::Domain
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::Domain
     @domain = RiGse::Domain.new(params[:domain])
 
     respond_to do |format|
@@ -63,7 +70,8 @@ class RiGse::DomainsController < ApplicationController
   # PUT /RiGse/domains/1.xml
   def update
     @domain = RiGse::Domain.find(params[:id])
-    authorize @domain
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @domain
 
     respond_to do |format|
       if @domain.update_attributes(params[:domain])
@@ -81,7 +89,8 @@ class RiGse::DomainsController < ApplicationController
   # DELETE /RiGse/domains/1.xml
   def destroy
     @domain = RiGse::Domain.find(params[:id])
-    authorize @domain
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @domain
     @domain.destroy
 
     respond_to do |format|

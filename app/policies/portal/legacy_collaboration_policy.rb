@@ -1,2 +1,2 @@
-class LegacyCollaborationPolicy < ApplicationPolicy
+class Portal::LegacyCollaborationPolicy < ApplicationPolicy
 end

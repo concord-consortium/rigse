@@ -22,13 +22,9 @@ class Portal::StudentsController < ApplicationController
   end
 
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    authorize Portal::Student
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    @students = policy_scope(Portal::Student)
-    @portal_students = Portal::Student.all
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Student
+    @portal_students = policy_scope(Portal::Student)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -39,10 +35,9 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students/1
   # GET /portal_students/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @student
     @portal_student = Portal::Student.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student
 
     respond_to do |format|
       format.html # show.html.erb
@@ -53,9 +48,8 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students/new
   # GET /portal_students/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    authorize Portal::Student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Student
     @portal_student = Portal::Student.new
     @user = User.new
     if params[:clazz_id]
@@ -69,10 +63,9 @@ class Portal::StudentsController < ApplicationController
 
   # GET /portal_students/1/edit
   def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @student
     @portal_student = Portal::Student.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student
     @user = @portal_student.user
   end
 
@@ -97,9 +90,8 @@ class Portal::StudentsController < ApplicationController
   # POST /portal_students.xml
   #
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    authorize Portal::Student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Student
     @portal_clazz = find_clazz_from_params
     @grade_level = find_grade_level_from_params
     user_attributes = generate_user_attributes_from_params
@@ -251,10 +243,9 @@ class Portal::StudentsController < ApplicationController
   # PUT /portal_students/1
   # PUT /portal_students/1.xml
   def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @student
     @portal_student = Portal::Student.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student
     respond_to do |format|
       if @portal_student.update_attributes(params[:portal_student])
         flash[:notice] = 'Portal::Student was successfully updated.'
@@ -274,10 +265,9 @@ class Portal::StudentsController < ApplicationController
   # DELETE /portal_students/1
   # DELETE /portal_students/1.xml
   def destroy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @student
     @portal_student = Portal::Student.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student
     @portal_student.destroy
 
     respond_to do |format|
@@ -287,26 +277,16 @@ class Portal::StudentsController < ApplicationController
   end
 
   def ask_consent
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Student
-    # authorize @student
-    # authorize Portal::Student, :new_or_create?
-    # authorize @student, :update_edit_or_destroy?
     @portal_student = Portal::Student.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student, :update_edit_or_destroy?
     @user = @portal_student.user
   end
 
   def update_consent
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Student
-    # authorize @student
-    # authorize Portal::Student, :new_or_create?
-    # authorize @student, :update_edit_or_destroy?
     @portal_student = Portal::Student.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student, :update_edit_or_destroy?
     @portal_student.user.asked_age = true;
     @portal_student.save
     if @portal_student.user.update_attributes(params[:user])
@@ -319,13 +299,7 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students/signup
   # GET /portal_students/signup.xml
   def signup
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
     # no authorization needed ...
-    # authorize Portal::Student
-    # authorize @student
-    # authorize Portal::Student, :new_or_create?
-    # authorize @student, :update_edit_or_destroy?
     @portal_student = Portal::Student.new
     @security_questions = SecurityQuestion.fill_array
     @user = User.new

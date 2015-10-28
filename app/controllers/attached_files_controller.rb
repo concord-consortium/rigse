@@ -5,8 +5,8 @@ class AttachedFilesController < ApplicationController
   def destroy
     @attached_file = AttachedFile.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    authorize @attached_file
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @attached_file
     @attached_file.destroy if @attached_file.changeable?(current_visitor)
     redirect_back_or @attached_file.attachable
   end

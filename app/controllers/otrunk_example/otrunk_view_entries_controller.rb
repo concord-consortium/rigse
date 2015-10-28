@@ -2,8 +2,11 @@ class OtrunkExample::OtrunkViewEntriesController < ApplicationController
   # GET /otrunk_example_otrunk_view_entries
   # GET /otrunk_example_otrunk_view_entries.xml
   def index
-    authorize OtrunkExample::OtrunkViewEntry
-    @otrunk_example_otrunk_view_entries = policy_scope(OtrunkExample::OtrunkViewEntry)
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize OtrunkExample::OtrunkViewEntry
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @otrunk_example_otrunk_view_entries = policy_scope(OtrunkExample::OtrunkViewEntry)
+    @otrunk_example_otrunk_view_entries = OtrunkExample::OtrunkViewEntry.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,7 +18,8 @@ class OtrunkExample::OtrunkViewEntriesController < ApplicationController
   # GET /otrunk_example_otrunk_view_entries/1.xml
   def show
     @otrunk_view_entry = OtrunkExample::OtrunkViewEntry.find(params[:id])
-    authorize @otrunk_view_entry
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @otrunk_view_entry
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,7 +30,8 @@ class OtrunkExample::OtrunkViewEntriesController < ApplicationController
   # GET /otrunk_example_otrunk_view_entries/new
   # GET /otrunk_example_otrunk_view_entries/new.xml
   def new
-    authorize OtrunkExample::OtrunkViewEntry
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize OtrunkExample::OtrunkViewEntry
     @otrunk_view_entry = OtrunkExample::OtrunkViewEntry.new
 
     respond_to do |format|
@@ -38,13 +43,15 @@ class OtrunkExample::OtrunkViewEntriesController < ApplicationController
   # GET /otrunk_example_otrunk_view_entries/1/edit
   def edit
     @otrunk_view_entry = OtrunkExample::OtrunkViewEntry.find(params[:id])
-    authorize @otrunk_view_entry
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @otrunk_view_entry
   end
 
   # POST /otrunk_example_otrunk_view_entries
   # POST /otrunk_example_otrunk_view_entries.xml
   def create
-    authorize OtrunkExample::OtrunkViewEntry
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize OtrunkExample::OtrunkViewEntry
     @otrunk_view_entry = OtrunkExample::OtrunkViewEntry.new(params[:otrunk_view_entry])
 
     respond_to do |format|
@@ -63,7 +70,8 @@ class OtrunkExample::OtrunkViewEntriesController < ApplicationController
   # PUT /otrunk_example_otrunk_view_entries/1.xml
   def update
     @otrunk_view_entry = OtrunkExample::OtrunkViewEntry.find(params[:id])
-    authorize @otrunk_view_entry
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @otrunk_view_entry
 
     respond_to do |format|
       if @otrunk_view_entry.update_attributes(params[:otrunk_view_entry])
@@ -81,7 +89,8 @@ class OtrunkExample::OtrunkViewEntriesController < ApplicationController
   # DELETE /otrunk_example_otrunk_view_entries/1.xml
   def destroy
     @otrunk_view_entry = OtrunkExample::OtrunkViewEntry.find(params[:id])
-    authorize @otrunk_view_entry
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @otrunk_view_entry
     @otrunk_view_entry.destroy
 
     respond_to do |format|

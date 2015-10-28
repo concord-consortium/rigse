@@ -1,2 +1,2 @@
-class UtilPolicy < ApplicationPolicy
+class Report::UtilPolicy < ApplicationPolicy
 end

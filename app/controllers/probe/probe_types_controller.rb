@@ -2,13 +2,11 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types
   # GET /Probe/probe_types.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::ProbeType
     @probe_types = Probe::ProbeType.all :order => 'ptype'
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
-    @probe_types = policy_scope(Probe::ProbeType)
+    # @probe_types = policy_scope(Probe::ProbeType)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -20,8 +18,6 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types/1.xml
   def show
     @probe_type = Probe::ProbeType.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @probe_type
 
     respond_to do |format|
@@ -33,8 +29,6 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types/new
   # GET /Probe/probe_types/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::ProbeType
     @probe_type = Probe::ProbeType.new
 
@@ -47,16 +41,12 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types/1/edit
   def edit
     @probe_type = Probe::ProbeType.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @probe_type
   end
 
   # POST /Probe/probe_types
   # POST /Probe/probe_types.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Probe::ProbeType
     @probe_type = Probe::ProbeType.new(params[:probe_type])
 
@@ -76,8 +66,6 @@ class Probe::ProbeTypesController < ApplicationController
   # PUT /Probe/probe_types/1.xml
   def update
     @probe_type = Probe::ProbeType.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @probe_type
 
     respond_to do |format|
@@ -96,8 +84,6 @@ class Probe::ProbeTypesController < ApplicationController
   # DELETE /Probe/probe_types/1.xml
   def destroy
     @probe_type = Probe::ProbeType.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @probe_type
     @probe_type.destroy
 

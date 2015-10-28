@@ -1,2 +1,2 @@
-class ExternalLinkUrlPolicy < ApplicationPolicy
+class Saveable::ExternalLinkUrlPolicy < ApplicationPolicy
 end

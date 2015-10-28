@@ -2,8 +2,11 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems
   # GET /RiGse/expectation_stems.xml
   def index
-    authorize RiGse::ExpectationStem
-    @expectation_stems = policy_scope(RiGse::ExpectationStem)
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::ExpectationStem
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @expectation_stems = policy_scope(RiGse::ExpectationStem)
+    @expectation_stems = RiGse::ExpectationStem.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,7 +18,8 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems/1.xml
   def show
     @expectation_stem = RiGse::ExpectationStem.find(params[:id])
-    authorize @expectation_stem
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @expectation_stem
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,7 +30,8 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems/new
   # GET /RiGse/expectation_stems/new.xml
   def new
-    authorize RiGse::ExpectationStem
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::ExpectationStem
     @expectation_stem = RiGse::ExpectationStem.new
 
     respond_to do |format|
@@ -38,13 +43,15 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems/1/edit
   def edit
     @expectation_stem = RiGse::ExpectationStem.find(params[:id])
-    authorize @expectation_stem
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @expectation_stem
   end
 
   # POST /RiGse/expectation_stems
   # POST /RiGse/expectation_stems.xml
   def create
-    authorize RiGse::ExpectationStem
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::ExpectationStem
     @expectation_stem = RiGse::ExpectationStem.new(params[:expectation_stem])
 
     respond_to do |format|
@@ -63,7 +70,8 @@ class RiGse::ExpectationStemsController < ApplicationController
   # PUT /RiGse/expectation_stems/1.xml
   def update
     @expectation_stem = RiGse::ExpectationStem.find(params[:id])
-    authorize @expectation_stem
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @expectation_stem
 
     respond_to do |format|
       if @expectation_stem.update_attributes(params[:expectation_stem])
@@ -81,7 +89,8 @@ class RiGse::ExpectationStemsController < ApplicationController
   # DELETE /RiGse/expectation_stems/1.xml
   def destroy
     @expectation_stem = RiGse::ExpectationStem.find(params[:id])
-    authorize @expectation_stem
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @expectation_stem
     @expectation_stem.destroy
 
     respond_to do |format|

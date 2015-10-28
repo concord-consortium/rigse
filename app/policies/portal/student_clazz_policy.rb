@@ -1,2 +1,2 @@
-class StudentClazzPolicy < ApplicationPolicy
+class Portal::StudentClazzPolicy < ApplicationPolicy
 end

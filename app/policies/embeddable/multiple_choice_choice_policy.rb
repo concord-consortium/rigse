@@ -1,2 +1,2 @@
-class MultipleChoiceChoicePolicy < ApplicationPolicy
+class Embeddable::MultipleChoiceChoicePolicy < ApplicationPolicy
 end

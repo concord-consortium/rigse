@@ -1,2 +1,2 @@
-class SubjectPolicy < ApplicationPolicy
+class Portal::SubjectPolicy < ApplicationPolicy
 end

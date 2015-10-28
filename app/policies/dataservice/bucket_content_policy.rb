@@ -1,2 +1,2 @@
-class BucketContentPolicy < ApplicationPolicy
+class Dataservice::BucketContentPolicy < ApplicationPolicy
 end

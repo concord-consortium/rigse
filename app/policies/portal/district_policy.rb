@@ -1,2 +1,2 @@
-class DistrictPolicy < ApplicationPolicy
+class Portal::DistrictPolicy < ApplicationPolicy
 end

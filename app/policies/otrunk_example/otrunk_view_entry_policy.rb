@@ -1,2 +1,2 @@
-class OtrunkViewEntryPolicy < ApplicationPolicy
+class OtrunkExample::OtrunkViewEntryPolicy < ApplicationPolicy
 end

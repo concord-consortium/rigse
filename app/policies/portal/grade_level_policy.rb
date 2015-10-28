@@ -1,2 +1,2 @@
-class GradeLevelPolicy < ApplicationPolicy
+class Portal::GradeLevelPolicy < ApplicationPolicy
 end

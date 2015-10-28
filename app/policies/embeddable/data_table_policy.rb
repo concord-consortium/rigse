@@ -1,2 +1,2 @@
-class DataTablePolicy < ApplicationPolicy
+class Embeddable::DataTablePolicy < ApplicationPolicy
 end

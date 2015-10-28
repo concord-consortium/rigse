@@ -1,2 +1,2 @@
-class SettingsVendorInterfacePolicy < ApplicationPolicy
+class Admin::SettingsVendorInterfacePolicy < ApplicationPolicy
 end

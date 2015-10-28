@@ -1,2 +1,2 @@
-class StateOrProvincePolicy < ApplicationPolicy
+class Portal::StateOrProvincePolicy < ApplicationPolicy
 end

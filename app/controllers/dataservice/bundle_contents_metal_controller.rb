@@ -1,7 +1,8 @@
 class Dataservice::BundleContentsMetalController < ActionController::Metal
 
   def create
-    authorize Dataservice::BundleContentsMetal
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Dataservice::BundleContentsMetal
     if bundle_logger = Dataservice::BundleLogger.find(params[:id])
       body = request.body.read
       if bundle_logger.in_progress_bundle

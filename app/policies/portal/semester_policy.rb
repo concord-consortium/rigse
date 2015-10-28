@@ -1,2 +1,2 @@
-class SemesterPolicy < ApplicationPolicy
+class Portal::SemesterPolicy < ApplicationPolicy
 end

@@ -112,12 +112,10 @@ class ExternalActivitiesController < ApplicationController
   public
 
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize ExternalActivity
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    @external_activities = policy_scope(ExternalActivity)
+    # @external_activities = policy_scope(ExternalActivity)
     search_params = { :material_types => [ExternalActivity], :page => params[:page] }
     if !params[:name].blank?
       search_params[:search_term] = params[:name]
@@ -142,12 +140,10 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def preview_index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    authorize ExternalActivity
+    authorize ExternalActivity, :index
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    @external_activities = policy_scope(ExternalActivity)
+    # @external_activities = policy_scope(ExternalActivity)
     page= params[:page] || 1
     @activities = ExternalActivity.all.paginate(
         :page => page || 1,
@@ -159,8 +155,6 @@ class ExternalActivitiesController < ApplicationController
   # GET /external_activities/1
   # GET /external_activities/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     authorize @external_activity
     # @teacher_mode = params[:teacher_mode] || @external_activity.teacher_only
     respond_to do |format|
@@ -177,8 +171,6 @@ class ExternalActivitiesController < ApplicationController
   # GET /external_activities/new
   # GET /external_activities/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize ExternalActivity
     @external_activity = ExternalActivity.new
     @external_activity.user = current_visitor
@@ -191,8 +183,6 @@ class ExternalActivitiesController < ApplicationController
   # GET /external_activities/1/edit
   def edit
     @external_activity = ExternalActivity.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @external_activity
     if request.xhr?
       render :partial => (params['use_short_form'] ? 'short_form' : 'form')
@@ -202,8 +192,6 @@ class ExternalActivitiesController < ApplicationController
   # POST /pages
   # POST /pages.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize ExternalActivity
     @external_activity = ExternalActivity.new(params[:external_activity])
     @external_activity.user = current_visitor
@@ -246,8 +234,6 @@ class ExternalActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @external_activity = ExternalActivity.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @external_activity
 
     if params[:update_cohorts]
@@ -299,8 +285,6 @@ class ExternalActivitiesController < ApplicationController
   # DELETE /external_activities/1.xml
   def destroy
     @external_activity = ExternalActivity.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @external_activity
     @external_activity.destroy
     @redirect = params[:redirect]
@@ -357,14 +341,10 @@ class ExternalActivitiesController < ApplicationController
   ##
   ##
   def duplicate
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
     @original = ExternalActivity.find(params['id'])
+    # PUNDIT_REVIEW_AUTHORIZE
+    authorize @original, :show?
+    authorize ExternalActivity, :new_or_create?
     @external_activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => [{:teacher_notes => {}}, {:author_notes => {}}]
     @external_activity.name = "copy of #{@external_activity.name}"
     @external_activity.user = current_visitor
@@ -377,13 +357,7 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def matedit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
+    authorize @external_activity, :show?
     @uri = ssl_if_we_are(URI.parse("#{@external_activity.url}/edit"))
     @uri.query = {
       :domain => root_url,
@@ -395,13 +369,7 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def set_private_before_matedit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
+    authorize @external_activity, :update_edit_or_destroy?
     @external_activity.publication_status = 'private'
     @external_activity.save
     redirect_uri = URI.parse(matedit_external_activity_url(@external_activity.id))
@@ -412,16 +380,7 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def copy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
-    # create a redirect url with a template parameter that LARA can replace with the remotely published activity_id
-    # an intermediate redirect is used to set the publication status to private
-    # We can't do this aways on 'matedit' because that action is used when editing an existing activity
+    authorize @external_activity, :show?
     url = set_private_before_matedit_external_activity_url(999)
     redirect_uri = URI.parse(url.sub!('999', ':activity_id'))
     redirect_uri.query = {

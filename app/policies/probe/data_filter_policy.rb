@@ -1,2 +1,2 @@
-class DataFilterPolicy < ApplicationPolicy
+class Probe::DataFilterPolicy < ApplicationPolicy
 end
