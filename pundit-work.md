@@ -38,9 +38,32 @@
 
 * Y dataservice/external_activity_data_controller.rb
 
+### Modified but need to resolve PeerAccess and authorization
+
+* P api/v1/collaborations_controller.rb
+
+### Modified but need to resolve PeerAccess, filters and scope
+
+* P external_activities_controller.rb
+
+### Not modified after auto edit but need to resolve PeerAccess
+
+* N admin/learner_details_controller.rb
+
 ### Need to resolve RestrictedBundleController
 
 * Y dataservice/periodic_bundle_loggers_controller.rb
+
+### Modified but need to resolve RestrictedBundleController
+
+* P dataservice/bucket_loggers_controller.rb
+
+### Modified but need to resolve RestrictedBundleController and scope
+
+* P dataservice/bundle_contents_controller.rb
+* P dataservice/bundle_loggers_controller.rb
+* P dataservice/console_contents_controller.rb
+* P dataservice/console_loggers_controller.rb
 
 ### Need to resolve RestrictedPortalController
 * Y portal/courses_controller.rb
@@ -48,6 +71,34 @@
 * Y portal/student_clazzes_controller.rb
 * Y portal/subjects_controller.rb
 
+### Modified but need to resolve RestrictedPortalController and filters
+
+* P portal/clazzes_controller.rb
+* P portal/grades_controller.rb
+* P portal/grade_levels_controller.rb
+* P portal/offerings_controller.rb
+* P portal/school_memberships_controller.rb
+* P portal/students_controller.rb
+* P portal/teachers_controller.rb
+
+### Modified but need to resolve RestrictedPortalController and filters and scope
+
+* P portal/districts_controller.rb
+* P portal/learners_controller.rb
+* P portal/nces06_districts_controller.rb
+* P portal/nces06_schools_controller.rb
+* P portal/schools_controller.rb
+
+### Modified but need to resolve RestrictedController and filters
+
+* P installer_reports_controller.rb
+* P investigations_controller.rb
+
+### Modified but need to resolve RestrictedController and filters and scope
+
+* P materials_collections_controller.rb
+* P report/learner_controller.rb
+* P search_controller.rb
 
 ### Modified but needs scope work (not using search)
 
@@ -97,6 +148,7 @@
 ### Modified but needs filter and authorization work
 
 * P teacher_notes_controller.rb
+* P import/imports_controller.rb
 
 ### Modified but needs scope and filter work
 
@@ -116,74 +168,18 @@
 * P portal/bookmarks_controller.rb
 * P ri_gse/grade_span_expectations_controller.rb
 
-### Modified but need to resolve PeerAccess and authorization
-
-* P api/v1/collaborations_controller.rb
-
-### Modified but need to resolve PeerAccess, filters and scope
-
-* P external_activities_controller.rb
-
 ### Modified but needs custom error message
 
 * P browse/activities_controller.rb
-
-### Modified but need to resolve RestrictedBundleController
-
-* P dataservice/bucket_loggers_controller.rb
-
-### Modified but need to resolve RestrictedBundleController and scope
-
-* P dataservice/bundle_contents_controller.rb
-* P dataservice/bundle_loggers_controller.rb
-* P dataservice/console_contents_controller.rb
-* P dataservice/console_loggers_controller.rb
 
 ### Modified but need to resolve authorization
 
 * P help_controller.rb
 * P registrations_controller.rb
 
-### Modified but need to resolve filters and authorization
-
-* P import/imports_controller.rb
-
-### Modified but need to resolve RestrictedController and filters
-
-* P installer_reports_controller.rb
-* P investigations_controller.rb
-
-### Modified but need to resolve RestrictedController and filters and scope
-
-* P materials_collections_controller.rb
-* P report/learner_controller.rb
-* P search_controller.rb
-
 ### Modified but need to double check authorization
 
 * P passwords_controller.rb
-
-### Modified but need to resolve RestrictedPortalController and filters
-
-* P portal/clazzes_controller.rb
-* P portal/grades_controller.rb
-* P portal/grade_levels_controller.rb
-* P portal/offerings_controller.rb
-* P portal/school_memberships_controller.rb
-* P portal/students_controller.rb
-* P portal/teachers_controller.rb
-
-### Modified but need to resolve RestrictedPortalController and filters and scope
-
-* P portal/districts_controller.rb
-* P portal/learners_controller.rb
-* P portal/nces06_districts_controller.rb
-* P portal/nces06_schools_controller.rb
-* P portal/schools_controller.rb
-
-### Not modified after auto edit but need to resolve PeerAccess
-
-* N admin/learner_details_controller.rb
 
 ### Not modified after auto edit needs authorization work
 
