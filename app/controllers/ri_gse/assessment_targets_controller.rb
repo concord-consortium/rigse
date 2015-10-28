@@ -2,8 +2,6 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # GET /RiGse/assessment_targets
   # GET /RiGse/assessment_targets.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::AssessmentTarget
     # :include => [:expectations => [:expectation_indicators, :stem]]
     @search_string = params[:search]
@@ -11,12 +9,12 @@ class RiGse::AssessmentTargetsController < ApplicationController
     respond_to do |format|
       format.html do
         @assessment_targets = RiGse::AssessmentTarget.search(params[:search], params[:page], nil)
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
-    @assessment_targets = policy_scope(RiGse::AssessmentTarget)
+        # PUNDIT_REVIEW_SCOPE
+        # PUNDIT_CHECK_SCOPE (found instance)
+        # @assessment_targets = policy_scope(RiGse::AssessmentTarget)
       end
       format.xml  do
-        @assessment_targets = RiGse::AssessmentTarget.all
+        @assessment_targets = policy_scope(RiGse::AssessmentTarget)
         render :xml => @assessment_targets
       end
     end
@@ -26,8 +24,6 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # GET /RiGse/assessment_targets/1.xml
   def show
     @assessment_target = RiGse::AssessmentTarget.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @assessment_target
 
     respond_to do |format|
@@ -39,8 +35,6 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # GET /RiGse/assessment_targets/new
   # GET /RiGse/assessment_targets/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::AssessmentTarget
     @assessment_target = RiGse::AssessmentTarget.new
 
@@ -53,16 +47,12 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # GET /RiGse/assessment_targets/1/edit
   def edit
     @assessment_target = RiGse::AssessmentTarget.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @assessment_target
   end
 
   # POST /RiGse/assessment_targets
   # POST /RiGse/assessment_targets.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize RiGse::AssessmentTarget
     @assessment_target = RiGse::AssessmentTarget.new(params[:assessment_target])
 
@@ -82,8 +72,6 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # PUT /RiGse/assessment_targets/1.xml
   def update
     @assessment_target = RiGse::AssessmentTarget.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @assessment_target
 
     respond_to do |format|
@@ -102,8 +90,6 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # DELETE /RiGse/assessment_targets/1.xml
   def destroy
     @assessment_target = RiGse::AssessmentTarget.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @assessment_target
     @assessment_target.destroy
 

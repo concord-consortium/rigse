@@ -6,15 +6,13 @@ class MaterialsCollectionsController < ApplicationController
   # GET /materials_collections
   # GET /materials_collections.json
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize MaterialsCollection
     # restrict search to project_id if provided
     filtered = params[:project_id].to_s.length > 0 ? MaterialsCollection.where({:project_id => params[:project_id]}) : MaterialsCollection
     @materials_collections = filtered.search(params[:search], params[:page], nil)
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
-    @materials_collections = policy_scope(MaterialsCollection)
+    # @materials_collections = policy_scope(MaterialsCollection)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -26,8 +24,6 @@ class MaterialsCollectionsController < ApplicationController
   # GET /materials_collections/1.json
   def show
     @materials_collection = MaterialsCollection.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @materials_collection
 
     respond_to do |format|
@@ -39,8 +35,6 @@ class MaterialsCollectionsController < ApplicationController
   # GET /materials_collections/new
   # GET /materials_collections/new.json
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize MaterialsCollection
     @materials_collection = MaterialsCollection.new
 
@@ -53,8 +47,6 @@ class MaterialsCollectionsController < ApplicationController
   # GET /materials_collections/1/edit
   def edit
     @materials_collection = MaterialsCollection.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @materials_collection
 
     if request.xhr?
@@ -65,8 +57,6 @@ class MaterialsCollectionsController < ApplicationController
   # POST /materials_collections
   # POST /materials_collections.json
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize MaterialsCollection
     @materials_collection = MaterialsCollection.new(materials_collection_params)
 
@@ -85,8 +75,6 @@ class MaterialsCollectionsController < ApplicationController
   # PATCH/PUT /materials_collections/1.json
   def update
     @materials_collection = MaterialsCollection.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @materials_collection
 
     if request.xhr?
@@ -109,8 +97,6 @@ class MaterialsCollectionsController < ApplicationController
   # DELETE /materials_collections/1.json
   def destroy
     @materials_collection = MaterialsCollection.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @materials_collection
     @materials_collection.destroy
 
@@ -127,14 +113,8 @@ class MaterialsCollectionsController < ApplicationController
   end
 
   def sort_materials
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize MaterialsCollection
-    # authorize @materials_collection
-    # authorize MaterialsCollection, :new_or_create?
-    # authorize @materials_collection, :update_edit_or_destroy?
     @materials_collection = MaterialsCollection.includes(:materials_collection_items).find(params[:id])
+    authorize @materials_collection, :update_edit_or_destroy?
     paramlistname = view_context.dom_id_for(@materials_collection, :materials)
     @materials_collection.materials_collection_items.each do |material|
       material.position = params[paramlistname].index(material.id.to_s) + 1
@@ -144,14 +124,8 @@ class MaterialsCollectionsController < ApplicationController
   end
 
   def remove_material
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize MaterialsCollection
-    # authorize @materials_collection
-    # authorize MaterialsCollection, :new_or_create?
-    # authorize @materials_collection, :update_edit_or_destroy?
     item = MaterialsCollectionItem.where(id: params[:materials_collection_item_id], materials_collection_id: params[:id]).first
+    authorize item, :destroy?
     if item && item.destroy
       render :nothing => true
     else

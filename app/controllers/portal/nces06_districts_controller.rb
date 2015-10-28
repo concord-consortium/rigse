@@ -8,39 +8,37 @@ class Portal::Nces06DistrictsController < ApplicationController
 
   def admin_only
     unless current_visitor.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator" 
+      flash[:notice] = "Please log in as an administrator"
       redirect_to(:home)
     end
   end
-  
+
   def admin_or_manager
     if current_visitor.has_role?('admin')
       @admin_role = true
     elsif current_visitor.has_role?('manager')
       @manager_role = true
     else
-      flash[:notice] = "Please log in as an administrator or manager" 
+      flash[:notice] = "Please log in as an administrator or manager"
       redirect_to(:home)
     end
   end
 
   public
-  
+
   # GET /portal_nces06_districts
   # GET /portal_nces06_districts.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Nces06District
     select = "id, NAME"
     if params[:state_or_province]
       @nces06_districts = Portal::Nces06District.find(:all, :conditions => ["MSTATE = ?", params[:state_or_province]], :select => select, :order => 'NAME')
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
-    @nces06_districts = policy_scope(Portal::Nces06District)
     else
       @nces06_districts = Portal::Nces06District.find(:all, :select => select, :order => 'NAME')
     end
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @nces06_districts = policy_scope(Portal::Nces06District)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -53,8 +51,6 @@ class Portal::Nces06DistrictsController < ApplicationController
   # GET /portal_nces06_districts/1.xml
   def show
     @nces06_district = Portal::Nces06District.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @nces06_district
 
     respond_to do |format|
@@ -66,8 +62,6 @@ class Portal::Nces06DistrictsController < ApplicationController
   # GET /portal_nces06_districts/new
   # GET /portal_nces06_districts/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Nces06District
     @nces06_district = Portal::Nces06District.new
 
@@ -80,16 +74,12 @@ class Portal::Nces06DistrictsController < ApplicationController
   # GET /portal_nces06_districts/1/edit
   def edit
     @nces06_district = Portal::Nces06District.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @nces06_district
   end
 
   # POST /portal_nces06_districts
   # POST /portal_nces06_districts.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::Nces06District
     @nces06_district = Portal::Nces06District.new(params[:nces06_district])
 
@@ -109,8 +99,6 @@ class Portal::Nces06DistrictsController < ApplicationController
   # PUT /portal_nces06_districts/1.xml
   def update
     @nces06_district = Portal::Nces06District.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @nces06_district
 
     respond_to do |format|
@@ -129,8 +117,6 @@ class Portal::Nces06DistrictsController < ApplicationController
   # DELETE /portal_nces06_districts/1.xml
   def destroy
     @nces06_district = Portal::Nces06District.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
     authorize @nces06_district
     @nces06_district.destroy
 

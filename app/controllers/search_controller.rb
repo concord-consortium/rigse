@@ -28,12 +28,10 @@ class SearchController < ApplicationController
   public
 
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Search
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    @searches = policy_scope(Search)
+    # @searches = policy_scope(Search)
     return redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
     opts = params.merge(:user_id => current_visitor.id, :skip_search => true)
     begin
@@ -45,13 +43,7 @@ class SearchController < ApplicationController
   end
 
   def unauthorized_user
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
     # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
     notice_msg = 'Please login or register as a teacher'
     redirect_url = root_url
 

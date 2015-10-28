@@ -1,21 +1,19 @@
 class Portal::DistrictsController < ApplicationController
-  
+
   include RestrictedPortalController
   # PUNDIT_CHECK_FILTERS
   before_filter :admin_only
-  
+
   public
-  
+
   # GET /portal_districts
   # GET /portal_districts.xml
-  def index    
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
+  def index
     authorize Portal::District
+    @portal_districts = Portal::District.search(params[:search], params[:page], nil)
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    @districts = policy_scope(Portal::District)
-    @portal_districts = Portal::District.search(params[:search], params[:page], nil)
+    # @portal_districts = policy_scope(Portal::District)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -26,10 +24,8 @@ class Portal::DistrictsController < ApplicationController
   # GET /portal_districts/1
   # GET /portal_districts/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @district
     @portal_district = Portal::District.find(params[:id])
+    authorize @portal_district
 
     respond_to do |format|
       format.html # show.html.erb
@@ -40,8 +36,6 @@ class Portal::DistrictsController < ApplicationController
   # GET /portal_districts/new
   # GET /portal_districts/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::District
     @portal_district = Portal::District.new
 
@@ -53,10 +47,8 @@ class Portal::DistrictsController < ApplicationController
 
   # GET /portal_districts/1/edit
   def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @district
     @portal_district = Portal::District.find(params[:id])
+    authorize @portal_district
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_district => @portal_district }
     else
@@ -70,13 +62,11 @@ class Portal::DistrictsController < ApplicationController
   # POST /portal_districts
   # POST /portal_districts.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Portal::District
     @portal_district = Portal::District.new(params[:portal_district])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @portal_district.save
         render :partial => 'new', :locals => { :portal_district => @portal_district }
@@ -100,11 +90,9 @@ class Portal::DistrictsController < ApplicationController
   # PUT /portal_districts/1
   # PUT /portal_districts/1.xml
   def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @district
     cancel = params[:commit] == "Cancel"
     @portal_district = Portal::District.find(params[:id])
+    authorize @portal_district
     if request.xhr?
       if cancel || @portal_district.update_attributes(params[:portal_district])
         render :partial => 'show', :locals => { :portal_district => @portal_district }
@@ -128,10 +116,8 @@ class Portal::DistrictsController < ApplicationController
   # DELETE /portal_districts/1
   # DELETE /portal_districts/1.xml
   def destroy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    authorize @district
     @portal_district = Portal::District.find(params[:id])
+    authorize @portal_district
     @portal_district.destroy
 
     respond_to do |format|

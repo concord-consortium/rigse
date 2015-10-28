@@ -101,12 +101,10 @@ class Report::LearnerController < ApplicationController
   end
 
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
     authorize Report::Learner
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    @learners = policy_scope(Report::Learner)
+    # @learners = policy_scope(Report::Learner)
     # renders views/report/learner/index.html.haml
   end
 
