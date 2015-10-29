@@ -21,7 +21,8 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations
   # GET /RiGse/grade_span_expectations.xml
   def index
-    authorize RiGse::GradeSpanExpectation
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::GradeSpanExpectation
     # :include => [:expectations => [:expectation_indicators, :stem]]
     respond_to do |format|
       format.html do
@@ -36,11 +37,15 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
         end
       end
       format.xml do
-        @grade_span_expectations = policy_scope(RiGse::GradeSpanExpectation)
+        # PUNDIT_FIX_SCOPE_MOCKING
+        # @grade_span_expectations = policy_scope(RiGse::GradeSpanExpectation)
+        @grade_span_expectations = RiGse::GradeSpanExpectation.all
         render :xml => @grade_span_expectations
       end
       format.pdf do
-        @grade_span_expectations = policy_scope(RiGse::GradeSpanExpectation)
+        # PUNDIT_FIX_SCOPE_MOCKING
+        # @grade_span_expectations = policy_scope(RiGse::GradeSpanExpectation)
+        @grade_span_expectations = RiGse::GradeSpanExpectation.all
         @rendered_partial = render_to_string :partial => 'expectation_list.html.haml',
           :locals => { :grade_span_expectations => @grade_span_expectations }
         @rendered_partial.gsub!(/&/, '&amp;')
@@ -115,7 +120,8 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations/1.xml
   def show
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
-    authorize @grade_span_expectation
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @grade_span_expectation
 
     respond_to do |format|
       format.html # show.html.erb
@@ -126,7 +132,8 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/investigations/1/print
   def print
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
-    authorize @grade_span_expectation
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @grade_span_expectation
     respond_to do |format|
       format.html { render :layout => "layouts/print" }
       format.xml  { render :xml => @investigation }
@@ -136,7 +143,8 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations/new
   # GET /RiGse/grade_span_expectations/new.xml
   def new
-    authorize RiGse::GradeSpanExpectation
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::GradeSpanExpectation
     @grade_span_expectation = RiGse::GradeSpanExpectation.new
 
     respond_to do |format|
@@ -148,13 +156,15 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations/1/edit
   def edit
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
-    authorize @grade_span_expectation
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @grade_span_expectation
   end
 
   # POST /RiGse/grade_span_expectations
   # POST /RiGse/grade_span_expectations.xml
   def create
-    authorize RiGse::GradeSpanExpectation
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::GradeSpanExpectation
     @grade_span_expectation = RiGse::GradeSpanExpectation.new(params[:grade_span_expectation])
 
     respond_to do |format|
@@ -173,7 +183,8 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # PUT /RiGse/grade_span_expectations/1.xml
   def update
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
-    authorize @grade_span_expectation
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @grade_span_expectation
 
     respond_to do |format|
       if @grade_span_expectation.update_attributes(params[:grade_span_expectation])
@@ -191,7 +202,8 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # DELETE /RiGse/grade_span_expectations/1.xml
   def destroy
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
-    authorize @grade_span_expectation
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @grade_span_expectation
     @grade_span_expectation.destroy
 
     respond_to do |format|

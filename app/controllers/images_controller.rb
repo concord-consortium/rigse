@@ -7,7 +7,8 @@ class ImagesController < ApplicationController
   # GET /images
   # GET /images.xml
   def index
-    authorize Image
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Image
     @only_mine = param_find(:only_mine, true)
     @name = param_find(:name)
     @sort_order = param_find(:sort_order, true)
@@ -38,7 +39,8 @@ class ImagesController < ApplicationController
     if current_visitor.has_role? 'admin'
       @image = Image.find(params[:id])
       # PUNDIT_REVIEW_AUTHORIZE
-      authorize @image
+      # PUNDIT_CHOOSE_AUTHORIZE
+      # authorize @image
     else
       @image = Image.visible_to_user_with_drafts(current_visitor).find(params[:id])
     end
@@ -52,7 +54,8 @@ class ImagesController < ApplicationController
   # GET /images/new
   # GET /images/new.xml
   def new
-    authorize Image
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Image
     @image = Image.new
 
     respond_to do |format|
@@ -63,13 +66,15 @@ class ImagesController < ApplicationController
 
   # GET /images/1/edit
   def edit
-    authorize @image
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @image
   end
 
   # POST /images
   # POST /images.xml
   def create
-    authorize Image
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Image
     params[:image][:user_id] = current_visitor.id.to_s
     @image = Image.new(params[:image])
 
@@ -103,7 +108,8 @@ class ImagesController < ApplicationController
   # PUT /images/1
   # PUT /images/1.xml
   def update
-    authorize @image
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @image
     respond_to do |format|
       if update_image_attributes
         flash[:notice] = 'Image was successfully updated.'
@@ -119,7 +125,8 @@ class ImagesController < ApplicationController
   # DELETE /images/1
   # DELETE /images/1.xml
   def destroy
-    authorize @image
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @image
     @image.destroy
 
     respond_to do |format|
@@ -132,7 +139,8 @@ class ImagesController < ApplicationController
   # for obtaining an image. (redirects to actual images path)
   def view
     @image = Image.find(params[:id])
-    authorize @image, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @image, :show
     redirect_to @image.image.url(:attributed)
   end
 

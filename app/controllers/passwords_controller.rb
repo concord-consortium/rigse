@@ -1,16 +1,19 @@
 class PasswordsController < ApplicationController
   def email
-    authorize Password, :new_or_create?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Password, :new_or_create?
     @password = Password.new
   end
 
   def login
-    authorize User, :new_or_create?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize User, :new_or_create?
     @user_login = User.new
   end
 
   def create_by_email
-    authorize Password, :new_or_create?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Password, :new_or_create?
     @password = Password.new(params[:password])
     @password.user = User.find_by_email(@password.email)
 
@@ -30,7 +33,8 @@ class PasswordsController < ApplicationController
   end
 
   def create_by_login
-    authorize User, :new_or_create?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize User, :new_or_create?
     user = User.find_by_login(params[:login])
 
     if user.nil?
@@ -64,13 +68,15 @@ class PasswordsController < ApplicationController
   def questions
     @user_recovery = User.find(params[:user_id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @user_recovery, :show?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @user_recovery, :show?
   end
 
   def check_questions
     @user_check_questions = User.find(params[:user_id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @user_check_questions, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @user_check_questions, :show?
     questions = params[:security_questions]
 
     ok = 0
@@ -95,7 +101,8 @@ class PasswordsController < ApplicationController
   def reset
     @user_reset_password = find_password_user
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @user_reset_password, :update_edit_or_destroy?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @user_reset_password, :update_edit_or_destroy?
   end
 
   def update_users_password
@@ -106,7 +113,8 @@ class PasswordsController < ApplicationController
 
     @user_reset_password = find_password_user
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @user_reset_password, :update_edit_or_destroy?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @user_reset_password, :update_edit_or_destroy?
     @user_reset_password.password = params[:user_reset_password][:password]
     @user_reset_password.password_confirmation = params[:user_reset_password][:password_confirmation]
     @user_reset_password.updating_password = true
@@ -137,7 +145,8 @@ class PasswordsController < ApplicationController
 
   def update
     @password = Password.find(params[:id])
-    authorize @password
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @password
     if @password.update_attributes(params[:password])
       flash[:notice] = 'Password was successfully updated.'
       redirect_back_or activities_url

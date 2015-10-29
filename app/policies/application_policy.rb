@@ -64,7 +64,7 @@ class ApplicationPolicy
   end
 
   def changeable?
-    record.changeable?(user)
+    user && record.respond_to?(:changeable?) ? record.changeable?(user) : true
   end
 
 end

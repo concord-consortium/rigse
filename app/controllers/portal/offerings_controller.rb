@@ -17,7 +17,8 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings
   # GET /portal_offerings.xml
   def index
-    authorize Portal::Offering
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Offering
     @portal_offerings = policy_scope(Portal::Offering)
 
     respond_to do |format|
@@ -30,7 +31,8 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings/1.xml
   def show
     @offering = Portal::Offering.find(params[:id])
-    authorize @offering
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering
 
     respond_to do |format|
       format.html # show.html.erb
@@ -93,7 +95,8 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings/new
   # GET /portal_offerings/new.xml
   def new
-    authorize Portal::Offering
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Offering
     @offering = Portal::Offering.new
 
     respond_to do |format|
@@ -105,13 +108,15 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings/1/edit
   def edit
     @offering = Portal::Offering.find(params[:id])
-    authorize @offering
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering
   end
 
   # POST /portal_offerings
   # POST /portal_offerings.xml
   def create
-    authorize Portal::Offering
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Offering
     @offering = Portal::Offering.new(params[:offering])
 
     respond_to do |format|
@@ -130,7 +135,8 @@ class Portal::OfferingsController < ApplicationController
   # PUT /portal_offerings/1.xml
   def update
     @offering = Portal::Offering.find(params[:id])
-    authorize @offering
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering
 
     respond_to do |format|
       if @offering.update_attributes(params[:offering])
@@ -148,7 +154,8 @@ class Portal::OfferingsController < ApplicationController
   # DELETE /portal_offerings/1.xml
   def destroy
     @offering = Portal::Offering.find(params[:id])
-    authorize @offering
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering
     @offering.destroy
 
     respond_to do |format|
@@ -159,14 +166,16 @@ class Portal::OfferingsController < ApplicationController
 
   def activate
     @offering = Portal::Offering.find(params[:id])
-    authorize @offering, :update_edit_or_destroy?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :update_edit_or_destroy?
     @offering.activate!
     redirect_to :back
   end
 
   def deactivate
     @offering = Portal::Offering.find(params[:id])
-    authorize @offering, :update_edit_or_destroy?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :update_edit_or_destroy?
     @offering.deactivate!
     redirect_to :back
   end
@@ -174,7 +183,8 @@ class Portal::OfferingsController < ApplicationController
   def report
     @offering = Portal::Offering.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @offering, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @activity_report_id = nil
     @report_embeddable_filter = []
     unless @offering.report_embeddable_filter.nil? || @offering.report_embeddable_filter.embeddables.nil?
@@ -223,7 +233,8 @@ class Portal::OfferingsController < ApplicationController
   def multiple_choice_report
     @offering = Portal::Offering.find(params[:id], :include => :learners)
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @offering, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @offering_report = Report::Offering::Investigation.new(@offering)
 
     respond_to do |format|
@@ -234,7 +245,8 @@ class Portal::OfferingsController < ApplicationController
   def open_response_report
     @offering = Portal::Offering.find(params[:id], :include => :learners)
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @offering, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @offering_report = Report::Offering::Investigation.new(@offering)
 
     respond_to do |format|
@@ -245,7 +257,8 @@ class Portal::OfferingsController < ApplicationController
   def separated_report
     @offering = Portal::Offering.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @offering, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
 
@@ -259,7 +272,8 @@ class Portal::OfferingsController < ApplicationController
   def report_embeddable_filter
     @offering = Portal::Offering.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @offering, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @report_embeddable_filter = @offering.report_embeddable_filter
     @filtered = true
     activity_report_id = params[:activity_id]
@@ -305,7 +319,8 @@ class Portal::OfferingsController < ApplicationController
   def student_report
     @offering = Portal::Offering.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @offering, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @learner = @offering.learners.find_by_student_id(current_visitor.portal_student)
     if (@learner && @offering)
       reportUtil = Report::Util.reload_without_filters(@offering)  # force a reload of this offering without filters
@@ -337,7 +352,8 @@ class Portal::OfferingsController < ApplicationController
   def answers
     @offering = Portal::Offering.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @offering, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     if @offering
       learner = setup_portal_student
       if learner && params[:questions]
@@ -386,7 +402,8 @@ class Portal::OfferingsController < ApplicationController
   def get_recent_student_report
     offering = Portal::Offering.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @offering, :show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     students = offering.clazz.students
     if !students.nil? && students.length > 0
       students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}

@@ -2,7 +2,8 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # GET /RiGse/assessment_targets
   # GET /RiGse/assessment_targets.xml
   def index
-    authorize RiGse::AssessmentTarget
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::AssessmentTarget
     # :include => [:expectations => [:expectation_indicators, :stem]]
     @search_string = params[:search]
 
@@ -14,7 +15,9 @@ class RiGse::AssessmentTargetsController < ApplicationController
         # @assessment_targets = policy_scope(RiGse::AssessmentTarget)
       end
       format.xml  do
-        @assessment_targets = policy_scope(RiGse::AssessmentTarget)
+        # PUNDIT_FIX_SCOPE_MOCKING
+        # @assessment_targets = policy_scope(RiGse::AssessmentTarget)
+        @assessment_targets = RiGse::AssessmentTarget.all
         render :xml => @assessment_targets
       end
     end
@@ -24,7 +27,8 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # GET /RiGse/assessment_targets/1.xml
   def show
     @assessment_target = RiGse::AssessmentTarget.find(params[:id])
-    authorize @assessment_target
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @assessment_target
 
     respond_to do |format|
       format.html # show.html.erb
@@ -35,7 +39,8 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # GET /RiGse/assessment_targets/new
   # GET /RiGse/assessment_targets/new.xml
   def new
-    authorize RiGse::AssessmentTarget
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::AssessmentTarget
     @assessment_target = RiGse::AssessmentTarget.new
 
     respond_to do |format|
@@ -47,13 +52,15 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # GET /RiGse/assessment_targets/1/edit
   def edit
     @assessment_target = RiGse::AssessmentTarget.find(params[:id])
-    authorize @assessment_target
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @assessment_target
   end
 
   # POST /RiGse/assessment_targets
   # POST /RiGse/assessment_targets.xml
   def create
-    authorize RiGse::AssessmentTarget
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::AssessmentTarget
     @assessment_target = RiGse::AssessmentTarget.new(params[:assessment_target])
 
     respond_to do |format|
@@ -72,7 +79,8 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # PUT /RiGse/assessment_targets/1.xml
   def update
     @assessment_target = RiGse::AssessmentTarget.find(params[:id])
-    authorize @assessment_target
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @assessment_target
 
     respond_to do |format|
       if @assessment_target.update_attributes(params[:assessment_target])
@@ -90,7 +98,8 @@ class RiGse::AssessmentTargetsController < ApplicationController
   # DELETE /RiGse/assessment_targets/1.xml
   def destroy
     @assessment_target = RiGse::AssessmentTarget.find(params[:id])
-    authorize @assessment_target
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @assessment_target
     @assessment_target.destroy
 
     respond_to do |format|

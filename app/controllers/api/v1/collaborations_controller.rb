@@ -4,7 +4,9 @@ class API::V1::CollaborationsController < API::APIController
   # Note that owner of the collaboration is automatically added to its members.
   # There is no need to provide owner's data in 'students' parameter.
   def create
-    authorize Api::V1::Collaboration
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Api::V1::Collaboration
     input = create_input
     return unauthorized unless create_auth(input)
     create_collaboration = API::V1::CreateCollaboration.new(input)

@@ -136,7 +136,7 @@ class Admin::SiteNoticesController < ApplicationController
 
   def remove_notice
     @notice = Admin::SiteNotice.find(params[:id])
-    authorize @notice
+    authorize @notice, :destroy?
 
     notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
     notice_roles.each do |notice_role|

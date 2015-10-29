@@ -2,8 +2,11 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas
   # GET /RiGse/big_ideas.xml
   def index
-    authorize RiGse::BigIdea
-    @big_ideas = policy_scope(RiGse::BigIdea)
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::BigIdea
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @big_ideas = policy_scope(RiGse::BigIdea)
+    @big_ideas = RiGse::BigIdea.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,7 +18,8 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas/1.xml
   def show
     @big_idea = RiGse::BigIdea.find(params[:id])
-    authorize @big_idea
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @big_idea
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,7 +30,8 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas/new
   # GET /RiGse/big_ideas/new.xml
   def new
-    authorize RiGse::BigIdea
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::BigIdea
     @big_idea = RiGse::BigIdea.new
 
     respond_to do |format|
@@ -38,13 +43,15 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas/1/edit
   def edit
     @big_idea = RiGse::BigIdea.find(params[:id])
-    authorize @big_idea
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @big_idea
   end
 
   # POST /RiGse/big_ideas
   # POST /RiGse/big_ideas.xml
   def create
-    authorize RiGse::BigIdea
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::BigIdea
     @big_idea = RiGse::BigIdea.new(params[:big_idea])
 
     respond_to do |format|
@@ -63,7 +70,8 @@ class RiGse::BigIdeasController < ApplicationController
   # PUT /RiGse/big_ideas/1.xml
   def update
     @big_idea = RiGse::BigIdea.find(params[:id])
-    authorize @big_idea
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @big_idea
 
     respond_to do |format|
       if @big_idea.update_attributes(params[:big_idea])
@@ -81,7 +89,8 @@ class RiGse::BigIdeasController < ApplicationController
   # DELETE /RiGse/big_ideas/1.xml
   def destroy
     @big_idea = RiGse::BigIdea.find(params[:id])
-    authorize @big_idea
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @big_idea
     @big_idea.destroy
 
     respond_to do |format|

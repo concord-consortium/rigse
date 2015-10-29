@@ -23,7 +23,8 @@ class HelpController < ApplicationController
   end
 
   def index
-    authorize Help
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Help
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
     # @helps = policy_scope(Help)

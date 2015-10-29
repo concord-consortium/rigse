@@ -2,7 +2,8 @@ class Embeddable::SoundGraphersController < ApplicationController
   # GET /embeddable_sound_graphers
   # GET /embeddable_sound_graphers.xml
   def index
-    authorize Embeddable::SoundGrapher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Embeddable::SoundGrapher
     @sound_graphers  = Embeddable::SoundGrapher.search(params[:search], params[:page], nil)
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
@@ -18,7 +19,8 @@ class Embeddable::SoundGraphersController < ApplicationController
   # GET /embeddable_sound_graphers/1.xml
   def show
     @sound_grapher = Embeddable::SoundGrapher.find(params[:id])
-    authorize @sound_grapher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @sound_grapher
     if request.xhr?
       render :partial => 'show', :locals => { :sound_grapher => @sound_grapher }
     else
@@ -36,7 +38,8 @@ class Embeddable::SoundGraphersController < ApplicationController
   # GET /embeddable_sound_graphers/new
   # GET /embeddable_sound_graphers/new.xml
   def new
-    authorize Embeddable::SoundGrapher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Embeddable::SoundGrapher
     @sound_grapher = Embeddable::SoundGrapher.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :sound_grapher => @sound_grapher }
@@ -51,7 +54,8 @@ class Embeddable::SoundGraphersController < ApplicationController
   # GET /embeddable_sound_graphers/1/edit
   def edit
     @sound_grapher = Embeddable::SoundGrapher.find(params[:id])
-    authorize @sound_grapher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @sound_grapher
     if request.xhr?
       render :partial => 'remote_form', :locals => { :sound_grapher => @sound_grapher }
     else
@@ -66,7 +70,8 @@ class Embeddable::SoundGraphersController < ApplicationController
   # POST /embeddable_sound_graphers
   # POST /embeddable_sound_graphers.xml
   def create
-    authorize Embeddable::SoundGrapher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Embeddable::SoundGrapher
     @sound_grapher = Embeddable::SoundGrapher.new(params[:embeddable_sound_grapher])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -96,7 +101,8 @@ class Embeddable::SoundGraphersController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @sound_grapher = Embeddable::SoundGrapher.find(params[:id])
-    authorize @sound_grapher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @sound_grapher
     if request.xhr?
       if cancel || @sound_grapher.update_attributes(params[:embeddable_sound_grapher])
         render :partial => 'show', :locals => { :sound_grapher => @sound_grapher }
@@ -121,7 +127,8 @@ class Embeddable::SoundGraphersController < ApplicationController
   # DELETE /embeddable_sound_graphers/1.xml
   def destroy
     @sound_grapher = Embeddable::SoundGrapher.find(params[:id])
-    authorize @sound_grapher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @sound_grapher
     respond_to do |format|
       format.html { redirect_to(sound_graphers_url) }
       format.xml  { head :ok }

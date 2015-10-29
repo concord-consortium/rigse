@@ -22,7 +22,8 @@ class Portal::StudentsController < ApplicationController
   end
 
   def index
-    authorize Portal::Student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Student
     @portal_students = policy_scope(Portal::Student)
 
     respond_to do |format|
@@ -35,7 +36,8 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students/1.xml
   def show
     @portal_student = Portal::Student.find(params[:id])
-    authorize @portal_student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student
 
     respond_to do |format|
       format.html # show.html.erb
@@ -46,7 +48,8 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students/new
   # GET /portal_students/new.xml
   def new
-    authorize Portal::Student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Student
     @portal_student = Portal::Student.new
     @user = User.new
     if params[:clazz_id]
@@ -61,7 +64,8 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students/1/edit
   def edit
     @portal_student = Portal::Student.find(params[:id])
-    authorize @portal_student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student
     @user = @portal_student.user
   end
 
@@ -86,7 +90,8 @@ class Portal::StudentsController < ApplicationController
   # POST /portal_students.xml
   #
   def create
-    authorize Portal::Student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Student
     @portal_clazz = find_clazz_from_params
     @grade_level = find_grade_level_from_params
     user_attributes = generate_user_attributes_from_params
@@ -239,7 +244,8 @@ class Portal::StudentsController < ApplicationController
   # PUT /portal_students/1.xml
   def update
     @portal_student = Portal::Student.find(params[:id])
-    authorize @portal_student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student
     respond_to do |format|
       if @portal_student.update_attributes(params[:portal_student])
         flash[:notice] = 'Portal::Student was successfully updated.'
@@ -260,7 +266,8 @@ class Portal::StudentsController < ApplicationController
   # DELETE /portal_students/1.xml
   def destroy
     @portal_student = Portal::Student.find(params[:id])
-    authorize @portal_student
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student
     @portal_student.destroy
 
     respond_to do |format|
@@ -271,13 +278,15 @@ class Portal::StudentsController < ApplicationController
 
   def ask_consent
     @portal_student = Portal::Student.find(params[:id])
-    authorize @portal_student, :update_edit_or_destroy?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student, :update_edit_or_destroy?
     @user = @portal_student.user
   end
 
   def update_consent
     @portal_student = Portal::Student.find(params[:id])
-    authorize @portal_student, :update_edit_or_destroy?
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_student, :update_edit_or_destroy?
     @portal_student.user.asked_age = true;
     @portal_student.save
     if @portal_student.user.update_attributes(params[:user])

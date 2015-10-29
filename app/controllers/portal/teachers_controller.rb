@@ -19,7 +19,8 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers
   # GET /portal_teachers.xml
   def index
-    authorize Portal::Teacher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Teacher
     @portal_teachers = policy_scope(Portal::Teacher)
 
     respond_to do |format|
@@ -31,7 +32,8 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/1
   # GET /portal_teachers/1.xml
   def show
-    authorize @portal_teacher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_teacher
     @portal_teacher = Portal::Teacher.find(params[:id])
     respond_to do |format|
       format.html # show.html.erb
@@ -42,7 +44,8 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/view
   # GET /portal_teachers/new.xml
   def new
-    authorize Portal::Teacher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Teacher
     @portal_teacher = Portal::Teacher.new
     @school_selector = Portal::SchoolSelector.new(params)
     respond_to do |format|
@@ -54,7 +57,8 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/1/edit
   def edit
     @portal_teacher = Portal::Teacher.find(params[:id])
-    authorize @portal_teacher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_teacher
     @user = @portal_teacher.user
     @school_selector = Portal::SchoolSelector.new(params)
   end
@@ -63,7 +67,8 @@ class Portal::TeachersController < ApplicationController
   # POST /portal_teachers.xml
   # TODO: move some of this into the teachers model.
   def create
-    authorize Portal::Teacher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Teacher
 
     # TODO: Teachers DO NOT HAVE grades or Domains.
     @portal_grade = nil
@@ -106,7 +111,8 @@ class Portal::TeachersController < ApplicationController
   # PUT /portal_teachers/1.xml
   def update
     @portal_teacher = Portal::Teacher.find(params[:id])
-    authorize @portal_teacher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_teacher
 
     respond_to do |format|
       if @portal_teacher.update_attributes(params[:teacher])
@@ -124,7 +130,8 @@ class Portal::TeachersController < ApplicationController
   # DELETE /portal_teachers/1.xml
   def destroy
     @portal_teacher = Portal::Teacher.find(params[:id])
-    authorize @portal_teacher
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_teacher
     @portal_teacher.destroy
 
     respond_to do |format|

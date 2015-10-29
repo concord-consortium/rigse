@@ -100,7 +100,7 @@ class Portal::LearnersController < ApplicationController
   def open_response_report
     @portal_learner = Portal::Learner.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @portal_learner, :show
+    authorize @portal_learner, :show?
 
     respond_to do |format|
       format.html # report.html.haml
@@ -112,7 +112,7 @@ class Portal::LearnersController < ApplicationController
   def multiple_choice_report
     @portal_learner = Portal::Learner.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @portal_learner, :show
+    authorize @portal_learner, :show?
 
     respond_to do |format|
       format.html # report.html.haml
@@ -123,7 +123,7 @@ class Portal::LearnersController < ApplicationController
   def report
     @portal_learner = Portal::Learner.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @portal_learner, :show
+    authorize @portal_learner, :show?
     @activity_report_id = nil
     offering = @portal_learner.offering
     unless offering.report_embeddable_filter.nil? || offering.report_embeddable_filter.embeddables.nil?
@@ -157,7 +157,7 @@ class Portal::LearnersController < ApplicationController
   def bundle_report
     @portal_learner = Portal::Learner.find(params[:id])
     # PUNDIT_REVIEW_AUTHORIZE
-    authorize @portal_learner, :show
+    authorize @portal_learner, :show?
 
     respond_to do |format|
       format.html # report.html.haml

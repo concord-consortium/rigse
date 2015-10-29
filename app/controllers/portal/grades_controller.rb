@@ -10,7 +10,9 @@ class Portal::GradesController < ApplicationController
   # GET /portal_grades.xml
   def index
     authorize Portal::Grade
-    @portal_grades = policy_scope(Portal::Grade)
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @portal_grades = policy_scope(Portal::Grade)
+    @portal_grades = Portal::Grade.all
 
     respond_to do |format|
       format.html # index.html.erb
