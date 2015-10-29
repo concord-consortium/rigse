@@ -105,6 +105,11 @@ class MiscController < ActionController::Base
     send("check_#{params[:provider]}")
   end
 
+  def auth_after
+    url = session[:auth_redirect] || root_path
+    redirect_to url
+  end
+
   private
 
   def check_schoology
@@ -126,6 +131,8 @@ class MiscController < ActionController::Base
   # Checks if the current user is the same one as provided.
   # If not, authenticate the user through the provider.
   def generic_check(provider, uid=nil)
+    session[:auth_popup] = true if params[:popup]
+
     if uid
       if current_user == (Authentication.find_by_provider_and_uid(provider, uid).user rescue nil)
         redirect_to(root_path)

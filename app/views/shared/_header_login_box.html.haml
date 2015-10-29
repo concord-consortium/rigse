@@ -24,5 +24,17 @@
           = f.submit "Log In", :id=>"LoginSubmitButtonHeader"
         - Devise.omniauth_providers.each do |provider|
           %span.segmented
-            = link_to "Log In with #{provider.to_s.titleize}", omniauth_authorize_path('user', provider), class: 'button'
+            - directPath = omniauth_authorize_path('user', provider)
+            - authCheckPath = auth_check_path(provider: provider.to_s, popup: 'true')
+            = link_to "Log In with #{provider.to_s.titleize}", 'javascript:void(0)', class: 'button', id: "#{provider.to_s.underscore}_login_button"
+            :javascript
+              jQuery(function() {
+                var button = jQuery('##{provider.to_s.underscore}_login_button'),
+                    path = '#{directPath}',
+                    popup = '#{authCheckPath}',
+                    redirect = '#{auth_after_path}';
+
+                window.AutomaticallyClosingPopupLink.configure(button, path, popup, redirect);
+              });
+
       .clear_both
