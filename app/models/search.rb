@@ -55,7 +55,7 @@ class Search
   NoProbeRequired = ["0"]
 
   def self.grade_level_groups
-    { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"] }
+    { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"], 'Higher Ed' => ["Higher Ed"] }
   end
 
   def self.clean_search_terms (term)
@@ -99,7 +99,7 @@ class Search
     self.project_ids                 = opts[:project_ids] || []
     self.available_subject_areas     = []
     self.available_projects          = []
-    self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
+    self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0, 'Higher Ed' => 0 }
     self.model_types                 = opts[:model_types] || nil
     self.available_model_types       = []
 
