@@ -1,0 +1,24 @@
+I, [2015-10-29T14:25:15.340612 #20087]  INFO -- : Not reporting to Code Climate because ENV['CODECLIMATE_REPO_TOKEN'] is not set.
+java version "1.7.0_79"
+OpenJDK Runtime Environment (IcedTea 2.5.5) (7u79-2.5.5-0ubuntu0.14.04.2)
+OpenJDK 64-Bit Server VM (build 24.79-b02, mixed mode)
+ignoring attempt to close div with span
+  opened at byte 1879, line 43
+  closed at byte 2877, line 57
+  attributes at open: {}
+  text around open: "class='contentdiv'>\n<div>\n          <spa"
+  text around close: "lector'))</script>\n\n</span>\n</div>\n<div "
+ignoring attempt to close div with span
+  opened at byte 1879, line 43
+  closed at byte 2877, line 57
+  attributes at open: {}
+  text around open: "class='contentdiv'>\n<div>\n          <spa"
+  text around close: "lector'))</script>\n\n</span>\n</div>\n<div "
+ignoring attempt to close div with span
+  opened at byte 1879, line 43
+  closed at byte 2877, line 57
+  attributes at open: {}
+  text around open: "class='contentdiv'>\n<div>\n          <spa"
+  text around close: "lector'))</script>\n\n</span>\n</div>\n<div "
+/projects/rigse/spec/models/image_spec.rb:176: warning: already initialized constant UseUploadedByInAttribution
+/projects/rigse/spec/models/image_spec.rb:184: warning: already initialized constant UseUploadedByInAttribution
