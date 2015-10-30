@@ -1,6 +1,7 @@
 -# Expects locals: object
 - if object && object.respond_to?("cohort_list") && current_visitor.has_role?("admin", "manager")
-  = field_set_tag 'Cohorts' do
+  - field_set_title = 'Cohorts' unless local_assigns[:field_set_title]
+  = field_set_tag field_set_title do
     .aligned
       = hidden_field_tag :update_cohorts, "true"
       %ul.menu_h

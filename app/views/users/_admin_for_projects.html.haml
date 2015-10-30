@@ -1,0 +1,9 @@
+= hidden_field(:user, :has_projects_in_form, :value => true)
+%fieldset
+  %legend
+    Admin for Projects
+  %ul.menu_h
+    - projects.each do |p|
+      %li
+        = p.name
+        = check_box_tag "user[admin_project_ids][]", p.id, @user.admin_for_projects.include?(p)

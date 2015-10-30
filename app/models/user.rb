@@ -52,6 +52,10 @@ class User < ActiveRecord::Base
   has_many :project_users, class_name: 'Admin::ProjectUser'
   has_many :projects, :through => :project_users
 
+  has_many :admin_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_admin = ?', true]
+  has_many :researcher_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_researcher = ?', true]
+  has_many :member_of_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_member = ?', true]
+
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
   scope :all_users, { :conditions => {}}
@@ -365,14 +369,44 @@ class User < ActiveRecord::Base
     self == User.anonymous
   end
 
-  def set_project_ids(project_ids)
-    all_projects = Admin::Project.all
-    all_projects.each do |project|
+  def is_project_admin?(project=nil)
+    if project
+      self.admin_for_projects.include? project
+    else
+      self.admin_for_projects.length > 0
+    end
+  end
+
+  def is_project_researcher?(project=nil)
+    if project
+      self.researcher_for_projects.include? project
+    else
+      self.researcher_for_projects.length > 0
+    end
+  end
+
+  def is_project_member?(project=nil)
+    if project
+      self.member_of_projects.include? project
+    else
+      self.member_of_projects.length > 0
+    end
+  end
+
+  def set_role_for_projects(role, selected_projects, project_ids)
+    role_attribute = 'is_' + role
+    selected_projects.each do |project|
+      project_user = project_users.find_by_project_id project.id
       if project_ids.find { |id| id.to_i == project.id }
-        projects << project if !projects.include? project
-      else
-        projects.delete project
+        if !project_user
+          projects << project
+          project_user = project_users.find_by_project_id project.id
+        end
+        project_user[role_attribute] = true
+      elsif project_user
+        project_user[role_attribute] = false
       end
+      project_user.save if project_user
     end
   end
 
