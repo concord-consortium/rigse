@@ -6,6 +6,12 @@ class Portal::StudentClazzesController < ApplicationController
   # GET /portal_student_clazzes
   # GET /portal_student_clazzes.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::StudentClazz
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @student_clazzes = policy_scope(Portal::StudentClazz)
     @portal_student_clazzes = Portal::StudentClazz.all
 
     respond_to do |format|
@@ -17,6 +23,9 @@ class Portal::StudentClazzesController < ApplicationController
   # GET /portal_student_clazzes/1
   # GET /portal_student_clazzes/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @student_clazz
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
 
     respond_to do |format|
@@ -28,6 +37,9 @@ class Portal::StudentClazzesController < ApplicationController
   # GET /portal_student_clazzes/new
   # GET /portal_student_clazzes/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::StudentClazz
     @portal_student_clazz = Portal::StudentClazz.new
 
     respond_to do |format|
@@ -38,12 +50,18 @@ class Portal::StudentClazzesController < ApplicationController
 
   # GET /portal_student_clazzes/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @student_clazz
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
   end
 
   # POST /portal_student_clazzes
   # POST /portal_student_clazzes.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::StudentClazz
     @portal_student_clazz = Portal::StudentClazz.new(params[:portal_student_clazz])
 
     respond_to do |format|
@@ -61,6 +79,9 @@ class Portal::StudentClazzesController < ApplicationController
   # PUT /portal_student_clazzes/1
   # PUT /portal_student_clazzes/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @student_clazz
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
 
     respond_to do |format|
@@ -78,6 +99,9 @@ class Portal::StudentClazzesController < ApplicationController
   # DELETE /portal_student_clazzes/1
   # DELETE /portal_student_clazzes/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @student_clazz
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
     @dom_id = view_context.dom_id_for(@portal_student_clazz)
     @clazz = @portal_student_clazz.clazz

@@ -5,6 +5,9 @@ class Admin::LearnerDetailsController < ApplicationController
   # GET /learner_details/1.txt
   # GET /learner_details/1.json
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @learner_detail
     if verify_request_is_peer
       learner = Portal::Learner.find(params[:id])
       @learner_details = LearnerDetail.new learner

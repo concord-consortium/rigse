@@ -1,6 +1,7 @@
 class Portal::SchoolsController < ApplicationController
   
   include RestrictedPortalController
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_or_manager
   before_filter :states_and_provinces, :only => [:new, :edit, :create, :update]
 
@@ -33,6 +34,12 @@ class Portal::SchoolsController < ApplicationController
   # GET /portal_schools
   # GET /portal_schools.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::School
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @schools = policy_scope(Portal::School)
     @portal_schools = Portal::School.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -44,6 +51,9 @@ class Portal::SchoolsController < ApplicationController
   # GET /portal_schools/1
   # GET /portal_schools/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @school
     @portal_school = Portal::School.find(params[:id])
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_school => @portal_school, :is_edit => true }
@@ -58,6 +68,9 @@ class Portal::SchoolsController < ApplicationController
   # GET /portal_schools/new
   # GET /portal_schools/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::School
     @portal_school = Portal::School.new
 
     respond_to do |format|
@@ -68,6 +81,9 @@ class Portal::SchoolsController < ApplicationController
 
   # GET /portal_schools/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @school
     @portal_school = Portal::School.find(params[:id])
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_school => @portal_school, :is_edit => true }
@@ -82,6 +98,9 @@ class Portal::SchoolsController < ApplicationController
   # POST /portal_schools
   # POST /portal_schools.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::School
     cancel = params[:commit] == "Cancel"
     change_skip_installer = (params[:settings] && params[:settings][:skip_installer])
     skip_installer = (params[:settings][:skip_installer] == "1") if change_skip_installer
@@ -118,6 +137,9 @@ class Portal::SchoolsController < ApplicationController
   # PUT /portal_schools/1
   # PUT /portal_schools/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @school
     cancel = params[:commit] == "Cancel"
     change_skip_installer = (params[:settings] && params[:settings][:skip_installer])
     skip_installer = (params[:settings][:skip_installer] == "1") if change_skip_installer
@@ -165,6 +187,9 @@ class Portal::SchoolsController < ApplicationController
   # DELETE /portal_schools/1
   # DELETE /portal_schools/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @school
     @portal_school = Portal::School.find(params[:id])
     @portal_school.destroy
 

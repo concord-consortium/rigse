@@ -1,0 +1,2 @@
+class SecurityQuestionPolicy < ApplicationPolicy
+end

@@ -1,8 +1,16 @@
 class Import::ImportsController < ApplicationController
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_only
 
   def import_school_district_json
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     file_data = params[:import][:import].read 
     begin
       json_data = JSON.parse file_data, :symbolize_names => true
@@ -23,6 +31,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def import_user_json
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     file_data = params[:import][:import].read
     begin
       json_data = JSON.parse file_data, :symbolize_names => true
@@ -43,6 +58,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def import_school_district_status
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     @import_type = Import::Import::IMPORT_TYPE_SCHOOL_DISTRICT
     imports_in_progress = Import::Import.in_progress(Import::Import::IMPORT_TYPE_SCHOOL_DISTRICT)
     @imports_progress = []
@@ -66,6 +88,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def import_user_status
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     @import_type = Import::Import::IMPORT_TYPE_USER
     imports_in_progress = Import::Import.in_progress(Import::Import::IMPORT_TYPE_USER)
     @imports_progress = []
@@ -89,6 +118,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def download
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     user_import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_USER})
     duplicate_users = Import::DuplicateUser.find(:all, :conditions => {:import_id => user_import.id})
     if duplicate_users.length == 0
@@ -103,6 +139,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def import_activity_status
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     respond_to do |format|
       format.js { render :json => { :html => render_to_string('import_activity_status')}, :content_type => 'text/json' }
       format.html
@@ -110,6 +153,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def import_activity
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     begin
       json_object = JSON.parse "#{params['import_activity_form'].read}", :symbolize_names => true
       req_url = "#{request.protocol}#{request.host_with_port}"
@@ -126,6 +176,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def import_activity_progress
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     if request.xhr?
       @import_activity = Import::Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::Import::IMPORT_TYPE_ACTIVITY).last
       render :json => {:progress => @import_activity ? @import_activity.progress : @import_activity}
@@ -133,6 +190,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def activity_clear_job
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     if request.xhr?
       import_activity = Import::Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::Import::IMPORT_TYPE_ACTIVITY).last
       import_activity.destroy
@@ -141,6 +205,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def batch_import_status
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     @import_type = Import::Import::IMPORT_TYPE_BATCH_ACTIVITY
     imports_in_progress = Import::Import.in_progress(Import::Import::IMPORT_TYPE_BATCH_ACTIVITY)
     @imports_progress = []
@@ -166,6 +237,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def batch_import_data
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY})
     imports_succeed = import.import_data.select{|item| item['success'] == true}
     import_data = []
@@ -179,6 +257,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def batch_import
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     begin
       json_object = JSON.parse "#{params['import']['import'].read}", :symbolize_names => true
       if json_object.class.name != "Array" || json_object.size < 1
@@ -198,6 +283,13 @@ class Import::ImportsController < ApplicationController
   end
 
   def failed_batch_import
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::Import
+    # authorize @import
+    # authorize Import::Import, :new_or_create?
+    # authorize @import, :update_edit_or_destroy?
     batch_import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY})
     imports_failed = batch_import.import_data.select{|item| item["success"] == false}.map{|item| item.except("success")}
     if imports_failed

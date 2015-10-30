@@ -2,7 +2,13 @@ class Embeddable::XhtmlsController < ApplicationController
   # GET /Embeddable/xhtmls
   # GET /Embeddable/xhtmls.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Xhtml
     @xhtmls = Embeddable::Xhtml.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @xhtmls = policy_scope(Embeddable::Xhtml)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +20,9 @@ class Embeddable::XhtmlsController < ApplicationController
   # GET /Embeddable/xhtmls/1.xml
   def show
     @xhtml = Embeddable::Xhtml.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @xhtml
     if request.xhr?
       render :partial => 'show', :locals => { :xhtml => @xhtml }
     else
@@ -31,6 +40,9 @@ class Embeddable::XhtmlsController < ApplicationController
   # GET /Embeddable/xhtmls/new
   # GET /Embeddable/xhtmls/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Xhtml
     @xhtml = Embeddable::Xhtml.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
@@ -45,6 +57,9 @@ class Embeddable::XhtmlsController < ApplicationController
   # GET /Embeddable/xhtmls/1/edit
   def edit
     @xhtml = Embeddable::Xhtml.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @xhtml
     if request.xhr?
       render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
     else
@@ -58,6 +73,9 @@ class Embeddable::XhtmlsController < ApplicationController
   # POST /Embeddable/xhtmls
   # POST /Embeddable/xhtmls.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Xhtml
     @xhtml = Embeddable::Xhtml.new(params[:xhtml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -87,6 +105,9 @@ class Embeddable::XhtmlsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @xhtml = Embeddable::Xhtml.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @xhtml
     if request.xhr?
       if cancel || @xhtml.update_attributes(params[:embeddable_xhtml])
         render :partial => 'show', :locals => { :xhtml => @xhtml }
@@ -111,6 +132,9 @@ class Embeddable::XhtmlsController < ApplicationController
   # DELETE /Embeddable/xhtmls/1.xml
   def destroy
     @xhtml = Embeddable::Xhtml.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @xhtml
     respond_to do |format|
       format.html { redirect_to(xhtmls_url) }
       format.xml  { head :ok }

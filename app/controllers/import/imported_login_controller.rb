@@ -1,9 +1,23 @@
 class Import::ImportedLoginController < ApplicationController
 
   def confirm_user
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::ImportedLogin
+    # authorize @imported_login
+    # authorize Import::ImportedLogin, :new_or_create?
+    # authorize @imported_login, :update_edit_or_destroy?
   end
 
   def imported_user_validation
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Import::ImportedLogin
+    # authorize @imported_login
+    # authorize Import::ImportedLogin, :new_or_create?
+    # authorize @imported_login, :update_edit_or_destroy?
     user = User.find_by_login(params[:login])
 
     unless user

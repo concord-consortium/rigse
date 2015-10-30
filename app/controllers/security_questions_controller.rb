@@ -1,13 +1,20 @@
 class SecurityQuestionsController < ApplicationController
+  # PUNDIT_CHECK_FILTERS
   before_filter :user_has_security_questions
   
   # GET
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @security_question
     @security_questions = SecurityQuestion.fill_array(current_visitor.security_questions)
   end
 
   # PUT
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @security_question
     @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions], current_visitor)
     errors = SecurityQuestion.errors_for_questions_list!(@security_questions)  
     if (!errors) || errors.empty?

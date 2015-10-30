@@ -1,4 +1,5 @@
 class Admin::SiteNoticesController < ApplicationController
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_or_manager, :except => [:toggle_notice_display, :dismiss_notice]
   
   protected
@@ -13,6 +14,9 @@ class Admin::SiteNoticesController < ApplicationController
   public
   
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Admin::SiteNotice
     @action_type = 'Create Notice'
     @all_roles_selected_by_default = true
     @notice_role_ids = []
@@ -20,6 +24,9 @@ class Admin::SiteNoticesController < ApplicationController
   end
 
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Admin::SiteNotice
     error = nil
     @action_type = 'Create Notice'
     @notice_html = params[:notice_html] ? params[:notice_html] : ''
@@ -64,10 +71,19 @@ class Admin::SiteNoticesController < ApplicationController
   end
   
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Admin::SiteNotice
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @site_notices = policy_scope(Admin::SiteNotice)
      @all_notices = Admin::SiteNotice.find(:all,:order=> 'updated_at desc') 
   end
   
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @site_notice
     @action_type = 'Edit Notice'
     @all_roles_selected_by_default = false
     @notice = Admin::SiteNotice.find(params[:id])
@@ -77,6 +93,9 @@ class Admin::SiteNoticesController < ApplicationController
   end
   
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @site_notice
     
     @action_type = 'Edit Notice'
     @all_roles_selected_by_default = false
@@ -126,6 +145,13 @@ class Admin::SiteNoticesController < ApplicationController
    
     
   def remove_notice
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Admin::SiteNotice
+    # authorize @site_notice
+    # authorize Admin::SiteNotice, :new_or_create?
+    # authorize @site_notice, :update_edit_or_destroy?
     #delete notice
     notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
     notice_roles.each do |notice_role|
@@ -159,6 +185,13 @@ class Admin::SiteNoticesController < ApplicationController
   
 
   def toggle_notice_display
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Admin::SiteNotice
+    # authorize @site_notice
+    # authorize Admin::SiteNotice, :new_or_create?
+    # authorize @site_notice, :update_edit_or_destroy?
     user_collapsed_notice = Admin::NoticeUserDisplayStatus.find_or_create_by_user_id(current_visitor.id)
     status_to_be_set = (user_collapsed_notice.collapsed_status.nil? || user_collapsed_notice.collapsed_status == false)? true : false
     
@@ -174,6 +207,13 @@ class Admin::SiteNoticesController < ApplicationController
   end
   
   def dismiss_notice
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Admin::SiteNotice
+    # authorize @site_notice
+    # authorize Admin::SiteNotice, :new_or_create?
+    # authorize @site_notice, :update_edit_or_destroy?
     notice = Admin::SiteNotice.find(params[:id])
     user_notice = Admin::SiteNoticeUser.find_or_create_by_notice_id_and_user_id(notice.id , current_visitor.id)
     user_notice.notice_dismissed = true

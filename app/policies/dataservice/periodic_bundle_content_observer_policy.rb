@@ -1,0 +1,2 @@
+class Dataservice::PeriodicBundleContentObserverPolicy < ApplicationPolicy
+end

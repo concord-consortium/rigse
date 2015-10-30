@@ -1,8 +1,12 @@
 class InteractivesController < ApplicationController
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_only, :except => [:index, :show, :export_model_library]
 
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Interactive
     search_params = {
       :material_types     => [Search::InteractiveMaterial],
       :interactive_page   => params[:page],
@@ -14,6 +18,9 @@ class InteractivesController < ApplicationController
 
     s = Search.new(search_params)
     @interactives = s.results[Search::InteractiveMaterial]
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @interactives = policy_scope(Interactive)
 
     if params[:mine_only]
       @interactives = @interactives.reject { |i| i.user.id != current_visitor.id }
@@ -32,10 +39,16 @@ class InteractivesController < ApplicationController
   end
 
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Interactive
     @interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)
   end
 
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Interactive
     @interactive = Interactive.new(params[:interactive])
     @interactive.user = current_visitor
 
@@ -69,14 +82,23 @@ class InteractivesController < ApplicationController
 
   def show
     @interactive = Interactive.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @interactive
   end
 
   def edit
     @interactive = Interactive.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @interactive
   end
 
   def destroy
     @interactive = Interactive.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @interactive
     @interactive.destroy
     @redirect = params[:redirect]
     respond_to do |format|
@@ -89,6 +111,9 @@ class InteractivesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @interactive = Interactive.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @interactive
 
     if params[:update_grade_levels]
       # set the grade_level tags
@@ -129,6 +154,13 @@ class InteractivesController < ApplicationController
   end
 
   def import_model_library
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Interactive
+    # authorize @interactive
+    # authorize Interactive, :new_or_create?
+    # authorize @interactive, :update_edit_or_destroy?
     if request.post?
       respond_to do |format|
         begin
@@ -171,6 +203,13 @@ class InteractivesController < ApplicationController
   end
 
   def export_model_library
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Interactive
+    # authorize @interactive
+    # authorize Interactive, :new_or_create?
+    # authorize @interactive, :update_edit_or_destroy?
     model_library = []
     Interactive.published.each do |m|
       model_library << {

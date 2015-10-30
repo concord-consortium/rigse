@@ -21,6 +21,9 @@ class Dataservice::ExternalActivityDataController < ApplicationController
 
   public
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Dataservice::ExternalActivityDatum
     learner_id = params[:id]
     if learner = Portal::Learner.find(learner_id)
       if can_create(learner) # If this fails we raise RoutingError('Not Allowed') (see above)

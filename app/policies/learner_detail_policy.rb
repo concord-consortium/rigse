@@ -1,0 +1,2 @@
+class LearnerDetailPolicy < ApplicationPolicy
+end

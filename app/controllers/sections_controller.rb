@@ -1,5 +1,6 @@
 class SectionsController < ApplicationController
   
+  # PUNDIT_CHECK_FILTERS
   before_filter :find_entities, :except => ['create','new']
   in_place_edit_for :section, :name
   in_place_edit_for :section, :description
@@ -57,6 +58,12 @@ class SectionsController < ApplicationController
   ##
   ##
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Section
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @sections = policy_scope(Section)
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
 
@@ -95,6 +102,9 @@ class SectionsController < ApplicationController
   ##
   ##
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @section
     @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.run_html   { render :show, :layout => "layouts/run" }
@@ -116,6 +126,9 @@ class SectionsController < ApplicationController
   ##
   ##
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Section
     @section = Section.new
     @section.user = current_visitor
     respond_to do |format|
@@ -128,6 +141,9 @@ class SectionsController < ApplicationController
   ##
   ##
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Section
     @section = Section.create!(params[:section])
     @section.user = current_visitor
     respond_to do |format|
@@ -150,6 +166,9 @@ class SectionsController < ApplicationController
 
   # GET /pages/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @section
     if request.xhr?
       render :partial => 'remote_form', :locals => { :section => @section, :activity => @section.activity }
     end
@@ -159,6 +178,9 @@ class SectionsController < ApplicationController
   ##
   ##
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @section
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if @section.update_attributes(params[:section])
@@ -184,6 +206,9 @@ class SectionsController < ApplicationController
   ##
   ##
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @section
     @section.destroy
     @redirect = params[:redirect]
     respond_to do |format|
@@ -198,6 +223,13 @@ class SectionsController < ApplicationController
   ##
   ##
   def add_page
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Section
+    # authorize @section
+    # authorize Section, :new_or_create?
+    # authorize @section, :update_edit_or_destroy?
     @page= Page.create
     @page.section = @section
     @page.user = current_visitor
@@ -209,6 +241,13 @@ class SectionsController < ApplicationController
   ##
   ##  
   def sort_pages
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Section
+    # authorize @section
+    # authorize Section, :new_or_create?
+    # authorize @section, :update_edit_or_destroy?
     paramlistname = params[:list_name].nil? ? 'section_pages_list' : params[:list_name]
     @section.pages.each do |page|
       page.position = params[paramlistname].index(page.id.to_s) + 1
@@ -221,6 +260,13 @@ class SectionsController < ApplicationController
   ##
   ##
   def delete_page
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Section
+    # authorize @section
+    # authorize Section, :new_or_create?
+    # authorize @section, :update_edit_or_destroy?
     @page= Page.find(params['page_id'])
     @page.destroy
   end
@@ -229,6 +275,13 @@ class SectionsController < ApplicationController
   ##
   ##
   def duplicate
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Section
+    # authorize @section
+    # authorize Section, :new_or_create?
+    # authorize @section, :update_edit_or_destroy?
     @copy = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => :pages
     @copy.name = "copy of #{@section.name}"
     @copy.save
@@ -242,6 +295,13 @@ class SectionsController < ApplicationController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Section
+    # authorize @section
+    # authorize Section, :new_or_create?
+    # authorize @section, :update_edit_or_destroy?
     render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:params => params}
   end
 
@@ -249,6 +309,13 @@ class SectionsController < ApplicationController
   # In a section controller, we only accept page clipboard data,
   # 
   def paste
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Section
+    # authorize @section
+    # authorize Section, :new_or_create?
+    # authorize @section, :update_edit_or_destroy?
     if @section.changeable?(current_visitor)
       @original = clipboard_object(params)
       if @original

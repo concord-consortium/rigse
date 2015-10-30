@@ -1,5 +1,6 @@
 class TeacherNotesController < ApplicationController
   
+  # PUNDIT_CHECK_FILTERS
   before_filter :setup_object, :except => [:index]
     
   protected
@@ -14,6 +15,13 @@ class TeacherNotesController < ApplicationController
   
   public
   def setup_object
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize TeacherNote
+    # authorize @teacher_note
+    # authorize TeacherNote, :new_or_create?
+    # authorize @teacher_note, :update_edit_or_destroy?
     if params[:id]
       if valid_uuid(params[:id])
         @teacher_note = TeacherNote.find(:first, :conditions => ['uuid=?',params[:id]])
@@ -40,6 +48,13 @@ class TeacherNotesController < ApplicationController
   end
   
   def show_teacher_note
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize TeacherNote
+    # authorize @teacher_note
+    # authorize TeacherNote, :new_or_create?
+    # authorize @teacher_note, :update_edit_or_destroy?
     if @teacher_note.changeable?(current_visitor)
       render :update do |page|
           page.replace_html  'note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @teacher_note}
@@ -57,7 +72,13 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes
   # GET /teacher_notes.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize TeacherNote
     @teacher_notes = TeacherNote.all
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @teacher_notes = policy_scope(TeacherNote)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @teacher_notes }
@@ -67,6 +88,9 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes/1
   # GET /teacher_notes/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @teacher_note
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @teacher_note }
@@ -76,6 +100,9 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes/new
   # GET /teacher_notes/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize TeacherNote
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @teacher_note }
@@ -84,11 +111,17 @@ class TeacherNotesController < ApplicationController
 
   # GET /teacher_notes/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @teacher_note
   end
 
   # POST /teacher_notes
   # POST /teacher_notes.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize TeacherNote
     if (@teacher_note.changeable?(current_visitor) && @teacher_note.update_attributes(params[:teacher_note]))
       if (request.xhr?)
         render :text => "<div class='notice'>teacher note saved</div>"
@@ -115,6 +148,9 @@ class TeacherNotesController < ApplicationController
   # PUT /teacher_notes/1
   # PUT /teacher_notes/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @teacher_note
     if (@teacher_note.changeable?(current_visitor) && @teacher_note.update_attributes(params[:teacher_note]))
       if (request.xhr?)
         render :text => "<div class='notice'>teacher note saved</div>"
@@ -141,6 +177,9 @@ class TeacherNotesController < ApplicationController
   # DELETE /teacher_notes/1
   # DELETE /teacher_notes/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @teacher_note
     if(@teacher_note.changeable?(current_visitor))
       @teacher_note.destroy
       respond_to do |format|

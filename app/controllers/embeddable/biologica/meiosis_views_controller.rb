@@ -2,6 +2,12 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views
   # GET /Embeddable::Biologica/biologica_meiosis_views.xml
   def index    
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Biologica::MeiosisView
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @meiosis_views = policy_scope(Embeddable::Biologica::MeiosisView)
     @biologica_meiosis_views = Embeddable::Biologica::MeiosisView.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -13,6 +19,9 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views/1
   # GET /Embeddable::Biologica/biologica_meiosis_views/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @meiosis_view
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
@@ -31,6 +40,9 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views/new
   # GET /Embeddable::Biologica/biologica_meiosis_views/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Biologica::MeiosisView
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
@@ -44,6 +56,9 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
 
   # GET /Embeddable::Biologica/biologica_meiosis_views/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @meiosis_view
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
     @scope = get_scope(@biologica_meiosis_view)
     if request.xhr?
@@ -60,6 +75,9 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # POST /Embeddable::Biologica/biologica_meiosis_views
   # POST /Embeddable::Biologica/biologica_meiosis_views.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Biologica::MeiosisView
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.new(params[:biologica_meiosis_view])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -87,6 +105,9 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # PUT /Embeddable::Biologica/biologica_meiosis_views/1
   # PUT /Embeddable::Biologica/biologica_meiosis_views/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @meiosis_view
     cancel = params[:commit] == "Cancel"
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
     if request.xhr?
@@ -112,6 +133,9 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_meiosis_views/1
   # DELETE /Embeddable::Biologica/biologica_meiosis_views/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @meiosis_view
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
     respond_to do |format|
       format.html { redirect_to(biologica_meiosis_views_url) }

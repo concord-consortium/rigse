@@ -2,8 +2,14 @@ class Embeddable::DataTablesController < ApplicationController
   # GET /Embeddable/data_tables
   # GET /Embeddable/data_tables.xml
   def index    
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::DataTable
     @teacher = false
     @data_tables = Embeddable::DataTable.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @data_tables = policy_scope(Embeddable::DataTable)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,6 +21,9 @@ class Embeddable::DataTablesController < ApplicationController
   # GET /Embeddable/data_tables/1.xml
   def show
     @data_table = Embeddable::DataTable.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @data_table
     if request.xhr?
       render :partial => 'show', :locals => { :data_table => @data_table }
     else
@@ -32,6 +41,9 @@ class Embeddable::DataTablesController < ApplicationController
   # GET /Embeddable/data_tables/new
   # GET /Embeddable/data_tables/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::DataTable
     @data_table = Embeddable::DataTable.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :data_table => @data_table }
@@ -46,6 +58,9 @@ class Embeddable::DataTablesController < ApplicationController
   # GET /Embeddable/data_tables/1/edit
   def edit
     @data_table = Embeddable::DataTable.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @data_table
     @scope = get_scope(@data_table)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :data_table => @data_table }
@@ -61,6 +76,9 @@ class Embeddable::DataTablesController < ApplicationController
   # POST /Embeddable/data_tables
   # POST /Embeddable/data_tables.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::DataTable
     @data_table = Embeddable::DataTable.new(params[:xhtml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -90,6 +108,9 @@ class Embeddable::DataTablesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @data_table = Embeddable::DataTable.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @data_table
     if request.xhr?
       if cancel || @data_table.update_attributes(params[:embeddable_data_table])
         render :partial => 'show', :locals => { :data_table => @data_table }
@@ -114,6 +135,9 @@ class Embeddable::DataTablesController < ApplicationController
   # DELETE /Embeddable/data_tables/1.xml
   def destroy
     @data_table = Embeddable::DataTable.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @data_table
     respond_to do |format|
       format.html { redirect_to(data_tables_url) }
       format.xml  { head :ok }
@@ -128,6 +152,13 @@ class Embeddable::DataTablesController < ApplicationController
   end
   
   def update_cell_data
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Embeddable::DataTable
+    # authorize @data_table
+    # authorize Embeddable::DataTable, :new_or_create?
+    # authorize @data_table, :update_edit_or_destroy?
     @data_table = Embeddable::DataTable.find(params[:id])
     if @data_table.changeable? current_visitor
       @data_table.column_data = params[:data]

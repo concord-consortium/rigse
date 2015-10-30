@@ -2,7 +2,13 @@ class Embeddable::ImageQuestionsController < ApplicationController
   # GET /embeddable_image_questions
   # GET /embeddable_image_questions.xml
   def index    
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::ImageQuestion
     @image_questions = Embeddable::ImageQuestion.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @image_questions = policy_scope(Embeddable::ImageQuestion)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +20,9 @@ class Embeddable::ImageQuestionsController < ApplicationController
   # GET /embeddable_image_questions/1.xml
   def show
     @image_question = Embeddable::ImageQuestion.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @image_question
     if request.xhr?
       render :partial => 'show', :locals => { :image_question => @image_question }
     else
@@ -32,6 +41,9 @@ class Embeddable::ImageQuestionsController < ApplicationController
   # GET /embeddable_image_questions/new
   # GET /embeddable_image_questions/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::ImageQuestion
     @image_question = Embeddable::ImageQuestion.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :image_question => @image_question }
@@ -46,6 +58,9 @@ class Embeddable::ImageQuestionsController < ApplicationController
   # GET /embeddable_image_questions/1/edit
   def edit
     @image_question = Embeddable::ImageQuestion.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @image_question
     if request.xhr?
       render :partial => 'remote_form', :locals => { :image_question => @image_question }
     else
@@ -60,6 +75,9 @@ class Embeddable::ImageQuestionsController < ApplicationController
   # POST /embeddable_image_questions
   # POST /embeddable_image_questions.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::ImageQuestion
     @image_question = Embeddable::ImageQuestion.new(params[:image_question])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -89,6 +107,9 @@ class Embeddable::ImageQuestionsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @image_question = Embeddable::ImageQuestion.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @image_question
     if request.xhr?
       if cancel || @image_question.update_attributes(params[:embeddable_image_question])
         render :partial => 'show', :locals => { :image_question => @image_question }
@@ -113,6 +134,9 @@ class Embeddable::ImageQuestionsController < ApplicationController
   # DELETE /embeddable_image_questions/1.xml
   def destroy
     @image_question = Embeddable::ImageQuestion.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @image_question
     respond_to do |format|
       format.html { redirect_to(image_questions_url) }
       format.xml  { head :ok }

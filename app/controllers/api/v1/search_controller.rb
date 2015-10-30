@@ -2,6 +2,13 @@ class API::V1::SearchController < API::APIController
   include Materials::DataHelpers
 
   def search
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Api::V1::Search
+    # authorize @search
+    # authorize Api::V1::Search, :new_or_create?
+    # authorize @search, :update_edit_or_destroy?
     opts = params.merge(:user_id => current_visitor.id)
     begin
       @search = Search.new(opts)

@@ -4,6 +4,7 @@ class PagesController < ApplicationController
   # so we can use dom_id_for
   include ApplicationHelper
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :find_entities, :except => [:create,:new,:index,:delete_element,:add_element]
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
@@ -66,6 +67,12 @@ class PagesController < ApplicationController
   # GET /page
   # GET /page.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Page
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @pages = policy_scope(Page)
     # @activity = Activity.find(params['section_id'])
     # @pages = @activity.pages
     # @pages = Page.all
@@ -107,6 +114,9 @@ class PagesController < ApplicationController
   # GET /page/1
   # GET /page/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @page
     @teacher_mode = params[:teacher_mode] || @page.teacher_only
     respond_to do |format|
       format.html {
@@ -138,6 +148,13 @@ class PagesController < ApplicationController
   # GET /page/1/preview
   # GET /page/1.xml
   def preview
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Page
+    # authorize @page
+    # authorize Page, :new_or_create?
+    # authorize @page, :update_edit_or_destroy?
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @page }
@@ -149,6 +166,9 @@ class PagesController < ApplicationController
   
   # GET /page/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Page
     @page = Page.new
     respond_to do |format|
       format.html # new.html.erb
@@ -158,6 +178,9 @@ class PagesController < ApplicationController
 
   # GET /page/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @page
     if request.xhr?
       render :partial => 'remote_form', :locals => { :page => @page, :section => @page.section }
     end
@@ -167,6 +190,9 @@ class PagesController < ApplicationController
   # POST /page
   # POST /page.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Page
     @page = Page.create(params[:page])
     @page.user = current_visitor
     respond_to do |format|
@@ -185,6 +211,9 @@ class PagesController < ApplicationController
   # PUT /page/1
   # PUT /page/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @page
     respond_to do |format|
       if @page.update_attributes(params[:page])
         flash[:notice] = 'Page was successfully updated.'
@@ -201,6 +230,9 @@ class PagesController < ApplicationController
   # DELETE /page/1
   # DELETE /page/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @page
     @page.destroy
     @redirect = params[:redirect]
 
@@ -218,6 +250,13 @@ class PagesController < ApplicationController
   ##
 
   def add_element
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Page
+    # authorize @page
+    # authorize Page, :new_or_create?
+    # authorize @page, :update_edit_or_destroy?
     @page = Page.find(params['page_id'])
     # @container no longer used?
     @container = params['container']
@@ -258,6 +297,13 @@ class PagesController < ApplicationController
   ##
   ##  
   def sort_elements
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Page
+    # authorize @page
+    # authorize Page, :new_or_create?
+    # authorize @page, :update_edit_or_destroy?
     key_name = 'elements_container'
     params.each_key do |k|
       key_name = k if k =~ /elements_container/
@@ -279,6 +325,13 @@ class PagesController < ApplicationController
   ##
   ##
   def duplicate
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Page
+    # authorize @page
+    # authorize Page, :new_or_create?
+    # authorize @page, :update_edit_or_destroy?
     @copy = @page.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at]
     @copy.name = "" #force numbering by default
     @copy.save
@@ -288,6 +341,13 @@ class PagesController < ApplicationController
 
 
   def paste_link
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Page
+    # authorize @page
+    # authorize Page, :new_or_create?
+    # authorize @page, :update_edit_or_destroy?
     # render :partial => 'pages/paste_link', :locals => {:params => params}
     # render :text => paste_link_for(page_paste_acceptable_types,params)
     render :partial => 'shared/paste_link', :locals =>{:types => Page.paste_acceptable_types,:params => params}
@@ -297,6 +357,13 @@ class PagesController < ApplicationController
   # Paste a page component
   #
   def paste
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Page
+    # authorize @page
+    # authorize Page, :new_or_create?
+    # authorize @page, :update_edit_or_destroy?
     if @page.changeable?(current_visitor)
       @original = clipboard_object(params)      
       if (@original) 

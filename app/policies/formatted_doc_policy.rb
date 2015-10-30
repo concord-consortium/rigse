@@ -1,0 +1,2 @@
+class FormattedDocPolicy < ApplicationPolicy
+end

@@ -2,6 +2,9 @@ class API::V1::StudentsController < API::APIController
 
   # POST api/v1/students
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Api::V1::Student
     registration = API::V1::StudentRegistration.new(params)
     if !current_visitor.anonymous?
       registration.set_user current_visitor
@@ -17,6 +20,13 @@ class API::V1::StudentsController < API::APIController
 
   # GET api/v1/students/check_class_word
   def check_class_word
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Api::V1::Student
+    # authorize @student
+    # authorize Api::V1::Student, :new_or_create?
+    # authorize @student, :update_edit_or_destroy?
     class_word = params.require(:class_word)
     found = Portal::Clazz.find_by_class_word(class_word)
     if found
@@ -29,6 +39,13 @@ class API::V1::StudentsController < API::APIController
   # POST api/v1/students/:id/check_password
   # Why not GET like in check_class_word? We don't want to put password in URL params.
   def check_password
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Api::V1::Student
+    # authorize @student
+    # authorize Api::V1::Student, :new_or_create?
+    # authorize @student, :update_edit_or_destroy?
     student_id = params.require(:id)
     password   = params.require(:password)
     login      = Portal::Student.find(student_id).user.login

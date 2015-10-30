@@ -2,7 +2,13 @@ class Embeddable::RawOtmlsController < ApplicationController
   # GET /Embeddable/raw_otmls
   # GET /Embeddable/raw_otmls.xml
   def index    
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::RawOtml
     @raw_otmls = Embeddable::RawOtml.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @raw_otmls = policy_scope(Embeddable::RawOtml)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,6 +19,9 @@ class Embeddable::RawOtmlsController < ApplicationController
   # GET /Embeddable/raw_otmls/new
   # GET /Embeddable/raw_otmls/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::RawOtml
     @raw_otml = Embeddable::RawOtml.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :raw_otml => @raw_otml }
@@ -27,6 +36,9 @@ class Embeddable::RawOtmlsController < ApplicationController
   def show
     @authoring = false
     @raw_otml = Embeddable::RawOtml.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @raw_otml
     if request.xhr?
       render :partial => 'show', :locals => { :raw_otml => @raw_otml }
     else
@@ -45,6 +57,9 @@ class Embeddable::RawOtmlsController < ApplicationController
   def edit
     @authoring = true
     @raw_otml = Embeddable::RawOtml.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @raw_otml
     if request.xhr?
       render :partial => 'remote_form', :locals => { :raw_otml => @raw_otml }
     else
@@ -60,6 +75,9 @@ class Embeddable::RawOtmlsController < ApplicationController
   # POST /Embeddable/raw_otmls
   # POST /Embeddable/raw_otmls.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::RawOtml
     @raw_otml = Embeddable::RawOtml.new(params[:raw_otml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -89,6 +107,9 @@ class Embeddable::RawOtmlsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @raw_otml = Embeddable::RawOtml.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @raw_otml
     if request.xhr?
       if cancel || @raw_otml.update_attributes(params[:embeddable_raw_otml])
         render :partial => 'show', :locals => { :raw_otml => @raw_otml }
@@ -117,6 +138,9 @@ class Embeddable::RawOtmlsController < ApplicationController
   # DELETE /Embeddable/raw_otmls/1.xml
   def destroy
     @raw_otml = Embeddable::RawOtml.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @raw_otml
     respond_to do |format|
       format.html { redirect_to(raw_otmls_url) }
       format.xml  { head :ok }

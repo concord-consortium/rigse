@@ -20,8 +20,14 @@ class Embeddable::DataCollectorsController < ApplicationController
   # GET /Embeddable/data_collectors
   # GET /Embeddable/data_collectors.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::DataCollector
     @teacher = false
     @data_collectors = Embeddable::DataCollector.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @data_collectors = policy_scope(Embeddable::DataCollector)
 
     respond_to do |format|
       format.html
@@ -34,6 +40,9 @@ class Embeddable::DataCollectorsController < ApplicationController
   def show
     @authoring = false
     @data_collector = Embeddable::DataCollector.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @data_collector
     if request.xhr?
       render :partial => 'show', :locals => { :data_collector => @data_collector }
     else
@@ -51,6 +60,9 @@ class Embeddable::DataCollectorsController < ApplicationController
   # GET /Embeddable/data_collectors/new
   # GET /Embeddable/data_collectors/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::DataCollector
     if probe_type_id = session[:last_saved_probe_type_id]
       @data_collector = Embeddable::DataCollector.new(:probe_type_id => probe_type_id)
     else
@@ -71,6 +83,9 @@ class Embeddable::DataCollectorsController < ApplicationController
   def edit
     @authoring = true
     @data_collector = Embeddable::DataCollector.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @data_collector
     @scope = get_scope(@data_collector)
     session[:last_saved_probe_type_id] = @data_collector.probe_type_id
     session[:new_probe_type_id] = nil
@@ -88,6 +103,9 @@ class Embeddable::DataCollectorsController < ApplicationController
   # POST /Embeddable/data_collectors
   # POST /Embeddable/data_collectors.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::DataCollector
     @data_collector = Embeddable::DataCollector.new(params[:embeddable_data_collector])
     session[:last_saved_probe_type_id] = @data_collector.probe_type_id
     cancel = params[:commit] == "Cancel"
@@ -120,6 +138,9 @@ class Embeddable::DataCollectorsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @data_collector = Embeddable::DataCollector.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @data_collector
 
     # FixMe [this has at least been moved out of the model -n]
     # If the probe_type is changed set a new default name based on the 
@@ -166,6 +187,9 @@ class Embeddable::DataCollectorsController < ApplicationController
   # DELETE /Embeddable/data_collectors/1.xml
   def destroy
     @data_collector = Embeddable::DataCollector.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @data_collector
     respond_to do |format|
       format.html { redirect_to(data_collectors_url) }
       format.xml  { head :ok }
@@ -179,10 +203,24 @@ class Embeddable::DataCollectorsController < ApplicationController
   end
     
   def changed_probe_info?(probe_type_id,calibration_id)
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Embeddable::DataCollector
+    # authorize @data_collector
+    # authorize Embeddable::DataCollector, :new_or_create?
+    # authorize @data_collector, :update_edit_or_destroy?
     return changed_probe_type?(probe_type_id) || changed_calibration?(calibration_id)
   end
   
   def change_probe_type
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Embeddable::DataCollector
+    # authorize @data_collector
+    # authorize Embeddable::DataCollector, :new_or_create?
+    # authorize @data_collector, :update_edit_or_destroy?
     probe_type_id = params[:embeddable_data_collector][:probe_type_id]
     calibration_id = params[:embeddable_data_collector][:calibration_id]
     # If probe_type or calibrations change, we change some other values.

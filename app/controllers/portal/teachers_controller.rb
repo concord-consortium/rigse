@@ -1,9 +1,17 @@
 class Portal::TeachersController < ApplicationController
   include RestrictedPortalController
+  # PUNDIT_CHECK_FILTERS
   before_filter :teacher_admin_or_manager, :except=> [:new, :create]
   public
 
   def teacher_admin_or_manager
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Teacher
+    # authorize @teacher
+    # authorize Portal::Teacher, :new_or_create?
+    # authorize @teacher, :update_edit_or_destroy?
     if current_visitor.has_role?('admin') ||
        current_visitor.has_role?('manager') ||
        (current_visitor.portal_teacher && current_visitor.portal_teacher.id.to_s == params[:id])
@@ -18,6 +26,12 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers
   # GET /portal_teachers.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::Teacher
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @teachers = policy_scope(Portal::Teacher)
     @portal_teachers = Portal::Teacher.all
 
     respond_to do |format|
@@ -29,6 +43,9 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/1
   # GET /portal_teachers/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @teacher
     @portal_teacher = Portal::Teacher.find(params[:id])
     respond_to do |format|
       format.html # show.html.erb
@@ -39,6 +56,9 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/view
   # GET /portal_teachers/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::Teacher
     @portal_teacher = Portal::Teacher.new
     @school_selector = Portal::SchoolSelector.new(params)
     respond_to do |format|
@@ -49,6 +69,9 @@ class Portal::TeachersController < ApplicationController
 
   # GET /portal_teachers/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @teacher
     @portal_teacher = Portal::Teacher.find(params[:id])
     @user = @portal_teacher.user
     @school_selector = Portal::SchoolSelector.new(params)
@@ -58,6 +81,9 @@ class Portal::TeachersController < ApplicationController
   # POST /portal_teachers.xml
   # TODO: move some of this into the teachers model.
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::Teacher
     
     # TODO: Teachers DO NOT HAVE grades or Domains.
     @portal_grade = nil
@@ -99,6 +125,9 @@ class Portal::TeachersController < ApplicationController
   # PUT /portal_teachers/1
   # PUT /portal_teachers/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @teacher
     @portal_teacher = Portal::Teacher.find(params[:id])
 
     respond_to do |format|
@@ -116,6 +145,9 @@ class Portal::TeachersController < ApplicationController
   # DELETE /portal_teachers/1
   # DELETE /portal_teachers/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @teacher
     @portal_teacher = Portal::Teacher.find(params[:id])
     @portal_teacher.destroy
 
@@ -126,12 +158,26 @@ class Portal::TeachersController < ApplicationController
   end
   
   def successful_creation(user)
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Teacher
+    # authorize @teacher
+    # authorize Portal::Teacher, :new_or_create?
+    # authorize @teacher, :update_edit_or_destroy?
     # Render the UsersController#thanks page instead of showing a flash message.
     redirect_to thanks_for_sign_up_url(:type=>"teacher",:login=>"#{user.login}")
 
   end
   
   def failed_creation(message = 'Sorry, there was an error creating your account')
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Teacher
+    # authorize @teacher
+    # authorize Portal::Teacher, :new_or_create?
+    # authorize @teacher, :update_edit_or_destroy?
     # FIXME is the sign_out necessary??? The user should not be signed in yet, however
     # previously there was a current_visitor=User.anonymous here.
     sign_out :user

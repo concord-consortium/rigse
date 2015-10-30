@@ -2,6 +2,13 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
 
   # PUT /RiGse/grade_span_expectations/reparse_gses
   def reparse_gses
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize RiGse::GradeSpanExpectation
+    # authorize @grade_span_expectation
+    # authorize RiGse::GradeSpanExpectation, :new_or_create?
+    # authorize @grade_span_expectation, :update_edit_or_destroy?
     parser = Parser.new
     parser.process_rigse_data
     respond_to do |format|
@@ -14,12 +21,18 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations
   # GET /RiGse/grade_span_expectations.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize RiGse::GradeSpanExpectation
     # :include => [:expectations => [:expectation_indicators, :stem]]
     respond_to do |format|
       format.html do
         @search_string = params[:search]
         if params[:mine_only]
           @grade_span_expectations = RiGse::GradeSpanExpectation.search(params[:search], params[:page], self.current_visitor, [{:expectations => [:expectation_indicators, :expectation_stem]}])
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @grade_span_expectations = policy_scope(RiGse::GradeSpanExpectation)
         else
           @grade_span_expectations = RiGse::GradeSpanExpectation.search(params[:search], params[:page], nil)
         end
@@ -40,6 +53,13 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
 
   # POST /RiGse/grade_span_expectations/select_js
   def select_js
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize RiGse::GradeSpanExpectation
+    # authorize @grade_span_expectation
+    # authorize RiGse::GradeSpanExpectation, :new_or_create?
+    # authorize @grade_span_expectation, :update_edit_or_destroy?
     if params[:grade_span_expectation]
       @selected_gse = RiGse::GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])
       session[:gse_id] = @selected_gse.id
@@ -75,6 +95,13 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
 
   # GET /RiGse/grade_span_expectations/1/summary
   def summary
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize RiGse::GradeSpanExpectation
+    # authorize @grade_span_expectation
+    # authorize RiGse::GradeSpanExpectation, :new_or_create?
+    # authorize @grade_span_expectation, :update_edit_or_destroy?
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
     
     if request.xhr?
@@ -90,6 +117,9 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations/1.xml
   def show
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @grade_span_expectation
 
     respond_to do |format|
       format.html # show.html.erb
@@ -99,6 +129,13 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
 
   # GET /RiGse/investigations/1/print
   def print
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize RiGse::GradeSpanExpectation
+    # authorize @grade_span_expectation
+    # authorize RiGse::GradeSpanExpectation, :new_or_create?
+    # authorize @grade_span_expectation, :update_edit_or_destroy?
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
     respond_to do |format|
       format.html { render :layout => "layouts/print" }
@@ -109,6 +146,9 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations/new
   # GET /RiGse/grade_span_expectations/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize RiGse::GradeSpanExpectation
     @grade_span_expectation = RiGse::GradeSpanExpectation.new
 
     respond_to do |format|
@@ -120,11 +160,17 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations/1/edit
   def edit
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @grade_span_expectation
   end
 
   # POST /RiGse/grade_span_expectations
   # POST /RiGse/grade_span_expectations.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize RiGse::GradeSpanExpectation
     @grade_span_expectation = RiGse::GradeSpanExpectation.new(params[:grade_span_expectation])
 
     respond_to do |format|
@@ -143,6 +189,9 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # PUT /RiGse/grade_span_expectations/1.xml
   def update
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @grade_span_expectation
 
     respond_to do |format|
       if @grade_span_expectation.update_attributes(params[:grade_span_expectation])
@@ -160,6 +209,9 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # DELETE /RiGse/grade_span_expectations/1.xml
   def destroy
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @grade_span_expectation
     @grade_span_expectation.destroy
 
     respond_to do |format|

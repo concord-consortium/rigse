@@ -10,7 +10,13 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses
   # GET /portal_courses.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::Course
     @courses = Portal::Course.all
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @courses = policy_scope(Portal::Course)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -22,6 +28,9 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/1.xml
   def show
     @course = Portal::Course.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @course
 
     respond_to do |format|
       format.html # show.html.erb
@@ -32,6 +41,9 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/new
   # GET /portal_courses/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::Course
     @course = Portal::Course.new
 
     respond_to do |format|
@@ -43,11 +55,17 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/1/edit
   def edit
     @course = Portal::Course.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @course
   end
 
   # POST /portal_courses
   # POST /portal_courses.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Portal::Course
     @course = Portal::Course.new(params[:portal_course])
 
     respond_to do |format|
@@ -66,6 +84,9 @@ class Portal::CoursesController < ApplicationController
   # PUT /portal_courses/1.xml
   def update
     @course = Portal::Course.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @course
 
     respond_to do |format|
       if @course.update_attributes(params[:portal_course])
@@ -83,6 +104,9 @@ class Portal::CoursesController < ApplicationController
   # DELETE /portal_courses/1.xml
   def destroy
     @course = Portal::Course.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @course
     @course.destroy
 
     respond_to do |format|

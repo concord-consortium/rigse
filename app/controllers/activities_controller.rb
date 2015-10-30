@@ -2,6 +2,7 @@ class ActivitiesController < ApplicationController
   # GET /pages
   # GET /pages.xml
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :setup_object, :except => [:index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
@@ -64,6 +65,9 @@ class ActivitiesController < ApplicationController
   public
 
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Activity
     search_params = {
       :material_types     => [Search::ActivityMaterial],
       :activity_page      => params[:page],
@@ -76,6 +80,9 @@ class ActivitiesController < ApplicationController
 
     s = Search.new(search_params)
     @activities = s.results[Search::ActivityMaterial]
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @activities = policy_scope(Activity)
 
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_visitor.id }
@@ -96,6 +103,9 @@ class ActivitiesController < ApplicationController
   # GET /pages/1
   # GET /pages/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @activity
     @teacher_mode = boolean_param(:teacher_mode) || @activity.teacher_only
     respond_to do |format|
       format.html {
@@ -128,6 +138,9 @@ class ActivitiesController < ApplicationController
   # GET /pages/new
   # GET /pages/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Activity
     @activity = Activity.new
     @activity.user = current_visitor
     respond_to do |format|
@@ -139,6 +152,9 @@ class ActivitiesController < ApplicationController
   # GET /pages/1/edit
   def edit
     @activity = Activity.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @activity
     if request.xhr?
       render :partial => 'remote_form', :locals => { :activity => @activity }
     end
@@ -147,6 +163,9 @@ class ActivitiesController < ApplicationController
   # POST /pages
   # POST /pages.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Activity
     @activity = Activity.new(params[:activity])
     @activity.user = current_visitor
 
@@ -183,6 +202,9 @@ class ActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @activity = Activity.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @activity
 
     if params[:update_cohorts]
       # set the cohort tags
@@ -227,6 +249,9 @@ class ActivitiesController < ApplicationController
   # DELETE /pages/1.xml
   def destroy
     @activity = Activity.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @activity
     @activity.destroy
     @redirect = params[:redirect]
     respond_to do |format|
@@ -241,6 +266,13 @@ class ActivitiesController < ApplicationController
   ##
   ##
   def add_section
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Activity
+    # authorize @activity
+    # authorize Activity, :new_or_create?
+    # authorize @activity, :update_edit_or_destroy?
     @section = Section.create
     @section.activity = @activity
     @section.user = current_visitor
@@ -252,6 +284,13 @@ class ActivitiesController < ApplicationController
   ##
   ##
   def sort_sections
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Activity
+    # authorize @activity
+    # authorize Activity, :new_or_create?
+    # authorize @activity, :update_edit_or_destroy?
     paramlistname = params[:list_name].nil? ? 'activity_sections_list' : params[:list_name]
     @activity = Activity.find(params[:id], :include => :sections)
     @activity.sections.each do |section|
@@ -265,6 +304,13 @@ class ActivitiesController < ApplicationController
   ##
   ##
   def delete_section
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Activity
+    # authorize @activity
+    # authorize Activity, :new_or_create?
+    # authorize @activity, :update_edit_or_destroy?
     @section= Section.find(params['section_id'])
     @section.destroy
   end
@@ -273,6 +319,13 @@ class ActivitiesController < ApplicationController
   ##
   ##
   def duplicate
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Activity
+    # authorize @activity
+    # authorize Activity, :new_or_create?
+    # authorize @activity, :update_edit_or_destroy?
     @original = Activity.find(params['id'])
     @activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => :pages}
     @activity.name = "copy of #{@activity.name}"
@@ -286,6 +339,13 @@ class ActivitiesController < ApplicationController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Activity
+    # authorize @activity
+    # authorize Activity, :new_or_create?
+    # authorize @activity, :update_edit_or_destroy?
     render :partial => 'shared/paste_link', :locals =>{:types => ['section'],:params => params}
   end
 
@@ -293,6 +353,13 @@ class ActivitiesController < ApplicationController
   # In an Activities controller, we only accept section clipboard data,
   #
   def paste
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Activity
+    # authorize @activity
+    # authorize Activity, :new_or_create?
+    # authorize @activity, :update_edit_or_destroy?
     if @activity.changeable?(current_visitor)
       @original = clipboard_object(params)
       if (@original)
@@ -316,6 +383,13 @@ class ActivitiesController < ApplicationController
   end
 
   def export
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Activity
+    # authorize @activity
+    # authorize Activity, :new_or_create?
+    # authorize @activity, :update_edit_or_destroy?
     respond_to do |format|
       format.xml  {
         send_data @activity.deep_xml, :type => :xml, :filename=>"#{@activity.name}.xml"

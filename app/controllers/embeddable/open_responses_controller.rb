@@ -2,10 +2,16 @@ class Embeddable::OpenResponsesController < ApplicationController
   # GET /Embeddable/open_responses
   # GET /Embeddable/open_responses.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::OpenResponse
     # @open_responses = Embeddable::OpenResponse.all
     # @paginated_objects = @open_responses
 
     @open_responses = Embeddable::OpenResponse.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @open_responses = policy_scope(Embeddable::OpenResponse)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -17,6 +23,9 @@ class Embeddable::OpenResponsesController < ApplicationController
   # GET /Embeddable/open_responses/1.xml
   def show
     @open_response = Embeddable::OpenResponse.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @open_response
     if request.xhr?
       render :partial => 'show', :locals => { :open_response => @open_response }
     else
@@ -34,6 +43,9 @@ class Embeddable::OpenResponsesController < ApplicationController
   # GET /Embeddable/open_responses/new
   # GET /Embeddable/open_responses/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::OpenResponse
     @open_response = Embeddable::OpenResponse.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :open_response => @open_response }
@@ -48,6 +60,9 @@ class Embeddable::OpenResponsesController < ApplicationController
   # GET /Embeddable/open_responses/1/edit
   def edit
     @open_response = Embeddable::OpenResponse.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @open_response
     if request.xhr?
       render :partial => 'remote_form', :locals => { :open_response => @open_response }
     end
@@ -56,6 +71,9 @@ class Embeddable::OpenResponsesController < ApplicationController
   # POST /Embeddable/open_responses
   # POST /Embeddable/open_responses.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::OpenResponse
     @open_response = Embeddable::OpenResponse.new(params[:open_response])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -86,6 +104,9 @@ class Embeddable::OpenResponsesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @open_response = Embeddable::OpenResponse.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @open_response
     if request.xhr?
       if cancel || @open_response.update_attributes(params[:embeddable_open_response])
         render :partial => 'show', :locals => { :open_response => @open_response }
@@ -110,6 +131,9 @@ class Embeddable::OpenResponsesController < ApplicationController
   # DELETE /Embeddable/open_responses/1.xml
   def destroy
     @open_response = Embeddable::OpenResponse.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (found instance)
+    # authorize @open_response
     respond_to do |format|
       format.html { redirect_to(open_responses_url) }
       format.xml  { head :ok }

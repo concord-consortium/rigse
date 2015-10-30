@@ -2,6 +2,12 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings
   # GET /Embeddable::Biologica/biologica_breed_offsprings.xml
   def index    
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Biologica::BreedOffspring
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @breed_offsprings = policy_scope(Embeddable::Biologica::BreedOffspring)
     @biologica_breed_offsprings = Embeddable::Biologica::BreedOffspring.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -13,6 +19,9 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings/1
   # GET /Embeddable::Biologica/biologica_breed_offsprings/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @breed_offspring
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
@@ -31,6 +40,9 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings/new
   # GET /Embeddable::Biologica/biologica_breed_offsprings/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Biologica::BreedOffspring
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
@@ -44,6 +56,9 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
 
   # GET /Embeddable::Biologica/biologica_breed_offsprings/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @breed_offspring
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
     @scope = get_scope(@biologica_breed_offspring)
     if request.xhr?
@@ -60,6 +75,9 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # POST /Embeddable::Biologica/biologica_breed_offsprings
   # POST /Embeddable::Biologica/biologica_breed_offsprings.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Embeddable::Biologica::BreedOffspring
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.new(params[:biologica_breed_offspring])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -87,6 +105,9 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # PUT /Embeddable::Biologica/biologica_breed_offsprings/1
   # PUT /Embeddable::Biologica/biologica_breed_offsprings/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @breed_offspring
     cancel = params[:commit] == "Cancel"
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
     if request.xhr?
@@ -112,6 +133,9 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_breed_offsprings/1
   # DELETE /Embeddable::Biologica/biologica_breed_offsprings/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @breed_offspring
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
     respond_to do |format|
       format.html { redirect_to(biologica_breed_offsprings_url) }

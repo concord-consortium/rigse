@@ -1,5 +1,6 @@
 class Admin::SettingsController < ApplicationController
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_only, :except => [:index, :edit, :update]
   before_filter :admin_or_manager, :only => [:index, :edit, :update]
   # before_filter :setup_object, :except => [:index]
@@ -37,6 +38,12 @@ class Admin::SettingsController < ApplicationController
   # GET /admin/settings
   # GET /admin/settings.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Admin::Setting
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @settings = policy_scope(Admin::Setting)
     default_settings = Admin::Settings.default_settings
 
     if @manager_role
@@ -62,6 +69,9 @@ class Admin::SettingsController < ApplicationController
   # GET /admin/settings/1
   # GET /admin/settings/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @setting
     @admin_settings = Admin::Settings.find(params[:id])
 
     respond_to do |format|
@@ -73,6 +83,9 @@ class Admin::SettingsController < ApplicationController
   # GET /admin/settings/new
   # GET /admin/settings/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Admin::Setting
     @admin_settings = Admin::Settings.new
     @scope = nil
 
@@ -85,6 +98,9 @@ class Admin::SettingsController < ApplicationController
 
   # GET /admin/settings/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @setting
     @admin_settings = Admin::Settings.find(params[:id])
 
     # Pull in the current theme default home page content, if it isn't set in the settings.
@@ -103,6 +119,9 @@ class Admin::SettingsController < ApplicationController
   # POST /admin/settings
   # POST /admin/settings.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Admin::Setting
     @admin_settings = Admin::Settings.new(params[:admin_settings])
     respond_to do |format|
       if @admin_settings.save
@@ -119,6 +138,9 @@ class Admin::SettingsController < ApplicationController
   # PUT /admin/settings/1
   # PUT /admin/settings/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @setting
     @admin_settings = Admin::Settings.find(params[:id])
     if request.xhr?
       @admin_settings.update_attributes(params[:admin_settings])
@@ -140,6 +162,9 @@ class Admin::SettingsController < ApplicationController
   # DELETE /admin/settings/1
   # DELETE /admin/settings/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @setting
     @settings = Admin::Settings.find(params[:id])
     @settings.destroy
 

@@ -1,0 +1,2 @@
+class PasswordMailerPolicy < ApplicationPolicy
+end
