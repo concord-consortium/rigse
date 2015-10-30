@@ -83,6 +83,11 @@ class ResourcePagesController < ApplicationController
     # authorize ResourcePage
     @resource_page = current_visitor.resource_pages.new(params[:resource_page])
 
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @resource_page.material_property_list = (params[:material_properties] || [])
+    end
+
     if params[:update_cohorts]
       # set the cohort tags
       @resource_page.cohort_list = (params[:cohorts] || [])
@@ -117,6 +122,12 @@ class ResourcePagesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @resource_page
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @resource_page.material_property_list = (params[:material_properties] || [])
+      @resource_page.save
+    end
+
     if params[:update_cohorts]
       # set the cohort tags
       @resource_page.cohort_list = (params[:cohorts] || [])

@@ -42,7 +42,9 @@ class Investigation < ActiveRecord::Base
     string  :grade_span
     integer :domain_id
     string  :material_type
-    string  :java_requirements
+    string  :material_properties, :multiple => true do
+      material_property_list
+    end
     string  :cohorts, :multiple => true do
       cohort_list
     end

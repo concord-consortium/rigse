@@ -71,7 +71,9 @@ class Interactive < ActiveRecord::Base
       "Interactive"
     end
 
-    string  :java_requirements
+    string  :material_properties, :multiple => true do
+      material_property_list
+    end
     string  :cohorts, :multiple => true do
       cohort_list
     end

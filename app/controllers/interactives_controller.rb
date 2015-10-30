@@ -54,6 +54,11 @@ class InteractivesController < ApplicationController
     @interactive = Interactive.new(params[:interactive])
     @interactive.user = current_visitor
 
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @interactive.material_property_list = (params[:material_properties] || [])
+    end
+
     if params[:update_grade_levels]
       # set the grade_level tags
       @interactive.grade_level_list = (params[:grade_levels] || [])
@@ -108,6 +113,12 @@ class InteractivesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @interactive = Interactive.find(params[:id])
     authorize @interactive
+
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @interactive.material_property_list = (params[:material_properties] || [])
+      @interactive.save
+    end
 
     if params[:update_grade_levels]
       # set the grade_level tags

@@ -1,18 +1,19 @@
 {span, a, br} = React.DOM
 
 window.SMaterialHeaderClass = React.createClass
-  renderJavaReq: ->
-    reqJava = @props.material.requires_java
-    className = if reqJava then 'JNLPJavaRequirement' else 'NoJavaRequirement'
+  renderMaterialProperties: ->
+    # FIXME Make this a generic loop to handle displaying arbitrary properties
+    reqDownload = @props.material.material_properties.indexOf('Requires download') isnt -1
+    className = if reqDownload then 'RequiresDownload' else 'RunsInBrowser'
     (span {className: className},
-      if reqJava then 'Requires download' else 'Runs in browser'
+      if reqDownload then 'Requires download' else 'Runs in browser'
     )
 
   render: ->
     material = @props.material
     (span {className: 'material_header'},
       (span {className: 'material_meta_data'},
-        @renderJavaReq()
+        @renderMaterialProperties()
         if material.is_official
           (span {className: 'is_official'}, 'Official')
         else

@@ -208,6 +208,11 @@ class ExternalActivitiesController < ApplicationController
     @external_activity = ExternalActivity.new(params[:external_activity])
     @external_activity.user = current_visitor
 
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @external_activity.material_property_list = (params[:material_properties] || [])
+    end
+
     if params[:update_cohorts]
       # set the cohort tags
       @external_activity.cohort_list = (params[:cohorts] || [])
@@ -249,6 +254,12 @@ class ExternalActivitiesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE (found instance)
     # authorize @external_activity
+
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @external_activity.material_property_list = (params[:material_properties] || [])
+      @external_activity.save
+    end
 
     if params[:update_cohorts]
       # set the cohort tags
