@@ -4,8 +4,29 @@ require 'will_paginate/array'
 
 BrowserSpecificiation = Struct.new(:browser, :version)
 
+class PunditUserContext
+  attr_reader :user, :request
+
+  def initialize(user, request)
+    @user = user
+    @request = request
+  end
+end
+
 class ApplicationController < ActionController::Base
   include Clipboard
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  def pundit_user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    #redirect_to(request.referrer || root_path)
+  end
+
+  def pundit_user
+    PunditUserContext.new(current_user, request)
+  end
 
   # protect_from_forgery
   self.allow_forgery_protection = false
@@ -13,53 +34,24 @@ class ApplicationController < ActionController::Base
   theme :get_theme
 
   def test
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Application
-    # authorize @application
-    # authorize Application, :new_or_create?
-    # authorize @application, :update_edit_or_destroy?
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
 
   def self.set_theme(name)
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Application
-    # authorize @application
-    # authorize Application, :new_or_create?
-    # authorize @application, :update_edit_or_destroy?
     @@theme = name
   end
 
   def get_theme
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Application
-    # authorize @application
-    # authorize Application, :new_or_create?
-    # authorize @application, :update_edit_or_destroy?
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
   def self.get_theme
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Application
-    # authorize @application
-    # authorize Application, :new_or_create?
-    # authorize @application, :update_edit_or_destroy?
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-  # PUNDIT_CHECK_FILTERS
   before_filter :setup_container
   before_filter :reject_old_browsers
 

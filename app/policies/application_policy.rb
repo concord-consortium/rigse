@@ -1,8 +1,9 @@
 class ApplicationPolicy
-  attr_reader :user, :record
+  attr_reader :user, :record, :request
 
-  def initialize(user, record)
-    @user = user
+  def initialize(context, record)
+    @user = context.user
+    @request = context.request
     @record = record
   end
 
@@ -65,6 +66,32 @@ class ApplicationPolicy
 
   def changeable?
     user && record.respond_to?(:changeable?) ? record.changeable?(user) : true
+  end
+
+  # from old restricted_controller
+
+  def manager?
+    has_roles?('manager','admin','district_admin')
+  end
+
+  def admin_or_manager?
+    has_roles?('admin', 'manager')
+  end
+
+  def manager_or_researcher?
+    user && (user.is_project_admin? || has_roles?('manager','admin','researcher'))
+  end
+
+  def admin?
+    has_roles?('admin')
+  end
+
+  def admin_or_config?
+    user && (user.has_role?('admin') || request.format == :config)
+  end
+
+  def has_roles?(*roles)
+    user && user.has_role?(*roles)
   end
 
 end
