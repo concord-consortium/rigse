@@ -25,7 +25,7 @@
                 = hidden_field_tag 'user[id]', user.id
                 = hidden_field_tag 'commit', 'Switch'
           - elsif current_visitor.is_project_admin?
-            %li.menu=link_to 'edit', edit_user_path(user)
+            %li.menu=link_to 'edit', edit_by_project_admin_user_path(user)
 
     %div{:id => dom_id_for(user, :details), :class => 'tiny'}
       %ul.menu_h

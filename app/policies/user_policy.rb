@@ -4,7 +4,10 @@ class UserPolicy < ApplicationPolicy
     manager_or_researcher?
   end
 
-  def edit?
+  def edit_by_project_admin?
+    changeable? || project_admin?
+  end
+  def update_by_project_admin?
     changeable? || project_admin?
   end
 

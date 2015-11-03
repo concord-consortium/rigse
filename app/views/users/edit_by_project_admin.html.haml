@@ -1,0 +1,18 @@
+%p
+  = link_to 'back to Users list', users_path
+
+= form_for @user, :url => {:action => "update_by_project_admin"} do |form|
+  .action_menu
+    .action_menu_header
+      .action_menu_header_right
+        %ul.menu
+          %li
+            = submit_tag 'Save'
+          %li
+            = submit_tag 'Cancel'
+
+  .item
+    .content
+      %h3
+        = @user.name
+      = render :partial => 'researcher_for_projects', :locals => { :f => form, :projects => current_visitor.admin_for_projects }
