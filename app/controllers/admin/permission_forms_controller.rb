@@ -1,6 +1,13 @@
 class Admin::PermissionFormsController < ApplicationController
-  # PUNDIT_CHECK_FILTERS
-  before_filter :admin_or_manager
+
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    flash[:notice] = "Please log in as an administrator or manager"
+    redirect_to(:home)
+  end
 
   protected
 
@@ -82,24 +89,16 @@ class Admin::PermissionFormsController < ApplicationController
   public
 
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Admin::PermissionForm
+    authorize Portal::PermissionForm
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @permission_forms = policy_scope(Admin::PermissionForm)
+    # @permission_forms = policy_scope(Portal::PermissionForm)
     form = TeacherSearchForm.new(params[:form])
     @teachers = form.search
   end
 
   def update_forms
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Admin::PermissionForm
-    # authorize @permission_form
-    # authorize Admin::PermissionForm, :new_or_create?
-    # authorize @permission_form, :update_edit_or_destroy?
+    authorize Portal::PermissionForm
     student_id     = params['student_id']
     permission_ids = params['permission_ids']
     status = 400
@@ -114,9 +113,7 @@ class Admin::PermissionFormsController < ApplicationController
   end
 
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Admin::PermissionForm
+    authorize Portal::PermissionForm
     form_data = params['portal_permission']
     if form_data && (!form_data['name'].blank?)
       form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'])
@@ -125,14 +122,8 @@ class Admin::PermissionFormsController < ApplicationController
   end
 
   def remove_form
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Admin::PermissionForm
-    # authorize @permission_form
-    # authorize Admin::PermissionForm, :new_or_create?
-    # authorize @permission_form, :update_edit_or_destroy?
     form = Portal::PermissionForm.find(params[:id])
+    authorize form, :destroy?
     form.destroy
     redirect_to action: 'index'
   end

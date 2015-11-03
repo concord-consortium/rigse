@@ -2,23 +2,28 @@
   Administration and Reports
 
 %ul
+  - is_admin_or_manager = current_visitor.has_role?('admin', 'manager')
+  - is_admin_or_project_admin = is_admin_or_manager || current_visitor.is_project_admin?
+
   - if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
     %li.trail=link_to('Authoring', authoring_path)
   - if current_visitor.has_role?('admin', 'manager','researcher')
     %li= link_to 'Reports', learner_report_path
-  - if current_visitor.has_role?('admin', 'manager')
+  - if is_admin_or_manager
     %li= link_to 'Districts', portal_districts_path
     %li= link_to 'Schools', portal_schools_path
     - if APP_CONFIG[:use_gse]
       %li= link_to 'GSEs', ri_gse_grade_span_expectations_path
-  - if current_visitor.has_role?('admin', 'manager') || current_visitor.is_project_admin?
+  - if is_admin_or_project_admin
     %li= link_to 'Users', users_path
     %li= link_to 'Projects', admin_projects_path
-  - if current_visitor.has_role?('admin', 'manager')
+  - if is_admin_or_manager
     %li= link_to 'Tags', admin_tags_path
     %li= link_to 'Settings', admin_settings_path
     %li= link_to 'Notices', admin_site_notices_path
+  - if is_admin_or_project_admin
     %li= link_to 'Permission Forms', admin_permission_forms_path
+  - if is_admin_or_manager
     %li= link_to 'Materials Collections', materials_collections_path
     %li= link_to 'Interactives' , interactives_path
     %li= link_to 'Import Schools and Districts' , import_school_district_status_import_imports_path
