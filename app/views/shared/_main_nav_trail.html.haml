@@ -14,6 +14,8 @@
 
         - if current_visitor.has_role?('admin', 'manager','researcher')
           %li.trail= link_to 'Admin', admin_path
+        - elsif current_visitor.is_project_admin?
+          %li.trail= link_to 'Users', users_path
 
       - if current_visitor.has_role?('admin') || current_visitor.portal_teacher
         - current_visitor.projects.each do |project|
