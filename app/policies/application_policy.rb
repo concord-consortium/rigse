@@ -68,6 +68,10 @@ class ApplicationPolicy
     user && record.respond_to?(:changeable?) ? record.changeable?(user) : true
   end
 
+  def project_admin?
+    user && user.is_project_admin?
+  end
+
   # from old restricted_controller
 
   def manager?
