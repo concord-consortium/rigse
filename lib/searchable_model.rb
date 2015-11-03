@@ -16,14 +16,14 @@
 #        @@searchable_attributes
 #      end
 #    end
-# 
+#
 # Create @searchable_attributes instance variable in controller for model
 # for later use in view.
 #
 #   @searchable_attributes = Investigation.searchable_attributes
 #
 # Create controller paginated model instance variable like this:
-# 
+#
 #    @investigations = Investigation.search(params[:search], params[:page], current_visitor)
 #
 # Optionally add an include parameter to eagerly load asociations:
@@ -32,7 +32,7 @@
 #
 module SearchableModel
   # see: http://github.com/mislav/will_paginate/wikis/simple-search
-  def search(search, page, user, includes={})
+  def search(search, page, user, includes={}, scope=nil)
     sql_parameters = []
     sql_conditions = ""
     # pass in a username to limit the search to the users items
@@ -47,7 +47,7 @@ module SearchableModel
         end
       end
     end
-    
+
     # debugger
     sql_conditions = sql_conditions + '(' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
     # FIXME - This search should do the following: split the terms based on whitespace, then perform the search
@@ -61,11 +61,15 @@ module SearchableModel
     # maybe we'll need to add a nested block.
     searchable_attributes.length.times {sql_parameters << "%#{search}%"}
     conditions = [sql_conditions] + sql_parameters
-    # this results     
+    # this results
     # (user_id = ? or public = '1') and name like ? or description like ?, 1, %%, %%, 2
     # debugger
-    
+
     per_page = self.per_page || 20
-    paginate(:per_page => per_page, :page => page, :conditions => conditions, :include => includes)
+    if scope
+      scope.paginate(:per_page => per_page, :page => page, :conditions => conditions, :include => includes)
+    else
+      paginate(:per_page => per_page, :page => page, :conditions => conditions, :include => includes)
+    end
   end
 end
