@@ -90,6 +90,10 @@ class ApplicationPolicy
     has_roles?('admin')
   end
 
+  def admin_or_project_admin?
+    user && (user.is_project_admin? || has_roles?('admin'))
+  end
+
   def admin_or_config?
     user && (user.has_role?('admin') || request.format == :config)
   end
