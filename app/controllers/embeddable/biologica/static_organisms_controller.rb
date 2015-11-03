@@ -1,13 +1,7 @@
 class Embeddable::Biologica::StaticOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_static_organisms
   # GET /Embeddable::Biologica/biologica_static_organisms.xml
-  def index    
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Biologica::StaticOrganism
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @static_organisms = policy_scope(Embeddable::Biologica::StaticOrganism)
+  def index
     @biologica_static_organisms = Embeddable::Biologica::StaticOrganism.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -19,9 +13,6 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_static_organisms/1
   # GET /Embeddable::Biologica/biologica_static_organisms/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @static_organism
     @biologica_static_organism = Embeddable::Biologica::StaticOrganism.find(params[:id])
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_static_organism => @biologica_static_organism }
@@ -40,9 +31,6 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_static_organisms/new
   # GET /Embeddable::Biologica/biologica_static_organisms/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Biologica::StaticOrganism
     @biologica_static_organism = Embeddable::Biologica::StaticOrganism.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_static_organism => @biologica_static_organism }
@@ -56,32 +44,26 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
 
   # GET /Embeddable::Biologica/biologica_static_organisms/1/edit
   def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @static_organism
     @biologica_static_organism = Embeddable::Biologica::StaticOrganism.find(params[:id])
     @scope = get_scope(@biologica_static_organism)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_static_organism => @biologica_static_organism }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_static_organism  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_static_organisms
   # POST /Embeddable::Biologica/biologica_static_organisms.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Biologica::StaticOrganism
     @biologica_static_organism = Embeddable::Biologica::StaticOrganism.new(params[:biologica_static_organism])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_static_organism.save
         render :partial => 'new', :locals => { :biologica_static_organism => @biologica_static_organism }
@@ -105,9 +87,6 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
   # PUT /Embeddable::Biologica/biologica_static_organisms/1
   # PUT /Embeddable::Biologica/biologica_static_organisms/1.xml
   def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @static_organism
     cancel = params[:commit] == "Cancel"
     @biologica_static_organism = Embeddable::Biologica::StaticOrganism.find(params[:id])
     if request.xhr?
@@ -133,20 +112,17 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_static_organisms/1
   # DELETE /Embeddable::Biologica/biologica_static_organisms/1.xml
   def destroy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @static_organism
     @biologica_static_organism = Embeddable::Biologica::StaticOrganism.find(params[:id])
     respond_to do |format|
       format.html { redirect_to(biologica_static_organisms_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_static_organism.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_static_organism.destroy    
+    @biologica_static_organism.destroy
   end
 end

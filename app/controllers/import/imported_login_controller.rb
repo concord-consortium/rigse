@@ -1,23 +1,9 @@
 class Import::ImportedLoginController < ApplicationController
 
   def confirm_user
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Import::ImportedLogin
-    # authorize @imported_login
-    # authorize Import::ImportedLogin, :new_or_create?
-    # authorize @imported_login, :update_edit_or_destroy?
   end
 
   def imported_user_validation
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Import::ImportedLogin
-    # authorize @imported_login
-    # authorize Import::ImportedLogin, :new_or_create?
-    # authorize @imported_login, :update_edit_or_destroy?
     user = User.find_by_login(params[:login])
 
     unless user
@@ -33,7 +19,7 @@ class Import::ImportedLoginController < ApplicationController
     if user.school && user.school.country
       country = user.school.country
       if params[:country] == "United States"
-      	if params[:state] == user.school.state
+        if params[:state] == user.school.state
           sign_in_user(user)
         else
           send_mail(user, "You have entered an invalid country or state.")
@@ -44,7 +30,7 @@ class Import::ImportedLoginController < ApplicationController
         sign_in_user(user)
       else
         send_mail(user, "You have entered an invalid country.")
-      	#flash[:error] = 'Invalid country.'
+        #flash[:error] = 'Invalid country.'
         invalid_user
       end
     else
@@ -62,7 +48,7 @@ class Import::ImportedLoginController < ApplicationController
   end
 
   def invalid_user
-  	redirect_to :action => 'confirm_user'
+    redirect_to :action => 'confirm_user'
   end
 
   def send_mail(user, message)

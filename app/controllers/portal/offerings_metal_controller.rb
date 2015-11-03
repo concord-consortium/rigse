@@ -2,13 +2,6 @@ require 'json'
 class Portal::OfferingsMetalController < ActionController::Metal
 
   def launch_status
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::OfferingsMetal
-    # authorize @offerings_metal
-    # authorize Portal::OfferingsMetal, :new_or_create?
-    # authorize @offerings_metal, :update_edit_or_destroy?
     if (offering = Portal::Offering.find(params[:id])) && (current_visitor=logged_in_user) && current_visitor.portal_student
       learner = Portal::Learner.find_by_offering_id_and_student_id(offering.id, current_visitor.portal_student.id)
       status_event_info = {}

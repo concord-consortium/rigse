@@ -4,13 +4,6 @@ class API::V1::MaterialsController < API::APIController
   # GET /api/v1/materials/own
   # Template materials are not listed.
   def own
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Api::V1::Material
-    # authorize @material
-    # authorize Api::V1::Material, :new_or_create?
-    # authorize @material, :update_edit_or_destroy?
     # Filter out template objects.
     materials = current_visitor.external_activities +
                 current_visitor.activities.is_template(false) +
@@ -20,13 +13,6 @@ class API::V1::MaterialsController < API::APIController
 
   # GET /api/v1/materials/featured
   def featured
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Api::V1::Material
-    # authorize @material
-    # authorize Api::V1::Material, :new_or_create?
-    # authorize @material, :update_edit_or_destroy?
     materials =
       Investigation.published.where(:is_featured => true).includes([:activities, :user]).to_a +
       ExternalActivity.published.where(:is_featured => true).includes([:template, :user]).to_a +
@@ -58,13 +44,6 @@ class API::V1::MaterialsController < API::APIController
   end
 
   def assign_to_class
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Api::V1::Material
-    # authorize @material
-    # authorize Api::V1::Material, :new_or_create?
-    # authorize @material, :update_edit_or_destroy?
     # only add/delete if assign parameter exists to avoid deleting data on a bad request
     status = 200
     if params[:assign].present?

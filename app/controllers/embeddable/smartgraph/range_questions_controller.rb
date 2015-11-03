@@ -1,13 +1,7 @@
 class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
   # GET /Embeddable/smartgraph_smartgraph_range_questions
   # GET /Embeddable/smartgraph_smartgraph_range_questions.xml
-  def index    
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Smartgraph::RangeQuestion
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @range_questions = policy_scope(Embeddable::Smartgraph::RangeQuestion)
+  def index
     @smartgraph_range_questions = Embeddable::Smartgraph::RangeQuestion.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -19,9 +13,6 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
   # GET /Embeddable/smartgraph_smartgraph_range_questions/1
   # GET /Embeddable/smartgraph_smartgraph_range_questions/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @range_question
     @smartgraph_range_question = Embeddable::Smartgraph::RangeQuestion.find(params[:id])
     if request.xhr?
       render :partial => 'show', :locals => { :smartgraph_range_question => @smartgraph_range_question }
@@ -40,9 +31,6 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
   # GET /Embeddable/smartgraph_smartgraph_range_questions/new
   # GET /Embeddable/smartgraph_smartgraph_range_questions/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Smartgraph::RangeQuestion
     @smartgraph_range_question = Embeddable::Smartgraph::RangeQuestion.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :smartgraph_range_question => @smartgraph_range_question }
@@ -56,32 +44,26 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
 
   # GET /Embeddable/smartgraph_smartgraph_range_questions/1/edit
   def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @range_question
     @smartgraph_range_question = Embeddable::Smartgraph::RangeQuestion.find(params[:id])
     @scope = get_scope(@smartgraph_range_question)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :smartgraph_range_question => @smartgraph_range_question }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @smartgraph_range_question  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/smartgraph_smartgraph_range_questions
   # POST /Embeddable/smartgraph_smartgraph_range_questions.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Smartgraph::RangeQuestion
     @smartgraph_range_question = Embeddable::Smartgraph::RangeQuestion.new(params[:smartgraph_smartgraph_range_question])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @smartgraph_range_question.save
         render :partial => 'new', :locals => { :smartgraph_range_question => @smartgraph_range_question }
@@ -105,9 +87,6 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
   # PUT /Embeddable/smartgraph_smartgraph_range_questions/1
   # PUT /Embeddable/smartgraph_smartgraph_range_questions/1.xml
   def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @range_question
     cancel = params[:commit] == "Cancel"
     @smartgraph_range_question = Embeddable::Smartgraph::RangeQuestion.find(params[:id])
     if request.xhr?
@@ -133,20 +112,17 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
   # DELETE /Embeddable/smartgraph_smartgraph_range_questions/1
   # DELETE /Embeddable/smartgraph_smartgraph_range_questions/1.xml
   def destroy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @range_question
     @smartgraph_range_question = Embeddable::Smartgraph::RangeQuestion.find(params[:id])
     respond_to do |format|
       format.html { redirect_to(smartgraph_range_questions_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @smartgraph_range_question.page_elements.each do |pe|
       pe.destroy
     end
-    @smartgraph_range_question.destroy    
+    @smartgraph_range_question.destroy
   end
 end

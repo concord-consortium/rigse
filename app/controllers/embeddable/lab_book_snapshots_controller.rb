@@ -1,14 +1,8 @@
 class Embeddable::LabBookSnapshotsController < ApplicationController
   # GET /Embeddable/lab_book_snapshots
   # GET /Embeddable/lab_book_snapshots.xml
-  def index    
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::LabBookSnapshot
+  def index
     @lab_book_snapshots = Embeddable::LabBookSnapshot.search(params[:search], params[:page], nil)
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
-    # @lab_book_snapshots = policy_scope(Embeddable::LabBookSnapshot)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -20,9 +14,6 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
   # GET /Embeddable/lab_book_snapshots/1.xml
   def show
     @lab_book_snapshot = Embeddable::LabBookSnapshot.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @lab_book_snapshot
     if request.xhr?
       render :partial => 'show', :locals => { :lab_book_snapshot => @lab_book_snapshot }
     else
@@ -40,9 +31,6 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
   # GET /Embeddable/lab_book_snapshots/new
   # GET /Embeddable/lab_book_snapshots/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::LabBookSnapshot
     @lab_book_snapshot = Embeddable::LabBookSnapshot.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :lab_book_snapshot => @lab_book_snapshot }
@@ -57,30 +45,24 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
   # GET /Embeddable/lab_book_snapshots/1/edit
   def edit
     @lab_book_snapshot = Embeddable::LabBookSnapshot.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @lab_book_snapshot
     if request.xhr?
       render :partial => 'remote_form', :locals => { :lab_book_snapshot => @lab_book_snapshot }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @lab_book_snapshot  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/lab_book_snapshots
   # POST /Embeddable/lab_book_snapshots.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::LabBookSnapshot
     @lab_book_snapshot = Embeddable::LabBookSnapshot.new(params[:lab_book_snapshot])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @lab_book_snapshot.save
         render :partial => 'new', :locals => { :lab_book_snapshot => @lab_book_snapshot }
@@ -106,9 +88,6 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @lab_book_snapshot = Embeddable::LabBookSnapshot.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @lab_book_snapshot
     if request.xhr?
       if cancel || @lab_book_snapshot.update_attributes(params[:embeddable_lab_book_snapshot])
         @lab_book_snapshot.save
@@ -134,19 +113,16 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
   # DELETE /Embeddable/lab_book_snapshots/1.xml
   def destroy
     @lab_book_snapshot = Embeddable::LabBookSnapshot.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @lab_book_snapshot
     respond_to do |format|
       format.html { redirect_to(lab_book_snapshots_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @lab_book_snapshot.page_elements.each do |pe|
       pe.destroy
     end
-    @lab_book_snapshot.destroy    
+    @lab_book_snapshot.destroy
   end
 end

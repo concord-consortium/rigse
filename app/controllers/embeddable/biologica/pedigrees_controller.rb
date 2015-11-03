@@ -1,13 +1,7 @@
 class Embeddable::Biologica::PedigreesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_pedigrees
   # GET /Embeddable::Biologica/biologica_pedigrees.xml
-  def index    
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Biologica::Pedigree
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @pedigrees = policy_scope(Embeddable::Biologica::Pedigree)
+  def index
     @biologica_pedigrees = Embeddable::Biologica::Pedigree.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -19,9 +13,6 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_pedigrees/1
   # GET /Embeddable::Biologica/biologica_pedigrees/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @pedigree
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_pedigree => @biologica_pedigree }
@@ -40,9 +31,6 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_pedigrees/new
   # GET /Embeddable::Biologica/biologica_pedigrees/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Biologica::Pedigree
     @biologica_pedigree = Embeddable::Biologica::Pedigree.new
     modify_organism_ids
     if request.xhr?
@@ -57,9 +45,6 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
 
   # GET /Embeddable::Biologica/biologica_pedigrees/1/edit
   def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @pedigree
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     @scope = get_scope(@biologica_pedigree)
     modify_organism_ids
@@ -67,24 +52,21 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
       render :partial => 'remote_form', :locals => { :biologica_pedigree => @biologica_pedigree }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_pedigree  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_pedigrees
   # POST /Embeddable::Biologica/biologica_pedigrees.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Embeddable::Biologica::Pedigree
     @biologica_pedigree = Embeddable::Biologica::Pedigree.new(params[:biologica_pedigree])
     cancel = params[:commit] == "Cancel"
     modify_organism_ids
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_pedigree.save
         render :partial => 'new', :locals => { :biologica_pedigree => @biologica_pedigree }
@@ -108,9 +90,6 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   # PUT /Embeddable::Biologica/biologica_pedigrees/1
   # PUT /Embeddable::Biologica/biologica_pedigrees/1.xml
   def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @pedigree
     cancel = params[:commit] == "Cancel"
     modify_organism_ids
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
@@ -137,21 +116,18 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_pedigrees/1
   # DELETE /Embeddable::Biologica/biologica_pedigrees/1.xml
   def destroy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @pedigree
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     respond_to do |format|
       format.html { redirect_to(biologica_pedigrees_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_pedigree.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_pedigree.destroy    
+    @biologica_pedigree.destroy
   end
 
   private
@@ -162,7 +138,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   # only has one string value(!) Can't figure out why.
   def modify_organism_ids
     return unless params[:embeddable_biologica_pedigree]
-    value = params[:embeddable_biologica_pedigree][:organism_ids]    
+    value = params[:embeddable_biologica_pedigree][:organism_ids]
     return if value.nil?
     case value
     when Array
@@ -172,5 +148,5 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
     end
     value = [value]
     params[:embeddable_biologica_pedigree][:organism_ids]=value.flatten.compact
-  end 
+  end
 end

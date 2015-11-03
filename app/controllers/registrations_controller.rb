@@ -1,8 +1,5 @@
 class RegistrationsController < Devise::RegistrationsController
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Registration
      # Building the resource with information that MAY BE available from omniauth!
      build_resource(:first_name => session[:omniauth] && session[:omniauth]['user_info'] && session[:omniauth]['user_info']['first_name'],
          :last_name => session[:omniauth] && session[:omniauth]['user_info'] && session[:omniauth]['user_info']['last_name'],
@@ -11,9 +8,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Registration
     build_resource
 
     # normal processing
@@ -22,13 +16,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def build_resource(*args)
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Registration
-    # authorize @registration
-    # authorize Registration, :new_or_create?
-    # authorize @registration, :update_edit_or_destroy?
     super
 
     if session[:omniauth]
@@ -38,13 +25,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def after_update_path_for(scope)
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Registration
-    # authorize @registration
-    # authorize Registration, :new_or_create?
-    # authorize @registration, :update_edit_or_destroy?
     session[:referrer] ? session[:referrer] : root_path
   end
 end

@@ -2,13 +2,7 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   # GET /saveable/sparks/measuring_resistances
   # GET /saveable/sparks/measuring_resistances.json
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Saveable::Sparks::MeasuringResistance
     @measuring_resistances = Saveable::Sparks::MeasuringResistance.all
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
-    # @measuring_resistances = policy_scope(Saveable::Sparks::MeasuringResistance)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -19,11 +13,8 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   # GET /saveable/sparks/measuring_resistances/1
   # GET /saveable/sparks/measuring_resistances/1.json
   def show
-    
+
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @measuring_resistance
 
     respond_to do |format|
       format.html # show.html.erb
@@ -35,9 +26,6 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   # GET /saveable/sparks/measuring_resistances/new
   # GET /saveable/sparks/measuring_resistances/new.json
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Saveable::Sparks::MeasuringResistance
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.new
 
     respond_to do |format|
@@ -49,17 +37,11 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   # GET /saveable/sparks/measuring_resistances/1/edit
   def edit
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @measuring_resistance
   end
 
   # POST /saveable/sparks/measuring_resistances
   # POST /saveable/sparks/measuring_resistances.json
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Saveable::Sparks::MeasuringResistance
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.new(params[:measuring_resistance])
 
     respond_to do |format|
@@ -79,9 +61,6 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   # PUT /saveable/sparks/measuring_resistances/1.json
   def update
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @measuring_resistance
 
     respond_to do |format|
       if @measuring_resistance.update_attributes(params[:measuring_resistance])
@@ -99,9 +78,6 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   # DELETE /saveable/sparks/measuring_resistances/1.json
   def destroy
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @measuring_resistance
     @measuring_resistance.destroy
 
     respond_to do |format|
