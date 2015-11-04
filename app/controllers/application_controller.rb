@@ -179,7 +179,13 @@ class ApplicationController < ActionController::Base
     if session[:sso_callback_params]
       AccessGrant.prune!
       access_grant = current_user.access_grants.create({:client => session[:sso_application], :state => session[:sso_callback_params][:state]}, :without_protection => true)
-      redirect_path = access_grant.redirect_uri_for(session[:sso_callback_params][:redirect_uri])
+      sso_redirect = access_grant.redirect_uri_for(session[:sso_callback_params][:redirect_uri])
+      if session[:auth_popup]
+        session[:auth_popup] = nil
+        session[:auth_redirect] = sso_redirect
+      else
+        redirect_path = sso_redirect
+      end
       session[:sso_callback_params] = nil
       session[:sso_application] = nil
     end

@@ -3,7 +3,8 @@ RailsPortal::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => 'registrations', :omniauth_callbacks => "authentications" }
 
   # Client stuff
-  match '/auth/:provider/check' => 'misc#auth_check', method: :get
+  match '/auth/:provider/check' => 'misc#auth_check', method: :get, as: 'auth_check'
+  match '/auth/after' => 'misc#auth_after', method: :get, as: 'auth_after'
 
   # Provider stuff
   match '/auth/concord_id/authorize' => 'auth#authorize'
