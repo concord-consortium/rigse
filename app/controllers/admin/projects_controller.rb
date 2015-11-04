@@ -21,7 +21,7 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects
   def index
     authorize Admin::Project
-    @projects = Admin::Project.search(params[:search], params[:page], nil, {}, policy_scope(Admin::Project))
+    @projects = policy_scope(Admin::Project).search(params[:search], params[:page], nil)
   end
 
   # GET /admin/projects/1

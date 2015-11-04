@@ -32,7 +32,7 @@
 #
 module SearchableModel
   # see: http://github.com/mislav/will_paginate/wikis/simple-search
-  def search(search, page, user, includes={}, scope=nil)
+  def search(search, page, user, includes={})
     sql_parameters = []
     sql_conditions = ""
     # pass in a username to limit the search to the users items
@@ -66,10 +66,6 @@ module SearchableModel
     # debugger
 
     per_page = self.per_page || 20
-    if scope
-      scope.paginate(:per_page => per_page, :page => page, :conditions => conditions, :include => includes)
-    else
-      paginate(:per_page => per_page, :page => page, :conditions => conditions, :include => includes)
-    end
+    paginate(:per_page => per_page, :page => page, :conditions => conditions, :include => includes)
   end
 end

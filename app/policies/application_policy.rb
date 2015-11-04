@@ -48,8 +48,18 @@ class ApplicationPolicy
       @scope = scope
     end
 
+    def all
+      # return scoped instead of all so that methods can be chained after
+      scope.scoped
+    end
+
+    def none
+      # hack to return an empty relation pre Rails 4
+      scope.where("1 = 0")
+    end
+
     def resolve
-      scope.all
+      all
     end
   end
 
@@ -101,6 +111,10 @@ class ApplicationPolicy
 
   def admin_or_config?
     user && (user.has_role?('admin') || request.format == :config)
+  end
+
+  def author?
+    has_roles?('author')
   end
 
   def has_roles?(*roles)
