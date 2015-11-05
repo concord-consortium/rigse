@@ -1,8 +1,12 @@
 class Embeddable::MultipleChoicesController < ApplicationController
   # GET /Embeddable/multiple_choices
   # GET /Embeddable/multiple_choices.xml
-  def index    
+  def index
+    authorize Embeddable::MultipleChoice
     @multiple_choices = Embeddable::MultipleChoice.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @multiple_choices = policy_scope(Embeddable::MultipleChoice)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +18,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
   # GET /Embeddable/multiple_choices/1.xml
   def show
     @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
+    authorize @multiple_choice
     if request.xhr?
       render :partial => 'show', :locals => { :multiple_choice => @multiple_choice }
     else
@@ -31,6 +36,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
   # GET /Embeddable/multiple_choices/new
   # GET /Embeddable/multiple_choices/new.xml
   def new
+    authorize Embeddable::MultipleChoice
     @multiple_choice = Embeddable::MultipleChoice.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :multiple_choice => @multiple_choice }
@@ -45,6 +51,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
   # GET /Embeddable/multiple_choices/1/edit
   def edit
     @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
+    authorize @multiple_choice
     if request.xhr?
       render :partial => 'remote_form', :locals => { :multiple_choice => @multiple_choice }
     end
@@ -53,10 +60,11 @@ class Embeddable::MultipleChoicesController < ApplicationController
   # POST /Embeddable/multiple_choices
   # POST /Embeddable/multiple_choices.xml
   def create
+    authorize Embeddable::MultipleChoice
     @multiple_choice = Embeddable::MultipleChoice.new(params[:xhtml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @multiple_choice.save
         @multiple_choice.create_default_choices
@@ -84,6 +92,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
+    authorize @multiple_choice
     if request.xhr?
       if cancel || @multiple_choice.update_attributes(params[:embeddable_multiple_choice])
         @multiple_choice.reload
@@ -104,26 +113,29 @@ class Embeddable::MultipleChoicesController < ApplicationController
       end
     end
   end
-  
+
   # DELETE /Embeddable/multiple_choices/1
   # DELETE /Embeddable/multiple_choices/1.xml
   def destroy
     @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
+    authorize @multiple_choice
     respond_to do |format|
       format.html { redirect_to(multiple_choices_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @multiple_choice.page_elements.each do |pe|
       pe.destroy
     end
-    @multiple_choice.destroy    
+    @multiple_choice.destroy
   end
-  
+
   def add_choice
     @question = Embeddable::MultipleChoice.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    authorize @question, :update_edit_or_destroy?
     # dont use @question.addChoice or it will be added twice!!
     @choice = Embeddable::MultipleChoiceChoice.new(:choice => "new choice")
     @choice.save

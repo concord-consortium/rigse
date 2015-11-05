@@ -1,9 +1,17 @@
 class AuthController < ApplicationController
+  # PUNDIT_CHECK_FILTERS
   before_filter :verify_logged_in, :except => [:access_token]
   skip_before_filter :authenticate_user!, :only => [:authorize]  # this is handled by verify_logged_in
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
   def verify_logged_in
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Auth
+    # authorize @auth
+    # authorize Auth, :new_or_create?
+    # authorize @auth, :update_edit_or_destroy?
 
     if current_user.nil?
       session[:sso_callback_params] = params
@@ -13,18 +21,46 @@ class AuthController < ApplicationController
   end
 
   def welcome
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Auth
+    # authorize @auth
+    # authorize Auth, :new_or_create?
+    # authorize @auth, :update_edit_or_destroy?
     render :text => "Hiya! #{current_user.first_name} #{current_user.last_name}"
   end
   def self.authorize
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Auth
+    # authorize @auth
+    # authorize Auth, :new_or_create?
+    # authorize @auth, :update_edit_or_destroy?
     debugger
   end
   def authorize
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Auth
+    # authorize @auth
+    # authorize Auth, :new_or_create?
+    # authorize @auth, :update_edit_or_destroy?
     AccessGrant.prune!
     access_grant = current_user.access_grants.create({:client => application, :state => params[:state]}, :without_protection => true)
     redirect_to access_grant.redirect_uri_for(params[:redirect_uri])
   end
 
   def access_token
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Auth
+    # authorize @auth
+    # authorize Auth, :new_or_create?
+    # authorize @auth, :update_edit_or_destroy?
     application = Client.authenticate(params[:client_id], params[:client_secret])
 
     if application.nil?
@@ -43,10 +79,24 @@ class AuthController < ApplicationController
   end
 
   def failure
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Auth
+    # authorize @auth
+    # authorize Auth, :new_or_create?
+    # authorize @auth, :update_edit_or_destroy?
     render :text => "ERROR: #{params[:message]}"
   end
 
   def user
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Auth
+    # authorize @auth
+    # authorize Auth, :new_or_create?
+    # authorize @auth, :update_edit_or_destroy?
     hash = {
       :provider => 'concord_id',
       :id => current_user.id.to_s,
@@ -71,6 +121,13 @@ class AuthController < ApplicationController
   # This will be called ONLY if the user is authenticated and token is valid
   # Extend the UserManager session
   def isalive
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Auth
+    # authorize @auth
+    # authorize Auth, :new_or_create?
+    # authorize @auth, :update_edit_or_destroy?
     warden.set_user(current_user, :scope => :user)
     response = { 'status' => 'ok' }
 

@@ -1,13 +1,17 @@
 class Portal::GradesController < ApplicationController
 
   include RestrictedPortalController
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_only
   public
-  
+
 
   # GET /portal_grades
   # GET /portal_grades.xml
   def index
+    authorize Portal::Grade
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @portal_grades = policy_scope(Portal::Grade)
     @portal_grades = Portal::Grade.all
 
     respond_to do |format|
@@ -20,6 +24,7 @@ class Portal::GradesController < ApplicationController
   # GET /portal_grades/1.xml
   def show
     @portal_grade = Portal::Grade.find(params[:id])
+    authorize @portal_grade
 
     respond_to do |format|
       format.html # show.html.erb
@@ -30,6 +35,7 @@ class Portal::GradesController < ApplicationController
   # GET /portal_grades/new
   # GET /portal_grades/new.xml
   def new
+    authorize Portal::Grade
     @portal_grade = Portal::Grade.new
 
     respond_to do |format|
@@ -41,11 +47,13 @@ class Portal::GradesController < ApplicationController
   # GET /portal_grades/1/edit
   def edit
     @portal_grade = Portal::Grade.find(params[:id])
+    authorize @portal_grade
   end
 
   # POST /portal_grades
   # POST /portal_grades.xml
   def create
+    authorize Portal::Grade
     @portal_grade = Portal::Grade.new(params[:portal_grade])
 
     respond_to do |format|
@@ -64,6 +72,7 @@ class Portal::GradesController < ApplicationController
   # PUT /portal_grades/1.xml
   def update
     @portal_grade = Portal::Grade.find(params[:id])
+    authorize @portal_grade
 
     respond_to do |format|
       if @portal_grade.update_attributes(params[:portal_grade])
@@ -81,6 +90,7 @@ class Portal::GradesController < ApplicationController
   # DELETE /portal_grades/1.xml
   def destroy
     @portal_grade = Portal::Grade.find(params[:id])
+    authorize @portal_grade
     @portal_grade.destroy
 
     respond_to do |format|

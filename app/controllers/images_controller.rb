@@ -1,4 +1,5 @@
 class ImagesController < ApplicationController
+  # PUNDIT_CHECK_FILTERS
   before_filter :author_required, :except => :view
   before_filter :find_image_and_verify_owner, :only => [:edit, :update, :destroy]
   # scale the text since most images will be displayed at around screen size
@@ -6,6 +7,8 @@ class ImagesController < ApplicationController
   # GET /images
   # GET /images.xml
   def index
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Image
     @only_mine = param_find(:only_mine, true)
     @name = param_find(:name)
     @sort_order = param_find(:sort_order, true)
@@ -20,6 +23,9 @@ class ImagesController < ApplicationController
       :page => params[:page]
     })
     @paginated_objects = @images
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @images = policy_scope(Image)
 
     if request.xhr?
       render :partial => 'runnable_list', :locals => { :images => @images, :paginated_objects => @images }
@@ -32,6 +38,9 @@ class ImagesController < ApplicationController
   def show
     if current_visitor.has_role? 'admin'
       @image = Image.find(params[:id])
+      # PUNDIT_REVIEW_AUTHORIZE
+      # PUNDIT_CHOOSE_AUTHORIZE
+      # authorize @image
     else
       @image = Image.visible_to_user_with_drafts(current_visitor).find(params[:id])
     end
@@ -45,6 +54,8 @@ class ImagesController < ApplicationController
   # GET /images/new
   # GET /images/new.xml
   def new
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Image
     @image = Image.new
 
     respond_to do |format|
@@ -55,11 +66,15 @@ class ImagesController < ApplicationController
 
   # GET /images/1/edit
   def edit
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @image
   end
 
   # POST /images
   # POST /images.xml
   def create
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Image
     params[:image][:user_id] = current_visitor.id.to_s
     @image = Image.new(params[:image])
 
@@ -93,6 +108,8 @@ class ImagesController < ApplicationController
   # PUT /images/1
   # PUT /images/1.xml
   def update
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @image
     respond_to do |format|
       if update_image_attributes
         flash[:notice] = 'Image was successfully updated.'
@@ -108,6 +125,8 @@ class ImagesController < ApplicationController
   # DELETE /images/1
   # DELETE /images/1.xml
   def destroy
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @image
     @image.destroy
 
     respond_to do |format|
@@ -120,6 +139,8 @@ class ImagesController < ApplicationController
   # for obtaining an image. (redirects to actual images path)
   def view
     @image = Image.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @image, :show
     redirect_to @image.image.url(:attributed)
   end
 

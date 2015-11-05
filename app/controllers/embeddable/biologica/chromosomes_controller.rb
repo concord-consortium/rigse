@@ -1,7 +1,11 @@
 class Embeddable::Biologica::ChromosomesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosomes
   # GET /Embeddable::Biologica/biologica_chromosomes.xml
-  def index    
+  def index
+    authorize Embeddable::Biologica::Chromosome
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @chromosomes = policy_scope(Embeddable::Biologica::Chromosome)
     @biologica_chromosomes = Embeddable::Biologica::Chromosome.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -14,6 +18,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosomes/1.xml
   def show
     @biologica_chromosome = Embeddable::Biologica::Chromosome.find(params[:id])
+    authorize @biologica_chromosome
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_chromosome=> @biologica_chromosome }
     else
@@ -31,6 +36,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosomes/new
   # GET /Embeddable::Biologica/biologica_chromosomes/new.xml
   def new
+    authorize Embeddable::Biologica::Chromosome
     @biologica_chromosome = Embeddable::Biologica::Chromosome.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_chromosome=> @biologica_chromosome }
@@ -45,25 +51,27 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosomes/1/edit
   def edit
     @biologica_chromosome = Embeddable::Biologica::Chromosome.find(params[:id])
+    authorize @biologica_chromosome
     @scope = get_scope(@biologica_chromosome)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_chromosome=> @biologica_chromosome }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_chromosome  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_chromosomes
   # POST /Embeddable::Biologica/biologica_chromosomes.xml
   def create
+    authorize Embeddable::Biologica::Chromosome
     @biologica_chromosome = Embeddable::Biologica::Chromosome.new(params[:biologica_chromosome])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_chromosome.save
         render :partial => 'new', :locals => { :biologica_chromosome=> @biologica_chromosome }
@@ -89,6 +97,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @biologica_chromosome = Embeddable::Biologica::Chromosome.find(params[:id])
+    authorize @biologica_chromosome
     if request.xhr?
       if cancel || @biologica_chromosome.update_attributes(params[:embeddable_biologica_chromosome])
         render :partial => 'show', :locals => { :biologica_chromosome=> @biologica_chromosome }
@@ -113,16 +122,17 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_chromosomes/1.xml
   def destroy
     @biologica_chromosome = Embeddable::Biologica::Chromosome.find(params[:id])
+    authorize @biologica_chromosome
     respond_to do |format|
       format.html { redirect_to(biologica_chromosomes_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_chromosome.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_chromosome.destroy    
+    @biologica_chromosome.destroy
   end
 end

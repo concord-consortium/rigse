@@ -1,0 +1,2 @@
+class InteractivePolicy < ApplicationPolicy
+end

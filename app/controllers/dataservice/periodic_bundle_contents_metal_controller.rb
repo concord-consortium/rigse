@@ -1,6 +1,7 @@
 class Dataservice::PeriodicBundleContentsMetalController < ActionController::Metal
 
   def create
+    authorize Dataservice::PeriodicBundleContent
     bundle_content = nil
     if bundle_logger = Dataservice::PeriodicBundleLogger.find(params[:id])
       body = request.body.read

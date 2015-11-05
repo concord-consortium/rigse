@@ -1,8 +1,12 @@
 class Embeddable::DrawingToolsController < ApplicationController
   # GET /Embeddable/drawing_tools
   # GET /Embeddable/drawing_tools.xml
-  def index    
+  def index
+    authorize Embeddable::DrawingTool
     @drawing_tools = Embeddable::DrawingTool.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @drawing_tools = policy_scope(Embeddable::DrawingTool)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +18,7 @@ class Embeddable::DrawingToolsController < ApplicationController
   # GET /Embeddable/drawing_tools/1.xml
   def show
     @drawing_tool = Embeddable::DrawingTool.find(params[:id])
+    authorize @drawing_tool
     if request.xhr?
       render :partial => 'show', :locals => { :drawing_tool => @drawing_tool }
     else
@@ -31,6 +36,7 @@ class Embeddable::DrawingToolsController < ApplicationController
   # GET /Embeddable/drawing_tools/new
   # GET /Embeddable/drawing_tools/new.xml
   def new
+    authorize Embeddable::DrawingTool
     @drawing_tool = Embeddable::DrawingTool.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :drawing_tool => @drawing_tool }
@@ -45,19 +51,21 @@ class Embeddable::DrawingToolsController < ApplicationController
   # GET /Embeddable/drawing_tools/1/edit
   def edit
     @drawing_tool = Embeddable::DrawingTool.find(params[:id])
+    authorize @drawing_tool
     if request.xhr?
       render :partial => 'remote_form', :locals => { :drawing_tool => @drawing_tool }
     end
-    
+
   end
 
   # POST /Embeddable/drawing_tools
   # POST /Embeddable/drawing_tools.xml
   def create
+    authorize Embeddable::DrawingTool
     @drawing_tool = Embeddable::DrawingTool.new(params[:xhtml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @drawing_tool.save
         render :partial => 'new', :locals => { :drawing_tool => @drawing_tool }
@@ -83,6 +91,7 @@ class Embeddable::DrawingToolsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @drawing_tool = Embeddable::DrawingTool.find(params[:id])
+    authorize @drawing_tool
     if request.xhr?
       if cancel || @drawing_tool.update_attributes(params[:embeddable_drawing_tool])
         render :partial => 'show', :locals => { :drawing_tool => @drawing_tool }
@@ -107,16 +116,17 @@ class Embeddable::DrawingToolsController < ApplicationController
   # DELETE /Embeddable/drawing_tools/1.xml
   def destroy
     @drawing_tool = Embeddable::DrawingTool.find(params[:id])
+    authorize @drawing_tool
     respond_to do |format|
       format.html { redirect_to(drawing_tools_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @drawing_tool.page_elements.each do |pe|
       pe.destroy
     end
-    @drawing_tool.destroy    
+    @drawing_tool.destroy
   end
 end

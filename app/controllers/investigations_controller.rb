@@ -10,6 +10,7 @@ class InvestigationsController < AuthoringController
   include ControllerParamUtils
   #access_rule 'researcher', :only => [:usage_report, :details_report]
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
@@ -102,11 +103,19 @@ class InvestigationsController < AuthoringController
 
 
   def index
+    authorize Investigation
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @investigations = policy_scope(Investigation)
     redirect_to search_url(material_types: Search::InvestigationMaterial)
   end
 
   def printable_index
+    authorize Investigation
     @investigations = default_search
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @investigations = policy_scope(Investigation)
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_visitor.id }
     end
@@ -115,7 +124,13 @@ class InvestigationsController < AuthoringController
   end
 
   def preview_index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize Investigation
     page= params[:page] || 1
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @investigations = policy_scope(Investigation)
     @investigations = Investigation.published.paginate(
         :page => page || 1,
         :per_page => params[:per_page] || 20,
@@ -129,6 +144,7 @@ class InvestigationsController < AuthoringController
   # GET /investigations/1.dynamic_otml
   # GET /investigations/1.otml
   def show
+    authorize @investigation
     # display for teachers? Later we can determin via roles?
     @teacher_mode = boolean_param(:teacher_mode)
     respond_to do |format|
@@ -164,7 +180,7 @@ class InvestigationsController < AuthoringController
   # GET /investigations/teacher/1.otml
   # GET /investigations/teacher/1.dynamic_otml
   def teacher
-    # display for teachers? Later we can determin via roles?
+    authorize @investigation, :show
     @teacher_mode = true
     # whay doesn't this work with: respond_to do |format| ??
     if request.format == :otml
@@ -177,6 +193,7 @@ class InvestigationsController < AuthoringController
   # GET /pages/new
   # GET /pages/new.xml
   def new
+    authorize Investigation
     @investigation = Investigation.new
     @investigation.user = current_visitor
     if APP_CONFIG[:use_gse]
@@ -201,6 +218,7 @@ class InvestigationsController < AuthoringController
   # GET /pages/1/edit
   def edit
     @investigation = Investigation.find(params[:id])
+    authorize @investigation
     if APP_CONFIG[:use_gse]
       # if there is no gse assign a default one:
       unless @gse = @investigation.grade_span_expectation
@@ -224,6 +242,7 @@ class InvestigationsController < AuthoringController
   # POST /pages
   # POST /pages.xml
   def create
+    authorize Investigation
     begin
       gse = RiGse::GradeSpanExpectation.find(params[:grade_span_expectation])
       params[:investigation][:grade_span_expectation] = gse
@@ -240,7 +259,7 @@ class InvestigationsController < AuthoringController
 
     if params[:update_grade_levels]
       # set the grade_level tags
-      @investigation.grade_level_list = (params[:grade_levels] || [])     
+      @investigation.grade_level_list = (params[:grade_levels] || [])
     end
 
     if params[:update_subject_areas]
@@ -261,6 +280,13 @@ class InvestigationsController < AuthoringController
   end
 
   def gse_select
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Investigation
+    # authorize @investigation
+    # authorize Investigation, :new_or_create?
+    # authorize @investigation, :update_edit_or_destroy?
     if params[:grade_span_expectation]
       @selected_gse = RiGse::GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])
       session[:gse_id] = @selected_gse.id
@@ -299,6 +325,7 @@ class InvestigationsController < AuthoringController
   # PUT /pages/1.xml
   def update
     @investigation = Investigation.find(params[:id])
+    authorize @investigation
     update_gse
 
     if params[:update_cohorts]
@@ -343,6 +370,7 @@ class InvestigationsController < AuthoringController
   # DELETE /pages/1.xml
   def destroy
     @investigation = Investigation.find(params[:id])
+    authorize @investigation
     if @investigation.changeable?(current_visitor)
       if @investigation.offerings && @investigation.offerings.size > 0
         flash[:error] = "This #{Investigation.display_name} can't be destoyed, its in use by classes..."
@@ -362,6 +390,7 @@ class InvestigationsController < AuthoringController
   ##
   ##
   def add_activity
+    authorize Activity, :new_or_create?
     @activity = Activity.new
     @activity.user = current_visitor
     @activity.investigation = @investigation
@@ -373,6 +402,7 @@ class InvestigationsController < AuthoringController
   ##
   ##
   def sort_activities
+    authorize @investigation, :update_edit_or_destroy?
     paramlistname = params[:list_name].nil? ? 'investigation_activities_list' : params[:list_name]
     @investigation = Investigation.find(params[:id], :include => :activities)
     @investigation.activities.each do |section|
@@ -387,6 +417,7 @@ class InvestigationsController < AuthoringController
   ##
   def delete_activity
     @activity= Activity.find(params['activity_id'])
+    authorize @activity, :destroy?
     # @activity.update_investigation_timestamp
     @activity.destroy
   end
@@ -396,6 +427,9 @@ class InvestigationsController < AuthoringController
   ##
   def duplicate
     @original = Investigation.find(params['id'])
+    # PUNDIT_REVIEW_AUTHORIZE
+    authorize @original, :show?
+    authorize Investigation, :new_or_create?
     @investigation = @original.duplicate(current_visitor)
     @investigation.save
     flash[:notice] ="Copied #{@original.name}"
@@ -403,6 +437,7 @@ class InvestigationsController < AuthoringController
   end
 
   def export
+    authorize @investigation, :show?
     respond_to do |format|
       format.xml  {
         send_data @investigation.deep_xml, :type => :xml, :filename=>"#{@investigation.name}.xml"
@@ -415,6 +450,13 @@ class InvestigationsController < AuthoringController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Investigation
+    # authorize @investigation
+    # authorize Investigation, :new_or_create?
+    # authorize @investigation, :update_edit_or_destroy?
     render :partial => 'shared/paste_link', :locals =>{:types => ['activity'],:params => params}
   end
 
@@ -423,6 +465,13 @@ class InvestigationsController < AuthoringController
   # see: views/investigations/_paste_link
   #
   def paste
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Investigation
+    # authorize @investigation
+    # authorize Investigation, :new_or_create?
+    # authorize @investigation, :update_edit_or_destroy?
     if @investigation.changeable?(current_visitor)
       @original = clipboard_object(params)
       if (@original)
@@ -447,12 +496,26 @@ class InvestigationsController < AuthoringController
   end
 
   def usage_report
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Investigation
+    # authorize @investigation
+    # authorize Investigation, :new_or_create?
+    # authorize @investigation, :update_edit_or_destroy?
     sio = get_report(:usage)
     filename = @investigation.id.nil? ? "investigations-published-usage.xls" : "investigation-#{@investigation.id}-usage.xls"
     send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
   end
 
   def details_report
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Investigation
+    # authorize @investigation
+    # authorize Investigation, :new_or_create?
+    # authorize @investigation, :update_edit_or_destroy?
     sio = get_report(:detail)
     filename = @investigation.id.nil? ? "investigations-published-details.xls" : "investigation-#{@investigation.id}-details.xls"
     send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )

@@ -1,6 +1,7 @@
 class Dataservice::ConsoleContentsMetalController < ActionController::Metal
 
   def create
+    authorize Dataservice::ConsoleContentsMetal
     console_content = nil
     if console_logger = Dataservice::ConsoleLogger.find(params[:id])
       body = request.body.read

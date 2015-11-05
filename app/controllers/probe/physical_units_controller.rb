@@ -2,7 +2,8 @@ class Probe::PhysicalUnitsController < ApplicationController
   # GET /Probe/physical_units
   # GET /Probe/physical_units.xml
   def index
-    @physical_units = Probe::PhysicalUnit.all
+    authorize Probe::PhysicalUnit
+    @physical_units = policy_scope(Probe::PhysicalUnit)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +15,7 @@ class Probe::PhysicalUnitsController < ApplicationController
   # GET /Probe/physical_units/1.xml
   def show
     @physical_unit = Probe::PhysicalUnit.find(params[:id])
+    authorize @physical_unit
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,6 +26,7 @@ class Probe::PhysicalUnitsController < ApplicationController
   # GET /Probe/physical_units/new
   # GET /Probe/physical_units/new.xml
   def new
+    authorize Probe::PhysicalUnit
     @physical_unit = Probe::PhysicalUnit.new
 
     respond_to do |format|
@@ -35,11 +38,13 @@ class Probe::PhysicalUnitsController < ApplicationController
   # GET /Probe/physical_units/1/edit
   def edit
     @physical_unit = Probe::PhysicalUnit.find(params[:id])
+    authorize @physical_unit
   end
 
   # POST /Probe/physical_units
   # POST /Probe/physical_units.xml
   def create
+    authorize Probe::PhysicalUnit
     @physical_unit = Probe::PhysicalUnit.new(params[:physical_unit])
 
     respond_to do |format|
@@ -58,6 +63,7 @@ class Probe::PhysicalUnitsController < ApplicationController
   # PUT /Probe/physical_units/1.xml
   def update
     @physical_unit = Probe::PhysicalUnit.find(params[:id])
+    authorize @physical_unit
 
     respond_to do |format|
       if @physical_unit.update_attributes(params[:physical_unit])
@@ -75,6 +81,7 @@ class Probe::PhysicalUnitsController < ApplicationController
   # DELETE /Probe/physical_units/1.xml
   def destroy
     @physical_unit = Probe::PhysicalUnit.find(params[:id])
+    authorize @physical_unit
     @physical_unit.destroy
 
     respond_to do |format|

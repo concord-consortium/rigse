@@ -1,7 +1,11 @@
 class Embeddable::Biologica::ChromosomeZoomsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosome_zooms
   # GET /Embeddable::Biologica/biologica_chromosome_zooms.xml
-  def index    
+  def index
+    authorize Embeddable::Biologica::ChromosomeZoom
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @chromosome_zooms = policy_scope(Embeddable::Biologica::ChromosomeZoom)
     @biologica_chromosome_zooms = Embeddable::Biologica::ChromosomeZoom.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -14,6 +18,7 @@ class Embeddable::Biologica::ChromosomeZoomsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosome_zooms/1.xml
   def show
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.find(params[:id])
+    authorize @biologica_chromosome_zoom
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
     else
@@ -31,6 +36,7 @@ class Embeddable::Biologica::ChromosomeZoomsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosome_zooms/new
   # GET /Embeddable::Biologica/biologica_chromosome_zooms/new.xml
   def new
+    authorize Embeddable::Biologica::ChromosomeZoom
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
@@ -45,25 +51,27 @@ class Embeddable::Biologica::ChromosomeZoomsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosome_zooms/1/edit
   def edit
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.find(params[:id])
+    authorize @biologica_chromosome_zoom
     @scope = get_scope(@biologica_chromosome_zoom)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_chromosome_zoom  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_chromosome_zooms
   # POST /Embeddable::Biologica/biologica_chromosome_zooms.xml
   def create
+    authorize Embeddable::Biologica::ChromosomeZoom
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.new(params[:biologica_chromosome_zoom])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_chromosome_zoom.save
         render :partial => 'new', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
@@ -89,6 +97,7 @@ class Embeddable::Biologica::ChromosomeZoomsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.find(params[:id])
+    authorize @biologica_chromosome_zoom
     if request.xhr?
       if cancel || @biologica_chromosome_zoom.update_attributes(params[:embeddable_biologica_chromosome_zoom])
         render :partial => 'show', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
@@ -113,16 +122,17 @@ class Embeddable::Biologica::ChromosomeZoomsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_chromosome_zooms/1.xml
   def destroy
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.find(params[:id])
+    authorize @biologica_chromosome_zoom
     respond_to do |format|
       format.html { redirect_to(biologica_chromosome_zooms_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_chromosome_zoom.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_chromosome_zoom.destroy    
+    @biologica_chromosome_zoom.destroy
   end
 end

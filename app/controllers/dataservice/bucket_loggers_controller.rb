@@ -6,6 +6,9 @@ class Dataservice::BucketLoggersController < ApplicationController
   # GET /dataservice/bucket_loggers/1.xml
   def show
     @dataservice_bucket_logger = Dataservice::BucketLogger.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @dataservice_bucket_logger
     bundle = @dataservice_bucket_logger.most_recent_content
     if @dataservice_bucket_logger.learner
       # FIXME How do we now associate launch process events since bucket_content != session?
@@ -32,6 +35,13 @@ class Dataservice::BucketLoggersController < ApplicationController
   end
 
   def show_by_learner
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Dataservice::BucketLogger
+    # authorize @bucket_logger
+    # authorize Dataservice::BucketLogger, :new_or_create?
+    # authorize @bucket_logger, :update_edit_or_destroy?
     learner = Portal::Learner.find(params[:id]) rescue nil
     raise ActionController::RoutingError.new('Not Found') unless learner
 
@@ -60,6 +70,13 @@ class Dataservice::BucketLoggersController < ApplicationController
   end
 
   def show_by_name
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Dataservice::BucketLogger
+    # authorize @bucket_logger
+    # authorize Dataservice::BucketLogger, :new_or_create?
+    # authorize @bucket_logger, :update_edit_or_destroy?
     @dataservice_bucket_logger = Dataservice::BucketLogger.find_by_name(params[:name])
     raise ActionController::RoutingError.new('Not Found') unless @dataservice_bucket_logger
 
@@ -79,6 +96,13 @@ class Dataservice::BucketLoggersController < ApplicationController
   end
 
   def show_log_items_by_learner
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Dataservice::BucketLogger
+    # authorize @bucket_logger
+    # authorize Dataservice::BucketLogger, :new_or_create?
+    # authorize @bucket_logger, :update_edit_or_destroy?
     learner = Portal::Learner.find(params[:id]) rescue nil
     raise ActionController::RoutingError.new('Not Found') unless learner
 
@@ -99,6 +123,13 @@ class Dataservice::BucketLoggersController < ApplicationController
   end
 
   def show_log_items_by_name
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Dataservice::BucketLogger
+    # authorize @bucket_logger
+    # authorize Dataservice::BucketLogger, :new_or_create?
+    # authorize @bucket_logger, :update_edit_or_destroy?
     @dataservice_bucket_logger = Dataservice::BucketLogger.find_by_name(params[:name])
     raise ActionController::RoutingError.new('Not Found') unless @dataservice_bucket_logger
 

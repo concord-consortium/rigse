@@ -1,8 +1,12 @@
 class ResourcePagesController < ApplicationController
+  # PUNDIT_CHECK_FILTERS
   before_filter :teacher_required, :except => [:show, :index]
   before_filter :find_resource_page_and_verify_owner, :only => [:edit, :update, :destroy]
 
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize ResourcePage
     @include_drafts = param_find(:include_drafts, true)
     @name = param_find(:name)
     @sort_order = param_find(:sort_order, true)
@@ -18,6 +22,9 @@ class ResourcePagesController < ApplicationController
       :paginate => true,
       :page => params[:page]
     })
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @resource_pages = policy_scope(ResourcePage)
 
     if request.xhr?
       render :partial => 'runnable_list', :locals => { :resource_pages => @resource_pages, :paginated_objects => @resource_pages }
@@ -26,6 +33,9 @@ class ResourcePagesController < ApplicationController
   end
 
   def printable_index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    authorize ResourcePage
     @resource_pages = ResourcePage.search_list({
       :name => param_find(:name),
       :user => current_visitor,
@@ -34,6 +44,9 @@ class ResourcePagesController < ApplicationController
       :sort_order => param_find(:sort_order, true),
       :paginate => false
     })
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @resource_pages = policy_scope(ResourcePage)
 
     render :layout => false
   end
@@ -41,6 +54,9 @@ class ResourcePagesController < ApplicationController
   def show
     if current_visitor.has_role? 'admin'
       @resource_page = ResourcePage.find(params[:id])
+      # PUNDIT_REVIEW_AUTHORIZE
+      # PUNDIT_CHECK_AUTHORIZE (found instance)
+      authorize @resource_page
     else
       @resource_page = ResourcePage.visible_to_user_with_drafts(current_visitor).find(params[:id])
       # If this is a student, increment the counter on StudentViews
@@ -55,10 +71,12 @@ class ResourcePagesController < ApplicationController
   end
 
   def new
+    authorize ResourcePage
     @resource_page = current_visitor.resource_pages.new
   end
 
   def create
+    authorize ResourcePage
     @resource_page = current_visitor.resource_pages.new(params[:resource_page])
 
     if params[:update_cohorts]
@@ -68,7 +86,7 @@ class ResourcePagesController < ApplicationController
 
     if params[:update_grade_levels]
       # set the grade_level tags
-      @resource_page.grade_level_list = (params[:grade_levels] || [])     
+      @resource_page.grade_level_list = (params[:grade_levels] || [])
     end
 
     if params[:update_subject_areas]
@@ -86,9 +104,11 @@ class ResourcePagesController < ApplicationController
   end
 
   def edit
+    authorize @resource_page
   end
 
   def update
+    authorize @resource_page
     if params[:update_cohorts]
       # set the cohort tags
       @resource_page.cohort_list = (params[:cohorts] || [])
@@ -116,6 +136,7 @@ class ResourcePagesController < ApplicationController
   end
 
   def destroy
+    authorize @resource_page
     @resource_page.destroy
     redirect_to resource_pages_path
   end

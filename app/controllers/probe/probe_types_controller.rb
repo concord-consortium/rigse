@@ -2,7 +2,11 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types
   # GET /Probe/probe_types.xml
   def index
+    authorize Probe::ProbeType
     @probe_types = Probe::ProbeType.all :order => 'ptype'
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @probe_types = policy_scope(Probe::ProbeType)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +18,7 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types/1.xml
   def show
     @probe_type = Probe::ProbeType.find(params[:id])
+    authorize @probe_type
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,6 +29,7 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types/new
   # GET /Probe/probe_types/new.xml
   def new
+    authorize Probe::ProbeType
     @probe_type = Probe::ProbeType.new
 
     respond_to do |format|
@@ -35,11 +41,13 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types/1/edit
   def edit
     @probe_type = Probe::ProbeType.find(params[:id])
+    authorize @probe_type
   end
 
   # POST /Probe/probe_types
   # POST /Probe/probe_types.xml
   def create
+    authorize Probe::ProbeType
     @probe_type = Probe::ProbeType.new(params[:probe_type])
 
     respond_to do |format|
@@ -58,6 +66,7 @@ class Probe::ProbeTypesController < ApplicationController
   # PUT /Probe/probe_types/1.xml
   def update
     @probe_type = Probe::ProbeType.find(params[:id])
+    authorize @probe_type
 
     respond_to do |format|
       if @probe_type.update_attributes(params[:probe_probe_type])
@@ -75,6 +84,7 @@ class Probe::ProbeTypesController < ApplicationController
   # DELETE /Probe/probe_types/1.xml
   def destroy
     @probe_type = Probe::ProbeType.find(params[:id])
+    authorize @probe_type
     @probe_type.destroy
 
     respond_to do |format|

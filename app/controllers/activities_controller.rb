@@ -2,43 +2,41 @@ class ActivitiesController < ApplicationController
   # GET /pages
   # GET /pages.xml
 
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  # PUNDIT_CHECK_FILTERS
   before_filter :setup_object, :except => [:index]
   before_filter :render_scope, :only => [:show]
-  # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export]
-  before_filter :can_create, :only => [:new, :create,:duplicate]
 
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
   include ControllerParamUtils
 
-  protected
+  private
 
-  def can_create
-    if (current_visitor.anonymous?)
+  def user_not_authorized(exception)
+    case exception.query
+    when :create?
       flash[:error] = "Anonymous users can not create activities"
       redirect_back_or activities_path
+    when :edit?
+      error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@activity.name}"
+      flash[:error] = error_message
+      if request.xhr?
+        render :text => "<div class='flash_error'>#{error_message}</div>"
+      else
+        redirect_back_or activities_path
+      end
+    else
+      raise exception
     end
   end
+
+  protected
 
   def render_scope
     @render_scope = @activity
   end
-
-  def can_edit
-    if defined? @activity
-      unless @activity.changeable?(current_visitor)
-        error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@activity.name}"
-        flash[:error] = error_message
-        if request.xhr?
-          render :text => "<div class='flash_error'>#{error_message}</div>"
-        else
-          redirect_back_or activities_path
-        end
-      end
-    end
-  end
-
 
   def setup_object
     if params[:id]
@@ -64,6 +62,7 @@ class ActivitiesController < ApplicationController
   public
 
   def index
+    authorize Activity
     search_params = {
       :material_types     => [Search::ActivityMaterial],
       :activity_page      => params[:page],
@@ -76,6 +75,9 @@ class ActivitiesController < ApplicationController
 
     s = Search.new(search_params)
     @activities = s.results[Search::ActivityMaterial]
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @activities = policy_scope(Activity)
 
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_visitor.id }
@@ -96,6 +98,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/1
   # GET /pages/1.xml
   def show
+    authorize @activity
     @teacher_mode = boolean_param(:teacher_mode) || @activity.teacher_only
     respond_to do |format|
       format.html {
@@ -128,6 +131,8 @@ class ActivitiesController < ApplicationController
   # GET /pages/new
   # GET /pages/new.xml
   def new
+    authorize Activity
+
     @activity = Activity.new
     @activity.user = current_visitor
     respond_to do |format|
@@ -139,6 +144,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/1/edit
   def edit
     @activity = Activity.find(params[:id])
+    authorize @activity
     if request.xhr?
       render :partial => 'remote_form', :locals => { :activity => @activity }
     end
@@ -147,6 +153,8 @@ class ActivitiesController < ApplicationController
   # POST /pages
   # POST /pages.xml
   def create
+    authorize Activity
+
     @activity = Activity.new(params[:activity])
     @activity.user = current_visitor
 
@@ -157,7 +165,7 @@ class ActivitiesController < ApplicationController
 
     if params[:update_grade_levels]
       # set the grade_level tags
-      @activity.grade_level_list = (params[:grade_levels] || [])     
+      @activity.grade_level_list = (params[:grade_levels] || [])
     end
 
     if params[:update_subject_areas]
@@ -183,13 +191,14 @@ class ActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @activity = Activity.find(params[:id])
+    authorize @activity
 
     if params[:update_cohorts]
       # set the cohort tags
       @activity.cohort_list = (params[:cohorts] || [])
       @activity.save
     end
-    
+
     if params[:update_grade_levels]
       # set the grade_level tags
       @activity.grade_level_list = (params[:grade_levels] || [])
@@ -227,6 +236,7 @@ class ActivitiesController < ApplicationController
   # DELETE /pages/1.xml
   def destroy
     @activity = Activity.find(params[:id])
+    authorize @activity
     @activity.destroy
     @redirect = params[:redirect]
     respond_to do |format|
@@ -241,6 +251,7 @@ class ActivitiesController < ApplicationController
   ##
   ##
   def add_section
+    authorize Section, :create?
     @section = Section.create
     @section.activity = @activity
     @section.user = current_visitor
@@ -254,6 +265,7 @@ class ActivitiesController < ApplicationController
   def sort_sections
     paramlistname = params[:list_name].nil? ? 'activity_sections_list' : params[:list_name]
     @activity = Activity.find(params[:id], :include => :sections)
+    authorize @activity, :update_edit_or_destroy?
     @activity.sections.each do |section|
       section.position = params[paramlistname].index(section.id.to_s) + 1
       section.save
@@ -266,6 +278,7 @@ class ActivitiesController < ApplicationController
   ##
   def delete_section
     @section= Section.find(params['section_id'])
+    authorize @section, :destroy?
     @section.destroy
   end
 
@@ -273,7 +286,11 @@ class ActivitiesController < ApplicationController
   ##
   ##
   def duplicate
+
     @original = Activity.find(params['id'])
+    # PUNDIT_REVIEW_AUTHORIZE
+    authorize @original, :show?
+    authorize Activity, :create?
     @activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => :pages}
     @activity.name = "copy of #{@activity.name}"
     @activity.deep_set_user current_visitor
@@ -286,6 +303,7 @@ class ActivitiesController < ApplicationController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
+    # no authorization needed ...
     render :partial => 'shared/paste_link', :locals =>{:types => ['section'],:params => params}
   end
 
@@ -293,6 +311,8 @@ class ActivitiesController < ApplicationController
   # In an Activities controller, we only accept section clipboard data,
   #
   def paste
+    # PUNDIT_REVIEW_AUTHORIZE
+    authorize @activity, :edit
     if @activity.changeable?(current_visitor)
       @original = clipboard_object(params)
       if (@original)
@@ -316,6 +336,7 @@ class ActivitiesController < ApplicationController
   end
 
   def export
+    authorize @activity, :show?
     respond_to do |format|
       format.xml  {
         send_data @activity.deep_xml, :type => :xml, :filename=>"#{@activity.name}.xml"

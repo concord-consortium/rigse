@@ -1,7 +1,11 @@
 class Embeddable::Biologica::MultipleOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_multiple_organisms
   # GET /Embeddable::Biologica/biologica_multiple_organisms.xml
-  def index    
+  def index
+    authorize Embeddable::Biologica::MultipleOrganism
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @multiple_organisms = policy_scope(Embeddable::Biologica::MultipleOrganism)
     @biologica_multiple_organisms = Embeddable::Biologica::MultipleOrganism.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -14,6 +18,7 @@ class Embeddable::Biologica::MultipleOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_multiple_organisms/1.xml
   def show
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.find(params[:id])
+    authorize @biologica_multiple_organism
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
     else
@@ -31,6 +36,7 @@ class Embeddable::Biologica::MultipleOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_multiple_organisms/new
   # GET /Embeddable::Biologica/biologica_multiple_organisms/new.xml
   def new
+    authorize Embeddable::Biologica::MultipleOrganism
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
@@ -45,25 +51,27 @@ class Embeddable::Biologica::MultipleOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_multiple_organisms/1/edit
   def edit
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.find(params[:id])
+    authorize @biologica_multiple_organism
     @scope = get_scope(@biologica_multiple_organism)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_multiple_organism  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_multiple_organisms
   # POST /Embeddable::Biologica/biologica_multiple_organisms.xml
   def create
+    authorize Embeddable::Biologica::MultipleOrganism
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.new(params[:biologica_multiple_organism])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_multiple_organism.save
         render :partial => 'new', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
@@ -89,6 +97,7 @@ class Embeddable::Biologica::MultipleOrganismsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.find(params[:id])
+    authorize @biologica_multiple_organism
     if request.xhr?
       if cancel || @biologica_multiple_organism.update_attributes(params[:embeddable_biologica_multiple_organism])
         render :partial => 'show', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
@@ -113,16 +122,17 @@ class Embeddable::Biologica::MultipleOrganismsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_multiple_organisms/1.xml
   def destroy
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.find(params[:id])
+    authorize @biologica_multiple_organism
     respond_to do |format|
       format.html { redirect_to(biologica_multiple_organisms_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_multiple_organism.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_multiple_organism.destroy    
+    @biologica_multiple_organism.destroy
   end
 end

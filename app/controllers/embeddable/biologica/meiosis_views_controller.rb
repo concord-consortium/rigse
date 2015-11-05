@@ -1,7 +1,11 @@
 class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views
   # GET /Embeddable::Biologica/biologica_meiosis_views.xml
-  def index    
+  def index
+    authorize Embeddable::Biologica::MeiosisView
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @meiosis_views = policy_scope(Embeddable::Biologica::MeiosisView)
     @biologica_meiosis_views = Embeddable::Biologica::MeiosisView.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -14,6 +18,7 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views/1.xml
   def show
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
+    authorize @biologica_meiosis_view
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
     else
@@ -31,6 +36,7 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views/new
   # GET /Embeddable::Biologica/biologica_meiosis_views/new.xml
   def new
+    authorize Embeddable::Biologica::MeiosisView
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
@@ -45,25 +51,27 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views/1/edit
   def edit
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
+    authorize @biologica_meiosis_view
     @scope = get_scope(@biologica_meiosis_view)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_meiosis_view  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_meiosis_views
   # POST /Embeddable::Biologica/biologica_meiosis_views.xml
   def create
+    authorize Embeddable::Biologica::MeiosisView
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.new(params[:biologica_meiosis_view])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_meiosis_view.save
         render :partial => 'new', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
@@ -89,6 +97,7 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
+    authorize @biologica_meiosis_view
     if request.xhr?
       if cancel || @biologica_meiosis_view.update_attributes(params[:embeddable_biologica_meiosis_view])
         render :partial => 'show', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
@@ -113,16 +122,17 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_meiosis_views/1.xml
   def destroy
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
+    authorize @biologica_meiosis_view
     respond_to do |format|
       format.html { redirect_to(biologica_meiosis_views_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_meiosis_view.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_meiosis_view.destroy    
+    @biologica_meiosis_view.destroy
   end
 end

@@ -1,13 +1,17 @@
 class Dataservice::ConsoleLoggersController < ApplicationController
 
-  # restrict access to admins or bundle formatted requests 
+  # restrict access to admins or bundle formatted requests
   include RestrictedBundleController
-  
+
   public
 
   # GET /dataservice/console_loggers
   # GET /dataservice/console_loggers.xml
   def index
+    authorize Dataservice::ConsoleLogger
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @console_loggers = policy_scope(Dataservice::ConsoleLogger)
     @dataservice_console_loggers = Dataservice::ConsoleLogger.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -20,6 +24,7 @@ class Dataservice::ConsoleLoggersController < ApplicationController
   # GET /dataservice/console_loggers/1.xml
   def show
     @dataservice_console_logger = Dataservice::ConsoleLogger.find(params[:id])
+    authorize @dataservice_console_logger
     if console_content = @dataservice_console_logger.last_console_content
       eportfolio_bundle = console_content.eportfolio
     else
@@ -35,6 +40,7 @@ class Dataservice::ConsoleLoggersController < ApplicationController
   # GET /dataservice/console_loggers/new
   # GET /dataservice/console_loggers/new.xml
   def new
+    authorize Dataservice::ConsoleLogger
     @dataservice_console_logger = Dataservice::ConsoleLogger.new
 
     respond_to do |format|
@@ -46,11 +52,13 @@ class Dataservice::ConsoleLoggersController < ApplicationController
   # GET /dataservice/console_loggers/1/edit
   def edit
     @dataservice_console_logger = Dataservice::ConsoleLogger.find(params[:id])
+    authorize @dataservice_console_logger
   end
 
   # POST /dataservice/console_loggers
   # POST /dataservice/console_loggers.xml
   def create
+    authorize Dataservice::ConsoleLogger
     @dataservice_console_logger = Dataservice::ConsoleLogger.new(params[:dataservice_console_logger])
 
     respond_to do |format|
@@ -69,6 +77,7 @@ class Dataservice::ConsoleLoggersController < ApplicationController
   # PUT /dataservice/console_loggers/1.xml
   def update
     @dataservice_console_logger = Dataservice::ConsoleLogger.find(params[:id])
+    authorize @dataservice_console_logger
 
     respond_to do |format|
       if @dataservice_console_logger.update_attributes(params[:dataservice_console_logger])
@@ -86,6 +95,7 @@ class Dataservice::ConsoleLoggersController < ApplicationController
   # DELETE /dataservice/console_loggers/1.xml
   def destroy
     @dataservice_console_logger = Dataservice::ConsoleLogger.find(params[:id])
+    authorize @dataservice_console_logger
     @dataservice_console_logger.destroy
 
     respond_to do |format|

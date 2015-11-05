@@ -1,7 +1,11 @@
 class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings
   # GET /Embeddable::Biologica/biologica_breed_offsprings.xml
-  def index    
+  def index
+    authorize Embeddable::Biologica::BreedOffspring
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @breed_offsprings = policy_scope(Embeddable::Biologica::BreedOffspring)
     @biologica_breed_offsprings = Embeddable::Biologica::BreedOffspring.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -14,6 +18,7 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings/1.xml
   def show
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
+    authorize @biologica_breed_offspring
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
     else
@@ -31,6 +36,7 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings/new
   # GET /Embeddable::Biologica/biologica_breed_offsprings/new.xml
   def new
+    authorize Embeddable::Biologica::BreedOffspring
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
@@ -45,25 +51,27 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings/1/edit
   def edit
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
+    authorize @biologica_breed_offspring
     @scope = get_scope(@biologica_breed_offspring)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_breed_offspring  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_breed_offsprings
   # POST /Embeddable::Biologica/biologica_breed_offsprings.xml
   def create
+    authorize Embeddable::Biologica::BreedOffspring
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.new(params[:biologica_breed_offspring])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_breed_offspring.save
         render :partial => 'new', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
@@ -89,6 +97,7 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
+    authorize @biologica_breed_offspring
     if request.xhr?
       if cancel || @biologica_breed_offspring.update_attributes(params[:embeddable_biologica_breed_offspring])
         render :partial => 'show', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
@@ -113,16 +122,17 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_breed_offsprings/1.xml
   def destroy
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
+    authorize @biologica_breed_offspring
     respond_to do |format|
       format.html { redirect_to(biologica_breed_offsprings_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_breed_offspring.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_breed_offspring.destroy    
+    @biologica_breed_offspring.destroy
   end
 end

@@ -4,6 +4,7 @@ class API::V1::TeachersController < API::APIController
   # - 'school_id' is provided - school is expected to exist
   # - 'school_name' and 'district_id' are provided instead - school may be created in case of need
   def create
+    authorize Api::V1::Teacher
     teacher_registration = API::V1::TeacherRegistration.new(params)
     if !current_visitor.anonymous?
       teacher_registration.set_user current_visitor
@@ -18,6 +19,7 @@ class API::V1::TeachersController < API::APIController
   end
 
   def email_available
+    # no authorization needed ...
     found = User.find_by_email(params[:email])
     if !found
       render :json => {'message' => 'ok'}
@@ -27,6 +29,7 @@ class API::V1::TeachersController < API::APIController
   end
 
   def login_available
+    # no authorization needed ...
     found = User.find_by_login(params[:username])
     if !found
       render :json => {'message' => 'ok'}

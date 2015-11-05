@@ -1,8 +1,12 @@
 class Embeddable::MwModelerPagesController < ApplicationController
   # GET /Embeddable/mw_modeler_pages
   # GET /Embeddable/mw_modeler_pages.xml
-  def index    
+  def index
+    authorize Embeddable::MwModelerPage
     @mw_modeler_pages = Embeddable::MwModelerPage.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @mw_modeler_pages = policy_scope(Embeddable::MwModelerPage)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +18,7 @@ class Embeddable::MwModelerPagesController < ApplicationController
   # GET /Embeddable/mw_modeler_pages/1.xml
   def show
     @mw_modeler_page = Embeddable::MwModelerPage.find(params[:id])
+    authorize @mw_modeler_page
     if request.xhr?
       render :partial => 'show', :locals => { :mw_modeler_page => @mw_modeler_page }
     else
@@ -31,6 +36,7 @@ class Embeddable::MwModelerPagesController < ApplicationController
   # GET /Embeddable/mw_modeler_pages/new
   # GET /Embeddable/mw_modeler_pages/new.xml
   def new
+    authorize Embeddable::MwModelerPage
     @mw_modeler_page = Embeddable::MwModelerPage.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :mw_modeler_page => @mw_modeler_page }
@@ -45,24 +51,26 @@ class Embeddable::MwModelerPagesController < ApplicationController
   # GET /Embeddable/mw_modeler_pages/1/edit
   def edit
     @mw_modeler_page = Embeddable::MwModelerPage.find(params[:id])
+    authorize @mw_modeler_page
     if request.xhr?
       render :partial => 'remote_form', :locals => { :mw_modeler_page => @mw_modeler_page }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @mw_modeler_page  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/mw_modeler_pages
   # POST /Embeddable/mw_modeler_pages.xml
   def create
+    authorize Embeddable::MwModelerPage
     @mw_modeler_page = Embeddable::MwModelerPage.new(params[:mw_modeler_page])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @mw_modeler_page.save
         render :partial => 'new', :locals => { :mw_modeler_page => @mw_modeler_page }
@@ -88,6 +96,7 @@ class Embeddable::MwModelerPagesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @mw_modeler_page = Embeddable::MwModelerPage.find(params[:id])
+    authorize @mw_modeler_page
     if request.xhr?
       if cancel || @mw_modeler_page.update_attributes(params[:embeddable_mw_modeler_page])
         render :partial => 'show', :locals => { :mw_modeler_page => @mw_modeler_page }
@@ -112,16 +121,17 @@ class Embeddable::MwModelerPagesController < ApplicationController
   # DELETE /Embeddable/mw_modeler_pages/1.xml
   def destroy
     @mw_modeler_page = Embeddable::MwModelerPage.find(params[:id])
+    authorize @mw_modeler_page
     respond_to do |format|
       format.html { redirect_to(mw_modeler_pages_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @mw_modeler_page.page_elements.each do |pe|
       pe.destroy
     end
-    @mw_modeler_page.destroy    
+    @mw_modeler_page.destroy
   end
 end

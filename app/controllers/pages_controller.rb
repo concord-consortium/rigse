@@ -1,31 +1,32 @@
 class PagesController < ApplicationController
   helper :all
-  
+
   # so we can use dom_id_for
   include ApplicationHelper
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :find_entities, :except => [:create,:new,:index,:delete_element,:add_element]
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]
-  
+
   in_place_edit_for :page, :name
   in_place_edit_for :page, :description
-    
+
   protected
-  
+
   def render_scope
     @render_scope = @page
   end
-  
+
   def can_create
     if (current_visitor.anonymous?)
       flash[:error] = "Anonymous users can not create pages"
       redirect_back_or pages_path
     end
   end
-  
-  
+
+
   def find_entities
     if (params[:id])
       @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
@@ -46,7 +47,7 @@ class PagesController < ApplicationController
     unless format == 'otml' || format == 'jnlp'
     end
   end
-  
+
   def can_edit
     if defined? @page
       unless @page.changeable?(current_visitor)
@@ -60,40 +61,44 @@ class PagesController < ApplicationController
       end
     end
   end
-  
+
   public
-  
+
   # GET /page
   # GET /page.xml
   def index
+    authorize Page
     # @activity = Activity.find(params['section_id'])
     # @pages = @activity.pages
     # @pages = Page.all
-    
+
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
-    
+
     pagination = params[:page]
     if (pagination)
        @include_drafts = param_find(:include_drafts)
     else
       @include_drafts = param_find(:include_drafts,true)
     end
-    
+
     @pages = Page.search_list({
-      :name => @name, 
+      :name => @name,
       :portal_clazz_id => @portal_clazz_id,
-      :include_drafts => @include_drafts, 
-      :paginate => true, 
+      :include_drafts => @include_drafts,
+      :paginate => true,
       :page => pagination
     })
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @pages = policy_scope(Page)
 
     if params[:mine_only]
       @pages = @pages.reject { |i| i.user.id != current_visitor.id }
     end
 
     @paginated_objects = @pages
-    
+
     if request.xhr?
       render :partial => 'pages/runnable_list', :locals => {:pages => @pages, :paginated_objects => @pages}
     else
@@ -107,17 +112,18 @@ class PagesController < ApplicationController
   # GET /page/1
   # GET /page/1.xml
   def show
+    authorize @page
     @teacher_mode = params[:teacher_mode] || @page.teacher_only
     respond_to do |format|
       format.html {
-        if params['print'] 
+        if params['print']
           render :print, :layout => "layouts/print"
         end
       }
       format.run_sparks_html   { render :show, :layout => "layouts/run" }
       format.run_html   { render :show, :layout => "layouts/run" }
       format.jnlp       { render :partial => 'shared/installer', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
-      format.config     { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
+      format.config     { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
       format.otml       { render :layout => "layouts/page" } # page.otml.haml
       format.dynamic_otml {
         learner = (params[:learner_id] ? Portal::Learner.find(params[:learner_id]) : nil)
@@ -138,6 +144,8 @@ class PagesController < ApplicationController
   # GET /page/1/preview
   # GET /page/1.xml
   def preview
+    # PUNDIT_REVIEW_AUTHORIZE
+    authorize @page, :show
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @page }
@@ -146,9 +154,10 @@ class PagesController < ApplicationController
 
 
   # GET /page/
-  
+
   # GET /page/new.xml
   def new
+    authorize Page
     @page = Page.new
     respond_to do |format|
       format.html # new.html.erb
@@ -158,15 +167,17 @@ class PagesController < ApplicationController
 
   # GET /page/1/edit
   def edit
+    authorize @page
     if request.xhr?
       render :partial => 'remote_form', :locals => { :page => @page, :section => @page.section }
     end
   end
 
-  
+
   # POST /page
   # POST /page.xml
   def create
+    authorize Page
     @page = Page.create(params[:page])
     @page.user = current_visitor
     respond_to do |format|
@@ -185,12 +196,13 @@ class PagesController < ApplicationController
   # PUT /page/1
   # PUT /page/1.xml
   def update
+    authorize @page
     respond_to do |format|
       if @page.update_attributes(params[:page])
         flash[:notice] = 'Page was successfully updated.'
         format.html { redirect_to(@page) }
         format.xml  { head :ok }
-        format.js 
+        format.js
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
@@ -201,6 +213,7 @@ class PagesController < ApplicationController
   # DELETE /page/1
   # DELETE /page/1.xml
   def destroy
+    authorize @page
     @page.destroy
     @redirect = params[:redirect]
 
@@ -212,13 +225,14 @@ class PagesController < ApplicationController
   end
 
   ##
-  ## This is a remote_function (ajax) to be called with link_to_remote or similar. 
+  ## This is a remote_function (ajax) to be called with link_to_remote or similar.
   ## We expect parameters "page_id" and "closs_name"
   ## optional parameter "container" tells us what DOM ID to add our results too...
   ##
 
   def add_element
     @page = Page.find(params['page_id'])
+    authorize @page, :update_edit_or_destroy?
     # @container no longer used?
     @container = params['container']
 
@@ -245,8 +259,8 @@ class PagesController < ApplicationController
     @element = @page.element_for(@component)
     @element.user = current_visitor
     @element.save
-    
-    # 
+
+    #
     # # dynamically insert appropriate partial based on type.
     # @partial = partial_for(@component)
 
@@ -256,8 +270,9 @@ class PagesController < ApplicationController
 
   ##
   ##
-  ##  
+  ##
   def sort_elements
+    authorize @page, :update_edit_or_destroy?
     key_name = 'elements_container'
     params.each_key do |k|
       key_name = k if k =~ /elements_container/
@@ -268,7 +283,7 @@ class PagesController < ApplicationController
         element.position = element_index + 1
         element.save
       end
-    end 
+    end
     render :update do |page|
       page << "flatten_sortables();"
     end
@@ -279,6 +294,8 @@ class PagesController < ApplicationController
   ##
   ##
   def duplicate
+    # PUNDIT_REVIEW_AUTHORIZE
+    authorize Page, :new_or_create?
     @copy = @page.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at]
     @copy.name = "" #force numbering by default
     @copy.save
@@ -288,18 +305,18 @@ class PagesController < ApplicationController
 
 
   def paste_link
-    # render :partial => 'pages/paste_link', :locals => {:params => params}
-    # render :text => paste_link_for(page_paste_acceptable_types,params)
+    # no authorization needed ...
     render :partial => 'shared/paste_link', :locals =>{:types => Page.paste_acceptable_types,:params => params}
   end
-  
+
   #
   # Paste a page component
   #
   def paste
+    authorize @page, :update_edit_or_destroy?
     if @page.changeable?(current_visitor)
-      @original = clipboard_object(params)      
-      if (@original) 
+      @original = clipboard_object(params)
+      if (@original)
         # let some embeddables define their own means to save
         if @original.respond_to? :duplicate
           @component = @original.duplicate
@@ -319,11 +336,11 @@ class PagesController < ApplicationController
       end
       if @element.nil?
         logger.warn "Paste failed. original: #{@original} container: #{@container} component: #{@component} element: #{@element}"
-      else 
+      else
         render :update do |page|
           page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
           page.sortable 'elements_container', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
-          page[dom_id_for(@component, :item)].scrollTo()  
+          page[dom_id_for(@component, :item)].scrollTo()
           page.visual_effect :highlight, dom_id_for(@component, :item)
         end
       end

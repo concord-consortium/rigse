@@ -3,6 +3,7 @@ class Portal::OfferingsController < ApplicationController
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter,:activity_report]
   before_filter :student_teacher_admin_or_config, :only => [:answers]
   before_filter :student_teacher_or_admin, :only => [:show]
@@ -16,7 +17,9 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings
   # GET /portal_offerings.xml
   def index
-    @portal_offerings = Portal::Offering.all
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Offering
+    @portal_offerings = policy_scope(Portal::Offering)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -28,6 +31,8 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings/1.xml
   def show
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering
 
     respond_to do |format|
       format.html # show.html.erb
@@ -90,6 +95,8 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings/new
   # GET /portal_offerings/new.xml
   def new
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Offering
     @offering = Portal::Offering.new
 
     respond_to do |format|
@@ -101,11 +108,15 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings/1/edit
   def edit
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering
   end
 
   # POST /portal_offerings
   # POST /portal_offerings.xml
   def create
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Offering
     @offering = Portal::Offering.new(params[:offering])
 
     respond_to do |format|
@@ -124,6 +135,8 @@ class Portal::OfferingsController < ApplicationController
   # PUT /portal_offerings/1.xml
   def update
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering
 
     respond_to do |format|
       if @offering.update_attributes(params[:offering])
@@ -141,6 +154,8 @@ class Portal::OfferingsController < ApplicationController
   # DELETE /portal_offerings/1.xml
   def destroy
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering
     @offering.destroy
 
     respond_to do |format|
@@ -151,18 +166,25 @@ class Portal::OfferingsController < ApplicationController
 
   def activate
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :update_edit_or_destroy?
     @offering.activate!
     redirect_to :back
   end
 
   def deactivate
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :update_edit_or_destroy?
     @offering.deactivate!
     redirect_to :back
   end
 
   def report
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @activity_report_id = nil
     @report_embeddable_filter = []
     unless @offering.report_embeddable_filter.nil? || @offering.report_embeddable_filter.embeddables.nil?
@@ -210,6 +232,9 @@ class Portal::OfferingsController < ApplicationController
 
   def multiple_choice_report
     @offering = Portal::Offering.find(params[:id], :include => :learners)
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @offering_report = Report::Offering::Investigation.new(@offering)
 
     respond_to do |format|
@@ -219,6 +244,9 @@ class Portal::OfferingsController < ApplicationController
 
   def open_response_report
     @offering = Portal::Offering.find(params[:id], :include => :learners)
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @offering_report = Report::Offering::Investigation.new(@offering)
 
     respond_to do |format|
@@ -228,6 +256,9 @@ class Portal::OfferingsController < ApplicationController
 
   def separated_report
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
 
@@ -240,6 +271,9 @@ class Portal::OfferingsController < ApplicationController
 
   def report_embeddable_filter
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @report_embeddable_filter = @offering.report_embeddable_filter
     @filtered = true
     activity_report_id = params[:activity_id]
@@ -284,6 +318,9 @@ class Portal::OfferingsController < ApplicationController
   # report shown to students
   def student_report
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     @learner = @offering.learners.find_by_student_id(current_visitor.portal_student)
     if (@learner && @offering)
       reportUtil = Report::Util.reload_without_filters(@offering)  # force a reload of this offering without filters
@@ -297,6 +334,13 @@ class Portal::OfferingsController < ApplicationController
   end
 
   def setup_portal_student
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Offering
+    # authorize @offering
+    # authorize Portal::Offering, :new_or_create?
+    # authorize @offering, :update_edit_or_destroy?
     learner = nil
     if portal_student = current_visitor.portal_student
       # create a learner for the user if one doesnt' exist
@@ -307,6 +351,9 @@ class Portal::OfferingsController < ApplicationController
 
   def answers
     @offering = Portal::Offering.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     if @offering
       learner = setup_portal_student
       if learner && params[:questions]
@@ -328,6 +375,13 @@ class Portal::OfferingsController < ApplicationController
   end
 
   def offering_collapsed_status
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Offering
+    # authorize @offering
+    # authorize Portal::Offering, :new_or_create?
+    # authorize @offering, :update_edit_or_destroy?
     if current_visitor.portal_teacher.nil?
       render :nothing=>true
       return
@@ -347,6 +401,9 @@ class Portal::OfferingsController < ApplicationController
 
   def get_recent_student_report
     offering = Portal::Offering.find(params[:id])
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @offering, :show?
     students = offering.clazz.students
     if !students.nil? && students.length > 0
       students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}

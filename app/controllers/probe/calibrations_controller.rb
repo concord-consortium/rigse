@@ -2,7 +2,8 @@ class Probe::CalibrationsController < ApplicationController
   # GET /Probe/calibrations
   # GET /Probe/calibrations.xml
   def index
-    @calibrations = Probe::Calibration.all
+    authorize Probe::Calibration
+    @calibrations = policy_scope(Probe::Calibration)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +15,7 @@ class Probe::CalibrationsController < ApplicationController
   # GET /Probe/calibrations/1.xml
   def show
     @calibration = Probe::Calibration.find(params[:id])
+    authorize @calibration
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,6 +26,7 @@ class Probe::CalibrationsController < ApplicationController
   # GET /Probe/calibrations/new
   # GET /Probe/calibrations/new.xml
   def new
+    authorize Probe::Calibration
     @calibration = Probe::Calibration.new
 
     respond_to do |format|
@@ -35,11 +38,13 @@ class Probe::CalibrationsController < ApplicationController
   # GET /Probe/calibrations/1/edit
   def edit
     @calibration = Probe::Calibration.find(params[:id])
+    authorize @calibration
   end
 
   # POST /Probe/calibrations
   # POST /Probe/calibrations.xml
   def create
+    authorize Probe::Calibration
     @calibration = Probe::Calibration.new(params[:calibration])
 
     respond_to do |format|
@@ -58,6 +63,7 @@ class Probe::CalibrationsController < ApplicationController
   # PUT /Probe/calibrations/1.xml
   def update
     @calibration = Probe::Calibration.find(params[:id])
+    authorize @calibration
 
     respond_to do |format|
       if @calibration.update_attributes(params[:calibration])
@@ -75,6 +81,7 @@ class Probe::CalibrationsController < ApplicationController
   # DELETE /Probe/calibrations/1.xml
   def destroy
     @calibration = Probe::Calibration.find(params[:id])
+    authorize @calibration
     @calibration.destroy
 
     respond_to do |format|

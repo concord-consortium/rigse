@@ -1,12 +1,16 @@
 class Dataservice::BundleContentsController < ApplicationController
-  
-  # restrict access to admins or bundle formatted requests 
+
+  # restrict access to admins or bundle formatted requests
   include RestrictedBundleController
   public
-  
+
   # GET /dataservice_bundle_contents
   # GET /dataservice_bundle_contents.xml
   def index
+    authorize Dataservice::BundleContent
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @bundle_contents = policy_scope(Dataservice::BundleContent)
     @dataservice_bundle_contents = Dataservice::BundleContent.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -19,6 +23,7 @@ class Dataservice::BundleContentsController < ApplicationController
   # GET /dataservice_bundle_contents/1.xml
   def show
     @dataservice_bundle_content = Dataservice::BundleContent.find(params[:id])
+    authorize @dataservice_bundle_content
 
     respond_to do |format|
       format.html # show.html.erb
@@ -29,6 +34,7 @@ class Dataservice::BundleContentsController < ApplicationController
   # GET /dataservice_bundle_contents/new
   # GET /dataservice_bundle_contents/new.xml
   def new
+    authorize Dataservice::BundleContent
     @dataservice_bundle_content = Dataservice::BundleContent.new
 
     respond_to do |format|
@@ -40,11 +46,13 @@ class Dataservice::BundleContentsController < ApplicationController
   # GET /dataservice_bundle_contents/1/edit
   def edit
     @dataservice_bundle_content = Dataservice::BundleContent.find(params[:id])
+    authorize @dataservice_bundle_content
   end
 
   # POST /dataservice_bundle_contents
   # POST /dataservice_bundle_contents.xml
   def create
+    authorize Dataservice::BundleContent
     # by default this is not used.  Instead the file app/metal/bundle_content intercepts this route
     if params[:format] == 'bundle'
       bundle_logger_id = params[:bundle_logger_id]
@@ -58,7 +66,7 @@ class Dataservice::BundleContentsController < ApplicationController
         return head :bad_request
       end
     end
-    
+
     @dataservice_bundle_content = Dataservice::BundleContent.new(params[:dataservice_bundle_content])
 
     respond_to do |format|
@@ -77,6 +85,7 @@ class Dataservice::BundleContentsController < ApplicationController
   # PUT /dataservice_bundle_contents/1.xml
   def update
     @dataservice_bundle_content = Dataservice::BundleContent.find(params[:id])
+    authorize @dataservice_bundle_content
 
     respond_to do |format|
       if @dataservice_bundle_content.update_attributes(params[:dataservice_bundle_content])
@@ -94,6 +103,7 @@ class Dataservice::BundleContentsController < ApplicationController
   # DELETE /dataservice_bundle_contents/1.xml
   def destroy
     @dataservice_bundle_content = Dataservice::BundleContent.find(params[:id])
+    authorize @dataservice_bundle_content
     @dataservice_bundle_content.destroy
 
     respond_to do |format|

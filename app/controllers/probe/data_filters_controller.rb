@@ -2,7 +2,8 @@ class Probe::DataFiltersController < ApplicationController
   # GET /Probe/data_filters
   # GET /Probe/data_filters.xml
   def index
-    @data_filters = Probe::DataFilter.all
+    authorize Probe::DataFilter
+    @data_filters = policy_scope(Probe::DataFilter)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +15,7 @@ class Probe::DataFiltersController < ApplicationController
   # GET /Probe/data_filters/1.xml
   def show
     @data_filter = Probe::DataFilter.find(params[:id])
+    authorize @data_filter
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,6 +26,7 @@ class Probe::DataFiltersController < ApplicationController
   # GET /Probe/data_filters/new
   # GET /Probe/data_filters/new.xml
   def new
+    authorize Probe::DataFilter
     @data_filter = Probe::DataFilter.new
 
     respond_to do |format|
@@ -35,11 +38,13 @@ class Probe::DataFiltersController < ApplicationController
   # GET /Probe/data_filters/1/edit
   def edit
     @data_filter = Probe::DataFilter.find(params[:id])
+    authorize @data_filter
   end
 
   # POST /Probe/data_filters
   # POST /Probe/data_filters.xml
   def create
+    authorize Probe::DataFilter
     @data_filter = Probe::DataFilter.new(params[:data_filter])
 
     respond_to do |format|
@@ -58,6 +63,7 @@ class Probe::DataFiltersController < ApplicationController
   # PUT /Probe/data_filters/1.xml
   def update
     @data_filter = Probe::DataFilter.find(params[:id])
+    authorize @data_filter
 
     respond_to do |format|
       if @data_filter.update_attributes(params[:data_filter])
@@ -75,6 +81,7 @@ class Probe::DataFiltersController < ApplicationController
   # DELETE /Probe/data_filters/1.xml
   def destroy
     @data_filter = Probe::DataFilter.find(params[:id])
+    authorize @data_filter
     @data_filter.destroy
 
     respond_to do |format|

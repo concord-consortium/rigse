@@ -1,0 +1,2 @@
+class AccessGrantPolicy < ApplicationPolicy
+end

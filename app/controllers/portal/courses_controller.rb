@@ -1,16 +1,17 @@
 class Portal::CoursesController < ApplicationController
-  
-  # TODO:  There need to be a lot more 
+
+  # TODO:  There need to be a lot more
   # controller filters here...
   # this only protects management actions:
   include RestrictedPortalController
-  
-  
-  public 
+
+
+  public
   # GET /portal_courses
   # GET /portal_courses.xml
   def index
-    @courses = Portal::Course.all
+    authorize Portal::Course
+    @courses = policy_scope(Portal::Course)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -22,6 +23,7 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/1.xml
   def show
     @course = Portal::Course.find(params[:id])
+    authorize @course
 
     respond_to do |format|
       format.html # show.html.erb
@@ -32,6 +34,7 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/new
   # GET /portal_courses/new.xml
   def new
+    authorize Portal::Course
     @course = Portal::Course.new
 
     respond_to do |format|
@@ -43,11 +46,13 @@ class Portal::CoursesController < ApplicationController
   # GET /portal_courses/1/edit
   def edit
     @course = Portal::Course.find(params[:id])
+    authorize @course
   end
 
   # POST /portal_courses
   # POST /portal_courses.xml
   def create
+    authorize Portal::Course
     @course = Portal::Course.new(params[:portal_course])
 
     respond_to do |format|
@@ -66,6 +71,7 @@ class Portal::CoursesController < ApplicationController
   # PUT /portal_courses/1.xml
   def update
     @course = Portal::Course.find(params[:id])
+    authorize @course
 
     respond_to do |format|
       if @course.update_attributes(params[:portal_course])
@@ -83,6 +89,7 @@ class Portal::CoursesController < ApplicationController
   # DELETE /portal_courses/1.xml
   def destroy
     @course = Portal::Course.find(params[:id])
+    authorize @course
     @course.destroy
 
     respond_to do |format|

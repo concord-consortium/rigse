@@ -18,6 +18,9 @@ class Dataservice::BucketContentsMetalController < ActionController::Metal
   private
 
   def create_with_logger(bucket_logger)
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Dataservice::BucketContent, :create?
     bucket_content = nil
     if bucket_logger
       body = request.body.read

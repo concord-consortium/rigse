@@ -2,6 +2,10 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements
   # GET /RiGse/knowledge_statements.xml
   def index
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::KnowledgeStatement
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @knowledge_statements = policy_scope(RiGse::KnowledgeStatement)
     @knowledge_statements = RiGse::KnowledgeStatement.all
 
     respond_to do |format|
@@ -14,6 +18,8 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements/1.xml
   def show
     @knowledge_statement = RiGse::KnowledgeStatement.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @knowledge_statement
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,6 +30,8 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements/new
   # GET /RiGse/knowledge_statements/new.xml
   def new
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::KnowledgeStatement
     @knowledge_statement = RiGse::KnowledgeStatement.new
 
     respond_to do |format|
@@ -35,11 +43,15 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements/1/edit
   def edit
     @knowledge_statement = RiGse::KnowledgeStatement.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @knowledge_statement
   end
 
   # POST /RiGse/knowledge_statements
   # POST /RiGse/knowledge_statements.xml
   def create
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::KnowledgeStatement
     @knowledge_statement = RiGse::KnowledgeStatement.new(params[:knowledge_statement])
 
     respond_to do |format|
@@ -58,6 +70,8 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # PUT /RiGse/knowledge_statements/1.xml
   def update
     @knowledge_statement = RiGse::KnowledgeStatement.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @knowledge_statement
 
     respond_to do |format|
       if @knowledge_statement.update_attributes(params[:knowledge_statement])
@@ -75,6 +89,8 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # DELETE /RiGse/knowledge_statements/1.xml
   def destroy
     @knowledge_statement = RiGse::KnowledgeStatement.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @knowledge_statement
     @knowledge_statement.destroy
 
     respond_to do |format|

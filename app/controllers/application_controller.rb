@@ -6,6 +6,9 @@ BrowserSpecificiation = Struct.new(:browser, :version)
 
 class ApplicationController < ActionController::Base
   include Clipboard
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   # protect_from_forgery
   self.allow_forgery_protection = false
@@ -13,24 +16,53 @@ class ApplicationController < ActionController::Base
   theme :get_theme
 
   def test
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Application
+    # authorize @application
+    # authorize Application, :new_or_create?
+    # authorize @application, :update_edit_or_destroy?
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
 
   def self.set_theme(name)
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Application
+    # authorize @application
+    # authorize Application, :new_or_create?
+    # authorize @application, :update_edit_or_destroy?
     @@theme = name
   end
 
   def get_theme
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Application
+    # authorize @application
+    # authorize Application, :new_or_create?
+    # authorize @application, :update_edit_or_destroy?
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
   def self.get_theme
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Application
+    # authorize @application
+    # authorize Application, :new_or_create?
+    # authorize @application, :update_edit_or_destroy?
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :setup_container
   before_filter :reject_old_browsers
 
@@ -105,6 +137,13 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def user_not_authorized(exception)
+    policy_name = exception.policy.class.to_s.underscore
+
+    flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
+    redirect_to(request.referrer || root_path)
+  end
 
   # setup the portal_teacher and student instance variables
   def portal_resources

@@ -4,6 +4,9 @@ class API::V1::CollaborationsController < API::APIController
   # Note that owner of the collaboration is automatically added to its members.
   # There is no need to provide owner's data in 'students' parameter.
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Api::V1::Collaboration
     input = create_input
     return unauthorized unless create_auth(input)
     create_collaboration = API::V1::CreateCollaboration.new(input)
@@ -18,6 +21,13 @@ class API::V1::CollaborationsController < API::APIController
   # GET api/v1/collaborations/available_collaborators?offering_id=:id
   # Returns all the students in the same class without student that is currently signed in.
   def available_collaborators
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Api::V1::Collaboration
+    # authorize @collaboration
+    # authorize Api::V1::Collaboration, :new_or_create?
+    # authorize @collaboration, :update_edit_or_destroy?
     input = available_collaborators_input
     return unauthorized unless available_collaborators_auth(input)
     student_id = current_visitor.portal_student.id
@@ -28,6 +38,13 @@ class API::V1::CollaborationsController < API::APIController
 
   # GET api/v1/collaborations/:id/collaborators_data
   def collaborators_data
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Api::V1::Collaboration
+    # authorize @collaboration
+    # authorize Api::V1::Collaboration, :new_or_create?
+    # authorize @collaboration, :update_edit_or_destroy?
     input = collaborators_data_input
     return unauthorized unless collaborators_data_auth(input)
     show_endpoints = API::V1::ShowCollaboratorsData.new(input)

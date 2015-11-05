@@ -1,6 +1,6 @@
 class Dataservice::ExternalActivityDataController < ApplicationController
   include PeerAccess
-  
+
   private
   def can_create(learner)
     # allow admins and managers to re-post learner data
@@ -21,6 +21,7 @@ class Dataservice::ExternalActivityDataController < ApplicationController
 
   public
   def create
+    authorize Dataservice::ProcessExternalActivityDataJob
     learner_id = params[:id]
     if learner = Portal::Learner.find(learner_id)
       if can_create(learner) # If this fails we raise RoutingError('Not Allowed') (see above)

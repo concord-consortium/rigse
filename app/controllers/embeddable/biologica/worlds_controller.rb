@@ -1,7 +1,11 @@
 class Embeddable::Biologica::WorldsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_worlds
   # GET /Embeddable::Biologica/biologica_worlds.xml
-  def index    
+  def index
+    authorize Embeddable::Biologica::World
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @worlds = policy_scope(Embeddable::Biologica::World)
     @biologica_worlds = Embeddable::Biologica::World.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -14,6 +18,7 @@ class Embeddable::Biologica::WorldsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_worlds/1.xml
   def show
     @biologica_world = Embeddable::Biologica::World.find(params[:id])
+    authorize @biologica_world
     if request.xhr?
       render :partial => 'show', :locals => { :biologica_world => @biologica_world }
     else
@@ -31,6 +36,7 @@ class Embeddable::Biologica::WorldsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_worlds/new
   # GET /Embeddable::Biologica/biologica_worlds/new.xml
   def new
+    authorize Embeddable::Biologica::World
     @biologica_world = Embeddable::Biologica::World.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_world => @biologica_world }
@@ -45,24 +51,26 @@ class Embeddable::Biologica::WorldsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_worlds/1/edit
   def edit
     @biologica_world = Embeddable::Biologica::World.find(params[:id])
+    authorize @biologica_world
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_world => @biologica_world }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_world  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_worlds
   # POST /Embeddable::Biologica/biologica_worlds.xml
   def create
+    authorize Embeddable::Biologica::World
     @biologica_world = Embeddable::Biologica::World.new(params[:biologica_world])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_world.save
         render :partial => 'new', :locals => { :biologica_world => @biologica_world }
@@ -88,6 +96,7 @@ class Embeddable::Biologica::WorldsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @biologica_world = Embeddable::Biologica::World.find(params[:id])
+    authorize @biologica_world
     if request.xhr?
       if cancel || @biologica_world.update_attributes(params[:embeddable_biologica_world])
         render :partial => 'show', :locals => { :biologica_world => @biologica_world }
@@ -112,16 +121,17 @@ class Embeddable::Biologica::WorldsController < ApplicationController
   # DELETE /Embeddable::Biologica/biologica_worlds/1.xml
   def destroy
     @biologica_world = Embeddable::Biologica::World.find(params[:id])
+    authorize @biologica_world
     respond_to do |format|
       format.html { redirect_to(biologica_worlds_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_world.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_world.destroy    
+    @biologica_world.destroy
   end
 end

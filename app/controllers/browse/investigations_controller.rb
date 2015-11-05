@@ -13,6 +13,7 @@ class Browse::InvestigationsController < ApplicationController
     @wide_content_layout = true
 
     material = ::Investigation.find(params[:id])
+    authorize material
 
     @search_material = Search::SearchMaterial.new(material, current_visitor)
     @search_material.url = url_for(@search_material.url)

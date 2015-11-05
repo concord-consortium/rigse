@@ -1,25 +1,33 @@
 class Admin::ProjectsController < ApplicationController
   include RestrictedController
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_only, except: [:landing_page]
 
   # GET /:landing_page_slug
   def landing_page
     @project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
+    authorize @project, :show?
     @landing_page_content = @project.landing_page_content
   end
 
   # GET /admin/projects
   def index
+    authorize Admin::Project
     @projects = Admin::Project.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @projects = policy_scope(Admin::Project)
   end
 
   # GET /admin/projects/1
   def show
     @project = Admin::Project.find(params[:id])
+    authorize @project
   end
 
   # GET /admin/projects/new
   def new
+    authorize Admin::Project
     @project = Admin::Project.new
     @project.links.build
   end
@@ -27,6 +35,7 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects/1/edit
   def edit
     @project = Admin::Project.find(params[:id])
+    authorize @project
 
     if request.xhr?
       render :partial => 'remote_form', :locals => { :project => @project }
@@ -35,6 +44,7 @@ class Admin::ProjectsController < ApplicationController
 
   # POST /admin/projects
   def create
+    authorize Admin::Project
     @project = Admin::Project.new(params[:admin_project])
 
     if @project.save
@@ -47,6 +57,7 @@ class Admin::ProjectsController < ApplicationController
   # PUT /admin/projects/1
   def update
     @project = Admin::Project.find(params[:id])
+    authorize @project
 
     if request.xhr?
       if @project.update_attributes(params[:admin_project])
@@ -65,7 +76,9 @@ class Admin::ProjectsController < ApplicationController
 
   # DELETE /admin/projects/1
   def destroy
-    Admin::Project.find(params[:id]).destroy
+    @project = Admin::Project.find(params[:id])
+    authorize @project
+    @project.destroy
 
     redirect_to admin_projects_url
   end

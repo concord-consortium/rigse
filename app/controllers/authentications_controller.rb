@@ -1,5 +1,12 @@
 class AuthenticationsController < Devise::OmniauthCallbacksController
   def schoology
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Authentication
+    # authorize @authentication
+    # authorize Authentication, :new_or_create?
+    # authorize @authentication, :update_edit_or_destroy?
     generic_oauth
   end
 

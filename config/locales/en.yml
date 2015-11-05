@@ -93,6 +93,9 @@ en:
   RosterRemoveStudent: "Remove Student"
   RosterRemoveStudentLong: "Remove Student %{name} from %{clazz}"
   RosterChangePassword: "Change password for %{name}"
+  pundit:
+    default: 'You cannot perform this action.'
+
 
 'en-HAS':
   activerecord:

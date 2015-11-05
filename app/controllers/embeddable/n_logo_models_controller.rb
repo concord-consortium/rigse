@@ -1,8 +1,12 @@
 class Embeddable::NLogoModelsController < ApplicationController
   # GET /Embeddable/n_logo_models
   # GET /Embeddable/n_logo_models.xml
-  def index    
+  def index
+    authorize Embeddable::NLogoModel
     @n_logo_models = Embeddable::NLogoModel.search(params[:search], params[:page], nil)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @n_logo_models = policy_scope(Embeddable::NLogoModel)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +18,7 @@ class Embeddable::NLogoModelsController < ApplicationController
   # GET /Embeddable/n_logo_models/1.xml
   def show
     @n_logo_model = Embeddable::NLogoModel.find(params[:id])
+    authorize @n_logo_model
     if request.xhr?
       render :partial => 'show', :locals => { :n_logo_model => @n_logo_model }
     else
@@ -31,6 +36,7 @@ class Embeddable::NLogoModelsController < ApplicationController
   # GET /Embeddable/n_logo_models/new
   # GET /Embeddable/n_logo_models/new.xml
   def new
+    authorize Embeddable::NLogoModel
     @n_logo_model = Embeddable::NLogoModel.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :n_logo_model => @n_logo_model }
@@ -45,24 +51,26 @@ class Embeddable::NLogoModelsController < ApplicationController
   # GET /Embeddable/n_logo_models/1/edit
   def edit
     @n_logo_model = Embeddable::NLogoModel.find(params[:id])
+    authorize @n_logo_model
     if request.xhr?
       render :partial => 'remote_form', :locals => { :n_logo_model => @n_logo_model }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @n_logo_model  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/n_logo_models
   # POST /Embeddable/n_logo_models.xml
   def create
+    authorize Embeddable::NLogoModel
     @n_logo_model = Embeddable::NLogoModel.new(params[:n_logo_model])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @n_logo_model.save
         render :partial => 'new', :locals => { :n_logo_model => @n_logo_model }
@@ -88,6 +96,7 @@ class Embeddable::NLogoModelsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @n_logo_model = Embeddable::NLogoModel.find(params[:id])
+    authorize @n_logo_model
     if request.xhr?
       if cancel || @n_logo_model.update_attributes(params[:embeddable_n_logo_model])
         render :partial => 'show', :locals => { :n_logo_model => @n_logo_model }
@@ -112,16 +121,17 @@ class Embeddable::NLogoModelsController < ApplicationController
   # DELETE /Embeddable/n_logo_models/1.xml
   def destroy
     @n_logo_model = Embeddable::NLogoModel.find(params[:id])
+    authorize @n_logo_model
     respond_to do |format|
       format.html { redirect_to(n_logo_models_url) }
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @n_logo_model.page_elements.each do |pe|
       pe.destroy
     end
-    @n_logo_model.destroy    
+    @n_logo_model.destroy
   end
 end

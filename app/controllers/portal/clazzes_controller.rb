@@ -6,6 +6,7 @@ class Portal::ClazzesController < ApplicationController
   include RestrictedPortalController
 
 
+  # PUNDIT_CHECK_FILTERS
   before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
   before_filter :student_teacher_admin_or_config, :only => [:show]
 
@@ -17,7 +18,9 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes
   # GET /portal_clazzes.xml
   def index
-    @portal_clazzes = Portal::Clazz.all
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Clazz
+    @portal_clazzes = policy_scope(Portal::Clazz)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -29,6 +32,8 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1.xml
   def show
     @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     if current_settings.allow_default_class
@@ -49,6 +54,8 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/new
   # GET /portal_clazzes/new.xml
   def new
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Clazz
     @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.new
     if params[:teacher_id]
@@ -66,6 +73,8 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1/edit
   def edit
     @portal_clazz = Portal::Clazz.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz
     @semesters = Portal::Semester.all
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_clazz => @portal_clazz }
@@ -80,6 +89,8 @@ class Portal::ClazzesController < ApplicationController
   # POST /portal_clazzes
   # POST /portal_clazzes.xml
   def create
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Clazz
     @semesters = Portal::Semester.all
 
     @object_params = params[:portal_clazz]
@@ -163,6 +174,8 @@ class Portal::ClazzesController < ApplicationController
   def update
     @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz
 
     if request.xhr?
       object_params = params[:portal_clazz]
@@ -232,6 +245,8 @@ class Portal::ClazzesController < ApplicationController
   # DELETE /portal_clazzes/1.xml
   def destroy
     @portal_clazz = Portal::Clazz.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz
     @portal_clazz.destroy
     respond_to do |format|
       format.html { redirect_to(portal_clazzes_url) }
@@ -243,6 +258,8 @@ class Portal::ClazzesController < ApplicationController
   ## END OF CRUD METHODS
   def edit_offerings
     @portal_clazz = Portal::Clazz.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz, :update_edit_or_destroy?
     @grade_span = session[:grade_span] ||= cookies[:grade_span]
     @domain_id = session[:domain_id] ||= cookies[:domain_id]
   end
@@ -252,6 +269,8 @@ class Portal::ClazzesController < ApplicationController
   # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
   def add_offering
     @portal_clazz = Portal::Clazz.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz, :update_edit_or_destroy?
     dom_id = params[:dragged_dom_id]
     container = params[:dropped_dom_id]
     runnable_id = params[:runnable_id]
@@ -298,6 +317,8 @@ class Portal::ClazzesController < ApplicationController
   # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
   def remove_offering
     @portal_clazz = Portal::Clazz.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz, :update_edit_or_destroy?
     dom_id = params[:dragged_dom_id]
     container = params[:dropped_dom_id]
     offering_id = params[:offering_id]
@@ -331,6 +352,8 @@ class Portal::ClazzesController < ApplicationController
   def add_student
     @student = nil
     @portal_clazz = Portal::Clazz.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz, :update_edit_or_destroy?
     valid_data = false
     begin
       student_id = params[:student_id].to_i
@@ -369,6 +392,8 @@ class Portal::ClazzesController < ApplicationController
 
   def add_teacher
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz, :update_edit_or_destroy?
 
     (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
     (render(:update) { |page| page << "$('flash').update('#{Portal::Clazz::ERROR_UNAUTHORIZED}')" } and return) unless current_visitor && @portal_clazz.changeable?(current_visitor)
@@ -400,6 +425,8 @@ class Portal::ClazzesController < ApplicationController
 
   def remove_teacher
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz, :update_edit_or_destroy?
     (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
 
     @teacher = @portal_clazz.teachers.find_by_id(params[:teacher_id])
@@ -440,6 +467,8 @@ class Portal::ClazzesController < ApplicationController
 
   def class_list
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz, :show?
 
     respond_to do |format|
       format.html { render :layout => 'report'}
@@ -454,6 +483,8 @@ class Portal::ClazzesController < ApplicationController
     end
     @portal_clazzes = Portal::Clazz.all
     @portal_clazz = Portal::Clazz.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_clazz, :show?
     if request.xhr?
       render :partial => 'remote_form_student_roster', :locals => { :portal_clazz => @portal_clazz }
       return
@@ -466,6 +497,13 @@ class Portal::ClazzesController < ApplicationController
 
 # GET add/edit student list
   def add_new_student_popup
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Clazz
+    # authorize @clazz
+    # authorize Portal::Clazz, :new_or_create?
+    # authorize @clazz, :update_edit_or_destroy?
     if request.xhr?
       @portal_student = Portal::Student.new
       @user = User.new
@@ -476,6 +514,13 @@ class Portal::ClazzesController < ApplicationController
   end
 
   def manage_classes
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Clazz
+    # authorize @clazz
+    # authorize Portal::Clazz, :new_or_create?
+    # authorize @clazz, :update_edit_or_destroy?
     unless current_visitor.portal_teacher
       redirect_to home_url
       return
@@ -523,6 +568,13 @@ class Portal::ClazzesController < ApplicationController
   end
 
   def copy_class
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Clazz
+    # authorize @clazz
+    # authorize Portal::Clazz, :new_or_create?
+    # authorize @clazz, :update_edit_or_destroy?
 
     response_value = {
       :success => true,
@@ -577,6 +629,13 @@ class Portal::ClazzesController < ApplicationController
 
 
   def materials
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Clazz
+    # authorize @clazz
+    # authorize Portal::Clazz, :new_or_create?
+    # authorize @clazz, :update_edit_or_destroy?
     unless current_visitor.portal_teacher
       redirect_to home_url
       return
@@ -591,6 +650,13 @@ class Portal::ClazzesController < ApplicationController
 
 
   def sort_offerings
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Clazz
+    # authorize @clazz
+    # authorize Portal::Clazz, :new_or_create?
+    # authorize @clazz, :update_edit_or_destroy?
     if current_visitor.portal_teacher
       params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
     end
@@ -598,6 +664,13 @@ class Portal::ClazzesController < ApplicationController
   end
 
   def fullstatus
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Clazz
+    # authorize @clazz
+    # authorize Portal::Clazz, :new_or_create?
+    # authorize @clazz, :update_edit_or_destroy?
     unless current_visitor.portal_teacher
       redirect_to home_url
       return
@@ -616,6 +689,13 @@ class Portal::ClazzesController < ApplicationController
   # Most of this information is already available just by signing up as a student
   # and entering in the class word.
   def info
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Clazz
+    # authorize @clazz
+    # authorize Portal::Clazz, :new_or_create?
+    # authorize @clazz, :update_edit_or_destroy?
     # look up the class with the class word and return a json object
     clazz = Portal::Clazz.find_by_class_word(params[:class_word])
 

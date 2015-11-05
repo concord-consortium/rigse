@@ -2,9 +2,13 @@ class RiGse::ExpectationsController < ApplicationController
   # GET /RiGse/expectations
   # GET /RiGse/expectations.xml
   def index
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::Expectation
+    # PUNDIT_FIX_SCOPE_MOCKING
+    # @expectations = policy_scope(RiGse::Expectation)
     @expectations = RiGse::Expectation.all
     respond_to do |format|
-      format.html 
+      format.html
       format.xml { render :xml => @expectations }
     end
   end
@@ -13,6 +17,8 @@ class RiGse::ExpectationsController < ApplicationController
   # GET /RiGse/expectations/1.xml
   def show
     @expectation = RiGse::Expectation.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @expectation
 
     respond_to do |format|
       format.html # show.html.erb
@@ -23,6 +29,8 @@ class RiGse::ExpectationsController < ApplicationController
   # GET /RiGse/expectations/new
   # GET /RiGse/expectations/new.xml
   def new
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::Expectation
     @expectation = RiGse::Expectation.new
 
     respond_to do |format|
@@ -34,11 +42,15 @@ class RiGse::ExpectationsController < ApplicationController
   # GET /RiGse/expectations/1/edit
   def edit
     @expectation = RiGse::Expectation.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @expectation
   end
 
   # POST /RiGse/expectations
   # POST /RiGse/expectations.xml
   def create
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize RiGse::Expectation
     @expectation = RiGse::Expectation.new(params[:expectation])
 
     respond_to do |format|
@@ -57,6 +69,8 @@ class RiGse::ExpectationsController < ApplicationController
   # PUT /RiGse/expectations/1.xml
   def update
     @expectation = RiGse::Expectation.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @expectation
 
     respond_to do |format|
       if @expectation.update_attributes(params[:expectation])
@@ -74,6 +88,8 @@ class RiGse::ExpectationsController < ApplicationController
   # DELETE /RiGse/expectations/1.xml
   def destroy
     @expectation = RiGse::Expectation.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @expectation
     @expectation.destroy
 
     respond_to do |format|

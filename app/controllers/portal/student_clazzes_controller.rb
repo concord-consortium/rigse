@@ -2,11 +2,12 @@ class Portal::StudentClazzesController < ApplicationController
 
   include RestrictedPortalController
   public
-  
+
   # GET /portal_student_clazzes
   # GET /portal_student_clazzes.xml
   def index
-    @portal_student_clazzes = Portal::StudentClazz.all
+    authorize Portal::StudentClazz
+    @portal_student_clazzes = policy_scope(Portal::StudentClazz)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,6 +19,7 @@ class Portal::StudentClazzesController < ApplicationController
   # GET /portal_student_clazzes/1.xml
   def show
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
+    authorize @portal_student_clazz
 
     respond_to do |format|
       format.html # show.html.erb
@@ -28,6 +30,7 @@ class Portal::StudentClazzesController < ApplicationController
   # GET /portal_student_clazzes/new
   # GET /portal_student_clazzes/new.xml
   def new
+    authorize Portal::StudentClazz
     @portal_student_clazz = Portal::StudentClazz.new
 
     respond_to do |format|
@@ -39,11 +42,13 @@ class Portal::StudentClazzesController < ApplicationController
   # GET /portal_student_clazzes/1/edit
   def edit
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
+    authorize @portal_student_clazz
   end
 
   # POST /portal_student_clazzes
   # POST /portal_student_clazzes.xml
   def create
+    authorize Portal::StudentClazz
     @portal_student_clazz = Portal::StudentClazz.new(params[:portal_student_clazz])
 
     respond_to do |format|
@@ -62,6 +67,7 @@ class Portal::StudentClazzesController < ApplicationController
   # PUT /portal_student_clazzes/1.xml
   def update
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
+    authorize @portal_student_clazz
 
     respond_to do |format|
       if @portal_student_clazz.update_attributes(params[:portal_student_clazz])
@@ -79,6 +85,7 @@ class Portal::StudentClazzesController < ApplicationController
   # DELETE /portal_student_clazzes/1.xml
   def destroy
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
+    authorize @portal_student_clazz
     @dom_id = view_context.dom_id_for(@portal_student_clazz)
     @clazz = @portal_student_clazz.clazz
     @portal_student_clazz.destroy

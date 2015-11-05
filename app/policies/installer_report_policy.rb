@@ -1,0 +1,2 @@
+class InstallerReportPolicy < ApplicationPolicy
+end

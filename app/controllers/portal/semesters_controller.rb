@@ -1,12 +1,13 @@
 class Portal::SemestersController < ApplicationController
-  
+
   include RestrictedPortalController
   public
-  
+
   # GET /portal_semesters
   # GET /portal_semesters.xml
   def index
-    @semesters = Portal::Semester.all
+    authorize Portal::Semester
+    @semesters = policy_scope(Portal::Semester)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,6 +19,7 @@ class Portal::SemestersController < ApplicationController
   # GET /portal_semesters/1.xml
   def show
     @semester = Portal::Semester.find(params[:id])
+    authorize @semester
 
     respond_to do |format|
       format.html # show.html.erb
@@ -28,6 +30,7 @@ class Portal::SemestersController < ApplicationController
   # GET /portal_semesters/new
   # GET /portal_semesters/new.xml
   def new
+    authorize Portal::Semester
     @semester = Portal::Semester.new
 
     respond_to do |format|
@@ -39,11 +42,13 @@ class Portal::SemestersController < ApplicationController
   # GET /portal_semesters/1/edit
   def edit
     @semester = Portal::Semester.find(params[:id])
+    authorize @semester
   end
 
   # POST /portal_semesters
   # POST /portal_semesters.xml
   def create
+    authorize Portal::Semester
     @semester = Portal::Semester.new(params[:portal_semester])
 
     respond_to do |format|
@@ -62,6 +67,7 @@ class Portal::SemestersController < ApplicationController
   # PUT /portal_semesters/1.xml
   def update
     @semester = Portal::Semester.find(params[:id])
+    authorize @semester
     respond_to do |format|
       if @semester.update_attributes(params[:portal_semester])
         flash[:notice] = 'Portal::Semester was successfully updated.'
@@ -78,6 +84,7 @@ class Portal::SemestersController < ApplicationController
   # DELETE /portal_semesters/1.xml
   def destroy
     @semester = Portal::Semester.find(params[:id])
+    authorize @semester
     @semester.destroy
 
     respond_to do |format|

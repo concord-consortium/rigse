@@ -2,14 +2,19 @@ class Portal::BookmarksController < ApplicationController
   include Portal::BookmarksHelper
 
   def index
+    authorize Portal::Bookmark
     # This is needed so the side-menu selection works as expected.
     @portal_clazz = get_current_clazz
     @bookmarks = Portal::Bookmark.where(clazz_id: @portal_clazz)
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @bookmarks = policy_scope(Portal::Bookmark)
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])
   end
 
   def add_padlet
+    authorize Portal::PadletBookmark, :new_or_create?
     mark = Portal::PadletBookmark.create_for_user(current_visitor, get_current_clazz)
     render :update do |page|
       page.insert_html :bottom,
@@ -20,6 +25,7 @@ class Portal::BookmarksController < ApplicationController
   end
 
   def add
+    authorize Portal::GenericBookmark, :new_or_create?
     props = params['portal_generic_bookmark'] || {
       name: 'My bookmark',
       url: 'http://concord.org'
@@ -38,12 +44,14 @@ class Portal::BookmarksController < ApplicationController
 
   def visit
     mark = Portal::Bookmark.find(params['id'])
+    authorize mark, :show
     mark.record_visit(current_visitor)
     redirect_to mark.url
   end
 
   def delete
     mark = Portal::Bookmark.find(params['id'])
+    authorize mark
     dom_id = bookmark_dom_item(mark)
     if mark.changeable? current_visitor
       mark.destroy
@@ -57,6 +65,13 @@ class Portal::BookmarksController < ApplicationController
   end
 
   def sort
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Bookmark
+    # authorize @bookmark
+    # authorize Portal::Bookmark, :new_or_create?
+    # authorize @bookmark, :update_edit_or_destroy?
     ids = JSON.parse(params['ids'])
     bookmarks = ids.map { |i| Portal::Bookmark.find(i) }
     position = 0
@@ -72,6 +87,7 @@ class Portal::BookmarksController < ApplicationController
 
   def edit
     bookmark = Portal::Bookmark.find(params['id'])
+    authorize bookmark
     if bookmark && bookmark.changeable?(current_visitor)
       %w[name url is_visible].each do |param|
         unless params[param].blank?
@@ -92,6 +108,13 @@ class Portal::BookmarksController < ApplicationController
   end
 
   def visits
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Bookmark
+    # authorize @bookmark
+    # authorize Portal::Bookmark, :new_or_create?
+    # authorize @bookmark, :update_edit_or_destroy?
     if current_visitor.has_role? "admin"
       @visits = Portal::BookmarkVisit.recent
       render :visits

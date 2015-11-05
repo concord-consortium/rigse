@@ -1,0 +1,2 @@
+class StudentViewPolicy < ApplicationPolicy
+end

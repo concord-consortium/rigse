@@ -1,5 +1,6 @@
 class Portal::TeachersController < ApplicationController
   include RestrictedPortalController
+  # PUNDIT_CHECK_FILTERS
   before_filter :teacher_admin_or_manager, :except=> [:new, :create]
   public
 
@@ -18,7 +19,9 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers
   # GET /portal_teachers.xml
   def index
-    @portal_teachers = Portal::Teacher.all
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Teacher
+    @portal_teachers = policy_scope(Portal::Teacher)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -29,6 +32,8 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/1
   # GET /portal_teachers/1.xml
   def show
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_teacher
     @portal_teacher = Portal::Teacher.find(params[:id])
     respond_to do |format|
       format.html # show.html.erb
@@ -39,6 +44,8 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/view
   # GET /portal_teachers/new.xml
   def new
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Teacher
     @portal_teacher = Portal::Teacher.new
     @school_selector = Portal::SchoolSelector.new(params)
     respond_to do |format|
@@ -50,6 +57,8 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/1/edit
   def edit
     @portal_teacher = Portal::Teacher.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_teacher
     @user = @portal_teacher.user
     @school_selector = Portal::SchoolSelector.new(params)
   end
@@ -58,7 +67,9 @@ class Portal::TeachersController < ApplicationController
   # POST /portal_teachers.xml
   # TODO: move some of this into the teachers model.
   def create
-    
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize Portal::Teacher
+
     # TODO: Teachers DO NOT HAVE grades or Domains.
     @portal_grade = nil
     if params[:grade]
@@ -91,8 +102,8 @@ class Portal::TeachersController < ApplicationController
     # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes
     # will redirect:
     @user.errors.add(:you, "must select a school") unless @school_selector.valid?
-    
-    
+
+
     failed_creation
   end
 
@@ -100,6 +111,8 @@ class Portal::TeachersController < ApplicationController
   # PUT /portal_teachers/1.xml
   def update
     @portal_teacher = Portal::Teacher.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_teacher
 
     respond_to do |format|
       if @portal_teacher.update_attributes(params[:teacher])
@@ -117,6 +130,8 @@ class Portal::TeachersController < ApplicationController
   # DELETE /portal_teachers/1.xml
   def destroy
     @portal_teacher = Portal::Teacher.find(params[:id])
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # authorize @portal_teacher
     @portal_teacher.destroy
 
     respond_to do |format|
@@ -124,19 +139,17 @@ class Portal::TeachersController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
-  def successful_creation(user)
-    # Render the UsersController#thanks page instead of showing a flash message.
-    redirect_to thanks_for_sign_up_url(:type=>"teacher",:login=>"#{user.login}")
 
+  def successful_creation(user)
+    # no authorization needed ...
+    redirect_to thanks_for_sign_up_url(:type=>"teacher",:login=>"#{user.login}")
   end
-  
+
   def failed_creation(message = 'Sorry, there was an error creating your account')
-    # FIXME is the sign_out necessary??? The user should not be signed in yet, however
-    # previously there was a current_visitor=User.anonymous here.
+    # no authorization needed ...
     sign_out :user
     flash.now[:error] = message
     render :action => :new
   end
-  
+
 end

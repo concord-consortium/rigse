@@ -2,7 +2,8 @@ class Probe::DeviceConfigsController < ApplicationController
   # GET /Probe/device_configs
   # GET /Probe/device_configs.xml
   def index
-    @device_configs = Probe::DeviceConfig.all
+    authorize Probe::DeviceConfig
+    @device_configs = policy_scope(Probe::DeviceConfig)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +15,7 @@ class Probe::DeviceConfigsController < ApplicationController
   # GET /Probe/device_configs/1.xml
   def show
     @device_config = Probe::DeviceConfig.find(params[:id])
+    authorize @device_config
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,6 +26,7 @@ class Probe::DeviceConfigsController < ApplicationController
   # GET /Probe/device_configs/new
   # GET /Probe/device_configs/new.xml
   def new
+    authorize Probe::DeviceConfig
     @device_config = Probe::DeviceConfig.new
 
     respond_to do |format|
@@ -35,11 +38,13 @@ class Probe::DeviceConfigsController < ApplicationController
   # GET /Probe/device_configs/1/edit
   def edit
     @device_config = Probe::DeviceConfig.find(params[:id])
+    authorize @device_config
   end
 
   # POST /Probe/device_configs
   # POST /Probe/device_configs.xml
   def create
+    authorize Probe::DeviceConfig
     @device_config = Probe::DeviceConfig.new(params[:device_config])
 
     respond_to do |format|
@@ -58,6 +63,7 @@ class Probe::DeviceConfigsController < ApplicationController
   # PUT /Probe/device_configs/1.xml
   def update
     @device_config = Probe::DeviceConfig.find(params[:id])
+    authorize @device_config
 
     respond_to do |format|
       if @device_config.update_attributes(params[:device_config])
@@ -75,6 +81,7 @@ class Probe::DeviceConfigsController < ApplicationController
   # DELETE /Probe/device_configs/1.xml
   def destroy
     @device_config = Probe::DeviceConfig.find(params[:id])
+    authorize @device_config
     @device_config.destroy
 
     respond_to do |format|

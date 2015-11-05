@@ -1,12 +1,13 @@
 class Portal::SubjectsController < ApplicationController
-  
+
   include RestrictedPortalController
   public
-  
+
   # GET /portal_subjects
   # GET /portal_subjects.xml
   def index
-    @subjects = Portal::Subject.all
+    authorize Portal::Subject
+    @subjects = policy_scope(Portal::Subject)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,6 +19,7 @@ class Portal::SubjectsController < ApplicationController
   # GET /portal_subjects/1.xml
   def show
     @subject = Portal::Subject.find(params[:id])
+    authorize @subject
 
     respond_to do |format|
       format.html # show.html.erb
@@ -28,6 +30,7 @@ class Portal::SubjectsController < ApplicationController
   # GET /portal_subjects/new
   # GET /portal_subjects/new.xml
   def new
+    authorize Portal::Subject
     @subject = Portal::Subject.new
 
     respond_to do |format|
@@ -39,11 +42,13 @@ class Portal::SubjectsController < ApplicationController
   # GET /portal_subjects/1/edit
   def edit
     @subject = Portal::Subject.find(params[:id])
+    authorize @subject
   end
 
   # POST /portal_subjects
   # POST /portal_subjects.xml
   def create
+    authorize Portal::Subject
     @subject = Portal::Subject.new(params[:subject])
 
     respond_to do |format|
@@ -62,6 +67,7 @@ class Portal::SubjectsController < ApplicationController
   # PUT /portal_subjects/1.xml
   def update
     @subject = Portal::Subject.find(params[:id])
+    authorize @subject
 
     respond_to do |format|
       if @subject.update_attributes(params[:subject])
@@ -79,6 +85,7 @@ class Portal::SubjectsController < ApplicationController
   # DELETE /portal_subjects/1.xml
   def destroy
     @subject = Portal::Subject.find(params[:id])
+    authorize @subject
     @subject.destroy
 
     respond_to do |format|

@@ -1,10 +1,15 @@
 class Admin::TagsController < ApplicationController
   include RestrictedController
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_only
 
   # GET /admin_tags
   # GET /admin_tags.xml
   def index
+    authorize Admin::Tag
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @tags = policy_scope(Admin::Tag)
     @admin_tags = Admin::Tag.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -17,6 +22,7 @@ class Admin::TagsController < ApplicationController
   # GET /admin_tags/1.xml
   def show
     @admin_tag = Admin::Tag.find(params[:id])
+    authorize @admin_tag
 
     respond_to do |format|
       format.html # show.html.erb
@@ -27,6 +33,7 @@ class Admin::TagsController < ApplicationController
   # GET /admin_tags/new
   # GET /admin_tags/new.xml
   def new
+    authorize Admin::Tag
     @admin_tag = Admin::Tag.new
 
     respond_to do |format|
@@ -38,6 +45,7 @@ class Admin::TagsController < ApplicationController
   # GET /admin_tags/1/edit
   def edit
     @admin_tag = Admin::Tag.find(params[:id])
+    authorize @admin_tag
 
     if request.xhr?
       render :partial => 'remote_form', :locals => { :admin_tag => @admin_tag }
@@ -47,6 +55,7 @@ class Admin::TagsController < ApplicationController
   # POST /admin_tags
   # POST /admin_tags.xml
   def create
+    authorize Admin::Tag
     @admin_tag = Admin::Tag.new(params[:admin_tag])
 
     respond_to do |format|
@@ -64,6 +73,7 @@ class Admin::TagsController < ApplicationController
   # PUT /admin_tags/1.xml
   def update
     @admin_tag = Admin::Tag.find(params[:id])
+    authorize @admin_tag
 
     if request.xhr?
       @admin_tag.update_attributes(params[:admin_tag])
@@ -85,6 +95,7 @@ class Admin::TagsController < ApplicationController
   # DELETE /admin_tags/1.xml
   def destroy
     @admin_tag = Admin::Tag.find(params[:id])
+    authorize @admin_tag
     @admin_tag.destroy
 
     respond_to do |format|

@@ -1,0 +1,2 @@
+class ExternalActivityPolicy < ApplicationPolicy
+end

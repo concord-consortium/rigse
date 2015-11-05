@@ -1,25 +1,26 @@
 class Portal::SchoolsController < ApplicationController
-  
+
   include RestrictedPortalController
+  # PUNDIT_CHECK_FILTERS
   before_filter :admin_or_manager
   before_filter :states_and_provinces, :only => [:new, :edit, :create, :update]
 
-  protected 
+  protected
 
   def admin_only
     unless current_visitor.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator" 
+      flash[:notice] = "Please log in as an administrator"
       redirect_to(:home)
     end
   end
-  
+
   def admin_or_manager
     if current_visitor.has_role?('admin')
       @admin_role = true
     elsif current_visitor.has_role?('manager')
       @manager_role = true
     else
-      flash[:notice] = "Please log in as an administrator or manager" 
+      flash[:notice] = "Please log in as an administrator or manager"
       redirect_to(:home)
     end
   end
@@ -27,12 +28,16 @@ class Portal::SchoolsController < ApplicationController
   def states_and_provinces
     @states_and_provinces = Portal::StateOrProvince.from_districts.sort
   end
-  
+
   public
-  
+
   # GET /portal_schools
   # GET /portal_schools.xml
   def index
+    authorize Portal::School
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @schools = policy_scope(Portal::School)
     @portal_schools = Portal::School.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -45,6 +50,7 @@ class Portal::SchoolsController < ApplicationController
   # GET /portal_schools/1.xml
   def show
     @portal_school = Portal::School.find(params[:id])
+    authorize @portal_school
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_school => @portal_school, :is_edit => true }
     else
@@ -58,6 +64,7 @@ class Portal::SchoolsController < ApplicationController
   # GET /portal_schools/new
   # GET /portal_schools/new.xml
   def new
+    authorize Portal::School
     @portal_school = Portal::School.new
 
     respond_to do |format|
@@ -69,6 +76,7 @@ class Portal::SchoolsController < ApplicationController
   # GET /portal_schools/1/edit
   def edit
     @portal_school = Portal::School.find(params[:id])
+    authorize @portal_school
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_school => @portal_school, :is_edit => true }
     else
@@ -82,6 +90,7 @@ class Portal::SchoolsController < ApplicationController
   # POST /portal_schools
   # POST /portal_schools.xml
   def create
+    authorize Portal::School
     cancel = params[:commit] == "Cancel"
     change_skip_installer = (params[:settings] && params[:settings][:skip_installer])
     skip_installer = (params[:settings][:skip_installer] == "1") if change_skip_installer
@@ -92,7 +101,7 @@ class Portal::SchoolsController < ApplicationController
       @portal_school = Portal::School.new(params[:portal_school])
     end
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @portal_school.save
         @portal_school.put_setting("skip_installer", "1") if skip_installer && change_skip_installer
@@ -122,6 +131,7 @@ class Portal::SchoolsController < ApplicationController
     change_skip_installer = (params[:settings] && params[:settings][:skip_installer])
     skip_installer = (params[:settings][:skip_installer] == "1") if change_skip_installer
     @portal_school = Portal::School.find(params[:id])
+    authorize @portal_school
     if request.xhr?
       if cancel || @portal_school.update_attributes(params[:portal_school])
         unless cancel || !change_skip_installer
@@ -166,6 +176,7 @@ class Portal::SchoolsController < ApplicationController
   # DELETE /portal_schools/1.xml
   def destroy
     @portal_school = Portal::School.find(params[:id])
+    authorize @portal_school
     @portal_school.destroy
 
     respond_to do |format|
