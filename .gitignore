@@ -103,3 +103,4 @@ solr/data
 solr/pids
 log
 app_environment_variables.rb
+config/environments/local-development.rb
