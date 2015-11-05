@@ -298,9 +298,7 @@ class PagesController < ApplicationController
 
 
   def paste_link
-    authorize @page, :edit?
-    # render :partial => 'pages/paste_link', :locals => {:params => params}
-    # render :text => paste_link_for(page_paste_acceptable_types,params)
+    # no authorization applied
     render :partial => 'shared/paste_link', :locals =>{:types => Page.paste_acceptable_types,:params => params}
   end
 

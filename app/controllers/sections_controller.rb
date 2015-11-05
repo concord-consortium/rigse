@@ -252,7 +252,7 @@ class SectionsController < ApplicationController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
-    authorize @section, :edit?
+    # no authorization needed
     render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:params => params}
   end
 
