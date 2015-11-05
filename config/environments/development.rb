@@ -18,7 +18,7 @@ RailsPortal::Application.configure do
   config.action_mailer.default_url_options = {:protocol => APP_CONFIG[:protocol], :host => APP_CONFIG[:host] }
   config.action_mailer.delivery_method = :test
   config.action_mailer.raise_delivery_errors = false
-  
+
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -30,7 +30,7 @@ RailsPortal::Application.configure do
 
   # Minify/uglify/compress assets from the pipeline
   config.assets.compress = false
-  
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
   # Turn this off if localizing
@@ -39,7 +39,7 @@ RailsPortal::Application.configure do
 
   # split apart assets to make debugging easier
   # This slows things down, but its also handy for x-ray
-  # https://github.com/brentd/xray-rails 
+  # https://github.com/brentd/xray-rails
   # Comment out locally if you need speed.
   config.assets.debug = true
   config.after_initialize do
@@ -48,5 +48,21 @@ RailsPortal::Application.configure do
     Bullet.rails_logger = true
     Bullet.add_footer = true
   end
+
+  # include per developer environment files if found (the default is excluded by .gitignore)
+  #
+  # Here is a sample local-development.rb file to speed up requests
+  #
+  # RailsPortal::Application.configure do
+  #   config.assets.debug = false
+  #   config.after_initialize do
+  #     Bullet.enable = false
+  #     Bullet.bullet_logger = false
+  #     Bullet.rails_logger = false
+  #     Bullet.add_footer = false
+  #   end
+  # end
+  localDevPath = File.expand_path((ENV['LOCAL_DEV_ENVIRONMENT_FILE'] || 'local-development.rb'), File.dirname(__FILE__))
+  require(localDevPath) if File.file?(localDevPath)
 end
 
