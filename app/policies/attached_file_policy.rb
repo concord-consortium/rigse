@@ -1,0 +1,2 @@
+class AttachedFilePolicy < ApplicationPolicy
+end

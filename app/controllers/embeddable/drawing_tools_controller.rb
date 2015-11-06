@@ -1,7 +1,7 @@
 class Embeddable::DrawingToolsController < ApplicationController
   # GET /Embeddable/drawing_tools
   # GET /Embeddable/drawing_tools.xml
-  def index    
+  def index
     @drawing_tools = Embeddable::DrawingTool.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -48,7 +48,7 @@ class Embeddable::DrawingToolsController < ApplicationController
     if request.xhr?
       render :partial => 'remote_form', :locals => { :drawing_tool => @drawing_tool }
     end
-    
+
   end
 
   # POST /Embeddable/drawing_tools
@@ -57,7 +57,7 @@ class Embeddable::DrawingToolsController < ApplicationController
     @drawing_tool = Embeddable::DrawingTool.new(params[:xhtml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @drawing_tool.save
         render :partial => 'new', :locals => { :drawing_tool => @drawing_tool }
@@ -112,11 +112,11 @@ class Embeddable::DrawingToolsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @drawing_tool.page_elements.each do |pe|
       pe.destroy
     end
-    @drawing_tool.destroy    
+    @drawing_tool.destroy
   end
 end

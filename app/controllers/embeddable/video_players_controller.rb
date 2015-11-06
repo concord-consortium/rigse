@@ -1,7 +1,7 @@
 class Embeddable::VideoPlayersController < ApplicationController
   # GET /embeddable_video_players
   # GET /embeddable_video_players.xml
-  def index    
+  def index
     @video_players = Embeddable::VideoPlayer.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -50,12 +50,12 @@ class Embeddable::VideoPlayersController < ApplicationController
       render :partial => 'remote_form', :locals => { :video_player => @video_player }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @video_player  }
       end
     end
   end
-  
+
 
   # POST /embeddable_video_players
   # POST /embeddable_video_players.xml
@@ -63,7 +63,7 @@ class Embeddable::VideoPlayersController < ApplicationController
     @video_player = Embeddable::VideoPlayer.new(params[:embeddable_video_player])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @video_player.save
         render :partial => 'new', :locals => { :video_player => @video_player }
@@ -118,11 +118,11 @@ class Embeddable::VideoPlayersController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @video_player.page_elements.each do |pe|
       pe.destroy
     end
-    @video_player.destroy    
+    @video_player.destroy
   end
 end

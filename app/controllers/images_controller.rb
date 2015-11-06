@@ -1,11 +1,22 @@
 class ImagesController < ApplicationController
-  before_filter :author_required, :except => :view
-  before_filter :find_image_and_verify_owner, :only => [:edit, :update, :destroy]
+  before_filter :find_image, :only => [:edit, :update, :destroy]
   # scale the text since most images will be displayed at around screen size
+
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    flash[:error] = "You're not authorized to do this"
+    redirect_to :home
+  end
+
+  public
 
   # GET /images
   # GET /images.xml
   def index
+    authorize Image
     @only_mine = param_find(:only_mine, true)
     @name = param_find(:name)
     @sort_order = param_find(:sort_order, true)
@@ -19,6 +30,9 @@ class ImagesController < ApplicationController
       :per_page => 36,
       :page => params[:page]
     })
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @images = policy_scope(Image)
     @paginated_objects = @images
 
     if request.xhr?
@@ -35,6 +49,7 @@ class ImagesController < ApplicationController
     else
       @image = Image.visible_to_user_with_drafts(current_visitor).find(params[:id])
     end
+    authorize @image
 
     respond_to do |format|
       format.html # show.html.erb
@@ -45,6 +60,7 @@ class ImagesController < ApplicationController
   # GET /images/new
   # GET /images/new.xml
   def new
+    authorize Image
     @image = Image.new
 
     respond_to do |format|
@@ -55,11 +71,13 @@ class ImagesController < ApplicationController
 
   # GET /images/1/edit
   def edit
+    authorize @image
   end
 
   # POST /images
   # POST /images.xml
   def create
+    authorize Image
     params[:image][:user_id] = current_visitor.id.to_s
     @image = Image.new(params[:image])
 
@@ -93,6 +111,7 @@ class ImagesController < ApplicationController
   # PUT /images/1
   # PUT /images/1.xml
   def update
+    authorize @image
     respond_to do |format|
       if update_image_attributes
         flash[:notice] = 'Image was successfully updated.'
@@ -108,6 +127,7 @@ class ImagesController < ApplicationController
   # DELETE /images/1
   # DELETE /images/1.xml
   def destroy
+    authorize @image
     @image.destroy
 
     respond_to do |format|
@@ -119,6 +139,7 @@ class ImagesController < ApplicationController
   # get /view/1
   # for obtaining an image. (redirects to actual images path)
   def view
+    # no authorization needed ...
     @image = Image.find(params[:id])
     redirect_to @image.image.url(:attributed)
   end
@@ -144,22 +165,7 @@ class ImagesController < ApplicationController
     return false
   end
 
-  def teacher_required
-    return true if logged_in? && (current_visitor.portal_teacher || current_visitor.has_role?("admin"))
-    flash[:error] = "You're not authorized to do this"
-    redirect_to :home
-  end
-
-  def author_required
-    return true if logged_in? && (current_visitor.has_role?("author"))
-    flash[:error] = "You're not authorized to do this"
-    redirect_to :home
-  end
-
-  def find_image_and_verify_owner
+  def find_image
     @image = Image.find(params[:id])
-    return if @image.changeable?(current_visitor)
-    flash[:error] = "You're not authorized to do this"
-    redirect_to :home
   end
 end

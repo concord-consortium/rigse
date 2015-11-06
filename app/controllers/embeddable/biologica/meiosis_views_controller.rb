@@ -1,7 +1,7 @@
 class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views
   # GET /Embeddable::Biologica/biologica_meiosis_views.xml
-  def index    
+  def index
     @biologica_meiosis_views = Embeddable::Biologica::MeiosisView.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -50,12 +50,12 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
       render :partial => 'remote_form', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_meiosis_view  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_meiosis_views
   # POST /Embeddable::Biologica/biologica_meiosis_views.xml
@@ -63,7 +63,7 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.new(params[:biologica_meiosis_view])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_meiosis_view.save
         render :partial => 'new', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
@@ -118,11 +118,11 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_meiosis_view.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_meiosis_view.destroy    
+    @biologica_meiosis_view.destroy
   end
 end

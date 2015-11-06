@@ -1,7 +1,7 @@
 class Embeddable::Biologica::ChromosomesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosomes
   # GET /Embeddable::Biologica/biologica_chromosomes.xml
-  def index    
+  def index
     @biologica_chromosomes = Embeddable::Biologica::Chromosome.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -50,12 +50,12 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
       render :partial => 'remote_form', :locals => { :biologica_chromosome=> @biologica_chromosome }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_chromosome  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_chromosomes
   # POST /Embeddable::Biologica/biologica_chromosomes.xml
@@ -63,7 +63,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
     @biologica_chromosome = Embeddable::Biologica::Chromosome.new(params[:biologica_chromosome])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_chromosome.save
         render :partial => 'new', :locals => { :biologica_chromosome=> @biologica_chromosome }
@@ -118,11 +118,11 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_chromosome.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_chromosome.destroy    
+    @biologica_chromosome.destroy
   end
 end

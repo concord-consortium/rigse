@@ -8,6 +8,12 @@ class Dataservice::BundleLoggersController < ApplicationController
   # GET /dataservice/bundle_loggers
   # GET /dataservice/bundle_loggers.xml
   def index
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Dataservice::BundleLogger
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @bundle_loggers = policy_scope(Dataservice::BundleLogger)
     @dataservice_bundle_loggers = Dataservice::BundleLogger.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -19,6 +25,9 @@ class Dataservice::BundleLoggersController < ApplicationController
   # GET /dataservice/bundle_loggers/1
   # GET /dataservice/bundle_loggers/1.xml
   def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @bundle_logger
     @dataservice_bundle_logger = Dataservice::BundleLogger.find(params[:id])
     if bundle_content = @dataservice_bundle_logger.last_non_empty_bundle_content
       eportfolio_bundle = bundle_content.eportfolio
@@ -43,6 +52,9 @@ class Dataservice::BundleLoggersController < ApplicationController
   # GET /dataservice/bundle_loggers/new
   # GET /dataservice/bundle_loggers/new.xml
   def new
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Dataservice::BundleLogger
     @dataservice_bundle_logger = Dataservice::BundleLogger.new
 
     respond_to do |format|
@@ -53,12 +65,18 @@ class Dataservice::BundleLoggersController < ApplicationController
 
   # GET /dataservice/bundle_loggers/1/edit
   def edit
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @bundle_logger
     @dataservice_bundle_logger = Dataservice::BundleLogger.find(params[:id])
   end
 
   # POST /dataservice/bundle_loggers
   # POST /dataservice/bundle_loggers.xml
   def create
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE
+    # authorize Dataservice::BundleLogger
     @dataservice_bundle_logger = Dataservice::BundleLogger.new(params[:dataservice_bundle_logger])
 
     respond_to do |format|
@@ -76,6 +94,9 @@ class Dataservice::BundleLoggersController < ApplicationController
   # PUT /dataservice/bundle_loggers/1
   # PUT /dataservice/bundle_loggers/1.xml
   def update
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @bundle_logger
     @dataservice_bundle_logger = Dataservice::BundleLogger.find(params[:id])
 
     respond_to do |format|
@@ -93,6 +114,9 @@ class Dataservice::BundleLoggersController < ApplicationController
   # DELETE /dataservice/bundle_loggers/1
   # DELETE /dataservice/bundle_loggers/1.xml
   def destroy
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @bundle_logger
     @dataservice_bundle_logger = Dataservice::BundleLogger.find(params[:id])
     @dataservice_bundle_logger.destroy
 

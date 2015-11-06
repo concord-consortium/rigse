@@ -8,9 +8,9 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
       flash[:notice] = 'Grade Span RiGse::Expectation. data reparsed from original RI-GSE documents'
       format.html { redirect_to :action => 'index' }
       format.xml  { head :ok }
-    end    
+    end
   end
-  
+
   # GET /RiGse/grade_span_expectations
   # GET /RiGse/grade_span_expectations.xml
   def index
@@ -29,11 +29,11 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
         render :xml => @grade_span_expectations
       end
       format.pdf do
-        @grade_span_expectations = RiGse::GradeSpanExpectation.all        
-        @rendered_partial = render_to_string :partial => 'expectation_list.html.haml', 
+        @grade_span_expectations = RiGse::GradeSpanExpectation.all
+        @rendered_partial = render_to_string :partial => 'expectation_list.html.haml',
           :locals => { :grade_span_expectations => @grade_span_expectations }
         @rendered_partial.gsub!(/&/, '&amp;')
-        render :layout => false 
+        render :layout => false
       end
     end
   end
@@ -58,11 +58,11 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
       grade_span = session[:grade_span]
       domain_id = session[:domain_id]
     end
-    # FIXME 
+    # FIXME
     # domains (as an associated model) are way too far away from a gse
     # I added some finder_sql to the domain model to make this faster
     domain = RiGse::Domain.find(domain_id)
-    gses = domain.grade_span_expectations 
+    gses = domain.grade_span_expectations
     @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?
       render :partial => 'select_js', :locals => { :related_gses => @related_gses, :gse => @selected_gse }
@@ -76,7 +76,7 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
   # GET /RiGse/grade_span_expectations/1/summary
   def summary
     @grade_span_expectation = RiGse::GradeSpanExpectation.find(params[:id])
-    
+
     if request.xhr?
       render :partial => 'summary', :locals => { :grade_span_expectations => @grade_span_expectations, :grade_span_expectation =>  @grade_span_expectation }
     else

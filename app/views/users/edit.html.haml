@@ -17,7 +17,12 @@
       = render :partial => 'form', :locals => { :f => form }
       - if current_visitor.has_role?("admin", "manager")
         = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
+        = render :partial => 'admin_for_projects', :locals => { :f => form, :projects => @projects }
       - if current_visitor.has_role?("admin", "manager")
-        = render :partial => 'projects', :locals => { :f => form, :projects => @projects }
-      = render :partial => 'shared/cohorts_edit', :locals => { :object => @user.portal_teacher }
+        = render :partial => 'researcher_for_projects', :locals => { :f => form, :projects => @projects }
+      - elsif current_visitor.is_project_admin?
+        = render :partial => 'researcher_for_projects', :locals => { :f => form, :projects => current_visitor.admin_for_projects }
+      - if current_visitor.has_role?("admin", "manager")
+        = render :partial => 'member_of_projects', :locals => { :f => form, :projects => @projects }
+      = render :partial => 'shared/cohorts_edit', :locals => { :object => @user.portal_teacher, :field_set_title => 'Teacher Cohorts' }
       = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }

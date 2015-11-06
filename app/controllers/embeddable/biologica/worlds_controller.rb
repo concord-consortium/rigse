@@ -1,7 +1,7 @@
 class Embeddable::Biologica::WorldsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_worlds
   # GET /Embeddable::Biologica/biologica_worlds.xml
-  def index    
+  def index
     @biologica_worlds = Embeddable::Biologica::World.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -49,12 +49,12 @@ class Embeddable::Biologica::WorldsController < ApplicationController
       render :partial => 'remote_form', :locals => { :biologica_world => @biologica_world }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_world  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_worlds
   # POST /Embeddable::Biologica/biologica_worlds.xml
@@ -62,7 +62,7 @@ class Embeddable::Biologica::WorldsController < ApplicationController
     @biologica_world = Embeddable::Biologica::World.new(params[:biologica_world])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_world.save
         render :partial => 'new', :locals => { :biologica_world => @biologica_world }
@@ -117,11 +117,11 @@ class Embeddable::Biologica::WorldsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_world.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_world.destroy    
+    @biologica_world.destroy
   end
 end

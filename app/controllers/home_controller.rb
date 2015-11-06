@@ -1,16 +1,27 @@
 class HomeController < ApplicationController
-  include RestrictedController
-  before_filter :manager_or_researcher, :only => ['admin']
+
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    if exception.query.to_s == 'admin?'
+      flash[:notice] = "Please log in as an administrator"
+    end
+    redirect_to :home
+  end
+
+  public
 
   caches_page   :settings_css
   theme "rites"
 
   def index
-   notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
-   @notices = notices_hash[:notices]
-   @notice_display_type = notices_hash[:notice_display_type]
-   @hide_signup_link = true
-   if current_visitor.has_role? "guest"
+    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
+    @notices = notices_hash[:notices]
+    @notice_display_type = notices_hash[:notice_display_type]
+    @hide_signup_link = true
+    if current_visitor.has_role? "guest"
       load_featured_materials
     end
   end
@@ -37,6 +48,7 @@ class HomeController < ApplicationController
   end
 
   def admin
+    authorize :home, :admin?
   end
 
   def authoring
@@ -65,7 +77,6 @@ class HomeController < ApplicationController
   end
 
   def report
-    # two different ways to render pdfs
     respond_to do |format|
       # this method uses classes in app/pdfs to generate the pdf:
       format.html {
@@ -86,16 +97,11 @@ class HomeController < ApplicationController
   # end
 
   def recent_activity
-
-    unless current_visitor.portal_teacher
-      redirect_to home_url
-      return
-    end
+    authorize :home, :recent_activity?
 
     notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
     @notices = notices_hash[:notices]
     @notice_display_type = notices_hash[:notice_display_type]
-
 
     @clazz_offerings=Array.new
 

@@ -2,7 +2,7 @@ class PasswordsController < ApplicationController
   def email
     @password = Password.new
   end
-  
+
   def login
     @user_login = User.new
   end
@@ -10,7 +10,7 @@ class PasswordsController < ApplicationController
   def create_by_email
     @password = Password.new(params[:password])
     @password.user = User.find_by_email(@password.email)
-    
+
     if @password.save
       PasswordMailer.forgot_password(@password).deliver
       flash[:notice] = "A link to change your password has been sent to #{@password.email}."
@@ -25,10 +25,10 @@ class PasswordsController < ApplicationController
       render :action => :email
     end
   end
-  
+
   def create_by_login
     user = User.find_by_login(params[:login])
-    
+
     if user.nil?
       flash[:error] = "User '#{params[:login]}' not found."
     elsif user.portal_student
@@ -51,25 +51,25 @@ class PasswordsController < ApplicationController
         flash[:error] = "This account has not set a valid email address. Please contact your school manager to access your account."
       end
     end
-    
+
     @user_login = User.new
     @password = Password.new unless @password
     render :action => :login
   end
-  
+
   def questions
     @user_recovery = User.find(params[:user_id])
   end
-  
+
   def check_questions
     @user_check_questions = User.find(params[:user_id])
     questions = params[:security_questions]
-    
+
     ok = 0
     questions.each do |k, v|
       ok += 1 if @user_check_questions.security_questions.find(v[:id]).answer.downcase == v[:answer].to_s.downcase
     end
-    
+
     if ok == 3
       # success!
       @password = Password.new(:user => @user_check_questions, :email => @user_check_questions.email)
@@ -78,7 +78,7 @@ class PasswordsController < ApplicationController
         return
       end
     end
-    
+
     # TODO: limit the number of wrong attempts for a single user
     flash[:error] = "Sorry, you did not answer all of your questions correctly."
     redirect_to password_questions_path(@user_check_questions.id)
@@ -122,7 +122,7 @@ class PasswordsController < ApplicationController
       render 'reset'
     end
   end
-  
+
   def update
     @password = Password.find(params[:id])
     if @password.update_attributes(params[:password])
@@ -133,8 +133,8 @@ class PasswordsController < ApplicationController
     end
   end
 
-  protected 
-  
+  protected
+
   def find_password_user
     return current_visitor if params[:reset_code] == "0" && !current_visitor.anonymous?
     begin

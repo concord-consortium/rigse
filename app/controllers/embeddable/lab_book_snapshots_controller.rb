@@ -1,7 +1,7 @@
 class Embeddable::LabBookSnapshotsController < ApplicationController
   # GET /Embeddable/lab_book_snapshots
   # GET /Embeddable/lab_book_snapshots.xml
-  def index    
+  def index
     @lab_book_snapshots = Embeddable::LabBookSnapshot.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -49,12 +49,12 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
       render :partial => 'remote_form', :locals => { :lab_book_snapshot => @lab_book_snapshot }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @lab_book_snapshot  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/lab_book_snapshots
   # POST /Embeddable/lab_book_snapshots.xml
@@ -62,7 +62,7 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
     @lab_book_snapshot = Embeddable::LabBookSnapshot.new(params[:lab_book_snapshot])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @lab_book_snapshot.save
         render :partial => 'new', :locals => { :lab_book_snapshot => @lab_book_snapshot }
@@ -118,11 +118,11 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @lab_book_snapshot.page_elements.each do |pe|
       pe.destroy
     end
-    @lab_book_snapshot.destroy    
+    @lab_book_snapshot.destroy
   end
 end

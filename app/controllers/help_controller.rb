@@ -1,8 +1,8 @@
 class HelpController < ApplicationController
   caches_page   :settings_css
   theme "rites"
-  
-  
+
+
   def get_help_page(help_type)
     case help_type
     when 'no help'
@@ -14,12 +14,12 @@ class HelpController < ApplicationController
       @help_page_content = current_settings.custom_help_page_html
     end
   end
-  
+
   def index
     help_type = current_settings.help_type
     get_help_page(help_type)
   end
-  
+
   def preview_help_page
     if (params[:preview_help_page_from_edit])
       response.headers["X-XSS-Protection"] = "0"

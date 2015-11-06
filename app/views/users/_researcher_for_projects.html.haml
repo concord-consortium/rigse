@@ -1,0 +1,9 @@
+= hidden_field(:user, :has_projects_in_form, :value => true)
+%fieldset
+  %legend
+    Researcher for Projects
+  %ul.menu_h
+    - projects.each do |p|
+      %li
+        = p.name
+        = check_box_tag "user[researcher_project_ids][]", p.id, @user.researcher_for_projects.include?(p)

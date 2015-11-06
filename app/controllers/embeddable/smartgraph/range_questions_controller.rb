@@ -1,7 +1,7 @@
 class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
   # GET /Embeddable/smartgraph_smartgraph_range_questions
   # GET /Embeddable/smartgraph_smartgraph_range_questions.xml
-  def index    
+  def index
     @smartgraph_range_questions = Embeddable::Smartgraph::RangeQuestion.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -50,12 +50,12 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
       render :partial => 'remote_form', :locals => { :smartgraph_range_question => @smartgraph_range_question }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @smartgraph_range_question  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/smartgraph_smartgraph_range_questions
   # POST /Embeddable/smartgraph_smartgraph_range_questions.xml
@@ -63,7 +63,7 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
     @smartgraph_range_question = Embeddable::Smartgraph::RangeQuestion.new(params[:smartgraph_smartgraph_range_question])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @smartgraph_range_question.save
         render :partial => 'new', :locals => { :smartgraph_range_question => @smartgraph_range_question }
@@ -118,11 +118,11 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @smartgraph_range_question.page_elements.each do |pe|
       pe.destroy
     end
-    @smartgraph_range_question.destroy    
+    @smartgraph_range_question.destroy
   end
 end

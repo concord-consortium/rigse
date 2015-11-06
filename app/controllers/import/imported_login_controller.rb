@@ -19,7 +19,7 @@ class Import::ImportedLoginController < ApplicationController
     if user.school && user.school.country
       country = user.school.country
       if params[:country] == "United States"
-      	if params[:state] == user.school.state
+        if params[:state] == user.school.state
           sign_in_user(user)
         else
           send_mail(user, "You have entered an invalid country or state.")
@@ -30,7 +30,7 @@ class Import::ImportedLoginController < ApplicationController
         sign_in_user(user)
       else
         send_mail(user, "You have entered an invalid country.")
-      	#flash[:error] = 'Invalid country.'
+        #flash[:error] = 'Invalid country.'
         invalid_user
       end
     else
@@ -48,7 +48,7 @@ class Import::ImportedLoginController < ApplicationController
   end
 
   def invalid_user
-  	redirect_to :action => 'confirm_user'
+    redirect_to :action => 'confirm_user'
   end
 
   def send_mail(user, message)

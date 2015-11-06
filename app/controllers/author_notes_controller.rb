@@ -1,7 +1,7 @@
 class AuthorNotesController < ApplicationController
-  
+
   before_filter :setup_object, :except => [:index]
-  
+
   def setup_object
     if params[:id]
       if valid_uuid(params[:id])
@@ -27,8 +27,8 @@ class AuthorNotesController < ApplicationController
       @author_note.user = current_visitor
     end
   end
-  
-  
+
+
   # GET /author_notes
   # GET /author_notes.xml
   def index
@@ -61,7 +61,7 @@ class AuthorNotesController < ApplicationController
       end
     end
   end
-  
+
   # GET /author_notes/new
   # GET /author_notes/new.xml
   def new
@@ -74,9 +74,9 @@ class AuthorNotesController < ApplicationController
   # GET /author_notes/1/edit
   def edit
     respond_to do |format|
-      format.js   { render :update do |page| 
-        page.visual_effect :highlite, 'note' 
-        end 
+      format.js   { render :update do |page|
+        page.visual_effect :highlite, 'note'
+        end
       }
     end
   end
@@ -84,7 +84,7 @@ class AuthorNotesController < ApplicationController
   # POST /author_notes
   # POST /author_notes.xml
   def create
-    if (@author_note.changeable?(current_visitor) && @author_note.update_attributes(params[:author_note]))      
+    if (@author_note.changeable?(current_visitor) && @author_note.update_attributes(params[:author_note]))
       flash[:notice] = 'AuthorNote was successfully created.'
       if (request.xhr?)
          render :text => "<div class='notice'>Author note saved</div>"

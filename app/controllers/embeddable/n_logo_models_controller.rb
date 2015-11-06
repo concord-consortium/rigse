@@ -1,7 +1,7 @@
 class Embeddable::NLogoModelsController < ApplicationController
   # GET /Embeddable/n_logo_models
   # GET /Embeddable/n_logo_models.xml
-  def index    
+  def index
     @n_logo_models = Embeddable::NLogoModel.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -49,12 +49,12 @@ class Embeddable::NLogoModelsController < ApplicationController
       render :partial => 'remote_form', :locals => { :n_logo_model => @n_logo_model }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @n_logo_model  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/n_logo_models
   # POST /Embeddable/n_logo_models.xml
@@ -62,7 +62,7 @@ class Embeddable::NLogoModelsController < ApplicationController
     @n_logo_model = Embeddable::NLogoModel.new(params[:n_logo_model])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @n_logo_model.save
         render :partial => 'new', :locals => { :n_logo_model => @n_logo_model }
@@ -117,11 +117,11 @@ class Embeddable::NLogoModelsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @n_logo_model.page_elements.each do |pe|
       pe.destroy
     end
-    @n_logo_model.destroy    
+    @n_logo_model.destroy
   end
 end

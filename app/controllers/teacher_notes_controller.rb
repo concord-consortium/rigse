@@ -1,9 +1,9 @@
 class TeacherNotesController < ApplicationController
-  
+
   before_filter :setup_object, :except => [:index]
-    
+
   protected
-  
+
   def set_owner(note)
     if (! note.authored_entity.nil?)
       note.user = note.authored_entity.user
@@ -11,7 +11,7 @@ class TeacherNotesController < ApplicationController
       note.user = current_visitor
     end
   end
-  
+
   public
   def setup_object
     if params[:id]
@@ -38,7 +38,7 @@ class TeacherNotesController < ApplicationController
       set_owner @teacher_note
     end
   end
-  
+
   def show_teacher_note
     if @teacher_note.changeable?(current_visitor)
       render :update do |page|
@@ -52,8 +52,8 @@ class TeacherNotesController < ApplicationController
       end
     end
   end
-  
-  
+
+
   # GET /teacher_notes
   # GET /teacher_notes.xml
   def index
@@ -147,7 +147,7 @@ class TeacherNotesController < ApplicationController
         format.html { redirect_to(teacher_notes_url) }
         format.xml  { head :ok }
       end
-    else 
+    else
       respond_to do |format|
         flash[:notice] = 'You can not modify this Teachernote.'
         format.html { redirect_to(@teacher_note) }

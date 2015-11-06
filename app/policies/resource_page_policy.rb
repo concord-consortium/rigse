@@ -1,0 +1,2 @@
+class ResourcePagePolicy < ApplicationPolicy
+end

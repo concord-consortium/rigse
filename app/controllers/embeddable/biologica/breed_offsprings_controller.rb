@@ -1,7 +1,7 @@
 class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings
   # GET /Embeddable::Biologica/biologica_breed_offsprings.xml
-  def index    
+  def index
     @biologica_breed_offsprings = Embeddable::Biologica::BreedOffspring.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -50,12 +50,12 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
       render :partial => 'remote_form', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_breed_offspring  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_breed_offsprings
   # POST /Embeddable::Biologica/biologica_breed_offsprings.xml
@@ -63,7 +63,7 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.new(params[:biologica_breed_offspring])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_breed_offspring.save
         render :partial => 'new', :locals => { :biologica_breed_offspring=> @biologica_breed_offspring }
@@ -118,11 +118,11 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_breed_offspring.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_breed_offspring.destroy    
+    @biologica_breed_offspring.destroy
   end
 end

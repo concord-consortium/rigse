@@ -3,7 +3,7 @@ module Portal::LearnerJnlpRenderer
     jnlp_session = Dataservice::JnlpSession.create!(:user => current_visitor)
 
     # only start a bundle if this really is the learner, this method is also used by teachers
-    # who want run jnlps 
+    # who want run jnlps
     if current_visitor == learner.student.user
       if(!learner.bundle_logger.in_progress_bundle)
         learner.bundle_logger.start_bundle

@@ -4,8 +4,30 @@ require 'will_paginate/array'
 
 BrowserSpecificiation = Struct.new(:browser, :version)
 
+class PunditUserContext
+  attr_reader :user, :original_user, :request
+
+  def initialize(user, original_user, request)
+    @user = user
+    @original_user = original_user
+    @request = request
+  end
+end
+
 class ApplicationController < ActionController::Base
   include Clipboard
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  def pundit_user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    #redirect_to(request.referrer || root_path)
+  end
+
+  def pundit_user
+    PunditUserContext.new(current_user, @original_user, request)
+  end
 
   # protect_from_forgery
   self.allow_forgery_protection = false

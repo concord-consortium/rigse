@@ -1,0 +1,2 @@
+class UserObserverPolicy < ApplicationPolicy
+end

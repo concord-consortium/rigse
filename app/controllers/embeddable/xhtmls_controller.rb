@@ -49,7 +49,7 @@ class Embeddable::XhtmlsController < ApplicationController
       render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @xhtml }
       end
     end
@@ -61,7 +61,7 @@ class Embeddable::XhtmlsController < ApplicationController
     @xhtml = Embeddable::Xhtml.new(params[:xhtml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @xhtml.save
         render :partial => 'new', :locals => { :xhtml => @xhtml }
@@ -116,11 +116,11 @@ class Embeddable::XhtmlsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @xhtml.page_elements.each do |pe|
       pe.destroy
     end
-    @xhtml.destroy    
+    @xhtml.destroy
   end
 end

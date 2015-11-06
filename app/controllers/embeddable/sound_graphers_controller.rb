@@ -1,7 +1,7 @@
 class Embeddable::SoundGraphersController < ApplicationController
   # GET /embeddable_sound_graphers
   # GET /embeddable_sound_graphers.xml
-  def index    
+  def index
     @sound_graphers  = Embeddable::SoundGrapher.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -49,12 +49,12 @@ class Embeddable::SoundGraphersController < ApplicationController
       render :partial => 'remote_form', :locals => { :sound_grapher => @sound_grapher }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @sound_grapher  }
       end
     end
   end
-  
+
 
   # POST /embeddable_sound_graphers
   # POST /embeddable_sound_graphers.xml
@@ -62,7 +62,7 @@ class Embeddable::SoundGraphersController < ApplicationController
     @sound_grapher = Embeddable::SoundGrapher.new(params[:embeddable_sound_grapher])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @sound_grapher.save
         render :partial => 'new', :locals => { :sound_grapher => @sound_grapher }
@@ -117,11 +117,11 @@ class Embeddable::SoundGraphersController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @sound_grapher.page_elements.each do |pe|
       pe.destroy
     end
-    @sound_grapher.destroy    
+    @sound_grapher.destroy
   end
 end

@@ -1,25 +1,38 @@
 class Admin::ProjectsController < ApplicationController
-  include RestrictedController
-  before_filter :admin_only, except: [:landing_page]
+
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    flash[:notice] = "Please log in as an administrator"
+    redirect_to(:home)
+  end
+
+  public
 
   # GET /:landing_page_slug
   def landing_page
+    # no authorization needed ...
     @project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
     @landing_page_content = @project.landing_page_content
   end
 
   # GET /admin/projects
   def index
-    @projects = Admin::Project.search(params[:search], params[:page], nil)
+    authorize Admin::Project
+    @projects = policy_scope(Admin::Project).search(params[:search], params[:page], nil)
   end
 
   # GET /admin/projects/1
   def show
     @project = Admin::Project.find(params[:id])
+    authorize @project
   end
 
   # GET /admin/projects/new
   def new
+    authorize Admin::Project
     @project = Admin::Project.new
     @project.links.build
   end
@@ -27,6 +40,7 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects/1/edit
   def edit
     @project = Admin::Project.find(params[:id])
+    authorize @project
 
     if request.xhr?
       render :partial => 'remote_form', :locals => { :project => @project }
@@ -35,6 +49,7 @@ class Admin::ProjectsController < ApplicationController
 
   # POST /admin/projects
   def create
+    authorize Admin::Project
     @project = Admin::Project.new(params[:admin_project])
 
     if @project.save
@@ -47,6 +62,7 @@ class Admin::ProjectsController < ApplicationController
   # PUT /admin/projects/1
   def update
     @project = Admin::Project.find(params[:id])
+    authorize @project
 
     if request.xhr?
       if @project.update_attributes(params[:admin_project])
@@ -65,17 +81,11 @@ class Admin::ProjectsController < ApplicationController
 
   # DELETE /admin/projects/1
   def destroy
-    Admin::Project.find(params[:id]).destroy
+    @project = Admin::Project.find(params[:id])
+    authorize @project
+    @project.destroy
 
     redirect_to admin_projects_url
   end
 
-  private
-
-  def admin_only
-    unless current_visitor.has_role?('admin')
-      flash[:notice] = 'Please log in as an administrator'
-      redirect_to(:home)
-    end
-  end
 end

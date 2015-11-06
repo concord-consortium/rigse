@@ -13,7 +13,7 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   # GET /saveable/sparks/measuring_resistances/1
   # GET /saveable/sparks/measuring_resistances/1.json
   def show
-    
+
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.find(params[:id])
 
     respond_to do |format|

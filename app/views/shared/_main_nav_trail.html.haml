@@ -12,7 +12,7 @@
         - unless current_visitor.only_a_student? || (current_visitor.anonymous? && !anon_can_browse)
           %li.trail= link_to 'Search' , search_path
 
-        - if current_visitor.has_role?('admin', 'manager','researcher')
+        - if current_visitor.has_role?('admin', 'manager','researcher') || current_visitor.is_project_admin?
           %li.trail= link_to 'Admin', admin_path
 
       - if current_visitor.has_role?('admin') || current_visitor.portal_teacher

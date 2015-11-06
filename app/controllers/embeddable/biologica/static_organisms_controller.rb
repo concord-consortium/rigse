@@ -1,7 +1,7 @@
 class Embeddable::Biologica::StaticOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_static_organisms
   # GET /Embeddable::Biologica/biologica_static_organisms.xml
-  def index    
+  def index
     @biologica_static_organisms = Embeddable::Biologica::StaticOrganism.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -50,12 +50,12 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
       render :partial => 'remote_form', :locals => { :biologica_static_organism => @biologica_static_organism }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_static_organism  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_static_organisms
   # POST /Embeddable::Biologica/biologica_static_organisms.xml
@@ -63,7 +63,7 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
     @biologica_static_organism = Embeddable::Biologica::StaticOrganism.new(params[:biologica_static_organism])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_static_organism.save
         render :partial => 'new', :locals => { :biologica_static_organism => @biologica_static_organism }
@@ -118,11 +118,11 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_static_organism.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_static_organism.destroy    
+    @biologica_static_organism.destroy
   end
 end

@@ -1,7 +1,7 @@
 class Embeddable::ImageQuestionsController < ApplicationController
   # GET /embeddable_image_questions
   # GET /embeddable_image_questions.xml
-  def index    
+  def index
     @image_questions = Embeddable::ImageQuestion.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -50,12 +50,12 @@ class Embeddable::ImageQuestionsController < ApplicationController
       render :partial => 'remote_form', :locals => { :image_question => @image_question }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @image_question  }
       end
     end
   end
-  
+
 
   # POST /embeddable_image_questions
   # POST /embeddable_image_questions.xml
@@ -63,7 +63,7 @@ class Embeddable::ImageQuestionsController < ApplicationController
     @image_question = Embeddable::ImageQuestion.new(params[:image_question])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @image_question.save
         render :partial => 'new', :locals => { :image_question => @image_question }
@@ -118,11 +118,11 @@ class Embeddable::ImageQuestionsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @image_question.page_elements.each do |pe|
       pe.destroy
     end
-    @image_question.destroy    
+    @image_question.destroy
   end
 end

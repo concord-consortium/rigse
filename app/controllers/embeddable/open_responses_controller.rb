@@ -59,7 +59,7 @@ class Embeddable::OpenResponsesController < ApplicationController
     @open_response = Embeddable::OpenResponse.new(params[:open_response])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @open_response.save
         render :partial => 'new', :locals => { :open_response => @open_response }
@@ -122,6 +122,6 @@ class Embeddable::OpenResponsesController < ApplicationController
     @open_response.destroy
 
   end
-  
-  
+
+
 end

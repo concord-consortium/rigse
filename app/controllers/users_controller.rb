@@ -1,25 +1,22 @@
 class UsersController < ApplicationController
 
-  include RestrictedController
-  before_filter :changeable_filter,
-    :only => [
-      :show,
-      :edit,
-      :update,
-      :reset_password
-    ]
-  before_filter :manager, :only => [:destroy]
-  before_filter :manager_or_researcher,
-    :only => [
-      :index,
-      :account_report
-    ]
   after_filter :store_location, :only => [:index]
 
-  def changeable_filter
-    @user = User.find(params[:id])
-    redirect_home unless @user.changeable?(current_visitor)
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    if exception.query.to_s == 'edit?'
+      flash[:warning] = "You need to be logged in first."
+      redirect_to login_url
+    else
+      flash[:notice] = "Please log in as an administrator"
+      redirect_to :home
+    end
   end
+
+  public
 
   def new
     #This method is called when a user tries to register as a member
@@ -27,8 +24,12 @@ class UsersController < ApplicationController
   end
 
   def index
+    authorize User
     if params[:mine_only]
       @users = User.search(params[:search], params[:page], self.current_visitor)
+      # PUNDIT_REVIEW_SCOPE
+      # PUNDIT_CHECK_SCOPE (found instance)
+      # @users = policy_scope(User)
     else
       @users = User.search(params[:search], params[:page], nil)
     end
@@ -42,6 +43,7 @@ class UsersController < ApplicationController
   # GET /users/1.xml
   def show
     @user = User.find(params[:id])
+    authorize @user
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @user }
@@ -50,91 +52,82 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
+    authorize @user
     @roles = Role.all
     @projects = Admin::Project.all_sorted
-    unless @user.changeable?(current_visitor)
-      flash[:warning]  = "You need to be logged in first."
-      redirect_to login_url
-    end
   end
-# GET /users/1/edit
+
+  # GET /users/1/preferences
   def preferences
     @user = User.find(params[:id])
+    authorize @user, :edit?
     @roles = Role.all
     @projects = Admin::Project.all_sorted
-    unless @user.changeable?(current_visitor)
-      flash[:warning]  = "You need to be logged in first."
-      redirect_to login_url
-    end
   end
    # /users/1/switch
   def switch
-    # @original_user is setup in app/controllers/application_controller.rb
-    unless @original_user.has_role?('admin', 'manager')
-      redirect_to home_path
-    else
-      if request.get?
-        @user = User.find(params[:id])
-        all_users = User.active.all
-        all_users.delete(current_visitor)
-        all_users.delete(User.anonymous)
-        all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
+    authorize User
+    if request.get?
+      @user = User.find(params[:id])
+      all_users = User.active.all
+      all_users.delete(current_visitor)
+      all_users.delete(User.anonymous)
+      all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
 
-        recent_users = []
-        (session[:recently_switched_from_users]  || []).each do |user_id|
-          recent_user = all_users.find { |u| u.id == user_id }
-          recent_users << all_users.delete(recent_user) if recent_user
-        end
-
-        users = all_users.group_by do |u|
-          case
-          when u.default_user   then :default_users
-          when u.portal_student then :student
-          when u.portal_teacher then :teacher
-          else :regular
-          end
-        end
-
-        # to avoid nil values, initialize everything to an empty array if it's non-existent
-        # users[:student] ||= []
-        # users[:regular] ||= []
-        # users[:default_users] ||= []
-        # users[:student].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
-        # users[:regular].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
-        [:student, :regular, :default_users, :student, :teacher].each do |ar|
-          users[ar] ||= []
-          users[ar].sort! { |a, b| a.last_name.downcase <=> b.last_name.downcase }
-        end
-        @user_list = [
-          { :name => 'recent' ,   :users => recent_users     } ,
-          { :name => 'guest',     :users => [User.anonymous] } ,
-          { :name => 'regular',   :users => users[:regular]  } ,
-          { :name => 'students',  :users => users[:student]  } ,
-          { :name => 'teachers',  :users => users[:teacher]  }
-        ]
-        if users[:default_users] && users[:default_users].size > 0
-          @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
-        end
-      elsif request.put?
-        if params[:commit] == "Switch"
-          if switch_to_user = User.find(params[:user][:id])
-            switch_from_user = current_visitor
-            original_user_from_session = session[:original_user_id]
-            recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
-            sign_out self.current_visitor
-            sign_in switch_to_user
-
-            # the original user is only set on the session once:
-            # the first time an admin switches to another user
-            unless original_user_from_session
-              session[:original_user_id] = switch_from_user.id
-            end
-            recently_switched_from_users.insert(0, switch_from_user.id)
-            session[:recently_switched_from_users] = recently_switched_from_users.uniq
-          end
-        end
-        redirect_to home_path
+      recent_users = []
+      (session[:recently_switched_from_users]  || []).each do |user_id|
+        recent_user = all_users.find { |u| u.id == user_id }
+        recent_users << all_users.delete(recent_user) if recent_user
       end
+
+      users = all_users.group_by do |u|
+        case
+        when u.default_user   then :default_users
+        when u.portal_student then :student
+        when u.portal_teacher then :teacher
+        else :regular
+        end
+      end
+
+      # to avoid nil values, initialize everything to an empty array if it's non-existent
+      # users[:student] ||= []
+      # users[:regular] ||= []
+      # users[:default_users] ||= []
+      # users[:student].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+      # users[:regular].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+      [:student, :regular, :default_users, :student, :teacher].each do |ar|
+        users[ar] ||= []
+        users[ar].sort! { |a, b| a.last_name.downcase <=> b.last_name.downcase }
+      end
+      @user_list = [
+        { :name => 'recent' ,   :users => recent_users     } ,
+        { :name => 'guest',     :users => [User.anonymous] } ,
+        { :name => 'regular',   :users => users[:regular]  } ,
+        { :name => 'students',  :users => users[:student]  } ,
+        { :name => 'teachers',  :users => users[:teacher]  }
+      ]
+      if users[:default_users] && users[:default_users].size > 0
+        @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
+      end
+    elsif request.put?
+      if params[:commit] == "Switch"
+        if switch_to_user = User.find(params[:user][:id])
+          switch_from_user = current_visitor
+          original_user_from_session = session[:original_user_id]
+          recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
+          sign_out self.current_visitor
+          sign_in switch_to_user
+
+          # the original user is only set on the session once:
+          # the first time an admin switches to another user
+          unless original_user_from_session
+            session[:original_user_id] = switch_from_user.id
+          end
+          recently_switched_from_users.insert(0, switch_from_user.id)
+          session[:recently_switched_from_users] = recently_switched_from_users.uniq
+        end
+      end
+      redirect_to home_path
     end
   end
 
@@ -150,6 +143,7 @@ class UsersController < ApplicationController
       end
     else
       @user = User.find(params[:id])
+      authorize @user
       respond_to do |format|
         if @user.update_attributes(params[:user])
 
@@ -162,7 +156,14 @@ class UsersController < ApplicationController
               @user.set_role_ids(params[:user][:role_ids] || [])
             end
             if params[:user][:has_projects_in_form]
-              @user.set_project_ids(params[:user][:project_ids] || [])
+              all_projects = Admin::Project.all
+              @user.set_role_for_projects('admin', all_projects, params[:user][:admin_project_ids] || [])
+              @user.set_role_for_projects('researcher', all_projects, params[:user][:researcher_project_ids] || [])
+              @user.set_role_for_projects('member', all_projects, params[:user][:member_project_ids] || [])
+            end
+          elsif current_visitor.is_project_admin?
+            if params[:user][:has_projects_in_form]
+              @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
             end
           end
 
@@ -204,30 +205,25 @@ class UsersController < ApplicationController
     if request.xhr?
       render :partial => 'interface', :locals => { :vendor_interface => @user.vendor_interface }
     else
-      if !@user.changeable?(current_visitor)
-        flash[:warning]  = "You need to be logged in first."
-        redirect_to login_url
+      authorize @user, :edit?
+      if params[:commit] == "Cancel"
+        redirect_back_or_default(home_url)
       else
-
-        if params[:commit] == "Cancel"
-          redirect_back_or_default(home_url)
-        else
-          if request.put?
-            respond_to do |format|
-              if @user.update_attributes(params[:user])
-                format.html {  redirect_back_or_default(home_url) }
-                format.xml  { head :ok }
-              else
-                format.html { render :action => "interface" }
-                format.xml  { render :xml => @user.errors.to_xml }
-              end
+        if request.put?
+          respond_to do |format|
+            if @user.update_attributes(params[:user])
+              format.html {  redirect_back_or_default(home_url) }
+              format.xml  { head :ok }
+            else
+              format.html { render :action => "interface" }
+              format.xml  { render :xml => @user.errors.to_xml }
             end
-          else
-            # @vendor_interface = current_visitor.vendor_interface
-            # @vendor_interfaces = Probe::VendorInterface.all.map { |v| [v.name, v.id] }
-            # session[:back_to] = request.env["HTTP_REFERER"]
-            # render :action => "interface"
           end
+        else
+          # @vendor_interface = current_visitor.vendor_interface
+          # @vendor_interfaces = Probe::VendorInterface.all.map { |v| [v.name, v.id] }
+          # session[:back_to] = request.env["HTTP_REFERER"]
+          # render :action => "interface"
         end
       end
     end
@@ -251,6 +247,8 @@ class UsersController < ApplicationController
   end
 
   def reset_password
+    @user = User.find(params[:id])
+    authorize @user
     p = Password.new(:user_id => params[:id])
     p.save(:validate => false) # we don't need the user to have a valid email address...
     session[:return_to] = request.referer
@@ -266,18 +264,14 @@ class UsersController < ApplicationController
 
   #Used for activation of users by a manager/admin
   def confirm
-    if current_visitor && current_visitor.has_role?('admin', 'manager')
-      user = User.find(params[:id]) unless params[:id].blank?
-      if !params[:id].blank? && user && user.state != "active"
-        user.confirm!
-        user.make_user_a_member
-        # assume this type of user just activated someone from somewhere else in the app
-        flash[:notice] = "Activation of #{user.name_and_login} complete."
-        redirect_to(session[:return_to] || root_path)
-      end
-    else
-      flash[:notice] = "Please login as an administrator."
-      redirect_to(root_path)
+    authorize User
+    user = User.find(params[:id]) unless params[:id].blank?
+    if !params[:id].blank? && user && user.state != "active"
+      user.confirm!
+      user.make_user_a_member
+      # assume this type of user just activated someone from somewhere else in the app
+      flash[:notice] = "Activation of #{user.name_and_login} complete."
+      redirect_to(session[:return_to] || root_path)
     end
   end
 
@@ -289,4 +283,25 @@ class UsersController < ApplicationController
     end
   end
 
+  def edit_by_project_admin
+    @user = User.find(params[:id])
+    authorize @user
+    @projects = Admin::Project.all_sorted
+  end
+  def update_by_project_admin
+    if params[:commit] == "Cancel"
+      redirect_to users_path
+    else
+      @user = User.find(params[:id])
+      authorize @user
+      respond_to do |format|
+        @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
+        flash[:notice] = "User: #{@user.name} was successfully updated."
+        format.html do
+          redirect_to users_path
+        end
+        format.xml  { head :ok }
+      end
+    end
+  end
 end

@@ -1,7 +1,7 @@
 class Embeddable::MultipleChoicesController < ApplicationController
   # GET /Embeddable/multiple_choices
   # GET /Embeddable/multiple_choices.xml
-  def index    
+  def index
     @multiple_choices = Embeddable::MultipleChoice.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -56,7 +56,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
     @multiple_choice = Embeddable::MultipleChoice.new(params[:xhtml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @multiple_choice.save
         @multiple_choice.create_default_choices
@@ -104,7 +104,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
       end
     end
   end
-  
+
   # DELETE /Embeddable/multiple_choices/1
   # DELETE /Embeddable/multiple_choices/1.xml
   def destroy
@@ -114,14 +114,14 @@ class Embeddable::MultipleChoicesController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @multiple_choice.page_elements.each do |pe|
       pe.destroy
     end
-    @multiple_choice.destroy    
+    @multiple_choice.destroy
   end
-  
+
   def add_choice
     @question = Embeddable::MultipleChoice.find(params[:id])
     # dont use @question.addChoice or it will be added twice!!

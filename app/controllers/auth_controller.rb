@@ -4,7 +4,6 @@ class AuthController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
   def verify_logged_in
-
     if current_user.nil?
       session[:sso_callback_params] = params
       session[:sso_application] = application

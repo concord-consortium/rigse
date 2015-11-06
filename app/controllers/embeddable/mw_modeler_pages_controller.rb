@@ -1,7 +1,7 @@
 class Embeddable::MwModelerPagesController < ApplicationController
   # GET /Embeddable/mw_modeler_pages
   # GET /Embeddable/mw_modeler_pages.xml
-  def index    
+  def index
     @mw_modeler_pages = Embeddable::MwModelerPage.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -49,12 +49,12 @@ class Embeddable::MwModelerPagesController < ApplicationController
       render :partial => 'remote_form', :locals => { :mw_modeler_page => @mw_modeler_page }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @mw_modeler_page  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/mw_modeler_pages
   # POST /Embeddable/mw_modeler_pages.xml
@@ -62,7 +62,7 @@ class Embeddable::MwModelerPagesController < ApplicationController
     @mw_modeler_page = Embeddable::MwModelerPage.new(params[:mw_modeler_page])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @mw_modeler_page.save
         render :partial => 'new', :locals => { :mw_modeler_page => @mw_modeler_page }
@@ -117,11 +117,11 @@ class Embeddable::MwModelerPagesController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @mw_modeler_page.page_elements.each do |pe|
       pe.destroy
     end
-    @mw_modeler_page.destroy    
+    @mw_modeler_page.destroy
   end
 end

@@ -4,7 +4,7 @@ class RiGse::ExpectationsController < ApplicationController
   def index
     @expectations = RiGse::Expectation.all
     respond_to do |format|
-      format.html 
+      format.html
       format.xml { render :xml => @expectations }
     end
   end

@@ -1,7 +1,7 @@
 class Embeddable::RawOtmlsController < ApplicationController
   # GET /Embeddable/raw_otmls
   # GET /Embeddable/raw_otmls.xml
-  def index    
+  def index
     @raw_otmls = Embeddable::RawOtml.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -55,7 +55,7 @@ class Embeddable::RawOtmlsController < ApplicationController
       end
     end
   end
-  
+
 
   # POST /Embeddable/raw_otmls
   # POST /Embeddable/raw_otmls.xml
@@ -63,7 +63,7 @@ class Embeddable::RawOtmlsController < ApplicationController
     @raw_otml = Embeddable::RawOtml.new(params[:raw_otml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @raw_otml.save
         render :partial => 'new', :locals => { :raw_otml => @raw_otml }
@@ -122,11 +122,11 @@ class Embeddable::RawOtmlsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @raw_otml.page_elements.each do |pe|
       pe.destroy
     end
-    @raw_otml.destroy    
+    @raw_otml.destroy
   end
 end

@@ -1,7 +1,7 @@
 class Embeddable::Biologica::PedigreesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_pedigrees
   # GET /Embeddable::Biologica/biologica_pedigrees.xml
-  def index    
+  def index
     @biologica_pedigrees = Embeddable::Biologica::Pedigree.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -52,12 +52,12 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
       render :partial => 'remote_form', :locals => { :biologica_pedigree => @biologica_pedigree }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @biologica_pedigree  }
       end
     end
   end
-  
+
 
   # POST /Embeddable::Biologica/biologica_pedigrees
   # POST /Embeddable::Biologica/biologica_pedigrees.xml
@@ -66,7 +66,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     modify_organism_ids
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @biologica_pedigree.save
         render :partial => 'new', :locals => { :biologica_pedigree => @biologica_pedigree }
@@ -122,12 +122,12 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @biologica_pedigree.page_elements.each do |pe|
       pe.destroy
     end
-    @biologica_pedigree.destroy    
+    @biologica_pedigree.destroy
   end
 
   private
@@ -138,7 +138,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   # only has one string value(!) Can't figure out why.
   def modify_organism_ids
     return unless params[:embeddable_biologica_pedigree]
-    value = params[:embeddable_biologica_pedigree][:organism_ids]    
+    value = params[:embeddable_biologica_pedigree][:organism_ids]
     return if value.nil?
     case value
     when Array
@@ -148,5 +148,5 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
     end
     value = [value]
     params[:embeddable_biologica_pedigree][:organism_ids]=value.flatten.compact
-  end 
+  end
 end

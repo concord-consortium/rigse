@@ -1,0 +1,2 @@
+class StudentRosterRowPolicy < ApplicationPolicy
+end

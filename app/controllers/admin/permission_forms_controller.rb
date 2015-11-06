@@ -1,5 +1,13 @@
 class Admin::PermissionFormsController < ApplicationController
-  before_filter :admin_or_manager
+
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    flash[:notice] = "Please log in as an administrator or manager"
+    redirect_to(:home)
+  end
 
   protected
 
@@ -81,11 +89,16 @@ class Admin::PermissionFormsController < ApplicationController
   public
 
   def index
+    authorize Portal::PermissionForm
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (did not find instance)
+    # @permission_forms = policy_scope(Portal::PermissionForm)
     form = TeacherSearchForm.new(params[:form])
     @teachers = form.search
   end
 
   def update_forms
+    authorize Portal::PermissionForm
     student_id     = params['student_id']
     permission_ids = params['permission_ids']
     status = 400
@@ -100,6 +113,7 @@ class Admin::PermissionFormsController < ApplicationController
   end
 
   def create
+    authorize Portal::PermissionForm
     form_data = params['portal_permission']
     if form_data && (!form_data['name'].blank?)
       form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'])
@@ -109,6 +123,7 @@ class Admin::PermissionFormsController < ApplicationController
 
   def remove_form
     form = Portal::PermissionForm.find(params[:id])
+    authorize form, :destroy?
     form.destroy
     redirect_to action: 'index'
   end

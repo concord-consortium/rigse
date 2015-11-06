@@ -1,7 +1,7 @@
 class Embeddable::DataTablesController < ApplicationController
   # GET /Embeddable/data_tables
   # GET /Embeddable/data_tables.xml
-  def index    
+  def index
     @teacher = false
     @data_tables = Embeddable::DataTable.search(params[:search], params[:page], nil)
 
@@ -51,12 +51,12 @@ class Embeddable::DataTablesController < ApplicationController
       render :partial => 'remote_form', :locals => { :data_table => @data_table }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @data_table  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/data_tables
   # POST /Embeddable/data_tables.xml
@@ -64,7 +64,7 @@ class Embeddable::DataTablesController < ApplicationController
     @data_table = Embeddable::DataTable.new(params[:xhtml])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @data_table.save
         render :partial => 'new', :locals => { :data_table => @data_table }
@@ -119,20 +119,20 @@ class Embeddable::DataTablesController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @data_table.page_elements.each do |pe|
       pe.destroy
     end
-    @data_table.destroy    
+    @data_table.destroy
   end
-  
+
   def update_cell_data
     @data_table = Embeddable::DataTable.find(params[:id])
     if @data_table.changeable? current_visitor
       @data_table.column_data = params[:data]
       if @data_table.save
-        # TODO: give some good feedback to the author 
+        # TODO: give some good feedback to the author
         # that the data has been updated.
         # render :update do |page|
         #   page << "debug('ok + #{@data_table.data}')"

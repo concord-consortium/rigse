@@ -11,5 +11,5 @@ class PageElementsController < ApplicationController
       format.js
     end
   end
-  
+
 end

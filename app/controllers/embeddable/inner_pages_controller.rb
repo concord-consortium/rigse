@@ -1,7 +1,7 @@
 class Embeddable::InnerPagesController < ApplicationController
   # GET /Embeddable/inner_pages
   # GET /Embeddable/inner_pages.xml
-  def index    
+  def index
     @inner_pages = Embeddable::InnerPage.search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
@@ -9,7 +9,7 @@ class Embeddable::InnerPagesController < ApplicationController
     end
   end
 
-  
+
   def add_page
     @inner_page = Embeddable::InnerPage.find(params['id'])
     @new_page = Page.create
@@ -18,12 +18,12 @@ class Embeddable::InnerPagesController < ApplicationController
     # render add_page.js.rjs
     # render :partial => "page", :locals => {:page => @new_page, :inner_page => @inner_page}
   end
-  
+
   def delete_page
     @inner_page = Embeddable::InnerPage.find(params['id'])
     @page = Page.find(params['page_id'])
     last_number = @page.page_number
-    last_number = last_number - 1 
+    last_number = last_number - 1
     @inner_page.delete_page(@page)
     # render delete_page.js.rjs
   end
@@ -36,7 +36,7 @@ class Embeddable::InnerPagesController < ApplicationController
 
   ##
   ##
-  ##  
+  ##
   def sort_pages
     paramlistname = params[:list_name].nil? ? 'inner_pages_pages_list' : params[:list_name]
     @inner_page = Embeddable::InnerPage.find(params['id'])
@@ -45,13 +45,13 @@ class Embeddable::InnerPagesController < ApplicationController
       # puts "page.id.to_s #{page.id.to_s}"
       page.position = params[paramlistname].index(page.id.to_s) + 1
       page.save
-    end 
+    end
     render :nothing => true
   end
   ##
   ## TODO: This code was copy/pasted from the pages controller.
   ## TODO: It should be DRYd up a bit.
-  ## This is a remote_function (ajax) to be called with link_to_remote or similar. 
+  ## This is a remote_function (ajax) to be called with link_to_remote or similar.
   ## We expect parameters "page_id" and "closs_name"
   ## optional parameter "container" tells us what DOM ID to add our results too...
   ##
@@ -92,14 +92,14 @@ class Embeddable::InnerPagesController < ApplicationController
 
 
 
-  
+
   # GET /Embeddable/inner_pages/1
   # GET /Embeddable/inner_pages/1.xml
   def show
     @inner_page = Embeddable::InnerPage.find(params[:id])
     @page = @inner_page.children[0]
     @teacher_mode = params['teacher_mode'] || nil
-    
+
     if request.xhr?
       render :partial => 'show', :locals => { :inner_page => @inner_page, :sub_page => @inner_page.sub_pages.first}
     else
@@ -136,12 +136,12 @@ class Embeddable::InnerPagesController < ApplicationController
       render :partial => 'remote_form', :locals => { :inner_page => @inner_page }
     else
       respond_to do |format|
-        format.html 
+        format.html
         format.xml  { render :xml => @inner_page  }
       end
     end
   end
-  
+
 
   # POST /Embeddable/inner_pages
   # POST /Embeddable/inner_pages.xml
@@ -149,7 +149,7 @@ class Embeddable::InnerPagesController < ApplicationController
     @inner_page = Embeddable::InnerPage.new(params[:inner_page])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @inner_page.save
         render :partial => 'new', :locals => { :inner_page => @inner_page }
@@ -204,11 +204,11 @@ class Embeddable::InnerPagesController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    
+
     # TODO:  We should move this logic into the model!
     @inner_page.page_elements.each do |pe|
       pe.destroy
     end
-    @inner_page.destroy    
+    @inner_page.destroy
   end
 end

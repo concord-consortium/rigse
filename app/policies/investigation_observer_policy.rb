@@ -1,0 +1,2 @@
+class InvestigationObserverPolicy < ApplicationPolicy
+end

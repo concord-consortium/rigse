@@ -1,8 +1,18 @@
 class InteractivesController < ApplicationController
 
-  before_filter :admin_only, :except => [:index, :show, :export_model_library]
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    flash[:notice] = "Please log in as an administrator"
+    redirect_to(:home)
+  end
+
+  public
 
   def index
+    authorize Interactive
     search_params = {
       :material_types     => [Search::InteractiveMaterial],
       :interactive_page   => params[:page],
@@ -14,6 +24,9 @@ class InteractivesController < ApplicationController
 
     s = Search.new(search_params)
     @interactives = s.results[Search::InteractiveMaterial]
+    # PUNDIT_REVIEW_SCOPE
+    # PUNDIT_CHECK_SCOPE (found instance)
+    # @interactives = policy_scope(Interactive)
 
     if params[:mine_only]
       @interactives = @interactives.reject { |i| i.user.id != current_visitor.id }
@@ -32,10 +45,12 @@ class InteractivesController < ApplicationController
   end
 
   def new
+    authorize Interactive
     @interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)
   end
 
   def create
+    authorize Interactive
     @interactive = Interactive.new(params[:interactive])
     @interactive.user = current_visitor
 
@@ -69,14 +84,17 @@ class InteractivesController < ApplicationController
 
   def show
     @interactive = Interactive.find(params[:id])
+    authorize @interactive
   end
 
   def edit
     @interactive = Interactive.find(params[:id])
+    authorize @interactive
   end
 
   def destroy
     @interactive = Interactive.find(params[:id])
+    authorize @interactive
     @interactive.destroy
     @redirect = params[:redirect]
     respond_to do |format|
@@ -89,6 +107,7 @@ class InteractivesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @interactive = Interactive.find(params[:id])
+    authorize @interactive
 
     if params[:update_grade_levels]
       # set the grade_level tags
@@ -129,6 +148,7 @@ class InteractivesController < ApplicationController
   end
 
   def import_model_library
+    authorize Interactive
     if request.post?
       respond_to do |format|
         begin
@@ -171,6 +191,7 @@ class InteractivesController < ApplicationController
   end
 
   def export_model_library
+    # no authorization needed ...
     model_library = []
     Interactive.published.each do |m|
       model_library << {
@@ -190,11 +211,4 @@ class InteractivesController < ApplicationController
     send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "portal_interactives_library.json"
   end
 
-  protected
-  def admin_only
-    unless current_visitor.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator"
-      redirect_to(:home)
-    end
-  end
 end
