@@ -10,6 +10,8 @@ class Anonymizer
   constructor: ->
     @selector      = ".learner_response_name"
     @alt_selector  = "div.user"
+    @feedback_selector = "div.feedback_link"
+    @title_selector = "img.portray"
     @button_select = "anonymize_button"
     @real_to_fake_map  = {}
     @fake_to_real_map  = {}
@@ -19,46 +21,40 @@ class Anonymizer
       $(@button_select).observe 'click', (evt) =>
         @toggle()
         evt.stop();
-
-  record_fake_and_real: (real_name) ->
-    fake = @real_to_fake_map[real_name]
-    unless fake
-      fake = "Student #{@counter}"
-      @counter++
-      @real_to_fake_map[real_name] = fake
-      @fake_to_real_map[fake] = real_name
-    return fake
-
-  rename_button: ->
-    if @anonymous
-      $(@button_select).textContent = "Show names"
-    else
-      $(@button_select).textContent = "Hide names"
+    $$(@selector).each (item) =>
+      real_name = trim(item.textContent)
+      if not @real_to_fake_map[real_name]
+        fake = "Student #{@counter++}"
+        @real_to_fake_map[real_name] = fake
+        @fake_to_real_map[fake] = real_name
 
   publicize: ->
     @anonymous = false
     $$(@selector).each (item) =>
-      fake_name = trim(item.textContent)
-      item.textContent = @fake_to_real_map[fake_name]
+      item.textContent = @fake_to_real_map[trim(item.textContent)]
     $$(@alt_selector).each (item) =>
-      fake_name = trim(item.textContent)
-      item.textContent = @fake_to_real_map[fake_name]
+      item.textContent = @fake_to_real_map[trim(item.textContent)]
+    $$(@title_selector).each (item) =>
+      item.title = @fake_to_real_map[trim(item.title)]
+    $$(@feedback_selector).each (Element.show)
 
   anonymize: ->
     @anonymous = true
     $$(@selector).each (item) =>
-      real_name = trim(item.textContent)
-      item.textContent = @record_fake_and_real(real_name)
+      item.textContent = @real_to_fake_map[trim(item.textContent)]
     $$(@alt_selector).each (item) =>
-      real_name = trim(item.textContent)
-      item.textContent = @real_to_fake_map[real_name]
+      item.textContent = @real_to_fake_map[trim(item.textContent)]
+    $$(@title_selector).each (item) =>
+      item.title = @real_to_fake_map[trim(item.title)]
+    $$(@feedback_selector).each (Element.hide)
 
   toggle: ->
-    if @anonymous
+    $(@button_select).textContent = if @anonymous
       @publicize()
+      "Hide names"
     else
       @anonymize()
-    @rename_button()
+      "Show names"
 
 document.observe "dom:loaded", ->
   a = new Anonymizer
