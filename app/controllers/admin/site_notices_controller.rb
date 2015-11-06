@@ -78,7 +78,7 @@ class Admin::SiteNoticesController < ApplicationController
 
   def index
     #authorize Admin::SiteNotice
-    #@all_notices = policy_scope(Admin::SiteNotice)
+    #@all_notices = policy_scope(Admin::SiteNotice).order('updated_at desc')
     @all_notices = Admin::SiteNotice.find(:all,:order=> 'updated_at desc')
   end
 

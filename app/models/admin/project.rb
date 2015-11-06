@@ -3,6 +3,15 @@ class Admin::Project < ActiveRecord::Base
 
   self.table_name = 'admin_projects'
 
+  def changeable?(user)
+    # project admins can change the projects they are admins of
+    if user.is_project_admin? && user.admin_for_projects.include?(self)
+      true
+    else
+      super(user)
+    end
+  end
+
   self.extend SearchableModel
   @@searchable_attributes = %w{name}
 

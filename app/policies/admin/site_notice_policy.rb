@@ -1,11 +1,5 @@
 class Admin::SiteNoticePolicy < ApplicationPolicy
 
-  class Scope < Scope
-    def resolve
-      all.order('updated_at desc')
-    end
-  end
-
   def index?
     admin_or_manager?
   end

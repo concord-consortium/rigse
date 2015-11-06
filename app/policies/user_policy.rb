@@ -23,4 +23,8 @@ class UserPolicy < ApplicationPolicy
     admin_or_manager?
   end
 
+  def reset_password?
+    changeable?
+  end
+
 end

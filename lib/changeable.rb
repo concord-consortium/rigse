@@ -14,10 +14,6 @@ module Changeable
     elsif user.has_role?("admin", "manager")
       true
 
-    # project admins can change the projects they are admins of
-    elsif (self.class == Admin::Project) && user.is_project_admin? && user.admin_for_projects.include?(self)
-      true
-
     # Some things (eg: portal_clazes) might havemultiple owners (users)
     # So provide alternate "is_user?" pattern for those cases.
     # is_user? should take precedence, because "user" is more ambiguous

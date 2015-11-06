@@ -1,16 +1,11 @@
 class SecurityQuestionPolicy < ApplicationPolicy
 
   def edit?
-    has_security_questions?
+    student?
   end
 
   def update?
-    has_security_questions?
+    student?
   end
 
-  private
-
-  def has_security_questions?
-    user && !user.portal_student.nil?
-  end
 end

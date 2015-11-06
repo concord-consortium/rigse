@@ -105,7 +105,7 @@ class ApplicationPolicy
     user && (user.is_project_admin? || has_roles?('admin'))
   end
 
-  def admin_or_manager_project_admin?
+  def manager_or_project_admin?
     user && (user.is_project_admin? || has_roles?('admin','manager'))
   end
 
@@ -115,6 +115,10 @@ class ApplicationPolicy
 
   def author?
     has_roles?('author')
+  end
+
+  def student?
+    user && !user.portal_student.nil?
   end
 
   def has_roles?(*roles)

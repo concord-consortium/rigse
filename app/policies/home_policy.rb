@@ -7,8 +7,6 @@ class HomePolicy < Struct.new(:user, :home)
   end
 
   def admin?
-    Rails.logger.warn '*** checking admin ***'
-    Rails.logger.warn user
     user && (user.is_project_admin? || user.has_role?('manager','admin','researcher'))
   end
 
