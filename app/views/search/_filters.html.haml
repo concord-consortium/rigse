@@ -78,13 +78,13 @@
                 .filterheader
                   Material Properties
                 .tablecell
-                  = check_box_tag 'java_requirements[]', SearchModelInterface::NoJavaRequirement, @form_model.runs_in_browser, :id => 'runs_in_browser'
+                  = check_box_tag 'material_properties[]', SearchModelInterface::RunsInBrowser, @form_model.runs_in_browser, :id => 'runs_in_browser'
                   %label.tooltip
                     Runs In Browser
                     %span.tip
                       These materials do not launch a Java webstart application.
                 .tablecell
-                  = check_box_tag 'java_requirements[]', SearchModelInterface::JNLPJavaRequirement, @form_model.requires_download, :id => 'requires_download'
+                  = check_box_tag 'material_properties[]', SearchModelInterface::RequiresDownload, @form_model.requires_download, :id => 'requires_download'
                   %label.tooltip
                     Requires Download
                     %span.tip

@@ -56,6 +56,7 @@
         Do not allow to copy this activity.
   = field_set_tag 'Save Path' do
     = f.text_field :save_path
+  = render :partial => 'shared/material_properties_edit', :locals => { :object => @external_activity }
   = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }
   = render :partial => 'shared/grade_levels_edit', :locals => { :object => @external_activity }
   = render :partial => 'shared/subject_areas_edit', :locals => { :object => @external_activity }

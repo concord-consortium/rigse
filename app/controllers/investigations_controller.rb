@@ -271,6 +271,11 @@ class InvestigationsController < AuthoringController
     @investigation = Investigation.new(params[:investigation])
     @investigation.user = current_visitor
 
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @investigation.material_property_list = (params[:material_properties] || [])
+    end
+
     if params[:update_cohorts]
       # set the cohort tags
       @investigation.cohort_list = (params[:cohorts] || [])
@@ -348,6 +353,12 @@ class InvestigationsController < AuthoringController
     # PUNDIT_CHECK_AUTHORIZE (found instance)
     # authorize @investigation
     update_gse
+
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @investigation.material_property_list = (params[:material_properties] || [])
+      @investigation.save
+    end
 
     if params[:update_cohorts]
       # set the cohort tags

@@ -22,7 +22,7 @@ class Search
   attr_accessor :include_official
   attr_accessor :include_mine
   attr_accessor :include_templates
-  attr_accessor :java_requirements
+  attr_accessor :material_properties
   attr_accessor :grade_level_groups
   attr_accessor :subject_areas
   attr_accessor :project_ids
@@ -55,7 +55,7 @@ class Search
   NoProbeRequired = ["0"]
 
   def self.grade_level_groups
-    { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"] }
+    { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"], 'Higher Ed' => ["Higher Ed"] }
   end
 
   def self.clean_search_terms (term)
@@ -99,7 +99,7 @@ class Search
     self.project_ids                 = opts[:project_ids] || []
     self.available_subject_areas     = []
     self.available_projects          = []
-    self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0 }
+    self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0, 'Higher Ed' => 0 }
     self.model_types                 = opts[:model_types] || nil
     self.available_model_types       = []
 
@@ -122,7 +122,7 @@ class Search
     self.investigation_page   = opts[:investigation_page]  || 1
     self.interactive_page     = opts[:interactive_page]    || 1
     self.without_teacher_only = opts[:without_teacher_only]|| true
-    self.java_requirements    = opts[:java_requirements]   || []
+    self.material_properties  = opts[:material_properties] || []
     self.include_contributed  = opts[:include_contributed] || false
     self.include_mine         = opts[:include_mine]        || false
     self.include_official     = opts[:include_official]    || false
@@ -186,7 +186,7 @@ class Search
 
         search_by_probes(s)
         search_by_authorship(s)
-        search_by_java_requirements(s)
+        search_by_material_properties(s)
         search_by_grade_levels(s)
         search_by_subject_areas(s)
         search_by_projects(s)
@@ -223,7 +223,7 @@ class Search
   def params
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
-      :per_page, :include_contributed,:include_mine, :investigation_page, :activity_page, :java_requirements,
+      :per_page, :include_contributed,:include_mine, :investigation_page, :activity_page, :material_properties,
       :grade_level_groups, :subject_areas, :project_ids, :model_types]
     keys.each do |key|
       value = self.send key
@@ -241,11 +241,11 @@ class Search
   end
 
   def requires_download
-    self.java_requirements.include? SearchModelInterface::JNLPJavaRequirement
+    self.material_properties.include? SearchModelInterface::RequiresDownload
   end
 
   def runs_in_browser
-    self.java_requirements.include? SearchModelInterface::NoJavaRequirement
+    self.material_properties.include? SearchModelInterface::RunsInBrowser
   end
 
   def will_show_official
@@ -272,11 +272,16 @@ class Search
     end
   end
 
-  def search_by_java_requirements(search)
-    return if (java_requirements.size < 1)
+  def search_by_material_properties(search)
+    return if (material_properties.size < 1)
     search.any_of do |s|
-      java_requirements.each do |r|
-        s.with(:java_requirements, r)
+      material_properties.each do |r|
+        # FIXME AU: Special-casing this seems hacky....
+        if r == SearchModelInterface::RunsInBrowser
+          s.without(:material_properties, SearchModelInterface::RequiresDownload)
+        else
+          s.with(:material_properties, r)
+        end
       end
     end
   end

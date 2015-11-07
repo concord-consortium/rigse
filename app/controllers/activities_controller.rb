@@ -152,6 +152,11 @@ class ActivitiesController < ApplicationController
     @activity = Activity.new(params[:activity])
     @activity.user = current_visitor
 
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @activity.material_property_list = (params[:material_properties] || [])
+    end
+
     if params[:update_cohorts]
       # set the cohort tags
       @activity.cohort_list = (params[:cohorts] || [])
@@ -186,6 +191,12 @@ class ActivitiesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @activity = Activity.find(params[:id])
     authorize @activity
+
+    if params[:update_material_properties]
+      # set the material_properties tags
+      @activity.material_property_list = (params[:material_properties] || [])
+      @activity.save
+    end
 
     if params[:update_cohorts]
       # set the cohort tags

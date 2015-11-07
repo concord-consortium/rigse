@@ -2,11 +2,12 @@
 # For the purposes of searching and grouping items which appear similar to
 # end users but have different representations in the data model
 module SearchModelInterface
-  JNLPJavaRequirement  = "JNLPJavaRequirement"
-  NoJavaRequirement    = "NoJavaRequirement"
+  RunsInBrowser  = "Runs in browser"
+  RequiresDownload    = "Requires download"
   def self.included(clazz)
     ## add before_save hooks
     clazz.class_eval do
+      acts_as_taggable_on :material_properties
       acts_as_taggable_on :cohorts
       acts_as_taggable_on :grade_levels
       acts_as_taggable_on :subject_areas
@@ -32,17 +33,6 @@ module SearchModelInterface
 
   def offerings_by_clazz(clazz_ids)
     offerings.find_all_by_clazz_id(clazz_ids)
-  end
-
-  def java_requirements
-    case self
-    when Investigation
-      return JNLPJavaRequirement
-    when Activity
-      return JNLPJavaRequirement
-    else
-      return NoJavaRequirement
-    end
   end
 
   def description_abstract(length=255)
