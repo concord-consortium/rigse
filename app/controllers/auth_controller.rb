@@ -17,7 +17,7 @@ class AuthController < ApplicationController
   def self.authorize
     debugger
   end
-  def authorize
+  def oauth_authorize
     AccessGrant.prune!
     access_grant = current_user.access_grants.create({:client => application, :state => params[:state]}, :without_protection => true)
     redirect_to access_grant.redirect_uri_for(params[:redirect_uri])

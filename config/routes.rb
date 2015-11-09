@@ -7,7 +7,7 @@ RailsPortal::Application.routes.draw do
   match '/auth/after' => 'misc#auth_after', method: :get, as: 'auth_after'
 
   # Provider stuff
-  match '/auth/concord_id/authorize' => 'auth#authorize'
+  match '/auth/concord_id/authorize' => 'auth#oauth_authorize'
   match '/auth/concord_id/access_token' => 'auth#access_token'
   match '/auth/concord_id/user' => 'auth#user'
   match '/oauth/token' => 'auth#access_token'
