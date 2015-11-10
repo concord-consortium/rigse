@@ -37,6 +37,9 @@ class Admin::Project < ActiveRecord::Base
   has_many :project_users, class_name: 'Admin::ProjectUser'
   has_many :users, :through => :project_users
 
+  has_many :cohorts, :class_name => 'Admin::Cohort', :dependent => :destroy
+  accepts_nested_attributes_for :cohorts, :reject_if => lambda { |cohort| cohort[:name].blank? }, :allow_destroy => true
+
   has_many :links, class_name: 'Admin::ProjectLink', :dependent => :destroy
   accepts_nested_attributes_for :links, :reject_if => lambda { |link| link[:name].blank? or link[:href].blank? }, :allow_destroy => true
 
