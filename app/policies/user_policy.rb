@@ -16,7 +16,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def switch?
-    original_user && original_user.has_role?('admin', 'manager')
+    changeable?
   end
 
   def confirm?
