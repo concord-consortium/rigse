@@ -1,0 +1,10 @@
+= hidden_field(:user, :has_projects_in_form, :value => true)
+%fieldset
+  %legend
+    Cohorts
+  %ul.menu_h
+    - projects.each do |p|
+      - p.cohorts.each_with_index do |c, i|
+        %li
+          = c.fullname
+          = check_box_tag "user[cohort_ids][]", c.id, @user.portal_teacher.cohorts.include?(c)

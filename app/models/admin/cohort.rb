@@ -6,4 +6,8 @@ class Admin::Cohort < ActiveRecord::Base
   def teachers
     items.where(:item_type => 'Portal::Teacher')
   end
+
+  def fullname
+    "#{project.name}: #{name}"
+  end
 end

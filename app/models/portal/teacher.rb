@@ -16,6 +16,9 @@ class Portal::Teacher < ActiveRecord::Base
 
   has_many :offering_full_status, :class_name => "Portal::TeacherFullStatus", :foreign_key => "teacher_id"
 
+  has_many :cohort_items, :class_name => 'Admin::CohortItem', :as => :item
+  has_many :cohorts, :class_name => 'Admin::Cohort', :through => :cohort_items, :foreign_key => "admin_cohort_id"
+
   # because of has many polymorphs, we SHOULDN't need the following relationships defined, but
   # HACK: noah went ahead, and explicitly defined them, because it wasn't working.
   #
@@ -151,5 +154,10 @@ class Portal::Teacher < ActiveRecord::Base
       self.user.add_role('author')
     end
   end
+
+  def set_cohorts_by_id(ids=[])
+    self.cohorts = Admin::Cohort.find_all_by_id(ids)
+  end
+
 
 end

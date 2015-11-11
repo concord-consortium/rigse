@@ -288,6 +288,7 @@ class UsersController < ApplicationController
     authorize @user
     @projects = Admin::Project.all_sorted
   end
+
   def update_by_project_admin
     if params[:commit] == "Cancel"
       redirect_to users_path
@@ -296,6 +297,9 @@ class UsersController < ApplicationController
       authorize @user
       respond_to do |format|
         @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
+        if @user.portal_teacher
+          @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
+        end
         flash[:notice] = "User: #{@user.name} was successfully updated."
         format.html do
           redirect_to users_path
