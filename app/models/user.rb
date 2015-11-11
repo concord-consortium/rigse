@@ -563,6 +563,24 @@ class User < ActiveRecord::Base
     portal_teacher || portal_student
   end
 
+  def admin_for_project_cohorts
+    admin_for_projects.map {|p| p.cohorts}.flatten.uniq
+  end
+
+  def cohorts
+    portal_teacher ? portal_teacher.cohorts : (portal_student ? portal_student.cohorts : [])
+  end
+
+  def changeable?(user)
+    # A project admin can edit a student or teacher's account if the usr is tagged with a cohort from one the project admin's projects
+    if user.is_project_admin?
+      # use set intersection to see if there is at least matching cohort
+      (user.admin_for_project_cohorts & cohorts).length > 0
+    else
+      super(user)
+    end
+  end
+
   protected
   def make_activation_code
     self.deleted_at = nil

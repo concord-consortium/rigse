@@ -91,6 +91,11 @@ class Portal::Student < ActiveRecord::Base
     teachers = self.clazzes.map {|c| c.teachers }.flatten.uniq
   end
 
+  def cohorts
+    # a students cohorts are infered from its teacher(s)
+    self.teachers.map {|t| t.cohorts}.flatten.uniq
+  end
+
   def has_teacher?(teacher)
     self.teachers.include?(teacher)
   end

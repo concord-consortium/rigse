@@ -5,10 +5,10 @@ class UserPolicy < ApplicationPolicy
   end
 
   def edit_by_project_admin?
-    changeable? || project_admin?
+    project_admin? && record.portal_teacher
   end
   def update_by_project_admin?
-    changeable? || project_admin?
+    project_admin? && record.portal_teacher
   end
 
   def show?

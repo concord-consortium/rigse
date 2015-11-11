@@ -167,11 +167,8 @@ class UsersController < ApplicationController
             end
           end
 
-          # set the cohort tags if we have a teacher
-          if @user.portal_teacher && params[:update_cohorts]
-            cohorts = params[:cohorts] ? params[:cohorts] : []
-            @user.portal_teacher.cohort_list = cohorts
-            @user.portal_teacher.save
+          if @user.portal_teacher && params[:user][:has_cohorts_in_form]
+            @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
           end
 
           flash[:notice] = "User: #{@user.name} was successfully updated."
@@ -296,8 +293,10 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       authorize @user
       respond_to do |format|
-        @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
-        if @user.portal_teacher
+        if params[:user][:has_projects_in_form]
+          @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
+        end
+        if @user.portal_teacher && params[:user][:has_cohorts_in_form]
           @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
         end
         flash[:notice] = "User: #{@user.name} was successfully updated."
