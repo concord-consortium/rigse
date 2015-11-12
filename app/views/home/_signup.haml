@@ -142,6 +142,7 @@
                 'minLength'        => 3,
                 'non-blank'        => true,
                 'placeholder'      => 'create username',
+                'ng-pattern'       => "/^[a-zA-Z0-9\\.\\+\\-\\_\\@]*$/",
                 'username-avail'   => 'true',
                 'server-errors'    => true,
                 'ng-model-options' => "{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }",
@@ -149,12 +150,14 @@
 
               .div{'ng-messages'  => "signup.login.$error"}
                 .div{'ng-message' => "non-blank"}
-                .div{'ng-message' => "minlength","class" => "error-message"}
+                .div{'ng-message' => "minlength", "class" => "error-message"}
                   Login is too short
-                .div{'ng-message' => "usernameAvail","class" => "error-message"}
+                .div{'ng-message' => "usernameAvail", "class" => "error-message"}
                   That login is taken
-                .div{'ng-message' => "serverErrors","class" => "error-message"}
-                  Please select another email
+                .div{'ng-message' => "pattern", "class" => "error-message"}
+                  Use only letters, numbers, and +.-_@ please.
+                .div{'ng-message' => "serverErrors", "class" => "error-message"}
+                  Login doesn't appear to be valid. Use only letters, numbers, and +.-_@ please.
             .f-row
               %input{'type'        => "text",
                 'name'             => 'email',
