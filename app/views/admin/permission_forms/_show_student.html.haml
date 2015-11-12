@@ -20,4 +20,4 @@
               'id'     => "student_perms_#{student.id}",
               'name'   => "permission_ids[]",
               'value'  => perm.id}
-          %label{'for'=>"perm_#{perm.id}_checkbox"}=perm.name
+          %label{'for'=>"perm_#{perm.id}_checkbox"}=perm.fullname

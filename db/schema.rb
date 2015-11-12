@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151105163615) do
+ActiveRecord::Schema.define(:version => 20151111213007) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1974,6 +1974,7 @@ ActiveRecord::Schema.define(:version => 20151105163615) do
     t.string   "url"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "project_id"
   end
 
   create_table "portal_school_memberships", :force => true do |t|
