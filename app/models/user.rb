@@ -567,6 +567,14 @@ class User < ActiveRecord::Base
     admin_for_projects.map {|p| p.cohorts}.flatten.uniq
   end
 
+  def admin_for_project_teachers
+    admin_for_project_cohorts.map {|c| c.teachers}.flatten.uniq
+  end
+
+  def admin_for_project_students
+    admin_for_project_cohorts.map {|c| c.students}.flatten.uniq
+  end
+
   def cohorts
     portal_teacher ? portal_teacher.cohorts : (portal_student ? portal_student.cohorts : [])
   end
