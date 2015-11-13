@@ -8,11 +8,17 @@ class Report::Learner::Selector
                 :learners
 
 
-  def initialize(options)
+  def initialize(options, current_visitor)
+
+    policy_scopes = {
+      :teachers => Pundit.policy_scope(current_visitor, Portal::Teacher),
+      :learners => Pundit.policy_scope(current_visitor, Report::Learner)
+    }
+
     # FIXME this sorting should be done at the end probably because I'm guessing it will
     # cause the query to be run
     @all_schools           = Portal::School.has_teachers.all.sort_by  {|s| s.name.downcase}
-    @all_teachers          = Portal::Teacher.all.sort_by {|t| t.name.downcase}
+    @all_teachers          = policy_scopes[:teachers].sort_by {|t| t.name.downcase}
 
     # TODO: fix me -- choose runnables better
     # I'm also guessing the '+' will cause the query to be run and we might not even
@@ -25,7 +31,7 @@ class Report::Learner::Selector
 
     @start_date            = options['start_date']
     @end_date              = options['end_date']
-    @all_perm_forms        = Portal::PermissionForm.all.map { |p| p.name }
+    @all_perm_forms        = Portal::PermissionForm.all.map { |p| p.fullname }
     begin
       Time.parse(@start_date)
     rescue
@@ -81,13 +87,15 @@ class Report::Learner::Selector
     end
 
     if @scopes.size > 0
-      results = Report::Learner
+      results = policy_scopes[:learners]
+      #results = Report::Learner
       @scopes.each_pair do |k,v|
         results = results.send(k,v)
       end
       @learners = results
     else
-      @learners = Report::Learner.all
+      @learners = policy_scopes[:learners]
+      #@learners = Report::Learner.all
     end
   end
 

@@ -2,8 +2,6 @@ class Report::LearnerController < ApplicationController
 
   require 'cgi'
 
-  include RestrictedController
-  # PUNDIT_CHECK_FILTERS
   before_filter :setup,
       :only => [
       :index,
@@ -11,35 +9,66 @@ class Report::LearnerController < ApplicationController
       :update_learners
     ]
 
-  before_filter :manager_or_researcher,
-    :only => [
-      :index,
-      :logs_query,
-      :update_learners
-    ]
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    flash[:notice] = "Please log in as an administrator"
+    redirect_to(:home)
+  end
+
+  public
 
   def update_learners
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Report::Learner
-    # authorize @learner
-    # authorize Report::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
-    # this should be removed eventually,
-    # force loading report-learner data
+    authorize Report::Learner
     Portal::Learner.all.each { |l| l.report_learner.update_fields }
   end
 
+  def index
+    authorize Report::Learner
+  end
 
-  def setup
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Report::Learner
+  def logs_query
+    authorize Report::Learner
     # authorize @learner
     # authorize Report::Learner, :new_or_create?
     # authorize @learner, :update_edit_or_destroy?
+    @remote_endpoints = @select_learners.map { |l| external_activity_return_url(l.learner_id) }
+    render :layout => false
+  end
+
+  def updated_at
+    # no authorization needed ...
+    learner = Report::Learner.find_by_user_id_and_offering_id(current_visitor.id,params[:id])
+    if learner
+      last_run = learner.last_run
+      status = 400
+      hasnt_run_text  = I18n.t "StudentHasntRun"
+      json_response = { error_msg: hasnt_run_text }
+      text_response = hasnt_run_text
+      if last_run
+        status = 200
+        modification_time = last_run.strftime("%s")
+        json_response = {modification_time: modification_time }
+        text_response = modification_time
+      end
+      respond_to do |format|
+        format.html do
+          render :text => text_response, :status => status
+        end
+        format.json do
+          render :json => json_response, :status => status
+        end
+      end
+    else
+      render :nothing => true
+    end
+  end
+
+  private
+
+  def setup
     @button_texts = {
       :apply => 'Apply Filters',
       :usage => 'Usage Report',
@@ -60,7 +89,7 @@ class Report::LearnerController < ApplicationController
     @no_log_manager = APP_CONFIG[:codap_url].nil? || APP_CONFIG[:log_manager_data_interactive_url].nil?
 
     # helper model to limit learner selections:
-    @learner_selector = Report::Learner::Selector.new(params)
+    @learner_selector = Report::Learner::Selector.new(params, current_visitor)
 
     # The learners we have selected:
     @select_learners  = @learner_selector.learners
@@ -99,65 +128,6 @@ class Report::LearnerController < ApplicationController
     end
 
   end
-
-  def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Report::Learner
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @learners = policy_scope(Report::Learner)
-    # renders views/report/learner/index.html.haml
-  end
-
-  def logs_query
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Report::Learner
-    # authorize @learner
-    # authorize Report::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
-    @remote_endpoints = @select_learners.map { |l| external_activity_return_url(l.learner_id) }
-    render :layout => false
-  end
-
-  def updated_at
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Report::Learner
-    # authorize @learner
-    # authorize Report::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
-    learner = Report::Learner.find_by_user_id_and_offering_id(current_visitor.id,params[:id])
-    if learner
-      last_run = learner.last_run
-      status = 400
-      hasnt_run_text  = I18n.t "StudentHasntRun"
-      json_response = { error_msg: hasnt_run_text }
-      text_response = hasnt_run_text
-      if last_run
-        status = 200
-        modification_time = last_run.strftime("%s")
-        json_response = {modification_time: modification_time }
-        text_response = modification_time
-      end
-      respond_to do |format|
-        format.html do
-          render :text => text_response, :status => status
-        end
-        format.json do
-          render :json => json_response, :status => status
-        end
-      end
-
-    else
-      render :nothing => true
-    end
-  end
-
-  private
 
   def log_manager
     if @no_log_manager
