@@ -109,6 +109,7 @@ class SectionsController < ApplicationController
       format.otml { render :layout => 'layouts/section' } # section.otml.haml
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @section, :teacher_mode => @teacher_mode} }
       format.xml  { render :xml => @section }
+      format.json { render :json => @section }
     end
   end
 
