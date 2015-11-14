@@ -179,6 +179,7 @@ class InvestigationsController < AuthoringController
       }
       format.otml   { render :layout => 'layouts/investigation' } # investigation.otml.haml
       format.xml    { render :xml => @investigation }
+      format.json   { render :json => @investigation }
       format.pdf    { render :layout => false }
     end
   end

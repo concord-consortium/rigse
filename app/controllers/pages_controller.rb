@@ -132,6 +132,7 @@ class PagesController < ApplicationController
         render :partial => 'shared/show', :locals => {:runnable => @page, :teacher_mode => @teacher_mode}
       }
       format.xml        { render :xml => @page }
+      format.json       { render :json => @page }
     end
   end
 

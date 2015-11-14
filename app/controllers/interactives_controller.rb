@@ -90,6 +90,11 @@ class InteractivesController < ApplicationController
   def show
     @interactive = Interactive.find(params[:id])
     authorize @interactive
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @interactive }
+    end
   end
 
   def edit

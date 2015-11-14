@@ -120,6 +120,7 @@ class ActivitiesController < ApplicationController
       }
       format.otml { render :layout => 'layouts/activity' } # activity.otml.haml
       format.xml  { render :xml => @activity }
+      format.json  { render :json => @activity }
       format.pdf {render :layout => false }
     end
   end

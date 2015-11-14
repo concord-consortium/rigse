@@ -68,6 +68,11 @@ class ResourcePagesController < ApplicationController
         @student_view.save
       end
     end
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @resource_page }
+    end
   end
 
   def new
