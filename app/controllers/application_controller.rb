@@ -192,12 +192,13 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     redirect_path = root_path
-    if APP_CONFIG[:recent_activity_on_login] && current_visitor.portal_teacher
-      if current_visitor.has_active_classes?
-        # Teachers with active classes are redirected to the "Recent Activity" page
-        redirect_path = recent_activity_path
-      end
+    if stored_location
+      redirect_path = stored_location
+    elsif APP_CONFIG[:recent_activity_on_login] && current_visitor.has_active_classes?
+      # Teachers with active classes are redirected to the "Recent Activity" page
+      redirect_path = recent_activity_path
     end
+
     if session[:sso_callback_params]
       AccessGrant.prune!
       access_grant = current_user.access_grants.create({:client => session[:sso_application], :state => session[:sso_callback_params][:state]}, :without_protection => true)
@@ -211,7 +212,8 @@ class ApplicationController < ActionController::Base
       session[:sso_callback_params] = nil
       session[:sso_application] = nil
     end
-    return redirect_path
+
+    redirect_path
   end
 
   def after_sign_out_path_for(resource)

@@ -2,6 +2,8 @@ class Admin::ProjectsController < ApplicationController
 
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
+  after_filter :store_location, :only => [:landing_page]
+
   private
 
   def pundit_user_not_authorized(exception)

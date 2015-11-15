@@ -17,6 +17,9 @@ class HomeController < ApplicationController
   theme "rites"
 
   def index
+    # Project landing pages store their location, so make sure we get to the default state
+    # if user is switching between them and the default home page.
+    clean_stored_location
     notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
     @notices = notices_hash[:notices]
     @notice_display_type = notices_hash[:notice_display_type]

@@ -50,7 +50,7 @@ module ApplicationHelper
 
   def display_system_info
     commit = git_repo_info rescue {:branch => "<b>Error loading git info!</b>"}
-    jnlp = current_settings.jnlp_url || "#"
+    jnlp = current_settings && current_settings.jnlp_url || "#"
     info = <<-HEREDOC
 <span class="tiny menu_h">
   #{commit[:branch]}

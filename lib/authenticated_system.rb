@@ -40,13 +40,23 @@ module AuthenticatedSystem
       session[:return_to] = request.fullpath
     end
 
+    # Returns URI stored in the session.
+    def stored_location
+      session[:return_to]
+    end
+
+    # Cleans up URI stored in the session.
+    def clean_stored_location
+      session[:return_to] = nil
+    end
+
     # Redirect to the URI stored by the most recent store_location call or
     # to the passed default.  Set an appropriately modified
     #   after_filter :store_location, :only => [:index, :new, :show, :edit]
     # for any controller you want to be bounce-backable.
     def redirect_back_or_default(default)
       redirect_to(session[:return_to] || default)
-      session[:return_to] = nil
+      clean_stored_location
     end
 
     # Inclusion hook to make #current_visitor and #logged_in?
@@ -55,17 +65,9 @@ module AuthenticatedSystem
       base.send :helper_method, :current_visitor, :logged_in? if base.respond_to? :helper_method
     end
 
-
-
-
-
-    
-
     #
     # Logout
     #
-
-
 
     # This is ususally what you want; resetting the session willy-nilly wreaks
     # havoc with forgery protection, and is only strictly necessary on login.
