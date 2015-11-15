@@ -53,9 +53,7 @@ class ExternalActivity < ActiveRecord::Base
     string  :material_properties, :multiple => true do
       material_property_list
     end
-    string  :cohorts, :multiple => true do
-      cohort_list
-    end
+    string  :cohort_ids, :multiple => true, :references => Admin::Cohort
     string  :grade_levels, :multiple => true do
       grade_level_list
     end
@@ -85,7 +83,7 @@ class ExternalActivity < ActiveRecord::Base
 
   acts_as_replicatable
 
-
+  include Cohorts
   include Changeable
   include Publishable
   include SearchModelInterface

@@ -43,9 +43,9 @@
         - if user.portal_teacher
           %li
             Cohorts:
-          - user.portal_teacher.cohort_list.each do |c|
+          - user.portal_teacher.cohorts.each do |c|
             %li
-              = c
+              = c.fullname
           %li
             Schools:
             %li

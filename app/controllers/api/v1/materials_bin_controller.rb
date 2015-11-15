@@ -53,7 +53,7 @@ class API::V1::MaterialsBinController < API::APIController
 
   def allowed_cohorts
     # Empty array means that only materials that are not assigned to any cohorts will be displayed.
-    current_visitor.portal_teacher ? current_visitor.portal_teacher.cohort_list : []
+    current_visitor.portal_teacher ? current_visitor.portal_teacher.cohorts : []
   end
 
   def materials_collection_data(name, materials, assigned_to_class)

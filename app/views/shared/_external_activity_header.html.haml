@@ -20,7 +20,7 @@
         %h3= @external_activity.name
         .small= @external_activity.description
         .small= @external_activity.url
-      .tiny= "Cohorts: #{@external_activity.cohort_list.join(', ')}"
+      .tiny= "Cohorts: #{@external_activity.cohort_fullnames.join(', ')}"
       .tiny= "Grade Levels: #{@external_activity.grade_level_list.join(', ')}"
       .tiny= "Subject Areas: #{@external_activity.subject_area_list.join(', ')}"
   .action_menu_header_right

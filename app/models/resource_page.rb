@@ -1,5 +1,6 @@
 class ResourcePage < ActiveRecord::Base
   self.table_name = :resource_pages
+  include Cohorts
   include Publishable
   include Changeable
   include SearchModelInterface
@@ -56,9 +57,7 @@ class ResourcePage < ActiveRecord::Base
     string  :material_properties, :multiple => true do
       material_property_list
     end
-    string  :cohorts, :multiple => true do
-      cohort_list
-    end
+    string  :cohort_ids, :multiple => true, :references => Admin::Cohort
     string  :grade_levels, :multiple => true do
       grade_level_list
     end
@@ -152,7 +151,6 @@ class ResourcePage < ActiveRecord::Base
 
   accepts_nested_attributes_for :attached_files
 
-  acts_as_taggable_on :cohorts
   acts_as_taggable_on :grade_levels
   acts_as_taggable_on :subject_areas
 
@@ -179,14 +177,15 @@ class ResourcePage < ActiveRecord::Base
           # if we're not an admin, filter by tags as well
           matches_tags = nil
           has_no_tags = nil
-          available_cohorts = Admin::Tag.find_all_by_scope("cohorts")
+          available_cohorts = Admin::Cohort.all
           if available_cohorts.size > 0
-            has_no_tags = ResourcePage.tagged_with(available_cohorts.collect{|c| c.tag }, :exclude => true, :on => :cohorts)
+            has_no_tags = ResourcePage.where('id NOT IN (SELECT DISTINCT(item_id) FROM admin_cohort_items WHERE item_type = "ResourcePage")')
           end
 
-          if t.cohort_list.size > 0
+          if t.cohorts.size > 0
             # and match everything with the correct tags
-            matches_tags = ResourcePage.tagged_with(t.cohort_list, :any => true, :on => :cohorts)
+            cohort_ids = t.cohorts.map {|c| c.id}
+            matches_tags = ResourcePage.where(['id IN (SELECT DISTINCT(item_id) FROM admin_cohort_items WHERE item_type = "ResourcePage" AND admin_cohort_id IN (?))', cohort_ids])
           end
 
           # sometimes tagged_with returns an empty hash

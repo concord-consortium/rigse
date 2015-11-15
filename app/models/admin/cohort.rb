@@ -12,6 +12,6 @@ class Admin::Cohort < ActiveRecord::Base
   end
 
   def fullname
-    "#{project.name}: #{name}"
+    project ? "#{project.name}: #{name}" : name
   end
 end

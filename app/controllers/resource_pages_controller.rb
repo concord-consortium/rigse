@@ -94,8 +94,8 @@ class ResourcePagesController < ApplicationController
     end
 
     if params[:update_cohorts]
-      # set the cohort tags
-      @resource_page.cohort_list = (params[:cohorts] || [])
+      # set the cohorts
+      @resource_page.set_cohorts_by_id(params[:cohort_ids] || [])
     end
 
     if params[:update_grade_levels]
@@ -135,7 +135,7 @@ class ResourcePagesController < ApplicationController
 
     if params[:update_cohorts]
       # set the cohort tags
-      @resource_page.cohort_list = (params[:cohorts] || [])
+      @resource_page.set_cohorts_by_id(params[:cohort_ids] || [])
       @resource_page.save
     end
 

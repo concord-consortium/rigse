@@ -28,7 +28,7 @@ class Reports::Account < Reports::Excel
   def class_name(clazz)
     (clazz.name && !clazz.name.empty?) ? clazz.name : "Class: #{clazz.id}"
   end
-  
+
   def process_portal_user(user, portal_user, user_type, sheet)
     row = sheet.row(sheet.last_row_index + 1)
     user_name  = "#{user.last_name}, #{user.first_name}"
@@ -42,10 +42,10 @@ class Reports::Account < Reports::Excel
     user_cohorts = ""
     user_email = portal_user.email
     if user_type == "Teacher"
-      user_cohorts = portal_user.cohort_list.join(", ")
+      user_cohorts = portal_user.cohort_fullnames.join(", ")
     else
       clazzes = portal_user.clazzes.reject { |c| c.teacher.nil? }
-      user_cohorts = clazzes.compact.map{|c| c.teacher.cohort_list }.flatten.uniq.compact.join(', ')
+      user_cohorts = clazzes.compact.map{|c| c.teacher.cohort_fullnames }.flatten.uniq.compact.join(', ')
     end
 
     user_created = user.created_at

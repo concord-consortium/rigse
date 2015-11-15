@@ -1,4 +1,5 @@
 class Interactive < ActiveRecord::Base
+  include Cohorts
   include Publishable
   include Changeable
   include SearchModelInterface
@@ -67,16 +68,14 @@ class Interactive < ActiveRecord::Base
       nil
     end
 
-    string  :material_type do 
+    string  :material_type do
       "Interactive"
     end
 
     string  :material_properties, :multiple => true do
       material_property_list
     end
-    string  :cohorts, :multiple => true do
-      cohort_list
-    end
+    string  :cohort_ids, :multiple => true, :references => Admin::Cohort
     string  :grade_levels, :multiple => true do
       grade_level_list
     end

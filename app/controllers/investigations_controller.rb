@@ -278,13 +278,13 @@ class InvestigationsController < AuthoringController
     end
 
     if params[:update_cohorts]
-      # set the cohort tags
-      @investigation.cohort_list = (params[:cohorts] || [])
+      # set the cohorts
+      @investigation.set_cohorts_by_id(params[:cohort_ids] || [])
     end
 
     if params[:update_grade_levels]
       # set the grade_level tags
-      @investigation.grade_level_list = (params[:grade_levels] || [])     
+      @investigation.grade_level_list = (params[:grade_levels] || [])
     end
 
     if params[:update_subject_areas]
@@ -363,7 +363,7 @@ class InvestigationsController < AuthoringController
 
     if params[:update_cohorts]
       # set the cohort tags
-      @investigation.cohort_list = (params[:cohorts] || [])
+      @investigation.set_cohorts_by_id(params[:cohort_ids] || [])
       @investigation.save
     end
 

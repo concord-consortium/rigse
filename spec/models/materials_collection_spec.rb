@@ -9,6 +9,7 @@ describe MaterialsCollection do
 
   before(:each) do
     # Assign some materials to cohorts.
+    # TODO: COHORT FIXME
     materials.each_with_index do |m, i|
       m.cohort_list = ["foo"] if i % 3 === 0
       m.cohort_list = ["bar"] if i % 3 === 1

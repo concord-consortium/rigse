@@ -12,7 +12,8 @@ class Report::Learner::Selector
 
     policy_scopes = {
       :teachers => Pundit.policy_scope(current_visitor, Portal::Teacher),
-      :learners => Pundit.policy_scope(current_visitor, Report::Learner)
+      :learners => Pundit.policy_scope(current_visitor, Report::Learner),
+      :perm_forms => Pundit.policy_scope(current_visitor, Portal::PermissionForm)
     }
 
     # FIXME this sorting should be done at the end probably because I'm guessing it will
@@ -31,7 +32,7 @@ class Report::Learner::Selector
 
     @start_date            = options['start_date']
     @end_date              = options['end_date']
-    @all_perm_forms        = Portal::PermissionForm.all.map { |p| p.fullname }
+    @all_perm_forms        = policy_scopes[:perm_forms].map { |p| p.fullname }
     begin
       Time.parse(@start_date)
     rescue

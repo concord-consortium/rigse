@@ -1,8 +1,9 @@
 class Portal::Teacher < ActiveRecord::Base
+  include Cohorts
+
   self.table_name = :portal_teachers
 
   acts_as_replicatable
-  acts_as_taggable_on :cohorts
   acts_as_taggable_on :grade_levels
   acts_as_taggable_on :subject_areas
 
@@ -15,9 +16,6 @@ class Portal::Teacher < ActiveRecord::Base
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
 
   has_many :offering_full_status, :class_name => "Portal::TeacherFullStatus", :foreign_key => "teacher_id"
-
-  has_many :cohort_items, :class_name => 'Admin::CohortItem', :as => :item
-  has_many :cohorts, :class_name => 'Admin::Cohort', :through => :cohort_items, :foreign_key => "admin_cohort_id"
 
   # because of has many polymorphs, we SHOULDN't need the following relationships defined, but
   # HACK: noah went ahead, and explicitly defined them, because it wasn't working.
@@ -154,10 +152,5 @@ class Portal::Teacher < ActiveRecord::Base
       self.user.add_role('author')
     end
   end
-
-  def set_cohorts_by_id(ids=[])
-    self.cohorts = Admin::Cohort.find_all_by_id(ids)
-  end
-
 
 end

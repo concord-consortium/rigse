@@ -311,6 +311,7 @@ describe Search do
 
 
       describe "With cohort tags" do
+        # TODO: COHORT FIXME
         let(:teacher_cohorts) {[]}
         let(:teacher)         { mock_model(Portal::Teacher, :cohort_list => teacher_cohorts)}
         let(:mock_user)       { mock_model(User, :id => 23, :portal_teacher => teacher)}

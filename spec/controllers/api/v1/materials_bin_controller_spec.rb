@@ -14,6 +14,7 @@ describe API::V1::MaterialsBinController do
     let(:inv) { FactoryGirl.create_list(:investigation, 3) }
     let(:materials) { ext_act + act + inv }
     before(:each) do
+      # TODO: COHORT FIXME
       # Assign some materials to cohorts.
       materials.each_with_index do |m, i|
         m.cohort_list = ["foo"] if i % 3 === 0
