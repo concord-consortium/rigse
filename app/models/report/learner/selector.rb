@@ -89,23 +89,20 @@ class Report::Learner::Selector
 
     if @scopes.size > 0
       results = policy_scopes[:learners]
-      #results = Report::Learner
       @scopes.each_pair do |k,v|
         results = results.send(k,v)
       end
       @learners = results
     else
       @learners = policy_scopes[:learners]
-      #@learners = Report::Learner.all
     end
   end
 
   def runnables_to_report_on
     if select_runnables.blank?
-      learners.group('concat(runnable_type, "_", runnable_id)').map{|learner| learner.runnable}
+      learners.group('concat(report_learners.runnable_type, "_", report_learners.runnable_id)').map{|learner| learner.runnable}
     else
       select_runnables
     end
   end
 end
-

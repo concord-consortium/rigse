@@ -182,6 +182,8 @@ class Reports::Detail < Reports::Excel
         row.concat all_answers
       end
     end
+    # writing an empty workbook throws an error...
+    @book.create_worksheet if @book.worksheets.empty?
     @book.write stream_or_path
   end
 
