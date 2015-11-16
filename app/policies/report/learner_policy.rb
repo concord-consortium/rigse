@@ -7,7 +7,7 @@ class Report::LearnerPolicy < ApplicationPolicy
       elsif user.is_project_admin?
         scope_for_project_ids(user.admin_for_projects.map { |p| p.id  })
       elsif user.is_project_researcher?
-        # narrow scope to those students that have signed permission forms 
+        # narrow scope to those students that have signed permission forms associated with the projects
         project_ids = user.researcher_for_projects.map { |p| p.id  }
         scope_for_project_ids(project_ids)
           .joins("left join portal_student_permission_forms on report_learners.student_id = portal_student_permission_forms.portal_student_id")

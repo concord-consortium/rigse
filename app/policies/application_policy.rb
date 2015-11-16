@@ -109,6 +109,10 @@ class ApplicationPolicy
     user && (user.is_project_admin? || has_roles?('admin','manager'))
   end
 
+  def manager_or_researcher_or_project_researcher?
+    user && (user.is_project_researcher? || manager_or_researcher?)
+  end
+
   def admin_or_config?
     user && (user.has_role?('admin') || request.format == :config)
   end
@@ -126,5 +130,3 @@ class ApplicationPolicy
   end
 
 end
-
-

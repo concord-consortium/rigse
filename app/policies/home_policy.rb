@@ -7,7 +7,7 @@ class HomePolicy < Struct.new(:user, :home)
   end
 
   def admin?
-    user && (user.is_project_admin? || user.has_role?('manager','admin','researcher'))
+    user && (user.is_project_admin? || user.is_project_researcher? || user.has_role?('manager','admin','researcher'))
   end
 
   def recent_activity?

@@ -5,10 +5,18 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
       if user.has_role?('manager','admin','researcher')
         all
       elsif user.is_project_admin?
-        Portal::PermissionForm.where(["project_id in (?)", user.admin_for_projects.map { |p| p.id  }])
+        scope_for_projects(user.admin_for_projects)
+      elsif user.is_project_researcher?
+        scope_for_projects(user.researcher_for_projects)
       else
         none
       end
+    end
+
+    private
+
+    def scope_for_projects(projects)
+      Portal::PermissionForm.where(["project_id in (?)", projects.map { |p| p.id  }])
     end
   end
 
