@@ -1,52 +1,22 @@
 class ExternalActivitiesController < ApplicationController
-  include PeerAccess
 
-  # PUNDIT_CHECK_FILTERS
-  before_filter :setup_object, :except => [:index, :preview_index, :publish]
-  before_filter :render_scope, :only => [:show]
-  # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export,:publish,:republish,:copy,:matedit,:set_private_before_matedit]
-  before_filter :can_create, :only => [:new, :create, :duplicate, :publish]
-  before_filter :only_peers, :only => [:republish]
-  in_place_edit_for :external_activity, :name
-  in_place_edit_for :external_activity, :description
-  in_place_edit_for :external_activity, :url
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
-  def only_peers
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
-    if verify_request_is_peer
-      return true
-    else
+  private
+
+  def pundit_user_not_authorized(exception)
+    case exception.query.to_s
+    when 'republish?'
       json_error('missing or invalid peer token', 401)
-    end
-  end
-
-  def json_error(msg,code=422)
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
-    render :json => { :error => msg }, :content_type => 'text/json', :status => code
-  end
-
-  def can_create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
-    if (current_visitor.anonymous?)
+    when 'preview_index?', 'edit?', 'update?', 'destroy?'
+      error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@external_activity.name}"
+      flash[:error] = error_message
+      if request.xhr?
+        render :text => "<div class='flash_error'>#{error_message}</div>"
+      else
+        redirect_back_or external_activities_path
+      end
+    when 'new?', 'create?', 'publish?', 'duplicate?'
       logger.warn "Didn't proceed: current_visitor.anonymous? was true"
       logger.info "Current visitor: #{current_visitor.to_s}"
       flash[:error] = "Anonymous users can not create external external_activities"
@@ -54,70 +24,16 @@ class ExternalActivitiesController < ApplicationController
     end
   end
 
-  def render_scope
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
-    @render_scope = @external_activity
-  end
-
-  def can_edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
-    if defined? @external_activity
-      unless @external_activity.changeable?(current_visitor)
-        error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@external_activity.name}"
-        flash[:error] = error_message
-        if request.xhr?
-          render :text => "<div class='flash_error'>#{error_message}</div>"
-        else
-          redirect_back_or external_activities_path
-        end
-      end
-    end
-  end
-
-
-  def setup_object
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
-    if params[:id]
-      if valid_uuid(params[:id])
-        @external_activity = ExternalActivity.find(:first, :conditions => ['uuid=?',params[:id]])
-      else
-        @external_activity = ExternalActivity.find(params[:id])
-      end
-    elsif params[:external_activity]
-      @external_activity = ExternalActivity.new(params[:external_activity])
-    else
-      @external_activity = ExternalActivity.new
-    end
-    @page_title = @external_activity.name if @external_activity
-  end
-
   public
 
+  before_filter :setup_object, :except => [:index, :preview_index, :publish]
+  before_filter :render_scope, :only => [:show]
+  in_place_edit_for :external_activity, :name
+  in_place_edit_for :external_activity, :description
+  in_place_edit_for :external_activity, :url
+
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize ExternalActivity
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @external_activities = policy_scope(ExternalActivity)
+    authorize ExternalActivity
     search_params = { :material_types => [ExternalActivity], :page => params[:page] }
     if !params[:name].blank?
       search_params[:search_term] = params[:name]
@@ -142,12 +58,6 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def preview_index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize ExternalActivity
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @external_activities = policy_scope(ExternalActivity)
     page= params[:page] || 1
     @activities = ExternalActivity.all.paginate(
         :page => page || 1,
@@ -159,10 +69,7 @@ class ExternalActivitiesController < ApplicationController
   # GET /external_activities/1
   # GET /external_activities/1.xml
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @external_activity
-    # @teacher_mode = params[:teacher_mode] || @external_activity.teacher_only
+    authorize @external_activity
     respond_to do |format|
       format.html {
         if params['print']
@@ -178,9 +85,7 @@ class ExternalActivitiesController < ApplicationController
   # GET /external_activities/new
   # GET /external_activities/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize ExternalActivity
+    authorize ExternalActivity
     @external_activity = ExternalActivity.new
     @external_activity.user = current_visitor
     respond_to do |format|
@@ -192,9 +97,7 @@ class ExternalActivitiesController < ApplicationController
   # GET /external_activities/1/edit
   def edit
     @external_activity = ExternalActivity.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @external_activity
+    authorize @external_activity
     if request.xhr?
       render :partial => (params['use_short_form'] ? 'short_form' : 'form')
     end
@@ -203,9 +106,7 @@ class ExternalActivitiesController < ApplicationController
   # POST /pages
   # POST /pages.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize ExternalActivity
+    authorize ExternalActivity
     @external_activity = ExternalActivity.new(params[:external_activity])
     @external_activity.user = current_visitor
 
@@ -252,9 +153,7 @@ class ExternalActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @external_activity = ExternalActivity.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @external_activity
+    authorize @external_activity
 
     if params[:update_material_properties]
       # set the material_properties tags
@@ -311,9 +210,7 @@ class ExternalActivitiesController < ApplicationController
   # DELETE /external_activities/1.xml
   def destroy
     @external_activity = ExternalActivity.find(params[:id])
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (found instance)
-    # authorize @external_activity
+    authorize @external_activity
     @external_activity.destroy
     @redirect = params[:redirect]
     respond_to do |format|
@@ -324,13 +221,7 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def publish
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
+    authorize ExternalActivity
     json = JSON.parse(request.body.read)
     begin
       if params[:version].present? and params[:version] == 'v2'
@@ -348,13 +239,7 @@ class ExternalActivitiesController < ApplicationController
   # If we have an authentication token from the authoring client
   # then we can republish without concern for current user.
   def republish
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
+    authorize ExternalActivity
     json = JSON.parse(request.body.read)
     begin
       @external_activity = ActivityRuntimeAPI.republish(json)
@@ -369,13 +254,7 @@ class ExternalActivitiesController < ApplicationController
   ##
   ##
   def duplicate
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
+    authorize ExternalActivity
     @original = ExternalActivity.find(params['id'])
     @external_activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => [{:teacher_notes => {}}, {:author_notes => {}}]
     @external_activity.name = "copy of #{@external_activity.name}"
@@ -389,13 +268,7 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def matedit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
+    authorize ExternalActivity
     @uri = ssl_if_we_are(URI.parse("#{@external_activity.url}/edit"))
     @uri.query = {
       :domain => root_url,
@@ -407,13 +280,7 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def set_private_before_matedit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
+    authorize ExternalActivity
     @external_activity.publication_status = 'private'
     @external_activity.save
     redirect_uri = URI.parse(matedit_external_activity_url(@external_activity.id))
@@ -424,13 +291,7 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def copy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize ExternalActivity
-    # authorize @external_activity
-    # authorize ExternalActivity, :new_or_create?
-    # authorize @external_activity, :update_edit_or_destroy?
+    authorize ExternalActivity
     # create a redirect url with a template parameter that LARA can replace with the remotely published activity_id
     # an intermediate redirect is used to set the publication status to private
     # We can't do this aways on 'matedit' because that action is used when editing an existing activity
@@ -448,6 +309,40 @@ class ExternalActivitiesController < ApplicationController
       :redirect_on_success => redirect_uri.to_s
     }.to_query
     redirect_to @uri.to_s
+  end
+
+  private
+
+  def json_error(msg,code=422)
+    render :json => { :error => msg }, :content_type => 'text/json', :status => code
+  end
+
+  def render_scope
+    @render_scope = @external_activity
+  end
+
+  def setup_object
+    if params[:id]
+      if valid_uuid(params[:id])
+        @external_activity = ExternalActivity.find(:first, :conditions => ['uuid=?',params[:id]])
+      else
+        @external_activity = ExternalActivity.find(params[:id])
+      end
+    elsif params[:external_activity]
+      @external_activity = ExternalActivity.new(params[:external_activity])
+    else
+      @external_activity = ExternalActivity.new
+    end
+    @page_title = @external_activity.name if @external_activity
+  end
+
+  def ssl_if_we_are(input_uri)
+    # return a copy of input_uri that is https if our request was https
+    # dont change otherwise.
+    return_uri = input_uri.dup
+    we_are_ssl = URI.parse(request.url).scheme =~ /https/i
+    return_uri.scheme="https" if we_are_ssl
+    return_uri
   end
 
 end
