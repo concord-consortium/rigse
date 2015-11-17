@@ -329,8 +329,8 @@ module MockData
       end
 
 
-      # TODO: COHORT FIXME
-      cohorts = teacher_info.delete(:cohort_list)
+      cohorts_names = teacher_info.delete(:cohort_names)
+      cohorts = cohorts_names.split(' ').map { |name| Admin::Cohort.create!(:name => name) }
 
       roles = teacher_info[:roles]
       if roles
@@ -359,7 +359,7 @@ module MockData
         end
 
         teacher_school.portal_teachers << portal_teacher
-        portal_teacher.cohort_list = cohorts if cohorts
+        portal_teacher.cohorts = cohorts
         portal_teacher.save!
 
         default_users << user

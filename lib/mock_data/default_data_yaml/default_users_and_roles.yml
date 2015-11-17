@@ -119,8 +119,7 @@ teachers:
     last_name: Nash
     email: bademail@noplace.com
     school: VJTI
-    # TODO: COHORT FIXME
-    cohort_list: control
+    cohort_names: control
     uuid: 00000000-0000-0000-0000-000000000024
 
   teacher_2:
@@ -129,7 +128,7 @@ teachers:
     last_name: Fernandez
     email: bademail@noplace2.com
     school: VJTI
-    cohort_list: experiment
+    cohort_names: experiment
     uuid: 00000000-0000-0000-0000-000000000025
 
   teacher_3:
@@ -138,7 +137,7 @@ teachers:
     last_name: Fernandez
     email: bademail@noplace3.com
     school: Fake School
-    cohort_list: control, experiment
+    cohort_names: control, experiment
     uuid: 00000000-0000-0000-0000-000000000026
 
   teacher_4:

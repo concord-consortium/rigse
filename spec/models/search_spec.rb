@@ -313,7 +313,7 @@ describe Search do
       describe "With cohort tags" do
         # TODO: COHORT FIXME
         let(:teacher_cohorts) {[]}
-        let(:teacher)         { mock_model(Portal::Teacher, :cohort_list => teacher_cohorts)}
+        let(:teacher)         { mock_model(Portal::Teacher, :cohorts => teacher_cohorts)}
         let(:mock_user)       { mock_model(User, :id => 23, :portal_teacher => teacher)}
         let(:search_opts)     {{ :private => false, :user_id => mock_user.id }}
         before(:each) do
@@ -321,9 +321,12 @@ describe Search do
         end
         describe "With two defined cohorts"  do
           describe "With activities in every combination of cohorts " do
-            let(:cohort1_opts) {{:publication_status=>'published', :cohort_list => ['cohort1'] }}
-            let(:cohort2_opts) {{:publication_status=>'published', :cohort_list => ['cohort2'] }}
-            let(:both_opts)    {{:publication_status=>'published', :cohort_list => ['cohort1','cohort2'] }}
+            let(:cohort1) { FactoryGirl.create(:admin_cohort, name: 'cohort1') }
+            let(:cohort2) { FactoryGirl.create(:admin_cohort, name: 'cohort2') }
+
+            let(:cohort1_opts) {{:publication_status=>'published', :cohorts => [cohort1] }}
+            let(:cohort2_opts) {{:publication_status=>'published', :cohorts => [cohort2] }}
+            let(:both_opts)    {{:publication_status=>'published', :cohorts => [cohort1, cohort2] }}
 
             let(:blank_sequence)     { collection(:investigation, 1, public_opts) }
             let(:cohort1_sequences)  { collection(:investigation, 2, cohort1_opts)}
@@ -377,7 +380,7 @@ describe Search do
             end
 
             describe "Teacher in Cohort1" do
-              let(:teacher_cohorts) { ['cohort1'] }
+              let(:teacher_cohorts) { [cohort1] }
 
               describe "Searching all material types" do
 
@@ -389,8 +392,8 @@ describe Search do
                 end
                 it "should be not cohort tagged, or include a cohort1 tag" do
                   subject.results[:all].each do |r|
-                    unless r.cohort_list.empty?
-                      r.cohort_list.should include('cohort1')
+                    unless r.cohorts.empty?
+                      r.cohorts.should include(cohort1)
                     end
                   end
                 end
@@ -398,7 +401,7 @@ describe Search do
             end
 
             describe "Teacher in Cohort2" do
-              let(:teacher_cohorts) { ['cohort2'] }
+              let(:teacher_cohorts) { [cohort2] }
 
               describe "Searching all material types" do
 
@@ -410,8 +413,8 @@ describe Search do
                 end
                 it "should be not cohort tagged, or include a cohort2 tag" do
                   subject.results[:all].each do |r|
-                    unless r.cohort_list.empty?
-                      r.cohort_list.should include('cohort2')
+                    unless r.cohorts.empty?
+                      r.cohorts.should include(cohort2)
                     end
                   end
                 end
@@ -419,7 +422,7 @@ describe Search do
             end
 
             describe "Teacher in both cohorts" do
-              let(:teacher_cohorts) { ['cohort2','cohort1'] }
+              let(:teacher_cohorts) { [cohort2, cohort1] }
 
               describe "Searching all material types" do
 

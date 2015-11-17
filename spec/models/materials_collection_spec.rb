@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe MaterialsCollection do
+  let(:foo_cohort) { FactoryGirl.create(:admin_cohort, name: 'foo') }
+  let(:bar_cohort) { FactoryGirl.create(:admin_cohort, name: 'bar') }
+  let(:nonexistent_cohort) { FactoryGirl.create(:admin_cohort, name: 'nonexistent-cohort') }
+
   let(:collection) { FactoryGirl.create(:materials_collection) }
   let(:ext_act) { FactoryGirl.create_list(:external_activity, 3) }
   let(:act) { FactoryGirl.create_list(:activity, 3) }
@@ -9,10 +13,9 @@ describe MaterialsCollection do
 
   before(:each) do
     # Assign some materials to cohorts.
-    # TODO: COHORT FIXME
     materials.each_with_index do |m, i|
-      m.cohort_list = ["foo"] if i % 3 === 0
-      m.cohort_list = ["bar"] if i % 3 === 1
+      m.cohorts = [foo_cohort] if i % 3 === 0
+      m.cohorts = [bar_cohort] if i % 3 === 1
       m.save!
     end
     # Assign all materials to collection.
@@ -30,10 +33,10 @@ describe MaterialsCollection do
 
     context "when cohorts list is provided" do
       it "should return only materials that are assigned to the same cohort or not assigned to any cohort" do
-        expect(collection.materials(["foo"])).to eql(materials.select { |m| m.cohort_list.empty? || m.cohort_list.include?("foo") })
-        expect(collection.materials(["bar"])).to eql(materials.select { |m| m.cohort_list.empty? || m.cohort_list.include?("bar") })
-        expect(collection.materials(["foo", "bar"])).to eql(materials.select { |m| m.cohort_list.empty? || m.cohort_list.include?("foo") ||  m.cohort_list.include?("bar") })
-        expect(collection.materials(["nonexistent-cohort"])).to eql(materials.select { |m| m.cohort_list.empty? })
+        expect(collection.materials([foo_cohort])).to eql(materials.select { |m| m.cohorts.empty? || m.cohorts.include?(foo_cohort) })
+        expect(collection.materials([bar_cohort])).to eql(materials.select { |m| m.cohorts.empty? || m.cohorts.include?(bar_cohort) })
+        expect(collection.materials([foo_cohort, bar_cohort])).to eql(materials.select { |m| m.cohorts.empty? || m.cohorts.include?(foo_cohort) ||  m.cohorts.include?(bar_cohort) })
+        expect(collection.materials([nonexistent_cohort])).to eql(materials.select { |m| m.cohorts.empty? })
       end
     end
   end
