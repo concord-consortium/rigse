@@ -31,9 +31,6 @@ class Report::LearnerController < ApplicationController
 
   def logs_query
     authorize Report::Learner
-    # authorize @learner
-    # authorize Report::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
     @remote_endpoints = @select_learners.map { |l| external_activity_return_url(l.learner_id) }
     render :layout => false
   end

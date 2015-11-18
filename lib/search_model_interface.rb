@@ -15,7 +15,7 @@ module SearchModelInterface
       # Fast way to find all materials that are in `allowed_cohorts` OR they are not assigned to any cohort.
       def self.filtered_by_cohorts(allowed_cohorts = [])
         params = {}
-        where = allowed_cohorts.map.with_index do |cohort, i|
+        cohorts_where = allowed_cohorts.map.with_index do |cohort, i|
           params["name#{i}".intern] = cohort.name
           if cohort.project_id
             params["project_id#{i}".intern] = cohort.project_id
@@ -24,10 +24,9 @@ module SearchModelInterface
             "admin_cohorts.name = :name#{i}"
           end
         end
-        where << "1=1" if where.empty? # if allowed_cohorts is empty we need something in the where clause so it doesn't throw an error
         joins("LEFT OUTER JOIN admin_cohort_items ON #{table_name}.id = admin_cohort_items.item_id AND admin_cohort_items.item_type = '#{name}'")
-        .joins("LEFT OUTER JOIN admin_cohorts ON admin_cohorts.id = admin_cohort_items.admin_cohort_id")
-        .where("(#{where.join(' OR ')}) OR admin_cohorts.name IS NULL", params)
+          .joins("LEFT OUTER JOIN admin_cohorts ON admin_cohorts.id = admin_cohort_items.admin_cohort_id")
+          .where("#{cohorts_where.empty? ? "" : "(#{cohorts_where.join(' OR ')}) OR "} admin_cohort_items.id IS NULL", params)
       end
     end
   end
