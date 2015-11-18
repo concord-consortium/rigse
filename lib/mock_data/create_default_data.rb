@@ -329,7 +329,7 @@ module MockData
       end
 
 
-      cohorts_names = teacher_info.delete(:cohort_names)
+      cohorts_names = teacher_info.delete(:cohort_names) || ''
       cohorts = cohorts_names.split(' ').map { |name| Admin::Cohort.create!(:name => name) }
 
       roles = teacher_info[:roles]

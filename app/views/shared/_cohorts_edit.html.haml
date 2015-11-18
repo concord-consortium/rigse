@@ -5,7 +5,7 @@
     .aligned
       = hidden_field_tag :update_cohorts, "true"
       %ul.menu_h
-        - policy_scope(Admin::Cohort).each do |cohort|
+        - Pundit.policy_scope(current_user, Admin::Cohort).each do |cohort|
           %li
             = cohort.fullname
             = check_box_tag "cohort_ids[]", cohort.id, object.cohorts.include?(cohort), :id => cohort.id
