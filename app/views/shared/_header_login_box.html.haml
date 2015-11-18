@@ -1,6 +1,8 @@
 .header-login-box
   %div
     = form_for( @user, :as => 'user', :url => user_session_path, :html => {:id=>"header-project-signin"} )  do |f|
+      -# Set @after_sign_in_path in your controller if you want your user to be redirected after sign in completes.
+      = hidden_field_tag('after_sign_in_path', @after_sign_in_path)
       %table{:cellpadding=>"0", :cellspacing=>"0", :border=>"0"}
         %tbody
           %tr.first-row
