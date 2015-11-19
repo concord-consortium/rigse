@@ -25,14 +25,7 @@ class UsersController < ApplicationController
 
   def index
     authorize User
-    if params[:mine_only]
-      @users = User.search(params[:search], params[:page], self.current_visitor)
-      # PUNDIT_REVIEW_SCOPE
-      # PUNDIT_CHECK_SCOPE (found instance)
-      # @users = policy_scope(User)
-    else
-      @users = User.search(params[:search], params[:page], nil)
-    end
+    @users = policy_scope(User).search(params[:search], params[:page], params[:mine_only] ? user : nil)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }

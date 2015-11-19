@@ -592,10 +592,17 @@ class User < ActiveRecord::Base
   end
 
   def changeable?(user)
-    # A project admin can edit a student or teacher's account if the usr is tagged with a cohort from one the project admin's projects
-    if user.is_project_admin?
-      # use set intersection to see if there is at least matching cohort
-      (user.admin_for_project_cohorts & cohorts).length > 0
+    if user.has_role?("admin", "manager")
+      true
+    elsif user.is_project_admin?
+      # A project admin can edit a student or teacher's account if the user is tagged with a cohort from one the project admin's projects
+      # however project admins can't edit portal admins
+      if has_role?("admin")
+        false
+      else
+        # use set intersection to see if there is at least matching cohort
+        (user.admin_for_project_cohorts & cohorts).length > 0
+      end
     else
       super(user)
     end

@@ -1,10 +1,11 @@
 class ApplicationPolicy
-  attr_reader :user, :original_user, :request, :record
+  attr_reader :user, :original_user, :request, :params, :record
 
   def initialize(context, record)
     @user = context.user
     @original_user = context.original_user
     @request = context.request
+    @params = context.params
     @record = record
   end
 
