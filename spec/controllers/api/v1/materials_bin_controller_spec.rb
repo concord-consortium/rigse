@@ -102,12 +102,9 @@ describe API::V1::MaterialsBinController do
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
         expect(results.length).to eql(3)
-        expect(results[0]['id']).to eql(user1.id)
-        expect(results[0]['name']).to eql(user1.name)
-        expect(results[1]['id']).to eql(user2.id)
-        expect(results[1]['name']).to eql(user2.name)
-        expect(results[2]['id']).to eql(user3.id)
-        expect(results[2]['name']).to eql(user3.name)
+        expect(results.select {|r| r['id'] == user1.id}.length).to eql(1)
+        expect(results.select {|r| r['id'] == user2.id}.length).to eql(1)
+        expect(results.select {|r| r['id'] == user3.id}.length).to eql(1)
       end
     end
   end
