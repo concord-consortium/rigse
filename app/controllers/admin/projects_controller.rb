@@ -16,6 +16,8 @@ class Admin::ProjectsController < ApplicationController
     # no authorization needed ...
     @project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
     @landing_page_content = @project.landing_page_content
+    # Redirect back to project landing page after user signs in.
+    @after_sign_in_path = request.path
   end
 
   # GET /admin/projects
