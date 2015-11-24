@@ -25,7 +25,7 @@ class UsersController < ApplicationController
 
   def index
     authorize User
-    @users = policy_scope(User).search(params[:search], params[:page], params[:mine_only] ? user : nil)
+    @users = policy_scope(User).search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }
