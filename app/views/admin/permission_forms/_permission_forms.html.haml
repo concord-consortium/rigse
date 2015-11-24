@@ -5,6 +5,10 @@
   = form_for :portal_permission, :action => :create do |f|
     %table
       %tr
+        %td Project:
+        %td= select_tag 'portal_permission[project_id]', options_from_collection_for_select(projects, "id", "name", selected: params[:project_id]), prompt: "Select project..."
+        %td
+      %tr
         %td Name:
         %td= f.text_field :name
         %td
@@ -17,7 +21,7 @@
           %div
             - Portal::PermissionForm.all.each do |perm|
               %span.existing_permission
-                %span.name= perm.name
+                %span.name= perm.fullname
                 %span.url
                   - if perm.url
                     %a{:href => perm.url, :target => "_blank"}="(link)"

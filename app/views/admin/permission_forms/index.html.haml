@@ -1,5 +1,5 @@
 %p
-  = render :partial => 'permission_forms', :locals => {:permissions => @permissions}
+  = render :partial => 'permission_forms', :locals => {:projects => @projects}
   = render :partial => 'search_form',      :locals => {:form => @form}
   - unless @teachers.blank?
     %h3 Teachers:

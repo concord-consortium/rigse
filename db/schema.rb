@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151030150216) do
+ActiveRecord::Schema.define(:version => 20151111213007) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -52,6 +52,19 @@ ActiveRecord::Schema.define(:version => 20151030150216) do
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
   add_index "activities", ["is_featured", "publication_status"], :name => "featured_public"
   add_index "activities", ["publication_status"], :name => "pub_status"
+
+  create_table "admin_cohort_items", :force => true do |t|
+    t.integer "admin_cohort_id"
+    t.integer "item_id"
+    t.string  "item_type"
+  end
+
+  create_table "admin_cohorts", :force => true do |t|
+    t.integer "project_id"
+    t.string  "name"
+  end
+
+  add_index "admin_cohorts", ["project_id", "name"], :name => "index_admin_cohorts_on_project_id_and_name", :unique => true
 
   create_table "admin_notice_user_display_statuses", :force => true do |t|
     t.integer  "user_id"
@@ -1961,6 +1974,7 @@ ActiveRecord::Schema.define(:version => 20151030150216) do
     t.string   "url"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "project_id"
   end
 
   create_table "portal_school_memberships", :force => true do |t|

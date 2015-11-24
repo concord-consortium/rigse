@@ -25,14 +25,7 @@ class UsersController < ApplicationController
 
   def index
     authorize User
-    if params[:mine_only]
-      @users = User.search(params[:search], params[:page], self.current_visitor)
-      # PUNDIT_REVIEW_SCOPE
-      # PUNDIT_CHECK_SCOPE (found instance)
-      # @users = policy_scope(User)
-    else
-      @users = User.search(params[:search], params[:page], nil)
-    end
+    @users = policy_scope(User).search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }
@@ -167,11 +160,8 @@ class UsersController < ApplicationController
             end
           end
 
-          # set the cohort tags if we have a teacher
-          if @user.portal_teacher && params[:update_cohorts]
-            cohorts = params[:cohorts] ? params[:cohorts] : []
-            @user.portal_teacher.cohort_list = cohorts
-            @user.portal_teacher.save
+          if @user.portal_teacher && params[:user][:has_cohorts_in_form]
+            @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
           end
 
           flash[:notice] = "User: #{@user.name} was successfully updated."
@@ -288,6 +278,7 @@ class UsersController < ApplicationController
     authorize @user
     @projects = Admin::Project.all_sorted
   end
+
   def update_by_project_admin
     if params[:commit] == "Cancel"
       redirect_to users_path
@@ -295,7 +286,12 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       authorize @user
       respond_to do |format|
-        @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
+        if params[:user][:has_projects_in_form]
+          @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
+        end
+        if @user.portal_teacher && params[:user][:has_cohorts_in_form]
+          @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
+        end
         flash[:notice] = "User: #{@user.name} was successfully updated."
         format.html do
           redirect_to users_path

@@ -5,12 +5,13 @@ require 'will_paginate/array'
 BrowserSpecificiation = Struct.new(:browser, :version)
 
 class PunditUserContext
-  attr_reader :user, :original_user, :request
+  attr_reader :user, :original_user, :request, :params
 
-  def initialize(user, original_user, request)
+  def initialize(user, original_user, request, params)
     @user = user
     @original_user = original_user
     @request = request
+    @params = params
   end
 end
 
@@ -26,7 +27,7 @@ class ApplicationController < ActionController::Base
   end
 
   def pundit_user
-    PunditUserContext.new(current_user, @original_user, request)
+    PunditUserContext.new(current_user, @original_user, request, params)
   end
 
   # protect_from_forgery

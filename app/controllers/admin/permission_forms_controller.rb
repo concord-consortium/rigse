@@ -11,13 +11,6 @@ class Admin::PermissionFormsController < ApplicationController
 
   protected
 
-  def admin_or_manager
-    return true if current_visitor.has_role?('admin')
-    return true if current_visitor.has_role?('manager')
-    flash[:notice] = "Please log in as an administrator or manager"
-    redirect_to(:home)
-  end
-
   def update_student_permissions(student_id, permission_ids)
     student = Portal::Student.find(student_id)
     return false unless student
@@ -37,7 +30,7 @@ class Admin::PermissionFormsController < ApplicationController
       self.name  = params[:name]
       self.order = params[:order] || "last_name"
     end
-    def search
+    def search(current_visitor)
       return [] unless self.name
       value  = "%#{self.name}%"
       where  = "users.login like ? " +
@@ -46,12 +39,13 @@ class Admin::PermissionFormsController < ApplicationController
                "or users.email like ?"
       order  = "users.last_name"
       group  = "users.login"
-      teachers = Portal::Teacher.joins(:user,:clazzes).
-        where(where, value, value, value, value).
-        order(order).
-        group(group).
-        limit(30)
-      teachers.map { |t| TeacherView.new(t)}
+      if current_visitor.is_project_admin?
+        ids = current_visitor.admin_for_project_teachers.map {|t| t.user_id}
+        teachers = Portal::Teacher.joins(:user,:clazzes).where("users.id in (?) and (#{where})", ids, value, value, value, value)
+      else
+        teachers = Portal::Teacher.joins(:user,:clazzes).where(where, value, value, value, value)
+      end
+      teachers.order(order).group(group).limit(30).map { |t| TeacherView.new(t)}
     end
   end
 
@@ -94,7 +88,8 @@ class Admin::PermissionFormsController < ApplicationController
     # PUNDIT_CHECK_SCOPE (did not find instance)
     # @permission_forms = policy_scope(Portal::PermissionForm)
     form = TeacherSearchForm.new(params[:form])
-    @teachers = form.search
+    @teachers = form.search current_visitor
+    @projects = policy_scope(Admin::Project).order("name ASC")
   end
 
   def update_forms
@@ -116,7 +111,7 @@ class Admin::PermissionFormsController < ApplicationController
     authorize Portal::PermissionForm
     form_data = params['portal_permission']
     if form_data && (!form_data['name'].blank?)
-      form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'])
+      form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'], :project_id => form_data['project_id'])
     end
     redirect_to action: 'index'
   end

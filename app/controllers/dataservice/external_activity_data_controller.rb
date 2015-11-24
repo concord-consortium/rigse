@@ -1,5 +1,4 @@
 class Dataservice::ExternalActivityDataController < ApplicationController
-  include PeerAccess
   
   private
   def can_create(learner)

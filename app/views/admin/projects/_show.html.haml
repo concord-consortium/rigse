@@ -23,3 +23,7 @@
               %li
                 Links:
                 = raw project.links.collect { |link| link_to link.name, link.href }.join(", ")
+            - if !project.cohorts.empty?
+              %li
+                Cohorts:
+                = project.cohorts.collect { |cohort| cohort.name }.join(", ")

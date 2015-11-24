@@ -8,16 +8,25 @@ module SearchModelInterface
     ## add before_save hooks
     clazz.class_eval do
       acts_as_taggable_on :material_properties
-      acts_as_taggable_on :cohorts
       acts_as_taggable_on :grade_levels
       acts_as_taggable_on :subject_areas
       acts_as_taggable_on :sensors
 
       # Fast way to find all materials that are in `allowed_cohorts` OR they are not assigned to any cohort.
-      scope :filtered_by_cohorts, ->(allowed_cohorts = []) do
-        joins("LEFT OUTER JOIN taggings ON #{table_name}.id = taggings.taggable_id AND taggings.taggable_type = '#{name}' AND taggings.context = 'cohorts'")
-          .joins("LEFT OUTER JOIN tags ON tags.id = taggings.tag_id")
-          .where("tags.name IN (?) OR tags.name IS NULL", allowed_cohorts)
+      def self.filtered_by_cohorts(allowed_cohorts = [])
+        params = {}
+        cohorts_where = allowed_cohorts.map.with_index do |cohort, i|
+          params["name#{i}".intern] = cohort.name
+          if cohort.project_id
+            params["project_id#{i}".intern] = cohort.project_id
+            "(admin_cohorts.name = :name#{i} AND admin_cohorts.project_id = :project_id#{i})"
+          else
+            "admin_cohorts.name = :name#{i}"
+          end
+        end
+        joins("LEFT OUTER JOIN admin_cohort_items ON #{table_name}.id = admin_cohort_items.item_id AND admin_cohort_items.item_type = '#{name}'")
+          .joins("LEFT OUTER JOIN admin_cohorts ON admin_cohorts.id = admin_cohort_items.admin_cohort_id")
+          .where("#{cohorts_where.empty? ? "" : "(#{cohorts_where.join(' OR ')}) OR "} admin_cohort_items.id IS NULL", params)
       end
     end
   end

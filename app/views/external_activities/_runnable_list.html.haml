@@ -31,7 +31,7 @@
         %p=external_activity.description
         - if current_visitor.has_role?("admin", "manager")
           %p
-            %i= "Cohorts: #{external_activity.cohort_list.join(", ")}"
+            %i= "Cohorts: #{external_activity.cohort_fullnames.join(", ")}"
           %p
             %i= "Grade Levels: #{external_activity.grade_level_list.join(", ")}"
           %p

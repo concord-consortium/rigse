@@ -78,9 +78,9 @@ class Reports::Counts
   BY_DISTRICT = lambda {|t| t.school ? t.school.district : nil}
   BY_SCHOOL = lambda {|t| t.school ? t.school : nil}
   BY_COHORT = lambda {|t|
-    cs = t.cohort_list || "none" if t.is_a?(Portal::Teacher)
+    cs = t.cohort_fullnames || "none" if t.is_a?(Portal::Teacher)
     if t.is_a?(Portal::Student)
-      cs = t.teachers.map{|te| te.cohorts }.flatten.uniq.map{|c| c.name }.join(", ")
+      cs = t.teachers.map{|te| te.cohorts }.flatten.uniq.map{|c| c.fullname }.join(", ")
     end
     cs
   }

@@ -1,32 +1,32 @@
 admin_settings:
   uuid: 00000000-0000-0000-0000-000000000001
   active: false
-  
+
 roles:
   role_1:
     title: admin
     uuid: 00000000-0000-0000-0000-000000000002
-    
+
   role_2:
     title: manager
     uuid: 00000000-0000-0000-0000-000000000003
-    
+
   role_3:
     title: researcher
     uuid: 00000000-0000-0000-0000-000000000004
-    
+
   role_4:
     title: author
     uuid: 00000000-0000-0000-0000-000000000005
-    
+
   role_5:
     title: member
     uuid: 00000000-0000-0000-0000-000000000006
-    
+
   role_6:
     title: guest
     uuid: 00000000-0000-0000-0000-000000000007
-  
+
 district:
   name: default district
   description: "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
@@ -37,7 +37,7 @@ grades:
     name: '9'
     description: 9th grade
     uuid: 00000000-0000-0000-0000-000000000009
-  
+
 grade_levels:
   grade_level_1:
     name: grade level 9
@@ -79,7 +79,7 @@ courses:
     name: Course for Fake School
     uuid: 00000000-0000-0000-0000-000000000017
     school: Fake School
-    
+
   course_2:
     name: Course for VJTI school
     uuid: 00000000-0000-0000-0000-000000000018
@@ -90,22 +90,22 @@ users:
     login: author
     roles: member, author
     uuid: 00000000-0000-0000-0000-000000000019
-    
+
   user_2:
     login: manager
     roles: manager
     uuid: 00000000-0000-0000-0000-000000000020
-    
+
   user_3:
     login: mymanager
     roles: manager
     uuid: 00000000-0000-0000-0000-000000000021
-      
+
   user_4:
     login: researcher
     roles: researcher
     uuid: 00000000-0000-0000-0000-000000000022
-      
+
   user_5:
     login: admin
     roles: admin
@@ -119,27 +119,27 @@ teachers:
     last_name: Nash
     email: bademail@noplace.com
     school: VJTI
-    cohort_list: control
+    cohort_names: control
     uuid: 00000000-0000-0000-0000-000000000024
-  
+
   teacher_2:
     login: albert
     first_name: Albert
     last_name: Fernandez
     email: bademail@noplace2.com
     school: VJTI
-    cohort_list: experiment
+    cohort_names: experiment
     uuid: 00000000-0000-0000-0000-000000000025
-  
+
   teacher_3:
     login: robert
     first_name: Robert
     last_name: Fernandez
     email: bademail@noplace3.com
     school: Fake School
-    cohort_list: control, experiment
+    cohort_names: control, experiment
     uuid: 00000000-0000-0000-0000-000000000026
-  
+
   teacher_4:
     login: peterson
     first_name: Peterson
@@ -147,7 +147,7 @@ teachers:
     email: bademail@noplace4.com
     school: Fake School
     uuid: 00000000-0000-0000-0000-000000000027
-      
+
   teacher_5:
     login: teacher_with_no_class
     first_name: Teacher_with_no_class
@@ -155,7 +155,7 @@ teachers:
     email: bademail@noplace5.com
     school: Fake School
     uuid: 00000000-0000-0000-0000-000000000028
-      
+
   teacher_6:
     login: jonson
     first_name: Jonson
@@ -171,56 +171,56 @@ students:
     last_name: Robert
     email: student@mailinator.com
     uuid: 00000000-0000-0000-0000-000000000030
-      
+
   student_2:
     login: dave
-    first_name: Dave 
+    first_name: Dave
     last_name: Doe
     email: student@mailinator1.com
     uuid: 00000000-0000-0000-0000-000000000031
-      
+
   student_3:
     login: chuck
     first_name: Chuck
     last_name: Smith
     email: student@mailinator2.com
     uuid: 00000000-0000-0000-0000-000000000032
-      
+
   student_4:
     login: taylor
     first_name: Taylor
     last_name: Donald
     email: student@mailinator3.com
     uuid: 00000000-0000-0000-0000-000000000033
-    
+
   student_5:
     login: Mache
     first_name: Mache
     last_name: Smith
     email: student@mailinator4.com
     uuid: 00000000-0000-0000-0000-000000000034
-      
+
   student_6:
     login: shon
     first_name: Shon
     last_name: Done
     email: student@mailinator5.com
     uuid: 00000000-0000-0000-0000-000000000035
-      
+
   student_7:
     login: ross
     first_name: Ross
     last_name: Taylor
     email: student@mailinator6.com
     uuid: 00000000-0000-0000-0000-000000000036
-    
+
   student_8:
     login: monty
     first_name: Monty
     last_name: Donald
     email: student@mailinator7.com
     uuid: 00000000-0000-0000-0000-000000000037
-      
+
   student_9:
     login: Switchuser
     first_name: Joe

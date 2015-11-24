@@ -41,3 +41,16 @@
               = link_form.link_to_remove "Remove this link"
           %li
             = f.link_to_add "Add a link", :links
+        %li
+          Cohorts:
+        = nested_form_for project do |f|
+          = f.fields_for :cohorts do |cohort_form|
+            %li
+              %table
+                %tr
+                  %td{ :style => "padding-right: 10px" } Name:
+                  %td
+                    = cohort_form.text_field :name
+              = cohort_form.link_to_remove "Remove this cohort"
+          %li
+            = f.link_to_add "Add a cohort", :cohorts

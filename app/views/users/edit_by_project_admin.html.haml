@@ -16,3 +16,5 @@
       %h3
         = @user.name
       = render :partial => 'researcher_for_projects', :locals => { :f => form, :projects => current_visitor.admin_for_projects }
+      - if @user.portal_teacher
+        = render :partial => 'project_cohorts', :locals => { :f => form, :projects => current_visitor.admin_for_projects }

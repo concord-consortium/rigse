@@ -70,12 +70,12 @@ class Search
     [domain_id].flatten
   end
 
-  def self.cohorts_for(user_id)
+  def self.cohort_ids_for(user_id)
     user = User.find(user_id)
     return nil unless user
     return nil unless user.portal_teacher
-    return nil if user.portal_teacher.cohort_list.empty?
-    return user.portal_teacher.cohort_list
+    return nil if user.portal_teacher.cohorts.empty?
+    return user.portal_teacher.cohorts.map {|c| c.id}
   end
 
   def self.clean_material_types(material_types)
@@ -194,8 +194,8 @@ class Search
 
         if (!self.private && self.user_id)
           s.any_of do |c|
-            c.with(:cohorts, Search.cohorts_for(self.user_id))
-            c.with(:cohorts, nil)
+            c.with(:cohort_ids, Search.cohort_ids_for(self.user_id))
+            c.with(:cohort_ids, nil)
           end
         end
 

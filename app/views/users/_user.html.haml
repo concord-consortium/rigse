@@ -14,7 +14,10 @@
               %li.menu=link_to 'Teacher Page', portal_teacher_path(user.portal_teacher)
             - if portal_student = user.portal_student
               %li.menu=link_to 'Student Page', portal_student_path(portal_student)
-            %li.menu=link_to 'edit', edit_user_path(user)
+            - if user.has_role?("admin") && !current_visitor.has_role?("admin")
+              %li.menu=link_to 'edit', edit_by_project_admin_user_path(user)
+            - else
+              %li.menu=link_to 'edit', edit_user_path(user)
             %li.menu=link_to 'Reset Password', reset_password_user_path(user)
             - if user.state == 'pending'
               %li.menu=link_to 'Activate', confirm_user_path(user)
@@ -24,7 +27,7 @@
               = form_for user, :url => switch_user_path(user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
                 = hidden_field_tag 'user[id]', user.id
                 = hidden_field_tag 'commit', 'Switch'
-          - elsif current_visitor.is_project_admin?
+          - elsif current_visitor.is_project_admin? && user.portal_teacher
             %li.menu=link_to 'edit', edit_by_project_admin_user_path(user)
 
     %div{:id => dom_id_for(user, :details), :class => 'tiny'}
@@ -43,9 +46,9 @@
         - if user.portal_teacher
           %li
             Cohorts:
-          - user.portal_teacher.cohort_list.each do |c|
+          - user.portal_teacher.cohorts.each do |c|
             %li
-              = c
+              = c.fullname
           %li
             Schools:
             %li

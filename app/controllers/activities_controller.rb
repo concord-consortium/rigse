@@ -159,8 +159,8 @@ class ActivitiesController < ApplicationController
     end
 
     if params[:update_cohorts]
-      # set the cohort tags
-      @activity.cohort_list = (params[:cohorts] || [])
+      # set the cohorts
+      @activity.set_cohorts_by_id(params[:cohort_ids] || [])
     end
 
     if params[:update_grade_levels]
@@ -201,7 +201,7 @@ class ActivitiesController < ApplicationController
 
     if params[:update_cohorts]
       # set the cohort tags
-      @activity.cohort_list = (params[:cohorts] || [])
+      @activity.set_cohorts_by_id(params[:cohort_ids] || [])
       @activity.save
     end
 

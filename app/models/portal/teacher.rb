@@ -1,8 +1,9 @@
 class Portal::Teacher < ActiveRecord::Base
+  include Cohorts
+
   self.table_name = :portal_teachers
 
   acts_as_replicatable
-  acts_as_taggable_on :cohorts
   acts_as_taggable_on :grade_levels
   acts_as_taggable_on :subject_areas
 

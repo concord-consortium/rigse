@@ -1,22 +1,24 @@
 class Admin::LearnerDetailsController < ApplicationController
-  include PeerAccess
+  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+
+  private
+
+  def pundit_user_not_authorized(exception)
+    render text: "unauthorized"
+  end
+
+  public
 
   # GET /learner_details/1
   # GET /learner_details/1.txt
   # GET /learner_details/1.json
   def show
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @learner_detail
-    if verify_request_is_peer
-      learner = Portal::Learner.find(params[:id])
-      @learner_details = LearnerDetail.new learner
-      respond_to do |format|
-        format.text  { render :text => @learner_details.display }
-        format.json  { render :json => @learner_details.to_json }
-      end
-    else
-      render text: "unauthorized"
+    authorize Admin::LearnerDetails
+    learner = Portal::Learner.find(params[:id])
+    @learner_details = LearnerDetail.new learner
+    respond_to do |format|
+      format.text  { render :text => @learner_details.display }
+      format.json  { render :json => @learner_details.to_json }
     end
   end
 end

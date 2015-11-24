@@ -1,10 +1,11 @@
 class ApplicationPolicy
-  attr_reader :user, :original_user, :request, :record
+  attr_reader :user, :original_user, :request, :params, :record
 
   def initialize(context, record)
     @user = context.user
     @original_user = context.original_user
     @request = context.request
+    @params = context.params
     @record = record
   end
 
@@ -109,6 +110,10 @@ class ApplicationPolicy
     user && (user.is_project_admin? || has_roles?('admin','manager'))
   end
 
+  def manager_or_researcher_or_project_researcher?
+    user && (user.is_project_researcher? || manager_or_researcher?)
+  end
+
   def admin_or_config?
     user && (user.has_role?('admin') || request.format == :config)
   end
@@ -125,6 +130,15 @@ class ApplicationPolicy
     user && user.has_role?(*roles)
   end
 
+  # from peer access
+
+  def request_is_peer?
+    auth_header = request.headers["Authorization"]
+    auth_token = auth_header && auth_header =~ /^Bearer (.*)$/ ? $1 : ""
+    peer_tokens = Client.all.map { |c| c.app_secret }.uniq
+    peer_tokens.include?(auth_token)
+  end
+
+
+
 end
-
-

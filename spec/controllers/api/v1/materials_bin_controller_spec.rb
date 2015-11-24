@@ -2,8 +2,12 @@
 require 'spec_helper'
 
 describe API::V1::MaterialsBinController do
-  def sign_in_user_in_foo_cohort
-    teacher = Factory.create(:portal_teacher, cohort_list: ['foo'])
+  let(:foo_cohort) { FactoryGirl.create(:admin_cohort, name: 'foo') }
+  let(:bar_cohort) { FactoryGirl.create(:admin_cohort, name: 'bar') }
+
+  def sign_in_user_in_cohort(cohort)
+    teacher = Factory.create(:portal_teacher)
+    teacher.cohorts = [cohort]
     sign_in teacher.user
   end
 
@@ -16,8 +20,8 @@ describe API::V1::MaterialsBinController do
     before(:each) do
       # Assign some materials to cohorts.
       materials.each_with_index do |m, i|
-        m.cohort_list = ["foo"] if i % 3 === 0
-        m.cohort_list = ["bar"] if i % 3 === 1
+        m.cohorts = [foo_cohort] if i % 3 === 0
+        m.cohorts = [bar_cohort] if i % 3 === 1
         m.save!
       end
       # Assign all materials to collection.
@@ -39,7 +43,7 @@ describe API::V1::MaterialsBinController do
 
     context 'when user is assigned to some cohorts' do
       before(:each) do
-        sign_in_user_in_foo_cohort
+        sign_in_user_in_cohort(foo_cohort)
       end
 
       it 'should return materials that are in the same cohort or materials not assigned to any cohort' do
@@ -61,13 +65,14 @@ describe API::V1::MaterialsBinController do
   let (:user2_private_activity) { FactoryGirl.create(:external_activity, user: user2, publication_status: 'private') }
   # materials that might not be taken into account:
   let (:official_activity) { FactoryGirl.create(:external_activity, user: user3, is_official: true, publication_status: 'published') }
-  let (:cohort_activity) { FactoryGirl.create(:external_activity, user: user3, cohort_list: ['foo'], publication_status: 'published') }
+  let (:cohort_activity) { FactoryGirl.create(:external_activity, user: user3, publication_status: 'published') }
   let (:user3_private_activity) { FactoryGirl.create(:external_activity, user: user3, publication_status: 'private') }
   # investigation is considered to be always official
   let (:inv) { FactoryGirl.create(:investigation, user: user3, publication_status: 'published') }
 
   def populate_example_materials
     # Make sure that objects are saved to DB.
+    cohort_activity.cohorts = [foo_cohort]
     act1; user2_public_activity; official_activity; cohort_activity; user2_private_activity; inv
   end
 
@@ -90,19 +95,16 @@ describe API::V1::MaterialsBinController do
 
     context 'when user is assigned to some cohorts' do
       before(:each) do
-        sign_in_user_in_foo_cohort
+        sign_in_user_in_cohort(foo_cohort)
       end
       it 'lists all unofficial materials authors respecting cohorts' do
         get :unofficial_materials_authors
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
         expect(results.length).to eql(3)
-        expect(results[0]['id']).to eql(user1.id)
-        expect(results[0]['name']).to eql(user1.name)
-        expect(results[1]['id']).to eql(user2.id)
-        expect(results[1]['name']).to eql(user2.name)
-        expect(results[2]['id']).to eql(user3.id)
-        expect(results[2]['name']).to eql(user3.name)
+        expect(results.select {|r| r['id'] == user1.id}.length).to eql(1)
+        expect(results.select {|r| r['id'] == user2.id}.length).to eql(1)
+        expect(results.select {|r| r['id'] == user3.id}.length).to eql(1)
       end
     end
   end
@@ -176,7 +178,7 @@ describe API::V1::MaterialsBinController do
 
     context 'when user is assigned to some cohorts' do
       before(:each) do
-        sign_in_user_in_foo_cohort
+        sign_in_user_in_cohort(foo_cohort)
       end
       let (:request_user) { user3 }
       it 'lists unofficial materials respecting cohorts' do
