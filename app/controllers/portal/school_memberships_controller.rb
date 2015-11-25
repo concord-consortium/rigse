@@ -87,7 +87,7 @@ class Portal::SchoolMembershipsController < ApplicationController
     # authorize @school_membership
 
     respond_to do |format|
-      if @school_membership.update_attributes(params[:school_membership])
+      if @school_membership.update_attributes(params[:portal_school_membership])
         flash[:notice] = 'Portal::SchoolMembership was successfully updated.'
         format.html { redirect_to(@school_membership) }
         format.xml  { head :ok }

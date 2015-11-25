@@ -1,12 +1,15 @@
-<h1>Editing school_membership</h1>
+<h1>Editing School for <%= @school_membership.member.name %></h1>
 
-<% form_for(@school_membership) do |f| %>
+<%= form_for(@school_membership) do |f| %>
   <%= f.error_messages %>
+
+  <%= f.hidden_field :member_id %>
+  <%= f.hidden_field :member_type %>
+
+  <%= label_tag :school_id, 'School ID: ', :class=>"right" %>
+  <%= f.text_field :school_id, {:live => false} %>
 
   <p>
     <%= f.submit 'Update' %>
   </p>
 <% end %>
-
-<%= link_to 'Show', @school_membership %> |
-<%= link_to 'Back', portal_school_memberships_path %>
