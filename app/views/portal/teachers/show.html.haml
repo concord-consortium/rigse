@@ -7,10 +7,14 @@
 %table.classes_school_listing
   %thead
     %tr
-      %td
+      %td{colspan: 2}
         %h4 Classes
+  %thead
+    %tr
       %td
-        %h4 Schools
+        Name
+      %td
+        School
   %tbody
     - @portal_teacher.clazzes.each do |clazz|
       %tr
@@ -18,3 +22,16 @@
           =link_to clazz.name, clazz
         %td
           =clazz.school.name
+
+%table.school_listing
+  %thead
+    %tr
+      %td{colspan: 2}
+        %h4 Schools
+  %tbody
+    - @portal_teacher.school_memberships.each do |school_membership|
+      %tr
+        %td
+          =school_membership.school.name
+        %td
+          =link_to 'Edit', edit_portal_school_membership_path(school_membership)

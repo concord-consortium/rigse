@@ -1,3 +1,3 @@
-
-<%= link_to 'Edit', edit_portal_school_membership_path(@school_membership) %> |
-<%= link_to 'Back', portal_school_memberships_path %>
+<%= @school_membership.member_type %>: <%= link_to @school_membership.member.name, @school_membership.member %>
+<br>
+School: <%= link_to @school_membership.school.name, @school_membership.school %>
