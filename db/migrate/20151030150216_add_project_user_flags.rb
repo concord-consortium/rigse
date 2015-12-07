@@ -12,9 +12,9 @@ class AddProjectUserFlags < ActiveRecord::Migration
   end
 
   def down
-    remove_column :admin_project_users, :id, :primary_key
-    remove_column :admin_project_users, :is_admin, :boolean, :default => false
-    remove_column :admin_project_users, :is_researcher, :boolean, :default => false
-    remove_column :admin_project_users, :is_member, :boolean, :default => false
+    remove_column :admin_project_users, :id
+    remove_column :admin_project_users, :is_admin
+    remove_column :admin_project_users, :is_researcher
+    remove_column :admin_project_users, :is_member
   end
 end

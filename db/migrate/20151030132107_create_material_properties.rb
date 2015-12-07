@@ -55,13 +55,21 @@ class CreateMaterialProperties < ActiveRecord::Migration
   end
 
   # Adapted from the sunspot:reindex rake task
+  # 2015-12-07 NP: UPDATE:
+  # This migration will break for developers who haven't run this migration yet,
+  # but also have other new pending model migrations.
+
+  # New models that have added to app/models/** expect that their tables exist.
+  # Loading those new models here, will throw exceptions. (As happened to me)
   def reindex
-    Sunspot.session = Sunspot::SessionProxy::Retry5xxSessionProxy.new(Sunspot.session)
-    reindex_options = { :batch_commit => false }
-    Dir.glob(Rails.root.join('app/models/**/*.rb')).each { |path| require path }
-    sunspot_models = Sunspot.searchable
-    sunspot_models.each do |model|
-      model.solr_reindex(reindex_options)
+    if ENV["REINDEX_SOLR"] # We would need to set this explicitly to re-index
+      Sunspot.session = Sunspot::SessionProxy::Retry5xxSessionProxy.new(Sunspot.session)
+      reindex_options = { :batch_commit => false }
+      Dir.glob(Rails.root.join('app/models/**/*.rb')).each { |path| require path }
+      sunspot_models = Sunspot.searchable
+      sunspot_models.each do |model|
+        model.solr_reindex(reindex_options)
+      end
     end
   end
 end
