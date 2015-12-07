@@ -91,8 +91,9 @@ describe Search do
   end
 
   describe "searching" do
-    let(:mock_user)      { mock_model(User, :portal_teacher => nil) }
-    let(:materials)      { [] }
+    let(:user_stubs) {{ portal_teacher: nil, anonymous?: false, only_a_student?: false }}
+    let(:mock_user)  { mock_model(User, user_stubs) }
+    let(:materials)  { [] }
     before(:all) do
       solr_setup
       clean_solar_index
@@ -107,10 +108,14 @@ describe Search do
       clean_solar_index
     end
 
-    let(:official)     { { :is_official => true }}
-    let(:public_opts)  { { :publication_status => "published"}}
-    let(:private_opts) { { :publication_status => "private"          }}
-    let(:external_base) { {:url => 'http://activities.com'}}
+    let(:official)       {{ :is_official => true               }}
+    let(:public_opts)    {{ :publication_status => "published" }}
+    let(:private_opts)   {{ :publication_status => "private"   }}
+    let(:external_base)  {{ :url => 'http://activities.com'    }}
+    let(:assessment_opts){{
+      :is_assessment_item => true, :publication_status => "published"
+    }}
+
     let(:external_seq) { external_base.merge({ :template => private_investigations.first})}
     let(:external_act) { external_base.merge({ :template => private_activities.first})}
 
@@ -122,7 +127,7 @@ describe Search do
     let(:private_ext_act)       { collection(:external_activity, 2, external_act.merge(private_opts).merge(official)) }
     let(:public_ext_seq)        { collection(:external_activity, 2, external_seq.merge(public_opts).merge(official))  }
     let(:private_ext_seq)       { collection(:external_activity, 2, external_seq.merge(private_opts).merge(official)) }
-
+    let(:assessment_activities) { collection(:activity, 2, assessment_opts) }
     let(:search_opts) { {} }
 
     subject do
@@ -184,6 +189,53 @@ describe Search do
         end
       end
 
+      describe "searching collectiosn that includes assessment items" do
+        let(:materials)     { [public_items, assessment_activities].flatten }
+        let(:search_opts)   {{ :user_id => mock_user.id }}
+        before(:each) do
+          User.stub!(:find => mock_user)
+        end
+        describe "a teacher" do
+          let(:user_stubs) {{
+            anonymous?: false,
+            portal_teacher: mock_model(Portal::Teacher, {cohorts: []}),
+            only_a_student?: false
+          }}
+
+          it "should see the assessment items" do
+            assessment_activities.each do |act|
+              subject.results[:all].should include act
+            end
+          end
+        end
+
+        describe "a student" do
+          let(:user_stubs) {{
+            anonymous?: false,
+            portal_teacher: nil,
+            only_a_student?: true
+          }}
+          it "should not see the assessment items" do
+            assessment_activities.each do |act|
+              subject.results[:all].should_not include act
+            end
+          end
+        end
+
+        describe "an anonymous user" do
+          let(:user_stubs) {{
+            anonymous?: true,
+            portal_teacher: nil
+          }}
+          it "should not see the assment items" do
+            assessment_activities.each do |act|
+              subject.results[:all].should_not include act
+            end
+          end
+
+        end
+
+      end
       describe "template items should not be included in results by default" do
         let(:template_ivs)  { collection(:investigation_template, 2, public_opts) }
         let(:template_acts) { collection(:activity_template, 2, public_opts) }
@@ -313,9 +365,16 @@ describe Search do
       describe "With cohort tags" do
         # TODO: COHORT FIXME
         let(:teacher_cohorts) {[]}
-        let(:teacher)         { mock_model(Portal::Teacher, :cohorts => teacher_cohorts)}
-        let(:mock_user)       { mock_model(User, :id => 23, :portal_teacher => teacher)}
-        let(:search_opts)     {{ :private => false, :user_id => mock_user.id }}
+        let(:teacher)    {
+          mock_model(Portal::Teacher, :cohorts => teacher_cohorts)
+        }
+        let(:user_stubs) {{
+          portal_teacher: teacher,
+          only_a_student?: false,
+          anonymous?: false,
+          id: 23
+        }}
+        let(:search_opts){{ :private => false, :user_id => mock_user.id }}
         before(:each) do
           User.stub!(:find => mock_user)
         end
@@ -492,6 +551,9 @@ describe Search do
       end
     end
     describe "#params" do
+      before(:each) do
+        User.stub!(:find => mock_user)
+      end
       subject { params = Search.new(search_opts).params }
       describe "with no options" do
         let(:search_opts) {{}}
