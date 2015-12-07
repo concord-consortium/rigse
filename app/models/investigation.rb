@@ -36,6 +36,7 @@ class Investigation < ActiveRecord::Base
     integer :offerings_count
     boolean :is_official
     boolean :is_template
+    boolean :is_assessment_item
 
     time    :updated_at
     time    :created_at

@@ -18,6 +18,7 @@ class Search
   attr_accessor :interactive_page
   attr_accessor :per_page
   attr_accessor :user_id
+  attr_accessor :user
   attr_accessor :include_contributed
   attr_accessor :include_official
   attr_accessor :include_mine
@@ -70,12 +71,16 @@ class Search
     [domain_id].flatten
   end
 
-  def self.cohort_ids_for(user_id)
-    user = User.find(user_id)
-    return nil unless user
-    return nil unless user.portal_teacher
-    return nil if user.portal_teacher.cohorts.empty?
-    return user.portal_teacher.cohorts.map {|c| c.id}
+  def user
+    return nil unless self.user_id
+    User.find(self.user_id)
+  end
+
+  def cohort_ids
+    return nil unless self.user
+    return nil unless self.user.portal_teacher
+    return nil if self.user.portal_teacher.cohorts.empty?
+    return self.user.portal_teacher.cohorts.map {|c| c.id}
   end
 
   def self.clean_material_types(material_types)
@@ -109,7 +114,7 @@ class Search
     self.no_probes      = false
 
     self.user_id        = opts[:user_id]
-
+    self.user           = User.find(self.user_id)  if self.user_id
     self.engine         = opts[:engine]         || Sunspot
     self.grade_span     = opts[:grade_span]     || NoGradeSpan
     self.probe          = opts[:probe]          || AnyProbeType
@@ -190,11 +195,12 @@ class Search
         search_by_grade_levels(s)
         search_by_subject_areas(s)
         search_by_projects(s)
+        search_without_assessments(s)
         s.with(:is_template, false) unless self.include_templates
 
         if (!self.private && self.user_id)
           s.any_of do |c|
-            c.with(:cohort_ids, Search.cohort_ids_for(self.user_id))
+            c.with(:cohort_ids, self.cohort_ids)
             c.with(:cohort_ids, nil)
           end
         end
@@ -283,6 +289,13 @@ class Search
           s.with(:material_properties, r)
         end
       end
+    end
+  end
+
+  def search_without_assessments(search)
+    u = self.user
+    if u.nil? or u.anonymous? or u.only_a_student?
+      search.with(:is_assessment_item, false)
     end
   end
 

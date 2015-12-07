@@ -34,6 +34,8 @@
   = field_set_tag 'Show Score' do
     = f.check_box :show_score
     #{t('authoring.show_score_description')} (this only applies if this activity is assigned individually)
+
+  = render :partial => 'shared/is_assessment_item', :locals => { :form => f }
   = render :partial => 'shared/material_properties_edit', :locals => { :object => @activity }
   = render :partial => 'shared/cohorts_edit', :locals => { :object => @activity }
   = render :partial => 'shared/grade_levels_edit', :locals => { :object => @activity }
