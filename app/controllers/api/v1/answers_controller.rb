@@ -1,4 +1,4 @@
-class API::V1::DataController < API::APIController
+class API::V1::AnswersController < API::APIController
 
   require 'yaml'
 
@@ -12,9 +12,9 @@ class API::V1::DataController < API::APIController
 
   public
 
-  # GET api/v1/data/student_answers?teacher_id=:teacher_id
+  # GET api/v1/answer/student_answers?teacher_id=:teacher_id
   def student_answers
-    authorize [:api, :v1, :data]
+    authorize [:api, :v1, :answer]
     teacher_ids = params.require(:teacher_id)
     if !teacher_ids.kind_of?(Array)
       teacher_ids = [teacher_ids]
