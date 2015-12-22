@@ -6,7 +6,6 @@
         %span.component_title
         #{@external_activity.name} Editing
     .action_menu_header_right
-      = link_to "Assign To Class", "javascript:void(0)",:onclick=>"get_Assign_To_Class_Popup(#{@external_activity.id}, '#{@external_activity.class.to_s}')", :class=>"button"
       = link_to "Edit Resource Options", "javascript:void(0)",:onclick=>"get_edit_resource_popup(#{@external_activity.id}, {use_short_form: true, content_height: 400})", :class=>"button"
   -#messgeedit This is edit lara activity page
   #iframe_container
@@ -27,3 +26,4 @@
         }
       })
     });
+
