@@ -677,6 +677,9 @@ RailsPortal::Application.routes.draw do
         namespace :search do
           get :search
         end
+        namespace :answers do
+          get :student_answers
+        end
       end
     end
 
