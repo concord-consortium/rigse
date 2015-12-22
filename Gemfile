@@ -165,6 +165,7 @@ group :development do
   gem "what_methods"
   gem "hirb"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
+  gem "debugger-ruby_core_source", "~> 1.3.8", :platforms => [:mri_19]
   gem "debugger", :platforms => [:mri_19]
   gem "pry-debugger"
   gem "awesome_print"
