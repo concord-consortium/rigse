@@ -35,18 +35,8 @@ module AuthenticatedSystem
 
     # Store the URI of the current request in the session.
     #
-    # We can return to this location by calling #redirect_back_or_default.
     def store_location
       session[:return_to] = request.fullpath
-    end
-
-    # Redirect to the URI stored by the most recent store_location call or
-    # to the passed default.  Set an appropriately modified
-    #   after_filter :store_location, :only => [:index, :new, :show, :edit]
-    # for any controller you want to be bounce-backable.
-    def redirect_back_or_default(default)
-      redirect_to(session[:return_to] || default)
-      session[:return_to] = nil
     end
 
     # Inclusion hook to make #current_visitor and #logged_in?

@@ -261,7 +261,7 @@ class UsersController < ApplicationController
       user.make_user_a_member
       # assume this type of user just activated someone from somewhere else in the app
       flash[:notice] = "Activation of #{user.name_and_login} complete."
-      redirect_to(session[:return_to] || root_path)
+      redirect_back_or_root
     end
   end
 

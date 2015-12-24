@@ -1,0 +1,23 @@
+PasswordController
+
+return_to is used by the password controller So when a user changes a password it can go back to the right place.
+As far as I can tell this only matters in two places:
+- an admin is on the user listing pages and hits the reset_password button
+- an user is on their preference page and hits the change password button
+
+In these cases if the cancel or submit button is pressed it should go back to the source page, but this page is
+two pages back.
+
+The password change route is referenced in several other places but in these cases returning to the root is ok.
+
+A fix would be to pass the return_to as a parameter in the change_password url.
+
+
+UsersController
+
+return_to is set here on the index page to support:
+- the PasswordController documented above
+
+the confirm route used to use redirect_to but is was only used the activation button
+so a simple redirect_back_or_root seemed fine
+the email sent out to uses uses the users/confirmation which is provided by devise
