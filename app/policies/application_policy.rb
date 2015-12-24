@@ -77,7 +77,7 @@ class ApplicationPolicy
   end
 
   def changeable?
-    user && record.respond_to?(:changeable?) ? record.changeable?(user) : true
+    user && (record.respond_to?(:changeable?) ? record.changeable?(user) : true)
   end
 
   def project_admin?
