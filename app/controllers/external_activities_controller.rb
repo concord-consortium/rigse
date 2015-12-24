@@ -8,19 +8,14 @@ class ExternalActivitiesController < ApplicationController
     case exception.query.to_s
     when 'republish?'
       json_error('missing or invalid peer token', 401)
-    when 'preview_index?', 'edit?', 'update?', 'destroy?'
+    else
       error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@external_activity.name}"
       flash[:error] = error_message
       if request.xhr?
         render :text => "<div class='flash_error'>#{error_message}</div>"
       else
-        redirect_back_or external_activities_path
+        redirect_back_or_root
       end
-    when 'new?', 'create?', 'publish?', 'duplicate?'
-      logger.warn "Didn't proceed: current_visitor.anonymous? was true"
-      logger.info "Current visitor: #{current_visitor.to_s}"
-      flash[:error] = "Anonymous users can not create external external_activities"
-      redirect_back_or external_activities_path
     end
   end
 
@@ -214,7 +209,7 @@ class ExternalActivitiesController < ApplicationController
     @external_activity.destroy
     @redirect = params[:redirect]
     respond_to do |format|
-      format.html { redirect_back_or(external_activities_url) }
+      format.html { redirect_back_or_root }
       format.js
       format.xml  { head :ok }
     end

@@ -34,7 +34,7 @@ class InvestigationsController < AuthoringController
   def can_create
     if (current_visitor.anonymous?)
       flash[:error] = "Anonymous users can not create investigaitons"
-      redirect_back_or investigations_path
+      redirect_back_or_root
     end
   end
 
@@ -50,7 +50,7 @@ class InvestigationsController < AuthoringController
         if request.xhr?
           render :text => "<div class='flash_error'>#{error_message}</div>"
         else
-          redirect_back_or investigations_path
+          redirect_back_or_root
         end
       end
     end

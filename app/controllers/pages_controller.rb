@@ -18,14 +18,14 @@ class PagesController < ApplicationController
   def pundit_user_not_authorized(exception)
     if ['new?', 'create?'].include? exception.query.to_s
       flash[:error] = "Anonymous users can not create pages"
-      redirect_back_or pages_path
+      redirect_back_or_root
     else
       error_message = "you (#{current_visitor.login}) are not permitted to #{action_name.humanize} (#{@page.name})"
       flash[:error] = error_message
       if request.xhr?
         render :text => "<div class='flash_error'>#{error_message}</div>"
       else
-        redirect_back_or investigations_path
+        redirect_back_or_root
       end
     end
   end

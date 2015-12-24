@@ -13,14 +13,14 @@ class SectionsController < ApplicationController
   def pundit_user_not_authorized(exception)
     if ['new?', 'create?'].include? exception.query.to_s
       flash[:error] = "Anonymous users can not create sections"
-      redirect_back_or sections_path
+      redirect_back_or_root
     else
       error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@section.name}"
       flash[:error] = error_message
       if request.xhr?
         render :text => "<div class='flash_error'>#{error_message}</div>"
       else
-        redirect_back_or sections_paths
+        redirect_back_or_root
       end
     end
   end

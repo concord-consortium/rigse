@@ -127,7 +127,7 @@ class PasswordsController < ApplicationController
     @password = Password.find(params[:id])
     if @password.update_attributes(params[:password])
       flash[:notice] = 'Password was successfully updated.'
-      redirect_back_or activities_url
+      redirect_back_or_root
     else
       render :action => :edit
     end

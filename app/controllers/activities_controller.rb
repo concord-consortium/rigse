@@ -16,14 +16,14 @@ class ActivitiesController < ApplicationController
   def pundit_user_not_authorized(exception)
     if ['new?', 'create?', 'duplicate?'].include? exception.query.to_s
       flash[:error] = "Anonymous users can not create activities"
-      redirect_back_or activities_path
+      redirect_back_or_root
     else
       error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@activity.name}"
       flash[:error] = error_message
       if request.xhr?
         render :text => "<div class='flash_error'>#{error_message}</div>"
       else
-        redirect_back_or activities_path
+        redirect_back_or_root
       end
     end
   end
@@ -246,7 +246,7 @@ class ActivitiesController < ApplicationController
     @activity.destroy
     @redirect = params[:redirect]
     respond_to do |format|
-      format.html { redirect_back_or(activities_url) }
+      format.html { redirect_back_or_root }
       format.js
       format.xml  { head :ok }
     end

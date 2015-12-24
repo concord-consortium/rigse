@@ -150,6 +150,12 @@ class ApplicationController < ActionController::Base
     redirect_to path
   end
 
+  def redirect_back_or_root
+    redirect_to :back
+  rescue ActionController::RedirectBackError
+    redirect_to root_path
+  end
+
   def session_sensitive_path
     path = request.env['PATH_INFO']
     return path =~ /password|session|sign_in|sign_out|security_questions|consent|help|user_type_selector/i

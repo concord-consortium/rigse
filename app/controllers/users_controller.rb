@@ -197,12 +197,12 @@ class UsersController < ApplicationController
     else
       authorize @user, :edit?
       if params[:commit] == "Cancel"
-        redirect_back_or_default(home_url)
+        redirect_back_or_root
       else
         if request.put?
           respond_to do |format|
             if @user.update_attributes(params[:user])
-              format.html {  redirect_back_or_default(home_url) }
+              format.html {  redirect_back_or_root }
               format.xml  { head :ok }
             else
               format.html { render :action => "interface" }
