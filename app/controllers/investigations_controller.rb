@@ -1,4 +1,4 @@
-class InvestigationsController
+class InvestigationsController < ApplicationController
   # This doesn't work, but the technique is described here:
   # vendor/rails/actionpack/lib/action_controller/caching/pages.rb:91
   # caches_page :show if => Proc.new { |c| c.request.format == :otml }
