@@ -21,3 +21,8 @@ return_to is set here on the index page to support:
 the confirm route used to use redirect_to but is was only used the activation button
 so a simple redirect_back_or_root seemed fine
 the email sent out to uses uses the users/confirmation which is provided by devise
+
+CustomFailure
+
+The store_location! used in CustomFailure is not related to return_to:
+http://www.rubydoc.info/github/plataformatec/devise/Devise%2FFailureApp%3Astore_location!
