@@ -166,7 +166,10 @@ class Search
       self.available_grade_level_groups[facet.value] = 1
     end
     results.facet(:project_ids).rows.each do |facet|
-      self.available_projects << {id: facet.value, name: facet.instance.name, landing_page_slug: facet.instance.landing_page_slug}
+      project = facet.instance
+      if project.visible?(user)
+        self.available_projects << {id: facet.value, name: project.name, landing_page_slug: project.landing_page_slug}
+      end
     end
     available_projects.uniq!
   end

@@ -1,4 +1,4 @@
-- projects_with_landing_pages = Admin::Project.with_landing_pages
+- projects_with_landing_pages = Admin::Project.with_landing_pages.select { |p| p.visible?(current_visitor) }
 - if projects_with_landing_pages.length > 0
   %div.project_cards
     %h3 Collections

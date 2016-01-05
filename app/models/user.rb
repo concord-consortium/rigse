@@ -393,6 +393,15 @@ class User < ActiveRecord::Base
     end
   end
 
+  def is_project_cohort_member?(project=nil)
+    projects = cohorts.map {|c| c.project}.flatten.uniq
+    if project
+      projects.include? project
+    else
+      projects.length > 0
+    end
+  end
+
   def set_role_for_projects(role, selected_projects, project_ids)
     role_attribute = 'is_' + role
     selected_projects.each do |project|
