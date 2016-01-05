@@ -86,6 +86,11 @@ class Interactive < ActiveRecord::Base
       model_type_list
     end
     integer :project_ids, :multiple => true, :references => Admin::Project
+
+    boolean :is_assessment_item do
+      false
+    end
+    
   end
 
   scope :published, where(publication_status: 'published')
