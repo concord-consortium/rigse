@@ -64,6 +64,11 @@ class ResourcePage < ActiveRecord::Base
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+
+    boolean :is_assessment_item do
+      false
+    end
+    
   end
 
   belongs_to :user
