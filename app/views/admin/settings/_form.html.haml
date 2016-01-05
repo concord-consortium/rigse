@@ -25,8 +25,8 @@
             %br
             (This option will allow students to reset their own passwords.)
           %li
-            = f.label :default_project_id,  "Default Project:"
-            = f.collection_select(:default_project_id, Admin::Project.all, :id, :name, {include_blank: 'none'})
+            = f.label :default_cohort_id,  "Default Cohort:"
+            = f.collection_select(:default_cohort_id, Admin::Cohort.all, :id, :fullname, {include_blank: 'none'})
             %br
             (This option will cause that new users will be automatically added to the selected project.)
           %li

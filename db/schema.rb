@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160104235843) do
+ActiveRecord::Schema.define(:version => 20160106034419) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -100,7 +100,6 @@ ActiveRecord::Schema.define(:version => 20160104235843) do
     t.integer "user_id"
     t.boolean "is_admin",      :default => false
     t.boolean "is_researcher", :default => false
-    t.boolean "is_member",     :default => false
   end
 
   add_index "admin_project_users", ["project_id", "user_id"], :name => "admin_proj_user_uniq_idx", :unique => true
@@ -147,9 +146,9 @@ ActiveRecord::Schema.define(:version => 20160104235843) do
     t.integer  "pub_interval",                                 :default => 10
     t.boolean  "anonymous_can_browse_materials",               :default => true
     t.string   "jnlp_url"
-    t.integer  "default_project_id"
     t.boolean  "show_collections_menu",                        :default => false
     t.boolean  "auto_set_teachers_as_authors",                 :default => false
+    t.integer  "default_cohort_id"
   end
 
   create_table "admin_settings_vendor_interfaces", :force => true do |t|

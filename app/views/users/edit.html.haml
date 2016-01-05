@@ -22,6 +22,4 @@
         = render :partial => 'researcher_for_projects', :locals => { :f => form, :projects => policy_scope(Admin::Project) }
         - if @user.portal_teacher
           = render :partial => 'project_cohorts', :locals => { :f => form, :projects => policy_scope(Admin::Project) }
-      - if current_visitor.has_role?("admin", "manager")
-        = render :partial => 'member_of_projects', :locals => { :f => form, :projects => policy_scope(Admin::Project) }
       = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }

@@ -40,6 +40,8 @@ class Portal::Teacher < ActiveRecord::Base
 
   validates_presence_of :user,  :message => "user association not specified"
 
+  after_create :add_to_default_cohort
+
   # Added to force Teachers to belong to at least one school, virtual or otherwise.
   # There should be no Teachers without schools, but if there are any that predate this change,
   # it could cause problems, so it's disabled until we discuss it further. -- Cantina-CMH 6/9/10
@@ -151,6 +153,15 @@ class Portal::Teacher < ActiveRecord::Base
   def possibly_add_authoring_role
     if self.class.can_author?
       self.user.add_role('author')
+    end
+  end
+
+  private
+
+  def add_to_default_cohort
+    default_cohort = Admin::Settings.default_settings && Admin::Settings.default_settings.default_cohort
+    if default_cohort
+      self.cohorts << default_cohort
     end
   end
 

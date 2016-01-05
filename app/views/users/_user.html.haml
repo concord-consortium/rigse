@@ -41,8 +41,6 @@
         %li
           Roles:
           = user.roles.map{|r| r.title.capitalize}.join(', ')
-          Projects:
-          = user.projects.map{|p| p.name}.sort().join(', ')
         - if user.portal_teacher
           %li
             Cohorts:
