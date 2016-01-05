@@ -8,7 +8,7 @@ describe InvestigationsController do
       :use_student_security_questions => false,
       :use_bitmap_snapshots? => false,
       :require_user_consent? => false,
-      :default_project => nil)
+      :default_cohort => nil)
     Admin::Settings.stub!(:default_settings).and_return(@current_settings)
     controller.stub(:before_render) {
       response.template.stub(:net_logo_package_name).and_return("blah")
