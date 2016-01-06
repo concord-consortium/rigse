@@ -405,8 +405,7 @@ class User < ActiveRecord::Base
       project_user = project_users.find_by_project_id project.id
       if project_ids.find { |id| id.to_i == project.id }
         if !project_user
-          projects << project
-          project_user = project_users.find_by_project_id project.id
+          project_user = Admin::ProjectUser.create!(project_id: project.id, user_id: user.id)
         end
         project_user[role_attribute] = true
       elsif project_user
