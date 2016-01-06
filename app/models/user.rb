@@ -591,7 +591,7 @@ class User < ActiveRecord::Base
   end
 
   def projects
-    cohort_projects.concat(admin_for_projects).concat(researcher_for_projects).flatten.uniq || []
+    (cohort_projects + admin_for_projects + researcher_for_projects).flatten.uniq || []
   end
 
   def changeable?(user)
