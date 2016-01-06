@@ -23,4 +23,8 @@ class Admin::ProjectPolicy < ApplicationPolicy
   def not_anonymous?
     admin_or_project_admin?
   end
+
+  def visible?
+    record.public || admin? || user && user.is_project_member?(record)
+  end
 end

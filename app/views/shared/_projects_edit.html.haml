@@ -8,7 +8,7 @@
         = hidden_field_tag prop_name
         - project_assigned = Hash[object.projects.map { |p| [p.id, true ] }]
         - Admin::Project.all.each do |project|
-          - if project.visible?(current_visitor)
+          - if policy(project).visible?
             %li
               - label_str = "project_#{project.id}"
               = label_tag label_str, project.name

@@ -50,11 +50,6 @@ class Admin::Project < ActiveRecord::Base
 
   before_validation :nullify_empty_slug
 
-  def visible?(user = nil)
-    return public if user.nil?
-    public || user.is_project_admin?(self) || user.is_project_researcher?(self) || user.is_project_cohort_member?(self)
-  end
-
   private
 
   # Empty strings comes from form, but we can't save it due to unique DB index.

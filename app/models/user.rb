@@ -385,21 +385,16 @@ class User < ActiveRecord::Base
     end
   end
 
-  def is_project_member?(project=nil)
+  def is_project_cohort_member?(project=nil)
     if project
-      self.member_of_projects.include? project
+      cohort_projects.include? project
     else
-      self.member_of_projects.length > 0
+      cohort_projects.length > 0
     end
   end
 
-  def is_project_cohort_member?(project=nil)
-    projects = cohorts.map {|c| c.project}.flatten.uniq
-    if project
-      projects.include? project
-    else
-      projects.length > 0
-    end
+  def is_project_member?(project=nil)
+    is_project_admin?(project) || is_project_researcher?(project) || is_project_cohort_member?(project)
   end
 
   def set_role_for_projects(role, selected_projects, project_ids)
@@ -598,6 +593,10 @@ class User < ActiveRecord::Base
 
   def cohorts
     portal_teacher ? portal_teacher.cohorts : (portal_student ? portal_student.cohorts : [])
+  end
+
+  def cohort_projects
+    cohorts.map {|c| c.project}.flatten.uniq
   end
 
   def changeable?(user)

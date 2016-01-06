@@ -167,7 +167,7 @@ class Search
     end
     results.facet(:project_ids).rows.each do |facet|
       project = facet.instance
-      if project.visible?(user)
+      if Pundit.policy!(user, project).visible?
         self.available_projects << {id: facet.value, name: project.name, landing_page_slug: project.landing_page_slug}
       end
     end
