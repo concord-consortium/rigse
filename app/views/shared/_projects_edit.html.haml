@@ -8,11 +8,7 @@
         = hidden_field_tag prop_name
         - project_assigned = Hash[object.projects.map { |p| [p.id, true ] }]
         - Admin::Project.all.each do |project|
-          - if policy(project).visible?
-            %li
-              - label_str = "project_#{project.id}"
-              = label_tag label_str, project.name
-              = check_box_tag prop_name, project.id, project_assigned[project.id], id: label_str
-          - elsif project_assigned[project.id]
-            -# This is necessary to keep hidden projects still assigned to the material.
-            = hidden_field_tag prop_name, project.id
+          %li
+            - label_str = "project_#{project.id}"
+            = label_tag label_str, project.name
+            = check_box_tag prop_name, project.id, project_assigned[project.id], id: label_str
