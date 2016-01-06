@@ -37,5 +37,5 @@
 - if show_collections_menu
   #collections_menu
     %ul
-      - Admin::Project.with_landing_pages.each do |project|
+      - Admin::Project.with_landing_pages.select {|p| policy(p).visible?}.each do |project|
         %li= link_to project.name, project_page_url(project.landing_page_slug)
