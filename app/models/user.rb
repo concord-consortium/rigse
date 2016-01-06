@@ -596,7 +596,7 @@ class User < ActiveRecord::Base
   end
 
   def cohort_projects
-    cohorts.map {|c| c.project}.flatten.uniq
+    cohorts.map {|c| c.project}.flatten.compact.uniq
   end
 
   def changeable?(user)
