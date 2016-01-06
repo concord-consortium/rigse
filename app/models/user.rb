@@ -49,6 +49,11 @@ class User < ActiveRecord::Base
   has_many :created_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
   has_many :updated_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
 
+  has_many :teacher_cohorts, :through => :portal_teacher, :source => :cohorts
+  has_many :teacher_cohort_projects, :through => :portal_teacher, :source => :projects
+  has_many :student_cohorts, :through => :portal_student, :source => :cohorts
+  has_many :student_cohort_projects, :through => :portal_student, :source => :projects
+
   has_many :project_users, class_name: 'Admin::ProjectUser'
   has_many :projects, :through => :project_users
 
@@ -592,11 +597,11 @@ class User < ActiveRecord::Base
   end
 
   def cohorts
-    portal_teacher ? portal_teacher.cohorts : (portal_student ? portal_student.cohorts : [])
+    teacher_cohorts || student_cohorts
   end
 
   def cohort_projects
-    cohorts.map {|c| c.project}.flatten.compact.uniq
+    teacher_cohort_projects || student_cohort_projects
   end
 
   def changeable?(user)

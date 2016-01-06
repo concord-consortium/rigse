@@ -34,6 +34,7 @@ class Portal::Teacher < ActiveRecord::Base
   # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
   has_many :teacher_clazzes, :dependent => :destroy, :class_name => "Portal::TeacherClazz", :foreign_key => "teacher_id"
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz", :source => :clazz
+  has_many :projects, :through => :cohorts, :class_name => "Admin::Project", :source => :project, :uniq => true
 
   [:first_name, :login, :password, :last_name, :email, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
 

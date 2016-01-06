@@ -16,6 +16,10 @@ class Portal::Student < ActiveRecord::Base
   has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
 
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz
+  has_many :teachers, :through => :clazzes, :class_name => "Portal::Teacher", :source => :teachers, :uniq => true
+  # students cohorts are infered from its teacher(s)
+  has_many :cohorts, :through => :teachers, :class_name => "Admin::Cohort", :source => :cohorts, :uniq => true
+  has_many :projects, :through => :cohorts, :class_name => "Admin::Project", :source => :project, :uniq => true
 
   has_many :own_collaborations, :class_name => "Portal::Collaboration", :foreign_key => "owner_id"
   has_many :collaboration_memberships, :class_name => "Portal::CollaborationMembership"
@@ -85,15 +89,6 @@ class Portal::Student < ActiveRecord::Base
 
   def school
     return schools.last
-  end
-
-  def teachers
-    teachers = self.clazzes.map {|c| c.teachers }.flatten.uniq
-  end
-
-  def cohorts
-    # a students cohorts are infered from its teacher(s)
-    self.teachers.map {|t| t.cohorts}.flatten.uniq
   end
 
   def has_teacher?(teacher)
