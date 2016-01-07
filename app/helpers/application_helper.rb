@@ -1,5 +1,6 @@
 module ApplicationHelper
   include Clipboard
+  include Pundit
 
   def current_settings
     @_settings ||= Admin::Settings.default_settings
