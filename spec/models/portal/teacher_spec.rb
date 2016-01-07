@@ -79,4 +79,28 @@ describe Portal::Teacher do
     end
   end
 
+  describe '[default cohort support]' do
+    let(:settings) { Factory.create(:admin_settings) }
+    let(:teacher) { Factory(:portal_teacher) }
+    before(:each) do
+      Admin::Settings.stub!(:default_settings).and_return(settings)
+    end
+
+    describe 'when default cohort is not specified in portal settings' do
+      it 'has empty list of cohorts' do
+        expect(teacher.cohorts.length).to eql(0)
+      end
+    end
+
+    describe 'when default cohort is specified in portal settings' do
+      let(:cohort) { Factory.create(:admin_cohort) }
+      let(:settings) { Factory.create(:admin_settings, default_cohort: cohort) }
+
+      it 'is added to the default cohort' do
+        expect(teacher.cohorts.length).to eql(1)
+        expect(teacher.cohorts[0]).to eql(cohort)
+      end
+    end
+  end
+
 end

@@ -55,11 +55,9 @@ class User < ActiveRecord::Base
   has_many :student_cohort_projects, :through => :portal_student, :source => :projects
 
   has_many :project_users, class_name: 'Admin::ProjectUser'
-  has_many :projects, :through => :project_users
 
   has_many :admin_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_admin = ?', true]
   has_many :researcher_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_researcher = ?', true]
-  has_many :member_of_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_member = ?', true]
 
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
@@ -91,7 +89,6 @@ class User < ActiveRecord::Base
 
   after_update :set_passive_users_as_pending
   after_create :set_passive_users_as_pending
-  after_create :add_to_default_project
 
   # strip leading and trailing spaces from names, login and email
   def strip_spaces
@@ -408,8 +405,7 @@ class User < ActiveRecord::Base
       project_user = project_users.find_by_project_id project.id
       if project_ids.find { |id| id.to_i == project.id }
         if !project_user
-          projects << project
-          project_user = project_users.find_by_project_id project.id
+          project_user = Admin::ProjectUser.create!(project_id: project.id, user_id: user.id)
         end
         project_user[role_attribute] = true
       elsif project_user
@@ -523,17 +519,6 @@ class User < ActiveRecord::Base
     self.reload
   end
 
-  def add_to_default_project
-    default_project = Admin::Settings.default_settings && Admin::Settings.default_settings.default_project
-    if default_project
-      self.projects << default_project
-    end
-  end
-
-  def projects_with_landing_pages
-    self.projects.where("landing_page_slug <> ''")
-  end
-
   def suspend!
     self.update_attribute(:state, 'suspended')
     self.reload
@@ -602,6 +587,10 @@ class User < ActiveRecord::Base
 
   def cohort_projects
     teacher_cohort_projects || student_cohort_projects
+  end
+
+  def projects
+    (cohort_projects + admin_for_projects + researcher_for_projects).flatten.uniq || []
   end
 
   def changeable?(user)
