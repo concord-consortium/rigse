@@ -1,5 +1,5 @@
 -# Expects locals: object
-- if object && object.respond_to?('projects') && current_visitor.has_role?('admin', 'manager')
+- if object && object.respond_to?('projects') && policy(object).edit_projects_or_cohorts?
   = field_set_tag 'Projects' do
     .aligned
       %ul.menu_h
@@ -8,7 +8,11 @@
         = hidden_field_tag prop_name
         - project_assigned = Hash[object.projects.map { |p| [p.id, true ] }]
         - Admin::Project.all.each do |project|
-          %li
-            - label_str = "project_#{project.id}"
-            = label_tag label_str, project.name
-            = check_box_tag prop_name, project.id, project_assigned[project.id], id: label_str
+          - if policy(project).assign_to_material?
+            %li
+              - label_str = "project_#{project.id}"
+              = label_tag label_str, project.name
+              = check_box_tag prop_name, project.id, project_assigned[project.id], id: label_str
+          - elsif project_assigned[project.id]
+            -# This is necessary to keep hidden projects still assigned to the material.
+            = hidden_field_tag prop_name, project.id

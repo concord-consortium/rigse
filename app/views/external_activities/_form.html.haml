@@ -1,71 +1,73 @@
 = form_for(@external_activity) do |f|
   = f.error_messages
   = edit_menu_for(@external_activity, f)
-  = field_set_tag 'Activity Name' do
-    = f.text_field :name
-  = field_set_tag 'Activity Description' do
-    = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
-  = field_set_tag 'Activity Abstract' do
-    = f.text_area :abstract, :cols => 80, :rows => 5, :class => 'mceNoEditor'
-  = field_set_tag 'Activity Description for Teacher' do
-    = t('authoring.description_for_teacher_description')
-    = f.text_area :description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
-  = field_set_tag 'URL' do
-    = f.text_field :url, :size => 60
-  = field_set_tag 'Launch URL' do
-    = f.text_field :launch_url, :size => 60
-    %br
-    = t('authoring.launch_url_description')
-  = field_set_tag 'Teacher Guide (URL)' do
-    = f.text_field :teacher_guide_url, :size => 60
-  = field_set_tag 'Thumbnail image URL (300 x 250 px)' do
-    = f.text_field :thumbnail_url, :size => 60
-  = field_set_tag 'Publication status' do
-    = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
-  = field_set_tag 'Feature On Landing Page' do
-    - if current_user.has_role? 'admin','manager'
-      = f.check_box :is_featured
-    - else
-      = f.check_box :is_featured, :disabled => true
-    This activity should be displayed to anonymous users on the landing page
-  = field_set_tag 'Has Pre And Post Tests' do
-    = f.check_box :has_pretest
-    This unit has pre- and post-tests available.
-  = field_set_tag 'Student Report Enabled' do
-    = f.check_box :student_report_enabled
-    = t('authoring.student_report_enabled_description')
-  = field_set_tag 'Extra Options' do
-    .config
-      = f.check_box :popup
-      Open the url in a new window
-    .config
-      = f.check_box :allow_collaboration
-      Allow students to run this activity with collaborators
-    .config
-      = f.check_box :append_learner_id_to_url
-      Append the learner id to the url (e.g. http://foo.com/bar?learner=4)
-    .config
-      = f.check_box :append_survey_monkey_uid
-      Append a unique Survey Monkey user id to the url (e.g. http://www.surveymonkey.com/s/H2Y9H27?c=00001)
-    - if current_visitor.has_role?('admin', 'manager','researcher')
+  - if policy(@external_activity).edit_all?
+    = field_set_tag 'Activity Name' do
+      = f.text_field :name
+    = field_set_tag 'Activity Description' do
+      = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'Activity Abstract' do
+      = f.text_area :abstract, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'Activity Description for Teacher' do
+      = t('authoring.description_for_teacher_description')
+      = f.text_area :description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'URL' do
+      = f.text_field :url, :size => 60
+    = field_set_tag 'Launch URL' do
+      = f.text_field :launch_url, :size => 60
+      %br
+      = t('authoring.launch_url_description')
+    = field_set_tag 'Teacher Guide (URL)' do
+      = f.text_field :teacher_guide_url, :size => 60
+    = field_set_tag 'Thumbnail image URL (300 x 250 px)' do
+      = f.text_field :thumbnail_url, :size => 60
+    = field_set_tag 'Publication status' do
+      = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
+    = field_set_tag 'Feature On Landing Page' do
+      - if current_user.has_role? 'admin','manager'
+        = f.check_box :is_featured
+      - else
+        = f.check_box :is_featured, :disabled => true
+      This activity should be displayed to anonymous users on the landing page
+    = field_set_tag 'Has Pre And Post Tests' do
+      = f.check_box :has_pretest
+      This unit has pre- and post-tests available.
+    = field_set_tag 'Student Report Enabled' do
+      = f.check_box :student_report_enabled
+      = t('authoring.student_report_enabled_description')
+    = field_set_tag 'Extra Options' do
       .config
-        = f.check_box :is_official
-        Designate this as an "official" Concord activity in lists
+        = f.check_box :popup
+        Open the url in a new window
       .config
-        = f.check_box :logging
-        Enable logging on this activity (for activities that support it)
-    - if current_visitor.has_role? 'admin'
+        = f.check_box :allow_collaboration
+        Allow students to run this activity with collaborators
       .config
-        = f.check_box :is_locked
-        Do not allow to copy this activity.
-  = field_set_tag 'Save Path' do
-    = f.text_field :save_path
-  = render :partial => 'shared/is_assessment_item', :locals => { :form => f }
-  = render :partial => 'shared/material_properties_edit', :locals => { :object => @external_activity }
-  = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }
-  = render :partial => 'shared/grade_levels_edit', :locals => { :object => @external_activity }
-  = render :partial => 'shared/subject_areas_edit', :locals => { :object => @external_activity }
+        = f.check_box :append_learner_id_to_url
+        Append the learner id to the url (e.g. http://foo.com/bar?learner=4)
+      .config
+        = f.check_box :append_survey_monkey_uid
+        Append a unique Survey Monkey user id to the url (e.g. http://www.surveymonkey.com/s/H2Y9H27?c=00001)
+      - if current_visitor.has_role?('admin', 'manager','researcher')
+        .config
+          = f.check_box :is_official
+          Designate this as an "official" Concord activity in lists
+        .config
+          = f.check_box :logging
+          Enable logging on this activity (for activities that support it)
+      - if current_visitor.has_role? 'admin'
+        .config
+          = f.check_box :is_locked
+          Do not allow to copy this activity.
+    = field_set_tag 'Save Path' do
+      = f.text_field :save_path
+    = render :partial => 'shared/is_assessment_item', :locals => { :form => f }
+    = render :partial => 'shared/material_properties_edit', :locals => { :object => @external_activity }
+    = render :partial => 'shared/grade_levels_edit', :locals => { :object => @external_activity }
+    = render :partial => 'shared/subject_areas_edit', :locals => { :object => @external_activity }
+    = render :partial => 'shared/sensors_edit', :locals => { :object => @external_activity }
+  -# Partials below can be available for project admins (separate policy method).
   = render :partial => 'shared/projects_edit', :locals => { :object => @external_activity }
-  = render :partial => 'shared/sensors_edit', :locals => { :object => @external_activity }
+  = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }
 
 = javascript_tag("focus_first_field();");

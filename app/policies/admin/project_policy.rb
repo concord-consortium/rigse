@@ -24,7 +24,12 @@ class Admin::ProjectPolicy < ApplicationPolicy
     admin_or_project_admin?
   end
 
+  # Visible on the search page, home page, navigation bar, etc.
   def visible?
     record.public || admin? || user && user.is_project_member?(record)
+  end
+
+  def assign_to_material?
+    admin? || user && user.is_project_admin?(record)
   end
 end

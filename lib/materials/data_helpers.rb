@@ -71,7 +71,7 @@ module Materials
           publication_status: material.publication_status,
           links: links_for_material(material),
           preview_url: view_context.run_url_for(material, (material.teacher_only? ? {:teacher_mode => true} : {})),
-          edit_url: material.changeable?(current_visitor) ? view_context.matedit_external_activity_url(material, iFrame: true) : nil,
+          edit_url: policy(material).edit_all? ? view_context.matedit_external_activity_url(material, iFrame: true) : nil,
           copy_url: external_copyable(material) ? view_context.copy_external_activity_url(material) : nil,
           assign_to_class_url: current_visitor.portal_teacher && material.respond_to?(:offerings) ? "javascript:get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}')" : nil,
           assign_to_collection_url: current_visitor.has_role?('admin') && material.respond_to?(:materials_collections) ? "javascript:get_Assign_To_Collection_Popup(#{material.id},'#{material.class.to_s}')" : nil,
@@ -203,7 +203,7 @@ module Materials
         end
       end
 
-      if current_visitor.has_role?('admin','manager')
+      if policy(material).edit?
         links[:edit] = {
           text: "(portal settings)",
           url: edit_polymorphic_url(material),

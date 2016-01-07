@@ -1,4 +1,5 @@
 class InteractivePolicy < ApplicationPolicy
+  include MaterialSharedPolicy
 
   def new_or_create?
     admin?

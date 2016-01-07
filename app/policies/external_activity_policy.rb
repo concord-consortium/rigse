@@ -1,4 +1,5 @@
 class ExternalActivityPolicy < ApplicationPolicy
+  include MaterialSharedPolicy
 
   def preview_index?
     true

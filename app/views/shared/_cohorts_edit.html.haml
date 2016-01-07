@@ -1,5 +1,5 @@
 -# Expects locals: object
-- if object && object.respond_to?("cohorts") && current_visitor.has_role?("admin", "manager")
+- if object && object.respond_to?('cohorts') && policy(object).edit_projects_or_cohorts?
   - field_set_title = 'Cohorts' unless local_assigns[:field_set_title]
   = field_set_tag field_set_title do
     .aligned

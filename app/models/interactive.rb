@@ -1,7 +1,6 @@
 class Interactive < ActiveRecord::Base
   include Cohorts
   include Publishable
-  include Changeable
   include SearchModelInterface
 
   acts_as_taggable_on :model_types
