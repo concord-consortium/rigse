@@ -1,7 +1,7 @@
 = form_for(@external_activity) do |f|
   = f.error_messages
   = edit_menu_for(@external_activity, f)
-  - if policy(@external_activity).edit_all?
+  - if @external_activity.new_record? || policy(@external_activity).edit_settings?
     = field_set_tag 'Activity Name' do
       = f.text_field :name
     = field_set_tag 'Activity Description' do

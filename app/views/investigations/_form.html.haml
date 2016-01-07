@@ -1,6 +1,6 @@
 = edit_menu_for(investigation, f)
 = field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} details" do
-  - if policy(investigation).edit_all?
+  - if investigation.new_record? || policy(investigation).edit_settings?
     .aligned
       %ol
         %li

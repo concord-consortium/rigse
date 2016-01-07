@@ -1,7 +1,7 @@
 = form_for(@activity) do |f|
   = f.error_messages
   = edit_menu_for(@activity, f)
-  - if policy(@activity).edit_all?
+  - if @activity.new_record? || policy(@activity).edit_settings?
     - if @activity.investigation
       = f.hidden_field 'investigation_id', :value =>@activity.investigation.id
     = field_set_tag 'Activity Name' do

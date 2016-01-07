@@ -137,6 +137,10 @@ class ApplicationPolicy
     user && user.has_role?(*roles)
   end
 
+  def owner?
+    user && record.respond_to?(:user) && record.user == user
+  end
+
   # from peer access
 
   def request_is_peer?

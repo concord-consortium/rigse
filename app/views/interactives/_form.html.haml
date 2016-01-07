@@ -1,7 +1,7 @@
 = form_for(@interactive) do |f|
   = f.error_messages
   = edit_menu_for(@interactive, f)
-  - if policy(@interactive).edit_all?
+  - if @interactive.new_record? || policy(@interactive).edit_settings?
     = field_set_tag 'Interactive Name' do
       = f.text_field :name
     = field_set_tag 'Interactive Description' do

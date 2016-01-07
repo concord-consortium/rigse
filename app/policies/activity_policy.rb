@@ -1,3 +1,3 @@
 class ActivityPolicy < ApplicationPolicy
-  include MaterialSharedPolicy
+  include OldMaterialSharedPolicy
 end

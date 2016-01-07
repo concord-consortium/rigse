@@ -29,7 +29,7 @@
               - unless(current_visitor.anonymous?)
                 %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
               %li.menu=link_to 'export (xml)', export_activity_url(activity)
-              - if (activity.changeable?(current_visitor))
+              - if policy(activity).destroy?
                 %li.menu=link_to 'delete', activity, :class => 'delete', :data => { :confirm => "Are you sure you want to delete activity #{activity.id}" }, :method => :delete
         %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
           %p=activity.description

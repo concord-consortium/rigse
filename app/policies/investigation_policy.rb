@@ -1,3 +1,3 @@
 class InvestigationPolicy < ApplicationPolicy
-  include MaterialSharedPolicy
+  include OldMaterialSharedPolicy
 end
