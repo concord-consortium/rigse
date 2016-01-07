@@ -5,8 +5,8 @@ describe "/external_activities/edit.html.haml" do
 
   before(:each) do
     assigns[:external_activity] = @external_activity = ext_act
-    view.stub!(:current_visitor).and_return(Factory.next(:researcher_user))
-    view.stub!(:current_user).and_return(Factory.next(:researcher_user))
+    view.stub!(:current_visitor).and_return(Factory.next(:admin_user))
+    view.stub!(:current_user).and_return(Factory.next(:admin_user))
   end
 
   it 'should have an is_official check box to designate official activities' do
