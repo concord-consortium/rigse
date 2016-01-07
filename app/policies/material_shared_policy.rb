@@ -1,15 +1,22 @@
 module MaterialSharedPolicy
 
   def edit_all?
+    # Admin or admin of a project assigned to this material.
     admin? || user && (user.admin_for_projects & record.projects).length > 0
   end
 
-  def edit_projects_or_cohorts?
+  def edit_projects?
+    # Admin or admin of any project.
+    admin? || project_admin?
+  end
+
+  def edit_cohorts?
+    # Admin or admin of any project.
     admin? || project_admin?
   end
 
   def edit?
-    edit_all? || edit_projects_or_cohorts?
+    edit_all? || edit_projects? || edit_cohorts?
   end
 
   def update?

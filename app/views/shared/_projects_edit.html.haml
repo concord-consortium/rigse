@@ -1,5 +1,5 @@
 -# Expects locals: object
-- if object && object.respond_to?('projects') && policy(object).edit_projects_or_cohorts?
+- if object && object.respond_to?('projects') && policy(object).edit_projects?
   = field_set_tag 'Projects' do
     .aligned
       %ul.menu_h
