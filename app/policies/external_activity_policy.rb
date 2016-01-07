@@ -6,7 +6,7 @@ class ExternalActivityPolicy < ApplicationPolicy
   end
 
   def publish?
-    new_or_create?
+    new_or_create? || author?
   end
 
   def republish?
