@@ -85,7 +85,6 @@ class ExternalActivity < ActiveRecord::Base
   acts_as_replicatable
 
   include Cohorts
-  include Changeable
   include Publishable
   include SearchModelInterface
 

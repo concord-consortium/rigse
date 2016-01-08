@@ -1,5 +1,6 @@
 module ApplicationHelper
   include Clipboard
+  include Pundit
 
   def current_settings
     @_settings ||= Admin::Settings.default_settings
@@ -444,7 +445,7 @@ module ApplicationHelper
   end
 
   def delete_button_for(model, options={})
-    if model.changeable? current_visitor
+    if policy(model).destroy?
       # find the page_element for the embeddable
       embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
       controller = "#{model.class.name.pluralize.underscore}"

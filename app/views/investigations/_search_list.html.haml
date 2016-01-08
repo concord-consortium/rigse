@@ -24,10 +24,10 @@
         %div.action_menu_header_right   
           %ul.menu
             %li= run_link_for(investigation)
-            - unless(current_visitor.anonymous?)
+            - if policy(investigation).new?
               %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
             %li.menu=link_to 'export (xml)', export_investigation_url(investigation)
-            - if (investigation.changeable?(current_visitor))
+            - if policy(investigation).destroy?
               %li.menu=link_to 'delete', investigation, :class => 'delete', :data => { :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{investigation.id}" }, :method => :delete 
       %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
         %p=investigation.description
