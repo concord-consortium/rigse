@@ -205,15 +205,15 @@ function close_popup()
 
 
 
-function get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_text)
+function get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_text, skip_reload)
 {
     lightbox_material_text = lightbox_material_text || "Materials";
     var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         title:"Assign " + lightbox_material_text + " to a Class"
     };
-    var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_clazzes_path') %>";
-     var options = {
+    var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_clazzes_path') %>?skip_reload=" + (skip_reload || false);
+    var options = {
         method: 'post',
         parameters : {'material_type':material_type,'material_id':material_id},
         onSuccess: function(transport) {
@@ -334,7 +334,7 @@ function getDataForAssignToClassPopup(lightbox_material_text)
 
 var g_messageModal = null;
 
-function getMessagePopup(message)
+function getMessagePopup(message, skip_reload)
 {
     g_messageModal = g_messageModal || null;
     if(g_messageModal !== null)
@@ -353,7 +353,9 @@ function getMessagePopup(message)
         type: Lightbox.type.ALERT,
         content: content,
         callback: function(){
-            location.reload();
+            if (!skip_reload) {
+                location.reload();
+            }
         }
     };
 

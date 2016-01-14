@@ -161,6 +161,8 @@ class SearchController < ApplicationController
     @unassigned_clazzes = @unassigned_clazzes.sort{|a,b| teacher_clazz_ids.index(a.id) <=> teacher_clazz_ids.index(b.id)}
 
     @teacher_active_clazzes_count = (teacher_clazzes)? teacher_clazzes.length : 0
+
+    @skip_reload = params[:skip_reload] == 'true'
     render :partial => 'material_unassigned_clazzes'
   end
 
@@ -175,6 +177,7 @@ class SearchController < ApplicationController
     clazz_ids = params[:clazz_id] || []
     runnable_ids = params[:material_id].split(',')
     runnable_type = params[:material_type].classify
+    skip_reload = params[:skip_reload] == 'true'
     assign_summary_data = []
 
     clazz_ids.each do|clazz_id|
@@ -225,7 +228,7 @@ class SearchController < ApplicationController
 
           if clazz_ids.count > 0
             page << "close_popup()"
-            page << "getMessagePopup('<div class=\"feedback_message\"><b>#{material.name.gsub("'","\\'")}</b> is assigned to the selected class(es) successfully.</div>')"
+            page << "getMessagePopup('<div class=\"feedback_message\"><b>#{material.name.gsub("'","\\'")}</b> is assigned to the selected class(es) successfully.</div>', #{skip_reload})"
             page.replace_html "material_clazz_count", class_count_desc
             if !material_parent.nil? && runnable_type == "Activity"
               used_in_clazz_count = material.offerings_count + material.parent.offerings_count
