@@ -14,9 +14,7 @@ class AuthController < ApplicationController
   def welcome
     render :text => "Hiya! #{current_user.first_name} #{current_user.last_name}"
   end
-  def self.authorize
-    debugger
-  end
+
   def oauth_authorize
     AccessGrant.prune!
     access_grant = current_user.access_grants.create({:client => application, :state => params[:state]}, :without_protection => true)
