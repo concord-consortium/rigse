@@ -31,7 +31,7 @@ class Report::LearnerController < ApplicationController
 
   def logs_query
     authorize Report::Learner
-    @remote_endpoints = @select_learners.map { |l| external_activity_return_url(l.learner_id) }
+    @remote_endpoints = @select_learners.map { |l| l.learner.remote_endpoint_url(request.protocol, request.host_with_port) }
     render :layout => false
   end
 
@@ -189,7 +189,7 @@ class Report::LearnerController < ApplicationController
 
     @report_url = "#{authoring_sites.first}/c_rater/argumentation_blocks/report"
     @remote_endpoints = learners.map do |learner|
-      external_activity_return_url(learner.learner_id)
+      learner.learner.remote_endpoint_url(request.protocol, request.host_with_port)
     end
 
     # intentionally leave out student name - results should be semi-anonymized
@@ -199,7 +199,7 @@ class Report::LearnerController < ApplicationController
     rows = learners.map do |learner|
       columns.map do |column|
         # except for remote_endpoint, column names are just names of Report::Learner instance methods
-        column == :remote_endpoint ? external_activity_return_url(learner.learner_id) : learner.send(column)
+        column == :remote_endpoint ? learner.learner.remote_endpoint_url(request.protocol, request.host_with_port) : learner.send(column)
       end
     end
 

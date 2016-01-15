@@ -101,7 +101,7 @@ end
 
 When /^the browser returns the following data to the portal$/ do |string|
   login_as('student')
-  path = external_activity_return_path(@learner)
+  path = @learner.remote_endpoint_path
   Delayed::Job.should_receive(:enqueue)
   page.driver.post(path, :content => string)
   # delayed_job doesn't work in tests, so force running the job
