@@ -108,7 +108,7 @@ class ExternalActivitiesController < ApplicationController
     @external_activity = ExternalActivity.find(params[:id])
     authorize @external_activity
     if request.xhr?
-      render :partial => 'short_form'
+      render :partial => 'basic_form'
     end
   end
 
