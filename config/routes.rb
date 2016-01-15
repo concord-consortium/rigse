@@ -564,6 +564,7 @@ RailsPortal::Application.routes.draw do
         get :matedit
         get :set_private_before_matedit
         get :copy
+        get :edit_basic
       end
     end
 
