@@ -99,7 +99,16 @@ class ExternalActivitiesController < ApplicationController
     @external_activity = ExternalActivity.find(params[:id])
     authorize @external_activity
     if request.xhr?
-      render :partial => (params['use_short_form'] ? 'short_form' : 'form')
+      render :partial => 'form'
+    end
+  end
+
+  # subset of editing provided to owners of the activities
+  def edit_basic
+    @external_activity = ExternalActivity.find(params[:id])
+    authorize @external_activity
+    if request.xhr?
+      render :partial => 'short_form'
     end
   end
 

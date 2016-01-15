@@ -29,4 +29,16 @@ class ExternalActivityPolicy < ApplicationPolicy
     true
   end
 
+  # owners can edit some basic settings of external activities
+  def edit_basic?
+    edit? || owner?
+  end
+
+  # we need to let owners update the settings too
+  # currently this means the owner could hack things and
+  # update some of the non basic settings too
+  def update?
+    edit? || owner?
+  end
+
 end
