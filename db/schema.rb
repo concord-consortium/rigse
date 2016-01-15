@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160106034419) do
+ActiveRecord::Schema.define(:version => 20160115171143) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -238,9 +238,10 @@ ActiveRecord::Schema.define(:version => 20160106034419) do
     t.string   "name"
     t.string   "app_id"
     t.string   "app_secret"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.string   "site_url"
+    t.string   "domain_matchers"
   end
 
   create_table "commons_licenses", :id => false, :force => true do |t|
