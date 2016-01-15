@@ -9,7 +9,7 @@ Feature: External Activities can support a REST api
       | domain_uid | 13                       |
       | externalId | 999                      |
       | logging    | false                    |
-      | returnUrl  | http://www.example.com/dataservice/external_activity_data/888 |
+      | returnUrl  | http://www.example.com/dataservice/external_activity_data/key |
     And "activities.com/activity/1/sessions/" GET responds with
       """
       HTTP/1.1 200 OK
