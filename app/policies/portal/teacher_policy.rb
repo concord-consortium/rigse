@@ -19,4 +19,8 @@ class Portal::TeacherPolicy < ApplicationPolicy
     end
   end
 
+  def show?
+    owner? || admin?
+  end
+
 end
