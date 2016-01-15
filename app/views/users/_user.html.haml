@@ -7,12 +7,16 @@
         - if imported_user
           %span.tiny{:style=>"font-weight:normal"}
             (Imported)
+        - if user.portal_teacher
+          %span.badge= "Teacher"
+        - if user.portal_student
+          %span.badge= "Student"
       %div.action_menu_header_right
         %ul.menu
           - if (user.changeable?(current_visitor))
-            - if user.portal_teacher
-              %li.menu=link_to 'Teacher Page', portal_teacher_path(user.portal_teacher)
-            - if portal_student = user.portal_student
+            - if (portal_teacher = user.portal_teacher) && policy(portal_teacher).show?
+              %li.menu=link_to 'Teacher Page', portal_teacher_path(portal_teacher)
+            - if (portal_student = user.portal_student) && policy(portal_student).show?
               %li.menu=link_to 'Student Page', portal_student_path(portal_student)
             - if user.has_role?("admin") && !current_visitor.has_role?("admin")
               %li.menu=link_to 'edit', edit_by_project_admin_user_path(user)

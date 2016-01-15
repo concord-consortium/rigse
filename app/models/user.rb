@@ -582,15 +582,15 @@ class User < ActiveRecord::Base
   end
 
   def cohorts
-    teacher_cohorts || student_cohorts
+    teacher_cohorts | student_cohorts
   end
 
   def cohort_projects
-    teacher_cohort_projects || student_cohort_projects
+    teacher_cohort_projects | student_cohort_projects
   end
 
   def projects
-    (cohort_projects + admin_for_projects + researcher_for_projects).flatten.uniq || []
+    cohort_projects | admin_for_projects | researcher_for_projects
   end
 
   def changeable?(user)
