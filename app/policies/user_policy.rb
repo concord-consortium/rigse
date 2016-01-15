@@ -42,4 +42,8 @@ class UserPolicy < ApplicationPolicy
     changeable?
   end
 
+  def preferences?
+    (user && user == record) || changeable?
+  end
+
 end

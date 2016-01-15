@@ -53,10 +53,11 @@ class UsersController < ApplicationController
   # GET /users/1/preferences
   def preferences
     @user = User.find(params[:id])
-    authorize @user, :edit?
+    authorize @user
     @roles = Role.all
     @projects = Admin::Project.all_sorted
   end
+
    # /users/1/switch
   def switch
     authorize User

@@ -593,6 +593,10 @@ class User < ActiveRecord::Base
     cohort_projects | admin_for_projects | researcher_for_projects
   end
 
+  # FIXME: this method will return fales for project_admins trying to change themselves
+  # if they are not a member of cohort that is their own cohort.
+  # The solution is that this logic should be moved to the UserPolicy instead here in the
+  # model
   def changeable?(user)
     if user.has_role?("admin", "manager")
       true
