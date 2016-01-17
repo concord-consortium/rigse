@@ -18,7 +18,11 @@ class ExternalActivityPolicy < ApplicationPolicy
   end
 
   def matedit?
-    true
+    # FIXME: this was done because the external_activity#user might not be
+    # the same as the actual author in LARA. That could happen if an admin published
+    # a material for the actual author. However this is problematic because sometimes
+    # the email of users changes
+    edit? || (user && (record.author_email == user.email))
   end
 
   def set_private_before_matedit?
