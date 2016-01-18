@@ -598,7 +598,9 @@ class User < ActiveRecord::Base
   # The solution is that this logic should be moved to the UserPolicy instead here in the
   # model
   def changeable?(user)
-    if user.has_role?("admin", "manager")
+    if self == user
+      true
+    elsif user.has_role?("admin", "manager")
       true
     elsif user.is_project_admin?
       # A project admin can edit a student or teacher's account if the user is tagged with a cohort from one the project admin's projects
