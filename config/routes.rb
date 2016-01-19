@@ -684,9 +684,7 @@ RailsPortal::Application.routes.draw do
         namespace :answers do
           get :student_answers
         end
-        namespace :dashboard_reports do
-          get :report
-        end
+        resources :offerings, only: [:show]
       end
     end
 
