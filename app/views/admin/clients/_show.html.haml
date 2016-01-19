@@ -1,0 +1,32 @@
+%div{id: dom_id_for(client), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3= client.name
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href:edit_admin_client_path(client)} edit
+        %li
+          %a{href:url_for(action: :destroy, id:client.id), data: {method: 'delete', confirm: "Delete this client?"} } delete
+  %div{id: dom_id_for(client, :item), class: 'item'}
+    %div{id: dom_id_for(client, :details), class: 'content'}
+      %p
+        %ul.menu_v
+          %li
+            Name:
+            = client.name
+          %li
+            App Id:
+            = client.app_id
+          %li
+            App Secret:
+            = client.app_secret
+          %li
+            Site URL:
+            = client.site_url
+          %li
+            Allowed Domain regexs:
+            - unless client.domain_matchers.blank?
+              %ul
+                - client.domain_matchers.split(/\s+/).each do |dm|
+                  %li= dm

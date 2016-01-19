@@ -1,0 +1,26 @@
+.item
+  .content
+    - if client.errors.any?
+      %ul.menu_v.error-explanation
+        %li Client can't be saved, there are errors in form:
+        - client.errors.full_messages.each do |msg|
+          %li= msg
+    %p
+      %ul.menu_v
+        /:app_id, :app_secret, :name, :site_url, :domain_matchers
+        %li
+          Name:
+          = f.text_field :name
+        %li
+          App Id:
+          = f.text_field :app_id
+        %li
+          App Secret:
+          = f.text_field :app_secret
+        %li
+          Site URL:
+          = f.text_field :site_url
+        %li
+          Allowed domains (multiple regex sererated by whitespace):
+          = f.text_area :domain_matchers, class: 'mceNoEditor'
+      = submit_tag
