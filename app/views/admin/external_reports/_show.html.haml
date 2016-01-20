@@ -1,0 +1,26 @@
+%div{id: dom_id_for(report), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3= report.name
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href:edit_admin_external_report_path(report)} edit
+        %li
+          %a{href:url_for(action: :destroy, id:report.id), data: {method: 'delete', confirm: "Delete this report?"} } delete
+  %div{id: dom_id_for(report, :item), class: 'item'}
+    %div{id: dom_id_for(report, :details), class: 'content'}
+      %p
+        %ul.menu_v
+          %li
+            Name:
+            = report.name
+          %li
+            Url:
+            = report.url
+          %li
+            Launch text:
+            = report.launch_text
+          %li
+            Client:
+            = report.client.name

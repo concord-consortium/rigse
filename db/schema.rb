@@ -854,6 +854,7 @@ ActiveRecord::Schema.define(:version => 20160123000348) do
     t.boolean  "is_locked"
     t.boolean  "logging",                  :default => false
     t.boolean  "is_assessment_item",       :default => false
+    t.integer  "external_report_id"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
@@ -862,6 +863,17 @@ ActiveRecord::Schema.define(:version => 20160123000348) do
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
   add_index "external_activities", ["template_id", "template_type"], :name => "index_external_activities_on_template_id_and_template_type"
   add_index "external_activities", ["user_id"], :name => "index_external_activities_on_user_id"
+
+  create_table "external_reports", :force => true do |t|
+    t.string   "url"
+    t.string   "name"
+    t.string   "launch_text"
+    t.integer  "client_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "external_reports", ["client_id"], :name => "index_external_reports_on_client_id"
 
   create_table "images", :force => true do |t|
     t.integer  "user_id"

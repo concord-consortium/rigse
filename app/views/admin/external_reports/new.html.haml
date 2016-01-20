@@ -1,0 +1,2 @@
+= form_for(@report, url: url_for(controller: 'external_reports', action: 'create')) do |f|
+  = render partial: 'form', locals: { report: @report, f: f }
