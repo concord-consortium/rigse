@@ -19,6 +19,21 @@ module MaterialSharedPolicy
     admin? || project_admin?
   end
 
+  # owners are allowed to edit the publication status of their materials
+  def edit_publication_status?
+    edit_settings? || owner?
+  end
+
+  # owners are allowed to edit the grade levels of their materials
+  def edit_grade_levels?
+    edit_settings? || owner?
+  end
+
+  # owners are allowed to edit the subject areas of their materials
+  def edit_subject_areas?
+    edit_settings? || owner?
+  end
+
   def edit?
     edit_settings? || edit_projects? || edit_cohorts?
   end

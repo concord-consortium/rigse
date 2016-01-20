@@ -1,5 +1,5 @@
 -# Expects locals: object
-- if object && object.respond_to?("grade_level_list") && current_visitor.has_role?("admin", "manager")
+- if object && object.respond_to?("grade_level_list") && policy(object).edit_grade_levels?
   = field_set_tag 'Grade Levels' do
     .aligned
       = hidden_field_tag :update_grade_levels, "true"
