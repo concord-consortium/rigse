@@ -47,4 +47,26 @@ describe Client do
       client.valid_from_referer?("https://baz.com/index.html").should be_true
     end
   end
+  describe "a client with an access_grant" do
+    let(:user)  { FactoryGirl.create(:user) }
+    before(:each) do
+      user.access_grants.create(client_id: client.id )
+      user.reload
+      client.reload
+    end
+    it "should a valid access_grant" do
+      client.access_grants.should have(1).grant
+      user.access_grants.should have(1).grant
+    end
+
+    describe "deting the client" do
+      before(:each) do
+        client.destroy
+        user.reload
+      end
+      it "should remove the grants from the users" do
+        user.access_grants.should have(0).grant
+      end
+    end
+  end
 end

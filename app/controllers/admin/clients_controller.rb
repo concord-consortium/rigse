@@ -26,6 +26,7 @@ class Admin::ClientsController < ApplicationController
   def new
     authorize Client
     @client = Client.new
+    @client.app_secret ||= SecureRandom.uuid()
   end
 
   # GET /admin/client/1/edit

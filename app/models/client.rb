@@ -1,5 +1,7 @@
 class Client < ActiveRecord::Base
   attr_accessible :app_id, :app_secret, :name, :site_url, :domain_matchers
+  has_many :access_grants, :dependent => :delete_all
+
   def self.authenticate(app_id, app_secret)
     where(["app_id = ? AND app_secret = ?", app_id, app_secret]).first
   end
