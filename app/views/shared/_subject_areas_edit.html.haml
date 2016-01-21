@@ -1,5 +1,5 @@
 -# Expects locals: object
-- if object && object.respond_to?("subject_area_list") && current_visitor.has_role?("admin", "manager")
+- if object && object.respond_to?("subject_area_list") && policy(object).edit_subject_areas?
   = field_set_tag 'Subject Areas' do
     .aligned
       = hidden_field_tag :update_subject_areas, "true"

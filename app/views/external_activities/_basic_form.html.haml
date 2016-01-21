@@ -1,8 +1,7 @@
 = remote_form_for(@external_activity, :complete => "close_popup();") do |f|
   = f.error_messages
   = edit_menu_for(@external_activity, f)
-  = field_set_tag 'Publication status' do
-    = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
+  = render :partial => 'shared/publication_status_edit', :locals => { :form => f, :object => @external_activity }
   = render :partial => 'shared/grade_levels_edit', :locals => { :object => @external_activity }
   = render :partial => 'shared/subject_areas_edit', :locals => { :object => @external_activity }
   = render :partial => 'shared/sensors_edit', :locals => { :object => @external_activity }

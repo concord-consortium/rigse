@@ -1,0 +1,7 @@
+-# Expects locals: object
+- if object && object.respond_to?("publication_status") && policy(object).edit_publication_status?
+  = field_set_tag 'Publication Status' do
+    -# FIXME: We need to access the publication states that are
+    -# added by the Publishable module. These are available directly so instead we are
+    -# just pulling them from the ExternalActivity class that includes the Publishable module.
+    = form.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}

@@ -33,9 +33,11 @@ class ExternalActivityPolicy < ApplicationPolicy
     true
   end
 
-  # owners can edit some basic settings of external activities
+  # the basic edit form lets a user change the publication status, subject areas,
+  # and grade levels. So if a user can change any of those things then they should
+  # be able to see the basic form
   def edit_basic?
-    edit? || owner?
+    edit_publication_status? || edit_subject_areas? || edit_grade_levels?
   end
 
   # we need to let owners update the settings too
