@@ -390,6 +390,14 @@ module ApplicationHelper
     link_to(link_text, url, :target => '_blank', :title => title)
   end
 
+  def alternate_report_link_for(offering)
+    return nil unless runnable = offering.runnable
+    return nil unless runnable.respond_to?(:external_report)
+    return nil unless report = runnable.external_report
+    url = portal_external_report_path(offering.id, report.id)
+    link_to report.launch_text, url, :target => '_blank', :title => report.name
+  end
+
   def activation_toggle_link_for(activatable, action='activate', link_text='Activate', title=nil)
     activatable_display_name = activatable.class.display_name.downcase
     action_string = action.gsub('_', ' ')

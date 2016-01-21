@@ -26,9 +26,11 @@
               %span.subheader
                 Student Submissions
             %td
-              - if current_offering.reportable?
-                %div.right
+              %div.right
+                - if current_offering.reportable?
                   %span.linkbutton.pie= report_link_for(current_offering, 'report', 'Run Report')
+                - if alternate_report_link_for(current_offering)
+                  %span.linkbutton.pit= alternate_report_link_for(current_offering)
           - if current_offering.clazz.students.length > 0
             %tr
               %td{:colspan=>"2"}= render :partial => 'progress_bar_legend'
