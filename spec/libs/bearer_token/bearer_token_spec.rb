@@ -12,7 +12,7 @@ end
 
 describe BearerToken:BearerTokenAuthenticatable do
   after(:each) { Delorean.back_to_the_present }
-
+  let(:domain_matchers) { "" }
   let(:strategy)  { BearerTokenAuthenticatable::BearerToken.new(nil) }
   let(:request)   { mock('request') }
   let(:mapping)   { Devise.mappings[:user] }
@@ -21,13 +21,16 @@ describe BearerToken:BearerTokenAuthenticatable do
   let(:headers)   { {"Authorization" => "Bearer #{token}"} }
   let(:user)      { FactoryGirl.create(:user) }
   let(:params)    { {} }
-  let(:client)    { Client.find_or_create_by_name(
+  let(:client)    { Client.create(
          :name       => "test_api_client",
          :app_id     => "test_api_client",
-         :app_secret => SecureRandom.uuid
+         :app_secret => SecureRandom.uuid,
+         :domain_matchers => domain_matchers
   )}
+  let(:referrer)  { "https://foo.bar.com/some/path.html" }
   before(:each) {
     request.stub!(:headers).and_return(headers)
+    request.stub!(:env).and_return({'HTTP_REFERER' => referrer})
     request.stub!(:params).and_return(params)
     strategy.stub!(:mapping).and_return(mapping)
     strategy.stub!(:request).and_return(request)
@@ -42,6 +45,18 @@ describe BearerToken:BearerTokenAuthenticatable do
     it 'the token should expire 12 minutes into the futre' do
       Delorean.jump(12 * 60) # move 12 minutes into the future
       strategy.authenticate!.should eql :failure
+    end
+    context "from an allowed domain" do
+      let(:domain_matchers) { "foo.bar.com" }
+      it 'should authenticate the user' do
+        strategy.authenticate!.should eql :success
+      end
+    end
+    context "from a prohibited domain" do
+      let(:domain_matchers) { "bar.com" } #no foo
+      it 'should not authenticate the user' do
+        strategy.authenticate!.should eql :failure
+      end
     end
   end
 

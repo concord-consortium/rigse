@@ -354,6 +354,7 @@ RailsPortal::Application.routes.draw do
       resources :settings
       resources :tags
       resources :projects
+      resources :clients
       resources :permission_forms do
         member do
           post :update_forms

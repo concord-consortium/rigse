@@ -1,0 +1,2 @@
+= form_for(@client, url: url_for(controller: 'clients', action: 'update')) do |f|
+  = render partial: 'admin/clients/form', locals: { client: @client, f: f }
