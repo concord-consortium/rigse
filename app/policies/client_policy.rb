@@ -11,32 +11,31 @@ class ClientPolicy < ApplicationPolicy
   end
 
   def index?
-    is_admin
+    admin?
   end
 
   def show?
-    is_admin
+    admin?
   end
 
   def create?
-    is_admin
+    admin?
   end
 
   def edit?
-    is_admin
+    admin?
   end
 
   def update?
-    is_admin
+    admin?
+  end
+
+  def new?
+    admin?
   end
 
   def changeable?
-    is_admin
-  end
-
-  private
-  def is_admin
-    has_roles?('admin')
+    admin?
   end
 
 end
