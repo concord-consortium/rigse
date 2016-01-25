@@ -46,7 +46,6 @@ class MiscController < ActionController::Base
     stats[:sections] = Section.count
     stats[:pages] = Page.count
     stats[:external_activities] = ExternalActivity.count
-    stats[:resource_pages] = ResourcePage.count
 
     # this sql was created because using the active record query language didn't generate the correct distinct ordering
     # additionally it allows us to get all the 'active' stats in one shot

@@ -40,9 +40,3 @@ Feature: Investigations can be searched
     And  I should not see "APP_CONFIG"
     And  I should not see "Resources" within "#nav_top"
 
-  @javascript @wip
-  Scenario: Resources are hidden from teachers in class assignment
-    When I am logged in with the username teacher
-    And  I am on the class page for "My Class"
-    And  I should not see "create resource" within "#resource_pages"
-

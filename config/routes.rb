@@ -597,16 +597,8 @@ RailsPortal::Application.routes.draw do
     match '/images/list/filter' => 'images#index', :as => :list_filter_image, :method => :post
     match '/images/:id/view'    => 'images#view',  :as => :view_image, :method => :get
 
-    match '/resource_pages/list/filter' => 'resource_pages#index', :as => :list_filter_resource_page, :method => :post
-    resources :resource_pages do
-      collection do
-        get :printable_index
-      end
-    end
-
     resources :installer_reports
 
-    resources :attached_files
     resources :images
 
     resources :interactives do

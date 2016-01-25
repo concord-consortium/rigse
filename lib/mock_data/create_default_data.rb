@@ -520,40 +520,6 @@ module MockData
     @default_investigations = default_investigations
     @default_activities = default_activities
 
-
-    # Resource pages
-    puts
-    puts
-    create_count = 0
-    update_count = 0
-    DEFAULT_DATA[:resource_pages].each do |key, rp|
-      user_name = rp.delete(:user)
-      user = @default_users.find{|u| u.login == user_name}
-      if user
-        default_rp = nil
-        rp_by_uuid = ResourcePage.find_by_uuid(rp[:uuid])
-        if rp_by_uuid
-          default_rp = rp_by_uuid
-          default_rp.name = rp[:name]
-          default_rp.user_id = user.id
-          default_rp.offerings_count = rp[:offerings_count]
-          default_rp.created_at = rp[:created_at]
-          default_rp.publication_status = rp[:publication_status]
-          default_rp.save!
-          print '+'
-          update_count += 1
-        else
-          rp[:user_id] = user.id
-          resource_page = ResourcePage.create!(rp)
-          resource_page.save!
-          create_count += 1
-          print '.'
-        end
-      end
-    end
-    puts
-    puts "Generated #{create_count} and updated #{update_count} Resource pages"
-
     # pages
     puts
     puts

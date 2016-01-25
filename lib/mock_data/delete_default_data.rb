@@ -6,7 +6,6 @@ module MockData
   def self.delete_default_data
     delete_default_learners
     delete_default_study_materials
-    delete_default_resource_pages
     delete_default_pages
     delete_default_questions
     delete_default_clazzes
@@ -67,19 +66,6 @@ module MockData
     external_activities = ExternalActivity.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     external_activities.each do |e|
       e.destroy
-    end
-  end
-  
-  def self.delete_default_resource_pages
-    puts <<-HEREDOC
-    
-    Deleting resource pages
-    
-    HEREDOC
-    
-    resource_pages = ResourcePage.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
-    resource_pages.each do |rp|
-      rp.destroy
     end
   end
   

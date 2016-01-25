@@ -121,12 +121,6 @@ class ExternalActivity < ActiveRecord::Base
   scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
 
   scope :ordered_by, lambda { |order| { :order => order } }
-  # FIXME: See comments in app/models/resource_page.rb
-  scope :match_any, lambda { |scopes|
-    table_name_dot_id = "#{self.table_name}.id"
-    conditions = "(#{scopes.map { |scope| "#{table_name_dot_id} IN (#{scope.select(table_name_dot_id).to_sql})" }.join(" OR ")})"
-    where(conditions)
-  }
 
   scope :official, where(:is_official => true)
   scope :contributed, where(:is_official => false)

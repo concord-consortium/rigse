@@ -118,7 +118,7 @@ class SearchController < ApplicationController
     # authorize Search, :new_or_create?
     # authorize @search, :update_edit_or_destroy?
     material = nil
-    if ["Investigation", "Activity", "Page", "ExternalActivity", "ResourcePage"].include?(type)  # this is for safety
+    if ["Investigation", "Activity", "Page", "ExternalActivity"].include?(type)  # this is for safety
       material = type.constantize.find(id)
     end
 

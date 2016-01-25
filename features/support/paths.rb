@@ -31,14 +31,6 @@ module NavigationHelpers
       "/admin/settings/#{Admin::Settings.default_settings.id}/show"
     when /the create investigation page/
       "/investigations/new"
-    when /the create resource page page/
-      "/resource_pages/new"
-    when /the resource pages page/
-      "/resource_pages/"
-    when /the resource pages with drafts page/
-      "/resource_pages/?include_drafts=true"
-    when /the reports for resource pages/
-      "/reports/resource_pages"
     when /the researcher reports page/
       "/report/learner"
     when /the class page for "(.*)"/
@@ -59,12 +51,6 @@ module NavigationHelpers
       page_path(page)
     when /the investigations like "(.*)"/
       "/investigations?name=#{$1}"
-    when /the resource pages printable index page/
-      "/resource_pages/printable_index"
-    when /the resource pages like "(.*)"/
-      "/resource_pages?name=#{$1}"
-    when /the resource page for "(.*)"/
-      "/resource_pages/#{ResourcePage.find_by_name($1).id}"
     when /the clazz create page/
       new_portal_clazz_path
     when /the user preferences page for the user "(.*)"/
