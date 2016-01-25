@@ -32,7 +32,7 @@ class API::V1::Offering
     self.teacher = offering.clazz.teacher.name
     self.clazz = offering.clazz.name
     self.activity = offering.name
-    self.activity_url = offering.runnable.url
+    self.activity_url = offering.runnable.respond_to?(:url) ? offering.runnable.url : nil
     self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port) }
   end
 end
