@@ -1,4 +1,6 @@
 class Portal::Learner < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
+
   self.table_name = :portal_learners
   
   default_scope :order => 'student_id ASC'
@@ -45,6 +47,10 @@ class Portal::Learner < ActiveRecord::Base
   has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner", :foreign_key => "learner_id"
 
   has_many :lightweight_blobs, :dependent => :destroy, :class_name => "Dataservice::Blob"
+
+  default_value_for :secure_key do
+    UUIDTools::UUID.random_create.to_s
+  end
 
   # automatically make the report learner if it doesn't exist yet
   def report_learner
@@ -109,6 +115,10 @@ class Portal::Learner < ActiveRecord::Base
       @@searchable_attributes
     end
 
+    def find_by_id_or_key(id_or_key)
+      Portal::Learner.where('secure_key = ? OR id = ?', id_or_key, id_or_key).first!
+    end
+
   end
   
   # for the view system ...
@@ -164,5 +174,21 @@ class Portal::Learner < ActiveRecord::Base
 
   def reportable?
     offering.individual_reportable?
+  end
+
+  def remote_endpoint_path
+    if secure_key.present?
+      external_activity_return_path(secure_key)
+    else
+      external_activity_return_path(id)
+    end
+  end
+
+  def remote_endpoint_url(protocol, host_with_port)
+    if secure_key.present?
+      external_activity_return_url(secure_key, protocol: protocol, host: host_with_port)
+    else
+      external_activity_return_url(id, protocol: protocol, host: host_with_port)
+    end
   end
 end

@@ -5,7 +5,7 @@ class Dataservice::ExternalActivityDataController < ApplicationController
   private
 
   def pundit_user_not_authorized(exception)
-    learner_id = params[:id]
+    learner = Portal::Learner.find_by_id_or_key(params[:id_or_key])
     learner_deets = LearnerDetail.new(learner)
     visitor = current_visitor ? current_visitor.name : 'anonymous'
     error_string = "Auth error for #{visitor} - #{learner_deets}"
@@ -15,14 +15,11 @@ class Dataservice::ExternalActivityDataController < ApplicationController
   public
 
   def create
-    learner_id = params[:id]
-    if learner = Portal::Learner.find(learner_id)
-      authorize Dataservice::ProcessExternalActivityDataJob
-      # TODO: wrap this in a begin/rescue/end and return a real-ish error
-      Delayed::Job.enqueue Dataservice::ProcessExternalActivityDataJob.new(learner_id, request.body.read)
-      render :status => 201, :nothing => true and return
-    end
-    raise ActionController::RoutingError.new('Not Found')
+    authorize Dataservice::ProcessExternalActivityDataJob
+    learner = Portal::Learner.find_by_id_or_key(params[:id_or_key])
+    # TODO: wrap this in a begin/rescue/end and return a real-ish error
+    Delayed::Job.enqueue Dataservice::ProcessExternalActivityDataJob.new(learner.id, request.body.read)
+    render :status => 201, :nothing => true
   end
 
 end

@@ -82,7 +82,7 @@ class Portal::OfferingsController < ApplicationController
            uri.query = {
              :domain => root_url,
              :externalId => learner.id,
-             :returnUrl => external_activity_return_url(learner.id),
+             :returnUrl => learner.remote_endpoint_url(request.protocol, request.host_with_port),
              :logging => @offering.clazz.logging || @offering.runnable.logging,
              :domain_uid => current_visitor.id
            }.to_query

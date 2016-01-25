@@ -343,8 +343,10 @@ RailsPortal::Application.routes.draw do
     post '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_name'
     get  '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_name'
 
-    # external activity return url (:id refers learner's ID)
-    post '/dataservice/external_activity_data/:id' => 'dataservice/external_activity_data#create', :as => 'external_activity_return'
+    # external activity return url (:id_or_key refers learner's ID or key)
+    # - key is a random UUID string, so it's impossible to guess somebody's else endpoint (more secure)
+    # - we still need to support basic ID, as LARA might store this form of URLs
+    post '/dataservice/external_activity_data/:id_or_key' => 'dataservice/external_activity_data#create', :as => 'external_activity_return'
 
     # A prettier version of the blob w/ token url
     match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
@@ -373,7 +375,7 @@ RailsPortal::Application.routes.draw do
           #post :manage_classes_save, :as => 'manage_save'
         end
       end
-      get '/learner_detail/:id.:format' => 'learner_details#show',  :as => :learner_detail
+      get '/learner_detail/:id_or_key.:format' => 'learner_details#show',  :as => :learner_detail
     end
 
     resources :materials_collections do

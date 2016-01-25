@@ -51,7 +51,7 @@ Given /^"([^"]*)" handles a (POST|GET) with query:$/ do |address, method, table|
   end
   # must use a copy! Cucumber apparently doesn't re-allocate arguments for Background steps
   query_data["externalId"] = query_data["externalId"].sub(/999/,"#{@learner.id}")
-  query_data["returnUrl"] = query_data["returnUrl"].sub(/888/,"#{@learner.id}")
+  query_data["returnUrl"] = query_data["returnUrl"].sub(/key/,"#{@learner.secure_key}")
   stub.with(:query => query_data)
 end
 
@@ -101,7 +101,7 @@ end
 
 When /^the browser returns the following data to the portal$/ do |string|
   login_as('student')
-  path = external_activity_return_path(@learner)
+  path = @learner.remote_endpoint_path
   Delayed::Job.should_receive(:enqueue)
   page.driver.post(path, :content => string)
   # delayed_job doesn't work in tests, so force running the job
