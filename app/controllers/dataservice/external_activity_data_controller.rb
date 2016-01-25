@@ -5,7 +5,7 @@ class Dataservice::ExternalActivityDataController < ApplicationController
   private
 
   def pundit_user_not_authorized(exception)
-    learner = Portal::Learner.find_by_id_or_key(params[:id] || params[:key])
+    learner = Portal::Learner.find_by_id_or_key(params[:id_or_key])
     learner_deets = LearnerDetail.new(learner)
     visitor = current_visitor ? current_visitor.name : 'anonymous'
     error_string = "Auth error for #{visitor} - #{learner_deets}"
