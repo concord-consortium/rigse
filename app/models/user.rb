@@ -29,7 +29,6 @@ class User < ActiveRecord::Base
 
   NO_EMAIL_STRING='no-email-'
   has_many :investigations
-  has_many :resource_pages
   has_many :activities
   has_many :interactives
   has_many :sections

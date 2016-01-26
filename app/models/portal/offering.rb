@@ -51,10 +51,6 @@ class Portal::Offering < ActiveRecord::Base
     multiple_choices + open_responses
   end
 
-  def resource_page?
-    self.runnable.is_a? ResourcePage
-  end
-
   def external_activity?
     self.runnable.is_a? ExternalActivity
   end

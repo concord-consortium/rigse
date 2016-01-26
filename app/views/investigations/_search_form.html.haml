@@ -3,8 +3,6 @@
 %h3
   #search_title
     = "Search #{Investigation.display_name.pluralize}"
-    - unless local_assigns[:investigations_only]
-      = " & #{ResourcePage.display_name.pluralize}"
 
 - # TODO: There is probably a cleaner method to avoid sumbissions on enter / return key:form
 %form{:method => 'get',  :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}

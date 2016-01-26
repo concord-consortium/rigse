@@ -44,11 +44,6 @@ en:
         zero: external activities
         one: external activity
         other: external activities
-      ResourcePage: Resource Page
-      resource_page:
-        zero: resource pages
-        one: resource page
-        other: resource page
       Interactive: Interactive
       interactive:
         zero: interactives
@@ -125,11 +120,6 @@ en:
         zero: activities
         one: activity
         other: activities
-'en-SMARTGRAPHS':
-  activerecord:
-    models:
-      ExternalActivity : Activity
-      ResourcePage : Resource
 'en-INTERACTIONS':
   investigation: investigation
   activerecord:

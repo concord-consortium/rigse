@@ -269,36 +269,6 @@ simple_investigations:
     page_uuid: 00000000-0000-0000-0000-000000000125
     
 
-resource_pages:
-  res_page_1:
-    name: NewestResource
-    description: NewestResource description
-    user: teacher
-    offerings_count: 6
-    created_at: <%= Wed Jan 26 12:00:00 -0500 2011 %>
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000126
-    
-  res_page_2:
-    name: MediumResource
-    description: MediumResource description
-    user: teacher
-    offerings_count: 11
-    created_at: <%= Wed Jan 23 12:00:00 -0500 2011 %>
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000127
-    
-      
-  res_page_3:
-    name: OldestResource
-    description: OldestResource description
-    user: teacher
-    offerings_count: 21
-    created_at: <%= Wed Jan 20 12:00:00 -0500 2011 %>
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000128
-        
-
 pages:
   page_1:
     name: My Page

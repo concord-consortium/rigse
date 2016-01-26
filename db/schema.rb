@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160115171143) do
+ActiveRecord::Schema.define(:version => 20160123000348) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -199,19 +199,6 @@ ActiveRecord::Schema.define(:version => 20160115171143) do
     t.string   "tag"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "attached_files", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "attachable_type"
-    t.integer  "attachable_id"
-    t.string   "attachment_file_name"
-    t.string   "attachment_content_type"
-    t.integer  "attachment_file_size"
-    t.datetime "attachment_updated_at"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
   end
 
   create_table "authentications", :force => true do |t|
@@ -2259,18 +2246,6 @@ ActiveRecord::Schema.define(:version => 20160115171143) do
   add_index "report_learners", ["school_id"], :name => "index_report_learners_on_school_id"
   add_index "report_learners", ["student_id"], :name => "index_report_learners_on_student_id"
 
-  create_table "resource_pages", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description"
-    t.string   "publication_status",               :default => "draft"
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
-    t.integer  "offerings_count",                  :default => 0
-    t.text     "content"
-    t.string   "uuid",               :limit => 36
-  end
-
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
     t.integer "assessment_target_id"
     t.integer "unifying_theme_id"
@@ -2548,15 +2523,6 @@ ActiveRecord::Schema.define(:version => 20160115171143) do
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
-
-  create_table "student_views", :force => true do |t|
-    t.integer "user_id",       :null => false
-    t.integer "viewable_id",   :null => false
-    t.string  "viewable_type", :null => false
-    t.integer "count"
-  end
-
-  add_index "student_views", ["user_id", "viewable_id", "viewable_type"], :name => "index_student_views_on_user_id_and_viewable_id_and_viewable_type"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"

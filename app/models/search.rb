@@ -33,7 +33,7 @@ class Search
   attr_accessor :available_model_types
   attr_accessor :available_projects
 
-  SearchableModels        = [Investigation, Activity, ResourcePage, ExternalActivity, Interactive]
+  SearchableModels        = [Investigation, Activity, ExternalActivity, Interactive]
   InvestigationMaterial   = "Investigation"
   ActivityMaterial        = "Activity"
   InteractiveMaterial     = "Interactive"

@@ -11,15 +11,6 @@
         = link_to_container(inv)
   = link_to "Create #{Investigation.display_name}", new_investigation_path, :class => 'button'
 
-- if current_visitor.has_role?('admin') || current_visitor.resource_pages.present?
-  %div{:style=> "margin: 1em; padding: 1em;"}
-    %h4= "#{ResourcePage.display_name.pluralize} you've authored"
-    %ul
-      - current_visitor.resource_pages.each do |resource_page|
-        %li
-          = link_to resource_page.display_name, resource_page
-    = link_to "Create #{ResourcePage.display_name}", new_resource_page_path, :class => 'button'
-
 - if current_visitor.has_role?('admin') || current_visitor.external_activities.present?
   %div{:style=> "margin: 1em; padding: 1em;"}
     %h4= "#{ExternalActivity.display_name.pluralize} you've authored"

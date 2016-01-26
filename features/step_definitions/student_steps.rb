@@ -63,7 +63,7 @@ Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_
   student.clazzes.should include clazz
 end
 
-When /^(?:|I )run the (?:investigation|activity|external activity|resource page)$/ do
+When /^(?:|I )run the (?:investigation|activity|external activity)$/ do
   # make sure the current user is a student
   user = User.find_by_login(@cuke_current_username)
   user.portal_student.should_not == nil

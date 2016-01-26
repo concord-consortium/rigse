@@ -25,7 +25,3 @@ default:
   Portal::Clazz : Class
   Portal::Nces06District : NCES District
   Portal::Nces06School : NCES School
-
-smartgraphs:
-  ExternalActivity : Activity
-  ResourcePage : Resource
