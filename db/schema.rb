@@ -1266,11 +1266,13 @@ ActiveRecord::Schema.define(:version => 20160123000348) do
     t.datetime "updated_at",                      :null => false
     t.integer  "bundle_logger_id"
     t.integer  "console_logger_id"
+    t.string   "key"
     t.string   "secure_key"
   end
 
   add_index "portal_learners", ["bundle_logger_id"], :name => "index_portal_learners_on_bundle_logger_id"
   add_index "portal_learners", ["console_logger_id"], :name => "index_portal_learners_on_console_logger_id"
+  add_index "portal_learners", ["key"], :name => "index_portal_learners_on_key", :unique => true
   add_index "portal_learners", ["offering_id"], :name => "index_portal_learners_on_offering_id"
   add_index "portal_learners", ["secure_key"], :name => "index_portal_learners_on_sec_key", :unique => true
   add_index "portal_learners", ["student_id"], :name => "index_portal_learners_on_student_id"
