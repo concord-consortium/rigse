@@ -13,20 +13,16 @@ module SearchModelInterface
       acts_as_taggable_on :sensors
 
       # Fast way to find all materials that are in `allowed_cohorts` OR they are not assigned to any cohort.
+      # NOTE: this will return duplicate entries if a material is tagged with more than one cohort
       def self.filtered_by_cohorts(allowed_cohorts = [])
-        params = {}
-        cohorts_where = allowed_cohorts.map.with_index do |cohort, i|
-          params["name#{i}".intern] = cohort.name
-          if cohort.project_id
-            params["project_id#{i}".intern] = cohort.project_id
-            "(admin_cohorts.name = :name#{i} AND admin_cohorts.project_id = :project_id#{i})"
-          else
-            "admin_cohorts.name = :name#{i}"
-          end
+        where_clause = "admin_cohort_items.id IS NULL"
+        unless allowed_cohorts.empty?
+          allowed_cohort_ids = allowed_cohorts.map(&:id).join(',')
+          where_clause += " OR admin_cohort_items.admin_cohort_id IN (#{allowed_cohort_ids})"
         end
+
         joins("LEFT OUTER JOIN admin_cohort_items ON #{table_name}.id = admin_cohort_items.item_id AND admin_cohort_items.item_type = '#{name}'")
-          .joins("LEFT OUTER JOIN admin_cohorts ON admin_cohorts.id = admin_cohort_items.admin_cohort_id")
-          .where("#{cohorts_where.empty? ? "" : "(#{cohorts_where.join(' OR ')}) OR "} admin_cohort_items.id IS NULL", params)
+          .where(where_clause)
       end
     end
   end

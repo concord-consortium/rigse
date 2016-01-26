@@ -33,6 +33,7 @@ class MaterialsCollection < ActiveRecord::Base
 
   private
 
+  # FIXME: need to also filter if the user has access to this material
   def materials_by_type(allowed_cohorts)
     materials = {}
     MATERIAL_TYPES.each do |type|
