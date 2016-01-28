@@ -33,6 +33,17 @@ class ApplicationController < ActionController::Base
   # protect_from_forgery
   self.allow_forgery_protection = false
 
+  # With +respond_to do |format|+, "406 Not Acceptable" is sent on invalid format.
+  # With a regular render (implicit or explicit), ActionView::MissingTemplate
+  # exception is raised instead. The MissingTemplate exception triggers an
+  # exception notification that we don't really care about.
+  # So instead we catch that and raise a RoutingError which Rails turns
+  # into a 404 response.
+  rescue_from(ActionView::MissingTemplate) do |e|
+    request.format = :html
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
   theme :get_theme
 
   def test
