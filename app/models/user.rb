@@ -592,10 +592,12 @@ class User < ActiveRecord::Base
     cohort_projects | admin_for_projects | researcher_for_projects
   end
 
-  # FIXME: this method will return fales for project_admins trying to change themselves
-  # if they are not a member of cohort that is their own cohort.
-  # The solution is that this logic should be moved to the UserPolicy instead here in the
-  # model
+  # FIXME: This logic should be moved to the UserPolicy instead here in the model
+  # FIMXE: This is not fine grained enough. Currently the UsersController#update
+  #   has its own logic to decide if a user can change particular aspect of another user.
+  #   for example that controller code ensures that user cannot elevate themselves to an
+  #   admin. If some code just relied on this changeable method it might allow this
+  #   elevation.
   def changeable?(user)
     if self == user
       true
