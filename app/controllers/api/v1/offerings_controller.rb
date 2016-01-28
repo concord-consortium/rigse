@@ -10,8 +10,12 @@ class API::V1::OfferingsController < API::APIController
 
   public
   def show
-    authorize [:api, :v1, :offering]
-    @offering = API::V1::Offering.new(params[:id], request.protocol, request.host_with_port)
-    render :json => @offering.to_json, :callback => params[:callback]
+    @offering = Portal::Offering.find(params[:id], include: {
+        learners: {student: :user},
+        clazz: {students: :user}
+    })
+    authorize @offering
+    @offering_api = API::V1::Offering.new(@offering, request.protocol, request.host_with_port)
+    render :json => @offering_api.to_json, :callback => params[:callback]
   end
 end

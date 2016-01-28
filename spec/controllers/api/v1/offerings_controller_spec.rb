@@ -8,17 +8,21 @@ describe API::V1::OfferingsController do
   let(:teacher)           { Factory.create(:portal_teacher)}
 
   let(:fake_json)         { {fake:true}.to_json  }
-  let(:mock_offering)     { mock }
+  let(:mock_offering)     { mock_model Portal::Offering }
   let(:mock_api_offering) { mock(to_json: fake_json) }
   let(:mock_offering_id)  { 32 }
 
+  before(:each) do
+    Portal::Offering.stub!(:find).and_return(mock_offering)
+  end
 
   describe "anonymous' access" do
     before (:each) do
       logout_user
     end
+
     describe "GET show" do
-      it "wont allow show, redirects home" do
+      it "wont allow show, returns error 403" do
         get :show, :id => mock_offering_id
         response.status.should eql(403)
       end
@@ -30,7 +34,7 @@ describe API::V1::OfferingsController do
       sign_in manager_user
     end
     describe "GET show" do
-      it "wont allow show, redirects home" do
+      it "wont allow show, returns error 403" do
         get :show, :id => mock_offering_id
         response.status.should eql(403)
       end
@@ -45,7 +49,7 @@ describe API::V1::OfferingsController do
     describe "GET show" do
       it "renders the show template" do
         get :show, :id => mock_offering_id
-        assigns[:offering].should eq mock_api_offering
+        assigns[:offering_api].should eq mock_api_offering
         response.status.should eq 200
         response.body.should eq fake_json
       end
@@ -53,21 +57,32 @@ describe API::V1::OfferingsController do
   end
 
   describe "teacher access" do
+    let(:offering_teachers) { [] }
     before(:each) do
       sign_in teacher.user
-      API::V1::Offering.should_receive(:new).and_return(mock_api_offering)
-      Portal::Offering.should_receive(:find_by_id).and_return(mock_offering)
-      mock_offering.stub_chain(:clazz, :teachers).and_return([teacher])
+      mock_offering.stub_chain(:clazz, :teachers).and_return(offering_teachers)
     end
-
-    describe "GET show" do
-      it "renders the show template" do
+    describe "when the offering doesn't belong to the teachers class" do
+      let(:offering_teachers) { [] }
+      it "wont allow show, returns error 403" do
         get :show, :id => mock_offering_id
-        assigns[:offering].should eq mock_api_offering
-        response.status.should eq 200
-        response.body.should eq fake_json
+        response.status.should eql(403)
       end
     end
+
+    describe "when the offering belongs to the teachers class" do
+      let(:offering_teachers) {[teacher]}
+      describe "GET show" do
+        it "renders the show template" do
+          API::V1::Offering.should_receive(:new).and_return(mock_api_offering)
+          get :show, :id => mock_offering_id
+          assigns[:offering_api].should eq mock_api_offering
+          response.status.should eq 200
+          response.body.should eq fake_json
+        end
+      end
+    end
+
   end
 
 end
