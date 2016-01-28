@@ -21,4 +21,19 @@ class Client < ActiveRecord::Base
       true
     end
   end
+
+  def updated_grant_for(user, time_to_live)
+    grant = find_grant_for_user(user) || create_grant_for_user(user)
+    grant.update_attribute(:access_token_expires_at, Time.now + time_to_live)
+    grant
+  end
+
+  private
+  def find_grant_for_user(user)
+    access_grants.where(user_id: user.id).first
+  end
+
+  def create_grant_for_user(user)
+    user.access_grants.create(client:self)
+  end
 end

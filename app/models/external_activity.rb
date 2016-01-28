@@ -68,6 +68,7 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   belongs_to :user
+  belongs_to :external_report
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
@@ -206,6 +207,10 @@ class ExternalActivity < ActiveRecord::Base
 
   def lara_activity_or_sequence?
     lara_activity? || lara_sequence?
+  end
+
+  def options_for_external_report
+    ExternalReport.all.map { |r| [r.name, r.id] }
   end
 
   private

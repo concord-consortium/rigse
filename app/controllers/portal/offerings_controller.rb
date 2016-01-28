@@ -4,7 +4,10 @@ class Portal::OfferingsController < ApplicationController
   include Portal::LearnerJnlpRenderer
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter,:activity_report]
+  before_filter :teacher_admin_or_config, :only => [
+    :report, :open_response_report, :multiple_choice_report,
+    :separated_report, :report_embeddable_filter, :activity_report, :external_report
+  ]
   before_filter :student_teacher_admin_or_config, :only => [:answers]
   before_filter :student_teacher_or_admin, :only => [:show]
 
@@ -475,6 +478,15 @@ class Portal::OfferingsController < ApplicationController
       page << "setRecentActivityTableHeaders(null,#{params[:id]})"
     end
     return
+  end
+
+  def external_report
+    offering_id = params[:id]
+    report_id = params[:report_id]
+    report = ExternalReport.find(report_id)
+    offering_api_url = api_v1_offering_url(offering_id)
+    next_url = report.url_for(offering_api_url, current_visitor)
+    redirect_to next_url
   end
 
   private

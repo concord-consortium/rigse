@@ -30,6 +30,9 @@
                         .report
                           %span.linkbutton.pie
                             = report_link_for(clazz_offering, 'report', 'Run Report')
+                        - if alternate_report_link_for(clazz_offering)
+                          .report
+                            %span.linkbutton.pit= alternate_report_link_for(clazz_offering)
             %td.investigation_activities
               %div
                 %table.status_count_graph{:border=>0,:cellpadding=>0,:cellspacing=>0}

@@ -1,0 +1,3 @@
+= remote_form_for(client, update: { success: dom_id_for(report), failure: dom_id_for(report, :edit)},
+                           html: { id: dom_id_for(report, :edit)}) do |f|
+  = render partial: 'form', locals: { report: report, f: f }

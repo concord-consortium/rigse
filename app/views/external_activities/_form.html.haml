@@ -17,6 +17,10 @@
       = f.text_field :launch_url, :size => 60
       %br
       = t('authoring.launch_url_description')
+    = field_set_tag t('authoring.external_report_label') do
+      = f.select :external_report_id, @external_activity.options_for_external_report, include_blank: 'none'
+      %br
+      = t('authoring.external_report_description')
     = field_set_tag 'Teacher Guide (URL)' do
       = f.text_field :teacher_guide_url, :size => 60
     = field_set_tag 'Thumbnail image URL (300 x 250 px)' do

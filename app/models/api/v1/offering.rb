@@ -24,11 +24,7 @@ class API::V1::Offering
   attribute :activity_url, String
   attribute :students, Array[OfferingStudent]
 
-  def initialize(offering_id, protocol, host_with_port)
-    offering = Portal::Offering.find(offering_id, include: {
-      learners: {student: :user},
-      clazz: {students: :user}
-    })
+  def initialize(offering, protocol, host_with_port)
     self.teacher = offering.clazz.teacher.name
     self.clazz = offering.clazz.name
     self.activity = offering.name

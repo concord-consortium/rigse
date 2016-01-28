@@ -1,0 +1,24 @@
+.item
+  .content
+    - if report.errors.any?
+      %ul.menu_v.error-explanation
+        %li Client can't be saved, there are errors in form:
+        - report.errors.full_messages.each do |msg|
+          %li= msg
+    %p
+      %ul.menu_v
+        /:app_id, :app_secret, :name, :site_url, :domain_matchers
+        %li
+          Name:
+          = f.text_field :name
+        %li
+          URL:
+          = f.text_field :url
+        %li
+          Launch Text:
+          = f.text_field :launch_text
+        %li
+          Client:
+          = f.select :client_id, report.options_for_client, {}, prompt: 'client:'
+
+      = submit_tag
