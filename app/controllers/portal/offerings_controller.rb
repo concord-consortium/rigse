@@ -80,7 +80,7 @@ class Portal::OfferingsController < ApplicationController
            # session[:put_path] = nil
          end
          external_activity = @offering.runnable
-         if external_activity.launch_url
+         if external_activity.launch_url.present?
            uri = URI.parse(external_activity.launch_url)
            uri.query = {
              :domain => root_url,
