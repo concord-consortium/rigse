@@ -75,6 +75,12 @@ Run the cucumber integration tests:
 All these tests should pass. If you add features make sure and add tests
 for these new features.
 
+#### SSO Clients and LARA (authoring) integration
+
+If you want to provide authentication services to LARA, you need to:
+1. Create a new SSO Client using `rake sso:add_client`
+2. Add the client id and secret to LARA, by editing `config/app_environment_variables.rb`
+
 ### Theme support & Rolling your own theme:
 
 We are using the
