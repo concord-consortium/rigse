@@ -15,7 +15,14 @@ Working git, ruby or jruby, and rubgems, wget
     startup](doc/core-extensions.textile)
 
 #### Simple Getting Started
+This example assumes that [rvm](https://rvm.io/) is installed. This
+ could be a good idea because we use an older version of ruby.
 
+
+    git clone git@github.com:concord-consortium/rigse.git portal
+    cd portal
+    echo 'rvm --create use 1.9.3@portal' >.rvmrc
+    rvm --create use 1.9.3@portal
     bundle install
     cp config/database.sample.yml config/database.yml (need to fix the mysql password and/or user)
     cp config/settings.sample.yml config/settings.yml
