@@ -9,21 +9,26 @@
       = link_to "Assign To Class", "javascript:void(0)",:onclick=>"get_Assign_To_Class_Popup(#{@external_activity.id}, '#{@external_activity.class.to_s}', null, true)", :class=>"button"
       = link_to "Edit Resource Options", "javascript:void(0)",:onclick=>"get_edit_resource_popup(#{@external_activity.id}, {use_short_form: true, content_height: 400})", :class=>"button"
   -#messgeedit This is edit lara activity page
-  #iframe_container
-    %iframe{:id => "Edit_in_Lara",:src =>"#{@uri}",:width => "1000",:height => "800",:style => "border :0;"}
+  #iframe_container.matedit
+    %iframe{:id => "Edit_in_Lara",:src =>"#{@uri}",:width => "1000",:height => "100%"}
 
   :javascript
-    var $iframe = jQuery("#Edit_in_Lara");
-    $iframe.on('load', function () {
-
-      // tell the iframe site manager we need the poller
-      $iframe[0].contentWindow.postMessage({iframed_site_manager: {need_height_poller: true}}, '*');
-
-      // listen for iframe site manager messages
-      jQuery(window).on('message', function (e) {
-        var data = e.originalEvent.data ? e.originalEvent.data.iframed_site_manager : null;
-        if (data && data.iframe_height) {
-          $iframe.css('height', data.iframe_height + 'px');
-        }
-      })
-    });
+    (function() {
+      var $ = jQuery;
+      var resizeIframe = function() {
+        var iframe = $("#Edit_in_Lara ");
+        var parent = $("#iframe_container");
+        var height = parent.height();
+        var offset = 150;
+        var newHeight = offset + height;
+        iframe.css('height', newHeight + "px");
+        iframe.css('top', "-" + offset + "px");
+      };
+      var registerResizeHandler = function() {
+        $(window).resize(resizeIframe);
+      };
+      $(document).ready(function() {
+        resizeIframe();
+        registerResizeHandler();
+      });
+    })();
