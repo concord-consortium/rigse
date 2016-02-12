@@ -1,11 +1,26 @@
-class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :content)
+class Dataservice::ProcessExternalActivityDataJob
+  attr_accessor :learner_id
+  attr_accessor :content
+
   include SaveableExtraction
 
   class UnknownRespose < NameError; end
   class MissingAnswer  < NameError; end
+
+  def initialize(_learner_id, _content)
+    self.learner_id = _learner_id
+    self.content = _content
+  end
+
+  def answers
+    JSON.parse(content) rescue {}
+  end
+
+  def learner
+    Portal::Learner.find(learner_id)
+  end
+
   def perform
-    all_data = JSON.parse(content) rescue {}
-    learner = Portal::Learner.find(learner_id)
     offering = learner.offering
     template = offering.runnable.template
 
@@ -14,7 +29,7 @@ class Dataservice::ProcessExternalActivityDataJob < Struct.new(:learner_id, :con
     @offering_id = offering.id
 
     # process the json data
-    all_data.each do |student_response|
+    answers.each do |student_response|
       begin
         case student_response["type"]
         when "open_response"

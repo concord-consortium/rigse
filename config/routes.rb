@@ -347,7 +347,13 @@ RailsPortal::Application.routes.draw do
     # external activity return url (:id_or_key refers learner's ID or key)
     # - key is a random UUID string, so it's impossible to guess somebody's else endpoint (more secure)
     # - we still need to support basic ID, as LARA might store this form of URLs
-    post '/dataservice/external_activity_data/:id_or_key' => 'dataservice/external_activity_data#create', :as => 'external_activity_return'
+    post '/dataservice/external_activity_data/:id_or_key' => 'dataservice/external_activity_data#create',
+         :as => 'external_activity_return'
+
+    # Addhock protocol versioning. Sort of hacky
+    post '/dataservice/external_activity_data/:id_or_key/protocol_version/:version' => 'dataservice/external_activity_data#create_by_protocol_version',
+         :as => 'external_activity_versioned_return',
+         :constraints => {:version => /[0-9]+/}
 
     # A prettier version of the blob w/ token url
     match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
