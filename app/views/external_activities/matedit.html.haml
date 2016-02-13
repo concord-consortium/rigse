@@ -9,21 +9,83 @@
       = link_to "Assign To Class", "javascript:void(0)",:onclick=>"get_Assign_To_Class_Popup(#{@external_activity.id}, '#{@external_activity.class.to_s}', null, true)", :class=>"button"
       = link_to "Edit Resource Options", "javascript:void(0)",:onclick=>"get_edit_resource_popup(#{@external_activity.id}, {use_short_form: true, content_height: 400})", :class=>"button"
   -#messgeedit This is edit lara activity page
-  #iframe_container
-    %iframe{:id => "Edit_in_Lara",:src =>"#{@uri}",:width => "1000",:height => "800",:style => "border :0;"}
+  #iframe_container.matedit
+    %iframe{:id => "Edit_in_Lara",:src =>"#{@uri}",:width => "1000",:height => "100%"}
 
   :javascript
-    var $iframe = jQuery("#Edit_in_Lara");
-    $iframe.on('load', function () {
 
-      // tell the iframe site manager we need the poller
-      $iframe[0].contentWindow.postMessage({iframed_site_manager: {need_height_poller: true}}, '*');
+    (function() {
+      var $ = jQuery;
+      var actionMenuPosition= "static";
+      var actionMenuLeft  = 0;
+      var actionMenuWidth = 0;
+      var actionMenuTop   = 0;
 
-      // listen for iframe site manager messages
-      jQuery(window).on('message', function (e) {
-        var data = e.originalEvent.data ? e.originalEvent.data.iframed_site_manager : null;
-        if (data && data.iframe_height) {
-          $iframe.css('height', data.iframe_height + 'px');
+
+      var pinActionMenu = function() {
+        var bodyScroll = $(window).scrollTop();
+
+        var saveActionMenu = function() {
+          actionMenuPosition =  $('.action_menu').css('position');
+          actionMenuWidth  =  $('.action_menu').css('width');
+          actionMenuLeft =  $('.action_menu').offset().left + "px";
+        };
+
+        var restoreActionMenu = function() {
+          $('.action_menu').css('position', actionMenuPosition || "static");
+          $('.action_menu').css('top', null);
+          $('.action_menu').css('left', null);
+          $('.action_menu').css('z-index',null);
+          $('.action_menu').css('width', actionMenuWidth);
+        };
+
+        if( $('.action_menu').css('position') != 'fixed') {
+          actionMenuTop = $('.action_menu').offset().top;
+          saveActionMenu();
         }
-      })
-    });
+
+        if (bodyScroll > actionMenuTop) {
+          $('.action_menu').css('top', '0px');
+          $('.action_menu').css('position', 'fixed');
+          $('.action_menu').css('left', actionMenuLeft);
+          $('.action_menu').css('width', actionMenuWidth);
+          $('.action_menu').css('z-index', 10);
+        }
+        else {
+          restoreActionMenu();
+        }
+      };
+
+      var adjustIframeContainer = function() {
+        var footerHeight = $("#footer").height();
+        var headerHeight = $("#lead").height();
+        var visiblePort = window.innerHeight;
+        var miniFrameContainer = 200;
+        var computedSize = visiblePort - (footerHeight);
+        computedSize = Math.max(computedSize,miniFrameContainer);
+        $("#iframe_container").css('height', computedSize + "px");
+      };
+
+      var resizeIframe = function() {
+        adjustIframeContainer();
+        var iframe = $("#Edit_in_Lara ");
+        var parent = $("#iframe_container");
+        var height = parent.height();
+        var offset = 150;
+        var newHeight = offset + height;
+        iframe.css('height', newHeight + "px");
+        iframe.css('top', "-" + offset + "px");
+      };
+
+      var registerListeners = function() {
+        $(window).resize(resizeIframe);
+        $(window).scroll(pinActionMenu);
+      };
+
+      $(document).ready(function() {
+        $("#wrapper").css("min-height", null);
+        resizeIframe();
+        registerListeners();
+      });
+
+    })();
