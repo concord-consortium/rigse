@@ -116,7 +116,16 @@ class Portal::Learner < ActiveRecord::Base
     end
 
     def find_by_id_or_key(id_or_key)
-      Portal::Learner.where('secure_key = ? OR id = ?', id_or_key, id_or_key).first!
+      if /\A\d+\z/.match(id_or_key)
+        # if the key is just digits then it could be either a id or secure_key
+        Portal::Learner.where('secure_key = ? OR id = ?', id_or_key, id_or_key).first!
+      else
+        # If the key has non numbers, then it has to be a secure_key.
+        # This check is necessary because SQL will convert a string like 68abcd to 68 when
+        # comparing with an integer. Therefore, if the query above is always used then
+        # 68abcd will match a secure_key of 68abcd but it will also match the id 68
+        Portal::Learner.where('secure_key = ?', id_or_key).first!
+      end
     end
 
   end
