@@ -79,7 +79,7 @@ en:
   "Runs in browser": Runs in browser
   "StudentProgress":
     "GenerateReport":
-      "NotDone": Generate a report to see which items are not complete.
+      "NotDone": Generate a report of your work.
       "Done": Generate a report of your work.
   "StudentReport":
     "Waiting": Please wait. Your report will display soon.
