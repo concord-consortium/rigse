@@ -84,7 +84,8 @@ Then /^I should not see the run link for "([^"]*)"$/ do | runnable_name |
 end
 
 Then /^I should see a link to generate a report of my work$/ do
-  page.should have_selector("div.run_graph", text: /generate a report of my work/i, visible: true)
+  text = I18n.t("StudentProgress.GenerateReport.NotDone")
+  page.should have_selector("div.run_graph", text: /#{text}/i, visible: true)
 end
 
 Then /^I should not see a link to generate a report of my work$/ do
