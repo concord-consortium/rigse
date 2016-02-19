@@ -1,0 +1,136 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}/
+    %title Log In to the Concord Consortium
+    %link{:href => "http://fonts.googleapis.com/css?family=Lato:400,700", :rel => "stylesheet", :type => "text/css"}/
+    :css
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed,
+      figure, figcaption, footer, header, hgroup,
+      menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      /* HTML5 display-role reset for older browsers */
+      article, aside, details, figcaption, figure,
+      footer, header, hgroup, menu, nav, section {
+        display: block;
+      }
+      a:link, a:visited {
+        color: #0093b0;
+        text-decoration: none;
+      }
+      a:active, a:hover {
+        color: #e86e2f;
+      }
+      body {
+        line-height: 1;
+        background: #fee9aa;
+        color: #3f3f3f;
+        font: 100% lato, verdana, arial, helvetica, sans-serif;
+      }
+      #page-wrap {
+        margin: 2em auto;
+        width: 22em;
+      }
+      #login-form {
+        background: #fff;
+        border-radius: .75em;
+        margin-bottom: 1em;
+        padding: 1.25em 1.5em 2em;
+        position: relative;
+        box-shadow: 0 2px 2px rgba(51, 51, 51, .3);
+      }
+      img {
+        display: block;
+        height: auto;
+        margin: 0 auto .75em;
+        width: 180px;
+      }
+      input[type=email], input[type=password], input[type=text] {
+        border: solid 1px #bbb;
+        border-radius: .25em;
+        font-size: 1em;
+        height: 2em;
+        padding: .25em .5em;
+        width: 17.85em;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      .with-errors input {
+        border: solid 1px #860024;
+      }
+      input#submit {
+        background: #eb8723;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        display: block;
+        font-family: lato, arial, helvetica, sans-serif;
+        font-size: 1em;
+        margin: 0;
+        padding: .5em .625em;
+        text-align: center;
+        text-decoration: none;
+        width: 9em;
+        -moz-border-radius: .1875em;
+        -webkit-border-radius: .1875em;
+        border-radius: .1875em;
+        box-shadow: 0 3px 0 #e16a3e;
+        background: -moz-linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
+        background: -ms-linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
+        background: -o-linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
+        background: -webkit-linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
+        background: linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
+      }
+      p { font-size: 1em; margin-bottom: 1em; }
+      p#forgot-login {
+        bottom: 1.375em;
+        font-size: .8em;
+        line-height: 140%;
+        position: absolute;
+        right: 2em;
+        text-align: right;
+      }
+      .error-message {
+        color: #860024;
+      }
+    %body
+    #page-wrap
+      = form_tag session_path(:user), :id => "login-form", :class => @error.present? ? "with-errors" : "" do
+        = image_tag "cc-logo.png", :title => "The Concord Consortium", :alt => "The Concord Consortium"
+        %p
+          Log in with your Learn Portal account
+          = @app_name.present? ? " to access the #{@app_name}" : ""
+          %span>.
+        %p
+          %input#username{:name => "user[login]", :type => "text", :placeholder => "Enter your username."}/
+        %p
+          %input#password{:name => "user[password]", :type => "password", :placeholder => "Enter your password."}/
+        - if @error.present?
+          %p.error-message= @error
+        %input#submit{:name => "submit", :type => "submit", :value => "Log In"}/
+        %p#forgot-login
+          = link_to "Forgot your login?", forgot_password_path, :title => "Reset your password"
+          %br/
+          = link_to "Need to register?", search_path, :title => "Create a Concord Consortium Learn portal account"
+    %script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"}
+    = javascript_include_tag 'jquery.placeholder'
+    :javascript
+      $(document).ready(function() {
+        $('input[placeholder]').placeholder();
+      });
