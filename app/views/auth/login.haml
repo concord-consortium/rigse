@@ -115,7 +115,7 @@
       = form_tag session_path(:user), :id => "login-form", :class => @error.present? ? "with-errors" : "" do
         = image_tag "cc-logo.png", :title => "The Concord Consortium", :alt => "The Concord Consortium"
         %p
-          Log in with your Learn Portal account
+          Log in with your #{APP_CONFIG[:site_name]} account
           = @app_name.present? ? " to access the #{@app_name}" : ""
           %span>.
         %p
