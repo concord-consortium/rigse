@@ -33,6 +33,7 @@
       a:link, a:visited {
         color: #0093b0;
         text-decoration: none;
+        display: block;
       }
       a:active, a:hover {
         color: #e86e2f;
@@ -126,8 +127,7 @@
         %input#submit{:name => "submit", :type => "submit", :value => "Log In"}/
         %p#forgot-login
           = link_to "Forgot your login?", forgot_password_path, :title => "Reset your password"
-          %br/
-          = link_to "Need to register?", search_path, :title => "Create a Concord Consortium Learn portal account"
+          = link_to "Need to register?", home_path, :title => "Create a Concord Consortium Learn portal account"
     %script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"}
     = javascript_include_tag 'jquery.placeholder'
     :javascript
