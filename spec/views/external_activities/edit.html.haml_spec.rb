@@ -20,5 +20,15 @@ describe "/external_activities/edit.html.haml" do
     assert_select "input[id=?]", 'external_activity_is_official', false
   end
 
+  it 'should not show the offical checkbox to project admins of the project material' do
+    common_projects = [mock_model(Admin::Project)]
+    auth_user = Factory.next(:author_user)
+    auth_user.stub!(admin_for_projects: common_projects)
+    ext_act.stub!(projects: common_projects)
+    view.stub!(:current_visitor).and_return(Factory.next(:author_user))
+    render
+    assert_select "input[id=?]", 'external_activity_is_official', false
+  end
+
   include_examples 'projects listing'
 end
