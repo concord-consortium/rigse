@@ -54,4 +54,8 @@
 
               %span.lightbox_report_link
                 - if student_status.display_report_link?
-                  =link_to "Generate a report of my work", student_report_portal_offering_url(offering)
+                  - if percentage > 99
+                    =link_to t("StudentProgress.GenerateReport.Done"), student_report_portal_offering_url(offering)
+                  - else
+                    =link_to t("StudentProgress.GenerateReport.NotDone"), student_report_portal_offering_url(offering)
+
