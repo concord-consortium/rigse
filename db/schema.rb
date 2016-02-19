@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160212173953) do
+ActiveRecord::Schema.define(:version => 20160218210759) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -994,6 +994,8 @@ ActiveRecord::Schema.define(:version => 20160212173953) do
     t.string   "url"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "lara_duration"
+    t.integer  "portal_duration"
   end
 
   add_index "learner_processing_events", ["learner_id"], :name => "index_learner_processing_events_on_learner_id"

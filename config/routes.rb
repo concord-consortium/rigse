@@ -708,6 +708,8 @@ RailsPortal::Application.routes.draw do
     match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
     match '/banner' => 'misc#banner', :as => :banner
     match '/time' => 'misc_metal#time', :as => :time
+    match '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
+    match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
     post  '/installer_report' => 'misc#installer_report', :as => :installer_report
     match 'authoring' => 'home#authoring', :as => :authoring
     match '/:controller(/:action(/:id))'

@@ -15,6 +15,7 @@ class LearnerProcessingEvent < ActiveRecord::Base
     }.compact.reverse.join(' ')
   end
 
+
   def self.build_proccesing_event(learner, lara_start, lara_end, portal_start)
     record = self.new()
     record.learner         = learner
@@ -24,12 +25,32 @@ class LearnerProcessingEvent < ActiveRecord::Base
     record.lara_end        = lara_end     || record.portal_start
     record.lara_start      = lara_start   || record.lara_end
 
+    record.lara_duration   = record.lara_end   - record.lara_start
+    record.portal_duration = record.portal_end - record.portal_start
     record.elapsed_seconds = record.portal_end - record.lara_start
+
     record.duration        = humanize(record.elapsed_seconds)
     record.login           = (record.learner.student.user.login           rescue 'unknown login').to_s
     record.teacher         = (record.learner.offering.clazz.teacher.name  rescue 'unknown teacher').to_s
     record.url             = (record.learner.offering.runnable.url        rescue 'unknown runnable url').to_s
     return record
+  end
+
+  def self.fake
+    now = (rand * 24).hours.ago
+    portal_start = now - (rand * 10).seconds
+    lara_end = portal_start - (rand * 10).seconds
+    lara_start = lara_end - (rand * 10).seconds
+    learner = Portal::Learner.last()
+    record = self.build_proccesing_event(learner, lara_start, lara_end, portal_start)
+    record.updated_at = now
+    record.created_at = now
+    record.portal_end = now
+    record.lara_duration   = record.lara_end   - record.lara_start
+    record.portal_duration = record.portal_end - record.portal_start
+    record.elapsed_seconds = record.portal_end - record.lara_start
+    record.duration        = humanize(record.elapsed_seconds)
+    record.save
   end
 
   def self.avg_delay(hours=2)
@@ -40,10 +61,23 @@ class LearnerProcessingEvent < ActiveRecord::Base
     self.where("updated_at > ?", hours.hours.ago).maximum(:elapsed_seconds)
   end
 
-  def self.human_max
-    humanize(max_delay)
+  def self.histogram(hours=12)
+    hours.times.to_a.reverse.map do |h|
+      start_time = (h+1).hours.ago
+      end_time   = h.hours.ago
+      range = self.where("updated_at  > ? and updated_at < ?", start_time, end_time)
+      {
+        total: range.average(:elapsed_seconds).to_i,
+        lara: range.average(:lara_duration).to_i,
+        portal: range.average(:portal_duration).to_i
+      }
+    end
   end
-  def self.human_avg
-    humanize(avg_delay)
+
+  def self.human_max(houts)
+    humanize(max_delay(hours))
+  end
+  def self.human_avg(hours)
+    humanize(avg_delay(hours))
   end
 end
