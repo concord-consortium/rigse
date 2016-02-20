@@ -50,11 +50,9 @@
       .config
         = f.check_box :append_survey_monkey_uid
         Append a unique Survey Monkey user id to the url (e.g. http://www.surveymonkey.com/s/H2Y9H27?c=00001)
-      - project_admin = (current_visitor.admin_for_projects & @external_activity.projects).length > 0
-      -if project_admin or current_visitor.has_role? 'admin'
-        .config
-          = f.check_box :is_official
-          Designate this as an "official" Concord activity in lists
+      .config
+        = f.check_box :is_official
+        Designate this as an "official" Concord activity in lists
       .config
         = f.check_box :logging
         Enable logging on this activity (for activities that support it)
