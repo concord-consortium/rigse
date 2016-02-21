@@ -299,6 +299,11 @@ namespace :deploy do
     # sudo "chmod -R g+rw #{shared_path}/system/attachments"
   end
 
+  desc "save a version.yml file on the server based on deployed branch"
+  task :put_version do
+    run "echo 'version: #{fetch(:branch)}' > #{release_path}/config/version.yml"
+  end
+
   # asset compilation included in Capfile load 'deploy/assets'
   # desc "Create asset packages for production"
   # task :create_asset_packages, :roles => :app do
@@ -658,6 +663,8 @@ end
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
+after 'deploy:update_code', 'deploy:put_version'
+
 # see load 'deploy/assets' in Capfile
 # after 'deploy:create_symlink', 'deploy:create_asset_packages'
 after 'deploy:shared_symlinks', 'deploy:cleanup'

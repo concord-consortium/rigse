@@ -13,6 +13,8 @@
       Questions/Feedback:
       = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "#{APP_CONFIG[:theme].upcase} question", :encode => "javascript")
       %br
+      Version:
+      = ENV['CC_PORTAL_VERSION']
       - if current_visitor.has_role?('admin')
         %span#under_footer
           = display_system_info.html_safe
