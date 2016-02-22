@@ -7,7 +7,8 @@ trim = (string) ->
 
 class Anonymizer
 
-  constructor: ->
+  constructor: (offeringUrl, anonymizeOnInit) ->
+    @offeringUrl = offeringUrl
     @selector      = ".learner_response_name"
     @alt_selector  = "div.user"
     @feedback_selector = "div.feedback_link"
@@ -28,7 +29,11 @@ class Anonymizer
         @real_to_fake_map[real_name] = fake
         @fake_to_real_map[fake] = real_name
 
-  publicize: ->
+    if anonymizeOnInit
+      $(@button_select).textContent = "Show names"
+      @anonymize()
+
+  publicize: () ->
     @anonymous = false
     $$(@selector).each (item) =>
       item.textContent = @fake_to_real_map[trim(item.textContent)]
@@ -55,6 +60,12 @@ class Anonymizer
     else
       @anonymize()
       "Show names"
+    @saveSetting()
 
-document.observe "dom:loaded", ->
-  a = new Anonymizer
+  saveSetting: ->
+    jQuery.ajax
+      url: @offeringUrl
+      type: 'PUT'
+      data: 'offering[anonymous_report]': @anonymous
+
+window.Anonymizer = Anonymizer

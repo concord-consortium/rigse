@@ -156,9 +156,13 @@ class Portal::OfferingsController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE (found instance)
     # authorize @offering
-
+    update_successful = @offering.update_attributes(params[:offering])
+    if request.xhr?
+      render :nothing => true, :status => update_successful ? 200 : 500
+      return
+    end
     respond_to do |format|
-      if @offering.update_attributes(params[:offering])
+      if update_successful
         flash[:notice] = 'Portal::Offering was successfully updated.'
         format.html { redirect_to(@offering) }
         format.xml  { head :ok }
