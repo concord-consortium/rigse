@@ -36,22 +36,6 @@ class LearnerProcessingEvent < ActiveRecord::Base
     return record
   end
 
-  def self.fake
-    now = (rand * 24).hours.ago
-    portal_start = now - (rand * 10).seconds
-    lara_end = portal_start - (rand * 10).seconds
-    lara_start = lara_end - (rand * 10).seconds
-    learner = Portal::Learner.last()
-    record = self.build_proccesing_event(learner, lara_start, lara_end, portal_start)
-    record.updated_at = now
-    record.created_at = now
-    record.portal_end = now
-    record.lara_duration   = record.lara_end   - record.lara_start
-    record.portal_duration = record.portal_end - record.portal_start
-    record.elapsed_seconds = record.portal_end - record.lara_start
-    record.duration        = humanize(record.elapsed_seconds)
-    record.save
-  end
 
   def self.avg_delay(hours=2)
     self.where("updated_at > ?", hours.hours.ago).average(:elapsed_seconds)

@@ -1,6 +1,8 @@
 class Dataservice::ProcessExternalActivityDataJob
   attr_accessor :learner_id
   attr_accessor :content
+  attr_accessor :learner
+  attr_accessor :answers
 
   include SaveableExtraction
 
@@ -10,21 +12,14 @@ class Dataservice::ProcessExternalActivityDataJob
   def initialize(_learner_id, _content)
     self.learner_id = _learner_id
     self.content = _content
-  end
-
-  def answers
-    JSON.parse(content) rescue {}
-  end
-
-  def learner
-    Portal::Learner.find(learner_id)
+    self.answers = JSON.parse(_content) rescue {}
+    self.learner = Portal::Learner.find(learner_id)
   end
 
   def perform
     offering = learner.offering
     template = offering.runnable.template
-
-    # setup for SaveableExtraction
+    # setup for SaveableExtractionlearn
     @learner_id = learner_id
     @offering_id = offering.id
 

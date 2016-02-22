@@ -84,7 +84,7 @@
 
 :javascript
   (function() {
-    var callback, draw;
+    var draw;
 
     draw = function(data) {
       var height, lara_area, portal_area, svg, total_area, width, x_scale, yAxis, y_scale;
@@ -121,9 +121,6 @@
       return svg.append('path').datum(data).attr('class', 'portal').attr('d', portal_area);
     };
 
-    callback = function(data) {
-      return alert("yes");
-    };
 
     $(document).ready(function() {
       return $.ajax({

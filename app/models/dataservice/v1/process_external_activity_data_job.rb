@@ -5,10 +5,7 @@ class Dataservice::V1::ProcessExternalActivityDataJob < Dataservice::ProcessExte
   def initialize(_learner, _content, _portal_start)
     super(_learner, _content)
     self.portal_start = _portal_start
-  end
-
-  def answers
-    JSON.parse(content)['answers'] rescue []
+    self.answers =  JSON.parse(content)['answers'] rescue []
   end
 
   def lara_start
