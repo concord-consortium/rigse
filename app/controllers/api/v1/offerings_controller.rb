@@ -14,7 +14,7 @@ class API::V1::OfferingsController < API::APIController
         learners: {student: :user},
         clazz: {students: :user}
     })
-    authorize @offering
+    authorize @offering, :api_show?
     @offering_api = API::V1::Offering.new(@offering, request.protocol, request.host_with_port)
     render :json => @offering_api.to_json, :callback => params[:callback]
   end

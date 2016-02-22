@@ -1,4 +1,13 @@
 class Portal::OfferingPolicy < ApplicationPolicy
+  # Used by API::V1::OfferingsController:
+  def api_show?
+    class_teacher_or_admin?
+  end
+
+  # Used by Portal::OfferingsController:
+  def show?
+    class_teacher_or_admin? || class_student?
+  end
 
   def destroy?
     class_teacher_or_admin?
@@ -14,10 +23,6 @@ class Portal::OfferingPolicy < ApplicationPolicy
 
   def update?
     class_teacher_or_admin?
-  end
-
-  def show?
-    class_teacher_or_admin? || class_student?
   end
 
   def answers?
