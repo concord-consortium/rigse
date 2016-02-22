@@ -76,6 +76,10 @@ class Search
     User.find(self.user_id)
   end
 
+  def show_user_all_materials?
+    user.has_role? ['admin']
+  end
+
   def cohort_ids
     return nil unless self.user
     return nil unless self.user.portal_teacher
@@ -202,9 +206,12 @@ class Search
         s.with(:is_template, false) unless self.include_templates
 
         if (!self.private && self.user_id)
-          s.any_of do |c|
-            c.with(:cohort_ids, self.cohort_ids)
-            c.with(:cohort_ids, nil)
+          unless show_user_all_materials?
+            s.any_of do |c|
+              c.with(:cohort_ids, self.cohort_ids)
+              c.with(:user_id, self.user_id)
+              c.with(:cohort_ids, nil)
+            end
           end
         end
 
