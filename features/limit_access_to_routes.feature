@@ -67,7 +67,6 @@ In NO case should the system allow:
       | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |
-      | /portal/offerings             |
       | /portal/teachers              |
 
   Scenario Outline: Admin user can accesss portal listing routes
@@ -95,7 +94,6 @@ In NO case should the system allow:
       | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |
-      | /portal/offerings             |
 
   Scenario Outline: Anonymous user can't access user listing routes:
     Given I am not logged in
