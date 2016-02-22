@@ -99,7 +99,6 @@ set :user, "deploy"
 #############################################################
 
 set :scm, :git
-set :branch, "production"
 set :git_enable_submodules, 1
 # wondering if we can do something special for this? create
 # a special deploy user on github?
@@ -200,6 +199,15 @@ namespace :deploy do
   # By default deploy:cleanup uses sudo(!)
   # We don't want this when using a deploy user
   set :use_sudo, false
+
+  task :require_branch do
+    if fetch(:branch, nil).nil?
+      abort "==============================================================================\n" +
+            "   \e[31mFAILED: a branch is required\e[0m\n" + # control codes make the text red
+            "     set a branch with `-S branch=[something]` (it could be a tag)\n" +
+            "=============================================================================="
+    end
+  end
 
   #############################################################
   #  Passenger
@@ -656,6 +664,7 @@ namespace :solr do
 end
 
 before 'deploy:restart', 'deploy:set_permissions'
+before 'deploy:update_code', 'deploy:require_branch'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
 # see load 'deploy/assets' in Capfile
