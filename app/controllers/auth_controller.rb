@@ -1,5 +1,5 @@
 class AuthController < ApplicationController
-  before_filter :verify_logged_in, :except => [:access_token]
+  before_filter :verify_logged_in, :except => [:access_token, :login]
   skip_before_filter :authenticate_user!, :only => [:authorize]  # this is handled by verify_logged_in
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
@@ -7,12 +7,15 @@ class AuthController < ApplicationController
     if current_user.nil?
       session[:sso_callback_params] = params
       session[:sso_application] = application
-      redirect_to root_path
+      redirect_to auth_login_path
     end
   end
 
-  def welcome
-    render :text => "Hiya! #{current_user.first_name} #{current_user.last_name}"
+  def login
+    # Renders a nice login form (views/auth/login.haml).
+    @app_name = session[:sso_application] ? session[:sso_application].name : nil
+    @error = flash[:alert]
+    render :layout => false
   end
 
   def oauth_authorize

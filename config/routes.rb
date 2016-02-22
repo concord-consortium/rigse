@@ -10,6 +10,7 @@ RailsPortal::Application.routes.draw do
   match '/auth/concord_id/authorize' => 'auth#oauth_authorize'
   match '/auth/concord_id/access_token' => 'auth#access_token'
   match '/auth/concord_id/user' => 'auth#user'
+  match '/auth/login' => 'auth#login', :as => :auth_login
   match '/oauth/token' => 'auth#access_token'
 
   root :to => "home#index"
