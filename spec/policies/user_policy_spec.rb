@@ -15,8 +15,9 @@ describe UserPolicy do
     it { should_not permit(:switch)                 }
     it { should_not permit(:confirm)                }
     it { should_not permit(:reset_password)         }
-    it { should permit(:create)                     }
-    it { should permit(:new)                        }
+    # Documenting current behavior:
+    it { should_not permit(:create)                 }
+    it { should_not permit(:new)                    }
   end
 
   context "for a normal user" do
@@ -46,6 +47,20 @@ describe UserPolicy do
     it { should permit(:switch)                     }
     it { should permit(:confirm)                    }
     it { should permit(:reset_password)             }
+  end
+
+  context "for a teacher" do
+    let(:clazz)       { FactoryGirl.create(:portal_clazz)   }
+    let(:active_user) { FactoryGirl.create(:portal_teacher, clazzes: [clazz]).user }
+
+    context "working with their own student" do
+      let(:user)     { FactoryGirl.create(:full_portal_student, clazzes: [clazz]).user}
+      it { should permit(:reset_password)             }
+    end
+    context "working with some other student" do
+      let(:user)     { FactoryGirl.create(:full_portal_student).user}
+      it { should_not permit(:reset_password)         }
+    end
   end
 
   context "for a project admin" do
@@ -81,9 +96,9 @@ describe UserPolicy do
       it { should permit(:show)                       }
       it { should permit(:confirm)                    }
       it { should permit(:reset_password)             }
-      it { should permit(:switch)                     }
       it { should permit(:update)                     }
       it { should permit(:edit)                       }
+      it { should_not permit(:switch)                 }
       # Documenting current behavior:
       it { should permit(:create)                     }
       it { should permit(:new)                        }

@@ -28,6 +28,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def project_admin_for_user?
+    return false unless record.respond_to? :cohorts
     (user.admin_for_project_cohorts & record.cohorts).length > 0
   end
 
@@ -48,7 +49,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def switch?
-    (project_admin_for_user? || admin_or_manager?) && record_not_admin?
+    admin_or_manager? || switching_back?
   end
 
   def confirm?
@@ -56,7 +57,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def reset_password?
-    (project_admin_for_user? || admin_or_manager?) && record_not_admin?
+    (project_admin_for_user? && record_not_admin?) || admin_or_manager? || am_teacher? || its_me?
   end
 
   def preferences?
@@ -66,5 +67,20 @@ class UserPolicy < ApplicationPolicy
   private
   def record_not_admin?
     !record.has_role?("admin")
+  end
+
+  def its_me?
+    record == user
+  end
+
+  def switching_back?
+    record == original_user
+  end
+
+  def am_teacher?
+    if record.portal_student && user.portal_teacher
+      return user.portal_teacher.students.include? record.portal_student
+    end
+    return false
   end
 end

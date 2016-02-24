@@ -60,9 +60,9 @@ class UsersController < ApplicationController
 
    # /users/1/switch
   def switch
-    authorize User
+    @user = User.find(params[:id])
+    authorize @user
     if request.get?
-      @user = User.find(params[:id])
       all_users = User.active.all
       all_users.delete(current_visitor)
       all_users.delete(User.anonymous)
