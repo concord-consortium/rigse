@@ -89,6 +89,23 @@ describe UserPolicy do
       it { should permit(:new)                        }
     end
 
+    context "for a portal administrator" do
+      before(:all) do
+        user.add_role("admin")
+      end
+      let(:user) { a_teacher.user }
+      it { should permit(:index)                      }
+      it { should_not permit(:show)                   }
+      it { should_not permit(:confirm)                }
+      it { should_not permit(:reset_password)         }
+      it { should_not permit(:switch)                 }
+      it { should_not permit(:update)                 }
+      it { should_not permit(:edit)                   }
+      # Documenting current behavior:
+      it { should permit(:create)                     }
+      it { should permit(:new)                        }
+    end
+
   end
 
 end

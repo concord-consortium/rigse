@@ -35,8 +35,20 @@ class UserPolicy < ApplicationPolicy
     changeable?
   end
 
-  def switch?
+  def edit_by_admin?
+    admin_or_manager?
+  end
+
+  def teacher_page?
     project_admin_for_user? || admin_or_manager?
+  end
+
+  def student_page?
+    project_admin_for_user? || admin_or_manager?
+  end
+
+  def switch?
+    (project_admin_for_user? || admin_or_manager?) && record_not_admin?
   end
 
   def confirm?
@@ -44,10 +56,15 @@ class UserPolicy < ApplicationPolicy
   end
 
   def reset_password?
-    project_admin_for_user? || admin_or_manager?
+    (project_admin_for_user? || admin_or_manager?) && record_not_admin?
   end
 
   def preferences?
     changeable?
+  end
+
+  private
+  def record_not_admin?
+    !record.has_role?("admin")
   end
 end
