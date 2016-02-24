@@ -22,8 +22,13 @@ class UserPolicy < ApplicationPolicy
   def edit_by_project_admin?
     project_admin? && record.portal_teacher
   end
+
   def update_by_project_admin?
     project_admin? && record.portal_teacher
+  end
+
+  def project_admin_for_user?
+    (user.admin_for_project_cohorts & record.cohorts).length > 0
   end
 
   def show?
@@ -31,15 +36,15 @@ class UserPolicy < ApplicationPolicy
   end
 
   def switch?
-    changeable?
+    project_admin_for_user? || admin_or_manager?
   end
 
   def confirm?
-    admin_or_manager?
+    project_admin_for_user? || admin_or_manager?
   end
 
   def reset_password?
-    changeable?
+    project_admin_for_user? || admin_or_manager?
   end
 
   def preferences?

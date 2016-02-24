@@ -333,6 +333,77 @@ describe User do
     end
   end
 
+  describe "add_role_for_project" do
+    let(:project)     { FactoryGirl.create(:project) }
+    let(:user)        { FactoryGirl.create(:user)    }
+
+    before(:each) do
+      user.add_role_for_project('admin', project)
+    end
+
+    it "should be a project admin for the project now " do
+      user.is_project_admin?(project).should eq true
+    end
+
+    describe "when a user was previously an admin for the project" do
+      before(:each) do
+        user.add_role_for_project('admin', project)
+      end
+      it "should still be an admin of the project " do
+        user.is_project_admin?(project).should eq true
+      end
+      it "should only be admin for one project" do
+        user.admin_for_projects.should have(1).item
+      end
+    end
+  end
+
+  describe "remove_role_for_project" do
+    let(:project)     { FactoryGirl.create(:project) }
+    let(:user)        { FactoryGirl.create(:user)    }
+
+    describe "when a user was previously an admin for the project" do
+      before(:each) do
+        user.add_role_for_project('admin', project)
+      end
+      it "the user is no longer an admin for the project" do
+        user.remove_role_for_project("admin",project)
+        user.is_project_admin?(project).should eq false
+      end
+    end
+
+    describe "when a user wasnt previously an admin for the project" do
+      it "the user is still not an admin for the project" do
+        user.remove_role_for_project("admin",project)
+        user.is_project_admin?(project).should eq false
+      end
+      it "should only be admin for no projects" do
+        user.admin_for_projects.should have(0).item
+      end
+    end
+  end
+
+  describe "set_role_for_projects" do
+    let(:projects)         { 5.times.map { |i|  FactoryGirl.create(:project, name: "project_#{i}")}  }
+    let(:user)             { FactoryGirl.create(:user)    }
+    let(:selected_projects){ [ projects.first] }
+
+    before(:each) do
+      user.set_role_for_projects('admin', projects, selected_projects.map(&:id) )
+    end
+
+    it "should be a project admin for the first project now " do
+      user.is_project_admin?(projects.first).should eq true
+    end
+
+    it "should list one admin_project" do
+      user.admin_for_projects.should have(1).item
+      user.admin_for_projects.should include(projects.first)
+    end
+
+  end
+
+
 protected
   def create_user(options = {})
     record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))

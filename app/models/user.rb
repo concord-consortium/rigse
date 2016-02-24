@@ -398,19 +398,29 @@ class User < ActiveRecord::Base
     is_project_admin?(project) || is_project_researcher?(project) || is_project_cohort_member?(project)
   end
 
-  def set_role_for_projects(role, selected_projects, project_ids)
-    role_attribute = 'is_' + role
-    selected_projects.each do |project|
-      project_user = project_users.find_by_project_id project.id
-      if project_ids.find { |id| id.to_i == project.id }
-        if !project_user
-          project_user = Admin::ProjectUser.create!(project_id: project.id, user_id: user.id)
-        end
-        project_user[role_attribute] = true
-      elsif project_user
-        project_user[role_attribute] = false
+  def add_role_for_project(role, project)
+    role_attribute = "is_#{role}"
+    project_user = project_users.find_by_project_id project.id
+    project_user ||= Admin::ProjectUser.create!(project_id: project.id, user_id: self.id)
+    project_user[role_attribute] = true
+    project_user.save
+  end
+
+  def remove_role_for_project(role, project)
+    if project_user = project_users.find_by_project_id(project.id)
+      role_attribute = "is_#{role}"
+      project_user[role_attribute] = false
+      project_user.save
+    end
+  end
+
+  def set_role_for_projects(role, possible_projects, selected_project_ids)
+    possible_projects.each do |project|
+      if selected_project_ids.find { |id| id.to_i == project.id }
+        add_role_for_project(role,project)
+      else
+        remove_role_for_project(role,project)
       end
-      project_user.save if project_user
     end
   end
 
