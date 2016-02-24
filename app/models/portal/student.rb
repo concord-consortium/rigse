@@ -65,11 +65,18 @@ class Portal::Student < ActiveRecord::Base
   end
 
   def status
-    report_learners = Report::Learner.where(:student_id => self.id).map do |learner|
+    report_learners = Portal::Learner.where(:student_id => self.id).map do |learner|
+      student_status = Report::OfferingStudentStatus.new
+      student_status.student = self
+      student_status.learner = learner
+      student_status.offering = learner.offering
       {
-        :offering_id => learner.offering_id,
-        :complete_percent => learner.complete_percent,
-        :last_run => learner.last_run_string
+        :offering_id => student_status.offering.id,
+        :last_run => student_status.last_run_string,
+        :complete_percent => student_status.complete_percent,
+        :subsection_complete_percent => student_status.sub_sections.map do |activity|
+          student_status.activity_complete_percent(activity)
+        end
       }
     end
     {

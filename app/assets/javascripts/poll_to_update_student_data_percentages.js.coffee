@@ -18,7 +18,10 @@ window.poll_to_update_student_data_percentages = (options) ->
       if $offering and report_learner.last_run
         $offering.find('.last_run').html(report_learner.last_run)
         $offering.find('.status_graphs .not_run').hide()
-        $offering.find('.status_graphs .progress').css({width: "#{report_learner.percentage}%"})
+        $offering.find('.status_graphs .summary .progress').css({width: "#{report_learner.complete_percent}%"})
+        $offering.find('.status_graphs .details .progress').each((idx) ->
+          jQuery(this).css({width: "#{report_learner.subsection_complete_percent[idx]}%"})
+        )
         $offering.find('.status_graphs .run_graph').show()
 
   # poll for percentage updates
