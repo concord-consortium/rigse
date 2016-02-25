@@ -20,16 +20,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def edit_by_project_admin?
-    project_admin? && record.portal_teacher
+   (project_admin? && record.portal_teacher) || project_admin_for_user?
   end
 
   def update_by_project_admin?
     project_admin? && record.portal_teacher
-  end
-
-  def project_admin_for_user?
-    return false unless record.respond_to? :cohorts
-    (user.admin_for_project_cohorts & record.cohorts).length > 0
   end
 
   def show?
@@ -41,15 +36,17 @@ class UserPolicy < ApplicationPolicy
   end
 
   def teacher_page?
-    project_admin_for_user? || admin_or_manager?
+    # TODO: Fix teacher_controller.rb to use policy using project_admin_for_user?
+    admin_or_manager?
   end
 
   def student_page?
-    project_admin_for_user? || admin_or_manager?
+    # TODO: Fix student_controller.rb to use policy using project_admin_for_user?
+    admin_or_manager?
   end
 
   def switch?
-    admin_or_manager? || switching_back?
+    (project_admin_for_user? && record_not_admin?) ||  admin_or_manager? || switching_back?
   end
 
   def confirm?

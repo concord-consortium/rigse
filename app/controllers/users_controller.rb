@@ -62,67 +62,24 @@ class UsersController < ApplicationController
   def switch
     @user = User.find(params[:id])
     authorize @user
-    if request.get?
-      all_users = User.active.all
-      all_users.delete(current_visitor)
-      all_users.delete(User.anonymous)
-      all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
+    if params[:commit] == "Switch"
+      if switch_to_user = User.find(params[:user][:id])
+        switch_from_user = current_visitor
+        original_user_from_session = session[:original_user_id]
+        recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
+        sign_out self.current_visitor
+        sign_in switch_to_user
 
-      recent_users = []
-      (session[:recently_switched_from_users]  || []).each do |user_id|
-        recent_user = all_users.find { |u| u.id == user_id }
-        recent_users << all_users.delete(recent_user) if recent_user
-      end
-
-      users = all_users.group_by do |u|
-        case
-        when u.default_user   then :default_users
-        when u.portal_student then :student
-        when u.portal_teacher then :teacher
-        else :regular
+        # the original user is only set on the session once:
+        # the first time an admin switches to another user
+        unless original_user_from_session
+          session[:original_user_id] = switch_from_user.id
         end
+        recently_switched_from_users.insert(0, switch_from_user.id)
+        session[:recently_switched_from_users] = recently_switched_from_users.uniq
       end
-
-      # to avoid nil values, initialize everything to an empty array if it's non-existent
-      # users[:student] ||= []
-      # users[:regular] ||= []
-      # users[:default_users] ||= []
-      # users[:student].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
-      # users[:regular].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
-      [:student, :regular, :default_users, :student, :teacher].each do |ar|
-        users[ar] ||= []
-        users[ar].sort! { |a, b| a.last_name.downcase <=> b.last_name.downcase }
-      end
-      @user_list = [
-        { :name => 'recent' ,   :users => recent_users     } ,
-        { :name => 'guest',     :users => [User.anonymous] } ,
-        { :name => 'regular',   :users => users[:regular]  } ,
-        { :name => 'students',  :users => users[:student]  } ,
-        { :name => 'teachers',  :users => users[:teacher]  }
-      ]
-      if users[:default_users] && users[:default_users].size > 0
-        @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
-      end
-    elsif request.put?
-      if params[:commit] == "Switch"
-        if switch_to_user = User.find(params[:user][:id])
-          switch_from_user = current_visitor
-          original_user_from_session = session[:original_user_id]
-          recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
-          sign_out self.current_visitor
-          sign_in switch_to_user
-
-          # the original user is only set on the session once:
-          # the first time an admin switches to another user
-          unless original_user_from_session
-            session[:original_user_id] = switch_from_user.id
-          end
-          recently_switched_from_users.insert(0, switch_from_user.id)
-          session[:recently_switched_from_users] = recently_switched_from_users.uniq
-        end
-      end
-      redirect_to home_path
     end
+    redirect_to home_path
   end
 
   def update

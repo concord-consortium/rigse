@@ -154,6 +154,11 @@ class ApplicationPolicy
     peer_tokens.include?(auth_token)
   end
 
+  def project_admin_for_user?
+    return false unless record.respond_to? :cohorts
+    return false unless user
+    (user.admin_for_project_cohorts & record.cohorts).length > 0
+  end
 
 
 end

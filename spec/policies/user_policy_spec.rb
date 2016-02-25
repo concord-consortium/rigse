@@ -47,6 +47,8 @@ describe UserPolicy do
     it { should permit(:switch)                     }
     it { should permit(:confirm)                    }
     it { should permit(:reset_password)             }
+    it { should permit(:student_page)               }
+    it { should permit(:teacher_page)               }
   end
 
   context "for a teacher" do
@@ -85,6 +87,8 @@ describe UserPolicy do
       it { should_not permit(:edit)                   }
       it { should_not permit(:confirm)                }
       it { should_not permit(:reset_password)         }
+      it { should_not permit(:student_page)           }
+      it { should_not permit(:teacher_page)           }
       # Documenting current behavior:
       it { should permit(:create)                     }
       it { should permit(:new)                        }
@@ -98,7 +102,7 @@ describe UserPolicy do
       it { should permit(:reset_password)             }
       it { should permit(:update)                     }
       it { should permit(:edit)                       }
-      it { should_not permit(:switch)                 }
+      it { should permit(:switch)                 }
       # Documenting current behavior:
       it { should permit(:create)                     }
       it { should permit(:new)                        }
