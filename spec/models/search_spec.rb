@@ -91,7 +91,7 @@ describe Search do
   end
 
   describe "searching" do
-    let(:user_stubs) {{ portal_teacher: nil, anonymous?: false, only_a_student?: false }}
+    let(:user_stubs) {{ portal_teacher: nil, anonymous?: false, only_a_student?: false , has_role?: false}}
     let(:mock_user)  { mock_model(User, user_stubs) }
     let(:materials)  { [] }
     before(:all) do
@@ -199,7 +199,8 @@ describe Search do
           let(:user_stubs) {{
             anonymous?: false,
             portal_teacher: mock_model(Portal::Teacher, {cohorts: []}),
-            only_a_student?: false
+            only_a_student?: false,
+            has_role?: false
           }}
 
           it "should see the assessment items" do
@@ -213,7 +214,8 @@ describe Search do
           let(:user_stubs) {{
             anonymous?: false,
             portal_teacher: nil,
-            only_a_student?: true
+            only_a_student?: true,
+            has_role?: false
           }}
           it "should not see the assessment items" do
             assessment_activities.each do |act|
@@ -225,7 +227,8 @@ describe Search do
         describe "an anonymous user" do
           let(:user_stubs) {{
             anonymous?: true,
-            portal_teacher: nil
+            portal_teacher: nil,
+            has_role?: false
           }}
           it "should not see the assment items" do
             assessment_activities.each do |act|
@@ -372,6 +375,7 @@ describe Search do
           portal_teacher: teacher,
           only_a_student?: false,
           anonymous?: false,
+          has_role?: false,
           id: 23
         }}
         let(:search_opts){{ :private => false, :user_id => mock_user.id }}
@@ -493,6 +497,43 @@ describe Search do
                 end
               end
             end
+
+            describe "The teacher is the author of cohort2 activities, but isnt in either cohort" do
+              let(:teacher_cohorts)    {[]}
+              let(:cohort2_opts) {{:publication_status=>'published', :cohorts => [cohort2], :user_id => mock_user.id} }
+
+              it "Includes sequences for cohort2(2), and unlabled(2)" do
+                subject.results[Search::InvestigationMaterial].should have(3).items
+              end
+              it "Includes activities for cohort2(4), and unlabled(2)" do
+                subject.results[Search::ActivityMaterial].should have(6).items
+              end
+              it "should be not cohort tagged, or include a cohort2 tag" do
+                subject.results[:all].each do |r|
+                  unless r.cohorts.empty?
+                    r.cohorts.should include(cohort2)
+                  end
+                end
+              end
+
+            end
+
+            describe "The current visitor is a site admin, not in either cohort" do
+              let(:user_stubs) {{
+                  portal_teacher: nil,
+                  anonymous?: false,
+                  only_a_student?: false,
+                  has_role?: true }}
+              describe "Searching all material types" do
+                it "Includes sequences for cohort1(2) cohort2(2), and unlabled(2)" do
+                  subject.results[Search::InvestigationMaterial].should have(6).items
+                end
+                it "Includes activities for cohort2(4), cohort1(4), and unlabled(2)" do
+                  subject.results[Search::ActivityMaterial].should have(10).items
+                end
+              end
+            end
+
           end
         end
       end
