@@ -198,6 +198,7 @@ module Materials
         if current_visitor.portal_teacher || current_visitor.has_role?('admin','manager')
           links[:teacher_guide] = {
             text: "Teacher Guide",
+            target: "_blank",
             url: material.teacher_guide_url
           }
         end

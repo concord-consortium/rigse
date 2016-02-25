@@ -31,6 +31,14 @@ class MiscController < ActionController::Base
     render :xml => "<created/>", :status => :created
   end
 
+  def learner_proc_stats
+    render json: LearnerProcessingEvent.histogram(12), :callback => params['callback']
+  end
+
+  def learner_proc
+    # will render misc/learner_proc.html.haml
+  end
+
   def stats
     stats = {}
     stats[:teachers] = Portal::Teacher.count

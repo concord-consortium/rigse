@@ -278,8 +278,11 @@ And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
   page.execute_script("
     var bSuccess = false;
 
-    var strDropdownId = '#{dropdown_id}_chzn';
-    var arrListItems =  Prototype.Selector.select('#'+ strDropdownId +'> div.chzn-drop > ul.chzn-results > li');
+    /* Open select first, as otherwise options are not generated. */
+    Prototype.Selector.select('##{dropdown_id}')[0].fire('chosen:open');
+
+    var strDropdownId = '#{dropdown_id}_chosen';
+    var arrListItems =  Prototype.Selector.select('#'+ strDropdownId +'> div.chosen-drop > ul.chosen-results > li');
 
     for (var i = 0; i < arrListItems.length; i++)
     {

@@ -67,6 +67,6 @@ end
 
 
 When /^(?:I )follow Add Another Teacher drop down$/ do
-  step_text = "follow xpath \"//div[@id='teacher_id_selector_chzn']/a\""
+  step_text = "follow xpath \"//div[@id='teacher_id_selector_chosen']/a\""
   step step_text
 end

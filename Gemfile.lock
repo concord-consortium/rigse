@@ -726,6 +726,3 @@ DEPENDENCIES
   wirble
   xray-rails
   yui-compressor
-
-BUNDLED WITH
-   1.11.0

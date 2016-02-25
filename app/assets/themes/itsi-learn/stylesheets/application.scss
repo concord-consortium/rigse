@@ -64,3 +64,8 @@
     }
   }
 }
+
+// ITSI wants to hide the student graphs until they are more reliable.
+.offering_for_student {
+  table.status_graphs {display: none;}
+}

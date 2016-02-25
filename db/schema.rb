@@ -981,6 +981,26 @@ ActiveRecord::Schema.define(:version => 20160222021449) do
   add_index "investigations", ["is_featured", "publication_status"], :name => "featured_public"
   add_index "investigations", ["publication_status"], :name => "pub_status"
 
+  create_table "learner_processing_events", :force => true do |t|
+    t.integer  "learner_id"
+    t.datetime "portal_end"
+    t.datetime "portal_start"
+    t.datetime "lara_end"
+    t.datetime "lara_start"
+    t.integer  "elapsed_seconds"
+    t.string   "duration"
+    t.string   "login"
+    t.string   "teacher"
+    t.string   "url"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "lara_duration"
+    t.integer  "portal_duration"
+  end
+
+  add_index "learner_processing_events", ["learner_id"], :name => "index_learner_processing_events_on_learner_id"
+  add_index "learner_processing_events", ["url"], :name => "index_learner_processing_events_on_url"
+
   create_table "legacy_collaborations", :force => true do |t|
     t.integer  "bundle_content_id"
     t.integer  "student_id"

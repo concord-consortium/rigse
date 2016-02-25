@@ -10,6 +10,7 @@ RailsPortal::Application.routes.draw do
   match '/auth/concord_id/authorize' => 'auth#oauth_authorize'
   match '/auth/concord_id/access_token' => 'auth#access_token'
   match '/auth/concord_id/user' => 'auth#user'
+  match '/auth/login' => 'auth#login', :as => :auth_login
   match '/oauth/token' => 'auth#access_token'
 
   root :to => "home#index"
@@ -346,7 +347,13 @@ RailsPortal::Application.routes.draw do
     # external activity return url (:id_or_key refers learner's ID or key)
     # - key is a random UUID string, so it's impossible to guess somebody's else endpoint (more secure)
     # - we still need to support basic ID, as LARA might store this form of URLs
-    post '/dataservice/external_activity_data/:id_or_key' => 'dataservice/external_activity_data#create', :as => 'external_activity_return'
+    post '/dataservice/external_activity_data/:id_or_key' => 'dataservice/external_activity_data#create',
+         :as => 'external_activity_return'
+
+    # Addhock protocol versioning. Sort of hacky
+    post '/dataservice/external_activity_data/:id_or_key/protocol_version/:version' => 'dataservice/external_activity_data#create_by_protocol_version',
+         :as => 'external_activity_versioned_return',
+         :constraints => {:version => /[0-9]+/}
 
     # A prettier version of the blob w/ token url
     match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
@@ -701,6 +708,8 @@ RailsPortal::Application.routes.draw do
     match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
     match '/banner' => 'misc#banner', :as => :banner
     match '/time' => 'misc_metal#time', :as => :time
+    match '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
+    match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
     post  '/installer_report' => 'misc#installer_report', :as => :installer_report
     match 'authoring' => 'home#authoring', :as => :authoring
     match '/:controller(/:action(/:id))'

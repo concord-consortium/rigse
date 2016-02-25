@@ -16,7 +16,6 @@ Feature: Teacher adds a new student
     When the student "student" belongs to class "Physics"
     When I login with username: teacher
     And I am on "Student Roster" page for "Mathematics"
-    And I follow "Search for registered student."
     And I should see "Robert, Alfred"
     And I select "Robert, Alfred ( student )" from the html dropdown "student_id_selector"
     And I should see "Robert, Alfred"

@@ -1,0 +1,136 @@
+!!! 5
+%head
+  %title student processing average times
+  %script{src:'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js'}
+  %script{src:'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js'}
+  :css
+    body {
+      font-family: Sans-Serif;
+      background-color: hsla(40,50%,100%, 1);
+    }
+
+    #container {
+      text-align: center;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    svg {
+      border: 2px solid hsla(60,70%,30%, 0.5);
+      padding: 1em;
+      margin: 1em;
+      background-color: hsla(40,50%,80%, 0.2);
+    }
+
+    path.lara {
+      fill: hsla(40,50%,20%, 0.7);
+      stroke: hsla(40,50%,60%, 0.8);
+    }
+    path.portal {
+      fill: hsla(40,50%,30%, 0.7);
+      stroke: hsla(40,50%,60%, 0.8);
+    }
+    path.total {
+      fill: hsla(60,50%,50%, 0.5);
+      stroke: hsla(60,50%,60%, 0.8);
+    }
+
+    .legend {
+      margin: 1em;
+      padding: 1em;
+      display: inline-block;
+      color: white;
+      font-weight: bold;
+    }
+
+    .portal {
+      background-color: hsla(40,50%,30%, 0.7);
+    }
+
+    .lara {
+      background-color: hsla(40,50%,20%, 0.7);
+    }
+
+    .total {
+      background-color: hsla(60,50%,50%, 0.5);
+    }
+    .details {
+      color: hsla(40,50%,30%, 0.7);
+      font-weight: bold;
+    }
+    g.yAxis .tick {
+      font-family: monospace;
+      font-size: 12pt;
+      fill: hsla(60,70%,30%, 1);
+    }
+
+    g.yAxis path.domain {
+      stroke-width: 2px;
+      stroke: hsla(60,70%,30%, 0.5);
+      fill: none;
+    }
+
+%body
+  #container
+    #chart
+    .details= "Average wait time: #{LearnerProcessingEvent.human_avg(12)}"
+    .legend.lara
+      lara
+    .legend.portal
+      portal
+    .legend.total
+      total
+
+:javascript
+  (function() {
+    var draw;
+
+    draw = function(data) {
+      var height, lara_area, portal_area, svg, total_area, width, x_scale, yAxis, y_scale;
+      width = 600;
+      height = 400;
+      x_scale = d3.scale.linear().domain([0, data.length - 1]).range([40, width]);
+      y_scale = d3.scale.linear().domain([
+        0, d3.max(data, function(d) {
+          return d.total;
+        })
+      ]).range([height, 0]);
+      svg = d3.select("#chart").append("svg:svg").attr("width", width).attr("height", height);
+      total_area = d3.svg.area().interpolate('linear').x(function(d, i) {
+        return x_scale(i);
+      }).y0(height).y1(function(d) {
+        return y_scale(d.total);
+      });
+      lara_area = d3.svg.area().interpolate('linear').x(function(d, i) {
+        return x_scale(i);
+      }).y0(height).y1(function(d) {
+        return y_scale(d.lara);
+      });
+      portal_area = d3.svg.area().interpolate('linear').x(function(d, i) {
+        return x_scale(i);
+      }).y0(function(d) {
+        return y_scale(d.lara);
+      }).y1(function(d) {
+        return y_scale(d.lara + d.portal);
+      });
+      yAxis = d3.svg.axis().scale(y_scale).tickFormat(d3.format(",02f")).orient("right");
+      svg.append('g').attr('class', 'yAxis').call(yAxis);
+      svg.append('path').datum(data).attr('class', 'total').attr('d', total_area);
+      svg.append('path').datum(data).attr('class', 'lara').attr('d', lara_area);
+      return svg.append('path').datum(data).attr('class', 'portal').attr('d', portal_area);
+    };
+
+
+    $(document).ready(function() {
+      return $.ajax({
+        url: "/learner_proc_stats",
+        dataType: "jsonp",
+        success: function(d) {
+          return draw(d);
+        }
+      });
+    });
+
+  }).call(this);
+

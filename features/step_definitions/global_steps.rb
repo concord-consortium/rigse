@@ -28,7 +28,13 @@ def login_with_ui_as(username, password)
   page.should have_content("Welcome")
   page.should have_content(user_first_name)
   page.should have_content(user_last_name)
-  
+end
+
+def login_with_auth_login_page_as(username, password)
+  visit "/auth/login"
+  fill_in("username", :with => username)
+  fill_in("password", :with => password)
+  click_button("Log In")
 end
 
 # scroll_into_view is a hack so an element is scrolled into view in selenium in IE
@@ -83,6 +89,11 @@ end
 Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
   step 'I log out'
   login_with_ui_as(username, password)
+end
+
+Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s* using auth\/login page$/ do |username,password|
+  step 'I log out'
+  login_with_auth_login_page_as(username, password)
 end
 
 When /^I log out$/ do
