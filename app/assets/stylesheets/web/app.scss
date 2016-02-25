@@ -1890,3 +1890,9 @@ span.badge {
   text-transform: lowercase;
   background-color: #479492;
 }
+
+.chosen-container {
+  // Chosen v0.9 plugin seemed to ensure that there is some basic
+  // margin under the select box. v1.5 doesn't seem to do it anymore.
+  margin-bottom: 5px;
+}
