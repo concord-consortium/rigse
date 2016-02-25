@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160218210759) do
+ActiveRecord::Schema.define(:version => 20160222021449) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1992,6 +1992,7 @@ ActiveRecord::Schema.define(:version => 20160218210759) do
     t.boolean  "active",                         :default => true
     t.boolean  "default_offering",               :default => false
     t.integer  "position",                       :default => 0
+    t.boolean  "anonymous_report",               :default => false
   end
 
   add_index "portal_offerings", ["clazz_id"], :name => "index_portal_offerings_on_clazz_id"

@@ -24,3 +24,11 @@
       %div{:style => 'font-weight: bold', :class => 'inline-block'}
         = report_summary
       = render :partial => '/portal/reports/container_heading', :locals => { :indent => 0, :map => page_elements, :show_selection_controls => show_selection_controls, :offering => offering, :learners => learners}
+
+:javascript
+  var offeringUrl = "#{portal_offering_path(offering)}";
+  var anonymizeOnInit = #{offering.anonymous_report};
+  document.observe("dom:loaded", function() {
+    // Defined in assets/javascripts/anonymizer.js.coffee
+    var a = new Anonymizer(offeringUrl, anonymizeOnInit);
+  });

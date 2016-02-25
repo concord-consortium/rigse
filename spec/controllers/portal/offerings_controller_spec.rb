@@ -33,7 +33,7 @@ describe Portal::OfferingsController do
       Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
-      @clazz = mock_model(Portal::Clazz, :is_student? => true)
+      @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false)
       @runnable_opts = {
         :name      => "Some Activity",
         :url       => "http://example.com",
@@ -78,7 +78,7 @@ describe Portal::OfferingsController do
       Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
-      @clazz = mock_model(Portal::Clazz, :is_student? => true)
+      @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false)
 
       @runnable = Factory(:page)
       @xhtml = Factory(:xhtml)

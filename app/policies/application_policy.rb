@@ -133,6 +133,10 @@ class ApplicationPolicy
     user && !user.portal_student.nil?
   end
 
+  def teacher?
+    user && !user.portal_teacher.nil?
+  end
+
   def has_roles?(*roles)
     user && user.has_role?(*roles)
   end
