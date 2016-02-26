@@ -3,7 +3,7 @@ class Portal::Learner < ActiveRecord::Base
 
   self.table_name = :portal_learners
   
-  default_scope :order => 'student_id ASC'
+  default_scope :order => 'portal_learners.student_id ASC'
   
   acts_as_replicatable
   

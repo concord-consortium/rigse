@@ -64,9 +64,20 @@ class Portal::Student < ActiveRecord::Base
     return generated_login
   end
 
-  def status
-    report_learners = Portal::Learner.includes({offering: {runnable: :template}}, :report_learner, :learner_activities)
-                                     .where(:student_id => self.id).map do |learner|
+  def status(offerings_updated_after=0)
+    # If offerings_updated_after is provided, all the offerings that haven't been updated
+    # after this timestamp will be filtered out from the results (performance optimization).
+    offerings_updated_after = Time.at(offerings_updated_after.to_i)
+    # Theoretically these queries could be merged into single one, but then
+    # ActiveRecord complains about eager loading of polymorphic association (:runnable).
+    learners_ids = Portal::Learner.joins(:report_learner)
+                                  .where('portal_learners.student_id = ?', self.id)
+                                  .where('report_learners.last_run > ?', offerings_updated_after)
+                                  .pluck(:id)
+    if learners_ids.length > 0
+      report_learners = Portal::Learner.includes({offering: {runnable: :template}}, :report_learner, :learner_activities)
+                                       .where(id: learners_ids)
+                                       .map do |learner|
       student_status = Report::OfferingStudentStatus.new
       student_status.student = self
       student_status.learner = learner
@@ -79,9 +90,13 @@ class Portal::Student < ActiveRecord::Base
           student_status.activity_complete_percent(activity)
         end
       }
+      end
+    else
+      report_learners = []
     end
     {
-      :report_learners => report_learners
+      timestamp: Time.now.to_i,
+      report_learners: report_learners
     }
   end
 
