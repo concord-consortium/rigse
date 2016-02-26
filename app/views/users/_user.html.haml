@@ -20,7 +20,7 @@
           - if policy(user).edit_by_admin?
             %li.menu=link_to 'edit', edit_user_path(user)
           - else
-            - if
+            - if edit_by_project_admin_user_path(user)
               %li.menu=link_to 'edit', edit_by_project_admin_user_path(user)
           - if policy(user).reset_password?
             %li.menu=link_to 'Reset Password', reset_password_user_path(user)
