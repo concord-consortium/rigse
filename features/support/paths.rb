@@ -9,7 +9,7 @@ module NavigationHelpers
     case page_name
 
     when /the home\s?page/
-      '/'
+      '/home'
 
     when /my home\s?page/
       '/home'

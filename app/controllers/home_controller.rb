@@ -8,7 +8,7 @@ class HomeController < ApplicationController
     if exception.query.to_s == 'admin?'
       flash[:notice] = "Please log in as an administrator"
     end
-    redirect_to :home
+    redirect_to :root
   end
 
   public
@@ -17,13 +17,52 @@ class HomeController < ApplicationController
   theme "rites"
 
   def index
-    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
-    @notices = notices_hash[:notices]
-    @notice_display_type = notices_hash[:notice_display_type]
-    @hide_signup_link = true
-    if current_visitor.has_role? "guest"
-      load_featured_materials
+    homePage = HomePage.new(current_visitor, Admin::Settings.default_settings)
+    flash.keep
+    case homePage.redirect
+      when HomePage::MyClasses
+        redirect_to :my_classes
+      when HomePage::RecentActivity
+        redirect_to :recent_activity
+      when HomePage::GettingStarted
+        redirect_to :getting_started
+      when HomePage::Home
+        redirect_to :home
     end
+  end
+
+  def home
+    homePage = HomePage.new(current_visitor, Admin::Settings.default_settings)
+    custom_content = homePage.content
+    load_notices
+    load_featured_materials
+    if custom_content.present?
+      render inline: custom_content.html_safe, layout: homePage.layout
+    else
+      render :home
+    end
+  end
+
+  def getting_started
+    @hide_signup_link = true
+    load_notices
+    render :getting_started
+  end
+
+  def my_classes
+    load_notices
+    @portal_student = current_visitor.portal_student
+    @hide_signup_link = true
+    render :my_classes
+  end
+
+  def preview_home_page
+    preview_content = params[:home_page_preview_content]
+    homePage = HomePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
+    @wide_content_layout = true
+    load_featured_materials
+    response.headers["X-XSS-Protection"] = "0"
+    render inline: homePage.content.html_safe, layout: homePage.layout
   end
 
   def readme
@@ -114,11 +153,11 @@ class HomeController < ApplicationController
     @offerings_count = 0
     @student_count = 0
 
-    # If there are no active classes assigned then return to the home page
-    if (!current_visitor.has_active_classes?)
-      redirect_to root_path
-      return
-    end
+    # # If there are no active classes assigned then return to the home page
+    # if (!current_visitor.has_active_classes?)
+    #   redirect_to root_path
+    #   return
+    # end
 
     portal_teacher = current_visitor.portal_teacher
     teacher_clazzes = portal_teacher.clazzes
@@ -179,17 +218,15 @@ class HomeController < ApplicationController
 
   end
 
-  def preview_home_page
-    @preview_home_page_content = true
-    @wide_content_layout = true
-    load_featured_materials
-    response.headers["X-XSS-Protection"] = "0"
 
-    @emulate_anonymous_user = true
-    @home_page_preview_content = params[:home_page_preview_content]
-  end
 
   protected
+
+  def load_notices
+    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
+    @notices = notices_hash[:notices]
+    @notice_display_type = notices_hash[:notice_display_type]
+  end
 
   def load_featured_materials
     @show_featured_materials = true
