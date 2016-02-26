@@ -65,7 +65,8 @@ class Portal::Student < ActiveRecord::Base
   end
 
   def status
-    report_learners = Portal::Learner.where(:student_id => self.id).map do |learner|
+    report_learners = Portal::Learner.includes({offering: {runnable: :template}}, :report_learner, :learner_activities)
+                                     .where(:student_id => self.id).map do |learner|
       student_status = Report::OfferingStudentStatus.new
       student_status.student = self
       student_status.learner = learner
