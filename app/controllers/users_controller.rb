@@ -231,13 +231,13 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit_by_project_admin
+  def limited_edit
     @user = User.find(params[:id])
     authorize @user
     @projects = Admin::Project.all_sorted
   end
 
-  def update_by_project_admin
+  def limited_update
     if params[:commit] == "Cancel"
       redirect_to users_path
     else

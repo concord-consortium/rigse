@@ -6,12 +6,13 @@ describe UserPolicy do
   let(:user)        { FactoryGirl.create(:user)            }
 
   context "for anonymous" do
-    it { should_not permit(:edit_by_project_admin)  }
-    it { should_not permit(:update_by_project_admin)}
+    it { should_not permit(:limited_edit)           }
+    it { should_not permit(:limited_update)         }
     it { should_not permit(:index)                  }
     it { should_not permit(:show)                   }
     it { should_not permit(:update)                 }
     it { should_not permit(:edit)                   }
+    it { should_not permit(:make_admin)             }
     it { should_not permit(:switch)                 }
     it { should_not permit(:confirm)                }
     it { should_not permit(:reset_password)         }
@@ -22,12 +23,13 @@ describe UserPolicy do
 
   context "for a normal user" do
     let(:active_user) { FactoryGirl.create(:user) }
-    it { should_not permit(:edit_by_project_admin)  }
-    it { should_not permit(:update_by_project_admin)}
+    it { should_not permit(:limited_edit)           }
+    it { should_not permit(:limited_update)         }
     it { should_not permit(:index)                  }
     it { should_not permit(:show)                   }
     it { should_not permit(:update)                 }
     it { should_not permit(:edit)                   }
+    it { should_not permit(:make_admin)             }
     it { should_not permit(:switch)                 }
     it { should_not permit(:confirm)                }
     it { should_not permit(:reset_password)         }
@@ -38,12 +40,15 @@ describe UserPolicy do
 
   context "for an admin" do
     let(:active_user) { Factory.next(:admin_user)   }
+    it { should permit(:limited_edit)               }
+    it { should permit(:limited_update)             }
     it { should permit(:index)                      }
     it { should permit(:show)                       }
     it { should permit(:update)                     }
     it { should permit(:create)                     }
     it { should permit(:new)                        }
     it { should permit(:edit)                       }
+    it { should permit(:make_admin)                 }
     it { should permit(:switch)                     }
     it { should permit(:confirm)                    }
     it { should permit(:reset_password)             }
@@ -81,10 +86,13 @@ describe UserPolicy do
 
     context "a generic portal teacher" do
       let(:user) { regular_teacher.user }
+      it { should permit(:limited_edit)               }
+      it { should permit(:limited_update)             }
       it { should permit(:index)                      }
       it { should_not permit(:show)                   }
       it { should_not permit(:update)                 }
       it { should_not permit(:edit)                   }
+      it { should_not permit(:make_admin)             }
       it { should_not permit(:confirm)                }
       it { should_not permit(:reset_password)         }
       it { should_not permit(:student_page)           }
@@ -102,7 +110,8 @@ describe UserPolicy do
       it { should permit(:reset_password)             }
       it { should permit(:update)                     }
       it { should permit(:edit)                       }
-      it { should permit(:switch)                 }
+      it { should_not permit(:make_admin)             }
+      it { should permit(:switch)                     }
       # Documenting current behavior:
       it { should permit(:create)                     }
       it { should permit(:new)                        }
@@ -114,6 +123,7 @@ describe UserPolicy do
       end
       let(:user) { a_teacher.user }
       it { should permit(:index)                      }
+      it { should_not permit(:make_admin)             }
       it { should_not permit(:show)                   }
       it { should_not permit(:confirm)                }
       it { should_not permit(:reset_password)         }

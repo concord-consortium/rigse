@@ -6,7 +6,7 @@ class UserPolicy < ApplicationPolicy
         all
       elsif user.is_project_admin?
         # project admins can see teachers or students in their admined cohorts
-        # or edit_by_project_admin any portal teacher
+        # or limited_edit any portal teacher
         teachers_and_students_ids = (user.admin_for_project_teachers + user.admin_for_project_students).uniq.map {|u| u.user_id}
         scope.where(["(users.id IN (?)) OR (users.id IN (SELECT user_id FROM portal_teachers))", teachers_and_students_ids])
       else
@@ -19,20 +19,24 @@ class UserPolicy < ApplicationPolicy
     manager_or_project_admin?
   end
 
-  def edit_by_project_admin?
-   (project_admin? && record.portal_teacher) || project_admin_for_user?
+  def limited_edit?
+    admin_or_manager? || (project_admin? && record.portal_teacher)
   end
 
-  def update_by_project_admin?
-    project_admin? && record.portal_teacher
+  def limited_update?
+    admin_or_manager? || (project_admin? && record.portal_teacher)
+  end
+
+  def edit?
+    admin_or_manager? || project_admin_for_user?
+  end
+
+  def make_admin?
+    admin_or_manager?
   end
 
   def show?
     changeable?
-  end
-
-  def edit_by_admin?
-    admin_or_manager?
   end
 
   def teacher_page?

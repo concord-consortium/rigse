@@ -292,8 +292,8 @@ RailsPortal::Application.routes.draw do
         put :preferences
         get :reset_password
         get :confirm
-        get :edit_by_project_admin
-        put :update_by_project_admin
+        get :limited_edit
+        put :limited_update
       end
       resource :security_questions, :only => [:edit, :update]
 
