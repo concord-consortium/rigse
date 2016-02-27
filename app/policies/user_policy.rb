@@ -74,11 +74,6 @@ class UserPolicy < ApplicationPolicy
     admin_or_manager? || its_me?
   end
 
-  # def changeable?
-  #   return false if user.nil?
-  #   its_me? || admin_or_manager? || (project_admin_for_user? && record_not_admin?) || am_teacher?
-  # end
-
   private
   def project_admin_for_user?
     return false unless record.respond_to? :cohorts

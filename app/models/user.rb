@@ -80,8 +80,6 @@ class User < ActiveRecord::Base
   # has_many :knowledge_statements, :class_name => 'RiGse::KnowledgeStatement'
   # has_many :unifying_themes, :class_name => 'RiGse::UnifyingTheme'
 
-  include Changeable
-
   attr_accessor :skip_notifications
 
   before_validation :strip_spaces
@@ -452,24 +450,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # a bit of a silly method to help the code in lib/changeable.rb so
-  # it doesn't have to special-case findingthe owner of a user object
-  def user
-    self
-  end
-
-  # If this user is a student, allow the student's teacher(s) to make
-  # changes to this.
-  def is_user?(user)
-    if user == self
-      true
-    elsif user.portal_teacher && self.portal_student && self.portal_student.has_teacher?(user.portal_teacher)
-      true
-    else
-      false
-    end
-  end
-
   def school
     school_person = self.portal_teacher || self.portal_student
     if (school_person)
@@ -600,31 +580,6 @@ class User < ActiveRecord::Base
 
   def projects
     cohort_projects | admin_for_projects | researcher_for_projects
-  end
-
-  # FIXME: This logic should be moved to the UserPolicy instead here in the model
-  # FIMXE: This is not fine grained enough. Currently the UsersController#update
-  #   has its own logic to decide if a user can change particular aspect of another user.
-  #   for example that controller code ensures that user cannot elevate themselves to an
-  #   admin. If some code just relied on this changeable method it might allow this
-  #   elevation.
-  def changeable?(user)
-    if self == user
-      true
-    elsif user.has_role?("admin", "manager")
-      true
-    elsif user.is_project_admin?
-      # A project admin can edit a student or teacher's account if the user is tagged with a cohort from one the project admin's projects
-      # however project admins can't edit portal admins
-      if has_role?("admin")
-        false
-      else
-        # use set intersection to see if there is at least matching cohort
-        (user.admin_for_project_cohorts & cohorts).length > 0
-      end
-    else
-      super(user)
-    end
   end
 
   protected
