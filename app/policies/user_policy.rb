@@ -28,7 +28,12 @@ class UserPolicy < ApplicationPolicy
   end
 
   def edit?
-    admin_or_manager? || project_admin_for_user?
+    admin_or_manager? || (project_admin_for_user? && record_not_admin?)
+  end
+
+  def update?
+    # the preferences page uses the update action so the user needs to be able to update themselves
+    its_me? || admin_or_manager? || (project_admin_for_user? && record_not_admin?)
   end
 
   def make_admin?
@@ -36,7 +41,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    changeable?
+    edit? || limited_edit?
+  end
+
+  def destroy?
+    admin_or_manager?
   end
 
   def teacher_page?
@@ -62,10 +71,22 @@ class UserPolicy < ApplicationPolicy
   end
 
   def preferences?
-    changeable?
+    admin_or_manager? || its_me?
   end
 
+  # def changeable?
+  #   return false if user.nil?
+  #   its_me? || admin_or_manager? || (project_admin_for_user? && record_not_admin?) || am_teacher?
+  # end
+
   private
+  def project_admin_for_user?
+    return false unless record.respond_to? :cohorts
+    return false unless user
+    (user.admin_for_project_cohorts & record.cohorts).length > 0
+  end
+
+
   def record_not_admin?
     !record.has_role?("admin")
   end
