@@ -929,12 +929,23 @@ a.button {
   -moz-border-radius: 12px;
   /* FF1+ */
   -webkit-border-radius: 12px;
-  /* Saf3+, Chrome */ }
+  /* Saf3+, Chrome */
+
+  &.disabled {
+    background: rgba(243, 149, 29, 0.45);
+    &:hover {
+      background: rgba(243, 149, 29, 0.45);
+      cursor: default;
+    }
+  }
+}
 
 button:hover {
   background: #f3951d;
   /* CSS 3 */
-  @include background-image(linear-gradient(#f3951d, #dd6e0d)); }
+  @include background-image(linear-gradient(#f3951d, #dd6e0d));
+
+}
 
 input {
   &[type=button]:hover, &.button.over, &[type=submit]:hover {
@@ -1539,7 +1550,6 @@ table.teacher_class_table th, table.teacher_class_table td
 }
 .classsetupform tr { vertical-align: top; }
 .classsetupform td { padding-top: 10px; padding-left: 10px; }
-.classsetupform td:nth-child(odd) { width: 112px !important;}
 .classsetupform td.title{ width: 60px;}
 .classsetupform table { margin: 0;}
 .classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
@@ -1586,7 +1596,12 @@ td.title { padding-left: 20px; text-align: left; }
 #sortable li { margin: 0 0px 5px 0px; padding: 0.4em;cursor:move }
 #sortable li label { padding-top:0 }
 #sortable td {vertical-align:top }
-#sortable td.offering_name{padding-top:2px}
+
+.offering-prop-checkbox {
+  display: inline-block;
+  width: 50px;
+  text-align: center;
+}
 
 a.hlink{color:#479492;text-decoration:none;cursor:pointer}
 a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}

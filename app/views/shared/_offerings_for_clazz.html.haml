@@ -1,10 +1,15 @@
 - if offerings.length > 0
-  - offerings.sort! {|a,b| a.position <=> b.position}  
-  %ul.sortable{:id=>"sortable",}
+  - offerings.sort! {|a,b| a.position <=> b.position}
+  %span.offering-prop-checkbox active
+  %span.offering-prop-checkbox locked
+  %span name
+  %ul.sortable{:id => "sortable"}
     = render :partial => 'shared/offering_for_clazz', :collection => offerings, :as => :offering
-  =sortable_element "sortable",:onUpdate=>'function(){}'
 - else
   .item
     %ul.quiet_list
       %li
         .tiny= t('offerings_for_class.no_materials')
+
+:javascript
+  Sortable.create('sortable')

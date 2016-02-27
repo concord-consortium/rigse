@@ -6,7 +6,7 @@ class Portal::OfferingPolicy < ApplicationPolicy
 
   # Used by Portal::OfferingsController:
   def show?
-    class_teacher_or_admin? || class_student?
+    class_teacher_or_admin? || (class_student? && !record.locked)
   end
 
   def destroy?

@@ -6,7 +6,13 @@ class Portal::OfferingsController < ApplicationController
   private
 
   def pundit_user_not_authorized(exception)
-    flash[:notice] = "Please log in as a teacher or an administrator"
+    offering = exception.record
+    message = if offering && offering.locked
+                "This offering is locked"
+              else
+                "Please log in as a teacher or an administrator"
+              end
+    flash[:notice] = message
     redirect_to(:home)
   end
 

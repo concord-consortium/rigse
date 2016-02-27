@@ -24,6 +24,7 @@ angular.module('ccCollaboration', ['ui.select'])
     restrict: 'A'
     link: ($scope, element, attrs) ->
       element.on 'click', (event) ->
+        return if element.hasClass('disabled')
         event.preventDefault()
         ccCollaborationSetup.start {offeringId: attrs.offeringId, jnlpUrl: attrs.jnlpUrl}
   ])
