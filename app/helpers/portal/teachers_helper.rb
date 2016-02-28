@@ -33,7 +33,6 @@ module Portal::TeachersHelper
           </tr></table>
           <div >(Note: Make sure new teacher is registered before trying to add them.)</div>
           <br>
-        </span>
         
         #{make_chosen('teacher_id_selector')}
       EOF
