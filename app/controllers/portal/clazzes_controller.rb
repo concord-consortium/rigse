@@ -407,9 +407,6 @@ class Portal::ClazzesController < ApplicationController
         page << "if ($('students_listing')){"
         page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
         page << "}"
-        #page << "if ($('add_students_listing')){"
-        #page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        #page << "}"
         page << "if ($('oClassStudentCount')){"
         page.replace_html 'oClassStudentCount', @portal_clazz.students.length.to_s
         page << "}"
@@ -583,7 +580,6 @@ class Portal::ClazzesController < ApplicationController
       @portal_student = Portal::Student.new
       @user = User.new
       render :partial => 'portal/students/form', :locals => {:portal_student => @portal_student, :portal_clazz => Portal::Clazz.find_by_id(params[:id]), :signup => false}
-      #render :partial => 'portal/students/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
       return
     end
   end
