@@ -57,7 +57,6 @@ In NO case should the system allow:
       | /portal/school_memberships    |
       | /portal/schools               |
       | /portal/semesters             |
-      | /portal/student_clazzes       |
       | /portal/students              |
       | /portal/subjects              |
       | /portal/teachers              |
@@ -84,7 +83,6 @@ In NO case should the system allow:
       | /portal/school_memberships    |
       | /portal/schools               |
       | /portal/semesters             |
-      | /portal/student_clazzes       |
       | /portal/students              |
       | /portal/subjects              |
       | /portal/teachers              |
