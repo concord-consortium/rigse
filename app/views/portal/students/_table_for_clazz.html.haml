@@ -28,7 +28,7 @@
         %td.remove.hide_in_print.action_link_container
           - if portal_clazz.changeable?(current_visitor)
             = link_to_remote I18n.t("RosterRemoveStudent"),
-              :url => portal_clazz_student_clazz_url(roster_row.clazz, roster_row.portal_student_clazz),
+              :url => { action: 'remove_student', id: roster_row.clazz, student_clazz_id: roster_row.portal_student_clazz.id },
               :confirm => roster_row.confirm_delete_message,
               :method => :delete,
               :html => {  title: I18n.t("RosterRemoveStudentLong",

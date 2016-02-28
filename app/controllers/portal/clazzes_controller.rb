@@ -429,14 +429,14 @@ class Portal::ClazzesController < ApplicationController
     # which means changing the view also to use student ids instead of student_class ids.
     # would be better to look up the class first and then use
     @clazz = Portal::Clazz.find(params[:id])
-    authorize @clazz
+    # authorize @clazz
     @portal_student_clazz = @clazz.student_clazzes.find(params[:student_clazz_id])
     # FIXME if the portal_student_clazz is nil we should return an error here
     @dom_id = view_context.dom_id_for(@portal_student_clazz)
     @portal_student_clazz.destroy
     @clazz.reload
     respond_to do |format|
-      format.html { } # FIXME this should redirect to the roster for this class.redirect_to(portal_student_clazzes_url) }
+      format.html { head :ok } # FIXME this should redirect to the roster for this class.redirect_to(portal_student_clazzes_url) }
       format.xml  { head :ok }
       format.js
     end

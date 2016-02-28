@@ -613,6 +613,22 @@ describe Portal::ClazzesController do
     end
   end
 
+  describe "DELETE remove_student" do
+    it "will remove the student from the class" do
+      sign_in_symbol :authorized_teacher_user
+
+      @student_clazz = Portal::StudentClazz.new
+      @student_clazz.clazz_id = @mock_clazz.id
+      @student_clazz.student_id = @authorized_student.id
+      @student_clazz.save!
+      @mock_clazz.reload
+      assert(@mock_clazz.students.count == 1)
+      delete :remove_student, { id: @mock_clazz.id, student_clazz_id: @student_clazz.id }
+
+      @mock_clazz.reload
+      assert(@mock_clazz.students.count == 0)
+    end
+  end
 
   describe "Put teacher Manage class" do
     before(:each) do
