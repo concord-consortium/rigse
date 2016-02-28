@@ -3754,7 +3754,7 @@ UI.Window = Class.create(UI.Options, {
     var toggleClassName = (resizable ? 'add' : 'remove') + 'ClassName';
 
     this.element[toggleClassName]('resizable')
-      .select('div:[class*=_sizer]').invoke(resizable ? 'show' : 'hide');
+      .select('div[class*=_sizer]').invoke(resizable ? 'show' : 'hide');
     if (resizable)
       this.createResizeHandles();
 

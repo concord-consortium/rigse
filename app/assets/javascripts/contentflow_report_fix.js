@@ -6,7 +6,7 @@ UI.Window.prototype.setResizable = function(resizable) {
   this.options.resizable = resizable;
   var toggleClassName = (resizable ? 'add' : 'remove') + 'ClassName';
   this.element[toggleClassName]('resizable');
-  this.element.select('div:[class*=_sizer]').invoke(resizable ? 'show' : 'hide');
+  this.element.select('div[class*=_sizer]').invoke(resizable ? 'show' : 'hide');
   if (resizable) {
     this.createResizeHandles();
   }
