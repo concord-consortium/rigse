@@ -379,8 +379,6 @@ class Portal::ClazzesController < ApplicationController
 
   # HACK: Add a student to a clazz
   # TODO: test this method
-  # NOTE: delete student is in the student_clazzes_controller.
-  # we should put these functions in the same place ...
   def add_student
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -424,6 +422,26 @@ class Portal::ClazzesController < ApplicationController
         # more friendly such as:
         page << "alert('Please select a user from the list before clicking add button.')"
       end
+    end
+  end
+
+  # DELETE /portal/clazzes/1/remove_student
+  # DELETE /portal/clazzes/1/remove_student
+  def remove_student
+    # TODO it might be better to switch to using just student_id here
+    # which means changing the view also to use student ids instead of student_class ids.
+    # would be better to look up the class first and then use
+    @clazz = Portal::Clazz.find(params[:id])
+    authorize @clazz
+    @portal_student_clazz = @clazz.student_clazzes.find(params[:student_clazz_id])
+    # FIXME if the portal_student_clazz is nil we should return an error here
+    @dom_id = view_context.dom_id_for(@portal_student_clazz)
+    @portal_student_clazz.destroy
+    @clazz.reload
+    respond_to do |format|
+      format.html { } # FIXME this should redirect to the roster for this class.redirect_to(portal_student_clazzes_url) }
+      format.xml  { head :ok }
+      format.js
     end
   end
 

@@ -154,6 +154,7 @@ RailsPortal::Application.routes.draw do
           get :class_list
           get :add_student
           post :add_student
+          delete :remove_student
           get :remove_offering
           post :remove_offering
           get :edit_offerings
