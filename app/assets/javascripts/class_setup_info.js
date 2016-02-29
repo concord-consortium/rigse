@@ -3,7 +3,7 @@ var bDraggedElementChecked;
 
 function ChangeOrder(elementDragged)
 {
-    var oDraggedElementCheckBox = $$('#'+elementDragged.element.id+' input:[type="checkbox"]')[0];
+    var oDraggedElementCheckBox = $$('#'+elementDragged.element.id+' input[type="checkbox"]')[0];
     strDraggedElementCheckBoxID = oDraggedElementCheckBox.id;
     bDraggedElementChecked = oDraggedElementCheckBox.checked;
 }
