@@ -182,9 +182,7 @@ RailsPortal::Application.routes.draw do
 
       end
 
-      resources :clazzes, :path => :classes do
-        resources :student_clazzes
-      end
+      resources :clazzes, :path => :classes
 
       resources :courses
 
@@ -243,8 +241,6 @@ RailsPortal::Application.routes.draw do
           get :status
         end
       end
-
-      resources :student_clazzes
 
       resources :subjects
 
