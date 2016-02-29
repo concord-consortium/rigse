@@ -15,11 +15,11 @@
     .content
       = form.error_messages
       = render :partial => 'form', :locals => { :f => form }
-      - if current_visitor.has_role?("admin", "manager")
+      - if policy(@user).make_admin?
+        -# FIXME: Currently this also prevents others from making the user an author
         = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
         = render :partial => 'admin_for_projects', :locals => { :f => form, :projects => policy_scope(Admin::Project) }
-      - if current_visitor.has_role?("admin", "manager") || current_visitor.is_project_admin?
-        = render :partial => 'researcher_for_projects', :locals => { :f => form, :projects => policy_scope(Admin::Project) }
-        - if @user.portal_teacher
-          = render :partial => 'project_cohorts', :locals => { :f => form, :projects => policy_scope(Admin::Project) }
+      = render :partial => 'researcher_for_projects', :locals => { :f => form, :projects => policy_scope(Admin::Project) }
+      - if @user.portal_teacher
+        = render :partial => 'project_cohorts', :locals => { :f => form, :projects => policy_scope(Admin::Project) }
       = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }

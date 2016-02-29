@@ -287,14 +287,13 @@ RailsPortal::Application.routes.draw do
         put :suspend
         put :unsuspend
         get :interface
-        get :switch
         put :switch
         get :preferences
         put :preferences
         get :reset_password
         get :confirm
-        get :edit_by_project_admin
-        put :update_by_project_admin
+        get :limited_edit
+        put :limited_update
       end
       resource :security_questions, :only => [:edit, :update]
 

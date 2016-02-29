@@ -80,8 +80,6 @@ class User < ActiveRecord::Base
   # has_many :knowledge_statements, :class_name => 'RiGse::KnowledgeStatement'
   # has_many :unifying_themes, :class_name => 'RiGse::UnifyingTheme'
 
-  include Changeable
-
   attr_accessor :skip_notifications
 
   before_validation :strip_spaces
@@ -398,19 +396,29 @@ class User < ActiveRecord::Base
     is_project_admin?(project) || is_project_researcher?(project) || is_project_cohort_member?(project)
   end
 
-  def set_role_for_projects(role, selected_projects, project_ids)
-    role_attribute = 'is_' + role
-    selected_projects.each do |project|
-      project_user = project_users.find_by_project_id project.id
-      if project_ids.find { |id| id.to_i == project.id }
-        if !project_user
-          project_user = Admin::ProjectUser.create!(project_id: project.id, user_id: user.id)
-        end
-        project_user[role_attribute] = true
-      elsif project_user
-        project_user[role_attribute] = false
+  def add_role_for_project(role, project)
+    role_attribute = "is_#{role}"
+    project_user = project_users.find_by_project_id project.id
+    project_user ||= Admin::ProjectUser.create!(project_id: project.id, user_id: self.id)
+    project_user[role_attribute] = true
+    project_user.save
+  end
+
+  def remove_role_for_project(role, project)
+    if project_user = project_users.find_by_project_id(project.id)
+      role_attribute = "is_#{role}"
+      project_user[role_attribute] = false
+      project_user.save
+    end
+  end
+
+  def set_role_for_projects(role, possible_projects, selected_project_ids)
+    possible_projects.each do |project|
+      if selected_project_ids.find { |id| id.to_i == project.id }
+        add_role_for_project(role,project)
+      else
+        remove_role_for_project(role,project)
       end
-      project_user.save if project_user
     end
   end
 
@@ -439,24 +447,6 @@ class User < ActiveRecord::Base
         :password_confirmation => "password"){|u| u.skip_notifications = true}
       anonymous_user.add_role('guest')
       @@anonymous_user = anonymous_user
-    end
-  end
-
-  # a bit of a silly method to help the code in lib/changeable.rb so
-  # it doesn't have to special-case findingthe owner of a user object
-  def user
-    self
-  end
-
-  # If this user is a student, allow the student's teacher(s) to make
-  # changes to this.
-  def is_user?(user)
-    if user == self
-      true
-    elsif user.portal_teacher && self.portal_student && self.portal_student.has_teacher?(user.portal_teacher)
-      true
-    else
-      false
     end
   end
 
@@ -590,31 +580,6 @@ class User < ActiveRecord::Base
 
   def projects
     cohort_projects | admin_for_projects | researcher_for_projects
-  end
-
-  # FIXME: This logic should be moved to the UserPolicy instead here in the model
-  # FIMXE: This is not fine grained enough. Currently the UsersController#update
-  #   has its own logic to decide if a user can change particular aspect of another user.
-  #   for example that controller code ensures that user cannot elevate themselves to an
-  #   admin. If some code just relied on this changeable method it might allow this
-  #   elevation.
-  def changeable?(user)
-    if self == user
-      true
-    elsif user.has_role?("admin", "manager")
-      true
-    elsif user.is_project_admin?
-      # A project admin can edit a student or teacher's account if the user is tagged with a cohort from one the project admin's projects
-      # however project admins can't edit portal admins
-      if has_role?("admin")
-        false
-      else
-        # use set intersection to see if there is at least matching cohort
-        (user.admin_for_project_cohorts & cohorts).length > 0
-      end
-    else
-      super(user)
-    end
   end
 
   protected
