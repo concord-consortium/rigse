@@ -41,6 +41,10 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin?
   end
 
+  def external_report?
+    class_teacher_or_admin?
+  end
+
   def open_response_report?
     class_teacher_or_admin?
   end
