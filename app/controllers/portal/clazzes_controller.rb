@@ -214,20 +214,17 @@ class Portal::ClazzesController < ApplicationController
         object_params = params[:portal_clazz]
         grade_levels = object_params.delete(:grade_levels)
 
-        clazz_investigation_id = params[:clazz_investigations]
-        clazz_investigation_id_hidden = params[:clazz_investigations_hidden]
-
-        @portal_clazz.offerings.each do|offering|
-          offering.active = false
-          offering.position = clazz_investigation_id_hidden.index(offering.id.to_s) + 1
-          unless clazz_investigation_id.nil? then
-            if clazz_investigation_id.include?(offering.id.to_s) then
-              offering.active = true
-            end
+        clazz_investigations_ids = params[:clazz_investigations_ids]
+        clazz_active_investigations = params[:clazz_active_investigations] || []
+        clazz_locked_investigations = params[:clazz_locked_investigations] || []
+        unless clazz_investigations_ids.nil?
+          @portal_clazz.offerings.each do |offering|
+            offering.update_attributes!(
+              position: clazz_investigations_ids.index(offering.id.to_s) + 1,
+              active: clazz_active_investigations.include?(offering.id.to_s),
+              locked: clazz_locked_investigations.include?(offering.id.to_s)
+            )
           end
-
-          offering.save
-
         end
 
         if Admin::Settings.default_settings.enable_grade_levels?

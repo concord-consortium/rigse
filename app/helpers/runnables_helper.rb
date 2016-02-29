@@ -27,6 +27,7 @@ module RunnablesHelper
     classes = _classes.dup
     classes << "button"
     classes << "run" if display_status_updates?(offering)
+    classes << "disabled" if offering.locked
     classes.join(" ")
   end
 
@@ -35,7 +36,7 @@ module RunnablesHelper
     solo_label      = opts[:solo_text]  || default_solo_label
     group_label     = opts[:group_label]|| "Run with Other Students"
     options         = popup_options_for(offering)
-    options[:href]  = run_url_for(offering)
+    options[:href]  = !offering.locked ? run_url_for(offering) : "javascript:void(0)"
     options[:class] = student_run_button_css(offering, ["solo"])
 
     capture_haml do

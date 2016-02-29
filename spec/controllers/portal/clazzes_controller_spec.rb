@@ -560,8 +560,8 @@ describe Portal::ClazzesController do
               :"9" => "1"
             }
           },
-          :clazz_investigations => offers,
-          :clazz_investigations_hidden => offers,
+          :clazz_investigations_ids => offers,
+          :clazz_active_investigations => offers,
           :clazz_teacher_ids => (@authorized_teacher.id.to_s + "," + @another_authorized_teacher.id.to_s)
         }
         
@@ -588,7 +588,8 @@ describe Portal::ClazzesController do
     
     it "all the deactivated offerings should actually get deactivated in the database" do
       login_admin
-      @post_params[:clazz_investigations] = Array[]
+      @post_params[:clazz_investigations_ids] = @mock_clazz.offerings.map(&:id)
+      @post_params[:clazz_active_investigations] = Array[]
       post :update, @post_params
       
       @mock_clazz.reload
