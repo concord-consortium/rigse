@@ -14,7 +14,7 @@ class Portal::StudentsController < ApplicationController
     # authorize @student
     # authorize Portal::Student, :new_or_create?
     # authorize @student, :update_edit_or_destroy?
-    result = Portal::Student.find(params[:id]).status
+    result = Portal::Student.find(params[:id]).status(params[:offerings_updated_after] || 0)
     respond_to do |format|
       format.xml { render :xml => result }
       format.json { render :json => result }

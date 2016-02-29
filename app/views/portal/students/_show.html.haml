@@ -3,8 +3,11 @@
 - unless current_visitor.anonymous?
   %h3 Classes and Offerings:
   = render :partial => 'portal/clazzes/list_for_student', :locals => { :portal_student => portal_student }
-  - poll_options = {poll_url: status_portal_student_url(portal_student.id, :format => :json), poll_interval: ENV['PORTAL_STUDENT_STATUS_UPDATE_POLL_INTERVAL_IN_SECONDS']}
   - # note: there is a default value for the poll interval in the javascript
+  - #       timestamp is generated on server, as it more reliable
+  - poll_options = {poll_url: status_portal_student_url(portal_student.id, :format => :json),
+                    poll_interval: ENV['PORTAL_STUDENT_STATUS_UPDATE_POLL_INTERVAL_IN_SECONDS'],
+                    data_timestamp: Time.now.to_i}
   :javascript
     poll_to_update_student_data_percentages(#{ poll_options.to_json })
 
