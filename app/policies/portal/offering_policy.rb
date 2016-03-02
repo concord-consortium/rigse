@@ -4,6 +4,11 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin?
   end
 
+  # Used by API::V1::ReportsController:
+  def api_report?
+    class_teacher_or_admin?
+  end
+
   # Used by Portal::OfferingsController:
   def show?
     class_teacher_or_admin? || (class_student? && !record.locked)
