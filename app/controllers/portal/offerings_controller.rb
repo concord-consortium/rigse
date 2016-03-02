@@ -296,7 +296,7 @@ class Portal::OfferingsController < ApplicationController
         learner.report_learner.update_fields
       end
       flash[:notice] = "Your answers have been saved."
-      redirect_to :home
+      redirect_to :root
     else
       render :text => 'problem loading offering', :status => 500
     end

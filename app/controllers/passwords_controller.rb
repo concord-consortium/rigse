@@ -142,7 +142,7 @@ class PasswordsController < ApplicationController
       return @user_find
     rescue
       flash[:notice] = 'The change password URL you visited is either invalid or expired.'
-      redirect_to home_path
+      redirect_to root_path
     end
   end
 

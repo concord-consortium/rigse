@@ -310,7 +310,7 @@ class Portal::StudentsController < ApplicationController
     @portal_student.user.asked_age = true;
     @portal_student.save
     if @portal_student.user.update_attributes(params[:user])
-      redirect_to home_path
+      redirect_to root_path
     else
       render :action => "ask_consent"
     end

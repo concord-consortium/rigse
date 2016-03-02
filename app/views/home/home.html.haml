@@ -1,0 +1,12 @@
+= render :partial => "notice"
+
+.landing-container
+  .home-page-content
+    - render_project_info
+    = content_for :project_info
+  .signup-box
+    = render partial: "home/signup"
+= render partial: "home/featured_content"
+
+- if !@portal_student
+  = render :partial => "project_cards"
