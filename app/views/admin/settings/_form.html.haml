@@ -81,6 +81,11 @@
             = f.label :auto_set_teachers_as_authors, "Auto set teachers as authors:", :style => "display:inline;"
             = f.check_box :auto_set_teachers_as_authors
           %li
+            = f.label :custom_search_path, "Custom Search Path:", :style => "display:inline;"
+            = f.text_field :custom_search_path
+            %br
+            (If this field contains any value the 'search' links will take users to the path specified. Defaults to '/search'.)
+          %li
             = f.label :enabled_bookmark_types,  "Enabled bookmark types"
             = f.select(:enabled_bookmark_types, admin_settings.available_bookmark_types.map { |b| [b,b]}, {},{ :class => ".chzn-select", :multiple => true})
           = content_for "admin_settings_form_#{admin_settings.id || 'new'}"

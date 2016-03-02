@@ -1,5 +1,13 @@
 module SearchHelper
 
+  def configured_search_path
+    if current_settings.custom_search_path.present?
+      current_settings.custom_search_path
+    else
+      search_path # config/routes.rb
+    end
+  end
+
   def order_check_box(order_option, name, current_order)
     is_current = current_order == order_option
     klass = is_current ? "highlightoption" : ""
