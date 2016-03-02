@@ -8,7 +8,7 @@ class ImagesController < ApplicationController
 
   def pundit_user_not_authorized(exception)
     flash[:error] = "You're not authorized to do this"
-    redirect_to :home
+    redirect_to :root
   end
 
   public
