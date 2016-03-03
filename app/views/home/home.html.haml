@@ -4,8 +4,9 @@
   .home-page-content
     - render_project_info
     = content_for :project_info
-  .signup-box
-    = render partial: "home/signup"
+  - if current_visitor.anonymous?
+    .signup-box
+      = render partial: "home/signup"
 = render partial: "home/featured_content"
 
 - if !@portal_student
