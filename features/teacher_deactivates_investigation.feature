@@ -13,5 +13,5 @@ Feature: Teacher can deactivate materials from a class
     And I uncheck "Radioactivity"
     And I press "Save"
     And I am logged in with the username student
-    And I am on my home page
+    And I am on my classes page
     Then I should not see "Radioactivity"

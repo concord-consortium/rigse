@@ -10,7 +10,7 @@ Feature: External Activities can be run as offerings
   Scenario: External Activity offerings are runnable
     When the external activity "My Activity" is assigned to the class "Class_with_no_assignment"
     And I am logged in with the username student
-    When I go to my home page
+    When I go to my classes page
     And I follow "Class_with_no_assignment" within left panel for class navigation
     And run the external activity
     Then I should be on /mock_html/test-external-activity.html
