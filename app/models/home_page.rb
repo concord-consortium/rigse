@@ -1,8 +1,5 @@
 class HomePage
   MyClasses        = "my_classes"
-  GettingStarted   = "getting_started"
-  RecentActivity   = "recent_activity"
-  Guest            = "guest"
   LayoutUnwrapped  = "minimal"
   LayoutNormal     = "application"
   Home             = "home"
@@ -16,37 +13,48 @@ class HomePage
   end
 
   def redirect
-    if @settings.nil?
-      NeedsSettings     # render needs settings if we do.
-    elsif @user.portal_teacher
-      if @user.has_active_classes?
-        RecentActivity            # Should redirect in controller
-      else
-        GettingStarted            # Should redirect in controller
-      end
+    if @user.portal_teacher and @settings.teacher_home_path.present?
+      @settings.teacher_home_path
     elsif @user.portal_student
-      MyClasses                   # Should redirect in controller
+      MyClasses
     else
       Home
     end
   end
 
   def content
-    @preview_content || @settings.home_page_content
+    if @settings.nil?
+      NeedsSettings
+    else
+      @preview_content || @settings.home_page_content
+    end
   end
 
+  def view_options
+    {
+      custom_content: content,
+      show_signup: @user.anonymous? && wrapped_page?,
+      show_project_cards: wrapped_page?,
+      show_featured: wrapped_page?
+    }
+  end
 
   def layout
-    if content and wrap_home_page?
-      return LayoutNormal
+    if wrapped_page?
+      LayoutNormal
+    else
+      LayoutUnwrapped
     end
-    return LayoutUnwrapped
   end
 
 
   private
-  def wrap_home_page?
-    @settings.wrap_home_page_content?
+  def wrapped_page?
+    content.blank? or @settings.wrap_home_page_content?
+  end
+
+  def unwrapped_page?
+    content.present? and not @settings.wrap_home_page_content?
   end
 
 end

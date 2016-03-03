@@ -108,7 +108,9 @@ body {
   &.main-nav-hidden {
     background-image: image-url("styles/bg-body-no-nav.png");
   }
-
+  &.blank {
+    background-image: none;
+  }
   .hide-from-all-visitors {
     display: none !important;
   }

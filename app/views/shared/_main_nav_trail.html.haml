@@ -5,7 +5,7 @@
     %span.hidden.doNotPrint
       Navigation:
     %ul.menu_h
-      %li#home.trail= link_to I18n.t('HomePage.MyClassesNav'), root_path
+      %li#home.trail= link_to I18n.t('HomePage.MyClassesNav'), class_link_for_user
       = render :partial => 'shared/extra_nav'
       - unless @emulate_anonymous_user
         - anon_can_browse = current_settings ? current_settings.anonymous_can_browse_materials : true

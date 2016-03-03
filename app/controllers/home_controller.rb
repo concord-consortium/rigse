@@ -17,31 +17,20 @@ class HomeController < ApplicationController
   theme "rites"
 
   def index
-    homePage = HomePage.new(current_visitor, Admin::Settings.default_settings)
+    homePage = HomePage.new(current_visitor, current_settings)
     flash.keep
     case homePage.redirect
       when HomePage::MyClasses
         redirect_to :my_classes
-      when HomePage::RecentActivity
-        redirect_to :recent_activity
-      when HomePage::GettingStarted
-        redirect_to :getting_started
       when HomePage::Home
-        redirect_to :home
+        load_notices
+        load_featured_materials
+        render :home, locals: homePage.view_options, layout: homePage.layout
+      else
+        redirect_to homePage.redirect
+      end
     end
-  end
 
-  def home
-    homePage = HomePage.new(current_visitor, Admin::Settings.default_settings)
-    custom_content = homePage.content
-    load_notices
-    load_featured_materials
-    if custom_content.present?
-      render inline: custom_content.html_safe, layout: homePage.layout
-    else
-      render :home
-    end
-  end
 
   def getting_started
     @hide_signup_link = true

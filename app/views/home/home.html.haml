@@ -2,12 +2,17 @@
 
 .landing-container
   .home-page-content
-    - render_project_info
-    = content_for :project_info
-  - if current_visitor.anonymous?
+    - if custom_content.blank?
+      - render_project_info
+      = content_for :project_info
+    - else
+      = custom_content.html_safe
+  - if show_signup
     .signup-box
       = render partial: "home/signup"
-= render partial: "home/featured_content"
 
-- if !@portal_student
+- if show_featured
+  = render partial: "home/featured_content"
+
+- if show_project_cards
   = render :partial => "project_cards"
