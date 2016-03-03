@@ -101,6 +101,7 @@ en:
   RosterRemoveStudentLong: "Remove Student %{name} from %{clazz}"
   RosterChangePassword: "Change password for %{name}"
   HomePage:
+    MyClassesNav: My Classes
     NeedSettings: |
       You need to create a project for this portal. <br/>
       One way to do this is run <pre>bin/rake app:setup:new_app</pre>
