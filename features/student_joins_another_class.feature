@@ -13,7 +13,7 @@ Feature: Student joins another class
     And the class "My Class" has the class word "word"
     And the student "student" belongs to class "Class_with_no_students"
     And I am logged in with the username student
-    And I am on the home page
+    And I am on my classes page
     And I fill in "clazz_class_word" with "word"
     And I press "Submit"
     And I wait 1 second
@@ -28,7 +28,7 @@ Feature: Student joins another class
     And the class "My Class" has the class word "word"
     And the student "student" belongs to class "Class_with_no_students"
     And I am logged in with the username student
-    And I am on the home page
+    And I am on my classes page
     And I press "Submit"
     Then I should see "Please enter a valid class word and try again."
     When I fill in "clazz_class_word" with "word"
@@ -46,7 +46,7 @@ Feature: Student joins another class
     And the class "My Class" has the class word "word"
     And the student "student" belongs to class "Class_with_no_students"
     And I am logged in with the username student
-    And I am on the home page
+    And I am on my classes page
     And I fill in "clazz_class_word" with "word"
     And I press "Submit"
     And I wait 1 second
@@ -62,7 +62,7 @@ Feature: Student joins another class
     And the class "My Class" has the class word "word"
     And the student "student" belongs to class "Class_with_no_students"
     And I am logged in with the username student
-    And I am on the home page
+    And I am on my classes page
     And I press "Submit"
     Then I should see "Please enter a valid class word and try again."
     When I fill in "clazz_class_word" with "word"

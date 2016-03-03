@@ -10,7 +10,8 @@ module NavigationHelpers
 
     when /the home\s?page/
       '/home'
-
+    when /my classes page/
+      '/my_classes'
     when /my home\s?page/
       '/home'
     when /my preferences/

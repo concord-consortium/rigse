@@ -46,12 +46,14 @@ class HomeController < ApplicationController
   end
 
   def preview_home_page
+    @emulate_anonymous_user = true
     preview_content = params[:home_page_preview_content]
     homePage = HomePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
     @wide_content_layout = true
+    load_notices
     load_featured_materials
     response.headers["X-XSS-Protection"] = "0"
-    render inline: homePage.content.html_safe, layout: homePage.layout
+    render :home, locals: homePage.view_options, layout: homePage.layout
   end
 
   def readme
