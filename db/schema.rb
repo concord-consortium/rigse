@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160302223127) do
+ActiveRecord::Schema.define(:version => 20160303160621) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(:version => 20160302223127) do
     t.integer  "default_cohort_id"
     t.boolean  "wrap_home_page_content",                       :default => true
     t.string   "custom_search_path",                           :default => "/search"
+    t.string   "teacher_home_path"
   end
 
   create_table "admin_settings_vendor_interfaces", :force => true do |t|

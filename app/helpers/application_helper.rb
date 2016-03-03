@@ -1368,4 +1368,12 @@ CONFIG
     admin_settings_path
   end
 
+  def navigation_logo_path
+    if current_settings.teacher_home_path.present? &&  current_visitor.portal_teacher
+      current_settings.teacher_home_path
+    else
+      root_path
+    end
+  end
+
 end
