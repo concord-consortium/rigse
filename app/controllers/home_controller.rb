@@ -144,12 +144,6 @@ class HomeController < ApplicationController
     @offerings_count = 0
     @student_count = 0
 
-    # # If there are no active classes assigned then return to the home page
-    # if (!current_visitor.has_active_classes?)
-    #   redirect_to root_path
-    #   return
-    # end
-
     portal_teacher = current_visitor.portal_teacher
     teacher_clazzes = portal_teacher.clazzes
     portal_teacher_clazzes = portal_teacher.teacher_clazzes
