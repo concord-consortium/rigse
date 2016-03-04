@@ -30,8 +30,7 @@ describe HomeController do
     @test_settings.should_receive(:home_page_content).at_least(:once).and_return(content)
     @test_settings.stub(:name).and_return("Test Settings")
 
-    get :home
-
+    get :index
     response.body.should include(content)
   end
 

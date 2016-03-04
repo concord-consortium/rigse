@@ -28,8 +28,8 @@ class HomeController < ApplicationController
         render :home, locals: homePage.view_options, layout: homePage.layout
       else
         redirect_to homePage.redirect
-      end
     end
+  end
 
 
   def getting_started
