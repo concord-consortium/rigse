@@ -144,5 +144,5 @@ Feature: Teacher can see recent activity
     When I log out
     And I am an anonymous user
     And I try to go to Recent Activity Page
-    Then I should be on "my home page"
+    Then I should be on the root path
     

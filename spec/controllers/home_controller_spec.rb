@@ -13,6 +13,8 @@ describe HomeController do
     @test_settings.stub!(:allow_adhoc_schools).and_return(false)
     @test_settings.stub!(:show_collections_menu).and_return(false)
     @test_settings.stub!(:auto_set_teachers_as_authors).and_return(false)
+    @test_settings.stub!(:wrap_home_page_content?).and_return(true)
+    @test_settings.stub!(:teacher_home_path).and_return(nil)
     controller.stub(:before_render) {
       response.template.stub(:current_settings).and_return(@test_settings)
     }
@@ -29,7 +31,6 @@ describe HomeController do
     @test_settings.stub(:name).and_return("Test Settings")
 
     get :index
-
     response.body.should include(content)
   end
 
@@ -59,11 +60,7 @@ describe HomeController do
       }
       post :preview_home_page, @post_params
       assert_response :success
-      assert_template 'preview_home_page'
-      assert_not_nil assigns[:home_page_preview_content]
-      assert_equal assigns[:home_page_preview_content], @post_params[:home_page_preview_content]
-      assert_equal assigns[:preview_home_page_content], true
-      assert_equal assigns[:wide_content_layout], true
+      response.body.should include(@post_params[:home_page_preview_content])
     end
   end
 end

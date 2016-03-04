@@ -694,23 +694,27 @@ RailsPortal::Application.routes.draw do
     match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
     match '/readme' => 'home#readme', :as => :readme
     match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
-    match '/home' => 'home#index', :as => :home
+    match '/home'       => 'home#index', :as => :home
+    match '/my_classes' => 'home#my_classes', :as => :my_classes
     match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
+    match '/getting_started' => 'home#getting_started', :as => :getting_started
     match '/about' => 'home#about', :as => :about
     match '/report' => 'home#report', :as => :report
     match '/test_exception' => 'home#test_exception', :as => :test_exception
-    match '/' => 'home#index'
+    match '/' => 'home#index', :as => :root
     match '/requirements' => 'home#requirements', :as => :requirements
     match '/stylesheets/settings.css' => 'home#settings_css', :as => :settings_css
     match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
     match '/admin' => 'home#admin', :as => :admin
     match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
+    match 'authoring' => 'home#authoring', :as => :authoring
+
     match '/banner' => 'misc#banner', :as => :banner
     match '/time' => 'misc_metal#time', :as => :time
     match '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
     post  '/installer_report' => 'misc#installer_report', :as => :installer_report
-    match 'authoring' => 'home#authoring', :as => :authoring
+
     match '/:controller(/:action(/:id))'
 
     root :to => 'home#index'

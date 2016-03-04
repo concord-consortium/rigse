@@ -7,10 +7,14 @@ module NavigationHelpers
   #
   def path_to(page_name)
     case page_name
-
+    when /the root path/
+      "/"
     when /the home\s?page/
-      '/'
-
+      '/home'
+    when /my classes page/
+      '/my_classes'
+    when /getting started page/
+      '/getting_started'
     when /my home\s?page/
       '/home'
     when /my preferences/

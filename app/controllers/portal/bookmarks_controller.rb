@@ -95,7 +95,7 @@ class Portal::BookmarksController < ApplicationController
       @visits = Portal::BookmarkVisit.recent
       render :visits
     else
-      redirect_to :home
+      redirect_to :root
     end
   end
 

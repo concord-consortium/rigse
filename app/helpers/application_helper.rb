@@ -1368,4 +1368,18 @@ CONFIG
     admin_settings_path
   end
 
+  def class_link_for_user
+    if current_visitor.portal_teacher
+      if current_visitor.has_active_classes?
+        recent_activity_path
+      else
+        getting_started_path
+      end
+    elsif current_visitor.portal_student
+      my_classes_path
+    else
+      root_path
+    end
+  end
+
 end

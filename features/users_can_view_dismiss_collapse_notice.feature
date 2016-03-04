@@ -12,7 +12,7 @@ Feature: Users can view notices created by project staff
     
   Scenario: Member roles should see notices
     When I am logged in with the username teacher
-    And am on the my home page
+    And am on getting started page
     Then I should see "Notice for all users"
     
     
@@ -42,7 +42,7 @@ Feature: Users can view notices created by project staff
     
   Scenario: Students should not see notices
     And I am logged in with the username student
-    And am on the my home page
+    And am on my classes page
     Then I should not see "Notice for all users"
     
     

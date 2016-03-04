@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160226050939) do
+ActiveRecord::Schema.define(:version => 20160303160621) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -123,8 +123,8 @@ ActiveRecord::Schema.define(:version => 20160226050939) do
     t.integer  "user_id"
     t.text     "description"
     t.string   "uuid",                           :limit => 36
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.datetime "created_at",                                                                   :null => false
+    t.datetime "updated_at",                                                                   :null => false
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
     t.boolean  "allow_default_class"
@@ -149,6 +149,9 @@ ActiveRecord::Schema.define(:version => 20160226050939) do
     t.boolean  "show_collections_menu",                        :default => false
     t.boolean  "auto_set_teachers_as_authors",                 :default => false
     t.integer  "default_cohort_id"
+    t.boolean  "wrap_home_page_content",                       :default => true
+    t.string   "custom_search_path",                           :default => "/search"
+    t.string   "teacher_home_path",                            :default => "/getting_started"
   end
 
   create_table "admin_settings_vendor_interfaces", :force => true do |t|

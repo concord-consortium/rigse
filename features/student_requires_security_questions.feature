@@ -13,17 +13,17 @@ Feature: Student must specify security questions before using the portal
     And I am logged in with the username student
 
     Scenario: Student forced to enter security questions
-      When I try to go to my home page
+      When I try to go to the root path
       Then I should be on the edit security questions page for the user "student"
 
     Scenario: Student tries to navigate to their preferences
       When I try to go to my preferences
       Then I should be on the edit security questions page for the user "student"
 
-    Scenario: Student can navigate to their home page after their security qeustions are set
+    Scenario: Student can navigate to their home page after their security questions are set
       When the student "student" has security questions set
-      And I go to my home page
-      Then I should be on my home page
+      And I go to my classes page
+      Then I should be on my classes page
 
     Scenario: Student can navigate to their preferences
       When the student "student" has security questions set

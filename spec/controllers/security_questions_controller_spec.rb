@@ -14,6 +14,7 @@ describe SecurityQuestionsController do
     @test_settings.stub!(:anonymous_can_browse_materials).and_return(true)
     @test_settings.stub!(:show_collections_menu).and_return(false)
     @test_settings.stub!(:auto_set_teachers_as_authors).and_return(false)
+    @test_settings.stub!(:teacher_home_path).and_return(nil)
     Admin::Settings.stub(:default_settings).and_return(@test_settings)
   end
 

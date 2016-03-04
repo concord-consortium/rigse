@@ -8,7 +8,7 @@ Feature: Class state should be saved
   
   @javascript
   Scenario: Teacher should land on instructional materials page
-    When I am on the home page
+    When I am on the getting started page
     When I follow "Physics" within left panel for class navigation
     Then I should be on the Instructional Materials page for "Physics"
     

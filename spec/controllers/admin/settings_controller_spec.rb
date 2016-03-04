@@ -104,7 +104,7 @@ describe Admin::SettingsController do
       
       response.body.should have_selector("*[name='admin_settings[home_page_content]']")
 
-      (settings.attributes.keys - ["home_page_content","custom_css"]).each do |attribute|
+      (settings.attributes.keys - ["home_page_content","custom_css","wrap_home_page_content"]).each do |attribute|
         response.body.should_not have_selector("*[name='admin_settings[#{attribute}]']")
       end
     end
