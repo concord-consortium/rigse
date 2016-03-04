@@ -36,4 +36,13 @@ class Saveable::OpenResponse < ActiveRecord::Base
   def answered?
     answers.length > 0
   end
+
+  def current_feedback
+    if answered?
+      answers.last.feedback
+    else
+      nil
+    end
+  end
+
 end

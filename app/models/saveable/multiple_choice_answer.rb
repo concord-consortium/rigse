@@ -14,7 +14,8 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
         data = {
           :choice_id => rc.choice.id,
           :answer => rc.choice.choice,
-          :correct => rc.choice.is_correct
+          :correct => rc.choice.is_correct,
+          :feedback => rc.answer.feedback
         }
         data[:rationale] = rc.rationale if rc.rationale
         data

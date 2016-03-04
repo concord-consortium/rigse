@@ -31,6 +31,12 @@ class Portal::Offering < ActiveRecord::Base
     end
   end
 
+  has_many :metadata, :class_name => "Portal::OfferingEmbeddableMetadata" do
+    def for_embeddable(embeddable)
+      where(embeddable_type: embeddable.class.name, embeddable_id: embeddable.id).first
+    end
+  end
+
   attr_reader :saveable_objects
   before_destroy :can_be_deleted?
 
@@ -49,6 +55,10 @@ class Portal::Offering < ActiveRecord::Base
 
   def saveables
     multiple_choices + open_responses
+  end
+
+  def resource_page?
+    self.runnable.is_a? ResourcePage
   end
 
   def external_activity?
