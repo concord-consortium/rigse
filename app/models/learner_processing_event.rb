@@ -7,6 +7,9 @@ class LearnerProcessingEvent < ActiveRecord::Base
 
   # Humanize duration seconds, similar to ActiveSupport's distance_of_time_in_words
   def self.humanize(secs)
+    if secs.nil?
+      return "N/A"
+    end
     [[60, :seconds], [60, :minutes], [24, :hours], [1000, :days]].map{ |count, name|
       if secs > 0
         secs, n = secs.divmod(count)

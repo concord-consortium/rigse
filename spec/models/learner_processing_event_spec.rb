@@ -36,5 +36,14 @@ describe LearnerProcessingEvent do
       expect(record.duration).to match "2 minutes"
     end
   end
+  describe "The expected average" do
+    it "should be N/A when there is no data" do
+      expect(LearnerProcessingEvent.human_avg(12)).to match "N/A"
+    end
 
+    it "should be a human readable form of the time since the lara_start" do
+      record.save!
+      expect(LearnerProcessingEvent.human_avg(12)).to match "10 minutes 0 seconds"
+    end
+  end
 end
