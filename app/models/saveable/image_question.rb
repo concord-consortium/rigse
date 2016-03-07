@@ -43,12 +43,5 @@ class Saveable::ImageQuestion < ActiveRecord::Base
     self.answers.create(:blob  => blob, :note => note, :is_final => is_final)
   end
 
-  def current_feedback
-    if answered?
-      answers.last.feedback
-    else
-      nil
-    end
-  end
 
 end
