@@ -12,7 +12,6 @@ class API::V1::Report
     answers_hash = get_student_answers
     provide_no_answer_entries(answers_hash, clazz[:students])
     {
-      # Might be useful e.g. to filter out sections that doesn't make sense in LARA activities context.
       report: report_json(answers_hash),
       class: clazz,
       visibility_filter: visibility_filter_json(@offering.report_embeddable_filter),
@@ -48,7 +47,6 @@ class API::V1::Report
     # Collect all the student answers for given offering.
     answers = Report::Learner.where(offering_id: @offering.id).map do |report_learner|
       student_id = report_learner.student_id
-      student_name = report_learner.student_name
       answers = []
       report_learner.answers.map do |embeddable_key, answer|
         # Process some answers type to provide cleaner format, names, etc.
@@ -56,7 +54,6 @@ class API::V1::Report
         answer[:type] = question_type
         answer[:embeddable_key] = embeddable_key
         answer[:student_id] = student_id
-        answer[:student_name] = student_name
         if question_type == 'Embeddable::MultipleChoice'
           process_multiple_choice_answer(answer)
         elsif question_type == 'Embeddable::ImageQuestion'
@@ -75,7 +72,6 @@ class API::V1::Report
     default_answer_entries = students_json.select { |s| s[:started_offering] }.map do |s|
       {
         student_id: s[:id],
-        student_name: s[:name],
         answer: nil,
         type: 'NoAnswer'
       }
@@ -85,7 +81,9 @@ class API::V1::Report
       embeddable_answers.each { |answer| student_found[answer[:student_id]] = true }
       default_answer_entries.each do |default_answer|
         unless student_found.fetch(default_answer[:student_id], false)
-          answers[embeddable_key].push(default_answer)
+          ans = default_answer.clone
+          ans[:embeddable_key] = embeddable_key
+          answers[embeddable_key].push(ans)
         end
       end
     end
