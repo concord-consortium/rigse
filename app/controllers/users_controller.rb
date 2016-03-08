@@ -212,9 +212,9 @@ class UsersController < ApplicationController
 
   #Used for activation of users by a manager/admin
   def confirm
-    authorize User
-    user = User.find(params[:id]) unless params[:id].blank?
-    if !params[:id].blank? && user && user.state != "active"
+    user = User.find(params[:id])
+    authorize user
+    if user.state != "active"
       user.confirm!
       user.make_user_a_member
       # assume this type of user just activated someone from somewhere else in the app
