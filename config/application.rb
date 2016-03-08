@@ -122,6 +122,7 @@ module RailsPortal
         resource '/interactives/export_model_library', :headers => :any, :methods => :get
         # always allow access to the class#info
         resource '/portal/classes/info', :headers => :any, :methods => :get
+        resource '/api/v1/reports/*', :headers => :any, :methods => [:get, :put]
       end
 
       # Set up custom CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".
