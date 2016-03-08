@@ -8,23 +8,12 @@ class Saveable::ImageQuestion < ActiveRecord::Base
 
   has_many :answers, :dependent => :destroy, :order => :position, :class_name => "Saveable::ImageQuestionAnswer"
 
-  # has_one :answer,
-  #   :class_name => "Saveable::OpenResponseAnswer",
-  #   :order => 'position DESC'
 
   [:prompt, :name, :drawing_prompt].each { |m| delegate m, :to => :image_question, :class_name => 'Embeddable::ImageQuestion' }
 
   include Saveable::Saveable
 
-  def answer
-    if answered?
-      answers.last.answer
-    else
-      'not answered'
-    end
-  end
-
-    def submitted_answer
+  def submitted_answer
     if submitted?
       answers.last.answer
     elsif answered?
@@ -32,10 +21,6 @@ class Saveable::ImageQuestion < ActiveRecord::Base
     else
       'not answered'
     end
-  end
-
-  def answered?
-    answers.length > 0
   end
 
   def add_external_answer(note, url, is_final = nil)

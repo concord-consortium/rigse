@@ -36,11 +36,42 @@ module Saveable::Saveable
     end
   end
 
-  def current_feedback
+  def answer
     if answered?
+      answers.last.answer
+    else
+      'not answered'
+    end
+  end
+
+  def answered?
+    answers.length > 0
+  end
+
+
+  def current_feedback
+    if answered? && answers.last.respond_to?(:feedback)
       answers.last.feedback
     else
       nil
     end
   end
+
+  def current_score
+    if answered? && answers.last.respond_to?(:score)
+      answers.last.score
+    else
+      nil
+    end
+  end
+
+  def needs_review?
+    if answered? && answers.last.respond_to?(:has_been_reviewed?)
+      ! answers.last.has_been_reviewed?
+    else
+      false
+    end
+  end
+
+
 end

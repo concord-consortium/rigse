@@ -15,13 +15,7 @@ class Saveable::ExternalLink < ActiveRecord::Base
   delegate :width, :to => :embeddable
   delegate :height, :to => :embeddable
 
-  def answer
-    if answered?
-      answers.last.answer
-    else
-      'not answered'
-    end
-  end
+  include Saveable::Saveable
 
   def submitted_answer
     if submitted?
@@ -33,9 +27,6 @@ class Saveable::ExternalLink < ActiveRecord::Base
     end
   end
 
-  def answered?
-    answers.length > 0
-  end
 
   def submitted?
     true
