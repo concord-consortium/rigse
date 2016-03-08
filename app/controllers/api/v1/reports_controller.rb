@@ -12,7 +12,7 @@ class API::V1::ReportsController < API::APIController
     render json: API::V1::Report.new(offering, request.protocol, request.host_with_port).to_json
   end
 
-  # POST api/v1/reports/:id
+  # PUT api/v1/reports/:id
   def update
     offering = Portal::Offering.find(params[:id])
     # authorize offering, :api_report?
