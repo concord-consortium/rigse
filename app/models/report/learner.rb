@@ -34,6 +34,24 @@ class Report::Learner < ActiveRecord::Base
     return true
   end
 
+  def serialize_blob_answer(answer)
+    if answer.is_a? Hash
+      blob = answer[:blob]
+      if blob
+        # Return a serialized hash of the blob
+        return {
+            :type => "Dataservice::Blob",
+            :id => blob.id,
+            :token => blob.token,
+            :file_extension => blob.file_extension,
+            :note => answer[:note]
+        }
+      end
+    end
+    # Otherwise don't change it
+    return answer
+  end
+
   def last_run_string(opts={})
     return Report::Learner.build_last_run_string(last_run, opts)
   end
@@ -92,23 +110,31 @@ class Report::Learner < ActiveRecord::Base
     # AU: We'll use a serialized column to store a hash, for now
     answers_hash = {}
     report_util.saveables.each do |s|
-      hash = {:answer => s.answer, :answered => s.answered?, :submitted => s.submitted?, :question_required => s.embeddable.is_required }
-      hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
-      if hash[:answer].is_a? Hash
-        if hash[:answer][:blob]
-          blob = hash[:answer][:blob]
-          hash[:answer] = {
-            :type => "Dataservice::Blob",
-            :id => blob.id,
-            :token => blob.token,
-            :file_extension => blob.file_extension,
-            :note => hash[:answer][:note]
-          }
-        end
+      feedbacks = s.answers.map do |ans|
+        {
+            answer: serialize_blob_answer(ans.answer),
+            answer_key: serialize_record_key(ans),
+            score: ans.respond_to?(:score) ? (ans.score || false) : nil,
+            feedback: ans.respond_to?(:feedback) ? (ans.feedback || false): nil,
+            has_been_reviewed: ans.respond_to?(:has_been_reviewed?) ? (ans.has_been_reviewed?||false) : nil
+        }
       end
-      answers_hash["#{s.embeddable.class.to_s}|#{s.embeddable.id}"] = hash
+      hash = {
+          :answer => serialize_blob_answer(s.answer),
+          :feedbacks => feedbacks,
+          :answered => s.answered?,
+          :submitted => s.submitted?,
+          :question_required => s.embeddable.is_required,
+          :needs_review => s.needs_review?
+      }
+      hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
+      answers_hash[serialize_record_key(s.embeddable)] = hash
     end
     self.answers = answers_hash
+  end
+
+  def serialize_record_key(item)
+    "#{item.class.to_s}|#{item.id}"
   end
 
   def update_field(methods_string, field=nil)
