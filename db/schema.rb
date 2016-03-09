@@ -2397,9 +2397,10 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.integer  "position"
     t.string   "url"
     t.boolean  "is_final"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.text     "feedback"
+    t.boolean  "has_been_reviewed", :default => false
     t.integer  "score"
   end
 
@@ -2411,9 +2412,8 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.integer  "learner_id"
     t.integer  "offering_id"
     t.integer  "response_count"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-    t.boolean  "has_been_reviewed", :default => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   add_index "saveable_external_links", ["embeddable_id", "embeddable_type"], :name => "svbl_xtrn_links_poly"
@@ -2425,12 +2425,13 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.integer  "bundle_content_id"
     t.integer  "blob_id"
     t.integer  "position"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.text     "note"
     t.string   "uuid",              :limit => 36
     t.boolean  "is_final"
     t.text     "feedback"
+    t.boolean  "has_been_reviewed",               :default => false
     t.integer  "score"
   end
 
@@ -2441,10 +2442,9 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.integer  "offering_id"
     t.integer  "image_question_id"
     t.integer  "response_count",                  :default => 0
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
     t.string   "uuid",              :limit => 36
-    t.boolean  "has_been_reviewed",               :default => false
   end
 
   add_index "saveable_image_questions", ["image_question_id"], :name => "index_saveable_image_questions_on_image_question_id"
@@ -2455,11 +2455,12 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.integer  "multiple_choice_id"
     t.integer  "bundle_content_id"
     t.integer  "position"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
     t.string   "uuid",               :limit => 36
     t.boolean  "is_final"
     t.text     "feedback"
+    t.boolean  "has_been_reviewed",                :default => false
     t.integer  "score"
   end
 
@@ -2480,12 +2481,11 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
   create_table "saveable_multiple_choices", :force => true do |t|
     t.integer  "learner_id"
     t.integer  "multiple_choice_id"
-    t.datetime "created_at",                                          :null => false
-    t.datetime "updated_at",                                          :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.integer  "offering_id"
     t.integer  "response_count",                   :default => 0
     t.string   "uuid",               :limit => 36
-    t.boolean  "has_been_reviewed",                :default => false
   end
 
   add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"
@@ -2497,10 +2497,11 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.integer  "bundle_content_id"
     t.integer  "position"
     t.text     "answer"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.boolean  "is_final"
     t.text     "feedback"
+    t.boolean  "has_been_reviewed", :default => false
     t.integer  "score"
   end
 
@@ -2509,11 +2510,10 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
   create_table "saveable_open_responses", :force => true do |t|
     t.integer  "learner_id"
     t.integer  "open_response_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.integer  "offering_id"
-    t.integer  "response_count",    :default => 0
-    t.boolean  "has_been_reviewed", :default => false
+    t.integer  "response_count",   :default => 0
   end
 
   add_index "saveable_open_responses", ["learner_id"], :name => "index_saveable_open_responses_on_learner_id"
