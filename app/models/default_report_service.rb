@@ -17,12 +17,12 @@ class DefaultReportService
       name: DefaultReportServiceAppID,
       app_secret: SecureRandom.uuid()
     })
-    @client.update_attribute(:domain_matchers, DefaultReportDomainMatchers)
-    @client.save!
+    if @client.domain_matchers != DefaultReportDomainMatchers
+      @client.update_attribute(:domain_matchers, DefaultReportDomainMatchers)
+    end
   end
 
-  # Return a the external_report url
-  # with parameters for the offering_api_url
+  # Return a the external_report url with parameters for the offering_api_url
   # and the short-lived bearer token for the user.
   def url_for(api_offering_url, user)
     grant = @client.updated_grant_for(user, ReportTokenValidFor)

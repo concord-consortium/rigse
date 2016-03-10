@@ -373,25 +373,21 @@ module ApplicationHelper
     end
   end
 
-  # TODO: NP 2016-03-10 Remove this old_report_link if no other projects need it
-  def old_report_link_for(reportable, action='report', link_text='Report ', title=nil)
-    return "" if reportable.respond_to?('reportable?') && !reportable.reportable?
+  def learner_report_link_for(learner, action='report', link_text='Report ', title=nil)
+    return "" if learner.respond_to?('reportable?') && !learner.reportable?
 
-    reportable_display_name = reportable.class.display_name.downcase
+    reportable_display_name = learner.class.display_name.downcase
     action_string = action.gsub('_', ' ')
-    name = reportable.name
+    name = learner.name
     format = nil
-    if (reportable.respond_to?('runnable') && reportable.runnable.respond_to?('report_format') && reportable.runnable.respond_to?('report_url') && reportable.runnable.report_url && !reportable.runnable.report_url.strip.empty?)
-      format = reportable.runnable.report_format
-    end
-    url = polymorphic_url(reportable, :action => action, :format => format)
+
+    url = polymorphic_url(learner, :action => action, :format => format)
     if title.nil?
       title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window."
     end
     link_to(link_text, url, :target => '_blank', :title => title)
   end
 
-  # TODO: NP 2016-03-10 : Need to exlude some runnable types as old_report_link?
   def report_link_for(reportable, link_text='Report ', title=nil)
     return "" if reportable.respond_to?('reportable?') && !reportable.reportable?
     url = report_portal_offering_path(reportable.id)
@@ -918,11 +914,11 @@ module ApplicationHelper
             haml_concat link_to('Run', run_url_for(learner))
             haml_concat " | "
             if current_visitor.has_role?("admin")
-              haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+              haml_concat learner_report_link_for(learner, 'bundle_report', 'Bundles ')
               haml_concat " | "
             end
           end
-          haml_concat report_link_for(learner, 'report', 'Report')
+          haml_concat learner_report_link_for(learner, 'report', 'Report')
         end
         haml_tag :div, :class => 'action_menu_activity_title' do
           haml_concat title_for_component(learner, options)
@@ -975,10 +971,6 @@ module ApplicationHelper
             haml_concat activation_toggle_link_for(offering, 'activate', 'Activate')
           end
 
-          # haml_concat " | "
-          # haml_concat report_link_for(offering, 'open_response_report','OR Report')
-          # haml_concat " | "
-          # haml_concat report_link_for(offering, 'multiple_choice_report','MC Report')
         end
         haml_tag :div, :class => 'action_menu_activity_title' do
           haml_concat title_for_component(offering, options)

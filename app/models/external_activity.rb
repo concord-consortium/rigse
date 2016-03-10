@@ -189,10 +189,6 @@ class ExternalActivity < ActiveRecord::Base
     :run_resource_html
   end
 
-  def report_format
-    :run_resource_html
-  end
-
   def has_launch_url?
     !launch_url.blank?
   end

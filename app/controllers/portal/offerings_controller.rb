@@ -140,53 +140,6 @@ class Portal::OfferingsController < ApplicationController
     redirect_to :back
   end
 
-  # TODO: NP 2016-03-10 Delete this #old_report action if projects like the new report.
-  def old_report
-    @offering = Portal::Offering.find(params[:id])
-    authorize @offering
-    @activity_report_id = nil
-    @report_embeddable_filter = []
-    unless @offering.report_embeddable_filter.nil? || @offering.report_embeddable_filter.embeddables.nil?
-      @report_embeddable_filter = @offering.report_embeddable_filter.embeddables
-    end
-    unless params[:activity_id].nil?
-      activity = ::Activity.find(params[:activity_id].to_i)
-      @activity_report_id = params[:activity_id].to_i
-      unless activity.nil?
-        activity_embeddables = activity.page_elements.map{|pe|pe.embeddable}
-        if @offering.report_embeddable_filter.ignore
-          @offering.report_embeddable_filter.embeddables = activity_embeddables
-        else
-           filtered_embeddables = @offering.report_embeddable_filter.embeddables & activity_embeddables
-           filtered_embeddables = (filtered_embeddables.length == 0)? activity_embeddables : filtered_embeddables
-           @offering.report_embeddable_filter.embeddables = filtered_embeddables
-        end
-        @offering.report_embeddable_filter.ignore = false
-      end
-    end
-
-    respond_to do |format|
-      format.html {
-        reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
-        @learners = reportUtil.learners
-        @page_elements = reportUtil.page_elements
-
-        render :layout => 'report' # report.html.haml
-      }
-
-      format.run_resource_html   {
-        @learners = @offering.clazz.students.map do |l|
-          "name: '#{l.name}', id: #{l.id}"
-        end
-        cookies[:activity_name] = @offering.runnable.url
-        cookies[:class] = @offering.clazz.id
-        cookies[:class_students] = "[{" + @learners.join("},{") + "}]" # formatted for JSON parsing
-
-        redirect_to(@offering.runnable.report_url, 'popup' => true)
-       }
-    end
-  end
-
   def multiple_choice_report
     @offering = Portal::Offering.find(params[:id], :include => :learners)
     authorize @offering
