@@ -12,22 +12,16 @@ require 'haml'
 require File.expand_path('../../lib/yaml_editor', __FILE__)
 
 set :stages, %w(
-  rites-staging rites-production rites-ri-production
-  itsi-master-staging itsi-master-production
-  smartgraphs-staging smartgraphs-production smartgraphs-aws1
-  has-dev has-staging has-production has-aws1
-  geniverse-dev geniverse-production
-  geniverse-aws-testing geniverse-aws-production
-  genigames-baseline-production genigames-ungamed-production
-  genigames-dev genigames-staging genigames-production
-  interactions-staging interactions-production
-  genomedynamics-dev genomedynamics-staging
-  sparks-dev sparks-staging sparks-production sparks-aws1
-  learn-staging learn-production
-  ngss-assessment-staging ngss-assessment-production
   codap-production
-  xproject-dev
-  inquiryspace-production inquiryspace-staging)
+  geniverse-dev geniverse-aws-testing geniverse-aws-production
+  has-staging has-production
+  interactions-production
+  itsi-production
+  learn-staging learn-production
+  ngss-assessment-production
+  rites-production
+  sparks-aws1 sparks-common sparks-dev sparks-production sparks-staging
+  )
 
 set :default_stage, "development"
 
