@@ -42,6 +42,10 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin? || class_student?
   end
 
+  def old_report?
+    class_teacher_or_admin?
+  end
+
   def report?
     class_teacher_or_admin?
   end

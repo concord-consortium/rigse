@@ -140,7 +140,8 @@ class Portal::OfferingsController < ApplicationController
     redirect_to :back
   end
 
-  def report
+  # TODO: NP 2016-03-10 Delete this #old_report action if projects like the new report.
+  def old_report
     @offering = Portal::Offering.find(params[:id])
     authorize @offering
     @activity_report_id = nil
@@ -335,6 +336,15 @@ class Portal::OfferingsController < ApplicationController
       page << "setRecentActivityTableHeaders(null,#{params[:id]})"
     end
     return
+  end
+
+  def report
+    offering_id = params[:id]
+    authorize Portal::Offering.find(offering_id)
+    report = DefaultReportService.instance()
+    offering_api_url = api_v1_report_url(offering_id)
+    next_url = report.url_for(offering_api_url, current_visitor)
+    redirect_to next_url
   end
 
   def external_report

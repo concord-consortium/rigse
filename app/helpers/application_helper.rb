@@ -373,7 +373,8 @@ module ApplicationHelper
     end
   end
 
-  def report_link_for(reportable, action='report', link_text='Report ', title=nil)
+  # TODO: NP 2016-03-10 Remove this old_report_link if no other projects need it
+  def old_report_link_for(reportable, action='report', link_text='Report ', title=nil)
     return "" if reportable.respond_to?('reportable?') && !reportable.reportable?
 
     reportable_display_name = reportable.class.display_name.downcase
@@ -388,6 +389,13 @@ module ApplicationHelper
       title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window."
     end
     link_to(link_text, url, :target => '_blank', :title => title)
+  end
+
+  # TODO: NP 2016-03-10 : Need to exlude some runnable types as old_report_link?
+  def report_link_for(reportable, link_text='Report ', title=nil)
+    return "" if reportable.respond_to?('reportable?') && !reportable.reportable?
+    url = report_portal_offering_path(reportable.id)
+    link_to link_text, url, :target => '_blank', :title => title
   end
 
   def alternate_report_link_for(offering)
