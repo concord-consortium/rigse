@@ -25,6 +25,19 @@ class Report::EmbeddableFilter < ActiveRecord::Base
     write_attribute(:embeddables, items)
     @embeddables_internal = array
   end
+
+  def embeddable_keys
+    read_attribute(:embeddables).map { |em| "#{em[:type]}|#{em[:id]}" }
+  end
+
+  def embeddable_keys=(array)
+    items = array.map do |key|
+      keyPair = key.split('|')
+      {type: keyPair[0], id: keyPair[1]}
+    end
+    write_attribute(:embeddables, items)
+    @embeddables_internal = nil
+  end
   
   def clear
     self.update_attribute(:embeddables, [])

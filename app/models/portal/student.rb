@@ -13,6 +13,7 @@ class Portal::Student < ActiveRecord::Base
   # has_many :schools, :through => :school_memberships, :class_name => "Portal::School"
 
   has_many :learners, :dependent => :destroy , :class_name => "Portal::Learner", :foreign_key => "student_id"
+  has_many :report_learners, :class_name => "Report::Learner"
   has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
 
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz"
