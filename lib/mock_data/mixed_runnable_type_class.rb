@@ -15,8 +15,7 @@ module MockData
         Factory(:external_activity, :name => "External Activity with internal reporting Sample",
           :template => Factory(:activity, :name => "Backing Activity for External Activity")),
         Factory(:external_activity, :name => "External Activity with external reporting Sample",
-          :url => "/mock_html/test-external-activity.html",
-          :report_url => "/mock_html/test-external-report.html")
+          :url => "/mock_html/test-external-activity.html")
       ]
 
       offerings = runnables.map { |runnable| 

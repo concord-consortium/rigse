@@ -118,7 +118,9 @@ class Portal::Offering < ActiveRecord::Base
     if internal_report?
       true
     else
-      runnable.class == ExternalActivity && !runnable.report_url.blank?
+      # runnable.class == ExternalActivity && !runnable.report_url.blank?
+      # We no longer handle report_url in external activities, see 3f7638a
+      false
     end
   end
 
