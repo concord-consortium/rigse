@@ -173,7 +173,7 @@ class API::V1::Report
     key = embeddable_key(embeddable)
     hash[:key] = key
     hash[:type] = embeddable.class.to_s
-    hash[:children] = answers[key]
+    hash[:answers] = answers[key]
 
     if embeddable.is_a? Embeddable::MultipleChoice
       process_multiple_choice(hash, embeddable)
@@ -196,7 +196,7 @@ class API::V1::Report
 
   def process_iframe(hash, embeddable)
     # Filter out null answers.
-    hash[:children].select { |a| a[:answer].present? }.each do |answer|
+    hash[:answers].select { |a| a[:answer].present? }.each do |answer|
       # Pass these properties to answer too.
       answer[:display_in_iframe] = embeddable.display_in_iframe
       answer[:width] = embeddable.width
