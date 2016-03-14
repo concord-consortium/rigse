@@ -85,8 +85,8 @@ source "http://rubygems.org"
   # this is because of the removed RAILS_ROOT constant
   # gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
   gem 'calpicker', :git => 'git://github.com/concord-consortium/calpicker'
-  gem 'delayed_job',          "~> 3.0.1"
-  gem 'delayed_job_active_record', "~> 0.3.2"
+  gem 'delayed_job',          "~> 4.1.1"
+  gem 'delayed_job_active_record', "~> 4.1.0"
   gem "delayed_job_web"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
