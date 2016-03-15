@@ -278,10 +278,17 @@ describe Portal::OfferingsController do
     end
 
     describe "When the teacher of the class requests the report" do
-      let(:user) { teacher.user }
-      it "should redirect to the external reporting service" do
+      let(:user)           { teacher.user }
+      let(:report_url)     { "https://concord-consortium.github.io/portal-report/" }
+      let(:report_domains) { "concord-consortium.github.io" }
+      before(:each) do
+        ENV.stub(:[]).with("REPORT_VIEW_URL").and_return(report_url)
+        ENV.stub(:[]).with("REPORT_DOMAINS").and_return(report_domains)
+      end
+
+      it "should redirect to the external reporting service as configured by the environment" do
         get :report, post_params
-        response.location.should =~ /#{DefaultReportService::ReportViewUrl}/
+        response.location.should =~ /#{report_url}/
       end
       it "should include an authentication token parameter" do
         get :report, post_params
