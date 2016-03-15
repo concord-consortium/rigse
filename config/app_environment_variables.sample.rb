@@ -10,8 +10,9 @@
 # sample :  ENV['PORTAL_FEATURES']  ||= 'geniverse_remote_auth genigames_data'
 # EG, enable genigame auth / data via `     ENV['PORTAL_FEATURES']  ||= 'geniverse_remote_auth genigames_data'
 
-ENV['PORTAL_FEATURES'] ||= ''
-ENV['REPORT_SERVER']   ||= 'https://concord-consortium.github.io/portal-report/'
+ENV['PORTAL_FEATURES']   ||= ''
+ENV['REPORT_VIEW_URL']   ||= 'https://concord-consortium.github.io/portal-report/'
+ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 
 # CORS_ORIGINS:
 # Sets the allowed CORS origins to a specific whitelist. Requires ENV['PORTAL_FEATURES'] ||= 'allow_cors'

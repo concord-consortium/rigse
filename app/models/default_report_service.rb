@@ -1,18 +1,26 @@
 # This class mimics external_report.rb
 class DefaultReportService
   DefaultReportServiceAppID   = 'DEFAULT_REPORT_SERVICE_CLIENT'
-  DefaultReportDomainMatchers = '*.concord.org concord-consortium.github.io localhost'
-  ReportViewUrl = 'https://concord-consortium.github.io/portal-report/'
-
-
   ReportTokenValidFor = 2.hours
 
   def self.instance
     @instance || self.new()
   end
 
+  def load_env(varname)
+    result =  ENV[varname]
+    unless result
+      throw(Exception("Please add #{varname} to app_environment_variables.rb"))
+    end
+    result
+  end
+
   def reportViewUrl
-    ENV['REPORT_VIEW_URL'] || ReportViewUrl
+    load_env('REPORT_VIEW_URL')
+  end
+
+  def report_domain_matchers
+    load_env('REPORT_DOMAINS')
   end
 
   def initialize
@@ -22,8 +30,8 @@ class DefaultReportService
       name: DefaultReportServiceAppID,
       app_secret: SecureRandom.uuid()
     })
-    if @client.domain_matchers != DefaultReportDomainMatchers
-      @client.update_attribute(:domain_matchers, DefaultReportDomainMatchers)
+    if @client.domain_matchers != report_domain_matchers
+      @client.update_attribute(:domain_matchers, report_domain_matchers)
     end
   end
 

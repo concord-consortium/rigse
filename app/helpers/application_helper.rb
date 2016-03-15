@@ -374,14 +374,13 @@ module ApplicationHelper
   end
 
   def learner_report_link_for(learner, action='report', link_text='Report ', title=nil)
-    return "" if learner.respond_to?('reportable?') && !learner.reportable?
+    return "" unless learner.reportable?
 
     reportable_display_name = learner.class.display_name.downcase
     action_string = action.gsub('_', ' ')
     name = learner.name
-    format = nil
 
-    url = polymorphic_url(learner, :action => action, :format => format)
+    url = polymorphic_url(learner, :action => action)
     if title.nil?
       title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window."
     end

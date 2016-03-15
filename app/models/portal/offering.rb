@@ -115,13 +115,7 @@ class Portal::Offering < ActiveRecord::Base
   end
 
   def reportable?
-    if internal_report?
-      true
-    else
-      # runnable.class == ExternalActivity && !runnable.report_url.blank?
-      # We no longer handle report_url in external activities, see 3f7638a
-      false
-    end
+    internal_report?
   end
 
   def individual_reportable?
