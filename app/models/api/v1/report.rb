@@ -93,7 +93,7 @@ class API::V1::Report
     # Make naming more consistent, otherwise we would have crazy sequence of [:answers][:answer][:answer] keys.
     hash[:answer] = hash[:answer].map do |a|
       {
-        id: a[:id],
+        id: a[:choice_id],
         choice: a[:answer],
         is_correct: a[:correct]
       }
@@ -174,7 +174,7 @@ class API::V1::Report
     key = embeddable_key(embeddable)
     hash[:key] = key
     hash[:type] = embeddable.class.to_s
-    hash[:answers] = answers[key]
+    hash[:answers] = answers[key] || [] #when no students have answered
 
     if embeddable.is_a? Embeddable::MultipleChoice
       process_multiple_choice(hash, embeddable)
