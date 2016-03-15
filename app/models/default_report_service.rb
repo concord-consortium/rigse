@@ -1,13 +1,18 @@
 # This class mimics external_report.rb
 class DefaultReportService
-  DefaultReportServiceAppID = 'DEFAULT_REPORT_SERVICE_CLIENT'
+  DefaultReportServiceAppID   = 'DEFAULT_REPORT_SERVICE_CLIENT'
   DefaultReportDomainMatchers = '*.concord.org concord-consortium.github.io localhost'
-  ReportViewUrl = 'http://concord-consortium.github.io/portal-report/'
+  ReportViewUrl = 'https://concord-consortium.github.io/portal-report/'
+
 
   ReportTokenValidFor = 2.hours
 
   def self.instance
     @instance || self.new()
+  end
+
+  def reportViewUrl
+    ENV['REPORT_VIEW_URL'] || ReportViewUrl
   end
 
   def initialize
@@ -27,7 +32,7 @@ class DefaultReportService
   def url_for(api_offering_url, user)
     grant = @client.updated_grant_for(user, ReportTokenValidFor)
     token = grant.access_token
-    "#{ReportViewUrl}?reportUrl=#{api_offering_url}&token=#{token}"
+    "#{reportViewUrl}?reportUrl=#{api_offering_url}&token=#{token}"
   end
 
 end
