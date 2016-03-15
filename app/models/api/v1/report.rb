@@ -93,6 +93,7 @@ class API::V1::Report
     # Make naming more consistent, otherwise we would have crazy sequence of [:answers][:answer][:answer] keys.
     hash[:answer] = hash[:answer].map do |a|
       {
+        id: a[:id],
         choice: a[:answer],
         is_correct: a[:correct]
       }
