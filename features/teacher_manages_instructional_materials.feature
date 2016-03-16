@@ -48,10 +48,9 @@ Feature: Teacher manages instructional materials of a class
     Then I should see "Show Activities"
 
   @javascript
-  Scenario: Teacher should be able to run the report
+  Scenario: Teacher should be able to see a report link
     When I select the option of Instructional Materials with text "Radioactivity"
-    And I follow "Run Report"
-    Then A report window opens of offering "Radioactivity"
+    And  I should see "report"
 
   Scenario: Teacher should be able to see all students assigned to the class
     Then I should see "Doe, Dave"

@@ -127,19 +127,17 @@ Feature: Teacher can see recent activity
     And I follow "Recent Activity" within left panel for class navigation
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "In Progress No students with incomplete progress."
-    
-  @javascript
-  Scenario: Teacher should be able to run the report
+
+  Scenario: Teacher should be able to see a link to run the report
     When the following student answers:
       | student   | class         | investigation       | question_prompt | answer |
       | ross      | Physics       | Aerodynamics        | c               | y      |
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
-    And I follow "Run Report" within the first recent activity on the recent activity page
-    Then A report window opens of offering "Aerodynamics"
-    And I should see "Aerodynamics"
-    
+    And I should see "report" within the first recent activity on the recent activity page
+
+
   Scenario: Anonymous user cannot see recent activity page
     When I log out
     And I am an anonymous user

@@ -30,10 +30,10 @@ class Client < ActiveRecord::Base
 
   private
   def find_grant_for_user(user)
-    access_grants.where(user_id: user.id).first
+    access_grants.where({user_id: user.id, client_id:self.id}).first
   end
 
   def create_grant_for_user(user)
-    user.access_grants.create(client:self)
+    user.access_grants.create(client_id:self.id, user_id:user.id)
   end
 end
