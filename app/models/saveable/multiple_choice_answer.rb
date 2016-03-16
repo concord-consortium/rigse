@@ -12,6 +12,7 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
     if rationale_choices.size > 0
       rationale_choices.compact.select { |rc| rc.choice }.map do |rc|
         data = {
+          :choice_id => rc.choice.id,
           :answer => rc.choice.choice,
           :correct => rc.choice.is_correct
         }
