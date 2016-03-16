@@ -79,7 +79,7 @@ describe Dataservice::PeriodicBundleContent do
     end
     learner.multiple_choices.each do |saveable|
       saveable.answers.size.should eql(1)
-      saveable.answers[0].answer.should eql([{:answer => 'someChoice', :correct => nil}])
+      saveable.answers[0].answer[0].should include({:answer => 'someChoice', :correct => nil})
     end
     learner.image_questions.each do |saveable|
       bundle_content.blobs.include?(saveable.answer[:blob]).should be_true
