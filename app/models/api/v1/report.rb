@@ -176,6 +176,15 @@ class API::V1::Report
     hash[:type] = embeddable.class.to_s
     hash[:answers] = answers[key] || [] #when no students have answered
 
+    # We want to remove markup from the prompt and name. Even though
+    # Markup is stript, HTML entities are preserved, eg `&deg`;
+    # Do this without creating new keys in hash.
+    if hash[:prompt]
+      hash[:prompt] = ActionController::Base.helpers.strip_tags(hash[:prompt])
+    end
+    if hash[:name]
+      hash[:name] = ActionController::Base.helpers.strip_tags(hash[:name])
+    end
     if embeddable.is_a? Embeddable::MultipleChoice
       process_multiple_choice(hash, embeddable)
     elsif embeddable.is_a? Embeddable::Iframe
