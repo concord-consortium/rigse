@@ -161,19 +161,20 @@ class API::V1::Report
       id: page.id,
       type: 'Page',
       name: page.name,
-      children: page.page_elements.map { |pe| embeddable_json(pe.embeddable, answers) }
+      children: page.page_elements.map { |pe| embeddable_json(pe.question_number, pe.embeddable, answers) }
     }
   end
 
   IGNORED_EMBEDDABLE_KEYS = ['created_at', 'updated_at', 'uuid', 'user_id', 'external_id']
 
-  def embeddable_json(embeddable, answers)
+  def embeddable_json(question_number, embeddable, answers)
     # Provide as much information about embeddable as we can, but skip some attributes
     # to make results more readable and clean.
     hash = embeddable.attributes.clone.except(*IGNORED_EMBEDDABLE_KEYS)
     key = embeddable_key(embeddable)
     hash[:key] = key
     hash[:type] = embeddable.class.to_s
+    hash[:question_number] = question_number
     hash[:answers] = answers[key] || [] #when no students have answered
 
     # We want to remove markup from the prompt and name. Even though
