@@ -957,7 +957,7 @@ module ApplicationHelper
           haml_concat options[:print_link]
           haml_concat " | "
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
-          report_link = report_link_for(offering, 'report', 'Report')
+          report_link = report_link_for(offering, 'Report', 'Report')
           if !report_link.blank?
             haml_concat " | #{report_link}"
           end

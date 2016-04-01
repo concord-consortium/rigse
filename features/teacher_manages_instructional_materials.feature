@@ -50,7 +50,7 @@ Feature: Teacher manages instructional materials of a class
   @javascript
   Scenario: Teacher should be able to see a report link
     When I select the option of Instructional Materials with text "Radioactivity"
-    And  I should see "report"
+    And  I should see "Report"
 
   Scenario: Teacher should be able to see all students assigned to the class
     Then I should see "Doe, Dave"
