@@ -69,7 +69,7 @@ class API::V1::Report
 
   def provide_no_answer_entries(answers, students_json)
     # Provide "no answer" entries for students who started activity, but didn't respond to given question.
-    default_answer_entries = students_json.select { |s| s[:started_offering] }.map do |s|
+    default_answer_entries = students_json.map do |s|
       {
         student_id: s[:id],
         answer: nil,
@@ -175,7 +175,7 @@ class API::V1::Report
     hash[:key] = key
     hash[:type] = embeddable.class.to_s
     hash[:question_number] = question_number
-    hash[:answers] = answers[key] || [] #when no students have answered
+    hash[:answers] = answers[key] || no_answers(key)
 
     # We want to remove markup from the prompt and name. Even though
     # Markup is stript, HTML entities are preserved, eg `&deg`;
@@ -215,8 +215,18 @@ class API::V1::Report
     end
   end
 
-  # Visibility filter:
+  def no_answers(embeddable_key)
+    @offering.clazz.students.map do |s|
+      {
+          student_id: s.id,
+          answer: nil,
+          type: 'NoAnswer',
+          embeddable_key: embeddable_key
+      }
+    end
+  end
 
+  # Visibility filter:
   def visibility_filter_json(filter)
     {
       active: !filter.ignore,
