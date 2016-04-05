@@ -140,33 +140,16 @@ class Portal::LearnersController < ApplicationController
     # authorize @learner
     # authorize Portal::Learner, :new_or_create?
     # authorize @learner, :update_edit_or_destroy?
-    @portal_learner = Portal::Learner.find(params[:id])
-    @activity_report_id = nil
-    offering = @portal_learner.offering
-    unless offering.report_embeddable_filter.nil? || offering.report_embeddable_filter.embeddables.nil?
-      @report_embeddable_filter = offering.report_embeddable_filter.embeddables
-    end
-    unless params[:activity_id].nil?
-      activity = ::Activity.find(params[:activity_id].to_i)
-      @activity_report_id = params[:activity_id].to_i
-      unless activity.nil?
-        activity_embeddables = activity.page_elements.map{|pe|pe.embeddable}
-        if offering.report_embeddable_filter.ignore
-          @portal_learner.offering.report_embeddable_filter.embeddables = activity_embeddables
-        else
-          filtered_embeddables = offering.report_embeddable_filter.embeddables & activity_embeddables
-          filtered_embeddables = (filtered_embeddables.length == 0)? activity_embeddables : filtered_embeddables
-          @portal_learner.offering.report_embeddable_filter.embeddables = filtered_embeddables 
-        end
-        @portal_learner.offering.report_embeddable_filter.ignore = false
-      end
-    end
+    portal_learner = Portal::Learner.find(params[:id])
+    student_id = portal_learner.student_id
+
+    offering_id = portal_learner.offering_id
+    authorize Portal::Offering.find(offering_id)
+    report = DefaultReportService.instance()
+    offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id]})
+    next_url = report.url_for(offering_api_url, current_visitor)
+    redirect_to next_url
     
-    respond_to do |format|
-      format.html # report.html.haml
-        reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
-        @page_elements = reportUtil.page_elements
-    end
   end
 
   # GET /portal/learners/1/bundle_report
