@@ -5,9 +5,17 @@ class Portal::LearnersController < ApplicationController
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
 
+
+  def pundit_user_not_authorized(exception)
+    offering = exception.record
+    message = "Please log in as a teacher or an administrator"
+    flash[:notice] = message
+    redirect_to(:home)
+  end
+
   # PUNDIT_CHECK_FILTERS
   before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report,:activity_report]
-  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report,:activity_report]
+  before_filter :teacher_admin_or_config, :only => [:open_response_report, :multiple_choice_report,:activity_report]
   before_filter :handle_jnlp_session, :only => [:show]
   before_filter :authorize_show, :only => [:show]
   
@@ -133,13 +141,9 @@ class Portal::LearnersController < ApplicationController
   
 
   def report
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Learner
-    # authorize @learner
-    # authorize Portal::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
+    # This report is for the teacher at the moment so for authentication
+    # we just check pundit for offering report method. See reports_controller.rb
+
     portal_learner = Portal::Learner.find(params[:id])
     student_id = portal_learner.student_id
 
@@ -149,7 +153,6 @@ class Portal::LearnersController < ApplicationController
     offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id]})
     next_url = report.url_for(offering_api_url, current_visitor)
     redirect_to next_url
-    
   end
 
   # GET /portal/learners/1/bundle_report
