@@ -293,9 +293,10 @@ class Portal::OfferingsController < ApplicationController
 
   def report
     offering_id = params[:id]
+    activity_id = params[:activity_id] # Might be null
     authorize Portal::Offering.find(offering_id)
     report = DefaultReportService.instance()
-    offering_api_url = api_v1_report_url(offering_id)
+    offering_api_url = api_v1_report_url(offering_id, {activity_id: activity_id})
     next_url = report.url_for(offering_api_url, current_visitor)
     redirect_to next_url
   end
