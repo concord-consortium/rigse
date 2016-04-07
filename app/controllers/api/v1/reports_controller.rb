@@ -10,8 +10,22 @@ class API::V1::ReportsController < API::APIController
     offering = Portal::Offering.find(params[:id])
     student_ids = params["student_ids"]
     activity_id = params["activity_id"]
-    authorize offering, :api_report?
-    render json: API::V1::Report.new(offering, request.protocol, request.host_with_port, student_ids, activity_id).to_json
+    is_student_report =
+        student_ids &&
+        student_ids.length > 0 &&
+        current_visitor.portal_student &&
+        student_ids.first.to_s == current_visitor.portal_student.id.to_s
+
+    report = API::V1::Report.new({
+         offering: offering,
+         protocol: request.protocol,
+         host_with_port: request.host_with_port,
+         student_ids: student_ids,
+         activity_id: activity_id,
+         hide_controls: is_student_report
+    })
+    authorize report
+    render json: report.to_json
   end
 
   # PUT api/v1/reports/:id

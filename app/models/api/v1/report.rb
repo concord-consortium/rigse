@@ -1,12 +1,17 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
 
-  def initialize(offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
-    @offering = offering
-    @protocol = protocol
-    @host_with_port = host_with_port
+  def initialize(options)
+    # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
+    @offering          = options[:offering]
+    @protocol          = options[:protocol]
+    @host_with_port    = options[:host_with_port]
+    @activity_id       = options[:activity_id]
+    @hide_controls     = options[:hide_controls]
+    @activity_id       = options[:activity_id]
+    student_ids        = options[:student_ids]
     @report_for = 'class'
-    @activity_id = activity_id
+
     if student_ids
       @students = Portal::Student.where(id: student_ids).includes([:user, :clazzes])
       @students = @students.select { |s| s.clazz_ids.include?  @offering.clazz_id }
@@ -15,6 +20,18 @@ class API::V1::Report
       @students =  @offering.clazz.students.includes(:user)
       @report_for = 'class'
     end
+  end
+
+  def is_teacher?(user)
+    @offering.clazz.teachers.include?(user.portal_teacher)
+  end
+
+  def is_student?(user)
+    user.portal_student && @offering.clazz.students.include?(user.portal_student)
+  end
+
+  def is_report_for_student?(user)
+    is_student?(user)  && @students.length == 1 && @students.first == user.portal_student
   end
 
   def to_json
@@ -27,7 +44,8 @@ class API::V1::Report
         class: clazz,
         visibility_filter: visibility_filter_json(@offering.report_embeddable_filter),
         anonymous_report: @offering.anonymous_report,
-        is_offering_external: @offering.runnable.is_a?(ExternalActivity)
+        is_offering_external: @offering.runnable.is_a?(ExternalActivity),
+        hide_controls: @hide_controls
     }
   end
 
