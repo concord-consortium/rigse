@@ -21,7 +21,7 @@ source "http://rubygems.org"
   gem 'omniauth'
   gem 'omniauth-oauth'  # for schoology integration
 
-  gem "rails",                "~> 3.2"
+  gem "rails",                "~> 3.2.22"
   gem "arrayfields"
   gem 'strong_parameters'
   gem "httpclient",           "~> 2.2"
