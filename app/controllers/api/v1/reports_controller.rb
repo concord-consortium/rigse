@@ -8,8 +8,9 @@ class API::V1::ReportsController < API::APIController
   # GET api/v1/reports/:id
   def show
     offering = Portal::Offering.find(params[:id])
+    student_ids = params["student_ids"]
     authorize offering, :api_report?
-    render json: API::V1::Report.new(offering, request.protocol, request.host_with_port).to_json
+    render json: API::V1::Report.new(offering, request.protocol, request.host_with_port, student_ids).to_json
   end
 
   # PUT api/v1/reports/:id

@@ -1,10 +1,19 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
 
-  def initialize(offering, protocol, host_with_port)
+  def initialize(offering, protocol, host_with_port, student_ids = nil)
     @offering = offering
     @protocol = protocol
     @host_with_port = host_with_port
+    @report_for = 'class'
+    if student_ids
+      @students = Portal::Student.where(id: student_ids).includes([:user, :clazzes])
+      @students = @students.select { |s| s.clazz_ids.include?  @offering.clazz_id }
+      @report_for = 'student'
+    else
+      @students =  @offering.clazz.students.includes(:user)
+      @report_for = 'class'
+    end
   end
 
   def to_json
@@ -12,11 +21,12 @@ class API::V1::Report
     answers_hash = get_student_answers
     provide_no_answer_entries(answers_hash, clazz[:students])
     {
-      report: report_json(answers_hash),
-      class: clazz,
-      visibility_filter: visibility_filter_json(@offering.report_embeddable_filter),
-      anonymous_report: @offering.anonymous_report,
-      is_offering_external: @offering.runnable.is_a?(ExternalActivity)
+        report: report_json(answers_hash),
+        report_for: @report_for,
+        class: clazz,
+        visibility_filter: visibility_filter_json(@offering.report_embeddable_filter),
+        anonymous_report: @offering.anonymous_report,
+        is_offering_external: @offering.runnable.is_a?(ExternalActivity)
     }
   end
 
@@ -28,7 +38,9 @@ class API::V1::Report
     section = section ? " (#{section})" : ""
     {
       name: clazz.name + section,
-      students: clazz.students.includes(:user).map { |s| student_json(s) }.sort_by { |s| s[:name] }
+      students: @students
+                    .sort_by { |s| s.last_name }
+                    .map     { |s| student_json(s) }
     }
   end
 
@@ -45,7 +57,8 @@ class API::V1::Report
 
   def get_student_answers
     # Collect all the student answers for given offering.
-    answers = Report::Learner.where(offering_id: @offering.id).map do |report_learner|
+    student_ids = @students.map { |s| s.id }
+    answers = Report::Learner.where(offering_id: @offering.id, student_id: student_ids).map do |report_learner|
       student_id = report_learner.student_id
       answers = []
       report_learner.answers.map do |embeddable_key, answer|
@@ -161,7 +174,7 @@ class API::V1::Report
       id: page.id,
       type: 'Page',
       name: page.name,
-      children: page.page_elements.map { |pe| embeddable_json(pe.question_number, pe.embeddable, answers) }
+      children: page.page_elements.includes(:page).map { |pe| embeddable_json(pe.question_number, pe.embeddable, answers) }
     }
   end
 
@@ -216,7 +229,7 @@ class API::V1::Report
   end
 
   def no_answers(embeddable_key)
-    @offering.clazz.students.map do |s|
+    @students.map do |s|
       {
           student_id: s.id,
           answer: nil,
