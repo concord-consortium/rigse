@@ -1,11 +1,12 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
 
-  def initialize(offering, protocol, host_with_port, student_ids = nil)
+  def initialize(offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
     @offering = offering
     @protocol = protocol
     @host_with_port = host_with_port
     @report_for = 'class'
+    @activity_id = activity_id
     if student_ids
       @students = Portal::Student.where(id: student_ids).includes([:user, :clazzes])
       @students = @students.select { |s| s.clazz_ids.include?  @offering.clazz_id }
@@ -127,7 +128,11 @@ class API::V1::Report
   # Helpers that provide the final structure of an offering plus related answers for each question:
 
   def report_json(answers)
-    runnable = @offering.runnable
+    runnable =  @offering.runnable
+    if @activity_id
+      runnable = Activity.find(@activity_id)
+    end
+
     if runnable.is_a?(ExternalActivity) && runnable.template
       runnable = runnable.template
     end

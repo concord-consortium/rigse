@@ -40,7 +40,8 @@ class DefaultReportService
   def url_for(api_offering_url, user)
     grant = @client.updated_grant_for(user, ReportTokenValidFor)
     token = grant.access_token
-    "#{reportViewUrl}?reportUrl=#{api_offering_url}&token=#{token}"
+    url = ERB::Util.url_encode(api_offering_url)
+    "#{reportViewUrl}?reportUrl=#{url}&token=#{token}"
   end
 
 end

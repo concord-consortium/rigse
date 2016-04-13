@@ -150,7 +150,7 @@ class Portal::LearnersController < ApplicationController
     offering_id = portal_learner.offering_id
     authorize Portal::Offering.find(offering_id)
     report = DefaultReportService.instance()
-    offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id]})
+    offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id], activity_id: params[:activity_id]})
     next_url = report.url_for(offering_api_url, current_visitor)
     redirect_to next_url
   end
