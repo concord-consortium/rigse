@@ -19,7 +19,10 @@ namespace :app do
 
       filename = args[:filename]
       File.new(filename, 'w') do |file|
-        rep = Reports::Detail.new({:verbose => true, :blobs_url => dataservice_blobs_url})
+        rep = Reports::Detail.new({:verbose => true,
+                                   :blobs_url => dataservice_blobs_url,
+                                   :url_helpers => Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
+                                   })
         rep.run_report(file)
       end
     end
@@ -32,7 +35,10 @@ namespace :app do
 
       filename = args[:filename]
       File.new(filename, 'w') do |file|
-        rep = Reports::Usage.new({:verbose => true, :blobs_url => dataservice_blobs_url})
+        rep = Reports::Usage.new({:verbose => true,
+                                  :blobs_url => dataservice_blobs_url,
+                                  :url_helpers => Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
+                                  })
         rep.run_report(file)
       end
     end
@@ -52,7 +58,9 @@ namespace :app do
                                   :report_learners => Report::Learner.all,
                                   :blobs_url => dataservice_blobs_url,
                                   :include_child_usage => true,
-                                  :verbose => true })
+                                  :verbose => true,
+                                  :url_helpers => Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
+                                   })
         rep.run_report(file)
       end
     end

@@ -591,6 +591,7 @@ class InvestigationsController < AuthoringController
     opts = {:verbose => false}
     opts[:runnables] = [@investigation] unless @investigation.id.nil?
     opts[:blobs_url] = dataservice_blobs_url
+    opts[:url_helpers] = Reports::UrlHelpers.new(:protocol => request.protocol, :host_with_port => request.host_with_port)
     rep = nil
     case type
     when :detail

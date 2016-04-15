@@ -13,6 +13,8 @@ class Reports::Usage < Reports::Excel
     # stud.id, class, school, user.id, username, student name, teachers
     @shared_column_defs = common_header
 
+    @url_helpers = opts[:url_helpers]
+
     @runnable_start_column = {}
     @sheet_defs = [[]]
     @runnables.each do |runnable|
@@ -21,6 +23,7 @@ class Reports::Usage < Reports::Excel
       col_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.class}_#{runnable.id})\nAssessments Completed", :width => 25, :height => 2, :left_border => :thin)
       col_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
       col_defs << Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
+      col_defs << Reports::ColumnDefinition.new(:title => "Remote Endpoint", :width => 100)
       if @include_child_usage
         children = (get_containers(runnable) - [runnable])
         children.each do |child|
@@ -66,7 +69,8 @@ class Reports::Usage < Reports::Excel
           assess_completed =  l.num_submitted
           assess_percent = percent(assess_completed, total_assessments)
           last_run = l.last_run || 'never'
-          row_vals = [assess_completed, assess_percent, last_run]
+          remote_endpoint = @url_helpers.remote_endpoint_url(l.learner)
+          row_vals = [assess_completed, assess_percent, last_run, remote_endpoint]
           if @include_child_usage
             children = (get_containers(runnable) - [runnable])
             children.each do |child|
