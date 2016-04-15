@@ -5,13 +5,15 @@ class Reports::Detail < Reports::Excel
 
     @runnables = opts[:runnables] || Investigation.published
     @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
+    @url_helpers = opts[:url_helpers]
 
     # stud.id, class, school, user.id, username, student name, teachers, completed, %completed, last_run
     @common_columns = common_header + [
-      Reports::ColumnDefinition.new(:title => "# Completed", :width => 10, :left_border => :thin),
-      Reports::ColumnDefinition.new(:title => "% Completed", :width => 10),
-      Reports::ColumnDefinition.new(:title => "# Correct",   :width => 10),
-      Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
+      Reports::ColumnDefinition.new(:title => "# Completed",     :width => 10, :left_border => :thin),
+      Reports::ColumnDefinition.new(:title => "% Completed",     :width => 10),
+      Reports::ColumnDefinition.new(:title => "# Correct",       :width => 10),
+      Reports::ColumnDefinition.new(:title => "Last run",        :width => 20),
+      Reports::ColumnDefinition.new(:title => "Remote Endpoint", :width => 100)
     ]
 
     @reportable_embeddables = {} # keys will be runnables, and value will be an array of reportables for that runnable, in the correct order
@@ -139,7 +141,8 @@ class Reports::Detail < Reports::Excel
         row = sheet.row(sheet.last_row_index + 1)
         assess_completed = "#{assess_completed}/#{total_assessments}(#{total_by_container})"
         assess_correct = "#{l.num_correct}/#{correctable.size}"
-        row[0, 3] =  report_learner_info_cells([l]) + [assess_completed, assess_percent, assess_correct, last_run]
+        remote_endpoint = @url_helpers.remote_endpoint_url(l.learner)
+        row[0, 3] =  report_learner_info_cells([l]) + [assess_completed, assess_percent, assess_correct, last_run, remote_endpoint]
 
         all_answers = []
         get_containers(runnable).each do |container|

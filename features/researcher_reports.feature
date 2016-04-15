@@ -90,7 +90,7 @@ Feature: Investigations can be reported on
     And "student" should have 2 answers for "first investigation" in "My Class"
 
   Scenario: Comprehensive report tests for two investigations and two students
-    Given PENDING yaml dumping on hudson and local machines differ. 
+    Given PENDING yaml dumping on hudson and local machines differ.
     Given the following student answers:
        | student | class       | investigation        | question_prompt | answer |
        | student | My Class    | first investigation  | a               | a      |
@@ -184,6 +184,7 @@ Feature: Investigations can be reported on
         | student | My Class | first investigation | c               | b      |
 
     And a mocked spreadsheet library
+    And a mocked remote endpoint url
 
     And I am logged in with the username researcher
     And I am on the researcher reports page

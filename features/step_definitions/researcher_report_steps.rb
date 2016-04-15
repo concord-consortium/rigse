@@ -3,7 +3,8 @@ def modified_report_for(investigation)
   report  = Reports::Detail.new(
     :verbose        => false,
     :runnables      => [investigation],
-    :blobs_url      => FAKE_BLOBS_URL
+    :blobs_url      => FAKE_BLOBS_URL,
+    :url_helpers    => Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
   )
   report.stub!(:learner_id).and_return('learner_id')
   report.stub!(:user_id).and_return('user_id')
@@ -33,7 +34,7 @@ def add_response(learner,prompt_text,answer_text)
   puts "No Question found for #{prompt_text}" if question.nil?
   return if question.nil?
   case question.class.name
-  when "Embeddable::MultipleChoice" 
+  when "Embeddable::MultipleChoice"
     return add_multichoice_answer(learner,question, answer_text)
   when "Embeddable::OpenResponse"
     return add_openresponse_answer(learner,question, answer_text)
@@ -48,7 +49,7 @@ def add_multichoice_answer(learner,question,answer_text)
     :learner => learner,
     :offering => learner.offering,
     :multiple_choice => question
-  ) 
+  )
   saveable_answer = Saveable::MultipleChoiceAnswer.create(
     :multiple_choice => new_answer
   )
@@ -63,7 +64,7 @@ def add_openresponse_answer(learner,question,answer_text)
     :learner => learner,
     :offering => learner.offering,
     :open_repsonse => question
-  ) 
+  )
   saveable_answer = Saveable::OpenResponseAnswer.create(
     :answer          => answer_text
   )
@@ -77,7 +78,7 @@ def add_image_question_answer(learner,question,answer_text)
     :learner => learner,
     :offering => learner.offering,
     :image_question => question
-  ) 
+  )
   # TODO: Maybe slurp in some image and encode it for the blob?
   saveable_answer = Saveable::ImageQuestionAnswer.create(
     :blob => Dataservice::Blob.create(
@@ -234,4 +235,8 @@ Given /^a mocked spreadsheet library$/ do
   workbook = Spreadsheet::Workbook.new
   workbook.stub("write").and_return('')
   Spreadsheet::Workbook.stub(:new).and_return(workbook)
+end
+
+Given /^a mocked remote endpoint url$/ do
+  Reports::UrlHelpers.any_instance.stub(:remote_endpoint_url).and_return('https://portal.concord.org/dataservice/external_activity_data/1')
 end
