@@ -12,7 +12,7 @@ class Report::Learner::Selector
 
     policy_scopes = {
       :teachers => Pundit.policy_scope(current_visitor, Portal::Teacher),
-      :learners => Pundit.policy_scope(current_visitor, Report::Learner),
+      :learners => Pundit.policy_scope(current_visitor, Report::Learner).includes(:learner),  # include learner to generate remote endpoint url
       :perm_forms => Pundit.policy_scope(current_visitor, Portal::PermissionForm)
     }
 
