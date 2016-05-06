@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160310223421) do
+ActiveRecord::Schema.define(:version => 20160506143045) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2382,10 +2382,13 @@ ActiveRecord::Schema.define(:version => 20160310223421) do
     t.integer  "external_link_id"
     t.integer  "bundle_content_id"
     t.integer  "position"
-    t.string   "url"
+    t.text     "url"
     t.boolean  "is_final"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.text     "feedback"
+    t.boolean  "has_been_reviewed", :default => false
+    t.integer  "score"
   end
 
   add_index "saveable_external_link_urls", ["external_link_id"], :name => "index_saveable_external_link_urls_on_external_link_id"
