@@ -684,7 +684,13 @@ RailsPortal::Application.routes.draw do
           get :student_answers
         end
         resources :reports, only: [:show, :update]
-        resources :offerings, only: [:show]
+
+        resources :offerings, only: [:show] do
+          member do
+            get :for_class
+            get :for_teacher
+          end
+        end
       end
     end
 
