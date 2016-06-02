@@ -20,5 +20,7 @@
         %li
           Client:
           = f.select :client_id, report.options_for_client, {}, prompt: 'client:'
-
+        %li
+          Report Type:
+          = f.select :report_type, report.options_for_report_type, {}, prompt: 'report type:'
       = submit_tag

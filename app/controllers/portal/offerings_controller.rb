@@ -305,8 +305,7 @@ class Portal::OfferingsController < ApplicationController
     authorize Portal::Offering.find(offering_id)
     report_id = params[:report_id]
     report = ExternalReport.find(report_id)
-    offering_api_url = api_v1_offering_url(offering_id)
-    next_url = report.url_for(offering_api_url, current_visitor)
+    next_url = report.url_for(offering_id, current_visitor, request.protocol, request.host_with_port)
     redirect_to next_url
   end
 
