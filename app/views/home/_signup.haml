@@ -127,6 +127,10 @@
 
 
         .group
+          %p
+            %small
+              By clicking Sign Up!, you agree to our
+              #{link_to 'privacy policy','https://concord.org/privacy-policy', :id=>"reg-privacy-policy-link", :target=>"_blank"}.
           .f-row
             %button#finsish-student{"ng-disabled" => "!signup.$valid", "ng-click" => "regCtrl.sendRegistration()"}
               Sign Up!
@@ -271,6 +275,10 @@
             .f-row
 
         .group
+          %p
+            %small
+              By clicking Sign Up!, you agree to our
+              #{link_to 'privacy policy','https://concord.org/privacy-policy', :id=>"reg-privacy-policy-link", :target=>"_blank"}.
           .f-row
             %button#finsish-teacher{"ng-disabled" => "regCtrl.disableSubmit(signup.$valid)", "ng-click" => "regCtrl.sendRegistration()"}
               Sign Up!
