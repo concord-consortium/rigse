@@ -11,24 +11,40 @@ services:
       DB_PASSWORD: root
       DB_NAME: portal_production
       SOLR_HOST: solr
-      SOLR_PORT: 8982
-    links:
-      - solr
+      SOLR_PORT: 8983
+    networks:
+      - appnet
     ports:
       - "3000:3000"
     volumes:
-      - .:/lara
+      - .:/rigse
       - "bundle:/bundle"
   solr:
-    image: zoopdoop/rigse
-    command: script/docker-solr.sh
-    environment:
-      DB_HOST: 10.0.0.2
-      DB_USER: root
-      DB_PASSWORD: root
-      DB_NAME: portal_production
+    image: solr
+    networks:
+      - appnet
+    ports:
+      - "8983:8983"
     volumes:
-      - .:/lara
-      - "bundle:/bundle"
+      - data:/opt/solr/server/solr/mycores
+    depends_on:
+      - solrdata
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - mycore
+  solrdata:
+    image: solr
+    volumes:
+      - data:/opt/solr/server/solr/mycores
+    user:
+      root
+    entrypoint:
+      - chown
+      - solr:solr
+      - /opt/solr/server/solr/mycores
+networks:
+  appnet:
 volumes:
   bundle:
+  data:

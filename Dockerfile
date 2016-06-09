@@ -41,7 +41,7 @@ ENV RAILS_ENV=production
 
 # compile the assets - NOTE: config.assets.initialize_on_precompile MUST be set to false in application.rb for this to work
 # otherwise somewhere in the initializers it tries to connect to the database which will fail
-RUN bundle exec rake assets:precompile --trace
+RUN bundle exec rake assets:precompile
 
 EXPOSE 80
 
