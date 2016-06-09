@@ -1,0 +1,34 @@
+version: '2'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    command: script/docker-app.sh
+    environment:
+      DB_HOST: 10.0.0.2
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: portal_production
+      SOLR_HOST: solr
+      SOLR_PORT: 8982
+    links:
+      - solr
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/lara
+      - "bundle:/bundle"
+  solr:
+    image: zoopdoop/rigse
+    command: script/docker-solr.sh
+    environment:
+      DB_HOST: 10.0.0.2
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: portal_production
+    volumes:
+      - .:/lara
+      - "bundle:/bundle"
+volumes:
+  bundle:

@@ -1,0 +1,37 @@
+FROM ruby:1.9.3
+
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
+
+# for a JS runtime
+RUN apt-get install -qq -y nodejs
+
+# install software-properties-common for add-apt-repository
+RUN apt-get install -qq -y software-properties-common
+
+# clean up ruby / gems / bundler
+RUN gem update --system
+RUN gem update bundler
+# get rid of old bundler version
+RUN gem cleanup bundler
+
+# for solr
+RUN apt-get -y install openjdk-7-jdk && apt-get -y install solr-tomcat
+
+ENV APP_HOME /rigse
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+# use a mounted volume so the gems don't need to be rebundled each time
+ENV BUNDLE_PATH /bundle
+
+ADD Gemfile* $APP_HOME/
+
+ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
+  BUNDLE_JOBS=2 \
+  BUNDLE_PATH=/bundle
+
+ADD . $APP_HOME
+
+EXPOSE 3000
+
+CMD rails s -b 0.0.0.0

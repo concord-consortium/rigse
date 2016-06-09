@@ -8,8 +8,8 @@ production:
 
 development:
   solr:
-    hostname: localhost
-    port: 8982
+    hostname: <%= ENV['SOLR_HOST'] || 'localhost' %>
+    port: <%= ENV['SOLR_PORT'] || 8982 %>
     log_level: INFO
 
 test: &TEST
