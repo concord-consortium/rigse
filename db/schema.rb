@@ -2383,10 +2383,13 @@ ActiveRecord::Schema.define(:version => 20160517214328) do
     t.integer  "external_link_id"
     t.integer  "bundle_content_id"
     t.integer  "position"
-    t.string   "url"
+    t.text     "url"
     t.boolean  "is_final"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.text     "feedback"
+    t.boolean  "has_been_reviewed", :default => false
+    t.integer  "score"
   end
 
   add_index "saveable_external_link_urls", ["external_link_id"], :name => "index_saveable_external_link_urls_on_external_link_id"
