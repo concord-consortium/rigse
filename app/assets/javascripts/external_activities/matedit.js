@@ -6,9 +6,9 @@ function get_edit_resource_popup(external_activity_id, popup_options){
     list_lightbox=new Lightbox(lightboxConfig);
     jQuery(".n.move_handle").css({"width":"400px"});
     jQuery(".buttons")[0].innerHTML = jQuery(".buttons")[0].innerHTML + "<a href='javascript:void(0)' style='float:right;margin-top: 5px;margin-right: 10px' class='button' onclick='close_popup()'>Cancel</a>"
-    var target_url = "<%= URLResolver.getUrl('edit_external_activity_path',:id => 999) %>";
+    var target_url = "/eresources/999/edit";
     if (popup_options && popup_options.use_short_form) {
-      target_url = "<%= URLResolver.getUrl('edit_basic_external_activity_path',:id => 999) %>"
+      target_url = "/eresources/999/edit_basic"
     }
     target_url = target_url.replace('999',external_activity_id);
     var options = {

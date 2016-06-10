@@ -6,7 +6,7 @@ function get_Assign_To_Collection_Popup(material_id,material_type, lightbox_mate
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         title:"Assign " + lightbox_material_text + " to a Collection"
     };
-    var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_collections_path') %>";
+    var target_url = "/search/get_current_material_unassigned_collections";
      var options = {
         method: 'post',
         parameters : {'material_type':material_type,'material_id':material_id},
