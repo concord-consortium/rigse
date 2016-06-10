@@ -23,29 +23,24 @@ services:
       - .:/rigse
       - "bundle:/bundle"
   solr:
-    image: solr
+    image: solr:5.3
     networks:
       - appnet
     ports:
       - "8983:8983"
     volumes:
+      - .:/rigse
       - data:/opt/solr/server/solr/mycores
     depends_on:
       - solrdata
-    entrypoint:
-      - docker-entrypoint.sh
-      - solr-precreate
-      - mycore
+    command: /rigse/docker/start-solr-within-solr-container.sh
   solrdata:
-    image: solr
+    image: solr:5.3
     volumes:
       - data:/opt/solr/server/solr/mycores
     user:
       root
-    entrypoint:
-      - chown
-      - solr:solr
-      - /opt/solr/server/solr/mycores
+    command: chown solr:solr /opt/solr/server/solr/mycores
 networks:
   appnet:
 volumes:
