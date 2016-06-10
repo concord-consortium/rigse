@@ -1,3 +1,6 @@
+# NOTE: an easy way to setup the values for the variable substitions is to create a .env file in this same directory
+#       more information can be found here: http://docs.master.dockerproject.org/compose/env-file/
+
 version: '2'
 services:
   app:
@@ -6,10 +9,10 @@ services:
       dockerfile: Dockerfile-dev
     command: script/docker-app.sh
     environment:
-      DB_HOST: 10.0.0.2
-      DB_USER: root
-      DB_PASSWORD: root
-      DB_NAME: portal_production
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
       SOLR_HOST: solr
       SOLR_PORT: 8983
     networks:
