@@ -101,6 +101,10 @@ padlet.yml
 .powenv
 solr/data
 solr/pids
+solr/production
+solr/development
+solr/test
+solr/default
 log
 app_environment_variables.rb
 config/environments/local-development.rb

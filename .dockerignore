@@ -10,3 +10,9 @@ docker-compose.yml
 Dockerfile
 Dockerfile-dev
 README.md
+solr/data
+solr/pids
+solr/production
+solr/development
+solr/test
+solr/default
