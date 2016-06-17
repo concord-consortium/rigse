@@ -1,4 +1,4 @@
-FROM zoopdoop/rails-base
+FROM concordconsortium/docker-rails-base
 
 # install nginx
 RUN apt-get update -qq && apt-get install -qq -y nginx

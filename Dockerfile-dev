@@ -1,4 +1,4 @@
-FROM zoopdoop/rails-base
+FROM concordconsortium/docker-rails-base
 
 ENV APP_HOME /rigse
 RUN mkdir $APP_HOME
