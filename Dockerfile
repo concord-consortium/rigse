@@ -39,8 +39,9 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/
 # set production
 ENV RAILS_ENV=production
 
-# compile the assets - NOTE: config.assets.initialize_on_precompile MUST be set to false in application.rb for this to work
+# compile the assets - NOTE: DOCKER_NO_INIT_ON_PRECOMPILE MUST be set to true for this to work
 # otherwise somewhere in the initializers it tries to connect to the database which will fail
+ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
 RUN bundle exec rake assets:precompile
 
 EXPOSE 80
