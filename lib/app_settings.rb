@@ -1,5 +1,6 @@
 require 'yaml'
 require 'pathname'
+require 'json'
 
 module AppSettings
 
@@ -10,10 +11,14 @@ module AppSettings
   end
 
   def load_app_settings(env=::Rails.env)
+    puts "load_app_settings: " + env
     load_all_app_settings[env]
   end
 
   def load_all_app_settings(path=APP_SETTINGS_PATH)
+    puts "load_all_app_settings: " + path
+    puts "load_settings: " + load_settings(path).to_json
+    puts "symbolize_app_settings: " + symbolize_app_settings(load_settings(path)).to_json
     symbolize_app_settings(load_settings(path))
   end
 
@@ -47,7 +52,7 @@ end
 
 
 # Recursively converts the keys in a Hash to symbols.
-# Also converts the keys in any Array elements which are 
+# Also converts the keys in any Array elements which are
 # Hashes to symbols.
 module HashExtensions
   def recursive_symbolize_keys
