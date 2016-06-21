@@ -24,7 +24,7 @@ ADD . $APP_HOME
 # get files into the right place
 RUN mv -f Gemfile.lock-docker Gemfile.lock && \
     cp config/database.sample.yml config/database.yml && \
-    cp docker/prod/app_environment_variables.rb config/
+    cp -r docker/prod/config/. config/
 
 ## Configured nginx (after bundler so we don't have to wait for bundler to change config)
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
@@ -41,8 +41,8 @@ ENV RAILS_ENV=production
 
 # compile the assets - NOTE: DOCKER_NO_INIT_ON_PRECOMPILE MUST be set to true for this to work
 # otherwise somewhere in the initializers it tries to connect to the database which will fail
-ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
-RUN bundle exec rake assets:precompile
+# ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
+# RUN bundle exec rake assets:precompile
 
 EXPOSE 80
 

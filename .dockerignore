@@ -3,9 +3,13 @@ db/*.sqlite3
 db/*.sqlite3-journal
 log/*
 tmp/*
-config/database.yml
 config/app_environment_variables.rb
-docker/prod/local-test-compose.yml
+config/aws_s3.yml
+config/installer.yml
+config/padlet.yml
+config/paperclip.yml
+config/settings.yml
+config/initializers/site_keys.yml
 docker-compose.yml
 Dockerfile
 Dockerfile-dev

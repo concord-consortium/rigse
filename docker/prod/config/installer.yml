@@ -1,0 +1,6 @@
+---
+shortname: <%= ENV["INSTALLER_SHORTNAME"] %>
+version: <%= ENV["INSTALLER_VERSION"] %>
+jnlp_config: <%= ENV["INSTALLER_JNLP_CONFIG"] %>
+signature: TODO-Fixme
+s3_credentials: config/aws_s3.yml
