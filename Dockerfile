@@ -41,8 +41,10 @@ ENV RAILS_ENV=production
 
 # compile the assets - NOTE: DOCKER_NO_INIT_ON_PRECOMPILE MUST be set to true for this to work
 # otherwise somewhere in the initializers it tries to connect to the database which will fail
-# ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
-# RUN bundle exec rake assets:precompile
+RUN cp config/settings.sample.yml config/settings.yml
+ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
+RUN bundle exec rake assets:precompile
+RUN cp docker/prod/config/settings.yml config/settings.yml
 
 EXPOSE 80
 
