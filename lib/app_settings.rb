@@ -1,6 +1,5 @@
 require 'yaml'
 require 'pathname'
-require 'json'
 
 module AppSettings
 
