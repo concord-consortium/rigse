@@ -98,6 +98,10 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     !(choices.detect{ |c| c.is_correct }.nil?)
   end
 
+  def has_duplicate_choices?
+    choices.pluck(:choice).uniq.length != choices.length
+  end
+
   def correct_answer
     choices.select { |c| c.is_correct }.map { |c| c.choice }.join(', ')
   end
