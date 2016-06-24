@@ -8,7 +8,12 @@ class Saveable::MultipleChoice < ActiveRecord::Base
 
   has_many :answers, :dependent => :destroy , :order => :position, :class_name => "Saveable::MultipleChoiceAnswer"
 
-  [:prompt, :name, :choices].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
+  [ :prompt,
+    :name,
+    :choices,
+    :has_correct_answer?,
+    :has_duplicate_choices?
+  ].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
 
   include Saveable::Saveable
 
