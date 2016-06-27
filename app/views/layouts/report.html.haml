@@ -9,7 +9,7 @@
     %meta{ :name => "resource-type", :content => "document" }
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     %link{ :href => path_to_image('favicon.ico'), :rel => "shortcut icon"}/
-    %script{ :src=> "https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js", :type => "text/javascript"}
+    != javascript_include_tag 'prototype'
 
     != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     != stylesheet_link_tag 'print', {'media' => 'print'}
