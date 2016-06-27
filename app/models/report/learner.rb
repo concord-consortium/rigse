@@ -5,7 +5,8 @@
 class Report::Learner < ActiveRecord::Base
   self.table_name = "report_learners"
 
-  belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
+  belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id",
+    :inverse_of => :report_learner
   serialize    :answers, Hash
   belongs_to   :runnable, :polymorphic => true
 

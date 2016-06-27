@@ -6,7 +6,8 @@ class Portal::Offering < ActiveRecord::Base
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true, :counter_cache => "offerings_count"
 
-  has_many :learners, :dependent => :destroy, :class_name => "Portal::Learner", :foreign_key => "offering_id"
+  has_many :learners, :dependent => :destroy, :class_name => "Portal::Learner", :foreign_key => "offering_id",
+    :inverse_of => :offering
 
   has_one :report_embeddable_filter, :dependent => :destroy, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
 

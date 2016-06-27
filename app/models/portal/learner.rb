@@ -8,7 +8,8 @@ class Portal::Learner < ActiveRecord::Base
   acts_as_replicatable
   
   belongs_to :student, :class_name => "Portal::Student", :foreign_key => "student_id"
-  belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id"
+  belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id",
+    :inverse_of => :learners
   
   belongs_to :console_logger, :class_name => "Dataservice::ConsoleLogger", :foreign_key => "console_logger_id", :dependent => :destroy
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id", :dependent => :destroy
@@ -44,7 +45,8 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
 
-  has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner", :foreign_key => "learner_id"
+  has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner",
+    :foreign_key => "learner_id", :inverse_of => :learner
 
   has_many :lightweight_blobs, :dependent => :destroy, :class_name => "Dataservice::Blob"
 
