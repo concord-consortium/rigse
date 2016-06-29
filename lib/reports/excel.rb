@@ -157,6 +157,16 @@ class Reports::Excel
     ]
   end
 
+  def report_learner_teacher_info_cells(report_learners)
+    report_learner = report_learners.first
+
+    return [
+      report_learner.teachers_district,
+      report_learner.teachers_state,
+      report_learner.teachers_email
+    ]
+  end
+
   def common_header
     return [
       Reports::ColumnDefinition.new(:title => "Student ID",    :width => 10),
@@ -169,6 +179,14 @@ class Reports::Excel
       Reports::ColumnDefinition.new(:title => "Username",      :width => 25),
       Reports::ColumnDefinition.new(:title => "Student Name",  :width => 25),
       Reports::ColumnDefinition.new(:title => "Teachers",      :width => 50)
+    ]
+  end
+
+  def teacher_info_header
+    return [
+      Reports::ColumnDefinition.new(:title => "Teacher Districts",   :width => 50),
+      Reports::ColumnDefinition.new(:title => "Teacher States",      :width => 50),
+      Reports::ColumnDefinition.new(:title => "Teacher Emails",      :width => 50)
     ]
   end
 
