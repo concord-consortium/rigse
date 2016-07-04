@@ -12,7 +12,13 @@ class API::V1::TeacherRegistration < API::V1::UserRegistration
     return false
   end
 
+  def self.valid_except_from_school_id(params)
+    registration = self.new(params)
+    !registration.valid? && registration.errors.count == 1 && registration.errors.include?(:school_id)
+  end
+
   protected
+
   def persist_teacher
     user.portal_teacher = @teacher = Portal::Teacher.new(:user => user)
     @teacher.schools << Portal::School.find(self.school_id)

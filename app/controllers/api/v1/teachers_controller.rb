@@ -2,16 +2,26 @@ class API::V1::TeachersController < API::APIController
 
   # Note that two scenarios are possible:
   # - 'school_id' is provided - school is expected to exist
-  # - 'school_name' and 'district_id' are provided instead - school may be created in case of need
+  # - 'school_name', 'country_id' and 'zipcode' are provided instead - school may be created in case of need
   def create
     teacher_registration = API::V1::TeacherRegistration.new(params)
     if !current_visitor.anonymous?
       teacher_registration.set_user current_visitor
     end
 
+    if should_create_new_school?
+      school_id, school_reg_errors = create_new_school
+      if school_id
+        teacher_registration.school_id = school_id
+      else
+        error(school_reg_errors)
+        return
+      end
+    end
+
     if teacher_registration.valid?
       teacher_registration.save
-      render :json => teacher_registration.attributes
+      render status: 201, json: teacher_registration.attributes
     else
       error(teacher_registration.errors)
     end
@@ -35,4 +45,29 @@ class API::V1::TeachersController < API::APIController
     end
   end
 
+  private
+
+  def school_params_provided?
+    params[:school_name].present? && params[:country_id].present? && params[:zipcode].present?
+  end
+
+  def should_create_new_school?
+    # We should create a new school only if there are appropriate params provided and teacher params are valid
+    # (only school_id can be missing).
+    school_params_provided? && API::V1::TeacherRegistration.valid_except_from_school_id(params)
+  end
+
+  def create_new_school
+    # School name, zipcode and country are provided. Look for school that matches these criteria.
+    # If school is not found, try to create a new one.
+    school = API::V1::SchoolRegistration.find(params)
+    return [school.id, nil] if school
+    school = API::V1::SchoolRegistration.new(params)
+    if school.valid?
+      school.save
+      [school.school_id, nil]
+    else
+      [nil, school.errors]
+    end
+  end
 end
