@@ -2,6 +2,7 @@
  // TODO: consider moving assets from zeus into
  // package (mange_classes,instructional_materials, &etc.)
 
+= require 'modulejs'
 = require 'portal-namespace'
 = require 'prototype-ui/prototype-ui'
 = require 'globals'
@@ -56,6 +57,10 @@
 = require 'iframeable-link'
 = require 'react'
 = require 'react_ujs'
+= require 'formsy-react'
+= require 'classnames'
+= require 'react-input-autosize'
+= require 'react-select'
 = require 'component'
 = require 'jquery_nested_form'
 = require 'main_nav_more_menu'

@@ -121,7 +121,7 @@ source "http://rubygems.org"
 
   gem 'useragent'  # detect browser types
 
-  gem 'react-rails', '~> 1.0'
+  gem 'react-rails', '~> 1.7'
 
   gem 'nested_form'
   gem 'sanitize'

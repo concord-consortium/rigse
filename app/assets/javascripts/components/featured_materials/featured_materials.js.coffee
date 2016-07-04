@@ -20,4 +20,4 @@ window.FeaturedMaterials = React.createFactory FeaturedMaterialsClass
 Portal.renderFeaturedMaterials = (selectorOrElement) ->
   query = window.location.search
   query = query.slice(1) if query[0] == '?'
-  React.render FeaturedMaterials(queryString: query), jQuery(selectorOrElement)[0]
+  ReactDOM.render FeaturedMaterials(queryString: query), jQuery(selectorOrElement)[0]

@@ -58,5 +58,5 @@ Portal.renderMaterialsCollection = (collectionId, selectorOrElement, limitOrOpti
               {limit: limitOrOptions}
             else
               limitOrOptions
-  React.render MaterialsCollection(collection: collectionId, limit: options.limit, randomize: options.randomize),
+  ReactDOM.render MaterialsCollection(collection: collectionId, limit: options.limit, randomize: options.randomize),
     jQuery(selectorOrElement)[0]
