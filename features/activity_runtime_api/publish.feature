@@ -7,6 +7,8 @@ Feature: External Activities can support a REST publishing api
         "name": "Cool Activity",
         "url": "http://activity.com/activity/1",
         "launch_url": "http://activity.com/activity/1/sessions/",
+        "author_url": "http://activity.com/activity/1/edit",
+        "print_url": "http://activity.com/activity/1/print_blank",
         "description": "This activity does fun stuff.",
         "sections": [
           {
@@ -55,6 +57,8 @@ Feature: External Activities can support a REST publishing api
         "name": "Cool Activity",
         "url": "http://activity.com/activity/1",
         "launch_url": "http://activity.com/activity/1/sessions/",
+        "author_url": "http://activity.com/activity/1/edit_new",
+        "print_url": "http://activity.com/activity/1/print_blank_new",
         "sections": [
           {
             "name": "Cool Activity Section 1",
@@ -103,6 +107,8 @@ Feature: External Activities can support a REST publishing api
         "description": "Several activities together in a sequence",
         "url": "http://activity.com/sequence/1",
         "launch_url": "http://activity.com/sequence/1",
+        "author_url": "http://activity.com/sequence/1/edit",
+        "print_url": "http://activity.com/sequence/1/print_blank",
         "abstract": "This is the abstract",
         "activities": [
           {
@@ -110,6 +116,8 @@ Feature: External Activities can support a REST publishing api
             "name": "Cool Activity",
             "url": "http://activity.com/activity/1",
             "launch_url": "http://activity.com/activity/1/sessions/",
+            "author_url": "http://activity.com/activity/1/edit",
+            "print_url": "http://activity.com/activity/1/print_blank",
             "description": "This activity does fun stuff.",
             "abstract": "This is the abstract.",
             "sections": [
@@ -208,12 +216,16 @@ Feature: External Activities can support a REST publishing api
         "abstract": "The abstract was also changed",
         "url": "http://activity.com/sequence/1",
         "launch_url": "http://activity.com/sequence/1",
+        "author_url": "http://activity.com/sequence/1/edit_new",
+        "print_url": "http://activity.com/sequence/1/print_blank_new",
         "activities": [
           {
             "type": "Activity",
             "name": "Cool Activity",
             "url": "http://activity.com/activity/1",
             "launch_url": "http://activity.com/activity/1/sessions/",
+            "author_url": "http://activity.com/activity/1/edit_new",
+            "print_url": "http://activity.com/activity/1/print_blank_new",
             "description": "This activity does fun stuff.",
             "sections": [
               {
@@ -310,7 +322,9 @@ Feature: External Activities can support a REST publishing api
     And the portal should create an external activity with the following attributes:
       | name            | Cool Activity |
       | url             | http://activity.com/activity/1 |
-      | launch_url | http://activity.com/activity/1/sessions/ |
+      | launch_url      | http://activity.com/activity/1/sessions/ |
+      | author_url      | http://activity.com/activity/1/edit |
+      | print_url       | http://activity.com/activity/1/print_blank |
       | description     | This activity does fun stuff. |
     And the external activity should have a template
     And the portal should create an activity with the following attributes:
@@ -328,11 +342,19 @@ Feature: External Activities can support a REST publishing api
       | external_id              | 456789 |
       | choices                  | [{"external_id": "97", "choice": "red"},{"external_id": "98", "choice": "blue", "is_correct": "true"},{"external_id": "99", "choice": "green"}] |
 
+
   @mechanize
   Scenario: External REST activity is published the second time
     Given the external runtime published the activity "Fun Stuff" before
     When the external runtime publishes the activity "Fun Stuff" again
     Then the published activity "Fun Stuff" should be correctly modified by the API
+    And the portal should create an external activity with the following attributes:
+      | name            | Cool Activity |
+      | url             | http://activity.com/activity/1 |
+      | launch_url      | http://activity.com/activity/1/sessions/ |
+      | author_url      | http://activity.com/activity/1/edit_new |
+      | print_url       | http://activity.com/activity/1/print_blank_new |
+      | description     | This activity does fun stuff. |
 
   @mechanize
   Scenario: External REST sequence is published the first time
@@ -342,6 +364,8 @@ Feature: External Activities can support a REST publishing api
       | name            | Many fun things |
       | url             | http://activity.com/sequence/1 |
       | launch_url      | http://activity.com/sequence/1 |
+      | author_url      | http://activity.com/sequence/1/edit |
+      | print_url       | http://activity.com/sequence/1/print_blank |
       | description     | Several activities together in a sequence |
       | abstract        | This is the abstract |
     And the external activity should have a template
@@ -367,4 +391,8 @@ Feature: External Activities can support a REST publishing api
     Given the external runtime published the sequence "Many fun things" before
     When the external runtime publishes the sequence "Many fun things" again
     Then the published activity "Many fun things" should be correctly modified by the API
-
+    And the portal should create an external activity with the following attributes:
+      | name            | Many fun things |
+      | launch_url      | http://activity.com/sequence/1 |
+      | author_url      | http://activity.com/sequence/1/edit_new |
+      | print_url       | http://activity.com/sequence/1/print_blank_new |

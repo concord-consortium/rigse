@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160517214328) do
+ActiveRecord::Schema.define(:version => 20160701193035) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -857,6 +857,8 @@ ActiveRecord::Schema.define(:version => 20160517214328) do
     t.boolean  "logging",                  :default => false
     t.boolean  "is_assessment_item",       :default => false
     t.integer  "external_report_id"
+    t.string   "author_url"
+    t.string   "print_url"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
