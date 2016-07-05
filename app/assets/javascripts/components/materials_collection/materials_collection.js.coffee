@@ -1,17 +1,29 @@
 {div, span, a, i} = React.DOM
 
+shuffle = (a) ->
+  idx = a.length
+  while --idx > 0
+    j = ~~(Math.random() * (idx + 1))
+    t = a[j]
+    a[j] = a[idx]
+    a[idx] = t
+  a
+
 window.MaterialsCollectionClass = React.createClass
   getInitialState: ->
     materials: []
     truncated: true
 
   componentDidMount: ->
+    {randomize} = @props
     jQuery.ajax
       url: Portal.API_V1.MATERIALS_BIN_COLLECTIONS
       data: id: @props.collection
       dataType: 'json'
       success: (data) =>
-        @setState materials: data[0].materials if @isMounted()
+        materials = data[0].materials
+        materials = shuffle(materials) if randomize
+        @setState materials: materials if @isMounted()
 
   toggle: (e) ->
     @setState truncated: not @state.truncated
@@ -40,5 +52,11 @@ window.MaterialsCollectionClass = React.createClass
 
 window.MaterialsCollection = React.createFactory MaterialsCollectionClass
 
-Portal.renderMaterialsCollection = (collectionId, selectorOrElement, limit = Infinity) ->
-  React.render MaterialsCollection(collection: collectionId, limit: limit), jQuery(selectorOrElement)[0]
+Portal.renderMaterialsCollection = (collectionId, selectorOrElement, limitOrOptions = Infinity) ->
+  # Keep API backward compatible, so accept either 'limit' option as the last argument or hash.
+  options = if typeof limitOrOptions == 'number'
+              {limit: limitOrOptions}
+            else
+              limitOrOptions
+  React.render MaterialsCollection(collection: collectionId, limit: options.limit, randomize: options.randomize),
+    jQuery(selectorOrElement)[0]
