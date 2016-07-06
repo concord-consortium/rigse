@@ -48,7 +48,9 @@ class ActivityRuntimeAPI
         :abstract         => hash["abstract"],
         :url              => hash["url"],
         :thumbnail_url    => hash["thumbnail_url"],
-        :launch_url  => hash["launch_url"] || hash["create_url"],
+        :launch_url       => hash["launch_url"] || hash["create_url"],
+        :author_url       => hash["author_url"],
+        :print_url        => hash["print_url"],
         :template         => activity,
         :publication_status => "published",
         :user => user,
@@ -89,7 +91,7 @@ class ActivityRuntimeAPI
       end
     end
 
-    ['author_email', 'is_locked'].each do |attribute|
+    ['author_email', 'is_locked', 'print_url', 'author_url'].each do |attribute|
       external_activity.update_attribute(attribute,hash[attribute])
     end
     
@@ -148,6 +150,8 @@ class ActivityRuntimeAPI
         :url              => hash["url"],
         :thumbnail_url    => hash["thumbnail_url"],
         :launch_url       => hash["launch_url"] || hash["create_url"],
+        :author_url       => hash["author_url"],
+        :print_url        => hash["print_url"],
         :template         => investigation,
         :publication_status => "published",
         :user => user,
