@@ -15,7 +15,7 @@ class PasswordMailer < ActionMailer::Base
   def imported_password_reset(password)
     @user = password.user
     @url = "#{APP_CONFIG[:site_url]}/change_password/#{password.reset_code}"
-    finish_email(password.user, 'Account Upgrade', APP_CONFIG[:admin_email])
+    finish_email(password.user, 'Your password has been reset.', APP_CONFIG[:admin_email])
   end
 
   protected
