@@ -49,8 +49,6 @@
 = require 'angular-messages'
 = require 'angular/vendor/angular_select2'
 = require 'angular/vendor/angular_ui_validate'
-= require 'angular/signup_directives'
-= require 'angular/signup'
 = require 'angular/collaboration'
 = require 'angular/portal_app'
 = require 'external_activities/matedit'
