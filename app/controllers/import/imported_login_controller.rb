@@ -13,10 +13,11 @@ class Import::ImportedLoginController < ApplicationController
     write_to_us = "<a href=\"mailto:#{help_email}\">write to us</a> (#{help_email})"
     if password.save
       PasswordMailer.imported_password_reset(password).deliver
-      flash[:alert] = "A link to change your password has been sent to <b>#{user.email}.</b><br>" +
-                      "If you don't have access to this email address anymore, please #{write_to_us}."
+      flash[:alert] = "Your account was imported. A link to set your password has been sent to: <b>#{user.email}.</b><br>" +
+                      "If you need help, #{write_to_us}."
     else
-      flash[:error] = "This account has not set a valid email address. Please #{write_to_us} to access your account."
+      flash[:error] = "Your account was imported from another site. We need a valid email address to complete the " +
+                      "import process, and your account does not have one. Please #{write_to_us} to access your account."
     end
   end
 end
