@@ -9,7 +9,7 @@ class API::V1::TeachersController < API::APIController
       teacher_registration.set_user current_visitor
     end
 
-    if should_create_new_school?
+    if should_create_new_school(teacher_registration)
       school_id, school_reg_errors = create_new_school
       if school_id
         teacher_registration.school_id = school_id
@@ -51,10 +51,10 @@ class API::V1::TeachersController < API::APIController
     params[:school_name].present? && params[:country_id].present? && params[:zipcode].present?
   end
 
-  def should_create_new_school?
+  def should_create_new_school(teacher_registration)
     # We should create a new school only if there are appropriate params provided and teacher params are valid
     # (only school_id can be missing).
-    school_params_provided? && API::V1::TeacherRegistration.valid_except_from_school_id(params)
+    school_params_provided? && teacher_registration.valid_except_from_school_id
   end
 
   def create_new_school

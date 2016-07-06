@@ -60,8 +60,13 @@ modulejs.define 'components/signup/teacher_form',
 
     onBasicFormValid: ->
       # Unfortunately, async validation is not respected by onValid / onInvalid handlers. We need to manually check
-      # async components.
-      @setState canSubmit: @refs.login.isValidAsync() && @refs.email.isValidAsync()
+      # async components. Note that they might be undefined in non-anonymous mode.
+      valid = true
+      if @refs.login && !@refs.login.isValidAsync()
+        valid = false
+      if @refs.email && !@refs.email.isValidAsync()
+        valid = false
+      @setState canSubmit: valid
 
     onBasicFormInvalid: ->
       @setState canSubmit: false
@@ -118,36 +123,40 @@ modulejs.define 'components/signup/teacher_form',
       if isUSSelected then 'ZIP code' else 'postal code'
 
     render: ->
+      {anonymous} = @props
       {canSubmit, currentCountry, currentZipcode, registerNewSchool, showZipcodeHelp} = @state
       showZipcode = currentCountry?
       showSchool = currentCountry? && currentZipcode?
       (FormsyForm {ref: 'form', onValidSubmit: @submit, onValid: @onBasicFormValid, onInvalid: @onBasicFormInvalid, onChange: @onChange},
-        (TextInput
-          ref: 'login'
-          name: 'login'
-          placeholder: 'Username'
-          required: true
-          validations:
-            minLength: 3
-            matchRegexp: /^[a-zA-Z0-9\.\+\-\_\@]*$/
-          validationErrors:
-            minLength: LOGIN_TOO_SHORT
-            matchRegexp: LOGIN_REGEXP
-          asyncValidation: loginAvailableValidator
-          asyncValidationError: LOGIN_TAKEN
-        )
-        (TextInput
-          ref: 'email'
-          name: 'email'
-          placeholder: 'Email'
-          required: true
-          validations:
-            isEmail: true
-          validationErrors:
-            isEmail: EMAIL_REGEXP
-          asyncValidation: emailAvailableValidator
-          asyncValidationError: EMAIL_TAKEN
-        )
+        if anonymous
+          (div {},
+            (TextInput
+              ref: 'login'
+              name: 'login'
+              placeholder: 'Username'
+              required: true
+              validations:
+                minLength: 3
+                matchRegexp: /^[a-zA-Z0-9\.\+\-\_\@]*$/
+              validationErrors:
+                minLength: LOGIN_TOO_SHORT
+                matchRegexp: LOGIN_REGEXP
+              asyncValidation: loginAvailableValidator
+              asyncValidationError: LOGIN_TAKEN
+            )
+            (TextInput
+              ref: 'email'
+              name: 'email'
+              placeholder: 'Email'
+              required: true
+              validations:
+                isEmail: true
+              validationErrors:
+                isEmail: EMAIL_REGEXP
+              asyncValidation: emailAvailableValidator
+              asyncValidationError: EMAIL_TAKEN
+            )
+          )
         (SelectInput
           name: 'country_id'
           placeholder: 'Country'

@@ -12,9 +12,8 @@ class API::V1::TeacherRegistration < API::V1::UserRegistration
     return false
   end
 
-  def self.valid_except_from_school_id(params)
-    registration = self.new(params)
-    !registration.valid? && registration.errors.count == 1 && registration.errors.include?(:school_id)
+  def valid_except_from_school_id
+    !valid? && errors.count == 1 && errors.include?(:school_id)
   end
 
   protected

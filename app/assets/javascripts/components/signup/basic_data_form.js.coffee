@@ -34,33 +34,37 @@ modulejs.define 'components/signup/basic_data_form',
       @props.onSubmit(model)
 
     render: ->
+      {anonymous} = @props
       (FormsyForm {onValidSubmit: @submit, onValid: @enableButton, onInvalid: @disableButton, onChange: @onChange},
-        (TextInput
-          name: 'first_name'
-          placeholder: 'First Name'
-          required: true
-        )
-        (TextInput
-          name: 'last_name'
-          placeholder: 'Last Name'
-          required: true
-        )
-        (TextInput
-          name: 'password'
-          placeholder: 'Password'
-          type: 'password'
-          required: true
-          validations: 'minLength:6'
-          validationError: PASS_TOO_SHORT
-        )
-        (TextInput
-          name: 'password_confirmation'
-          placeholder: 'Confirm Password'
-          type: 'password'
-          required: true
-          validations: "equals:#{@state.password}"
-          validationError: PASS_NOT_MATCH
-        )
+        if anonymous
+          (div {},
+            (TextInput
+              name: 'first_name'
+              placeholder: 'First Name'
+              required: true
+            )
+            (TextInput
+              name: 'last_name'
+              placeholder: 'Last Name'
+              required: true
+            )
+            (TextInput
+              name: 'password'
+              placeholder: 'Password'
+              type: 'password'
+              required: true
+              validations: 'minLength:6'
+              validationError: PASS_TOO_SHORT
+            )
+            (TextInput
+              name: 'password_confirmation'
+              placeholder: 'Confirm Password'
+              type: 'password'
+              required: true
+              validations: "equals:#{@state.password}"
+              validationError: PASS_NOT_MATCH
+            )
+          )
         (RadioInput
           name: 'type'
           title: 'I am a '

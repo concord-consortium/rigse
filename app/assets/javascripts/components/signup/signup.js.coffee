@@ -27,6 +27,13 @@ modulejs.define 'components/signup/signup',
       studentData: null
       teacherData: null
 
+    getDefaultProps: ->
+      signupText: 'Sign Up'
+      # When user is anonymous, we need to ask about all the information (email, login, password).
+      # However, sometimes users are using SSO and basic user object can be already created. Then we only
+      # need to create Portal-specific models (student or teacher).
+      anonymous: true
+
     onBasicDataSubmit: (data) ->
       @setState basicData: data
 
@@ -43,23 +50,25 @@ modulejs.define 'components/signup/signup',
       return 3
 
     render: ->
-      {signupText} = @props
+      {signupText, anonymous} = @props
       {basicData, studentData, teacherData} = @state
       (div {className: 'signup-form'},
-        (div {className: 'title'}, 'Sign Up')
+        (div {className: 'title'}, if anonymous then 'Sign Up' else 'Finish Signing Up')
         (div {className: 'step'}, "Step #{@getStepNumber()} of 3")
         if studentData
-          (StudentRegistrationComplete {data: studentData})
+          (StudentRegistrationComplete {anonymous, data: studentData})
         else if teacherData
-          (TeacherRegistrationComplete {})
+          (TeacherRegistrationComplete {anonymous})
         else if !basicData
-          (BasicDataForm {signupText: signupText, onSubmit: @onBasicDataSubmit})
+          (BasicDataForm {anonymous, signupText, onSubmit: @onBasicDataSubmit})
         else if basicData.type == 'student'
-          (StudentForm {basicData: basicData, onRegistration: @onStudentRegistration})
+          (StudentForm {basicData, onRegistration: @onStudentRegistration})
         else if basicData.type == 'teacher'
-          (TeacherForm {basicData: basicData, onRegistration: @onTeacherRegistration})
+          (TeacherForm {anonymous, basicData, onRegistration: @onTeacherRegistration})
       )
 
-Portal.renderSingupForm = (selectorOrElement, signupText = 'Sign Up') ->
+Portal.renderSingupForm = (selectorOrElement, properties = {}) ->
   Signup = React.createFactory modulejs.require('components/signup/signup')
-  ReactDOM.render Signup(signupText: signupText), jQuery(selectorOrElement)[0]
+  # Automatically set anonymous / non-anonymous mode if this property is not explicitely defined.
+  properties.anonymous = Portal.currentUser.isAnonymous unless properties.anonymous?
+  ReactDOM.render Signup(properties), jQuery(selectorOrElement)[0]
