@@ -28,11 +28,11 @@ modulejs.define 'components/signup/signup',
       teacherData: null
 
     getDefaultProps: ->
-      signupText: 'Sign Up'
+      signupText: "Sign Up for #{Portal.siteName}!"
       # When user is anonymous, we need to ask about all the information (email, login, password).
       # However, sometimes users are using SSO and basic user object can be already created. Then we only
       # need to create Portal-specific models (student or teacher).
-      anonymous: true
+      anonymous: Portal.currentUser.isAnonymous
 
     onBasicDataSubmit: (data) ->
       @setState basicData: data
@@ -69,6 +69,4 @@ modulejs.define 'components/signup/signup',
 
 Portal.renderSingupForm = (selectorOrElement, properties = {}) ->
   Signup = React.createFactory modulejs.require('components/signup/signup')
-  # Automatically set anonymous / non-anonymous mode if this property is not explicitely defined.
-  properties.anonymous = Portal.currentUser.isAnonymous unless properties.anonymous?
   ReactDOM.render Signup(properties), jQuery(selectorOrElement)[0]
