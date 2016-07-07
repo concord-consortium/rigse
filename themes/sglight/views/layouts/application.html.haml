@@ -58,7 +58,7 @@
             - else
               = link_to 'Login', login_path
               \/
-              = link_to 'Sign Up', pick_signup_path
+              = link_to 'Sign Up', 'javascript:Portal.openSignupModal();'
             - if @original_user.has_role?('admin', 'manager')
               \/
               = link_to 'Switch', switch_user_path(current_visitor)

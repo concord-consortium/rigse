@@ -1263,7 +1263,7 @@ module ApplicationHelper
       end
       message += link_to opts[:login], login_path
       message += " / "
-      message += link_to opts[:signup], pick_signup_path
+      message += link_to opts[:signup], 'javascript:Portal.openSignupModal();'
     else
       message += "#{opts[:welcome]} #{current_visitor.send(opts[:name_method])} &nbsp;"
       message += link_to opts[:prefs],  preferences_user_path(current_visitor)
