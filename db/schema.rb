@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160705205130) do
+ActiveRecord::Schema.define(:version => 20160708124448) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2625,6 +2625,7 @@ ActiveRecord::Schema.define(:version => 20160705205130) do
     t.string   "unconfirmed_email"
     t.datetime "confirmation_sent_at"
     t.boolean  "require_portal_user_type",                :default => false
+    t.string   "sign_up_path"
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
