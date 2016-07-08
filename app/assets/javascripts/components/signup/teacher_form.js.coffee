@@ -10,8 +10,7 @@ newSchoolWarning = (zipOrPostal) ->
   'You are adding a new school / institution. Please make sure that the ' +
   "#{zipOrPostal} and school / institution name are correct!"
 zipcodeHelp = (zipOrPostal) ->
-  "Not sure which #{zipOrPostal} code to use? Please enter the #{zipOrPostal} code of your school's official " +
-  "address. If you are at a virtual school, please use the #{zipOrPostal} code of your school's business address."
+  "Not sure which #{zipOrPostal} to use? Please enter the #{zipOrPostal} of your school's address."
 invalidZipcode = (zipOrPostal) ->
   "Incorrect #{zipOrPostal}"
 
@@ -181,12 +180,10 @@ modulejs.define 'components/signup/teacher_form',
             if !showZipcodeHelp
               (i {className: 'zipcode-help-icon fa fa-question-circle', onClick: @showZipcodeHelp})
             if showZipcodeHelp
-              (div {className: 'zipcode-help-text'},
+              (div {className: 'help-text'},
                 (div {}, zipcodeHelp(@zipOrPostal()))
               )
           )
-        if registerNewSchool && showSchool
-          (div {style: fontSize: '0.8em'}, newSchoolWarning(@zipOrPostal()))
         if showSchool && !registerNewSchool
           (SchoolInput
             name: 'school_id'
@@ -199,10 +196,13 @@ modulejs.define 'components/signup/teacher_form',
         if showSchool && !registerNewSchool
           (a {onClick: @addNewSchool}, CANT_FIND_SCHOOL)
         if showSchool && registerNewSchool
-          (TextInput
-            name: 'school_name'
-            placeholder: 'School / Institution Name'
-            required: true
+          (div {},
+            (TextInput
+              name: 'school_name'
+              placeholder: 'School / Institution Name'
+              required: true
+            )
+            (div {className: 'help-text'}, newSchoolWarning(@zipOrPostal()))
           )
         if showSchool && registerNewSchool
           (a {onClick: @goBackToSchoolList}, GO_BACK_TO_LIST)
