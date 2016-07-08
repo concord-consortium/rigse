@@ -50,14 +50,14 @@ Feature: Teacher can search and assign instructional materials to a class
     Then I should see "Please log-in" within the lightbox in focus
     And I should see "as a teacher to assign this material." within the lightbox in focus
     And I follow "register" within the lightbox in focus
-    Then I should be on the pick signup page
+    Then I should see "Sign Up for Rails Portal"
     And I am on the the preview investigation page for the investigation "Mechanics"
     And I uncheck "Fluid Mechanics" from the investigation preview page
     And I follow "Assign Individual Activities"
     Then I should see "Please log-in" within the lightbox in focus
     And I should see "as a teacher to assign this material." within the lightbox in focus
     And I follow "register" within the lightbox in focus
-    Then I should be on the pick signup page
+    Then I should see "Sign Up for Rails Portal"
     
     
   Scenario: Teacher should be able to see different properties of materials
