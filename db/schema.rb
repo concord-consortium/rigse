@@ -2037,7 +2037,7 @@ ActiveRecord::Schema.define(:version => 20160705205130) do
     t.datetime "updated_at",                   :null => false
     t.integer  "nces_school_id"
     t.string   "state",          :limit => 80
-    t.string   "zipcode",        :limit => 5
+    t.string   "zipcode",        :limit => 20
     t.string   "ncessch",        :limit => 12
     t.integer  "country_id"
     t.text     "city"
@@ -2387,11 +2387,8 @@ ActiveRecord::Schema.define(:version => 20160705205130) do
     t.integer  "position"
     t.text     "url"
     t.boolean  "is_final"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-    t.text     "feedback"
-    t.boolean  "has_been_reviewed", :default => false
-    t.integer  "score"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   add_index "saveable_external_link_urls", ["external_link_id"], :name => "index_saveable_external_link_urls_on_external_link_id"

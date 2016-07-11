@@ -2,7 +2,7 @@
 
 # helper methods
 window.renderStatic = (reactClass, props={} ) ->
-  React.renderToStaticMarkup ((React.createFactory reactClass) props)
+  ReactDOM.renderToStaticMarkup ((React.createFactory reactClass) props)
 
 # shortcuts for add-on test utilities (the add-ons are enabled in /config/environments/test.rb)
 window.Simulate = React.addons.TestUtils.Simulate

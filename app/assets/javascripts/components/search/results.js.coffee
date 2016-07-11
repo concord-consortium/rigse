@@ -39,4 +39,4 @@ window.SearchResultsClass = React.createClass
 window.SearchResults = React.createFactory SearchResultsClass
 
 Portal.renderSearchResults = (results, dest) ->
-  React.render SearchResults(results: results), jQuery(dest)[0]
+  ReactDOM.render SearchResults(results: results), jQuery(dest)[0]

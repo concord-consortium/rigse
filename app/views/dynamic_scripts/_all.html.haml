@@ -1,6 +1,8 @@
 :javascript
   if (typeof Portal === 'undefined') {
-    Portal = {}
+    Portal = {
+      siteName: "#{APP_CONFIG[:site_name]}"
+    }
   }
 
 = render :partial => 'dynamic_scripts/api_paths'

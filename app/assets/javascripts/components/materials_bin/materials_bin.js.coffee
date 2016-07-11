@@ -120,4 +120,4 @@ Portal.renderMaterialsBin = (definition, selectorOrElement, queryString = null) 
   queryString = window.location.search if queryString is null
   matches = queryString.match(/assign_to_class=(\d+)/)
   assignToSpecificClass = if matches then matches[1] else null
-  React.render MaterialsBin({materials: definition, assignToSpecificClass: assignToSpecificClass}), jQuery(selectorOrElement)[0]
+  ReactDOM.render MaterialsBin({materials: definition, assignToSpecificClass: assignToSpecificClass}), jQuery(selectorOrElement)[0]
