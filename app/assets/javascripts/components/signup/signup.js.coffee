@@ -35,7 +35,7 @@ modulejs.define 'components/signup/signup',
       anonymous: Portal.currentUser.isAnonymous
 
     onBasicDataSubmit: (data) ->
-      # Save the current path. Backed can use that information to redirect user to this page the first time he logs in.
+      # Save the current path. Backend can use that information to redirect user to this page the first time he logs in.
       data.sign_up_path = location.pathname
       @setState basicData: data
 
