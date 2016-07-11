@@ -4,6 +4,7 @@
 
 = require 'modulejs'
 = require 'portal-namespace'
+= require 'modal'
 = require 'prototype-ui/prototype-ui'
 = require 'globals'
 = require 'effects'

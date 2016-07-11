@@ -1,4 +1,5 @@
 .signup-form {
+  font-family: museo-sans, verdana, helvetica, sans-serif;
   font-size: 13px;
   padding: 3px;
   
@@ -51,6 +52,7 @@
     margin: 8px 0;
     width: 100%;
     input {
+      box-sizing: border-box;
       width: 100%;
     }
     &.error, &.required {
@@ -173,6 +175,40 @@
     }
     p {
       margin: 6px;
+    }
+  }
+}
+
+.signup-default-modal-content {
+  .signup-form {
+    display: inline-block;
+    width: 46%;
+    font-size: 1.1em;
+
+    .first_name, .last_name {
+      width: 100%;
+      display: block;
+    }
+    .last_name {
+      margin-bottom: 1.5em;
+    }
+  }
+
+  .side-info {
+    display: inline-block;
+    background: #f9eec1;
+    border-radius: 12px;
+    float: right;
+    margin-top: 10px;
+    padding: 3.5% 4% 5% !important;
+    width: 42%;
+    font: 1.2em museo-sans;
+    line-height: 1.3;
+
+    .side-info-header {
+      color: #3f3f3f;
+      font: 1.5em museo;
+      margin-bottom: .25em;
     }
   }
 }
