@@ -189,7 +189,7 @@ describe Search do
         end
       end
 
-      describe "searching collectiosn that includes assessment items" do
+      describe "searching collections that includes assessment items" do
         let(:materials)     { [public_items, assessment_activities].flatten }
         let(:search_opts)   {{ :user_id => mock_user.id }}
         before(:each) do
@@ -537,6 +537,28 @@ describe Search do
           end
         end
       end
+
+      describe "with projects" do
+        let(:public_projects) { collection(:project, 2) }
+
+        describe "available_projects" do
+          subject { Search.new(search_opts).available_projects }
+
+          describe "when public external activities have public projects" do
+            before(:each) do
+              # add these projects to a public external activity
+              public_ext_act.first.projects = public_projects
+              reindex_all
+            end
+
+            it "should contain both public projects" do
+              expect(subject[0][:id]).to eql public_projects[0].id
+              expect(subject[1][:id]).to eql public_projects[1].id
+            end
+          end
+        end
+      end
+
 
       describe "ordering" do
         describe "by date" do
