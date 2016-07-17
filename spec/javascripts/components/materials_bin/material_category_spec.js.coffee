@@ -1,5 +1,4 @@
 #= require helpers/react_helper
-#= require component
 
 describe 'MBMaterialsCategoryClass', ->
   beforeEach ->
