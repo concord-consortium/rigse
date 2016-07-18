@@ -25,9 +25,6 @@
     / TODO: if themes need their own print CSS make a themed link here:
     != stylesheet_link_tag 'print', {'media' => 'print'}
 
-    != javascript_include_tag 'prototype'
-    %script{ :src=> "https://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.3/scriptaculous.js", :type => "text/javascript"}
-
     / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
     = render :partial => 'dynamic_scripts/all'
     / TODO: if themes need their own javascript, add theme_ to this:
