@@ -11,7 +11,7 @@ class Reports::Usage < Reports::Excel
       #Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50 )
     #]
     # stud.id, class, school, user.id, username, student name, teachers
-    @shared_column_defs = common_header
+    @shared_column_defs = common_header + teacher_info_header
 
     @url_helpers = opts[:url_helpers]
 
@@ -55,10 +55,12 @@ class Reports::Usage < Reports::Excel
       student_id = student_class[0]
       learners = student_learners[student_class]
       learner_info = report_learner_info_cells(learners)
+      teacher_info = report_learner_teacher_info_cells(learners)
       rows = []
       @sheets.each do |sheet|
         row = sheet.row(sheet.last_row_index + 1)
         row[0, learner_info.size] =  learner_info
+        row[learner_info.size, teacher_info.size] =  teacher_info
         rows << row
       end
       @runnables.each do |runnable|

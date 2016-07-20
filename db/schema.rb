@@ -2275,6 +2275,9 @@ ActiveRecord::Schema.define(:version => 20160708124448) do
     t.float    "complete_percent"
     t.text     "permission_forms"
     t.integer  "num_submitted"
+    t.string   "teachers_district"
+    t.string   "teachers_state"
+    t.string   "teachers_email"
   end
 
   add_index "report_learners", ["class_id"], :name => "index_report_learners_on_class_id"

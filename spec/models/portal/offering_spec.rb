@@ -51,21 +51,20 @@ describe Portal::Offering do
 
     describe "an offering with learners" do
       before (:each) do
-        # TODO: Why is delete and destroy being called on this association?  It shouldn't be
-        @learner = mock_model(Portal::Learner, :valid? => true,:[]= => true, :save => true, :destroy=> false, :delete=>false)
+        @learner = Factory.build(:portal_learner)
+        @learner.stub(:valid?).and_return(true)
+
         @offering = Factory.create(:portal_offering, 
                                    :runnable => @investigation,
                                    :learners => [@learner])
       end
 
+      # this is probably not a good approach, it makes it heard for cleaning up learner data
+      # and assignments when we really want to. It blocks all of the dependent destroy definitions
+      # from being used
       it "can not be destroyed" do
-        @learner.destroy.should be false
-        lambda { @learner.destroy!}.should raise_exception()
-      end
-
-      it "can not be deleted" do
-        @learner.delete.should be false
-        lambda { @learner.delete!}.should raise_exception()
+        @offering.destroy.should be false
+        lambda { @offering.destroy!}.should raise_exception()
       end
 
     end
