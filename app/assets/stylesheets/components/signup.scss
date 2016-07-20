@@ -94,6 +94,10 @@
       color: #d0d0d0;
     }
 
+    .Select-input > input {
+      padding: 10px 0 12px !important;
+    }
+
     &.valid {
       .Select-control {
         background: #f6fff5;

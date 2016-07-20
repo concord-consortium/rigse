@@ -22,6 +22,8 @@ modulejs.define 'components/signup/school_input', [], () ->
       {country, zipcode} = @props
       # Update options if country is changed or zipcode input is changed.
       if prevProps.country != country || prevProps.zipcode != zipcode
+        # Reset current school if country or zipcode is changed and download a new list of schools.
+        @setValue ''
         @updateOptions()
 
     newSchoolLink: ->
@@ -43,8 +45,6 @@ modulejs.define 'components/signup/school_input', [], () ->
           options = data.map (school) -> label: school.name, value: school.id
           options.push {label: @newSchoolLink(), disabled: true}
           @setState options: options, isLoading: false
-          # Reset selected option when we download a new list of schools.
-          @setValue ''
       , TIMEOUT
 
     render: ->
