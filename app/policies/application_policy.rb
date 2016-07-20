@@ -2,7 +2,7 @@ class ApplicationPolicy
   attr_reader :user, :original_user, :request, :params, :record
 
   def initialize(context, record)
-    if context.is_a? User
+    if context.nil? || (context.is_a? User)
       @user = context
       @original_user = context
       @request = nil
@@ -52,7 +52,7 @@ class ApplicationPolicy
     attr_reader :user, :scope
 
     def initialize(context, scope)
-      if context.is_a? User
+      if context.nil? || (context.is_a? User)
         @user = context
       else
         @user = context.user
