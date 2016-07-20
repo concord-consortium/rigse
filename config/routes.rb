@@ -1,6 +1,6 @@
 RailsPortal::Application.routes.draw do
 
-  devise_for :users, :controllers => { :registrations => 'registrations', :omniauth_callbacks => "authentications" }
+  devise_for :users, :controllers => { :registrations => 'registrations', :confirmations => 'confirmations', :omniauth_callbacks => "authentications" }
 
   # Client stuff
   match '/auth/:provider/check' => 'misc#auth_check', method: :get, as: 'auth_check'
@@ -635,7 +635,6 @@ RailsPortal::Application.routes.draw do
         end
       end
       match '/imported_login/confirm_user'    => 'imported_login#confirm_user',  :as => :confirm_user_imported_login, :method => :get
-      match '/imported_login/imported_user_validation'    => 'imported_login#imported_user_validation',  :as => :imported_user_validation_imported_login, :method => :post
     end
 
     namespace :api, :defaults => {:format => :json} do

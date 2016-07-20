@@ -5,7 +5,6 @@
 * =require window/lightbox
 * =require web/app
 * =require web/guest_home_page
-* =require web/signup
 * =require web/simple_lightbox
 * =require web/collaboration_setup
 * =require web/accordion
@@ -31,7 +30,10 @@
 * =require web/bad_browser
 * =require web/material_collections
 * =require web/matedit
+* =require modal
+* =require react-select
 * =require components/materials_bin
+* =require components/signup
 * =require chosen
 * =require select2
 * =require select2-custom

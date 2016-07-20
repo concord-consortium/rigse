@@ -121,7 +121,7 @@ source "http://rubygems.org"
 
   gem 'useragent'  # detect browser types
 
-  gem 'react-rails', '~> 1.0'
+  gem 'react-rails', '~> 1.7'
 
   gem 'nested_form'
   gem 'sanitize'
@@ -186,7 +186,7 @@ end
 group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
-  gem "selenium-webdriver", "~> 2.46.2"
+  gem "selenium-webdriver"
   gem "cucumber",           "~> 1.2.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"

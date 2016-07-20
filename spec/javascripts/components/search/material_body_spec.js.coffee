@@ -1,5 +1,4 @@
 #= require helpers/react_helper
-#= require components/search/material_body
 
 describe 'SMaterialBodyClass', ->
 

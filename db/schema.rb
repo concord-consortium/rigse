@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160629104824) do
+ActiveRecord::Schema.define(:version => 20160708124448) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -857,6 +857,8 @@ ActiveRecord::Schema.define(:version => 20160629104824) do
     t.boolean  "logging",                  :default => false
     t.boolean  "is_assessment_item",       :default => false
     t.integer  "external_report_id"
+    t.text     "author_url"
+    t.text     "print_url"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
@@ -2035,7 +2037,7 @@ ActiveRecord::Schema.define(:version => 20160629104824) do
     t.datetime "updated_at",                   :null => false
     t.integer  "nces_school_id"
     t.string   "state",          :limit => 80
-    t.string   "zipcode",        :limit => 5
+    t.string   "zipcode",        :limit => 20
     t.string   "ncessch",        :limit => 12
     t.integer  "country_id"
     t.text     "city"
@@ -2388,11 +2390,8 @@ ActiveRecord::Schema.define(:version => 20160629104824) do
     t.integer  "position"
     t.text     "url"
     t.boolean  "is_final"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-    t.text     "feedback"
-    t.boolean  "has_been_reviewed", :default => false
-    t.integer  "score"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   add_index "saveable_external_link_urls", ["external_link_id"], :name => "index_saveable_external_link_urls_on_external_link_id"
@@ -2629,6 +2628,7 @@ ActiveRecord::Schema.define(:version => 20160629104824) do
     t.string   "unconfirmed_email"
     t.datetime "confirmation_sent_at"
     t.boolean  "require_portal_user_type",                :default => false
+    t.string   "sign_up_path"
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

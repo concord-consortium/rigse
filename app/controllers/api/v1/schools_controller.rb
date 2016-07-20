@@ -1,14 +1,12 @@
 class API::V1::SchoolsController < API::APIController
 
   def index
-    district_id = params['district_id']
     country_id  = params['country_id']
-    if district_id.blank? && country_id.blank?
-      error("param 'district_id' or 'country_id' are required for school list")
-    elsif district_id
-      @schools = API::V1::SchoolRegistration.for_district(district_id)
+    zipcode = params['zipcode']
+    if country_id.blank? || zipcode.blank?
+      error("'country_id' and 'zipcode' are required for school list")
     else
-      @schools = API::V1::SchoolRegistration.for_country(country_id)
+      @schools = API::V1::SchoolRegistration.for_country_and_zipcode(country_id, zipcode)
     end
     render :json => @schools
   end
