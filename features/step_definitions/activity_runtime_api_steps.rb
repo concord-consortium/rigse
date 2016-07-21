@@ -52,6 +52,10 @@ Given /^"([^"]*)" handles a (POST|GET) with query:$/ do |address, method, table|
   # must use a copy! Cucumber apparently doesn't re-allocate arguments for Background steps
   query_data["externalId"] = query_data["externalId"].sub(/999/,"#{@learner.id}")
   query_data["returnUrl"] = query_data["returnUrl"].sub(/key/,"#{@learner.secure_key}")
+  # replace domain_uid by user id if it has the pattern "domain_uid of 'login'"
+  if /domain_uid of '(.*)'/ =~ query_data["domain_uid"]
+    query_data["domain_uid"] = User.find_by_login($~[1]).id.to_s
+  end
   stub.with(:query => query_data)
 end
 
