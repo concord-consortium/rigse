@@ -41,8 +41,9 @@ end
 When /^(?:|I )search for "(.+)" on the search instructional materials page$/ do |search_text|
   fill_in("search_term", :with => search_text)
   click_button("GO")
-  old_wait_time = Capybara.default_wait_time
-  page.should have_content("matching search term \"#{search_text}\"")
+  using_wait_time(10) do
+    page.should have_content("matching search term \"#{search_text}\"")
+  end
 end
 
 When /^(?:|I )enter search text "(.+)" on the search instructional materials page$/ do |search_text|
