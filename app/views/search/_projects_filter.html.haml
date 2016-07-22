@@ -1,6 +1,6 @@
 - if @form_model.available_projects.size > 0
   .filterheader
-    Projects
+    Collections
   - puts  @form_model.available_projects
   - @form_model.available_projects.sort_by { |p| p[:name].downcase }.each do |project|
     .tablecell

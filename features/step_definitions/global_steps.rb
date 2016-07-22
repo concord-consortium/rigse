@@ -11,6 +11,7 @@ end
 
 def login_as(username)
   visit "/login/#{username}"
+  page.should have_content(username)
   @cuke_current_username = username
 end
 

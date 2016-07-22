@@ -98,7 +98,7 @@ Feature: Admin can work with projects
     And I press "Save"
     # Now project filter should be visible on the search page
     And I am on the search instructional materials page
-    Then I should see "Projects"
+    Then I should see "Collections"
     Then I should see "project 1"
 
   @javascript @search
@@ -110,7 +110,7 @@ Feature: Admin can work with projects
       | Set Theory    | project 2 |
       | Mechanics     | project 2 |
     When I am on the search instructional materials page
-    Then I should see "Projects"
+    Then I should see "Collections"
     And I should see "project 1"
     And I should see "project 2"
     And I should not see "project 3"
