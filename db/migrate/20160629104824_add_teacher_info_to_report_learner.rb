@@ -9,8 +9,8 @@ class AddTeacherInfoToReportLearner < ActiveRecord::Migration
     belongs_to :clazz, :class_name => "AddTeacherInfoToReportLearner::Portal::Clazz", :foreign_key => "class_id"
 
     def update_teacher_info_fields
-      self.teachers_district = clazz.teachers.map{ |t| t.schools.map{ |s| s.district.name}.join(", ")}.join(", ")
-      self.teachers_state = clazz.teachers.map{ |t| t.schools.map{ |s| s.district.state}.join(", ")}.join(", ")
+      self.teachers_district = clazz.teachers.map{ |t| t.schools.map{ |s| s.district ? s.district.name : nil }.join(", ")}.join(", ")
+      self.teachers_state = clazz.teachers.map{ |t| t.schools.map{ |s| s.district ? s.district.state : nil}.join(", ")}.join(", ")
       self.teachers_email = clazz.teachers.map{ |t| t.user.email}.join(", ")
       save!
     end
