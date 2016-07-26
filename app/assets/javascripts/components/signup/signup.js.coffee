@@ -69,6 +69,6 @@ modulejs.define 'components/signup/signup',
           (TeacherForm {anonymous, basicData, onRegistration: @onTeacherRegistration})
       )
 
-Portal.renderSingupForm = (selectorOrElement, properties = {}) ->
+Portal.renderSignupForm = (selectorOrElement, properties = {}) ->
   Signup = React.createFactory modulejs.require('components/signup/signup')
   ReactDOM.render Signup(properties), jQuery(selectorOrElement)[0]
