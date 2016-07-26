@@ -57,6 +57,7 @@ class ActivityRuntimeAPI
         :author_email => hash["author_email"],
         :is_locked => hash["is_locked"]
       )
+      self.update_external_report(external_activity,hash["external_report_url"])
       # update activity so external_activity.template is correctly initialzed
       # otherwise external_activity.template.is_template? won't be true
       activity.reload
@@ -94,7 +95,7 @@ class ActivityRuntimeAPI
     ['author_email', 'is_locked', 'print_url', 'author_url'].each do |attribute|
       external_activity.update_attribute(attribute,hash[attribute])
     end
-    
+    self.update_external_report(external_activity,hash["external_report_url"])
     # save the embeddables
     mc_cache = {}
     or_cache = {}
@@ -158,6 +159,7 @@ class ActivityRuntimeAPI
         :author_email => hash["author_email"],
         :is_locked => hash["is_locked"]
       )
+      self.update_external_report(external_activity, hash["external_report_url"])
       # update investigation so external_activity.template is correctly initialzed
       # otherwise external_activity.template.is_template? won't be true
       investigation.reload
@@ -188,6 +190,7 @@ class ActivityRuntimeAPI
       end
     end
     external_activity.update_attribute('author_email',hash['author_email'])
+    self.update_external_report(external_activity, hash["external_report_url"])
     # save the embeddables
     mc_cache = {}
     or_cache = {}
@@ -448,4 +451,15 @@ class ActivityRuntimeAPI
     filters = template.offerings.map { |offering| offering.report_embeddable_filter }.compact
     filters.each { |filter| filter.clear }
   end
+
+
+  def self.update_external_report(external_activity, report_url)
+    external_report = nil
+    if report_url
+      external_report = ExternalReport.find_by_url(report_url)
+    end
+    external_activity.external_report = external_report
+    external_activity.save
+  end
+
 end
