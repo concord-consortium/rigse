@@ -19,10 +19,10 @@
       .login-buttons
         %span.login-links
           %span.segmented.first
-            =link_to "Can't log in?",forgot_password_path, :id=>"link_forgot_password"
+            = link_to "Can't log in?",forgot_password_path, :id=>"link_forgot_password"
           - unless defined? @hide_signup_link
             %span.segmented
-              =link_to 'Sign Up', home_path
+              = link_to "Sign Up", "javascript:Portal.openSignupModal();"
         %span.segmented
           = f.submit "Log In", :id=>"LoginSubmitButtonHeader"
         - Devise.omniauth_providers.each do |provider|

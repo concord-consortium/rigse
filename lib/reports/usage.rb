@@ -11,7 +11,9 @@ class Reports::Usage < Reports::Excel
       #Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50 )
     #]
     # stud.id, class, school, user.id, username, student name, teachers
-    @shared_column_defs = common_header
+    @shared_column_defs = common_header + teacher_info_header
+
+    @url_helpers = opts[:url_helpers]
 
     @runnable_start_column = {}
     @sheet_defs = [[]]
@@ -21,6 +23,7 @@ class Reports::Usage < Reports::Excel
       col_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.class}_#{runnable.id})\nAssessments Completed", :width => 25, :height => 2, :left_border => :thin)
       col_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
       col_defs << Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
+      col_defs << Reports::ColumnDefinition.new(:title => "Remote Endpoint", :width => 100)
       if @include_child_usage
         children = (get_containers(runnable) - [runnable])
         children.each do |child|
@@ -52,10 +55,12 @@ class Reports::Usage < Reports::Excel
       student_id = student_class[0]
       learners = student_learners[student_class]
       learner_info = report_learner_info_cells(learners)
+      teacher_info = report_learner_teacher_info_cells(learners)
       rows = []
       @sheets.each do |sheet|
         row = sheet.row(sheet.last_row_index + 1)
         row[0, learner_info.size] =  learner_info
+        row[learner_info.size, teacher_info.size] =  teacher_info
         rows << row
       end
       @runnables.each do |runnable|
@@ -66,7 +71,8 @@ class Reports::Usage < Reports::Excel
           assess_completed =  l.num_submitted
           assess_percent = percent(assess_completed, total_assessments)
           last_run = l.last_run || 'never'
-          row_vals = [assess_completed, assess_percent, last_run]
+          remote_endpoint = @url_helpers.remote_endpoint_url(l.learner)
+          row_vals = [assess_completed, assess_percent, last_run, remote_endpoint]
           if @include_child_usage
             children = (get_containers(runnable) - [runnable])
             children.each do |child|

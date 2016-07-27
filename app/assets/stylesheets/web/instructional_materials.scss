@@ -303,7 +303,17 @@
 #oFullStatusDiv .progress_div{width:484px;overflow:auto;text-align:left}
 
 div.progressbar_container {height:15px;padding-top:5px;}
-th.expand_collapse_text div.progressbar_container{width:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+th.expand_collapse_text {
+  div.progressbar_container {
+    width:1px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    &.activity_header {
+      width: auto;
+    }
+  }
+}
 
 #oFullStatusDiv .student_list{text-align:left;border:0;margin-top:0px;width:130px}
 #oFullStatusDiv .student_list tr { vertical-align: middle; }

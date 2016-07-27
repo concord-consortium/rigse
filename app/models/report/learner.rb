@@ -5,7 +5,8 @@
 class Report::Learner < ActiveRecord::Base
   self.table_name = "report_learners"
 
-  belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
+  belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id",
+    :inverse_of => :report_learner
   serialize    :answers, Hash
   belongs_to   :runnable, :polymorphic => true
 
@@ -177,6 +178,8 @@ class Report::Learner < ActiveRecord::Base
       ts.map{ |t| t.user.name}.join(", ")
     end
 
+    update_teacher_info_fields
+
     update_permission_forms
     # check to see if we can obtain the last run info
     if self.learner.offering.internal_report?
@@ -192,6 +195,19 @@ class Report::Learner < ActiveRecord::Base
     end
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
+  end
+
+  # this is a separate method so that it can be called in the migration of the learner data
+  def update_teacher_info_fields
+    update_field("offering.clazz.teachers", "teachers_district") do |ts|
+      ts.map{ |t| t.schools.map{ |s| s.district.name}.join(", ")}.join(", ")
+    end
+    update_field("offering.clazz.teachers", "teachers_state") do |ts|
+      ts.map{ |t| t.schools.map{ |s| s.district.state}.join(", ")}.join(", ")
+    end
+    update_field("offering.clazz.teachers", "teachers_email") do |ts|
+      ts.map{ |t| t.user.email}.join(", ")
+    end
   end
 
   def update_permission_forms

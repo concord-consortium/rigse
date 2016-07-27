@@ -210,6 +210,8 @@ class ApplicationController < ActionController::Base
       if current_visitor.has_active_classes?
         # Teachers with active classes are redirected to the "Recent Activity" page
         redirect_path = recent_activity_path
+      else
+        redirect_path = getting_started_path
       end
     end
     if session[:sso_callback_params]

@@ -3,7 +3,7 @@
 window.SPaginationClass = React.createClass
   componentDidMount: ->
     return if @props.info.total_pages < 2 # don't display pagination if there's only 1 page
-    node = jQuery(React.findDOMNode(@))
+    node = jQuery(ReactDOM.findDOMNode(@))
     node.paging @props.info.total_items,
       format: '<  . (qq -) nnncnnn (- pp) >'
       perpage: @props.info.per_page

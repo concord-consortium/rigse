@@ -135,7 +135,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
-    And I should see "report" within the first recent activity on the recent activity page
+    And I should see "Report" within the first recent activity on the recent activity page
 
 
   Scenario: Anonymous user cannot see recent activity page

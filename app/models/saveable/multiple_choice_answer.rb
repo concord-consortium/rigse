@@ -10,6 +10,10 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
 
   def answer
     if rationale_choices.size > 0
+      choices = multiple_choice.choices
+      # figure out if we need to include indexes in the answer
+      duplicate_choices = multiple_choice.has_duplicate_choices?
+
       rationale_choices.compact.select { |rc| rc.choice }.map do |rc|
         data = {
           :choice_id => rc.choice.id,
@@ -17,6 +21,11 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
           :correct => rc.choice.is_correct,
           :feedback => rc.answer.feedback
         }
+        if duplicate_choices
+          data[:answer] = "(#{choices.index(rc.choice) + 1})#{rc.choice.choice}"
+        else
+          data[:answer] = rc.choice.choice
+        end
         data[:rationale] = rc.rationale if rc.rationale
         data
       end

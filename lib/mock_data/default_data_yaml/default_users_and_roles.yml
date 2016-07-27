@@ -111,6 +111,11 @@ users:
     roles: admin
     uuid: 00000000-0000-0000-0000-000000000023
 
+  user_6:
+    login: member
+    roles: member
+    email: member@concord.org
+    uuid: 00000000-0000-0000-0000-000000000040
 
 teachers:
   teacher_1:

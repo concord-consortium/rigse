@@ -6,7 +6,7 @@ Feature: External Activities can support a REST api
       | launch_url  | http://activities.com/activity/1/sessions/ |
     And "activities.com/activity/1/sessions/" handles a GET with query:
       | domain     | http://www.example.com/  |
-      | domain_uid | 13                       |
+      | domain_uid | domain_uid of 'student'  |
       | externalId | 999                      |
       | logging    | false                    |
       | returnUrl  | http://www.example.com/dataservice/external_activity_data/key |

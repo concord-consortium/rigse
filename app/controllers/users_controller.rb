@@ -207,7 +207,7 @@ class UsersController < ApplicationController
     sign_out :user
     user = User.find_by_login!(params[:username])
     sign_in user
-    head :ok
+    render :text => "#{params[:username]} logged in"
   end
 
   #Used for activation of users by a manager/admin

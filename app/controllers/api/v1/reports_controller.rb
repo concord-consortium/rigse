@@ -8,8 +8,24 @@ class API::V1::ReportsController < API::APIController
   # GET api/v1/reports/:id
   def show
     offering = Portal::Offering.find(params[:id])
-    authorize offering, :api_report?
-    render json: API::V1::Report.new(offering, request.protocol, request.host_with_port).to_json
+    student_ids = params["student_ids"]
+    activity_id = params["activity_id"]
+    is_student_report =
+        student_ids &&
+        student_ids.length > 0 &&
+        current_visitor.portal_student &&
+        student_ids.first.to_s == current_visitor.portal_student.id.to_s
+
+    report = API::V1::Report.new({
+         offering: offering,
+         protocol: request.protocol,
+         host_with_port: request.host_with_port,
+         student_ids: student_ids,
+         activity_id: activity_id,
+         hide_controls: is_student_report
+    })
+    authorize report
+    render json: report.to_json
   end
 
   # PUT api/v1/reports/:id
@@ -28,7 +44,12 @@ class API::V1::ReportsController < API::APIController
   def update_visibility_filter(filter, filter_params)
     # In some cases client can send only one parameter, so make sure that the second one won't be affected.
     # Note that we should accept an empty array, so #present? or #blank? can't be used here.
-    filter.embeddable_keys = filter_params[:questions] unless filter_params[:questions].nil?
+    # also see: http://stackoverflow.com/questions/14647731/rails-converts-empty-arrays-into-nils-in-params-of-the-request
+
+    if filter_params.has_key?('questions')
+      questions = filter_params[:questions] || []
+      filter.embeddable_keys = questions
+    end
     filter.ignore = !filter_params[:active]            unless filter_params[:active].nil?
     filter.save!
   end

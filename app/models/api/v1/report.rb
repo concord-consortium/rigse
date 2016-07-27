@@ -1,10 +1,37 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
 
-  def initialize(offering, protocol, host_with_port)
-    @offering = offering
-    @protocol = protocol
-    @host_with_port = host_with_port
+  def initialize(options)
+    # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
+    @offering          = options[:offering]
+    @protocol          = options[:protocol]
+    @host_with_port    = options[:host_with_port]
+    @activity_id       = options[:activity_id]
+    @hide_controls     = options[:hide_controls]
+    @activity_id       = options[:activity_id]
+    student_ids        = options[:student_ids]
+    @report_for = 'class'
+
+    if student_ids
+      @students = Portal::Student.where(id: student_ids).includes([:user, :clazzes])
+      @students = @students.select { |s| s.clazz_ids.include?  @offering.clazz_id }
+      @report_for = 'student'
+    else
+      @students =  @offering.clazz.students.includes(:user)
+      @report_for = 'class'
+    end
+  end
+
+  def is_teacher?(user)
+    @offering.clazz.teachers.include?(user.portal_teacher)
+  end
+
+  def is_student?(user)
+    user.portal_student && @offering.clazz.students.include?(user.portal_student)
+  end
+
+  def is_report_for_student?(user)
+    is_student?(user)  && @students.length == 1 && @students.first == user.portal_student
   end
 
   def to_json
@@ -12,11 +39,13 @@ class API::V1::Report
     answers_hash = get_student_answers
     provide_no_answer_entries(answers_hash, clazz[:students])
     {
-      report: report_json(answers_hash),
-      class: clazz,
-      visibility_filter: visibility_filter_json(@offering.report_embeddable_filter),
-      anonymous_report: @offering.anonymous_report,
-      is_offering_external: @offering.runnable.is_a?(ExternalActivity)
+        report: report_json(answers_hash),
+        report_for: @report_for,
+        class: clazz,
+        visibility_filter: visibility_filter_json(@offering.report_embeddable_filter),
+        anonymous_report: @offering.anonymous_report,
+        is_offering_external: @offering.runnable.is_a?(ExternalActivity),
+        hide_controls: @hide_controls
     }
   end
 
@@ -28,7 +57,9 @@ class API::V1::Report
     section = section ? " (#{section})" : ""
     {
       name: clazz.name + section,
-      students: clazz.students.includes(:user).map { |s| student_json(s) }.sort_by { |s| s[:name] }
+      students: @students
+                    .sort_by { |s| s.last_name }
+                    .map     { |s| student_json(s) }
     }
   end
 
@@ -45,7 +76,8 @@ class API::V1::Report
 
   def get_student_answers
     # Collect all the student answers for given offering.
-    answers = Report::Learner.where(offering_id: @offering.id).map do |report_learner|
+    student_ids = @students.map { |s| s.id }
+    answers = Report::Learner.where(offering_id: @offering.id, student_id: student_ids).map do |report_learner|
       student_id = report_learner.student_id
       answers = []
       report_learner.answers.map do |embeddable_key, answer|
@@ -69,7 +101,7 @@ class API::V1::Report
 
   def provide_no_answer_entries(answers, students_json)
     # Provide "no answer" entries for students who started activity, but didn't respond to given question.
-    default_answer_entries = students_json.select { |s| s[:started_offering] }.map do |s|
+    default_answer_entries = students_json.map do |s|
       {
         student_id: s[:id],
         answer: nil,
@@ -114,7 +146,11 @@ class API::V1::Report
   # Helpers that provide the final structure of an offering plus related answers for each question:
 
   def report_json(answers)
-    runnable = @offering.runnable
+    runnable =  @offering.runnable
+    if @activity_id
+      runnable = Activity.find(@activity_id)
+    end
+
     if runnable.is_a?(ExternalActivity) && runnable.template
       runnable = runnable.template
     end
@@ -161,21 +197,31 @@ class API::V1::Report
       id: page.id,
       type: 'Page',
       name: page.name,
-      children: page.page_elements.map { |pe| embeddable_json(pe.embeddable, answers) }
+      children: page.page_elements.includes(:page).map { |pe| embeddable_json(pe.question_number, pe.embeddable, answers) }
     }
   end
 
   IGNORED_EMBEDDABLE_KEYS = ['created_at', 'updated_at', 'uuid', 'user_id', 'external_id']
 
-  def embeddable_json(embeddable, answers)
+  def embeddable_json(question_number, embeddable, answers)
     # Provide as much information about embeddable as we can, but skip some attributes
     # to make results more readable and clean.
     hash = embeddable.attributes.clone.except(*IGNORED_EMBEDDABLE_KEYS)
     key = embeddable_key(embeddable)
     hash[:key] = key
     hash[:type] = embeddable.class.to_s
-    hash[:answers] = answers[key] || [] #when no students have answered
+    hash[:question_number] = question_number
+    hash[:answers] = answers[key] || no_answers(key)
 
+    # We want to remove markup from the prompt and name. Even though
+    # Markup is stript, HTML entities are preserved, eg `&deg`;
+    # Do this without creating new keys in hash.
+    if hash[:prompt]
+      hash[:prompt] = ActionController::Base.helpers.strip_tags(hash[:prompt])
+    end
+    if hash[:name]
+      hash[:name] = ActionController::Base.helpers.strip_tags(hash[:name])
+    end
     if embeddable.is_a? Embeddable::MultipleChoice
       process_multiple_choice(hash, embeddable)
     elsif embeddable.is_a? Embeddable::Iframe
@@ -205,8 +251,18 @@ class API::V1::Report
     end
   end
 
-  # Visibility filter:
+  def no_answers(embeddable_key)
+    @students.map do |s|
+      {
+          student_id: s.id,
+          answer: nil,
+          type: 'NoAnswer',
+          embeddable_key: embeddable_key
+      }
+    end
+  end
 
+  # Visibility filter:
   def visibility_filter_json(filter)
     {
       active: !filter.ignore,

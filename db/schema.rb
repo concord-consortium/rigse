@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160307215246) do
+ActiveRecord::Schema.define(:version => 20160708124448) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -857,6 +857,8 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.boolean  "logging",                  :default => false
     t.boolean  "is_assessment_item",       :default => false
     t.integer  "external_report_id"
+    t.text     "author_url"
+    t.text     "print_url"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
@@ -870,8 +872,9 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.string   "name"
     t.string   "launch_text"
     t.integer  "client_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.string   "report_type", :default => "offering"
   end
 
   add_index "external_reports", ["client_id"], :name => "index_external_reports_on_client_id"
@@ -2047,7 +2050,7 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.datetime "updated_at",                   :null => false
     t.integer  "nces_school_id"
     t.string   "state",          :limit => 80
-    t.string   "zipcode",        :limit => 5
+    t.string   "zipcode",        :limit => 20
     t.string   "ncessch",        :limit => 12
     t.integer  "country_id"
     t.text     "city"
@@ -2285,6 +2288,9 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.float    "complete_percent"
     t.text     "permission_forms"
     t.integer  "num_submitted"
+    t.string   "teachers_district"
+    t.string   "teachers_state"
+    t.string   "teachers_email"
   end
 
   add_index "report_learners", ["class_id"], :name => "index_report_learners_on_class_id"
@@ -2395,7 +2401,7 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.integer  "external_link_id"
     t.integer  "bundle_content_id"
     t.integer  "position"
-    t.string   "url"
+    t.text     "url"
     t.boolean  "is_final"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
@@ -2647,6 +2653,7 @@ ActiveRecord::Schema.define(:version => 20160307215246) do
     t.string   "unconfirmed_email"
     t.datetime "confirmation_sent_at"
     t.boolean  "require_portal_user_type",                :default => false
+    t.string   "sign_up_path"
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

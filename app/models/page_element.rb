@@ -110,4 +110,8 @@ class PageElement < ActiveRecord::Base
     end
     return @reportable_elements
   end
+
+  def question_number
+    page.activity.question_number(embeddable)
+  end
 end

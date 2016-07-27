@@ -22,7 +22,7 @@ Feature: Teacher views report
         | dave      | Class_with_no_assignment | first investigation | a               | b      |
     When I am logged in with the username teacher
     And go to the class page for "Class_with_no_assignment"
-    And I should see "report" within ".action_menu_activity"
+    And I should see "Report" within ".action_menu_activity"
 
   # Report is now handled by an external service.
   # see spec/api/v1/reports_controller_spec.rb to test the related API.

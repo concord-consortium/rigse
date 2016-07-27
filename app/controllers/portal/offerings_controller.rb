@@ -217,21 +217,6 @@ class Portal::OfferingsController < ApplicationController
     end
   end
 
-  # report shown to students
-  def student_report
-    @offering = Portal::Offering.find(params[:id])
-    authorize @offering
-    @learner = @offering.learners.find_by_student_id(current_visitor.portal_student)
-    if (@learner && @offering)
-      reportUtil = Report::Util.reload_without_filters(@offering)  # force a reload of this offering without filters
-      @learners = reportUtil.learners
-      @page_elements = reportUtil.page_elements
-      render :layout => false # student_report.html.haml
-      # will render student_report.html.haml
-    else
-      render :nothing => true
-    end
-  end
 
   def answers
     @offering = Portal::Offering.find(params[:id])
@@ -291,11 +276,26 @@ class Portal::OfferingsController < ApplicationController
     return
   end
 
+
+
+  # report shown to students
+  def student_report
+    offering_id = params[:id]
+    offering = Portal::Offering.find(offering_id)
+    authorize offering
+    student_id = current_visitor.portal_student.id
+    report = DefaultReportService.instance()
+    offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id]})
+    next_url = report.url_for(offering_api_url, current_visitor)
+    redirect_to next_url
+  end
+
   def report
     offering_id = params[:id]
+    activity_id = params[:activity_id] # Might be null
     authorize Portal::Offering.find(offering_id)
     report = DefaultReportService.instance()
-    offering_api_url = api_v1_report_url(offering_id)
+    offering_api_url = api_v1_report_url(offering_id, {activity_id: activity_id})
     next_url = report.url_for(offering_api_url, current_visitor)
     redirect_to next_url
   end
@@ -305,8 +305,7 @@ class Portal::OfferingsController < ApplicationController
     authorize Portal::Offering.find(offering_id)
     report_id = params[:report_id]
     report = ExternalReport.find(report_id)
-    offering_api_url = api_v1_offering_url(offering_id)
-    next_url = report.url_for(offering_api_url, current_visitor)
+    next_url = report.url_for(offering_id, current_visitor, request.protocol, request.host_with_port)
     redirect_to next_url
   end
 

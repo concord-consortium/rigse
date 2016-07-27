@@ -18,7 +18,7 @@ Feature: Teacher views report from the instructional materials page of a class
       | dave      | My Class       | Aerodynamics        | c               | y      |
       | chuck     | My Class       | Aerodynamics        | a               | Y      |
     And I go to Instructional Materials page for "My Class"
-    And I should see "report"
+    And I should see "Report"
 
   # The actual report has been moved to an external service
   # We need to create tests for the API endpoint, and the materials we see there

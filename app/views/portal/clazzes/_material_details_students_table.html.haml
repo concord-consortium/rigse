@@ -43,7 +43,7 @@
             - activity_name = (activity.name.nil?)? "Activity #{index+1}" : activity.name
             - activity_name_tooltip = (activity.name.nil?)? "Activity #{index+1}" : activity.name
             %th.expand_collapse_text{:id=>"activity_header_text#{activity.id}", :class=>"class investigation_detail_row_#{offering.id}", :title=>"#{activity_name_tooltip}"}
-              %div.progressbar_container
+              %div.progressbar_container.activity_header
                 - report_learner_activity = Report::LearnerActivity.where("complete_percent > 0 && activity_id = #{activity.id} && learner_id IN (?)",learner_ids)
                 - if report_learner_activity && offering.reportable?
                   - if report_learner_activity.length > 0

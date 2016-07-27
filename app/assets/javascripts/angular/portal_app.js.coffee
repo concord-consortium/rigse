@@ -1,1 +1,1 @@
-angular.module('cc-portal', ['ccSignup', 'ccCollaboration'])
+angular.module('cc-portal', ['ccCollaboration'])
