@@ -1,28 +1,108 @@
 shared_examples_for 'a saveable' do
-  
-  model_class_lambda = lambda { self.send(:described_class) } 
-  model_name_lambda  = lambda { model_class_lambda.call.name.underscore_module }
 
-  def create_new(model_name)
-    method_name = "create_new_#{model_name}".to_sym
-    if self.respond_to?(method_name)
-      return self.send(method_name)
-    else
-      return Factory.create(model_name)
-    end
-  end
+  let(:model_name) { described_class.name.underscore_module }
+  let(:saveable)   { Factory.create model_name }
 
-  before(:each) do
-    @model_class = model_class_lambda.call
-    @model_ivar = create_new(model_name_lambda.call)
-  end
   
   describe "belong to an embeddable and" do
     it "respond to embeddable?" do
-      @model_ivar.should respond_to :embeddable
+      expect(saveable).to respond_to :embeddable
     end
     it "return an embeddable instance" do
-      @model_ivar.embeddable.should_not be_nil
+      expect(saveable.embeddable).to_not be_nil
     end
+  end
+
+  describe "score and feedback for answers" do
+    def add_answer
+      saveable.answers.create
+    end
+
+    def add_score(score)
+      saveable.answers.last.update_attribute(:score, score)
+    end
+
+    def add_feedback(feedback)
+      saveable.answers.last.update_attribute(:feedback, feedback)
+    end
+
+    def review_answer
+      saveable.answers.last.update_attribute(:has_been_reviewed, true)
+    end
+
+    describe "#needs_review?" do
+      subject { saveable.needs_review? }
+      describe "with no answers" do
+        it { should be_false }
+      end
+      describe "with an answer" do
+        before(:each) do
+          add_answer
+        end
+
+        describe "when no feedback has been given" do
+          it { should  be_true }
+        end
+
+        describe "when the answer has been reviewed" do
+          before(:each) do
+            review_answer
+          end
+          it { should be_false }
+        end
+
+      end
+    end
+
+    describe "#current_feedback" do
+      subject { saveable.current_feedback }
+      describe "with no answers" do
+        it { should be_nil }
+      end
+      describe "with an answer" do
+        before(:each) do
+          add_answer
+        end
+
+        describe "when no feedback has been given" do
+          it { should  be_nil }
+        end
+
+        describe "when we give feeback" do
+          let(:feedback) { "great_job" }
+          before(:each) do
+            add_feedback(feedback)
+          end
+          it { should eq feedback }
+        end
+
+      end
+    end
+
+    describe "#current_score" do
+      subject { saveable.current_score }
+      describe "with no answers" do
+        it { should be_nil }
+      end
+      describe "with an answer" do
+        before(:each) do
+          add_answer
+        end
+
+        describe "when no score has been given" do
+          it { should  be_nil }
+        end
+
+        describe "when we score the work" do
+          let(:score) { 5 }
+          before(:each) do
+            add_score(score)
+          end
+          it { should eq score }
+        end
+
+      end
+    end
+
   end
 end
