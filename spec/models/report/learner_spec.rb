@@ -1,6 +1,6 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-include ReportLearnerSpecHelper # defines : saveable_for : answers_for : add_answer
+include ReportLearnerSpecHelper # defines : saveable_for : answers_for : add_answer : stub_all_reportables
 
 describe Report::Learner do
   before(:each) do
@@ -172,12 +172,13 @@ describe Report::Learner do
 
       subject { report_learner}
       before(:each) do
-        Investigation.any_instance.stub(:reportable_elements).and_return( embeddables.map { |e| {embeddable: e} } )
+        # Investigation.any_instance.stub(:reportable_elements).and_return( embeddables.map { |e| {embeddable: e} } )
+        stub_all_reportables(Investigation, embeddables)
       end
 
       it { should have(0).answers }
 
-      describe "when the learner answers something thing" do
+      describe "when the learner answers something" do
         before(:each) do
           add_answer(open_response, {answer: "testing"}           )
           add_answer(image_question, {blob: Dataservice::Blob.create(), note: "note"} )

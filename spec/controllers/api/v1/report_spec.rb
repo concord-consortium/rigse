@@ -1,35 +1,164 @@
 require 'spec_helper'
 
+include ReportLearnerSpecHelper # defines : saveable_for : answers_for : add_answer : stub_all_reportables
 
-describe API::V1::OfferingsController do
+RSpec::Matchers.define :include_hash do |comp_hash|
+  match do |actual|
+    found = false
+    actual.each do |test|
+      hash_matched = true
+      comp_hash.each_pair do |key,value|
+        hash_matched = hash_matched && test.has_key?(key) && test[key] == value
+      end
+      found = hash_matched
+      break if found
+    end
+    found
+  end
+end
 
+describe API::V1::ReportsController do
+  let(:open_response)     { Factory.create(:open_response)}
+  let(:section)           { Factory.create(:section) }
+  let(:page)              { Factory.create(:page) }
   let(:runnable)          { Factory.create(:activity, runnable_opts)    }
   let(:offering)          { Factory(:portal_offering, offering_opts)    }
   let(:clazz)             { Factory(:portal_clazz, teachers: [class_teacher], students:[student_a,student_b]) }
-  let(:offering_opts)     { {clazz: clazz, runnable: runnable}   }
+  let(:offering_opts)     { {clazz: clazz, runnable: runnable}  }
   let(:runnable_opts)     { {name: 'the activity'}              }
-  let(:admin_user)        { Factory.next(:admin_user)           }
   let(:class_teacher)     { Factory.create(:portal_teacher)     }
-  let(:student_a)         { Factory.create(:full_portal_student)}
-  let(:student_b)         { Factory.create(:full_portal_student)}
-  let(:user)              { class_teacher.user                  }
+  let(:learner_a)         { Portal::Learner.find_or_create_by_offering_id_and_student_id(offering.id, student_a.id )}
+  let(:learner_b)         { Portal::Learner.find_or_create_by_offering_id_and_student_id(offering.id, student_b.id )}
+  let(:student_a)         { FactoryGirl.create(:full_portal_student) }
+  let(:student_b)         { FactoryGirl.create(:full_portal_student) }
+  let(:report_learner_a)  { learner_a.report_learner }
+  let(:report_learner_b)  { learner_b.report_learner }
+  let(:user)              { class_teacher.user       }
+  let(:learner)           { learner_a }
 
-  before(:each) do
-    Portal::Offering.stub!(:find).and_return(offering)
-    sign_in user
+  def json_path(path_string)
+    json =  JSON.parse(response.body)
+
+    path_string.split(".").each do |segment|
+      json = json[segment]
+    end
+    json
   end
 
-  # TODO:  Add answers &etc to make this test more meaningful
+  def update(opts)
+    put :update, opts
+  end
+
+  def show
+    get :show, :id => offering.id
+  end
+
+  def question
+    json_path("report.children")[0]['children'][0]['children'][0]
+  end
+
+  def answers
+    question['answers']
+  end
+
+  def feedback_should_be_enabled
+    question.should include({"feedback_enabled" => true})
+  end
+
+  def feedback_should_be_disabled
+    question.should include({"feedback_enabled" => false})
+  end
+
+  def score_should_be_enabled
+    question.should include({"score_enabled" => true})
+  end
+
+  def score_should_be_disabled
+    question.should include({"score_enabled" => false})
+  end
+
+  def max_score_should_be(value)
+    question.should include({"max_score" => value})
+  end
+
+  before(:each) do
+    page.add_embeddable(open_response)
+    section.pages << page
+    runnable.sections << section
+    runnable.save
+    Portal::Offering.stub!(:find).and_return(offering)
+    sign_in user
+    add_answer_for_learner(learner_a, open_response, {"answer" => "testing from #{learner_a.student.user.id}"} )
+    add_answer_for_learner(learner_b, open_response, {"answer" => "testing from #{learner_b.student.user.id}"} )
+    report_learner_a.update_answers()
+    report_learner_b.update_answers()
+    report_learner_a.save
+    report_learner_b.save
+  end
+
+
   describe "GET show" do
     describe "For the offering's teacher" do
       it 'it should render the report json' do
-        get :show, :id => offering.id
+        show
         response.status.should eql(200)
-        report = JSON.parse(response.body)
-        report["activity"].should eql "the activity"
-        report["students"][0].should include("started_activity"=>false)
-        report["students"][0].should include("name"=>"joe user")
+        json_path("report_version").should eql "1.0.1"
+        json_path("report.name").should eql "the activity"
+        json_path("class.students").should include_hash({"started_offering"=>true, "name"=>"joe user"})
+        max_score_should_be 0
+        feedback_should_be_enabled
+        score_should_be_disabled
+        answers.should include_hash({"answer" => "testing from #{learner_a.student.user.id}", "needs_review" => true})
       end
     end
   end
+
+  describe "changing the view filter" do
+    let(:active)             { false }
+    let(:questions)          { [] }
+    let(:visibility_filter)  { { questions: questions, active: active} }
+    let(:opts) { {id: offering.id, visibility_filter: visibility_filter } }
+
+    describe "to off" do
+      let(:active)             { false }
+      it "should save the filter settings" do
+        update opts
+        show
+        response.status.should eql 200
+        json_path("visibility_filter.active").should be_false
+      end
+    end
+
+    describe "to on" do
+      let(:active)             { true }
+      it "should save the filter settings" do
+        update(opts)
+        show
+        response.status.should eql(200)
+        json_path("visibility_filter.active").should be_true
+      end
+    end
+  end
+
+  describe "enabling feedback options for a question in the report" do
+    let(:feedback_enabled)     { false }
+    let(:score_enabled)        { false }
+    let(:max_score)            { 0 }
+    let(:embeddable_key)       { API::V1::Report.embeddable_key(open_response) }
+    let(:feedback_opts)        { { embeddable_key: embeddable_key , feedback_enabled: feedback_enabled, score_enabled: score_enabled, max_score: max_score} }
+    let(:opts) { {id: offering.id, enable_feedback: feedback_opts} }
+    # enable_feedback(offering, question, feedback_enabled, score_enabled, max_score)
+    describe "when disabling feedback for our question" do
+      it "should disable feedback for our question" do
+        update(opts)
+        show
+        response.status.should eql(200)
+        # TODO: WIP!
+        # binding.pry
+        # feedback_should_be_disabled
+      end
+    end
+  end
+
+
 end

@@ -1,5 +1,15 @@
 module ReportLearnerSpecHelper
+
+  def stub_all_reportables(runnableClass, embeddables)
+    runnableClass.any_instance.stub(:reportable_elements).and_return( embeddables.map { |e| {embeddable: e} } )
+  end
+
+  # must have a learner in scenario
   def saveable_for(embeddable)
+    saveable_for_learner(learner, embeddable)
+  end
+
+  def saveable_for_learner(learner, embeddable)
     args = [learner.id, embeddable.id]
     case embeddable
       when Embeddable::MultipleChoice
@@ -21,7 +31,12 @@ module ReportLearnerSpecHelper
     end
   end
 
+  # must have a learner in the scenario
   def add_answer(embeddable, answer_hash)
+    add_answer_for_learner(learner,embeddable, answer_hash)
+  end
+
+  def add_answer_for_learner(learner, embeddable, answer_hash)
     case embeddable
       when Embeddable::OpenResponse
         saveable = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(learner.id,learner.offering.id, embeddable.id)
@@ -29,7 +44,7 @@ module ReportLearnerSpecHelper
       when Embeddable::ImageQuestion
         saveable = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(learner.id, learner.offering.id, embeddable.id)
         saveable.answers.create!(answer_hash)
-      # TODO: test mutliple choices and others, that are hard to make... SO HARD TO MAKE!
+      # TODO: test mutliple choices and others, that are harder to make...
     end
   end
 end
