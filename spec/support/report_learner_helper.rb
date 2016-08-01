@@ -4,12 +4,12 @@ module ReportLearnerSpecHelper
     runnableClass.any_instance.stub(:reportable_elements).and_return( embeddables.map { |e| {embeddable: e} } )
   end
 
-  # must have a learner in scenario
+  # must have a learner in scenario's setup
   def saveable_for(embeddable)
-    saveable_for_learner(learner, embeddable)
+    find_saveable_for_learner(learner, embeddable)
   end
 
-  def saveable_for_learner(learner, embeddable)
+  def find_saveable_for_learner(learner, embeddable)
     args = [learner.id, embeddable.id]
     case embeddable
       when Embeddable::MultipleChoice
