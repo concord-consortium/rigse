@@ -278,18 +278,50 @@ class API::V1::Report
 
   # Other helpers:
 
+
+  def self.decode_embeddable(embeddable_key)
+    type,id = embeddable_key.split("|")
+  end
+
   def self.embeddable_type(embeddable_key)
-    embeddable_key.split('|')[0]
+    return self.decode_embeddable(embeddable_key)[0]
   end
 
   def self.embeddable_key(embeddable)
     "#{embeddable.class.to_s}|#{embeddable.id}"
   end
 
+  def self.decode_answer_key(answer_key)
+    Report::Learner.decode_answer_key(answer_key)
+  end
+
+  def self.encode_answer_key(saveable)
+    Report::Learner.encode_answer_key(saveable)
+  end
 
   def self.update_feedback_settings(offering, feedback_settings)
-    # { embeddable_key: embeddable_key , feedback_enabled: feedback_enabled, score_enabled: score_enabled, max_score: max_score}
-    # TODO: WIP
+    return false unless feedback_settings.has_key? 'embeddable_key'
+    type, id = self.decode_embeddable(feedback_settings['embeddable_key'])
+    meta = Portal:: OfferingEmbeddableMetadata.find_or_create_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, id, type)
+    ['max_score', 'enable_text_feedback', 'enable_score'].each do |key|
+      if feedback_settings.has_key?(key)
+        meta.update_attribute(key.to_sym, feedback_settings[key])
+      end
+    end
   end
+
+  def self.submit_feedback(answer_feedback_hash)
+    answer_key = answer_feedback_hash['answer_key']
+    return unless answer_key
+    # see Portal::Report::Learner.serialize_record_key
+    type,id = API::V1::Report.decode_answer_key(answer_key)
+    if type && id
+      answer = type.constantize.find(id)
+    end
+
+    return unless answer
+    answer.add_feedback(answer_feedback_hash)
+  end
+
 
 end

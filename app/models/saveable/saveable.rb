@@ -73,5 +73,13 @@ module Saveable::Saveable
     end
   end
 
-
+  # add_feedback to last answer only.
+  def add_feedback(feedback_opts)
+    return unless answers.size > 0
+    opts = {}
+    opts[:score]             = feedback_opts['score']    if feedback_opts.has_key?('score')
+    opts[:feedback]          = feedback_opts['feedback'] if feedback_opts.has_key?('feedback')
+    opts[:has_been_reviewed] = feedback_opts['has_been_reviewed'] if feedback_opts.has_key?('has_been_reviewed')
+    answers.last.update_attributes(opts)
+  end
 end

@@ -36,7 +36,7 @@ class API::V1::ReportsController < API::APIController
       update_visibility_filter(offering.report_embeddable_filter, params[:visibility_filter])
     end
     if params[:feedback_opts]
-
+      API::V1::Report.update_feedback_settings(offering, params[:feedback_opts])
     end
     offering.update_attributes!(report_params)
     head :ok

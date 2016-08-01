@@ -114,28 +114,32 @@ class Report::Learner < ActiveRecord::Base
       feedbacks = s.answers.map do |ans|
         {
             answer: serialize_blob_answer(ans.answer),
-            answer_key: serialize_record_key(ans),
+            answer_key: Report::Learner.encode_answer_key(ans),
             score: ans.respond_to?(:score) ? (ans.score || false) : nil,
             feedback: ans.respond_to?(:feedback) ? (ans.feedback || false): nil,
             has_been_reviewed: ans.respond_to?(:has_been_reviewed?) ? (ans.has_been_reviewed?||false) : nil
         }
       end
       hash = {
-          :answer => serialize_blob_answer(s.answer),
-          :feedbacks => feedbacks,
-          :answered => s.answered?,
-          :submitted => s.submitted?,
-          :question_required => s.embeddable.is_required,
-          :needs_review => s.needs_review?
+          answer: serialize_blob_answer(s.answer),
+          feedbacks: feedbacks,
+          answered: s.answered?,
+          submitted: s.submitted?,
+          question_required: s.embeddable.is_required,
+          needs_review: s.needs_review?
       }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
-      answers_hash[serialize_record_key(s.embeddable)] = hash
+      answers_hash[ Report::Learner.encode_answer_key(s.embeddable)] = hash
     end
     self.answers = answers_hash
   end
 
-  def serialize_record_key(item)
+  def self.encode_answer_key(item)
     "#{item.class.to_s}|#{item.id}"
+  end
+
+  def self.decode_answer_key(answer_key)
+    answer_key.split("|")
   end
 
   def update_field(methods_string, field=nil)

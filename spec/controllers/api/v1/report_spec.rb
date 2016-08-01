@@ -141,24 +141,57 @@ describe API::V1::ReportsController do
   end
 
   describe "enabling feedback options for a question in the report" do
-    let(:feedback_enabled)     { false }
-    let(:score_enabled)        { false }
+    let(:enable_feedback)     { false }
+    let(:enable_score)        { false }
     let(:max_score)            { 0 }
     let(:embeddable_key)       { API::V1::Report.embeddable_key(open_response) }
-    let(:feedback_opts)        { { embeddable_key: embeddable_key , feedback_enabled: feedback_enabled, score_enabled: score_enabled, max_score: max_score} }
-    let(:opts) { {id: offering.id, enable_feedback: feedback_opts} }
+    let(:feedback_opts)        do
+      {
+          'embeddable_key'       => embeddable_key ,
+          'enable_text_feedback' => enable_feedback,
+          'enable_score'         => enable_score,
+          'max_score'            => max_score
+      }
+    end
+    let(:opts) { {id: offering.id, feedback_opts: feedback_opts} }
     # enable_feedback(offering, question, feedback_enabled, score_enabled, max_score)
     describe "when disabling feedback for our question" do
       it "should disable feedback for our question" do
         update(opts)
         show
         response.status.should eql(200)
-        # TODO: WIP!
-        # binding.pry
-        # feedback_should_be_disabled
+        md = Portal::OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, open_response.id, open_response.class.name)
+        md.enable_text_feedback.should be_false
+        md.enable_score.should be_false
+        md.max_score.should eq 0
+      end
+    end
+
+    describe "when enabling score only for our question" do
+      let(:enable_score)  { true }
+      it "should disable feedback for our question" do
+        update(opts)
+        show
+        response.status.should eql(200)
+        md = Portal::OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, open_response.id, open_response.class.name)
+        md.enable_text_feedback.should be_false
+        md.enable_score.should be_true
+        md.max_score.should eq 0
+      end
+    end
+
+    describe "when chaging the max score to 20" do
+      let(:max_score)   { 20 }
+      it "should disable feedback for our question" do
+        update(opts)
+        show
+        response.status.should eql(200)
+        md = Portal::OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, open_response.id, open_response.class.name)
+        md.enable_text_feedback.should be_false
+        md.enable_score.should be_false
+        md.max_score.should eq 20
       end
     end
   end
-
 
 end
