@@ -136,3 +136,13 @@ Given /^the external runtime published the (activity|sequence) "([^"]*)" before$
     publish_sequence(name, false)
   end
 end
+
+Then(/^the (.*) should have a external report at "(.*)"$/) do |ignored_param, report_url|
+  @external_activity.external_report.should_not be_nil
+  @external_activity.external_report.url.should == report_url
+end
+
+Given(/^an external_report with the URL "(.*?)"$/) do | report_url|
+  ExternalReport.create(url:report_url)
+end
+

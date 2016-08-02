@@ -9,6 +9,7 @@ Feature: External Activities can support a REST publishing api
         "launch_url": "http://activity.com/activity/1/sessions/",
         "author_url": "http://activity.com/activity/1/edit",
         "print_url": "http://activity.com/activity/1/print_blank",
+        "external_report_url": "https://reports.concord.org/act",
         "description": "This activity does fun stuff.",
         "sections": [
           {
@@ -59,6 +60,7 @@ Feature: External Activities can support a REST publishing api
         "launch_url": "http://activity.com/activity/1/sessions/",
         "author_url": "http://activity.com/activity/1/edit_new",
         "print_url": "http://activity.com/activity/1/print_blank_new",
+        "external_report_url": "https://reports.concord.org/act/changed",
         "sections": [
           {
             "name": "Cool Activity Section 1",
@@ -109,6 +111,7 @@ Feature: External Activities can support a REST publishing api
         "launch_url": "http://activity.com/sequence/1",
         "author_url": "http://activity.com/sequence/1/edit",
         "print_url": "http://activity.com/sequence/1/print_blank",
+        "external_report_url": "https://reports.concord.org/seq",
         "abstract": "This is the abstract",
         "activities": [
           {
@@ -218,6 +221,7 @@ Feature: External Activities can support a REST publishing api
         "launch_url": "http://activity.com/sequence/1",
         "author_url": "http://activity.com/sequence/1/edit_new",
         "print_url": "http://activity.com/sequence/1/print_blank_new",
+        "external_report_url": "https://reports.concord.org/seq/changed",
         "activities": [
           {
             "type": "Activity",
@@ -314,6 +318,10 @@ Feature: External Activities can support a REST publishing api
         ]
       }
       """
+    And an external_report with the URL "https://reports.concord.org/act"
+    And an external_report with the URL "https://reports.concord.org/act/changed"
+    And an external_report with the URL "https://reports.concord.org/seq"
+    And an external_report with the URL "https://reports.concord.org/seq/changed"
 
   @mechanize
   Scenario: External REST activity is published the first time
@@ -327,6 +335,7 @@ Feature: External Activities can support a REST publishing api
       | print_url       | http://activity.com/activity/1/print_blank |
       | description     | This activity does fun stuff. |
     And the external activity should have a template
+    And the external activity should have a external report at "https://reports.concord.org/act"
     And the portal should create an activity with the following attributes:
       | name            | Cool Activity |
     And the portal should create a section with the following attributes:
@@ -355,6 +364,7 @@ Feature: External Activities can support a REST publishing api
       | author_url      | http://activity.com/activity/1/edit_new |
       | print_url       | http://activity.com/activity/1/print_blank_new |
       | description     | This activity does fun stuff. |
+    And the external activity should have a external report at "https://reports.concord.org/act/changed"
 
   @mechanize
   Scenario: External REST sequence is published the first time
@@ -369,6 +379,7 @@ Feature: External Activities can support a REST publishing api
       | description     | Several activities together in a sequence |
       | abstract        | This is the abstract |
     And the external activity should have a template
+    And the external activity should have a external report at "https://reports.concord.org/seq"
     And the portal should create an investigation with the following attributes:
       | name            | Many fun things |
     And the portal should create an activity with the following attributes:
@@ -396,3 +407,4 @@ Feature: External Activities can support a REST publishing api
       | launch_url      | http://activity.com/sequence/1 |
       | author_url      | http://activity.com/sequence/1/edit_new |
       | print_url       | http://activity.com/sequence/1/print_blank_new |
+    And the external activity should have a external report at "https://reports.concord.org/seq/changed"
