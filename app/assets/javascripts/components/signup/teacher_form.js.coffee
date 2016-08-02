@@ -10,7 +10,7 @@ newSchoolWarning = (zipOrPostal) ->
   'You are adding a new school / institution. Please make sure that the ' +
   "#{zipOrPostal} and school / institution name are correct!"
 zipcodeHelp = (zipOrPostal) ->
-  "Not sure which #{zipOrPostal} to use? Please enter the #{zipOrPostal} of your school's address."
+  "Not sure which #{zipOrPostal} to use? Please enter the #{zipOrPostal} of your school or institution."
 invalidZipcode = (zipOrPostal) ->
   "Incorrect #{zipOrPostal}"
 
