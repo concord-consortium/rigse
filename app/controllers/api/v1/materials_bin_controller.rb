@@ -11,7 +11,7 @@ class API::V1::MaterialsBinController < API::APIController
     collection_by_id = MaterialsCollection.where(id: params[:id]).index_by { |mc| mc.id.to_s }
     collections = Array(params[:id]).map do |id|
       col = collection_by_id[id]
-      materials_collection_data(col.name, col.materials(allowed_cohorts), params[:assigned_to_class])
+      materials_collection_data(col.name, col.materials(allowed_cohorts, show_assessment_items), params[:assigned_to_class])
     end
     render json: collections
   end
@@ -26,26 +26,24 @@ class API::V1::MaterialsBinController < API::APIController
     materials = ExternalActivity.filtered_by_cohorts(allowed_cohorts)
                                 .where(user_id: user_id, is_official: false)
                                 .order('name ASC')
-    if current_user.nil? || (current_user.id != user_id.to_i && current_user.does_not_have_role?('admin'))
-      materials.select!{|material|
-        material.public?
-      }
-    end
-
+    # Apply publication status and assessment item filters.
+    materials = filtered_materials(materials, user_id)
     render json: materials_data(materials, params[:assigned_to_class])
   end
 
   # GET /api/v1/materials_bin/unofficial_materials_authors
-  # Returns all authors of unofficial mateterials.
+  # Returns all authors of unofficial materials.
   def unofficial_materials_authors
     # Note that activities and investigations are ALWAYS considered as official.
     # Only external activities can be unofficial at the moment.
-    authors = ExternalActivity.filtered_by_cohorts(allowed_cohorts)
-                              .where(is_official: false)
-                              .group(:user_id)
-                              .includes(:user)
-                              .map { |e| {id: e.user.id, name: e.user.name} }
-                              .sort_by { |u| u[:name] }
+    materials = ExternalActivity.filtered_by_cohorts(allowed_cohorts)
+                                .where(is_official: false)
+                                .group(:user_id)
+                                .includes(:user)
+    # Apply publication status and assessment item filters.
+    materials = filtered_materials(materials)
+    authors = materials.map { |e| {id: e.user.id, name: e.user.name} }
+                       .sort_by { |u| u[:name] }
     render json: authors
   end
 
@@ -54,6 +52,18 @@ class API::V1::MaterialsBinController < API::APIController
   def allowed_cohorts
     # Empty array means that only materials that are not assigned to any cohorts will be displayed.
     current_visitor.portal_teacher ? current_visitor.portal_teacher.cohorts : []
+  end
+
+  def show_assessment_items
+    !!current_visitor.portal_teacher || current_visitor.has_role?('admin')
+  end
+
+  def filtered_materials(materials, user_id = -1)
+    materials = materials.where(is_assessment_item: false) unless show_assessment_items
+    if current_user.nil? || (current_user.id != user_id.to_i && current_user.does_not_have_role?('admin'))
+      materials = materials.select { |material| material.public? }
+    end
+    materials
   end
 
   def materials_collection_data(name, materials, assigned_to_class)
