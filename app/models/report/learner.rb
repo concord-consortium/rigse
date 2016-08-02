@@ -128,7 +128,9 @@ class Report::Learner < ActiveRecord::Base
           question_required: s.embeddable.is_required,
           needs_review: s.needs_review?
       }
-      hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
+      if s.respond_to?("has_correct_answer?") && s.has_correct_answer? && s.respond_to?("answered_correctly?")
+        hash[:is_correct] = s.answered_correctly?
+      end
       answers_hash[ Report::Learner.encode_answer_key(s.embeddable)] = hash
     end
     self.answers = answers_hash
