@@ -18,30 +18,33 @@ describe API::V1::MaterialsBinController do
     let(:inv) { FactoryGirl.create_list(:investigation, 3) }
     let(:materials) { ext_act + act + inv }
     before(:each) do
-      # Assign some materials to cohorts.
+      # Assign some materials to cohorts and mark the first one as assessment item.
       materials.each_with_index do |m, i|
         m.cohorts = [foo_cohort] if i % 3 === 0
         m.cohorts = [bar_cohort] if i % 3 === 1
         m.save!
       end
+      # Set one material to be an assessment item.
+      materials[2].update_attributes!(is_assessment_item: true)
       # Assign all materials to collection.
       materials.each do |m|
         FactoryGirl.create(:materials_collection_item, material: m, materials_collection: collection)
       end
     end
 
-    context 'when user is not assigned to any cohorts' do
-      it 'should return materials that are not assigned to any cohorts' do
+    context 'when user is an anonymous user not assigned to any cohorts' do
+      it 'should return materials that are not assigned to any cohorts and are not marked as assessment items' do
         get :collections, id: collection.id
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
         expect(results.length).to eql(1)
         expect(results[0]['name']).to eql(collection.name)
-        expect(results[0]['materials'].length).to eql(3)
+        # There are 3 materials without any cohort, but one of them is an assessment item.
+        expect(results[0]['materials'].length).to eql(2)
       end
     end
 
-    context 'when user is assigned to some cohorts' do
+    context 'when user is a teacher assigned to some cohorts' do
       before(:each) do
         sign_in_user_in_cohort(foo_cohort)
       end
@@ -57,11 +60,11 @@ describe API::V1::MaterialsBinController do
     end
   end
 
-  let(:user1) { FactoryGirl.create(:confirmed_user) }
-  let(:user2) { FactoryGirl.create(:confirmed_user) }
-  let(:user3) { FactoryGirl.create(:confirmed_user) }
+  let(:user1) { t = FactoryGirl.create(:teacher); t.user }
+  let(:user2) { t = FactoryGirl.create(:teacher); t.user }
+  let(:user3) { t = FactoryGirl.create(:teacher); t.user }
   let (:act1) { FactoryGirl.create(:external_activity, user: user1, publication_status: 'published') }
-  let (:user2_public_activity) { FactoryGirl.create(:external_activity, user: user2, publication_status: 'published') }
+  let (:user2_public_activity) { FactoryGirl.create(:external_activity, user: user2, publication_status: 'published', is_assessment_item: true) }
   let (:user2_private_activity) { FactoryGirl.create(:external_activity, user: user2, publication_status: 'private') }
   # materials that might not be taken into account:
   let (:official_activity) { FactoryGirl.create(:external_activity, user: user3, is_official: true, publication_status: 'published') }
@@ -80,20 +83,19 @@ describe API::V1::MaterialsBinController do
     before(:each) do
       populate_example_materials
     end
-    context 'when user is not assigned to any cohorts' do
-      it 'lists all unofficial materials authors respecting cohorts' do
+    context 'when user is anonymous and not assigned to any cohorts' do
+      it 'lists all unofficial materials authors respecting cohorts and assessment items' do
         get :unofficial_materials_authors
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
-        expect(results.length).to eql(2)
+        # Only act1 is public, not assigned to any cohort and not an assessment item.
+        expect(results.length).to eql(1)
         expect(results[0]['id']).to eql(user1.id)
         expect(results[0]['name']).to eql(user1.name)
-        expect(results[1]['id']).to eql(user2.id)
-        expect(results[1]['name']).to eql(user2.name)
       end
     end
 
-    context 'when user is assigned to some cohorts' do
+    context 'when user is a teacher assigned to some cohorts' do
       before(:each) do
         sign_in_user_in_cohort(foo_cohort)
       end
@@ -127,9 +129,8 @@ describe API::V1::MaterialsBinController do
 
     context 'when a user is not logged in' do
       let (:request_user) { user2 }
-      it 'does not list private materials' do
-        expect(results.length).to eql(1)
-        expect(results[0]['id']).to eql(user2_public_activity.id)
+      it 'does not list private materials or assessment items' do
+        expect(results.length).to eql(0)
       end
     end
 

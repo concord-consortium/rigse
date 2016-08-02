@@ -25,19 +25,20 @@ class MaterialsCollection < ActiveRecord::Base
   # If `allowed_cohorts` argument is provided, resulting list will be limited to materials that:
   #  - are assigned to one of the provided cohorts
   #  - are assigned to any cohort
-  def materials(allowed_cohorts = nil)
-    materials = materials_by_type(allowed_cohorts)
+  def materials(allowed_cohorts = nil, show_assessment_items = false)
+    materials = materials_by_type(allowed_cohorts, show_assessment_items)
     # .compact removes nils if some materials were filtered out due to provided cohorts list.
     materials_collection_items.map { |mi| materials[mi.material_type][mi.material_id] }.compact
   end
 
   private
 
-  def materials_by_type(allowed_cohorts)
+  def materials_by_type(allowed_cohorts, show_assessment_items)
     materials = {}
     MATERIAL_TYPES.each do |type|
        mat = materials_of_type(type)
        mat = mat.filtered_by_cohorts(allowed_cohorts) if allowed_cohorts
+       mat = mat.where(is_assessment_item: false) unless show_assessment_items
        materials[type.to_s] = mat.index_by(&:id)
     end
     materials
