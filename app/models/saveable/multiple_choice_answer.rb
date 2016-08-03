@@ -17,7 +17,9 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
       rationale_choices.compact.select { |rc| rc.choice }.map do |rc|
         data = {
           :choice_id => rc.choice.id,
-          :correct => rc.choice.is_correct
+          :answer => rc.choice.choice,
+          :correct => rc.choice.is_correct,
+          :feedback => rc.answer.feedback
         }
         if duplicate_choices
           data[:answer] = "(#{choices.index(rc.choice) + 1})#{rc.choice.choice}"

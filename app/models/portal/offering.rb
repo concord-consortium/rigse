@@ -33,6 +33,12 @@ class Portal::Offering < ActiveRecord::Base
     end
   end
 
+  has_many :metadata, :class_name => "Portal::OfferingEmbeddableMetadata" do
+    def for_embeddable(embeddable)
+      where(embeddable_type: embeddable.class.name, embeddable_id: embeddable.id).first
+    end
+  end
+
   attr_reader :saveable_objects
 
   # create one of these on the fly as needed

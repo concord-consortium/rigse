@@ -1,5 +1,6 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
+  REPORT_VERSION = "1.0.1"
 
   def initialize(options)
     # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
@@ -40,6 +41,7 @@ class API::V1::Report
     provide_no_answer_entries(answers_hash, clazz[:students])
     {
         report: report_json(answers_hash),
+        report_version: REPORT_VERSION,
         report_for: @report_for,
         class: clazz,
         visibility_filter: visibility_filter_json(@offering.report_embeddable_filter),
@@ -82,7 +84,7 @@ class API::V1::Report
       answers = []
       report_learner.answers.map do |embeddable_key, answer|
         # Process some answers type to provide cleaner format, names, etc.
-        question_type = embeddable_type(embeddable_key)
+        question_type = API::V1::Report.embeddable_type(embeddable_key)
         answer[:type] = question_type
         answer[:embeddable_key] = embeddable_key
         answer[:student_id] = student_id
@@ -206,12 +208,16 @@ class API::V1::Report
   def embeddable_json(question_number, embeddable, answers)
     # Provide as much information about embeddable as we can, but skip some attributes
     # to make results more readable and clean.
+    feedback_data = Portal::OfferingEmbeddableMetadata.find_or_create_by_offering_id_and_embeddable_id_and_embeddable_type(@offering.id, embeddable.id, embeddable.class.name)
     hash = embeddable.attributes.clone.except(*IGNORED_EMBEDDABLE_KEYS)
-    key = embeddable_key(embeddable)
+    key = API::V1::Report.embeddable_key(embeddable)
     hash[:key] = key
     hash[:type] = embeddable.class.to_s
     hash[:question_number] = question_number
     hash[:answers] = answers[key] || no_answers(key)
+    hash[:feedback_enabled] = feedback_data.enable_text_feedback?
+    hash[:score_enabled] = feedback_data.enable_score?
+    hash[:max_score] = feedback_data.max_score || 0
 
     # We want to remove markup from the prompt and name. Even though
     # Markup is stript, HTML entities are preserved, eg `&deg`;
@@ -272,12 +278,50 @@ class API::V1::Report
 
   # Other helpers:
 
-  def embeddable_key(embeddable)
+
+  def self.decode_embeddable(embeddable_key)
+    type,id = embeddable_key.split("|")
+  end
+
+  def self.embeddable_type(embeddable_key)
+    return self.decode_embeddable(embeddable_key)[0]
+  end
+
+  def self.embeddable_key(embeddable)
     "#{embeddable.class.to_s}|#{embeddable.id}"
   end
 
-  def embeddable_type(embeddable_key)
-    embeddable_key.split('|')[0]
+  def self.decode_answer_key(answer_key)
+    Report::Learner.decode_answer_key(answer_key)
   end
+
+  def self.encode_answer_key(saveable)
+    Report::Learner.encode_answer_key(saveable)
+  end
+
+  def self.update_feedback_settings(offering, feedback_settings)
+    return false unless feedback_settings.has_key? 'embeddable_key'
+    type, id = self.decode_embeddable(feedback_settings['embeddable_key'])
+    meta = Portal:: OfferingEmbeddableMetadata.find_or_create_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, id, type)
+    ['max_score', 'enable_text_feedback', 'enable_score'].each do |key|
+      if feedback_settings.has_key?(key)
+        meta.update_attribute(key.to_sym, feedback_settings[key])
+      end
+    end
+  end
+
+  def self.submit_feedback(answer_feedback_hash)
+    answer_key = answer_feedback_hash['answer_key']
+    return unless answer_key
+    # see Portal::Report::Learner.serialize_record_key
+    type,id = API::V1::Report.decode_answer_key(answer_key)
+    if type && id
+      answer = type.constantize.find(id)
+    end
+
+    return unless answer
+    answer.add_feedback(answer_feedback_hash)
+  end
+
 
 end

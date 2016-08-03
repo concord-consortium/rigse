@@ -1985,6 +1985,19 @@ ActiveRecord::Schema.define(:version => 20160708124448) do
   add_index "portal_nces06_schools", ["STID"], :name => "index_portal_nces06_schools_on_STID"
   add_index "portal_nces06_schools", ["nces_district_id"], :name => "index_portal_nces06_schools_on_nces_district_id"
 
+  create_table "portal_offering_embeddable_metadata", :force => true do |t|
+    t.integer  "offering_id"
+    t.integer  "embeddable_id"
+    t.string   "embeddable_type"
+    t.boolean  "enable_score",         :default => false
+    t.integer  "max_score"
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+    t.boolean  "enable_text_feedback", :default => true
+  end
+
+  add_index "portal_offering_embeddable_metadata", ["offering_id", "embeddable_id", "embeddable_type"], :name => "index_portal_offering_metadata", :unique => true
+
   create_table "portal_offerings", :force => true do |t|
     t.string   "uuid",             :limit => 36
     t.string   "status"
@@ -2390,8 +2403,11 @@ ActiveRecord::Schema.define(:version => 20160708124448) do
     t.integer  "position"
     t.text     "url"
     t.boolean  "is_final"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.text     "feedback"
+    t.boolean  "has_been_reviewed", :default => false
+    t.integer  "score"
   end
 
   add_index "saveable_external_link_urls", ["external_link_id"], :name => "index_saveable_external_link_urls_on_external_link_id"
@@ -2415,11 +2431,14 @@ ActiveRecord::Schema.define(:version => 20160708124448) do
     t.integer  "bundle_content_id"
     t.integer  "blob_id"
     t.integer  "position"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.text     "note"
     t.string   "uuid",              :limit => 36
     t.boolean  "is_final"
+    t.text     "feedback"
+    t.boolean  "has_been_reviewed",               :default => false
+    t.integer  "score"
   end
 
   add_index "saveable_image_question_answers", ["image_question_id", "position"], :name => "i_q_id_and_position_index"
@@ -2442,10 +2461,13 @@ ActiveRecord::Schema.define(:version => 20160708124448) do
     t.integer  "multiple_choice_id"
     t.integer  "bundle_content_id"
     t.integer  "position"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
     t.string   "uuid",               :limit => 36
     t.boolean  "is_final"
+    t.text     "feedback"
+    t.boolean  "has_been_reviewed",                :default => false
+    t.integer  "score"
   end
 
   add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
@@ -2481,9 +2503,12 @@ ActiveRecord::Schema.define(:version => 20160708124448) do
     t.integer  "bundle_content_id"
     t.integer  "position"
     t.text     "answer"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.boolean  "is_final"
+    t.text     "feedback"
+    t.boolean  "has_been_reviewed", :default => false
+    t.integer  "score"
   end
 
   add_index "saveable_open_response_answers", ["open_response_id", "position"], :name => "o_r_id_and_position_index"

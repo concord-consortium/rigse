@@ -1,5 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
+include ReportLearnerSpecHelper # defines : saveable_for : answers_for : add_answer : stub_all_reportables
+
 describe Report::Learner do
   before(:each) do
     @user     = mock_model(User,
@@ -139,7 +141,100 @@ describe Report::Learner do
 
   end
 
+  describe "feedback in reports" do
+    let(:learner)          { FactoryGirl.create(:full_portal_learner) }
+    let(:report_learner)   { learner.report_learner }
+    let(:offering)         { learner.offering       }
+
+    describe "basic test setup" do
+      subject {report_learner}
+      it { should_not be_nil}
+
+      describe "answers" do
+        subject { report_learner.answers }
+        it { should_not be_nil}
+      end
+      describe "offering" do
+        subject { offering }
+        it { should_not be_nil}
+      end
+    end
 
 
+    # We are stubbing #reportables in the runnable to avoids crazy structure of pages / &etc.
+    # TODO: Its a bit hacky, but it should works for now, and be clearer than the alternatives.
+    describe "after adding some answers and running update on the report learner" do
+      let(:multiple_choice) { FactoryGirl.create(:multiple_choice) }
+      let(:open_response)   { FactoryGirl.create(:open_response)   }
+      let(:image_question)  { FactoryGirl.create(:image_question)  }
+      let(:embeddables)     { [ multiple_choice, open_response, image_question ] }
+      let(:learner_answers) { report_learner }
+
+      subject { report_learner}
+      before(:each) do
+        # Investigation.any_instance.stub(:reportable_elements).and_return( embeddables.map { |e| {embeddable: e} } )
+        stub_all_reportables(Investigation, embeddables)
+      end
+
+      it { should have(0).answers }
+
+      describe "when the learner answers something" do
+        before(:each) do
+          add_answer(open_response, {answer: "testing"}           )
+          add_answer(image_question, {blob: Dataservice::Blob.create(), note: "note"} )
+          report_learner.update_answers()
+        end
+        its(:answers) { should have(2).answers }
+
+        describe "the feedback" do
+          it "should have feedback entries for each answer" do
+            subject.answers.each do |answer|
+              qkey,a = answer
+              a[:feedbacks].should_not be_nil
+            end
+          end
+
+          it "should indicate that the answers need feedback" do
+            subject.answers.each do |answer|
+              qkey,a = answer
+              a[:needs_review].should be_true
+            end
+          end
+
+
+          describe "giving feedback" do
+            let(:last_answer)           { learner.answers.last }
+            let(:feedback)              {{ feedback: "great job!", score: 4, has_been_reviewed: true}}
+            let(:open_response_saveable) do
+              subject.answers.detect { |k,v| k == "#{open_response.class.to_s}|#{open_response.id}"}
+            end
+            before(:each) do
+              answers_for(open_response).last.update_attributes(feedback)
+              report_learner.update_answers()
+            end
+
+            it "should no longer require feedback for the open response item" do
+              open_response_saveable[1][:needs_review].should be_false
+            end
+
+            describe "adding a new answer" do
+              before(:each) do
+                add_answer(open_response, {answer: "testing again"})
+                report_learner.update_answers()
+              end
+
+              it "should require feedback because there is a new answer" do
+                open_response_saveable[1][:needs_review].should be_true
+              end
+            end
+
+          end
+        end
+      end
+    end
+
+
+
+  end
 
 end

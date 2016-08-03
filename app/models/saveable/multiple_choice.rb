@@ -17,6 +17,9 @@ class Saveable::MultipleChoice < ActiveRecord::Base
 
   include Saveable::Saveable
 
+  # TODO:  We shouldn't need to special case this. But we do.
+  # We should use saveable.rb#answer, but because we are sending
+  # an array of answers, it doesn't work.
   def answer
     if answered?
       answers.last.answer
@@ -35,10 +38,6 @@ class Saveable::MultipleChoice < ActiveRecord::Base
     end
   end
 
-  def answered?
-    answers.length > 0
-  end
-
   def answered_correctly?
     if submitted?
       answers.last.answered_correctly?
@@ -46,4 +45,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
       false
     end
   end
+
+
+
 end
