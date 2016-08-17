@@ -115,8 +115,8 @@ class Report::Learner < ActiveRecord::Base
         {
             answer: serialize_blob_answer(ans.answer),
             answer_key: Report::Learner.encode_answer_key(ans),
-            score: ans.respond_to?(:score) ? (ans.score || false) : nil,
-            feedback: ans.respond_to?(:feedback) ? (ans.feedback || false): nil,
+            score: ans.respond_to?(:score) ? ans.score  : nil,
+            feedback: ans.respond_to?(:feedback) ? ans.feedback : nil,
             has_been_reviewed: ans.respond_to?(:has_been_reviewed?) ? (ans.has_been_reviewed?||false) : nil
         }
       end
@@ -126,7 +126,9 @@ class Report::Learner < ActiveRecord::Base
           answered: s.answered?,
           submitted: s.submitted?,
           question_required: s.embeddable.is_required,
-          needs_review: s.needs_review?
+          needs_review: s.needs_review?,
+          score: s.current_score,       # may be null
+          feedback: s.current_feedback  # may be null
       }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
       answers_hash[ Report::Learner.encode_answer_key(s.embeddable)] = hash

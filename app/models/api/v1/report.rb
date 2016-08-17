@@ -1,6 +1,7 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
   REPORT_VERSION = "1.0.1"
+  MAX_REPORT_LEARNER_AGE = 2.hours
 
   def initialize(options)
     # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
@@ -60,7 +61,7 @@ class API::V1::Report
     {
       name: clazz.name + section,
       students: @students
-                    .sort_by { |s| s.last_name }
+                    .sort_by { |s| "#{s.last_name} #{s.first_name}".downcase }
                     .map     { |s| student_json(s) }
     }
   end
@@ -70,18 +71,31 @@ class API::V1::Report
     {
       id: student.id,
       name: student.name,
+      first_name: student.first_name,
+      last_name: student.last_name,
       started_offering:  started_offering
     }
   end
 
-  # Helpers that provide student answers grouped by embeddable key:
 
+  def update_report_learners(report_learners)
+    report_learners.each do |learner|
+      if learner.last_report.nil? or learner.last_report < MAX_REPORT_LEARNER_AGE.ago
+        learner.last_report = Time.now
+        learner.update_fields()
+      end
+    end
+  end
+
+  # Helpers that provide student answers grouped by embeddable key:
   def get_student_answers
     # Collect all the student answers for given offering.
     student_ids = @students.map { |s| s.id }
-    answers = Report::Learner.where(offering_id: @offering.id, student_id: student_ids).map do |report_learner|
+    report_learners = Report::Learner.where(offering_id: @offering.id, student_id: student_ids)
+    update_report_learners(report_learners)
+
+    answers = report_learners.map do |report_learner|
       student_id = report_learner.student_id
-      answers = []
       report_learner.answers.map do |embeddable_key, answer|
         # Process some answers type to provide cleaner format, names, etc.
         question_type = API::V1::Report.embeddable_type(embeddable_key)
@@ -93,23 +107,29 @@ class API::V1::Report
         elsif question_type == 'Embeddable::ImageQuestion'
           process_image_question_answer(answer)
         end
-        answers.push(answer)
+        answer
       end
-      answers
     end
     # Flatten answers and group them by the embeddable key.
     answers.flatten.sort_by { |s| s[:student_name] }.group_by { |a| a[:embeddable_key] }
   end
 
+  def no_answer_for_student_id(student_id, embeddable_key='fake-emb-key|0')
+    {
+        student_id: student_id,
+        answer: nil,
+        type: 'NoAnswer',
+        feedback: nil,
+        needs_review: false,
+        score: nil,
+        feedbacks: [],
+        embeddable_key: embeddable_key
+    }
+  end
+
   def provide_no_answer_entries(answers, students_json)
     # Provide "no answer" entries for students who started activity, but didn't respond to given question.
-    default_answer_entries = students_json.map do |s|
-      {
-        student_id: s[:id],
-        answer: nil,
-        type: 'NoAnswer'
-      }
-    end
+    default_answer_entries = students_json.map { |s| no_answer_for_student_id(s[:id]) }
     answers.each do |embeddable_key, embeddable_answers|
       student_found = {}
       embeddable_answers.each { |answer| student_found[answer[:student_id]] = true }
@@ -258,14 +278,7 @@ class API::V1::Report
   end
 
   def no_answers(embeddable_key)
-    @students.map do |s|
-      {
-          student_id: s.id,
-          answer: nil,
-          type: 'NoAnswer',
-          embeddable_key: embeddable_key
-      }
-    end
+    @students.map { |s| no_answer_for_student_id(s.id, embeddable_key) }
   end
 
   # Visibility filter:
@@ -311,7 +324,7 @@ class API::V1::Report
   end
 
   def self.submit_feedback(answer_feedback_hash)
-    answer_key = answer_feedback_hash['answer_key']
+    answer_key = answer_feedback_hash.delete('answer_key')
     return unless answer_key
     # see Portal::Report::Learner.serialize_record_key
     type,id = API::V1::Report.decode_answer_key(answer_key)
@@ -320,7 +333,12 @@ class API::V1::Report
     end
 
     return unless answer
-    answer.add_feedback(answer_feedback_hash)
+    if answer.respond_to? :add_feedback # the answer is a saveable
+      answer.add_feedback(answer_feedback_hash)
+    else # assume answer has feedback columns.
+      answer.update_attributes(answer_feedback_hash)
+    end
+
   end
 
 

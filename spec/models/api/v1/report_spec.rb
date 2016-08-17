@@ -81,7 +81,7 @@ describe API::V1::Report do
         end
       end
 
-      describe "when an answer is give" do
+      describe "when an answer is given" do
         before(:each) do
           open_response_answer.answers.create(answer: "this is the answer")
           API::V1::Report.submit_feedback(feedback)
