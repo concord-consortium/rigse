@@ -124,7 +124,6 @@ describe API::V1::Report do
             open_response_answer.current_feedback.should eq text_feedback
           end
         end
-
       end
     end
   end

@@ -1,7 +1,7 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
   REPORT_VERSION = "1.0.1"
-  MAX_REPORT_LEARNER_AGE = 1.seconds
+  MAX_REPORT_LEARNER_AGE = 3.hours
 
   def initialize(options)
     # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
@@ -337,6 +337,11 @@ class API::V1::Report
       answer.add_feedback(answer_feedback_hash)
     else # assume answer has feedback columns.
       answer.update_attributes(answer_feedback_hash)
+    end
+    # All answers should delegate learner to their saveables...
+    # We need to update fields, because the answer is serialized in the report learner
+    if answer.respond_to?(:learner) && answer.learner
+      answer.learner.report_learner.update_fields()
     end
 
   end
