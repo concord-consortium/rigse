@@ -111,7 +111,10 @@ class Report::Learner < ActiveRecord::Base
     # AU: We'll use a serialized column to store a hash, for now
     answers_hash = {}
     report_util.saveables.each do |s|
-      feedbacks = s.answers.map do |ans|
+      # feedbacks = s.answers.map do |ans|
+      # TOOD: Eventually we want all answers.... Or answers with feedback...
+      # this has been simplified here because for performance reasons.
+        feedbacks = [s.answers.last].compact.map do |ans|
         {
             answer: serialize_blob_answer(ans.answer),
             answer_key: Report::Learner.encode_answer_key(ans),
@@ -125,10 +128,7 @@ class Report::Learner < ActiveRecord::Base
           feedbacks: feedbacks,
           answered: s.answered?,
           submitted: s.submitted?,
-          question_required: s.embeddable.is_required,
-          needs_review: s.needs_review?,
-          score: s.current_score,       # may be null
-          feedback: s.current_feedback  # may be null
+          question_required: s.embeddable.is_required
       }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
       answers_hash[ Report::Learner.encode_answer_key(s.embeddable)] = hash

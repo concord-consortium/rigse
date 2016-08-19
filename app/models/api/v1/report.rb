@@ -1,7 +1,7 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
   REPORT_VERSION = "1.0.1"
-  MAX_REPORT_LEARNER_AGE = 2.hours
+  MAX_REPORT_LEARNER_AGE = 1.seconds
 
   def initialize(options)
     # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
@@ -78,7 +78,7 @@ class API::V1::Report
   end
 
 
-  def update_report_learners(report_learners)
+  def self.update_report_learners(report_learners)
     report_learners.each do |learner|
       if learner.last_report.nil? or learner.last_report < MAX_REPORT_LEARNER_AGE.ago
         learner.last_report = Time.now
@@ -92,7 +92,7 @@ class API::V1::Report
     # Collect all the student answers for given offering.
     student_ids = @students.map { |s| s.id }
     report_learners = Report::Learner.where(offering_id: @offering.id, student_id: student_ids)
-    update_report_learners(report_learners)
+    API::V1::Report.update_report_learners(report_learners)
 
     answers = report_learners.map do |report_learner|
       student_id = report_learner.student_id
