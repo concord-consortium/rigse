@@ -75,6 +75,12 @@ en:
     external_report_label: External Reporting
     external_report_description: Specify and alternate report link to be shown to teachers in the offering view. Unless you know what you are doing 'none' is recommended.
     report_client: Report Auth Client
+  matedit:
+    assign_to_class: Assign To Class
+    edit__options: Edit Resource Options
+    archive: Archive
+    archive_confirm: Are you sure you want to archive this activity?
+    archive_success: "'%{name}' was successfuly archived."
   "Requires download": Requires download
   "Runs in browser": Runs in browser
   "StudentProgress":

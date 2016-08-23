@@ -24,6 +24,7 @@ class ExternalActivity < ActiveRecord::Base
 
     integer :offerings_count
     boolean :is_official
+    boolean :is_archived
     boolean :is_assessment_item
     boolean :is_template do
       false
@@ -125,6 +126,7 @@ class ExternalActivity < ActiveRecord::Base
 
   scope :official, where(:is_official => true)
   scope :contributed, where(:is_official => false)
+  scope :archived, where(:is_archived => true)
 
   def url(learner = nil)
     begin
