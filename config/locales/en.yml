@@ -123,7 +123,9 @@ en:
           To get started, you can view available activities by clicking on the “Search” link in the menu
           above. Or set up a class by clicking the “Create a Class” button on the left.
 
-
+  search:
+    only_mine: Show only materials authored by me
+    only_archived: Show only archived materials
 'en-HAS':
   activerecord:
     models:

@@ -117,7 +117,11 @@
             .authored_by_me
               = check_box_tag 'include_mine', '1', params[:include_mine], :id => 'include_mine', :class => 'include_mine'
               %label.tooltip.filterheader{:for => "include_mine", :class => 'include_mine'}
-                Find only Materials authored by me
+                = t "search.only_mine"
+            .only_show_archived
+              = check_box_tag 'show_archived', '1', params[:show_archived], :id => 'show_archived', :class => 'show_archived'
+              %label.tooltip.filterheader{:for => "show archived", :class => 'show_archived'}
+                = t "search.only_archived"
 
 = render :partial=>"search/customize_filters"
 

@@ -279,7 +279,7 @@ describe Search do
           end
         end
         describe "when searching for archived items" do
-          let(:search_opts) { {:include_archived => true } }
+          let(:search_opts) { {:show_archived => true } }
           it "results should include only archived activities" do
             # TBD: I think we decided to only show archived with this option
             subject.results[:all].should have(1).entries
