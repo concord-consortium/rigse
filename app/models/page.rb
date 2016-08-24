@@ -56,6 +56,7 @@ class Page < ActiveRecord::Base
   include Noteable # convenience methods for notes...
 
   include Publishable
+  include Archiveable
 
   acts_as_replicatable
   acts_as_list :scope => :section
