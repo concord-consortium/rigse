@@ -290,7 +290,7 @@ class ExternalActivitiesController < ApplicationController
 
   def archive
     authorize @external_activity
-    @external_activity.update_attributes(is_archived: true, archive_date: Time.now)
+    @external_activity.archive!
     flash[:notice]= t("matedit.archive_success", {name: @external_activity.name})
     redirect_to :root  #TBD:  Where to go?
   end

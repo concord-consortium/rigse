@@ -100,6 +100,11 @@ class Portal::Offering < ActiveRecord::Base
     self.save
   end
 
+  def should_show?
+    runnable_archived = runnable.respond_to?(:is_archived) ? runnable.is_archived : false
+    active? && (!runnable_archived)
+  end
+
   def can_be_deleted?
     learners.empty?
   end

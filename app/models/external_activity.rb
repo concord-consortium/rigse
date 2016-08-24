@@ -211,6 +211,14 @@ class ExternalActivity < ActiveRecord::Base
     ExternalReport.all.map { |r| [r.name, r.id] }
   end
 
+  def archive!
+    update_attributes(is_archived: true, archive_date: Time.now)
+  end
+
+  def unarchive!
+    update_attributes(is_archived: false, archive_date: nil)
+  end
+
   private
 
   def append_query(uri, query_str)
