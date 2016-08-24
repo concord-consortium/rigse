@@ -267,6 +267,14 @@ class Portal::Clazz < ActiveRecord::Base
     default_offerings
   end
 
+  def teacher_visible_offerings
+    self.offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
+  end
+
+  def student_visible_offerings
+    self.active_offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
+  end
+
   def update_offerings_position
     offerings = self.offerings.sort {|a,b| a.position <=> b.position}
     position = 1
