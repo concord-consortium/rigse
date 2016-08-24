@@ -1,6 +1,7 @@
 {div, li, i, h3, h4} = React.DOM
 
 window.SMaterialDetailsClass = React.createClass
+  displayName: "SMaterialDetailsClass"
   toggle: (event) ->
     window.toggleDetails jQuery(event.target)
 

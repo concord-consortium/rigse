@@ -1,6 +1,7 @@
 {span, b} = React.DOM
 
 window.SPaginationInfoClass = React.createClass
+  displayName: "SPaginationInfoClass"
   render: ->
     info = @props.info
     if info.total_items <= info.per_page

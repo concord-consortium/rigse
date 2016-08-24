@@ -1,6 +1,7 @@
 {span, a, br} = React.DOM
 
 window.SMaterialHeaderClass = React.createClass
+  displayName: "SMaterialHeaderClass"
   renderMaterialProperties: ->
     # FIXME Make this a generic loop to handle displaying arbitrary properties
     reqDownload = @props.material.material_properties.indexOf('Requires download') isnt -1

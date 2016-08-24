@@ -1,6 +1,7 @@
 {div, a, img} = React.DOM
 
 window.SMaterialIconClass = React.createClass
+  displayName: "SMaterialIconClass"
   render: ->
     material = @props.material
     icon = material.icon

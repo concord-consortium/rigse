@@ -1,6 +1,7 @@
 {div, a} = React.DOM
 
 window.SMaterialLinksClass = React.createClass
+  displayName: "SMaterialLinksClass"
   render: ->
     (div {},
       for link, idx in @props.links

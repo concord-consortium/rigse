@@ -1,6 +1,7 @@
 {div, table, tbody, tr, td, span} = React.DOM
 
 window.SMaterialInfoClass = React.createClass
+  displayName: "SMaterialInfoClass"
   renderLinks: ->
     material = @props.material
     for own key, link of material.links
