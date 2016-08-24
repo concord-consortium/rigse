@@ -1,0 +1,6 @@
+s3:
+  access_key_id: ''          # s3 access key
+  secret_access_key: ''      # s3 secret access key
+  region: 'us-east-1'        # s3 region
+  bucket: ''                 # bucket to upload to
+  prefix: 'archive_portal'   # path prefix for blobs

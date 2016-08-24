@@ -19,6 +19,7 @@ config/aws_s3.yml
 config/settings.yml
 config/padlet.yml
 config/nces_data
+config/archive_portal.yml
 public/images/0*
 nbproject
 config/db_backup/
