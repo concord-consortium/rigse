@@ -18,7 +18,8 @@ window.SMaterialInfoClass = React.createClass
     links.push material.links.teacher_guide     if material.links.teacher_guide
     links.push material.links.assign_material   if material.links.assign_material
     links.push material.links.assign_collection if material.links.assign_collection
-
+    links.push material.links.unarchive         if material.links.unarchive
+    
     (SMaterialLinks {links: links})
 
   renderParentInfo: ->

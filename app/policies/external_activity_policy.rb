@@ -51,4 +51,7 @@ class ExternalActivityPolicy < ApplicationPolicy
     edit? || owner?
   end
 
+  def unarchive?
+    archive?
+  end
 end

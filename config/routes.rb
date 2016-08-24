@@ -573,6 +573,7 @@ RailsPortal::Application.routes.draw do
         get :duplicate
         get :matedit
         get :archive
+        get :unarchive
         get :set_private_before_matedit
         get :copy
         get :edit_basic
