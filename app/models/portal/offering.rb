@@ -101,8 +101,7 @@ class Portal::Offering < ActiveRecord::Base
   end
 
   def should_show?
-    runnable_archived = runnable.respond_to?(:is_archived) ? runnable.is_archived : false
-    active? && (!runnable_archived)
+    active? && (!runnable.archived?)
   end
 
   def can_be_deleted?

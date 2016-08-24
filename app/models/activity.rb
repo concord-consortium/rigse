@@ -53,6 +53,7 @@ class Activity < ActiveRecord::Base
   include Changeable
   include TreeNode
   include Publishable
+  include Archiveable
 
   searchable do
     text :name

@@ -30,7 +30,7 @@ describe Portal::Offering do
 
     describe "should_be_shown" do
       describe "when the runable is archived" do
-        before(:each) { runnable.stub(:is_archived).and_return(true) }
+        before(:each) { runnable.stub(:archived?).and_return(true) }
         it "should always be deactivated" do
           offering.should_show?.should be_false
         end
