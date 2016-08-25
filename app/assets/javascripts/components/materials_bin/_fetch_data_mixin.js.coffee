@@ -35,5 +35,25 @@ window.MBFetchDataMixin =
           newState[@dataStateKey] = if @processData? then @processData(data) else data
           @setState newState
 
+  archive: (material_id, arhive_url) ->
+    # TODO: this uses normal requests instead of JSON
+    jQuery.ajax
+      url: arhive_url
+      success: (data) =>
+        newState = @state.collectionsData.map (d) ->
+          copy = Object.clone(d)
+          copy.materials = d.materials.filter (m) -> m.id != material_id
+          copy
+        @setState(collectionsData: newState)
+
+  archiveSingle: (material_id, arhive_url) ->
+    # TODO: this uses normal requests instead of JSON
+    jQuery.ajax
+      url: arhive_url
+      success: (data) =>
+        newState = @state.materials.filter (m) -> m.id != material_id
+        @setState(materials: newState)
+
+
   getVisibilityClass: ->
     unless @props.visible then 'mb-hidden' else ''

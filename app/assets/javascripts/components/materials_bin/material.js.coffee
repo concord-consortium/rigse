@@ -26,6 +26,10 @@ window.MBMaterialClass = React.createClass
   hasDescription: ->
     @props.material.description? && @props.material.description != ''
 
+  archive: ->
+    if window.confirm("Archive '#{@props.material.name}'?")
+      @props.archive(@props.material.id, @props.material.archive_url)
+
   render: ->
     data = @props.material
     (div {className: 'mb-material'},
@@ -58,6 +62,8 @@ window.MBMaterialClass = React.createClass
           )
       )
       (span {className: 'mb-material-name'}, data.name)
+      if data.archive_url?
+        (a {className: 'archive-link', onClick: @archive, title: "archive this" }, "(archive this)")
       if @hasDescription()
         (MBMaterialDescription
           description: data.description

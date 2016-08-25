@@ -16,7 +16,11 @@ window.MBUserMaterialsContainerClass = React.createClass
   render: ->
     (div {className: @getVisibilityClass()},
       if @state.materials
-        (MBMaterialsCollection materials: @state.materials, assignToSpecificClass: @props.assignToSpecificClass)
+        (MBMaterialsCollection
+          materials: @state.materials
+          assignToSpecificClass: @props.assignToSpecificClass
+          archive: @archive
+        )
       else
         (div {}, 'Loading...')
     )
