@@ -44,11 +44,11 @@ class ExternalActivityPolicy < ApplicationPolicy
   # currently this means the owner could hack things and
   # update some of the non basic settings too
   def update?
-    edit? || owner?
+    admin? || owner?
   end
 
   def archive?
-    edit? || owner?
+    admin? || owner?
   end
 
   def unarchive?

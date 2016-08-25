@@ -73,7 +73,8 @@ module Materials
           links: links_for_material(material),
           preview_url: view_context.run_url_for(material, (material.teacher_only? ? {:teacher_mode => true} : {})),
           edit_url: (material.is_a?(ExternalActivity) && policy(material).matedit?) ? view_context.matedit_external_activity_url(material, iFrame: true) : nil,
-          unarchive_url: (material.is_a?(ExternalActivity) && policy(material).unarchive?) ? view_context.unarchive_external_activity_url(material, iFrame: true) : nil,
+          unarchive_url: (material.is_a?(ExternalActivity) && policy(material).unarchive?) ? view_context.unarchive_external_activity_url(material) : nil,
+          archive_url:   (material.is_a?(ExternalActivity) && policy(material).archive?) ? view_context.archive_external_activity_url(material) : nil,
           copy_url: external_copyable(material) ? view_context.copy_external_activity_url(material) : nil,
           assign_to_class_url: current_visitor.portal_teacher && material.respond_to?(:offerings) ? "javascript:get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}')" : nil,
           assign_to_collection_url: current_visitor.has_role?('admin') && material.respond_to?(:materials_collections) ? "javascript:get_Assign_To_Collection_Popup(#{material.id},'#{material.class.to_s}')" : nil,
@@ -127,12 +128,16 @@ module Materials
         }
       }
       if material.archived?
-        return  {
-            unarchive: {
-              url: unarchive_external_activity_url(material),
-              text: "Unarchive"
-            }
-        }
+        if policy(material).unarchive?
+          return  {
+              unarchive: {
+                url: unarchive_external_activity_url(material),
+                text: "Unarchive"
+              }
+          }
+        else
+          return {}
+        end
       end
 
       if current_visitor.anonymous? or external
