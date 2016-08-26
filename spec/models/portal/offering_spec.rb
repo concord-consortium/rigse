@@ -44,12 +44,12 @@ describe Portal::Offering do
     describe "delegates whether the student report" do
       it "is enabled" do
         runnable.student_report_enabled = true
-       offering.student_report_enabled?.should be_true
+        offering.student_report_enabled?.should be_true
       end
 
-      it "is enabled" do
+      it "is disabled" do
         runnable.student_report_enabled = false
-       offering.student_report_enabled?.should be_false
+        offering.student_report_enabled?.should be_false
       end
     end
 
