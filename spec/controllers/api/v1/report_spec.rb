@@ -108,7 +108,7 @@ describe API::V1::ReportsController do
         max_score_should_be 0
         feedback_should_be_enabled
         score_should_be_disabled
-        answers.should include_hash({"answer" => "testing from #{learner_a.student.user.id}", "needs_review" => true})
+        answers.should include_hash({"answer" => "testing from #{learner_a.student.user.id}"})
       end
     end
   end

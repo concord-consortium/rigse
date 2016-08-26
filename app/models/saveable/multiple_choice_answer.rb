@@ -8,6 +8,7 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
 
   acts_as_list :scope => :multiple_choice_id
 
+  delegate :learner, to: :multiple_choice, allow_nil: :true
   def answer
     if rationale_choices.size > 0
       choices = multiple_choice.choices

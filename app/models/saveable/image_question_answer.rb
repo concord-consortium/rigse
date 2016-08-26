@@ -7,7 +7,8 @@ class Saveable::ImageQuestionAnswer < ActiveRecord::Base
   belongs_to :blob, :class_name => 'Dataservice::Blob'
 
   acts_as_list :scope => :image_question_id
-  
+  delegate :learner, to: :image_question, allow_nil: :true
+
   def answer
     if blob || note
       {:blob => blob, :note => note}
