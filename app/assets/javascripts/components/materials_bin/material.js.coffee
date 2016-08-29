@@ -27,8 +27,10 @@ window.MBMaterialClass = React.createClass
     @props.material.description? && @props.material.description != ''
 
   archive: ->
-    if window.confirm("Archive '#{@props.material.name}'?")
-      @props.archive(@props.material.id, @props.material.archive_url)
+    Portal.confirm
+      message: "Archive '#{@props.material.name}'?"
+      callback: () =>
+        @props.archive(@props.material.id, @props.material.archive_url)
 
   render: ->
     data = @props.material

@@ -132,7 +132,8 @@ module Materials
           return  {
               unarchive: {
                 url: unarchive_external_activity_url(material),
-                text: "Unarchive"
+                text: t("matedit.unarchive"),
+                ccConfirm: t("matedit.unarchive_confirm", {name: material.name})
               }
           }
         else

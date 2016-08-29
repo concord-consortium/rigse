@@ -8,8 +8,8 @@
     .action_menu_header_right
       = link_to t("matedit.archive"),
         archive_external_activity_path(@external_activity),
-        confirm: t("matedit.archive_confirm"),
-        :class=>"button"
+        class: "button",
+        data: {cc_confirm: t("matedit.archive_confirm")}
       = link_to t("matedit.assign_to_class"),
         "javascript:void(0)",
         :onclick=>"get_Assign_To_Class_Popup(#{@external_activity.id}, '#{@external_activity.class.to_s}', null, true)",
