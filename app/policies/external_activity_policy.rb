@@ -30,7 +30,7 @@ class ExternalActivityPolicy < ApplicationPolicy
   end
 
   def copy?
-    true
+    ! user.anonymous?
   end
 
   # the basic edit form lets a user change the publication status, subject areas,
@@ -48,10 +48,18 @@ class ExternalActivityPolicy < ApplicationPolicy
   end
 
   def archive?
-    admin? || owner?
+    admin_or_material_admin? || owner?
   end
 
   def unarchive?
-    archive?
+    admin_or_material_admin? || owner?
+  end
+
+  def material_admin?
+    record.projects.detect{ |p| user.is_project_admin? p }
+  end
+
+  def admin_or_material_admin?
+    admin? || material_admin?
   end
 end
