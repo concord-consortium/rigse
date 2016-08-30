@@ -65,7 +65,7 @@ window.MBMaterialClass = React.createClass
       )
       (span {className: 'mb-material-name'}, data.name)
       if data.archive_url?
-        (a {className: 'archive-link', onClick: @archive, title: "archive this" }, "(archive this)")
+        (a {className: 'mb-archive-link', onClick: @archive, title: "archive this" }, "(archive this)")
       if @hasDescription()
         (MBMaterialDescription
           description: data.description
