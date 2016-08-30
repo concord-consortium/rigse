@@ -84,6 +84,9 @@ en:
     unarchive_confirm: "Are you sure you want to un-archive this activity?"
     archive_success: "'%{name}' was successfuly archived."
     unarchive_success: "'%{name}' was successfuly restored."
+  material_collection:
+    is_archived: (archived)
+    remove: "Remove %{name} from the collection '%{collection_name}'"
   "Requires download": Requires download
   "Runs in browser": Runs in browser
   "StudentProgress":

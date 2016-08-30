@@ -9,8 +9,12 @@
             %i.fa.fa-bars
           .material_item_content
             = link_to material.name, material
+          - if material.archived?
+            .material_item_archived
+              %i.fa.fa-archive
+              = t("material_collection.is_archived")
           .material_item_remove_link
-            - title = "Remove #{material.name} from the collection '#{materials_collection.name}'"
+            - title = t("material_collection.remove", {name: material.name, collection_name: materials_collection.name})
             - confirm = "#{title}?"
             - url = remove_material_materials_collection_path(materials_collection, :materials_collection_item_id => mci.id)
             - success = "jQuery('#materials_collection_item_#{mci.id}').remove();"
