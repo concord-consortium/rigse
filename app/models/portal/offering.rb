@@ -100,8 +100,12 @@ class Portal::Offering < ActiveRecord::Base
     self.save
   end
 
+  def archived?
+    runnable.archived?
+  end
+
   def should_show?
-    active? && (!runnable.archived?)
+    active? && (!archived?)
   end
 
   def can_be_deleted?
