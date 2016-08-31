@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160823201800) do
+ActiveRecord::Schema.define(:version => 20160804135541) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -885,9 +885,9 @@ ActiveRecord::Schema.define(:version => 20160823201800) do
     t.integer  "user_id"
     t.string   "name"
     t.text     "attribution"
-    t.string   "publication_status", :default => "private"
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
+    t.string   "publication_status", :default => "published"
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"

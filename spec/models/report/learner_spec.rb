@@ -194,14 +194,6 @@ describe Report::Learner do
             end
           end
 
-          it "should indicate that the answers need feedback" do
-            subject.answers.each do |answer|
-              qkey,a = answer
-              a[:needs_review].should be_true
-            end
-          end
-
-
           describe "giving feedback" do
             let(:last_answer)           { learner.answers.last }
             let(:feedback)              {{ feedback: "great job!", score: 4, has_been_reviewed: true}}
@@ -223,9 +215,6 @@ describe Report::Learner do
                 report_learner.update_answers()
               end
 
-              it "should require feedback because there is a new answer" do
-                open_response_saveable[1][:needs_review].should be_true
-              end
             end
 
           end

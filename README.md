@@ -748,6 +748,16 @@ should be written for it.
 * a few changes have been made to the default views
 * a default css file with blank selectors for common rails elements
 
+## Archiving a portal
+
+A set of rake tasks is available under the ```archive_portal``` namespace that enable the portal data to be archived.  These tasks are:
+
+* archive_portal:extract_and_upload_images - extracts the image binary data from the database and uploads it to S3
+* archive_portal:generate_teacher_reports - generates learner details reports for all teachers and places them in /tmp/archive_portal/teacher_reports
+* archive_portal:generate_runnable_reports - generates learner details reports for all runnables and places them in /tmp/archive_portal/runnable_reports
+
+The rake tasks use a config file at /config/archive_portal.yml to specify the S3 bucket parameters to use when extracting images and to use when generating the url to those images in the reports.  A /config/archive_portal.sample.yml file exists to be copied and updated with real values.
+
 ## License
 
 CC Rails Portal is released under the [MIT License](LICENSE).

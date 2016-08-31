@@ -5,5 +5,5 @@ class Saveable::OpenResponseAnswer < ActiveRecord::Base
   belongs_to :bundle_content, :class_name => 'Dataservice::BundleContent'
 
   acts_as_list :scope => :open_response_id
-  
+  delegate :learner, to: :open_response, allow_nil: :true
 end

@@ -22,6 +22,8 @@ module Saveable::Saveable
   end
 
   def embeddable
+    # guard against answers where the embeddables are null...
+    return nil unless self.class.embeddable_type(self)
     self.send(self.class.embeddable_type(self)[:str])
   end
 

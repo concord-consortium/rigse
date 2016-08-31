@@ -71,9 +71,6 @@ describe API::V1::Report do
             'has_been_reviewed' => has_been_reviewed
         }
       end
-      before(:each) do
-        API::V1::Report.submit_feedback(feedback)
-      end
 
       describe "when no feedback or answer has been given yet" do
         it "should indicate that it doesn't need review" do
@@ -81,7 +78,7 @@ describe API::V1::Report do
         end
       end
 
-      describe "when an answer is give" do
+      describe "when an answer is given" do
         before(:each) do
           open_response_answer.answers.create(answer: "this is the answer")
           API::V1::Report.submit_feedback(feedback)
@@ -119,6 +116,7 @@ describe API::V1::Report do
           end
 
           it "should have the correct score" do
+            open_response_answer.answers.length.should have_at_least(1).answer
             open_response_answer.current_score.should eq score
           end
 
@@ -126,7 +124,6 @@ describe API::V1::Report do
             open_response_answer.current_feedback.should eq text_feedback
           end
         end
-
       end
     end
   end
