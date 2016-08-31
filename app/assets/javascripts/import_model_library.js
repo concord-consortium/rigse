@@ -1,6 +1,6 @@
 jQuery(function() {
 
-  var targetUrl = "<%= URLResolver.getUrl("import_model_library_interactives_path") %>"
+  var targetUrl = "/interactives/import_model_library"
   var lightboxconfig={
           content:"<div style='padding:10px'>Loading...Please Wait.</div>",
           title:"Import Model Library",
@@ -39,7 +39,7 @@ jQuery(function() {
         var text = transport.html
         ajaxSuccess(text);
       },
-      error: function(transport) { 
+      error: function(transport) {
           message = JSON.parse(transport.responseText);
           jQuery(".message").html(message.error);
           return;
@@ -53,8 +53,8 @@ jQuery(function() {
     import_model_library_modal = null;
   }
 
-  
-  jQuery("#import-model-library-popup").on("click", function() { 
+
+  jQuery("#import-model-library-popup").on("click", function() {
     importModelLibraryPopup();
   });
   jQuery("body").on("click", "#import-model-library-post-json" , function() {

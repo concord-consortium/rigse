@@ -1,5 +1,5 @@
 var student_list_modal = null;
-var student_popup_base_url = "<%= URLResolver.getUrl("add_new_student_popup_portal_clazz_path", {:id => 999}) %>";
+var student_popup_base_url = "/portal/classes/999/add_new_student_popup";
 
 function close_popup()
 {
@@ -44,7 +44,7 @@ function add_New_Student_To_Class()
     var options = {
         method: 'post',
         onSuccess: function(transport) {
-            var text = transport.responseText;			
+            var text = transport.responseText;
             var response = text.evalJSON(true);
             if (!response.success)
             {
@@ -64,7 +64,7 @@ function add_New_Student_To_Class()
                         }
                     }
                 }
-                
+
                 $('oErrMsgDiv').innerHTML = error_msg;
 
                 $$(".create_button").each(function(item) {
@@ -74,7 +74,6 @@ function add_New_Student_To_Class()
             }
         }
     };
-    
+
     oForm.request(options);
 }
-

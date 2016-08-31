@@ -1,0 +1,48 @@
+# NOTE: an easy way to setup the values for the variable substitions is to create a .env file in this same directory
+#       more information can be found here: http://docs.master.dockerproject.org/compose/env-file/
+
+version: '2'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    command: script/docker-app.sh
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      SOLR_HOST: solr
+      SOLR_PORT: 8983
+    networks:
+      - appnet
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/rigse
+      - "bundle:/bundle"
+  solr:
+    image: solr:5.3
+    networks:
+      - appnet
+    ports:
+      - "8983:8983"
+    volumes:
+      - .:/rigse
+      - data:/opt/solr/server/solr/mycores
+    depends_on:
+      - solrdata
+    command: /rigse/docker/start-solr-within-solr-container.sh
+  solrdata:
+    image: solr:5.3
+    volumes:
+      - data:/opt/solr/server/solr/mycores
+    user:
+      root
+    command: chown solr:solr /opt/solr/server/solr/mycores
+networks:
+  appnet:
+volumes:
+  bundle:
+  data:

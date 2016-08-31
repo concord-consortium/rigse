@@ -1,32 +1,32 @@
---- 
-development: 
+---
+development: &development
   encoding: utf8
   adapter: mysql2
-  username: root
-  database: portal_development
-  password: '*****'
+  username: <%= ENV['DB_USER'] || 'root' %>
+  database: <%= ENV['DB_NAME'] || 'portal_development' %>
+  password: <%= ENV['DB_PASSWORD'] || 'root' %>
+  host: <%= ENV['DB_HOST'] || '127.0.0.1' %>
+  port: <%= ENV['DB_PORT'] || '3306' %>
   pool: 5
 
-test:
+test: &test
   encoding: utf8
   adapter: mysql2
-  username: root
-  database: portal_test
-  password: '*****'
+  username: <%= ENV['DB_USER'] || 'root' %>
+  database: <%= ENV['DB_NAME'] || 'portal_test' %>
+  password: <%= ENV['DB_PASSWORD'] || 'root' %>
+  host: <%= ENV['DB_HOST'] || '127.0.0.1' %>
+  port: <%= ENV['DB_PORT'] || '3306' %>
   pool: 5
 
-cucumber:
+cucumber: &cucumber
   encoding: utf8
   adapter: mysql2
-  username: root
-  database: portal_cucumber
-  password: '*****'
+  username: <%= ENV['DB_USER'] || 'root' %>
+  database: <%= ENV['DB_NAME'] || 'portal_cucumber' %>
+  password: <%= ENV['DB_PASSWORD'] || 'root' %>
+  host: <%= ENV['DB_HOST'] || '127.0.0.1' %>
+  port: <%= ENV['DB_PORT'] || '3306' %>
   pool: 5
 
-production:
-  encoding: utf8
-  adapter: mysql2
-  username: root
-  database: portal_production
-  password: '*****'
-  pool: 5
+production: *development

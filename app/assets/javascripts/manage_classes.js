@@ -7,7 +7,7 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
     var teacher_clazz_name = decodeURIComponent(clazz_name);
     class_word = decodeURIComponent(class_word);
     class_description = decodeURIComponent(class_description);
-    
+
     var popupConfig = {
         id: 'CopyClass',
         width:  500,
@@ -15,7 +15,7 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
         title:"Copy Class",
         content: null
     };
-    
+
     var popupHtml = '<div class="popup_content">'+
     '<input type="hidden" id="copyClass_copy_class_id" name="copyClass_copy_class_id" value="'+copy_clazz_id+'" />'+
     '<div id="class_form_fill_error_text" name="copy_class_error_text" class="bold"></div>'+
@@ -45,13 +45,13 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
     '</div>'+
     '</div>'+
     '</div>';
-    
+
     popupConfig.content = popupHtml;
-    
+
     var popup = new Lightbox(popupConfig);
-    
+
     $("copyClass_name").focus();
-    
+
     return;
 }
 
@@ -65,7 +65,7 @@ function SaveManageClassListState()
     showModalPopup();
     //$$(".edit_portal_teacher")[0].submit()
     var oForm = $$("form.edit_portal_teacher")[0];
-    
+
     var options = {
         method: 'post',
         onSuccess: function(transport) {
@@ -77,7 +77,7 @@ function SaveManageClassListState()
             return;
         }
     };
-    
+
     Sortable.destroy("sortable");
     oForm.request(options);
     return;
@@ -88,24 +88,24 @@ function ClassDragComplete()
     SaveManageClassListState();
 }
 
-var copy_clazz_base_url = "<%= URLResolver.getUrl('copy_class_portal_clazz_path', :id => 999) %>";
+var copy_clazz_base_url = "/portal/classes/999/copy_class";
 function copyClass(btnSave)
 {
     btnSave.disabled = true;
-    
+
     var oSubmitText = document.getElementById("submit_text");
     var copy_clazz_id = $("copyClass_copy_class_id").value;
     var clazz_name = $("copyClass_name").value.strip();
     var clazz_word = $("copyClass_class_word").value.strip();
     var clazz_desc = $("copyClass_desc").value;
-    
+
     error_text = document.getElementById('class_form_fill_error_text');
-    
+
     var strParams = "clazz_name="+encodeURIComponent(clazz_name) +
                     "&clazz_word="+encodeURIComponent(clazz_word) +
                     "&clazz_desc="+encodeURIComponent(clazz_desc) +
                     "";
-    
+
     var options = {
         method: 'post',
         parameters: strParams,
@@ -134,14 +134,14 @@ function copyClass(btnSave)
                         }
                     }
                 }
-                
+
                 error_text.innerHTML = error_msg;
                 oSubmitText.style.display = "none";
                 btnSave.disabled = false;
             }
         }
     };
-    
+
     var target_url = copy_clazz_base_url.replace(/999/,copy_clazz_id);
     new Ajax.Request(target_url, options);
     oSubmitText.style.display = "inline";
@@ -177,17 +177,17 @@ function removeLabelFor()
 function applyLabelFor()
 {
     var oElement = this;
-    
+
     if (g_strLabelFor !== null)
     {
         clearTimeout(g_oMouseDownTimer);
     }
-    
+
     if (g_strLabelFor === null)
     {
         return;
     }
-    
+
     setTimeout(function () {
         var oLabel = oElement.getElementsByTagName("label")[0];
         oLabel.setAttribute("for", g_strLabelFor);
@@ -197,17 +197,17 @@ function applyLabelFor()
 }
 
 function initManageClasses() {
-    
+
     var arrSortableElems = $$("#sortable > li");
     var oElem = null;
-    
+
     for (var i = 0; i < arrSortableElems.length; i++)
     {
         oElem = arrSortableElems[i];
         oElem.observe("mousedown", removeLabelFor);
         oElem.observe("mouseup", applyLabelFor);
     }
-    
+
     Sortable.create("sortable", {onUpdate:ClassDragComplete});
 }
 

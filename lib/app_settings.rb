@@ -47,7 +47,7 @@ end
 
 
 # Recursively converts the keys in a Hash to symbols.
-# Also converts the keys in any Array elements which are 
+# Also converts the keys in any Array elements which are
 # Hashes to symbols.
 module HashExtensions
   def recursive_symbolize_keys
