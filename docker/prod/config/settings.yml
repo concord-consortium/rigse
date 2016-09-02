@@ -46,7 +46,7 @@ production:
     first_name: Noah
     login: knowuh
     last_name: Paessel
-  email: npaessel@concord.org
+    email: npaessel@concord.org
   states_and_provinces: all
   runnables_use: otrunk_jnlp
   runnable_mime_type:
