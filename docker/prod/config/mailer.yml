@@ -1,8 +1,8 @@
 :delivery_method: :smtp
 :smtp:
   :domain: concord.org
-  :user_name: ENV['SMTP_USER']
-  :password: ENV['SMTP_PASS']
+  :user_name: <%= ENV['SMTP_USER'] %>
+  :password: <%= ENV['SMTP_PASS'] %>
   :address: email-smtp.us-east-1.amazonaws.com
   :port: 25
   :authentication: :login
