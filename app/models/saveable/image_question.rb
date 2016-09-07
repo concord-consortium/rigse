@@ -13,6 +13,10 @@ class Saveable::ImageQuestion < ActiveRecord::Base
 
   include Saveable::Saveable
 
+  def embeddable
+    image_question
+  end
+
   def submitted_answer
     if submitted?
       answers.last.answer
