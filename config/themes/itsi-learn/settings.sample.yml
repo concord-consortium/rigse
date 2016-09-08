@@ -48,7 +48,7 @@ production:
     - "10"
     - "11"
     - "12"
-  :theme: default
+  :theme: itsi-learn
   :site_name: DEFAULT Investigations
   :site_url: http://localhost:3000
   :runnables_use: otrunk_jnlp
