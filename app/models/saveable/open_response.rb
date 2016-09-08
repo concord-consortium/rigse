@@ -16,6 +16,10 @@ class Saveable::OpenResponse < ActiveRecord::Base
 
   include Saveable::Saveable
 
+  def embeddable
+    open_response
+  end
+
   def submitted_answer
     if submitted?
       answers.last.answer
