@@ -17,6 +17,10 @@ class Saveable::MultipleChoice < ActiveRecord::Base
 
   include Saveable::Saveable
 
+  def embeddable
+    multiple_choice
+  end
+
   # TODO:  We shouldn't need to special case this. But we do.
   # We should use saveable.rb#answer, but because we are sending
   # an array of answers, it doesn't work.
