@@ -8,6 +8,7 @@ class API::V1::MaterialsController < API::APIController
     materials = current_visitor.external_activities +
                 current_visitor.activities.is_template(false) +
                 current_visitor.investigations.is_template(false)
+    materials.reject! { |m| m.archived? }
     render json: materials_data(materials, params[:assigned_to_class])
   end
 
