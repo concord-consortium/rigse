@@ -35,7 +35,7 @@ Feature: Author can filter their own material
     And I should not see "interactive_2"
     When I am logged in with the username author_2
     And I am on the search instructional materials page
-    And I check "Find only Materials authored by me"
+    And I search for my own materials
     Then I should see "interactive_2"
     And I should not see "interactive_1"
 
@@ -59,7 +59,7 @@ Feature: Author can filter their own material
     And I check "contributed" under Authorship
     Then I should see "external_activity_2"
     And I should not see "external_activity_1"
-    When I check "Find only Materials authored by me"
+    When I search for my own materials
     Then I should see "external_activity_1"
     And I should see "external_activity_2"
 
@@ -76,7 +76,7 @@ Feature: Author can filter their own material
     And I reindex external activity
     When I am logged in with the username author_1
     And I am on the search instructional materials page
-    And I check "Find only Materials authored by me"
+    And I search for my own materials
     And I check "official" under Authorship
     Then I should see "external_activity_1"
     And I should not see "external_activity_2"
