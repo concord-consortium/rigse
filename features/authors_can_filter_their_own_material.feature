@@ -30,7 +30,7 @@ Feature: Author can filter their own material
     And I reindex interactive
     When I am logged in with the username author_1
     And I am on the search instructional materials page
-    And I check "Find only Materials authored by me"
+    And I search for my own materials
     Then I should see "interactive_1"
     And I should not see "interactive_2"
     When I am logged in with the username author_2
