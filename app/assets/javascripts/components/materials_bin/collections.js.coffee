@@ -22,6 +22,7 @@ window.MBCollectionsClass = React.createClass
             key: idx
             name: collection.name
             materials: collection.materials
+            archive: @archive
             # Merge extra properties that can be provided in collections array.
             teacherGuideUrl: @props.collections[idx].teacherGuideUrl
             assignToSpecificClass: @props.assignToSpecificClass

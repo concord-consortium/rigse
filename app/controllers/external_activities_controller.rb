@@ -288,6 +288,20 @@ class ExternalActivitiesController < ApplicationController
     end
   end
 
+  def archive
+    authorize @external_activity
+    @external_activity.archive!
+    flash[:notice]= t("matedit.archive_success", {name: @external_activity.name})
+    redirect_to :search  #TBD:  Where to go?
+  end
+
+  def unarchive
+    authorize @external_activity
+    @external_activity.unarchive!
+    flash[:notice]= t("matedit.unarchive_success", {name: @external_activity.name})
+    redirect_to :search  #TBD:  Where to go?
+  end
+
   def set_private_before_matedit
     authorize ExternalActivity
     @external_activity.publication_status = 'private'

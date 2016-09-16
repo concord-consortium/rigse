@@ -1,6 +1,7 @@
 {div, p, span} = React.DOM
 
 window.SearchResultsClass = React.createClass
+  displayName: "SearchResultsClass"
   generateScrollTo: (type)->
     return (event) ->
       window.scrollTo 0, $("#{type}_bookmark").offsetTop

@@ -152,14 +152,14 @@ class HomeController < ApplicationController
     portal_student_ids = []
     teacher_clazzes.each do|teacher_clazz|
       if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active
-        @offerings_count += teacher_clazz.offerings.count
+        @offerings_count += teacher_clazz.teacher_visible_offerings.count
 
         students = teacher_clazz.students
         portal_student_ids.concat(students.map{|s| s.id})
         student_count = students.count
         @student_count += student_count
         if student_count > 0
-          portal_teacher_offerings.concat(teacher_clazz.offerings)
+          portal_teacher_offerings.concat(teacher_clazz.teacher_visible_offerings)
         end
       end
     end

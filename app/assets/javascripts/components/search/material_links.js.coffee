@@ -1,6 +1,7 @@
 {div, a} = React.DOM
 
 window.SMaterialLinksClass = React.createClass
+  displayName: "SMaterialLinksClass"
   render: ->
     (div {},
       for link, idx in @props.links
@@ -13,20 +14,32 @@ window.SMaterialLinksClass = React.createClass
 window.SMaterialLinks = React.createFactory SMaterialLinksClass
 
 window.SGenericLinkClass = React.createClass
+
+  optionallyWrapConfirm: (link) ->
+    if(link.ccConfirm)
+      followLink = -> window.location = link.url
+      link.onclick = (event) ->
+        Portal.confirm
+          message: link.ccConfirm
+          callback: followLink
+        event.preventDefault()
+
   wrapOnClick: (str) ->
     return ->
       eval(str)
 
   render: ->
     link = @props.link
+    @optionallyWrapConfirm(link)
     link.className = 'button' unless link.className?
     if typeof link.onclick is 'string'
       link.onclick = @wrapOnClick link.onclick
     (a
-      href: link.url
-      className: link.className
-      target: link.target
-      onClick: link.onclick
+      'href': link.url
+      'className': link.className
+      'target': link.target
+      'onClick': link.onclick
+      'data-cc-confirm': link.ccConfirm
       dangerouslySetInnerHTML: {__html: link.text}
     )
 

@@ -265,6 +265,29 @@ describe Search do
         end
       end
 
+      describe "behavior of archived materials" do
+        let(:published_opts)      { external_act.merge({ publication_status: "published" })}
+        let(:archived_opts)       { published_opts.merge({is_archived: true })}
+        let(:unarchived_opts)     { published_opts.merge({is_archived: false })}
+        let(:archived_activity)   { FactoryGirl.create(:external_activity, archived_opts) }
+        let(:unarchived_activity) { FactoryGirl.create(:external_activity, unarchived_opts) }
+        let(:materials) { [archived_activity, unarchived_activity] }
+        describe "with default search options" do
+          it "results should include not include archived activities" do
+            subject.results[:all].should have(1).entries
+            subject.results[:all].should include(unarchived_activity)
+          end
+        end
+        describe "when searching for archived items" do
+          let(:search_opts) { {:show_archived => true } }
+          it "results should include only archived activities" do
+            # TBD: I think we decided to only show archived with this option
+            subject.results[:all].should have(1).entries
+            subject.results[:all].should include(archived_activity)
+          end
+        end
+      end
+
       describe "searching all items" do
         let(:search_opts) { {:private => true, :include_templates => true} }
         it "results should include 8 activities and 8 investigations" do

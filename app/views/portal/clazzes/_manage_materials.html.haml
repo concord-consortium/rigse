@@ -1,5 +1,9 @@
--material_text = t('material')
-- instructional_materials = t('instructional_materials')
+:ruby
+  material_text = t('material')
+  instructional_materials = t('instructional_materials')
+  offerings = portal_clazz.teacher_visible_offerings
+
+
 %tr
   %td{:colspan=>2}
     %br
@@ -10,4 +14,4 @@
       order will also be reflected in the menu on your #{instructional_materials} page.
 %tr
   %td{:colspan=>2}
-    = render :partial => 'shared/offerings_for_clazz', :locals => {:offerings => portal_clazz.offerings}
+    = render :partial => 'shared/offerings_for_clazz', :locals => {:offerings => offerings}

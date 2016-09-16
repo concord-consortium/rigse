@@ -23,6 +23,7 @@ class Search
   attr_accessor :include_official
   attr_accessor :include_mine
   attr_accessor :include_templates
+  attr_accessor :show_archived
   attr_accessor :material_properties
   attr_accessor :grade_level_groups
   attr_accessor :subject_areas
@@ -136,6 +137,7 @@ class Search
     self.include_mine         = opts[:include_mine]        || false
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
+    self.show_archived     = opts[:show_archived]    || false
     self.fetch_available_model_types()
     self.fetch_available_grade_subject_areas_projects()
     self.search() unless opts[:skip_search]
@@ -204,7 +206,8 @@ class Search
         search_by_projects(s)
         search_without_assessments(s)
         s.with(:is_template, false) unless self.include_templates
-
+        s.without(:is_archived, true) unless self.show_archived
+        s.with(:is_archived, true) if self.show_archived
         if (!self.private && self.user_id)
           unless show_user_all_materials?
             s.any_of do |c|

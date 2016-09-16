@@ -19,6 +19,7 @@ window.MBOwnMaterialsClass = React.createClass
         (MBMaterialsCollection
           name: 'My activities'
           materials: @state.materials
+          archive: @archiveSingle
           assignToSpecificClass: @props.assignToSpecificClass
         )
       else

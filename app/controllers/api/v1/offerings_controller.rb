@@ -25,9 +25,7 @@ class API::V1::OfferingsController < API::APIController
     offering =  Portal::Offering.find(params[:id])
     authorize offering, :api_show?
     offerings = offering.clazz.offerings(include: {learners: {student: :user}, clazz: {students: :user}})
-    @offering_api = offerings.map do |offering|
-      API::V1::Offering.new(offering, request.protocol, request.host_with_port)
-    end
+    @offering_api = offerings_to_api_offering(offerings, request)
     render :json => @offering_api.to_json, :callback => params[:callback]
   end
 
@@ -41,12 +39,18 @@ class API::V1::OfferingsController < API::APIController
                     .where("clazz_id", clazz_ids)
                     .includes(learners: {student: :user}, clazz: {students: :user})
 
-    @offering_api = offerings.map do |offering|
-      API::V1::Offering.new(offering, request.protocol, request.host_with_port)
-    end
+    @offering_api = offerings_to_api_offering(offerings, request)
     render :json => @offering_api.to_json, :callback => params[:callback]
   end
 
+
+  protected
+  def offerings_to_api_offering(offerings, request)
+    filtered_offerings = offerings.reject { |o| o.archived? }
+    return filtered_offerings.map do |offering|
+      API::V1::Offering.new(offering, request.protocol, request.host_with_port)
+    end
+  end
 
 end
 

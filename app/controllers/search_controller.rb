@@ -34,7 +34,12 @@ class SearchController < ApplicationController
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
     # @searches = policy_scope(Search)
-    return redirect_to action: 'index', include_official: '1' if request.query_parameters.empty?
+
+    if request.query_parameters.empty?
+      flash.keep
+      return redirect_to action: 'index', include_official: '1'
+    end
+
     opts = params.merge(:user_id => current_visitor.id, :skip_search => true)
     begin
       @form_model = Search.new(opts)

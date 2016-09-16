@@ -1,6 +1,7 @@
 {div, i, span} = React.DOM
 
 window.SMaterialBodyClass = React.createClass
+  displayName: "SMaterialBodyClass"
   renderMaterialUsage: ->
     classCount = @props.material.class_count
     if classCount?

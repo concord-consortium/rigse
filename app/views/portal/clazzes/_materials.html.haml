@@ -1,6 +1,6 @@
 = javascript_include_tag "instructional_materials.js"
 = javascript_include_tag "share_material.js"
-- clazz_offerings = @portal_clazz.offerings.sort{|a,b| a.position<=>b.position}
+- clazz_offerings = @portal_clazz.teacher_visible_offerings.sort{|a,b| a.position<=>b.position}
 - material_text = t("material").pluralize.capitalize
 .maincontainer.pie
   .container

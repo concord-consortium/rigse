@@ -1,6 +1,7 @@
 {div} = React.DOM
 
 window.SMaterialClass = React.createClass
+  displayName: "SMaterialClass"
   render: ->
     material = @props.material
     (div {

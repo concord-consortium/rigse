@@ -1,7 +1,7 @@
 %div
   - active_offerings = []
   - offerings.each do |offering|
-    - if offering.runnable and offering.active then
+    - if offering.runnable and offering.should_show? then
       - active_offerings << offering
 
   = render :partial => 'shared/offering_for_student', :collection => active_offerings, :as => :offering

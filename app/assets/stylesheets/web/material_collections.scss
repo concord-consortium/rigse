@@ -25,7 +25,16 @@
     margin-left: 10px;
   }
 
+  .material_item_archived {
+    margin-left: 10px;
+    color: #ED834E;
+    font-size: 9pt;
+    display: inline-block;
+    i { font-size: 12pt;}
+  }
+
   .material_item_remove_link {
     float: right;
   }
+
 }
