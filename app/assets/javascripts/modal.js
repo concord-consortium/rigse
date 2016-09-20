@@ -2,10 +2,12 @@
 // Requires no setup. Just create HTML container:
 // <div id="my-modal" class="modal">Content</div>
 // and then call:
-// Portal.showModal("#my-modal");
+// Portal.showModal(clickHandler, "#my-modal");
 // Close button and overlay will be automatically added.
 // Related styles are in modal.scss file.
-Portal.showOverlay = function(clickHandler) {
+Portal.showOverlay = function(clickHandler,modalId) {
+    jQuery('.modal').hide();
+    jQuery(modalId).addClass('modal');
     if (jQuery('#modal-overlay').length === 0) {
         jQuery('body').append('<div id="modal-overlay"></div>');
     }
@@ -17,7 +19,7 @@ Portal.showOverlay = function(clickHandler) {
 };
 
 Portal.showModal = function(modalId, specialMsg) {
-  Portal.showOverlay(Portal.hideModal);
+  Portal.showOverlay(Portal.hideModal,modalId);
 
   if (jQuery(modalId + ' .close').length === 0) {
     jQuery(modalId).append('<a class="close">x</a>');
