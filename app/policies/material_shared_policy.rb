@@ -9,6 +9,11 @@ module MaterialSharedPolicy
     admin? || user && (user.admin_for_projects & record.projects).length > 0
   end
 
+  def edit_credits?
+    # Admin or admin of any project.
+    admin? || project_admin?
+  end
+
   def edit_projects?
     # Admin or admin of any project.
     admin? || project_admin?

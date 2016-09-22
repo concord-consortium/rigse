@@ -87,7 +87,8 @@ module Materials
           lara_activity_or_sequence: material.respond_to?(:lara_activity_or_sequence?) ? material.lara_activity_or_sequence? : false,
           parent: parent_data,
           user: user_data,
-          assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}")
+          assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}"),
+          credits: material.respond_to?(:credits) ? material.credits : nil,
         }
 
         data.push mat_data
