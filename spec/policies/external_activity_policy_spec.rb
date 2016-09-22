@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe ExternalActivityPolicy do
   subject                 { ExternalActivityPolicy.new(active_user, activity)   }
-  let(:active_user)       { Factory.next(:anonymous_user)           }
-  let(:activity)          { FactoryGirl.create(:external_activity)  }
+  let(:active_user)       { nil                                                 }
+  let(:activity)          { FactoryGirl.create(:external_activity)              }
 
   context "for anonymous" do
     it { should permit(:preview_index)           }
