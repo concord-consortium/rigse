@@ -30,7 +30,7 @@ class ExternalActivityPolicy < ApplicationPolicy
   end
 
   def copy?
-    user.present?
+    not_anonymous?
   end
 
   # the basic edit form lets a user change the publication status, subject areas,
