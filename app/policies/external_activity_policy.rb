@@ -55,11 +55,4 @@ class ExternalActivityPolicy < ApplicationPolicy
     admin_or_material_admin? || owner?
   end
 
-  def material_admin?
-    user.present? && record.projects.detect{ |p| user.is_project_admin? p }
-  end
-
-  def admin_or_material_admin?
-    admin? || material_admin?
-  end
 end
