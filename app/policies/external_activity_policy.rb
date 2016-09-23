@@ -40,11 +40,12 @@ class ExternalActivityPolicy < ApplicationPolicy
     edit_publication_status? || edit_subject_areas? || edit_grade_levels?
   end
 
-  # we need to let owners update the settings too
-  # currently this means the owner could hack things and
-  # update some of the non basic settings too
+  # FIMXE: This single update permission is used by all users when they are changing the
+  # settings. The edit_basic and the other fine grained permissions in MaterialSharedPolicy 
+  # only control which fields are visible. So for example it would be possible for an 
+  # owner who is not an admin to change some advanced settings.
   def update?
-    admin? || owner?
+    admin_or_material_admin? || owner?
   end
 
   def archive?
