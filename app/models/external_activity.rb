@@ -14,7 +14,7 @@ class ExternalActivity < ActiveRecord::Base
     end
 
     text :owner do |ea|
-      ea.user && ea.user.name
+      ea.credits.present? ? ea.credits : ea.user && ea.user.name
     end
 
     integer :user_id

@@ -5,8 +5,11 @@ module MaterialSharedPolicy
   end
 
   def edit_settings?
-    # Admin or admin of a project assigned to this material.
-    admin? || user && (user.admin_for_projects & record.projects).length > 0
+    admin_or_material_admin?
+  end
+
+  def edit_credits?
+    admin_or_material_admin?
   end
 
   def edit_projects?
@@ -21,21 +24,21 @@ module MaterialSharedPolicy
 
   # owners are allowed to edit the publication status of their materials
   def edit_publication_status?
-    edit_settings? || owner?
+    admin_or_material_admin? || owner?
   end
 
   # owners are allowed to edit the grade levels of their materials
   def edit_grade_levels?
-    edit_settings? || owner?
+    admin_or_material_admin? || owner?
   end
 
   # owners are allowed to edit the subject areas of their materials
   def edit_subject_areas?
-    edit_settings? || owner?
+    admin_or_material_admin? || owner?
   end
 
   def edit?
-    edit_settings? || edit_projects? || edit_cohorts?
+    admin_or_material_admin? || edit_projects? || edit_cohorts?
   end
 
   def update?
@@ -49,4 +52,13 @@ module MaterialSharedPolicy
   def destroy?
     admin?
   end
+
+  def material_admin?
+    user.present? && record.projects.detect{ |p| user.is_project_admin? p }
+  end
+
+  def admin_or_material_admin?
+    admin? || material_admin?
+  end
+
 end

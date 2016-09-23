@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe UserPolicy do
+describe ExternalActivityPolicy do
   subject                 { ExternalActivityPolicy.new(active_user, activity)   }
-  let(:active_user)       { Factory.next(:anonymous_user)           }
-  let(:activity)          { FactoryGirl.create(:external_activity)  }
+  let(:active_user)       { nil                                                 }
+  let(:activity)          { FactoryGirl.create(:external_activity)              }
 
   context "for anonymous" do
     it { should permit(:preview_index)           }
@@ -16,6 +16,7 @@ describe UserPolicy do
     it { should_not permit(:update)              }
     it { should_not permit(:archive)             }
     it { should_not permit(:unarchive)           }
+    it { should_not permit(:edit_credits)        }
   end
 
 
@@ -32,6 +33,7 @@ describe UserPolicy do
     it { should_not permit(:update)               }
     it { should_not permit(:archive)              }
     it { should_not permit(:unarchive)            }
+    it { should_not permit(:edit_credits)        }
   end
 
   context "for the owner" do
@@ -52,6 +54,8 @@ describe UserPolicy do
 
     # not sure why. Just documenting:
     it { should_not permit(:duplicate)            }
+
+    it { should_not permit(:edit_credits)         }
   end
 
   context "for an admin" do
@@ -65,6 +69,7 @@ describe UserPolicy do
     it { should permit(:archive)                  }
     it { should permit(:unarchive)                }
     it { should permit(:duplicate)                }
+    it { should permit(:edit_credits)             }
   end
 
 
@@ -83,6 +88,7 @@ describe UserPolicy do
     it { should permit(:archive)                  }
     it { should permit(:unarchive)                }
     it { should permit(:duplicate)                }
+    it { should permit(:edit_credits)             }
   end
 
 end

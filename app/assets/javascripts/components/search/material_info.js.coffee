@@ -19,7 +19,7 @@ window.SMaterialInfoClass = React.createClass
     links.push material.links.assign_material   if material.links.assign_material
     links.push material.links.assign_collection if material.links.assign_collection
     links.push material.links.unarchive         if material.links.unarchive
-    
+
     (SMaterialLinks {links: links})
 
   renderParentInfo: ->
@@ -27,9 +27,15 @@ window.SMaterialInfoClass = React.createClass
       (span {}, "from #{@props.material.parent.type} \"#{@props.material.parent.name}\"")
 
   renderAuthorInfo: ->
-    if @props.material.user
+    credits = if @props.material.credits?.length > 0
+      @props.material.credits
+    else if @props.material.user?.name.length > 0
+      @props.material.user.name
+    else
+      null
+    if credits
       (div {},
-        (span {style: {fontWeight: 'bold'}}, "By #{@props.material.user.name}")
+        (span {style: {fontWeight: 'bold'}}, "By #{credits}")
       )
 
   renderClassInfo: ->
