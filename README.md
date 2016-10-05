@@ -58,6 +58,17 @@ Later, you can run migrations using:
 
     docker-compose run app bundle exec rake db:migrate
 
+###### Using Docker with an external MySQL Server
+
+If you wish to use an existing MySQL server you can use the `docker-compose-external-mysql.yml` file which does
+not define a MySQL volume like the default `docker-compose.yml` file but rather uses the server defined by a number of environment variables.
+
+Here is an example of an invocation with all the environment variables set:
+
+`DB_HOST=10.0.0.10 DB_USER=root DB_PASSWORD=root DB_NAME=portal_production docker-compose -f docker-compose-external-mysql.yml up`
+
+Note the `-f docker-compose-external-mysql.yml` parameter to select the alternative .yml file.
+
 #### Setup Issues
 
 If you get the following error
