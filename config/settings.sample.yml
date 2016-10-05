@@ -1,5 +1,4 @@
 development: &non_production_settings
-  :password_for_default_users: secret
   :site_name: Rails Portal (development)
   :site_url: http://localhost:3000
   :authoring_site_url: //authoring.staging.concord.org

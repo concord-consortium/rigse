@@ -15,9 +15,11 @@ Working git, ruby or jruby, and rubgems, wget
     startup](doc/core-extensions.textile)
 
 #### Simple Getting Started
+
+##### Local development
+
 This example assumes that [rvm](https://rvm.io/) is installed. This
  could be a good idea because we use an older version of ruby.
-
 
     git clone git@github.com:concord-consortium/rigse.git portal
     cd portal
@@ -35,6 +37,37 @@ In a new terminal start the Solr
     rake sunspot:solr:run
 
 Now open your browser to [http://localhost:3000](http://localhost:3000)
+
+##### Using Docker
+
+Install Docker and make sure that docker-compose is installed too (it should be part of the standard Docker installation).
+
+    git clone git@github.com:concord-consortium/rigse.git portal
+    cd portal
+    docker-compose up
+
+Now open your browser to [http://0.0.0.0:3000](http://0.0.0.0:3000)
+
+`docker-compose.yml` defines app, solr and mysql database services.
+
+`config/database.yml`, `config/settings.yml` and `config/app_environment_variables.yml` are automatically created
+when you run docker-compose up for the first time by `docker/dev/run.sh`.
+
+Also, when `config/database.yml` is not present yet, `docker/dev/run.sh` will create it and setup DB.
+Later, you can run migrations using:
+
+    docker-compose run app bundle exec rake db:migrate
+
+###### Using Docker with an external MySQL Server
+
+If you wish to use an existing MySQL server you can use the `docker-compose-external-mysql.yml` file which does
+not define a MySQL volume like the default `docker-compose.yml` file but rather uses the server defined by a number of environment variables.
+
+Here is an example of an invocation with all the environment variables set:
+
+`DB_HOST=10.0.0.10 DB_USER=root DB_PASSWORD=root DB_NAME=portal_production docker-compose -f docker-compose-external-mysql.yml up`
+
+Note the `-f docker-compose-external-mysql.yml` parameter to select the alternative .yml file.
 
 #### Setup Issues
 
