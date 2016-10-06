@@ -119,8 +119,13 @@ def create_default_users
   manager_user.add_role('manager')
   researcher_user.add_role('researcher')
   teacher_user.add_role('member')
+  author_user.add_role('author')
   member_user.add_role('member')
   anonymous_user.add_role('guest')
+
+  teacher = Portal::Teacher.find_or_create_by_user_id(:user_id => teacher_user.id)
+  site_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
+  site_school.portal_teachers << teacher
 end
 
 def create_grades

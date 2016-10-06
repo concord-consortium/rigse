@@ -4,6 +4,12 @@
   - if @external_activity.new_record? || policy(@external_activity).edit_settings?
     = field_set_tag 'Activity Name' do
       = f.text_field :name
+    - if policy(@external_activity).edit_credits?
+      = field_set_tag 'Activity Credits' do
+        = f.text_field :credits
+        %br
+        - if @external_activity.user && @external_activity.user.name
+          If the credits field is filled in, it will override the default credits of "#{@external_activity.user.name}".
     = field_set_tag 'Activity Description' do
       = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
     = field_set_tag 'Activity Abstract' do

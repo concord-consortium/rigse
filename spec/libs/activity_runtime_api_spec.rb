@@ -131,10 +131,12 @@ describe ActivityRuntimeAPI do
     ]
   end
 
-  let(:sequence_name)     { "Many fun things" }
-  let(:sequence_desc)     { "Several activities together in a sequence" }
-  let(:sequence_abstract) { abstract }
-  let(:sequence_url)      { "http://activity.com/sequence/1" }
+  let(:sequence_name)       { "Many fun things" }
+  let(:sequence_desc)       { "Several activities together in a sequence" }
+  let(:sequence_abstract)   { abstract }
+  let(:sequence_url)        { "http://activity.com/sequence/1" }
+  let(:sequence_author_url) { "#{sequence_url}/edit" }
+  let(:sequence_print_url)  { "#{sequence_url}/print" }
 
   let(:sequence_hash) do
     act1 = new_hash.clone
@@ -150,6 +152,8 @@ describe ActivityRuntimeAPI do
       "abstract" => sequence_abstract,
       "url" => sequence_url,
       "launch_url" => sequence_url,
+      "print_url" => sequence_print_url,
+      "author_url" => sequence_author_url,
       "activities" => [act2, act1]
     }
   end
@@ -210,6 +214,12 @@ describe ActivityRuntimeAPI do
   let(:existing){ Factory.create(:external_activity, exist_stubs) }
 
   let(:existing_sequence) { Factory.create(:external_activity, existing_sequence_stubs) }
+
+  let(:existing_locked_sequence) {
+    locked_sequence_properties = existing_sequence_stubs
+    locked_sequence_properties[:is_locked] = true
+    Factory.create(:external_activity, locked_sequence_properties)
+  }
 
   let(:user)    { Factory.create(:user) }
 
@@ -460,6 +470,15 @@ describe ActivityRuntimeAPI do
         result.id.should == existing_sequence.id
         result.abstract.should match /something new/
         result.template.abstract.should match /something new/
+        result.author_url.should == sequence_author_url
+        result.print_url.should == sequence_print_url
+      end
+
+      it 'should not override properties that are not provided' do
+        existing_locked_sequence
+        # the sequence_hash does not provide the is_locked proeprty
+        result = ActivityRuntimeAPI.update_sequence(sequence_hash)
+        result.is_locked.should == true
       end
 
       it 'should update order of activities' do

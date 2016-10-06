@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe UserPolicy do
   subject           { UserPolicy.new(active_user, user)    }
-  let(:active_user) { Factory.next(:anonymous_user)        }
+  let(:active_user) { nil                                  }
   let(:user)        { FactoryGirl.create(:user)            }
 
   context "for anonymous" do

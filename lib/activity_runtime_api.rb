@@ -189,7 +189,11 @@ class ActivityRuntimeAPI
         act.update_attribute(attribute,hash[attribute])
       end
     end
-    external_activity.update_attribute('author_email',hash['author_email'])
+
+    ['author_email', 'is_locked', 'print_url', 'author_url'].each do |attribute|
+      external_activity.update_attribute(attribute,hash[attribute]) if hash.has_key?(attribute)
+    end
+
     self.update_external_report(external_activity, hash["external_report_url"])
     # save the embeddables
     mc_cache = {}

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160823201800) do
+ActiveRecord::Schema.define(:version => 20160921194347) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -861,6 +861,7 @@ ActiveRecord::Schema.define(:version => 20160823201800) do
     t.text     "print_url"
     t.boolean  "is_archived",              :default => false
     t.datetime "archive_date"
+    t.string   "credits"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
