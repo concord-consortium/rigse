@@ -1293,13 +1293,11 @@ ActiveRecord::Schema.define(:version => 20160921194347) do
     t.datetime "updated_at",                      :null => false
     t.integer  "bundle_logger_id"
     t.integer  "console_logger_id"
-    t.string   "key"
     t.string   "secure_key"
   end
 
   add_index "portal_learners", ["bundle_logger_id"], :name => "index_portal_learners_on_bundle_logger_id"
   add_index "portal_learners", ["console_logger_id"], :name => "index_portal_learners_on_console_logger_id"
-  add_index "portal_learners", ["key"], :name => "index_portal_learners_on_key", :unique => true
   add_index "portal_learners", ["offering_id"], :name => "index_portal_learners_on_offering_id"
   add_index "portal_learners", ["secure_key"], :name => "index_portal_learners_on_sec_key", :unique => true
   add_index "portal_learners", ["student_id"], :name => "index_portal_learners_on_student_id"
@@ -2017,7 +2015,6 @@ ActiveRecord::Schema.define(:version => 20160921194347) do
   end
 
   add_index "portal_offerings", ["clazz_id"], :name => "index_portal_offerings_on_clazz_id"
-  add_index "portal_offerings", ["runnable_id", "runnable_type"], :name => "runnable"
 
   create_table "portal_permission_forms", :force => true do |t|
     t.string   "name"
@@ -2042,7 +2039,6 @@ ActiveRecord::Schema.define(:version => 20160921194347) do
 
   add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
   add_index "portal_school_memberships", ["school_id", "member_id", "member_type"], :name => "school_memberships_long_idx"
-  add_index "portal_school_memberships", ["school_id"], :name => "index_portal_school_memberships_on_school_id"
 
   create_table "portal_schools", :force => true do |t|
     t.string   "uuid",           :limit => 36
@@ -2607,7 +2603,6 @@ ActiveRecord::Schema.define(:version => 20160921194347) do
 
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
   add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
-  add_index "taggings", ["tagger_id", "tagger_type"], :name => "index_taggings_on_tagger_id_and_tagger_type"
 
   create_table "tags", :force => true do |t|
     t.string "name"

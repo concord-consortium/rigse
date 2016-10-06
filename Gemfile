@@ -136,6 +136,7 @@ source "http://rubygems.org"
 # when compressing assets without a javascript runtime:
 group :production do
   gem 'therubyracer',         "~>0.12.1"
+  gem "unicorn"
 end
 
 # Feature enabling groups

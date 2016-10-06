@@ -178,6 +178,11 @@ module RailsPortal
       path == "APP_CONFIG[:theme]/stylesheets/application.css"
     end
 
+    # do not initialize on precompile so that the Dockerfile can run the precompile
+    if ENV['DOCKER_NO_INIT_ON_PRECOMPILE']
+      config.assets.initialize_on_precompile = false
+    end
+
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')

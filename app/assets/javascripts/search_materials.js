@@ -66,7 +66,7 @@ function searchsuggestions(e, oElement,bSubmit_form) {
     ajaxRequestCounter ++;
     params.ajaxRequestCounter = ajaxRequestCounter;
     params.submit_form =  bSubmit_form;
-    ajaxRequest = new Ajax.Request('<%= URLResolver.getUrl("search_get_search_suggestions_path") %>', {
+    ajaxRequest = new Ajax.Request('/search/get_search_suggestions', {
         parameters: params,
         method : 'get'
     });
@@ -212,7 +212,7 @@ function get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         title:"Assign " + lightbox_material_text + " to a Class"
     };
-    var target_url = "<%= URLResolver.getUrl('search_get_current_material_unassigned_clazzes_path') %>?skip_reload=" + (skip_reload || false);
+    var target_url = "/search/get_current_material_unassigned_clazzes?skip_reload=" + (skip_reload || false);
     var options = {
         method: 'post',
         parameters : {'material_type':material_type,'material_id':material_id},

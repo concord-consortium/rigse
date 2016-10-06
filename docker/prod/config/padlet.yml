@@ -1,0 +1,5 @@
+---
+host:  concordconsortium.padlet.org
+email: all-portal-errors@concord.org
+basic_auth_user: <%= ENV["PADLET_USER"] %>
+basic_auth_pass: <%= ENV["PADLET_PASSWORD"] %>

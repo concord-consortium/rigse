@@ -1,0 +1,2 @@
+storage: s3
+s3_credentials: config/aws_s3.yml

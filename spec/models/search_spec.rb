@@ -174,13 +174,13 @@ describe Search do
               subject.results[:all].should include funny_activity
             end
           end
-          describe "searching for 'Noah" do
-            let(:search_term)      { "Noah" }
+          describe "searching for 'Noah'" do
+            let(:search_term)      { "Noah*" }
             it "should be found" do
               subject.results[:all].should include funny_activity
             end
           end
-          describe "searching for 'Soup" do
+          describe "searching for 'Soup'" do
             let(:search_term)      { "Soup" }
             it "should be found" do
               subject.results[:all].should include funny_activity

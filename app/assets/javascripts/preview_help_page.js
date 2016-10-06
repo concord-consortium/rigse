@@ -4,13 +4,13 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
       var customHtml = null;
       var previewWindow = null;
       var formString = null;
-      
+
       var popupContent = null;
-      
+
       var windowUrl = '';
       var previewWindowDocument = null;
-      
-      
+
+
       if (isExternalUrl)
       {
           windowUrl = $(urlOrHtmlContainerId).value;
@@ -19,18 +19,18 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
             showpopup(popupContent);
             return;
           }
-          
+
           if(!protocolPattern.test(windowUrl)){
               windowUrl = 'http://' + windowUrl;
           }
           previewWindow = window.open(windowUrl, 'HelpPagePreviewExternalUrl', 'height = 700 width = 800, resizable = yes, scrollbars = yes');
       }
       else {
-          
-            
+
+
           if(isDomId){
             customHtml = $(urlOrHtmlContainerId).value || false;
-            
+
             if (!customHtml)
             {
                 popupContent = "<div style='padding:18px'>Please enter some custom help HTML to preview.</div>";
@@ -46,7 +46,7 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
                              '<meta http-equiv="Content-type" value="text/html; charset=UTF-8" />' +
                            '</head>' +
                            '<body>' +
-                             '<form id="preview_help_page" name="preview_help_page" action="<%= URLResolver.getUrl('help_preview_help_page_path') %>" method="post" style="display: none;" accept-charset="UTF-8">' +
+                             '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none;" accept-charset="UTF-8">' +
                                '<textarea id="preview_help_page_content" name="preview_help_page_from_edit" style="opacity:0;">' +
                                  customHtml +
                                '</textarea>' +
@@ -65,14 +65,14 @@ function openPreviewHelpPage(isExternalUrl, urlOrHtmlContainerId, isDomId, proje
             if(!previewWindow){
                 return;
             }
-            formString = '<form id="preview_help_page" name="preview_help_page" action="<%= URLResolver.getUrl('help_preview_help_page_path') %>" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_summary_page" style="opacity:0;">'+project_id+'</textarea></form>';
+            formString = '<form id="preview_help_page" name="preview_help_page" action="/help/preview_help_page" method="post" style="display: none"><textarea id="preview_help_page_content" name="preview_help_page_from_summary_page" style="opacity:0;">'+project_id+'</textarea></form>';
             previewWindowDocument = previewWindow.document;
             previewWindowDocument.open();
             previewWindowDocument.write(formString);
             previewWindowDocument.close();
             previewWindowDocument.getElementById('preview_help_page').submit();
           }
-          
+
       }
 }
 
@@ -86,4 +86,3 @@ function showpopup(content)
     };
     var lightbox = new Lightbox(lightboxConfig);
 }
-
