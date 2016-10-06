@@ -100,12 +100,7 @@ public/assets/
 public/*/calendar_date_select
 .floo
 .powenv
-solr/data
-solr/pids
-solr/production
-solr/development
-solr/test
-solr/default
+solr
 log
 config/app_environment_variables.rb
 config/environments/local-development.rb
