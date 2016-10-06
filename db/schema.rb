@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160823201800) do
+ActiveRecord::Schema.define(:version => 20160921194347) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -861,6 +861,7 @@ ActiveRecord::Schema.define(:version => 20160823201800) do
     t.text     "print_url"
     t.boolean  "is_archived",              :default => false
     t.datetime "archive_date"
+    t.string   "credits"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
@@ -885,9 +886,9 @@ ActiveRecord::Schema.define(:version => 20160823201800) do
     t.integer  "user_id"
     t.string   "name"
     t.text     "attribution"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
     t.string   "publication_status", :default => "published"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"
@@ -2285,7 +2286,7 @@ ActiveRecord::Schema.define(:version => 20160823201800) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",          :limit => 16777215
+    t.text     "answers",           :limit => 16777215
     t.string   "runnable_type"
     t.float    "complete_percent"
     t.text     "permission_forms"
