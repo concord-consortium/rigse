@@ -97,6 +97,10 @@ pass before changing any code.
 Prepare a database for use when running the spec tests:
 
     rake db:test:prepare
+    
+Start SOLR in test environment (it works with cucumber tests too):
+      
+    RAILS_ENV=test rake sunspot:solr:run
 
 Run the rspec unit tests:
 
