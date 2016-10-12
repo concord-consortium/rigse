@@ -39,7 +39,8 @@ class ExternalReport < ActiveRecord::Base
   def url_for(offering_id, user, protocol, host)
     grant = client.updated_grant_for(user, ReportTokenValidFor)
     token = grant.access_token
-    "#{url}?offering=#{offering_api_url(offering_id, protocol, host)}&token=#{token}"
+    username = user.login
+    "#{url}?offering=#{offering_api_url(offering_id, protocol, host)}&token=#{token}&username=#{username}"
   end
 
 end
