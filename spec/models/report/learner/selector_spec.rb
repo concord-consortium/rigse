@@ -29,8 +29,8 @@ describe Report::Learner::Selector do
   describe "when filtering based on permission forms" do
     let(:selector_opts)     {{ 'perm_form' => [permission_form_a.id] }}
 
-    it "expect the selector to specigy our permission form" do
-      expect(selector.select_perm_form).to include permission_form_a.id
+    it "expect the selector to specify our permission form" do
+      expect(selector.select_perm_form).to include permission_form_a
     end
 
     describe "when the student has the selected permission form (a)" do
