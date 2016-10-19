@@ -78,7 +78,7 @@ class Report::Learner::Selector
     @scopes[:with_runnables] = @select_runnables                 unless @select_runnables.blank?
     @scopes[:before]         = Time.parse(@parsed_end_date)      unless @parsed_end_date.blank?
     @scopes[:after]          = Time.parse(@start_date)           unless @start_date.blank?
-    @scopes[:with_permission_ids] = @select_perm_form            unless @select_perm_form.blank?
+    @scopes[:with_permission_ids] = @select_perm_form.map(&:id)  unless @select_perm_form.blank?
 
     unless @select_teachers.blank?
       clazzes = @select_teachers.map { |t| t.clazzes }
