@@ -1,4 +1,4 @@
-{div, span, a, i} = React.DOM
+{div, span, a, i, h1} = React.DOM
 
 shuffle = (a) ->
   idx = a.length
@@ -10,6 +10,11 @@ shuffle = (a) ->
   a
 
 window.MaterialsCollectionClass = React.createClass
+  getDefaultProps: ->
+    randomize: false
+    limit: Infinity
+    header: null
+
   getInitialState: ->
     materials: []
     truncated: true
@@ -45,18 +50,22 @@ window.MaterialsCollectionClass = React.createClass
     )
 
   render: ->
+    headerVisible = @props.header && @state.materials.length > 0
     (div {},
+      if headerVisible
+        (h1 {className: 'collection-header'}, @props.header)
       (SMaterialsList {materials: @getMaterialsList()})
       @renderTruncationToggle()
     )
 
 window.MaterialsCollection = React.createFactory MaterialsCollectionClass
 
+# Supported options: limit, randomize, header
+# Keep API backward compatible, so accept either 'limit' option as the last argument or hash.
 Portal.renderMaterialsCollection = (collectionId, selectorOrElement, limitOrOptions = Infinity) ->
-  # Keep API backward compatible, so accept either 'limit' option as the last argument or hash.
-  options = if typeof limitOrOptions == 'number'
-              {limit: limitOrOptions}
-            else
-              limitOrOptions
-  ReactDOM.render MaterialsCollection(collection: collectionId, limit: options.limit, randomize: options.randomize),
-    jQuery(selectorOrElement)[0]
+  props = if typeof limitOrOptions == 'number'
+            {limit: limitOrOptions}
+          else
+            limitOrOptions
+  props.collection = collectionId
+  ReactDOM.render MaterialsCollection(props), jQuery(selectorOrElement)[0]
