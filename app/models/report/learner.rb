@@ -7,6 +7,7 @@ class Report::Learner < ActiveRecord::Base
 
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id",
     :inverse_of => :report_learner
+  belongs_to   :student, :class_name => "Portal::Student"
   serialize    :answers, Hash
   belongs_to   :runnable, :polymorphic => true
 
@@ -14,10 +15,13 @@ class Report::Learner < ActiveRecord::Base
   scope :before, lambda         { |date|         {:conditions => ["last_run < ?", date]} }
   scope :in_schools, lambda     { |school_ids|   {:conditions => {:school_id   => school_ids   }}}
   scope :in_classes, lambda     { |class_ids|    {:conditions => {:class_id    => class_ids    }}}
-  scope :with_perm_form, lambda { |perm_forms|
-    query = perm_forms.map { |pf| "find_in_set(?,permission_forms)" }.join(" or ")
-    where("(#{query})", *perm_forms)
+
+  scope :with_permission_ids, lambda { |ids|
+    includes(student: :portal_student_permission_forms)
+      .where("portal_student_permission_forms.portal_permission_form_id", ids)
+
   }
+
   scope :with_runnables, lambda { |runnables|
     where 'CONCAT(runnable_type, "_", runnable_id) IN (?)', runnables.map{|runnable| "#{runnable.class}_#{runnable.id}"}.join(",")}
 

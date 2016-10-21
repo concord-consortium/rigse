@@ -12,25 +12,26 @@
         %td
           %label Schools:
         %td
-          = select_tag('schools', options_for_select(@learner_selector.all_schools.map {|s| [s.name, s.id]},
-                                                     @learner_selector.select_schools.map {|s| s.id}), { :multiple => true })
+          = select_tag('schools', options_for_select(*@learner_selector.options_for_schools),
+            { :multiple => true })
       %tr
         %td
           %label Teachers:
         %td
-          = select_tag('teachers', options_for_select(@learner_selector.all_teachers.map {|s| [s.name, s.id]},
-                                                      @learner_selector.select_teachers.map {|s| s.id}), { :multiple => true })
+          = select_tag('teachers', options_for_select(*@learner_selector.options_for_teachers),
+            { :multiple => true })
       %tr
         %td
           %label Runnables:
         %td
-          = select_tag('runnables', options_for_select(@learner_selector.all_runnables.map {|r| ["#{r.name}(#{r.class})", "#{r.class}_#{r.id}"]},
-                                                       @learner_selector.select_runnables.map {|r| "#{r.class}_#{r.id}"}), { :multiple => true })
+          = select_tag('runnables', options_for_select(*@learner_selector.options_for_runnables),
+            { :multiple => true })
       %tr
         %td
           %label Permission Forms:
         %td
-          = select_tag('perm_form', options_for_select(@learner_selector.all_perm_forms, @learner_selector.select_perm_form),  { :multiple => true, :class => 'big_selector'})
+          = select_tag('perm_form', options_for_select(*@learner_selector.options_for_permissions),
+            { :multiple => true, :class => 'big_selector'})
       %tr
         %td
           %label Start Date:

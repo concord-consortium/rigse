@@ -32,7 +32,7 @@ class Report::Learner::Selector
 
     @start_date            = options['start_date']
     @end_date              = options['end_date']
-    @all_perm_forms        = policy_scopes[:perm_forms].map { |p| p.fullname }
+    @all_perm_forms        = policy_scopes[:perm_forms]
     begin
       Time.parse(@start_date)
     rescue
@@ -51,11 +51,12 @@ class Report::Learner::Selector
     @select_runnables      = options['runnables'] || []
     @select_schools        = options['schools']   || []
     @select_teachers       = options['teachers']  || []
-    @select_perm_form      = options['perm_form'] || nil
+    @select_perm_form      = options['perm_form'] || []
 
     # to populate dropdown menus:
     @select_schools   = @select_schools.map      { |s| Portal::School.find(s) }
     @select_teachers  = @select_teachers.map     { |t| Portal::Teacher.find(t) }
+    @select_perm_form = @select_perm_form.map    { |p| Portal::PermissionForm.find(p) }
     @select_runnables = @select_runnables.map    { |r|
       case(r)
       when /^Investigation_(\d+)/
@@ -77,7 +78,7 @@ class Report::Learner::Selector
     @scopes[:with_runnables] = @select_runnables                 unless @select_runnables.blank?
     @scopes[:before]         = Time.parse(@parsed_end_date)      unless @parsed_end_date.blank?
     @scopes[:after]          = Time.parse(@start_date)           unless @start_date.blank?
-    @scopes[:with_perm_form] = @select_perm_form                 unless @select_perm_form.blank?
+    @scopes[:with_permission_ids] = @select_perm_form.map(&:id)  unless @select_perm_form.blank?
 
     unless @select_teachers.blank?
       clazzes = @select_teachers.map { |t| t.clazzes }
@@ -105,4 +106,33 @@ class Report::Learner::Selector
       select_runnables
     end
   end
+
+  def options_for_schools
+    [
+      @all_schools.map    { |s| [s.name, s.id] },
+      @select_schools.map { |s|          s.id  }
+    ]
+  end
+
+  def options_for_teachers
+    [
+      @all_teachers.map    { |s| [s.name, s.id] },
+      @select_teachers.map { |s|          s.id  }
+    ]
+  end
+
+  def options_for_runnables
+    [
+        @all_runnables.map    { |r| ["#{r.name}(#{r.class})", "#{r.class}_#{r.id}"] },
+        @select_runnables.map { |r| "#{r.class}_#{r.id}" }
+    ]
+  end
+
+  def options_for_permissions
+    [
+      @all_perm_forms.map   { |p| [p.fullname, p.id] },
+      @select_perm_form.map { |p|              p.id  }
+    ]
+  end
+
 end
