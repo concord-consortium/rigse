@@ -14,13 +14,15 @@ window.MaterialsCollectionClass = React.createClass
     randomize: false
     limit: Infinity
     header: null
+    # Optional callback executed when materials collection is downloaded
+    onDataLoad: null
 
   getInitialState: ->
     materials: []
     truncated: true
 
   componentDidMount: ->
-    {randomize} = @props
+    {randomize, onDataLoad} = @props
     jQuery.ajax
       url: Portal.API_V1.MATERIALS_BIN_COLLECTIONS
       data: id: @props.collection
@@ -28,6 +30,7 @@ window.MaterialsCollectionClass = React.createClass
       success: (data) =>
         materials = data[0].materials
         materials = shuffle(materials) if randomize
+        onDataLoad(materials) if onDataLoad
         @setState materials: materials if @isMounted()
 
   toggle: (e) ->
@@ -60,7 +63,7 @@ window.MaterialsCollectionClass = React.createClass
 
 window.MaterialsCollection = React.createFactory MaterialsCollectionClass
 
-# Supported options: limit, randomize, header
+# Supported options: limit, randomize, header, onDataLoad
 # Keep API backward compatible, so accept either 'limit' option as the last argument or hash.
 Portal.renderMaterialsCollection = (collectionId, selectorOrElement, limitOrOptions = Infinity) ->
   props = if typeof limitOrOptions == 'number'
