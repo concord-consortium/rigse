@@ -236,8 +236,6 @@ namespace :deploy do
       mkdir -p #{shared_path}/public/installers &&
       mkdir -p #{shared_path}/config/initializers &&
       mkdir -p #{shared_path}/system/attachments &&
-      mkdir -p #{shared_path}/solr/data &&
-      mkdir -p #{shared_path}/solr/pids &&
       touch #{shared_path}/config/database.yml &&
       touch #{shared_path}/config/settings.yml &&
       touch #{shared_path}/config/installer.yml &&
@@ -271,8 +269,7 @@ namespace :deploy do
       ln -nfs #{shared_path}/public/installers #{release_path}/public/installers &&
       ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data &&
       ln -nfs #{shared_path}/system #{release_path}/public/system &&
-      ln -nfs #{shared_path}/solr/data #{release_path}/solr/data &&
-      ln -nfs #{shared_path}/solr/pids #{release_path}/solr/pids &&
+      ln -nfs #{shared_path}/solr #{release_path}/solr &&
       ln -nfs #{shared_path}/config/app_environment_variables.rb #{release_path}/config/app_environment_variables.rb
     CMD
     # This is part of the setup necessary for using newrelics reporting gem
@@ -651,7 +648,7 @@ namespace :solr do
   desc "stop solr, remove data, start solr, reindex all records"
   task :hard_reindex, :roles => :app do
     stop
-    run "rm -rf #{shared_path}/solr/data/*"
+    run "rm -rf #{shared_path}/solr/production/data/*"
     start
     reindex
   end
