@@ -36,7 +36,7 @@ class API::V1::OfferingsController < API::APIController
     teacher = offering.clazz.teacher
     clazz_ids = teacher.clazz_ids
     offerings = Portal::Offering
-                    .where("clazz_id", clazz_ids)
+                    .where(clazz_id: clazz_ids)
                     .includes(learners: {student: :user}, clazz: {students: :user})
 
     @offering_api = offerings_to_api_offering(offerings, request)
