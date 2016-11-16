@@ -5,12 +5,14 @@ class API::V1::Offering
     include Virtus.model
     attribute :name, String
     attribute :username, String
+    attribute :user_id, Integer
     attribute :started_activity, Boolean
     attribute :endpoint_url, String
 
     def initialize(student, offering, protocol, host_with_port)
       self.name = student.user.name
       self.username = student.user.login
+      self.user_id = student.user.id
       learner = offering.learners.where(student_id: student.id).first
       # Learner object is available only if student has started the activity.
       self.started_activity = learner ? true : false
