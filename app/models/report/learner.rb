@@ -18,7 +18,7 @@ class Report::Learner < ActiveRecord::Base
 
   scope :with_permission_ids, lambda { |ids|
     includes(student: :portal_student_permission_forms)
-      .where("portal_student_permission_forms.portal_permission_form_id", ids)
+      .where("portal_student_permission_forms.portal_permission_form_id" => ids)
 
   }
 

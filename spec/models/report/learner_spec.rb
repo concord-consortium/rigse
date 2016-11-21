@@ -226,4 +226,48 @@ describe Report::Learner do
 
   end
 
+  describe "with_permission_ids" do
+    let(:permission_form_a) { FactoryGirl.create(:permission_form) }
+
+    let(:permission_form_b) { FactoryGirl.create(:permission_form) }
+
+    let(:offering) { FactoryGirl.create(:portal_offering) }
+
+    let(:report_learner_a) do
+      student = FactoryGirl.create(:full_portal_student,
+        permission_forms: [permission_form_a]
+      )
+
+      learner = FactoryGirl.create(:portal_learner,
+        offering: offering,
+        student: student)
+
+      Report::Learner.create(:learner => learner)
+    end
+
+    let(:report_learner_b) do
+      student = FactoryGirl.create(:full_portal_student,
+        permission_forms: [permission_form_b]
+      )
+
+      learner = FactoryGirl.create(:portal_learner,
+        offering: offering,
+        student: student)
+
+      Report::Learner.create(:learner => learner)
+    end
+
+    it "should not return a learner without the permission_id" do
+      report_learner_a
+      expect(Report::Learner.with_permission_ids([99999]).count).to eq(0)
+    end
+
+    it "should return a learner with with the correct permission_id" do
+      report_learner_a
+      report_learner_b
+      expect(Report::Learner.with_permission_ids([permission_form_a.id]).count).to eq(1)
+    end
+
+  end
+
 end
