@@ -6,6 +6,8 @@ class Saveable::ExternalLinkUrl < ActiveRecord::Base
 
   acts_as_list :scope => :external_link_id
 
+  delegate :learner, to: :external_link, allow_nil: :true
+
   def answer
     url
   end
