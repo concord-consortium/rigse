@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160921194347) do
+ActiveRecord::Schema.define(:version => 20161220154756) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1994,7 +1994,7 @@ ActiveRecord::Schema.define(:version => 20160921194347) do
     t.integer  "max_score"
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
-    t.boolean  "enable_text_feedback", :default => true
+    t.boolean  "enable_text_feedback", :default => false
   end
 
   add_index "portal_offering_embeddable_metadata", ["offering_id", "embeddable_id", "embeddable_type"], :name => "index_portal_offering_metadata", :unique => true
