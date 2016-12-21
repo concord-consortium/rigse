@@ -44,6 +44,15 @@ RSpec::Matchers.define :have_choice_id do |choice_id|
   end
 end
 
+RSpec::Matchers.define :have_page_like do |name,url|
+  match do |thing|
+    activity = thing.respond_to?(:template) ? thing.template : thing
+    pages = activity.pages
+    pages.detect{|p| p.name == name &&  p.url == url }
+  end
+end
+
+
 
 describe ActivityRuntimeAPI do
   include SolrSpecHelper
@@ -61,6 +70,7 @@ describe ActivityRuntimeAPI do
   let(:description) { name                             }
   let(:abstract)    { "abstract"                       }
   let(:url )        { "http://activity.com/activity/1" }
+  let(:page_1_url ) { "http://activity.com/activity/1/pages/5" }
   let(:launch_url)  { "#{url}/1/sessions/"             }
   let(:existing_url){ nil }
 
@@ -77,6 +87,7 @@ describe ActivityRuntimeAPI do
           "pages" => [
             {
               "name" => "Cool Activity Page 1",
+              "url" => page_1_url,
               "elements" => [
                 {
                   "type" => "open_response",
@@ -242,6 +253,7 @@ describe ActivityRuntimeAPI do
         result.should_not have_choice_like "brown"
         result.should have_image_question_like "draw a picture"
         result.should have_image_question_like "now explain"
+        result.should have_page_like "Cool Activity Page 1", page_1_url
       end
 
       it "should cause that parent investigation and activities are recognized as templates" do
