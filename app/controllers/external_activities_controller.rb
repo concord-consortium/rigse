@@ -72,7 +72,7 @@ class ExternalActivitiesController < ApplicationController
     authorize @external_activity
     respond_to do |format|
       format.html {
-        redirect_to(browser_external_activity_path(@external_activity))
+        redirect_to(browse_external_activity_path(@external_activity))
       }
       format.run_resource_html   { redirect_to(@external_activity.url) }
       format.xml  { render xml: @external_activity }

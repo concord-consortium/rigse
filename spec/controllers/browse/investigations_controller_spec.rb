@@ -19,7 +19,7 @@ describe Browse::InvestigationsController do
         
         assert_equal assigns[:wide_content_layout], true
         
-        assigns[:back_url].should match /.*search\?activity_page=1&investigation_page=1&search_term=#{@physics_investigation.name}&type=inv$/
+        assigns[:back_to_search_url].should match /.*search\?activity_page=1&investigation_page=1&search_term=#{@physics_investigation.name}&type=inv$/
         assert_not_nil assigns[:search_material]
         assert_equal assigns[:search_material].material, @physics_investigation
       end
