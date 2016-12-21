@@ -19,8 +19,8 @@
 = hidden_field_tag "assign_material_type", search_material.model_name
 
 %div
-  - unless @back_url.nil?
-    = link_to "&larr; return to search".html_safe, @back_url,:class=>"return_link",:title=>"return to search"
+  - unless @back_to_search_url.nil?
+    = link_to "&larr; return to search".html_safe, @back_to_search_url,:class=>"return_link",:title=>"return to search"
     %br
     %br
 

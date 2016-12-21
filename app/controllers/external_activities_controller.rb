@@ -72,9 +72,7 @@ class ExternalActivitiesController < ApplicationController
     authorize @external_activity
     respond_to do |format|
       format.html {
-        if params['print']
-          render :print, :layout => "layouts/print"
-        end
+        redirect_to(browser_external_activity_path(@external_activity))
       }
       format.run_resource_html   { redirect_to(@external_activity.url) }
       format.xml  { render xml: @external_activity }
@@ -204,7 +202,8 @@ class ExternalActivitiesController < ApplicationController
       respond_to do |format|
         if @external_activity.update_attributes(params[:external_activity])
           flash[:notice] = 'ExternalActivity was successfully updated.'
-          format.html { redirect_to(@external_activity) }
+          # redirect to browse path instead of show page since the show page is deprecated
+          format.html { redirect_to(browse_external_activity_path(@external_activity)) }
           format.xml  { head :ok }
         else
           format.html { render :action => "edit" }
