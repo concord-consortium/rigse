@@ -106,7 +106,7 @@ describe API::V1::ReportsController do
         json_path("report.name").should eql "the activity"
         json_path("class.students").should include_hash({"started_offering"=>true, "name"=>"joe user"})
         max_score_should_be 0
-        feedback_should_be_enabled
+        feedback_should_be_disabled
         score_should_be_disabled
         answers.should include_hash({"answer" => "testing from #{learner_a.student.user.id}"})
       end
