@@ -42,6 +42,11 @@
           %label End Date:
         %td
           = calpicker_tag "end_date", @learner_selector.end_date
+      %tr
+        %td
+        %td{:style=>"padding-top: 20px;"}
+          = check_box_tag "hide_names", "yes", @learner_selector.hide_names == "yes"
+          Hide names?
 
     = submit_tag @button_texts[:apply]
     = submit_tag @button_texts[:usage]
