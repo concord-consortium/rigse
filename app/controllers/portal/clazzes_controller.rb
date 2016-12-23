@@ -218,7 +218,7 @@ class Portal::ClazzesController < ApplicationController
         clazz_active_investigations = params[:clazz_active_investigations] || []
         clazz_locked_investigations = params[:clazz_locked_investigations] || []
         unless clazz_investigations_ids.nil?
-          @portal_clazz.offerings.each do |offering|
+          @portal_clazz.teacher_visible_offerings.each do |offering|
             offering.update_attributes!(
               position: clazz_investigations_ids.index(offering.id.to_s) + 1,
               active: clazz_active_investigations.include?(offering.id.to_s),
