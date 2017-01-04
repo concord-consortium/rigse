@@ -286,6 +286,7 @@ class ActivityRuntimeAPI
       section_data["pages"].each_with_index do |page_data, page_index|
         page = Page.create(
           :name => page_data["name"],
+          :url => page_data["url"],
           :section => section,
           :user => user,
           :position => page_index

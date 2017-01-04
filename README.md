@@ -32,9 +32,6 @@ This example assumes that [rvm](https://rvm.io/) is installed. This
     rake db:setup
     rails s
 
-In a new terminal start the Solr
-
-    rake sunspot:solr:run
 
 Now open your browser to [http://localhost:3000](http://localhost:3000)
 
@@ -710,6 +707,19 @@ assets.
 
 [Sunspot](https://github.com/sunspot/sunspot/blob/master/README.md
 ) is being used to provide search capabilities.
+
+
+You will need to create solr cores if you want to update materials or publish.
+At the least you will need a 'development' solr core.  Here is a basic set of directions:
+
+1. Make sure there are no solr processes running with `ps auxxwww | grep solr`
+2. `scp -r deploy@learn.staging.concord.org:/web/portal/shared/solr-template solr`
+3. `cp -r ./solr/production ./solr/development`
+4. `vim ./solr/development/core.properties` (change name from production to development)
+5. `bundle exec rake sunspot:solr:start`
+6. `bundle exec rake sunspot:solr:reindex` (edited)
+
+You could also create a test core by repeating steps 3 & 4.
 
 In development mode you will need to create an index and start sunspot:
 

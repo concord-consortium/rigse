@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161220154756) do
+ActiveRecord::Schema.define(:version => 20161221214804) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1131,6 +1131,7 @@ ActiveRecord::Schema.define(:version => 20161220154756) do
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
     t.integer  "offerings_count",                  :default => 0
+    t.text     "url"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"

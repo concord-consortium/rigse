@@ -21,7 +21,7 @@ describe API::V1::Report do
       end
 
       let(:embeddable) { FactoryGirl.create(:open_response) }
-      let(:meta_data)  { Portal:: OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, embeddable.id, embeddable.class.name) }
+      let(:meta_data)  { Portal::OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, embeddable.id, embeddable.class.name) }
 
       before(:each) do
         API::V1::Report.update_feedback_settings(offering, feedback_settings )
@@ -124,6 +124,16 @@ describe API::V1::Report do
             open_response_answer.current_feedback.should eq text_feedback
           end
         end
+      end
+    end
+    describe "#page_json" do
+      let(:url)    { "http//unlikely.com/foo/bar" }
+      let(:page)   { FactoryGirl.create(:page, url: url, name: "page 1") }
+      let(:report) { API::V1::Report.new(offering: offering)             }
+      let(:answers){ [] }
+      it "should return json" do
+        expect(report.page_json(page,answers)).to include(url: url)
+        expect(report.page_json(page,answers)).to include(name: "page 1")
       end
     end
   end

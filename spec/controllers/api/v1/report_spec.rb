@@ -102,7 +102,7 @@ describe API::V1::ReportsController do
       it 'it should render the report json' do
         show
         response.status.should eql(200)
-        json_path("report_version").should eql "1.0.1"
+        json_path("report_version").should eql "1.0.2"
         json_path("report.name").should eql "the activity"
         json_path("class.students").should include_hash({"started_offering"=>true, "name"=>"joe user"})
         max_score_should_be 0

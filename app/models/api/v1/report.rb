@@ -1,6 +1,6 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
-  REPORT_VERSION = "1.0.1"
+  REPORT_VERSION = "1.0.2"
 
   def initialize(options)
     # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
@@ -208,6 +208,7 @@ class API::V1::Report
       id: page.id,
       type: 'Page',
       name: page.name,
+      url: page.url,
       children: page.page_elements.includes(:page).map { |pe| embeddable_json(pe.question_number, pe.embeddable, answers) }
     }
   end
