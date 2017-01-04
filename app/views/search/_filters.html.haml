@@ -112,7 +112,7 @@
                     .tablecell
                       = check_box_tag 'probe[]',"#{probe.id}",(@form_model.probe_type.include?(probe.id.to_s)),:id=>"probe_#{probe.id}",:class=>"probe_items"
                       = label_tag "probe_#{probe.id}","#{probe.name}",:class=>"probes_label"
-          - unless current_visitor.anonymous?            
+          - unless current_visitor.anonymous?
             %br
             .authored_by_me
               = check_box_tag 'include_mine', '1', params[:include_mine], :id => 'include_mine', :class => 'include_mine'
@@ -126,17 +126,20 @@
 = render :partial=>"search/customize_filters"
 
 
-:javascript 
-  
+:javascript
+
   jQuery(function(){
     var authoredByMe = jQuery("#include_mine"),
         includeMine = jQuery(".include_mine"),
+        showArchived = jQuery(".show_archived"),
         includeOfficial = jQuery("#include_official"),
-        includeCommunity = jQuery("#include_contributed");
-    includeMine.on("mousedown",function() {
-      if(!authoredByMe.is(":checked")) {
-        includeOfficial.prop('checked', false);
-        includeCommunity.prop('checked', false);
-      }
-    });
+        includeCommunity = jQuery("#include_contributed"),
+        autoUncheck = function() {
+          if(!authoredByMe.is(":checked")) {
+            includeOfficial.prop('checked', false);
+            includeCommunity.prop('checked', false);
+          }
+        };
+    includeMine.on("mousedown",autoUncheck);
+    showArchived.on("mousedown",autoUncheck);
   });
