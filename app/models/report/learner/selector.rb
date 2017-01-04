@@ -4,7 +4,7 @@
 class Report::Learner::Selector
   attr_accessor :all_schools, :all_teachers, :all_runnables, :all_perm_forms,
                 :select_schools, :select_teachers, :select_runnables, :select_perm_form,
-                :start_date, :end_date,
+                :start_date, :end_date, :hide_names,
                 :learners
 
 
@@ -33,6 +33,7 @@ class Report::Learner::Selector
     @start_date            = options['start_date']
     @end_date              = options['end_date']
     @all_perm_forms        = policy_scopes[:perm_forms]
+    @hide_names            = options['hide_names'] == 'yes'
     begin
       Time.parse(@start_date)
     rescue

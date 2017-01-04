@@ -2,6 +2,8 @@ class Reports::Usage < Reports::Excel
   def initialize(opts = {})
     super(opts)
 
+    @hide_names = opts[:hide_names] || false
+
     @runnables =  opts[:runnables]  || Investigation.published
     @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
     @include_child_usage = opts[:include_child_usage]
@@ -11,7 +13,7 @@ class Reports::Usage < Reports::Excel
       #Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50 )
     #]
     # stud.id, class, school, user.id, username, student name, teachers
-    @shared_column_defs = common_header + teacher_info_header
+    @shared_column_defs = common_header(@hide_names) + teacher_info_header
 
     @url_helpers = opts[:url_helpers]
 
@@ -54,7 +56,7 @@ class Reports::Usage < Reports::Excel
     iterate_with_status(student_learners.keys) do |student_class|
       student_id = student_class[0]
       learners = student_learners[student_class]
-      learner_info = report_learner_info_cells(learners)
+      learner_info = report_learner_info_cells(learners, @hide_names)
       teacher_info = report_learner_teacher_info_cells(learners)
       rows = []
       @sheets.each do |sheet|
