@@ -2,14 +2,6 @@ class API::V1::AnswersController < API::APIController
 
   require 'yaml'
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  private
-
-  def pundit_user_not_authorized(exception)
-    unauthorized
-  end
-
   public
 
   # GET api/v1/answer/student_answers?teacher_id=:teacher_id

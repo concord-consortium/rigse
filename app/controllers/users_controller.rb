@@ -2,18 +2,10 @@ class UsersController < ApplicationController
 
   after_filter :store_location, :only => [:index]
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+  protected
 
-  private
-
-  def pundit_user_not_authorized(exception)
-    if exception.query.to_s == 'edit?'
-      flash[:warning] = "You need to be logged in first."
-      redirect_to login_url
-    else
-      flash[:notice] = "Please log in as an administrator"
-      redirect_to :root
-    end
+  def not_authorized_error_message
+    super({resource_type: 'user', resource_name: @user ? @user.name : nil})
   end
 
   public

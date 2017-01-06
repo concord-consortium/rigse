@@ -1,21 +1,6 @@
 class Dataservice::BlobsController < ApplicationController
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  private
-
-  def pundit_user_not_authorized(exception)
-    login_redirect
-  end
-
-  public
-
   protected
-
-  def login_redirect
-    flash[:notice] = "Please log in as an administrator"
-    redirect_to(:home)
-  end
 
   def is_admin?
     return (current_visitor != nil && current_visitor.has_role?('admin'))
@@ -44,18 +29,12 @@ class Dataservice::BlobsController < ApplicationController
 
     respond_to do |format|
       format.html {
-        if is_authorized
-          render
-        else
-          login_redirect
-        end
+        raise Pundit::NotAuthorizedError unless is_authorized
+        render
       }
       format.xml  {
-        if is_authorized
-          render :xml => @dataservice_blob
-        else
-          login_redirect
-        end
+        raise Pundit::NotAuthorizedError unless is_authorized
+        render :xml => @dataservice_blob
       }
       format.png  {
         _handle_rendering_blob(is_authorized)

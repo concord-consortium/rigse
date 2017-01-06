@@ -1,11 +1,9 @@
 class Admin::ExternalReportsController < ApplicationController
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+  protected
 
-  private
-  def pundit_user_not_authorized(exception)
-    flash[:notice] = "Please log in as an administrator"
-    redirect_to(:home)
+  def not_authorized_error_message
+    super({resource_type: 'external report'})
   end
 
   public

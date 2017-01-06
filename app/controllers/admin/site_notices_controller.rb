@@ -3,14 +3,6 @@ class Admin::SiteNoticesController < ApplicationController
   before_filter :admin_or_manager, :except => [:toggle_notice_display, :dismiss_notice]
 
   # TODO: figure out why rspec is breaking and add authorization back (and remove before_filter)
-  #rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-  #
-  #private
-  #
-  #def pundit_user_not_authorized(exception)
-  #  flash[:error] = "Please log in as an administrator or manager"
-  #  redirect_to(:home)
-  #end
 
   protected
 

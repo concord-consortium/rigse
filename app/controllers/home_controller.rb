@@ -1,14 +1,9 @@
 class HomeController < ApplicationController
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+  protected
 
-  private
-
-  def pundit_user_not_authorized(exception)
-    if exception.query.to_s == 'admin?'
-      flash[:notice] = "Please log in as an administrator"
-    end
-    redirect_to :root
+  def not_authorized_error_message
+    super({resource_type: 'page'})
   end
 
   public

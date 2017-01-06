@@ -49,7 +49,7 @@ module NavigationHelpers
     when /the investigations page for "(.*)"/
       inv = Investigation.find_by_name $1
       investigation_path inv
-    when /the first page of the "(.*)" investigation/ 
+    when /the first page of the "(.*)" investigation/
       investigation = Investigation.find_by_name($1)
       page = investigation.pages.first
       page_path(page)
@@ -68,7 +68,7 @@ module NavigationHelpers
       "/about"
     when /the admin create notice page/
       "/admin/site_notices/new"
-    when /the site notices index page/  
+    when /the site notices index page/
       "/admin/site_notices"
     when /the password reset page/
       "/change_password/0"
@@ -125,12 +125,14 @@ module NavigationHelpers
     when /the edit page of interactive "([^"]+)"/
       interactive = Interactive.find_by_name($1).id
       "/interactives/#{interactive}/edit"
+    when /the signin page/
+      "/users/sign_in"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
     #   when /^(.*)'s profile page$/i
     #     user_profile_path(User.find_by_login($1))
-    
+
     else
       begin
         page_name =~ /^the (.*) page$/

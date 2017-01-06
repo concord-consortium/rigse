@@ -21,9 +21,15 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
-  def pundit_user_not_authorized
-    flash[:alert] = "You are not authorized to perform this action."
-    #redirect_to(request.referrer || root_path)
+  def pundit_user_not_authorized(exception)
+    error_message = not_authorized_error_message
+    if request.xhr?
+      render :text => "<div class='flash_error'>#{error_message}</div>"
+    else
+      flash[:alert] = error_message
+      fallback_url = current_user.nil? ? root_path : after_sign_in_path_for(current_user)
+      redirect_to_siginin_if_anon_or fallback_url
+    end
   end
 
   def pundit_user
@@ -86,7 +92,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-
   def setup_container
     @container_type = self.class.name[/(.+)sController/,1]
     @container_id =  request.symbolized_path_parameters[:id]
@@ -138,6 +143,37 @@ class ApplicationController < ActionController::Base
     value.is_a?(String) && value.length == 36
   end
 
+  def humanized_action(map={})
+    key = action_name.to_sym
+    if map.key?(key)
+      name = map[key]
+    else
+      name = case action_name
+      when "index" then "list"
+      when "new", "duplicate" then "create"
+      when "show" then "view"
+      else action_name
+      end
+    end
+    name.humanize
+  end
+
+  def not_authorized_error_message(options={})
+    resource_type = options[:resource_type] || ''
+    resource_name = options[:resource_name] || ''
+    additional_info = options[:additional_info] || ''
+
+    is_singular = action_name != "index"
+
+    action = humanized_action.downcase
+    error_message = "#{current_user.nil? ? "Anonymous users" : "You (#{current_visitor.login})"} can not #{action} the requested"
+    error_message = "#{error_message} #{resource_name.empty? ? '' : "'#{resource_name}' "}#{resource_type.empty? ? 'resource' : resource_type.pluralize(is_singular ? 1 : 2 )}"
+    error_message = "#{error_message}, #{additional_info}" if !additional_info.empty?
+    error_message = "#{error_message}.  Please sign in to #{action} #{is_singular ? 'it' : 'them'}." if current_user.nil?
+
+    error_message
+  end
+
   private
 
   # setup the portal_teacher and student instance variables
@@ -159,6 +195,14 @@ class ApplicationController < ActionController::Base
     redirect_to :back
   rescue ActionController::RedirectBackError
     redirect_to path
+  end
+
+  def redirect_to_siginin_if_anon_or(path)
+    if current_user.nil?
+      redirect_to new_user_session_path
+    elsif !path.empty?
+      redirect_to path
+    end
   end
 
   def session_sensitive_path
@@ -264,4 +308,5 @@ class ApplicationController < ActionController::Base
       render 'home/bad_browser', :layout => "old_browser"
     end
   end
+
 end

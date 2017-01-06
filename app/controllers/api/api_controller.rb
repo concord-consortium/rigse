@@ -1,5 +1,16 @@
 class API::APIController < ApplicationController
 
+  protected
+
+  def pundit_user_not_authorized(exception)
+    render status: 403, json: {
+      success: false,
+      message: 'Not authorized'
+    }
+  end
+
+  public
+
   def error(message, status = 400)
     render :json =>
       {
@@ -7,10 +18,6 @@ class API::APIController < ApplicationController
         :message => message
       },
       :status => status
-  end
-
-  def unauthorized
-    error("unauthorized", 401)
   end
 
   def show

@@ -1,20 +1,14 @@
 class Portal::OfferingsController < ApplicationController
   include Portal::LearnerJnlpRenderer
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+  protected
+
+  def not_authorized_error_message
+    additional_info = @offering && @offering.locked ? "this offering is locked" : nil
+    super({resource_type: 'offering', additional_info: additional_info})
+  end
 
   private
-
-  def pundit_user_not_authorized(exception)
-    offering = exception.record
-    message = if offering && offering.locked
-                "This offering is locked"
-              else
-                "Please log in as a teacher or an administrator"
-              end
-    flash[:notice] = message
-    redirect_to(:home)
-  end
 
   def setup_portal_student
     learner = nil

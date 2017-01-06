@@ -1,13 +1,4 @@
 class Admin::LearnerDetailsController < ApplicationController
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  private
-
-  def pundit_user_not_authorized(exception)
-    render text: "unauthorized"
-  end
-
-  public
 
   # GET /learner_details/1
   # GET /learner_details/1.txt

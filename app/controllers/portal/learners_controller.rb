@@ -1,24 +1,24 @@
 class Portal::LearnersController < ApplicationController
 
   layout 'report', :only => %w{report open_response_report multiple_choice_report bundle_report}
-  
+
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
 
+  protected
 
-  def pundit_user_not_authorized(exception)
-    offering = exception.record
-    message = "Please log in as a teacher or an administrator"
-    flash[:notice] = message
-    redirect_to(:home)
+  def not_authorized_error_message
+    super({resource_type: 'portal learner'})
   end
+
+  public
 
   # PUNDIT_CHECK_FILTERS
   before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report,:activity_report]
   before_filter :teacher_admin_or_config, :only => [:open_response_report, :multiple_choice_report,:activity_report]
   before_filter :handle_jnlp_session, :only => [:show]
   before_filter :authorize_show, :only => [:show]
-  
+
   def current_clazz
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -29,7 +29,7 @@ class Portal::LearnersController < ApplicationController
     # authorize @learner, :update_edit_or_destroy?
     Portal::Learner.find(params[:id]).offering.clazz
   end
-  
+
   def handle_jnlp_session
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -85,7 +85,7 @@ class Portal::LearnersController < ApplicationController
       end
     end
   end
-  
+
   public
 
   # GET /portal/learners
@@ -116,12 +116,12 @@ class Portal::LearnersController < ApplicationController
     # authorize Portal::Learner, :new_or_create?
     # authorize @learner, :update_edit_or_destroy?
     @portal_learner = Portal::Learner.find(params[:id])
-    
+
     respond_to do |format|
       format.html # report.html.haml
     end
   end
-  
+
   # GET /portal/learners/1/multiple_choice_report
   # GET /portal/learners/1/multiple_choice_report.xml
   def multiple_choice_report
@@ -133,12 +133,12 @@ class Portal::LearnersController < ApplicationController
     # authorize Portal::Learner, :new_or_create?
     # authorize @learner, :update_edit_or_destroy?
     @portal_learner = Portal::Learner.find(params[:id])
-    
+
     respond_to do |format|
       format.html # report.html.haml
     end
   end
-  
+
 
   def report
     # This report is for the teacher at the moment so for authentication
@@ -166,7 +166,7 @@ class Portal::LearnersController < ApplicationController
     # authorize Portal::Learner, :new_or_create?
     # authorize @learner, :update_edit_or_destroy?
     @portal_learner = Portal::Learner.find(params[:id])
-    
+
     respond_to do |format|
       format.html # report.html.haml
     end
@@ -179,15 +179,15 @@ class Portal::LearnersController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @learner
     @portal_learner = Portal::Learner.find(params[:id])
-    
+
     @portal_learner.console_logger = Dataservice::ConsoleLogger.create! unless @portal_learner.console_logger
     @portal_learner.bundle_logger = Dataservice::BundleLogger.create! unless @portal_learner.bundle_logger
     @portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.jnlp { render_learner_jnlp @portal_learner }
-      format.config { 
+      format.config {
         # if this isn't the learner then it is launched read only
         properties = {}
         bundle_get_url = dataservice_bundle_logger_url(@portal_learner.bundle_logger, :format => :bundle)
@@ -209,7 +209,7 @@ class Portal::LearnersController < ApplicationController
           bundle_post_url = nil
         end
         render :partial => 'shared/sail',
-          :locals => { 
+          :locals => {
             :otml_url => polymorphic_url(@portal_learner.offering.runnable, :format => :dynamic_otml, :learner_id => @portal_learner.id),
             :session_id => (params[:session] || request.env["rack.session.options"][:id]),
             :console_post_url => dataservice_console_logger_console_contents_url(@portal_learner.console_logger, :format => :bundle),

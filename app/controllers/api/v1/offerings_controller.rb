@@ -1,15 +1,5 @@
 class API::V1::OfferingsController < API::APIController
 
-  private
-  def pundit_user_not_authorized(exception)
-    render status: 403, json: {
-        success: false,
-        message: 'Not authorized'
-    }
-  end
-
-
-  public
   def show
     offering = Portal::Offering.find(params[:id], include: {
         learners: {student: :user},

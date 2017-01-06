@@ -1,13 +1,5 @@
 class API::V1::CollaborationsController < API::APIController
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  private
-
-  def pundit_user_not_authorized(exception)
-    unauthorized
-  end
-
   public
 
   # POST api/v1/collaborations

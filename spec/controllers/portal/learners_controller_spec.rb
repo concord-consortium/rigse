@@ -102,11 +102,11 @@ describe Portal::LearnersController do
 
     describe "when the current user is a teacher without access to this offering" do
       let(:user) { teacher_b.user }
-      it "should redirect the user to /home" do
+      it "should redirect the user to /recent_activity" do
         get :report, post_params
-        response.should redirect_to :home
+        response.should redirect_to :recent_activity
       end
     end
   end
-  
+
 end

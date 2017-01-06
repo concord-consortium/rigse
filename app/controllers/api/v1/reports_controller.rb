@@ -1,9 +1,4 @@
 class API::V1::ReportsController < API::APIController
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  def pundit_user_not_authorized(exception)
-    unauthorized
-  end
 
   # GET api/v1/reports/:id
   def show

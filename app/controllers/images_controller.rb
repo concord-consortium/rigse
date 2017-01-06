@@ -2,13 +2,10 @@ class ImagesController < ApplicationController
   before_filter :find_image, :only => [:edit, :update, :destroy]
   # scale the text since most images will be displayed at around screen size
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+  protected
 
-  private
-
-  def pundit_user_not_authorized(exception)
-    flash[:error] = "You're not authorized to do this"
-    redirect_to :root
+  def not_authorized_error_message
+    super({resource_type: 'image'})
   end
 
   public

@@ -1,27 +1,30 @@
 class ExternalActivitiesController < ApplicationController
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
   private
 
   def pundit_user_not_authorized(exception)
     case exception.query.to_s
     when 'republish?'
       json_error('missing or invalid peer token', 401)
-    when 'preview_index?', 'edit?', 'update?', 'destroy?'
-      error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@external_activity.name}"
-      flash[:error] = error_message
-      if request.xhr?
-        render :text => "<div class='flash_error'>#{error_message}</div>"
-      else
-        redirect_back_or external_activities_path
-      end
-    when 'new?', 'create?', 'publish?', 'duplicate?'
-      logger.warn "Didn't proceed: current_visitor.anonymous? was true"
+    else
+      logger.warn "Didn't proceed: current_visitor.anonymous? was true" if current_visitor.anonymous?
       logger.info "Current visitor: #{current_visitor.to_s}"
-      flash[:error] = "Anonymous users can not create external external_activities"
-      redirect_back_or external_activities_path
+      super(exception)
     end
+  end
+
+  protected
+
+  def humanized_action
+    super({
+      matedit: "edit",
+      edit_basic: "edit",
+      set_private_before_matedit: "set_private_before_edit"
+    })
+  end
+
+  def not_authorized_error_message
+    super({resource_type: 'external activity', resource_name: @external_activity ? @external_activity.name : nil})
   end
 
   public

@@ -6,26 +6,11 @@ class SectionsController < ApplicationController
 
   before_filter :render_scope, :only => [:show]
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  private
-
-  def pundit_user_not_authorized(exception)
-    if ['new?', 'create?'].include? exception.query.to_s
-      flash[:error] = "Anonymous users can not create sections"
-      redirect_back_or sections_path
-    else
-      error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@section.name}"
-      flash[:error] = error_message
-      if request.xhr?
-        render :text => "<div class='flash_error'>#{error_message}</div>"
-      else
-        redirect_back_or sections_paths
-      end
-    end
-  end
-
   protected
+
+  def not_authorized_error_message
+    super({resource_type: 'section', resource_name: @section ? @section.name : nil})
+  end
 
   def render_scope
     @render_scope = @section
