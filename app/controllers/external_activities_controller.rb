@@ -74,7 +74,16 @@ class ExternalActivitiesController < ApplicationController
       format.html {
         redirect_to(browse_external_activity_path(@external_activity))
       }
-      format.run_resource_html   { redirect_to(@external_activity.url) }
+      format.run_resource_html {
+        # automatically log in teachers
+        if current_visitor.portal_teacher
+           uri = URI.parse(@external_activity.url)
+           uri.query = URI.encode_www_form(URI.decode_www_form(uri.query || '') << ["domain", root_url] << ["domain_uid", current_visitor.id])
+           redirect_to(uri.to_s)
+        else
+          redirect_to(@external_activity.url)
+        end
+      }
       format.xml  { render xml: @external_activity }
       format.json { render json: @external_activity }
     end
