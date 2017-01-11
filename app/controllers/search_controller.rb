@@ -1,19 +1,9 @@
 class SearchController < ApplicationController
 
-  include RestrictedController
-
   # PUNDIT_CHECK_FILTERS
-  before_filter :teacher_only, :only => [:index, :show]
-  before_filter :check_if_teacher, :only => [:get_current_material_unassigned_clazzes, :add_material_to_clazzes]
   before_filter :admin_only, :only => [:get_current_material_unassigned_collections, :add_material_to_collections]
 
   protected
-
-  def teacher_only
-    if current_visitor.portal_student
-      redirect_to(:root)
-    end
-  end
 
   def check_if_teacher
     if current_visitor.portal_teacher.nil? && request.xhr?
@@ -28,12 +18,7 @@ class SearchController < ApplicationController
   public
 
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Search
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @searches = policy_scope(Search)
+    authorize Search
 
     if request.query_parameters.empty?
       flash.keep
@@ -50,13 +35,7 @@ class SearchController < ApplicationController
   end
 
   def unauthorized_user
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
+    authorize Search
     notice_msg = 'Please login or register as a teacher'
     redirect_url = root_url
 
@@ -68,26 +47,14 @@ class SearchController < ApplicationController
   end
 
   def setup_material_type
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
+    authorize Search
     @material_type = param_find(:material_types, (params[:method] == :get)) ||
       (current_settings.include_external_activities? ? ['investigation','activity','external_activity'] : ['investigation','activity'])
   end
 
 
   def get_search_suggestions
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
+    authorize Search
     setup_material_type
     search_term         = params[:search_term]
     ajaxResponseCounter = params[:ajaxRequestCounter]
@@ -114,30 +81,8 @@ class SearchController < ApplicationController
     end
   end
 
-  def find_material(type, id)
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
-    material = nil
-    if ["Investigation", "Activity", "Page", "ExternalActivity"].include?(type)  # this is for safety
-      material = type.constantize.find(id)
-    end
-
-    return material
-  end
-
   def get_current_material_unassigned_clazzes
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
+    authorize Search
     material_type = params[:material_type]
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
@@ -172,13 +117,7 @@ class SearchController < ApplicationController
   end
 
   def add_material_to_clazzes
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
+    authorize Search
     clazz_ids = params[:clazz_id] || []
     runnable_ids = params[:material_id].split(',')
     runnable_type = params[:material_type].classify
@@ -295,13 +234,7 @@ class SearchController < ApplicationController
   end
 
   def get_current_material_unassigned_collections
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
+    authorize Search
     material_type = params[:material_type]
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
@@ -322,13 +255,7 @@ class SearchController < ApplicationController
   end
 
   def add_material_to_collections
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
+    authorize Search
     collection_ids = params[:materials_collection_id] || []
     runnable_ids = params[:material_id].split(',')
     runnable_type = params[:material_type].classify
@@ -384,6 +311,15 @@ class SearchController < ApplicationController
   end
 
   private
+
+  def find_material(type, id)
+    material = nil
+    if ["Investigation", "Activity", "Page", "ExternalActivity"].include?(type)  # this is for safety
+      material = type.constantize.find(id)
+    end
+
+    return material
+  end
 
   def _collection_has_materials(collection, materials)
     items = collection.materials_collection_items.map{|i| [i.material_type, i.material_id] }
