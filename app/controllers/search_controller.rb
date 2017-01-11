@@ -1,17 +1,6 @@
 class SearchController < ApplicationController
 
-  # PUNDIT_CHECK_FILTERS
-  before_filter :admin_only, :only => [:get_current_material_unassigned_collections, :add_material_to_collections]
-
   protected
-
-  def check_if_teacher
-    if current_visitor.portal_teacher.nil? && request.xhr?
-      respond_to do |format|
-        format.js { render :json => "Not Teacher",:status => 401 }
-      end
-    end
-  end
 
   in_place_edit_for :investigation, :search_term
 
