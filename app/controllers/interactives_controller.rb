@@ -220,7 +220,9 @@ class InteractivesController < ApplicationController
         :scale => m.scale,
         :image_url => m.image_url,
         :credits => m.credits,
-        :model_type => m.model_type_list[0]
+        :model_type => m.model_type_list[0],
+        :full_window => m.full_window,
+        :no_snapshots => m.no_snapshots
       }
     end
     model_library = {:models => model_library }

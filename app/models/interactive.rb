@@ -6,7 +6,7 @@ class Interactive < ActiveRecord::Base
 
   acts_as_taggable_on :model_types
 
-  attr_accessible :name, :description, :url, :width, :height, :scale, :image_url, :credits, :publication_status, :project_ids
+  attr_accessible :name, :description, :url, :width, :height, :scale, :image_url, :credits, :publication_status, :project_ids, :full_window, :no_snapshots
   alias_attribute :thumbnail_url, :image_url
   belongs_to :user
 
@@ -90,7 +90,7 @@ class Interactive < ActiveRecord::Base
     boolean :is_assessment_item do
       false
     end
-    
+
   end
 
   scope :published, where(publication_status: 'published')
