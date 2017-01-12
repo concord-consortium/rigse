@@ -86,7 +86,13 @@ namespace :app do
         print ("\n%5d: " % i) if (i % 50 == 0)
         offering.learners.each do |learner|
           rl = learner.report_learner
-          rl.update_fields
+          begin
+            rl.update_fields
+          rescue => exception
+            # catch the exception and try to keep going
+            puts "learner.id: #{learner.id}, report_learner.id: #{rl.id}"
+            puts exception.backtrace
+          end
         end
         print '.'
         i += 1
