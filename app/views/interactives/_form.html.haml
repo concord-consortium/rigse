@@ -10,7 +10,7 @@
       = f.select :publication_status, Interactive.publication_states.map {|s| s.to_s}
     = field_set_tag 'Interactive URL' do
       = f.text_field :url, :size => 60
-    = field_set_tag 'Interactive Sizing & Snapshot Support' do
+    = field_set_tag 'Interactive Sizing' do
       Scale:
       = f.text_field :scale, :size => 5
       Width
@@ -19,6 +19,10 @@
       = f.text_field :height, :size => 5
       Full Window
       = f.check_box :full_window
+    = field_set_tag 'Interactive Settings' do
+      Save Interactive State
+      = f.check_box :save_interactive_state
+      %br
       Snapshots Not Supported
       = f.check_box :no_snapshots
     = field_set_tag 'Interactive Image URL' do
