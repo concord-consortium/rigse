@@ -17,6 +17,14 @@
       = f.text_field :width, :size => 5
       Height
       = f.text_field :height, :size => 5
+      Full Window
+      = f.check_box :full_window
+    = field_set_tag 'Interactive Settings' do
+      Save Interactive State
+      = f.check_box :save_interactive_state
+      %br
+      Snapshots Not Supported
+      = f.check_box :no_snapshots
     = field_set_tag 'Interactive Image URL' do
       = f.text_field :image_url
     = field_set_tag 'Credits' do
