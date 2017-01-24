@@ -1,0 +1,21 @@
+# This is an docker-compose overlay that adds ssh-agent support
+# you will need to setup the ssh-agent container described here:
+# https://github.com/whilp/ssh-agent
+
+# A convient way to overlay this file is to add a `.env` file with the contents:
+#  COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-ssh.yml
+# You can also do it manually when you run docker-compose each time with
+# docker-compose -f docker-compose.yml -f docker/dev/docker-compose-ssh.yml
+# if you are making changes to docker-compose.yml or this file it is useful to
+# run `docker-compose config` which shows how the two files get merged together
+
+version: '2'
+services:
+  app:
+    environment:
+      - SSH_AUTH_SOCK=/ssh/auth/sock
+    volumes:
+      - ssh:/ssh
+volumes:
+  ssh:
+    external: true
