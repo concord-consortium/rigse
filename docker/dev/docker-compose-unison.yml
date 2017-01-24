@@ -1,0 +1,36 @@
+# This is an docker-compose overlay that uses unison for syncing files between the host
+# and containers.  On OS X it is much faster than simple mounting of local files
+# You need to run docker/dev/start-unison.sh to start the sync
+
+# A convient way to overlay this file is to add a `.env` file with the contents:
+#  COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-unison.yml
+# You can also do it manually when you run docker-compose each time with
+# docker-compose -f docker-compose.yml -f docker/dev/docker-compose-unison.yml
+# if you are making changes to docker-compose.yml or this file it is useful to
+# run `docker-compose config` which shows how the two files get merged together
+
+version: '2'
+services:
+  app:
+    volumes:
+      - unison:/rigse
+  solr:
+    volumes:
+      - unison:/rigse
+  unison:
+    image: onnimonni/unison:2.48.4
+    environment:
+      # root is used here since the app is running as root so any files it creates
+      # will be owned by root, and then unison should be able to override them
+      - UNISON_UID=0
+      - UNISON_GID=0
+      - UNISON_USER=root
+      - UNISON_GROUP=root
+    ports:
+      # a single port number means docker will randomly map this the start-unison
+      # script inspects the container to find what it is mapped to
+      - "5000"
+    volumes:
+      - unison:/data
+volumes:
+  unison:
