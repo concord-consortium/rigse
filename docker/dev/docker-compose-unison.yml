@@ -2,10 +2,10 @@
 # and containers.  On OS X it is much faster than simple mounting of local files
 # You need to run docker/dev/start-unison.sh to start the sync
 
-# A convient way to overlay it is to add a `.env` file with the contents:
-#  COMPOSE_FILE=docker-compose.yml:docker-compose-unison.yml
+# A convient way to overlay this file is to add a `.env` file with the contents:
+#  COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-unison.yml
 # You can also do it manually when you run docker-compose each time with
-# docker-compose -f docker-compose.yml -f docker-compose-unison.yml
+# docker-compose -f docker-compose.yml -f docker/dev/docker-compose-unison.yml
 # if you are making changes to docker-compose.yml or this file it is useful to
 # run `docker-compose config` which shows how the two files get merged together
 
