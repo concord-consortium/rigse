@@ -7,7 +7,7 @@
 <body>
 <table width="100%" style="margin:0;padding:0;">
 <tr><td align="left" valign="middle" style="background:#bddfdf;padding:16px;">
-<img src="https://learn.concord.org/assets/banners/learn-aa43865ea93b51f353fe57a1aa05d624.png" alt="The Concord Consortium" width="124" height="50" style="margin:0;padding:0;" />
+<%= render :partial => 'shared/email_banner' %>
 </td></tr>
 <tr><td align="left" style="background:#ffffff;padding:16px;">
 <p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 16px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">Welcome, <%= @user.first_name %>!</p>
