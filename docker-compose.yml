@@ -26,17 +26,7 @@ services:
       - 8983:8983
     volumes:
       - .:/rigse
-      - data:/opt/solr/server/solr/mycores
-    depends_on:
-      - solrdata
     command: /bin/bash ./start-solr.sh
-  solrdata:
-    image: concordconsortium/docker-solr-portal
-    volumes:
-      - data:/opt/solr/server/solr/mycores
-    user:
-      root
-    command: /bin/bash ./start-volume.sh
   mysql:
     image: mysql:5.6
     environment:
@@ -47,4 +37,3 @@ services:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
 volumes:
   bundle:
-  data:
