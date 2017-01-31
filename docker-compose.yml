@@ -18,6 +18,13 @@ services:
     volumes:
       - .:/rigse
       - bundle:/bundle
+    networks:
+      # the portal network allows external connections
+      portal:
+        aliases:
+          - portal
+      # app service needs to be on default network too so it can connect to mysql and solr
+      default:
   solr:
     image: concordconsortium/docker-solr-portal
     # no ports are published, see below for details
@@ -34,6 +41,10 @@ services:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
 volumes:
   bundle:
+networks:
+  # create a portal network so other services such as LARA can be part of this network
+  # and connect with the web app.
+  portal:
 
 # In this file the web app and solr ports are not published. However, if you run
 # `docker-compose up` (without customizing your environment) the ports will be published
