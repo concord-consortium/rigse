@@ -28,7 +28,7 @@ Feature: Teacher resets password
     And "example@example.com" should receive an email
     When I open the email
     Then I should see "Please activate your new account" in the email subject
-    When I click the first link in the email
+    When I follow "/confirmation" in the email
     Then I should see "Your account was successfully confirmed. You are now signed in."
     Given I am an anonymous user
     And I follow "link_forgot_password"
@@ -37,7 +37,7 @@ Feature: Teacher resets password
     Then I should see "A link to change your password has been sent to example@example.com."
     And "example@example.com" should receive an email
     And I open the email with subject "You have requested to change your password"
-    When I click the first link in the email
+    When I follow "/change_password" in the email
     Then I should see "Please enter a new password and confirm it."
     And I fill in "New Password" with "password2" within content box in change password page
     And I fill in "Confirm New Password" with "password2" within content box in change password page
