@@ -24,6 +24,7 @@ RailsPortal::Application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.default_url_options = {:protocol => APP_CONFIG[:protocol], :host => APP_CONFIG[:host] }
+  config.action_mailer.asset_host = APP_CONFIG[:protocol] + '://' + APP_CONFIG[:host]
   config.action_mailer.delivery_method = :test
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.

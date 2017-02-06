@@ -8,8 +8,8 @@ Feature: An author registers to use the portal
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And member registration is enabled
-    
-    
+
+
   Scenario: Anonymous user signs up as an author
     Given I am an anonymous user
     When I go to the pick signup page
@@ -28,7 +28,7 @@ Feature: An author registers to use the portal
     And "example@example.com" should receive an email
     When I open the email
     Then I should see "Please activate your new account" in the email subject
-    When I click the first link in the email
+    When I follow "/confirmation" in the email
     Then I should see "Your account was successfully confirmed. You are now signed in."
     And I should not see "Sorry, there was an error creating your account"
 
@@ -52,7 +52,7 @@ Feature: An author registers to use the portal
     And "example@example.com" should receive an email
     When I open the email
     Then I should see "Please activate your new account" in the email subject
-    When I click the first link in the email
+    When I follow "/confirmation" in the email
     Then I should see "Your account was successfully confirmed. You are now signed in."
     And I should not see "Sorry, there was an error creating your account"
 

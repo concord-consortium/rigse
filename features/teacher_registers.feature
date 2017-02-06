@@ -30,7 +30,7 @@ ITSI-SU requires that teachers self-register.
     And "example@example.com" should receive an email
     When I open the email
     Then I should see "Please activate your new account" in the email subject
-    When I click the first link in the email
+    When I follow "/confirmation" in the email
     Then I should see "Your account was successfully confirmed. You are now signed in."
 
   @javascript
