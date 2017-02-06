@@ -18,6 +18,7 @@ RailsPortal::Application.configure do
   config.action_mailer.default_url_options = {:protocol => APP_CONFIG[:protocol], :host => APP_CONFIG[:host] }
   config.action_mailer.delivery_method = :test
   config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.asset_host = APP_CONFIG[:protocol] + '://' + APP_CONFIG[:host]
 
 
   # Print deprecation notices to the Rails logger
@@ -65,4 +66,3 @@ RailsPortal::Application.configure do
   localDevPath = File.expand_path((ENV['LOCAL_DEV_ENVIRONMENT_FILE'] || 'local-development.rb'), File.dirname(__FILE__))
   require(localDevPath) if File.file?(localDevPath)
 end
-
