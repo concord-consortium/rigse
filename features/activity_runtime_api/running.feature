@@ -1,15 +1,16 @@
 Feature: External Activities can support a REST api
   Background:
     Given the following external REST activity:
-      | name             | Cool Thing |
-      | url              | http://activities.com/activity/1 |
+      | name        | Cool Thing |
+      | url         | http://activities.com/activity/1 |
       | launch_url  | http://activities.com/activity/1/sessions/ |
     And "activities.com/activity/1/sessions/" handles a GET with query:
-      | domain     | http://www.example.com/  |
-      | domain_uid | domain_uid of 'student'  |
-      | externalId | 999                      |
-      | logging    | false                    |
-      | returnUrl  | http://www.example.com/dataservice/external_activity_data/key |
+      | domain            | http://www.example.com/      |
+      | domain_uid        | domain_uid of 'student'      |
+      | externalId        | 999                          |
+      | logging           | false                        |
+      | returnUrl         | http://www.example.com/dataservice/external_activity_data/key |
+      | class_info_url    | class_info_url of 'My Class' |
     And "activities.com/activity/1/sessions/" GET responds with
       """
       HTTP/1.1 200 OK
