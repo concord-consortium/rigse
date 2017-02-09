@@ -8,24 +8,22 @@ class Portal::Nces06DistrictsController < ApplicationController
 
   def admin_only
     unless current_visitor.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator" 
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
-  
+
   def admin_or_manager
     if current_visitor.has_role?('admin')
       @admin_role = true
     elsif current_visitor.has_role?('manager')
       @manager_role = true
     else
-      flash[:notice] = "Please log in as an administrator or manager" 
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
 
   public
-  
+
   # GET /portal_nces06_districts
   # GET /portal_nces06_districts.xml
   def index

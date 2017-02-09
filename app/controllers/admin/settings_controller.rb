@@ -17,8 +17,7 @@ class Admin::SettingsController < ApplicationController
 
   def admin_only
     unless current_visitor.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator"
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
 
@@ -28,8 +27,7 @@ class Admin::SettingsController < ApplicationController
     elsif current_visitor.has_role?('manager')
       @manager_role = true
     else
-      flash[:notice] = "Please log in as an administrator or manager"
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
 

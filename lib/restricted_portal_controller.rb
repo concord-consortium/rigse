@@ -1,24 +1,24 @@
 module RestrictedPortalController
-  # restrict access to sensitive routes to manager 
+  # restrict access to sensitive routes to manager
   def self.included(clazz)
     # include methods like require_roles
     include RestrictedController
      clazz.class_eval {
        before_filter :manager, :only => :index
 
-       protected  
+       protected
        # must define current_clazz in calling controller class
        def teacher_admin_or_config
-         redirect_home unless current_clazz.is_teacher?(current_visitor) || current_visitor.has_role?('admin') || request.format == :config
+         force_signin unless current_clazz.is_teacher?(current_visitor) || current_visitor.has_role?('admin') || request.format == :config
        end
 
        def student_teacher_admin_or_config
-         redirect_home unless current_clazz.is_student?(current_visitor) || current_clazz.is_teacher?(current_visitor) ||
+         force_signin unless current_clazz.is_student?(current_visitor) || current_clazz.is_teacher?(current_visitor) ||
                    current_visitor.has_role?('admin') || request.format == :config
        end
 
        def student_teacher_or_admin
-         redirect_home unless current_clazz.is_student?(current_visitor) || current_clazz.is_teacher?(current_visitor) ||
+         force_signin unless current_clazz.is_student?(current_visitor) || current_clazz.is_teacher?(current_visitor) ||
                    current_visitor.has_role?('admin')
        end
      }

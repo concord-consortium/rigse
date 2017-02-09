@@ -81,7 +81,7 @@ class Portal::LearnersController < ApplicationController
       if request.format.config?
         raise "unauthorized config request"
       else
-        redirect_home
+        force_signin
       end
     end
   end

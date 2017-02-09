@@ -1,36 +1,34 @@
 class Portal::SchoolsController < ApplicationController
-  
+
   include RestrictedPortalController
   # PUNDIT_CHECK_FILTERS
   before_filter :admin_or_manager
   before_filter :states_and_provinces, :only => [:new, :edit, :create, :update]
 
-  protected 
+  protected
 
   def admin_only
     unless current_visitor.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator" 
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
-  
+
   def admin_or_manager
     if current_visitor.has_role?('admin')
       @admin_role = true
     elsif current_visitor.has_role?('manager')
       @manager_role = true
     else
-      flash[:notice] = "Please log in as an administrator or manager" 
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
 
   def states_and_provinces
     @states_and_provinces = Portal::StateOrProvince.from_districts.sort
   end
-  
+
   public
-  
+
   # GET /portal_schools
   # GET /portal_schools.xml
   def index
@@ -111,7 +109,7 @@ class Portal::SchoolsController < ApplicationController
       @portal_school = Portal::School.new(params[:portal_school])
     end
     if request.xhr?
-      if cancel 
+      if cancel
         redirect_to :index
       elsif @portal_school.save
         @portal_school.put_setting("skip_installer", "1") if skip_installer && change_skip_installer

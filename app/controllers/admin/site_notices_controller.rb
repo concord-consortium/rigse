@@ -8,8 +8,7 @@ class Admin::SiteNoticesController < ApplicationController
 
   def admin_or_manager
     unless current_visitor.has_role?('admin') or current_visitor.has_role?('manager')
-      flash[:error] = "Please log in as an administrator or manager"
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
 

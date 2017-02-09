@@ -11,7 +11,7 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    file_data = params[:import][:import].read 
+    file_data = params[:import][:import].read
     begin
       json_data = JSON.parse file_data, :symbolize_names => true
       if json_data[:districts].nil? || json_data[:schools].nil?
@@ -70,7 +70,7 @@ class Import::ImportsController < ApplicationController
     @imports_progress = []
     imports_in_progress.each_with_index do |import_in_progress, index|
       @imports_progress << {
-        id: import_in_progress.id,        
+        id: import_in_progress.id,
         progress: import_in_progress.progress,
         total: import_in_progress.total_imports
       }
@@ -306,8 +306,7 @@ class Import::ImportsController < ApplicationController
   protected
   def admin_only
     unless current_visitor.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator"
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
   def get_authoring_url
