@@ -18,6 +18,7 @@ services:
     volumes:
       - unison:/rigse
   unison:
+    # the version of unison in this container needs to match the verson on your machine
     image: onnimonni/unison:2.48.4
     environment:
       # root is used here since the app is running as root so any files it creates
@@ -27,8 +28,8 @@ services:
       - UNISON_USER=root
       - UNISON_GROUP=root
     ports:
-      # a single port number means docker will randomly map this the start-unison
-      # script inspects the container to find what it is mapped to
+      # a single port number means docker will randomly map to a host port.
+      # the start-unison script inspects the container to find what it is mapped to
       - "5000"
     volumes:
       - unison:/data

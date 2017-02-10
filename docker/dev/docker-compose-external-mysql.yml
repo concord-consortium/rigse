@@ -1,0 +1,29 @@
+# This is an docker-compose overlay that adds external mysql support
+
+# A convient way to overlay this file is to add a `.env` file with the contents:
+#  COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-external-mysql.yml
+# You can also do it manually when you run docker-compose each time with
+# docker-compose -f docker-compose.yml -f docker/dev/docker-compose-external-mysql.yml
+# if you are making changes to docker-compose.yml or this file it is useful to
+# run `docker-compose config` which shows how the two files get merged together
+
+# You will need to provide the database environment variables defined below
+# an easy way to manage that is to the use the .env file:
+#    http://docs.master.dockerproject.org/compose/env-file/
+#
+# This external mysql will not work on Docker for Mac without some extra configuration:
+#    https://docs.docker.com/docker-for-mac/networking/#/i-want-to-connect-from-a-container-to-a-service-on-the-host
+version: '2'
+services:
+  app:
+    environment:
+      # this should be defined in the host environment
+      DB_HOST:
+      DB_USER:
+      DB_PASSWORD:
+      DB_NAME:
+  mysql:
+    # we can't delete the service but we can replace it with a small conatiner that just
+    # exits right away
+    image: busybox
+    command: "true"

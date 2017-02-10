@@ -1,6 +1,5 @@
-# NOTE: an easy way to setup the values for the variable substitions is to create a .env file in this same directory
-#       more information can be found here: http://docs.master.dockerproject.org/compose/env-file/
-
+# This file is meant for development, in production we use a slightly different
+# configuration
 version: '2'
 services:
   app:
@@ -15,15 +14,20 @@ services:
       DB_PASSWORD: master
       SOLR_HOST: solr
       SOLR_PORT: 8983
-    ports:
-      - 3000:3000
+    # no ports are published, see below for details
     volumes:
       - .:/rigse
       - bundle:/bundle
+    networks:
+      # the portal network allows external connections
+      portal:
+        aliases:
+          - portal
+      # app service needs to be on default network too so it can connect to mysql and solr
+      default:
   solr:
     image: concordconsortium/docker-solr-portal
-    ports:
-      - 8983:8983
+    # no ports are published, see below for details
     volumes:
       - .:/rigse
     command: /bin/bash ./start-solr.sh
@@ -37,3 +41,15 @@ services:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
 volumes:
   bundle:
+networks:
+  # create a portal network so other services such as LARA can be part of this network
+  # and connect with the web app.
+  portal:
+
+# In this file the web app and solr ports are not published. However, if you run
+# `docker-compose up` (without customizing your environment) the ports will be published
+# to 3000 and 8983.  This is because the docker-compose.override.yml file will be loaded
+# automatically by docker-compose.
+# You will likely want to modify how the ports are published, so they don't conflict.
+# Take a look at the this overlay for more information:
+#   docker/dev/docker-compose-random-ports.yml
