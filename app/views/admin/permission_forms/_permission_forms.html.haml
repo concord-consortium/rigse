@@ -19,7 +19,7 @@
       %tr
         %td#permission_form_list{:colspan => 3}
           %div
-            - Portal::PermissionForm.all.each do |perm|
+            - permission_forms.each do |perm|
               %span.existing_permission
                 %span.name= perm.fullname
                 %span.url

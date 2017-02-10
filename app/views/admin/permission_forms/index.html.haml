@@ -1,5 +1,5 @@
 %p
-  = render :partial => 'permission_forms', :locals => {:projects => @projects}
+  = render :partial => 'permission_forms', :locals => {:projects => @projects, :permission_forms => @permission_forms}
   = render :partial => 'search_form',      :locals => {:form => @form}
   - unless @teachers.blank?
     %h3 Teachers:
@@ -8,7 +8,7 @@
         %tr
           %th Teacher
           %th Classes
-        = render :partial => 'show', :collection => @teachers, :as => :teacher
+        = render :partial => 'show', :collection => @teachers, :as => :teacher, :locals => {:permission_forms => @permission_forms}
   - else
     %p
       search for teachers by firstname, lastname, login, or email.
