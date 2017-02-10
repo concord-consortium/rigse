@@ -32,6 +32,8 @@ class ExternalActivitiesController < ApplicationController
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url
 
+  skip_before_filter :verify_authenticity_token, :only => [:publish, :republish]
+
   def index
     authorize ExternalActivity
     search_params = { :material_types => [ExternalActivity], :page => params[:page] }

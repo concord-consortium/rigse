@@ -1,5 +1,9 @@
 class API::APIController < ApplicationController
 
+  # Disable CSRF token verification, as large part of this API is meant
+  # to be used by external sites (e.g. reports).
+  skip_before_filter :verify_authenticity_token
+
   def error(message, status = 400)
     render :json =>
       {

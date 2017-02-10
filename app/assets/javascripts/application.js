@@ -31,6 +31,7 @@
 = require tinymce
 = require_tree './in_place_rich_editor'
 = require 'jquery/jquery'
+= require 'jquery_ajax_csrf_token'
 = require 'jquery_ajax_select'
 = require 'jquery.serialize-object'
 = require 'jquery.placeholder.js'
