@@ -19,12 +19,12 @@ class PasswordMailer < ActionMailer::Base
   end
 
   protected
-  
+
   def finish_email(user, subject, bcc=nil)
     # CHECKME: is this theme stuff necessary here?
     self.theme_name = (APP_CONFIG[:theme]||'default')
     mail(:to => "#{user.name} <#{user.email}>",
-         :subject => "[#{APP_CONFIG[:site_name]}] #{subject}",
+         :subject => subject,
          :bcc => [bcc],
          :date => Time.now)
   end
