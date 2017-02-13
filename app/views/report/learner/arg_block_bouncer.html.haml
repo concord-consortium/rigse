@@ -1,3 +1,4 @@
 %form{ :action => @report_url, :method => "post" }
+  = hidden_field_tag :authenticity_token, form_authenticity_token
   %input{ :type => "hidden", :name => "arg_block_buckets", :value => @arg_block_buckets.to_json }/
   %input{ :type => "submit", :value => "Get Report" }
