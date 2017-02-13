@@ -2,9 +2,6 @@ class Dataservice::PeriodicBundleLoggersController < ApplicationController
   # restrict access to admins or bundle formatted requests 
   include RestrictedBundleController
 
-  # Disable CSRF token verification, as data might be coming from external apps.
-  skip_before_filter :verify_authenticity_token
-
   # GET /dataservice/periodic_bundle_loggers/1
   # GET /dataservice/periodic_bundle_loggers/1.xml
   def show

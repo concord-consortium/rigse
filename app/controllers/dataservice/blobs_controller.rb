@@ -2,9 +2,6 @@ class Dataservice::BlobsController < ApplicationController
 
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
-  # Disable CSRF token verification, as data might be coming from external apps.
-  skip_before_filter :verify_authenticity_token
-
   private
 
   def pundit_user_not_authorized(exception)

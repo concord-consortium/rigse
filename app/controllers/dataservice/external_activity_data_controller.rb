@@ -1,8 +1,5 @@
 class Dataservice::ExternalActivityDataController < ApplicationController
 
-  # Disable CSRF token verification, as this API is meant to be used by external sites (e.g. LARA).
-  skip_before_filter :verify_authenticity_token
-
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
   private
