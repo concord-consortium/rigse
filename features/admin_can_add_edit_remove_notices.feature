@@ -3,18 +3,18 @@ Feature: Admin can add, edit and remove notices
   As an admin
   I should be able to add, edit and remove notices
   In order to update my users with important updates or information
-  
+
   Background:
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And I am logged in with the username admin
-    
+
   @javascript
   Scenario: Admin can add a notice
     When I create a notice "Notice for users" for the roles "Admin"
     And am on the my home page
     Then I should see "Notice for users"
-    
+
   @javascript
   Scenario: Admin can edit notices
     Given a notice "Notice for admin" for roles "Admin"
@@ -24,7 +24,7 @@ Feature: Admin can add, edit and remove notices
     And I press "Update Notice"
     And am on the my home page
     Then I should see "Edited notice for users"
-    
+
   @dialog
   @javascript
   Scenario: Admin can remove notices
@@ -34,13 +34,13 @@ Feature: Admin can add, edit and remove notices
     And accept the dialog
     And am on the my home page
     Then I should not see "Notice for admin"
-    
+
   @javascript
   Scenario: Admin cannot publish blank notices or without selecting any roles
     When I create a notice " " for the roles ""
     Then I should see "Notice text is blank"
     And I should see "No role is selected"
-    
+
   Scenario: Admin can cancel notice creation or editing
     Given a notice "Notice for admin" for roles "Admin"
     When I go to the admin create notice page
@@ -49,14 +49,14 @@ Feature: Admin can add, edit and remove notices
     When I follow "Edit"
     And I follow "Cancel"
     Then I should be on "the site notices index page"
-    
+
   Scenario: Anonymous users cannot create notice page
     When I am an anonymous user
     And I try to go to the admin create notice page
-    Then I should be on "my home page"
-    
+    Then I should be on "the signin page"
+
   Scenario: Admin is shown a message if there are no notices
     When I am on the site notices index page
     Then I should see "You have no notices."
-    
-    
+
+

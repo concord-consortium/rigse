@@ -48,7 +48,7 @@ In NO case should the system allow:
   Scenario Outline: Anonymous user can't access portal listing routes:
     Given I am not logged in
     When I visit the route <route>
-    Then I should be on my home page
+    Then I should be on the signin page
 
     Examples:
       | route                         |

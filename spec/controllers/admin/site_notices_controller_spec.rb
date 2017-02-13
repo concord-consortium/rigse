@@ -30,37 +30,30 @@ describe Admin::SiteNoticesController do
       get :new
       assert_template "new"
 
-      error_msg = /Please log in as an administrator or manager/i
-
       sign_out :user
       sign_in @teacher_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      response.should redirect_to("/recent_activity")
 
       sign_out :user
       sign_in @researcher_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      response.should redirect_to("/")
 
       sign_out :user
       sign_in @author_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      response.should redirect_to("/")
 
       sign_out :user
       sign_in @student_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      response.should redirect_to("/my_classes")
 
       sign_out :user
       sign_in @guest_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      response.should redirect_to("/")
 
     end
   end
@@ -187,7 +180,7 @@ describe Admin::SiteNoticesController do
       # Check the notice exists before checking that it is deleted
       notice = Admin::SiteNotice.find_by_id(@params[:id])
       assert_not_nil(notice)
-      
+
       xhr :post, :remove_notice, @params
       notice = Admin::SiteNotice.find_by_id(@params[:id])
       assert_nil(notice)

@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   def pundit_user_not_authorized(exception)
     error_message = not_authorized_error_message
     if request.xhr?
-      render :text => "<div class='flash_error'>#{error_message}</div>"
+      render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
       flash[:alert] = error_message
       fallback_url = current_user.nil? ? root_path : after_sign_in_path_for(current_user)
