@@ -1,7 +1,10 @@
 class Dataservice::ConsoleContentsController < ApplicationController
-  # restrict access to admins or bundle formatted requests 
+  # restrict access to admins or bundle formatted requests
   include RestrictedBundleController
-  
+
+  # Disable CSRF token verification, as data might be coming from external apps.
+  skip_before_filter :verify_authenticity_token
+
   # GET /dataservice_console_contents
   # GET /dataservice_console_contents.xml
   def index

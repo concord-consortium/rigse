@@ -2,7 +2,10 @@ class Dataservice::ConsoleLoggersController < ApplicationController
 
   # restrict access to admins or bundle formatted requests 
   include RestrictedBundleController
-  
+
+  # Disable CSRF token verification, as data might be coming from external apps.
+  skip_before_filter :verify_authenticity_token
+
   public
 
   # GET /dataservice/console_loggers
