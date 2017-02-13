@@ -31,6 +31,25 @@ def login_with_ui_as(username, password)
   page.should have_content(user_last_name)
 end
 
+def post_with_bearer_token(path, post_data, user = 'admin')
+  if Client.count == 0
+    Client.create(
+      :name => "test_api_client",
+      :app_id => "test_api_client",
+      :app_secret => SecureRandom.uuid,
+      :domain_matchers => ""
+    )
+  end
+  user = User.find_by_login('admin')
+  grant = user.access_grants.create({
+                                      :client => Client.last,
+                                      :state => nil,
+                                      :access_token_expires_at => Time.now + 10.minutes
+                                    }, :without_protection => true)
+  token = grant.access_token
+  page.driver.post(path, post_data, {"Authorization" => "Bearer #{token}"})
+end
+
 def login_with_auth_login_page_as(username, password)
   visit "/auth/login"
   fill_in("username", :with => username)

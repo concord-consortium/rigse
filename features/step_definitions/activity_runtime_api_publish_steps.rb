@@ -110,15 +110,13 @@ Then /^the external activity should have a template$/ do
 end
 
 def publish_activity(name, again)
-  login_as('author')
   content = get_activity_definition(name, again)
-  page.driver.post(publish_external_activities_url(:version => 'v2'), content)
+  post_with_bearer_token(publish_external_activities_url(:version => 'v2'), content)
 end
 
 def publish_sequence(name, again)
-  login_as('author')
   content = get_sequence_definition(name, again)
-  page.driver.post(publish_external_activities_url(:version => 'v2'), content)
+  post_with_bearer_token(publish_external_activities_url(:version => 'v2'), content)
 end
 
 When /^the external runtime publishes the (sequence|activity) "([^"]*)"( again)?$/ do |kind, name, again|

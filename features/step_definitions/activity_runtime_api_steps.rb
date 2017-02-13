@@ -107,7 +107,7 @@ When /^the browser returns the following data to the portal$/ do |string|
   login_as('student')
   path = @learner.remote_endpoint_path
   Delayed::Job.should_receive(:enqueue)
-  page.driver.post(path, :content => string)
+  post_with_bearer_token(path, {:content => string})
   # delayed_job doesn't work in tests, so force running the job
   Dataservice::ProcessExternalActivityDataJob.new(@learner.id, string).perform
 end

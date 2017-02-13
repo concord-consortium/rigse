@@ -1,5 +1,4 @@
 class Dataservice::BucketLoggersController < ApplicationController
-
   # restrict access to admins or bundle formatted requests
   include RestrictedBundleController
 
