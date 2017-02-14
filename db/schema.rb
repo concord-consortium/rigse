@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161221214804) do
+ActiveRecord::Schema.define(:version => 20170115033711) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -958,8 +958,11 @@ ActiveRecord::Schema.define(:version => 20161221214804) do
     t.integer  "user_id"
     t.string   "credits"
     t.string   "publication_status"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.boolean  "full_window",            :default => false
+    t.boolean  "no_snapshots",           :default => false
+    t.boolean  "save_interactive_state", :default => false
   end
 
   create_table "investigations", :force => true do |t|
