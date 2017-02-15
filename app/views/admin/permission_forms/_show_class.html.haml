@@ -6,4 +6,4 @@
     %span.label Class Word:
     %span.value=clazz.word
 %table.admin_students_table
-  = render :partial => 'show_student', :collection => clazz.students, :as => :student
+  = render :partial => 'show_student', :collection => clazz.students, :as => :student, :locals => {:permission_forms => @permission_forms}

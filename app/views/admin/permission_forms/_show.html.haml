@@ -10,5 +10,5 @@
       %span.label Login
       %span.value= link_to(teacher.login, edit_user_path(teacher.id))
 
-  %td= render :partial => 'show_class', :collection => teacher.clazzes, :as => :clazz
+  %td= render :partial => 'show_class', :collection => teacher.clazzes, :as => :clazz, :locals => {:permission_forms => @permission_forms}
 
