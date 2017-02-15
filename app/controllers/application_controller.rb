@@ -19,6 +19,8 @@ class ApplicationController < ActionController::Base
   include Clipboard
   include Pundit
 
+  protect_from_forgery
+
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
   def pundit_user_not_authorized
@@ -29,9 +31,6 @@ class ApplicationController < ActionController::Base
   def pundit_user
     PunditUserContext.new(current_user, @original_user, request, params)
   end
-
-  # protect_from_forgery
-  self.allow_forgery_protection = false
 
   # With +respond_to do |format|+, "406 Not Acceptable" is sent on invalid format.
   # With a regular render (implicit or explicit), ActionView::MissingTemplate

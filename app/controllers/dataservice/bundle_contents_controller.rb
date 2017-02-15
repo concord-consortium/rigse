@@ -1,5 +1,5 @@
 class Dataservice::BundleContentsController < ApplicationController
-  
+
   # restrict access to admins or bundle formatted requests 
   include RestrictedBundleController
   public

@@ -5,6 +5,7 @@
     %form.student_permission_form{ :method => 'post',
       :id => "student_perms_#{student.id}_form",
       :action => "/admin/permission_forms/update_forms" }
+      = hidden_field_tag :authenticity_token, form_authenticity_token
       - permission_forms.each do |perm|
         %span.permission_from_item
           - checked = student.perms.include? perm

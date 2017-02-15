@@ -2,7 +2,7 @@ class Dataservice::ConsoleLoggersController < ApplicationController
 
   # restrict access to admins or bundle formatted requests 
   include RestrictedBundleController
-  
+
   public
 
   # GET /dataservice/console_loggers

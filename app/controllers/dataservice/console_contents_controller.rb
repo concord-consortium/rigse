@@ -1,7 +1,7 @@
 class Dataservice::ConsoleContentsController < ApplicationController
-  # restrict access to admins or bundle formatted requests 
+  # restrict access to admins or bundle formatted requests
   include RestrictedBundleController
-  
+
   # GET /dataservice_console_contents
   # GET /dataservice_console_contents.xml
   def index
