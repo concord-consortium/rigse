@@ -35,6 +35,6 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   def destroy?
-    manager_or_project_admin?
+    admin? || (project_admin? && user.projects.include?(record.project))
   end
 end

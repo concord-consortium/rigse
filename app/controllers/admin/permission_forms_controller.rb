@@ -90,6 +90,7 @@ class Admin::PermissionFormsController < ApplicationController
     form = TeacherSearchForm.new(params[:form])
     @teachers = form.search current_visitor
     @projects = policy_scope(Admin::Project).order("name ASC")
+    @permission_forms = policy_scope(Portal::PermissionForm)
   end
 
   def update_forms
