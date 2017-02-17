@@ -70,7 +70,7 @@ source "http://rubygems.org"
   # they are from a theme.
   gem 'themes_for_rails',     :git => 'git://github.com/concord-consortium/themes_for_rails',
            :branch => 'asset-pipeline-only'
-  gem 'default_value_for',    "~> 2.0.1"
+  gem 'default_value_for',    "~> 2.0.3"
   gem 'exception_notification', "~> 2.5.2"
 
   # This gem now contains the prototype_legacy view helpers, and the prototype helpers.
