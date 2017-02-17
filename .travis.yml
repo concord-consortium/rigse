@@ -1,7 +1,7 @@
 sudo: false # see: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 language: ruby
 rvm:
-  - "1.9.3"
+  - "2.2.0"
 
 env:
   matrix:
