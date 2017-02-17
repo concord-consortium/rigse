@@ -47,8 +47,6 @@ It should work and should be the safest option, but well, it does not.
 This version has breaking changes, something might fail. Although I can start rails server and at least basic features 
 seem to work.
 
-I had to remove `config/initializers/haml_markdown.rb`. TODO: is this file necessary?
-
 Also, it means that we no longer use `xml-mime-type-and-ie8-keycode-fix` branch of CC's HAML fork.
 How important is this fix? If it's related to IE8 only, it feels okay to me to drop it.
 
