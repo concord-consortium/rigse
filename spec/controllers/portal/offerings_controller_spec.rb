@@ -282,6 +282,7 @@ describe Portal::OfferingsController do
       let(:report_url)     { "https://concord-consortium.github.io/portal-report/" }
       let(:report_domains) { "concord-consortium.github.io" }
       before(:each) do
+        ENV.stub(:[]).and_return('')
         ENV.stub(:[]).with("REPORT_VIEW_URL").and_return(report_url)
         ENV.stub(:[]).with("REPORT_DOMAINS").and_return(report_domains)
       end
