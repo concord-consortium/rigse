@@ -291,9 +291,8 @@ describe Portal::ClazzesController do
         get :new
 
         assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
-          school = Portal::School.find_by_name(APP_CONFIG[:site_school])
           assert_select("option", :count => 1)
-          assert_select("option[value='#{school.id}']", :text => school.name)
+          assert_select("option", :text => APP_CONFIG[:site_school])
         end
       end
     end
