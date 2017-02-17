@@ -24,15 +24,6 @@ GIT
       rails (~> 3.2.11)
 
 GIT
-  remote: git://github.com/concord-consortium/cc_portal_wordpress_integration
-  revision: 442818c61c67c36aa089a010ef882865d65806c9
-  specs:
-    cc_portal_wordpress_integration (0.0.5)
-      devise (~> 2.1.0)
-      haml (~> 4.0)
-      rails (~> 3.2.11)
-
-GIT
   remote: git://github.com/concord-consortium/contentflow
   revision: 03b18e3c81abead40614f4a748878c63b6381eac
   branch: remove-addon-support
@@ -40,25 +31,6 @@ GIT
     contentflow (0.0.3)
       railties (>= 3.0)
       sass (>= 3.2)
-
-GIT
-  remote: git://github.com/concord-consortium/genigames-connector
-  revision: d46d31cad789dd806377a8e28feecf387a9020ee
-  specs:
-    genigames_connector (0.0.4)
-      haml (~> 4.0)
-      json (~> 1.8.6)
-      rails (~> 3.2.11)
-
-GIT
-  remote: git://github.com/concord-consortium/geniverse-portal-integration
-  revision: 0e164f135751905ac263ea222eb46f2e6b7da646
-  specs:
-    geniverse_portal_integration (0.0.6)
-      haml (~> 4.0)
-      json (~> 1.8.6)
-      rails (~> 3.2.19)
-      spreadsheet (>= 0.7.3)
 
 GIT
   remote: git://github.com/concord-consortium/in_place_editing.git
@@ -620,7 +592,6 @@ DEPENDENCIES
   capybara-mechanize (~> 0.3.0)
   capybara-screenshot
   cc_portal_remote_auth!
-  cc_portal_wordpress_integration!
   ci_reporter (~> 1.7.0)
   codeclimate-test-reporter
   coffee-rails
