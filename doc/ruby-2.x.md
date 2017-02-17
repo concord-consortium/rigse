@@ -12,7 +12,7 @@ devs use them (I use RubyMine debugger), but I guess we can install something si
 Ruby 2.2 removed `YAML::ENGINE`, so I had to modify `config/environment.rb`. There're comments
 and it feels safe to me.
 
-### Issues:
+### Issues
 
 #### HAML / SASS / Compass
 
@@ -50,3 +50,8 @@ seem to work.
 Also, it means that we no longer use `xml-mime-type-and-ie8-keycode-fix` branch of CC's HAML fork.
 How important is this fix? If it's related to IE8 only, it feels okay to me to drop it.
 
+#### Tests
+
+##### Rspec
+
+default_value_for had to be updated (probably not related to tests only).
