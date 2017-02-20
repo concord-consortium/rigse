@@ -55,10 +55,11 @@ Feature: Admin can work with interactives
 
     Scenario: Removing tags from Interactives
       Given I am on the edit page of interactive "Interactive 1"
-      When under "Grade Levels" I uncheck "12"
+      Then I should see "11" within #primary
+      When under "Grade Levels" I uncheck "11"
       And under "Subject Areas" I uncheck "Biology"
       And I press "Save"
-      Then I should not see "12" within #primary
+      Then I should not see "11" within #primary
       And I should not see "Biology"
 
     @javascript @search
