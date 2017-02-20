@@ -4,7 +4,7 @@ rerun_opts = rerun.to_s.strip.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'pr
 std_format = "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} "
 std_opts = " --tags ~@wip --tags ~@pending --tags ~@no-seeds -r features"
 %>
-default: --drb <%= std_format %> <%= std_opts %> features
-wip: --drb --tags @wip:3 --wip features
-rerun: --drb <%= rerun_opts %> --format rerun --out rerun.txt --tags ~@wip
-textmate: --drb --format html <%= std_opts %> features
+default: <%= std_format %> <%= std_opts %> features
+wip: --tags @wip:3 --wip features
+rerun: <%= rerun_opts %> --format rerun --out rerun.txt --tags ~@wip
+textmate: --format html <%= std_opts %> features
