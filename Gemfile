@@ -142,7 +142,7 @@ end
 
 # Feature enabling groups
 group :geniverse_wordpress do
-  # gem "cc_portal_wordpress_integration", :git => "git://github.com/concord-consortium/cc_portal_wordpress_integration"
+  gem "cc_portal_wordpress_integration", :git => "git://github.com/concord-consortium/cc_portal_wordpress_integration"
   # gem "cc_portal_wordpress_integration", :path => "../cc_portal_wordpress_integration"
 end
 
@@ -152,14 +152,13 @@ group :geniverse_remote_auth do
 end
 
 group :geniverse_backend do
-  # TODO: restore it when portal_integration gemfile is updated (json 1.7 was causing problems)
-  # gem "geniverse_portal_integration", :git => "git://github.com/concord-consortium/geniverse-portal-integration"
+  gem "geniverse_portal_integration", :git => "git://github.com/concord-consortium/geniverse-portal-integration"
   # gem "geniverse_portal_integration", :path => "../geniverse-portal-integration"
 end
 
 group :genigames_data do
-  # TODO: restore it when portal_integration gemfile is updated (json 1.7 was causing problems)
-  # gem 'genigames_connector',  '0.0.4', :git => 'git://github.com/concord-consortium/genigames-connector'
+  gem 'genigames_connector',  '0.0.4', :git => 'git://github.com/concord-consortium/genigames-connector'
+  # gem "genigames_connector", :path => "../genigames-connector"
 end
 
 group :development do
