@@ -45,7 +45,6 @@ Capybara.save_and_open_page_path = "tmp/capybara"
 
 require 'remarkable_activerecord'
 # we have to include our extensions in the rspec configuration block
-require File.expand_path("../support/rspec_extensions", __FILE__)
 require File.expand_path("../support/authenticated_test_helper", __FILE__)
 include AuthenticatedTestHelper
 include AuthenticatedSystem
@@ -68,7 +67,6 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = Rails.env == 'test'
 
-  config.include FailsInThemes
   config.include Sprockets::Helpers::RailsHelper
   config.include Devise::TestHelpers, :type => :controller
 

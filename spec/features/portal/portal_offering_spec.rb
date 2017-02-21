@@ -1,6 +1,6 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-describe "Portal::Offering" do
+feature "Portal::Offering" do
   before(:each) do
     generate_default_settings_and_jnlps_with_factories
     @learner = Factory(:full_portal_learner)
@@ -19,7 +19,7 @@ describe "Portal::Offering" do
     end
   end
 
-  it "returns a valid jnlp file" do
+  scenario "returns a valid jnlp file" do
     visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
     xml = Nokogiri::XML(page.driver.response.body)
     jnlp_elements = xml.xpath("/jnlp")
@@ -28,13 +28,13 @@ describe "Portal::Offering" do
     main_class.text.should == 'org.concord.LaunchJnlp'
   end
 
-  describe "the dynamic jnlp file" do
-    it "should not be cached" do
+  feature "the dynamic jnlp file" do
+    scenario "should not be cached" do
       visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
 
       headers = page.driver.response.headers
       headers.should have_key 'Pragma'
-      # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match it
+      # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match scenario
       headers['Pragma'].should match "no-cache"
       headers.should have_key 'Cache-Control'
       headers['Cache-Control'].should match "max-age=0"
@@ -42,8 +42,8 @@ describe "Portal::Offering" do
       headers['Cache-Control'].should match "no-store"
     end
 
-    describe "whose jnlp argument" do
-      it "points to a config file with a jnlp_session" do
+    feature "whose jnlp argument" do
+      scenario "points to a config file with a jnlp_session" do
         visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
         jnlp_xml = Nokogiri::XML(page.driver.response.body)
         jnlp_elements = jnlp_xml.xpath("/jnlp")
@@ -53,10 +53,10 @@ describe "Portal::Offering" do
         argument.text.should match 'jnlp_session'
       end
 
-      it "logs in the student" do
+      scenario "logs in the student" do
         visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
         jnlp_xml = Nokogiri::XML(page.driver.response.body)
-        argument = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
+        argument = jnlp_xml.xpath("/jnlp/application-desc/argument/text()")[0]
 
         page.reset!
         # make sure that worked by checking we are not logged in
@@ -69,10 +69,10 @@ describe "Portal::Offering" do
         page.should have_content "Welcome #{@user.name}"
       end
 
-      it "returns a valid config that sets the correct session" do
+      scenario "returns a valid config that sets the correct session" do
         visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
         jnlp_xml = Nokogiri::XML(page.driver.response.body)
-        config_url = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
+        config_url = jnlp_xml.xpath("/jnlp/application-desc/argument/text()")[0]
         page.reset!
         visit config_url
         config_xml = Nokogiri::XML(page.driver.response.body)
@@ -84,10 +84,10 @@ describe "Portal::Offering" do
         header_session_id.should == config_session_id
       end
 
-      it "should not be cached" do
+      scenario "should not be cached" do
         visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
         jnlp_xml = Nokogiri::XML(page.driver.response.body)
-        config_url = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
+        config_url = jnlp_xml.xpath("/jnlp/application-desc/argument/text()")[0]
         visit config_url
         headers = page.driver.response.headers
         headers.should have_key 'Pragma'

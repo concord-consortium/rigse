@@ -11,7 +11,7 @@ describe ApplicationHelper do
     end
 
     it "should output container if set" do
-      title_tag('hello', :h2).should have_selector('h2', :content => 'hello')
+      title_tag('hello', :h2).should have_selector('h2', :text => 'hello')
     end
   end
 
@@ -23,7 +23,7 @@ describe ApplicationHelper do
 
     describe "as anonymous" do
       before(:each) do
-        stub!(:current_visitor).and_return(@anonymous_user)
+        allow(self).to receive(:current_visitor).and_return(@anonymous_user)
         @original_user = @anonymous_user
       end
       it "should display appropriate login messages" do
@@ -37,7 +37,7 @@ describe ApplicationHelper do
 
     describe "as admin" do
       before(:each) do
-        stub!(:current_visitor).and_return(@admin_user)
+        allow(self).to receive(:current_visitor).and_return(@admin_user)
         @original_user = @admin_user
       end
       it "should display appropriate login messages" do

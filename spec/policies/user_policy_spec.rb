@@ -131,10 +131,12 @@ describe UserPolicy do
     end
 
     context "acting on a portal administrator" do
-      before(:all) do
-        user.add_role("admin")
-      end
       let(:user) { a_teacher.user }
+      before(:each) do
+        user.add_role("admin")
+        a_teacher.cohorts = []
+        a_teacher.save
+      end
       it { should permit(:index)                      }
       it { should_not permit(:make_admin)             }
       it { should permit(:show)                       }
