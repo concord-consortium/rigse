@@ -327,7 +327,7 @@ describe Portal::Clazz do
         @clazz.stub!(:active_offerings => @default_offerings)
       end
       it "should not fall back to offerings_including_default_class" do
-        @clazz.should_not_receive(:offerings_including_default_class).and_return(true)
+        @clazz.should_not_receive(:offerings_including_default_class)
         @clazz.offerings_with_default_classes(@user).should_not be_nil
       end
       it "should not contain the offerings which use the same runnable as a student offering" do

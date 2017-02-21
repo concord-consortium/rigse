@@ -110,14 +110,14 @@ describe ExternalActivitiesController do
   end
 
   before(:each) do
-    @current_settings = mock(
+    @current_settings = double(
       :name => "test settings",
       :using_custom_css? => false,
       :use_student_security_questions => false,
       :use_bitmap_snapshots? => false,
       :require_user_consent? => false,
       :default_cohort => nil)
-    Admin::Settings.stub!(:default_settings).and_return(@current_settings)
+    Admin::Settings.stub(:default_settings).and_return(@current_settings)
     controller.stub(:before_render) {
       response.template.stub(:net_logo_package_name).and_return("blah")
       response.template.stub_chain(:current_settings).and_return(@current_settings);
@@ -164,10 +164,10 @@ describe ExternalActivitiesController do
           created.url.should  == url
           created.id.should   == existing.id
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
-          created.template.sections.should have(1).section
-          created.template.pages.should have(1).page
-          created.template.open_responses.should have(1).open_response
-          created.template.multiple_choices.should have(1).multiple_choice
+          created.template.sections.should have(1).Section
+          created.template.pages.should have(1).Page
+          created.template.open_responses.should have(1).OpenResponse
+          created.template.multiple_choices.should have(1).MultipleChoice
         end
       end
     end
@@ -203,10 +203,10 @@ describe ExternalActivitiesController do
           created.url.should  == url
           created.id.should   == existing.id
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
-          created.template.sections.should have(1).section
-          created.template.pages.should have(1).page
-          created.template.open_responses.should have(1).open_response
-          created.template.multiple_choices.should have(1).multiple_choice
+          created.template.sections.should have(1).Section
+          created.template.pages.should have(1).Page
+          created.template.open_responses.should have(1).OpenResponse
+          created.template.multiple_choices.should have(1).MultipleChoice
         end
       end
 
