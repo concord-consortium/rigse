@@ -1,15 +1,10 @@
 class Admin::PermissionFormsController < ApplicationController
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  private
-
-  def pundit_user_not_authorized(exception)
-    flash[:notice] = "Please log in as an administrator or manager"
-    redirect_to(:home)
-  end
-
   protected
+
+  def not_authorized_error_message
+    super({resource_type: 'permission form'})
+  end
 
   def update_student_permissions(student_id, permission_ids)
     student = Portal::Student.find(student_id)

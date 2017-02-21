@@ -18,8 +18,7 @@ class Portal::TeachersController < ApplicationController
        # this user is authorized
        true
     else
-      flash[:notice] = "Please log in as an administrator or manager"
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
 
@@ -84,7 +83,7 @@ class Portal::TeachersController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Teacher
-    
+
     # TODO: Teachers DO NOT HAVE grades or Domains.
     @portal_grade = nil
     if params[:grade]
@@ -117,8 +116,8 @@ class Portal::TeachersController < ApplicationController
     # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes
     # will redirect:
     @user.errors.add(:you, "must select a school") unless @school_selector.valid?
-    
-    
+
+
     failed_creation
   end
 
@@ -156,7 +155,7 @@ class Portal::TeachersController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
+
   def successful_creation(user)
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -169,7 +168,7 @@ class Portal::TeachersController < ApplicationController
     redirect_to thanks_for_sign_up_url(:type=>"teacher",:login=>"#{user.login}")
 
   end
-  
+
   def failed_creation(message = 'Sorry, there was an error creating your account')
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -184,5 +183,5 @@ class Portal::TeachersController < ApplicationController
     flash.now[:error] = message
     render :action => :new
   end
-  
+
 end

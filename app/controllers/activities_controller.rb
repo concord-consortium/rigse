@@ -9,26 +9,11 @@ class ActivitiesController < ApplicationController
   in_place_edit_for :activity, :description
   include ControllerParamUtils
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  private
-
-  def pundit_user_not_authorized(exception)
-    if ['new?', 'create?', 'duplicate?'].include? exception.query.to_s
-      flash[:error] = "Anonymous users can not create activities"
-      redirect_back_or activities_path
-    else
-      error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@activity.name}"
-      flash[:error] = error_message
-      if request.xhr?
-        render :text => "<div class='flash_error'>#{error_message}</div>"
-      else
-        redirect_back_or activities_path
-      end
-    end
-  end
-
   protected
+
+  def not_authorized_error_message
+    super({resource_type: 'activity', resource_name: @activity ? @activity.name : nil})
+  end
 
   def render_scope
     @render_scope = @activity

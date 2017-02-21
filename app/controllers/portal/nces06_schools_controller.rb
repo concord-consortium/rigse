@@ -1,5 +1,5 @@
 class Portal::Nces06SchoolsController < ApplicationController
-  
+
   # PUNDIT_CHECK_FILTERS
   before_filter :admin_or_manager, :except => [ :description, :index ]
   include RestrictedPortalController
@@ -8,24 +8,22 @@ class Portal::Nces06SchoolsController < ApplicationController
 
   def admin_only
     unless current_visitor.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator" 
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
-  
+
   def admin_or_manager
     if current_visitor.has_role?('admin')
       @admin_role = true
     elsif current_visitor.has_role?('manager')
       @manager_role = true
     else
-      flash[:notice] = "Please log in as an administrator or manager" 
-      redirect_to(:home)
+      raise Pundit::NotAuthorizedError
     end
   end
 
   public
-  
+
   # GET /portal_nces06_schools
   # GET /portal_nces06_schools.xml
   def index
@@ -140,7 +138,7 @@ class Portal::Nces06SchoolsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
+
   def description
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE

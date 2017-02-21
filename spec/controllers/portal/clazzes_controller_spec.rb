@@ -60,7 +60,7 @@ describe Portal::ClazzesController do
       get :show, { :id => @mock_clazz.id }
 
       response.should_not be_success
-      response.should redirect_to("/home")
+      response.should redirect_to("/recent_activity")
     end
 
     it "saves the position of the left pane submenu item for an authorized teacher" do
@@ -72,7 +72,7 @@ describe Portal::ClazzesController do
       @authorized_teacher.reload
       @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['NONE']
     end
-   
+
   end # end describe GET show
 
   describe "XMLHttpRequest edit" do
@@ -82,7 +82,7 @@ describe Portal::ClazzesController do
       @mock_clazz.teachers = teachers
 
       xml_http_html_request :post, :edit, :id => @mock_clazz.id
-      
+
       response.should_not be_success
     end
 
@@ -95,13 +95,13 @@ describe Portal::ClazzesController do
 
     def can_edit(teacher)
       assert_select("table.teachers_listing") do
-        assert_select("input#clazz_teacher_#{teacher.id}:not([disabled='disabled'])") 
+        assert_select("input#clazz_teacher_#{teacher.id}:not([disabled='disabled'])")
       end
     end
 
     def cant_edit(teacher)
       assert_select("table.teachers_listing") do
-        assert_select("input#clazz_teacher_#{teacher.id}[disabled='disabled']") 
+        assert_select("input#clazz_teacher_#{teacher.id}[disabled='disabled']")
       end
     end
 
@@ -138,7 +138,7 @@ describe Portal::ClazzesController do
         xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
         if user == :unauthorized_teacher_user
-          assert_select("select#teacher_id_selector", false, 
+          assert_select("select#teacher_id_selector", false,
             "Unauthorized users should not see the 'add teacher' link")
         else
           assert_select("select#teacher_id_selector")
@@ -199,7 +199,7 @@ describe Portal::ClazzesController do
       login_admin
       #remove one teacher
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @another_authorized_teacher.id }
-      
+
       #remove last teacher
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
 
@@ -463,7 +463,7 @@ describe Portal::ClazzesController do
       Portal::Clazz.count(:all).should == (current_count + 1)
     end
   end
-  
+
   describe "PUT update" do
     before(:each) do
       # Make sure we have the grade levels we want
@@ -511,41 +511,41 @@ describe Portal::ClazzesController do
       Portal::Clazz.find(@mock_clazz.id).name.should == 'New Test Class'
     end
   end
-  
+
   describe "POST add_offering" do
     it "should run without error" do
       login_admin
       page = Factory.create(:page)
       post_params = {
-        :runnable_id => page.id, 
-        :runnable_type => "page", 
-        :dragged_dom_id => "page_#{page.id}", 
+        :runnable_id => page.id,
+        :runnable_type => "page",
+        :dragged_dom_id => "page_#{page.id}",
         :dropped_dom_id => "clazz_offerings",
         :id => @mock_clazz.id
       }
-      
+
       post :add_offering, post_params
     end
   end
 
-  
+
   describe "Post edit class information" do
     before(:each) do
       page = Factory.create(:page)
       post_params = {
-        :runnable_id => page.id, 
-        :runnable_type => "page", 
-        :dragged_dom_id => "page_#{page.id}", 
+        :runnable_id => page.id,
+        :runnable_type => "page",
+        :dragged_dom_id => "page_#{page.id}",
         :dropped_dom_id => "clazz_offerings",
         :id => @mock_clazz.id
       }
-    
+
       post :add_offering, post_params
       offers = Array.new
       @mock_clazz.offerings.each do|offering|
         offers << offering.id.to_s
       end
-      
+
       @post_params = {
           :id => @mock_clazz.id,
           :portal_clazz => {
@@ -564,11 +564,11 @@ describe Portal::ClazzesController do
           :clazz_active_investigations => offers,
           :clazz_teacher_ids => (@authorized_teacher.id.to_s + "," + @another_authorized_teacher.id.to_s)
         }
-        
+
     end
-    
-    
-    
+
+
+
 
     it "should not save the edited class info if the class name is blank" do
       login_admin
@@ -577,7 +577,7 @@ describe Portal::ClazzesController do
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       assert_not_equal(@portal_clazz.name , '', 'Class saved with no name.')
     end
-    
+
     it "should not save the edited class info if the class word is blank" do
       login_admin
       @post_params[:portal_clazz][:class_word] = ''
@@ -585,15 +585,15 @@ describe Portal::ClazzesController do
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       assert_not_equal(@portal_clazz.class_word , '', 'Class saved with blank class word.')
     end
-    
+
     it "all the deactivated offerings should actually get deactivated in the database" do
       login_admin
       @post_params[:clazz_investigations_ids] = @mock_clazz.offerings.map(&:id)
       @post_params[:clazz_active_investigations] = Array[]
       post :update, @post_params
-      
+
       @mock_clazz.reload
-      
+
       @mock_clazz.offerings.each do |offering|
         assert_equal(offering.active, false)
       end
@@ -601,7 +601,7 @@ describe Portal::ClazzesController do
   end
 
   describe "Post add a new student to a class" do
-    
+
     it "should add a new student to the class" do
       login_admin
       post_params = {
@@ -618,35 +618,35 @@ describe Portal::ClazzesController do
   describe "Put teacher Manage class" do
     before(:each) do
       @mock_teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
-      
+
       mock_clazz_name = "Mock Class Physics"
       @mock_clazz_phy = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
       @authorized_teacher.add_clazz(@mock_clazz_phy)
       @authorized_teacher.save!
       @mock_teacher_clazz_phy = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
-      
+
       mock_clazz_name = "Mock Class Chemistry"
       @mock_clazz_chem = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
       @authorized_teacher.add_clazz(@mock_clazz_chem)
       @authorized_teacher.save!
       @mock_teacher_clazz_chem = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
-      
+
       mock_clazz_name = "Mock Class Biology"
       @mock_clazz_bio = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
       @authorized_teacher.add_clazz(@mock_clazz_bio)
       @authorized_teacher.save!
       @mock_teacher_clazz_bio = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
-      
+
       mock_clazz_name = "Mock Class Mathematics"
       @mock_clazz_math = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
       @authorized_teacher.add_clazz(@mock_clazz_math)
       @authorized_teacher.save!
       @mock_teacher_clazz_math = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
-      
+
       @authorized_teacher.reload
-            
+
     end
-    
+
     it "should should save all the activated and deactivated classes and in the right order" do
       sign_in @authorized_teacher_user
       @post_params = {
@@ -654,54 +654,54 @@ describe Portal::ClazzesController do
         'teacher_clazz_position'  => Array[@mock_teacher_clazz_math.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_chem.id, @mock_teacher_clazz_bio.id ,@mock_teacher_clazz.id ]
       }
       put :manage_classes, @post_params
-      
+
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active)
       assert_equal(teacher_clazz.position, 5)
-      
+
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active)
       assert_equal(teacher_clazz.position, 2)
-      
+
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active == false)
       assert_equal(teacher_clazz.position, 3)
-      
+
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active)
       assert_equal(teacher_clazz.position, 4)
-      
+
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active)
       assert_equal(teacher_clazz.position, 1)
-      
+
     end
   end
-  
+
   describe "Post teacher Creates copy of a class" do
     before(:each) do
-     
+
       @student_clazz = Portal::StudentClazz.new
       @student_clazz.clazz_id = @mock_clazz.id
       @student_clazz.student_id = @authorized_student.id
       @student_clazz.save!
-          
+
       @investigation = Factory(:investigation)
       @investigation.name = 'Fluid Mechanics'
       @investigation.save!
-      
+
       @offering = Portal::Offering.new
       @offering.runnable_id = @investigation.id
       @offering.clazz_id = @mock_clazz.id
       @offering.runnable_type = 'Investigation'
       @offering.save!
       sign_in @authorized_teacher_user
-      
+
       @post_params = {
         :id => @mock_clazz.id,
         :clazz_name  => 'Concept of physics',
@@ -709,10 +709,10 @@ describe Portal::ClazzesController do
         :clazz_word => 'Phy123456'
       }
     end
-    
+
     it "should create a new class that's a copy of the original class with investigations and teachers but no students" do
       xhr :post, :copy_class, @post_params
-      
+
       @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
       assert_not_nil(@copy_clazz)
 
@@ -720,21 +720,21 @@ describe Portal::ClazzesController do
       @mock_clazz.teachers.each do |teacher|
         assert_not_nil(@copy_clazz.teachers.find_by_id(teacher.id))
       end
-      
+
       assert_equal(@copy_clazz.offerings.length, @mock_clazz.offerings.length)
       @mock_clazz.offerings.each do |offering|
         assert_not_nil(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id))
       end
-      
+
       assert_equal(@copy_clazz.students.length, 0)
-      
+
     end
   end
-  
-  
+
+
   # GET edit
   describe "GET edit" do
-    
+
     it "saves the position of the left pane submenu item for an authorized teacher" do
       sign_in @authorized_teacher_user
 
@@ -744,12 +744,12 @@ describe Portal::ClazzesController do
       @authorized_teacher.reload
       @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP']
     end
-    
+
   end
-  
+
   # GET materials
   describe "GET materials" do
-    
+
     it "saves the position of the left pane submenu item for an authorized teacher" do
       sign_in @authorized_teacher_user
 
@@ -759,12 +759,12 @@ describe Portal::ClazzesController do
       @authorized_teacher.reload
       @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['MATERIALS']
     end
-    
+
   end
-  
+
   # GET roster
   describe "GET roster" do
-    
+
     it "saves the position of the left pane submenu item for an authorized teacher" do
       sign_in @authorized_teacher_user
 
@@ -774,10 +774,10 @@ describe Portal::ClazzesController do
       @authorized_teacher.reload
       @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER']
     end
-    
+
   end
-  
-  
+
+
   describe "Post teacher sorts class offerings on class summary page" do
     before(:each) do
       @physics_offering = Factory.create(:portal_offering)
@@ -790,14 +790,14 @@ describe Portal::ClazzesController do
       sign_in @authorized_teacher_user
     end
     it "should store position of all the offerings after teacher sorts offerings" do
-      
+
       # Save initial offering positions
       xhr :post, :sort_offerings, @params
       offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
       offerings.each do |offering|
         assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
       end
-      
+
       # Update offering positions and verify they have been updated
       @params[:clazz_offerings] = [@mathematics_offering.id, @biology_offering.id, @chemistry_offering.id, @physics_offering.id]
       xhr :post, :sort_offerings, @params
@@ -807,7 +807,7 @@ describe Portal::ClazzesController do
       end
     end
   end
-  
+
   describe "GET fullstatus" do
     before(:each) do
       @params = {
@@ -818,7 +818,7 @@ describe Portal::ClazzesController do
       sign_in @normal_user
       get :fullstatus, @params
       response.should_not be_success
-      response.should redirect_to home_url
+      response.should redirect_to root_url
     end
     it "should retrieve the class when user is not anonymous user" do
       sign_in @authorized_teacher_user
@@ -843,9 +843,9 @@ describe Portal::ClazzesController do
       @mock_settings.jnlp_cdn_hostname = ''
       @mock_settings.save!
       Admin::Settings.stub(:default_settings).and_return(@mock_settings)
-      
+
       sign_in @authorized_teacher_user
-      
+
       @params = {
         :id => @mock_clazz.id
       }

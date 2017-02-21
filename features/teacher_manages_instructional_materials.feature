@@ -17,7 +17,7 @@ Feature: Teacher manages instructional materials of a class
   Scenario: Anonymous user can not view instructional materials of a class
     When I log out
     And I try to go to Instructional Materials page for "My Class"
-    Then I should be on "my home page"
+    Then I should be on "the signin page"
 
   Scenario: Teacher can click button to Manage Materials
     When I follow "Manage Materials"

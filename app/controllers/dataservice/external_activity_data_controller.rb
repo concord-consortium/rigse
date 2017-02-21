@@ -1,16 +1,6 @@
 class Dataservice::ExternalActivityDataController < ApplicationController
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
   private
-
-  def pundit_user_not_authorized(exception)
-    learner = Portal::Learner.find_by_id_or_key(params[:id_or_key])
-    learner_deets = LearnerDetail.new(learner)
-    visitor = current_visitor ? current_visitor.name : 'anonymous'
-    error_string = "Auth error for #{visitor} - #{learner_deets}"
-    raise ActionController::RoutingError.new(error_string)
-  end
 
   def handle_versioned_protocol(version)
     learner = Portal::Learner.find_by_id_or_key(params[:id_or_key])

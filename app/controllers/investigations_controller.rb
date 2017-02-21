@@ -33,8 +33,7 @@ class InvestigationsController < AuthoringController
 
   def can_create
     if (current_visitor.anonymous?)
-      flash[:error] = "Anonymous users can not create investigaitons"
-      redirect_back_or investigations_path
+      raise Pundit::NotAuthorizedError
     end
   end
 
@@ -45,13 +44,7 @@ class InvestigationsController < AuthoringController
   def can_edit
     if defined? @investigation
       unless @investigation.changeable?(current_visitor)
-        error_message = "you (#{current_visitor.login}) can not #{action_name.humanize} #{@investigation.name}"
-        flash[:error] = error_message
-        if request.xhr?
-          render :text => "<div class='flash_error'>#{error_message}</div>"
-        else
-          redirect_back_or investigations_path
-        end
+        raise Pundit::NotAuthorizedError
       end
     end
   end

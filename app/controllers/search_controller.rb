@@ -11,7 +11,7 @@ class SearchController < ApplicationController
 
   def teacher_only
     if current_visitor.portal_student
-      redirect_to(:root)
+      raise Pundit::NotAuthorizedError
     end
   end
 
@@ -57,14 +57,7 @@ class SearchController < ApplicationController
     # authorize @search
     # authorize Search, :new_or_create?
     # authorize @search, :update_edit_or_destroy?
-    notice_msg = 'Please login or register as a teacher'
-    redirect_url = root_url
-
-    # Set notice message
-    flash[:notice] = notice_msg
-
-    # Redirect to the login page
-    redirect_to redirect_url
+    raise Pundit::NotAuthorizedError
   end
 
   def setup_material_type

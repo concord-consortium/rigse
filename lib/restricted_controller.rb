@@ -18,16 +18,15 @@ module RestrictedController
        end
 
        def admin_or_config
-          redirect_home unless current_visitor.has_role?('admin') || request.format == :config
+          force_signin unless current_visitor.has_role?('admin') || request.format == :config
        end
 
        def require_roles(*roles)
-         redirect_home unless (current_visitor != nil &&  current_visitor.has_role?(*roles))
+         force_signin unless (current_visitor != nil &&  current_visitor.has_role?(*roles))
        end
 
-       def redirect_home(message = "Please log in as an administrator")
-         flash[:notice] = "Please log in as an administrator"
-         redirect_to(:home)
+       def force_signin
+         raise Pundit::NotAuthorizedError
        end
 
      }

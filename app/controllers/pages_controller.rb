@@ -11,26 +11,11 @@ class PagesController < ApplicationController
   in_place_edit_for :page, :name
   in_place_edit_for :page, :description
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
-
-  private
-
-  def pundit_user_not_authorized(exception)
-    if ['new?', 'create?'].include? exception.query.to_s
-      flash[:error] = "Anonymous users can not create pages"
-      redirect_back_or pages_path
-    else
-      error_message = "you (#{current_visitor.login}) are not permitted to #{action_name.humanize} (#{@page.name})"
-      flash[:error] = error_message
-      if request.xhr?
-        render :text => "<div class='flash_error'>#{error_message}</div>"
-      else
-        redirect_back_or investigations_path
-      end
-    end
-  end
-
   protected
+
+  def not_authorized_error_message
+    super({resource_type: 'page', resource_name: @page ? @page.name : nil})
+  end
 
   def render_scope
     @render_scope = @page

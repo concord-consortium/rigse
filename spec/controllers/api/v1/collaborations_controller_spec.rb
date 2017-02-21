@@ -54,7 +54,7 @@ describe API::V1::CollaborationsController do
       it "returns an error" do
         expect(Portal::Collaboration.count).to eql(0)
         post :create, params
-        expect(response.status).to eq(401) # unauthorized
+        expect(response.status).to eq(403) # unauthorized
         expect(Portal::Collaboration.count).to eql(0)
       end
     end
@@ -68,7 +68,7 @@ describe API::V1::CollaborationsController do
       it "returns an error" do
         expect(Portal::Collaboration.count).to eql(0)
         post :create, params
-        expect(response.status).to eq(401) # unauthorized
+        expect(response.status).to eq(403) # unauthorized
         expect(Portal::Collaboration.count).to eql(0)
       end
     end
@@ -78,7 +78,7 @@ describe API::V1::CollaborationsController do
     context "when no user is signed in" do
       it "returns an error" do
         get :available_collaborators, offering_id: offering.id
-        expect(response.status).to eq(401) # unauthorized
+        expect(response.status).to eq(403) # unauthorized
       end
     end
 
@@ -99,7 +99,7 @@ describe API::V1::CollaborationsController do
     let(:lara_token)   { 'xyzzy'                            }
     let(:clients)      { [ mock(:app_secret => lara_token)] }
     before(:each)      { Client.stub(:all => clients)       }
-  
+
     before do
       sign_in student1.user
       post :create, params
@@ -111,7 +111,7 @@ describe API::V1::CollaborationsController do
     context "when no authentication header token is sent" do
       it "returns an error" do
         get :collaborators_data, id: @collaboration_id
-        expect(response.status).to eq(401) # unauthorized
+        expect(response.status).to eq(403) # unauthorized
       end
     end
 
@@ -131,7 +131,7 @@ describe API::V1::CollaborationsController do
       it "returns an error" do
         set_auth_token(security_header_sent)
         get :collaborators_data, {id: @collaboration_id}
-        expect(response.status).to eq(401)
+        expect(response.status).to eq(403)
       end
     end
 

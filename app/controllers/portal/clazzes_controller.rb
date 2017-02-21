@@ -534,8 +534,7 @@ class Portal::ClazzesController < ApplicationController
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
     unless current_visitor.portal_teacher
-      redirect_to home_url
-      return
+      raise Pundit::NotAuthorizedError
     end
     @portal_clazzes = Portal::Clazz.all
     @portal_clazz = Portal::Clazz.find(params[:id])
@@ -576,8 +575,7 @@ class Portal::ClazzesController < ApplicationController
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
     unless current_visitor.portal_teacher
-      redirect_to home_url
-      return
+      raise Pundit::NotAuthorizedError
     end
 
     @teacher = current_visitor.portal_teacher;
@@ -691,8 +689,7 @@ class Portal::ClazzesController < ApplicationController
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
     unless current_visitor.portal_teacher
-      redirect_to home_url
-      return
+      raise Pundit::NotAuthorizedError
     end
 
     @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:id])
@@ -726,8 +723,7 @@ class Portal::ClazzesController < ApplicationController
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
     unless current_visitor.portal_teacher
-      redirect_to home_url
-      return
+      raise Pundit::NotAuthorizedError
     end
     @portal_clazz = Portal::Clazz.find(params[:id]);
 

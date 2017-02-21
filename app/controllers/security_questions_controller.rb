@@ -1,11 +1,9 @@
 class SecurityQuestionsController < ApplicationController
 
-  rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
+  protected
 
-  private
-
-  def pundit_user_not_authorized(exception)
-    redirect_to(root_path)
+  def not_authorized_error_message
+    super({resource_type: 'security question'})
   end
 
   public
