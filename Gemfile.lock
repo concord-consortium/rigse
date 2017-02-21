@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/cc_portal_remote_auth
-  revision: 8fdaefc7b8162cc89edc432f0afb8bc9e086e2bd
+  revision: a4b3828845a999823148c475e61086580bfb2063
   specs:
     cc_portal_remote_auth (0.0.3)
       devise (~> 2.1.0)
@@ -52,7 +52,7 @@ GIT
 
 GIT
   remote: git://github.com/concord-consortium/geniverse-portal-integration
-  revision: 9e9dddff36ca7de5d711a0f6e4d59d3d842c5435
+  revision: 4ad17906ca609b5267c844c2da2b7600fe09bb91
   specs:
     geniverse_portal_integration (0.0.6)
       haml (~> 3.1.4)
@@ -335,7 +335,7 @@ GEM
     kgio (2.10.0)
     launchy (2.0.5)
       addressable (~> 2.2.6)
-    libv8 (3.16.14.7)
+    libv8 (3.16.14.17)
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
     listen (1.3.1)
