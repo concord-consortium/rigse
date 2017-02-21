@@ -29,6 +29,8 @@ class Portal::Clazz < ActiveRecord::Base
   validates_uniqueness_of :class_word
   validates_presence_of :name
 
+  before_save :generate_class_hash
+
   include Changeable
 
   # String constants for error messages -- Cantina-CMH 6/2/10
@@ -289,6 +291,14 @@ class Portal::Clazz < ActiveRecord::Base
     self.name = self.name.strip if self.name
     self.description = self.description.strip if self.description
     self.class_word = self.class_word.strip if self.class_word
+  end
+
+  def generate_class_hash
+    self.class_hash = SecureRandom.hex(24) if self.class_hash.nil?
+  end
+
+  def class_info_url(protocol, host)
+    Rails.application.routes.url_helpers.api_v1_class_url(id: self.id, protocol: protocol, host: host)
   end
 
 end

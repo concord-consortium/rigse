@@ -56,6 +56,9 @@ Given /^"([^"]*)" handles a (POST|GET) with query:$/ do |address, method, table|
   if /domain_uid of '(.*)'/ =~ query_data["domain_uid"]
     query_data["domain_uid"] = User.find_by_login($~[1]).id.to_s
   end
+  if /class_info_url of '(.*)'/ =~ query_data["class_info_url"]
+    query_data["class_info_url"] = Portal::Clazz.find_by_name($~[1]).class_info_url("http", "www.example.com")
+  end
   stub.with(:query => query_data)
 end
 

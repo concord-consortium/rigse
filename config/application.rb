@@ -125,6 +125,7 @@ module RailsPortal
         resource '/api/v1/reports/*', :headers => :any, :methods => [:get, :put]
         resource '/api/v1/offerings/*', :headers => :any, :methods => [:get, :put]
         resource '/api/v1/offering/*', :headers => :any, :methods => [:get, :put]
+        resource '/api/v1/classes/*', :headers => :any, :methods => [:get]
       end
 
       # Set up custom CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".

@@ -693,6 +693,11 @@ RailsPortal::Application.routes.draw do
             get :for_teacher
           end
         end
+
+        resources :classes, only: [:show]
+        namespace :classes do
+          get :info
+        end
       end
     end
 
