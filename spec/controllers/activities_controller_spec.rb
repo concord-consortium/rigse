@@ -15,7 +15,7 @@ describe ActivitiesController do
   describe "#show" do
     describe "with teacher mode='true'" do
       before(:each) do
-        controller.stub!(:render)
+        controller.stub(:render)
         get :show, :id => activity.id, :teacher_mode => "true"
       end
       it "should assign true to teacher_mode instance var" do
@@ -24,7 +24,7 @@ describe ActivitiesController do
     end
     describe "with teacher mode='false'" do
       before(:each) do
-        controller.stub!(:render)
+        controller.stub(:render)
         get :show, :id => activity.id, :teacher_mode => "false"
       end
       it "should assign true to teacher_mode instance var" do

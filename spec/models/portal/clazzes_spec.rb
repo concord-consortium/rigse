@@ -184,25 +184,25 @@ describe Portal::Clazz do
       @offerings         = []
       @default_offerings = []
       1.upto(10) do |i|
-        @offerings << mock(:offering,
+        @offerings << double(:offering,
                            :id => i,
                            :runnable_id => i, 
                            :runnable_type => 'bogus', 
                            :default => false)
 
-        @default_offerings << mock(:offering,
+        @default_offerings << double(:offering,
                                    :id => i,
                                    :runnable_id => i, 
                                    :runnable_type => 'bogus', 
                                    :default => true)
       end
-      @clazz.stub!(:active_offerings => @offerings)
+      @clazz.stub(:active_offerings => @offerings)
     end
     
     describe "when there are no default activities" do
       before(:each) do
         def_offerings = []
-        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, zero default offerings" do
@@ -214,7 +214,7 @@ describe Portal::Clazz do
     describe "when there is 100% overlap with default activities" do
       before(:each) do
         def_offerings = @default_offerings
-        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 10 default offerings" do
@@ -226,7 +226,7 @@ describe Portal::Clazz do
     describe "the first half are default activities" do
       before(:each) do
         def_offerings = @default_offerings[0...5]
-        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
@@ -238,7 +238,7 @@ describe Portal::Clazz do
     describe "the first half are default activities" do
       before(:each) do
         def_offerings = @default_offerings[5...10]
-        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
@@ -250,7 +250,7 @@ describe Portal::Clazz do
     describe "every other activity is the default default" do
       before(:each) do
         def_offerings = @default_offerings.select { |i| i.runnable_id % 2 == 0 }
-        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
@@ -278,7 +278,7 @@ describe Portal::Clazz do
     end
     describe "called without a student" do
       before(:each) do
-        @user = mock(:user, :portal_student => nil)
+        @user = double(:user, :portal_student => nil)
       end
       it "should fall back to offerings_including_default_class" do
         @clazz.should_receive(:offerings_including_default_class).and_return(true)
@@ -287,10 +287,10 @@ describe Portal::Clazz do
     end
     describe "when not the default class" do
       before(:each) do
-        @offerings = [mock(:offering),mock(:offering)]
-        @clazzes = [mock(:clazz, :offerings => @offerings)]
-        @student = mock(:student, :clazzes => @clazzes)
-        @user = mock(:user, :portal_student => @student)
+        @offerings = [double(:offering),double(:offering)]
+        @clazzes = [double(:clazz, :offerings => @offerings)]
+        @student = double(:student, :clazzes => @clazzes)
+        @user = double(:user, :portal_student => @student)
       end
       it "should fall back to offerings_including_default_class" do
         @clazz.should_receive(:default_class).and_return(false)
@@ -303,28 +303,28 @@ describe Portal::Clazz do
         @offerings = []
         # these offerings belong to the "real" class
         0.upto(2) do |i|
-          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i, :runnable_id => i)
+          @offerings << double(:offering, :id => i, :runnable_type => 'fake', :runnable => i, :runnable_id => i)
         end
         @student_offerings = @offerings[0..2]
 
         # these offerings belong to the default class but have the same runnable as the first 2 student offerings
         3.upto 4 do |i|
-          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i-3, :runnable_id => i-3)          
+          @offerings << double(:offering, :id => i, :runnable_type => 'fake', :runnable => i-3, :runnable_id => i-3)
         end
         @default_offerings_with_same_runnable_as_a_student_offering = @offerings[3..4]
                 
         # these offerings belong only to the default class
         5.upto 8 do |i|
-          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i, :runnable_id => i)           
+          @offerings << double(:offering, :id => i, :runnable_type => 'fake', :runnable => i, :runnable_id => i)
         end
         @default_offerings_with_unique_runnable = @offerings[5..8]
         @default_offerings = @offerings[3..8]
         
-        @clazzes = [mock(:clazz, :active_offerings => @student_offerings, :default_class => false),@clazz]
-        @student = mock(:student, :clazzes => @clazzes)
-        @user = mock(:user, :portal_student => @student)
-        @clazz.stub!(:default_class => true)
-        @clazz.stub!(:active_offerings => @default_offerings)
+        @clazzes = [double(:clazz, :active_offerings => @student_offerings, :default_class => false),@clazz]
+        @student = double(:student, :clazzes => @clazzes)
+        @user = double(:user, :portal_student => @student)
+        @clazz.stub(:default_class => true)
+        @clazz.stub(:active_offerings => @default_offerings)
       end
       it "should not fall back to offerings_including_default_class" do
         @clazz.should_not_receive(:offerings_including_default_class)
@@ -356,7 +356,7 @@ describe Portal::Clazz do
     
     context "with no teachers" do
       subject do
-        @clazz.stub! :teachers => []
+        @clazz.stub :teachers => []
         @clazz
       end
       its(:teachers_label) {should == "Teacher"      }
@@ -365,7 +365,7 @@ describe Portal::Clazz do
 
     context "With one teacher" do
       subject do
-        @clazz.stub! :teachers => [@joan]
+        @clazz.stub :teachers => [@joan]
         @clazz
       end
       its(:teachers_label)  {should == "Teacher"         }
@@ -375,7 +375,7 @@ describe Portal::Clazz do
     
     context "With two teachers" do
       subject do
-        @clazz.stub! :teachers => [@bob,@joan]
+        @clazz.stub :teachers => [@bob,@joan]
         @clazz
       end
       its(:teachers_label)  {should == "Teachers"    }

@@ -24,7 +24,7 @@ describe RiGse::KnowledgeStatementsController do
   
       it "should render all knowledge_statements as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::KnowledgeStatement.should_receive(:all).and_return(knowledge_statements = mock("Array of KnowledgeStatements"))
+        RiGse::KnowledgeStatement.should_receive(:all).and_return(knowledge_statements = double("Array of KnowledgeStatements"))
         knowledge_statements.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
@@ -87,7 +87,7 @@ describe RiGse::KnowledgeStatementsController do
       end
 
       it "should redirect to the created knowledge_statement" do
-        RiGse::KnowledgeStatement.stub!(:new).and_return(mock_knowledge_statement(:save => true))
+        RiGse::KnowledgeStatement.stub(:new).and_return(mock_knowledge_statement(:save => true))
         post :create, :knowledge_statement => {}
         response.should redirect_to(ri_gse_knowledge_statement_url(mock_knowledge_statement))
       end
@@ -97,13 +97,13 @@ describe RiGse::KnowledgeStatementsController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved knowledge_statement as @knowledge_statement" do
-        RiGse::KnowledgeStatement.stub!(:new).with({'these' => 'params'}).and_return(mock_knowledge_statement(:save => false))
+        RiGse::KnowledgeStatement.stub(:new).with({'these' => 'params'}).and_return(mock_knowledge_statement(:save => false))
         post :create, :knowledge_statement => {:these => 'params'}
         assigns(:knowledge_statement).should equal(mock_knowledge_statement)
       end
 
       it "should re-render the 'new' template" do
-        RiGse::KnowledgeStatement.stub!(:new).and_return(mock_knowledge_statement(:save => false))
+        RiGse::KnowledgeStatement.stub(:new).and_return(mock_knowledge_statement(:save => false))
         post :create, :knowledge_statement => {}
         response.should render_template('new')
       end
@@ -123,13 +123,13 @@ describe RiGse::KnowledgeStatementsController do
       end
 
       it "should expose the requested knowledge_statement as @knowledge_statement" do
-        RiGse::KnowledgeStatement.stub!(:find).and_return(mock_knowledge_statement(:update_attributes => true))
+        RiGse::KnowledgeStatement.stub(:find).and_return(mock_knowledge_statement(:update_attributes => true))
         put :update, :id => "1"
         assigns(:knowledge_statement).should equal(mock_knowledge_statement)
       end
 
       it "should redirect to the knowledge_statement" do
-        RiGse::KnowledgeStatement.stub!(:find).and_return(mock_knowledge_statement(:update_attributes => true))
+        RiGse::KnowledgeStatement.stub(:find).and_return(mock_knowledge_statement(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(ri_gse_knowledge_statement_url(mock_knowledge_statement))
       end
@@ -145,13 +145,13 @@ describe RiGse::KnowledgeStatementsController do
       end
 
       it "should expose the knowledge_statement as @knowledge_statement" do
-        RiGse::KnowledgeStatement.stub!(:find).and_return(mock_knowledge_statement(:update_attributes => false))
+        RiGse::KnowledgeStatement.stub(:find).and_return(mock_knowledge_statement(:update_attributes => false))
         put :update, :id => "1"
         assigns(:knowledge_statement).should equal(mock_knowledge_statement)
       end
 
       it "should re-render the 'edit' template" do
-        RiGse::KnowledgeStatement.stub!(:find).and_return(mock_knowledge_statement(:update_attributes => false))
+        RiGse::KnowledgeStatement.stub(:find).and_return(mock_knowledge_statement(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -169,7 +169,7 @@ describe RiGse::KnowledgeStatementsController do
     end
   
     it "should redirect to the knowledge_statements list" do
-      RiGse::KnowledgeStatement.stub!(:find).and_return(mock_knowledge_statement(:destroy => true))
+      RiGse::KnowledgeStatement.stub(:find).and_return(mock_knowledge_statement(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(knowledge_statements_url)
     end

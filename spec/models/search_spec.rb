@@ -193,7 +193,7 @@ describe Search do
         let(:materials)     { [public_items, assessment_activities].flatten }
         let(:search_opts)   {{ :user_id => mock_user.id }}
         before(:each) do
-          User.stub!(:find => mock_user)
+          User.stub(:find => mock_user)
         end
         describe "a teacher" do
           let(:user_stubs) {{
@@ -373,7 +373,7 @@ describe Search do
         let(:public_items)   { collection(:activity, 2, public_opts)}
         let(:search_opts)     {{ :private => false, :user_id => my_id }}
         before(:each) do
-          User.stub!(:find => mock_user)
+          User.stub(:find => mock_user)
         end
         it "should return public items" do
           public_items.each do |act|
@@ -403,7 +403,7 @@ describe Search do
         }}
         let(:search_opts){{ :private => false, :user_id => mock_user.id }}
         before(:each) do
-          User.stub!(:find => mock_user)
+          User.stub(:find => mock_user)
         end
         describe "With two defined cohorts"  do
           describe "With activities in every combination of cohorts " do
@@ -638,7 +638,7 @@ describe Search do
     end
     describe "#params" do
       before(:each) do
-        User.stub!(:find => mock_user)
+        User.stub(:find => mock_user)
       end
       subject { params = Search.new(search_opts).params }
       describe "with no options" do

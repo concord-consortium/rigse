@@ -4,8 +4,8 @@ describe Portal::TeachersController do
   describe "POST create" do
     it "should complain if the login is the same except for case" do
       school   = Factory.create(:portal_school)
-      selector = mock(:portal_selector, :school => school, :valid? => true)
-      Portal::SchoolSelector.stub!(:new).and_return(selector) 
+      selector = double(:portal_selector, :school => school, :valid? => true)
+      Portal::SchoolSelector.stub(:new).and_return(selector) 
       Factory.create(:user, :login => "tteacher")
 
       params = {
@@ -38,10 +38,10 @@ describe Portal::TeachersController do
       @selector = Portal::SchoolSelector.new({
         :country => Portal::SchoolSelector::USA,
         :state   => 'MA'})
-      @selector.stub!(:valid?).and_return true
+      @selector.stub(:valid?).and_return true
       @selector.school = @school
       @selector.district = @school.district
-      Portal::SchoolSelector.stub!(:new).and_return(@selector) 
+      Portal::SchoolSelector.stub(:new).and_return(@selector) 
     end
 
     describe "POST create" do
@@ -77,7 +77,7 @@ describe Portal::TeachersController do
             :password_confirmation => "password"
           }
         }
-        @selector.stub!(:valid?).and_return false
+        @selector.stub(:valid?).and_return false
         current_user_count = User.count(:all)
         current_teacher_count = Portal::Teacher.count(:all)
         

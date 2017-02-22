@@ -6,9 +6,9 @@ describe "/portal/learners/_embeddable_open_response.html.haml" do
   end
   let(:answer_text){ "My answer" }
   let(:submitted)  { true }
-  let(:saveable)   { mock("Saveable", {submitted?: submitted, submitted_answer: answer_text}) }
-  let(:embeddable) { mock("embeddable", {prompt: "What is the sun made from?", is_required: false }) }
-  let(:learner)    { mock("Learner", {}) }
+  let(:saveable)   { double("Saveable", {submitted?: submitted, submitted_answer: answer_text}) }
+  let(:embeddable) { double("embeddable", {prompt: "What is the sun made from?", is_required: false }) }
+  let(:learner)    { double("Learner", {}) }
   let(:locals)     {{ embeddable: embeddable, learner: learner}}
 
   describe "When the student has submitted an answer" do

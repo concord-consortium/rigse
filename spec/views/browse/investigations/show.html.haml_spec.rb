@@ -6,7 +6,7 @@ describe "browse/investigations/show" do
   let (:search_material) { Search::SearchMaterial.new(inv, user) }
 
   before(:each) do
-    view.stub!(:current_visitor).and_return(user)
+    view.stub(:current_visitor).and_return(user)
     assigns[:search_material] = @search_material = search_material
   end
 

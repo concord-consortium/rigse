@@ -5,7 +5,7 @@ describe Portal::ClazzesController do
 
   def mock_clazz(stubs={})
     mock_clazz = Factory.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
-    #mock_clazz.stub!(stubs) unless stubs.empty?
+    #mock_clazz.stub(stubs) unless stubs.empty?
 
     mock_clazz
   end
@@ -43,8 +43,8 @@ describe Portal::ClazzesController do
     @mock_settings.stub(:enable_grade_levels?).and_return(true)
     @mock_settings.stub(:allow_default_class).and_return(false)
     @mock_settings.stub(:use_student_security_questions).and_return(false)
-    @mock_settings.stub!(:require_user_consent?).and_return(false)
-    @mock_settings.stub!(:default_cohort).and_return(nil)
+    @mock_settings.stub(:require_user_consent?).and_return(false)
+    @mock_settings.stub(:default_cohort).and_return(nil)
     Admin::Settings.stub(:default_settings).and_return(@mock_settings)
   end
 

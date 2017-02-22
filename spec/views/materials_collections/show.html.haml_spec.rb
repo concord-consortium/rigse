@@ -4,7 +4,7 @@ describe "materials_collections/show" do
   before(:each) do
 
     @admin_user = Factory.next(:admin_user)
-    controller.stub!(:current_user).and_return(@admin_user)
+    controller.stub(:current_user).and_return(@admin_user)
   end
 
   it "renders attributes in accordion (no materials)" do

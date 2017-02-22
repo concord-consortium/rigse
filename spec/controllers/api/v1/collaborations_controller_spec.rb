@@ -97,7 +97,7 @@ describe API::V1::CollaborationsController do
 
   describe "GET #collaborators_data" do
     let(:lara_token)   { 'xyzzy'                            }
-    let(:clients)      { [ mock(:app_secret => lara_token)] }
+    let(:clients)      { [ double(:app_secret => lara_token)] }
     before(:each)      { Client.stub(:all => clients)       }
 
     before do

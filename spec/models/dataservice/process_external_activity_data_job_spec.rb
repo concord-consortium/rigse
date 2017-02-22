@@ -1,11 +1,11 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Dataservice::ProcessExternalActivityDataJob do
-  let(:template)     { mock({open_responses: [], multiple_choices: [], image_questions: [], iframes: []}) }
-  let(:runnable)     { mock(template: template) }
-  let(:offering)     { mock(runnable: runnable, id: 23) }
-  let(:report_learner) { mock('last_run=' => true, update_fields: true)}
-  let(:learner)      { mock(offering: offering, report_learner: report_learner) }
+  let(:template)     { double({open_responses: [], multiple_choices: [], image_questions: [], iframes: []}) }
+  let(:runnable)     { double(template: template) }
+  let(:offering)     { double(runnable: runnable, id: 23) }
+  let(:report_learner) { double('last_run=' => true, update_fields: true)}
+  let(:learner)      { double(offering: offering, report_learner: report_learner) }
   let(:good_content) do
     [
       {
@@ -44,11 +44,11 @@ describe Dataservice::ProcessExternalActivityDataJob do
 
   subject { Dataservice::ProcessExternalActivityDataJob.new(23,json_content)}
   before(:each) do
-    Portal::Learner.stub!(:find => learner)
-    subject.stub!(:internal_process_open_response)
-    subject.stub!(:internal_process_multiple_choice)
-    subject.stub!(:internal_process_image_question)
-    subject.stub!(:internal_process_external_link)
+    Portal::Learner.stub(:find => learner)
+    subject.stub(:internal_process_open_response)
+    subject.stub(:internal_process_multiple_choice)
+    subject.stub(:internal_process_image_question)
+    subject.stub(:internal_process_external_link)
   end
 
 

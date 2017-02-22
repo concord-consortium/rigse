@@ -4,7 +4,7 @@ describe Portal::GradesController do
 
   def mock_grade(stubs={})
     # @mock_grade ||= mock_model(Portal::Grade, stubs)
-    @mock_grade.stub!(stubs) unless stubs.empty?
+    @mock_grade.stub(stubs) unless stubs.empty?
     @mock_grade
   end
 
@@ -16,7 +16,7 @@ describe Portal::GradesController do
 
   describe "GET index" do
     it "assigns all portal_grades as @portal_grades" do
-      Portal::Grade.stub!(:all).and_return([mock_grade])
+      Portal::Grade.stub(:all).and_return([mock_grade])
       get :index
       assigns[:portal_grades].should == [mock_grade]
     end
@@ -24,7 +24,7 @@ describe Portal::GradesController do
 
   describe "GET show" do
     it "assigns the requested grade as @portal_grade" do
-      Portal::Grade.stub!(:find).with("37").and_return(mock_grade)
+      Portal::Grade.stub(:find).with("37").and_return(mock_grade)
       get :show, :id => "37"
       assigns[:portal_grade].should equal(mock_grade)
     end
@@ -32,7 +32,7 @@ describe Portal::GradesController do
 
   describe "GET new" do
     it "assigns a new grade as @portal_grade" do
-      Portal::Grade.stub!(:new).and_return(mock_grade)
+      Portal::Grade.stub(:new).and_return(mock_grade)
       get :new
       assigns[:portal_grade].should equal(mock_grade)
     end
@@ -40,7 +40,7 @@ describe Portal::GradesController do
 
   describe "GET edit" do
     it "assigns the requested grade as @portal_grade" do
-      Portal::Grade.stub!(:find).with("37").and_return(mock_grade)
+      Portal::Grade.stub(:find).with("37").and_return(mock_grade)
       get :edit, :id => "37"
       assigns[:portal_grade].should equal(mock_grade)
     end
@@ -50,13 +50,13 @@ describe Portal::GradesController do
 
     describe "with valid params" do
       it "assigns a newly created grade as @portal_grade" do
-          Portal::Grade.stub!(:new).with({'these' => 'params'}).and_return(mock_grade(:save => true))
+          Portal::Grade.stub(:new).with({'these' => 'params'}).and_return(mock_grade(:save => true))
         post :create, :portal_grade => {:these => 'params'}
         assigns[:portal_grade].should equal(mock_grade)
       end
 
       it "redirects to the created grade" do
-          Portal::Grade.stub!(:new).and_return(mock_grade(:save => true))
+          Portal::Grade.stub(:new).and_return(mock_grade(:save => true))
         post :create, :portal_grade => {}
         response.should redirect_to(portal_grade_url(mock_grade))
       end
@@ -64,13 +64,13 @@ describe Portal::GradesController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved grade as @portal_grade" do
-          Portal::Grade.stub!(:new).with({'these' => 'params'}).and_return(mock_grade(:save => false))
+          Portal::Grade.stub(:new).with({'these' => 'params'}).and_return(mock_grade(:save => false))
         post :create, :portal_grade => {:these => 'params'}
         assigns[:portal_grade].should equal(mock_grade)
       end
 
       it "re-renders the 'new' template" do
-          Portal::Grade.stub!(:new).and_return(mock_grade(:save => false))
+          Portal::Grade.stub(:new).and_return(mock_grade(:save => false))
         post :create, :portal_grade => {}
         response.should render_template('new')
       end
@@ -88,13 +88,13 @@ describe Portal::GradesController do
       end
 
       it "assigns the requested grade as @portal_grade" do
-          Portal::Grade.stub!(:find).and_return(mock_grade(:update_attributes => true))
+          Portal::Grade.stub(:find).and_return(mock_grade(:update_attributes => true))
         put :update, :id => "1"
         assigns[:portal_grade].should equal(mock_grade)
       end
 
       it "redirects to the grade" do
-          Portal::Grade.stub!(:find).and_return(mock_grade(:update_attributes => true))
+          Portal::Grade.stub(:find).and_return(mock_grade(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(portal_grade_url(mock_grade))
       end
@@ -108,13 +108,13 @@ describe Portal::GradesController do
       end
 
       it "assigns the grade as @portal_grade" do
-          Portal::Grade.stub!(:find).and_return(mock_grade(:update_attributes => false))
+          Portal::Grade.stub(:find).and_return(mock_grade(:update_attributes => false))
         put :update, :id => "1"
         assigns[:portal_grade].should equal(mock_grade)
       end
 
       it "re-renders the 'edit' template" do
-          Portal::Grade.stub!(:find).and_return(mock_grade(:update_attributes => false))
+          Portal::Grade.stub(:find).and_return(mock_grade(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -130,7 +130,7 @@ describe Portal::GradesController do
     end
 
     it "redirects to the portal_grades list" do
-      Portal::Grade.stub!(:find).and_return(mock_grade(:destroy => true))
+      Portal::Grade.stub(:find).and_return(mock_grade(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(portal_grades_url)
     end

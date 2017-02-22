@@ -14,7 +14,7 @@ describe BearerToken:BearerTokenAuthenticatable do
   after(:each) { Delorean.back_to_the_present }
   let(:domain_matchers) { "" }
   let(:strategy)  { BearerTokenAuthenticatable::BearerToken.new(nil) }
-  let(:request)   { mock('request') }
+  let(:request)   { double('request') }
   let(:mapping)   { Devise.mappings[:user] }
   let(:expires)   { Time.now + 10.minutes}
   let(:token)     { addToken(user, client, expires) }
@@ -29,11 +29,11 @@ describe BearerToken:BearerTokenAuthenticatable do
   )}
   let(:referrer)  { "https://foo.bar.com/some/path.html" }
   before(:each) {
-    request.stub!(:headers).and_return(headers)
-    request.stub!(:env).and_return({'HTTP_REFERER' => referrer})
-    request.stub!(:params).and_return(params)
-    strategy.stub!(:mapping).and_return(mapping)
-    strategy.stub!(:request).and_return(request)
+    request.stub(:headers).and_return(headers)
+    request.stub(:env).and_return({'HTTP_REFERER' => referrer})
+    request.stub(:params).and_return(params)
+    strategy.stub(:mapping).and_return(mapping)
+    strategy.stub(:request).and_return(request)
   }
 
   context 'a user with a short-lived authentication token' do

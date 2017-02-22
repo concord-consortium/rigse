@@ -15,7 +15,7 @@ describe Embeddable::RawOtmlsController do
   end
 
   before(:each) do
-    Embeddable::RawOtml.stub!(:otrunk_imports).and_return(["org.concord.datagraph.state.OTDataAxis"])
+    Embeddable::RawOtml.stub(:otrunk_imports).and_return(["org.concord.datagraph.state.OTDataAxis"])
   end
 
   def with_tags_like_an_otml_raw_otml

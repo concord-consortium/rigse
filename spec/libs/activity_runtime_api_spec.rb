@@ -510,7 +510,7 @@ describe ActivityRuntimeAPI do
         before(:each) do
           Investigation.any_instance.stub(:offerings).and_return(offerings)
           Activity.any_instance.stub(:offerings).and_return(offerings)
-          offering.stub!(:report_embeddable_filter).and_return(mock_filter)
+          offering.stub(:report_embeddable_filter).and_return(mock_filter)
         end
        it 'should reset the filters' do
           existing_sequence

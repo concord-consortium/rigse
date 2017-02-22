@@ -2,14 +2,14 @@ require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelpe
 
 describe InvestigationsController do
   before(:each) do
-    @current_settings = mock(
+    @current_settings = double(
       :name => "test settings",
       :using_custom_css? => false,
       :use_student_security_questions => false,
       :use_bitmap_snapshots? => false,
       :require_user_consent? => false,
       :default_cohort => nil)
-    Admin::Settings.stub!(:default_settings).and_return(@current_settings)
+    Admin::Settings.stub(:default_settings).and_return(@current_settings)
     controller.stub(:before_render) {
       response.template.stub(:net_logo_package_name).and_return("blah")
       response.template.stub_chain(:current_settings).and_return(@current_settings);
@@ -48,7 +48,7 @@ describe InvestigationsController do
       # this is needed to prevent a missing template call, the real send_data method
       # keeps rails from doing an implicit render, but since we are stubing send_data here
       # the implicit render isn't stopped
-      controller.stub!(:render)
+      controller.stub(:render)
     end
 
     it 'should return an XLS file for the global Usage Report' do
@@ -75,7 +75,7 @@ describe InvestigationsController do
 
     describe "with teacher mode='true'" do
       before(:each) do
-        controller.stub!(:render)
+        controller.stub(:render)
         get :show, :id => @investigation.id, :teacher_mode => "true"
       end
       it "should assign true to teacher_mode instance var" do
@@ -84,7 +84,7 @@ describe InvestigationsController do
     end
     describe "with teacher mode='false'" do
       before(:each) do
-        controller.stub!(:render)
+        controller.stub(:render)
         get :show, :id => @investigation.id, :teacher_mode => "false"
       end
       it "should assign false to teacher_mode instance var" do

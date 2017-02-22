@@ -21,7 +21,7 @@ require 'spec_helper'
 describe MaterialsCollectionsController do
   before(:each) do
     @admin_user = Factory.next(:admin_user)
-    controller.stub!(:current_visitor).and_return(@admin_user)
+    controller.stub(:current_visitor).and_return(@admin_user)
 
     login_admin
   end

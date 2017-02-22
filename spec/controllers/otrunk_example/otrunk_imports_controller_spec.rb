@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe OtrunkExample::OtrunkImportsController do
 
   def mock_otrunk_import(stubs={})
-    @mock_otrunk_import.stub!(stubs) unless stubs.empty?
+    @mock_otrunk_import.stub(stubs) unless stubs.empty?
     @mock_otrunk_import
   end
   
@@ -24,7 +24,7 @@ describe OtrunkExample::OtrunkImportsController do
     describe "with mime type of xml" do
   
       it "renders all otrunk_example_otrunk_imports as xml" do
-        OtrunkExample::OtrunkImport.should_receive(:all).and_return(otrunk_imports = mock("Array of OtrunkExample::OtrunkImports"))
+        OtrunkExample::OtrunkImport.should_receive(:all).and_return(otrunk_imports = double("Array of OtrunkExample::OtrunkImports"))
         otrunk_imports.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
@@ -86,7 +86,7 @@ describe OtrunkExample::OtrunkImportsController do
       end
 
       it "redirects to the created otrunk_import" do
-        OtrunkExample::OtrunkImport.stub!(:new).and_return(mock_otrunk_import(:save => true))
+        OtrunkExample::OtrunkImport.stub(:new).and_return(mock_otrunk_import(:save => true))
         post :create, :otrunk_import => {}
         response.should redirect_to(otrunk_example_otrunk_import_url(mock_otrunk_import))
       end
@@ -96,13 +96,13 @@ describe OtrunkExample::OtrunkImportsController do
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved otrunk_import as @otrunk_import" do
-        OtrunkExample::OtrunkImport.stub!(:new).with({'these' => 'params'}).and_return(mock_otrunk_import(:save => false))
+        OtrunkExample::OtrunkImport.stub(:new).with({'these' => 'params'}).and_return(mock_otrunk_import(:save => false))
         post :create, :otrunk_import => {:these => 'params'}
         assigns(:otrunk_import).should equal(mock_otrunk_import)
       end
 
       it "re-renders the 'new' template" do
-        OtrunkExample::OtrunkImport.stub!(:new).and_return(mock_otrunk_import(:save => false))
+        OtrunkExample::OtrunkImport.stub(:new).and_return(mock_otrunk_import(:save => false))
         post :create, :otrunk_import => {}
         response.should render_template('new')
       end
@@ -122,13 +122,13 @@ describe OtrunkExample::OtrunkImportsController do
       end
 
       it "exposes the requested otrunk_import as @otrunk_import" do
-        OtrunkExample::OtrunkImport.stub!(:find).and_return(mock_otrunk_import(:update_attributes => true))
+        OtrunkExample::OtrunkImport.stub(:find).and_return(mock_otrunk_import(:update_attributes => true))
         put :update, :id => "1"
         assigns(:otrunk_import).should equal(mock_otrunk_import)
       end
 
       it "redirects to the otrunk_import" do
-        OtrunkExample::OtrunkImport.stub!(:find).and_return(mock_otrunk_import(:update_attributes => true))
+        OtrunkExample::OtrunkImport.stub(:find).and_return(mock_otrunk_import(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(otrunk_example_otrunk_import_url(mock_otrunk_import))
       end
@@ -144,13 +144,13 @@ describe OtrunkExample::OtrunkImportsController do
       end
 
       it "exposes the otrunk_import as @otrunk_import" do
-        OtrunkExample::OtrunkImport.stub!(:find).and_return(mock_otrunk_import(:update_attributes => false))
+        OtrunkExample::OtrunkImport.stub(:find).and_return(mock_otrunk_import(:update_attributes => false))
         put :update, :id => "1"
         assigns(:otrunk_import).should equal(mock_otrunk_import)
       end
 
       it "re-renders the 'edit' template" do
-        OtrunkExample::OtrunkImport.stub!(:find).and_return(mock_otrunk_import(:update_attributes => false))
+        OtrunkExample::OtrunkImport.stub(:find).and_return(mock_otrunk_import(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -168,7 +168,7 @@ describe OtrunkExample::OtrunkImportsController do
     end
   
     it "redirects to the otrunk_example_otrunk_imports list" do
-      OtrunkExample::OtrunkImport.stub!(:find).and_return(mock_otrunk_import(:destroy => true))
+      OtrunkExample::OtrunkImport.stub(:find).and_return(mock_otrunk_import(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(otrunk_example_otrunk_imports_url)
     end

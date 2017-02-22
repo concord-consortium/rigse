@@ -40,7 +40,7 @@ describe PasswordsController do
 
     it "will send an email reset notification for non-students with email" do
 
-      message = mock("message")
+      message = double("message")
       message.should_receive(:deliver)
       PasswordMailer.should_receive(:forgot_password).and_return(message)
 
@@ -131,7 +131,7 @@ describe PasswordsController do
     end
 
     it "will send an email reset notification for email addresses" do
-      message = mock("message")
+      message = double("message")
       message.should_receive(:deliver)
       PasswordMailer.should_receive(:forgot_password).and_return(message)
 

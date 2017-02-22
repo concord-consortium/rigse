@@ -9,7 +9,7 @@ describe "materials_collections/new" do
     ).as_new_record)
 
     @admin_user = Factory.next(:admin_user)
-    controller.stub!(:current_user).and_return(@admin_user)
+    controller.stub(:current_user).and_return(@admin_user)
   end
 
   it "renders new materials_collection form" do

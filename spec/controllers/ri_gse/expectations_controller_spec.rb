@@ -24,7 +24,7 @@ describe RiGse::ExpectationsController do
   
       it "should render all expectations as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::Expectation.should_receive(:all).and_return(expectations = mock("Array of Expectations"))
+        RiGse::Expectation.should_receive(:all).and_return(expectations = double("Array of Expectations"))
         expectations.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
@@ -87,7 +87,7 @@ describe RiGse::ExpectationsController do
       end
 
       it "should redirect to the created expectation" do
-        RiGse::Expectation.stub!(:new).and_return(mock_expectation(:save => true))
+        RiGse::Expectation.stub(:new).and_return(mock_expectation(:save => true))
         post :create, :expectation => {}
         response.should redirect_to(ri_gse_expectation_url(mock_expectation))
       end
@@ -97,13 +97,13 @@ describe RiGse::ExpectationsController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved expectation as @expectation" do
-        RiGse::Expectation.stub!(:new).with({'these' => 'params'}).and_return(mock_expectation(:save => false))
+        RiGse::Expectation.stub(:new).with({'these' => 'params'}).and_return(mock_expectation(:save => false))
         post :create, :expectation => {:these => 'params'}
         assigns(:expectation).should equal(mock_expectation)
       end
 
       it "should re-render the 'new' template" do
-        RiGse::Expectation.stub!(:new).and_return(mock_expectation(:save => false))
+        RiGse::Expectation.stub(:new).and_return(mock_expectation(:save => false))
         post :create, :expectation => {}
         response.should render_template('new')
       end
@@ -123,13 +123,13 @@ describe RiGse::ExpectationsController do
       end
 
       it "should expose the requested expectation as @expectation" do
-        RiGse::Expectation.stub!(:find).and_return(mock_expectation(:update_attributes => true))
+        RiGse::Expectation.stub(:find).and_return(mock_expectation(:update_attributes => true))
         put :update, :id => "1"
         assigns(:expectation).should equal(mock_expectation)
       end
 
       it "should redirect to the expectation" do
-        RiGse::Expectation.stub!(:find).and_return(mock_expectation(:update_attributes => true))
+        RiGse::Expectation.stub(:find).and_return(mock_expectation(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(ri_gse_expectation_url(mock_expectation))
       end
@@ -145,13 +145,13 @@ describe RiGse::ExpectationsController do
       end
 
       it "should expose the expectation as @expectation" do
-        RiGse::Expectation.stub!(:find).and_return(mock_expectation(:update_attributes => false))
+        RiGse::Expectation.stub(:find).and_return(mock_expectation(:update_attributes => false))
         put :update, :id => "1"
         assigns(:expectation).should equal(mock_expectation)
       end
 
       it "should re-render the 'edit' template" do
-        RiGse::Expectation.stub!(:find).and_return(mock_expectation(:update_attributes => false))
+        RiGse::Expectation.stub(:find).and_return(mock_expectation(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -169,7 +169,7 @@ describe RiGse::ExpectationsController do
     end
   
     it "should redirect to the expectations list" do
-      RiGse::Expectation.stub!(:find).and_return(mock_expectation(:destroy => true))
+      RiGse::Expectation.stub(:find).and_return(mock_expectation(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(expectations_url)
     end

@@ -86,7 +86,7 @@ describe API::V1::ReportsController do
     section.pages << page
     runnable.sections << section
     runnable.save
-    Portal::Offering.stub!(:find).and_return(offering)
+    Portal::Offering.stub(:find).and_return(offering)
     sign_in user
     add_answer_for_learner(learner_a, open_response, {"answer" => "testing from #{learner_a.student.user.id}"} )
     add_answer_for_learner(learner_b, open_response, {"answer" => "testing from #{learner_b.student.user.id}"} )

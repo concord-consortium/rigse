@@ -5,7 +5,7 @@ describe Portal::StudentClazzesController do
     
   def mock_clazz(stubs={})
     mock_clazz = Factory.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
-    #mock_clazz.stub!(stubs) unless stubs.empty?
+    #mock_clazz.stub(stubs) unless stubs.empty?
 
     mock_clazz
   end

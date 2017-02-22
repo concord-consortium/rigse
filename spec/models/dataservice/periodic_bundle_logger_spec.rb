@@ -65,7 +65,7 @@ describe Dataservice::PeriodicBundleLogger do
       # disable the observer so the parts of this bundle don't get extracted
       Dataservice::PeriodicBundleContentObserver.instance.stub(:after_create)
 
-      non_pub_bundle_contents = mock()
+      non_pub_bundle_contents = double()
       pb_logger.stub_chain(:learner, :bundle_logger, :last_non_empty_bundle_content).and_return(non_pub_bundle_contents)
 
       # note this is invalid otml so if you want to use this for something real you need to at 

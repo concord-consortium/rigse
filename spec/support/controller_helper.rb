@@ -84,7 +84,7 @@ def generate_default_settings_and_jnlps_with_mocks
     :enabled_bookmark_types         => []
   )
 
-  Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
+  Admin::Settings.stub(:default_settings).and_return(@mock_settings)
   @mock_settings
 end
 

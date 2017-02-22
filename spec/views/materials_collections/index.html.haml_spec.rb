@@ -9,7 +9,7 @@ describe "materials_collections/index" do
     assign(:materials_collections, MaterialsCollection.search(nil, nil, nil))
 
     @admin_user = Factory.next(:admin_user)
-    controller.stub!(:current_user).and_return(@admin_user)
+    controller.stub(:current_user).and_return(@admin_user)
   end
 
   it "renders a list of materials_collections" do

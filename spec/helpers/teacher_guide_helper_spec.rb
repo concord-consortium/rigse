@@ -6,14 +6,14 @@ describe TeacherGuideHelper do
   before :each do
     @helper = Object.new.extend TeacherGuideHelper
     @helper.extend ActionView::Helpers::UrlHelper
-    @helper.stub!(:tag_options).and_return({})
-    @helper.stub!(:current_user).and_return(user)
+    @helper.stub(:tag_options).and_return({})
+    @helper.stub(:current_user).and_return(user)
   end
   let(:is_admin)   {false}
   let(:is_teacher) {false}
   let(:stubs)      {{:has_role? => is_admin, :portal_teacher => is_teacher}}
   let(:user)       { mock_model(User, stubs)}
-  let(:material)   { mock({})}
+  let(:material)   { double({})}
   subject { @helper.teacher_guide_link(material)}
   describe "when the user isnt an admin" do
     describe "when the user isnt a teacher" do
@@ -26,11 +26,11 @@ describe TeacherGuideHelper do
         it { should be_blank}
       end
       describe "When the guide is an empty string" do
-        let(:material) {mock({:teacher_guide_url => ""})}
+        let(:material) {double({:teacher_guide_url => ""})}
         it {should be_blank}
       end
       describe "When the guide is an actual url" do
-        let(:material) {mock({:teacher_guide_url => "http://google.com/"})}
+        let(:material) {double({:teacher_guide_url => "http://google.com/"})}
         it {should match "http://google.com"}
       end
     end
@@ -41,11 +41,11 @@ describe TeacherGuideHelper do
         it { should be_blank}
       end
       describe "When the guide is an empty string" do
-        let(:material) {mock({:teacher_guide_url => ""})}
+        let(:material) {double({:teacher_guide_url => ""})}
         it {should be_blank}
       end
       describe "When the guide is an actual url" do
-        let(:material) {mock({:teacher_guide_url => "http://google.com/"})}
+        let(:material) {double({:teacher_guide_url => "http://google.com/"})}
         it {should match "http://google.com"}
       end
     end

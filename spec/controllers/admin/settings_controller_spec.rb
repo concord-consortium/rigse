@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Admin::SettingsController do
 
   def mock_settings(stubs={})
-    @mock_settings.stub!(stubs) unless stubs.empty?
+    @mock_settings.stub(stubs) unless stubs.empty?
     @mock_settings
   end
 
@@ -33,7 +33,7 @@ describe Admin::SettingsController do
     it "only allows managers to edit the current settings and only shows them the information they can change" do
       settings = Factory.create(:admin_settings, :active => true)
       second_settings = Factory.create(:admin_settings)
-      Admin::Settings.stub!(:default_settings).and_return(settings)
+      Admin::Settings.stub(:default_settings).and_return(settings)
 
       login_manager
       
@@ -66,7 +66,7 @@ describe Admin::SettingsController do
 
   describe "GET edit" do
     before(:each) do
-      mock_settings.stub!(:home_page_content=).and_return("") # Our controller uses this now, to set default content
+      mock_settings.stub(:home_page_content=).and_return("") # Our controller uses this now, to set default content
       Admin::Settings.should_receive(:find).with("37").and_return(mock_settings)
     end
 
@@ -76,13 +76,13 @@ describe Admin::SettingsController do
     end
 
     it "uses default content if home_page_content is empty" do
-      mock_settings.stub!(:home_page_content).and_return(nil)
+      mock_settings.stub(:home_page_content).and_return(nil)
       mock_settings.should_receive(:home_page_content=)
       get :edit, :id => "37"
     end
 
     it "uses the value of home_page_content if it is not empty" do
-      mock_settings.stub!(:home_page_content).and_return("test content")
+      mock_settings.stub(:home_page_content).and_return("test content")
       mock_settings.should_not_receive(:home_page_content=)
       get :edit, :id => "37"
     end

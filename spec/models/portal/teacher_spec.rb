@@ -62,7 +62,7 @@ describe Portal::Teacher do
   describe "possibly_add_authoring_role" do
     describe "when the portal allows teachers to author" do
       it "should add the authoring role to teachers when they are created" do
-        Admin::Settings.stub!(:teachers_can_author? => true)
+        Admin::Settings.stub(:teachers_can_author? => true)
         teacher = Factory.create(:portal_teacher)
         teacher.possibly_add_authoring_role
         teacher.user.should have_role('author')
@@ -71,7 +71,7 @@ describe Portal::Teacher do
 
     describe "when the portal doesn't allow the teacher to author" do
       it "should not add the authoring role to teachers when they are created" do
-        Admin::Settings.stub!(:teachers_can_author? => false)
+        Admin::Settings.stub(:teachers_can_author? => false)
         teacher = Factory.create(:portal_teacher)
         teacher.possibly_add_authoring_role
         teacher.user.should_not have_role('author')
@@ -83,7 +83,7 @@ describe Portal::Teacher do
     let(:settings) { Factory.create(:admin_settings) }
     let(:teacher) { Factory(:portal_teacher) }
     before(:each) do
-      Admin::Settings.stub!(:default_settings).and_return(settings)
+      Admin::Settings.stub(:default_settings).and_return(settings)
     end
 
     describe 'when default cohort is not specified in portal settings' do

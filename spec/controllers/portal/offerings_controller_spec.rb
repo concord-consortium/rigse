@@ -30,7 +30,7 @@ describe Portal::OfferingsController do
     before(:each) do
       generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
-      Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
+      Admin::Settings.stub(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
       @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false)
@@ -44,8 +44,8 @@ describe Portal::OfferingsController do
       @user = Factory(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
       @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
-      controller.stub!(:setup_portal_student).and_return(@learner)
-      Portal::Offering.stub!(:find).and_return(@offering)
+      controller.stub(:setup_portal_student).and_return(@learner)
+      Portal::Offering.stub(:find).and_return(@offering)
       sign_in @user
     end
 
@@ -64,7 +64,7 @@ describe Portal::OfferingsController do
 
     it "appends the learner id to the url" do
       @runnable.append_learner_id_to_url = true
-      # @runnable.stub!(:append_learner_id_to_url).and_return(true)
+      # @runnable.stub(:append_learner_id_to_url).and_return(true)
       get :show, :id => @offering.id, :format => 'run_resource_html'
       response.should redirect_to(@runnable_opts[:url] + "?learner=#{@learner.id}")
     end
@@ -75,7 +75,7 @@ describe Portal::OfferingsController do
     before(:each) do
       generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
-      Admin::Settings.stub!(:default_settings).and_return(@mock_settings)
+      Admin::Settings.stub(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
       @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false)
@@ -110,8 +110,8 @@ describe Portal::OfferingsController do
         :offering => @offering,
         :student  => @portal_student,
         :report_learner => @report_learner)
-      controller.stub!(:setup_portal_student).and_return(@learner)
-      Portal::Offering.stub!(:find).and_return(@offering)
+      controller.stub(:setup_portal_student).and_return(@learner)
+      Portal::Offering.stub(:find).and_return(@offering)
       sign_in @user
     end
 
@@ -183,7 +183,7 @@ describe Portal::OfferingsController do
     end
 
     it 'should disable the submit button when there is no learner' do
-      controller.stub!(:setup_portal_student).and_return(nil)
+      controller.stub(:setup_portal_student).and_return(nil)
       get :show, :id => @offering.id, :format => 'run_html'
       response.body.should =~ /<input.*class='disabled'.*type='submit'/
     end

@@ -154,7 +154,7 @@ describe Admin::Settings do
     end
 
     describe "teachers_can_author" do
-      let(:active_settings) { mock() }
+      let(:active_settings) { double() }
       it "should return true if the current settings allows teachers to author" do
         @clazz.should_receive(:default_settings).and_return(active_settings)
         active_settings.should_receive(:teachers_can_author).and_return(true)

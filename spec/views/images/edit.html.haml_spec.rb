@@ -19,11 +19,11 @@ describe "/images/edit.html.haml" do
       width: 10,
       height: 20
     )
-    @user = mock(
+    @user = double(
       :has_role?       => true
     )
 
-    view.stub!(:current_user).and_return(@user)
+    view.stub(:current_user).and_return(@user)
   end
 
   it "should render edit form without error" do

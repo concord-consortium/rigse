@@ -44,7 +44,7 @@ describe SearchController do
   let(:activity_results)      { [] }
 
   let(:search_results) {{ Investigation => investigation_results, Activity => activity_results }}
-  let(:mock_search)    { mock('results', {:results => search_results})}
+  let(:mock_search)    { double('results', {:results => search_results})}
 
   before(:all) do
     solr_setup
@@ -69,7 +69,7 @@ describe SearchController do
     describe "when its a student visiting" do
       it "should redirect to root" do
         student # Ensure student_user has a PortalStudent
-        controller.stub!(:current_visitor).and_return(student_user)
+        controller.stub(:current_visitor).and_return(student_user)
         get :index
         response.should redirect_to("/")
       end

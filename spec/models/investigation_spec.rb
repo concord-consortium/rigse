@@ -402,7 +402,7 @@ describe Investigation do
       @bad.stub(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
       @bad_with_learners.stub(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
       @bad_with_learners.stub(:offerings => [@offering])
-      Investigation.stub!(:all => [@good,@bad,@bad_with_learners])     
+      Investigation.stub(:all => [@good,@bad,@bad_with_learners])
     end
 
     describe "broken investigations" do
@@ -468,12 +468,12 @@ describe Investigation do
     let(:investigation)        { nil }
     let(:external_activities)  { [] }
     let(:activity_externals)    { [] }
-    let(:activity)             { mock(:external_activities => activity_externals) }
+    let(:activity)             { double(:external_activities => activity_externals) }
     let(:activities)           { [activity] }
     subject do
       s = Factory.create(:investigation)
-      s.stub!(:external_activities => external_activities)
-      s.stub!(:activities => activities)
+      s.stub(:external_activities => external_activities)
+      s.stub(:activities => activities)
       s.is_template
     end
     describe "when an investigation has an activity that is a template" do

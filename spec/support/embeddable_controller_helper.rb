@@ -51,13 +51,13 @@ shared_examples_for 'an embeddable controller' do
   describe "GET show" do
 
     it "assigns the requested #{model_ivar_name_lambda.call} as @#{model_ivar_name_lambda.call}" do
-      @model_class.stub!(:find).with("37").and_return(@model_ivar)
+      @model_class.stub(:find).with("37").and_return(@model_ivar)
       get :show, :id => "37"
       assigns[@model_ivar_name].should equal(@model_ivar)
     end
 
     it "assigns the requested #{model_ivar_name_lambda.call} as @#{model_ivar_name_lambda.call} when called with Ajax" do
-      @model_class.stub!(:find).with("37").and_return(@model_ivar)
+      @model_class.stub(:find).with("37").and_return(@model_ivar)
       xhr :get, :show, :id => "37"
       assigns[@model_ivar_name].should equal(@model_ivar)
     end
@@ -65,7 +65,7 @@ shared_examples_for 'an embeddable controller' do
     describe "with mime type of jnlp" do
 
       it "renders the requested #{model_ivar_name_lambda.call} as jnlp without error" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
+        @model_class.stub(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'jnlp'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template("shared/_installer")
@@ -86,7 +86,7 @@ shared_examples_for 'an embeddable controller' do
     describe "with mime type of config" do
 
       it "renders the requested #{model_ivar_name_lambda.call} as config without error" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
+        @model_class.stub(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'config'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template("shared/_show")
@@ -108,7 +108,7 @@ shared_examples_for 'an embeddable controller' do
     describe "with mime type of dynamic_otml" do
 
       it "renders the requested #{model_ivar_name_lambda.call} as dynamic_otml without error" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
+        @model_class.stub(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'dynamic_otml'
         assigns[@model_ivar_name].should equal(@model_ivar)
         assert_select('otrunk') do
@@ -139,7 +139,7 @@ shared_examples_for 'an embeddable controller' do
     describe "with mime type of otml" do
 
       it "renders the requested #{model_ivar_name_lambda.call} as otml without error" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
+        @model_class.stub(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'otml'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template(:show)

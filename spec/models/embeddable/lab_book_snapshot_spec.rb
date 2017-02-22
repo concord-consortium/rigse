@@ -6,7 +6,7 @@ describe Embeddable::LabBookSnapshot do
   # It took a while to finagle this test. It should probably be
   # looked at closer.
   it "should send updates to investigations when changed" do
-    investigation = mock("investigation")
+    investigation = double("investigation")
     investigations = [investigation]
     snapshot = Embeddable::LabBookSnapshot.new(:name => "button", :target_element_type => "fake", :target_element_id => 3)
     

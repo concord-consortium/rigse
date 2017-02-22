@@ -28,7 +28,7 @@ describe Embeddable::SoundGraphersController do
         :max_frequency => @max_frequency,
         :max_sample_time => @max_sample_time
       )
-      Embeddable::SoundGrapher.stub!(:find).and_return(@sound_grapher)
+      Embeddable::SoundGrapher.stub(:find).and_return(@sound_grapher)
     end
 
     # %OTSoundGrapherModel{ 
