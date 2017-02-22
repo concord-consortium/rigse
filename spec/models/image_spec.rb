@@ -74,7 +74,7 @@ describe Image do
     let(:with_quotes)   { %q!dangerous"name!}
     let(:expected)      { "dangerous-name"}
     before(:each) {
-      subject.stub(:image => image_mock)
+      allow(subject).to receive_messages(:image => image_mock)
       expect(image_mock).to receive(:instance_write).with(:file_name, expected)
     }
     context "with dangerous names" do
@@ -121,7 +121,7 @@ describe Image do
     subject { Image }
     describe "can_be_created_by" do
       before(:each) do
-        Admin::Settings.stub_chain(:default_settings, :teachers_can_author?).and_return(true)
+        allow(Admin::Settings).to receive_message_chain(:default_settings, :teachers_can_author?).and_return(true)
       end
 
 
@@ -140,7 +140,7 @@ describe Image do
   describe "redo_watermark" do
     before(:each) do
       @mock_image = double
-      subject.stub(:image => @mock_image)
+      allow(subject).to receive_messages(:image => @mock_image)
     end
     it "shouldn't reprocess if processing is in progress" do
       expect(subject).to receive(:is_reprocessing).and_return(true)
@@ -158,7 +158,7 @@ describe Image do
   describe "image_size" do
     before(:each) do
       @mock_image = double
-      subject.stub(:image => @mock_image)
+      allow(subject).to receive_messages(:image => @mock_image)
     end
     it "should return the images size" do
       expect(@mock_image).to receive(:size).and_return(100)

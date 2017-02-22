@@ -57,14 +57,14 @@ describe Portal::DistrictsController do
   
     describe "with valid params" do
       it "assigns a newly created district as @portal_district" do
-        @district.stub(:save => true)
+        allow(@district).to receive_messages(:save => true)
         allow(Portal::District).to receive(:new).with({'these' => 'params'}).and_return(@district)
         post :create, :portal_district => {:these => 'params'}
         expect(assigns[:portal_district]).to equal(@district)
       end
   
       it "redirects to the created district" do
-        @district.stub(:id => 37, :save => true )
+        allow(@district).to receive_messages(:id => 37, :save => true )
         allow(Portal::District).to receive(:new).and_return(@district)
         post :create, :portal_district => {}
         expect(response).to redirect_to(portal_district_url(@district))
@@ -73,14 +73,14 @@ describe Portal::DistrictsController do
   
     describe "with invalid params" do
       it "assigns a newly created but unsaved district as @portal_district" do
-        @district.stub(:save => false)
+        allow(@district).to receive_messages(:save => false)
         allow(Portal::District).to receive(:new).with({'these' => 'params'}).and_return(@district)
         post :create, :portal_district => {:these => 'params'}
         expect(assigns[:portal_district]).to equal(@district)
       end
   
       it "re-renders the 'new' template" do
-        @district.stub(:save => false)
+        allow(@district).to receive_messages(:save => false)
         allow(Portal::District).to receive(:new).and_return(@district)
         post :create, :portal_district => {}
         expect(response).to render_template('new')
@@ -99,14 +99,14 @@ describe Portal::DistrictsController do
       end
   
       it "assigns the requested district as @portal_district" do
-        @district.stub(:update_attributes => true)
+        allow(@district).to receive_messages(:update_attributes => true)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, :id => "1"
         expect(assigns[:portal_district]).to equal(@district)
       end
   
       it "redirects to the district" do
-        @district.stub(:update_attributes => true)
+        allow(@district).to receive_messages(:update_attributes => true)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, :id => "1"
         expect(response).to redirect_to(portal_district_url(@district))
@@ -121,14 +121,14 @@ describe Portal::DistrictsController do
       end
   
       it "assigns the district as @portal_district" do
-        @district.stub(:update_attributes => false)
+        allow(@district).to receive_messages(:update_attributes => false)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, :id => "1"
         expect(assigns[:portal_district]).to equal(@district)
       end
   
       it "re-renders the 'edit' template" do
-        @district.stub(:update_attributes => false)
+        allow(@district).to receive_messages(:update_attributes => false)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, :id => "1"
         expect(response).to render_template('edit')

@@ -43,7 +43,7 @@ describe OtmlHelper do
       end
 
       it "should call theme_stylesheet_path when there is a theme" do
-        helper.stub(:theme_stylesheet_path => '/fakeo-path')
+        allow(helper).to receive_messages(:theme_stylesheet_path => '/fakeo-path')
         expect(helper.otml_css_path).to eql("/fakeo-path")
       end
 

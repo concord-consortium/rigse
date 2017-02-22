@@ -6,7 +6,7 @@ require File.expand_path("../../../../lib/rack/config_session_cookies", __FILE__
 describe Rack::ConfigSessionCookies do
   before(:each) do
     @tester = Rack::ConfigSessionCookies.new(double("app", :call => nil))
-    @tester.stub(:session_key => "_fake_session_key")
+    allow(@tester).to receive_messages(:session_key => "_fake_session_key")
   end
   
   it "should have a stubbed session_key" do

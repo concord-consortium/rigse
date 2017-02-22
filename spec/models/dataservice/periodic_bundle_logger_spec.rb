@@ -48,8 +48,8 @@ describe Dataservice::PeriodicBundleLogger do
       # note this is invalid otml so if you want to use this for something real you need to at 
       # least add an import for OTBasicObject
       pb_bundle_contents = pb_logger.periodic_bundle_contents.create(:body => fake_bundle_contents )
-      pb_logger.stub_chain(:learner, :bundle_logger, :last_non_empty_bundle_content).and_return(nil)
-      pb_logger.stub_chain(:learner, :uuid).and_return(UUIDTools::UUID.timestamp_create)
+      allow(pb_logger).to receive_message_chain(:learner, :bundle_logger, :last_non_empty_bundle_content).and_return(nil)
+      allow(pb_logger).to receive_message_chain(:learner, :uuid).and_return(UUIDTools::UUID.timestamp_create)
       allow(pb_logger).to receive(:imports).and_return([])
       expect(pb_bundle_contents.parts_extracted).to eq(false)
       expect(pb_logger.periodic_bundle_parts.size).to eq(0)
@@ -66,13 +66,13 @@ describe Dataservice::PeriodicBundleLogger do
       allow(Dataservice::PeriodicBundleContentObserver.instance).to receive(:after_create)
 
       non_pub_bundle_contents = double()
-      pb_logger.stub_chain(:learner, :bundle_logger, :last_non_empty_bundle_content).and_return(non_pub_bundle_contents)
+      allow(pb_logger).to receive_message_chain(:learner, :bundle_logger, :last_non_empty_bundle_content).and_return(non_pub_bundle_contents)
 
       # note this is invalid otml so if you want to use this for something real you need to at 
       # least add an import for OTBasicObject
       expect(non_pub_bundle_contents).to receive(:otml).and_return(fake_bundle_contents)
 
-      pb_logger.stub_chain(:learner, :uuid).and_return(UUIDTools::UUID.timestamp_create)
+      allow(pb_logger).to receive_message_chain(:learner, :uuid).and_return(UUIDTools::UUID.timestamp_create)
       allow(pb_logger).to receive(:imports).and_return([])
       expect(pb_logger.periodic_bundle_parts.size).to eq(0)
       pb_logger.sail_bundle

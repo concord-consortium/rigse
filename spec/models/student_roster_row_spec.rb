@@ -29,7 +29,7 @@ describe StudentRosterRow do
   let(:roster_item)       { StudentRosterRow.new(student,clazz) }
 
   before(:each) do
-    clazz.stub_chain(:student_clazzes,:find_by_student_id).and_return(clazz)
+    allow(clazz).to receive_message_chain(:student_clazzes,:find_by_student_id).and_return(clazz)
   end
 
   describe "A student without a valid user" do
@@ -71,9 +71,9 @@ describe StudentRosterRow do
       let(:item3) { Object.new }
       let(:learners) { [item1, item2] }
       it "should list 2 assignments started" do
-        item1.stub_chain(:offering, :clazz_id).and_return(clazz.id)
-        item2.stub_chain(:offering, :clazz_id).and_return(clazz.id)
-        item3.stub_chain(:offering, :clazz_id).and_return(404)
+        allow(item1).to receive_message_chain(:offering, :clazz_id).and_return(clazz.id)
+        allow(item2).to receive_message_chain(:offering, :clazz_id).and_return(clazz.id)
+        allow(item3).to receive_message_chain(:offering, :clazz_id).and_return(404)
         expect(roster_item.assignments_started).to eql 2
       end
     end

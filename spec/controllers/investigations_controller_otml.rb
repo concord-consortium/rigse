@@ -17,7 +17,7 @@ describe InvestigationsController do
     # spec/support/controller_helper.rb
     allow(controller).to receive(:before_render) {
       allow(response.template).to receive(:net_logo_package_name).and_return("blah")
-      response.template.stub_chain(:current_settings).and_return(@current_settings);
+      allow(response.template).to receive_message_chain(:current_settings).and_return(@current_settings);
     }
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })

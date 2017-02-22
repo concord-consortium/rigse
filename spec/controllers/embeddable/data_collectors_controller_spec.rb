@@ -38,7 +38,7 @@ describe Embeddable::DataCollectorsController do
 
     describe "with a data_table" do
       before(:each) do
-        @graph.stub(:data_table => @mock_table)
+        allow(@graph).to receive_messages(:data_table => @mock_table)
       end
       it "should get its data from the data_tables dataStore" do
         expect(Embeddable::DataCollector).to receive(:find).with("37").and_return(@graph)
@@ -51,7 +51,7 @@ describe Embeddable::DataCollectorsController do
 
     describe "without a data_table" do
       before(:each) do
-        @graph.stub(:data_table => nil)
+        allow(@graph).to receive_messages(:data_table => nil)
       end
       it "should get its data from the data_tables dataStore" do
         expect(Embeddable::DataCollector).to receive(:find).with("37").and_return(@graph)

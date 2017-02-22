@@ -17,7 +17,7 @@ describe Portal::PadletBookmark do
           end
 
           it "shuld use a name with an ordinal found-size + 1" do
-            Portal::PadletBookmark.stub(:for_user => found_items)
+            allow(Portal::PadletBookmark).to receive_messages(:for_user => found_items)
             expect(Portal::PadletBookmark.create_for_user(user).name).to match(/my 4th padlet/i)
           end
         end
@@ -29,7 +29,7 @@ describe Portal::PadletBookmark do
           end
 
           it "shuld use a name with existing max ordinal size + 1" do
-            Portal::PadletBookmark.stub(:for_user => found_items)
+            allow(Portal::PadletBookmark).to receive_messages(:for_user => found_items)
             expect(Portal::PadletBookmark.create_for_user(user).name).to match(/my 8th padlet/i)
           end
         end
@@ -39,7 +39,7 @@ describe Portal::PadletBookmark do
     describe "user_can_make?(user)" do
       context "when the portal allows PadletBookmarks" do
         before(:each) do
-          Portal::Bookmark.stub(:allowed_types => [Portal::PadletBookmark])
+          allow(Portal::Bookmark).to receive_messages(:allowed_types => [Portal::PadletBookmark])
         end
 
         context "when the user is anonymous" do
@@ -57,7 +57,7 @@ describe Portal::PadletBookmark do
       end
       context "when the portal doesn't allow PadletBookmarks" do
         before(:each) do
-          Portal::Bookmark.stub(:allowed_types => [])
+          allow(Portal::Bookmark).to receive_messages(:allowed_types => [])
         end
         context "the user is a regular user" do
           let(:user) { mock_model(User, :anonymous? => false)}

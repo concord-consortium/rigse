@@ -131,8 +131,8 @@ describe Activity do
     let(:external_activities)  { [] }
     subject do
       s = Factory.create(:activity)
-      s.stub(:investigation => investigation)
-      s.stub(:external_activities => external_activities)
+      allow(s).to receive_messages(:investigation => investigation)
+      allow(s).to receive_messages(:external_activities => external_activities)
       s.is_template
     end
 

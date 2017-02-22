@@ -4,7 +4,7 @@ describe Report::OfferingStudentStatus do
   context "with a learner" do
     let :learner do
       _learner = Object.new
-      _learner.stub_chain(:report_learner, :last_run).and_return(@run_date)
+      allow(_learner).to receive_message_chain(:report_learner, :last_run).and_return(@run_date)
       _learner
     end
     let(:offering) {nil }
@@ -47,7 +47,7 @@ describe Report::OfferingStudentStatus do
         context "without a complete_percent in report_learner" do
           let :learner do
             _learner = Object.new
-            _learner.stub_chain(:report_learner,:complete_percent).and_return(nil)
+            allow(_learner).to receive_message_chain(:report_learner,:complete_percent).and_return(nil)
             _learner
           end
 
@@ -60,7 +60,7 @@ describe Report::OfferingStudentStatus do
         context "with a 50% complete_percent in report_learner" do
           let :learner do
             _learner = Object.new
-            _learner.stub_chain(:report_learner,:complete_percent).and_return(50)
+            allow(_learner).to receive_message_chain(:report_learner,:complete_percent).and_return(50)
             _learner
           end
 
