@@ -7,7 +7,7 @@ describe Portal::OfferingsController do
       admin = Factory.next :admin_user
       sign_in admin
       get :show, :id => offering.id, :format => :jnlp
-      response.should render_template('shared/_installer')
+      expect(response).to render_template('shared/_installer')
     end
 
     it "renders a jnlp for a teacher" do
@@ -15,14 +15,14 @@ describe Portal::OfferingsController do
       offering = Factory(:portal_offering, :clazz => teacher.clazzes.first)
       sign_in teacher.user
       get :show, :id => offering.id, :format => :jnlp
-      response.should render_template('shared/_installer')
+      expect(response).to render_template('shared/_installer')
     end
 
     it "renders a jnlp as a learner" do
       learner = Factory(:full_portal_learner)
       sign_in learner.student.user
       get :show, :id => learner.offering.id, :format => :jnlp
-      response.should render_template('shared/_installer')
+      expect(response).to render_template('shared/_installer')
     end
   end
 
@@ -30,7 +30,7 @@ describe Portal::OfferingsController do
     before(:each) do
       generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
-      Admin::Settings.stub(:default_settings).and_return(@mock_settings)
+      allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
       @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false)
@@ -44,8 +44,8 @@ describe Portal::OfferingsController do
       @user = Factory(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
       @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
-      controller.stub(:setup_portal_student).and_return(@learner)
-      Portal::Offering.stub(:find).and_return(@offering)
+      allow(controller).to receive(:setup_portal_student).and_return(@learner)
+      allow(Portal::Offering).to receive(:find).and_return(@offering)
       sign_in @user
     end
 
@@ -53,20 +53,20 @@ describe Portal::OfferingsController do
       @runnable.append_learner_id_to_url = false
 
       get :show, :id => @offering.id, :format => 'run_resource_html'
-      response.cookies["save_path"].should == @offering.runnable.save_path
-      response.cookies["learner_id"].should == @learner.id.to_s
-      response.cookies["student_name"].should == "#{@user.first_name} #{@user.last_name}"
-      response.cookies["activity_name"].should == @offering.runnable.name
-      response.cookies["class_id"].should == @clazz.id.to_s
+      expect(response.cookies["save_path"]).to eq(@offering.runnable.save_path)
+      expect(response.cookies["learner_id"]).to eq(@learner.id.to_s)
+      expect(response.cookies["student_name"]).to eq("#{@user.first_name} #{@user.last_name}")
+      expect(response.cookies["activity_name"]).to eq(@offering.runnable.name)
+      expect(response.cookies["class_id"]).to eq(@clazz.id.to_s)
 
-      response.should redirect_to(@runnable_opts[:url])
+      expect(response).to redirect_to(@runnable_opts[:url])
     end
 
     it "appends the learner id to the url" do
       @runnable.append_learner_id_to_url = true
       # @runnable.stub(:append_learner_id_to_url).and_return(true)
       get :show, :id => @offering.id, :format => 'run_resource_html'
-      response.should redirect_to(@runnable_opts[:url] + "?learner=#{@learner.id}")
+      expect(response).to redirect_to(@runnable_opts[:url] + "?learner=#{@learner.id}")
     end
   end
 
@@ -75,7 +75,7 @@ describe Portal::OfferingsController do
     before(:each) do
       generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
-      Admin::Settings.stub(:default_settings).and_return(@mock_settings)
+      allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
       @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false)
@@ -110,8 +110,8 @@ describe Portal::OfferingsController do
         :offering => @offering,
         :student  => @portal_student,
         :report_learner => @report_learner)
-      controller.stub(:setup_portal_student).and_return(@learner)
-      Portal::Offering.stub(:find).and_return(@offering)
+      allow(controller).to receive(:setup_portal_student).and_return(@learner)
+      allow(Portal::Offering).to receive(:find).and_return(@offering)
       sign_in @user
     end
 
@@ -119,28 +119,28 @@ describe Portal::OfferingsController do
       get :show, :id => @offering.id, :format => 'run_html'
 
       form_regex = /<form.*?action='\/portal\/offerings\/(\d+)\/answers'/
-      response.body.should =~ form_regex
+      expect(response.body).to match(form_regex)
       response.body =~ form_regex
-      $1.to_i.should == @offering.id
+      expect($1.to_i).to eq(@offering.id)
 
       or_regex = /<textarea.*?name='questions\[embeddable__open_response_(\d+)\]'/
-      response.body.should =~ or_regex
+      expect(response.body).to match(or_regex)
       response.body =~ or_regex
-      $1.to_i.should == @open_response.id
+      expect($1.to_i).to eq(@open_response.id)
 
       mc_regex = /<input.*?name='questions\[embeddable__multiple_choice_(\d+)\]'.*?type='radio'.*?value='embeddable__multiple_choice_choice_\d+'/
-      response.body.should =~ mc_regex
+      expect(response.body).to match(mc_regex)
       response.body =~ mc_regex
-      $1.to_i.should == @multiple_choice.id
+      expect($1.to_i).to eq(@multiple_choice.id)
 
       xhtml_regex = /<div.*?id='details_embeddable__xhtml_(\d+)'/
-      response.body.should =~ xhtml_regex
+      expect(response.body).to match(xhtml_regex)
       response.body =~ xhtml_regex
-      $1.to_i.should == @xhtml.id
+      expect($1.to_i).to eq(@xhtml.id)
     end
 
     it 'should create saveables when the form is submitted' do
-      @clazz.should_receive(:is_student?).and_return(true)
+      expect(@clazz).to receive(:is_student?).and_return(true)
 
       mc_sym = "embeddable__multiple_choice_#{@multiple_choice.id}"
       or_sym = "embeddable__open_response_#{@open_response.id}"
@@ -154,16 +154,16 @@ describe Portal::OfferingsController do
       post :answers, :id => @offering.id, :questions => answers
 
       or_saveables = Saveable::OpenResponse.find(:all)
-      or_saveables.size.should == (or_saveables_size + 1)
-      or_saveables.last.answer.should == "This is an OR answer"
+      expect(or_saveables.size).to eq(or_saveables_size + 1)
+      expect(or_saveables.last.answer).to eq("This is an OR answer")
 
       mc_saveables = Saveable::MultipleChoice.find(:all)
-      mc_saveables.size.should == (mc_saveables_size + 1)
-      mc_saveables.last.answer[0].should include({:choice_id => choice.id, :answer => choice.choice, :correct => nil})
+      expect(mc_saveables.size).to eq(mc_saveables_size + 1)
+      expect(mc_saveables.last.answer[0]).to include({:choice_id => choice.id, :answer => choice.choice, :correct => nil})
     end
 
     it 'should display previous answers when view again' do
-      @clazz.should_receive(:is_student?).and_return(true)
+      expect(@clazz).to receive(:is_student?).and_return(true)
 
       mc_sym = "embeddable__multiple_choice_#{@multiple_choice.id}"
       or_sym = "embeddable__open_response_#{@open_response.id}"
@@ -176,16 +176,16 @@ describe Portal::OfferingsController do
       get :show, :id => @offering.id, :format => 'run_html'
 
       or_regex = /<textarea.*?name='questions\[embeddable__open_response_(\d+)\].*?>[^<]*This is an OR answer[^<]*<\/textarea>/m
-      response.body.should =~ or_regex
+      expect(response.body).to match(or_regex)
 
       mc_regex = /<input.*?checked.*?name='questions\[embeddable__multiple_choice_(\d+)\]'.*?type='radio'.*?value='embeddable__multiple_choice_choice_#{choice.id}'/
-      response.body.should =~ mc_regex
+      expect(response.body).to match(mc_regex)
     end
 
     it 'should disable the submit button when there is no learner' do
-      controller.stub(:setup_portal_student).and_return(nil)
+      allow(controller).to receive(:setup_portal_student).and_return(nil)
       get :show, :id => @offering.id, :format => 'run_html'
-      response.body.should =~ /<input.*class='disabled'.*type='submit'/
+      expect(response.body).to match(/<input.*class='disabled'.*type='submit'/)
     end
   end
 
@@ -211,27 +211,27 @@ describe Portal::OfferingsController do
     it "should render nothing and return for users other than teacher" do
       login_admin
       xhr :post, :offering_collapsed_status, @params
-      response.body.should be_blank
+      expect(response.body).to be_blank
 
       sign_in @manager_user
       xhr :post, :offering_collapsed_status, @params
-      response.body.should be_blank
+      expect(response.body).to be_blank
 
       sign_in @researcher_user
       xhr :post, :offering_collapsed_status, @params
-      response.body.should be_blank
+      expect(response.body).to be_blank
 
       sign_in @author_user
       xhr :post, :offering_collapsed_status, @params
-      response.body.should be_blank
+      expect(response.body).to be_blank
 
       sign_in @guest_user
       xhr :post, :offering_collapsed_status, @params
-      response.body.should be_blank
+      expect(response.body).to be_blank
 
       sign_in @student_user
       xhr :post, :offering_collapsed_status, @params
-      response.body.should be_blank
+      expect(response.body).to be_blank
     end
     it "should maintain the offering collapse expand status when user is a teacher" do
       sign_in @authorized_teacher_user
@@ -244,14 +244,14 @@ describe Portal::OfferingsController do
       portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
       assert_not_nil(portal_teacher_full_status)
       assert_equal(portal_teacher_full_status.offering_collapsed, false)
-      response.body.should be_blank
+      expect(response.body).to be_blank
 
       #when teacher has collapsed and expanded many times before
       xhr :post, :offering_collapsed_status, @params
       portal_teacher_full_status.reload
       assert_not_nil(portal_teacher_full_status)
       assert_equal(portal_teacher_full_status.offering_collapsed, true)
-      response.body.should be_blank
+      expect(response.body).to be_blank
     end
   end
 
@@ -282,18 +282,18 @@ describe Portal::OfferingsController do
       let(:report_url)     { "https://concord-consortium.github.io/portal-report/" }
       let(:report_domains) { "concord-consortium.github.io" }
       before(:each) do
-        ENV.stub(:[]).and_return('')
-        ENV.stub(:[]).with("REPORT_VIEW_URL").and_return(report_url)
-        ENV.stub(:[]).with("REPORT_DOMAINS").and_return(report_domains)
+        allow(ENV).to receive(:[]).and_return('')
+        allow(ENV).to receive(:[]).with("REPORT_VIEW_URL").and_return(report_url)
+        allow(ENV).to receive(:[]).with("REPORT_DOMAINS").and_return(report_domains)
       end
 
       it "should redirect to the external reporting service as configured by the environment" do
         get :report, post_params
-        response.location.should =~ /#{report_url}/
+        expect(response.location).to match(/#{report_url}/)
       end
       it "should include an authentication token parameter" do
         get :report, post_params
-        response.location.should =~ /token=([0-9]|[a-f]){32}/
+        expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
       end
     end
 
@@ -301,7 +301,7 @@ describe Portal::OfferingsController do
       let(:user) { teacher_b.user }
       it "should redirect the user to /recent_activity" do
         get :report, post_params
-        response.should redirect_to :recent_activity
+        expect(response).to redirect_to :recent_activity
       end
     end
   end

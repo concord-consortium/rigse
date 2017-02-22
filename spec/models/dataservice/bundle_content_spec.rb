@@ -38,7 +38,7 @@ describe Dataservice::BundleContent do
     # disable the after_save there is observer_spec to test that specific call
     # we might want to try out the no_peeping_toms gem to handle this
     # https://github.com/patmaddox/no-peeping-toms
-    Dataservice::BundleContentObserver.instance.should_receive(:after_save).any_number_of_times
+    allow(Dataservice::BundleContentObserver.instance).to receive(:after_save)
   end
 
   it "should create a new instance given valid attributes" do
@@ -47,18 +47,18 @@ describe Dataservice::BundleContent do
 
   it "should extract blobs into separate model objects" do
     bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
-    bundle_content.blobs.size.should eql(1)
+    expect(bundle_content.blobs.size).to eql(1)
     bundle_content.reload
     setup_expected(bundle_content.blobs.first)
-    bundle_content.otml.should eql(@expected_otml)
-    bundle_content.body.should eql(@expected_body)
-    bundle_content.original_body.should eql(@valid_attributes_with_blob[:body])
+    expect(bundle_content.otml).to eql(@expected_otml)
+    expect(bundle_content.body).to eql(@expected_body)
+    expect(bundle_content.original_body).to eql(@valid_attributes_with_blob[:body])
   end
 
   it "after multiple-processing passes, the blob count should be constant" do
     bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
     bundle_content.save
-    bundle_content.blobs.size.should eql(1)
+    expect(bundle_content.blobs.size).to eql(1)
     bundle_content.process_blobs
     bundle_content.processed=false
     bundle_content.process_blobs
@@ -66,7 +66,7 @@ describe Dataservice::BundleContent do
     bundle_content.processed=false
     bundle_content.process_bundle
     bundle_content.save
-    bundle_content.blobs.size.should eql(1)
+    expect(bundle_content.blobs.size).to eql(1)
   end
 
   it "when a body with no learner data is added, the bundle count doesn't change" do
@@ -75,7 +75,7 @@ describe Dataservice::BundleContent do
     bundle_content.body="<gah>BAD BAD</gah>"
     bundle_content.save!
     bundle_content.reload
-    bundle_content.blobs.size.should eql(1)
+    expect(bundle_content.blobs.size).to eql(1)
   end
 
   # TODO, not supported really, but we should expect more blobs if
@@ -202,34 +202,34 @@ describe Dataservice::BundleContent do
 
       it "should set processed to true" do
         @bundle.body = ""
-        @bundle.processed.should be_false
+        expect(@bundle.processed).to be_falsey
         #@bundle.should_receive(:processed).with(true)
         @bundle.process_bundle
-        @bundle.processed.should be_true
+        expect(@bundle.processed).to be_truthy
       end
 
       it "should set empty to true with a blank body" do
         @bundle.body = ""
         @bundle.process_bundle
-        @bundle.empty.should be_true
+        expect(@bundle.empty).to be_truthy
       end
 
       it "should set empty to true with a nil body" do
         @bundle.body = nil
         @bundle.process_bundle
-        @bundle.empty.should be_true
+        expect(@bundle.empty).to be_truthy
       end
 
       it "should not set empt? if there is a body" do
         @bundle.body = "testing"
         @bundle.process_bundle
-        @bundle.empty.should be_false
+        expect(@bundle.empty).to be_falsey
       end
 
       it "should not set valid_xml if the xml is invalid" do
         @bundle.body = "testing"
         @bundle.process_bundle
-        @bundle.valid_xml.should be_false
+        expect(@bundle.valid_xml).to be_falsey
       end
 
       it "should set valid_xml if the xml is valid" do
@@ -237,7 +237,7 @@ describe Dataservice::BundleContent do
         # actual sockentry protocols (which NP doesn't know very well)
         @bundle.body="<sessionBundles>FAKE IT.</sessionBundles>"
         @bundle.process_bundle
-        @bundle.valid_xml.should be_true
+        expect(@bundle.valid_xml).to be_truthy
       end
 
       it "should have an otml property if the xml is valid"  do
@@ -247,14 +247,14 @@ describe Dataservice::BundleContent do
         @learner_socks = "<ot.learner.data><sockEntries value=\"#{@ziped_otml}\"/></ot.learner.data>"
         @bundle.body="<sessionBundles>#{@learner_socks}</sessionBundles>"
         @bundle.process_bundle
-        @bundle.otml.should_not be_empty
+        expect(@bundle.otml).not_to be_empty
       end
 
       it "should not have an otml property if the xml is invalid" do
         @bundle.body="<INVALIDXML>"
         @bundle.process_bundle
-        @bundle.valid_xml.should be_false
-        @bundle.otml.should be_empty
+        expect(@bundle.valid_xml).to be_falsey
+        expect(@bundle.otml).to be_empty
       end
 
     end
@@ -265,13 +265,13 @@ describe Dataservice::BundleContent do
       end
 
       it "should process bundles before save" do
-        @bundle.should_receive(:process_bundle)
+        expect(@bundle).to receive(:process_bundle)
         # this runs the save callbacks and the return value of false causes it to skip the after_save callbacks
         @bundle.run_callbacks(:save) { false }
       end
 
       it "should call process blobs after processing bundle" do
-        @bundle.should_receive(:process_blobs)
+        expect(@bundle).to receive(:process_blobs)
         @bundle.process_bundle
       end
     end
@@ -290,10 +290,10 @@ describe Dataservice::BundleContent do
           @bundle.collaboration.students << @student_c
           @bundle.save
           @bundle.reload
-          @bundle.should have(3).collaborators
+          expect(@bundle.collaborators.size).to eq(3)
           @bundle.collaborators.each do |s|
-            s.collaborative_bundles.should_not be_nil
-            s.collaborative_bundles.should include @bundle
+            expect(s.collaborative_bundles).not_to be_nil
+            expect(s.collaborative_bundles).to include @bundle
           end
         end
       end
@@ -318,10 +318,10 @@ describe Dataservice::BundleContent do
         it "should copy the bundle contents" do
           @bundle.collaboration.owner = @main_student
           @bundle.collaboration.students << @student_a
-          @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
-          @learner_a.should_receive(:bundle_logger).and_return(@bundle_logger)
+          expect(@offering).to receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
+          expect(@learner_a).to receive(:bundle_logger).and_return(@bundle_logger)
           @bundle.copy_to_collaborators
-          @contents_a.should have(1).bundle_content
+          expect(@contents_a.size).to eq(1)
         end
       end
     end

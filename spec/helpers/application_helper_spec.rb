@@ -6,12 +6,12 @@ describe ApplicationHelper do
 
   describe "title" do
     it "should set @page_title" do
-      title_tag('hello').should be_nil
-      page_title.should eql('hello')
+      expect(title_tag('hello')).to be_nil
+      expect(page_title).to eql('hello')
     end
 
     it "should output container if set" do
-      title_tag('hello', :h2).should have_selector('h2', :text => 'hello')
+      expect(title_tag('hello', :h2)).to have_selector('h2', :text => 'hello')
     end
   end
 
@@ -27,11 +27,11 @@ describe ApplicationHelper do
         @original_user = @anonymous_user
       end
       it "should display appropriate login messages" do
-        login_line.should match(/login/i)
-        login_line.should_not match(/welcome/i)
-        login_line(:guest => "guest").should match(/welcome\s*guest/i)
-        login_line(:login => "Log In").should match(/Log In/)
-        login_line(:signup => "Sign Up").should match(/Sign Up/)
+        expect(login_line).to match(/login/i)
+        expect(login_line).not_to match(/welcome/i)
+        expect(login_line(:guest => "guest")).to match(/welcome\s*guest/i)
+        expect(login_line(:login => "Log In")).to match(/Log In/)
+        expect(login_line(:signup => "Sign Up")).to match(/Sign Up/)
       end
     end
 
@@ -41,9 +41,9 @@ describe ApplicationHelper do
         @original_user = @admin_user
       end
       it "should display appropriate login messages" do
-        login_line.should match(/log\s*out/i)
-        login_line.should match(/switch/i)
-        login_line(:logout => "Log Out").should match(/Log Out/)
+        expect(login_line).to match(/log\s*out/i)
+        expect(login_line).to match(/switch/i)
+        expect(login_line(:logout => "Log Out")).to match(/Log Out/)
       end
     end
   end

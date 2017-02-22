@@ -192,8 +192,8 @@ group :test, :cucumber do
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
   gem "capybara",           "~> 2.12.1"
-  gem "rspec",              "~> 2.14.1"
-  gem "rspec-rails",        "~> 2.14.1"
+  gem "rspec",              "~> 2.99.0"
+  gem "rspec-rails",        "~> 2.99.0"
   gem "email_spec",         "~> 1.2.1"
   gem "fakeweb",            "~> 1.3", :require => false
   gem "ci_reporter",        "~> 1.7.0"

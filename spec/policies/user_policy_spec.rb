@@ -6,60 +6,60 @@ describe UserPolicy do
   let(:user)        { FactoryGirl.create(:user)            }
 
   context "for anonymous" do
-    it { should_not permit(:limited_edit)           }
-    it { should_not permit(:limited_update)         }
-    it { should_not permit(:index)                  }
-    it { should_not permit(:show)                   }
-    it { should_not permit(:update)                 }
-    it { should_not permit(:destroy)                }
-    it { should_not permit(:edit)                   }
-    it { should_not permit(:make_admin)             }
-    it { should_not permit(:switch)                 }
-    it { should_not permit(:confirm)                }
-    it { should_not permit(:preferences)            }
-    it { should_not permit(:reset_password)         }
+    it { is_expected.not_to permit(:limited_edit)           }
+    it { is_expected.not_to permit(:limited_update)         }
+    it { is_expected.not_to permit(:index)                  }
+    it { is_expected.not_to permit(:show)                   }
+    it { is_expected.not_to permit(:update)                 }
+    it { is_expected.not_to permit(:destroy)                }
+    it { is_expected.not_to permit(:edit)                   }
+    it { is_expected.not_to permit(:make_admin)             }
+    it { is_expected.not_to permit(:switch)                 }
+    it { is_expected.not_to permit(:confirm)                }
+    it { is_expected.not_to permit(:preferences)            }
+    it { is_expected.not_to permit(:reset_password)         }
     # Documenting current behavior:
-    it { should_not permit(:create)                 }
-    it { should_not permit(:new)                    }
+    it { is_expected.not_to permit(:create)                 }
+    it { is_expected.not_to permit(:new)                    }
   end
 
   context "for a normal user" do
     let(:active_user) { FactoryGirl.create(:user) }
-    it { should_not permit(:limited_edit)           }
-    it { should_not permit(:limited_update)         }
-    it { should_not permit(:index)                  }
-    it { should_not permit(:show)                   }
-    it { should_not permit(:update)                 }
-    it { should_not permit(:destroy)                }
-    it { should_not permit(:edit)                   }
-    it { should_not permit(:make_admin)             }
-    it { should_not permit(:switch)                 }
-    it { should_not permit(:preferences)            }
-    it { should_not permit(:confirm)                }
-    it { should_not permit(:reset_password)         }
+    it { is_expected.not_to permit(:limited_edit)           }
+    it { is_expected.not_to permit(:limited_update)         }
+    it { is_expected.not_to permit(:index)                  }
+    it { is_expected.not_to permit(:show)                   }
+    it { is_expected.not_to permit(:update)                 }
+    it { is_expected.not_to permit(:destroy)                }
+    it { is_expected.not_to permit(:edit)                   }
+    it { is_expected.not_to permit(:make_admin)             }
+    it { is_expected.not_to permit(:switch)                 }
+    it { is_expected.not_to permit(:preferences)            }
+    it { is_expected.not_to permit(:confirm)                }
+    it { is_expected.not_to permit(:reset_password)         }
     # Documenting current behavior:
-    it { should permit(:create)                     }
-    it { should permit(:new)                        }
+    it { is_expected.to permit(:create)                     }
+    it { is_expected.to permit(:new)                        }
   end
 
   context "for an admin" do
     let(:active_user) { Factory.next(:admin_user)   }
-    it { should permit(:limited_edit)               }
-    it { should permit(:limited_update)             }
-    it { should permit(:index)                      }
-    it { should permit(:show)                       }
-    it { should permit(:update)                     }
-    it { should permit(:destroy)                    }
-    it { should permit(:create)                     }
-    it { should permit(:new)                        }
-    it { should permit(:edit)                       }
-    it { should permit(:make_admin)                 }
-    it { should permit(:switch)                     }
-    it { should permit(:confirm)                    }
-    it { should permit(:preferences)                }
-    it { should permit(:reset_password)             }
-    it { should permit(:student_page)               }
-    it { should permit(:teacher_page)               }
+    it { is_expected.to permit(:limited_edit)               }
+    it { is_expected.to permit(:limited_update)             }
+    it { is_expected.to permit(:index)                      }
+    it { is_expected.to permit(:show)                       }
+    it { is_expected.to permit(:update)                     }
+    it { is_expected.to permit(:destroy)                    }
+    it { is_expected.to permit(:create)                     }
+    it { is_expected.to permit(:new)                        }
+    it { is_expected.to permit(:edit)                       }
+    it { is_expected.to permit(:make_admin)                 }
+    it { is_expected.to permit(:switch)                     }
+    it { is_expected.to permit(:confirm)                    }
+    it { is_expected.to permit(:preferences)                }
+    it { is_expected.to permit(:reset_password)             }
+    it { is_expected.to permit(:student_page)               }
+    it { is_expected.to permit(:teacher_page)               }
   end
 
   context "for a teacher" do
@@ -68,11 +68,11 @@ describe UserPolicy do
 
     context "working with their own student" do
       let(:user)     { FactoryGirl.create(:full_portal_student, clazzes: [clazz]).user}
-      it { should permit(:reset_password)             }
+      it { is_expected.to permit(:reset_password)             }
     end
     context "working with some other student" do
       let(:user)     { FactoryGirl.create(:full_portal_student).user}
-      it { should_not permit(:reset_password)         }
+      it { is_expected.not_to permit(:reset_password)         }
     end
   end
 
@@ -90,44 +90,44 @@ describe UserPolicy do
     end
 
     it "the active user should be a project admin" do
-      active_user.admin_for_projects.should include(project_a)
+      expect(active_user.admin_for_projects).to include(project_a)
     end
 
     context "acting on a generic portal teacher" do
       let(:user) { regular_teacher.user }
-      it { should permit(:limited_edit)               }
-      it { should permit(:limited_update)             }
-      it { should permit(:index)                      }
-      it { should permit(:show)                       }
-      it { should_not permit(:update)                 }
-      it { should_not permit(:destroy)                }
-      it { should_not permit(:edit)                   }
-      it { should_not permit(:make_admin)             }
-      it { should_not permit(:confirm)                }
-      it { should_not permit(:preferences)            }
-      it { should_not permit(:reset_password)         }
-      it { should_not permit(:student_page)           }
-      it { should_not permit(:teacher_page)           }
+      it { is_expected.to permit(:limited_edit)               }
+      it { is_expected.to permit(:limited_update)             }
+      it { is_expected.to permit(:index)                      }
+      it { is_expected.to permit(:show)                       }
+      it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:destroy)                }
+      it { is_expected.not_to permit(:edit)                   }
+      it { is_expected.not_to permit(:make_admin)             }
+      it { is_expected.not_to permit(:confirm)                }
+      it { is_expected.not_to permit(:preferences)            }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.not_to permit(:student_page)           }
+      it { is_expected.not_to permit(:teacher_page)           }
       # Documenting current behavior:
-      it { should permit(:create)                     }
-      it { should permit(:new)                        }
+      it { is_expected.to permit(:create)                     }
+      it { is_expected.to permit(:new)                        }
     end
 
     context "acting on a portal teacher in hir project cohort" do
       let(:user) { a_teacher.user }
-      it { should permit(:index)                      }
-      it { should permit(:show)                       }
-      it { should permit(:confirm)                    }
-      it { should_not permit(:preferences)            }
-      it { should permit(:reset_password)             }
-      it { should permit(:update)                     }
-      it { should_not permit(:destroy)                }
-      it { should permit(:edit)                       }
-      it { should_not permit(:make_admin)             }
-      it { should permit(:switch)                     }
+      it { is_expected.to permit(:index)                      }
+      it { is_expected.to permit(:show)                       }
+      it { is_expected.to permit(:confirm)                    }
+      it { is_expected.not_to permit(:preferences)            }
+      it { is_expected.to permit(:reset_password)             }
+      it { is_expected.to permit(:update)                     }
+      it { is_expected.not_to permit(:destroy)                }
+      it { is_expected.to permit(:edit)                       }
+      it { is_expected.not_to permit(:make_admin)             }
+      it { is_expected.to permit(:switch)                     }
       # Documenting current behavior:
-      it { should permit(:create)                     }
-      it { should permit(:new)                        }
+      it { is_expected.to permit(:create)                     }
+      it { is_expected.to permit(:new)                        }
     end
 
     context "acting on a portal administrator" do
@@ -137,55 +137,55 @@ describe UserPolicy do
         a_teacher.cohorts = []
         a_teacher.save
       end
-      it { should permit(:index)                      }
-      it { should_not permit(:make_admin)             }
-      it { should permit(:show)                       }
-      it { should_not permit(:confirm)                }
-      it { should_not permit(:reset_password)         }
-      it { should_not permit(:preferences)            }
-      it { should_not permit(:switch)                 }
-      it { should_not permit(:update)                 }
-      it { should_not permit(:destroy)                }
-      it { should_not permit(:edit)                   }
+      it { is_expected.to permit(:index)                      }
+      it { is_expected.not_to permit(:make_admin)             }
+      it { is_expected.to permit(:show)                       }
+      it { is_expected.not_to permit(:confirm)                }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.not_to permit(:preferences)            }
+      it { is_expected.not_to permit(:switch)                 }
+      it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:destroy)                }
+      it { is_expected.not_to permit(:edit)                   }
       # Documenting current behavior:
-      it { should permit(:create)                     }
-      it { should permit(:new)                        }
+      it { is_expected.to permit(:create)                     }
+      it { is_expected.to permit(:new)                        }
     end
 
     context "acting on a regular student" do
       let(:user) { regular_student.user }
-      it { should permit(:index)                      }
-      it { should_not permit(:limited_edit)           }
-      it { should_not permit(:limited_update)         }
-      it { should_not permit(:make_admin)             }
-      it { should_not permit(:show)                   }
-      it { should_not permit(:confirm)                }
-      it { should_not permit(:reset_password)         }
-      it { should_not permit(:preferences)            }
-      it { should_not permit(:switch)                 }
-      it { should_not permit(:update)                 }
-      it { should_not permit(:destroy)                }
-      it { should_not permit(:edit)                   }
+      it { is_expected.to permit(:index)                      }
+      it { is_expected.not_to permit(:limited_edit)           }
+      it { is_expected.not_to permit(:limited_update)         }
+      it { is_expected.not_to permit(:make_admin)             }
+      it { is_expected.not_to permit(:show)                   }
+      it { is_expected.not_to permit(:confirm)                }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.not_to permit(:preferences)            }
+      it { is_expected.not_to permit(:switch)                 }
+      it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:destroy)                }
+      it { is_expected.not_to permit(:edit)                   }
       # Documenting current behavior:
-      it { should permit(:create)                     }
-      it { should permit(:new)                        }
+      it { is_expected.to permit(:create)                     }
+      it { is_expected.to permit(:new)                        }
     end
 
     context "acting on a student in hir project cohort" do
       let(:user) { a_student.user }
-      it { should permit(:index)                      }
-      it { should_not permit(:make_admin)             }
-      it { should permit(:show)                       }
-      it { should permit(:confirm)                    }
-      it { should permit(:reset_password)             }
-      it { should_not permit(:preferences)            }
-      it { should permit(:switch)                     }
-      it { should permit(:update)                     }
-      it { should_not permit(:destroy)                }
-      it { should permit(:edit)                       }
+      it { is_expected.to permit(:index)                      }
+      it { is_expected.not_to permit(:make_admin)             }
+      it { is_expected.to permit(:show)                       }
+      it { is_expected.to permit(:confirm)                    }
+      it { is_expected.to permit(:reset_password)             }
+      it { is_expected.not_to permit(:preferences)            }
+      it { is_expected.to permit(:switch)                     }
+      it { is_expected.to permit(:update)                     }
+      it { is_expected.not_to permit(:destroy)                }
+      it { is_expected.to permit(:edit)                       }
       # Documenting current behavior:
-      it { should permit(:create)                     }
-      it { should permit(:new)                        }
+      it { is_expected.to permit(:create)                     }
+      it { is_expected.to permit(:new)                        }
     end
   end
 

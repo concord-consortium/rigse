@@ -27,8 +27,8 @@ describe Embeddable::Biologica::PedigreesController do
       });
     end
     it "the should attempt to update the organism_ids array" do
-        Embeddable::Biologica::Pedigree.should_receive(:find).with("37").and_return(@mock_pedigree)
-        @mock_pedigree.should_receive(:update_attributes).with({"organism_ids"=>["796", "797"]})
+        expect(Embeddable::Biologica::Pedigree).to receive(:find).with("37").and_return(@mock_pedigree)
+        expect(@mock_pedigree).to receive(:update_attributes).with({"organism_ids"=>["796", "797"]})
         embeddable_biologica_pedigree = { "organism_ids" => ["796,797"] }
         parms = { "id" => "37", "embeddable_biologica_pedigree" => embeddable_biologica_pedigree }
         put :update, parms

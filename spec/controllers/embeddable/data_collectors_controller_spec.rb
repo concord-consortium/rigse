@@ -41,7 +41,7 @@ describe Embeddable::DataCollectorsController do
         @graph.stub(:data_table => @mock_table)
       end
       it "should get its data from the data_tables dataStore" do
-        Embeddable::DataCollector.should_receive(:find).with("37").and_return(@graph)
+        expect(Embeddable::DataCollector).to receive(:find).with("37").and_return(@graph)
         get :show, :id => "37", :format => 'otml'
         assert_select('dataStore') do
           assert_select("object[refid*=?]", /data_store_data_table/)
@@ -54,7 +54,7 @@ describe Embeddable::DataCollectorsController do
         @graph.stub(:data_table => nil)
       end
       it "should get its data from the data_tables dataStore" do
-        Embeddable::DataCollector.should_receive(:find).with("37").and_return(@graph)
+        expect(Embeddable::DataCollector).to receive(:find).with("37").and_return(@graph)
         get :show, :id => "37", :format => 'otml'
         assert_select('dataStore') do
           # <OTDataStore local_id='data_store_data_collector_3046' numberChannels='2'>
@@ -72,7 +72,7 @@ describe Embeddable::DataCollectorsController do
       @graph = Embeddable::DataCollector.create(
         :is_digital_display => true,
         :dd_font_size => @font_size)
-      Embeddable::DataCollector.should_receive(:find).and_return(@graph)
+      expect(Embeddable::DataCollector).to receive(:find).and_return(@graph)
     end
     describe "the generated otml" do
       it "should include OTDigitalDisplay tag" do
@@ -91,7 +91,7 @@ describe Embeddable::DataCollectorsController do
     before(:each) do
       @graph = Embeddable::DataCollector.create(
         :multiple_graphable_enabled =>  true)
-      Embeddable::DataCollector.should_receive(:find).and_return(@graph)
+      expect(Embeddable::DataCollector).to receive(:find).and_return(@graph)
     end
     describe "the generated otml" do
       it "should include a prototype graphable" do
@@ -115,7 +115,7 @@ describe Embeddable::DataCollectorsController do
     before(:each) do
       @graph = Embeddable::DataCollector.create(
         :multiple_graphable_enabled =>  false)
-      Embeddable::DataCollector.should_receive(:find).and_return(@graph)
+      expect(Embeddable::DataCollector).to receive(:find).and_return(@graph)
     end
     describe "the generated otml" do
       it "should include a prototype graphable" do

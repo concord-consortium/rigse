@@ -10,7 +10,7 @@ describe Rack::ConfigSessionCookies do
   end
   
   it "should have a stubbed session_key" do
-    @tester.session_key.should eql("_fake_session_key")
+    expect(@tester.session_key).to eql("_fake_session_key")
   end
   
   def make_env(options)
@@ -29,7 +29,7 @@ describe Rack::ConfigSessionCookies do
           session_param = "_fake_session_key=1234#{path}1234"
           env = make_env(:path => path, :query => session_param)
           @tester.call(env)
-          env['HTTP_COOKIE'].should eql(session_param)
+          expect(env['HTTP_COOKIE']).to eql(session_param)
         end
       end
       it "should not set cookies for disallowed paths" do
@@ -37,7 +37,7 @@ describe Rack::ConfigSessionCookies do
           session_param = "_fake_session_key=1234#{path}1234"
           env = make_env(:path => path, :query => session_param)
           @tester.call(env)
-          env['HTTP_COOKIE'].should_not eql(session_param)
+          expect(env['HTTP_COOKIE']).not_to eql(session_param)
         end
       end
     end
@@ -47,7 +47,7 @@ describe Rack::ConfigSessionCookies do
     session_param = "_fake_session_key=1234"
     env = make_env(:query => session_param, :cookie => "_fake_session_key=5678")
     @tester.call(env)
-    env['HTTP_COOKIE'].should eql(session_param)    
+    expect(env['HTTP_COOKIE']).to eql(session_param)    
   end
 
   it "should preserve other parts of the cookie" do
@@ -72,7 +72,7 @@ describe Rack::ConfigSessionCookies do
       env = make_env(:query => new_session, 
                      :cookie => String.new(key))
       @tester.call(env)
-      env['HTTP_COOKIE'].should eql(value)
+      expect(env['HTTP_COOKIE']).to eql(value)
     }
   end
 
@@ -86,7 +86,7 @@ describe Rack::ConfigSessionCookies do
         env['PATH_INFO'] = "blah.config"
         env['QUERY_STRING'] = query
         @tester.call(env)
-        env['HTTP_COOKIE'].should eql(session_param)
+        expect(env['HTTP_COOKIE']).to eql(session_param)
     }
   end
 
@@ -96,7 +96,7 @@ describe Rack::ConfigSessionCookies do
     }
     original_hash = env.hash
     @tester.call(env)
-    env.hash.should equal(original_hash)
+    expect(env.hash).to equal(original_hash)
   end
 
   it "should not change the environment if there is no query string" do
@@ -105,12 +105,12 @@ describe Rack::ConfigSessionCookies do
     env['PATH_INFO'] = "blah.config"
     original_hash = env.hash
     @tester.call(env)
-    env.hash.should equal(original_hash)
+    expect(env.hash).to equal(original_hash)
 
     env['PATH_INFO']  = "blah.jnlp"
     original_hash = env.hash
     @tester.call(env)
-    env.hash.should equal(original_hash)
+    expect(env.hash).to equal(original_hash)
   end
   
   it "should not change the environment if there is a incorrect query string" do
@@ -119,13 +119,13 @@ describe Rack::ConfigSessionCookies do
     env['QUERY_STRING'] = "_wrong_session_key=1234"
     original_hash = env.hash
     @tester.call(env)
-    env.hash.should equal(original_hash)
+    expect(env.hash).to equal(original_hash)
     
     env = {}
     env['PATH_INFO'] = "blah.jnlp"
     env['QUERY_STRING'] = "_wrong_session_key=1234"
     original_hash = env.hash
     @tester.call(env)
-    env.hash.should equal(original_hash)
+    expect(env.hash).to equal(original_hash)
   end
 end

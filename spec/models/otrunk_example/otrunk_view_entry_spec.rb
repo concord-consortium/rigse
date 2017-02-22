@@ -14,6 +14,6 @@ describe OtrunkExample::OtrunkViewEntry do
   end
 
   it "should create a new instance given valid attributes" do
-    @new_valid_otrunk_view_entry.should be_valid
+    expect(@new_valid_otrunk_view_entry).to be_valid
   end
 end

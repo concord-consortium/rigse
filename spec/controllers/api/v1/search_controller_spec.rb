@@ -75,16 +75,16 @@ describe API::V1::SearchController do
 
       describe "with no filter parameters" do
         it "should return search results that show all the materials" do
-          assigns[:search].should_not be_nil
-          assigns[:search].results[Search::InvestigationMaterial].should_not be_nil
-          assigns[:search].results[Search::InvestigationMaterial].length.should be(5)
+          expect(assigns[:search]).not_to be_nil
+          expect(assigns[:search].results[Search::InvestigationMaterial]).not_to be_nil
+          expect(assigns[:search].results[Search::InvestigationMaterial].length).to be(5)
           assigns[:search].results[Search::InvestigationMaterial].each do |investigation|
-            all_investigations.should include(investigation)
+            expect(all_investigations).to include(investigation)
           end
-          assigns[:search].results[Search::ActivityMaterial].should_not be_nil
-          assigns[:search].results[Search::ActivityMaterial].length.should be(7)
+          expect(assigns[:search].results[Search::ActivityMaterial]).not_to be_nil
+          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(7)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
-            all_activities.should include(activity)
+            expect(all_activities).to include(activity)
           end
         end
       end
@@ -92,21 +92,21 @@ describe API::V1::SearchController do
       describe "searching only official materials" do
         let(:get_params) { {:include_official => 1} }
         it "should show all official study materials" do
-          assigns[:search].results[Search::InvestigationMaterial].should_not be_nil
-          assigns[:search].results[Search::InvestigationMaterial].length.should be(5)
+          expect(assigns[:search].results[Search::InvestigationMaterial]).not_to be_nil
+          expect(assigns[:search].results[Search::InvestigationMaterial].length).to be(5)
           assigns[:search].results[Search::InvestigationMaterial].each do |investigation|
-            all_investigations.should include(investigation)
+            expect(all_investigations).to include(investigation)
           end
-          assigns[:search].results[Search::ActivityMaterial].should_not be_nil
-          assigns[:search].results[Search::ActivityMaterial].length.should be(6)
+          expect(assigns[:search].results[Search::ActivityMaterial]).not_to be_nil
+          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(6)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
-            official_activities.should include(activity)
+            expect(official_activities).to include(activity)
           end
         end
 
         it "should not return any contributed activities" do
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
-            contributed_activities.should_not include(activity)
+            expect(contributed_activities).not_to include(activity)
           end
         end
       end
@@ -116,33 +116,33 @@ describe API::V1::SearchController do
         let(:activity_results) {[]}
 
         it "should return all investigations" do
-          assigns[:search].results[Search::InvestigationMaterial].should_not be_nil
-          assigns[:search].results[Search::InvestigationMaterial].length.should be(5)
+          expect(assigns[:search].results[Search::InvestigationMaterial]).not_to be_nil
+          expect(assigns[:search].results[Search::InvestigationMaterial].length).to be(5)
         end
 
         it "should not return any activities" do
           get :search, get_params
-          assigns[:search].results[Search::ActivityMaterial].should be_nil
+          expect(assigns[:search].results[Search::ActivityMaterial]).to be_nil
         end
       end
 
       describe "searching only activities" do
         let(:get_params) {{:material_types => [Search::ActivityMaterial]}}
         it "should not include investigations" do
-          assigns[:search].results[Search::InvestigationMaterial].should be_nil
+          expect(assigns[:search].results[Search::InvestigationMaterial]).to be_nil
         end
         it "should return all activities" do
-          assigns[:search].results[Search::ActivityMaterial].should_not be_nil
-          assigns[:search].results[Search::ActivityMaterial].length.should be(7)
+          expect(assigns[:search].results[Search::ActivityMaterial]).not_to be_nil
+          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(7)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
-            all_activities.should include(activity)
+            expect(all_activities).to include(activity)
           end
         end
         describe "including contributed activities" do
           let(:get_params) {{ :material_types => ['Activity'], :include_contributed => 1 }}
           it "should include contributed activities" do
-            assigns[:search].results[Search::ActivityMaterial].length.should == 1
-            assigns[:search].results[Search::ActivityMaterial].should include(contributed_activity)
+            expect(assigns[:search].results[Search::ActivityMaterial].length).to eq(1)
+            expect(assigns[:search].results[Search::ActivityMaterial]).to include(contributed_activity)
           end
         end
       end

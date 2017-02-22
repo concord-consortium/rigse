@@ -12,7 +12,7 @@ describe Activity do
   end
 
   it 'should respond to #material_type' do
-    activity.material_type.should == 'Activity'
+    expect(activity.material_type).to eq('Activity')
   end
 
   it "should be destroy'able" do
@@ -20,26 +20,26 @@ describe Activity do
   end
 
   it 'has_many for all BASE_EMBEDDABLES' do
-    BASE_EMBEDDABLES.length.should be > 0
+    expect(BASE_EMBEDDABLES.length).to be > 0
     BASE_EMBEDDABLES.each do |e|
-      activity.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize).should be(true)
+      expect(activity.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize)).to be(true)
     end
   end
 
   describe "should be publishable" do
     it "should not be public by default" do
-      activity.published?.should be(false)
+      expect(activity.published?).to be(false)
     end
     it "should be public if published" do
       activity.publish!
-      activity.public?.should be(true)
+      expect(activity.public?).to be(true)
     end
     
     it "should not be public if unpublished " do
       activity.publish!
-      activity.public?.should be(true)
+      expect(activity.public?).to be(true)
       activity.un_publish!
-      activity.public?.should_not be(true)
+      expect(activity.public?).not_to be(true)
     end
   end
 
@@ -138,20 +138,20 @@ describe Activity do
 
     describe "when an activity has external_activities" do
       let(:external_activities) { [1,2,3]}
-      it { should be_true}
+      it { is_expected.to be_truthy}
     end
     describe "when an activity has no external_activities" do
       let(:external_activities) {[]}
-      it { should be_false}
+      it { is_expected.to be_falsey}
 
       describe "when the activity has an investigation" do
         describe "that is a template" do
           let(:investigation) { investigation_with_template }
-          it { should be_true }
+          it { is_expected.to be_truthy }
         end
         describe "that is not a template" do
           let(:investigation) { investigation_without_template }
-          it { should be_false }
+          it { is_expected.to be_falsey }
         end
       end
     end
@@ -185,14 +185,18 @@ describe Activity do
       "This is the description. Its text is too long to be an abstract really: #{big_text}"
     end
 
-    subject { Factory.create(:activity, :description => description) }
-    its(:abstract_text)    { should match /This is the description./ }
-    its(:abstract_text)    { should have_at_most(255).letters }
+    subject { Factory.create(:activity, :description => description).abstract_text }
+
+    it { is_expected.to match /This is the description./ }
+
+    it 'has at most 255 letters' do
+      expect(subject.size).to be <= 255
+    end
   end
 
   describe "question_number" do
     before(:each) do
-      activity_with_questions.stub(:reportable_elements).and_return(elements)
+      allow(activity_with_questions).to receive(:reportable_elements).and_return(elements)
     end
     let(:activity_with_questions) { activity }
     let(:mc_question)         {Factory.create(:multiple_choice) }
@@ -205,19 +209,19 @@ describe Activity do
     subject() { activity_with_questions }
 
     it "should find the multiple choice question in the first position" do
-      subject.question_number(mc_question).should eq 1
+      expect(subject.question_number(mc_question)).to eq 1
     end
 
     it "should find the open response question at the second position" do
-      subject.question_number(or_question).should eq 2
+      expect(subject.question_number(or_question)).to eq 2
     end
 
     it "should return -1 for questions that aren't supposed to be there... " do
-      subject.question_number(another_or_question).should eq -1
+      expect(subject.question_number(another_or_question)).to eq -1
     end
 
     it "should return -1 when nonesense is passed in " do
-      subject.question_number("xxx").should eq -1
+      expect(subject.question_number("xxx")).to eq -1
     end
   end
 

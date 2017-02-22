@@ -20,32 +20,32 @@ describe ExternalActivity do
     let(:learner) { mock_model(Portal::Learner, :id => 34) }
 
     it "should default to not appending the learner id to the url" do
-      activity.append_learner_id_to_url.should be_false
+      expect(activity.append_learner_id_to_url).to be_falsey
     end
 
     it "should return the original url when appending is false" do
-      activity.url.should eql(valid_attributes[:url])
-      activity.url(learner).should eql(valid_attributes[:url])
+      expect(activity.url).to eql(valid_attributes[:url])
+      expect(activity.url(learner)).to eql(valid_attributes[:url])
     end
 
     it "should return a modified url when appending is true" do
       activity.append_learner_id_to_url = true
-      activity.url.should eql(valid_attributes[:url])
-      activity.url(learner).should eql(valid_attributes[:url] + "?learner=34")
+      expect(activity.url).to eql(valid_attributes[:url])
+      expect(activity.url(learner)).to eql(valid_attributes[:url] + "?learner=34")
     end
 
     it "should return a correct url when appending to a url with existing params" do
       url = "http://www.concord.org/?foo=bar"
       activity.append_learner_id_to_url = true
       activity.url = url
-      activity.url(learner).should eql(url + "&learner=34")
+      expect(activity.url(learner)).to eql(url + "&learner=34")
     end
 
     it "should return a correct url when appending to a url with existing fragment" do
       url = "http://www.concord.org/#3"
       activity.append_learner_id_to_url = true
       activity.url = url
-      activity.url(learner).should eql(url + "?learner=34")
+      expect(activity.url(learner)).to eql(url + "?learner=34")
     end
   end
 
@@ -56,16 +56,16 @@ describe ExternalActivity do
 
     it 'should return template_type for EAs with templates' do
       activity.template = real_activity
-      activity.material_type.should == 'Activity'
+      expect(activity.material_type).to eq('Activity')
       activity.template = investigation
-      activity.material_type.should == 'Investigation'
+      expect(activity.material_type).to eq('Investigation')
     end
   end
 
   describe '#full_title' do
     let (:activity) { ExternalActivity.create!(valid_attributes) }
     it 'should return external activity name (compatibility with regular activities and sequences)' do
-      activity.full_title.should == valid_attributes[:name]
+      expect(activity.full_title).to eq(valid_attributes[:name])
     end
   end
 
@@ -76,20 +76,24 @@ describe ExternalActivity do
       "This is the description. Its text is too long to be an abstract really: #{big_text}"
     end
     let(:abstract)    { nil }
-    subject { ExternalActivity.create(:name => 'test', :abstract => abstract, :description => description) }
+    subject { ExternalActivity.create(:name => 'test', :abstract => abstract, :description => description).abstract_text }
     describe "without an abstract" do
       let(:abstract)         { nil }
-      its(:abstract_text)    { should match /This is the description./ }
-      its(:abstract_text)    { should have_at_most(255).letters }
+      it { is_expected.to match /This is the description./ }
+      it 'has at most 255 letters' do
+        expect(subject.size).to be <= 255
+      end
     end
     describe "without an empty abstract" do
       let(:abstract)         { " " }
-      its(:abstract_text)    { should match /This is the description./ }
-      its(:abstract_text)    { should have_at_most(255).letters }
+      it { is_expected.to match /This is the description./ }
+      it 'has at most 255 letters' do
+        expect(subject.size).to be <= 255
+      end
     end
     describe "without a good abstract" do
       let(:abstract)         { "This is the abstract." }
-      its(:abstract_text)    { should match /This is the abstract./ }
+      it { is_expected.to match /This is the abstract./ }
     end
   end
 

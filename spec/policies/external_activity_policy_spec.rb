@@ -6,34 +6,34 @@ describe ExternalActivityPolicy do
   let(:activity)          { FactoryGirl.create(:external_activity)              }
 
   context "for anonymous" do
-    it { should permit(:preview_index)           }
-    it { should_not permit(:publish)             }
-    it { should_not permit(:duplicate)           }
-    it { should_not permit(:matedit)             }
-    it { should_not permit(:duplicate)           }
-    it { should_not permit(:copy)                }
-    it { should_not permit(:edit_basic)          }
-    it { should_not permit(:update)              }
-    it { should_not permit(:archive)             }
-    it { should_not permit(:unarchive)           }
-    it { should_not permit(:edit_credits)        }
+    it { is_expected.to permit(:preview_index)           }
+    it { is_expected.not_to permit(:publish)             }
+    it { is_expected.not_to permit(:duplicate)           }
+    it { is_expected.not_to permit(:matedit)             }
+    it { is_expected.not_to permit(:duplicate)           }
+    it { is_expected.not_to permit(:copy)                }
+    it { is_expected.not_to permit(:edit_basic)          }
+    it { is_expected.not_to permit(:update)              }
+    it { is_expected.not_to permit(:archive)             }
+    it { is_expected.not_to permit(:unarchive)           }
+    it { is_expected.not_to permit(:edit_credits)        }
   end
 
 
   context "for a normal user" do
     let(:active_user) { FactoryGirl.create(:user) }
 
-    it { should permit(:preview_index)            }
-    it { should permit(:copy)                     }
-    it { should_not permit(:publish)              }
-    it { should_not permit(:duplicate)            }
-    it { should_not permit(:matedit)              }
-    it { should_not permit(:duplicate)            }
-    it { should_not permit(:edit_basic)           }
-    it { should_not permit(:update)               }
-    it { should_not permit(:archive)              }
-    it { should_not permit(:unarchive)            }
-    it { should_not permit(:edit_credits)        }
+    it { is_expected.to permit(:preview_index)            }
+    it { is_expected.to permit(:copy)                     }
+    it { is_expected.not_to permit(:publish)              }
+    it { is_expected.not_to permit(:duplicate)            }
+    it { is_expected.not_to permit(:matedit)              }
+    it { is_expected.not_to permit(:duplicate)            }
+    it { is_expected.not_to permit(:edit_basic)           }
+    it { is_expected.not_to permit(:update)               }
+    it { is_expected.not_to permit(:archive)              }
+    it { is_expected.not_to permit(:unarchive)            }
+    it { is_expected.not_to permit(:edit_credits)        }
   end
 
   context "for the owner" do
@@ -44,32 +44,32 @@ describe ExternalActivityPolicy do
       active_user.add_role('author')
     end
 
-    it { should permit(:preview_index)            }
-    it { should permit(:copy)                     }
-    it { should permit(:publish)                  }
-    it { should permit(:matedit)                  }
-    it { should permit(:edit_basic)               }
-    it { should permit(:archive)                  }
-    it { should permit(:unarchive)                }
+    it { is_expected.to permit(:preview_index)            }
+    it { is_expected.to permit(:copy)                     }
+    it { is_expected.to permit(:publish)                  }
+    it { is_expected.to permit(:matedit)                  }
+    it { is_expected.to permit(:edit_basic)               }
+    it { is_expected.to permit(:archive)                  }
+    it { is_expected.to permit(:unarchive)                }
 
     # not sure why. Just documenting:
-    it { should_not permit(:duplicate)            }
+    it { is_expected.not_to permit(:duplicate)            }
 
-    it { should_not permit(:edit_credits)         }
+    it { is_expected.not_to permit(:edit_credits)         }
   end
 
   context "for an admin" do
     let(:active_user) { Factory.next(:admin_user)   }
 
-    it { should permit(:preview_index)            }
-    it { should permit(:copy)                     }
-    it { should permit(:publish)                  }
-    it { should permit(:matedit)                  }
-    it { should permit(:edit_basic)               }
-    it { should permit(:archive)                  }
-    it { should permit(:unarchive)                }
-    it { should permit(:duplicate)                }
-    it { should permit(:edit_credits)             }
+    it { is_expected.to permit(:preview_index)            }
+    it { is_expected.to permit(:copy)                     }
+    it { is_expected.to permit(:publish)                  }
+    it { is_expected.to permit(:matedit)                  }
+    it { is_expected.to permit(:edit_basic)               }
+    it { is_expected.to permit(:archive)                  }
+    it { is_expected.to permit(:unarchive)                }
+    it { is_expected.to permit(:duplicate)                }
+    it { is_expected.to permit(:edit_credits)             }
   end
 
 
@@ -80,15 +80,15 @@ describe ExternalActivityPolicy do
     before(:each) do
       active_user.add_role_for_project('admin', project_a)
     end
-    it { should permit(:preview_index)            }
-    it { should permit(:copy)                     }
-    it { should permit(:publish)                  }
-    it { should permit(:matedit)                  }
-    it { should permit(:edit_basic)               }
-    it { should permit(:archive)                  }
-    it { should permit(:unarchive)                }
-    it { should permit(:duplicate)                }
-    it { should permit(:edit_credits)             }
+    it { is_expected.to permit(:preview_index)            }
+    it { is_expected.to permit(:copy)                     }
+    it { is_expected.to permit(:publish)                  }
+    it { is_expected.to permit(:matedit)                  }
+    it { is_expected.to permit(:edit_basic)               }
+    it { is_expected.to permit(:archive)                  }
+    it { is_expected.to permit(:unarchive)                }
+    it { is_expected.to permit(:duplicate)                }
+    it { is_expected.to permit(:edit_credits)             }
   end
 
 end

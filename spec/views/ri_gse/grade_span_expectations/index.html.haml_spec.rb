@@ -18,9 +18,9 @@ describe "/ri_gse/grade_span_expectations/index.html.haml" do
       mock_model(RiGse::GradeSpanExpectation,canned_responses)
     ];
     # do this so will_paginate handles this array, there is probably a better approach
-    @gses.stub(:total_pages).and_return(1)
-    @gses.stub(:total_entries).and_return(@gses.length)
-    RiGse::GradeSpanExpectation.stub(:paginate).and_return(@gses)
+    allow(@gses).to receive(:total_pages).and_return(1)
+    allow(@gses).to receive(:total_entries).and_return(@gses.length)
+    allow(RiGse::GradeSpanExpectation).to receive(:paginate).and_return(@gses)
     assign(:grade_span_expectations, @gses)
   end
 

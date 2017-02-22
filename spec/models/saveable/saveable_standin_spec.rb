@@ -10,16 +10,16 @@ describe Saveable::SaveableStandin do
   end
 
   it "should resond to embeddable" do
-    @nil_standin.should respond_to :embeddable
+    expect(@nil_standin).to respond_to :embeddable
   end
 
   it "should respond to submitted?" do
-    @nil_standin.should respond_to :submitted?
+    expect(@nil_standin).to respond_to :submitted?
   end
 
   it "should optionally return its embeddable" do
-    @nil_standin.embeddable.should be_nil
-    @real_standin.embeddable.should == @multiple_choice
+    expect(@nil_standin.embeddable).to be_nil
+    expect(@real_standin.embeddable).to eq(@multiple_choice)
   end
 
 end

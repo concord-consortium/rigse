@@ -21,22 +21,22 @@ describe Portal::Clazz do
         @existing_clazz.section,
         @existing_clazz.start_time)
       
-      found_clazz.id.should_not be_nil
-      found_clazz.id.should eql(@existing_clazz.id)
-      found_clazz.should eql(@existing_clazz)
-      found_clazz.name.should_not be_nil
+      expect(found_clazz.id).not_to be_nil
+      expect(found_clazz.id).to eql(@existing_clazz.id)
+      expect(found_clazz).to eql(@existing_clazz)
+      expect(found_clazz.name).not_to be_nil
     end
 
     
     it "when creating a new clazz this way, the name should be default to the course name" do
       found_clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(@course,@section_b,@start_date)
-      found_clazz.name.should eql(@course.name)
+      expect(found_clazz.name).to eql(@course.name)
     end
        
     it "given criterea that does not match an existing class, it should return a new clazz" do
       found_clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(@course,@section_b,@start_date)
-      found_clazz.id.should_not eql(@existing_clazz.id)
-      found_clazz.should_not eql(@existing_clazz)
+      expect(found_clazz.id).not_to eql(@existing_clazz.id)
+      expect(found_clazz).not_to eql(@existing_clazz)
     end
   end
   
@@ -50,24 +50,24 @@ describe Portal::Clazz do
     it "under normal circumstances should say there is no reason admins cannot remove teachers" do
       admin_user = Factory.next(:admin_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
-      @existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1).should == nil
+      expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1)).to eq(nil)
     end
     
     it "under normal circumstances should say there is no reason authorized teachers cannot remove teachers" do
       @existing_clazz.teachers = [@teacher1, @teacher2]
-      @existing_clazz.reason_user_cannot_remove_teacher_from_class(@teacher1.user, @teacher2).should == nil
+      expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(@teacher1.user, @teacher2)).to eq(nil)
     end
     
     it "should say it is illegal for an unauthorized user to remove a teacher" do
       random_user = Factory.next(:anonymous_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
-      @existing_clazz.reason_user_cannot_remove_teacher_from_class(random_user, @teacher1).should == Portal::Clazz::ERROR_UNAUTHORIZED
+      expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(random_user, @teacher1)).to eq(Portal::Clazz::ERROR_UNAUTHORIZED)
     end
     
     it "should say it is illegal for a user to remove the last teacher" do
       admin_user = Factory.next(:admin_user)
       @existing_clazz.teachers = [@teacher1]
-      @existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1).should == Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER
+      expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1)).to eq(Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
     end
   end
   
@@ -78,25 +78,25 @@ describe Portal::Clazz do
 
     it "is true for admins" do
       admin_user = Factory.next(:admin_user)
-      @existing_clazz.changeable?(admin_user).should be_true
+      expect(@existing_clazz.changeable?(admin_user)).to be_truthy
     end
 
     it "is true for class teacher" do
       @teacher = Factory.create(:portal_teacher)
       @existing_clazz.teachers = [@teacher]
-      @existing_clazz.changeable?(@teacher.user).should be_true
+      expect(@existing_clazz.changeable?(@teacher.user)).to be_truthy
     end
 
     it "is true for second class teacher" do
       @teacher1 = Factory.create(:portal_teacher)
       @teacher2 = Factory.create(:portal_teacher)
       @existing_clazz.teachers = [@teacher1, @teacher2]
-      @existing_clazz.changeable?(@teacher2.user).should be_true
+      expect(@existing_clazz.changeable?(@teacher2.user)).to be_truthy
     end
 
     it "is false for non class teacher" do
       @teacher = Factory.create(:portal_teacher)
-      @existing_clazz.changeable?(@teacher.user).should be_false
+      expect(@existing_clazz.changeable?(@teacher.user)).to be_falsey
     end
   end
 
@@ -139,7 +139,7 @@ describe Portal::Clazz do
       })
       
       @new_clazz.name = ''
-      @new_clazz.valid?.should == false
+      expect(@new_clazz.valid?).to eq(false)
       
     end
     
@@ -159,7 +159,7 @@ describe Portal::Clazz do
       
       @new_clazz.class_word = ''
       
-      @new_clazz.valid?.should == false
+      expect(@new_clazz.valid?).to eq(false)
     end
     
   end
@@ -167,14 +167,14 @@ describe Portal::Clazz do
   describe ".default_class" do
     it "should return a portal clazz with default_class true" do
       default_class = Portal::Clazz.default_class
-      default_class.should be_an_instance_of Portal::Clazz
-      default_class.default_class.should be_true
+      expect(default_class).to be_an_instance_of Portal::Clazz
+      expect(default_class.default_class).to be_truthy
     end
 
     it "should return the same portal clazz on second call" do
       default_clazz = Portal::Clazz.default_class
-      default_clazz.should be_an_instance_of Portal::Clazz
-      Portal::Clazz.default_class.should == default_clazz
+      expect(default_clazz).to be_an_instance_of Portal::Clazz
+      expect(Portal::Clazz.default_class).to eq(default_clazz)
     end
   end
   
@@ -202,60 +202,60 @@ describe Portal::Clazz do
     describe "when there are no default activities" do
       before(:each) do
         def_offerings = []
-        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, zero default offerings" do
-        @clazz.offerings_including_default_class.size.should == 10
-        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 0
+        expect(@clazz.offerings_including_default_class.size).to eq(10)
+        expect(@clazz.offerings_including_default_class.select{ |i| i.default == true}.size).to eq(0)
       end
     end
 
     describe "when there is 100% overlap with default activities" do
       before(:each) do
         def_offerings = @default_offerings
-        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 10 default offerings" do
-        @clazz.offerings_including_default_class.size.should == 10
-        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 10
+        expect(@clazz.offerings_including_default_class.size).to eq(10)
+        expect(@clazz.offerings_including_default_class.select{ |i| i.default == true}.size).to eq(10)
       end
     end
     
     describe "the first half are default activities" do
       before(:each) do
         def_offerings = @default_offerings[0...5]
-        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
-        @clazz.offerings_including_default_class.size.should == 10
-        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 5
+        expect(@clazz.offerings_including_default_class.size).to eq(10)
+        expect(@clazz.offerings_including_default_class.select{ |i| i.default == true}.size).to eq(5)
       end
     end
 
     describe "the first half are default activities" do
       before(:each) do
         def_offerings = @default_offerings[5...10]
-        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
-        @clazz.offerings_including_default_class.size.should == 10
-        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 5
+        expect(@clazz.offerings_including_default_class.size).to eq(10)
+        expect(@clazz.offerings_including_default_class.select{ |i| i.default == true}.size).to eq(5)
       end
     end
 
     describe "every other activity is the default default" do
       before(:each) do
         def_offerings = @default_offerings.select { |i| i.runnable_id % 2 == 0 }
-        Portal::Offering.stub(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
-        @clazz.offerings_including_default_class.size.should == 10
-        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 5
+        expect(@clazz.offerings_including_default_class.size).to eq(10)
+        expect(@clazz.offerings_including_default_class.select{ |i| i.default == true}.size).to eq(5)
       end
     end
   end
@@ -272,8 +272,8 @@ describe Portal::Clazz do
     end
     describe "called without a user" do
       it "should fall back to offerings_including_default_class" do
-        @clazz.should_receive(:offerings_including_default_class).and_return(true)
-        @clazz.offerings_with_default_classes.should == true
+        expect(@clazz).to receive(:offerings_including_default_class).and_return(true)
+        expect(@clazz.offerings_with_default_classes).to eq(true)
       end
     end
     describe "called without a student" do
@@ -281,8 +281,8 @@ describe Portal::Clazz do
         @user = double(:user, :portal_student => nil)
       end
       it "should fall back to offerings_including_default_class" do
-        @clazz.should_receive(:offerings_including_default_class).and_return(true)
-        @clazz.offerings_with_default_classes(@user).should == true
+        expect(@clazz).to receive(:offerings_including_default_class).and_return(true)
+        expect(@clazz.offerings_with_default_classes(@user)).to eq(true)
       end
     end
     describe "when not the default class" do
@@ -293,9 +293,9 @@ describe Portal::Clazz do
         @user = double(:user, :portal_student => @student)
       end
       it "should fall back to offerings_including_default_class" do
-        @clazz.should_receive(:default_class).and_return(false)
-        @clazz.should_receive(:offerings_including_default_class).and_return(true)
-        @clazz.offerings_with_default_classes(@user).should == true
+        expect(@clazz).to receive(:default_class).and_return(false)
+        expect(@clazz).to receive(:offerings_including_default_class).and_return(true)
+        expect(@clazz.offerings_with_default_classes(@user)).to eq(true)
       end
     end
     describe "when the default class, and when there is a user" do
@@ -327,20 +327,20 @@ describe Portal::Clazz do
         @clazz.stub(:active_offerings => @default_offerings)
       end
       it "should not fall back to offerings_including_default_class" do
-        @clazz.should_not_receive(:offerings_including_default_class)
-        @clazz.offerings_with_default_classes(@user).should_not be_nil
+        expect(@clazz).not_to receive(:offerings_including_default_class)
+        expect(@clazz.offerings_with_default_classes(@user)).not_to be_nil
       end
       it "should not contain the offerings which use the same runnable as a student offering" do
         default_class_offerings = @clazz.offerings_with_default_classes(@user)
         @default_offerings_with_same_runnable_as_a_student_offering.each do |o|
-          default_class_offerings.should_not include(o)
+          expect(default_class_offerings).not_to include(o)
         end
       end
       it "should contain exactly the offerings which do not use the same runnable as a student offering" do
         default_class_offerings = @clazz.offerings_with_default_classes(@user)
-        default_class_offerings.should have(@default_offerings_with_unique_runnable.length).offerings
+        expect(default_class_offerings.size).to eq(@default_offerings_with_unique_runnable.length)
         @default_offerings_with_unique_runnable.each do |o|
-          default_class_offerings.should include(o)
+          expect(default_class_offerings).to include(o)
         end
       end
     end
@@ -359,8 +359,16 @@ describe Portal::Clazz do
         @clazz.stub :teachers => []
         @clazz
       end
-      its(:teachers_label) {should == "Teacher"      }
-      its(:teachers_listing){should == "no teachers" }
+
+      describe '#teachers_label' do
+        subject { super().teachers_label }
+        it {is_expected.to eq("Teacher")      }
+      end
+
+      describe '#teachers_listing' do
+        subject { super().teachers_listing }
+        it {is_expected.to eq("no teachers") }
+      end
     end
 
     context "With one teacher" do
@@ -368,9 +376,21 @@ describe Portal::Clazz do
         @clazz.stub :teachers => [@joan]
         @clazz
       end
-      its(:teachers_label)  {should == "Teacher"         }
-      its(:teachers_listing){should match @joan.name      }
-      its(:teachers_listing){should_not match @bob.name }
+
+      describe '#teachers_label' do
+        subject { super().teachers_label }
+        it {is_expected.to eq("Teacher")         }
+      end
+
+      describe '#teachers_listing' do
+        subject { super().teachers_listing }
+        it {is_expected.to match @joan.name      }
+      end
+
+      describe '#teachers_listing' do
+        subject { super().teachers_listing }
+        it {is_expected.not_to match @bob.name }
+      end
     end
     
     context "With two teachers" do
@@ -378,9 +398,21 @@ describe Portal::Clazz do
         @clazz.stub :teachers => [@bob,@joan]
         @clazz
       end
-      its(:teachers_label)  {should == "Teachers"    }
-      its(:teachers_listing){should match @bob.name  }
-      its(:teachers_listing){should match @joan.name }
+
+      describe '#teachers_label' do
+        subject { super().teachers_label }
+        it {is_expected.to eq("Teachers")    }
+      end
+
+      describe '#teachers_listing' do
+        subject { super().teachers_listing }
+        it {is_expected.to match @bob.name  }
+      end
+
+      describe '#teachers_listing' do
+        subject { super().teachers_listing }
+        it {is_expected.to match @joan.name }
+      end
     end
   end
 

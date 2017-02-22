@@ -26,7 +26,7 @@ describe OtmlHelper do
       end
       
       it "should return the default otml.css path" do
-        otml_css_path.should eql("/assets/otml.css")
+        expect(otml_css_path).to eql("/assets/otml.css")
       end
 
     end
@@ -44,12 +44,12 @@ describe OtmlHelper do
 
       it "should call theme_stylesheet_path when there is a theme" do
         helper.stub(:theme_stylesheet_path => '/fakeo-path')
-        helper.otml_css_path.should eql("/fakeo-path")
+        expect(helper.otml_css_path).to eql("/fakeo-path")
       end
 
       it "should return the default otml stylesheet if it can't find a themed one" do
         # note this might start failing if the asset configuration is changed for the test environment
-        helper.otml_css_path.should eql("/assets/otml.css")
+        expect(helper.otml_css_path).to eql("/assets/otml.css")
       end
     end
   end
@@ -58,7 +58,7 @@ describe OtmlHelper do
   # this test is just here as documentation
   describe "otml_settings_css_path" do
     it "should return /stylesheets/settings.css (always)" do
-      otml_settings_css_path.should eql("/stylesheets/settings.css")
+      expect(otml_settings_css_path).to eql("/stylesheets/settings.css")
     end
 
   end

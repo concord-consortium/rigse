@@ -11,17 +11,17 @@ describe Portal::StateOrProvince do
 
   it "should return all states if :all is configured" do
     APP_CONFIG[:states_and_provinces] = 'all'
-    Portal::StateOrProvince.configured.length.should == Portal::StateOrProvince::STATES_AND_PROVINCES.length
+    expect(Portal::StateOrProvince.configured.length).to eq(Portal::StateOrProvince::STATES_AND_PROVINCES.length)
   end
 
   it "should return no states if nil is configured" do
     APP_CONFIG[:states_and_provinces] = nil
-    Portal::StateOrProvince.configured.should be_empty
+    expect(Portal::StateOrProvince.configured).to be_empty
   end
 
   it "should return the specific states if they are configured" do
     APP_CONFIG[:states_and_provinces] = ['MA', 'RI']
-    Portal::StateOrProvince.configured.should == ['MA', 'RI']
+    expect(Portal::StateOrProvince.configured).to eq(['MA', 'RI'])
   end
 
 end

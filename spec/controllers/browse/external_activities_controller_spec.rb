@@ -18,7 +18,7 @@ describe Browse::ExternalActivitiesController do
 
         assert_equal assigns[:wide_content_layout], true
 
-        assigns[:back_to_search_url].should match /.*search\?activity_page=1&investigation_page=1&search_term=#{@external_activity.name}$/
+        expect(assigns[:back_to_search_url]).to match /.*search\?activity_page=1&investigation_page=1&search_term=#{@external_activity.name}$/
         assert_not_nil assigns[:search_material]
         assert_equal assigns[:search_material].material, @external_activity
       end

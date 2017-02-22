@@ -4,8 +4,8 @@ describe "/embeddable/open_responses/edit.html.haml" do
 
   before(:each) do
     power_user = stub_model(User, :has_role? => true)
-    view.stub(:edit_menu_for).and_return("edit menu")
-    view.stub(:current_visitor).and_return(power_user)
+    allow(view).to receive(:edit_menu_for).and_return("edit menu")
+    allow(view).to receive(:current_visitor).and_return(power_user)
     assign(:open_response, @open_response = stub_model(Embeddable::OpenResponse,
       :new_record? => false, 
       :id => 1,
@@ -19,15 +19,15 @@ describe "/embeddable/open_responses/edit.html.haml" do
 
   it "renders the edit form" do
     render
-    rendered.should have_selector("form[action='#{embeddable_open_response_path(@open_response)}'][method=post]")
+    expect(rendered).to have_selector("form[action='#{embeddable_open_response_path(@open_response)}'][method=post]")
   end
   it "should have a prompt tag" do
     render
-    rendered.should have_selector("textarea[name='embeddable_open_response[prompt]']")
+    expect(rendered).to have_selector("textarea[name='embeddable_open_response[prompt]']")
   end
   it "should have a rows field" do
     render
-    rendered.should have_selector("input[name='embeddable_open_response[rows]']")
+    expect(rendered).to have_selector("input[name='embeddable_open_response[rows]']")
   end
   # No one has asked for these yet, but they are in the model:
   # it "should have a columns field" do

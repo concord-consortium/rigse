@@ -15,19 +15,19 @@ describe Saveable::ImageQuestion do
   subject {Saveable::ImageQuestion.create(:learner => learner, :image_question => image_q )}
   describe "valid instance as a basis for testing" do
     it "should be valid" do
-      subject.should be_valid
+      expect(subject).to be_valid
     end
   end
 
   describe "add_external_answer" do
     it "should create new answer with a blob" do
       blob = Dataservice::Blob.create()
-      Dataservice::Blob.should_receive(:for_learner_and_url).and_return(blob)
+      expect(Dataservice::Blob).to receive(:for_learner_and_url).and_return(blob)
       note = "this is the note"
       url  = "http://somelace.com/example.jgp"
       subject.add_external_answer(note, url)
-      subject.answers.size.should == 1
-      subject.answers.first.blob.should == blob
+      expect(subject.answers.size).to eq(1)
+      expect(subject.answers.first.blob).to eq(blob)
     end
   end
 

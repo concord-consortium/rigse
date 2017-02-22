@@ -5,7 +5,7 @@ describe "/embeddable/data_tables/edit.html.haml" do
 
   before(:each) do
     # cut off the edit_menu_for helper which traverses lots of other code
-    view.stub(:edit_menu_for).and_return("edit menu")
+    allow(view).to receive(:edit_menu_for).and_return("edit menu")
     assign(:data_table, @data_table = stub_model(Embeddable::DataTable,
       :new_record? => false, :id => 1, :name => "Data Table", :description => "Desc", :column_count => 4, :visible_rows => 9, :column_names => 'One,Two,Three,Four', :column_data => '', :data_collector_id => nil
     ))
@@ -14,7 +14,7 @@ describe "/embeddable/data_tables/edit.html.haml" do
   it "renders the edit form" do
     render
 
-    rendered.should have_selector("form[action='#{embeddable_data_table_path(@data_table)}'][method=post]") do
+    expect(rendered).to have_selector("form[action='#{embeddable_data_table_path(@data_table)}'][method=post]") do
     end
   end
 

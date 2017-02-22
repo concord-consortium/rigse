@@ -10,7 +10,7 @@ describe TinyMceHelper do
 
     it "should have default settings for buttons" do
       buttons = mce_buttons(1)
-      buttons.should match default_mce_buttons(1)
+      expect(buttons).to match default_mce_buttons(1)
     end
   end
   
@@ -29,10 +29,10 @@ describe TinyMceHelper do
     
     it "should use application settings for tiny_mce buttons" do
       buttons = mce_buttons(1)
-      buttons.should_not match default_mce_buttons(1)
-      buttons.should match(@line1)
-      buttons.should match(@line2)
-      buttons.should match("|") # seperator for button sets.
+      expect(buttons).not_to match default_mce_buttons(1)
+      expect(buttons).to match(@line1)
+      expect(buttons).to match(@line2)
+      expect(buttons).to match("|") # seperator for button sets.
     end
 
   end

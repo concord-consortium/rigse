@@ -43,34 +43,34 @@ describe Portal::SchoolsController do
 
   describe "GET index" do
     it "assigns all portal_schools as @portal_schools" do
-      Portal::School.stub(:search).with(nil,nil,nil).and_return([@school])
+      allow(Portal::School).to receive(:search).with(nil,nil,nil).and_return([@school])
       get :index
-      assigns[:portal_schools].should == [@school]
+      expect(assigns[:portal_schools]).to eq([@school])
     end
   end
 
   describe "GET show" do
     it "assigns the requested school as @portal_school" do
-      Portal::School.stub(:find).with("37").and_return(@school)
+      allow(Portal::School).to receive(:find).with("37").and_return(@school)
       get :show, :id => "37"
-      assigns[:portal_school].should equal(@school)
+      expect(assigns[:portal_school]).to equal(@school)
     end
   end
   
   describe "GET new" do
     it "assigns a new school as @portal_school" do
-      Portal::School.stub(:new).and_return(@school)
+      allow(Portal::School).to receive(:new).and_return(@school)
       get :new
-      assigns[:portal_school].should equal(@school)
+      expect(assigns[:portal_school]).to equal(@school)
     end
   end
   
   describe "GET edit" do
     it "assigns the requested school as @portal_school" do
       #@school.should_receive(:changeable?).and_return(:true)
-      Portal::School.stub(:find).with("37").and_return(@school)
+      allow(Portal::School).to receive(:find).with("37").and_return(@school)
       get :edit, :id => "37"
-      assigns[:portal_school].should equal(@school)
+      expect(assigns[:portal_school]).to equal(@school)
     end
   end
   
@@ -78,35 +78,35 @@ describe Portal::SchoolsController do
   
     describe "with valid nces_school params" do
       it "assigns a newly created school as @portal_school" do
-        @school.should_receive(:save).and_return(true)
-        Portal::Nces06School.stub(:find).with('123').and_return(@nces_school)
-        Portal::School.stub(:find_or_create_by_nces_school).with(@nces_school).and_return(@school)
+        expect(@school).to receive(:save).and_return(true)
+        allow(Portal::Nces06School).to receive(:find).with('123').and_return(@nces_school)
+        allow(Portal::School).to receive(:find_or_create_by_nces_school).with(@nces_school).and_return(@school)
         post :create, :nces_school => {:id => '123'}
-        assigns[:portal_school].should equal(@school)
+        expect(assigns[:portal_school]).to equal(@school)
       end
   
       it "redirects to the created school" do
-        @school.should_receive(:save).and_return(true)
-        Portal::Nces06School.stub(:find).with('123').and_return(@nces_school)
-        Portal::School.stub(:find_or_create_by_nces_school).with(@nces_school).and_return(@school)
+        expect(@school).to receive(:save).and_return(true)
+        allow(Portal::Nces06School).to receive(:find).with('123').and_return(@nces_school)
+        allow(Portal::School).to receive(:find_or_create_by_nces_school).with(@nces_school).and_return(@school)
         post :create, :nces_school => {:id => '123'}
-        response.should redirect_to(portal_school_url(@school))
+        expect(response).to redirect_to(portal_school_url(@school))
       end
     end
   
     describe "with invalid portal_school params" do
       it "assigns a newly created but unsaved school as @portal_school" do
-        @school.should_receive(:save).and_return(true)
-        Portal::School.stub(:new).with({'these' => 'params'}).and_return(@school)
+        expect(@school).to receive(:save).and_return(true)
+        allow(Portal::School).to receive(:new).with({'these' => 'params'}).and_return(@school)
         post :create, :portal_school => {:these => 'params'}
-        assigns[:portal_school].should equal(@school)
+        expect(assigns[:portal_school]).to equal(@school)
       end
   
       it "re-renders the 'new' template" do
-        @school.should_receive(:save).and_return(false)
-        Portal::School.stub(:new).and_return(@school)
+        expect(@school).to receive(:save).and_return(false)
+        allow(Portal::School).to receive(:new).and_return(@school)
         post :create, :portal_school => {}
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
   
@@ -116,24 +116,24 @@ describe Portal::SchoolsController do
   
     describe "with valid params" do
       it "updates the requested school" do
-        Portal::School.should_receive(:find).with("37").and_return(@school)
-        @school.should_receive(:update_attributes).with({'portal_school' => 'params'})
+        expect(Portal::School).to receive(:find).with("37").and_return(@school)
+        expect(@school).to receive(:update_attributes).with({'portal_school' => 'params'})
         put :update, :id => "37", :portal_school => {:portal_school => 'params'}
       end
   
       it "assigns the requested school as @portal_school" do
-        @school.should_receive(:update_attributes).and_return(true)
-        Portal::School.stub(:find).and_return(@school)
+        expect(@school).to receive(:update_attributes).and_return(true)
+        allow(Portal::School).to receive(:find).and_return(@school)
         put :update, :id => "1"
-        assigns[:portal_school].should equal(@school)
+        expect(assigns[:portal_school]).to equal(@school)
       end
   
       it "redirects to the school" do
         @school.stub(:id => 1)
-        @school.should_receive(:update_attributes).and_return(true)
-        Portal::School.stub(:find).and_return(@school)
+        expect(@school).to receive(:update_attributes).and_return(true)
+        allow(Portal::School).to receive(:find).and_return(@school)
         put :update, :id => "1"
-        response.should redirect_to(portal_school_url(@school))
+        expect(response).to redirect_to(portal_school_url(@school))
       end
     end
   
@@ -141,18 +141,18 @@ describe Portal::SchoolsController do
 
       before(:each) do
         @school.stub(:id => 1)
-        @school.should_receive(:update_attributes).with({'portal_school' => 'params'}).and_return(false)
-        Portal::School.stub(:find).and_return(@school)
+        expect(@school).to receive(:update_attributes).with({'portal_school' => 'params'}).and_return(false)
+        allow(Portal::School).to receive(:find).and_return(@school)
       end
 
       it "assigns the school as @portal_school" do
         put :update, :id => "1", :portal_school => {:portal_school => 'params'}
-        assigns[:portal_school].should equal(@school)
+        expect(assigns[:portal_school]).to equal(@school)
       end
   
       it "re-renders the 'edit' template" do
         put :update, :id => "1", :portal_school => {:portal_school => 'params'}
-        response.should render_template('edit')
+        expect(response).to render_template('edit')
       end
     end
   
@@ -163,8 +163,8 @@ describe Portal::SchoolsController do
 
     before(:each) do
       @school.stub(:id => 1)
-      @school.should_receive(:destroy).and_return(true)
-      Portal::School.should_receive(:find).with("1").and_return(@school)
+      expect(@school).to receive(:destroy).and_return(true)
+      expect(Portal::School).to receive(:find).with("1").and_return(@school)
     end
     
     it "destroys the requested school" do
@@ -173,12 +173,12 @@ describe Portal::SchoolsController do
   
     it "redirects to the portal_schools list" do
       delete :destroy, :id => "1"
-      response.should redirect_to(portal_schools_url)
+      expect(response).to redirect_to(portal_schools_url)
     end
 
     it "renders the rjs template" do
       xhr :post, :destroy, :id => "1"
-      response.should render_template('destroy')
+      expect(response).to render_template('destroy')
       assert_select_rjs
     end
 

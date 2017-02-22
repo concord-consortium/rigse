@@ -13,7 +13,7 @@ describe "home/authoring.html.haml" do
       :has_role?       => true
     )
 
-    view.stub(:current_visitor).and_return(@user)
+    allow(view).to receive(:current_visitor).and_return(@user)
   end
 
   it "renders without error" do

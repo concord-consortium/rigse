@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe API::V1::StudentRegistration do
   before(:each) do
-    API::V1::StudentRegistration.any_instance.stub(:valid_class_word_checker).and_return(true)
+    allow_any_instance_of(API::V1::StudentRegistration).to receive(:valid_class_word_checker).and_return(true)
   end
 
   let(:params) {
@@ -25,8 +25,16 @@ describe API::V1::StudentRegistration do
       registration.save
       registration
     }
-    its(:user)    { should be_valid }
-    its(:student) { should be_valid }
+
+    describe '#user' do
+      subject { super().user }
+      it { is_expected.to be_valid }
+    end
+
+    describe '#student' do
+      subject { super().student }
+      it { is_expected.to be_valid }
+    end
   end
 
 end      
