@@ -2,7 +2,6 @@ require 'spec_helper'
 
 include ApplicationHelper
 describe RunnablesHelper do
-  include RunnablesLinkMatcher
   before :each do
     @anonymous_user = mock_model(User, :roles => ["guest"], :anonymous? => true, :name => "guest")
     allow(@anonymous_user).to receive(:extra_params).and_return({})
