@@ -3,18 +3,18 @@ describe HomeController do
   render_views
 
   before(:each) do
-    @test_settings = mock("settings")
+    @test_settings = double("settings")
     Admin::Settings.stub(:default_settings).and_return(@test_settings)
-    @test_settings.stub!(:use_student_security_questions).and_return(false)
-    @test_settings.stub!(:require_user_consent?).and_return(false)
-    @test_settings.stub!(:help_type).and_return('no help')
-    @test_settings.stub!(:anonymous_can_browse_materials).and_return(true)
-    @test_settings.stub!(:allow_default_class).and_return(false)
-    @test_settings.stub!(:allow_adhoc_schools).and_return(false)
-    @test_settings.stub!(:show_collections_menu).and_return(false)
-    @test_settings.stub!(:auto_set_teachers_as_authors).and_return(false)
-    @test_settings.stub!(:wrap_home_page_content?).and_return(true)
-    @test_settings.stub!(:teacher_home_path).and_return(nil)
+    @test_settings.stub(:use_student_security_questions).and_return(false)
+    @test_settings.stub(:require_user_consent?).and_return(false)
+    @test_settings.stub(:help_type).and_return('no help')
+    @test_settings.stub(:anonymous_can_browse_materials).and_return(true)
+    @test_settings.stub(:allow_default_class).and_return(false)
+    @test_settings.stub(:allow_adhoc_schools).and_return(false)
+    @test_settings.stub(:show_collections_menu).and_return(false)
+    @test_settings.stub(:auto_set_teachers_as_authors).and_return(false)
+    @test_settings.stub(:wrap_home_page_content?).and_return(true)
+    @test_settings.stub(:teacher_home_path).and_return(nil)
     controller.stub(:before_render) {
       response.template.stub(:current_settings).and_return(@test_settings)
     }

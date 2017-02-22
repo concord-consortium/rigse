@@ -9,7 +9,7 @@ describe Portal::Learner do
     :update_fields => true,
     # this is needed because of the inverse_of definition in the report_learner associtation
     # I think newer version of mock_model take care of this for you
-    :association => mock(:target= => nil) )
+    :association => double(:target= => nil) )
   }
   let(:attributes)  do
     {

@@ -24,7 +24,7 @@ describe RiGse::DomainsController do
   
       it "should render all domains as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::Domain.should_receive(:all).and_return(domains = mock("Array of Domains"))
+        RiGse::Domain.should_receive(:all).and_return(domains = double("Array of Domains"))
         domains.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
@@ -87,7 +87,7 @@ describe RiGse::DomainsController do
       end
 
       it "should redirect to the created domain" do
-        RiGse::Domain.stub!(:new).and_return(mock_domain(:save => true))
+        RiGse::Domain.stub(:new).and_return(mock_domain(:save => true))
         post :create, :domain => {}
         response.should redirect_to(ri_gse_domain_url(mock_domain))
       end
@@ -97,13 +97,13 @@ describe RiGse::DomainsController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved domain as @domain" do
-        RiGse::Domain.stub!(:new).with({'these' => 'params'}).and_return(mock_domain(:save => false))
+        RiGse::Domain.stub(:new).with({'these' => 'params'}).and_return(mock_domain(:save => false))
         post :create, :domain => {:these => 'params'}
         assigns(:domain).should equal(mock_domain)
       end
 
       it "should re-render the 'new' template" do
-        RiGse::Domain.stub!(:new).and_return(mock_domain(:save => false))
+        RiGse::Domain.stub(:new).and_return(mock_domain(:save => false))
         post :create, :domain => {}
         response.should render_template('new')
       end
@@ -123,13 +123,13 @@ describe RiGse::DomainsController do
       end
 
       it "should expose the requested domain as @domain" do
-        RiGse::Domain.stub!(:find).and_return(mock_domain(:update_attributes => true))
+        RiGse::Domain.stub(:find).and_return(mock_domain(:update_attributes => true))
         put :update, :id => "1"
         assigns(:domain).should equal(mock_domain)
       end
 
       it "should redirect to the domain" do
-        RiGse::Domain.stub!(:find).and_return(mock_domain(:update_attributes => true))
+        RiGse::Domain.stub(:find).and_return(mock_domain(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(ri_gse_domain_url(mock_domain))
       end
@@ -145,13 +145,13 @@ describe RiGse::DomainsController do
       end
 
       it "should expose the domain as @domain" do
-        RiGse::Domain.stub!(:find).and_return(mock_domain(:update_attributes => false))
+        RiGse::Domain.stub(:find).and_return(mock_domain(:update_attributes => false))
         put :update, :id => "1"
         assigns(:domain).should equal(mock_domain)
       end
 
       it "should re-render the 'edit' template" do
-        RiGse::Domain.stub!(:find).and_return(mock_domain(:update_attributes => false))
+        RiGse::Domain.stub(:find).and_return(mock_domain(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -169,7 +169,7 @@ describe RiGse::DomainsController do
     end
   
     it "should redirect to the domains list" do
-      RiGse::Domain.stub!(:find).and_return(mock_domain(:destroy => true))
+      RiGse::Domain.stub(:find).and_return(mock_domain(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(domains_url)
     end

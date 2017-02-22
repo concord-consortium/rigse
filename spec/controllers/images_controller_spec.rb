@@ -6,7 +6,7 @@ describe ImagesController do
   end
 
   def stub_users_scope(results)
-    mock_ar_set = mock(:find => results)
+    mock_ar_set = double(:find => results)
     Image.should_receive(:visible_to_user_with_drafts).
       with(@logged_in_user).
         and_return(mock_ar_set)
@@ -71,7 +71,7 @@ describe ImagesController do
       end
 
       it "should redirect to the created image" do
-        Image.stub!(:new).and_return(mock_image(:save => true))
+        Image.stub(:new).and_return(mock_image(:save => true))
         post :create, :image => {}
         response.should redirect_to(image_url(mock_image))
       end
@@ -80,13 +80,13 @@ describe ImagesController do
 
     describe "with invalid params" do
       it "should expose a newly created but unsaved image as @image" do
-        Image.stub!(:new).with({'these' => 'params','user_id' => @logged_in_user.id.to_s}).and_return(mock_image(:save => false))
+        Image.stub(:new).with({'these' => 'params','user_id' => @logged_in_user.id.to_s}).and_return(mock_image(:save => false))
         post :create, :image => {:these => 'params'}
         assigns(:image).should equal(mock_image)
       end
 
       it "should re-render the 'new' template" do
-        Image.stub!(:new).and_return(mock_image(:save => false))
+        Image.stub(:new).and_return(mock_image(:save => false))
         post :create, :image => {}
         response.should render_template('new')
       end
@@ -109,13 +109,13 @@ describe ImagesController do
       end
 
       it "should expose the requested image as @image" do
-        Image.stub!(:find).and_return(@img)
+        Image.stub(:find).and_return(@img)
         put :update, :id => "1", :image => {}
         assigns(:image).should equal(@img)
       end
 
       it "should redirect to the image" do
-        Image.stub!(:find).and_return(@img)
+        Image.stub(:find).and_return(@img)
         put :update, :id => "1", :format => :html, :image => {}
         response.should redirect_to(@img)
       end
@@ -134,13 +134,13 @@ describe ImagesController do
       end
 
       it "should expose the image as @image" do
-        Image.stub!(:find).and_return(@img)
+        Image.stub(:find).and_return(@img)
         put :update, :id => "1"
         assigns(:image).should equal(@img)
       end
 
       it "should re-render the 'edit' template" do
-        Image.stub!(:find).and_return(@img)
+        Image.stub(:find).and_return(@img)
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -161,7 +161,7 @@ describe ImagesController do
     end
 
     it "should redirect to the images list" do
-      Image.stub!(:find).and_return(@img)
+      Image.stub(:find).and_return(@img)
       delete :destroy, :id => "1"
       response.should redirect_to(images_url)
     end

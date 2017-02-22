@@ -91,7 +91,7 @@ PART
   end
 
   xit "should reconstitute the parts into a valid learner data format" do
-    @bundle_logger.should_receive(:learner).and_return(mock(Portal::Learner, :uuid => "somefakeid"))
+    @bundle_logger.should_receive(:learner).and_return(double(Portal::Learner, :uuid => "somefakeid"))
     bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)
     bundle_content.extract_parts
     @bundle_logger.reload

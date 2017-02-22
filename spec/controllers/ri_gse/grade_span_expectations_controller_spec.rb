@@ -24,7 +24,7 @@ describe RiGse::GradeSpanExpectationsController do
   
       it "should render all grade_span_expectations as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::GradeSpanExpectation.should_receive(:all).and_return(grade_span_expectations = mock("Array of GradeSpanExpectations"))
+        RiGse::GradeSpanExpectation.should_receive(:all).and_return(grade_span_expectations = double("Array of GradeSpanExpectations"))
         grade_span_expectations.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
@@ -87,7 +87,7 @@ describe RiGse::GradeSpanExpectationsController do
       end
 
       it "should redirect to the created grade_span_expectation" do
-        RiGse::GradeSpanExpectation.stub!(:new).and_return(mock_grade_span_expectation(:save => true))
+        RiGse::GradeSpanExpectation.stub(:new).and_return(mock_grade_span_expectation(:save => true))
         post :create, :grade_span_expectation => {}
         response.should redirect_to(ri_gse_grade_span_expectation_url(mock_grade_span_expectation))
       end
@@ -97,13 +97,13 @@ describe RiGse::GradeSpanExpectationsController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved grade_span_expectation as @grade_span_expectation" do
-        RiGse::GradeSpanExpectation.stub!(:new).with({'these' => 'params'}).and_return(mock_grade_span_expectation(:save => false))
+        RiGse::GradeSpanExpectation.stub(:new).with({'these' => 'params'}).and_return(mock_grade_span_expectation(:save => false))
         post :create, :grade_span_expectation => {:these => 'params'}
         assigns(:grade_span_expectation).should equal(mock_grade_span_expectation)
       end
 
       it "should re-render the 'new' template" do
-        RiGse::GradeSpanExpectation.stub!(:new).and_return(mock_grade_span_expectation(:save => false))
+        RiGse::GradeSpanExpectation.stub(:new).and_return(mock_grade_span_expectation(:save => false))
         post :create, :grade_span_expectation => {}
         response.should render_template('new')
       end
@@ -123,13 +123,13 @@ describe RiGse::GradeSpanExpectationsController do
       end
 
       it "should expose the requested grade_span_expectation as @grade_span_expectation" do
-        RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => true))
+        RiGse::GradeSpanExpectation.stub(:find).and_return(mock_grade_span_expectation(:update_attributes => true))
         put :update, :id => "1"
         assigns(:grade_span_expectation).should equal(mock_grade_span_expectation)
       end
 
       it "should redirect to the grade_span_expectation" do
-        RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => true))
+        RiGse::GradeSpanExpectation.stub(:find).and_return(mock_grade_span_expectation(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(ri_gse_grade_span_expectation_url(mock_grade_span_expectation))
       end
@@ -145,13 +145,13 @@ describe RiGse::GradeSpanExpectationsController do
       end
 
       it "should expose the grade_span_expectation as @grade_span_expectation" do
-        RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => false))
+        RiGse::GradeSpanExpectation.stub(:find).and_return(mock_grade_span_expectation(:update_attributes => false))
         put :update, :id => "1"
         assigns(:grade_span_expectation).should equal(mock_grade_span_expectation)
       end
 
       it "should re-render the 'edit' template" do
-        RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => false))
+        RiGse::GradeSpanExpectation.stub(:find).and_return(mock_grade_span_expectation(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -169,7 +169,7 @@ describe RiGse::GradeSpanExpectationsController do
     end
   
     it "should redirect to the grade_span_expectations list" do
-      RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:destroy => true))
+      RiGse::GradeSpanExpectation.stub(:find).and_return(mock_grade_span_expectation(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(grade_span_expectations_url)
     end

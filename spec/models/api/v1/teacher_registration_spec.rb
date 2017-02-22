@@ -16,8 +16,8 @@ describe API::V1::TeacherRegistration do
   it_behaves_like 'user registration' do
     let(:good_params) { params }
     before(:each) do
-      Portal::School.stub!(:find).and_return(mock_model(Portal::School))
-      Portal::School.stub!(:exists?).and_return(true)
+      Portal::School.stub(:find).and_return(mock_model(Portal::School))
+      Portal::School.stub(:exists?).and_return(true)
     end
   end
 
@@ -26,7 +26,7 @@ describe API::V1::TeacherRegistration do
 
     describe "no school found" do
       before(:each) do
-        Portal::School.stub!(:exists?).and_return(false)
+        Portal::School.stub(:exists?).and_return(false)
       end
       it {
         should_not be_valid
@@ -36,7 +36,7 @@ describe API::V1::TeacherRegistration do
 
     describe "school found" do
       before(:each) do
-        Portal::School.stub!(:exists?).and_return(true)
+        Portal::School.stub(:exists?).and_return(true)
       end
       it { should be_valid }
     end
@@ -51,8 +51,8 @@ describe API::V1::TeacherRegistration do
 
     describe "when school is found" do
       before(:each) do
-        Portal::School.stub!(:exists?).and_return(true)
-        Portal::School.stub!(:find).and_return(mock_model(Portal::School, id: 123))
+        Portal::School.stub(:exists?).and_return(true)
+        Portal::School.stub(:find).and_return(mock_model(Portal::School, id: 123))
       end
 
       it "should have exactly one school" do

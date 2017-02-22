@@ -5,11 +5,11 @@ describe "/images/show.html.haml" do
   before(:each) do
     @image = stub_model(Image, :name => "my secret image")
     assigns[:image] = @image
-    @user = mock(
+    @user = double(
       :has_role?       => true,
       :anonymous?      => false
     )
-    view.stub!(:current_visitor).and_return(@user)
+    view.stub(:current_visitor).and_return(@user)
   end
 
 

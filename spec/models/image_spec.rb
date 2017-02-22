@@ -2,10 +2,10 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 describe Image do
   before(:each) do
-    Paperclip::Geometry.stub!(:from_file).and_return(dimensions)
+    Paperclip::Geometry.stub(:from_file).and_return(dimensions)
   end
 
-  let(:dimensions)  { mock(:width  => 100, :height => 100)}
+  let(:dimensions)  { double(:width  => 100, :height => 100)}
   let(:license)     { mock_model(CommonsLicense, :code => 'CC-BY') }
   let(:user)        { mock_model(User, :login=>"testuser")}
   let(:img_filename){ "testing_file_name"                 }
@@ -65,7 +65,7 @@ describe Image do
 
   end
   describe "clean_image_filename" do
-    let(:image_mock)    { mock              }
+    let(:image_mock)    { double            }
     let(:with_slashes)  { "dangerous/name"  }
     let(:with_colons)   { "dangerous:name"  }
     let(:with_backticks){ "dangerous`name"  }

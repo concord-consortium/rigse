@@ -44,7 +44,7 @@ describe API::V1::SearchController do
   let(:activity_results)      { [] }
 
   let(:search_results) {{ Investigation => investigation_results, Activity => activity_results }}
-  let(:mock_search)    { mock('results', {:results => search_results})}
+  let(:mock_search)    { double('results', {:results => search_results})}
 
   before(:all) do
     solr_setup

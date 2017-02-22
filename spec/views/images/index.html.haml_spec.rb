@@ -7,10 +7,10 @@ describe "/images/index.html.haml" do
       stub_model(Image),
       stub_model(Image)
     ]
-    @user = mock(
+    @user = double(
       :has_role?       => true
     )
-    view.stub!(:current_visitor).and_return(@user)
+    view.stub(:current_visitor).and_return(@user)
   end
 
   it "should render list of images without error" do

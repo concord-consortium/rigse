@@ -4,8 +4,8 @@ describe Portal::LearnersController do
 
   describe "GET config" do
     before(:each) do
-      @controller.stub!(:current_settings).and_return(
-        mock(:settings,
+      @controller.stub(:current_settings).and_return(
+        double(:settings,
           :use_periodic_bundle_uploading? => false,
           :use_student_security_questions => false,
           :require_user_consent? => false)
@@ -27,7 +27,7 @@ describe Portal::LearnersController do
 
     it "should log in the user with the jnlp_session" do
       @learner.student.user.confirm!
-      Dataservice::JnlpSession.stub!(:get_user_from_token).and_return(
+      Dataservice::JnlpSession.stub(:get_user_from_token).and_return(
         @learner.student.user
       )
       get :show, :format => :config, :id => @learner.id, :jnlp_session => "doesn't mater what is here"
@@ -40,7 +40,7 @@ describe Portal::LearnersController do
       sign_in other_user
 
       @learner.student.user.confirm!
-      Dataservice::JnlpSession.stub!(:get_user_from_token).and_return(
+      Dataservice::JnlpSession.stub(:get_user_from_token).and_return(
         @learner.student.user
       )
       get :show, :format => :config, :id => @learner.id, :jnlp_session => "doesn't mater what is here"

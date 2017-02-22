@@ -6,15 +6,15 @@ describe SecurityQuestionsController do
   before(:each) do
     @student = Factory.create(:portal_student, :user => Factory.create(:confirmed_user))
     sign_in @student.user
-    @test_settings = mock("settings",:name=> "Test Settings")
+    @test_settings = double("settings",:name=> "Test Settings")
     @test_settings.should_receive(:use_student_security_questions).and_return(true)
-    @test_settings.stub!(:require_user_consent?).and_return(false)
-    @test_settings.stub!(:help_type).and_return('no help')
-    @test_settings.stub!(:enabled_bookmark_types).and_return([])
-    @test_settings.stub!(:anonymous_can_browse_materials).and_return(true)
-    @test_settings.stub!(:show_collections_menu).and_return(false)
-    @test_settings.stub!(:auto_set_teachers_as_authors).and_return(false)
-    @test_settings.stub!(:teacher_home_path).and_return(nil)
+    @test_settings.stub(:require_user_consent?).and_return(false)
+    @test_settings.stub(:help_type).and_return('no help')
+    @test_settings.stub(:enabled_bookmark_types).and_return([])
+    @test_settings.stub(:anonymous_can_browse_materials).and_return(true)
+    @test_settings.stub(:show_collections_menu).and_return(false)
+    @test_settings.stub(:auto_set_teachers_as_authors).and_return(false)
+    @test_settings.stub(:teacher_home_path).and_return(nil)
     Admin::Settings.stub(:default_settings).and_return(@test_settings)
   end
 

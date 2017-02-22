@@ -7,7 +7,7 @@ describe "/admin/settings/edit.html.haml" do
     @pub_interval = 30000;
     @settings = Admin::Settings.new(:pub_interval => @pub_interval)
     assign(:admin_settings,@settings)
-    view.stub!(:current_visitor).and_return(Factory.next(:admin_user))
+    view.stub(:current_visitor).and_return(Factory.next(:admin_user))
     render
   end
 

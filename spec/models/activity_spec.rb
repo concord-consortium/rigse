@@ -131,8 +131,8 @@ describe Activity do
     let(:external_activities)  { [] }
     subject do
       s = Factory.create(:activity)
-      s.stub!(:investigation => investigation)
-      s.stub!(:external_activities => external_activities)
+      s.stub(:investigation => investigation)
+      s.stub(:external_activities => external_activities)
       s.is_template
     end
 
@@ -192,7 +192,7 @@ describe Activity do
 
   describe "question_number" do
     before(:each) do
-      activity_with_questions.stub!(:reportable_elements).and_return(elements)
+      activity_with_questions.stub(:reportable_elements).and_return(elements)
     end
     let(:activity_with_questions) { activity }
     let(:mc_question)         {Factory.create(:multiple_choice) }

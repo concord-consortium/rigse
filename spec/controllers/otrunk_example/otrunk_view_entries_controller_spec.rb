@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe OtrunkExample::OtrunkViewEntriesController do
 
   def mock_otrunk_view_entry(stubs={})
-    @mock_otrunk_view_entry.stub!(stubs) unless stubs.empty?
+    @mock_otrunk_view_entry.stub(stubs) unless stubs.empty?
     @mock_otrunk_view_entry
   end
   
@@ -24,7 +24,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
     describe "with mime type of xml" do
   
       it "renders all otrunk_example_otrunk_view_entries as xml" do
-        OtrunkExample::OtrunkViewEntry.should_receive(:all).and_return(otrunk_view_entries = mock("Array of OtrunkExample::OtrunkViewEntries"))
+        OtrunkExample::OtrunkViewEntry.should_receive(:all).and_return(otrunk_view_entries = double("Array of OtrunkExample::OtrunkViewEntries"))
         otrunk_view_entries.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
@@ -86,7 +86,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
       end
 
       it "redirects to the created otrunk_view_entry" do
-        OtrunkExample::OtrunkViewEntry.stub!(:new).and_return(mock_otrunk_view_entry(:save => true))
+        OtrunkExample::OtrunkViewEntry.stub(:new).and_return(mock_otrunk_view_entry(:save => true))
         post :create, :otrunk_view_entry => {}
         response.should redirect_to(otrunk_example_otrunk_view_entry_url(mock_otrunk_view_entry))
       end
@@ -96,13 +96,13 @@ describe OtrunkExample::OtrunkViewEntriesController do
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved otrunk_view_entry as @otrunk_view_entry" do
-        OtrunkExample::OtrunkViewEntry.stub!(:new).with({'these' => 'params'}).and_return(mock_otrunk_view_entry(:save => false))
+        OtrunkExample::OtrunkViewEntry.stub(:new).with({'these' => 'params'}).and_return(mock_otrunk_view_entry(:save => false))
         post :create, :otrunk_view_entry => {'these' => 'params'}
         assigns(:otrunk_view_entry).should equal(mock_otrunk_view_entry)
       end
 
       it "re-renders the 'new' template" do
-        OtrunkExample::OtrunkViewEntry.stub!(:new).and_return(mock_otrunk_view_entry(:save => false))
+        OtrunkExample::OtrunkViewEntry.stub(:new).and_return(mock_otrunk_view_entry(:save => false))
         post :create, :otrunk_view_entry => {}
         response.should render_template('new')
       end
@@ -122,13 +122,13 @@ describe OtrunkExample::OtrunkViewEntriesController do
       end
 
       it "exposes the requested otrunk_view_entry as @otrunk_view_entry" do
-        OtrunkExample::OtrunkViewEntry.stub!(:find).and_return(mock_otrunk_view_entry(:update_attributes => true))
+        OtrunkExample::OtrunkViewEntry.stub(:find).and_return(mock_otrunk_view_entry(:update_attributes => true))
         put :update, :id => "1"
         assigns(:otrunk_view_entry).should equal(mock_otrunk_view_entry)
       end
 
       it "redirects to the otrunk_view_entry" do
-        OtrunkExample::OtrunkViewEntry.stub!(:find).and_return(mock_otrunk_view_entry(:update_attributes => true))
+        OtrunkExample::OtrunkViewEntry.stub(:find).and_return(mock_otrunk_view_entry(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(otrunk_example_otrunk_view_entry_url(mock_otrunk_view_entry))
       end
@@ -144,13 +144,13 @@ describe OtrunkExample::OtrunkViewEntriesController do
       end
 
       it "exposes the otrunk_view_entry as @otrunk_view_entry" do
-        OtrunkExample::OtrunkViewEntry.stub!(:find).and_return(mock_otrunk_view_entry(:update_attributes => false))
+        OtrunkExample::OtrunkViewEntry.stub(:find).and_return(mock_otrunk_view_entry(:update_attributes => false))
         put :update, :id => "1"
         assigns(:otrunk_view_entry).should equal(mock_otrunk_view_entry)
       end
 
       it "re-renders the 'edit' template" do
-        OtrunkExample::OtrunkViewEntry.stub!(:find).and_return(mock_otrunk_view_entry(:update_attributes => false))
+        OtrunkExample::OtrunkViewEntry.stub(:find).and_return(mock_otrunk_view_entry(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -168,7 +168,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
     end
   
     it "redirects to the otrunk_example_otrunk_view_entries list" do
-      OtrunkExample::OtrunkViewEntry.stub!(:find).and_return(mock_otrunk_view_entry(:destroy => true))
+      OtrunkExample::OtrunkViewEntry.stub(:find).and_return(mock_otrunk_view_entry(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(otrunk_example_otrunk_view_entries_url)
     end

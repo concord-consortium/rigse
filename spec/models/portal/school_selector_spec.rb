@@ -9,7 +9,7 @@ describe Portal::SchoolSelector do
   before(:each) do
     @adhoc = mock_model(Admin::Settings,    {:allow_adhoc_schools => true })
     @no_adhoc = mock_model(Admin::Settings, {:allow_adhoc_schools => false })
-    Admin::Settings.stub!(:default_settings).and_return(@adhoc)
+    Admin::Settings.stub(:default_settings).and_return(@adhoc)
     @district1 = Factory(:portal_district, {:state => "MA", :name => "no district"} )
   end
   describe "when presented for the first time (no query params)" do
@@ -45,7 +45,7 @@ describe Portal::SchoolSelector do
       @school3   = Factory(:portal_school, {:district => @district2})
 
       @default_district = Factory(:portal_district,  {:state => nil} )
-      Portal::District.stub!(:default).and_return(@default_district)
+      Portal::District.stub(:default).and_return(@default_district)
       @selector = new_selector({:country => Portal::SchoolSelector::USA})
     end
     it "no longer requires a country" do
@@ -110,7 +110,7 @@ describe Portal::SchoolSelector do
       describe "checking if teachers can add districts and schools" do
         describe "when the portal allows adhoc schools" do
           before(:each) do
-            Admin::Settings.stub!(:default_settings).and_return(@adhoc)
+            Admin::Settings.stub(:default_settings).and_return(@adhoc)
             @selector = new_selector({
             :country => Portal::SchoolSelector::USA,
             :state => 'MA',
@@ -123,7 +123,7 @@ describe Portal::SchoolSelector do
         end
         describe "when the portal doesnt adhoc schools" do
           before(:each) do
-            Admin::Settings.stub!(:default_settings).and_return(@no_adhoc)
+            Admin::Settings.stub(:default_settings).and_return(@no_adhoc)
           end
           it "shouldn't let teachers add new district" do
             @selector.allow_teacher_creation(:district).should be_false
@@ -155,7 +155,7 @@ describe Portal::SchoolSelector do
 
           describe "when the settings lets teacher create new schools" do
             before(:each) do
-              Admin::Settings.stub!(:default_settings).and_return(@adhoc)
+              Admin::Settings.stub(:default_settings).and_return(@adhoc)
               @selector = new_selector(@params)
             end
             it "should have a district" do
@@ -172,7 +172,7 @@ describe Portal::SchoolSelector do
 
           describe "when the settings prevents teachers from creating new schools" do
             before(:each) do
-              Admin::Settings.stub!(:default_settings).and_return(@no_adhoc)
+              Admin::Settings.stub(:default_settings).and_return(@no_adhoc)
               @selector = new_selector(@params)
             end
             it "should remove the invalid school" do

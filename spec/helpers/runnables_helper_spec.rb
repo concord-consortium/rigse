@@ -5,21 +5,21 @@ describe RunnablesHelper do
   include RunnablesLinkMatcher
   before :each do
     @anonymous_user = mock_model(User, :roles => ["guest"], :anonymous? => true, :name => "guest")
-    @anonymous_user.stub!(:extra_params).and_return({})
-    helper.stub!(:current_visitor).and_return(@anonymous_user)
-    helper.stub!(:authenticate_with_http_basic).and_return nil
+    @anonymous_user.stub(:extra_params).and_return({})
+    helper.stub(:current_visitor).and_return(@anonymous_user)
+    helper.stub(:authenticate_with_http_basic).and_return nil
   end
 
   describe ".display_workgroups_run_link?" do
     context "with workgroups enabled" do
       before :each do
-        helper.stub!(:use_adhoc_workgroups?).and_return true
+        helper.stub(:use_adhoc_workgroups?).and_return true
       end
 
       context "with a jnlp launchable" do
         let :offering do
           runnable = Object.new().extend(JnlpLaunchable)
-          mock(:runnable => runnable)
+          double(:runnable => runnable)
         end
         it "should return true" do
           helper.display_workgroups_run_link?(offering).should be_true
@@ -27,7 +27,7 @@ describe RunnablesHelper do
       end
       context "with non-jlnp launchables" do
         let :offering do
-          mock(:runnable => Object.new)
+          double(:runnable => Object.new)
         end
         it "should return false" do
           helper.display_workgroups_run_link?(offering).should be_false
@@ -37,12 +37,12 @@ describe RunnablesHelper do
 
     context "with workgroups disabled" do
       before :each do
-        helper.stub!(:use_adhoc_workgroups?).and_return false
+        helper.stub(:use_adhoc_workgroups?).and_return false
       end
 
       context "with a jnlp launchable" do
         let :offering do
-          mock(:runnable => Object.new().extend(JnlpLaunchable))
+          double(:runnable => Object.new().extend(JnlpLaunchable))
         end
         it "should return false" do
           helper.display_workgroups_run_link?(offering).should be_false
@@ -54,7 +54,7 @@ describe RunnablesHelper do
   describe ".display_status_updates?" do
       context "with an offering that can update statuses" do
         let :offering do
-          mock(:runnable => mock(:has_update_status? => true))
+          double(:runnable => double(:has_update_status? => true))
         end
         it "should return true" do
           helper.display_status_updates?(offering).should be_true
@@ -62,7 +62,7 @@ describe RunnablesHelper do
       end
       context "with simpler offering" do
         let :offering do
-          mock(:runnable => Object.new())
+          double(:runnable => Object.new())
         end
         it "should return false" do
           helper.display_status_updates?(offering).should be_false
@@ -153,9 +153,9 @@ describe RunnablesHelper do
     it "should render a link for a Investigation Offering" do
       offering = mock_model(Portal::Offering, :name => "Investigation Offering")
       investigation = stub_model(Investigation)
-      offering.stub!(:runnable).and_return(investigation)
-      offering.stub!(:run_format).and_return :jnlp
-      offering.stub!(:external_activity?).and_return false
+      offering.stub(:runnable).and_return(investigation)
+      offering.stub(:run_format).and_return :jnlp
+      offering.stub(:external_activity?).and_return false
       helper.run_link_for(offering).should be_link_like("http://test.host/users/#{@anonymous_user.id}/portal/offerings/#{offering.id}.jnlp",
                                                              "run_link rollover",
                                                              asset_path("run.png"))

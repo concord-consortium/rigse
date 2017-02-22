@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe OtrunkExample::OtmlCategoriesController do
 
   def mock_otml_category(stubs={})
-    @mock_otml_category.stub!(stubs) unless stubs.empty?
+    @mock_otml_category.stub(stubs) unless stubs.empty?
     @mock_otml_category
   end
   
@@ -24,7 +24,7 @@ describe OtrunkExample::OtmlCategoriesController do
     describe "with mime type of xml" do
   
       it "renders all otrunk_example_otml_categories as xml" do
-        OtrunkExample::OtmlCategory.should_receive(:all).and_return(otml_categories = mock("Array of OtrunkExample::OtmlCategories"))
+        OtrunkExample::OtmlCategory.should_receive(:all).and_return(otml_categories = double("Array of OtrunkExample::OtmlCategories"))
         otml_categories.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
@@ -86,7 +86,7 @@ describe OtrunkExample::OtmlCategoriesController do
       end
 
       it "redirects to the created otml_category" do
-        OtrunkExample::OtmlCategory.stub!(:new).and_return(mock_otml_category(:save => true))
+        OtrunkExample::OtmlCategory.stub(:new).and_return(mock_otml_category(:save => true))
         post :create, :otml_category => {}
         response.should redirect_to(otrunk_example_otml_category_url(mock_otml_category))
       end
@@ -96,13 +96,13 @@ describe OtrunkExample::OtmlCategoriesController do
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved otml_category as @otml_category" do
-        OtrunkExample::OtmlCategory.stub!(:new).with({'these' => 'params'}).and_return(mock_otml_category(:save => false))
+        OtrunkExample::OtmlCategory.stub(:new).with({'these' => 'params'}).and_return(mock_otml_category(:save => false))
         post :create, :otml_category => {:these => 'params'}
         assigns(:otml_category).should equal(mock_otml_category)
       end
 
       it "re-renders the 'new' template" do
-        OtrunkExample::OtmlCategory.stub!(:new).and_return(mock_otml_category(:save => false))
+        OtrunkExample::OtmlCategory.stub(:new).and_return(mock_otml_category(:save => false))
         post :create, :otml_category => {}
         response.should render_template('new')
       end
@@ -122,13 +122,13 @@ describe OtrunkExample::OtmlCategoriesController do
       end
 
       it "exposes the requested otml_category as @otml_category" do
-        OtrunkExample::OtmlCategory.stub!(:find).and_return(mock_otml_category(:update_attributes => true))
+        OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:update_attributes => true))
         put :update, :id => "1"
         assigns(:otml_category).should equal(mock_otml_category)
       end
 
       it "redirects to the otml_category" do
-        OtrunkExample::OtmlCategory.stub!(:find).and_return(mock_otml_category(:update_attributes => true))
+        OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(otrunk_example_otml_category_url(mock_otml_category))
       end
@@ -144,13 +144,13 @@ describe OtrunkExample::OtmlCategoriesController do
       end
 
       it "exposes the otml_category as @otml_category" do
-        OtrunkExample::OtmlCategory.stub!(:find).and_return(mock_otml_category(:update_attributes => false))
+        OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:update_attributes => false))
         put :update, :id => "1"
         assigns(:otml_category).should equal(mock_otml_category)
       end
 
       it "re-renders the 'edit' template" do
-        OtrunkExample::OtmlCategory.stub!(:find).and_return(mock_otml_category(:update_attributes => false))
+        OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -168,7 +168,7 @@ describe OtrunkExample::OtmlCategoriesController do
     end
   
     it "redirects to the otrunk_example_otml_categories list" do
-      OtrunkExample::OtmlCategory.stub!(:find).and_return(mock_otml_category(:destroy => true))
+      OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(otrunk_example_otml_categories_url)
     end

@@ -4,14 +4,14 @@ describe InvestigationsController do
   render_views
 
   before(:each) do
-    @current_settings = mock(
+    @current_settings = double(
       :name => "test settings",
       :using_custom_css? => false,
       :use_bitmap_snapshots? => false,
       :snapshot_enabled => false,
       :use_student_security_questions => false,
       :require_user_consent? => false)
-    Admin::Settings.stub!(:default_settings).and_return(@current_settings)
+    Admin::Settings.stub(:default_settings).and_return(@current_settings)
     
     # this part is broken when the monkey patched application controller was removed
     # spec/support/controller_helper.rb
@@ -30,8 +30,8 @@ describe InvestigationsController do
       :description => "new decription"
     })
 
-    Investigation.stub!(:find).and_return(@investigation)
-    Investigation.stub!(:published).and_return([@investigation])
+    Investigation.stub(:find).and_return(@investigation)
+    Investigation.stub(:published).and_return([@investigation])
   end
 
   it "should render preview warning in OTML" do

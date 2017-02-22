@@ -9,12 +9,12 @@ describe API::V1::OfferingsController do
 
   let(:fake_json)         { {fake:true}.to_json  }
   let(:mock_offering)     { mock_model Portal::Offering }
-  let(:mock_api_offering) { mock(to_json: fake_json) }
+  let(:mock_api_offering) { double(to_json: fake_json) }
   let(:mock_offering_id)  { 32 }
   let(:offering_teachers) { [] }
 
   before(:each) do
-    Portal::Offering.stub!(:find).and_return(mock_offering)
+    Portal::Offering.stub(:find).and_return(mock_offering)
     mock_offering.stub_chain(:clazz, :is_teacher?).and_return { |t| offering_teachers.include?(t) }
   end
 

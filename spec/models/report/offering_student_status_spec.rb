@@ -26,7 +26,7 @@ describe Report::OfferingStudentStatus do
       context "when the offering isn't reportable" do
         let :offering do
           _offering = Object.new
-          _offering.stub!(:individual_reportable?).and_return(false)
+          _offering.stub(:individual_reportable?).and_return(false)
           _offering
         end
         its(:complete_percent){should == 99.99}
@@ -34,7 +34,7 @@ describe Report::OfferingStudentStatus do
       context "when the offering is reportable" do
         let :offering do
           _offering = Object.new
-          _offering.stub!(:individual_reportable?).and_return(true)
+          _offering.stub(:individual_reportable?).and_return(true)
           _offering
         end
         context "without a complete_percent in report_learner" do

@@ -24,7 +24,7 @@ describe RiGse::AssessmentTargetsController do
   
       it "should render all assessment_targets as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::AssessmentTarget.should_receive(:all).and_return(assessment_targets = mock("Array of AssessmentTargets"))
+        RiGse::AssessmentTarget.should_receive(:all).and_return(assessment_targets = double("Array of AssessmentTargets"))
         assessment_targets.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
@@ -87,7 +87,7 @@ describe RiGse::AssessmentTargetsController do
       end
 
       it "should redirect to the created assessment_target" do
-        RiGse::AssessmentTarget.stub!(:new).and_return(mock_assessment_target(:save => true))
+        RiGse::AssessmentTarget.stub(:new).and_return(mock_assessment_target(:save => true))
         post :create, :assessment_target => {}
         response.should redirect_to(ri_gse_assessment_target_url(mock_assessment_target))
       end
@@ -97,13 +97,13 @@ describe RiGse::AssessmentTargetsController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved assessment_target as @assessment_target" do
-        RiGse::AssessmentTarget.stub!(:new).with({'these' => 'params'}).and_return(mock_assessment_target(:save => false))
+        RiGse::AssessmentTarget.stub(:new).with({'these' => 'params'}).and_return(mock_assessment_target(:save => false))
         post :create, :assessment_target => {:these => 'params'}
         assigns(:assessment_target).should equal(mock_assessment_target)
       end
 
       it "should re-render the 'new' template" do
-        RiGse::AssessmentTarget.stub!(:new).and_return(mock_assessment_target(:save => false))
+        RiGse::AssessmentTarget.stub(:new).and_return(mock_assessment_target(:save => false))
         post :create, :assessment_target => {}
         response.should render_template('new')
       end
@@ -123,13 +123,13 @@ describe RiGse::AssessmentTargetsController do
       end
 
       it "should expose the requested assessment_target as @assessment_target" do
-        RiGse::AssessmentTarget.stub!(:find).and_return(mock_assessment_target(:update_attributes => true))
+        RiGse::AssessmentTarget.stub(:find).and_return(mock_assessment_target(:update_attributes => true))
         put :update, :id => "1"
         assigns(:assessment_target).should equal(mock_assessment_target)
       end
 
       it "should redirect to the assessment_target" do
-        RiGse::AssessmentTarget.stub!(:find).and_return(mock_assessment_target(:update_attributes => true))
+        RiGse::AssessmentTarget.stub(:find).and_return(mock_assessment_target(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(ri_gse_assessment_target_url(mock_assessment_target))
       end
@@ -145,13 +145,13 @@ describe RiGse::AssessmentTargetsController do
       end
 
       it "should expose the assessment_target as @assessment_target" do
-        RiGse::AssessmentTarget.stub!(:find).and_return(mock_assessment_target(:update_attributes => false))
+        RiGse::AssessmentTarget.stub(:find).and_return(mock_assessment_target(:update_attributes => false))
         put :update, :id => "1"
         assigns(:assessment_target).should equal(mock_assessment_target)
       end
 
       it "should re-render the 'edit' template" do
-        RiGse::AssessmentTarget.stub!(:find).and_return(mock_assessment_target(:update_attributes => false))
+        RiGse::AssessmentTarget.stub(:find).and_return(mock_assessment_target(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -169,7 +169,7 @@ describe RiGse::AssessmentTargetsController do
     end
   
     it "should redirect to the assessment_targets list" do
-      RiGse::AssessmentTarget.stub!(:find).and_return(mock_assessment_target(:destroy => true))
+      RiGse::AssessmentTarget.stub(:find).and_return(mock_assessment_target(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(assessment_targets_url)
     end

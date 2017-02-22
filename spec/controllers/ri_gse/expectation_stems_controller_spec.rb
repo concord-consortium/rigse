@@ -24,7 +24,7 @@ describe RiGse::ExpectationStemsController do
   
       it "should render all expectation_stems as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::ExpectationStem.should_receive(:all).and_return(expectation_stems = mock("Array of ExpectationStems"))
+        RiGse::ExpectationStem.should_receive(:all).and_return(expectation_stems = double("Array of ExpectationStems"))
         expectation_stems.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
@@ -87,7 +87,7 @@ describe RiGse::ExpectationStemsController do
       end
 
       it "should redirect to the created expectation_stem" do
-        RiGse::ExpectationStem.stub!(:new).and_return(mock_expectation_stem(:save => true))
+        RiGse::ExpectationStem.stub(:new).and_return(mock_expectation_stem(:save => true))
         post :create, :expectation_stem => {}
         response.should redirect_to(ri_gse_expectation_stem_url(mock_expectation_stem))
       end
@@ -97,13 +97,13 @@ describe RiGse::ExpectationStemsController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved expectation_stem as @expectation_stem" do
-        RiGse::ExpectationStem.stub!(:new).with({'these' => 'params'}).and_return(mock_expectation_stem(:save => false))
+        RiGse::ExpectationStem.stub(:new).with({'these' => 'params'}).and_return(mock_expectation_stem(:save => false))
         post :create, :expectation_stem => {:these => 'params'}
         assigns(:expectation_stem).should equal(mock_expectation_stem)
       end
 
       it "should re-render the 'new' template" do
-        RiGse::ExpectationStem.stub!(:new).and_return(mock_expectation_stem(:save => false))
+        RiGse::ExpectationStem.stub(:new).and_return(mock_expectation_stem(:save => false))
         post :create, :expectation_stem => {}
         response.should render_template('new')
       end
@@ -123,13 +123,13 @@ describe RiGse::ExpectationStemsController do
       end
 
       it "should expose the requested expectation_stem as @expectation_stem" do
-        RiGse::ExpectationStem.stub!(:find).and_return(mock_expectation_stem(:update_attributes => true))
+        RiGse::ExpectationStem.stub(:find).and_return(mock_expectation_stem(:update_attributes => true))
         put :update, :id => "1"
         assigns(:expectation_stem).should equal(mock_expectation_stem)
       end
 
       it "should redirect to the expectation_stem" do
-        RiGse::ExpectationStem.stub!(:find).and_return(mock_expectation_stem(:update_attributes => true))
+        RiGse::ExpectationStem.stub(:find).and_return(mock_expectation_stem(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(ri_gse_expectation_stem_url(mock_expectation_stem))
       end
@@ -145,13 +145,13 @@ describe RiGse::ExpectationStemsController do
       end
 
       it "should expose the expectation_stem as @expectation_stem" do
-        RiGse::ExpectationStem.stub!(:find).and_return(mock_expectation_stem(:update_attributes => false))
+        RiGse::ExpectationStem.stub(:find).and_return(mock_expectation_stem(:update_attributes => false))
         put :update, :id => "1"
         assigns(:expectation_stem).should equal(mock_expectation_stem)
       end
 
       it "should re-render the 'edit' template" do
-        RiGse::ExpectationStem.stub!(:find).and_return(mock_expectation_stem(:update_attributes => false))
+        RiGse::ExpectationStem.stub(:find).and_return(mock_expectation_stem(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -169,7 +169,7 @@ describe RiGse::ExpectationStemsController do
     end
   
     it "should redirect to the expectation_stems list" do
-      RiGse::ExpectationStem.stub!(:find).and_return(mock_expectation_stem(:destroy => true))
+      RiGse::ExpectationStem.stub(:find).and_return(mock_expectation_stem(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(expectation_stems_url)
     end

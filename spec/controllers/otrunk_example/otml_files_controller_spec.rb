@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe OtrunkExample::OtmlFilesController do
 
   def mock_otml_file(stubs={})
-    @mock_otml_file.stub!(stubs) unless stubs.empty?
+    @mock_otml_file.stub(stubs) unless stubs.empty?
     @mock_otml_file
   end
   
@@ -24,7 +24,7 @@ describe OtrunkExample::OtmlFilesController do
     describe "with mime type of xml" do
   
       it "renders all otrunk_example_otml_files as xml" do
-        OtrunkExample::OtmlFile.should_receive(:all).and_return(otml_files = mock("Array of OtrunkExample::OtmlFiles"))
+        OtrunkExample::OtmlFile.should_receive(:all).and_return(otml_files = double("Array of OtrunkExample::OtmlFiles"))
         otml_files.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
@@ -86,7 +86,7 @@ describe OtrunkExample::OtmlFilesController do
       end
 
       it "redirects to the created otml_file" do
-        OtrunkExample::OtmlFile.stub!(:new).and_return(mock_otml_file(:save => true))
+        OtrunkExample::OtmlFile.stub(:new).and_return(mock_otml_file(:save => true))
         post :create, :otml_file => {}
         response.should redirect_to(otrunk_example_otml_file_url(mock_otml_file))
       end
@@ -96,13 +96,13 @@ describe OtrunkExample::OtmlFilesController do
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved otml_file as @otml_file" do
-        OtrunkExample::OtmlFile.stub!(:new).with({'these' => 'params'}).and_return(mock_otml_file(:save => false))
+        OtrunkExample::OtmlFile.stub(:new).with({'these' => 'params'}).and_return(mock_otml_file(:save => false))
         post :create, :otml_file => {:these => 'params'}
         assigns(:otml_file).should equal(mock_otml_file)
       end
 
       it "re-renders the 'new' template" do
-        OtrunkExample::OtmlFile.stub!(:new).and_return(mock_otml_file(:save => false))
+        OtrunkExample::OtmlFile.stub(:new).and_return(mock_otml_file(:save => false))
         post :create, :otml_file => {}
         response.should render_template('new')
       end
@@ -122,13 +122,13 @@ describe OtrunkExample::OtmlFilesController do
       end
 
       it "exposes the requested otml_file as @otml_file" do
-        OtrunkExample::OtmlFile.stub!(:find).and_return(mock_otml_file(:update_attributes => true))
+        OtrunkExample::OtmlFile.stub(:find).and_return(mock_otml_file(:update_attributes => true))
         put :update, :id => "1"
         assigns(:otml_file).should equal(mock_otml_file)
       end
 
       it "redirects to the otml_file" do
-        OtrunkExample::OtmlFile.stub!(:find).and_return(mock_otml_file(:update_attributes => true))
+        OtrunkExample::OtmlFile.stub(:find).and_return(mock_otml_file(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(otrunk_example_otml_file_url(mock_otml_file))
       end
@@ -144,13 +144,13 @@ describe OtrunkExample::OtmlFilesController do
       end
 
       it "exposes the otml_file as @otml_file" do
-        OtrunkExample::OtmlFile.stub!(:find).and_return(mock_otml_file(:update_attributes => false))
+        OtrunkExample::OtmlFile.stub(:find).and_return(mock_otml_file(:update_attributes => false))
         put :update, :id => "1"
         assigns(:otml_file).should equal(mock_otml_file)
       end
 
       it "re-renders the 'edit' template" do
-        OtrunkExample::OtmlFile.stub!(:find).and_return(mock_otml_file(:update_attributes => false))
+        OtrunkExample::OtmlFile.stub(:find).and_return(mock_otml_file(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -168,7 +168,7 @@ describe OtrunkExample::OtmlFilesController do
     end
   
     it "redirects to the otrunk_example_otml_files list" do
-      OtrunkExample::OtmlFile.stub!(:find).and_return(mock_otml_file(:destroy => true))
+      OtrunkExample::OtmlFile.stub(:find).and_return(mock_otml_file(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(otrunk_example_otml_files_url)
     end

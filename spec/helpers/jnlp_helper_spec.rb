@@ -21,11 +21,11 @@ describe JnlpHelper do
       before :each do
         @settings = Admin::Settings.new(:pub_interval => 10,
           :use_periodic_bundle_uploading => true)
-        @student = mock()
+        @student = double()
         @user = Factory(:user)
         @student.stub(:user => @user)
-        pbl   = mock()
-        @learner = mock(:student => @student, :periodic_bundle_logger => pbl)
+        pbl   = double()
+        @learner = double(:student => @student, :periodic_bundle_logger => pbl)
       end
       it "should include the update interval as a property" do
         subject.stub(:current_settings => @settings)
