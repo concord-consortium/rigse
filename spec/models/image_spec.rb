@@ -173,7 +173,7 @@ describe Image do
   describe "uploaded_by_attribution" do
     context "when UseUploadedByInAttribution is set to true" do
       before(:each) do
-        Image::UseUploadedByInAttribution = true
+        stub_const('Image::UseUploadedByInAttribution', true)
       end
       it "should return the users login" do
         expect(subject.uploaded_by_attribution).to eq("Uploaded by: testuser")
@@ -181,7 +181,7 @@ describe Image do
     end
     context "when UseUploadedByInAttribution is set to false" do
       before(:each) do
-        Image::UseUploadedByInAttribution = false
+        stub_const('Image::UseUploadedByInAttribution', false)
       end
       it "should return an empty string" do
         expect(subject.uploaded_by_attribution).to be_blank

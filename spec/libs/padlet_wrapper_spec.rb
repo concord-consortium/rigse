@@ -68,7 +68,7 @@ describe PadletWrapper do
     end
 
     it 'should raise an error' do
-      expect {  PadletWrapper.new }.to raise_error
+      expect {  PadletWrapper.new }.to raise_error(JSON::ParserError)
     end
   end
 end

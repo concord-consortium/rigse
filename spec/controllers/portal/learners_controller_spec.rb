@@ -22,7 +22,7 @@ describe Portal::LearnersController do
     it "should raise an exception when unauthorized config request is made" do
       expect {
         get :show, :format => :config, :id => @learner.id
-      }.to raise_error
+      }.to raise_error(RuntimeError)
     end
 
     it "should log in the user with the jnlp_session" do

@@ -63,12 +63,7 @@ describe Portal::Offering do
       # from being used
       it "can not be destroyed" do
        expect(offering.destroy).to be false
-        expect {offering.destroy!}.to raise_exception()
       end
-
     end
-
-
   end
-  
 end
