@@ -69,16 +69,16 @@ describe SearchController do
     describe "when its a student visiting" do
       it "should redirect to root" do
         student # Ensure student_user has a PortalStudent
-        controller.stub(:current_visitor).and_return(student_user)
+        allow(controller).to receive(:current_visitor).and_return(student_user)
         get :index
-        response.should redirect_to("/")
+        expect(response).to redirect_to("/")
       end
     end
 
     describe "when there are no query parameters" do
       it "should redirect to ?include_official=1" do
         get :index
-        response.should redirect_to action: :index, include_official: '1'
+        expect(response).to redirect_to action: :index, include_official: '1'
       end
     end
   end
@@ -116,10 +116,10 @@ describe SearchController do
         :material_id => activity_for_all_clazz.id
       }
       xhr :post, :get_current_material_unassigned_clazzes, post_params
-      should render_template('_material_unassigned_clazzes')
-      assigns[:material].should eq [activity_for_all_clazz]
-      assigns[:assigned_clazzes].should eq [physics_clazz]
-      assigns[:unassigned_clazzes].should eq [chemistry_clazz, mathematics_clazz]
+      is_expected.to render_template('_material_unassigned_clazzes')
+      expect(assigns[:material]).to eq [activity_for_all_clazz]
+      expect(assigns[:assigned_clazzes]).to eq [physics_clazz]
+      expect(assigns[:unassigned_clazzes]).to eq [chemistry_clazz, mathematics_clazz]
     end
 
     it "should get all the classes to which the investigation is not assigned. Material to be assigned is a single investigation" do
@@ -128,9 +128,9 @@ describe SearchController do
         :material_id => investigations_for_all_clazz.id
       }
       xhr :post, :get_current_material_unassigned_clazzes, post_params
-      assigns[:material].should eq [investigations_for_all_clazz]
-      assigns[:assigned_clazzes].should eq [physics_clazz]
-      assigns[:unassigned_clazzes].should eq [chemistry_clazz, mathematics_clazz]
+      expect(assigns[:material]).to eq [investigations_for_all_clazz]
+      expect(assigns[:assigned_clazzes]).to eq [physics_clazz]
+      expect(assigns[:unassigned_clazzes]).to eq [chemistry_clazz, mathematics_clazz]
     end
 
     it "should get all the classes to which the activity is not assigned. Material to be assigned is a multiple activity" do
@@ -140,9 +140,9 @@ describe SearchController do
         :material_id => "#{activity_for_all_clazz.id},#{another_activity_for_all_clazz.id}"
       }
       xhr :post, :get_current_material_unassigned_clazzes, post_params
-      assigns[:material].should eq [activity_for_all_clazz, another_activity_for_all_clazz]
-      assigns[:assigned_clazzes].should eq []
-      assigns[:unassigned_clazzes].should eq [physics_clazz, chemistry_clazz, mathematics_clazz]
+      expect(assigns[:material]).to eq [activity_for_all_clazz, another_activity_for_all_clazz]
+      expect(assigns[:assigned_clazzes]).to eq []
+      expect(assigns[:unassigned_clazzes]).to eq [physics_clazz, chemistry_clazz, mathematics_clazz]
     end
 
   end
@@ -169,12 +169,12 @@ describe SearchController do
       offering_for_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(clazz.id, runnable_type, runnable_id)
       offering_for_another_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(another_clazz.id, runnable_type, runnable_id)
 
-      offering_for_clazz.length.should be(1)
-      offering_for_clazz.first.should == already_assigned_offering
+      expect(offering_for_clazz.length).to be(1)
+      expect(offering_for_clazz.first).to eq(already_assigned_offering)
 
-      offering_for_another_clazz.length.should be(1)
-      offering_for_another_clazz.first.runnable_id.should be(chemistry_investigation.id)
-      offering_for_another_clazz.first.clazz_id.should be(another_clazz.id)
+      expect(offering_for_another_clazz.length).to be(1)
+      expect(offering_for_another_clazz.first.runnable_id).to be(chemistry_investigation.id)
+      expect(offering_for_another_clazz.first.clazz_id).to be(another_clazz.id)
     end
 
     it "should assign activities to the classes" do
@@ -191,7 +191,7 @@ describe SearchController do
       post_params[:clazz_id].each do |clazz_id|
         runnable_ids.each do |runnable_id|
           offering = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(clazz_id, runnable_type, runnable_id)
-          offering.length.should be(1)
+          expect(offering.length).to be(1)
         end
       end
     end

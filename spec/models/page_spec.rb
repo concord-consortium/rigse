@@ -20,10 +20,10 @@ describe Page do
   end
 
   it 'has_many for all ALL_EMBEDDABLES' do
-    ALL_EMBEDDABLES.length.should be > 0
+    expect(ALL_EMBEDDABLES.length).to be > 0
     p = Page.create!(@valid_attributes)
     ALL_EMBEDDABLES.each do |e|
-      p.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize).should be(true)
+      expect(p.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize)).to be(true)
     end
   end
 
@@ -39,8 +39,8 @@ describe Page do
       @page2 = Page.create!(:name => "Page2", :description => "Page2 description")
       @page.reload
       @page2.reload
-      @page.position.should == 1
-      @page2.position.should == 2
+      expect(@page.position).to eq(1)
+      expect(@page2.position).to eq(2)
     end
   end
 end

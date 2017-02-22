@@ -9,15 +9,15 @@ describe Portal::SchoolSelector do
   before(:each) do
     @adhoc = mock_model(Admin::Settings,    {:allow_adhoc_schools => true })
     @no_adhoc = mock_model(Admin::Settings, {:allow_adhoc_schools => false })
-    Admin::Settings.stub(:default_settings).and_return(@adhoc)
+    allow(Admin::Settings).to receive(:default_settings).and_return(@adhoc)
     @district1 = Factory(:portal_district, {:state => "MA", :name => "no district"} )
   end
   describe "when presented for the first time (no query params)" do
     it "needs a state" do
-      new_selector({}).needs.should == :state
+      expect(new_selector({}).needs).to eq(:state)
     end
     it "provides state options" do
-      new_selector({}).choices[:state].should include "MA"
+      expect(new_selector({}).choices[:state]).to include "MA"
     end
   end
 
@@ -26,12 +26,12 @@ describe Portal::SchoolSelector do
       @selector = new_selector({:country => 'England'})
     end
     it "does not require state or district information" do
-      @selector.needs.should_not == :country
-      @selector.needs.should_not == :state
-      @selector.needs.should_not == :district
+      expect(@selector.needs).not_to eq(:country)
+      expect(@selector.needs).not_to eq(:state)
+      expect(@selector.needs).not_to eq(:district)
     end
     it "provides a list of schools in England" do
-      pending # how do we do this?
+      skip # how do we do this?
     end
   end
 
@@ -45,18 +45,18 @@ describe Portal::SchoolSelector do
       @school3   = Factory(:portal_school, {:district => @district2})
 
       @default_district = Factory(:portal_district,  {:state => nil} )
-      Portal::District.stub(:default).and_return(@default_district)
+      allow(Portal::District).to receive(:default).and_return(@default_district)
       @selector = new_selector({:country => Portal::SchoolSelector::USA})
     end
     it "no longer requires a country" do
-      @selector.needs.should_not == :country
+      expect(@selector.needs).not_to eq(:country)
     end
     it "requires a state" do
-      @selector.needs.should == :state
+      expect(@selector.needs).to eq(:state)
     end
     it "presents a list of available states" do
-      @selector.choices[:state].should include "MA"
-      @selector.choices[:state].should include "NY"
+      expect(@selector.choices[:state]).to include "MA"
+      expect(@selector.choices[:state]).to include "NY"
     end
 
     describe "when the user has selected Massachussetts as the state" do
@@ -65,13 +65,13 @@ describe Portal::SchoolSelector do
       end
 
       it "still requires a district" do
-        @selector.needs.should == :district
+        expect(@selector.needs).to eq(:district)
       end
 
       it "presents choices for the districts in Massachussetts" do
-        @selector.choices[:district].map { |d| d[1] }.should     include @district1.id
-        @selector.choices[:district].map { |d| d[1] }.should     include @district2.id
-        @selector.choices[:district].map { |d| d[1] }.should_not include @district3.id
+        expect(@selector.choices[:district].map { |d| d[1] }).to     include @district1.id
+        expect(@selector.choices[:district].map { |d| d[1] }).to     include @district2.id
+        expect(@selector.choices[:district].map { |d| d[1] }).not_to include @district3.id
       end
 
       describe "when the user has picked the first district in Massachussetts" do
@@ -80,17 +80,17 @@ describe Portal::SchoolSelector do
         end
 
         it "no longer requires a district" do
-          @selector.needs.should_not == :district
+          expect(@selector.needs).not_to eq(:district)
         end
 
         it "should still reqruire a school" do
-          @selector.needs.should == :school
+          expect(@selector.needs).to eq(:school)
         end
 
         it "presents a list of schools in Massachussetts in district1" do
-          @selector.choices[:school].map { |s| s[1]}.should     include @school1.id
-          @selector.choices[:school].map { |s| s[1]}.should     include @school2.id
-          @selector.choices[:school].map { |s| s[1]}.should_not include @school3.id
+          expect(@selector.choices[:school].map { |s| s[1]}).to     include @school1.id
+          expect(@selector.choices[:school].map { |s| s[1]}).to     include @school2.id
+          expect(@selector.choices[:school].map { |s| s[1]}).not_to include @school3.id
         end
       end
 
@@ -103,14 +103,14 @@ describe Portal::SchoolSelector do
           })
         end
         it "should indicate the selection is not complete" do
-          @selector.should_not be_valid
+          expect(@selector).not_to be_valid
         end
       end
 
       describe "checking if teachers can add districts and schools" do
         describe "when the portal allows adhoc schools" do
           before(:each) do
-            Admin::Settings.stub(:default_settings).and_return(@adhoc)
+            allow(Admin::Settings).to receive(:default_settings).and_return(@adhoc)
             @selector = new_selector({
             :country => Portal::SchoolSelector::USA,
             :state => 'MA',
@@ -118,15 +118,15 @@ describe Portal::SchoolSelector do
           })
           end
           it "should let teachers add new schools" do
-            @selector.allow_teacher_creation.should be_true
+            expect(@selector.allow_teacher_creation).to be_truthy
           end
         end
         describe "when the portal doesnt adhoc schools" do
           before(:each) do
-            Admin::Settings.stub(:default_settings).and_return(@no_adhoc)
+            allow(Admin::Settings).to receive(:default_settings).and_return(@no_adhoc)
           end
           it "shouldn't let teachers add new district" do
-            @selector.allow_teacher_creation(:district).should be_false
+            expect(@selector.allow_teacher_creation(:district)).to be_falsey
           end
         end
       end
@@ -155,31 +155,31 @@ describe Portal::SchoolSelector do
 
           describe "when the settings lets teacher create new schools" do
             before(:each) do
-              Admin::Settings.stub(:default_settings).and_return(@adhoc)
+              allow(Admin::Settings).to receive(:default_settings).and_return(@adhoc)
               @selector = new_selector(@params)
             end
             it "should have a district" do
-              @selector.district.should_not be_nil
+              expect(@selector.district).not_to be_nil
             end
             it "should have a school (id) set" do
-              @selector.school.should_not be_nil
-              @selector.school.should be_a_kind_of Portal::School
+              expect(@selector.school).not_to be_nil
+              expect(@selector.school).to be_a_kind_of Portal::School
             end
             it "should be comeplete" do
-              @selector.should be_valid
+              expect(@selector).to be_valid
             end
           end
 
           describe "when the settings prevents teachers from creating new schools" do
             before(:each) do
-              Admin::Settings.stub(:default_settings).and_return(@no_adhoc)
+              allow(Admin::Settings).to receive(:default_settings).and_return(@no_adhoc)
               @selector = new_selector(@params)
             end
             it "should remove the invalid school" do
-              @selector.school.should be_nil
+              expect(@selector.school).to be_nil
             end
             it "should not be comeplete" do
-              @selector.should_not be_valid
+              expect(@selector).not_to be_valid
             end
           end
 
@@ -207,13 +207,13 @@ describe Portal::SchoolSelector do
         @selector = new_selector(@params)
       end
       it "sould invalidate the district" do
-        @selector.state.should == 'MA'
+        expect(@selector.state).to eq('MA')
       end
       it "should invalidate the district" do
-        @selector.district.should be_nil
+        expect(@selector.district).to be_nil
       end
       it "should invlidate the school" do
-        @selector.school.should be_nil
+        expect(@selector.school).to be_nil
       end
     end
     describe "changing the district" do
@@ -229,14 +229,14 @@ describe Portal::SchoolSelector do
         @selector = new_selector(@params)
       end
       it "the state should still be valid" do
-        @selector.state.should == "ME"
+        expect(@selector.state).to eq("ME")
       end
 
       it "the district should be changed" do
-        @selector.district.should == @changed_district
+        expect(@selector.district).to eq(@changed_district)
       end
       it "should invlidate the school" do
-        @selector.school.should be_nil
+        expect(@selector.school).to be_nil
       end
     end
   end

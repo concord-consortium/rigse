@@ -6,8 +6,8 @@ describe "/embeddable/data_collectors/edit.html.haml" do
   before(:each) do
     # cut off the edit_menu_for helper which traverses lots of other code
     power_user = stub_model(User, :has_role? => true)
-    view.stub(:edit_menu_for).and_return("edit menu")
-    view.stub(:current_visitor).and_return(power_user)
+    allow(view).to receive(:edit_menu_for).and_return("edit menu")
+    allow(view).to receive(:current_visitor).and_return(power_user)
     assign(:data_collector, @data_collector = stub_model(Embeddable::DataCollector,
       :new_record? => false, 
       :id => 1, 
@@ -47,12 +47,12 @@ describe "/embeddable/data_collectors/edit.html.haml" do
 
   it "renders the edit form" do
     render
-    rendered.should have_selector("form[action='#{embeddable_data_collector_path(@data_collector)}'][method='post']")
+    expect(rendered).to have_selector("form[action='#{embeddable_data_collector_path(@data_collector)}'][method='post']")
   end
 
   it "should have a way to select a linked data collector" do
     render
-    rendered.should have_selector("select[name='embeddable_data_collector[data_table_id]']")
+    expect(rendered).to have_selector("select[name='embeddable_data_collector[data_table_id]']")
   end
   it "should have a way to select the font size for the digital display" do
     render

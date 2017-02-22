@@ -5,7 +5,7 @@ describe Portal::OfferingsMetalController do
     it "should return 'Not Found' without a user" do
       offering = Factory(:portal_offering)
       get :launch_status, :id => offering.id
-      response.body.should == "Not Found"
+      expect(response.body).to eq("Not Found")
     end
 
     it "should return no_session with a user not running anything" do
@@ -14,7 +14,7 @@ describe Portal::OfferingsMetalController do
       get :launch_status, :id => learner.offering.id
       response.content_type == 'application/json'
       json_body = JSON.parse(response.body)
-      json_body['event_type'].should == 'no_session'
+      expect(json_body['event_type']).to eq('no_session')
     end
   end
 end

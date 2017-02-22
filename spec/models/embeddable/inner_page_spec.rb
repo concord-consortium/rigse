@@ -14,7 +14,7 @@ describe Embeddable::InnerPage do
   end
 
   it "should create a new instance given valid attributes" do
-    @inner_page.should_not be_nil
+    expect(@inner_page).not_to be_nil
   end
   
   it "should belong to a page" do

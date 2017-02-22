@@ -2,7 +2,7 @@ require 'spec_helper'
 describe "/portal/learners/_embeddable_open_response.html.haml" do
   
   before(:each) do
-    view.stub(:saveable_for_learner).and_return(saveable)
+    allow(view).to receive(:saveable_for_learner).and_return(saveable)
   end
   let(:answer_text){ "My answer" }
   let(:submitted)  { true }
@@ -15,7 +15,7 @@ describe "/portal/learners/_embeddable_open_response.html.haml" do
     let(:submitted)  { true }
     it "should display render the users answer" do 
       render :partial => "embeddable_open_response", :locals => locals
-      rendered.should =~ /#{answer_text}/
+      expect(rendered).to match(/#{answer_text}/)
     end
   end
 

@@ -115,13 +115,13 @@ describe Admin::ExternalReportsController do
       it "will render the index" do
         get :index
         assert_response 200
-        response.should render_template("index")
+        expect(response).to render_template("index")
       end
     end
 
     describe "DELETE destroy" do
       it "delete, and redirect back to index" do
-        ExternalReport.should_receive(:find).and_return(mock_report)
+        expect(ExternalReport).to receive(:find).and_return(mock_report)
         delete :destroy, :id => report_id
         assert_redirected_to action: :index
       end
@@ -129,26 +129,26 @@ describe Admin::ExternalReportsController do
 
     describe "GET show" do
       it "redners the show template" do
-        ExternalReport.should_receive(:find).and_return(mock_report)
+        expect(ExternalReport).to receive(:find).and_return(mock_report)
         get :show, :id => report_id
-        assigns[:report].should eq mock_report
-        response.should render_template("show")
+        expect(assigns[:report]).to eq mock_report
+        expect(response).to render_template("show")
       end
     end
 
     describe "GET edit" do
       it "renders the edit template" do
-        ExternalReport.should_receive(:find).and_return(mock_report)
+        expect(ExternalReport).to receive(:find).and_return(mock_report)
         get :edit, :id => report_id
-        assigns[:report].should eq mock_report
-        response.should render_template("edit")
+        expect(assigns[:report]).to eq mock_report
+        expect(response).to render_template("edit")
       end
     end
 
     describe "GET new" do
       it "renders the new form" do
         get :new
-        response.should render_template("new")
+        expect(response).to render_template("new")
         assert_response 200
       end
     end
@@ -156,7 +156,7 @@ describe Admin::ExternalReportsController do
     describe "PUT update" do
       let(:stubs) {{ update_attributes: true }}
       it "updates the model, redirects to index" do
-        ExternalReport.should_receive(:find).and_return(mock_report)
+        expect(ExternalReport).to receive(:find).and_return(mock_report)
         put :update, :id => report_id, :report => {:params => 'params'}
         assert_redirected_to action: :index
       end

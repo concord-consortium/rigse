@@ -45,10 +45,10 @@ describe Dataservice::ProcessExternalActivityDataJob do
   subject { Dataservice::ProcessExternalActivityDataJob.new(23,json_content)}
   before(:each) do
     Portal::Learner.stub(:find => learner)
-    subject.stub(:internal_process_open_response)
-    subject.stub(:internal_process_multiple_choice)
-    subject.stub(:internal_process_image_question)
-    subject.stub(:internal_process_external_link)
+    allow(subject).to receive(:internal_process_open_response)
+    allow(subject).to receive(:internal_process_multiple_choice)
+    allow(subject).to receive(:internal_process_image_question)
+    allow(subject).to receive(:internal_process_external_link)
   end
 
 
@@ -57,23 +57,23 @@ describe Dataservice::ProcessExternalActivityDataJob do
       let(:json_content) { bad_content }
 
       it "should record a name exception when performing" do
-        subject.content.should == bad_content
-        Rails.logger.should_receive :info
-        NewRelic::Agent.should_receive :notice_error
-        subject.should_receive :internal_process_multiple_choice
+        expect(subject.content).to eq(bad_content)
+        expect(Rails.logger).to receive :info
+        expect(NewRelic::Agent).to receive :notice_error
+        expect(subject).to receive :internal_process_multiple_choice
         subject.perform
       end
     end
 
     describe "with good content" do
       it "should not record any exceptions when performing" do
-        subject.content.should == good_content
-        Rails.logger.should_not_receive :info
-        NewRelic::Agent.should_not_receive :notice_error
-        subject.should_receive :internal_process_open_response
-        subject.should_receive :internal_process_multiple_choice
-        subject.should_receive :internal_process_image_question
-        subject.should_receive :internal_process_external_link
+        expect(subject.content).to eq(good_content)
+        expect(Rails.logger).not_to receive :info
+        expect(NewRelic::Agent).not_to receive :notice_error
+        expect(subject).to receive :internal_process_open_response
+        expect(subject).to receive :internal_process_multiple_choice
+        expect(subject).to receive :internal_process_image_question
+        expect(subject).to receive :internal_process_external_link
         subject.perform
       end
     end

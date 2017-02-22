@@ -12,21 +12,21 @@ describe Embeddable::SoundGrapher do
   describe "object creation" do
     it "should create a new instance given valid attributes" do
       new_graph = Embeddable::SoundGrapher.create(@valid_attributes)
-      new_graph.should be_valid
+      expect(new_graph).to be_valid
     end
 
     it "should create a new instance with valid defaults" do
       new_graph = Embeddable::SoundGrapher.create
-      new_graph.should be_valid
+      expect(new_graph).to be_valid
     end
 
     it "should have validation errors when created with bad attributes" do
       new_graph = Embeddable::SoundGrapher.create(@valid_attributes.merge(:max_frequency   => "40"))
-      new_graph.should_not be_valid
+      expect(new_graph).not_to be_valid
       new_graph = Embeddable::SoundGrapher.create(@valid_attributes.merge(:max_sample_time => "4"))
-      new_graph.should_not be_valid
+      expect(new_graph).not_to be_valid
       new_graph = Embeddable::SoundGrapher.create(@valid_attributes.merge(:display_mode    => "Plaid"))
-      new_graph.should_not be_valid
+      expect(new_graph).not_to be_valid
     end
   end
 

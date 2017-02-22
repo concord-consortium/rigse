@@ -11,98 +11,98 @@ describe UsersController do
   end
 
   it 'allows signup' do
-    pending "Broken example"
-    lambda do
+    skip "Broken example"
+    expect do
       create_user
-      response.should be_redirect
-    end.should change(User, :count).by(1)
+      expect(response).to be_redirect
+    end.to change(User, :count).by(1)
   end
 
   it 'signs up user in pending state' do
-    pending "Broken example"
+    skip "Broken example"
     create_user
     assigns(:user).reload
-    assigns(:user).should be_pending
+    expect(assigns(:user)).to be_pending
   end
 
   it 'signs up user with activation code' do
-    pending "Broken example"
+    skip "Broken example"
     create_user
     assigns(:user).reload
-    assigns(:user).activation_code.should_not be_nil
+    expect(assigns(:user).activation_code).not_to be_nil
   end
   it 'requires login on signup' do
-    pending "Broken example"
-    lambda do
+    skip "Broken example"
+    expect do
       create_user(:login => nil)
-      assigns[:user].errors[:login].should_not be_nil
-      response.should be_success
-    end.should_not change(User, :count)
+      expect(assigns[:user].errors[:login]).not_to be_nil
+      expect(response).to be_success
+    end.not_to change(User, :count)
   end
   
   it 'requires password on signup' do
-    pending "Broken example"
-    lambda do
+    skip "Broken example"
+    expect do
       create_user(:password => nil)
-      assigns[:user].errors[:password].should_not be_nil
-      response.should be_success
-    end.should_not change(User, :count)
+      expect(assigns[:user].errors[:password]).not_to be_nil
+      expect(response).to be_success
+    end.not_to change(User, :count)
   end
   
   it 'requires password confirmation on signup' do
-    pending "Broken example"
-    lambda do
+    skip "Broken example"
+    expect do
       create_user(:password_confirmation => nil)
-      assigns[:user].errors[:password_confirmation].should_not be_nil
-      response.should be_success
-    end.should_not change(User, :count)
+      expect(assigns[:user].errors[:password_confirmation]).not_to be_nil
+      expect(response).to be_success
+    end.not_to change(User, :count)
   end
 
   it 'requires email on signup' do
-    pending "Broken example"
-    lambda do
+    skip "Broken example"
+    expect do
       create_user(:email => nil)
-      assigns[:user].errors[:email].should_not be_nil
-      response.should be_success
-    end.should_not change(User, :count)
+      expect(assigns[:user].errors[:email]).not_to be_nil
+      expect(response).to be_success
+    end.not_to change(User, :count)
   end
   
   it 'activates user' do
-    pending "Broken example"
-    User.authenticate('aaron', 'monkey').should be_nil
+    skip "Broken example"
+    expect(User.authenticate('aaron', 'monkey')).to be_nil
     get :activate, :activation_code => users(:aaron).activation_code
-    response.should redirect_to('/login')
-    flash[:notice].should_not be_nil
-    flash[:error ].should     be_nil
-    User.authenticate('aaron', 'monkey').should == users(:aaron)
+    expect(response).to redirect_to('/login')
+    expect(flash[:notice]).not_to be_nil
+    expect(flash[:error ]).to     be_nil
+    expect(User.authenticate('aaron', 'monkey')).to eq(users(:aaron))
   end
   
   it 'does not activate user without key' do
-    pending "Broken example"
+    skip "Broken example"
     get :activate
-    flash[:notice].should     be_nil
-    flash[:error ].should_not be_nil
+    expect(flash[:notice]).to     be_nil
+    expect(flash[:error ]).not_to be_nil
   end
   
   it 'does not activate user with blank key' do
-    pending "Broken example"
+    skip "Broken example"
     get :activate, :activation_code => ''
-    flash[:notice].should     be_nil
-    flash[:error ].should_not be_nil
+    expect(flash[:notice]).to     be_nil
+    expect(flash[:error ]).not_to be_nil
   end
   
   it 'does not activate user with bogus key' do
-    pending "Broken example"
+    skip "Broken example"
     get :activate, :activation_code => 'i_haxxor_joo'
-    flash[:notice].should     be_nil
-    flash[:error ].should_not be_nil
+    expect(flash[:notice]).to     be_nil
+    expect(flash[:error ]).not_to be_nil
   end
   
   it 'shows thank you page to teacher on successful registration' do
     
     get :registration_successful, {:type => 'teacher'}
     
-    @response.should render_template("users/thanks")
+    expect(@response).to render_template("users/thanks")
     
     assert_select 'h2', /thanks/i
     assert_select 'p', /activation code/i
@@ -113,7 +113,7 @@ describe UsersController do
     
     get :registration_successful, {:type => 'student'}
     
-    @response.should render_template("portal/students/signup_success")
+    expect(@response).to render_template("portal/students/signup_success")
     
     # should show text "your username is"
     assert_select "p", /username\s+is/i

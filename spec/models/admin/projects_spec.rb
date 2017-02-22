@@ -29,35 +29,35 @@ describe Admin::Project do
 
   describe "#name" do
     it "should be required" do
-      expect(Admin::Project.new(name: 'n').valid?).to be_true
-      expect(Admin::Project.new(name: '').valid?).to be_false
-      expect(Admin::Project.new().valid?).to be_false
+      expect(Admin::Project.new(name: 'n').valid?).to be_truthy
+      expect(Admin::Project.new(name: '').valid?).to be_falsey
+      expect(Admin::Project.new().valid?).to be_falsey
     end
   end
 
   describe "#landing_page_slug" do
     it "should be optional" do
-      expect(Admin::Project.new(name: 'n').valid?).to be_true
-      expect(Admin::Project.new(name: 'n', landing_page_slug: '').valid?).to be_true
+      expect(Admin::Project.new(name: 'n').valid?).to be_truthy
+      expect(Admin::Project.new(name: 'n', landing_page_slug: '').valid?).to be_truthy
     end
 
     it "should be unique (except from nil or empty string)" do
-      expect(Admin::Project.create(name: 'n', landing_page_slug: 'test').valid?).to be_true
-      expect(Admin::Project.create(name: 'n', landing_page_slug: 'test').valid?).to be_false
-      expect(Admin::Project.create(name: 'n', landing_page_slug: '').valid?).to be_true
-      expect(Admin::Project.create(name: 'n', landing_page_slug: '').valid?).to be_true
-      expect(Admin::Project.create(name: 'n').valid?).to be_true
-      expect(Admin::Project.create(name: 'n').valid?).to be_true
+      expect(Admin::Project.create(name: 'n', landing_page_slug: 'test').valid?).to be_truthy
+      expect(Admin::Project.create(name: 'n', landing_page_slug: 'test').valid?).to be_falsey
+      expect(Admin::Project.create(name: 'n', landing_page_slug: '').valid?).to be_truthy
+      expect(Admin::Project.create(name: 'n', landing_page_slug: '').valid?).to be_truthy
+      expect(Admin::Project.create(name: 'n').valid?).to be_truthy
+      expect(Admin::Project.create(name: 'n').valid?).to be_truthy
     end
 
     it "should be limited to lower case letters, digits and '-' character" do
-      expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug').valid?).to be_true
-      expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug-2').valid?).to be_true
-      expect(Admin::Project.new(name: 'n', landing_page_slug: '3-valid-slug').valid?).to be_true
-      expect(Admin::Project.new(name: 'n', landing_page_slug: 'Invalid-slug').valid?).to be_false
-      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid/slug').valid?).to be_false
-      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid.slug').valid?).to be_false
-      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid:slug').valid?).to be_false
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug').valid?).to be_truthy
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug-2').valid?).to be_truthy
+      expect(Admin::Project.new(name: 'n', landing_page_slug: '3-valid-slug').valid?).to be_truthy
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'Invalid-slug').valid?).to be_falsey
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid/slug').valid?).to be_falsey
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid.slug').valid?).to be_falsey
+      expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid:slug').valid?).to be_falsey
     end
   end
 end

@@ -1,7 +1,7 @@
 module ReportLearnerSpecHelper
 
   def stub_all_reportables(runnableClass, embeddables)
-    runnableClass.any_instance.stub(:reportable_elements).and_return( embeddables.map { |e| {embeddable: e} } )
+    allow_any_instance_of(runnableClass).to receive(:reportable_elements).and_return( embeddables.map { |e| {embeddable: e} } )
   end
 
   # must have a learner in scenario's setup

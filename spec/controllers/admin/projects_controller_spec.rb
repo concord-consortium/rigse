@@ -31,28 +31,28 @@ describe Admin::ProjectsController do
       it "assigns all projects as @projects" do
         project
         get :index, {}
-        assigns(:projects).to_a.should eq([project])
+        expect(assigns(:projects).to_a).to eq([project])
       end
     end
 
     describe "GET show" do
       it "assigns the requested project as @project" do
         get :show, {:id => project.to_param}
-        assigns(:project).should eq(project)
+        expect(assigns(:project)).to eq(project)
       end
     end
 
     describe "GET new" do
       it "assigns a new project as @project" do
         get :new, {}
-        assigns(:project).should be_a_new(Admin::Project)
+        expect(assigns(:project)).to be_a_new(Admin::Project)
       end
     end
 
     describe "GET edit" do
       it "assigns the requested project as @project" do
         get :edit, {:id => project.to_param}
-        assigns(:project).should eq(project)
+        expect(assigns(:project)).to eq(project)
       end
     end
 
@@ -66,31 +66,31 @@ describe Admin::ProjectsController do
 
         it "assigns a newly created project as @project" do
           post :create, {:admin_project => valid_attributes}
-          assigns(:project).should be_a(Admin::Project)
-          assigns(:project).should be_persisted
+          expect(assigns(:project)).to be_a(Admin::Project)
+          expect(assigns(:project)).to be_persisted
         end
 
         it "redirects to the projects index" do
           post :create, {:admin_project => valid_attributes}
-          response.should redirect_to(admin_projects_url)
+          expect(response).to redirect_to(admin_projects_url)
         end
       end
 
       describe "with invalid params" do
         it "assigns a newly created but unsaved project as @project" do
           # Trigger the behavior that occurs when invalid params are submitted
-          Admin::Project.any_instance.stub(:save).and_return(false)
+          allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
           post :create, {:admin_project => valid_attributes}
-          assigns(:project).should be_a(Admin::Project)
-          assigns(:project).should_not be_persisted
-          assigns(:project).should be_a_new(Admin::Project)
+          expect(assigns(:project)).to be_a(Admin::Project)
+          expect(assigns(:project)).not_to be_persisted
+          expect(assigns(:project)).to be_a_new(Admin::Project)
         end
 
         it "re-renders the 'new' template" do
           # Trigger the behavior that occurs when invalid params are submitted
-          Admin::Project.any_instance.stub(:save).and_return(false)
+          allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
           post :create, {:admin_project => valid_attributes}
-          response.should render_template(:new)
+          expect(response).to render_template(:new)
         end
       end
     end
@@ -102,34 +102,34 @@ describe Admin::ProjectsController do
           # specifies that the Admin::Project created on the previous line
           # receives the :update_attributes message with whatever params are
           # submitted in the request.
-          Admin::Project.any_instance.should_receive(:update_attributes).with({'name' => 'new name'})
+          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with({'name' => 'new name'})
           put :update, {:id => project.to_param, :admin_project => {'name' => 'new name'}}
         end
 
         it "assigns the requested project as @project" do
           put :update, {:id => project.to_param, :admin_project => valid_attributes}
-          assigns(:project).should eq(project)
+          expect(assigns(:project)).to eq(project)
         end
 
         it "redirects to the project" do
           put :update, {:id => project.to_param, :admin_project => valid_attributes}
-          response.should redirect_to(project)
+          expect(response).to redirect_to(project)
         end
       end
 
       describe "with invalid params" do
         it "assigns the project as @project" do
           # Trigger the behavior that occurs when invalid params are submitted
-          Admin::Project.any_instance.stub(:save).and_return(false)
+          allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
           put :update, {:id => project.to_param, :admin_project => valid_attributes}
-          assigns(:project).should eq(project)
+          expect(assigns(:project)).to eq(project)
         end
 
         it "re-renders the 'edit' template" do
           # Trigger the behavior that occurs when invalid params are submitted
-          Admin::Project.any_instance.stub(:save).and_return(false)
+          allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
           put :update, {:id => project.to_param, :admin_project => valid_attributes}
-          response.should render_template("edit")
+          expect(response).to render_template("edit")
         end
       end
     end
@@ -144,7 +144,7 @@ describe Admin::ProjectsController do
 
       it "redirects to the projects list" do
         delete :destroy, {:id => project.to_param}
-        response.should redirect_to(admin_projects_url)
+        expect(response).to redirect_to(admin_projects_url)
       end
     end
   end

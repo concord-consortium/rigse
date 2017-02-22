@@ -35,9 +35,9 @@ describe TruncatableXhtml do
          :name =>"testing",
          :content => original
         })
-        xhtml.stub(:html_replacements).and_return(TruncatableXhtml::DEFAULT_REPLACEABLES)
-        xhtml.replace_offensive_html.content.should_not eql(original)
-        xhtml.replace_offensive_html.content.should eql(expected)
+        allow(xhtml).to receive(:html_replacements).and_return(TruncatableXhtml::DEFAULT_REPLACEABLES)
+        expect(xhtml.replace_offensive_html.content).not_to eql(original)
+        expect(xhtml.replace_offensive_html.content).to eql(expected)
       end
     end
     it "should leave non offending xhtml alone" do
@@ -46,8 +46,8 @@ describe TruncatableXhtml do
          :name => "testing",
          :content => content
         })
-        xhtml.stub(:html_replacements).and_return(TruncatableXhtml::DEFAULT_REPLACEABLES)
-        xhtml.replace_offensive_html.content.should eql(content)
+        allow(xhtml).to receive(:html_replacements).and_return(TruncatableXhtml::DEFAULT_REPLACEABLES)
+        expect(xhtml.replace_offensive_html.content).to eql(content)
       end
     end
   end

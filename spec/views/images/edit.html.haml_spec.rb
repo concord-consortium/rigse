@@ -23,7 +23,7 @@ describe "/images/edit.html.haml" do
       :has_role?       => true
     )
 
-    view.stub(:current_user).and_return(@user)
+    allow(view).to receive(:current_user).and_return(@user)
   end
 
   it "should render edit form without error" do

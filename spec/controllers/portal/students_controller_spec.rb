@@ -6,8 +6,8 @@ describe Portal::StudentsController do
   before(:each) do
     generate_default_settings_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
-    Admin::Settings.stub(:default_settings).and_return(@mock_settings)
-    @mock_settings.stub(:allow_default_class).and_return(true)
+    allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
+    allow(@mock_settings).to receive(:allow_default_class).and_return(true)
   end
 
   describe "POST create" do
@@ -48,7 +48,7 @@ describe Portal::StudentsController do
       user_attributes[:email] = Portal::Student.generate_user_email
 
       @new_user = User.new(user_attributes)
-      User.stub(:new).and_return(@new_user)
+      allow(User).to receive(:new).and_return(@new_user)
       @new_user
     end
 
@@ -60,8 +60,8 @@ describe Portal::StudentsController do
 
       post :create, @params_for_creation
 
-      User.count(:all).should == current_user_count + 1
-      Portal::Student.count(:all).should == current_student_count + 1
+      expect(User.count(:all)).to eq(current_user_count + 1)
+      expect(Portal::Student.count(:all)).to eq(current_student_count + 1)
 
     end
 
@@ -72,7 +72,7 @@ describe Portal::StudentsController do
       stub_user_with_params
       post :create, @params_for_creation
 
-      response.should redirect_to(thanks_for_sign_up_url(:type=>"student", :login=>@new_user.login))
+      expect(response).to redirect_to(thanks_for_sign_up_url(:type=>"student", :login=>@new_user.login))
 
     end
 
@@ -80,7 +80,7 @@ describe Portal::StudentsController do
     it "does not show any of the students classes after successful creation" do
       stub_user_with_params
       post :create, @params_for_creation
-      response.should redirect_to(thanks_for_sign_up_url(:type=>"student",:login=>@new_user.login))
+      expect(response).to redirect_to(thanks_for_sign_up_url(:type=>"student",:login=>@new_user.login))
     end
 
     it "does not create a user or a student when given incorrect password_confirmation" do
@@ -91,8 +91,8 @@ describe Portal::StudentsController do
 
       post :create, @params_for_creation
 
-      User.count(:all).should == current_user_count
-      Portal::Student.count(:all).should == current_student_count
+      expect(User.count(:all)).to eq(current_user_count)
+      expect(Portal::Student.count(:all)).to eq(current_student_count)
     end
 
     it "does not create a user or a student when given an invalid classword" do
@@ -103,30 +103,30 @@ describe Portal::StudentsController do
 
       post :create, @params_for_creation
 
-      User.count(:all).should == current_user_count
-      Portal::Student.count(:all).should == current_student_count
+      expect(User.count(:all)).to eq(current_user_count)
+      expect(Portal::Student.count(:all)).to eq(current_student_count)
     end
 
 
     describe "security questions" do
       before(:each) do
-        @mock_settings.stub(:use_student_security_questions).and_return(true)
+        allow(@mock_settings).to receive(:use_student_security_questions).and_return(true)
       end
 
       it "creates security questions when given valid parameters" do
         stub_user_with_params
 
-        SecurityQuestion.should_receive(:make_questions_from_hash_and_user)
-        SecurityQuestion.should_receive(:errors_for_questions_list!)
-        @new_user.should_receive(:update_security_questions!)
+        expect(SecurityQuestion).to receive(:make_questions_from_hash_and_user)
+        expect(SecurityQuestion).to receive(:errors_for_questions_list!)
+        expect(@new_user).to receive(:update_security_questions!)
 
         current_user_count = User.count(:all)
         current_student_count = Portal::Student.count(:all)
 
         post :create, @params_for_creation
 
-        User.count(:all).should == current_user_count + 1
-        Portal::Student.count(:all).should == current_student_count + 1
+        expect(User.count(:all)).to eq(current_user_count + 1)
+        expect(Portal::Student.count(:all)).to eq(current_student_count + 1)
       end
 
       it "does not create a user or a student when given bad security questions" do
@@ -137,16 +137,16 @@ describe Portal::StudentsController do
 
         post :create, @params_for_creation
 
-        User.count(:all).should == current_user_count
-        Portal::Student.count(:all).should == current_student_count
+        expect(User.count(:all)).to eq(current_user_count)
+        expect(Portal::Student.count(:all)).to eq(current_student_count)
       end
 
       it "does not check for security questions when they are not enabled in the settings" do
-        @mock_settings.stub(:use_student_security_questions).and_return(false)
+        allow(@mock_settings).to receive(:use_student_security_questions).and_return(false)
         stub_user_with_params
 
-        SecurityQuestion.should_not_receive(:errors_for_questions_list!)
-        @new_user.should_not_receive(:update_security_questions!)
+        expect(SecurityQuestion).not_to receive(:errors_for_questions_list!)
+        expect(@new_user).not_to receive(:update_security_questions!)
 
         post :create, @params_for_creation
       end
@@ -159,8 +159,8 @@ describe Portal::StudentsController do
 
         stub_user_with_params
 
-        SecurityQuestion.should_not_receive(:errors_for_questions_list!)
-        @new_user.should_not_receive(:update_security_questions!)
+        expect(SecurityQuestion).not_to receive(:errors_for_questions_list!)
+        expect(@new_user).not_to receive(:update_security_questions!)
 
         post :create, @params_for_creation
       end
@@ -168,8 +168,8 @@ describe Portal::StudentsController do
       it "checks for security questions when a student signs themselves up" do
         stub_user_with_params
 
-        SecurityQuestion.should_receive(:errors_for_questions_list!)
-        @new_user.should_receive(:update_security_questions!)
+        expect(SecurityQuestion).to receive(:errors_for_questions_list!)
+        expect(@new_user).to receive(:update_security_questions!)
 
         post :create, @params_for_creation
       end

@@ -15,19 +15,19 @@ describe RiGse::BigIdeasController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @big_ideas" do
-      RiGse::BigIdea.should_receive(:all).and_return([mock_big_idea])
+      expect(RiGse::BigIdea).to receive(:all).and_return([mock_big_idea])
       get :index
-      assigns[:big_ideas].should == [mock_big_idea]
+      expect(assigns[:big_ideas]).to eq([mock_big_idea])
     end
 
     describe "with mime type of xml" do
   
       it "should render all big_ideas as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::BigIdea.should_receive(:all).and_return(big_ideas = double("Array of BigIdeas"))
-        big_ideas.should_receive(:to_xml).and_return("generated XML")
+        expect(RiGse::BigIdea).to receive(:all).and_return(big_ideas = double("Array of BigIdeas"))
+        expect(big_ideas).to receive(:to_xml).and_return("generated XML")
         get :index
-        response.body.should == "generated XML"
+        expect(response.body).to eq("generated XML")
       end
     
     end
@@ -37,19 +37,19 @@ describe RiGse::BigIdeasController do
   describe "responding to GET show" do
 
     it "should expose the requested big_idea as @big_idea" do
-      RiGse::BigIdea.should_receive(:find).with("37").and_return(mock_big_idea)
+      expect(RiGse::BigIdea).to receive(:find).with("37").and_return(mock_big_idea)
       get :show, :id => "37"
-      assigns[:big_idea].should equal(mock_big_idea)
+      expect(assigns[:big_idea]).to equal(mock_big_idea)
     end
     
     describe "with mime type of xml" do
 
       it "should render the requested big_idea as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::BigIdea.should_receive(:find).with("37").and_return(mock_big_idea)
-        mock_big_idea.should_receive(:to_xml).and_return("generated XML")
+        expect(RiGse::BigIdea).to receive(:find).with("37").and_return(mock_big_idea)
+        expect(mock_big_idea).to receive(:to_xml).and_return("generated XML")
         get :show, :id => "37"
-        response.body.should == "generated XML"
+        expect(response.body).to eq("generated XML")
       end
 
     end
@@ -59,9 +59,9 @@ describe RiGse::BigIdeasController do
   describe "responding to GET new" do
   
     it "should expose a new big_idea as @big_idea" do
-      RiGse::BigIdea.should_receive(:new).and_return(mock_big_idea)
+      expect(RiGse::BigIdea).to receive(:new).and_return(mock_big_idea)
       get :new
-      assigns[:big_idea].should equal(mock_big_idea)
+      expect(assigns[:big_idea]).to equal(mock_big_idea)
     end
 
   end
@@ -69,9 +69,9 @@ describe RiGse::BigIdeasController do
   describe "responding to GET edit" do
   
     it "should expose the requested big_idea as @big_idea" do
-      RiGse::BigIdea.should_receive(:find).with("37").and_return(mock_big_idea)
+      expect(RiGse::BigIdea).to receive(:find).with("37").and_return(mock_big_idea)
       get :edit, :id => "37"
-      assigns[:big_idea].should equal(mock_big_idea)
+      expect(assigns[:big_idea]).to equal(mock_big_idea)
     end
 
   end
@@ -81,15 +81,15 @@ describe RiGse::BigIdeasController do
     describe "with valid params" do
       
       it "should expose a newly created big_idea as @big_idea" do
-        RiGse::BigIdea.should_receive(:new).with({'these' => 'params'}).and_return(mock_big_idea(:save => true))
+        expect(RiGse::BigIdea).to receive(:new).with({'these' => 'params'}).and_return(mock_big_idea(:save => true))
         post :create, :big_idea => {:these => 'params'}
-        assigns(:big_idea).should equal(mock_big_idea)
+        expect(assigns(:big_idea)).to equal(mock_big_idea)
       end
 
       it "should redirect to the created big_idea" do
-        RiGse::BigIdea.stub(:new).and_return(mock_big_idea(:save => true))
+        allow(RiGse::BigIdea).to receive(:new).and_return(mock_big_idea(:save => true))
         post :create, :big_idea => {}
-        response.should redirect_to(ri_gse_big_idea_url(mock_big_idea))
+        expect(response).to redirect_to(ri_gse_big_idea_url(mock_big_idea))
       end
       
     end
@@ -97,15 +97,15 @@ describe RiGse::BigIdeasController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved big_idea as @big_idea" do
-        RiGse::BigIdea.stub(:new).with({'these' => 'params'}).and_return(mock_big_idea(:save => false))
+        allow(RiGse::BigIdea).to receive(:new).with({'these' => 'params'}).and_return(mock_big_idea(:save => false))
         post :create, :big_idea => {:these => 'params'}
-        assigns(:big_idea).should equal(mock_big_idea)
+        expect(assigns(:big_idea)).to equal(mock_big_idea)
       end
 
       it "should re-render the 'new' template" do
-        RiGse::BigIdea.stub(:new).and_return(mock_big_idea(:save => false))
+        allow(RiGse::BigIdea).to receive(:new).and_return(mock_big_idea(:save => false))
         post :create, :big_idea => {}
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
       
     end
@@ -117,21 +117,21 @@ describe RiGse::BigIdeasController do
     describe "with valid params" do
 
       it "should update the requested big_idea" do
-        RiGse::BigIdea.should_receive(:find).with("37").and_return(mock_big_idea)
-        mock_big_idea.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(RiGse::BigIdea).to receive(:find).with("37").and_return(mock_big_idea)
+        expect(mock_big_idea).to receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :big_idea => {:these => 'params'}
       end
 
       it "should expose the requested big_idea as @big_idea" do
-        RiGse::BigIdea.stub(:find).and_return(mock_big_idea(:update_attributes => true))
+        allow(RiGse::BigIdea).to receive(:find).and_return(mock_big_idea(:update_attributes => true))
         put :update, :id => "1"
-        assigns(:big_idea).should equal(mock_big_idea)
+        expect(assigns(:big_idea)).to equal(mock_big_idea)
       end
 
       it "should redirect to the big_idea" do
-        RiGse::BigIdea.stub(:find).and_return(mock_big_idea(:update_attributes => true))
+        allow(RiGse::BigIdea).to receive(:find).and_return(mock_big_idea(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(ri_gse_big_idea_url(mock_big_idea))
+        expect(response).to redirect_to(ri_gse_big_idea_url(mock_big_idea))
       end
 
     end
@@ -139,21 +139,21 @@ describe RiGse::BigIdeasController do
     describe "with invalid params" do
 
       it "should update the requested big_idea" do
-        RiGse::BigIdea.should_receive(:find).with("37").and_return(mock_big_idea)
-        mock_big_idea.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(RiGse::BigIdea).to receive(:find).with("37").and_return(mock_big_idea)
+        expect(mock_big_idea).to receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :big_idea => {:these => 'params'}
       end
 
       it "should expose the big_idea as @big_idea" do
-        RiGse::BigIdea.stub(:find).and_return(mock_big_idea(:update_attributes => false))
+        allow(RiGse::BigIdea).to receive(:find).and_return(mock_big_idea(:update_attributes => false))
         put :update, :id => "1"
-        assigns(:big_idea).should equal(mock_big_idea)
+        expect(assigns(:big_idea)).to equal(mock_big_idea)
       end
 
       it "should re-render the 'edit' template" do
-        RiGse::BigIdea.stub(:find).and_return(mock_big_idea(:update_attributes => false))
+        allow(RiGse::BigIdea).to receive(:find).and_return(mock_big_idea(:update_attributes => false))
         put :update, :id => "1"
-        response.should render_template('edit')
+        expect(response).to render_template('edit')
       end
 
     end
@@ -163,15 +163,15 @@ describe RiGse::BigIdeasController do
   describe "responding to DELETE destroy" do
 
     it "should destroy the requested big_idea" do
-      RiGse::BigIdea.should_receive(:find).with("37").and_return(mock_big_idea)
-      mock_big_idea.should_receive(:destroy)
+      expect(RiGse::BigIdea).to receive(:find).with("37").and_return(mock_big_idea)
+      expect(mock_big_idea).to receive(:destroy)
       delete :destroy, :id => "37"
     end
   
     it "should redirect to the big_ideas list" do
-      RiGse::BigIdea.stub(:find).and_return(mock_big_idea(:destroy => true))
+      allow(RiGse::BigIdea).to receive(:find).and_return(mock_big_idea(:destroy => true))
       delete :destroy, :id => "1"
-      response.should redirect_to(big_ideas_url)
+      expect(response).to redirect_to(big_ideas_url)
     end
 
   end

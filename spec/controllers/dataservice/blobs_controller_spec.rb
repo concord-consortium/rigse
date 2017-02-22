@@ -12,7 +12,7 @@ describe Dataservice::BlobsController do
 
   describe "GET index" do
     it "assigns all dataservice_blobs as @dataservice_blobs" do
-      pending
+      skip
       # this tests the default controller, but now we're setting @dataservice_blobs to be a search collection
       # Dataservice::Blob.stub(:all).and_return([mock_blob])
       # get :index
@@ -22,25 +22,25 @@ describe Dataservice::BlobsController do
 
   describe "GET show" do
     it "assigns the requested blob as @blob" do
-      Dataservice::Blob.stub(:find).with("37").and_return(mock_blob)
+      allow(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
       get :show, :id => "37"
-      assigns[:dataservice_blob].should equal(mock_blob)
+      expect(assigns[:dataservice_blob]).to equal(mock_blob)
     end
   end
 
   describe "GET new" do
     it "assigns a new blob as @blob" do
-      Dataservice::Blob.stub(:new).and_return(mock_blob)
+      allow(Dataservice::Blob).to receive(:new).and_return(mock_blob)
       get :new
-      assigns[:dataservice_blob].should equal(mock_blob)
+      expect(assigns[:dataservice_blob]).to equal(mock_blob)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested blob as @blob" do
-      Dataservice::Blob.stub(:find).with("37").and_return(mock_blob)
+      allow(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
       get :edit, :id => "37"
-      assigns[:dataservice_blob].should equal(mock_blob)
+      expect(assigns[:dataservice_blob]).to equal(mock_blob)
     end
   end
 
@@ -48,29 +48,29 @@ describe Dataservice::BlobsController do
 
     describe "with valid params" do
       it "assigns a newly created blob as @blob" do
-        Dataservice::Blob.stub(:new).with({'these' => 'params'}).and_return(mock_blob(:save => true))
+        allow(Dataservice::Blob).to receive(:new).with({'these' => 'params'}).and_return(mock_blob(:save => true))
         post :create, :blob => {:these => 'params'}
-        assigns[:dataservice_blob].should equal(mock_blob)
+        expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
 
       it "redirects to the created blob" do
-        Dataservice::Blob.stub(:new).and_return(mock_blob(:save => true))
+        allow(Dataservice::Blob).to receive(:new).and_return(mock_blob(:save => true))
         post :create, :blob => {}
-        response.should redirect_to(dataservice_blob_url(mock_blob))
+        expect(response).to redirect_to(dataservice_blob_url(mock_blob))
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved blob as @blob" do
-        Dataservice::Blob.stub(:new).with({'these' => 'params'}).and_return(mock_blob(:save => false))
+        allow(Dataservice::Blob).to receive(:new).with({'these' => 'params'}).and_return(mock_blob(:save => false))
         post :create, :blob => {:these => 'params'}
-        assigns[:dataservice_blob].should equal(mock_blob)
+        expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
 
       it "re-renders the 'new' template" do
-        Dataservice::Blob.stub(:new).and_return(mock_blob(:save => false))
+        allow(Dataservice::Blob).to receive(:new).and_return(mock_blob(:save => false))
         post :create, :blob => {}
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
 
@@ -80,41 +80,41 @@ describe Dataservice::BlobsController do
 
     describe "with valid params" do
       it "updates the requested blob" do
-        Dataservice::Blob.should_receive(:find).with("37").and_return(mock_blob)
-        mock_blob.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
+        expect(mock_blob).to receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :blob => {:these => 'params'}
       end
 
       it "assigns the requested blob as @blob" do
-        Dataservice::Blob.stub(:find).and_return(mock_blob(:update_attributes => true))
+        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => true))
         put :update, :id => "1"
-        assigns[:dataservice_blob].should equal(mock_blob)
+        expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
 
       it "redirects to the blob" do
-        Dataservice::Blob.stub(:find).and_return(mock_blob(:update_attributes => true))
+        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(dataservice_blob_url(mock_blob))
+        expect(response).to redirect_to(dataservice_blob_url(mock_blob))
       end
     end
 
     describe "with invalid params" do
       it "updates the requested blob" do
-        Dataservice::Blob.should_receive(:find).with("37").and_return(mock_blob)
-        mock_blob.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
+        expect(mock_blob).to receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :blob => {:these => 'params'}
       end
 
       it "assigns the blob as @blob" do
-        Dataservice::Blob.stub(:find).and_return(mock_blob(:update_attributes => false))
+        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => false))
         put :update, :id => "1"
-        assigns[:dataservice_blob].should equal(mock_blob)
+        expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
 
       it "re-renders the 'edit' template" do
-        Dataservice::Blob.stub(:find).and_return(mock_blob(:update_attributes => false))
+        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => false))
         put :update, :id => "1"
-        response.should render_template('edit')
+        expect(response).to render_template('edit')
       end
     end
 
@@ -122,15 +122,15 @@ describe Dataservice::BlobsController do
 
   describe "DELETE destroy" do
     it "destroys the requested blob" do
-      Dataservice::Blob.should_receive(:find).with("37").and_return(mock_blob)
-      mock_blob.should_receive(:destroy)
+      expect(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
+      expect(mock_blob).to receive(:destroy)
       delete :destroy, :id => "37"
     end
 
     it "redirects to the dataservice_blobs list" do
-      Dataservice::Blob.stub(:find).and_return(mock_blob(:destroy => true))
+      allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:destroy => true))
       delete :destroy, :id => "1"
-      response.should redirect_to(dataservice_blobs_url)
+      expect(response).to redirect_to(dataservice_blobs_url)
     end
   end
 

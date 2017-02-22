@@ -10,9 +10,9 @@ describe Embeddable::LabBookSnapshot do
     investigations = [investigation]
     snapshot = Embeddable::LabBookSnapshot.new(:name => "button", :target_element_type => "fake", :target_element_id => 3)
     
-    snapshot.should_receive(:save)
-    snapshot.should_receive(:investigations).and_return(investigations)
-    investigation.should_receive(:update_attribute).and_return(true)
+    expect(snapshot).to receive(:save)
+    expect(snapshot).to receive(:investigations).and_return(investigations)
+    expect(investigation).to receive(:update_attribute).and_return(true)
     snapshot.update_attributes({:name => "button changed"})
     snapshot.destroy
   end

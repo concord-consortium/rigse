@@ -21,7 +21,7 @@ describe RiGse::Expectation do
     gse = RiGse::GradeSpanExpectation.new
     gse.save
     @expectation.grade_span_expectation = gse
-    @expectation.grade_span_expectation.should_not be_nil
+    expect(@expectation.grade_span_expectation).not_to be_nil
     @expectation.save
   end
   
@@ -29,7 +29,7 @@ describe RiGse::Expectation do
     stem = RiGse::ExpectationStem.new
     stem.save
     @expectation.expectation_stem = stem
-    @expectation.expectation_stem.should_not be_nil
+    expect(@expectation.expectation_stem).not_to be_nil
     @expectation.save
   end
   
@@ -42,7 +42,7 @@ describe RiGse::Expectation do
     two.save
     @expectation.expectation_indicators << one
     @expectation.expectation_indicators << two
-    @expectation.expectation_indicators.size.should be(2) 
+    expect(@expectation.expectation_indicators.size).to be(2) 
     @expectation.save
   end
   

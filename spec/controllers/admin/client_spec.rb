@@ -115,13 +115,13 @@ describe Admin::ClientsController do
       it "will render the index" do
         get :index
         assert_response 200
-        response.should render_template("index")
+        expect(response).to render_template("index")
       end
     end
 
     describe "DELETE destroy" do
       it "delete, and redirect back to index" do
-        Client.should_receive(:find).and_return(mock_client)
+        expect(Client).to receive(:find).and_return(mock_client)
         delete :destroy, :id => client_id
         assert_redirected_to action: :index
       end
@@ -129,26 +129,26 @@ describe Admin::ClientsController do
 
     describe "GET show" do
       it "redners the show template" do
-        Client.should_receive(:find).and_return(mock_client)
+        expect(Client).to receive(:find).and_return(mock_client)
         get :show, :id => client_id
-        assigns[:client].should eq mock_client
-        response.should render_template("show")
+        expect(assigns[:client]).to eq mock_client
+        expect(response).to render_template("show")
       end
     end
 
     describe "GET edit" do
       it "renders the edit template" do
-        Client.should_receive(:find).and_return(mock_client)
+        expect(Client).to receive(:find).and_return(mock_client)
         get :edit, :id => client_id
-        assigns[:client].should eq mock_client
-        response.should render_template("edit")
+        expect(assigns[:client]).to eq mock_client
+        expect(response).to render_template("edit")
       end
     end
 
     describe "GET new" do
       it "renders the new form" do
         get :new
-        response.should render_template("new")
+        expect(response).to render_template("new")
         assert_response 200
       end
     end
@@ -156,7 +156,7 @@ describe Admin::ClientsController do
     describe "PUT update" do
       let(:stubs) {{ update_attributes: true }}
       it "updates the model, redirects to index" do
-        Client.should_receive(:find).and_return(mock_client)
+        expect(Client).to receive(:find).and_return(mock_client)
         put :update, :id => client_id, :client => {:params => 'params'}
         assert_redirected_to action: :index
       end

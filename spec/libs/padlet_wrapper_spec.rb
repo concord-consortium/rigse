@@ -53,7 +53,7 @@ describe PadletWrapper do
     end
 
     it 'should create new Padlet and provide its URL' do
-      PadletWrapper.new.padlet_url.should eql(wall_url)
+      expect(PadletWrapper.new.padlet_url).to eql(wall_url)
     end
   end
 

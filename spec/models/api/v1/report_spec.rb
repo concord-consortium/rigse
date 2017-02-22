@@ -33,24 +33,57 @@ describe API::V1::Report do
         let(:enable_feedback)      { true }
         let(:max_score)            { 10   }
 
-        its(:max_score)            { should be 10 }
-        its(:enable_text_feedback) { should be true }
-        its(:enable_score)         { should be true }
+        describe '#max_score' do
+          subject { super().max_score }
+          it { is_expected.to be 10 }
+        end
+
+        describe '#enable_text_feedback' do
+          subject { super().enable_text_feedback }
+          it { is_expected.to be true }
+        end
+
+        describe '#enable_score' do
+          subject { super().enable_score }
+          it { is_expected.to be true }
+        end
 
         describe "changing the max_score to 0" do
           let(:max_score)            { 0 }
 
-          its(:max_score)            { should be 0 }
-          its(:enable_text_feedback) { should be true }
-          its(:enable_score)         { should be true }
+          describe '#max_score' do
+            subject { super().max_score }
+            it { is_expected.to be 0 }
+          end
+
+          describe '#enable_text_feedback' do
+            subject { super().enable_text_feedback }
+            it { is_expected.to be true }
+          end
+
+          describe '#enable_score' do
+            subject { super().enable_score }
+            it { is_expected.to be true }
+          end
         end
 
         describe "disabling text feedback" do
           let(:enable_feedback)      { false }
 
-          its(:max_score)            { should be 10 }
-          its(:enable_text_feedback) { should be false }
-          its(:enable_score)         { should be true  }
+          describe '#max_score' do
+            subject { super().max_score }
+            it { is_expected.to be 10 }
+          end
+
+          describe '#enable_text_feedback' do
+            subject { super().enable_text_feedback }
+            it { is_expected.to be false }
+          end
+
+          describe '#enable_score' do
+            subject { super().enable_score }
+            it { is_expected.to be true  }
+          end
         end
       end
 
@@ -74,7 +107,7 @@ describe API::V1::Report do
 
       describe "when no feedback or answer has been given yet" do
         it "should indicate that it doesn't need review" do
-          open_response_answer.needs_review?.should be_false
+          expect(open_response_answer.needs_review?).to be_falsey
         end
       end
 
@@ -85,7 +118,7 @@ describe API::V1::Report do
         end
 
         it "should indicate that it does need a review" do
-          open_response_answer.needs_review?.should be_true
+          expect(open_response_answer.needs_review?).to be_truthy
         end
 
         describe 'giving feedback without marking complete' do
@@ -93,15 +126,15 @@ describe API::V1::Report do
           let(:score)          {  10        }
 
           it "should indicate that it does need a review" do
-            open_response_answer.needs_review?.should be_true
+            expect(open_response_answer.needs_review?).to be_truthy
           end
 
           it "should have the correct score" do
-            open_response_answer.current_score.should eq score
+            expect(open_response_answer.current_score).to eq score
           end
 
           it "should have the correct feedback" do
-            open_response_answer.current_feedback.should eq text_feedback
+            expect(open_response_answer.current_feedback).to eq text_feedback
           end
         end
 
@@ -112,16 +145,16 @@ describe API::V1::Report do
           let(:has_been_reviewed) { true        }
 
           it "should show that feedback is complete" do
-            open_response_answer.needs_review?.should be_false
+            expect(open_response_answer.needs_review?).to be_falsey
           end
 
           it "should have the correct score" do
-            open_response_answer.answers.length.should have_at_least(1).answer
-            open_response_answer.current_score.should eq score
+            expect(open_response_answer.answers.length.size).to be >= 1
+            expect(open_response_answer.current_score).to eq score
           end
 
           it "should have the correct feedback" do
-            open_response_answer.current_feedback.should eq text_feedback
+            expect(open_response_answer.current_feedback).to eq text_feedback
           end
         end
       end

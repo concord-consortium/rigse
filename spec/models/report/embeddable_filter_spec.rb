@@ -18,7 +18,7 @@ describe Report::EmbeddableFilter do
   describe "#embeddables" do
     let(:embeddables)    { all_embeddables }
     it "should set the instance variable @embeddables_internal" do
-      subject.instance_variable_get(:@embeddables_internal).should eq all_embeddables
+      expect(subject.instance_variable_get(:@embeddables_internal)).to eq all_embeddables
     end
   end
 
@@ -26,13 +26,13 @@ describe Report::EmbeddableFilter do
     let(:embeddables)    { mc_questions }
     # this is a cheat because our subject is calling #embeddables=
     it "should set the instance variable @embeddables_internal" do
-      subject.instance_variable_get(:@embeddables_internal).should eq mc_questions
+      expect(subject.instance_variable_get(:@embeddables_internal)).to eq mc_questions
     end
     it "should set AR attribute embeddables to a serialized hash" do
       hashes = subject.read_attribute(:embeddables)
       hashes.each do |hash| 
-        hash.should have_key(:type) 
-        hash.should have_key(:id)
+        expect(hash).to have_key(:type) 
+        expect(hash).to have_key(:id)
       end
     end
   end
@@ -41,14 +41,14 @@ describe Report::EmbeddableFilter do
     let(:embeddables) { mc_questions }
     describe "filtering all_embeddables using a mc_questions filter" do  
       it "should only return the multiplechoice embeddables" do
-        subject.filter(all_embeddables).should eq mc_questions
+        expect(subject.filter(all_embeddables)).to eq mc_questions
       end
     end
 
     describe "filtering all embeddables using an empty filter" do
       let(:embeddables) { [] }
       it "should return all the embeddables" do
-        subject.filter(all_embeddables).should eq all_embeddables
+        expect(subject.filter(all_embeddables)).to eq all_embeddables
       end
     end
   end
@@ -59,10 +59,10 @@ describe Report::EmbeddableFilter do
       subject.clear
     end
     it "shouldn't filter anything" do
-      subject.instance_variable_get(:@embeddables_internal).should be_nil
+      expect(subject.instance_variable_get(:@embeddables_internal)).to be_nil
     end
     it "serialized embeddables should be empty" do
-      subject.read_attribute(:embeddables).should be_empty
+      expect(subject.read_attribute(:embeddables)).to be_empty
     end
   end
 

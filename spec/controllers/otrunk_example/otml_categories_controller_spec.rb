@@ -3,7 +3,11 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe OtrunkExample::OtmlCategoriesController do
 
   def mock_otml_category(stubs={})
-    @mock_otml_category.stub(stubs) unless stubs.empty?
+    unless stubs.empty?
+      stubs.each do |key, value|
+        allow(@mock_otml_category).to receive(key).and_return(value)
+      end
+    end
     @mock_otml_category
   end
   
@@ -16,18 +20,18 @@ describe OtrunkExample::OtmlCategoriesController do
   describe "GET index" do
 
     it "exposes all otrunk_example_otml_categories as @otrunk_example_otml_categories" do
-      OtrunkExample::OtmlCategory.should_receive(:all).and_return([mock_otml_category])
+      expect(OtrunkExample::OtmlCategory).to receive(:all).and_return([mock_otml_category])
       get :index
-      assigns[:otrunk_example_otml_categories].should == [mock_otml_category]
+      expect(assigns[:otrunk_example_otml_categories]).to eq([mock_otml_category])
     end
 
     describe "with mime type of xml" do
   
       it "renders all otrunk_example_otml_categories as xml" do
-        OtrunkExample::OtmlCategory.should_receive(:all).and_return(otml_categories = double("Array of OtrunkExample::OtmlCategories"))
-        otml_categories.should_receive(:to_xml).and_return("generated XML")
+        expect(OtrunkExample::OtmlCategory).to receive(:all).and_return(otml_categories = double("Array of OtrunkExample::OtmlCategories"))
+        expect(otml_categories).to receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
-        response.body.should == "generated XML"
+        expect(response.body).to eq("generated XML")
       end
     
     end
@@ -37,18 +41,18 @@ describe OtrunkExample::OtmlCategoriesController do
   describe "GET show" do
 
     it "exposes the requested otml_category as @otml_category" do
-      OtrunkExample::OtmlCategory.should_receive(:find).with("37").and_return(mock_otml_category)
+      expect(OtrunkExample::OtmlCategory).to receive(:find).with("37").and_return(mock_otml_category)
       get :show, :id => "37"
-      assigns[:otml_category].should equal(mock_otml_category)
+      expect(assigns[:otml_category]).to equal(mock_otml_category)
     end
     
     describe "with mime type of xml" do
 
       it "renders the requested otml_category as xml" do
-        OtrunkExample::OtmlCategory.should_receive(:find).with("37").and_return(mock_otml_category)
-        mock_otml_category.should_receive(:to_xml).and_return("generated XML")
+        expect(OtrunkExample::OtmlCategory).to receive(:find).with("37").and_return(mock_otml_category)
+        expect(mock_otml_category).to receive(:to_xml).and_return("generated XML")
         get :show, :id => "37", :format => 'xml'
-        response.body.should == "generated XML"
+        expect(response.body).to eq("generated XML")
       end
 
     end
@@ -58,9 +62,9 @@ describe OtrunkExample::OtmlCategoriesController do
   describe "GET new" do
   
     it "exposes a new otml_category as @otml_category" do
-      OtrunkExample::OtmlCategory.should_receive(:new).and_return(mock_otml_category)
+      expect(OtrunkExample::OtmlCategory).to receive(:new).and_return(mock_otml_category)
       get :new
-      assigns[:otml_category].should equal(mock_otml_category)
+      expect(assigns[:otml_category]).to equal(mock_otml_category)
     end
 
   end
@@ -68,9 +72,9 @@ describe OtrunkExample::OtmlCategoriesController do
   describe "GET edit" do
   
     it "exposes the requested otml_category as @otml_category" do
-      OtrunkExample::OtmlCategory.should_receive(:find).with("37").and_return(mock_otml_category)
+      expect(OtrunkExample::OtmlCategory).to receive(:find).with("37").and_return(mock_otml_category)
       get :edit, :id => "37"
-      assigns[:otml_category].should equal(mock_otml_category)
+      expect(assigns[:otml_category]).to equal(mock_otml_category)
     end
 
   end
@@ -80,15 +84,15 @@ describe OtrunkExample::OtmlCategoriesController do
     describe "with valid params" do
       
       it "exposes a newly created otml_category as @otml_category" do
-        OtrunkExample::OtmlCategory.should_receive(:new).with({'these' => 'params'}).and_return(mock_otml_category(:save => true))
+        expect(OtrunkExample::OtmlCategory).to receive(:new).with({'these' => 'params'}).and_return(mock_otml_category(:save => true))
         post :create, :otml_category => {:these => 'params'}
-        assigns(:otml_category).should equal(mock_otml_category)
+        expect(assigns(:otml_category)).to equal(mock_otml_category)
       end
 
       it "redirects to the created otml_category" do
-        OtrunkExample::OtmlCategory.stub(:new).and_return(mock_otml_category(:save => true))
+        allow(OtrunkExample::OtmlCategory).to receive(:new).and_return(mock_otml_category(:save => true))
         post :create, :otml_category => {}
-        response.should redirect_to(otrunk_example_otml_category_url(mock_otml_category))
+        expect(response).to redirect_to(otrunk_example_otml_category_url(mock_otml_category))
       end
       
     end
@@ -96,15 +100,15 @@ describe OtrunkExample::OtmlCategoriesController do
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved otml_category as @otml_category" do
-        OtrunkExample::OtmlCategory.stub(:new).with({'these' => 'params'}).and_return(mock_otml_category(:save => false))
+        allow(OtrunkExample::OtmlCategory).to receive(:new).with({'these' => 'params'}).and_return(mock_otml_category(:save => false))
         post :create, :otml_category => {:these => 'params'}
-        assigns(:otml_category).should equal(mock_otml_category)
+        expect(assigns(:otml_category)).to equal(mock_otml_category)
       end
 
       it "re-renders the 'new' template" do
-        OtrunkExample::OtmlCategory.stub(:new).and_return(mock_otml_category(:save => false))
+        allow(OtrunkExample::OtmlCategory).to receive(:new).and_return(mock_otml_category(:save => false))
         post :create, :otml_category => {}
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
       
     end
@@ -116,21 +120,21 @@ describe OtrunkExample::OtmlCategoriesController do
     describe "with valid params" do
 
       it "updates the requested otml_category" do
-        OtrunkExample::OtmlCategory.should_receive(:find).with("37").and_return(mock_otml_category)
-        mock_otml_category.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(OtrunkExample::OtmlCategory).to receive(:find).with("37").and_return(mock_otml_category)
+        expect(mock_otml_category).to receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :otml_category => {:these => 'params'}
       end
 
       it "exposes the requested otml_category as @otml_category" do
-        OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:update_attributes => true))
+        allow(OtrunkExample::OtmlCategory).to receive(:find).and_return(mock_otml_category(:update_attributes => true))
         put :update, :id => "1"
-        assigns(:otml_category).should equal(mock_otml_category)
+        expect(assigns(:otml_category)).to equal(mock_otml_category)
       end
 
       it "redirects to the otml_category" do
-        OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:update_attributes => true))
+        allow(OtrunkExample::OtmlCategory).to receive(:find).and_return(mock_otml_category(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(otrunk_example_otml_category_url(mock_otml_category))
+        expect(response).to redirect_to(otrunk_example_otml_category_url(mock_otml_category))
       end
 
     end
@@ -138,21 +142,21 @@ describe OtrunkExample::OtmlCategoriesController do
     describe "with invalid params" do
 
       it "updates the requested otml_category" do
-        OtrunkExample::OtmlCategory.should_receive(:find).with("37").and_return(mock_otml_category)
-        mock_otml_category.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(OtrunkExample::OtmlCategory).to receive(:find).with("37").and_return(mock_otml_category)
+        expect(mock_otml_category).to receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :otml_category => {:these => 'params'}
       end
 
       it "exposes the otml_category as @otml_category" do
-        OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:update_attributes => false))
+        allow(OtrunkExample::OtmlCategory).to receive(:find).and_return(mock_otml_category(:update_attributes => false))
         put :update, :id => "1"
-        assigns(:otml_category).should equal(mock_otml_category)
+        expect(assigns(:otml_category)).to equal(mock_otml_category)
       end
 
       it "re-renders the 'edit' template" do
-        OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:update_attributes => false))
+        allow(OtrunkExample::OtmlCategory).to receive(:find).and_return(mock_otml_category(:update_attributes => false))
         put :update, :id => "1"
-        response.should render_template('edit')
+        expect(response).to render_template('edit')
       end
 
     end
@@ -162,15 +166,15 @@ describe OtrunkExample::OtmlCategoriesController do
   describe "DELETE destroy" do
 
     it "destroys the requested otml_category" do
-      OtrunkExample::OtmlCategory.should_receive(:find).with("37").and_return(mock_otml_category)
-      mock_otml_category.should_receive(:destroy)
+      expect(OtrunkExample::OtmlCategory).to receive(:find).with("37").and_return(mock_otml_category)
+      expect(mock_otml_category).to receive(:destroy)
       delete :destroy, :id => "37"
     end
   
     it "redirects to the otrunk_example_otml_categories list" do
-      OtrunkExample::OtmlCategory.stub(:find).and_return(mock_otml_category(:destroy => true))
+      allow(OtrunkExample::OtmlCategory).to receive(:find).and_return(mock_otml_category(:destroy => true))
       delete :destroy, :id => "1"
-      response.should redirect_to(otrunk_example_otml_categories_url)
+      expect(response).to redirect_to(otrunk_example_otml_categories_url)
     end
 
   end

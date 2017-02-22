@@ -72,16 +72,16 @@ describe Report::Learner do
 
     it "the last_run time should be nil" do
       report = Report::Learner.create(:learner => @learner)
-      report.last_run.should be_nil
+      expect(report.last_run).to be_nil
     end
 
     it "the last_run time should be preserved" do
       report = Report::Learner.create(:learner => @learner)
-      report.last_run.should be_nil
+      expect(report.last_run).to be_nil
       now = DateTime.now
       report.last_run = now
       report.calculate_last_run
-      report.last_run.should == now
+      expect(report.last_run).to eq(now)
     end
   end
 
@@ -93,7 +93,7 @@ describe Report::Learner do
 
     it "should use the last bundle contents update time" do
       report = Report::Learner.create(:learner => @learner)
-      report.last_run.should == @bundle_content.updated_at
+      expect(report.last_run).to eq(@bundle_content.updated_at)
     end
   end
 
@@ -106,7 +106,7 @@ describe Report::Learner do
 
     it "should use the last bundle contents update time" do
       report = Report::Learner.create(:learner => @learner)
-      report.last_run.should == @periodic_bundle_content.updated_at
+      expect(report.last_run).to eq(@periodic_bundle_content.updated_at)
     end
   end
 
@@ -121,7 +121,7 @@ describe Report::Learner do
 
       it "should use the periodic update time" do
         report = Report::Learner.create(:learner => @learner)
-        report.last_run.should == @periodic_bundle_content.updated_at
+        expect(report.last_run).to eq(@periodic_bundle_content.updated_at)
       end
     end
     describe "when the periodic logger is the most recent" do
@@ -135,7 +135,7 @@ describe Report::Learner do
 
       it "should use the bundle update time" do
         report = Report::Learner.create(:learner => @learner)
-        report.last_run.should == @bundle_content.updated_at
+        expect(report.last_run).to eq(@bundle_content.updated_at)
       end
     end
 
@@ -148,15 +148,15 @@ describe Report::Learner do
 
     describe "basic test setup" do
       subject {report_learner}
-      it { should_not be_nil}
+      it { is_expected.not_to be_nil}
 
       describe "answers" do
         subject { report_learner.answers }
-        it { should_not be_nil}
+        it { is_expected.not_to be_nil}
       end
       describe "offering" do
         subject { offering }
-        it { should_not be_nil}
+        it { is_expected.not_to be_nil}
       end
     end
 
@@ -176,7 +176,9 @@ describe Report::Learner do
         stub_all_reportables(Investigation, embeddables)
       end
 
-      it { should have(0).answers }
+      it 'has no answers' do
+        expect(subject.answers.size).to eq(0)
+      end
 
       describe "when the learner answers something" do
         before(:each) do
@@ -184,13 +186,16 @@ describe Report::Learner do
           add_answer(image_question, {blob: Dataservice::Blob.create(), note: "note"} )
           report_learner.update_answers()
         end
-        its(:answers) { should have(2).answers }
+
+        it 'has 2 answers' do
+          expect(subject.answers.size).to eq(2)
+        end
 
         describe "the feedback" do
           it "should have feedback entries for each answer" do
             subject.answers.each do |answer|
               qkey,a = answer
-              a[:feedbacks].should_not be_nil
+              expect(a[:feedbacks]).not_to be_nil
             end
           end
 
@@ -206,7 +211,7 @@ describe Report::Learner do
             end
 
             it "should no longer require feedback for the open response item" do
-              open_response_saveable[1][:needs_review].should be_false
+              expect(open_response_saveable[1][:needs_review]).to be_falsey
             end
 
             describe "adding a new answer" do

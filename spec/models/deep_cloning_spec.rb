@@ -8,28 +8,28 @@ describe DeepCloning do
       @section = Section.create!(:name => "Section", :description => "Section description")
       @section.pages << @page
       @section.pages << @page2
-      @section.pages[0].name.should == "Page"
-      @section.pages[1].name.should == "Page2"
+      expect(@section.pages[0].name).to eq("Page")
+      expect(@section.pages[1].name).to eq("Page2")
     end
 
     it "should keep the pages in the same order" do
       klone = @section.deep_clone :no_duplicates => false, :never_clone => [:uuid, :created_at, :updated_at], :include => :pages
-      klone.pages.size.should == 2
-      klone.pages[0].name.should == "Page"
-      klone.pages[1].name.should == "Page2"
+      expect(klone.pages.size).to eq(2)
+      expect(klone.pages[0].name).to eq("Page")
+      expect(klone.pages[1].name).to eq("Page2")
     end
 
     it "should not modify the source when duplication fails" do
       # have page2 return an object that can't be saved
       bad_clone = Page.new(:name => "Bad Clone")
-      bad_clone.stub(:save).and_return(false)
-      @page2.stub(:dup).and_return(bad_clone)
+      allow(bad_clone).to receive(:save).and_return(false)
+      allow(@page2).to receive(:dup).and_return(bad_clone)
       begin
         klone = @section.deep_clone :no_duplicates => false, :never_clone => [:uuid, :created_at, :updated_at], :include => :pages 
       rescue ActiveRecord::RecordNotSaved
       end
       @section.reload
-      @section.pages.count.should == 2
+      expect(@section.pages.count).to eq(2)
     end
   end
 
@@ -62,9 +62,9 @@ describe DeepCloning do
       else
         attrs.each do |att|
           if equal
-            obj1.send(att).should == obj2.send(att)
+            expect(obj1.send(att)).to eq(obj2.send(att))
           else
-            obj1.send(att).should_not == obj2.send(att)
+            expect(obj1.send(att)).not_to eq(obj2.send(att))
           end
         end
       end
@@ -74,14 +74,14 @@ describe DeepCloning do
       klone = @page.deep_clone
       klone.save!
       compare_equal(klone, @page, [:name, :description])
-      klone.page_elements.size.should == 1
-      klone.page_elements[0].embeddable.class.should == Embeddable::Biologica::StaticOrganism
+      expect(klone.page_elements.size).to eq(1)
+      expect(klone.page_elements[0].embeddable.class).to eq(Embeddable::Biologica::StaticOrganism)
       compare_equal(klone.page_elements[0].embeddable, @static_org, [:name, :description])
-      klone.page_elements[0].embeddable.organism.should_not == nil
-      klone.page_elements[0].embeddable.organism.class.should == Embeddable::Biologica::Organism
+      expect(klone.page_elements[0].embeddable.organism).not_to eq(nil)
+      expect(klone.page_elements[0].embeddable.organism.class).to eq(Embeddable::Biologica::Organism)
       compare_equal(klone.page_elements[0].embeddable.organism, @org, [:name, :description, :sex])
-      klone.page_elements[0].embeddable.organism.world.should_not == nil
-      klone.page_elements[0].embeddable.organism.world.class.should == Embeddable::Biologica::World
+      expect(klone.page_elements[0].embeddable.organism.world).not_to eq(nil)
+      expect(klone.page_elements[0].embeddable.organism.world.class).to eq(Embeddable::Biologica::World)
       compare_equal(klone.page_elements[0].embeddable.organism.world, @world, [:name, :description, :species_path])
     end
     
@@ -96,16 +96,16 @@ describe DeepCloning do
     
     it "should not make multiple organisms or worlds" do
       klone = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => :pages
-      klone.pages.size.should == 2
-      klone.pages[0].page_elements[0].embeddable.organism.should == klone.pages[1].page_elements[0].embeddable.organism
-      klone.pages[0].page_elements[0].embeddable.organism.world.should == klone.pages[1].page_elements[0].embeddable.organism.world
+      expect(klone.pages.size).to eq(2)
+      expect(klone.pages[0].page_elements[0].embeddable.organism).to eq(klone.pages[1].page_elements[0].embeddable.organism)
+      expect(klone.pages[0].page_elements[0].embeddable.organism.world).to eq(klone.pages[1].page_elements[0].embeddable.organism.world)
     end
     
     it "should make multiple organisms or worlds" do
       klone = @section.deep_clone :no_duplicates => false, :never_clone => [:uuid, :created_at, :updated_at], :include => :pages
-      klone.pages.size.should == 2
-      klone.pages[0].page_elements[0].embeddable.organism.should_not == klone.pages[1].page_elements[0].embeddable.organism
-      klone.pages[0].page_elements[0].embeddable.organism.world.should_not == klone.pages[1].page_elements[0].embeddable.organism.world
+      expect(klone.pages.size).to eq(2)
+      expect(klone.pages[0].page_elements[0].embeddable.organism).not_to eq(klone.pages[1].page_elements[0].embeddable.organism)
+      expect(klone.pages[0].page_elements[0].embeddable.organism.world).not_to eq(klone.pages[1].page_elements[0].embeddable.organism.world)
     end
   end
 

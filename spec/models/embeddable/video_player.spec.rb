@@ -39,25 +39,25 @@ describe Embeddable::VideoPlayer do
     it "should create a new instance given valid attributes" do
       video_player = Embeddable::VideoPlayer.create(@valid_attributes)
       video_player.save 
-      video_player.should be_valid
+      expect(video_player).to be_valid
     end
     
     it "it should not create a new instance with bad image_url" do
       video_player = Embeddable::VideoPlayer.create(@bad_url_attributes)
       video_player.save
-      video_player.should_not be_valid
+      expect(video_player).not_to be_valid
     end
     
     it "it should create a new instance without a image_url" do
       video_player = Embeddable::VideoPlayer.create(@missing_url_attributes)
       video_player.save
-      video_player.should be_valid
+      expect(video_player).to be_valid
     end
 
     it "it should not create a new instance with a bad name" do
       video_player = Embeddable::VideoPlayer.create(@bad_name_attributes)
       video_player.save
-      video_player.should_not be_valid
+      expect(video_player).not_to be_valid
     end
   end
   
@@ -67,30 +67,30 @@ describe Embeddable::VideoPlayer do
     end
     
     it "should have image methods" do
-      @video_player.should respond_to(:image_url)
-      @video_player.should respond_to(:image_url=)
-      @video_player.should respond_to(:has_image?)
+      expect(@video_player).to respond_to(:image_url)
+      expect(@video_player).to respond_to(:image_url=)
+      expect(@video_player).to respond_to(:has_image?)
     end
     
     it "should not have an image at first" do
-      @video_player.has_image?.should be false
-      @video_player.image_url.should be nil
+      expect(@video_player.has_image?).to be false
+      expect(@video_player.image_url).to be nil
     end
     
     it "should accept valid image urls" do
       @video_player.image_url=@small_image_url
-      @video_player.save.should be true
+      expect(@video_player.save).to be true
       @video_player.reload
-      @video_player.image_url.should == @small_image_url
-      @video_player.has_image?.should be true
+      expect(@video_player.image_url).to eq(@small_image_url)
+      expect(@video_player.has_image?).to be true
     end
     
     it "should reject invalid image urls" do
       @video_player.image_url=@non_existant_image
-      @video_player.save.should be false
+      expect(@video_player.save).to be false
       @video_player.reload
-      @video_player.image_url.should be_nil
-      @video_player.has_image?.should be false
+      expect(@video_player.image_url).to be_nil
+      expect(@video_player.has_image?).to be false
     end
   end
 

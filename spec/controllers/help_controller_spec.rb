@@ -6,7 +6,7 @@ describe HelpController do
       @admin_user = Factory.next(:admin_user)
       @test_settings = Factory.create(:admin_settings, :user => @admin_user, :id=> 1)
       login_admin
-      Admin::Settings.stub(:default_settings).and_return(@test_settings)
+      allow(Admin::Settings).to receive(:default_settings).and_return(@test_settings)
   end
   
   describe "GET index" do
@@ -19,7 +19,7 @@ describe HelpController do
       @test_settings.external_url = 'www.concord.org'
       @test_settings.help_type = 'external url'
       get :index
-      response.should redirect_to 'www.concord.org'
+      expect(response).to redirect_to 'www.concord.org'
     end
     it "should render index template when help type is help custom html" do
       @test_settings.custom_help_page_html = '<b>Help page</b>'
@@ -60,7 +60,7 @@ describe HelpController do
           :preview_help_page_from_summary_page => "#{@test_settings.id}"
         }
       get :preview_help_page, @post_params
-      response.should redirect_to 'www.concord.org'
+      expect(response).to redirect_to 'www.concord.org'
     end
     
     it "should render preview_help_page template when help type is help custom html and preview is from summary page." do

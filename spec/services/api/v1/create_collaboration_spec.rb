@@ -39,22 +39,22 @@ describe API::V1::CreateCollaboration do
 
     describe "missing owner" do
       before { params.delete('owner_id') }
-      it { should have(1).error_on :owner_id }
+      it { is_expected.to have(1).error_on :owner_id }
     end
 
     describe "missing offering" do
       before { params.delete('offering_id') }
-      it { should have(1).error_on :offering_id }
+      it { is_expected.to have(1).error_on :offering_id }
     end
 
     describe "incorrect student password" do
       before { params['students'][0]['password'] = "wrong_password" }
-      it { should have(1).error_on :"students[0]" }
+      it { is_expected.to have(1).error_on :"students[0]" }
     end
 
     describe "incorrect student ID" do
       before { params['students'][1]['id'] = 99999999 }
-      it { should have(1).error_on :"students[1]" }
+      it { is_expected.to have(1).error_on :"students[1]" }
     end
   end
 
@@ -76,11 +76,11 @@ describe API::V1::CreateCollaboration do
       end
       describe "http" do
         let (:protocol) { 'http://' }
-        it { should start_with(domain) }
+        it { is_expected.to start_with(domain) }
       end
       describe "https" do
         let (:protocol) { 'https://' }
-        it { should start_with(domain) }
+        it { is_expected.to start_with(domain) }
       end
     end
 

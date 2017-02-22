@@ -4,8 +4,8 @@ describe "/embeddable/open_responses/show.html.haml" do
 
   before(:each) do
     power_user = stub_model(User, :has_role? => true)
-    view.stub(:edit_menu_for).and_return("edit menu")
-    view.stub(:current_visitor).and_return(power_user)
+    allow(view).to receive(:edit_menu_for).and_return("edit menu")
+    allow(view).to receive(:current_visitor).and_return(power_user)
     assign(:open_response, @open_response = stub_model(Embeddable::OpenResponse,
       :new_record? => false, 
       :id => 1,
@@ -19,10 +19,10 @@ describe "/embeddable/open_responses/show.html.haml" do
 
   it "should have a rows field" do
     render
-    rendered.should have_selector("textarea[rows='#{@open_response.rows.to_s}']")
+    expect(rendered).to have_selector("textarea[rows='#{@open_response.rows.to_s}']")
   end
   it "should have a columns field" do
     render
-    rendered.should have_selector("textarea[cols='#{@open_response.columns.to_s}']")
+    expect(rendered).to have_selector("textarea[cols='#{@open_response.columns.to_s}']")
   end
 end

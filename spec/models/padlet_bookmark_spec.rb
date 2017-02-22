@@ -3,7 +3,7 @@
 describe Portal::PadletBookmark do
   let(:bookmark_wrapper) { double(:padlet_url => "http://fake_padlet.com") }
   before(:each) do
-    PadletWrapper.stub(:new) { bookmark_wrapper }
+    allow(PadletWrapper).to receive(:new) { bookmark_wrapper }
   end
 
   describe "Class methods" do
@@ -18,7 +18,7 @@ describe Portal::PadletBookmark do
 
           it "shuld use a name with an ordinal found-size + 1" do
             Portal::PadletBookmark.stub(:for_user => found_items)
-            Portal::PadletBookmark.create_for_user(user).name.should match(/my 4th padlet/i)
+            expect(Portal::PadletBookmark.create_for_user(user).name).to match(/my 4th padlet/i)
           end
         end
 
@@ -30,7 +30,7 @@ describe Portal::PadletBookmark do
 
           it "shuld use a name with existing max ordinal size + 1" do
             Portal::PadletBookmark.stub(:for_user => found_items)
-            Portal::PadletBookmark.create_for_user(user).name.should match(/my 8th padlet/i)
+            expect(Portal::PadletBookmark.create_for_user(user).name).to match(/my 8th padlet/i)
           end
         end
       end
@@ -45,13 +45,13 @@ describe Portal::PadletBookmark do
         context "when the user is anonymous" do
           let(:user) { mock_model(User, :anonymous? => true)}
           it "shouldn't let the user make a PadletBookmark" do
-            Portal::PadletBookmark.user_can_make?(user).should be_false
+            expect(Portal::PadletBookmark.user_can_make?(user)).to be_falsey
           end
         end
         context "the user is a regular user" do
           let(:user) { mock_model(User, :anonymous? => false)}
           it "should let the user make a PadletBookmark" do
-            Portal::PadletBookmark.user_can_make?(user).should be_true
+            expect(Portal::PadletBookmark.user_can_make?(user)).to be_truthy
           end
         end
       end
@@ -62,13 +62,13 @@ describe Portal::PadletBookmark do
         context "the user is a regular user" do
           let(:user) { mock_model(User, :anonymous? => false)}
           it "should let the user make a PadletBookmark" do
-            Portal::PadletBookmark.user_can_make?(user).should be_false
+            expect(Portal::PadletBookmark.user_can_make?(user)).to be_falsey
           end
         end
         context "the user is an anonymous user" do
           let(:user) { mock_model(User, :anonymous? => true)}
           it "should let the user make a PadletBookmark" do
-            Portal::PadletBookmark.user_can_make?(user).should be_false
+            expect(Portal::PadletBookmark.user_can_make?(user)).to be_falsey
           end
         end
       end

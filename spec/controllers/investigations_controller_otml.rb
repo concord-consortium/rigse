@@ -11,12 +11,12 @@ describe InvestigationsController do
       :snapshot_enabled => false,
       :use_student_security_questions => false,
       :require_user_consent? => false)
-    Admin::Settings.stub(:default_settings).and_return(@current_settings)
+    allow(Admin::Settings).to receive(:default_settings).and_return(@current_settings)
     
     # this part is broken when the monkey patched application controller was removed
     # spec/support/controller_helper.rb
-    controller.stub(:before_render) {
-      response.template.stub(:net_logo_package_name).and_return("blah")
+    allow(controller).to receive(:before_render) {
+      allow(response.template).to receive(:net_logo_package_name).and_return("blah")
       response.template.stub_chain(:current_settings).and_return(@current_settings);
     }
 
@@ -30,8 +30,8 @@ describe InvestigationsController do
       :description => "new decription"
     })
 
-    Investigation.stub(:find).and_return(@investigation)
-    Investigation.stub(:published).and_return([@investigation])
+    allow(Investigation).to receive(:find).and_return(@investigation)
+    allow(Investigation).to receive(:published).and_return([@investigation])
   end
 
   it "should render preview warning in OTML" do
@@ -53,12 +53,12 @@ describe InvestigationsController do
   it "should not be cached" do
     visit investigation_path(:id => @investigation.id, :format => :dynamic_otml)
     headers = page.driver.response.headers
-    headers.should have_key 'Pragma'
+    expect(headers).to have_key 'Pragma'
     # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match it
-    headers['Pragma'].should match "no-cache"
-    headers.should have_key 'Cache-Control'
-    headers['Cache-Control'].should match "max-age=0"
-    headers['Cache-Control'].should match "no-cache"
-    headers['Cache-Control'].should match "no-store"
+    expect(headers['Pragma']).to match "no-cache"
+    expect(headers).to have_key 'Cache-Control'
+    expect(headers['Cache-Control']).to match "max-age=0"
+    expect(headers['Cache-Control']).to match "no-cache"
+    expect(headers['Cache-Control']).to match "no-store"
   end
 end

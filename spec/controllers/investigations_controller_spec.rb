@@ -9,9 +9,9 @@ describe InvestigationsController do
       :use_bitmap_snapshots? => false,
       :require_user_consent? => false,
       :default_cohort => nil)
-    Admin::Settings.stub(:default_settings).and_return(@current_settings)
-    controller.stub(:before_render) {
-      response.template.stub(:net_logo_package_name).and_return("blah")
+    allow(Admin::Settings).to receive(:default_settings).and_return(@current_settings)
+    allow(controller).to receive(:before_render) {
+      allow(response.template).to receive(:net_logo_package_name).and_return("blah")
       response.template.stub_chain(:current_settings).and_return(@current_settings);
     }
 
@@ -42,13 +42,13 @@ describe InvestigationsController do
 
   describe "Researcher Reports" do
     before(:each) do
-      controller.should_receive(:send_data) { | data, options |
-        options[:type].should == "application/vnd.ms.excel"
+      expect(controller).to receive(:send_data) { | data, options |
+        expect(options[:type]).to eq("application/vnd.ms.excel")
       }
       # this is needed to prevent a missing template call, the real send_data method
       # keeps rails from doing an implicit render, but since we are stubing send_data here
       # the implicit render isn't stopped
-      controller.stub(:render)
+      allow(controller).to receive(:render)
     end
 
     it 'should return an XLS file for the global Usage Report' do
@@ -75,7 +75,7 @@ describe InvestigationsController do
 
     describe "with teacher mode='true'" do
       before(:each) do
-        controller.stub(:render)
+        allow(controller).to receive(:render)
         get :show, :id => @investigation.id, :teacher_mode => "true"
       end
       it "should assign true to teacher_mode instance var" do
@@ -84,7 +84,7 @@ describe InvestigationsController do
     end
     describe "with teacher mode='false'" do
       before(:each) do
-        controller.stub(:render)
+        allow(controller).to receive(:render)
         get :show, :id => @investigation.id, :teacher_mode => "false"
       end
       it "should assign false to teacher_mode instance var" do

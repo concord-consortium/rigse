@@ -24,13 +24,13 @@ describe Embeddable::LabBookSnapshotsController do
     
     describe "with bitmap snapshots enabled" do 
       before(:each) do
-        @mock_settings.stub(:use_bitmap_snapshots?).and_return(true)
+        allow(@mock_settings).to receive(:use_bitmap_snapshots?).and_return(true)
       end
 
       it "the LabbookBundle should not scale drawTools" do
-        Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
+        expect(Embeddable::LabBookSnapshot).to receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
-        response.should render_template(:show)
+        expect(response).to render_template(:show)
         assert_select('OTSystem') do
           assert_select('bundles') do
             assert_select('OTLabbookBundle[scaleDrawTools="false"]')
@@ -39,9 +39,9 @@ describe Embeddable::LabBookSnapshotsController do
       end
 
       it "the OTLabbookButton should useBitmaps" do
-          Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
+          expect(Embeddable::LabBookSnapshot).to receive(:find).with("37").and_return(@mock_model)
           get :show, :id => "37", :format => 'otml'
-          response.should render_template(:show)
+          expect(response).to render_template(:show)
           assert_select('library') do
             assert_select('OTLabbookButton[useBitmap="true"]')
           end
@@ -50,13 +50,13 @@ describe Embeddable::LabBookSnapshotsController do
 
     describe "with bitmap snapshots disabled" do 
       before(:each) do
-        @mock_settings.stub(:use_bitmap_snapshots?).and_return(false)
+        allow(@mock_settings).to receive(:use_bitmap_snapshots?).and_return(false)
       end
 
       it "the LabbookBundle should not scale drawTools" do
-        Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
+        expect(Embeddable::LabBookSnapshot).to receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
-        response.should render_template(:show)
+        expect(response).to render_template(:show)
         assert_select('OTSystem') do
           assert_select('bundles') do
             assert_select('OTLabbookBundle[scaleDrawTools="true"]')
@@ -64,9 +64,9 @@ describe Embeddable::LabBookSnapshotsController do
         end
       end
       it "the OTLabbookButton should useBitmaps" do
-          Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
+          expect(Embeddable::LabBookSnapshot).to receive(:find).with("37").and_return(@mock_model)
           get :show, :id => "37", :format => 'otml'
-          response.should render_template(:show)
+          expect(response).to render_template(:show)
           assert_select('library') do
             assert_select('OTLabbookButton[useBitmap="false"]')
           end

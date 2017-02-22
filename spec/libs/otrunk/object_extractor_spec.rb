@@ -18,12 +18,12 @@ describe Otrunk::ObjectExtractor do
 
     it "finds all elements of a type" do
       elements = @extractor.find_all("OTText")
-      elements.size.should == 2
+      expect(elements.size).to eq(2)
     end
   
     it "finds no elements when type doesn't exist" do
       elements = @extractor.find_all("OTObject")
-      elements.size.should == 0
+      expect(elements.size).to eq(0)
     end
 
     it "iterates elements of a type" do
@@ -31,7 +31,7 @@ describe Otrunk::ObjectExtractor do
       @extractor.find_all("OTText") do
         count += 1
       end
-      count.should == 2
+      expect(count).to eq(2)
     end
 
     it "iterates no elements when type doesn't exist" do
@@ -39,7 +39,7 @@ describe Otrunk::ObjectExtractor do
       @extractor.find_all("OTObject") do
         count += 1
       end
-      count.should == 0
+      expect(count).to eq(0)
     end
   end
   
@@ -59,7 +59,7 @@ describe Otrunk::ObjectExtractor do
     
     it "handles the children method" do
       @extractor.find_all('currentChoices') do |choice|
-        choice.children.should_not be_nil
+        expect(choice.children).not_to be_nil
       end
     end
     
@@ -70,7 +70,7 @@ describe Otrunk::ObjectExtractor do
           count += 1 if child.elem?
         end
       end
-      count.should == 2
+      expect(count).to eq(2)
     end
   end
   
@@ -83,7 +83,7 @@ describe Otrunk::ObjectExtractor do
       OTML
       
       @extractor.find_all("OTText") do |element|
-        @extractor.get_text_property(element, "text").should == 'hello world'
+        expect(@extractor.get_text_property(element, "text")).to eq('hello world')
       end
     end
 
@@ -97,7 +97,7 @@ describe Otrunk::ObjectExtractor do
       OTML
       
       @extractor.find_all("OTText") do |element|
-        @extractor.get_text_property(element, "text").should == 'hello world'
+        expect(@extractor.get_text_property(element, "text")).to eq('hello world')
       end
     end
 
@@ -109,7 +109,7 @@ describe Otrunk::ObjectExtractor do
       OTML
       
       @extractor.find_all("OTText") do |element|
-        @extractor.get_text_property(element, "text").should == ''
+        expect(@extractor.get_text_property(element, "text")).to eq('')
       end
     end
     
@@ -123,7 +123,7 @@ describe Otrunk::ObjectExtractor do
       OTML
       
       @extractor.find_all("OTText") do |element|
-        @extractor.get_text_property(element, "text").should == ''
+        expect(@extractor.get_text_property(element, "text")).to eq('')
       end
     end
 
@@ -139,7 +139,7 @@ describe Otrunk::ObjectExtractor do
       OTML
       
       @extractor.find_all("OTText") do |element|
-        @extractor.get_text_property(element, "text").should == 'hello world'
+        expect(@extractor.get_text_property(element, "text")).to eq('hello world')
       end
     end
 
@@ -162,7 +162,7 @@ describe Otrunk::ObjectExtractor do
       OTML
       
       @extractor.find_all("OTQuestion") do |element|
-        @extractor.get_text_property(element, "text").should == 'hello world'
+        expect(@extractor.get_text_property(element, "text")).to eq('hello world')
       end
     end
   end
@@ -177,7 +177,7 @@ describe Otrunk::ObjectExtractor do
       OTML
 
       @extractor.find_all("OTText") do |element|
-        @extractor.get_property_path(element, "text").first.should == 'hello world'
+        expect(@extractor.get_property_path(element, "text").first).to eq('hello world')
       end
     end
 
@@ -190,7 +190,7 @@ describe Otrunk::ObjectExtractor do
       OTML
 
       @extractor.find_all("OTText") do |element|
-        @extractor.get_property_path(element, "blah").size.should == 0
+        expect(@extractor.get_property_path(element, "blah").size).to eq(0)
       end
     end
 
@@ -207,7 +207,7 @@ describe Otrunk::ObjectExtractor do
       OTML
 
       @extractor.find_all("OTObject") do |element|
-        @extractor.get_property_path(element, "child/text").first.should == 'hello world'
+        expect(@extractor.get_property_path(element, "child/text").first).to eq('hello world')
       end
     end
 
@@ -227,10 +227,10 @@ describe Otrunk::ObjectExtractor do
 
       element = @extractor.find_all("OTObject").first
       texts = @extractor.get_property_path(element, "child/text")
-      texts.size.should == 3
-      texts[0].should == 'hello world'
-      texts[1].should == 'this is some'
-      texts[2].should == 'text for answers'
+      expect(texts.size).to eq(3)
+      expect(texts[0]).to eq('hello world')
+      expect(texts[1]).to eq('this is some')
+      expect(texts[2]).to eq('text for answers')
     end
 
     it "returns multiple results (complex)" do
@@ -264,10 +264,10 @@ describe Otrunk::ObjectExtractor do
 
       element = @extractor.find_all("OTObject").first
       texts = @extractor.get_property_path(element, "child/*/src")
-      texts.size.should == 3
-      texts[0].to_s.should == 'First Source'
-      texts[1].to_s.should == 'Second Source'
-      texts[2].to_s.should == 'Third Source'
+      expect(texts.size).to eq(3)
+      expect(texts[0].to_s).to eq('First Source')
+      expect(texts[1].to_s).to eq('Second Source')
+      expect(texts[2].to_s).to eq('Third Source')
     end
 
   end

@@ -9,13 +9,13 @@ describe "/images/show.html.haml" do
       :has_role?       => true,
       :anonymous?      => false
     )
-    view.stub(:current_visitor).and_return(@user)
+    allow(view).to receive(:current_visitor).and_return(@user)
   end
 
 
   it "should render without error" do
     render
-    rendered.should match /my secret image/
+    expect(rendered).to match /my secret image/
   end
 end
 

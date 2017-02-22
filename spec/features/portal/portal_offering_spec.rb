@@ -23,9 +23,9 @@ feature "Portal::Offering" do
     visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
     xml = Nokogiri::XML(page.driver.response.body)
     jnlp_elements = xml.xpath("/jnlp")
-    jnlp_elements.should_not be_empty
+    expect(jnlp_elements).not_to be_empty
     main_class = xml.xpath("/jnlp/application-desc/@main-class")
-    main_class.text.should == 'org.concord.LaunchJnlp'
+    expect(main_class.text).to eq('org.concord.LaunchJnlp')
   end
 
   feature "the dynamic jnlp file" do
@@ -33,13 +33,13 @@ feature "Portal::Offering" do
       visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
 
       headers = page.driver.response.headers
-      headers.should have_key 'Pragma'
+      expect(headers).to have_key 'Pragma'
       # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match scenario
-      headers['Pragma'].should match "no-cache"
-      headers.should have_key 'Cache-Control'
-      headers['Cache-Control'].should match "max-age=0"
-      headers['Cache-Control'].should match "no-cache"
-      headers['Cache-Control'].should match "no-store"
+      expect(headers['Pragma']).to match "no-cache"
+      expect(headers).to have_key 'Cache-Control'
+      expect(headers['Cache-Control']).to match "max-age=0"
+      expect(headers['Cache-Control']).to match "no-cache"
+      expect(headers['Cache-Control']).to match "no-store"
     end
 
     feature "whose jnlp argument" do
@@ -47,10 +47,10 @@ feature "Portal::Offering" do
         visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
         jnlp_xml = Nokogiri::XML(page.driver.response.body)
         jnlp_elements = jnlp_xml.xpath("/jnlp")
-        jnlp_elements.should_not be_empty
+        expect(jnlp_elements).not_to be_empty
         argument = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
-        argument.text.should match 'config'
-        argument.text.should match 'jnlp_session'
+        expect(argument.text).to match 'config'
+        expect(argument.text).to match 'jnlp_session'
       end
 
       scenario "logs in the student" do
@@ -61,12 +61,12 @@ feature "Portal::Offering" do
         page.reset!
         # make sure that worked by checking we are not logged in
         visit "/"
-        page.should have_no_content "Welcome"
+        expect(page).to have_no_content "Welcome"
 
         # load in the config file
         visit argument
         visit "/"
-        page.should have_content "Welcome #{@user.name}"
+        expect(page).to have_content "Welcome #{@user.name}"
       end
 
       scenario "returns a valid config that sets the correct session" do
@@ -81,7 +81,7 @@ feature "Portal::Offering" do
         config_session_id = session_cookie_string[/\=([^;]*);/, 1]
         header_session_string = page.driver.response.headers["Set-Cookie"]
         header_session_id = header_session_string[/#{Rails.application.config.session_options[:key]}\=([^;]*);/, 1]
-        header_session_id.should == config_session_id
+        expect(header_session_id).to eq(config_session_id)
       end
 
       scenario "should not be cached" do
@@ -90,13 +90,13 @@ feature "Portal::Offering" do
         config_url = jnlp_xml.xpath("/jnlp/application-desc/argument/text()")[0]
         visit config_url
         headers = page.driver.response.headers
-        headers.should have_key 'Pragma'
+        expect(headers).to have_key 'Pragma'
         # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match it
-        headers['Pragma'].should match "no-cache"
-        headers.should have_key 'Cache-Control'
-        headers['Cache-Control'].should match "max-age=0"
-        headers['Cache-Control'].should match "no-cache"
-        headers['Cache-Control'].should match "no-store"
+        expect(headers['Pragma']).to match "no-cache"
+        expect(headers).to have_key 'Cache-Control'
+        expect(headers['Cache-Control']).to match "max-age=0"
+        expect(headers['Cache-Control']).to match "no-cache"
+        expect(headers['Cache-Control']).to match "no-store"
       end
     end
   end

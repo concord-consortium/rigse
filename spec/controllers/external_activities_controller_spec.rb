@@ -117,9 +117,9 @@ describe ExternalActivitiesController do
       :use_bitmap_snapshots? => false,
       :require_user_consent? => false,
       :default_cohort => nil)
-    Admin::Settings.stub(:default_settings).and_return(@current_settings)
-    controller.stub(:before_render) {
-      response.template.stub(:net_logo_package_name).and_return("blah")
+    allow(Admin::Settings).to receive(:default_settings).and_return(@current_settings)
+    allow(controller).to receive(:before_render) {
+      allow(response.template).to receive(:net_logo_package_name).and_return("blah")
       response.template.stub_chain(:current_settings).and_return(@current_settings);
     }
 
@@ -136,7 +136,7 @@ describe ExternalActivitiesController do
     it "should assign the activity correctly" do
       get :show, :id => existing.id
       result = assigns(:external_activity)
-      result.name.should == existing.name
+      expect(result.name).to eq(existing.name)
     end
   end
 
@@ -147,10 +147,10 @@ describe ExternalActivitiesController do
         it "should create a new activity" do
           raw_post :publish, {}, activity_hash.to_json
           created = assigns(:external_activity)
-          created.should_not be_nil
-          created.name.should == name
-          created.url.should  == url
-          created.id.should_not == existing.id
+          expect(created).not_to be_nil
+          expect(created.name).to eq(name)
+          expect(created.url).to  eq(url)
+          expect(created.id).not_to eq(existing.id)
         end
       end
 
@@ -159,15 +159,15 @@ describe ExternalActivitiesController do
           existing
           raw_post :publish, {}, activity_hash.to_json
           created = assigns(:external_activity)
-          created.should_not be_nil
-          created.name.should == name
-          created.url.should  == url
-          created.id.should   == existing.id
+          expect(created).not_to be_nil
+          expect(created.name).to eq(name)
+          expect(created.url).to  eq(url)
+          expect(created.id).to   eq(existing.id)
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
-          created.template.sections.should have(1).Section
-          created.template.pages.should have(1).Page
-          created.template.open_responses.should have(1).OpenResponse
-          created.template.multiple_choices.should have(1).MultipleChoice
+          expect(created.template.sections.size).to eq(1)
+          expect(created.template.pages.size).to eq(1)
+          expect(created.template.open_responses.size).to eq(1)
+          expect(created.template.multiple_choices.size).to eq(1)
         end
       end
     end
@@ -185,11 +185,11 @@ describe ExternalActivitiesController do
         it "should create a new activity" do
           raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
           created = assigns(:external_activity)
-          created.should_not be_nil
-          created.name.should == name
-          created.url.should  == url
-          created.id.should_not == existing.id
-          created.template.should be_an_instance_of(Activity)
+          expect(created).not_to be_nil
+          expect(created.name).to eq(name)
+          expect(created.url).to  eq(url)
+          expect(created.id).not_to eq(existing.id)
+          expect(created.template).to be_an_instance_of(Activity)
         end
       end
 
@@ -198,15 +198,15 @@ describe ExternalActivitiesController do
           existing
           raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
           created = assigns(:external_activity)
-          created.should_not be_nil
-          created.name.should == name
-          created.url.should  == url
-          created.id.should   == existing.id
+          expect(created).not_to be_nil
+          expect(created.name).to eq(name)
+          expect(created.url).to  eq(url)
+          expect(created.id).to   eq(existing.id)
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
-          created.template.sections.should have(1).Section
-          created.template.pages.should have(1).Page
-          created.template.open_responses.should have(1).OpenResponse
-          created.template.multiple_choices.should have(1).MultipleChoice
+          expect(created.template.sections.size).to eq(1)
+          expect(created.template.pages.size).to eq(1)
+          expect(created.template.open_responses.size).to eq(1)
+          expect(created.template.multiple_choices.size).to eq(1)
         end
       end
 
@@ -215,11 +215,11 @@ describe ExternalActivitiesController do
           sequence_hash['url'] = 'http://activity.org/sequence/2'
           raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
           created = assigns(:external_activity)
-          created.should_not be_nil
-          created.name.should == sequence_name
-          created.url.should  == 'http://activity.org/sequence/2'
-          created.id.should_not == existing_sequence.id
-          created.template.should be_an_instance_of(Investigation)
+          expect(created).not_to be_nil
+          expect(created.name).to eq(sequence_name)
+          expect(created.url).to  eq('http://activity.org/sequence/2')
+          expect(created.id).not_to eq(existing_sequence.id)
+          expect(created.template).to be_an_instance_of(Investigation)
         end
       end
 
@@ -228,10 +228,10 @@ describe ExternalActivitiesController do
           existing_sequence
           raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
           updated = assigns(:external_activity)
-          updated.should_not be_nil
-          updated.name.should == sequence_name
-          updated.url.should  == sequence_url
-          updated.id.should   == existing_sequence.id
+          expect(updated).not_to be_nil
+          expect(updated.name).to eq(sequence_name)
+          expect(updated.url).to  eq(sequence_url)
+          expect(updated.id).to   eq(existing_sequence.id)
           # More about the updated sequence?
         end
       end

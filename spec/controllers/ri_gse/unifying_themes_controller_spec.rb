@@ -15,19 +15,19 @@ describe RiGse::UnifyingThemesController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @unifying_themes" do
-      RiGse::UnifyingTheme.should_receive(:all).and_return([mock_unifying_theme])
+      expect(RiGse::UnifyingTheme).to receive(:all).and_return([mock_unifying_theme])
       get :index
-      assigns[:unifying_themes].should == [mock_unifying_theme]
+      expect(assigns[:unifying_themes]).to eq([mock_unifying_theme])
     end
 
     describe "with mime type of xml" do
   
       it "should render all unifying_themes as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::UnifyingTheme.should_receive(:all).and_return(unifying_themes = double("Array of UnifyingThemes"))
-        unifying_themes.should_receive(:to_xml).and_return("generated XML")
+        expect(RiGse::UnifyingTheme).to receive(:all).and_return(unifying_themes = double("Array of UnifyingThemes"))
+        expect(unifying_themes).to receive(:to_xml).and_return("generated XML")
         get :index
-        response.body.should == "generated XML"
+        expect(response.body).to eq("generated XML")
       end
     
     end
@@ -37,19 +37,19 @@ describe RiGse::UnifyingThemesController do
   describe "responding to GET show" do
 
     it "should expose the requested unifying_theme as @unifying_theme" do
-      RiGse::UnifyingTheme.should_receive(:find).with("37").and_return(mock_unifying_theme)
+      expect(RiGse::UnifyingTheme).to receive(:find).with("37").and_return(mock_unifying_theme)
       get :show, :id => "37"
-      assigns[:unifying_theme].should equal(mock_unifying_theme)
+      expect(assigns[:unifying_theme]).to equal(mock_unifying_theme)
     end
     
     describe "with mime type of xml" do
 
       it "should render the requested unifying_theme as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::UnifyingTheme.should_receive(:find).with("37").and_return(mock_unifying_theme)
-        mock_unifying_theme.should_receive(:to_xml).and_return("generated XML")
+        expect(RiGse::UnifyingTheme).to receive(:find).with("37").and_return(mock_unifying_theme)
+        expect(mock_unifying_theme).to receive(:to_xml).and_return("generated XML")
         get :show, :id => "37"
-        response.body.should == "generated XML"
+        expect(response.body).to eq("generated XML")
       end
 
     end
@@ -59,9 +59,9 @@ describe RiGse::UnifyingThemesController do
   describe "responding to GET new" do
   
     it "should expose a new unifying_theme as @unifying_theme" do
-      RiGse::UnifyingTheme.should_receive(:new).and_return(mock_unifying_theme)
+      expect(RiGse::UnifyingTheme).to receive(:new).and_return(mock_unifying_theme)
       get :new
-      assigns[:unifying_theme].should equal(mock_unifying_theme)
+      expect(assigns[:unifying_theme]).to equal(mock_unifying_theme)
     end
 
   end
@@ -69,9 +69,9 @@ describe RiGse::UnifyingThemesController do
   describe "responding to GET edit" do
   
     it "should expose the requested unifying_theme as @unifying_theme" do
-      RiGse::UnifyingTheme.should_receive(:find).with("37").and_return(mock_unifying_theme)
+      expect(RiGse::UnifyingTheme).to receive(:find).with("37").and_return(mock_unifying_theme)
       get :edit, :id => "37"
-      assigns[:unifying_theme].should equal(mock_unifying_theme)
+      expect(assigns[:unifying_theme]).to equal(mock_unifying_theme)
     end
 
   end
@@ -81,15 +81,15 @@ describe RiGse::UnifyingThemesController do
     describe "with valid params" do
       
       it "should expose a newly created unifying_theme as @unifying_theme" do
-        RiGse::UnifyingTheme.should_receive(:new).with({'these' => 'params'}).and_return(mock_unifying_theme(:save => true))
+        expect(RiGse::UnifyingTheme).to receive(:new).with({'these' => 'params'}).and_return(mock_unifying_theme(:save => true))
         post :create, :unifying_theme => {:these => 'params'}
-        assigns(:unifying_theme).should equal(mock_unifying_theme)
+        expect(assigns(:unifying_theme)).to equal(mock_unifying_theme)
       end
 
       it "should redirect to the created unifying_theme" do
-        RiGse::UnifyingTheme.stub(:new).and_return(mock_unifying_theme(:save => true))
+        allow(RiGse::UnifyingTheme).to receive(:new).and_return(mock_unifying_theme(:save => true))
         post :create, :unifying_theme => {}
-        response.should redirect_to(ri_gse_unifying_theme_url(mock_unifying_theme))
+        expect(response).to redirect_to(ri_gse_unifying_theme_url(mock_unifying_theme))
       end
       
     end
@@ -97,15 +97,15 @@ describe RiGse::UnifyingThemesController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved unifying_theme as @unifying_theme" do
-        RiGse::UnifyingTheme.stub(:new).with({'these' => 'params'}).and_return(mock_unifying_theme(:save => false))
+        allow(RiGse::UnifyingTheme).to receive(:new).with({'these' => 'params'}).and_return(mock_unifying_theme(:save => false))
         post :create, :unifying_theme => {:these => 'params'}
-        assigns(:unifying_theme).should equal(mock_unifying_theme)
+        expect(assigns(:unifying_theme)).to equal(mock_unifying_theme)
       end
 
       it "should re-render the 'new' template" do
-        RiGse::UnifyingTheme.stub(:new).and_return(mock_unifying_theme(:save => false))
+        allow(RiGse::UnifyingTheme).to receive(:new).and_return(mock_unifying_theme(:save => false))
         post :create, :unifying_theme => {}
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
       
     end
@@ -117,21 +117,21 @@ describe RiGse::UnifyingThemesController do
     describe "with valid params" do
 
       it "should update the requested unifying_theme" do
-        RiGse::UnifyingTheme.should_receive(:find).with("37").and_return(mock_unifying_theme)
-        mock_unifying_theme.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(RiGse::UnifyingTheme).to receive(:find).with("37").and_return(mock_unifying_theme)
+        expect(mock_unifying_theme).to receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :unifying_theme => {:these => 'params'}
       end
 
       it "should expose the requested unifying_theme as @unifying_theme" do
-        RiGse::UnifyingTheme.stub(:find).and_return(mock_unifying_theme(:update_attributes => true))
+        allow(RiGse::UnifyingTheme).to receive(:find).and_return(mock_unifying_theme(:update_attributes => true))
         put :update, :id => "1"
-        assigns(:unifying_theme).should equal(mock_unifying_theme)
+        expect(assigns(:unifying_theme)).to equal(mock_unifying_theme)
       end
 
       it "should redirect to the unifying_theme" do
-        RiGse::UnifyingTheme.stub(:find).and_return(mock_unifying_theme(:update_attributes => true))
+        allow(RiGse::UnifyingTheme).to receive(:find).and_return(mock_unifying_theme(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(ri_gse_unifying_theme_url(mock_unifying_theme))
+        expect(response).to redirect_to(ri_gse_unifying_theme_url(mock_unifying_theme))
       end
 
     end
@@ -139,21 +139,21 @@ describe RiGse::UnifyingThemesController do
     describe "with invalid params" do
 
       it "should update the requested unifying_theme" do
-        RiGse::UnifyingTheme.should_receive(:find).with("37").and_return(mock_unifying_theme)
-        mock_unifying_theme.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(RiGse::UnifyingTheme).to receive(:find).with("37").and_return(mock_unifying_theme)
+        expect(mock_unifying_theme).to receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :unifying_theme => {:these => 'params'}
       end
 
       it "should expose the unifying_theme as @unifying_theme" do
-        RiGse::UnifyingTheme.stub(:find).and_return(mock_unifying_theme(:update_attributes => false))
+        allow(RiGse::UnifyingTheme).to receive(:find).and_return(mock_unifying_theme(:update_attributes => false))
         put :update, :id => "1"
-        assigns(:unifying_theme).should equal(mock_unifying_theme)
+        expect(assigns(:unifying_theme)).to equal(mock_unifying_theme)
       end
 
       it "should re-render the 'edit' template" do
-        RiGse::UnifyingTheme.stub(:find).and_return(mock_unifying_theme(:update_attributes => false))
+        allow(RiGse::UnifyingTheme).to receive(:find).and_return(mock_unifying_theme(:update_attributes => false))
         put :update, :id => "1"
-        response.should render_template('edit')
+        expect(response).to render_template('edit')
       end
 
     end
@@ -163,15 +163,15 @@ describe RiGse::UnifyingThemesController do
   describe "responding to DELETE destroy" do
 
     it "should destroy the requested unifying_theme" do
-      RiGse::UnifyingTheme.should_receive(:find).with("37").and_return(mock_unifying_theme)
-      mock_unifying_theme.should_receive(:destroy)
+      expect(RiGse::UnifyingTheme).to receive(:find).with("37").and_return(mock_unifying_theme)
+      expect(mock_unifying_theme).to receive(:destroy)
       delete :destroy, :id => "37"
     end
   
     it "should redirect to the unifying_themes list" do
-      RiGse::UnifyingTheme.stub(:find).and_return(mock_unifying_theme(:destroy => true))
+      allow(RiGse::UnifyingTheme).to receive(:find).and_return(mock_unifying_theme(:destroy => true))
       delete :destroy, :id => "1"
-      response.should redirect_to(unifying_themes_url)
+      expect(response).to redirect_to(unifying_themes_url)
     end
 
   end

@@ -43,7 +43,7 @@ shared_examples_for 'an embeddable controller' do
   describe "GET index" do
     it "runs without error" do
       get :index
-      response.should be_success
+      expect(response).to be_success
     end
 
   end
@@ -51,24 +51,24 @@ shared_examples_for 'an embeddable controller' do
   describe "GET show" do
 
     it "assigns the requested #{model_ivar_name_lambda.call} as @#{model_ivar_name_lambda.call}" do
-      @model_class.stub(:find).with("37").and_return(@model_ivar)
+      allow(@model_class).to receive(:find).with("37").and_return(@model_ivar)
       get :show, :id => "37"
-      assigns[@model_ivar_name].should equal(@model_ivar)
+      expect(assigns[@model_ivar_name]).to equal(@model_ivar)
     end
 
     it "assigns the requested #{model_ivar_name_lambda.call} as @#{model_ivar_name_lambda.call} when called with Ajax" do
-      @model_class.stub(:find).with("37").and_return(@model_ivar)
+      allow(@model_class).to receive(:find).with("37").and_return(@model_ivar)
       xhr :get, :show, :id => "37"
-      assigns[@model_ivar_name].should equal(@model_ivar)
+      expect(assigns[@model_ivar_name]).to equal(@model_ivar)
     end
 
     describe "with mime type of jnlp" do
 
       it "renders the requested #{model_ivar_name_lambda.call} as jnlp without error" do
-        @model_class.stub(:find).with("37").and_return(@model_ivar)
+        allow(@model_class).to receive(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'jnlp'
-        assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template("shared/_installer")
+        expect(assigns[@model_ivar_name]).to equal(@model_ivar)
+        expect(response).to render_template("shared/_installer")
         assert_select('jnlp') do
           assert_select('information')
           assert_select('security')
@@ -86,10 +86,10 @@ shared_examples_for 'an embeddable controller' do
     describe "with mime type of config" do
 
       it "renders the requested #{model_ivar_name_lambda.call} as config without error" do
-        @model_class.stub(:find).with("37").and_return(@model_ivar)
+        allow(@model_class).to receive(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'config'
-        assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template("shared/_show")
+        expect(assigns[@model_ivar_name]).to equal(@model_ivar)
+        expect(response).to render_template("shared/_show")
         assert_select('java') do
           assert_select('object[class=?]', 'net.sf.sail.core.service.impl.LauncherServiceImpl') do
             assert_select('void[property=?]', 'properties') do
@@ -108,9 +108,9 @@ shared_examples_for 'an embeddable controller' do
     describe "with mime type of dynamic_otml" do
 
       it "renders the requested #{model_ivar_name_lambda.call} as dynamic_otml without error" do
-        @model_class.stub(:find).with("37").and_return(@model_ivar)
+        allow(@model_class).to receive(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'dynamic_otml'
-        assigns[@model_ivar_name].should equal(@model_ivar)
+        expect(assigns[@model_ivar_name]).to equal(@model_ivar)
         assert_select('otrunk') do
           assert_select('imports')
           assert_select('objects') do
@@ -139,10 +139,10 @@ shared_examples_for 'an embeddable controller' do
     describe "with mime type of otml" do
 
       it "renders the requested #{model_ivar_name_lambda.call} as otml without error" do
-        @model_class.stub(:find).with("37").and_return(@model_ivar)
+        allow(@model_class).to receive(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'otml'
-        assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template(:show)
+        expect(assigns[@model_ivar_name]).to equal(@model_ivar)
+        expect(response).to render_template(:show)
         assert_select('otrunk') do
           assert_select('imports')
           assert_select('objects') do

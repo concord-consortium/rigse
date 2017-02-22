@@ -35,32 +35,32 @@ describe Admin::SiteNoticesController do
       sign_out :user
       sign_in @teacher_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      expect(response).to redirect_to("/home")
+      expect(flash[:error]).to match(error_msg)
 
       sign_out :user
       sign_in @researcher_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      expect(response).to redirect_to("/home")
+      expect(flash[:error]).to match(error_msg)
 
       sign_out :user
       sign_in @author_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      expect(response).to redirect_to("/home")
+      expect(flash[:error]).to match(error_msg)
 
       sign_out :user
       sign_in @student_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      expect(response).to redirect_to("/home")
+      expect(flash[:error]).to match(error_msg)
 
       sign_out :user
       sign_in @guest_user
       get :new
-      response.should redirect_to("/home")
-      flash[:error].should =~ error_msg
+      expect(response).to redirect_to("/home")
+      expect(flash[:error]).to match(error_msg)
 
     end
   end
@@ -90,20 +90,20 @@ describe Admin::SiteNoticesController do
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Notice text is blank/i
+      expect(flash[:error]).to match(/Notice text is blank/i)
 
       @post_params[:notice_html] = ' '
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Notice text is blank/i
+      expect(flash[:error]).to match(/Notice text is blank/i)
     end
     it("should not create a notice if no role is selected") do
       @post_params[:role] = nil
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /No role is selected/i
+      expect(flash[:error]).to match(/No role is selected/i)
     end
   end
 
@@ -154,20 +154,20 @@ describe Admin::SiteNoticesController do
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Notice text is blank/i
+      expect(flash[:error]).to match(/Notice text is blank/i)
 
       @post_params[:notice_html] = "       "
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /Notice text is blank/i
+      expect(flash[:error]).to match(/Notice text is blank/i)
     end
     it("should not create a notice if no role is selected") do
       @post_params[:role] = nil
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       assert_nil(notice)
-      flash[:error].should =~ /No role is selected/i
+      expect(flash[:error]).to match(/No role is selected/i)
     end
   end
 
@@ -193,7 +193,7 @@ describe Admin::SiteNoticesController do
       assert_nil(notice)
       notice_roles = Admin::SiteNoticeRole.find_by_notice_id(@params[:id])
       assert_nil(notice_roles)
-      response.should be_success
+      expect(response).to be_success
     end
   end
   describe "Dismiss a notice" do
@@ -213,7 +213,7 @@ describe Admin::SiteNoticesController do
       dismissed_notice = Admin::SiteNoticeUser.find_by_notice_id_and_user_id(@notice.id, @teacher_user.id)
       assert_not_nil(dismissed_notice)
       assert(dismissed_notice.notice_dismissed)
-      response.should be_success
+      expect(response).to be_success
     end
   end
   describe "toggle_notice_display" do
@@ -230,13 +230,13 @@ describe Admin::SiteNoticesController do
       toggle_notice_status = Admin::NoticeUserDisplayStatus.find_by_user_id(@teacher_user.id)
       assert_not_nil(toggle_notice_status)
       assert(toggle_notice_status.collapsed_status)
-      response.should be_success
+      expect(response).to be_success
 
       xhr :post, :toggle_notice_display
       toggle_notice_status.reload
       assert_not_nil(toggle_notice_status)
       assert_equal(toggle_notice_status.collapsed_status, false)
-      response.should be_success
+      expect(response).to be_success
     end
   end
 end

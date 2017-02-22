@@ -28,7 +28,7 @@ describe Embeddable::SoundGraphersController do
         :max_frequency => @max_frequency,
         :max_sample_time => @max_sample_time
       )
-      Embeddable::SoundGrapher.stub(:find).and_return(@sound_grapher)
+      allow(Embeddable::SoundGrapher).to receive(:find).and_return(@sound_grapher)
     end
 
     # %OTSoundGrapherModel{ 
@@ -38,7 +38,7 @@ describe Embeddable::SoundGraphersController do
     # :maxSampleTime => sound_grapher.max_sample_time 
     it "renders the otml view" do
       get :show, :id => "37", :format => 'otml'
-      response.should render_template(:show)
+      expect(response).to render_template(:show)
       assert_select("OTSoundGrapherModel[displayMode='#{@display_mode}'][maxFrequency='#{@max_frequency}'][maxSampleTime='#{@max_sample_time}']")
     end
   end
