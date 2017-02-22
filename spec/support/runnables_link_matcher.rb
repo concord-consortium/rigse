@@ -1,24 +1,13 @@
-module RunnablesLinkMatcher
-  class BeLinkLike
-    def initialize(href, css_class, image, link_text)
-      @href, @css_class, @image, @link_text = href, css_class, image, link_text
-    end
+require 'rspec/expectations'
 
-    def matches?(target)
-      @target = target
-      @target.should =~ /(.*)#{@href}(.*)#{@css_class}(.*)#{@image}(.*)(#{@link_text}(.*))?/i
-    end
-
-    def failure_message
-      "Expected a properly formed link."
-    end
-
-    def negative_failure_message
-      "Expected an improperly formed link."
-    end
+RSpec::Matchers.define :be_link_like do |href, css_class, image, link_text=""|
+  match do |actual|
+    actual =~ /(.*)#{href}(.*)#{css_class}(.*)#{image}(.*)(#{link_text}(.*))?/i
   end
-
-  def be_link_like(href, css_class, image, link_text="")
-    BeLinkLike.new(href, css_class, image, link_text)
+  failure_message do |actual|
+    "Expected a properly formed link."
+  end
+  failure_message_when_negated do |actual|
+    "Expected an improperly formed link."
   end
 end
