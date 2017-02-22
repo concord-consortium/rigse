@@ -23,13 +23,13 @@ describe JnlpHelper do
           :use_periodic_bundle_uploading => true)
         @student = double()
         @user = Factory(:user)
-        @student.stub(:user => @user)
+        allow(@student).to receive_messages(:user => @user)
         pbl   = double()
         @learner = double(:student => @student, :periodic_bundle_logger => pbl)
       end
       it "should include the update interval as a property" do
-        subject.stub(:current_settings => @settings)
-        subject.stub(:current_visitor => @user)
+        allow(subject).to receive_messages(:current_settings => @settings)
+        allow(subject).to receive_messages(:current_visitor => @user)
         allow(subject).to receive(:dataservice_periodic_bundle_logger_periodic_bundle_contents_url).and_return("URL")
         allow(subject).to receive(:dataservice_periodic_bundle_logger_session_end_notification_url).and_return("URL")
         props = subject.system_properties(:learner => @learner)

@@ -15,7 +15,7 @@ describe API::V1::OfferingsController do
 
   before(:each) do
     allow(Portal::Offering).to receive(:find).and_return(mock_offering)
-    mock_offering.stub_chain(:clazz, :is_teacher?) { |t| offering_teachers.include?(t) }
+    allow(mock_offering).to receive_message_chain(:clazz, :is_teacher?) { |t| offering_teachers.include?(t) }
   end
 
   describe "anonymous' access" do

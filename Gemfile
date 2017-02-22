@@ -192,9 +192,11 @@ group :test, :cucumber do
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
   gem "capybara",           "~> 2.12.1"
-  gem "rspec",              "~> 2.99.0"
-  gem "rspec-rails",        "~> 2.99.0"
-  gem "email_spec",         "~> 1.2.1"
+  gem "rspec",              "~> 3.5.0"
+  gem "rspec-rails",        "~> 3.5.0"
+  gem "rspec-activemodel-mocks"
+  gem "rspec-collection_matchers"
+  gem "email_spec",         "~> 1.6.0"
   gem "fakeweb",            "~> 1.3", :require => false
   gem "ci_reporter",        "~> 1.7.0"
   gem "delorean",           "~> 1.1"
@@ -212,7 +214,6 @@ group :test, :cucumber, :development do
   gem "guard-rspec"
   gem "guard-cucumber",     "~> 1.2.2"
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
-  gem "launchy",           "~> 2.0.5"
   gem "pry"
 end
 

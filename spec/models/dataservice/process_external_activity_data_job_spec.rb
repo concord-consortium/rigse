@@ -44,7 +44,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
 
   subject { Dataservice::ProcessExternalActivityDataJob.new(23,json_content)}
   before(:each) do
-    Portal::Learner.stub(:find => learner)
+    allow(Portal::Learner).to receive_messages(:find => learner)
     allow(subject).to receive(:internal_process_open_response)
     allow(subject).to receive(:internal_process_multiple_choice)
     allow(subject).to receive(:internal_process_image_question)

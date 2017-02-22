@@ -120,7 +120,7 @@ describe ExternalActivitiesController do
     allow(Admin::Settings).to receive(:default_settings).and_return(@current_settings)
     allow(controller).to receive(:before_render) {
       allow(response.template).to receive(:net_logo_package_name).and_return("blah")
-      response.template.stub_chain(:current_settings).and_return(@current_settings);
+      allow(response.template).to receive_message_chain(:current_settings).and_return(@current_settings);
     }
 
     @admin_user = login_admin
@@ -243,7 +243,7 @@ describe ExternalActivitiesController do
     let(:opts)       { {} }
 
     before(:each) do
-      controller.stub_chain(:request, :url) { our_url }
+      allow(controller).to receive_message_chain(:request, :url) { our_url }
     end
 
     it "url is set" do

@@ -4,15 +4,15 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 RSpec::Matchers.define :be_before do |expected|
   match                          { |given| given.position < expected.position }
-  failure_message_for_should     { |given| "expected #{given.inspect} to be before #{expected.inspect}" }
-  failure_message_for_should_not { |given| "expected #{given.inspect} not to be before #{expected.inspect}" }
+  failure_message     { |given| "expected #{given.inspect} to be before #{expected.inspect}" }
+  failure_message_when_negated { |given| "expected #{given.inspect} not to be before #{expected.inspect}" }
   description                    { "be before #{expected.position}" }
 end
 
 RSpec::Matchers.define :be_after do |expected|
   match                          { |given| given.position > expected.position }
-  failure_message_for_should     { |given| "expected #{given.inspect} to be after #{expected.inspect}" }
-  failure_message_for_should_not { |given| "expected #{given.inspect} not to be after #{expected.inspect}" }
+  failure_message     { |given| "expected #{given.inspect} to be after #{expected.inspect}" }
+  failure_message_when_negated { |given| "expected #{given.inspect} not to be after #{expected.inspect}" }
   description                    { "be after #{expected.position}" }
 end
 
@@ -398,11 +398,11 @@ describe Investigation do
       @offering = mock_model(Portal::Offering, :can_be_deleted? => false)
       @bad_page_element = mock_model(PageElement, :embeddable => nil)
       @good_page_element = mock_model(PageElement, :embeddable => mock_model(Embeddable::MultipleChoice))
-      @good.stub(:page_elements => [@good_page_element,@good_page_element])
-      @bad.stub(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
-      @bad_with_learners.stub(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
-      @bad_with_learners.stub(:offerings => [@offering])
-      Investigation.stub(:all => [@good,@bad,@bad_with_learners])
+      allow(@good).to receive_messages(:page_elements => [@good_page_element,@good_page_element])
+      allow(@bad).to receive_messages(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
+      allow(@bad_with_learners).to receive_messages(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
+      allow(@bad_with_learners).to receive_messages(:offerings => [@offering])
+      allow(Investigation).to receive_messages(:all => [@good,@bad,@bad_with_learners])
     end
 
     describe "broken investigations" do
@@ -472,8 +472,8 @@ describe Investigation do
     let(:activities)           { [activity] }
     subject do
       s = Factory.create(:investigation)
-      s.stub(:external_activities => external_activities)
-      s.stub(:activities => activities)
+      allow(s).to receive_messages(:external_activities => external_activities)
+      allow(s).to receive_messages(:activities => activities)
       s.is_template
     end
     describe "when an investigation has an activity that is a template" do

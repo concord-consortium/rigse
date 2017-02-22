@@ -37,7 +37,7 @@ describe Portal::ClazzesController do
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course })
 
     allow(@controller).to receive(:before_render) {
-      response.template.stub_chain(:current_settings, :name).and_return("Test Settings")
+      allow(response.template).to receive_message_chain(:current_settings, :name).and_return("Test Settings")
     }
     @mock_settings = mock_model(Admin::Settings, :name => "Test Settings")
     allow(@mock_settings).to receive(:enable_grade_levels?).and_return(true)
