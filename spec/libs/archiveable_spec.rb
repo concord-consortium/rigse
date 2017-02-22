@@ -27,13 +27,13 @@ describe Archiveable do
     end
     describe "archive!" do
       it "should throw an exception" do
-        expect { instance.archive!}.to raise_error
+        expect { instance.archive!}.to raise_error(RuntimeError)
       end
     end
 
     describe "unarchive!" do
       it "should throw an exception" do
-        expect { instance.unarchive!}.to raise_error
+        expect { instance.unarchive!}.to raise_error(RuntimeError)
       end
     end
   end
