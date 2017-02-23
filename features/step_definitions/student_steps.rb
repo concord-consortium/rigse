@@ -60,13 +60,13 @@ Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_
   user = User.find_by_login student_login
   student = Portal::Student.find_by_user_id user.id
   clazz = Portal::Clazz.find_by_name class_name
-  student.clazzes.should include clazz
+  expect(student.clazzes).to include clazz
 end
 
 When /^(?:|I )run the (?:investigation|activity|external activity)$/ do
   # make sure the current user is a student
   user = User.find_by_login(@cuke_current_username)
-  user.portal_student.should_not == nil
+  expect(user.portal_student).not_to eq(nil)
 
   # note this isn't an exact match sometimes the link is Run by Myself, sometimes it is just Run
   # and addtionally if groups are turned on then there will be another link that is Run with Other Students
@@ -75,21 +75,21 @@ end
 
 Then /^I should see the run link for "([^"]*)"$/ do | runnable_name |
   within(".offering_for_student:contains('#{runnable_name}')") do
-    page.should have_selector('.solo.button')
+    expect(page).to have_selector('.solo.button')
   end
 end
 
 Then /^I should not see the run link for "([^"]*)"$/ do | runnable_name |
-  page.should_not have_content(runnable_name)
+  expect(page).not_to have_content(runnable_name)
 end
 
 Then /^I should see a link to generate a report of my work$/ do
   text = I18n.t("StudentProgress.GenerateReport.NotDone")
-  page.should have_selector("div.run_graph", text: /#{text}/i, visible: true)
+  expect(page).to have_selector("div.run_graph", text: /#{text}/i, visible: true)
 end
 
 Then /^I should not see a link to generate a report of my work$/ do
-  page.should_not have_selector("div.run_graph", text: /generate a report of my work/i, visible: true)
+  expect(page).not_to have_selector("div.run_graph", text: /generate a report of my work/i, visible: true)
 end
 
 Given /^the student report is disabled for the (activity|investigation|external activity) "([^"]+)"$/ do |type, name|

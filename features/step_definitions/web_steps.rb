@@ -55,7 +55,7 @@ def verify_current_path(expected_path)
     break if current_path == expected_path
     sleep(0.05)
   }
-  current_path.should == expected_path
+  expect(current_path).to eq(expected_path)
 end
 
 def verified_visit(path)
@@ -143,13 +143,13 @@ And /^I decline the upcoming javascript confirm box$/ do
 end
 
 Then /^(?:|I )should see "([^"]*)" (\d+) times?$/ do |text, count|
-  (page.find(:xpath, '//body').text.split(text).length - 1).should == count.to_i
+  expect(page.find(:xpath, '//body').text.split(text).length - 1).to eq(count.to_i)
 end
 
 Then /^(?:|I )should see an option for "([^"]*)" in (.*[^:])$/ do |option, select_name|
   select = selector_for(select_name)
   if page.respond_to? :should
-    page.should have_select(select, :with_options => [option])
+    expect(page).to have_select(select, :with_options => [option])
   else
     assert page.has_select?(select, :with_options => [option])
   end
@@ -157,7 +157,7 @@ end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
   if page.respond_to? :should
-    page.should have_content(text)
+    expect(page).to have_content(text)
   else
     assert page.has_content?(text)
   end
@@ -167,7 +167,7 @@ Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
 
   if page.respond_to? :should
-    page.should have_xpath('.//*', :text => regexp)
+    expect(page).to have_xpath('.//*', :text => regexp)
   else
     assert page.has_xpath?('.//*', :text => regexp)
   end
@@ -175,7 +175,7 @@ end
 
 Then /^(?:|I )should not see "([^"]*)"$/ do |text|
   if page.respond_to? :should
-    page.should have_no_content(text)
+    expect(page).to have_no_content(text)
   else
     assert page.has_no_content?(text)
   end
@@ -185,7 +185,7 @@ Then /^(?:|I )should not see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
 
   if page.respond_to? :should
-    page.should have_no_xpath('//*', :text => regexp)
+    expect(page).to have_no_xpath('//*', :text => regexp)
   else
     assert page.has_no_xpath?('//*', :text => regexp)
   end
@@ -196,7 +196,7 @@ Then /^the "([^"]*)" field(?: within (.*))? should contain "([^"]*)"$/ do |field
     field = find_field(field)
     field_value = (field.tag_name == 'textarea') ? field.text : field.value
     if field_value.respond_to? :should
-      field_value.should =~ /#{value}/
+      expect(field_value).to match(/#{value}/)
     else
       assert_match(/#{value}/, field_value)
     end
@@ -208,7 +208,7 @@ Then /^the "([^"]*)" field(?: within (.*))? should not contain "([^"]*)"$/ do |f
     field = find_field(field)
     field_value = (field.tag_name == 'textarea') ? field.text : field.value
     if field_value.respond_to? :should_not
-      field_value.should_not =~ /#{value}/
+      expect(field_value).not_to match(/#{value}/)
     else
       assert_no_match(/#{value}/, field_value)
     end
@@ -219,7 +219,7 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should be checked$/ do |label, pa
   with_scope(parent) do
     field_checked = find_field(label)['checked']
     if field_checked.respond_to? :should
-      field_checked.should be_true
+      expect(field_checked).to be_truthy
     else
       assert field_checked
     end
@@ -230,7 +230,7 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label
   with_scope(parent) do
     field_checked = find_field(label)['checked']
     if field_checked.respond_to? :should
-      field_checked.should be_false
+      expect(field_checked).to be_falsey
     else
       assert !field_checked
     end
@@ -263,7 +263,7 @@ Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
   expected_pairs.rows_hash.each_pair{|k,v| expected_params[k] = v.split(',')}
 
   if actual_params.respond_to? :should
-    actual_params.should == expected_params
+    expect(actual_params).to eq(expected_params)
   else
     assert_equal expected_params, actual_params
   end
@@ -304,13 +304,13 @@ And /^I receive a file for download with a filename like "(.+)"$/ do |filename|
   pattern = Regexp.compile(pattern)
 
   headers = page.response_headers['Content-Disposition'] rescue pending("response_headers is unsupported by the current page driver")
-  headers.should =~ pattern
+  expect(headers).to match(pattern)
 end
 
 And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor_id|
   # make sure the editor is on the page, this also triggers capybara to do its
   # automatic waiting if it isn't on the page yet
-  page.should have_css("##{editor_id}")
+  expect(page).to have_css("##{editor_id}")
   evaluate_script("tinyMCE.getInstanceById('#{editor_id}').setContent('#{html}');")
 end
 

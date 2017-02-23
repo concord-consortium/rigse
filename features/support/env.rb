@@ -37,8 +37,6 @@ Capybara.default_selector = :css
 # see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
 Capybara.default_max_wait_time = 5
 
-include RSpec::Mocks::Methods
-
 # so we can use things like dom_id_for
 include ApplicationHelper
 
@@ -122,7 +120,6 @@ Cucumber::Rails::Database.javascript_strategy = :transaction
 
 APP_CONFIG[:theme] = 'xproject' #lots of tests seem to be broken if we try to use another theme
 
-World(RSpec::Rails::Mocks)
 World(RSpec::Mocks::ExampleMethods)
 
 # Make visible for testing

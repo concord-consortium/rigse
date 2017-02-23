@@ -34,11 +34,11 @@ Given /a mock gse/ do
     :gse_key => 'PHY-9-11',
     :expectations => [] # not very ambitious
   )
-  domain.stub(:grade_span_expectations).and_return([gse])
+  allow(domain).to receive(:grade_span_expectations).and_return([gse])
 
-  RiGse::GradeSpanExpectation.stub!(:default).and_return(gse)
-  RiGse::Domain.stub!(:find).and_return([domain])
-  RiGse::Domain.stub!(:find).with(1).and_return(domain)
+  allow(RiGse::GradeSpanExpectation).to receive(:default).and_return(gse)
+  allow(RiGse::Domain).to receive(:find).and_return([domain])
+  allow(RiGse::Domain).to receive(:find).with(1).and_return(domain)
 end
 
 

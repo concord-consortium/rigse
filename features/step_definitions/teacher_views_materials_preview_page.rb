@@ -22,12 +22,12 @@ When /^the check box for the activity "(.+)" (should|should not) be checked$/ do
     when "should"
       within(:xpath,"//table[@class = 'activity_list']/tbody/tr[contains(.,'#{activity_name}')]") do
         field_checked = find_field("activity_id[]")['checked']
-        field_checked.should be_true
+        expect(field_checked).to be_truthy
       end
     when "should not"
       within(:xpath,"//table[@class = 'activity_list']/tbody/tr[contains(.,'#{activity_name}')]") do
         field_checked = find_field("activity_id[]")['checked']
-        field_checked.should be_false
+        expect(field_checked).to be_falsey
       end
   end
 end
@@ -37,22 +37,22 @@ When /^(?:|I )should be able to share (investigation|activity) "(.+)"$/ do |mate
       when "investigation"
         material_id = Investigation.find_by_name(material_name).id
         element = page.find(:xpath, "//div[@id='Investigation#{material_id}Share']/div[@class='ss-fb sharelink']")
-        element.should be_visible
+        expect(element).to be_visible
         element = page.find(:xpath, "//div[@id='Investigation#{material_id}Share']/div[@class='ss-tw sharelink']")
-        element.should be_visible
+        expect(element).to be_visible
         element = page.find(:xpath, "//div[@id='Investigation#{material_id}Share']/div[@class='ss-li sharelink']")
-        element.should be_visible
+        expect(element).to be_visible
         element = page.find(:xpath, "//div[@id='Investigation#{material_id}Share']/div[@class='ss-po sharelink']")
-        element.should be_visible
+        expect(element).to be_visible
       when "activity"
         material_id = Activity.find_by_name(material_name).id
         element = page.find(:xpath, "//div[@id='Activity#{material_id}Share']/div[@class='ss-fb sharelink']")
-        element.should be_visible
+        expect(element).to be_visible
         element = page.find(:xpath, "//div[@id='Activity#{material_id}Share']/div[@class='ss-tw sharelink']")
-        element.should be_visible
+        expect(element).to be_visible
         element = page.find(:xpath, "//div[@id='Activity#{material_id}Share']/div[@class='ss-li sharelink']")
-        element.should be_visible
+        expect(element).to be_visible
         element = page.find(:xpath, "//div[@id='Activity#{material_id}Share']/div[@class='ss-po sharelink']")
-        element.should be_visible
+        expect(element).to be_visible
     end
 end

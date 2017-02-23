@@ -99,7 +99,7 @@ Given /^the mixed runnable types class exists$/ do
 end
 
 Then /^I can view a report for materials in the mixed runnable type class$/ do
-  @mixed_runnable_type_clazz.should_not be_nil
+  expect(@mixed_runnable_type_clazz).not_to be_nil
   # start by assuming what tabs are there
 
 
@@ -115,7 +115,7 @@ Then /^I can view a report for materials in the mixed runnable type class$/ do
       click_link("Run Report")
       new_window=page.driver.browser.window_handles.last
       page.within_window new_window do
-        page.should have_content("Report")
+        expect(page).to have_content("Report")
       end
     end
   }

@@ -74,9 +74,9 @@ Given /^the default settings has student consent enabled$/ do
 end
 
 Then /^APP_CONFIG\[:([^\]]*)\] should be (true|false)$/ do |setting, value|
-  APP_CONFIG[setting.to_sym].should == (value == 'true')
+  expect(APP_CONFIG[setting.to_sym]).to eq(value == 'true')
 end
 
 Then /^I should see the default district$/ do
-  page.should have_xpath('//*', :text => APP_CONFIG[:site_district])
+  expect(page).to have_xpath('//*', :text => APP_CONFIG[:site_district])
 end

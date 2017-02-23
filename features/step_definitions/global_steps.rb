@@ -11,7 +11,7 @@ end
 
 def login_as(username)
   visit "/login/#{username}"
-  page.should have_content(username)
+  expect(page).to have_content(username)
   @cuke_current_username = username
 end
 
@@ -26,9 +26,9 @@ def login_with_ui_as(username, password)
   user = User.find_by_login(username)
   user_first_name = user.first_name
   user_last_name = user.last_name
-  page.should have_content("Welcome")
-  page.should have_content(user_first_name)
-  page.should have_content(user_last_name)
+  expect(page).to have_content("Welcome")
+  expect(page).to have_content(user_first_name)
+  expect(page).to have_content(user_last_name)
 end
 
 def post_with_bearer_token(path, post_data, user = 'admin')
@@ -118,7 +118,7 @@ end
 
 When /^I log out$/ do
   visit "/users/sign_out"
-  ['/home', '/'].should include URI.parse(current_url).path
+  expect(['/home', '/']).to include URI.parse(current_url).path
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|
@@ -134,24 +134,24 @@ end
 # Then the investigation named "Test" should have "offerings_count" equal to "1"
 Then /^the (.*) named "([^"]*)" should have "([^"]*)" equal to "([^"]*)"$/ do |class_name, obj_name, field, value|
   obj = class_name.gsub(/\s/, "_").classify.constantize.find_by_name(obj_name)
-  obj.send(field.to_sym).to_s.should == value
+  expect(obj.send(field.to_sym).to_s).to eq(value)
 end
 
 Then /^"(.*)" should appear before "(.*)"$/ do |first_item, second_item|
   # these first two lines make sure the content is actually on the page
   # and will trigger synchronized waiting
-  page.should have_content(first_item)
-  page.should have_content(second_item)
+  expect(page).to have_content(first_item)
+  expect(page).to have_content(second_item)
   # this won't trigger synchronized waiting so if there is synchronization issues you should
   # try to verify something is on the page, before using this step
-  page.body.should =~ /#{first_item}.*#{second_item}/m
+  expect(page.body).to match(/#{first_item}.*#{second_item}/m)
 end
 
 
 Then /^I should see the sites name$/ do
   site_name = APP_CONFIG[:site_name]
   if page.respond_to? :should
-    page.should have_content(site_name)
+    expect(page).to have_content(site_name)
   else
     assert page.has_content?(site_name)
   end
@@ -172,15 +172,15 @@ Then /^I should wait (?:for )?(\d+) second(?:s)?/ do |seconds|
 end
 
 Then /^I should not see the xpath "([^"]*)"$/ do |xpath|
-  page.should have_no_xpath xpath
+  expect(page).to have_no_xpath xpath
 end
 
 Then /^I should see the xpath "([^"]*)"$/ do |xpath|
-  page.should have_xpath xpath
+  expect(page).to have_xpath xpath
 end
 
 Then /^the location should be "([^"]*)"$/ do |location|
-  current_url.should == location
+  expect(current_url).to eq(location)
 end
 
 Then /^I should see the button "([^"]*)"$/ do |locator| 
@@ -189,7 +189,7 @@ Then /^I should see the button "([^"]*)"$/ do |locator|
 end
 
 Then /^I should not see the button "([^"]*)"$/ do |button| 
-  page.should have_no_button(button)
+  expect(page).to have_no_button(button)
 end
 
 Given /^PENDING/ do
@@ -207,7 +207,7 @@ end
 Then /^(?:|I )need to confirm "([^"]*)"$/ do |text|
   # currently confirmations like this are done with dialogs
   dialog_text = page.driver.browser.switch_to.alert.text
-  dialog_text.should == text
+  expect(dialog_text).to eq(text)
   page.driver.browser.switch_to.alert.accept
 end
 
@@ -216,21 +216,22 @@ When /^the newly opened window (should|should not) have content "(.*)"$/ do |pre
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
     case present
       when "should"
-      page.should have_content(content)
+      expect(page).to have_content(content)
       when "should not"
-      page.should have_no_content(content)
+      expect(page).to have_no_content(content)
     end
   end
 end
 
 When /^Help link should not appear in the top navigation bar$/ do
-  find('#help').should_not be_visible
+  expect(find('#help')).not_to be_visible
 end
 
 When /^(?:|I )close the newly opened window$/ do
-  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
-    page.execute_script "window.close();"
-  end
+  # within_window page.driver.browser.window_handles.last do
+  #   #page.execute_script "window.close();"
+  #   page.driver.quit
+  # end
 end
 
 require 'securerandom'

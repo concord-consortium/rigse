@@ -73,7 +73,7 @@ end
 
 Then /^the (portal|browser) should send a (POST|GET) to "([^"]*)"$/ do |client,method,address|
   stub = get_request_stub(method, address)
-  stub.should have_been_requested
+  expect(stub).to have_been_requested
 end
 
 def create_and_run_external_rest_activity(activity_name)
@@ -86,7 +86,7 @@ end
 
 Then /^the (portal|browser) should not send a (POST|GET) to "([^"]*)"$/  do |client, method, address|
   stub = get_request_stub(method, address)
-  stub.should_not have_been_requested
+  expect(stub).not_to have_been_requested
 end
 
 When /^a student first runs the external activity "([^"]*)"$/  do |activity_name|
@@ -109,7 +109,7 @@ end
 When /^the browser returns the following data to the portal$/ do |string|
   login_as('student')
   path = @learner.remote_endpoint_path
-  Delayed::Job.should_receive(:enqueue)
+  expect(Delayed::Job).to receive(:enqueue)
   post_with_bearer_token(path, {:content => string})
   # delayed_job doesn't work in tests, so force running the job
   Dataservice::ProcessExternalActivityDataJob.new(@learner.id, string).perform
@@ -117,29 +117,29 @@ end
 
 Then /^the portal should create an open response saveable with the answer "([^"]*)"$/ do |answer|
   ors = Saveable::OpenResponse.all
-  ors.count.should == 1
-  ors.first.answer.should == answer
+  expect(ors.count).to eq(1)
+  expect(ors.first.answer).to eq(answer)
 end
 
 Then /^the portal should create an image question saveable with the answer "([^"]*)"$/ do |answer|
   iqs = Saveable::ImageQuestion.all
-  iqs.count.should == 1
+  expect(iqs.count).to eq(1)
   a = iqs.first.answer
-  a[:note].should == answer
-  a[:blob].should_not be_nil
+  expect(a[:note]).to eq(answer)
+  expect(a[:blob]).not_to be_nil
 end
 
 
 Then /^the portal should create a multiple choice saveable with the answer "([^"]*)"$/ do |answer|
   multiple_choices = Saveable::MultipleChoice.all
   matching = multiple_choices.select {|mcs| mcs.answer.first[:answer] == answer}
-  matching.size.should >= 1
+  expect(matching.size).to be >= 1
 end
 
 # Only test that the report_learner is upadted
 # TODO: Test the actual report learner content
 Then /the student's progress bars should be updated/ do
   @learner.reload
-  @learner.report_learner.complete_percent.should be > 0.0
-  @learner.report_learner.last_run.should_not be_nil
+  expect(@learner.report_learner.complete_percent).to be > 0.0
+  expect(@learner.report_learner.last_run).not_to be_nil
 end

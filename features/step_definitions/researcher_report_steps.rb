@@ -6,8 +6,8 @@ def modified_report_for(investigation)
     :blobs_url      => FAKE_BLOBS_URL,
     :url_helpers    => Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
   )
-  report.stub!(:learner_id).and_return('learner_id')
-  report.stub!(:user_id).and_return('user_id')
+  allow(report).to receive(:learner_id).and_return('learner_id')
+  allow(report).to receive(:user_id).and_return('user_id')
   report
 end
 
@@ -95,9 +95,9 @@ def find_bloblinks_in_spreadheet(spreadsheet,num)
   lines = structure.lines.select{ |l| l =~ regexp}
   if num
     num = num.to_i
-    num.should == lines.size
+    expect(num).to eq(lines.size)
   else
-    lines.size.should_not == 0
+    expect(lines.size).not_to eq(0)
   end
 end
 
@@ -119,21 +119,21 @@ Then /^"([^"]*)" should have (\d+) answers for "([^"]*)" in "([^"]*)"$/ do |stud
   offering = offering_for(investigation_name,class_name)
   learner = learner_for(student_name,offering)
   report = Report::Util.new(offering)
-  report.complete_number(learner).should == num_answers.to_i
+  expect(report.complete_number(learner)).to eq(num_answers.to_i)
 end
 
 Then /^"([^"]*)" should have answered (\d+)% of the questions for "([^"]*)" in "([^"]*)"$/ do |student_name, percent, investigation_name,class_name|
   offering = offering_for(investigation_name,class_name)
   learner = learner_for(student_name,offering)
   report = Report::Util.new(offering)
-  report.complete_percent(learner).should be_within(1.5).of(Float(percent))
+  expect(report.complete_percent(learner)).to be_within(1.5).of(Float(percent))
 end
 
 Then /^"([^"]*)" should have (\d+)% of the questions correctly for "([^"]*)" in "([^"]*)"$/ do |student_name, percent, investigation_name,class_name|
   offering = offering_for(investigation_name,class_name)
   learner = learner_for(student_name,offering)
   report = Report::Util.new(offering)
-  report.correct_percent(learner).should be_within(1.5).of(Float(percent))
+  expect(report.correct_percent(learner)).to be_within(1.5).of(Float(percent))
 end
 
 
@@ -208,13 +208,13 @@ Then /^"([^"]*)" should have completed \((\d+)\) assessments for Activity "([^"]
   offering = offering_for(investigation.name,class_name)
   learner = learner_for(student_name,offering)
   report = Report::Util.new(offering)
-  report.complete_number(learner,activity).should == num_answers.to_i
+  expect(report.complete_number(learner,activity)).to eq(num_answers.to_i)
 end
 
 Then /^I should receive an Excel spreadsheet$/ do
   headers = page.driver.response.headers
-  headers.should have_key 'Content-Type'
-  headers['Content-Type'].should match "application/vnd.ms.excel"
+  expect(headers).to have_key 'Content-Type'
+  expect(headers['Content-Type']).to match "application/vnd.ms.excel"
 end
 
 Given /^the following researchers exist:$/ do |users_table|
@@ -233,10 +233,10 @@ end
 
 Given /^a mocked spreadsheet library$/ do
   workbook = Spreadsheet::Workbook.new
-  workbook.stub("write").and_return('')
-  Spreadsheet::Workbook.stub(:new).and_return(workbook)
+  allow(workbook).to receive("write").and_return('')
+  allow(Spreadsheet::Workbook).to receive(:new).and_return(workbook)
 end
 
 Given /^a mocked remote endpoint url$/ do
-  Reports::UrlHelpers.any_instance.stub(:remote_endpoint_url).and_return('https://portal.concord.org/dataservice/external_activity_data/1')
+  allow_any_instance_of(Reports::UrlHelpers).to receive(:remote_endpoint_url).and_return('https://portal.concord.org/dataservice/external_activity_data/1')
 end
