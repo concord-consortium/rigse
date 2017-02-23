@@ -5,9 +5,9 @@ When /^Report page (should|should not) have student name "(.*)" in answered sect
 
     case present
       when "should"
-      page.should have_content(student_name)
+      expect(page).to have_content(student_name)
       when "should not"
-      page.should have_no_content(student_name)
+      expect(page).to have_no_content(student_name)
     end
   end
 end
@@ -17,9 +17,9 @@ When /^Report page (should|should not) have content "(.*)"$/ do |present, conten
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
     case present
       when "should"
-      page.should have_content(content)
+      expect(page).to have_content(content)
       when "should not"
-      page.should have_no_content(content)
+      expect(page).to have_no_content(content)
     end
   end
 end

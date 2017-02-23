@@ -42,7 +42,7 @@ When /^(?:|I )search for "(.+)" on the search instructional materials page$/ do 
   fill_in("search_term", :with => search_text)
   click_button("GO")
   using_wait_time(10) do
-    page.should have_content("matching search term \"#{search_text}\"")
+    expect(page).to have_content("matching search term \"#{search_text}\"")
   end
 end
 
@@ -71,42 +71,42 @@ Then /^the search results should be paginated on the search instructional materi
   #pagination for investigations
   within(".results_container .materials_container.investigations") do
     if page.respond_to? :should
-      page.should have_link("Next")
+      expect(page).to have_link("Next")
     else
       assert page.has_link?("Next")
     end
 
-    page.should have_content("Previous")
+    expect(page).to have_content("Previous")
 
     step 'I follow "Next"'
     if page.respond_to? :should
-      page.should have_link("Previous")
+      expect(page).to have_link("Previous")
     else
       assert page.has_link?("Previous")
     end
 
-    page.should have_content("Next")
+    expect(page).to have_content("Next")
   end
 
   #pagination for activity
   step 'I am on the search instructional materials page'
   within(".results_container .materials_container.activities") do
     if page.respond_to? :should
-      page.should have_link("Next")
+      expect(page).to have_link("Next")
     else
       assert page.has_link?("Next")
     end
 
-    page.should have_content("Previous")
+    expect(page).to have_content("Previous")
 
     step 'I follow "Next"'
     if page.respond_to? :should
-      page.should have_link("Previous")
+      expect(page).to have_link("Previous")
     else
       assert page.has_link?("Previous")
     end
 
-    page.should have_content("Next")
+    expect(page).to have_content("Next")
   end
 end
 

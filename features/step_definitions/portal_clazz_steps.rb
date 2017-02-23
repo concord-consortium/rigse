@@ -21,13 +21,13 @@ end
 Then /^I should see "([^"]*)" for the external activity "([^"]*)"$/ do |content, offering_name|
   offering = ExternalActivity.find_by_name offering_name
   with_scope("#details_portal__offering_#{offering.id}") do
-    page.should have_content(content)
+    expect(page).to have_content(content)
   end
 end
 
 Then /^the class "([^"]*)" should not have any offerings$/ do |class_name|
   clazz = Portal::Clazz.find_by_name class_name
-  clazz.offerings.size.should == 0
+  expect(clazz.offerings.size).to eq(0)
 end
 
 Then /^the classes "([^"]*)" are in a school named "([^"]*)"$/ do |classes,school_name|
@@ -42,10 +42,10 @@ end
 
 Then /^the portal class "([^"]*)" should have been created$/ do |clazz_name|
   clazz = Portal::Clazz.find_by_name clazz_name
-  clazz.should be
+  expect(clazz).to be
 end
 
 Then /^the class word for the portal class "([^"]*)" should be "([^"]*)"$/ do |clazz_name, class_word|
   clazz = Portal::Clazz.find_by_name clazz_name
-  clazz.class_word.should == class_word
+  expect(clazz.class_word).to eq(class_word)
 end

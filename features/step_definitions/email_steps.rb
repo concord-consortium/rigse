@@ -49,11 +49,11 @@ end
 #
 
 Then /^(?:I|they|"([^"]*?)") should receive (an|no|\d+) emails?$/ do |address, amount|
-  unread_emails_for(address).size.should == parse_email_count(amount)
+  expect(unread_emails_for(address).size).to eq(parse_email_count(amount))
 end
 
 Then /^(?:I|they|"([^"]*?)") should have (an|no|\d+) emails?$/ do |address, amount|
-  mailbox_for(address).size.should == parse_email_count(amount)
+  expect(mailbox_for(address).size).to eq(parse_email_count(amount))
 end
 
 # DEPRECATED
@@ -62,7 +62,7 @@ end
 Then /^(?:I|they|"([^"]*?)") should not receive an email$/ do |address|
   email_spec_deprecate "The step 'I/they/[email] should not receive an email' is no longer supported.
                       Please use 'I/they/[email] should receive no emails' instead."
-  unread_emails_for(address).size.should == 0
+  expect(unread_emails_for(address).size).to eq(0)
 end
 
 #
@@ -87,11 +87,11 @@ end
 #
 
 Then /^(?:I|they) should see "([^"]*?)" in the email subject$/ do |text|
-  current_email.should have_subject(Regexp.new(text))
+  expect(current_email).to have_subject(Regexp.new(text))
 end
 
 Then /^(?:I|they) should see "([^"]*?)" in the email body$/ do |text|
-  current_email.body.should =~ Regexp.new(text)
+  expect(current_email.body).to match(Regexp.new(text))
 end
 
 # DEPRECATED
@@ -100,12 +100,12 @@ end
 Then /^(?:I|they) should see "([^"]*?)" in the subject$/ do |text|
   email_spec_deprecate "The step 'I/they should see [text] in the subject' is no longer supported.
                       Please use 'I/they should see [text] in the email subject' instead."
-  current_email.should have_subject(Regexp.new(text))
+  expect(current_email).to have_subject(Regexp.new(text))
 end
 Then /^(?:I|they) should see "([^"]*?)" in the email$/ do |text|
   email_spec_deprecate "The step 'I/they should see [text] in the email' is no longer supported.
                       Please use 'I/they should see [text] in the email body' instead."
-  current_email.body.should =~ Regexp.new(text)
+  expect(current_email.body).to match(Regexp.new(text))
 end
 
 #

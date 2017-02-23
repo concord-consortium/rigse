@@ -61,7 +61,7 @@ Then /^the portal should create a(?:n)? (.*?) with the following attributes:$/ d
   else
     objs = []
   end
-  objs.size.should == 1
+  expect(objs.size).to eq(1)
   obj = objs.last
   if (klass == ExternalActivity)
     @external_activity = obj
@@ -75,38 +75,38 @@ Then /^the portal should create a(?:n)? (.*?) with the following attributes:$/ d
       complex_data = JSON.parse(expected_value)
       compare_complex(val, complex_data)
     else
-      val.to_s.should == expected_value
+      expect(val.to_s).to eq(expected_value)
     end
   end
 end
 
 def compare_complex(obj, complex_data)
   if obj.is_a?(Array)
-    complex_data.class.should be Array
-    obj.length.should == complex_data.length
+    expect(complex_data.class).to be Array
+    expect(obj.length).to eq(complex_data.length)
     obj.each_with_index do |child, i|
       complex_child = complex_data[i]
       compare_complex(child, complex_child)
     end
   else
-    complex_data.class.should be Hash
+    expect(complex_data.class).to be Hash
     complex_data.each do |attr, expected|
       attr_val = obj.send(attr)
-      attr_val.to_s.should == expected
+      expect(attr_val.to_s).to eq(expected)
     end
   end
 end
 
 Then /^the portal should respond with a "([^"]*)" status and location$/ do |status|
-  page.status_code.to_s.should == status
+  expect(page.status_code.to_s).to eq(status)
   location = page.response_headers["Location"]
-  location.should_not be_nil
-  location.should match(/http:\/\/www.example.com\/eresources\/\d+/)
+  expect(location).not_to be_nil
+  expect(location).to match(/http:\/\/www.example.com\/eresources\/\d+/)
 end
 
 Then /^the external activity should have a template$/ do
-  @external_activity.should_not be_nil
-  @external_activity.template.should_not be_nil
+  expect(@external_activity).not_to be_nil
+  expect(@external_activity.template).not_to be_nil
 end
 
 def publish_activity(name, again)
@@ -136,8 +136,8 @@ Given /^the external runtime published the (activity|sequence) "([^"]*)" before$
 end
 
 Then(/^the (.*) should have a external report at "(.*)"$/) do |ignored_param, report_url|
-  @external_activity.external_report.should_not be_nil
-  @external_activity.external_report.url.should == report_url
+  expect(@external_activity.external_report).not_to be_nil
+  expect(@external_activity.external_report.url).to eq(report_url)
 end
 
 Given(/^an external_report with the URL "(.*?)"$/) do | report_url|

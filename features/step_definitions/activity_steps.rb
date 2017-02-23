@@ -19,7 +19,7 @@ Given /^the following activities with multiple choices exist:$/ do |activity_tab
   activity_table.hashes.each do |hash|
     activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
     activity.user = Factory(:user)
-    activity.save.should be_true
+    expect(activity.save).to be_truthy
     section = Section.find_or_create_by_name(hash['section'])
     page = Page.find_or_create_by_name(hash['page'])
     mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
@@ -51,7 +51,7 @@ end
 Given /^a simple activity with a multiple choice exists$/ do
   activity = Activity.create(:name => 'simple activity', :description => 'simple activity')
   activity.user = Factory(:user)
-  activity.save.should be_true
+  expect(activity.save).to be_truthy
 
   section = Section.create(:name => 'simple section')
   activity.sections << section

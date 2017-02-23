@@ -7,8 +7,8 @@ When /^the column for "(.*)" on the Full Status page should be (expanded|collaps
   xpath_expression = "//th[@title='#{column_name}' and contains(., '#{column_name}')]"
   element = page.find(:xpath, xpath_expression)
   if expanded_or_collapsed == 'expanded'
-    element.should be_visible
+    expect(element).to be_visible
   else
-    element.should_not be_visible
+    expect(element).not_to be_visible
   end
 end

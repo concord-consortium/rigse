@@ -7,13 +7,13 @@ end
 
 Then /the current settings should be using the following interfaces:/ do |interfaces_table|
   interfaces_table.hashes.each do |hash|
-    Admin::Settings.default_settings.enabled_vendor_interfaces.should include(Probe::VendorInterface.find_by_name(hash[:name]))
+    expect(Admin::Settings.default_settings.enabled_vendor_interfaces).to include(Probe::VendorInterface.find_by_name(hash[:name]))
   end
 end
 
 Given /^I am an anonymous user$/ do
   visit('/users/sign_out')
-  ['/home', '/'].should include URI.parse(current_url).path
+  expect(['/home', '/']).to include URI.parse(current_url).path
 end
 
 
@@ -28,9 +28,9 @@ Then /^I should see the following form checkboxes:$/ do |checkbox_table|
   checkbox_table.hashes.each do |hash|
     field = find_field(hash[:name])
     if hash[:checked] =~ /true/
-      field.should be_checked
+      expect(field).to be_checked
     else
-      field.should_not be_checked
+      expect(field).not_to be_checked
     end
   end
 end
@@ -50,7 +50,7 @@ When /^(?:|I )should have the following selection options:$/ do |selection_table
   within_fieldset("Probeware Interface") do
     selection_table.hashes.each do |hash|
       if defined?(RSpec::Rails::Matchers)
-        page.should have_content(hash[:option])
+        expect(page).to have_content(hash[:option])
       else
         assert page.has_content?(hash[:option])
       end
@@ -62,7 +62,7 @@ Then /^I should not see the following selection options:$/ do |selection_table|
   within_fieldset("Probeware Interface") do
     selection_table.hashes.each do |hash|
       if defined?(RSpec::Rails::Matchers)
-        page.should_not have_content(hash[:option])
+        expect(page).not_to have_content(hash[:option])
       else
         assert(! page.has_content?(hash[:option]))
       end

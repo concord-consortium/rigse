@@ -188,8 +188,8 @@ group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
   gem "selenium-webdriver", "~> 3.1"
-  gem "cucumber",           "~> 1.3.0"
-  gem "cucumber-rails",     "~> 1.3.0", :require => false
+  gem "cucumber",           "~> 2.4.0"
+  gem "cucumber-rails",     "~> 1.4.5", :require => false
   gem "database_cleaner",   "~> 0.7.2"
   gem "capybara",           "~> 2.12.1"
   gem "rspec",              "~> 3.5.0"
@@ -200,7 +200,7 @@ group :test, :cucumber do
   gem "fakeweb",            "~> 1.3", :require => false
   gem "ci_reporter",        "~> 1.7.0"
   gem "delorean",           "~> 1.1"
-  gem "webmock",            "~> 1.11.0", :require => false
+  gem "webmock",            "~> 1.24.6", :require => false
   gem "capybara-mechanize", "~> 1.5.0"
   gem 'capybara-screenshot'
   gem "codeclimate-test-reporter", require: nil

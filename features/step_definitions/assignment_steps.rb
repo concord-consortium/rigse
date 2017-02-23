@@ -1,7 +1,7 @@
 def polymorphic_assign(assignable_type, assignable_name, clazz_name)
   clazz = Portal::Clazz.find_by_name(clazz_name)
   assignable = assignable_type.gsub(/\s/, "_").classify.constantize.find_by_name(assignable_name)
-  assignable.should_not be_nil
+  expect(assignable).not_to be_nil
   Factory.create(:portal_offering, {
     :runnable => assignable,
     :clazz => clazz
