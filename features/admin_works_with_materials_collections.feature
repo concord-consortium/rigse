@@ -53,17 +53,20 @@ Feature: Admin can work with materials collections
     And I press "Save"
     Then I should see "My new Collection edits"
 
-  @javascript
-  Scenario: Admin re-orders materials in a Materials Collection
-    When I am on the materials collection index page
-    And I open the accordion for the materials collection "Collection 3"
-    And I wait 1 second
-    And I drag the 3rd material in the materials collection "Collection 3" to the top
-    And I wait 1 second
-    Then the previously moved material in the materials collection "Collection 3" should be first
-    When I drag the 2nd material in the materials collection "Collection 3" to the bottom
-    And I wait 1 second
-    Then the previously moved material in the materials collection "Collection 3" should be last
+# FIXME Disabled because of the following error:
+# https://github.com/mozilla/geckodriver/issues/427
+# Hopefully it'll be enough to update geckodriver or selenium-webdriver.
+#  @javascript
+#  Scenario: Admin re-orders materials in a Materials Collection
+#    When I am on the materials collection index page
+#    And I open the accordion for the materials collection "Collection 3"
+#    And I wait 1 second
+#    And I drag the 3rd material in the materials collection "Collection 3" to the top
+#    And I wait 1 second
+#    Then the previously moved material in the materials collection "Collection 3" should be first
+#    When I drag the 2nd material in the materials collection "Collection 3" to the bottom
+#    And I wait 1 second
+#    Then the previously moved material in the materials collection "Collection 3" should be last
 
   @javascript @search
   Scenario: Admin adds materials to a Materials Collection
@@ -84,6 +87,7 @@ Feature: Admin can work with materials collections
     And I should not see "Collection 4"
     And I should see "testing fast cars is assigned to the selected collection(s) successfully" within the lightbox in focus
     When I press "OK"
+    And I wait 1 second
     And I follow the "Add to Collection" link for the investigation "testing fast cars"
     Then I should see "Select Collection(s)"
     And I should see "Already assigned to the following collection(s)"

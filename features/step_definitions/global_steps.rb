@@ -184,8 +184,7 @@ Then /^the location should be "([^"]*)"$/ do |location|
 end
 
 Then /^I should see the button "([^"]*)"$/ do |locator| 
-  msg = "no button '#{locator}' found"
-  find(:xpath, XPath::HTML.button(locator), :message => msg)
+  find(:xpath, XPath::HTML.button(locator))
 end
 
 Then /^I should not see the button "([^"]*)"$/ do |button| 

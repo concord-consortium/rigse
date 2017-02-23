@@ -312,7 +312,7 @@ GEM
     httparty (0.8.3)
       multi_json (~> 1.0)
       multi_xml
-    httpclient (2.2.5)
+    httpclient (2.8.3)
     i18n (0.8.1)
     ice_nine (0.11.0)
     interactive_editor (0.0.10)
@@ -604,7 +604,7 @@ GEM
       equalizer (~> 0.0, >= 0.0.9)
     warden (1.2.1)
       rack (>= 1.0)
-    webmock (1.24.6)
+    webmock (2.3.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -683,7 +683,7 @@ DEPENDENCIES
   highline
   hirb
   httparty
-  httpclient (~> 2.2)
+  httpclient (~> 2.8)
   in_place_editing!
   interactive_editor
   jasmine
@@ -748,7 +748,7 @@ DEPENDENCIES
   useragent
   uuidtools (~> 2.1.2)
   virtus (~> 1.0.3)
-  webmock (~> 1.24.6)
+  webmock (~> 2.3)
   what_methods
   will_paginate (~> 3.0.0)
   win32-open3

@@ -19,6 +19,7 @@ require 'email_spec/cucumber'
 
 require 'cucumber/rspec/doubles'
 require 'rspec/expectations'
+require 'rspec/active_model/mocks'
 
 require 'capybara-screenshot/cucumber'
 
@@ -52,8 +53,8 @@ end
 ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 
 # By default, any exception happening in your Rails application will bubble up
-# to Cucumber so that your scenario will fail. This is a different from how 
-# your application behaves in the production environment, where an error page will 
+# to Cucumber so that your scenario will fail. This is a different from how
+# your application behaves in the production environment, where an error page will
 # be rendered instead.
 #
 # Sometimes we want to override this default behaviour and allow Rails to rescue
@@ -83,7 +84,7 @@ ActionController::Base.allow_rescue = false
 #   ri_gse_big_ideas
 #   ri_gse_domains
 #   ri_gse_expectations
-#   ri_gse_expectation_indicators 
+#   ri_gse_expectation_indicators
 #   ri_gse_expectation_stems
 #   ri_gse_grade_span_expectations
 #   ri_gse_knowledge_statements
@@ -121,6 +122,7 @@ Cucumber::Rails::Database.javascript_strategy = :transaction
 APP_CONFIG[:theme] = 'xproject' #lots of tests seem to be broken if we try to use another theme
 
 World(RSpec::Mocks::ExampleMethods)
+World(RSpec::ActiveModel::Mocks::Mocks)
 
 # Make visible for testing
 ApplicationController.send(:public, :logged_in?, :current_visitor)

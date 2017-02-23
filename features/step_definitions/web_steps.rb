@@ -143,63 +143,37 @@ And /^I decline the upcoming javascript confirm box$/ do
 end
 
 Then /^(?:|I )should see "([^"]*)" (\d+) times?$/ do |text, count|
-  expect(page.find(:xpath, '//body').text.split(text).length - 1).to eq(count.to_i)
+  expect(page.find(:xpath, '//body').text(:visible).split(text).length - 1).to eq(count.to_i)
 end
 
 Then /^(?:|I )should see an option for "([^"]*)" in (.*[^:])$/ do |option, select_name|
   select = selector_for(select_name)
-  if page.respond_to? :should
-    expect(page).to have_select(select, :with_options => [option])
-  else
-    assert page.has_select?(select, :with_options => [option])
-  end
+  expect(page).to have_select(select, :with_options => [option])
 end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
-  if page.respond_to? :should
-    expect(page).to have_content(text)
-  else
-    assert page.has_content?(text)
-  end
+  expect(page).to have_content(text)
 end
 
 Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
-
-  if page.respond_to? :should
-    expect(page).to have_xpath('.//*', :text => regexp)
-  else
-    assert page.has_xpath?('.//*', :text => regexp)
-  end
+  expect(page).to have_xpath('.//*', :text => regexp)
 end
 
 Then /^(?:|I )should not see "([^"]*)"$/ do |text|
-  if page.respond_to? :should
-    expect(page).to have_no_content(text)
-  else
-    assert page.has_no_content?(text)
-  end
+  expect(page).to have_no_content(text)
 end
 
 Then /^(?:|I )should not see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
-
-  if page.respond_to? :should
-    expect(page).to have_no_xpath('//*', :text => regexp)
-  else
-    assert page.has_no_xpath?('//*', :text => regexp)
-  end
+  expect(page).to have_no_xpath('//*', :text => regexp)
 end
 
 Then /^the "([^"]*)" field(?: within (.*))? should contain "([^"]*)"$/ do |field, parent, value|
   with_scope(parent) do
     field = find_field(field)
     field_value = (field.tag_name == 'textarea') ? field.text : field.value
-    if field_value.respond_to? :should
-      expect(field_value).to match(/#{value}/)
-    else
-      assert_match(/#{value}/, field_value)
-    end
+    expect(field_value).to match(/#{value}/)
   end
 end
 
@@ -207,33 +181,21 @@ Then /^the "([^"]*)" field(?: within (.*))? should not contain "([^"]*)"$/ do |f
   with_scope(parent) do
     field = find_field(field)
     field_value = (field.tag_name == 'textarea') ? field.text : field.value
-    if field_value.respond_to? :should_not
-      expect(field_value).not_to match(/#{value}/)
-    else
-      assert_no_match(/#{value}/, field_value)
-    end
+    expect(field_value).not_to match(/#{value}/)
   end
 end
 
 Then /^the "([^"]*)" checkbox(?: within (.*))? should be checked$/ do |label, parent|
   with_scope(parent) do
     field_checked = find_field(label)['checked']
-    if field_checked.respond_to? :should
-      expect(field_checked).to be_truthy
-    else
-      assert field_checked
-    end
+    expect(field_checked).to be_truthy
   end
 end
 
 Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label, parent|
   with_scope(parent) do
     field_checked = find_field(label)['checked']
-    if field_checked.respond_to? :should
-      expect(field_checked).to be_falsey
-    else
-      assert !field_checked
-    end
+    expect(field_checked).to be_falsey
   end
 end
 
@@ -261,12 +223,7 @@ Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
   actual_params = query ? CGI.parse(query) : {}
   expected_params = {}
   expected_pairs.rows_hash.each_pair{|k,v| expected_params[k] = v.split(',')}
-
-  if actual_params.respond_to? :should
-    expect(actual_params).to eq(expected_params)
-  else
-    assert_equal expected_params, actual_params
-  end
+  expect(actual_params).to eq(expected_params)
 end
 
 Then /^show me the page$/ do
@@ -286,7 +243,7 @@ And /^I select "(.+)" from the html dropdown "(.+)"$/ do |label, dropdown_id|
 
     for (var i = 0; i < arrListItems.length; i++)
     {
-      if (arrListItems[i].innerHTML.stripTags().strip() == '#{label}')
+      if (arrListItems[i].textContent == '#{label}')
       {
         bSuccess = true;
         arrListItems[i].simulate('mouseup');
