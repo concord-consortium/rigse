@@ -25,7 +25,7 @@ source "http://rubygems.org"
   gem "rails",                "~> 3.2.22"
   gem "arrayfields"
   gem 'strong_parameters'
-  gem "httpclient",           "~> 2.2"
+  gem "httpclient",           "~> 2.8"
   gem "httparty"
 
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
@@ -200,7 +200,7 @@ group :test, :cucumber do
   gem "fakeweb",            "~> 1.3", :require => false
   gem "ci_reporter",        "~> 1.7.0"
   gem "delorean",           "~> 1.1"
-  gem "webmock",            "~> 1.24.6", :require => false
+  gem "webmock",            "~> 2.3", :require => false
   gem "capybara-mechanize", "~> 1.5.0"
   gem 'capybara-screenshot'
   gem "codeclimate-test-reporter", require: nil
