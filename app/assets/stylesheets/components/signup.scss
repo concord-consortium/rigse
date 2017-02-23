@@ -2,28 +2,21 @@
   font-family: museo-sans, verdana, helvetica, sans-serif;
   font-size: 13px;
   padding: 3px;
-  
+
   a {
     cursor: pointer;
   }
 
   form {
-    padding: 3px;
+    padding: 0;
     margin: 0;
   }
 
-  .title {
-    color: #eb8723;
-    font-size: 1.8em;
-    display: inline-block;
-  }
-
-  .step {
-    color: #95939C;
-    font-size: 1em;
-    display: inline-block;
+  .arrow {
+    color: #f3951d;
     float: right;
-    margin-top: 0.4em;
+    font-size: 2em;
+    margin-top: -.35em;
   }
 
   .submit-btn {
@@ -181,13 +174,28 @@
       margin: 6px;
     }
   }
+  .registration-complete.student {
+    background: #fff;
+    padding: 6px 0 0;
+    margin: 0;
+    p {
+      margin: 0;
+    }
+    .login {
+      display: block;
+      font-size: 2.5em;
+    }
+  }
 }
 
 .signup-default-modal-content {
+  overflow: hidden;
+  padding-bottom: 1em;
   .signup-form {
-    display: inline-block;
-    width: 46%;
+    float: left;
     font-size: 1.1em;
+    margin: .25em 0 0 .65em;
+    width: 44.25%;
 
     .first_name, .last_name {
       width: 100%;
@@ -199,15 +207,14 @@
   }
 
   .side-info {
-    display: inline-block;
     background: #f9eec1;
     border-radius: 12px;
     float: right;
-    margin-top: 10px;
-    padding: 3.5% 4% 5% !important;
-    width: 42%;
     font: 1.2em museo-sans;
     line-height: 1.3;
+    margin: .9em .75em 0 0;
+    padding: 3.5% 4% 4.5% !important;
+    width: 41.5%;
 
     .side-info-header {
       color: #3f3f3f;
