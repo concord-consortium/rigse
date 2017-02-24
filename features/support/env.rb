@@ -23,6 +23,11 @@ require 'rspec/active_model/mocks'
 
 require 'capybara-screenshot/cucumber'
 
+# To use different browser, e.g. chrome:
+# Capybara.register_driver :selenium do |app|
+#   Capybara::Selenium::Driver.new(app, browser: :chrome)
+# end
+
 Capybara::Screenshot.prune_strategy = :keep_last_run
 Capybara::Screenshot.register_filename_prefix_formatter(:cucumber) do |scenario|
   "screenshot_#{scenario.name.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
