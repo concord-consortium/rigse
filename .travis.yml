@@ -2,8 +2,6 @@ sudo: false # see: http://docs.travis-ci.com/user/workers/container-based-infras
 language: ruby
 rvm:
   - "2.2.6"
-addons:
-  firefox: "51"
 
 env:
   matrix:
@@ -54,6 +52,7 @@ addons:
     - ./tmp/capybara
   code_climate:
     repo_token: 555af44da071264ef9c30bc5d16bcaceee2b8c2e40cccdbc74fc2b7db9839a92
+  firefox: "latest"
 
 # blacklist - these branches aren't feature branches and shouldn't be getting direct commits
 # branches:
