@@ -23,6 +23,9 @@ RailsPortal::Application.configure do
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
+  if ENV['RAILS_STDOUT_LOGGING']
+    config.logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  end
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
