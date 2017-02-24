@@ -2,6 +2,8 @@ sudo: false # see: http://docs.travis-ci.com/user/workers/container-based-infras
 language: ruby
 rvm:
   - "2.2.6"
+addons:
+  firefox: "51"
 
 env:
   matrix:
@@ -18,6 +20,10 @@ env:
 before_install:
   - "export DISPLAY=:99.0"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz
+  - mkdir geckodriver
+  - tar -xzf geckodriver-v0.14.0-linux64.tar.gz -C geckodriver
+  - export PATH=$PATH:$PWD/geckodriver
 
 before_script:
   - cp config/database.travis.yml config/database.yml
