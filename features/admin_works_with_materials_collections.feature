@@ -55,7 +55,8 @@ Feature: Admin can work with materials collections
 
 # FIXME Disabled because of the following error:
 # https://github.com/mozilla/geckodriver/issues/427
-# Hopefully it'll be enough to update geckodriver or selenium-webdriver.
+# Hopefully it'll be enough to update geckodriver.
+# It works when we Chrome is being used.
 #  @javascript
 #  Scenario: Admin re-orders materials in a Materials Collection
 #    When I am on the materials collection index page

@@ -20,6 +20,7 @@ Feature: Admin can add, edit and remove notices
     Given a notice "Notice for admin" for roles "Admin"
     And am on the site notices index page
     When I follow "Edit"
+    Then I wait for 1 second
     And I fill "Edited notice for users" in the tinyMCE editor with id "notice_html"
     And I press "Update Notice"
     And am on the my home page
