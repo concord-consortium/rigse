@@ -14,7 +14,7 @@ namespace :db do
       load_common_data
 
       if Rails.env == 'cucumber'
-        require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
+        require File.expand_path('../../../spec/spec_helper_common.rb', __FILE__)
         APP_CONFIG[:password_for_default_users] = 'password'
         Rake::Task['app:setup:create_default_data'].invoke
       end
