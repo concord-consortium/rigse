@@ -4,7 +4,7 @@ if File.exists?("#{::Rails.root.to_s}/config/mailer.yml") || ::Rails.env == "tes
     puts "Overriding ActionMailer config and setting test mode"
     ActionMailer::Base.delivery_method = :test
   else
-    c = YAML::load(File.open("#{::Rails.root.to_s}/config/mailer.yml"))
+    c = YAML::load(ERB.new(IO.read("#{::Rails.root.to_s}/config/mailer.yml")).result)
     c.each do |key,val|
       if key == :smtp || key == 'smtp'
         key = :smtp_settings
