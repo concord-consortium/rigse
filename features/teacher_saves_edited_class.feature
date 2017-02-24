@@ -54,6 +54,7 @@ Feature: Teacher edits and saves class information
     And I uncheck investigation with label "Lumped circuit abstraction"
     And I move investigation named "Non Linear Devices" to the top of the list
     And I press "Save"
+    And I wait 1 second
     Then I should be on Instructional Materials page for "Basic Electronics"
     And I should see "Class was successfully updated."
     
