@@ -17,7 +17,7 @@ And /^I move "(.+)" to the top of the list with id "(.+)"$/ do|sortable_name, id
                        var strListLabel = null;
                        for(var i=0; i< arrListChildren.length; i++)
                        {
-                          strListLabel = arrListChildren[i].getElementsByTagName('label')[0].innerHTML.stripTags().strip();
+                          strListLabel = arrListChildren[i].getElementsByTagName('label')[0].textContent;
                           if(strListLabel == '#{sortable_name}')
                           {
                             offeringToMove = arrListChildren[i];
@@ -48,7 +48,7 @@ Then /^"(.+)" should be the first on the list with id "(.+)"$/ do|class_name, id
                                  var bSortSuccess = false;
                                  var strUlId = '#{id_of_list}'
                                  var oLabel = $$('#'+strUlId+' > li:first-child label')[0];
-                                 var strClassNameOfTopMostClass = oLabel.innerHTML.stripTags().strip()
+                                 var strClassNameOfTopMostClass = oLabel.textContent;
                                  if(strClassNameOfTopMostClass == '#{class_name}')
                                  {
                                     bSortSuccess = true;
@@ -63,7 +63,7 @@ Then /^"(.+)" should be the last on the list with id "(.+)"$/ do|class_name, id_
                                  var bSortSuccess = false;
                                  var strUlId = '#{id_of_list}'
                                  var oLabel = $$('#'+strUlId+' > li:last-child label')[0];
-                                 var strClassNameOfTopMostClass = oLabel.innerHTML.stripTags().strip()
+                                 var strClassNameOfTopMostClass = oLabel.textContent;
                                  if(strClassNameOfTopMostClass == '#{class_name}')
                                  {
                                     bSortSuccess = true;

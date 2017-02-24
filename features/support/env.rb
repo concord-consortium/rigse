@@ -25,7 +25,7 @@ require 'capybara-screenshot/cucumber'
 
 Capybara::Screenshot.prune_strategy = :keep_last_run
 Capybara::Screenshot.register_filename_prefix_formatter(:cucumber) do |scenario|
-  "screenshot_#{scenario.title.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
+  "screenshot_#{scenario.name.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
 end
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In

@@ -14,7 +14,7 @@ And /^I move the offering named "(.+)" to the top of the list on the class summa
                        var strListLabel = null;
                        for(var i=0; i< arrListChildren.length; i++)
                        {
-                          strListLabel = arrListChildren[i].getElementsByClassName('component_title')[0].innerHTML.stripTags().strip();
+                          strListLabel = arrListChildren[i].getElementsByClassName('component_title')[0].textContent;
                           if(strListLabel == '#{sortable_name}')
                           {
                             offeringToMove = arrListChildren[i];
@@ -40,7 +40,7 @@ Then /^the offering named "(.+)" should be the first on the list on the class su
                                  var bSortSuccess = false;
                                  var strUlId = 'clazz_offerings'
                                  var oLabel = $$('#'+strUlId+' > li:first-child span.component_title')[0];
-                                 var strClassNameOfTopMostClass = oLabel.innerHTML.stripTags().strip()
+                                 var strClassNameOfTopMostClass = oLabel.textContent
                                  if(strClassNameOfTopMostClass == '#{class_name}')
                                  {
                                     bSortSuccess = true;

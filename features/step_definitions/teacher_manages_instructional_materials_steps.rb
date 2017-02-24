@@ -13,7 +13,7 @@ And /^(?:|I )select the option of Instructional Materials with text "(.+)"$/ do 
     var materialOptions = $$('select#material_select > option'),
         materialSelect = $$('select#material_select');
     for (var i = 0; i < materialOptions.length; i++) {
-      if (materialOptions[i].innerHTML.stripTags().strip() == '#{text}')
+      if (materialOptions[i].textContent == '#{text}')
       {
         materialSelect[0].value = materialOptions[i].value;
         if (document.createEvent) {

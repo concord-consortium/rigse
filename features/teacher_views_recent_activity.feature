@@ -48,6 +48,7 @@ Feature: Teacher can see recent activity
       | student   | class         | investigation       | question_prompt | answer |
       | ross      | Physics       | Aerodynamics        | c               | y      |
     And I follow "Recent Activity" within left panel for class navigation
+    And I wait for 2 seconds
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Air activity"
     And I should not see "Aeroplane"
@@ -72,6 +73,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
+    And I wait for 2 seconds
     Then I should see the progress of the student within the first recent activity on the recent activity page
 
   @javascript
@@ -84,6 +86,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
+    And I wait for 2 seconds
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Taylor, Ross" in In-progress on the recent activity page
     And I should see "Completed Smith, Chuck"
@@ -105,6 +108,7 @@ Feature: Teacher can see recent activity
       | student   | class         | activity            | question_prompt | answer |
       | taylor    | Mathematics   | Algebra             | f               | y      |
     And I follow "Recent Activity" within left panel for class navigation
+    And I wait for 2 seconds
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Completed No student has completed this sequence yet."
 
@@ -115,6 +119,7 @@ Feature: Teacher can see recent activity
       | chuck   | Mechanics | Aerodynamics  | image_q         | Y      |
       | chuck   | Mechanics | Aerodynamics  | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
+    And I wait for 2 seconds
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "Not Yet Started All students have started this sequence."
 
@@ -125,6 +130,7 @@ Feature: Teacher can see recent activity
       | chuck     | Mechanics      | Aerodynamics        | image_q         | Y      |
       | chuck     | Mechanics      | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
+    And I wait for 2 seconds
     And I follow "Show detail" within the first recent activity on the recent activity page
     Then I should see "In Progress No students with incomplete progress."
 
@@ -135,6 +141,7 @@ Feature: Teacher can see recent activity
       | chuck     | Physics       | Aerodynamics        | image_q         | Y      |
       | chuck     | Physics       | Aerodynamics        | c               | Y      |
     And I follow "Recent Activity" within left panel for class navigation
+    And I wait for 2 seconds
     And I should see "Report" within the first recent activity on the recent activity page
 
 
