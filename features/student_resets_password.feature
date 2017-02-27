@@ -14,6 +14,7 @@ Feature: Student resets passwordAnd
     And I am on the forgot password page
     When I fill in "login" with "student" within content box in change password page
     And I press "Submit"
+    And I wait 1 second
     Then I should see "Security Questions"
     When I fill in "security_questions[question0][answer]" with "red"
     When I fill in "security_questions[question1][answer]" with "pizza"
@@ -21,5 +22,6 @@ Feature: Student resets passwordAnd
     And I press "Submit"
     Then I should see "Please enter a new password and confirm it."
     When I press "Save"
+    And I wait for 2 second
     Then I should see "Your password could not be changed."
     And I should see "Password can't be blank"

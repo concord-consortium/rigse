@@ -21,7 +21,7 @@ Feature: An copies and pastes embeddables
     When I copy the embeddable "Text: content goes here ..." by clicking on the content
     Then I should see "paste Text: content goes here ..."
     When I paste the embeddable "Text: content goes here ..."
-    And I wait 1 second
+    And I wait 2 second
     Then I should see "Text: content goes here ..." 2 times
 
   @dialog
@@ -41,5 +41,5 @@ Feature: An copies and pastes embeddables
     When I copy the embeddable "Text: content goes here ..." by clicking on the title
     Then I should see "paste Text: content goes here ..."
     When I paste the embeddable "Text: content goes here ..."
-    And I wait 1 second
+    And I wait 2 second
     Then I should see "Text: content goes here ..." 2 times

@@ -20,4 +20,5 @@ Feature: Admin switches to a different user
     And I switch to "Joe Switchuser" in the user list by searching "Switchuser"
     Then I should see "Welcome Joe Switchuser"
     And I follow "Switch Back"
+    And I wait for 2 second
     Then I should see "Welcome joe user"

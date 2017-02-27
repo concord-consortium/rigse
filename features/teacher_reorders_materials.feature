@@ -13,8 +13,10 @@ Feature: Teacher reorders materials assigned to the class
     And I am on the class edit page for "Mathematics"
     And I move investigation named "Non Linear Devices" to the top of the list
     And I press "Save"
+    And I wait 1 second
     When I login with username: taylor
     And I follow "Mathematics"
+    And I wait 1 second
     And I should see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "Static discipline"
