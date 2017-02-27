@@ -53,6 +53,7 @@ Feature: Student joins another class
     Then I should see "By joining this class, the teacher John Nash will be able to see all of your current and future work. If do not want to share your work, but do want to join the class please create a second account and use it to join the class"
     And I should see "Click 'Join' to continue registering for this class."
     When I press "Join"
+    And I wait 1 second
     Then I should see "Successfully registered for class."
     And the student "student" should belong to the class "My Class"
 

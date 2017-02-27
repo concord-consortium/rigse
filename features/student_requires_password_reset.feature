@@ -32,6 +32,7 @@ Feature: Student requires a password reset
     When I fill in "New Password" with "c"
     When I fill in "Confirm New Password" with "pizzaxyzzy"
     And I press "Save"
+    And I wait for 1 second
     Then I should see "Your password could not be changed."
 
   @javascript

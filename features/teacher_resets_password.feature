@@ -32,8 +32,10 @@ Feature: Teacher resets password
     Then I should see "Your account was successfully confirmed. You are now signed in."
     Given I am an anonymous user
     And I follow "link_forgot_password"
+    And I wait 1 second
     When I fill in "login" with "login" within content box in change password page
     And I press "Submit" within content box in change password page
+    And I wait 1 second
     Then I should see "A link to change your password has been sent to example@example.com."
     And "example@example.com" should receive an email
     And I open the email with subject "You have requested to change your password"

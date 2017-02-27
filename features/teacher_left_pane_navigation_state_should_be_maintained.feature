@@ -33,5 +33,6 @@ Feature: Class state should be saved
     And I log out
     And I login with username: teacher password: password
     And I follow "Physics" within left panel for class navigation
+    And I wait for 1 second
     Then I should see "Class Name : Physics"
     And I should be on "Student Roster" page for "Physics" 
