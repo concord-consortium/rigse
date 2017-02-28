@@ -2,6 +2,13 @@
 
 modulejs.define 'components/signup/student_registration_complete_sideinfo', [], () ->
   React.createClass
+    componentDidMount: ->
+      authToken = jQuery('meta[name="csrf-token"]').attr('content');
+      jQuery('form[method="post"]').each () ->
+        $form = jQuery(this)
+        hiddenField = "<input type='hidden' name='authenticity_token' value='#{authToken}'/>"
+        if ($form.find('input[name="authenticity_token"]').length is 0)
+          $form.prepend(hiddenField)
     render: ->
       (div {},
         (div {className: 'side-info-header'}, 'Sign In')
