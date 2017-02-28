@@ -116,8 +116,8 @@ source "http://rubygems.org"
   gem 'sunspot_solr' # optional pre-packaged Solr distribution
   # TODO ⬆⬆ remove this, and do something better on production deploy
 
-  gem 'sass', '~> 3.3.14'  # font-awesome-sass doesn't seem compatible with newer sass :(
-  gem 'font-awesome-sass'
+  gem 'sass'
+  gem 'font-awesome-rails'
   gem 'virtus',               "~>1.0.3"
 
   gem 'useragent'  # detect browser types
