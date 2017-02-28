@@ -1,4 +1,4 @@
-FROM concordconsortium/docker-rails-base
+FROM concordconsortium/docker-rails-base-ruby-2.2.6
 
 ENV APP_HOME /rigse
 RUN mkdir $APP_HOME
