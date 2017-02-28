@@ -39,9 +39,9 @@ end
 # steps to use the XPath syntax.
 Capybara.default_selector = :css
 
-# Increase default wait time for asynchronous JavaScript requests from 2 to 5s
+# Increase default wait time for asynchronous JavaScript requests from 2 to 15s
 # see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
-Capybara.default_max_wait_time = 5
+Capybara.default_max_wait_time = 15
 
 # so we can use things like dom_id_for
 include ApplicationHelper

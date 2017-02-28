@@ -49,6 +49,7 @@ Feature: A manager updates account information for another user
     And I am on the user list page
     And I should see "justsignedup"
     And I activate the user from user list by searching "justsignedup"
+    And I wait 1 second
     Then I should be on the user list page
     And I should see "Activation of user, joe ( justsignedup ) complete."
 
