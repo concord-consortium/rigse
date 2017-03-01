@@ -227,10 +227,7 @@ When /^Help link should not appear in the top navigation bar$/ do
 end
 
 When /^(?:|I )close the newly opened window$/ do
-  # within_window page.driver.browser.window_handles.last do
-  #   #page.execute_script "window.close();"
-  #   page.driver.quit
-  # end
+  windows.last.close()
 end
 
 require 'securerandom'
