@@ -6,6 +6,8 @@ class Admin::ProjectPolicy < ApplicationPolicy
         all
       elsif user.is_project_admin?
         user.admin_for_projects
+      elsif user.is_project_researcher?
+        user.researcher_for_projects
       else
         none
       end

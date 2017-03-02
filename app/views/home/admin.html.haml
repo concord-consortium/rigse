@@ -4,6 +4,7 @@
 %ul
   - is_admin_or_manager = current_visitor.has_role?('admin', 'manager')
   - is_admin_or_project_admin = is_admin_or_manager || current_visitor.is_project_admin?
+  - is_admin_or_project_admin_or_projet_researcher = is_admin_or_project_admin || current_visitor.is_project_researcher?
 
   - if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
     %li.trail=link_to('Authoring', authoring_path)
@@ -23,7 +24,7 @@
     %li= link_to 'Tags', admin_tags_path
     %li= link_to 'Settings', admin_settings_path
     %li= link_to 'Notices', admin_site_notices_path
-  - if is_admin_or_project_admin
+  - if is_admin_or_project_admin_or_projet_researcher
     %li= link_to 'Permission Forms', admin_permission_forms_path
   - if is_admin_or_manager
     %li= link_to 'Materials Collections', materials_collections_path

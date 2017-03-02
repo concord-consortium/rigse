@@ -34,11 +34,15 @@ class Admin::PermissionFormsController < ApplicationController
                "or users.email like ?"
       order  = "users.last_name"
       group  = "users.login"
-      if current_visitor.is_project_admin?
-        ids = current_visitor.admin_for_project_teachers.map {|t| t.user_id}
-        teachers = Portal::Teacher.joins(:user,:clazzes).where("users.id in (?) and (#{where})", ids, value, value, value, value)
-      else
+      if current_visitor.has_role?('manager', 'admin', 'researcher')
         teachers = Portal::Teacher.joins(:user,:clazzes).where(where, value, value, value, value)
+      else
+        if current_visitor.is_project_admin?
+          ids = current_visitor.admin_for_project_teachers.map {|t| t.user_id}
+        elsif current_visitor.is_project_researcher?
+          ids = current_visitor.researcher_for_project_teachers.map {|t| t.user_id}
+        end
+        teachers = Portal::Teacher.joins(:user,:clazzes).where("users.id in (?) and (#{where})", ids, value, value, value, value)
       end
       teachers.order(order).group(group).limit(30).map { |t| TeacherView.new(t)}
     end
