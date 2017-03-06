@@ -173,6 +173,8 @@ class Reports::Detail < Reports::Excel
               end
             else
               answer_value = ans[:answer].kind_of?(Enumerable) ? ans[:answer].map { |a| a[:answer] }.join(', ') : ans[:answer]
+              # Limit length of the answer to 5000 characters, so we don't break Excel.
+              answer_value = answer_value.truncate(5000)
               case ans[:is_correct]
                 when true then res = ["(correct) #{answer_value}"]
                 when nil then res = [answer_value]
