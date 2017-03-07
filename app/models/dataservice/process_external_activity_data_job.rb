@@ -41,6 +41,11 @@ class Dataservice::ProcessExternalActivityDataJob
             embeddable = template.iframes.detect {|e| e.external_id == student_response["question_id"]}
             internal_process_external_link(student_response, embeddable)
           end
+        when "interactive"
+          if student_response["question_type"] == "iframe interactive"
+            embeddable = template.iframes.detect {|e| e.external_id == student_response["question_id"]}
+            internal_process_interactive(student_response, embeddable)
+          end
         else
           raise UnknownRespose.new("type: #{student_response["type"]}\nContent: #{content}")
         end
@@ -74,6 +79,11 @@ class Dataservice::ProcessExternalActivityDataJob
   def internal_process_external_link(data,embeddable)
     saveable_external_link = Saveable::ExternalLink.find_or_create_by_learner_id_and_offering_id_and_embeddable_type_and_embeddable_id(@learner_id, @offering_id, embeddable.class.name, embeddable.id)
     saveable_external_link.answers.create(url: data["answer"], is_final: data["is_final"])
+  end
+
+  def internal_process_interactive(data,embeddable)
+    saveable_interactive = Saveable::Interactive.find_or_create_by_learner_id_and_offering_id_and_embeddable_type_and_embeddable_id(@learner_id, @offering_id, embeddable.class.name, embeddable.id)
+    saveable_interactive.answers.create(state: data["answer"], is_final: data["is_final"])
   end
 
   # stub id method, for SaveableExtraction compatibility

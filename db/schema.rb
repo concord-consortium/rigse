@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170202190333) do
+ActiveRecord::Schema.define(:version => 20170307192402) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2460,6 +2460,29 @@ ActiveRecord::Schema.define(:version => 20170202190333) do
   add_index "saveable_image_questions", ["image_question_id"], :name => "index_saveable_image_questions_on_image_question_id"
   add_index "saveable_image_questions", ["learner_id"], :name => "index_saveable_image_questions_on_learner_id"
   add_index "saveable_image_questions", ["offering_id"], :name => "index_saveable_image_questions_on_offering_id"
+
+  create_table "saveable_interactive_states", :force => true do |t|
+    t.integer  "interactive_id"
+    t.integer  "bundle_content_id"
+    t.integer  "position"
+    t.text     "state",             :limit => 2147483647
+    t.boolean  "is_final"
+    t.text     "feedback"
+    t.boolean  "has_been_reviewed",                       :default => false
+    t.integer  "score"
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
+  end
+
+  create_table "saveable_interactives", :force => true do |t|
+    t.integer  "embeddable_id"
+    t.string   "embeddable_type"
+    t.integer  "learner_id"
+    t.integer  "offering_id"
+    t.integer  "response_count"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "saveable_multiple_choice_answers", :force => true do |t|
     t.integer  "multiple_choice_id"
