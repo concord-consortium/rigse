@@ -4,7 +4,7 @@ class Saveable::InteractiveState < ActiveRecord::Base
   belongs_to :interactive,  :class_name => 'Saveable::Interactive', :counter_cache => :response_count
   belongs_to :bundle_content, :class_name => 'Dataservice::BundleContent'
 
-  acts_as_list :scope => :interactive_state_id
+  acts_as_list :scope => :interactive_id
 
   delegate :learner, to: :interactive, allow_nil: :true
 
