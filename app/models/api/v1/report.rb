@@ -262,6 +262,7 @@ class API::V1::Report
     hash[:answers].select { |a| a[:answer].present? }.each do |answer|
       # Pass these properties to answer too.
       answer[:display_in_iframe] = embeddable.display_in_iframe
+      answer[:url] = embeddable.url
       answer[:width] = embeddable.width
       answer[:height] = embeddable.height
     end

@@ -10,7 +10,7 @@ class Saveable::Interactive < ActiveRecord::Base
 
   delegate :name, :to => :embeddable
 
-  # External link can be displayed in an iframe in teacher report.
+  # Interactive can be displayed in an iframe in teacher report.
   delegate :display_in_iframe, :to => :embeddable
   delegate :width, :to => :embeddable
   delegate :height, :to => :embeddable

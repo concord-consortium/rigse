@@ -118,7 +118,7 @@ class Report::Learner < ActiveRecord::Base
       # feedbacks = s.answers.map do |ans|
       # TOOD: Eventually we want all answers.... Or answers with feedback...
       # this has been simplified here because for performance reasons.
-        feedbacks = [s.answers.last].compact.map do |ans|
+      feedbacks = [s.answers.last].compact.map do |ans|
         {
             answer: serialize_blob_answer(ans.answer),
             answer_key: Report::Learner.encode_answer_key(ans),
@@ -129,6 +129,7 @@ class Report::Learner < ActiveRecord::Base
       end
       hash = {
           answer: serialize_blob_answer(s.answer),
+          answer_type: s.answer_type,
           feedbacks: feedbacks,
           answered: s.answered?,
           submitted: s.submitted?,

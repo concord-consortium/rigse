@@ -42,10 +42,8 @@ class Dataservice::ProcessExternalActivityDataJob
             internal_process_external_link(student_response, embeddable)
           end
         when "interactive"
-          if student_response["question_type"] == "iframe interactive"
-            embeddable = template.iframes.detect {|e| e.external_id == student_response["question_id"]}
-            internal_process_interactive(student_response, embeddable)
-          end
+          embeddable = template.iframes.detect {|e| e.external_id == student_response["question_id"]}
+          internal_process_interactive(student_response, embeddable)
         else
           raise UnknownRespose.new("type: #{student_response["type"]}\nContent: #{content}")
         end
