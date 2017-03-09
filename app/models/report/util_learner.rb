@@ -22,6 +22,7 @@ class Report::UtilLearner
     @saveables += Saveable::MultipleChoice.find_all_by_learner_id(learner.id)
     @saveables += Saveable::ImageQuestion.find_all_by_learner_id(learner.id)
     @saveables += Saveable::ExternalLink.find_all_by_learner_id(learner.id)
+    @saveables += Saveable::Interactive.find_all_by_learner_id(learner.id)
 
     # ResponseTypes.saveable_types.each do |type|
     #   all = type.find_all_by_learner_id(learner.id)

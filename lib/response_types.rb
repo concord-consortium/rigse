@@ -1,6 +1,6 @@
 module ResponseTypes
   def self.saveable_types
-    [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion, Saveable::ExternalLink ]
+    [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion, Saveable::ExternalLink, Saveable::Interactive ]
   end
 
   def saveable_types
