@@ -17,7 +17,9 @@ class UsersController < ApplicationController
 
   def index
     authorize User
-    @users = policy_scope(User).search(params[:search], params[:page], nil)
+    @users = policy_scope(User).search(params[:search], params[:page], nil).
+      includes(:imported_user, :portal_teacher, :portal_student,
+              :teacher_cohorts, :student_cohorts, :roles)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }
