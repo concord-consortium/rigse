@@ -14,6 +14,12 @@ ENV['PORTAL_FEATURES']   ||= ''
 ENV['REPORT_VIEW_URL']   ||= 'https://concord-consortium.github.io/portal-report/'
 ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 
+# Researcher report link can point to a different portal instance to avoid overloading the main server.
+# ENV['RESEARCHER_REPORT_HOST'] ||= 'https://research-report-portal.concord.org'
+# Portal that is dedicated to the research report should enable option below to disable all the links that could
+# lead researchers to other parts of the portal.
+# ENV['RESEARCHER_REPORT_ONLY'] ||= 'true'
+
 # CORS_ORIGINS:
 # Sets the allowed CORS origins to a specific whitelist. Requires ENV['PORTAL_FEATURES'] ||= 'allow_cors'
 # ENV['CORS_ORIGINS']    ||= "concord.org"
