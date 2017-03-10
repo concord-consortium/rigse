@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
     else
       flash[:alert] = error_message
       fallback_url = current_user.nil? ? root_path : after_sign_in_path_for(current_user)
-      redirect_to_siginin_if_anon_or fallback_url
+      redirect_to fallback_url
     end
   end
 
@@ -196,15 +196,6 @@ class ApplicationController < ActionController::Base
     redirect_to path
   end
 
-  def redirect_to_siginin_if_anon_or(path)
-    if current_user.nil?
-      session[:redirect_path_after_signin] = request.path
-      redirect_to new_user_session_path
-    elsif !path.empty?
-      redirect_to path
-    end
-  end
-
   def session_sensitive_path
     path = request.env['PATH_INFO']
     return path =~ /password|session|sign_in|sign_out|security_questions|consent|help|user_type_selector/i
@@ -272,9 +263,6 @@ class ApplicationController < ActionController::Base
       end
       session[:sso_callback_params] = nil
       session[:sso_application] = nil
-    elsif session[:redirect_path_after_signin]
-      redirect_path = session[:redirect_path_after_signin]
-      session[:redirect_path_after_signin] = nil
     end
     return redirect_path
   end
