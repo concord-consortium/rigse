@@ -14,6 +14,7 @@ services:
       DB_PASSWORD: master
       SOLR_HOST: solr
       SOLR_PORT: 8983
+      PORTAL_FEATURES:
     # no ports are published, see below for details
     volumes:
       - .:/rigse
