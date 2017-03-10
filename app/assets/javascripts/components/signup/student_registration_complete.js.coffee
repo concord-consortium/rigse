@@ -5,16 +5,17 @@ modulejs.define 'components/signup/student_registration_complete', [], () ->
     render: ->
       {anonymous, data} = @props
       {first_name, last_name, login} = data
-      (div {className: 'registration-complete'},
-        (p {className: 'reg-header'}, 'Thanks for signing up!')
+      (div {className: 'registration-complete student'},
         if anonymous
           (div {},
             (p {},
-              "You have successfully registered #{first_name} #{last_name} with the user name "
+              'Success! Your username is: '
               (span {className: 'login'}, login)
-              '.'
             )
-            (p {}, 'Use this user name and password you provided to sign in.')
+            (p {},
+              'Use your new account to sign in here '
+              (span {className: 'arrow'}, String.fromCharCode(0x2192))
+            )
           )
         else
           (p {}, (a {href: '/'}, 'Start using the site.'))

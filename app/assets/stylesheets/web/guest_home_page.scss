@@ -38,6 +38,19 @@
         small {
           font-size: 11px;
         }
+        .title {
+          color: #eb8723;
+          font-size: 1.8em;
+          display: inline-block;
+        }
+
+        .step {
+          color: #95939C;
+          font-size: 1em;
+          display: inline-block;
+          float: right;
+          margin-top: 0.4em;
+        }
     }
     .home-page-content, .signup-box {
         display: inline-block;
