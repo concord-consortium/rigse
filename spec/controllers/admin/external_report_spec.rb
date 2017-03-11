@@ -14,42 +14,42 @@ describe Admin::ExternalReportsController do
     describe "GET index" do
       it "wont alow the index, redirects to signin" do
         get :index
-        assert_redirected_to :new_user_session
+        expect(response).to redirect_to_path auth_login_path
       end
     end
 
     describe "DELETE destroy" do
       it "wont allow delete, redirects to signin" do
         delete :destroy, :id => report_id
-        assert_redirected_to :new_user_session
+        expect(response).to redirect_to_path auth_login_path
       end
     end
 
     describe "GET show" do
       it "wont allow show, redirects to signin" do
         get :show, :id => report_id
-        assert_redirected_to :new_user_session
+        expect(response).to redirect_to_path auth_login_path
       end
     end
 
     describe "GET edit" do
       it "wont allow edit, redirects to signin" do
         get :show, :id => report_id
-        assert_redirected_to :new_user_session
+        expect(response).to redirect_to_path auth_login_path
       end
     end
 
     describe "GET new" do
       it "wont allow new, redirects to signin" do
         get :new
-        assert_redirected_to :new_user_session
+        expect(response).to redirect_to_path auth_login_path
       end
     end
 
     describe "PUT update" do
       it "wont allow update, redirects to signin" do
         put :update, :id => report_id, :report => {:params => 'params'}
-        assert_redirected_to :new_user_session
+        expect(response).to redirect_to_path auth_login_path
       end
     end
   end

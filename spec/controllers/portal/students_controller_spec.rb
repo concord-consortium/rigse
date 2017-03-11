@@ -181,8 +181,7 @@ describe Portal::StudentsController do
 
     it "should redirect when current user isn't an admin" do
       get :show, id: student.id
-      expect(response).to redirect_to(:new_user_session)
-      expect(response.status).to eq(302)
+      expect(response).to redirect_to_path auth_login_path
     end
 
     it "should not redirect when current user is an admin" do
