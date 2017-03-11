@@ -112,6 +112,9 @@ class MiscController < ActionController::Base
     send("check_#{params[:provider]}")
   end
 
+  # TODO need to fix this to handle redirect after a schoology login
+  # seems this auth_after path could be passed a param instead of using this session
+  # variable
   def auth_after
     url = session[:auth_redirect] || root_path
     redirect_to url

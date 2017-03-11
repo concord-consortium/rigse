@@ -113,6 +113,8 @@
     %body
     #page-wrap
       = form_tag session_path(:user), :id => "login-form", :class => @error.present? ? "with-errors" : "" do
+        - if @after_sign_in_path.present?
+          = hidden_field_tag('after_sign_in_path', @after_sign_in_path)
         = image_tag "cc-logo.png", :title => "The Concord Consortium", :alt => "The Concord Consortium"
         %p
           Log in with your #{APP_CONFIG[:site_name]} account

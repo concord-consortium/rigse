@@ -28,8 +28,7 @@ class Report::LearnerController < ApplicationController
     # path, as a confusing alert message would be displayed. Use our nice sign in page
     # (auth_login_path) instead and redirect to report page later.
     if current_user.nil?
-      session[:redirect_path_after_signin] = learner_report_path # this action
-      redirect_to auth_login_path
+      redirect_to auth_login_path(after_sign_in_path: learner_report_path) # this action
       return
     end
     authorize Report::Learner

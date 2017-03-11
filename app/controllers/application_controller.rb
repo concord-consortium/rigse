@@ -198,8 +198,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_siginin_if_anon_or(path)
     if current_user.nil?
-      session[:redirect_path_after_signin] = request.path
-      redirect_to new_user_session_path
+      redirect_to auth_login_path(after_sign_in_path: request.path)
     elsif !path.empty?
       redirect_to path
     end
@@ -246,6 +245,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # this is normally called by devise during the sessions#create action
+  # so it has access to the parameters that were passed in. This allows us to pass
+  # a hidden param :after_sign_in_path to the sign in form.
   def after_sign_in_path_for(resource)
     redirect_path = root_path
     if current_user.portal_student
@@ -272,9 +274,6 @@ class ApplicationController < ActionController::Base
       end
       session[:sso_callback_params] = nil
       session[:sso_application] = nil
-    elsif session[:redirect_path_after_signin]
-      redirect_path = session[:redirect_path_after_signin]
-      session[:redirect_path_after_signin] = nil
     end
     return redirect_path
   end
