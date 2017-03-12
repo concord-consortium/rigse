@@ -80,7 +80,7 @@ class Dataservice::ProcessExternalActivityDataJob
   end
 
   def internal_process_interactive(data,embeddable)
-    saveable_interactive = Saveable::Interactive.find_or_create_by_learner_id_and_offering_id_and_embeddable_type_and_embeddable_id(@learner_id, @offering_id, embeddable.class.name, embeddable.id)
+    saveable_interactive = Saveable::Interactive.find_or_create_by_learner_id_and_offering_id_and_iframe_id(@learner_id, @offering_id, embeddable.id)
     saveable_interactive.answers.create(state: data["answer"], is_final: data["is_final"])
   end
 

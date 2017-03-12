@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170307192402) do
+ActiveRecord::Schema.define(:version => 20170312203545) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2475,13 +2475,12 @@ ActiveRecord::Schema.define(:version => 20170307192402) do
   end
 
   create_table "saveable_interactives", :force => true do |t|
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
     t.integer  "learner_id"
     t.integer  "offering_id"
     t.integer  "response_count"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "iframe_id"
   end
 
   create_table "saveable_multiple_choice_answers", :force => true do |t|
