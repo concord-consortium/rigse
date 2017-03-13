@@ -28,9 +28,25 @@ class ApplicationController < ActionController::Base
     if request.xhr?
       render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
-      flash[:alert] = error_message
-      fallback_url = current_user.nil? ? root_path : after_sign_in_path_for(current_user)
-      redirect_to_siginin_if_anon_or fallback_url
+      if params[:redirecting_after_sign_in]
+        # this not authorized error happened while we were redirecting after signing in
+        # This should only happen in two cases:
+        # 1. the user was logged out and then clicked on an restricted link, then the user
+        #    didn't actually log in, but just left the page there. Then a different user
+        #    logged in. This new user didn't have access to the page of the original user
+        #    so this exception was thrown during the automatic redirect to the original
+        # 2. A anonymous user tried to access something they shouldn't access. They should
+        #    have been shown a message and directed to the login page.  Now if the user
+        #    logs in the portal will redirect to this initial page. Since the user already
+        #    saw the message there is no need to show it again.
+        # So instead of showing the error message again, we just send the user to the
+        # default login page for that user.
+        redirect_to after_sign_in_path_for(current_user)
+      else
+        flash[:alert] = error_message
+        fallback_url = current_user.nil? ? root_path : after_sign_in_path_for(current_user)
+        redirect_to_siginin_if_anon_or fallback_url
+      end
     end
   end
 
@@ -253,7 +269,12 @@ class ApplicationController < ActionController::Base
     if current_user.portal_student
       redirect_path = my_classes_path
     elsif params[:after_sign_in_path]
-      redirect_path = params[:after_sign_in_path]
+      # add an extra param to this path we don't go in a loop, see pundit_user_not_authorized
+      redirect_uri = URI.parse(params[:after_sign_in_path])
+      query = Rack::Utils.parse_query(redirect_uri.query)
+      query["redirecting_after_sign_in"] = '1'
+      redirect_uri.query = Rack::Utils.build_query(query)
+      redirect_path = redirect_uri.to_s
     elsif APP_CONFIG[:recent_activity_on_login] && current_user.portal_teacher
       if current_user.has_active_classes?
         # Teachers with active classes are redirected to the "Recent Activity" page
@@ -266,6 +287,10 @@ class ApplicationController < ActionController::Base
       AccessGrant.prune!
       access_grant = current_user.access_grants.create({:client => session[:sso_application], :state => session[:sso_callback_params][:state]}, :without_protection => true)
       sso_redirect = access_grant.redirect_uri_for(session[:sso_callback_params][:redirect_uri])
+      # the user has been logged in by another auth provider via a popup window:
+      # AutomaticallyClosingPopupLink in that case the other auth provider redirects in the
+      # the window, so the auth_redirect session var is set which is then picked up by the
+      # misc#auth_after action.
       if session[:auth_popup]
         session[:auth_popup] = nil
         session[:auth_redirect] = sso_redirect
