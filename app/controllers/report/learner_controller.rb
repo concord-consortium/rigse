@@ -23,14 +23,6 @@ class Report::LearnerController < ApplicationController
   end
 
   def index
-    # Anonymous user might try to access this page when a separate portal instance
-    # is used to handle researcher reports. In this case don't follow typical authorization
-    # path, as a confusing alert message would be displayed. Use our nice sign in page
-    # (auth_login_path) instead and redirect to report page later.
-    if current_user.nil?
-      redirect_to auth_login_path(after_sign_in_path: learner_report_path) # this action
-      return
-    end
     authorize Report::Learner
     render layout: ENV['RESEARCHER_REPORT_ONLY'] ? "application" : "minimal"
   end
