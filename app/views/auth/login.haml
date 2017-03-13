@@ -75,7 +75,7 @@
       .with-errors input {
         border: solid 1px #860024;
       }
-      input#submit {
+      .button {
         background: #eb8723;
         border: none;
         color: #fff;
@@ -100,7 +100,7 @@
       }
       p { font-size: 1em; margin-bottom: 1em; }
       p#forgot-login {
-        bottom: 1.375em;
+        bottom: -1em;
         font-size: .8em;
         line-height: 140%;
         position: absolute;
@@ -113,23 +113,37 @@
     %body
     #page-wrap
       = form_tag session_path(:user), :id => "login-form", :class => @error.present? ? "with-errors" : "" do
-        - if @after_sign_in_path.present?
-          = hidden_field_tag('after_sign_in_path', @after_sign_in_path)
-        = image_tag "cc-logo.png", :title => "The Concord Consortium", :alt => "The Concord Consortium"
-        %p
-          Log in with your #{APP_CONFIG[:site_name]} account
-          = @app_name.present? ? " to access the #{@app_name}" : ""
-          %span>.
-        %p
-          %input#username{:name => "user[login]", :type => "text", :placeholder => "Enter your username."}/
-        %p
-          %input#password{:name => "user[password]", :type => "password", :placeholder => "Enter your password."}/
-        - if @error.present?
-          %p.error-message= @error
-        %input#submit{:name => "submit", :type => "submit", :value => "Log In"}/
-        %p#forgot-login
-          = link_to "Forgot your login?", forgot_password_path, :title => "Reset your password"
-          = link_to "Need to register?", home_path, :title => "Create a Concord Consortium Learn portal account"
+        %div{:style => "position: relative"}
+          - if @after_sign_in_path.present?
+            = hidden_field_tag('after_sign_in_path', @after_sign_in_path)
+          = image_tag "cc-logo.png", :title => "The Concord Consortium", :alt => "The Concord Consortium"
+          %p
+            Log in with your #{APP_CONFIG[:site_name]} account
+            = @app_name.present? ? " to access the #{@app_name}" : ""
+            %span>.
+          %p
+            %input#username{:name => "user[login]", :type => "text", :placeholder => "Enter your username."}/
+          %p
+            %input#password{:name => "user[password]", :type => "password", :placeholder => "Enter your password."}/
+          - if @error.present?
+            %p.error-message= @error
+          %input#submit.button{:name => "submit", :type => "submit", :value => "Log In"}/
+          %p#forgot-login
+            = link_to "Forgot your login?", forgot_password_path, :title => "Reset your password"
+            = link_to "Need to register?", home_path, :title => "Create a Concord Consortium Learn portal account"
+        - if Devise.omniauth_providers.length > 0
+          %div{:style => "width: 100%; height: 11px; border-bottom: 1px solid black; margin-bottom: 20px; margin-top: 10px; text-align: center"}
+            %span{:style => "background-color: #FFFFFF; padding: 0 10px;"}
+              or
+        - Devise.omniauth_providers.each do |provider|
+          -# The after_sign_in_path is added to this path, when the authorize controller
+          -# handles the request it takes all of its own query string and adds it to the
+          -# callback url. So then when the callback url is called, the after_sign_in_path_for
+          -# helper should be called which will then redirect to after_sigin_in_path param.
+          - providerPath = omniauth_authorize_path('user', provider, after_sign_in_path: @after_sign_in_path)
+          = link_to "Log In with #{provider.to_s.titleize}", providerPath, class: 'button',
+              id: "#{provider.to_s.underscore}_login_button", style: "color: white; width: inherit"
+
     %script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"}
     = javascript_include_tag 'jquery.placeholder'
     :javascript
