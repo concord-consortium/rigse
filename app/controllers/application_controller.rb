@@ -28,9 +28,9 @@ class ApplicationController < ActionController::Base
     if request.xhr?
       render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
-      if params[:redirecting_after_sign_in]
-        # this not authorized error happened while we were redirecting after signing in
-        # This should only happen in two cases:
+      if current_user
+        # only show the error alert if we are not redirecting after signing in
+        # An error on redirecting after signing in should only happen in two cases:
         # 1. the user was logged out and then clicked on an restricted link, then the user
         #    didn't actually log in, but just left the page there. Then a different user
         #    logged in. This new user didn't have access to the page of the original user
@@ -41,11 +41,15 @@ class ApplicationController < ActionController::Base
         #    saw the message there is no need to show it again.
         # So instead of showing the error message again, we just send the user to the
         # default login page for that user.
+        flash[:alert] = error_message if not params[:redirecting_after_sign_in]
         redirect_to after_sign_in_path_for(current_user)
       else
         flash[:alert] = error_message
-        fallback_url = current_user.nil? ? root_path : after_sign_in_path_for(current_user)
-        redirect_to_siginin_if_anon_or fallback_url
+        # send the anonymous user to the login page, and then try to send the user back
+        # to the original page. In the case of a post request this won't always work so
+        # well. It will redirect the user to the GET route of the same URL that was posted
+        # to. Often this is the index page of the resource. 
+        redirect_to auth_login_path(after_sign_in_path: request.path)
       end
     end
   end
@@ -210,14 +214,6 @@ class ApplicationController < ActionController::Base
     redirect_to :back
   rescue ActionController::RedirectBackError
     redirect_to path
-  end
-
-  def redirect_to_siginin_if_anon_or(path)
-    if current_user.nil?
-      redirect_to auth_login_path(after_sign_in_path: request.path)
-    elsif !path.empty?
-      redirect_to path
-    end
   end
 
   def session_sensitive_path
