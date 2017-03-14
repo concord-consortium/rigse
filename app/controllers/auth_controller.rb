@@ -13,9 +13,25 @@ class AuthController < ApplicationController
 
   def login
     # Renders a nice login form (views/auth/login.haml).
+    # TODO session variables cause weird behaviors try to remove this if possible
     @app_name = session[:sso_application] ? session[:sso_application].name : nil
     @error = flash[:alert]
-    render :layout => false
+    @after_sign_in_path = params[:after_sign_in_path]
+    # If the user is already signed in and there is is a after_sign_in_path set
+    # then redirect the user to this page.
+    if @after_sign_in_path and current_user
+      # add an extra param before redirecting to so we don't show the user an extra
+      # warning message see pundit_user_not_authorized
+      redirect_uri = URI.parse(@after_sign_in_path)
+      query = Rack::Utils.parse_query(redirect_uri.query)
+      query["redirecting_after_sign_in"] = '1'
+      redirect_uri.query = Rack::Utils.build_query(query)
+      redirect_path = redirect_uri.to_s
+
+      redirect_to @after_sign_in_path
+    else
+      render :layout => false
+    end
   end
 
   def oauth_authorize

@@ -27,7 +27,11 @@
           = f.submit "Log In", :id=>"LoginSubmitButtonHeader"
         - Devise.omniauth_providers.each do |provider|
           %span.segmented
-            - directPath = omniauth_authorize_path('user', provider)
+            -# The after_sign_in_path is added to this path, when the authorize controller
+            -# handles the request it takes all of its own query string and adds it to the
+            -# callback url. So then when the callback url is called, the after_sign_in_path_for
+            -# helper should be called which will then redirect to after_sigin_in_path param.
+            - directPath = omniauth_authorize_path('user', provider, after_sign_in_path: params[:after_sign_in_path])
             - authCheckPath = auth_check_path(provider: provider.to_s, popup: 'true')
             = link_to "Log In with #{provider.to_s.titleize}", 'javascript:void(0)', class: 'button', id: "#{provider.to_s.underscore}_login_button"
             :javascript
