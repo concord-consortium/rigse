@@ -9,8 +9,11 @@
   - if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
     %li.trail=link_to('Authoring', authoring_path)
   - if current_visitor.has_role?('admin', 'manager','researcher') || current_visitor.is_project_admin? || current_visitor.is_project_researcher?
-    %li= link_to 'Reports', "#{ENV['RESEARCHER_REPORT_HOST']}#{learner_report_path}",
-                            target: (ENV['RESEARCHER_REPORT_HOST'] ? "_blank" : "_self")
+    - if ENV['RESEARCHER_REPORT_HOST']
+      %li= link_to 'Reports', "#{ENV['RESEARCHER_REPORT_HOST']}#{auth_login_path(after_sign_in_path: learner_report_path)}",
+                            target: "_blank"
+    - else
+      %li= link_to 'Reports', learner_report_path
   - if is_admin_or_manager
     %li= link_to 'Districts', portal_districts_path
     %li= link_to 'Schools', portal_schools_path
