@@ -21,11 +21,30 @@ service. The files `config/database.yml`, `config/settings.yml` and
 `config/app_environment_variables.yml` are automatically copied from their `.sample.yml`
 counterparts when you run `docker-compose up` if they do not exist. If they already
 exist, they will not be updated. If they already exist then there is a good chance
-they will not be configured correctly for Docker. You can delete these files and run
-`docker-compose restart` which will fix things.  
+they will not be configured correctly for Docker. If you are not using unison to sync
+your local files (see below), you can delete these files and run
+
+    docker-compose build app # make sure you have the latest app image
+    docker-compose up app    # recreate the app container from this image
+
+If you are using unison then you should delete your unison volume first to be safe. You
+can't delete a volume that is still attached to containers, so you also need to delete
+all of the containers using the unison volume (pretty much everything):
+
+    docker-compose down              # stop all containers and remove them
+    docker volume ls                 # list all of the volumes
+    docker volume rm {portal}_unison # remove the unison volume
+    docker-compose build app         # make sure you have the latest app image
+    docker-compose up unison         # start unison container, so you can resync the files
+    # in a new terminal
+    docker/dev/start-unison.sh       # start unison OS X server
+    # in a new terminal
+    docker-compose up                # start rest of services
 
 Also, when `config/database.yml` is not present yet, `docker-compose up` will copy it
-and run `rake db:setup`. `rake db:setup` erases any data in your database, so be careful.
+and run `rake db:setup`. This running of `rake db:setup` will erase any data in the
+mysql service created by docker-compose, so be careful if you have data in this docker
+managed database.
 
 ## Docker Compose Overrides
 
