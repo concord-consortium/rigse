@@ -36,8 +36,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: xyzzy
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    volumes:
+      # use a named volume here so the database is preserved after a down and up
+      - mysql:/var/lib/mysql
 volumes:
   bundle:
+  mysql:
 networks:
   # create a portal network so other services such as LARA can be part of this network
   # and connect with the web app.
