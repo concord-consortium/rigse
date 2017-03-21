@@ -1,0 +1,65 @@
+# This file is meant for testing a built image.
+# It uses dynamically assigned ports so they won't conflict with other services you
+# might have running. You can use `docker-compose port app 80` to find the port
+# Or if you have dinghy-http-proxy installed you can just use app.portalimage.docker
+version: '2.1'
+services:
+  app:
+    # To use a different tag, create an .env file with PORTAL_IMAGE_TAG defined
+    image: concordconsortium/rigse:${PORTAL_IMAGE_TAG:-master}
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: xyzzy
+      DB_NAME: portal
+      SOLR_HOST: solr
+      SOLR_PORT: 8983
+      NUM_UNICORN_PROCESSES: 1
+      SITE_URL: http://app.rigseprod.docker
+      SITE_NAME: Test Portal
+      AUTHORING_SITE_URL: https://authoring.staging.concord.org
+      THEME: learn
+      HELP_EMAIL: help@concord.org
+      ADMIN_EMAIL: admin@concord.org
+      TOP_LEVEL_CONTAINER_NAME: Sequence
+      SITE_KEY: 123456
+      RAILS_STDOUT_LOGGING: 'true'
+      PORTAL_FEATURES:
+    ports:
+    - '80'
+    volumes:
+      - code:/rigse
+    networks:
+      # the portal network allows external connections
+      portal:
+        aliases:
+          - portal
+      # app service needs to be on default network too so it can connect to mysql and solr
+      default:
+    # The latest run.sh fixes this, but older images won't have that change
+    command: bash -c "rm /rigse/tmp/unicorn.pid; ./docker/prod/run.sh"
+    depends_on:
+      - mysql
+      - solr
+  solr:
+    image: concordconsortium/docker-solr-portal
+    volumes:
+      - code:/rigse
+    ports:
+    - '8983'
+    command: /bin/bash ./start-solr.sh
+  mysql:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: xyzzy
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    volumes:
+      # use a named volume here so the database is preserved after a down and up
+      - mysql:/var/lib/mysql
+volumes:
+  code:
+  mysql:
+networks:
+  # create a portal network so other services such as LARA can be part of this network
+  # and connect with the web app.
+  portal:
