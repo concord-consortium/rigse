@@ -9,9 +9,8 @@ services:
     command: docker/dev/run.sh
     environment:
       DB_HOST: mysql
-      DB_NAME: portal
-      DB_USER: master
-      DB_PASSWORD: master
+      DB_USER: root
+      DB_PASSWORD: xyzzy
       SOLR_HOST: solr
       SOLR_PORT: 8983
       PORTAL_FEATURES:
@@ -35,13 +34,14 @@ services:
   mysql:
     image: mysql:5.6
     environment:
-      MYSQL_DATABASE: portal
-      MYSQL_PASSWORD: master
-      MYSQL_USER: master
       MYSQL_ROOT_PASSWORD: xyzzy
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    volumes:
+      # use a named volume here so the database is preserved after a down and up
+      - mysql:/var/lib/mysql
 volumes:
   bundle:
+  mysql:
 networks:
   # create a portal network so other services such as LARA can be part of this network
   # and connect with the web app.
