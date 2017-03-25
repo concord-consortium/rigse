@@ -23,18 +23,18 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   def index?
-    manager_or_project_admin?
+    manager_or_researcher_or_project_researcher?
   end
 
   def update_forms?
-    manager_or_project_admin?
+    manager_or_researcher_or_project_researcher?
   end
 
   def create?
-    manager_or_project_admin?
+    manager_or_researcher_or_project_researcher?
   end
 
   def destroy?
-    admin? || (project_admin? && user.projects.include?(record.project))
+    admin? || (manager_or_researcher_or_project_researcher? && user.projects.include?(record.project))
   end
 end

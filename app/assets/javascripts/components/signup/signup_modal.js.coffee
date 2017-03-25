@@ -2,26 +2,20 @@
 
 modulejs.define 'components/signup/signup_modal',
 [
-  'components/signup/signup'
+  'components/signup/signup',
+  'components/signup/sideinfo'
 ],
 (
-  SignupClass
+  SignupClass,
+  SideInfoClass
 ) ->
   Signup = React.createFactory SignupClass
+  SideInfo = React.createFactory SideInfoClass
 
   React.createClass
     render: ->
       (div {className: 'signup-default-modal-content'},
         (Signup {})
-        (div {className: 'side-info'},
-          (div {className: 'side-info-header'}, 'Why sign up?')
-          (p {}, 'It\'s free and you get access to several key features:')
-          (ul {}, 
-            (li {}, 'Create classes for your students and assign them activities')
-            (li {}, 'Save student work')
-            (li {}, 'Track student progress through activities')
-          )
-        )
       )
 
 Portal.openSignupModal = ->

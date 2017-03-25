@@ -49,30 +49,15 @@ Install Docker and make sure that docker-compose is installed too (it should be 
 
     git clone git@github.com:concord-consortium/rigse.git portal
     cd portal
-    docker-compose up
+    docker-compose up # this will take 15 minutes to download gems
 
-Now open your browser to [http://0.0.0.0:3000](http://0.0.0.0:3000)
+Now open your browser to [http://0.0.0.0:3000](http://0.0.0.0:3000). On OS X this might
+take more than 5 minutes to load the first page. Look in the terminal where you ran
+`docker-compose up` to monitor progress.
 
-`docker-compose.yml` defines app, solr and mysql database services.
-
-`config/database.yml`, `config/settings.yml` and `config/app_environment_variables.yml` are automatically created
-when you run docker-compose up for the first time by `docker/dev/run.sh`.
-
-Also, when `config/database.yml` is not present yet, `docker/dev/run.sh` will create it and setup DB.
-Later, you can run migrations using:
-
-    docker-compose run app bundle exec rake db:migrate
-
-###### Using Docker with an external MySQL Server
-
-If you wish to use an existing MySQL server you can use the `docker-compose-external-mysql.yml` file which does
-not define a MySQL volume like the default `docker-compose.yml` file but rather uses the server defined by a number of environment variables.
-
-Here is an example of an invocation with all the environment variables set:
-
-`DB_HOST=10.0.0.10 DB_USER=root DB_PASSWORD=root DB_NAME=portal_production docker-compose -f docker-compose-external-mysql.yml up`
-
-Note the `-f docker-compose-external-mysql.yml` parameter to select the alternative .yml file.
+Visit [the Docker docs](doc/docker.md) for how to use your portal running in docker. This
+also includes: instructions on speeding things up on OS X, using a local dns+proxy system
+to avoid port conflicts, and setting up ssh for capistrano deploys.
 
 #### Setup Issues
 
@@ -111,9 +96,9 @@ pass before changing any code.
 Prepare a database for use when running the spec tests:
 
     rake db:test:prepare
-    
+
 Start SOLR in test environment (it works with cucumber tests too):
-      
+
     RAILS_ENV=test rake sunspot:solr:run
 
 Run the rspec unit tests:

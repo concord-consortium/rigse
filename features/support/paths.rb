@@ -126,7 +126,7 @@ module NavigationHelpers
       interactive = Interactive.find_by_name($1).id
       "/interactives/#{interactive}/edit"
     when /the signin page/
-      "/users/sign_in"
+      "/auth/login"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

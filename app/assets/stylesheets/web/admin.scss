@@ -59,13 +59,9 @@
   }
   .label {
     font-weight: bold;
-    padding-left: 2em;
   }
   .permission_checkbox {
     padding-left: 2em;
-  }
-  table.admin_students_table {
-    width: 100%;
   }
   label {
     font-weight: bold;
@@ -90,6 +86,12 @@
       white-space: normal;
       .permission_from_item {
         white-space: nowrap;
+        display: block;
+        label {
+          vertical-align: top;
+          display: inline-block;
+          white-space: normal;
+        }
       }
     }
 
