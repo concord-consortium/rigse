@@ -6,7 +6,7 @@
 # `allow_cors`: Allow CORS requests (see below)
 # `genigames_data`: Genigames-related student sata saving
 # `geniverse_wordpress`: Geniverse-related Wordpress connection
-# 
+#
 # sample :  ENV['PORTAL_FEATURES']  ||= 'geniverse_remote_auth genigames_data'
 # EG, enable genigame auth / data via `     ENV['PORTAL_FEATURES']  ||= 'geniverse_remote_auth genigames_data'
 
@@ -24,6 +24,12 @@ ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 # Sets the allowed CORS origins to a specific whitelist. Requires ENV['PORTAL_FEATURES'] ||= 'allow_cors'
 # ENV['CORS_ORIGINS']    ||= "concord.org"
 
-# CORS_RESOURECES:
+# CORS_RESOURCES:
 # Sets the allowed CORS resources to a specific route. Requires ENV['PORTAL_FEATURES'] ||= 'allow_cors'
-# ENV['CORS_RESOURCES']  ||= "/xyz"`: 
+# ENV['CORS_RESOURCES']  ||= "/xyz"
+
+# JWT_HMAC_SECRET:
+# Sets the secret used to generate the portal JWT tokens in lib/signed_jwt.rb
+# This the input to the SHA-256 HMAC so the max secret length should be 32 bytes (longer secrets are first hashed to 32 bytes)
+# This can be generated in the Rails console via `SecureRandom.random_bytes(32)`
+# ENV['JWT_HMAC_SECRET']  ||= "<32 bytes of random characters>"
