@@ -21,7 +21,10 @@ class API::V1::TeachersController < API::APIController
 
     if teacher_registration.valid?
       teacher_registration.save
-      render status: 201, json: teacher_registration.attributes
+      attributes = teacher_registration.attributes
+      attributes.delete(:password)
+      attributes.delete(:password_confirmation)
+      render status: 201, json: attributes
     else
       error(teacher_registration.errors)
     end
