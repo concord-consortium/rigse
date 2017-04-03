@@ -9,7 +9,10 @@ class API::V1::StudentsController < API::APIController
 
     if registration.valid?
       registration.save
-      render :json => registration.attributes
+      attributes = registration.attributes
+      attributes.delete(:password)
+      attributes.delete(:password_confirmation)
+      render :json => attributes
     else
       error(registration.errors)
     end
