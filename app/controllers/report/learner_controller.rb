@@ -24,7 +24,7 @@ class Report::LearnerController < ApplicationController
 
   def index
     authorize Report::Learner
-    render layout: ENV['RESEARCHER_REPORT_ONLY'] ? "application" : "minimal"
+    render layout: ENV['RESEARCHER_REPORT_ONLY'] ? "minimal" : "application"
   end
 
   def logs_query
