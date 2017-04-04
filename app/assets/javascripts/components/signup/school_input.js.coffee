@@ -9,6 +9,7 @@ modulejs.define 'components/signup/school_input', [], () ->
     jQuery.get("#{Portal.API_V1.SCHOOLS}?country_id=#{country}&zipcode=#{zipcode}")
 
   React.createClass
+    displayName: 'SchoolInput'
     mixins: [Formsy.Mixin]
 
     getInitialState: ->

@@ -2,6 +2,7 @@
 
 modulejs.define 'components/signup/sideinfo', [], () ->
   React.createClass
+    displayName: 'SideInfo'
     render: ->
       (div {},
         (div {className: 'side-info-header'}, 'Why sign up?')

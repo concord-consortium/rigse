@@ -2,6 +2,7 @@
 
 modulejs.define 'components/signup/teacher_registration_complete', [], () ->
   React.createClass
+    displayName: 'TeacherRegistrationComplete'
     render: ->
       {anonymous} = @props
       (div {className: 'registration-complete'},
