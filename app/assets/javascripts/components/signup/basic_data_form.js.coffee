@@ -3,11 +3,11 @@
 PASS_TOO_SHORT = 'Password is too short'
 PASS_NOT_MATCH = 'Passwords do not match'
 
-modulejs.define 'components/signup/basic_data_form', 
+modulejs.define 'components/signup/basic_data_form',
 [
   'components/signup/text_input',
   'components/signup/radio_input'
-], 
+],
 (
   TextInputClass,
   RadioInputClass
@@ -17,6 +17,7 @@ modulejs.define 'components/signup/basic_data_form',
   FormsyForm = React.createFactory Formsy.Form
 
   React.createClass
+    displayName: 'BasicDataForm'
     getInitialState: ->
       canSubmit: false
       password: ''

@@ -21,6 +21,7 @@ modulejs.define 'components/signup/student_form',
     jQuery.post Portal.API_V1.STUDENTS, params
 
   React.createClass
+    displayName: 'StudentForm'
     getInitialState: ->
       canSubmit: false
 
@@ -31,7 +32,7 @@ modulejs.define 'components/signup/student_form',
 
     onBasicFormInvalid: ->
       @setState canSubmit: false
-    
+
     submit: (data, resetForm, invalidateForm) ->
       {basicData, onRegistration} = @props
       params = jQuery.extend {}, basicData, data

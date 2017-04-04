@@ -2,6 +2,7 @@
 
 modulejs.define 'components/signup/student_registration_complete', [], () ->
   React.createClass
+    displayName: 'StudentRegistrationComplete'
     render: ->
       {anonymous, data} = @props
       {first_name, last_name, login} = data

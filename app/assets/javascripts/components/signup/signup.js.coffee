@@ -31,6 +31,7 @@ modulejs.define 'components/signup/signup',
   TeacherRegistrationComplete = React.createFactory TeacherRegistrationCompleteClass
 
   React.createClass
+    displayName: 'SignUp'
     getInitialState: ->
       basicData: null
       studentData: null

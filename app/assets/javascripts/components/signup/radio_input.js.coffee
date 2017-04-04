@@ -2,6 +2,7 @@
 
 modulejs.define 'components/signup/radio_input', [], () ->
   React.createClass
+    displayName: 'RadioInput'
     mixins: [Formsy.Mixin]
 
     # setValue() will set the value of the component, which in
