@@ -5,8 +5,23 @@ class API::V1::TeachersController < API::APIController
   # - 'school_name', 'country_id' and 'zipcode' are provided instead - school may be created in case of need
   def create
     teacher_registration = API::V1::TeacherRegistration.new(params)
-    if !current_visitor.anonymous?
-      teacher_registration.set_user current_visitor
+
+    # This was added to allow for registering after logging in the first time with SSO
+    # But it also occurs if a user is able to access the registration form while being
+    # logged in a different window.
+    if current_user
+      # If the user has a portal_teacher or portal_student, we don't want them re-registering
+      # The errors in this case will be passed down to the registration form.
+      # The use of school_id is so the error message is shown in the form.
+      if current_user.portal_teacher
+        error(school_id: I18n.t('Registration.LoggedInAsTeacher'))
+        return
+      elsif current_user.portal_student
+        error(school_id: I18n.t('Registration.LoggedInAsStudent'))
+        return
+      else
+        teacher_registration.set_user current_user
+      end
     end
 
     if should_create_new_school(teacher_registration)
