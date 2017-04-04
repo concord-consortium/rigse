@@ -23,6 +23,10 @@ class API::V1::UserRegistration
   def set_user(user)
     @user = user
     @user_set = true
+    self.login = user.login
+    self.email = user.email
+    self.first_name = user.first_name
+    self.last_name = user.last_name
   end
 
   def set_defaults
