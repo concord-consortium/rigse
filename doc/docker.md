@@ -85,7 +85,7 @@ for certain commands.
 
 For example to run the migrations you would do:
 
-    docker-compose run --rm app [command] bundle exec rake db:migrate
+    docker-compose run --rm app bundle exec rake db:migrate
 
 However if you are doing active portal development you will probably need to run several
 commands. In that case it is more useful to start up a shell and for your commands:
@@ -156,7 +156,7 @@ time. These will be shown in the output of the start-unison.sh command.
 ## Setting up a DNS and Proxy to avoid port conflicts
 
 You can easily setup a DNS and Proxy system so you can access all of your docker-compose
-services with urls like: http://app.portal.docker
+services with urls like: http://app.[folder-name].docker (e.g. http://app.portal.docker)
 
 We use [dingh-http-proxy](https://github.com/codekitchen/dinghy-http-proxy). To install
 on OS X follow the
@@ -166,11 +166,28 @@ docker-compose projects. Basically you start a docker container that automatical
 restarts. Second you configure the OS X DNS to know about the DNS server of this
 container.
 
+Note that if you get an error that port 80 is already in use (`Error starting userland proxy:
+Bind for 0.0.0.0:80: unexpected error (Failure EADDRINUSE)`), it may be that OS X's local
+Apache server is running, and you will need to stop it using `sudo apachectl stop`.
+
 With this in place you can now use randomly assigned ports for Rails and Solr and
 the Dingy Proxy will pick them up automatically. You can switch to randomly assigned
 ports by adding this to your `.env` file:
 
     COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-random-ports.yml
+
+Note that it may take several reloads for your browser to ask you whether you really do
+intend to go to http://app.portal.docker/, and not search for it. (Adding the trailing / to
+the url helps.)
+
+## Connecting to MySQL running in Docker
+
+If you wish to connect to the MySQL database running in Docker, you can publish the
+port using the `docker/dev/docker-compose-publish-mysql-port.yml` override file.
+
+Note that if you have a local MySQL server already running on port 3306, or if you
+are already publishing a MySQL port from another Docker container (e.g. LARA) you will
+want to change the port you are publishing to something else.
 
 ## Using Docker with an external MySQL Server
 
