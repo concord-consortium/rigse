@@ -85,7 +85,7 @@ modulejs.define 'components/signup/signup',
           if studentData
             # StudentRegistrationCompleteSideInfo contains a login form
             # If the student is already logged in because of the SSO path, don't show
-            # this form
+            # this form or anything else in the side info section.
             if anonymous
               (StudentRegistrationCompleteSideInfo {})
           else if !basicData

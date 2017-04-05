@@ -12,10 +12,10 @@ class API::V1::StudentsController < API::APIController
       # The errors in this case will be passed down to the registration form.
       # The use of class_word is so the error message is shown in the form.
       if current_user.portal_teacher
-        error(class_word: I18n.t('Registration.LoggedInAsTeacher'))
+        error(class_word: I18n.t('Registration.ErrorLoggedInAsTeacher'))
         return
       elsif current_user.portal_student
-        error(class_word: I18n.t('Registration.LoggedInAsStudent'));
+        error(class_word: I18n.t('Registration.ErrorLoggedInAsStudent'));
         return
       else
         registration.set_user current_user
