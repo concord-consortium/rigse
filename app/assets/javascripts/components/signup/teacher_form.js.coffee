@@ -49,6 +49,7 @@ modulejs.define 'components/signup/teacher_form',
     name == 'United States' || name == 'US' || name == 'USA'
 
   React.createClass
+    displayName: 'TeacherForm'
     getInitialState: ->
       canSubmit: false
       currentCountry: null
@@ -69,7 +70,7 @@ modulejs.define 'components/signup/teacher_form',
 
     onBasicFormInvalid: ->
       @setState canSubmit: false
-    
+
     submit: (data, resetForm, invalidateForm) ->
       {basicData, onRegistration} = @props
       params = jQuery.extend {}, basicData, data

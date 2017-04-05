@@ -2,6 +2,7 @@
 
 modulejs.define 'components/signup/student_registration_complete_sideinfo', [], () ->
   React.createClass
+    displayName: 'StudentRegistrationCompleteSideInfo'
     componentDidMount: ->
       authToken = jQuery('meta[name="csrf-token"]').attr('content');
       jQuery('form[method="post"]').each () ->

@@ -2,6 +2,7 @@
 
 modulejs.define 'components/signup/privacy_policy', [], () ->
   React.createClass
+    displayName: 'PrivacyPolicy'
     render: ->
       (div {className: 'privacy-policy'},
         'By clicking Sign Up!, you agree to our '

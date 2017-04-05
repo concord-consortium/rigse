@@ -31,6 +31,7 @@ modulejs.define 'components/signup/signup',
   TeacherRegistrationComplete = React.createFactory TeacherRegistrationCompleteClass
 
   React.createClass
+    displayName: 'SignUp'
     getInitialState: ->
       basicData: null
       studentData: null
@@ -41,6 +42,8 @@ modulejs.define 'components/signup/signup',
       # When user is anonymous, we need to ask about all the information (email, login, password).
       # However, sometimes users are using SSO and basic user object can be already created. Then we only
       # need to create Portal-specific models (student or teacher).
+      # Note: if the user loaded the page while they were anonymous, but then logged in in another
+      # tab, this property will be incorrect
       anonymous: Portal.currentUser.isAnonymous
 
     onBasicDataSubmit: (data) ->
@@ -80,7 +83,11 @@ modulejs.define 'components/signup/signup',
         ),
         (div {className: 'side-info'},
           if studentData
-            (StudentRegistrationCompleteSideInfo {})
+            # StudentRegistrationCompleteSideInfo contains a login form
+            # If the student is already logged in because of the SSO path, don't show
+            # this form or anything else in the side info section.
+            if anonymous
+              (StudentRegistrationCompleteSideInfo {})
           else if !basicData
             (SideInfo {})
           else if basicData.type == 'student'

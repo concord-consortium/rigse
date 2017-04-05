@@ -9,6 +9,7 @@ modulejs.define 'components/signup/text_input',
   AsyncValidationMixin
 ) ->
   React.createClass
+    displayName: 'TextInput'
     mixins: [Formsy.Mixin, AsyncValidationMixin]
 
     getDefaultProps: ->

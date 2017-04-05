@@ -2,6 +2,7 @@
 
 modulejs.define 'components/signup/student_form_sideinfo', [], () ->
   React.createClass
+    displayName: 'StudentFormSideInfo'
     render: ->
       (div {},
         (p {},

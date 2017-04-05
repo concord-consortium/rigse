@@ -5,6 +5,7 @@ modulejs.define 'components/signup/select_input', [], () ->
   SelectAsync = React.createFactory Select.Async
 
   React.createClass
+    displayName: 'SelectInput'
     mixins: [Formsy.Mixin]
 
     # setValue() will set the value of the component, which in

@@ -13,6 +13,7 @@ modulejs.define 'components/signup/signup_modal',
   SideInfo = React.createFactory SideInfoClass
 
   React.createClass
+    displayName: 'SignupModal'
     render: ->
       (div {className: 'signup-default-modal-content'},
         (Signup {})
