@@ -23,7 +23,7 @@ class Report::Learner < ActiveRecord::Base
   }
 
   scope :with_runnables, lambda { |runnables|
-    where 'CONCAT(runnable_type, "_", runnable_id) IN (?)', runnables.map{|runnable| "#{runnable.class}_#{runnable.id}"}.join(",")}
+    where 'CONCAT(runnable_type, "_", runnable_id) IN (?)', runnables.map{|runnable| "#{runnable.class}_#{runnable.id}"}}
 
   validates_presence_of   :learner
   validates_uniqueness_of :learner_id
