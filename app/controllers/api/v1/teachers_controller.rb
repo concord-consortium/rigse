@@ -14,10 +14,10 @@ class API::V1::TeachersController < API::APIController
       # The errors in this case will be passed down to the registration form.
       # The use of school_id is so the error message is shown in the form.
       if current_user.portal_teacher
-        error(school_id: I18n.t('Registration.LoggedInAsTeacher'))
+        error(school_id: I18n.t('Registration.ErrorLoggedInAsTeacher'))
         return
       elsif current_user.portal_student
-        error(school_id: I18n.t('Registration.LoggedInAsStudent'))
+        error(school_id: I18n.t('Registration.ErrorLoggedInAsStudent'))
         return
       else
         teacher_registration.set_user current_user

@@ -133,10 +133,10 @@ en:
     only_mine: Show only materials authored by me
     only_archived: Show only archived materials
   Registration:
-    LoggedInAsTeacher: |
+    ErrorLoggedInAsTeacher: |
       You are logged in as a teacher in another window.
       Please log out, and register again.
-    LoggedInAsStudent: |
+    ErrorLoggedInAsStudent: |
       You are logged in as a student in another window.
       Please log out, and register again.
 'en-HAS':
