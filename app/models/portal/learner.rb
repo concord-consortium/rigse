@@ -201,11 +201,11 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
 
-  def remote_endpoint_url(protocol, host_with_port)
+  def remote_endpoint_url
     if secure_key.present?
-      external_activity_return_url(secure_key, protocol: protocol, host: host_with_port)
+      "#{APP_CONFIG[:site_url]}#{external_activity_return_path(secure_key)}"
     else
-      external_activity_return_url(id, protocol: protocol, host: host_with_port)
+      "#{APP_CONFIG[:site_url]}#{external_activity_return_path(id)}"
     end
   end
 end
