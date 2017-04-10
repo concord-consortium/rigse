@@ -29,26 +29,34 @@ class ApplicationController < ActionController::Base
       render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
       if current_user
-        # only show the error alert if we are not redirecting after signing in
-        # An error on redirecting after signing in should only happen in two cases:
-        # 1. the user was logged out and then clicked on an restricted link, then the user
-        #    didn't actually log in, but just left the page there. Then a different user
-        #    logged in. This new user didn't have access to the page of the original user
-        #    so this exception was thrown during the automatic redirect to the original
-        # 2. A anonymous user tried to access something they shouldn't access. They should
-        #    have been shown a message and directed to the login page.  Now if the user
-        #    logs in the portal will redirect to this initial page. Since the user already
-        #    saw the message there is no need to show it again.
-        # So instead of showing the error message again, we just send the user to the
-        # default login page for that user.
-        flash[:alert] = error_message if not params[:redirecting_after_sign_in]
-        redirect_to after_sign_in_path_for(current_user)
+        if ENV['RESEARCHER_REPORT_ONLY']
+          # if we are here then current user is not authorized to access the reports.
+          # The normal code path would send them in a redirect loop
+          # instead sign them out and show them a page telling them this ia report only portal
+          sign_out :user
+          redirect_to learner_report_only_path
+        else
+          # only show the error alert if we are not redirecting after signing in
+          # An error on redirecting after signing in should only happen in two cases:
+          # 1. the user was logged out and then clicked on an restricted link, then the user
+          #    didn't actually log in, but just left the page there. Then a different user
+          #    logged in. This new user didn't have access to the page of the original user
+          #    so this exception was thrown during the automatic redirect to the original
+          # 2. A anonymous user tried to access something they shouldn't access. They should
+          #    have been shown a message and directed to the login page.  Now if the user
+          #    logs in the portal will redirect to this initial page. Since the user already
+          #    saw the message there is no need to show it again.
+          # So instead of showing the error message again, we just send the user to the
+          # default login page for that user.
+          flash[:alert] = error_message if not params[:redirecting_after_sign_in]
+          redirect_to after_sign_in_path_for(current_user)
+        end
       else
         flash[:alert] = error_message
         # send the anonymous user to the login page, and then try to send the user back
         # to the original page. In the case of a post request this won't always work so
         # well. It will redirect the user to the GET route of the same URL that was posted
-        # to. Often this is the index page of the resource. 
+        # to. Often this is the index page of the resource.
         redirect_to auth_login_path(after_sign_in_path: request.path)
       end
     end
@@ -262,7 +270,9 @@ class ApplicationController < ActionController::Base
   # a hidden param :after_sign_in_path to the sign in form.
   def after_sign_in_path_for(resource)
     redirect_path = root_path
-    if current_user.portal_student
+    if ENV['RESEARCHER_REPORT_ONLY']
+      redirect_path = learner_report_path
+    elsif current_user.portal_student
       redirect_path = my_classes_path
     elsif params[:after_sign_in_path]
       # add an extra param to this path we don't go in a loop, see pundit_user_not_authorized

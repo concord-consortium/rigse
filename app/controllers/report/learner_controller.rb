@@ -61,6 +61,10 @@ class Report::LearnerController < ApplicationController
     end
   end
 
+  def report_only
+    render layout: "minimal"
+  end
+
   private
 
   def setup
