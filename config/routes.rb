@@ -1,6 +1,10 @@
 RailsPortal::Application.routes.draw do
 
-  devise_for :users, :controllers => { :registrations => 'registrations', :confirmations => 'confirmations', :omniauth_callbacks => "authentications" }
+  devise_for :users, :controllers => {
+    :registrations => 'registrations',
+    :confirmations => 'confirmations',
+    :omniauth_callbacks => 'authentications',
+    :sessions =>  'sessions'}
 
   # Client stuff
   match '/auth/:provider/check' => 'misc#auth_check', method: :get, as: 'auth_check'
