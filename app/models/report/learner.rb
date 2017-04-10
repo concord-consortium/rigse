@@ -194,6 +194,7 @@ class Report::Learner < ActiveRecord::Base
     update_teacher_info_fields
 
     update_permission_forms
+    update_permission_form_ids
     # check to see if we can obtain the last run info
     if self.learner.offering.internal_report?
       calculate_last_run
@@ -226,6 +227,12 @@ class Report::Learner < ActiveRecord::Base
   def update_permission_forms
     update_field("student.permission_forms", "permission_forms") do |pfs|
       pfs.map{ |p| p.name }.join(",")
+    end
+  end
+
+  def update_permission_form_ids
+    update_field("student.permission_forms", "permission_form_ids") do |pfs|
+      pfs.map{ |p| p.id }.join(",")
     end
   end
 
