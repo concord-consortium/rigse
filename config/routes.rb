@@ -540,6 +540,7 @@ RailsPortal::Application.routes.draw do
     match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
     match '/report/learner/logs_query' => 'report/learner#logs_query', :as => :learner_logs_query, :method => :get
     match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get
+    match '/report/learner/report_only' => 'report/learner#report_only', :as => :learner_report_only, :method => :get
     resources :activities do
       member do
         get :duplicate
