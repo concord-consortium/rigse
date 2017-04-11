@@ -190,6 +190,9 @@ class Report::Learner < ActiveRecord::Base
     update_field("offering.clazz.teachers", "teachers_name") do |ts|
       ts.map{ |t| t.user.name}.join(", ")
     end
+    update_field("offering.clazz.teachers", "teacher_ids") do |ts|
+      ts.map{ |t| t.id}.join(", ")
+    end
 
     update_teacher_info_fields
 
