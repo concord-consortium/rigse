@@ -47,9 +47,39 @@ class Portal::Student < ActiveRecord::Base
   end
 
   def self.generate_user_login(first_name, last_name)
+
     # Old method, first_name + last initial
     #generated_login = "#{first_name.downcase.gsub(/[^a-z0-9]/,'')}#{last_name[0..0].downcase}"
-    suggested_login = "#{first_name[0..0].downcase}#{last_name.downcase.gsub(/[^a-z0-9]/,'')}"
+
+    #
+    # Create a login name below
+    #
+    suggested_login = ""
+
+    #
+    # Check that the first and last name contain valid characters
+    # that can be used to derive a login. If not, then generate a random
+    # login. 
+    #
+    if (    User.login_regex.match(first_name) &&
+            User.login_regex.match(last_name) )
+
+      #
+      # For names containing valid characters, use first initial and last name.
+      #
+      suggested_login = "#{first_name[0..0].downcase}#{last_name.downcase.gsub(/[^a-z0-9]/,'')}"
+
+    else
+      #
+      # For names containing characters which cannot be used in 
+      # the username login, generate some random valid characters and digits.
+      # We'll use 2 lower case letters followed by 6 digits for now?
+      #
+      suggested_login = (   [*('a'..'z')].sample(2) + 
+                            [*('0'..'9')].sample(6)     ).join
+
+    end
+
     # existing_users = User.find(:all, :conditions => "login RLIKE '#{generated_login}[0-9]*$'", :order => :login)
     counter = 0
     generated_login = suggested_login
