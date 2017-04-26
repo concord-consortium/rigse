@@ -100,12 +100,7 @@ class User < ActiveRecord::Base
 
   # Validations
 
-  @@login_regex     = /\A\w[\w\.\-\+_@]+\z/                     # ASCII, strict
-
-  def self.login_regex
-    @@login_regex
-  end
-
+  login_regex       = /\A\w[\w\.\-\+_@]+\z/                     # ASCII, strict
   bad_login_message = "use only letters, numbers, and +.-_@ please.".freeze
 
   name_regex        = /\A[^[:cntrl:]\\<>\/&]*\z/              # Unicode, permissive
@@ -122,7 +117,7 @@ class User < ActiveRecord::Base
   validates_presence_of     :login
   validates_length_of       :login,    :within => 1..40
   validates_uniqueness_of   :login, :case_sensitive => false
-  validates_format_of       :login,    :with => @@login_regex, :message => bad_login_message
+  validates_format_of       :login,    :with => login_regex, :message => bad_login_message
 
   validates_format_of       :first_name,     :with => name_regex,  :message => bad_name_message, :allow_nil => true
   validates_length_of       :first_name,     :maximum => 100
