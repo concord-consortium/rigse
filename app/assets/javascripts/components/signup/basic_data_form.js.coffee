@@ -1,7 +1,9 @@
 {button, div} = React.DOM
 
-PASS_TOO_SHORT = 'Password is too short'
-PASS_NOT_MATCH = 'Passwords do not match'
+PASS_TOO_SHORT      = 'Password is too short'
+PASS_NOT_MATCH      = 'Passwords do not match'
+INVALID_FIRST_NAME  = 'You must enter a valid first name.'
+INVALID_LAST_NAME   = 'You must enter a valid last name.'
 
 modulejs.define 'components/signup/basic_data_form', 
 [
@@ -15,6 +17,10 @@ modulejs.define 'components/signup/basic_data_form',
   TextInput = React.createFactory TextInputClass
   RadioInput = React.createFactory RadioInputClass
   FormsyForm = React.createFactory Formsy.Form
+  
+  nameValidator = (value) ->
+      jQuery.get "#{Portal.API_V1.NAME_VALID}?name=#{value}"
+
 
   React.createClass
     getInitialState: ->
@@ -30,6 +36,13 @@ modulejs.define 'components/signup/basic_data_form',
     onChange: (model) ->
       @setState password: model.password
 
+    onBasicFormValid: ->
+      @setState canSubmit:  (   @refs.firstName.isValidAsync() &&
+                                @refs.lastName.isValidAsync()       )
+
+    onBasicFormInvalid: ->
+      @setState canSubmit: false
+
     submit: (model) ->
       @props.onSubmit(model)
 
@@ -39,14 +52,20 @@ modulejs.define 'components/signup/basic_data_form',
         if anonymous
           (div {},
             (TextInput
+              ref:  'firstName'
               name: 'first_name'
               placeholder: 'First Name'
               required: true
+              asyncValidation: nameValidator
+              asyncValidationError: INVALID_FIRST_NAME
             )
             (TextInput
+              ref:  'lastName'
               name: 'last_name'
               placeholder: 'Last Name'
               required: true
+              asyncValidation: nameValidator
+              asyncValidationError: INVALID_LAST_NAME
             )
             (TextInput
               name: 'password'

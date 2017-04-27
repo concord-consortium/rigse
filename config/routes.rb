@@ -647,6 +647,8 @@ RailsPortal::Application.routes.draw do
           collection do
             get :email_available
             get :login_available
+            get :login_valid
+            get :name_valid
           end
         end
         resources :students do

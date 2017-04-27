@@ -45,6 +45,33 @@ class API::V1::TeachersController < API::APIController
     end
   end
 
+  def login_valid
+    valid = User.login_regex.match(params[:username])
+    if valid
+      render :json => {'message' => 'ok'}
+    else
+      error({'login' => 'username not valid'})
+    end
+  end
+
+  #
+  # Determine if a user's given name or surname is valid based on
+  # what pattern is defined in the User class.
+  #
+  def name_valid
+    name = params[:name]
+
+    puts "***\nValidating #{name}\n***"
+
+    valid = User.name_regex.match(name)
+    if valid
+      render :json => {'message' => 'ok'}
+    else
+      error({'name' => 'name not valid'})
+    end
+  end
+
+
   private
 
   def school_params_provided?

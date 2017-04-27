@@ -47,12 +47,14 @@ class Portal::Student < ActiveRecord::Base
   end
 
   def self.generate_user_login(first_name, last_name)
-    # Old method, first_name + last initial
-    #generated_login = "#{first_name.downcase.gsub(/[^a-z0-9]/,'')}#{last_name[0..0].downcase}"
-    suggested_login = "#{first_name[0..0].downcase}#{last_name.downcase.gsub(/[^a-z0-9]/,'')}"
-    # existing_users = User.find(:all, :conditions => "login RLIKE '#{generated_login}[0-9]*$'", :order => :login)
+
+    suggested_login =   "#{first_name[0..0].downcase}" + 
+                        "#{last_name.downcase.gsub(/[^\p{L}0-9]/,'')}"
+
+
     counter = 0
     generated_login = suggested_login
+
     # Disable cache as we have higher chance to avoid race condition causing that the generated login
     # is not unique. Also it's needed when we actually handle that situation (see student_registration.rb),
     # as otherwise subsequent login generation could return the same result as previous call.
@@ -62,6 +64,7 @@ class Portal::Student < ActiveRecord::Base
         generated_login = "#{suggested_login}#{counter}"
       end
     end
+
     return generated_login
   end
 
