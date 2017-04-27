@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
     @@login_regex
   end
 
-  @@name_regex      = /\A[\p{L}[^\\<>\/&]]+\z/          # Unicode, permissive
+  @@name_regex      = /\A[\p{L}\d]+\z/          # Unicode, permissive
   bad_name_message  = "avoid non-printing characters and \\&gt;&lt;&amp;/ please.".freeze
 
   def self.name_regex

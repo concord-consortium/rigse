@@ -48,7 +48,7 @@ modulejs.define 'components/signup/basic_data_form',
 
     render: ->
       {anonymous} = @props
-      (FormsyForm {onValidSubmit: @submit, onValid: @enableButton, onInvalid: @disableButton, onChange: @onChange},
+      (FormsyForm { onValidSubmit: @submit, onValid: @onBasicFormValid, onInvalid: @onBasicFormInvalid, onChange: @onChange },
         if anonymous
           (div {},
             (TextInput
