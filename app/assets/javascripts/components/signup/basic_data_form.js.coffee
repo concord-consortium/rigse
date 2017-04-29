@@ -50,22 +50,26 @@ modulejs.define 'components/signup/basic_data_form',
       {anonymous} = @props
       (FormsyForm { onValidSubmit: @submit, onValid: @onBasicFormValid, onInvalid: @onBasicFormInvalid, onChange: @onChange },
         if anonymous
-          (div {},
-            (TextInput
-              ref:  'firstName'
-              name: 'first_name'
-              placeholder: 'First Name'
-              required: true
-              asyncValidation: nameValidator
-              asyncValidationError: INVALID_FIRST_NAME
+          (div { },
+            (div { style: { display: "inline-block", verticalAlign: "top", width: "50%" } },
+              (TextInput
+                ref:  'firstName'
+                name: 'first_name'
+                placeholder: 'First Name'
+                required: true
+                asyncValidation: nameValidator
+                asyncValidationError: INVALID_FIRST_NAME
+              )
             )
-            (TextInput
-              ref:  'lastName'
-              name: 'last_name'
-              placeholder: 'Last Name'
-              required: true
-              asyncValidation: nameValidator
-              asyncValidationError: INVALID_LAST_NAME
+            (div { style: { display: "inline-block", verticalAlign: "top", width: "50%" } },
+              (TextInput
+                ref:  'lastName'
+                name: 'last_name'
+                placeholder: 'Last Name'
+                required: true
+                asyncValidation: nameValidator
+                asyncValidationError: INVALID_LAST_NAME
+              )
             )
             (TextInput
               name: 'password'

@@ -116,12 +116,16 @@
   }
 
   .first_name, .last_name {
-    width: 48%;
+    width: 98%;
     display: inline-block;
   }
 
   .first_name {
-    margin-right: 4%;
+    margin-right: 2%;
+  }
+
+  .last_name {
+    margin-left: 2%;
   }
 
   .zipcode {
