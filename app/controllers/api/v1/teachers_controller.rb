@@ -45,10 +45,16 @@ class API::V1::TeachersController < API::APIController
     end
   end
 
+  #
+  # Check if login is both a valid login name and
+  # if the login is available.
+  #
   def login_valid
+    puts "***\nChecking login #{params[:username]}\n***\n"
     valid = User.login_regex.match(params[:username])
     if valid
-      render :json => {'message' => 'ok'}
+      puts "***\nChecking login available #{params[:username]}\n***\n"
+      login_available 
     else
       error({'login' => 'username not valid'})
     end
