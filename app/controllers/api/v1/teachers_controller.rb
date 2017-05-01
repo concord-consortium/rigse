@@ -50,10 +50,8 @@ class API::V1::TeachersController < API::APIController
   # if the login is available.
   #
   def login_valid
-    puts "***\nChecking login #{params[:username]}\n***\n"
     valid = User.login_regex.match(params[:username])
     if valid
-      puts "***\nChecking login available #{params[:username]}\n***\n"
       login_available 
     else
       error({'login' => 'username not valid'})

@@ -2,8 +2,8 @@
 
 PASS_TOO_SHORT      = 'Password is too short'
 PASS_NOT_MATCH      = 'Passwords do not match'
-INVALID_FIRST_NAME  = 'You must enter a valid first name.'
-INVALID_LAST_NAME   = 'You must enter a valid last name.'
+INVALID_FIRST_NAME  = 'Invalid first name. Use only letters and numbers.'
+INVALID_LAST_NAME   = 'Invalid last name. Use only letters and numbers.'
 
 modulejs.define 'components/signup/basic_data_form', 
 [
