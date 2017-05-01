@@ -703,6 +703,7 @@ RailsPortal::Application.routes.draw do
         namespace :classes do
           get :info
         end
+        resources :report_learners_es
       end
     end
 

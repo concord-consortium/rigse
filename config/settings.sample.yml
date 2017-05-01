@@ -4,6 +4,7 @@ development: &non_production_settings
   :authoring_site_url: //authoring.staging.concord.org
   :codap_url: http://codap.concord.org/releases/latest/
   :log_manager_data_interactive_url: //cc-log-manager.herokuapp.com/di
+  :elastic_search_endpoint_url: http://search-has-portal-prod-xruhhhyiv2fugtujtzbgfq7bem.us-east-1.es.amazonaws.com
   :description: ""
   :default_admin_user: &default_admin_user
     :login: admin
@@ -88,6 +89,7 @@ production:
   :authoring_site_url: //authoring.staging.concord.org
   :codap_url: http://codap.concord.org/releases/latest/
   :log_manager_data_interactive_url: //cc-log-manager.herokuapp.com/di
+  :elastic_search_endpoint_url: http://search-has-portal-prod-xruhhhyiv2fugtujtzbgfq7bem.us-east-1.es.amazonaws.com
   :description: ""
   :default_admin_user: *default_admin_user
   :include_otrunk_examples: false
