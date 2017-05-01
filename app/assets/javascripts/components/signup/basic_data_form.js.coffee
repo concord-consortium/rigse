@@ -51,7 +51,7 @@ modulejs.define 'components/signup/basic_data_form',
       (FormsyForm { onValidSubmit: @submit, onValid: @onBasicFormValid, onInvalid: @onBasicFormInvalid, onChange: @onChange },
         if anonymous
           (div { },
-            (div { style: { display: "inline-block", verticalAlign: "top", width: "50%" } },
+            (div { className: 'name_wrapper' },
               (TextInput
                 ref:  'firstName'
                 name: 'first_name'
@@ -61,7 +61,7 @@ modulejs.define 'components/signup/basic_data_form',
                 asyncValidationError: INVALID_FIRST_NAME
               )
             )
-            (div { style: { display: "inline-block", verticalAlign: "top", width: "50%" } },
+            (div { className: 'name_wrapper' },
               (TextInput
                 ref:  'lastName'
                 name: 'last_name'
