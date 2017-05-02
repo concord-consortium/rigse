@@ -1,6 +1,6 @@
 #
 # This is a docker-compose overlay that creates a solr
-# service for use with rspec and cucumber testing.
+# service (solr-test) for use with rspec and cucumber testing.
 # 
 version: '2'
 services:
@@ -14,4 +14,4 @@ services:
       TEST_SOLR_PORT: 8981
     volumes:
       - .:/rigse
-    command: ["/bin/bash", "-c", "solr -f -p $${TEST_SOLR_PORT}"]
+    command: ["/bin/bash", "-c", "/rigse/docker/dev/start-solr-test.sh -f -p $${TEST_SOLR_PORT}" ]
