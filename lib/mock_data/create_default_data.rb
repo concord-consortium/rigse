@@ -1292,12 +1292,6 @@ module MockData
 
       user = Factory(:user, user_info)
 
-      #
-      # Ensure anonymous user has valid first and last name
-      #
-      user.first_name = 'anonymous'
-      user.last_name = 'anonymous'
-
       user.save!
       user.confirm!
 
