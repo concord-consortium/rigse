@@ -122,8 +122,9 @@ describe User do
   end
 
   describe 'allows legitimate names:' do
-    ['Andre The Giant (7\'4", 520 lb.) -- has a posse',
-     '', '1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890',
+    ['Andre',
+     'ᛅᛁᛚᛁᚠᚱ', 
+     '1234567890k',
     ].each do |name_str|
       it "'#{name_str}'" do
         lambda do
@@ -406,7 +407,12 @@ describe User do
 
 protected
   def create_user(options = {})
-    record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
+    record = User.new({ :first_name => "foo",
+                        :last_name  => "bar",
+                        :login      => 'quire', 
+                        :email      => 'quire@example.com', 
+                        :password   => 'quire69', 
+                        :password_confirmation => 'quire69' }.merge(options))
     record.save! if record.valid?
     record
   end
