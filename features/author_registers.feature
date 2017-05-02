@@ -38,7 +38,7 @@ Feature: An author registers to use the portal
     And I press "Sign up as a member"
     Then I should see "Signup"
     When I press "Sign up"
-    Then I should see "9 errors prohibited this user from being saved"
+    Then I should see "11 errors prohibited this user from being saved"
     When I fill in the following:
       | user_first_name            | Example             |
       | user_last_name             | Author              |

@@ -1287,8 +1287,17 @@ module MockData
 
       return_value[:updated?] = true
       return_value[:user] = user
+
     elsif user_by_login.nil? && user_by_email.nil?
+
       user = Factory(:user, user_info)
+
+      #
+      # Ensure anonymous user has valid first and last name
+      #
+      user.first_name = 'anonymous'
+      user.last_name = 'anonymous'
+
       user.save!
       user.confirm!
 
