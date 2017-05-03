@@ -200,7 +200,7 @@ window.FilterReports = React.createClass
         name: name
         value: @state[name],
         onChange: (value) =>
-          @setState {"#{name}", value}, () =>
+          @setState {"#{name}": value}, () =>
             @updateFilters()
       })
     )

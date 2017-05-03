@@ -123,6 +123,11 @@ source "http://rubygems.org"
   gem 'useragent'  # detect browser types
 
   gem 'react-rails', '~> 1.7'
+  gem 'momentjs-rails', '~>2.17.1'
+
+  source 'https://rails-assets.org' do
+    gem 'rails-assets-react-day-picker', '~>5.4.1'
+  end
 
   gem 'nested_form'
   gem 'sanitize'

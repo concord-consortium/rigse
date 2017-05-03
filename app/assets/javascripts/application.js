@@ -63,7 +63,7 @@
 = require 'react-input-autosize'
 = require 'react-select'
 = require 'moment'
-= require 'daypicker'
+= require 'react-day-picker'
 = require 'daypicker-overlay'
 = require 'component'
 = require 'jquery_nested_form'
