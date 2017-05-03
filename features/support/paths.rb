@@ -35,8 +35,16 @@ module NavigationHelpers
       "/admin/settings/#{Admin::Settings.default_settings.id}/show"
     when /the create investigation page/
       "/investigations/new"
-    when /the researcher reports page/
-      "/report/learner"
+    when /the researcher reports page and click usage report/
+      WebMock.stub_request(:post, /report_learners\/_search$/).
+        to_return(:status => 200, :body => { "hits" => { "hits" => [] } }.to_json,
+          :headers => {'Content-Type'=>'application/json'})
+      "/report/learner?commit=Usage+Report"
+    when /the researcher reports page and click details report/
+      WebMock.stub_request(:post, /report_learners\/_search$/).
+        to_return(:status => 200, :body => { "hits" => { "hits" => [] } }.to_json,
+          :headers => {'Content-Type'=>'application/json'})
+      "/report/learner?commit=Details+Report"
     when /the class page for "(.*)"/
       "/portal/classes/#{Portal::Clazz.find_by_name($1).id}"
     when /the class edit page for "([^"]*)"/
