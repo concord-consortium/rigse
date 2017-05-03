@@ -25,6 +25,10 @@ describe Dataservice::ProcessExternalActivityDataJob do
         question_type: "iframe interactive",
         question_id: 4
       },
+      {
+        type: "interactive",
+        question_id: 5
+      }
     ].to_json
   end
 
@@ -49,6 +53,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
     subject.stub!(:internal_process_multiple_choice)
     subject.stub!(:internal_process_image_question)
     subject.stub!(:internal_process_external_link)
+    subject.stub!(:internal_process_interactive)
   end
 
 
@@ -74,6 +79,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
         subject.should_receive :internal_process_multiple_choice
         subject.should_receive :internal_process_image_question
         subject.should_receive :internal_process_external_link
+        subject.should_receive :internal_process_interactive
         subject.perform
       end
     end

@@ -23,10 +23,17 @@ module Saveable::Saveable
     end
   end
 
+  def answer_type
+    if answered?
+      answers.last.class.to_s
+    else
+      nil
+    end
+  end
+
   def answered?
     answers.length > 0
   end
-
 
   def current_feedback
     if answered? && answers.last.respond_to?(:feedback)

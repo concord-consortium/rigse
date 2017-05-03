@@ -45,6 +45,12 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
 
+  has_many :interactives, :dependent => :destroy , :class_name => "Saveable::Interactive" do
+    def answered
+      find(:all).select { |question| question.answered? }
+    end
+  end
+
   has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner",
     :foreign_key => "learner_id", :inverse_of => :learner
 
