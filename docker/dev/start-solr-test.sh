@@ -1,8 +1,11 @@
 #!/bin/bash
 #
-# Start the docker solr-test service with a test core 
-# and allow additional arguments passed to actual solr script rather than 
-# docker-entrypoint.sh wrapper.
+# This should be executed from within a docker container running
+# a solr-test environment.
+#
+# This script starts the docker solr-test service with a "test" core 
+# and allows additional arguments to be passed to the actual solr 
+# script rather than the docker-entrypoint.sh wrapper.
 #
 
 cd /opt/solr

@@ -12,6 +12,13 @@ services:
     image: concordconsortium/docker-solr-portal
     environment:
       TEST_SOLR_PORT: 8981
+    #
+    # Mount the portal source in the container under /rigse
+    #
     volumes:
       - .:/rigse
+    #
+    # Invoke the docker/dev/start-solr-test.sh script allowing us
+    # to specify a port and other parameters.
+    #
     command: ["/bin/bash", "-c", "/rigse/docker/dev/start-solr-test.sh -f -p $${TEST_SOLR_PORT}" ]
