@@ -6,13 +6,14 @@
 # `allow_cors`: Allow CORS requests (see below)
 # `genigames_data`: Genigames-related student sata saving
 # `geniverse_wordpress`: Geniverse-related Wordpress connection
-# 
+#
 # sample :  ENV['PORTAL_FEATURES']  ||= 'geniverse_remote_auth genigames_data'
 # EG, enable genigame auth / data via `     ENV['PORTAL_FEATURES']  ||= 'geniverse_remote_auth genigames_data'
 
 ENV['PORTAL_FEATURES']   ||= ''
 ENV['REPORT_VIEW_URL']   ||= 'https://concord-consortium.github.io/portal-report/'
 ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
+ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbgfq7bem.us-east-1.es.amazonaws.com'
 
 # Researcher report link can point to a different portal instance to avoid overloading the main server.
 # ENV['RESEARCHER_REPORT_HOST'] ||= 'https://research-report-portal.concord.org'
@@ -26,4 +27,4 @@ ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 
 # CORS_RESOURECES:
 # Sets the allowed CORS resources to a specific route. Requires ENV['PORTAL_FEATURES'] ||= 'allow_cors'
-# ENV['CORS_RESOURCES']  ||= "/xyz"`: 
+# ENV['CORS_RESOURCES']  ||= "/xyz"`:

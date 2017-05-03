@@ -25,7 +25,7 @@ class API::V1::ReportLearnersEsController < API::APIController
   def index
     authorize Portal::PermissionForm
 
-    if !APP_CONFIG[:elastic_search_endpoint_url]
+    if !ENV['ELASTICSEARCH_URL']
       return error("Elasticsearch endpoint url not set")
     end
 
@@ -196,7 +196,7 @@ class API::V1::ReportLearnersEsController < API::APIController
       }
     end
 
-    search_url = "#{APP_CONFIG[:elastic_search_endpoint_url]}/report_learners/_search"
+    search_url = "#{ENV['ELASTICSEARCH_URL']}/report_learners/_search"
 
     esSearchResult = HTTParty.post(search_url,
       :body => {
