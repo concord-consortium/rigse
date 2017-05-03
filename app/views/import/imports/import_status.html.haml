@@ -59,54 +59,53 @@
       %div.upload-progress-message.upload
         Please wait while your file is being uploaded.
 
-%style(type="text/css") 
-  :sass
-    #import
-      padding: 0
-    .progress-wrap
-      .progress-bar
-        width: 400px
-        border: 1px solid #0B6B08
-        padding: 1px
+:sass
+  #import
+    padding: 0
+  .progress-wrap
+    .progress-bar
+      width: 400px
+      border: 1px solid #0B6B08
+      padding: 1px
+      border-radius: 3px
+      .progress-status
+        background-color: #EFA967
+        width: 0%
+        height: 15px
         border-radius: 3px
-        .progress-status
-          background-color: #EFA967
-          width: 0%
-          height: 15px
-          border-radius: 3px
-      .progress-complete
-        display: none
-        margin-bottom: 30px
-        .new-import
-          margin-top: 10px
-      .batch-import
-        font-weight: bold
-        .successful
-          color: green
-          margin-right: 20px
-        .failed
-          color: red
-      .progress-percentage
-        span
-          font-weight: bold
-    .finished
+    .progress-complete
       display: none
+      margin-bottom: 30px
+      .new-import
+        margin-top: 10px
+    .batch-import
+      font-weight: bold
+      .successful
+        color: green
+        margin-right: 20px
+      .failed
+        color: red
+    .progress-percentage
+      span
+        font-weight: bold
+  .finished
+    display: none
 
-    .upload-wrap
-      margin-top: 10px
-      .upload-progress
-        width: 400px
-        border: 1px solid #0B6B08
-        padding: 1px
+  .upload-wrap
+    margin-top: 10px
+    .upload-progress
+      width: 400px
+      border: 1px solid #0B6B08
+      padding: 1px
+      border-radius: 3px
+      background-color: #FFCC99
+    .upload
+      display: none
+      .bar
+        background-color: #E78014
+        width: 0%
+        height: 10px
         border-radius: 3px
-        background-color: #FFCC99
-      .upload
-        display: none
-        .bar
-          background-color: #E78014
-          width: 0%
-          height: 10px
-          border-radius: 3px
 
 :javascript
 

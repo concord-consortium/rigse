@@ -4,7 +4,7 @@ YAML::ENGINE.yamler= "psych" if defined?(YAML::ENGINE)
 source "http://rubygems.org"
 
 #### COMMON
-  gem "mysql2",             '~> 0.3.15', :platforms => [:ruby,:mingw]
+  gem "mysql2",             '~> 0.3.16', :platforms => [:ruby,:mingw]
 
   platforms :jruby do
     gem "activerecord-jdbcmysql-adapter",  "~> 1.1.3"
@@ -20,6 +20,7 @@ source "http://rubygems.org"
   gem 'devise-encryptable'
   gem 'omniauth'
   gem 'omniauth-oauth'  # for schoology integration
+  gem 'test-unit',            '~> 3.0'
 
   gem "rails",                "~> 3.2.22"
   gem "arrayfields"
@@ -35,7 +36,7 @@ source "http://rubygems.org"
 
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
-  gem "haml",           :git => "git://github.com/concord-consortium/haml.git", :branch => "xml-mime-type-and-ie8-keycode-fix"
+  gem "haml",                 "~> 4.0"
 
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
@@ -49,7 +50,7 @@ source "http://rubygems.org"
 
   gem "grit",                 "~> 2.4"
   gem "open4",                "~> 1.0"
-  gem "jnlp",                 "~> 0.7.3"
+  # gem "jnlp",                 "~> 0.8.0"
   # # use a merge of ghazel and tracksimple ar-extensions forks
   # # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
   # # git "git://github.com/concord-consortium/ar-extensions.git" do
@@ -63,13 +64,13 @@ source "http://rubygems.org"
   gem "paperclip",            "~> 3.4.0"
   gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "acts_as_list",         "~> 0.1.6"
-  gem "nokogiri",             "~> 1.5.0"
+  gem "nokogiri",             "~> 1.7.0"
   gem 'rdoc',                 "~> 3.9.4"
   # this customization is so the digests or fingerprints are correctly added to the assets even when
   # they are from a theme.
   gem 'themes_for_rails',     :git => 'git://github.com/concord-consortium/themes_for_rails',
            :branch => 'asset-pipeline-only'
-  gem 'default_value_for',    "~> 2.0.1"
+  gem 'default_value_for',    "~> 2.0.3"
   gem 'exception_notification', "~> 2.5.2"
 
   # This gem now contains the prototype_legacy view helpers, and the prototype helpers.
@@ -80,7 +81,7 @@ source "http://rubygems.org"
   gem 'in_place_editing',      :git => 'git://github.com/concord-consortium/in_place_editing.git'
 
   gem 'dynamic_form',         "~> 1.1.4"
-  gem 'json',                 "~> 1.7.6"
+  gem 'json',                 "~> 1.8.6"
   # need patched version of calendar_data_select to work in rails 3.1 and higher
   # this is because of the removed RAILS_ROOT constant
   # gem 'calendar_date_select', :git => 'git://github.com/courtland/calendar_date_select'
@@ -115,8 +116,8 @@ source "http://rubygems.org"
   gem 'sunspot_solr' # optional pre-packaged Solr distribution
   # TODO ⬆⬆ remove this, and do something better on production deploy
 
-  gem 'sass', '~> 3.3.14'  # font-awesome-sass doesn't seem compatible with newer sass :(
-  gem 'font-awesome-sass'
+  gem 'sass'
+  gem 'font-awesome-rails'
   gem 'virtus',               "~>1.0.3"
 
   gem 'useragent'  # detect browser types
@@ -157,6 +158,7 @@ end
 
 group :genigames_data do
   gem 'genigames_connector',  '0.0.4', :git => 'git://github.com/concord-consortium/genigames-connector'
+  # gem "genigames_connector", :path => "../genigames-connector"
 end
 
 group :development do
@@ -167,8 +169,6 @@ group :development do
   gem "hirb"
   gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
   gem "debugger-ruby_core_source", "~> 1.3.8", :platforms => [:mri_19]
-  gem "debugger", :platforms => [:mri_19]
-  gem "pry-debugger"
   gem "awesome_print"
   gem "interactive_editor"
   gem "ruby-prof"
@@ -188,7 +188,7 @@ group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
   gem "selenium-webdriver"
-  gem "cucumber",           "~> 1.2.0"
+  gem "cucumber",           "~> 1.3.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
   gem "capybara",           "~> 1.1.2"

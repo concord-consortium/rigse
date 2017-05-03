@@ -18,20 +18,28 @@ Working git, ruby or jruby, and rubgems, wget
 
 ##### Local development
 
-This example assumes that [rvm](https://rvm.io/) is installed. This
- could be a good idea because we use an older version of ruby.
+This example assumes that [rvm](https://rvm.io/) is installed. 
+This could be a good idea because we use an older version of ruby. You should install Ruby 2.2.6 first:
+
+    rvm install 2.2.6
+    
+If you use OS X and you see some errors related to SSL, you might need to use following command instead:
+```
+    rvm install 2.2.6 --with-openssl-dir=`brew --prefix openssl`
+```
+
 
     git clone git@github.com:concord-consortium/rigse.git portal
     cd portal
-    echo 'rvm --create use 1.9.3@portal' >.rvmrc
-    rvm --create use 1.9.3@portal
+    echo 'rvm --create use 2.2.6@portal' >.rvmrc
+    rvm --create use 2.2.6@portal
+    gem install bundler -v '1.11.0'
     bundle install
     cp config/database.sample.yml config/database.yml (need to fix the mysql password and/or user)
     cp config/settings.sample.yml config/settings.yml
     cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
     rake db:setup
     rails s
-
 
 Now open your browser to [http://localhost:3000](http://localhost:3000)
 
@@ -55,13 +63,13 @@ to avoid port conflicts, and setting up ssh for capistrano deploys.
 
 If you get the following error
 
-    An error occurred while installing libv8 (3.16.14.3), and Bundler cannot
+    An error occurred while installing libv8 (3.16.14.17), and Bundler cannot
     continue.
-    Make sure that `gem install libv8 -v '3.16.14.3'` succeeds before bundling.
+    Make sure that `gem install libv8 -v '3.16.14.17'` succeeds before bundling.
 
  To resolve the error install libv8 sepratelly with --with-system-v8
 
-	gem install libv8 -v '3.16.14.3' -- --with-system-v8
+	gem install libv8 -v '3.16.14.17' -- --with-system-v8
 
 If you get the following error
 
@@ -70,6 +78,15 @@ If you get the following error
 	Make sure that `gem install therubyracer -v '0.12.1'` succeeds before bundling.
 
 Replace `gem 'therubyracer',         "~>0.12.1"` entry in the Gemfile to `gem 'therubyracer',         "~>0.10.2"`
+
+If `rails s -p 9000` fails due to mysql2 segmentation fault
+
+    gems/mysql2-0.3.21/lib/mysql2/mysql2.bundle: [BUG] Segmentation fault
+    
+It usually helps to remove mysql2 and install it again
+
+    gem uninstall mysql2
+    bundle install
 
 #### Tests
 

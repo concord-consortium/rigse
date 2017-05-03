@@ -1,4 +1,4 @@
-FROM concordconsortium/docker-rails-base
+FROM concordconsortium/docker-rails-base-ruby-2.2.6
 
 # install nginx
 RUN apt-get update -qq && apt-get install -qq -y nginx
