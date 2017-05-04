@@ -155,8 +155,8 @@ teachers:
 
   teacher_5:
     login: teacher_with_no_class
-    first_name: TeacherWithNoClass
-    last_name: TeacherWithNoClass
+    first_name: Teacher_with_no_class
+    last_name: Teacher_with_no_class
     email: bademail@noplace5.com
     school: Fake School
     uuid: 00000000-0000-0000-0000-000000000028
