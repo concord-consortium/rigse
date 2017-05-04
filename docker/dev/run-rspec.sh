@@ -6,10 +6,12 @@
 #
 # Prepare spec tests
 #
-bundle exec rake db:test:prepare
+rake db:schema:load
+rake db:migrate
+rake db:test:prepare
 
 #
 # Run spec tests
 #
-bundle exec rspec spec/
+RAILS_ENV=test rake spec
 
