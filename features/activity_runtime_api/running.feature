@@ -9,7 +9,7 @@ Feature: External Activities can support a REST api
       | domain_uid        | domain_uid of 'student'      |
       | externalId        | 999                          |
       | logging           | false                        |
-      | returnUrl         | http://www.example.com/dataservice/external_activity_data/key |
+      | returnUrl         | site_url/dataservice/external_activity_data/key |
       | class_info_url    | class_info_url of 'My Class' |
     And "activities.com/activity/1/sessions/" GET responds with
       """
