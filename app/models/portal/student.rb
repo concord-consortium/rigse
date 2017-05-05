@@ -48,7 +48,7 @@ class Portal::Student < ActiveRecord::Base
 
   def self.generate_user_login(first_name, last_name)
 
-    suggested_login =   "#{first_name[0..0].downcase}" + 
+    suggested_login =   "#{first_name.downcase.gsub(/[^\p{L}\d]/,'')[0..0]}" + 
                         "#{last_name.downcase.gsub(/[^\p{L}\d]/,'')}"
 
 

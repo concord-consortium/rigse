@@ -107,7 +107,14 @@ class User < ActiveRecord::Base
     @@login_regex
   end
 
-  @@name_regex      = /\A[\p{L}\d]+\z/          # Unicode, permissive
+  #
+  # name_regex      Lookahead regex. Between start and end of word, match at
+  #                 least one or more of any letter character, digit, or the
+  #                 special characters listed. The second paren group says at
+  #                 least one of what was previously matched must be a
+  #                 letter character or digit.
+  #
+  @@name_regex      = /(?=\A[\p{L}\d\.\-\+_@ \'\"\`;:]*\z)(.*[\p{L}\d].*)/u
   bad_name_message  = "avoid non-printing characters and \\&gt;&lt;&amp;/ please.".freeze
 
   def self.name_regex
