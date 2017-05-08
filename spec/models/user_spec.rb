@@ -122,7 +122,7 @@ describe User do
   end
 
   describe 'allows legitimate names:' do
-    ['Andre',
+    ['Andre The Giant (7\'4", 520 lb.) -- has a posse',
      'ᛅᛁᛚᛁᚠᚱ', 
      '1234567890k',
     ].each do |name_str|
