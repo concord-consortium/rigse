@@ -68,7 +68,6 @@ environment. These can be found in `docker/dev/`. Currently these overrides supp
 
 - `docker-compose-external-mysql.yml`: external mysql server
 - `docker-compose-random-ports.yml`: assigning random ports to rails and solr
-- `docker-compose-solr-test.yml`: run an additional solr docker instance for user with rspec and cucumber testing
 - `docker-compose-ssh.yml`: sharing an ssh-agent with the app service so you can do capistrano deploys
 - `docker-compose-unison.yml`: using unison for faster performance on OS X 
 
@@ -212,13 +211,9 @@ image above has instructions on doing this.
 ## Running rspec and cucumber tests with docker
 
 
-1. Create or modify the `.env` file located at the root of your git clone workspace. Add the `docker-compose-solr-test.yml` overlay file to the list of files specified in the COMPOSE_FILE property. E.g. the contents of your `.env` file might look something like the following: 
-> `COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-random-ports.yml:docker/dev/docker-compose-solr-test.yml`
-2. Use `docker-compose` to bring up the docker services
-> `$ docker-compose up`
-3. Connect to the running docker instance of your "app" service. 
+1. Connect to the running docker instance of your "app" service. 
 > `$ docker-compose exec app bash`
-4. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
+2. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
     * `docker/dev/run-rspec.sh`
     * `docker/dev/run-cucumber.sh`
 
