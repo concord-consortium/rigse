@@ -16,7 +16,7 @@ class API::V1::Offering
       learner = offering.learners.where(student_id: student.id).first
       # Learner object is available only if student has started the activity.
       self.started_activity = learner ? true : false
-      self.endpoint_url = learner ? learner.remote_endpoint_url(protocol, host_with_port) : nil
+      self.endpoint_url = learner ? learner.remote_endpoint_url : nil
     end
   end
 

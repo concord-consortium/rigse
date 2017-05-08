@@ -5,6 +5,6 @@ class Reports::UrlHelpers
   end
 
   def remote_endpoint_url(portal_learner)
-    portal_learner.remote_endpoint_url(@protocol, @host_with_port)
+    portal_learner.remote_endpoint_url
   end
 end
