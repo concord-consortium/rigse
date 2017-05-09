@@ -7,12 +7,15 @@ namespace :app do
     task :fix_invalid_user_fields => :environment do
         regex = /(?=\A[^[:cntrl:]\\<>\/&]*\z)(.*[\p{L}\d].*)/u
         count = 0
+        puts 
+        puts "ID,Login,First name,Last name,Email"
         User.find_each do |u|
             if !(u.first_name =~ regex && u.last_name =~ regex)
-                puts "id: #{u.id} login: #{u.login} "   +
-                        "first name: #{u.first_name} "  +
-                        "last name: #{u.last_name} "    +
-                        "email #{u.email}"
+                puts    "#{u.id},"          +
+                        "#{u.login},"       +
+                        "#{u.first_name},"  +
+                        "#{u.last_name},"   +
+                        "#{u.email}"
                 if(u.first_name !~ regex)
                     u.update_attributes(first_name: "unknown")
                 end
@@ -22,7 +25,9 @@ namespace :app do
                 count+=1
             end
         end
+        puts
         puts "Updated #{count} users."
+        puts
     end
 
     desc 'Add the author role to all users who have authored an Investigation'
