@@ -18,8 +18,8 @@ development:
 
 test: &TEST
   solr:
-    hostname: localhost
-    port: 8981
+    hostname:   <%= ENV['TEST_SOLR_HOST'] || 'localhost' %>
+    port:       <%= ENV['TEST_SOLR_PORT'] || 8981 %>
     log_level: WARNING
     path: /solr/test
     solr_home: <%= Rails.root %>/solr
