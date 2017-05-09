@@ -114,7 +114,14 @@ class User < ActiveRecord::Base
   #                 previously matched must be a letter character or digit.
   #
   @@name_regex      = /(?=\A[^[:cntrl:]\\<>\/&]*\z)(.*[\p{L}\d].*)/u
-  bad_name_message  = "avoid non-printing characters and \\&gt;&lt;&amp;/ please.".freeze
+
+  #
+  # User friendly representation of restricted name characters
+  #
+  @@restricted_characters = "\\, <, >, &, /"
+
+  bad_name_message  = I18n.t(   'UserBadName',
+                                restricted_characters: @@restricted_characters )
 
   def self.name_regex
     @@name_regex
@@ -133,10 +140,10 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :login, :case_sensitive => false
   validates_format_of       :login,    :with => @@login_regex, :message => bad_login_message
 
-  validates_format_of       :first_name,     :with => @@name_regex,  :message => bad_name_message, :allow_nil => true
+  validates_format_of       :first_name,     :with => @@name_regex,  :message => bad_name_message, :allow_nil => false
   validates_length_of       :first_name,     :maximum => 100
 
-  validates_format_of       :last_name,     :with => @@name_regex,  :message => bad_name_message, :allow_nil => true
+  validates_format_of       :last_name,     :with => @@name_regex,  :message => bad_name_message, :allow_nil => false
   validates_length_of       :last_name,     :maximum => 100
 
   validates_presence_of     :email

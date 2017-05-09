@@ -3,6 +3,10 @@
 
 en:
   activerecord:
+    attributes:
+      user:
+        first_name: 'First name'
+        last_name: 'Last name'
     models:
       "dataservice/bundle_content": BundleContent
       "dataservice/bundle_logger": BundleLogger
@@ -112,6 +116,9 @@ en:
   RosterRemoveStudent: "Remove Student"
   RosterRemoveStudentLong: "Remove Student %{name} from %{clazz}"
   RosterChangePassword: "Change password for %{name}"
+
+  UserBadName: "cannot be empty, must include letter characters and cannot use non-printing characters or %{restricted_characters}." 
+
   HomePage:
     MyClassesNav: My Classes
     NeedSettings: |
