@@ -66,10 +66,11 @@ thing.
 There are several docker-compose overrides you can use to customize your docker-compose
 environment. These can be found in `docker/dev/`. Currently these overrides support:
 
-- assigning random ports to rails and solr
-- sharing a ssh-agent with the app service so you can do capistrano deploys
-- using unison for faster performance on OS X
-- external mysql server
+- `docker-compose-external-mysql.yml`: external mysql server
+- `docker-compose-random-ports.yml`: assigning random ports to rails and solr
+- `docker-compose-ssh.yml`: sharing an ssh-agent with the app service so you can do capistrano deploys
+- `docker-compose-unison.yml`: using unison for faster performance on OS X 
+
 
 There is more on each of these below.
 
@@ -223,3 +224,20 @@ docker/dev/docker-compose-ssh.yml to provide access to this agent.
 
 You will need to add your keys to the ssh-agent container on each reboot. The ssh-agent
 image above has instructions on doing this.
+
+## Running rspec and cucumber tests with docker
+
+
+1. Connect to the running docker instance of your "app" service. 
+> `$ docker-compose exec app bash`
+2. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
+    * `docker/dev/run-rspec.sh`
+    * `docker/dev/run-cucumber.sh`
+
+    E.g. 
+    > `$ /rigse/docker/dev/run-rspec.sh`
+
+
+ 
+
+

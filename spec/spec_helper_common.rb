@@ -7,6 +7,8 @@ CodeClimate::TestReporter.start
 require File.expand_path("../../config/environment", __FILE__)
 
 Rails.env = ENV['RAILS_ENV']
+solr_host = ENV['TEST_SOLR_HOST'] || 'localhost'
+solr_port = ENV['TEST_SOLR_PORT'] || 8981
 
 require 'factory_girl'
 
@@ -34,7 +36,10 @@ require 'capybara/rails'
 require 'webmock/rspec'
 
 # Allow reporting to codeclimate
-WebMock.disable_net_connect!(:allow => "codeclimate.com")
+WebMock.disable_net_connect!(:allow => 
+                                [   "#{solr_host}:#{solr_port}", 
+                                    "codeclimate.com" ] 
+                            )
 
 require 'capybara-screenshot/rspec'
 

@@ -3,6 +3,13 @@ describe HomeController do
   render_views
 
   before(:each) do
+
+    #
+    # Warning: 
+    # When the specs are run different ways sometimes the @test_settings 
+    # mock is used and sometimes it is not. 
+    # see this PT story for more details: https://www.pivotaltracker.com/story/show/145134539
+    # 
     @test_settings = mock("settings")
     Admin::Settings.stub(:default_settings).and_return(@test_settings)
     @test_settings.stub!(:use_student_security_questions).and_return(false)
@@ -29,6 +36,7 @@ describe HomeController do
 
     @test_settings.should_receive(:home_page_content).at_least(:once).and_return(content)
     @test_settings.stub(:name).and_return("Test Settings")
+    @test_settings.stub(:custom_search_path)
 
     get :index
     response.body.should include(content)

@@ -16,16 +16,27 @@ module SolrSpecHelper
     end
   end
 
-  def test_solr_server
-    open("http://localhost:#{$sunspot.port}/")
+  def test_solr_server(host, port)
+    open("http://#{host}:#{port}/")
   end
 
   def solr_setup
+
+    solr_host = ENV['TEST_SOLR_HOST'] || 'localhost'
+    solr_port = ENV['TEST_SOLR_PORT'] || 8981
+
     unless $sunspot
-      ::WebMock.disable_net_connect!(:allow => ["localhost:8981", "codeclimate.com"])
-      $sunspot = Sunspot::Rails::Server.new
+
+      ::WebMock.disable_net_connect!(:allow => 
+                                        [   "#{solr_host}:#{solr_port}", 
+                                            "codeclimate.com" ] )
+
       begin
-        test_solr_server
+
+        $sunspot = Sunspot::Rails::Server.new
+
+        test_solr_server(solr_host, solr_port)
+
       rescue Errno::ECONNREFUSED
         puts 'SOLR server is not running. Start it using:'
         puts 'RAILS_ENV=test rake sunspot:solr:run'
