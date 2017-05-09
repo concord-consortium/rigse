@@ -1,4 +1,5 @@
 require 'rake'
+require 'csv'
 
 namespace :app do
   namespace :convert do
@@ -11,11 +12,10 @@ namespace :app do
         puts "ID,Login,First name,Last name,Email"
         User.find_each do |u|
             if !(u.first_name =~ regex && u.last_name =~ regex)
-                puts    "#{u.id},"          +
-                        "#{u.login},"       +
-                        "#{u.first_name},"  +
-                        "#{u.last_name},"   +
-                        "#{u.email}"
+                line = CSV.generate do |csv|
+                    csv << [ u.id, u.login, u.first_name, u.last_name, u.email ]
+                end
+                puts line
                 if(u.first_name !~ regex)
                     u.update_attributes(first_name: "unknown")
                 end
