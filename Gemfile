@@ -132,6 +132,8 @@ source "http://rubygems.org"
 
   gem 'pundit'
 
+  gem 'jwt'
+
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:

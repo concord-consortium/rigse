@@ -182,7 +182,6 @@ RailsPortal::Application.routes.draw do
           match 'manage', :to => 'clazzes#manage_classes'
           #post :manage_classes_save, :as => 'manage_save'
         end
-
       end
 
       resources :clazzes, :path => :classes do
@@ -699,9 +698,17 @@ RailsPortal::Application.routes.draw do
           end
         end
 
-        resources :classes, only: [:show]
+        resources :classes, only: [:show] do
+          member do
+            get :log_links
+          end
+        end
         namespace :classes do
           get :info
+        end
+
+        namespace :jwt do
+          post :firebase
         end
       end
     end
