@@ -3,6 +3,28 @@ require 'rake'
 namespace :app do
   namespace :convert do
 
+    desc 'Fix user fields which are not compliant with ActiveRecord validation checks.'
+    task :fix_invalid_user_fields => :environment do
+        regex = /(?=\A[^[:cntrl:]\\<>\/&]*\z)(.*[\p{L}\d].*)/u
+        count = 0
+        User.find_each do |u|
+            if !(u.first_name =~ regex && u.last_name =~ regex)
+                puts "id: #{u.id} login: #{u.login} "   +
+                        "first name: #{u.first_name} "  +
+                        "last name: #{u.last_name} "    +
+                        "email #{u.email}"
+                if(u.first_name !~ regex)
+                    u.update_attributes(first_name: "unknown")
+                end
+                if(u.last_name !~ regex)
+                    u.update_attributes(last_name: "unknown")
+                end
+                count+=1
+            end
+        end
+        puts "Updated #{count} users."
+    end
+
     desc 'Add the author role to all users who have authored an Investigation'
     task :add_author_role_to_authors => :environment do
       User.find(:all).each do |user|
