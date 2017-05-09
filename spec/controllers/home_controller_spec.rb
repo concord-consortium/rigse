@@ -5,20 +5,11 @@ describe HomeController do
   before(:each) do
 
     #
-    # Ensure this mock responds to "custom_search_path"
-    #
-    # See fix for PT 144299359: Figure out how to run non-javascript 
-    #                           cucumber tests when doing development 
-    #                           using docker.
-    #
-    # Note PT #144866753: Portal rspec test fails in docker.
-    # It appears some test configurations are not using the 
-    # appropriate mock. Ensure tests with this spec use this mock
-    # and ensure this mock responds to this message. 
-    # Responding with nil is fine as callers should check for that
-    # and handle it appropriately.
-    #
- 
+    # Warning: 
+    # When the specs are run different ways sometimes the @test_settings 
+    # mock is used and sometimes it is not. 
+    # see this PT story for more details: https://www.pivotaltracker.com/story/show/145134539
+    # 
     @test_settings = mock("settings")
     Admin::Settings.stub(:default_settings).and_return(@test_settings)
     @test_settings.stub!(:use_student_security_questions).and_return(false)
