@@ -115,13 +115,23 @@
     }
   }
 
+  .name_wrapper {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+  }
+
   .first_name, .last_name {
-    width: 48%;
+    width: 98%;
     display: inline-block;
   }
 
   .first_name {
-    margin-right: 4%;
+    margin-right: 2%;
+  }
+
+  .last_name {
+    margin-left: 2%;
   }
 
   .zipcode {
@@ -197,13 +207,20 @@
     margin: .25em 0 0 .65em;
     width: 44.25%;
 
+    .name_wrapper {
+      width: 100%;
+    }
+
     .first_name, .last_name {
       width: 100%;
       display: block;
     }
+
     .last_name {
+      margin-left: 0%;
       margin-bottom: 1.5em;
     }
+
   }
 
   .side-info {

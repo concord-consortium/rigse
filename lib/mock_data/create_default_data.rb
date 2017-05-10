@@ -1287,8 +1287,11 @@ module MockData
 
       return_value[:updated?] = true
       return_value[:user] = user
+
     elsif user_by_login.nil? && user_by_email.nil?
+
       user = Factory(:user, user_info)
+
       user.save!
       user.confirm!
 

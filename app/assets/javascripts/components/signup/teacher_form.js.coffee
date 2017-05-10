@@ -1,7 +1,6 @@
 {button, a, i, div} = React.DOM
 LOGIN_TOO_SHORT = 'Login is too short'
-LOGIN_TAKEN = 'That login is taken'
-LOGIN_REGEXP = 'Use only letters, numbers, and +.-_@ please'
+LOGIN_INVALID = 'Invalid login. This name is either already taken or does not use only letters, numbers and the characters .+-_@'
 EMAIL_REGEXP = 'Email doesn\'t appear to be a valid email'
 EMAIL_TAKEN = 'Email belongs to an existing user'
 CANT_FIND_SCHOOL = 'I can\'t find my school in the list.'
@@ -33,8 +32,8 @@ modulejs.define 'components/signup/teacher_form',
   PrivacyPolicy = React.createFactory PrivacyPolicyClass
   FormsyForm = React.createFactory Formsy.Form
 
-  loginAvailableValidator = (value) ->
-    jQuery.get "#{Portal.API_V1.LOGINS}?username=#{value}"
+  loginValidValidator = (value) ->
+    jQuery.get "#{Portal.API_V1.LOGIN_VALID}?username=#{value}"
 
   emailAvailableValidator = (value) ->
     jQuery.get "#{Portal.API_V1.EMAILS}?email=#{value}"
@@ -137,12 +136,10 @@ modulejs.define 'components/signup/teacher_form',
               required: true
               validations:
                 minLength: 3
-                matchRegexp: /^[a-zA-Z0-9\.\+\-\_\@]*$/
               validationErrors:
                 minLength: LOGIN_TOO_SHORT
-                matchRegexp: LOGIN_REGEXP
-              asyncValidation: loginAvailableValidator
-              asyncValidationError: LOGIN_TAKEN
+              asyncValidation: loginValidValidator
+              asyncValidationError: LOGIN_INVALID
             )
             (TextInput
               ref: 'email'

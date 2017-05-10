@@ -45,6 +45,6 @@ Then /^I click category "([^"]+)"$/ do |category_name|
 end
 
 Given /^user "([^"]+)" authored unofficial material "([^"]+)"$/ do |user_name, act_name|
-  author = Factory.create(:confirmed_user, first_name: user_name, last_name: '')
+  author = Factory.create(:confirmed_user, first_name: user_name, last_name: 'testuser')
   Factory.create(:external_activity, name: act_name, is_official: false, user: author, publication_status: 'published')
 end

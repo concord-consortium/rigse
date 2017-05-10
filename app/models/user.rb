@@ -100,11 +100,32 @@ class User < ActiveRecord::Base
 
   # Validations
 
-  login_regex       = /\A\w[\w\.\-\+_@]+\z/                     # ASCII, strict
+  @@login_regex     = /\A[\p{L}\d][\p{L}\d\.\-\+_@]+\z/ # ASCII and unicode
   bad_login_message = "use only letters, numbers, and +.-_@ please.".freeze
 
-  name_regex        = /\A[^[:cntrl:]\\<>\/&]*\z/              # Unicode, permissive
-  bad_name_message  = "avoid non-printing characters and \\&gt;&lt;&amp;/ please.".freeze
+  def self.login_regex
+    @@login_regex
+  end
+
+  #
+  # name_regex      Lookahead regex. Between start and end of word, match
+  #                 none of the control or special characters listed.
+  #                 The second paren group says at least one of what was
+  #                 previously matched must be a letter character or digit.
+  #
+  @@name_regex      = /(?=\A[^[:cntrl:]\\<>\/&]*\z)(.*[\p{L}\d].*)/u
+
+  #
+  # User friendly representation of restricted name characters
+  #
+  @@restricted_characters = "\\, <, >, &, /"
+
+  bad_name_message  = I18n.t(   'UserBadName',
+                                restricted_characters: @@restricted_characters )
+
+  def self.name_regex
+    @@name_regex
+  end
 
   email_name_regex  = '[\w\.%\+\-\']+'.freeze
   domain_head_regex = '(?:[A-Z0-9\-]+\.)+'.freeze
@@ -117,12 +138,12 @@ class User < ActiveRecord::Base
   validates_presence_of     :login
   validates_length_of       :login,    :within => 1..40
   validates_uniqueness_of   :login, :case_sensitive => false
-  validates_format_of       :login,    :with => login_regex, :message => bad_login_message
+  validates_format_of       :login,    :with => @@login_regex, :message => bad_login_message
 
-  validates_format_of       :first_name,     :with => name_regex,  :message => bad_name_message, :allow_nil => true
+  validates_format_of       :first_name,     :with => @@name_regex,  :message => bad_name_message, :allow_nil => false
   validates_length_of       :first_name,     :maximum => 100
 
-  validates_format_of       :last_name,     :with => name_regex,  :message => bad_name_message, :allow_nil => true
+  validates_format_of       :last_name,     :with => @@name_regex,  :message => bad_name_message, :allow_nil => false
   validates_length_of       :last_name,     :maximum => 100
 
   validates_presence_of     :email
