@@ -33,7 +33,7 @@ describe API::V1::StudentRegistration do
     context "given duplicate user names" do
       it "creates unique logins" do
 
-        @count = User.all.size
+        @count = User.count
 
         reg1 = API::V1::StudentRegistration.new(params)
         reg1.save
@@ -51,7 +51,7 @@ describe API::V1::StudentRegistration do
         reg2.login = 'sdoe'
         reg2.save
 
-        expect(User.all.size).to eql(@count + 2)
+        expect(User.count).to eql(@count + 2)
 
       end
     end

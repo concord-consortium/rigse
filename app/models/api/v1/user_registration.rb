@@ -19,6 +19,15 @@ class API::V1::UserRegistration
 
   before_validation :set_defaults
 
+  #
+  # Override login attribute's accessor to also set
+  # login on @user object.
+  #
+  def login=(_login)
+    @login      = _login
+    @user.login = _login if @user
+  end
+
   # used by oauth signup path to preset the current user
   def set_user(user)
     @user = user
@@ -83,7 +92,6 @@ class API::V1::UserRegistration
 
   def persist_user
     @user = new_user
-    @user.login = @login
     return @user.save!
   end
 
