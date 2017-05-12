@@ -83,6 +83,7 @@ class API::V1::UserRegistration
 
   def persist_user
     @user = new_user
+    @user.login = @login
     return @user.save!
   end
 
