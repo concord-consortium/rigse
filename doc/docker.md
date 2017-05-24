@@ -122,7 +122,8 @@ extension:
 
     brew install unison
     pip install MacFSEvents
-    curl -o /usr/local/bin/unison-fsmonitor -L https://raw.githubusercontent.com/hnsl/unox/master/unox.py
+    pip install watchdog
+    curl -o /usr/local/bin/unison-fsmonitor -L https://raw.githubusercontent.com/hnsl/unox/master/src/unox/unox.py
     chmod +x /usr/local/bin/unison-fsmonitor
 
 Those instructions were taken from here:
