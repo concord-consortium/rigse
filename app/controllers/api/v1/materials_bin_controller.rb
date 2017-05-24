@@ -7,13 +7,20 @@ class API::V1::MaterialsBinController < API::APIController
   #   - ?id=:id or ?id[]=:id1&id[]=:id2 - returns collections with given IDs
   # Note that materials are filtered by cohorts of the current visitor!
   def collections
+    status = 200
     # Preserver order of collections provided by client!
     collection_by_id = MaterialsCollection.where(id: params[:id]).index_by { |mc| mc.id.to_s }
     collections = Array(params[:id]).map do |id|
       col = collection_by_id[id]
+      if col.nil?
+        message = "Invalid collection ID #{id}."
+        status  = 400 # bad request
+        render json: {:message => message}, :status => status
+        return
+      end
       materials_collection_data(col.name, col.materials(allowed_cohorts, show_assessment_items), params[:assigned_to_class])
     end
-    render json: collections
+    render json: collections, :status => status
   end
 
   # GET /api/v1/materials_bin/unofficial_materials?user_id=:user_id
