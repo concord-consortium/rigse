@@ -173,6 +173,10 @@ class Reports::Detail < Reports::Excel
               end
             else
               answer_value = ans[:answer].kind_of?(Enumerable) ? ans[:answer].map { |a| a[:answer] }.join(', ') : ans[:answer]
+              # guard against invalid or missing answers (can happen eg when Saveable::ExternalLinkUrl has no "url" param set )
+              if answer_value.nil?
+                answer_value = "";
+              end
               # Limit length of the answer to 5000 characters, so we don't break Excel.
               answer_value = answer_value.truncate(5000)
               case ans[:is_correct]
