@@ -59,11 +59,11 @@ class Dataservice::ProcessExternalActivityDataJob
       #
       rescue NameError => e
 
-        # Delayed::Worker.logger.debug("*** rescue #{e}")
-        # Delayed::Worker.logger.debug("*** learner_id #{learner_id}")
-        # Delayed::Worker.logger.debug("*** student_ response " <<
-        #                               "#{student_response}")
-        # Delayed::Worker.logger.error e.backtrace.join("\n")
+        Delayed::Worker.logger.debug("*** rescue #{e}")
+        Delayed::Worker.logger.debug("*** learner_id #{learner_id}")
+        Delayed::Worker.logger.debug("*** student_response " <<
+                                        "#{student_response}")
+        Delayed::Worker.logger.error e.backtrace.join("\n")
 
         log_exception(e, learner_id, student_response)
 
@@ -75,14 +75,20 @@ class Dataservice::ProcessExternalActivityDataJob
 
   def internal_process_open_response(data, embeddable)
     if data["answer"].nil?
-      raise MissingAnswer.new("Open response is missing answer value")
+      data["answer"] = ''
     end
     process_open_response(embeddable.id, data["answer"], data["is_final"])
   end
 
   def internal_process_multiple_choice(data, embeddable)
     choice_ids = data["answer_ids"].map {|aid| choice = embeddable.choices.detect{|ch| ch.external_id == aid }; choice ? choice.id : nil }
-    process_multiple_choice(choice_ids.compact.uniq, {}, data["is_final"])
+
+    # Delayed::Worker.logger.debug("*** choice_ids #{choice_ids}")
+
+    process_multiple_choice(data["question_id"],
+                            choice_ids.compact.uniq,
+                            {},
+                            data["is_final"])
   end
 
   def internal_process_image_question(data,embeddable)

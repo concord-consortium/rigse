@@ -64,16 +64,43 @@ module SaveableExtraction
     return rationales
   end
 
-  def process_multiple_choice(choice_ids, rationales = {}, is_final = nil)
+  def process_multiple_choice(  question_id,
+                                choice_ids,
+                                rationales = {},
+                                is_final = nil )
+
+    if choice_ids.count == 0
+      #
+      # User is unselecting a previous selection.
+      # Do not associate answers with this question.
+      #
+      Delayed::Worker.logger.debug("Create saveable with no choices selected.")
+      saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, question_id)
+      saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => question_id, :is_final => is_final)
+      return
+    end
+
     choice = Embeddable::MultipleChoiceChoice.find_by_id(choice_ids.first, :include => :multiple_choice)
     multiple_choice = choice ? choice.multiple_choice : nil
+
+    # Delayed::Worker.logger.debug("choice #{choice}")
+    # Delayed::Worker.logger.debug("multiple_choice #{multiple_choice}")
+
     if multiple_choice && choice
+
+      # Delayed::Worker.logger.debug("choice id #{choice.id}")
+      # Delayed::Worker.logger.debug("multiple_choice id #{multiple_choice.id}")
+
       saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, multiple_choice.id)
+
       if saveable.answers.empty? || # we don't have any answers yet
          saveable.answers.last.answer.size != choice_ids.size || # the number of selected choices differs
          ((saveable.answers.last.rationale_choices.map{|rc| rc.choice_id} - choice_ids).size != 0) || # the actual selections differ
          ((saveable.answers.last.rationale_choices.map{|rc| rc.rationale}.compact - rationales.values).size != 0) || # the actual rationales differ
          saveable.answers.last.is_final != is_final # is_final differs (answer is explicitly submitted by learner)
+
+        Delayed::Worker.logger.debug("saveable.answers.last.answer.size " <<
+                                "#{saveable.answers.last.answer.size}" )
 
         saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => multiple_choice.id, :is_final => is_final)
         choice_ids.each do |choice_id|
@@ -83,9 +110,8 @@ module SaveableExtraction
     else
       if ! choice
         logger.error("Missing Embeddable::MultipleChoiceChoice id: #{choice_ids.join(",")}")
-      end
-      if ! multiple_choice
-        logger.error("Missing Embeddable::MultipleChoice because choice is nil")
+      elsif ! multiple_choice
+        logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
       end
     end
   end

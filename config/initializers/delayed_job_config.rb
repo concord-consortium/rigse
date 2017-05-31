@@ -13,6 +13,6 @@ if Rails.env.development?
   Delayed::Backend::ActiveRecord::Job.send(:include, Delayed::Worker::Scaler)
 end
 
-# Delayed::Worker.logger = Logger.new(
-#   File.join(Rails.root, 'log', 'delayed_job.log') )
+Delayed::Worker.logger = Logger.new(
+    File.join(Rails.root, 'log', 'delayed_job.log') )
 
