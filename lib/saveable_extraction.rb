@@ -85,7 +85,7 @@ module SaveableExtraction
         logger.error("Missing Embeddable::MultipleChoiceChoice id: #{choice_ids.join(",")}")
       end
       if ! multiple_choice
-        logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
+        logger.error("Missing Embeddable::MultipleChoice because choice is nil")
       end
     end
   end

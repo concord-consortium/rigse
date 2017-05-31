@@ -25,7 +25,12 @@ class Dataservice::ProcessExternalActivityDataJob
 
     # process the json data
     answers.each do |student_response|
+
+      # Delayed::Worker.logger.debug( "Processing student_response " <<
+	  #                              "#{student_response}" )
+
       begin
+
         case student_response["type"]
         when "open_response"
           embeddable = template.open_responses.detect {|e| e.external_id == student_response["question_id"]}
@@ -47,10 +52,21 @@ class Dataservice::ProcessExternalActivityDataJob
         else
           raise UnknownRespose.new("type: #{student_response["type"]}\nContent: #{content}")
         end
+
+      #
       # We could broaden this to StdErr, but this should catch most cases
       # which will be NPE-like cases
-      rescue NameError => stderr
-        log_exception(stderr, learner_id, student_response)
+      #
+      rescue NameError => e
+
+        # Delayed::Worker.logger.debug("*** rescue #{e}")
+        # Delayed::Worker.logger.debug("*** learner_id #{learner_id}")
+        # Delayed::Worker.logger.debug("*** student_ response " <<
+        #                               "#{student_response}")
+        # Delayed::Worker.logger.error e.backtrace.join("\n")
+
+        log_exception(e, learner_id, student_response)
+
       end
     end
     learner.report_learner.last_run = Time.now
