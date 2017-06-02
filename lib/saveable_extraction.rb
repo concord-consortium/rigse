@@ -64,7 +64,7 @@ module SaveableExtraction
     return rationales
   end
 
-  def process_multiple_choice(  question_id,
+  def process_multiple_choice(  embeddable_id,
                                 choice_ids,
                                 rationales = {},
                                 is_final = nil )
@@ -74,9 +74,9 @@ module SaveableExtraction
       # User is unselecting a previous selection.
       # Do not associate answers with this question.
       #
-      Delayed::Worker.logger.debug("Create saveable with no choices selected.")
-      saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, question_id)
-      saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => question_id, :is_final => is_final)
+      # Delayed::Worker.logger.debug("Create saveable with no choices selected.")
+      saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, embeddable_id)
+      saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => embeddable_id, :is_final => is_final)
       return
     end
 
@@ -88,6 +88,7 @@ module SaveableExtraction
 
     if multiple_choice && choice
 
+      # Delayed::Worker.logger.debug("embeddable id #{embeddable_id}")
       # Delayed::Worker.logger.debug("choice id #{choice.id}")
       # Delayed::Worker.logger.debug("multiple_choice id #{multiple_choice.id}")
 
@@ -95,12 +96,12 @@ module SaveableExtraction
 
       if saveable.answers.empty? || # we don't have any answers yet
          saveable.answers.last.answer.size != choice_ids.size || # the number of selected choices differs
+         ( !(saveable.answers.last.answer[0].key?(:choice_id)) ) || # a placeholder value indicating "no selection" is present.
          ((saveable.answers.last.rationale_choices.map{|rc| rc.choice_id} - choice_ids).size != 0) || # the actual selections differ
          ((saveable.answers.last.rationale_choices.map{|rc| rc.rationale}.compact - rationales.values).size != 0) || # the actual rationales differ
          saveable.answers.last.is_final != is_final # is_final differs (answer is explicitly submitted by learner)
 
-        Delayed::Worker.logger.debug("saveable.answers.last.answer.size " <<
-                                "#{saveable.answers.last.answer.size}" )
+        # Delayed::Worker.logger.debug("*** Saving new multiple choice answers.")
 
         saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => multiple_choice.id, :is_final => is_final)
         choice_ids.each do |choice_id|

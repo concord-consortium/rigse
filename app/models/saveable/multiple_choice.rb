@@ -17,6 +17,35 @@ class Saveable::MultipleChoice < ActiveRecord::Base
 
   include Saveable::Saveable
 
+  #
+  # Override #answered? to ensure last answer was not the user
+  # resetting the selection to the default un-selected state.
+  #
+  def answered?
+
+    if answers.length == 0 
+        return false
+    end
+
+    if  answers.last.answer                         &&
+        answers.last.answer.length == 1             &&
+        !(answers.last.answer[0].key?(:choice_id))
+
+        #
+        # The last answer is a list containing only one item, and it
+        # does not contain a key for :choice_id. This is the answer we
+        # generated in the case of unselecting a previous selection.
+        # I.e. user is resetting to the default unselected state.
+        # {:answer=>"not answered"}
+        #
+
+        return false
+    end
+
+    return true 
+  end
+
+
   def embeddable
     multiple_choice
   end
