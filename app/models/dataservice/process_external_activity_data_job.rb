@@ -26,9 +26,6 @@ class Dataservice::ProcessExternalActivityDataJob
     # process the json data
     answers.each do |student_response|
 
-      # Delayed::Worker.logger.debug( "Processing student_response " <<
-	  #                              "#{student_response}" )
-
       begin
 
         case student_response["type"]

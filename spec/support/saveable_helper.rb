@@ -16,6 +16,24 @@ shared_examples_for 'a saveable' do
   describe "score and feedback for answers" do
     def add_answer
       saveable.answers.create
+
+      if described_class == Saveable::MultipleChoice
+        #
+        # Stubbing the #answer method since its return is derived from some
+        # complex relationships
+        #
+        Saveable::MultipleChoiceAnswer.any_instance.stub(
+            :answer =>
+                [ { :choice_id => 1, :answer => "non-default answer" } ] )
+      end
+
+      if described_class == Saveable::OpenResponse
+        #
+        # For open response, set the :answer attribute to some non-empty value
+        #
+        saveable.answers.last.update_attribute(:answer, "non-empty answer")
+      end
+
     end
 
     def add_score(score)

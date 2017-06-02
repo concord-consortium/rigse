@@ -61,9 +61,6 @@ class Report::UtilLearner
       total = Float(embeddables.size)
     end
 
-    # puts "*** util_learner found total      #{total}"
-    # puts "*** util_learner found completed  #{completed}"
-
     return total < 0.5 ? 0.0 : (completed/total) * 100.0
   end
 end
