@@ -27,9 +27,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
         return false
     end
 
-    if  answers.last.answer                         &&
-        answers.last.answer.length == 1             &&
-        !(answers.last.answer[0].key?(:choice_id))
+    if answers.last.rationale_choices.size > 0
 
         #
         # The last answer is a list containing only one item, and it
@@ -39,10 +37,11 @@ class Saveable::MultipleChoice < ActiveRecord::Base
         # {:answer=>"not answered"}
         #
 
-        return false
+        return true
     end
 
-    return true 
+    return false
+
   end
 
 
