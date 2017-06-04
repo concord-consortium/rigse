@@ -16,6 +16,7 @@ shared_examples_for 'a saveable' do
   describe "score and feedback for answers" do
     def add_answer
       saveable.answers.create
+      saveable.answers.last.rationale_choices.create
 
       if described_class == Saveable::MultipleChoice
         #
