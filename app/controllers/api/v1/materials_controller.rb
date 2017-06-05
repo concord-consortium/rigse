@@ -71,7 +71,15 @@ class API::V1::MaterialsController < API::APIController
       id = params[:id]
 
       if id
-        favorite = Favorite.find(id)
+        
+        favorite = nil
+
+        begin
+          favorite = Favorite.find(id)
+        rescue ActiveRecord::RecordNotFound => rnf
+          status = 400
+          message = "RecordNotFound Favorite #{id} does not exist."
+        end
 
         if favorite
           if favorite.user == current_visitor
@@ -119,28 +127,44 @@ class API::V1::MaterialsController < API::APIController
       type  = params[:material_type]
       id    = params[:id]
 
-      item  = nil
-
       if type && id 
-        case type
-        when "external_activity"
-          item = ExternalActivity.find(id)
-        when "interactive"
-          item = Interactive.find(id)
-        else
+
+        item = nil
+
+        begin
+
           #
-          # Invalid material type
+          # Map of class types supported for favorites.
           #
+          # Might also consider using "classify" and "constantize" here
+          # rather than a hard coded map of types. But that might require
+          # additional input validation or otherwise constrain how we define
+          # the http parameters.
+          #
+          supported_types = {
+            "external_activity" => ExternalActivity,
+            "interactive"       => Interactive
+          }
+
+          rubyclass = supported_types[type]
+
+          if rubyclass 
+            item = rubyclass.find(id)
+          else
+            status = 400
+            message = "Invalid material type #{type}"
+          end
+        rescue ActiveRecord::RecordNotFound => rnf
           status = 400
-          message = "Invalid material type #{type}"
+          message = "RecordNotFound Invalid item #{id}"
         end
-  
+
         if item
           #
-          # Unclear if this should check for the existance of 
+          # Unclear if this should check for the existence of 
           # the favorite. The unique index should ensure there is only
-          # one favorite per user per item. Wehn attempting to add 
-          # another, rails logs:
+          # one favorite per user per item. When attempting to add 
+          # a duplicate, rails logs:
           # Favorite Exists (1.0ms) SELECT 1 AS one FROM `favorites` ...
           # and no error is reported. This might be less expensive than
           # attempting to determine if the favorite exists otherwise.
@@ -158,9 +182,6 @@ class API::V1::MaterialsController < API::APIController
         message = "Missing type (#{type}) or id (#{id})"
       end
     else
-      #
-      # Cannot add favorite for non-logged in user
-      #
       status = 400
       message = "Cannot add favorite for non-logged in user."
     end
@@ -169,9 +190,51 @@ class API::V1::MaterialsController < API::APIController
 
   end
 
+  #
+  # Get all favorites for the currently logged in user.
+  #
   def get_favorites
 
+    status  = 200
+    data    = nil
+
+    if current_user
+
+      favorites     = current_visitor.favorites
+      type_ids_map  = {}
+      materials     = []
+
+      #
+      # Build sets of IDs for each type
+      #
+      favorites.each do |favorite|
+        favoritable_type    = favorite.favoritable_type
+        favoritable_id      = favorite.favoritable_id
+        if !type_ids_map[favoritable_type] 
+          type_ids_map[favoritable_type] = []
+        end
+        type_ids_map[favoritable_type].append(favoritable_id)
+      end
+
+      #
+      # Now do a single query for each type
+      #
+      type_ids_map.each do |key, val| 
+        items = key.constantize.find(val)   # E.g. this might become:
+                                            # ExternalActivity.find([1,2,3])
+        materials += items
+      end
+
+      data = materials_data(materials)
+
+    else 
+      status = 400
+      data = {:message => "Cannot retrieve favorites for non-logged in user."}
+    end
+
+    render json: data, :status => status
   end
+
 
   def assign_to_class
     # only add/delete if assign parameter exists to avoid deleting data on a bad request
