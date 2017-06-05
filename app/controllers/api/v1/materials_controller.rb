@@ -48,10 +48,12 @@ class API::V1::MaterialsController < API::APIController
   # Get all available materials
   #
   def all
-    materials = ExternalActivity.all +
+
+    materials = ExternalActivity.includes(:user, :template).all +
                 Interactive.all
 
     render json: materials_data(materials)
+
   end
 
   #
@@ -64,6 +66,7 @@ class API::V1::MaterialsController < API::APIController
   # GET /api/v1/materials/remove_favorite
   #
   def remove_favorite
+
     status  = 200
     message = "Removing favorite..."
 
@@ -233,6 +236,7 @@ class API::V1::MaterialsController < API::APIController
     end
 
     render json: data, :status => status
+
   end
 
 
