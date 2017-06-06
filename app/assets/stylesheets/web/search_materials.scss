@@ -78,17 +78,31 @@ width: 300px;
     font-size: 0.75em;
     color: #999;
 }
+.stackable_left {
+    position:   absolute;
+    top:        0px;
+    left:       0px;
+    z-index:    0;
+}
+.stackable_right {
+    position:   absolute;
+    top:        0px;
+    right:      0px;
+    z-index:    0;
+}
 .material_icon {
-  float:left;
-  margin:17px 10px 0 5px;
-  padding: 0px;
-  height: 100px;
-  width: 120px;
-  overflow: hidden;
-  text-align:center;
-  .thumb_link {
-    cursor: pointer;
-  }
+    position:   relative;
+    border:     1px solid black;
+    float:      left;
+    margin:     17px 10px 0 5px;
+    padding:    0px;
+    height:     100px;
+    width:      120px;
+    overflow:   hidden;
+    text-align: center;
+    .thumb_link {
+        cursor: pointer;
+    }
 }
 .material_type{
   width:120px;
