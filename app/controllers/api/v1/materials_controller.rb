@@ -61,7 +61,7 @@ class API::V1::MaterialsController < API::APIController
   #
   # Request params should contain:
   #
-  # id      The id 
+  # favorite_id     The favorite id 
   #
   # GET /api/v1/materials/remove_favorite
   #
@@ -71,31 +71,31 @@ class API::V1::MaterialsController < API::APIController
     message = "Removing favorite..."
 
     if current_visitor
-      id = params[:id]
+      favorite_id = params[:favorite_id]
 
-      if id
+      if favorite_id
         
         favorite = nil
 
         begin
-          favorite = Favorite.find(id)
+          favorite = Favorite.find(favorite_id)
         rescue ActiveRecord::RecordNotFound => rnf
           status = 400
-          message = "RecordNotFound Favorite #{id} does not exist."
+          message = "RecordNotFound Favorite #{favorite_id} does not exist."
         end
 
         if favorite
           if favorite.user == current_visitor
             favorite.destroy
             # current_visitor.favorites.delete(favorite)
-            message = "Favorite removed."
+            message = "Favorite #{favorite_id} removed."
           else
             status = 400
             message = "Cannot delete favorite not owned by current user."
           end
         else
           status = 400
-          message = "Favorite #{id} does not exist."
+          message = "Favorite #{favorite_id} does not exist."
         end
       else
         status = 400
@@ -122,8 +122,9 @@ class API::V1::MaterialsController < API::APIController
   #
   def add_favorite
 
-    status  = 200
-    message = "Adding favorite..."
+    status      = 200
+    message     = "Adding favorite..."
+    favorite_id = -1
 
     if current_visitor
     
@@ -164,7 +165,7 @@ class API::V1::MaterialsController < API::APIController
 
         if item
           #
-          # Unclear if this should check for the existence of 
+          # Unclear if this should first check for the existence of 
           # the favorite. The unique index should ensure there is only
           # one favorite per user per item. When attempting to add 
           # a duplicate, rails logs:
@@ -174,8 +175,25 @@ class API::V1::MaterialsController < API::APIController
           #
           favorite = Favorite.create(   user: current_visitor, 
                                         favoritable: item       )
-          current_visitor.favorites.append( favorite )
-          message = "Favorite added."
+          if favorite.id.nil?
+            #
+            # Query for the existing favorite so that we can 
+            # return the ID to the client who presumably did not have it
+            # prior to this call.
+            #
+            favorite = Favorite.where(  user_id: current_visitor.id, 
+                                        favoritable_id: id,
+                                        favoritable_type: rubyclass.name )[0]
+            message = "Favorite already exists with id #{favorite.id}."
+          else
+            #
+            # Add the new favorite for this user.
+            #
+            current_visitor.favorites.append( favorite )
+            message = "Added new favorite with id #{favorite.id}."
+          end
+          favorite_id = favorite.id
+
         else 
           status = 400
           message = "Invalid item #{id}"
@@ -189,7 +207,8 @@ class API::V1::MaterialsController < API::APIController
       message = "Cannot add favorite for non-logged in user."
     end
 
-    render json: {:message => message}, :status => status
+    render json: {  :message        => message, 
+                    :favorite_id    => favorite_id  }, :status => status
 
   end
 

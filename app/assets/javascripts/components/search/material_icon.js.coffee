@@ -30,8 +30,31 @@ window.SMaterialIconClass = React.createClass
 
   handleClick: ->
     material = @props.material
-    alert("Click " + material.id + " " + material.class_name_underscored)
+    # alert("Click " + material.id + " " + material.class_name_underscored)
     # console.log("DEBUG!!!")
     # console.log(@props)
+
+    apiUrl 	= null
+    params	= {}
+
+    if material.is_favorite 
+        apiUrl = Portal.API_V1.MATERIALS_REMOVE_FAVORITE
+        params = {  favorite_id:    material.favorite_id    }
+    else
+        apiUrl = Portal.API_V1.MATERIALS_ADD_FAVORITE
+        params = {  id:             material.id,                    \
+                    material_type:  material.class_name_underscored }
+
+    jQuery.ajax
+      url: apiUrl
+      data: params
+      dataType: 'json'
+      success: (data) =>
+        console.info("DEBUG", data.message, data)
+        material.is_favorite = !material.is_favorite
+        material.favorite_id = data.favorite_id
+        @setState {material: material}
+      error: (jqXHR, textStatus, errorThrown) =>
+        console.error("ERROR", jqXHR.responseText, jqXHR)
 
 window.SMaterialIcon = React.createFactory SMaterialIconClass
