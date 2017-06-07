@@ -85,22 +85,28 @@ class API::V1::MaterialsController < API::APIController
         end
 
         if favorite
+
           if favorite.user == current_visitor
+
             favorite.destroy
             # current_visitor.favorites.delete(favorite)
             message = "Favorite #{favorite_id} removed."
+
           else
             status = 400
             message = "Cannot delete favorite not owned by current user."
           end
+
         else
           status = 400
           message = "Favorite #{favorite_id} does not exist."
         end
+
       else
         status = 400
         message = "No favorite id specified."
       end
+
     else 
       status = 400
       message = "Cannot remove favorite for non-logged in user."
@@ -147,61 +153,82 @@ class API::V1::MaterialsController < API::APIController
           #
           supported_types = {
             "external_activity" => ExternalActivity,
-            "interactive"       => Interactive
+            "interactive"       => Interactive,
+            "investigation"     => Investigation
           }
 
           rubyclass = supported_types[type]
 
           if rubyclass 
             item = rubyclass.find(id)
+
+            if item
+              #
+              # Unclear if this should first check for the existence of 
+              # the favorite. The unique index should ensure there is only
+              # one favorite per user per item. When attempting to add 
+              # a duplicate, rails logs:
+              # Favorite Exists (1.0ms) SELECT 1 AS one FROM `favorites` ...
+              # and no error is reported. This might be less expensive than
+              # attempting to determine if the favorite exists otherwise.
+              #
+              favorite = Favorite.create(   user: current_visitor, 
+                                            favoritable: item       )
+              if ! favorite.id.nil?
+
+                #
+                # Add the new favorite for this user.
+                #
+                current_visitor.favorites.append( favorite )
+                message     = "Added new favorite with id #{favorite.id}."
+                favorite_id = favorite.id
+
+              else
+
+                #
+                # Query for the existing favorite so that we can 
+                # return the ID to the client who presumably did not have it
+                # prior to this call.
+                #
+                favorites = Favorite.where( user_id: current_visitor.id, 
+                                            favoritable_id: id,
+                                            favoritable_type: rubyclass.name )
+                if favorites.count == 1
+
+                  favorite = favorites[0] 
+                  message = "Favorite already exists with id #{favorite.id}."
+                  favorite_id = favorite.id
+
+                else
+                  #
+                  # This shouldn't happen...
+                  #
+                  status = 400
+                  message = "Could not create favorite even though " +
+                            "#{favorites.count} favorite(s) already exist."
+                end
+              end
+
+            else 
+              status = 400
+              message = "Invalid material id #{id}"
+            end
+
           else
             status = 400
             message = "Invalid material type #{type}"
           end
+
         rescue ActiveRecord::RecordNotFound => rnf
           status = 400
-          message = "RecordNotFound Invalid item #{id}"
+          message = "RecordNotFound Invalid material id #{id}"
         end
 
-        if item
-          #
-          # Unclear if this should first check for the existence of 
-          # the favorite. The unique index should ensure there is only
-          # one favorite per user per item. When attempting to add 
-          # a duplicate, rails logs:
-          # Favorite Exists (1.0ms) SELECT 1 AS one FROM `favorites` ...
-          # and no error is reported. This might be less expensive than
-          # attempting to determine if the favorite exists otherwise.
-          #
-          favorite = Favorite.create(   user: current_visitor, 
-                                        favoritable: item       )
-          if favorite.id.nil?
-            #
-            # Query for the existing favorite so that we can 
-            # return the ID to the client who presumably did not have it
-            # prior to this call.
-            #
-            favorite = Favorite.where(  user_id: current_visitor.id, 
-                                        favoritable_id: id,
-                                        favoritable_type: rubyclass.name )[0]
-            message = "Favorite already exists with id #{favorite.id}."
-          else
-            #
-            # Add the new favorite for this user.
-            #
-            current_visitor.favorites.append( favorite )
-            message = "Added new favorite with id #{favorite.id}."
-          end
-          favorite_id = favorite.id
-
-        else 
-          status = 400
-          message = "Invalid item #{id}"
-        end
       else
         status = 400
-        message = "Missing type (#{type}) or id (#{id})"
+        message = "Missing material type (#{type}) or id (#{id})"
       end
+
     else
       status = 400
       message = "Cannot add favorite for non-logged in user."
