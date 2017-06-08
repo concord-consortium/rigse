@@ -52,6 +52,14 @@ class UsersController < ApplicationController
     @projects = Admin::Project.all_sorted
   end
 
+  #
+  # GET /users/1/favorites
+  #
+  def favorites
+    @user = User.find(params[:id])
+    authorize @user
+  end
+
    # /users/1/switch
   def switch
     @user = User.find(params[:id])

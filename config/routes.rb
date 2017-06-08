@@ -291,6 +291,7 @@ RailsPortal::Application.routes.draw do
         put :unsuspend
         get :interface
         put :switch
+        get :favorites
         get :preferences
         put :preferences
         get :reset_password
