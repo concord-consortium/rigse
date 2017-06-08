@@ -1,13 +1,17 @@
-{div} = React.DOM
+{div, br} = React.DOM
 
 window.FavoritesListClass = React.createClass
 
   displayName: "FavoritesListClass"
 
   render: ->
-    (div {}, "Hello Favorites!" )
+    (div {}, 
+      for item in @props.items
+        (SMaterialIcon {material: item}) 
+    )
+
 
 window.FavoritesList = React.createFactory FavoritesListClass
 
-Portal.renderFavorites = (results, dest) ->
-  ReactDOM.render FavoritesList(results: results), jQuery(dest)[0]
+Portal.renderFavorites = (array, dest) ->
+  ReactDOM.render FavoritesList(items: array), jQuery(dest)[0]
