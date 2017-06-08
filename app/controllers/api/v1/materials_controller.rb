@@ -69,12 +69,11 @@ class API::V1::MaterialsController < API::APIController
 
     status  = 200
     message = "Removing favorite..."
-
-    if current_visitor
+ 
+    if current_user && !current_user.anonymous?
       favorite_id = params[:favorite_id]
 
       if favorite_id
-        
         favorite = nil
 
         begin
@@ -86,10 +85,9 @@ class API::V1::MaterialsController < API::APIController
 
         if favorite
 
-          if favorite.user == current_visitor
+          if favorite.user == current_user
 
             favorite.destroy
-            # current_visitor.favorites.delete(favorite)
             message = "Favorite #{favorite_id} removed."
 
           else
@@ -132,7 +130,7 @@ class API::V1::MaterialsController < API::APIController
     message     = "Adding favorite..."
     favorite_id = -1
 
-    if current_visitor
+    if current_user && !current_user.anonymous?
     
       type  = params[:material_type]
       id    = params[:id]
@@ -172,14 +170,14 @@ class API::V1::MaterialsController < API::APIController
               # and no error is reported. This might be less expensive than
               # attempting to determine if the favorite exists otherwise.
               #
-              favorite = Favorite.create(   user: current_visitor, 
+              favorite = Favorite.create(   user: current_user, 
                                             favoritable: item       )
               if ! favorite.id.nil?
 
                 #
                 # Add the new favorite for this user.
                 #
-                current_visitor.favorites.append( favorite )
+                current_user.favorites.append( favorite )
                 message     = "Added new favorite with id #{favorite.id}."
                 favorite_id = favorite.id
 
@@ -190,7 +188,7 @@ class API::V1::MaterialsController < API::APIController
                 # return the ID to the client who presumably did not have it
                 # prior to this call.
                 #
-                favorites = Favorite.where( user_id: current_visitor.id, 
+                favorites = Favorite.where( user_id: current_user.id, 
                                             favoritable_id: id,
                                             favoritable_type: rubyclass.name )
                 if favorites.count == 1
@@ -247,9 +245,9 @@ class API::V1::MaterialsController < API::APIController
     status  = 200
     data    = nil
 
-    if current_user
+    if current_user && !current_user.anonymous?
 
-      favorites     = current_visitor.favorites
+      favorites     = current_user.favorites
       type_ids_map  = {}
       materials     = []
 

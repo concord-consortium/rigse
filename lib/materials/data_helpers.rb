@@ -63,11 +63,15 @@ module Materials
         is_favorite = false
         favorite_id = nil
 
-        if material.respond_to?(:favorites)
-          favorites = material.favorites.where(:user_id => current_visitor.id)
+        if  current_user                        && 
+            !current_user.anonymous?            &&
+            material.respond_to?(:favorites)
+
+          favorites = material.favorites.where(:user_id => current_user.id)
           if favorites.count > 0
             favorite_id = favorites[0].id
             is_favorite = true
+
           end
         end
 
