@@ -7,7 +7,8 @@ window.FavoritesListClass = React.createClass
   render: ->
     (div {}, 
       for item in @props.items
-        (SMaterialIcon {material: item}) 
+        (SMaterialIcon {    material: item, \
+                            key: "#{item.class_name}#{item.id}" } ) 
     )
 
 
