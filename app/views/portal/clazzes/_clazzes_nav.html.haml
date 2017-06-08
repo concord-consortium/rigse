@@ -8,8 +8,10 @@
     = render :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => top_node, :selects => selects}
     - if top_node.is_a? Portal::Teacher
       .create{:id=>dom_id_for(top_node, :nav_list_create_class)}
+        .favorite_resources_link
+          = link_to 'My Favorite Resources', manage_portal_clazzes_url, :class=>"button pie", :id=>"btn_manage_classes"
         .create_link
-          = link_to 'Create a Class', new_portal_clazz_path, :class=>"button pie", :id=>"btn_create_class"
+          = link_to 'Add a New Class', new_portal_clazz_path, :class=>"button pie", :id=>"btn_create_class"
         .manage_classes_link
           = link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"button pie", :id=>"btn_manage_classes"
           

@@ -712,8 +712,11 @@ li.item_selectable {
   ul.create {
     border-top: none; }
   .create_link,
-  .manage_classes_link {
-    margin: 10px 0 0 20px; } }
+  .manage_classes_link, 
+  .favorite_resources_link {
+    margin: 10px 0 0 20px; 
+  } 
+}
 
 .user-info-box {
   background: white;
