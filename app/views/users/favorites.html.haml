@@ -1,16 +1,23 @@
 %h2
-  My Favorites
+  Favorite Resources
+%font{:size => 2}
+  To remove saved resources, simply uncheck the star icon.
+.ajax_results
+  No results found!
 
 :javascript
+
   jQuery(document).ready(function() {
-    var dest = '#results .search_resultscontainer',
-        apiUrl = '#{api_v1_materials_get_favorites_path}';
+
+    var dest    = '.ajax_results';
+    var apiUrl  = '#{api_v1_materials_get_favorites_path}';
 
     jQuery.ajax({
       dataType: "json",
       url: apiUrl,
       success: function(data) {
-        console.info("INFO", data);
+        console.info("DEBUG", data);
+        Portal.renderFavorites(data, dest)
       }
     })
 
