@@ -1,4 +1,4 @@
-{div, br} = React.DOM
+{div, span, br} = React.DOM
 
 window.FavoritesListClass = React.createClass
 
@@ -6,19 +6,39 @@ window.FavoritesListClass = React.createClass
 
   render: ->
 
+    #
+    # Configuration passed to SMaterialIcon
+    #
     configuration = {
         enableFavorites:    true,
         favoriteClassMap:   {
             true:   "stem-finder-result-favorite-active",
             false:  "stem-finder-result-favorite"
-        }
+        },
+        width:              "300px",
+        height:             "250px"
     }
 
-    (div {}, 
+    (div { style: { display: "flex", \
+                    flexFlow: "row wrap"} }, 
+
       for item in @props.items
-        (SMaterialIcon {    material: item, \
-                            key: "#{item.class_name}#{item.id}", \
-                            configuration: configuration } ) 
+        (div {  style: {    width: "300px",     \
+                            flex: "1 1 45%",    \
+                            display: "table" }, \
+                key: "div-#{item.class_name}#{item.id}" }, 
+
+            (SMaterialIcon {    material: item, \
+                                key: "#{item.class_name}#{item.id}", \
+                                configuration: configuration } )
+
+            (span {}, (br {}))
+            (span { style: { paddingLeft: "30px" } }, "#{item.name}")
+            (span {}, 
+                (br {})
+                (br {})
+            )
+        )
     )
 
 

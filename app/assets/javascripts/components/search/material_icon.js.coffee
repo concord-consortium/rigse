@@ -35,7 +35,16 @@ window.SMaterialIconClass = React.createClass
         border = '1px solid black'
     else
         border = '0px'
-   
+
+    containerStyle = { 'border': border }
+
+    #
+    # Check for caller overrides
+    #
+    for prop in ['width', 'height'] 
+        if configuration[prop]
+            containerStyle[prop] = configuration[prop]
+
     #
     # Create the favorites div if enabled.
     #
@@ -54,9 +63,10 @@ window.SMaterialIconClass = React.createClass
                         dangerouslySetInnerHTML: {__html: favStar} } )
  
 
-    (div {className: 'material_icon', style: {'border': border} },
+    (div {  className: 'material_icon', style: containerStyle },
+
         (a {className: 'thumb_link', href: material.links.browse && material.links.browse.url},
-            (img {src: icon.url, width: '100%'})
+            (img {  src: icon.url, width: '100%'})
         )
         favDiv
     )
