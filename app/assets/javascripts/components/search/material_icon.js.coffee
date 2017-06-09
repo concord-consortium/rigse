@@ -1,38 +1,68 @@
 {div, a, img} = React.DOM
 
 window.SMaterialIconClass = React.createClass
-  displayName: "SMaterialIconClass"
-  render: ->
-    material    = @props.material
-    icon        = material.icon
-    starred     = material.is_favorite
-    starURL     = Portal.favorite_image_map[starred]
 
+  displayName: "SMaterialIconClass"
+
+  render: ->
+
+    material        = @props.material
+    icon            = material.icon
+    starred         = material.is_favorite
+
+    configuration   = @props.configuration
+    enableFavorites = false
+
+    #
+    # Get display configuration info.
+    #
+    if configuration
+        enableFavorites = configuration.enableFavorites
+        favClassMap     = configuration.favoriteClassMap
+    else
+        #
+        # Set some defaults
+        #
+        favClassMap = {
+            true:   "stem-finder-result-favorite-active",
+            false:  "stem-finder-result-favorite"
+        }
+
+    #
+    # Set the icon image
+    #
     if icon.url is null 
         border = '1px solid black'
     else
         border = '0px'
+   
+    #
+    # Create the favorites div if enabled.
+    #
+    if enableFavorites
     
+        #
+        # Set favorite info.
+        #
+        favClass    = favClassMap[false]
+        favStar     = "&#128970;"
+        if starred
+            favClass += " " + favClassMap[true]
+
+        favDiv = (div { className:  favClass,       \
+                        onClick:    @handleClick,   \
+                        dangerouslySetInnerHTML: {__html: favStar} } )
+ 
+
     (div {className: 'material_icon', style: {'border': border} },
         (a {className: 'thumb_link', href: material.links.browse && material.links.browse.url},
-            (img {className: 'stackable_left',  \
-                    zIndex: 1,                  \
-                    src: icon.url,              \
-                    width: '100%' } )
+            (img {src: icon.url, width: '100%'})
         )
-        (img {className: 'stackable_right', \
-                zIndex: 2,                  \
-                src: starURL,               \
-                width: '32px',              \
-                height: '32px',             \
-                onClick: @handleClick } )
+        favDiv
     )
 
   handleClick: ->
     material = @props.material
-    # alert("Click " + material.id + " " + material.class_name_underscored)
-    # console.log("DEBUG!!!")
-    # console.log(@props)
 
     apiUrl 	= null
     params	= {}
@@ -53,7 +83,7 @@ window.SMaterialIconClass = React.createClass
         console.info("DEBUG", data.message, data)
         material.is_favorite = !material.is_favorite
         material.favorite_id = data.favorite_id
-        @setState {material: material}
+        @setState { material: material }
       error: (jqXHR, textStatus, errorThrown) =>
         console.error("ERROR", jqXHR.responseText, jqXHR)
 

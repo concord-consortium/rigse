@@ -5,10 +5,20 @@ window.FavoritesListClass = React.createClass
   displayName: "FavoritesListClass"
 
   render: ->
+
+    configuration = {
+        enableFavorites:    true,
+        favoriteClassMap:   {
+            true:   "stem-finder-result-favorite-active",
+            false:  "stem-finder-result-favorite"
+        }
+    }
+
     (div {}, 
       for item in @props.items
         (SMaterialIcon {    material: item, \
-                            key: "#{item.class_name}#{item.id}" } ) 
+                            key: "#{item.class_name}#{item.id}", \
+                            configuration: configuration } ) 
     )
 
 
