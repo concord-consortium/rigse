@@ -17,9 +17,10 @@
       url: apiUrl,
       success: function(data) {
         console.info("DEBUG", data);
-        Portal.renderFavorites(data, dest)
+        Portal.renderMaterialsList(data, dest);
       }
     })
 
   });
+
 
