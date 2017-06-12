@@ -77,6 +77,10 @@ window.SMaterialIconClass = React.createClass
     apiUrl 	= null
     params	= {}
 
+    if !Portal.currentUser.isTeacher
+        alert("You must be logged in as a teacher to favorite material.");
+        return
+
     if material.is_favorite 
         apiUrl = Portal.API_V1.MATERIALS_REMOVE_FAVORITE
         params = {  favorite_id:    material.favorite_id    }
