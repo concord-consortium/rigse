@@ -103,11 +103,12 @@ width: 300px;
  */
 .legacy-favorite {
   position: 	absolute;
-  top: 			-5px;
+  top: 			0px;
   margin-top:   -5px;
   right: 		0px;
   color: 		#FFFFFF;
   font-size: 	32px;
+  font-family:  initial;
   cursor:       default;
 }
 .legacy-favorite-active {

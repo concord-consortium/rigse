@@ -53,15 +53,20 @@ window.SMaterialIconClass = React.createClass
         #
         # Set favorite info.
         #
-        favClass    = favClassMap[false]
-        favStar     = "&#128970;"
+        favClass        = favClassMap[false]
+        favStar         = "★"
+        outlineStar     = "☆"
         if starred
             favClass += " " + favClassMap[true]
 
         favDiv = (div { className:  favClass,       \
                         onClick:    @handleClick,   \
                         dangerouslySetInnerHTML: {__html: favStar} } )
- 
+        if ! starred
+            outlineDiv = (div { className: favClass,    \
+                            style: {color: '#CCCCCC'},  \
+                            onClick:    @handleClick,   \
+                            dangerouslySetInnerHTML: {__html: outlineStar} } )
 
     (div {  className: 'material_icon', style: containerStyle },
 
@@ -69,6 +74,7 @@ window.SMaterialIconClass = React.createClass
             (img {  src: icon.url, width: '100%'})
         )
         favDiv
+        outlineDiv
     )
 
   handleClick: ->
