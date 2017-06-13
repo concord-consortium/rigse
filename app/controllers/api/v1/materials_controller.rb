@@ -264,11 +264,29 @@ class API::V1::MaterialsController < API::APIController
       end
 
       #
+      # Optimize queries for different material types.
+      #
+      includes_map = {}
+
+      includes_map['ExternalActivity']  = [ :template,
+                                            :user,
+                                            :subject_areas,
+                                            :grade_levels       ]
+
+      includes_map['Interactive']       = [ :user,
+                                            :subject_areas,
+                                            :grade_levels       ]
+
+      includes_map['Investigation']     = [ ]
+
+      #
       # Now do a single query for each type
       #
       type_ids_map.each do |key, val| 
-        items = key.constantize.find(val)   # E.g. this might become:
-                                            # ExternalActivity.find([1,2,3])
+        list = includes_map[key]
+        items = key.constantize.includes(*list).find(val)   
+                                # E.g. the above might become:
+                                # ExternalActivity.includes(...).find([1,2,3])
         materials += items
       end
 
