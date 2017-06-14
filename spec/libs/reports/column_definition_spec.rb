@@ -1,7 +1,6 @@
 require File.expand_path('../../../spec_helper', __FILE__)#include ApplicationHelper
 
 describe Reports::ColumnDefinition do
-  require 'spreadsheet'
 
   describe '#initialize' do
     it 'defines default values' do
