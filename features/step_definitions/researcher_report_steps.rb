@@ -231,12 +231,6 @@ Given /^the following researchers exist:$/ do |users_table|
   end
 end
 
-Given /^a mocked spreadsheet library$/ do
-  workbook = Spreadsheet::Workbook.new
-  workbook.stub("write").and_return('')
-  Spreadsheet::Workbook.stub(:new).and_return(workbook)
-end
-
 Given /^a mocked remote endpoint url$/ do
   Reports::UrlHelpers.any_instance.stub(:remote_endpoint_url).and_return('https://portal.concord.org/dataservice/external_activity_data/1')
 end

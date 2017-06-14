@@ -183,7 +183,6 @@ Feature: Investigations can be reported on
         | student | My Class | first investigation | a               | a      |
         | student | My Class | first investigation | c               | b      |
 
-    And a mocked spreadsheet library
     And a mocked remote endpoint url
 
     And I am logged in with the username researcher

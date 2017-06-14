@@ -487,10 +487,8 @@ RailsPortal::Application.routes.draw do
         post :sort_pages
         get :duplicate
         post :delete_page
-        get :details_report
         post :add_page
         get :add_page
-        get :usage_report
         get :print
       end
     end
@@ -523,10 +521,8 @@ RailsPortal::Application.routes.draw do
       end
       member do
         get :duplicate
-        get :details_report
         post :add_activity
         get :add_activity
-        get :usage_report
         post :sort_activities
         get :print
         post :delete_activity
@@ -538,8 +534,6 @@ RailsPortal::Application.routes.draw do
     match '/investigations/list/filter' => 'investigations#index', :as => :list_filter_investigation, :method => :get
     match '/investigations/teacher/:id.otml' => 'investigations#teacher', :as => :investigation_teacher_otml, :method => :get, :format => :otml
     match '/investigations/teacher/:id.dynamic_otml' => 'investigations#teacher', :as => :investigation_teacher_dynamic_otml, :method => :get, :format => :dynamic_otml
-    match '/investigations/reports/usage' => 'investigations#usage_report', :as => :investigation_usage_report, :method => :get
-    match '/investigations/reports/details' => 'investigations#details_report', :as => :investigation_details_report, :method => :get
     match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
     match '/report/learner/logs_query' => 'report/learner#logs_query', :as => :learner_logs_query, :method => :get
     match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get
