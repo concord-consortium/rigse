@@ -12,6 +12,7 @@ window.SMaterialIconClass = React.createClass
 
     configuration   = @props.configuration
     enableFavorites = false
+    favOutlineClass    = ""
 
     #
     # Get display configuration info.
@@ -19,6 +20,7 @@ window.SMaterialIconClass = React.createClass
     if configuration
         enableFavorites = configuration.enableFavorites
         favClassMap     = configuration.favoriteClassMap
+        favOutlineClass = configuration.favoriteOutlineClass
     else
         #
         # Set some defaults
@@ -58,14 +60,16 @@ window.SMaterialIconClass = React.createClass
         outlineStar     = "\u2606"
         if starred
             favClass += " " + favClassMap[true]
+        else
+            outlineClass = favClass + " " + favOutlineClass
 
         favDiv = (div { className:  favClass,       \
                         onClick:    @handleClick,   \
                         dangerouslySetInnerHTML: {__html: favStar} } )
         if ! starred
-            outlineDiv = (div { className: favClass,    \
-                            style: {color: '#CCCCCC'},  \
-                            onClick:    @handleClick,   \
+            outlineDiv = (div { className: outlineClass,    \
+                            style: {color: '#CCCCCC'},      \
+                            onClick:    @handleClick,       \
                             dangerouslySetInnerHTML: {__html: outlineStar} } )
 
     (div {  className: 'material_icon', style: containerStyle },
@@ -100,7 +104,6 @@ window.SMaterialIconClass = React.createClass
       data: params
       dataType: 'json'
       success: (data) =>
-        console.info("DEBUG", data.message, data)
         material.is_favorite = !material.is_favorite
         material.favorite_id = data.favorite_id
         @setState { material: material }

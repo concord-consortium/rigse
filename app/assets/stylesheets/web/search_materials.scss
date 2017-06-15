@@ -104,7 +104,7 @@ width: 300px;
 .legacy-favorite {
   position: 	absolute;
   top: 			0px;
-  margin-top:   -5px;
+  margin-top:   -10px;
   right: 		0px;
   color: 		#FFFFFF;
   font-size: 	32px;
@@ -113,6 +113,9 @@ width: 300px;
 }
 .legacy-favorite-active {
   color: 		#F8CF4D;
+}
+.legacy-favorite-outline {
+  color: 		#CCCCCC;
 }
 
 .material_icon {

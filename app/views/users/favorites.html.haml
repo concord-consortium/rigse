@@ -16,7 +16,6 @@
       dataType: "json",
       url: apiUrl,
       success: function(data) {
-        console.info("DEBUG", data);
         Portal.renderMaterialsList(data, dest);
       }
     })

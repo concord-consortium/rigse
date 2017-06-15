@@ -10,7 +10,8 @@ window.SMaterialClass = React.createClass
         favoriteClassMap:   {
             true:   "legacy-favorite-active",
             false:  "legacy-favorite"
-        }
+        },
+        favoriteOutlineClass:   "legacy-favorite-outline"
     }
 
     (div {
