@@ -54,8 +54,8 @@ window.SMaterialIconClass = React.createClass
         # Set favorite info.
         #
         favClass        = favClassMap[false]
-        favStar         = "X"
-        outlineStar     = "O"
+        favStar         = "\u2605"
+        outlineStar     = "\u2606"
         if starred
             favClass += " " + favClassMap[true]
 
