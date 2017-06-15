@@ -27,6 +27,7 @@ class Reports::Sheet
       @rows.each do |row|
         puts " Adding row: #{row}" if @verbose
         x_row = x_sheet.add_row
+        next if row.nil?
         row.each do |cell|
           if cell.is_a? Reports::Link
             x_cell = x_row.add_cell cell.text
