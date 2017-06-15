@@ -23,16 +23,20 @@ class Reports::Sheet
   # axlsx specific stuff
   def add_to_book(book)
     puts "Adding sheet: #{@name}" if @verbose
-    book.add_worksheet(name: @name){|x_sheet|
-      @rows.each{|row|
+    book.add_worksheet(name: @name) do |x_sheet|
+      @rows.each do |row|
         puts " Adding row: #{row}" if @verbose
-        if row.nil?
-          x_sheet.add_row
-        else
-          x_sheet.add_row row
+        x_row = x_sheet.add_row
+        row.each do |cell|
+          if cell.is_a? Reports::Link
+            x_cell = x_row.add_cell cell.text
+            x_sheet.add_hyperlink :location => cell.url, :ref => x_cell
+          else
+            x_row.add_cell cell
+          end
         end
-      }
-    }
+      end
+    end
   end
 
 end

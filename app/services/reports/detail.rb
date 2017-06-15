@@ -167,7 +167,7 @@ class Reports::Detail < Reports::Excel
               blob = ans[:answer]
               if blob[:id] && blob[:token]
                 url = "#{@blobs_url}/#{blob[:id]}/#{blob[:token]}.#{blob[:file_extension]}"
-                res = [Spreadsheet::Link.new(url, url), (ans[:answer][:note] || "")]
+                res = [Reports::Link.new(url: url, text: url), (ans[:answer][:note] || "")]
               else
                 res = ["not answered", ""]
               end
