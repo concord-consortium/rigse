@@ -1,8 +1,16 @@
-- material = search_material.material
+- if defined?(search_material)
+  - material = search_material.material
+  - margin = 260
+- else
+  - material = interactive
+  - margin = -10 
 
+.spacer{ style: 'height: 50px;' }
 
-.related_materials_summary{ style: 'margin-left: 200px;' }
-.related_materials_list{ style: 'margin-left: 200px;' }
+.related_materials_wrapper{ style: "margin-left: #{margin}px;" }
+
+  .related_materials_summary{ style: 'margin-left: 20px;' }
+  .related_materials_list
 
 :javascript
   jQuery(document).ready(function() {
@@ -17,9 +25,16 @@
         dataType: "json",
         url: apiBase + "?" + query,
         success: function(data) {
+
             console.log("DEBUG related materials " + data.related_materials.length);
-            jQuery(".related_materials_summary").html("Related Materials");
-            Portal.renderMaterialsList(data.related_materials, dest);
+
+            summary = jQuery(".related_materials_summary");
+            summary.html("<h3>Related Materials</h3>" +
+                            "Found " + data.related_materials.length +
+                            " related material(s)");
+
+            Portal.renderMaterialsList(data.related_materials, 
+                                            '.related_materials_list');
         }
     })
 
