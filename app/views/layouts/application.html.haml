@@ -36,9 +36,7 @@
     != javascript_include_tag 'application'
 
     / add the portal pages javascript and css if defined
-    - if ENV['PORTAL_PAGES_LIBRARY_URL']
-      %link{ :href => "#{ENV['PORTAL_PAGES_LIBRARY_URL']}/portal-pages.css", :rel => "stylesheet", :type => "text/css" }
-      %script{ :src => "#{ENV['PORTAL_PAGES_LIBRARY_URL']}/portal-pages.js", :type => "text/javascript" }
+    = render :partial => "layouts/portal_pages_library"
 
     / TODO: See if there's a less un-Rails-like calendar widget which will go in the asset pipeline
     = calpicker_includes "silver"
