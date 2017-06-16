@@ -11,7 +11,9 @@ module Materials
       Sanitize.fragment(html_fragment, Sanitize::Config::BASIC)
     end
 
-    def materials_data(materials, assigned_to_class = nil)
+    def materials_data( materials, 
+                        assigned_to_class   = nil, 
+                        include_related     = false )
       data = []
 
       if assigned_to_class
@@ -90,6 +92,29 @@ module Materials
             end
         end
 
+        #
+        # Check if we should search for related material
+        #
+        related_materials = []
+        if include_related
+            
+            search = Sunspot.search(Search::SearchableModels) do 
+
+                facet       :subject_areas
+                with        :subject_areas, tags['subject_areas']
+
+                facet       :grade_levels
+                with        :grade_levels,  tags['grade_levels']
+
+                without     :id, [material.id]
+                order_by    :score, :desc
+            end
+
+            related = search.results
+            related_materials = materials_data(related)
+        end
+
+        
         mat_data = {
           id: material.id,
           name: material.name,
@@ -129,6 +154,8 @@ module Materials
           user: user_data,
           assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}"),
           credits: material.respond_to?(:credits) ? material.credits : nil,
+       
+          related_materials: related_materials,
         }
 
         data.push mat_data

@@ -8,6 +8,7 @@ class Investigation < ActiveRecord::Base
 
   # see https://github.com/sunspot/sunspot/blob/master/README.md
   searchable do
+    integer :id
     text :name
     string :name
     text :description

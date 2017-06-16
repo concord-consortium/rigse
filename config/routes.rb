@@ -681,6 +681,7 @@ RailsPortal::Application.routes.draw do
           get   :featured
           post  :assign_to_class
           get   :all
+          get   :get_material
           get   :add_favorite
           get   :remove_favorite
           get   :get_favorites

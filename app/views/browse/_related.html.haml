@@ -1,0 +1,26 @@
+- material = search_material.material
+
+
+.related_materials_summary{ style: 'margin-left: 200px;' }
+.related_materials_list{ style: 'margin-left: 200px;' }
+
+:javascript
+  jQuery(document).ready(function() {
+
+    var dest    = '.related_materials_list';
+    var apiBase = '#{api_v1_materials_get_material_path}';
+    var query 	= 'id=#{material.id}&' +
+                    'material_type=#{material.class.name.underscore}&' +
+                    'include_related=true';
+
+    jQuery.ajax({
+        dataType: "json",
+        url: apiBase + "?" + query,
+        success: function(data) {
+            console.log("DEBUG related materials " + data.related_materials.length);
+            jQuery(".related_materials_summary").html("Related Materials");
+            Portal.renderMaterialsList(data.related_materials, dest);
+        }
+    })
+
+  })

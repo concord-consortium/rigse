@@ -1,6 +1,21 @@
 class API::V1::MaterialsController < API::APIController
   include Materials::DataHelpers
 
+  #
+  # Map of class types supported material types.
+  #
+  # Might also consider using "classify" and "constantize" here
+  # rather than a hard coded map of types. But that might require
+  # additional input validation or otherwise constrain how we define
+  # the http parameters.
+  #
+  @@supported_material_types = {
+    "external_activity" => ExternalActivity,
+    "interactive"       => Interactive,
+    "investigation"     => Investigation
+  }
+
+
   # GET /api/v1/materials/own
   # Template materials are not listed.
   def own
@@ -137,89 +152,58 @@ class API::V1::MaterialsController < API::APIController
 
       if type && id 
 
-        item = nil
+        item = get_materials_item id, type
 
-        begin
-
+        if item
           #
-          # Map of class types supported for favorites.
+          # Unclear if this should first check for the existence of 
+          # the favorite. The unique index should ensure there is only
+          # one favorite per user per item. When attempting to add 
+          # a duplicate, rails logs:
+          # Favorite Exists (1.0ms) SELECT 1 AS one FROM `favorites` ...
+          # and no error is reported. This might be less expensive than
+          # attempting to determine if the favorite exists otherwise.
           #
-          # Might also consider using "classify" and "constantize" here
-          # rather than a hard coded map of types. But that might require
-          # additional input validation or otherwise constrain how we define
-          # the http parameters.
-          #
-          supported_types = {
-            "external_activity" => ExternalActivity,
-            "interactive"       => Interactive,
-            "investigation"     => Investigation
-          }
+          favorite = Favorite.create(   user: current_user, 
+                                        favoritable: item       )
+          if ! favorite.id.nil?
 
-          rubyclass = supported_types[type]
-
-          if rubyclass 
-            item = rubyclass.find(id)
-
-            if item
-              #
-              # Unclear if this should first check for the existence of 
-              # the favorite. The unique index should ensure there is only
-              # one favorite per user per item. When attempting to add 
-              # a duplicate, rails logs:
-              # Favorite Exists (1.0ms) SELECT 1 AS one FROM `favorites` ...
-              # and no error is reported. This might be less expensive than
-              # attempting to determine if the favorite exists otherwise.
-              #
-              favorite = Favorite.create(   user: current_user, 
-                                            favoritable: item       )
-              if ! favorite.id.nil?
-
-                #
-                # Add the new favorite for this user.
-                #
-                current_user.favorites.append( favorite )
-                message     = "Added new favorite with id #{favorite.id}."
-                favorite_id = favorite.id
-
-              else
-
-                #
-                # Query for the existing favorite so that we can 
-                # return the ID to the client who presumably did not have it
-                # prior to this call.
-                #
-                favorites = Favorite.where( user_id: current_user.id, 
-                                            favoritable_id: id,
-                                            favoritable_type: rubyclass.name )
-                if favorites.count == 1
-
-                  favorite = favorites[0] 
-                  message = "Favorite already exists with id #{favorite.id}."
-                  favorite_id = favorite.id
-
-                else
-                  #
-                  # This shouldn't happen...
-                  #
-                  status = 400
-                  message = "Could not create favorite even though " +
-                            "#{favorites.count} favorite(s) already exist."
-                end
-              end
-
-            else 
-              status = 400
-              message = "Invalid material id #{id}"
-            end
+            #
+            # Add the new favorite for this user.
+            #
+            current_user.favorites.append( favorite )
+            message     = "Added new favorite with id #{favorite.id}."
+            favorite_id = favorite.id
 
           else
-            status = 400
-            message = "Invalid material type #{type}"
+
+            #
+            # Query for the existing favorite so that we can 
+            # return the ID to the client who presumably did not have it
+            # prior to this call.
+            #
+            favorites = Favorite.where( user_id: current_user.id, 
+                                        favoritable_id: id,
+                                        favoritable_type: rubyclass.name )
+            if favorites.count == 1
+
+              favorite = favorites[0] 
+              message = "Favorite already exists with id #{favorite.id}."
+              favorite_id = favorite.id
+
+            else
+              #
+              # This shouldn't happen...
+              #
+              status = 400
+              message = "Could not create favorite even though " +
+                        "#{favorites.count} favorite(s) already exist."
+            end
           end
 
-        rescue ActiveRecord::RecordNotFound => rnf
+        else 
           status = 400
-          message = "RecordNotFound Invalid material id #{id}"
+          message = "Invalid material type (#{type}) or id (#{id})"
         end
 
       else
@@ -301,6 +285,44 @@ class API::V1::MaterialsController < API::APIController
 
   end
 
+  #
+  #
+  # Get a single materials item and return a json representation
+  # GET /api/v1/materials/get_material
+  #
+  def get_material
+
+    type            = params[:material_type]
+    id              = params[:id]
+    include_related = params[:include_related]
+
+    status          = 200
+    data            = {}
+
+    item = get_materials_item id, type
+
+    if item
+      array = materials_data [item], nil, include_related
+  
+      if array.size == 1
+
+        data = array[0]
+
+      else
+        status = 400
+        data = {:message => 
+                "Unexpected materials size #{array.size}"}
+      end
+
+    else
+      status = 400
+      data = {  :message => 
+                "Cannot find materials item type (#{type}) with id (#{id})" }
+    end
+
+    render json: data, :status => status
+
+  end
 
   def assign_to_class
     # only add/delete if assign parameter exists to avoid deleting data on a bad request
@@ -329,4 +351,40 @@ class API::V1::MaterialsController < API::APIController
 
     render json: {:message => message}, :status => status
   end
+
+  private
+
+  #
+  # Return a single material item.
+  #
+  # id      The item id. (An id of ExternalActivity, Investigation, etc)
+  # type    A supported material type as a string key present in
+  #         the @@supported_material_types map. This will map to a
+  #         ruby class of the appropiate type, which will be returned
+  #         and can be used by materials libs to convert into json
+  #         and be consumed by API clients. 
+  #
+  def get_materials_item(id, type)
+
+    begin
+
+      rubyclass = @@supported_material_types[type]
+
+      if rubyclass 
+        item = rubyclass.find(id)
+
+        if item
+          return item
+        end
+ 
+      else
+        Rails.logger.error "Invalid material type #{type}"
+      end
+    rescue ActiveRecord::RecordNotFound => rnf
+      Rails.logger.error "RecordNotFound Invalid material id #{id}"
+    end
+
+    return nil
+  end
+
 end

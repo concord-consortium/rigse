@@ -17,6 +17,7 @@ class Interactive < ActiveRecord::Base
   before_validation :smart_add_url_protocol
 
   searchable do
+    integer :id
     text :name
     string :name
     text :description
