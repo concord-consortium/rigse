@@ -743,6 +743,8 @@ RailsPortal::Application.routes.draw do
     match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
     post  '/installer_report' => 'misc#installer_report', :as => :installer_report
 
+    match '/stem-resources/:type/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
+
     match '/:controller(/:action(/:id))'
 
     root :to => 'home#index'
