@@ -3,7 +3,7 @@ class Reports::Detail < Reports::Excel
   def initialize(opts = {})
     super(opts)
 
-    @runnables = opts[:runnables] || Investigation.published
+    @runnables = opts[:runnables] || ExternalActivity.published
     @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
     @url_helpers = opts[:url_helpers]
     @hide_names = opts[:hide_names] || false
@@ -101,8 +101,8 @@ class Reports::Detail < Reports::Excel
     return reportable_header_counter
   end
 
-  def run_report(stream_or_path, work_book = Spreadsheet::Workbook.new)
-    @book = work_book
+  def run_report
+    @book = Reports::Book.new(verbose: @verbose)
     @runnable_sheet = {}
     @runnables.sort!{|a,b| a.name <=> b.name}
 
@@ -167,7 +167,7 @@ class Reports::Detail < Reports::Excel
               blob = ans[:answer]
               if blob[:id] && blob[:token]
                 url = "#{@blobs_url}/#{blob[:id]}/#{blob[:token]}.#{blob[:file_extension]}"
-                res = [Spreadsheet::Link.new(url, url), (ans[:answer][:note] || "")]
+                res = [Reports::Link.new(url: url, text: url), (ans[:answer][:note] || "")]
               else
                 res = ["not answered", ""]
               end
@@ -192,9 +192,8 @@ class Reports::Detail < Reports::Excel
         row.concat all_answers
       end
     end
-    # writing an empty workbook throws an error...
-    @book.create_worksheet if @book.worksheets.empty?
-    @book.write stream_or_path
+
+    return @book
   end
 
   def default_answer_for(embeddable)

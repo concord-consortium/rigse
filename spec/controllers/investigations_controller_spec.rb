@@ -40,34 +40,6 @@ describe InvestigationsController do
     end
   end
 
-  describe "Researcher Reports" do
-    before(:each) do
-      controller.should_receive(:send_data) { | data, options |
-        options[:type].should == "application/vnd.ms.excel"
-      }
-      # this is needed to prevent a missing template call, the real send_data method
-      # keeps rails from doing an implicit render, but since we are stubing send_data here
-      # the implicit render isn't stopped
-      controller.stub!(:render)
-    end
-
-    it 'should return an XLS file for the global Usage Report' do
-      get :usage_report
-    end
-
-    it 'should return an XLS file for the global Details Report' do
-      get :details_report
-    end
-
-    it 'should return an XLS file for the specific Usage Report' do
-      get :usage_report, :id => @investigation.id
-    end
-
-    it 'should return an XLS file for the specific Details Report' do
-      get :details_report, :id => @investigation.id
-    end
-  end
-
   describe "#show" do
     it "should handle the show method without error" do
       get :show, :id => @investigation.id
