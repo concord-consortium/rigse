@@ -721,7 +721,7 @@ RailsPortal::Application.routes.draw do
 
     match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
     match '/readme' => 'home#readme', :as => :readme
-    match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
+    match '/docs/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
     match '/home'       => 'home#index', :as => :home
     match '/my_classes' => 'home#my_classes', :as => :my_classes
     match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
