@@ -7,7 +7,7 @@ WORKDIR $APP_HOME
 #
 # Install some basic dev tools
 #
-RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y vim xvfb firefox-esr
 
 # use a mounted volume so the gems don't need to be rebundled each time
 ENV BUNDLE_PATH /bundle

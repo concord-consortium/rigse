@@ -291,6 +291,7 @@ RailsPortal::Application.routes.draw do
         put :unsuspend
         get :interface
         put :switch
+        get :favorites
         get :preferences
         put :preferences
         get :reset_password
@@ -676,9 +677,13 @@ RailsPortal::Application.routes.draw do
           end
         end
         namespace :materials do
-          get :own
-          get :featured
-          post :assign_to_class
+          get   :own
+          get   :featured
+          post  :assign_to_class
+          get   :all
+          get   :add_favorite
+          get   :remove_favorite
+          get   :get_favorites
         end
         namespace :materials_bin do
           get :collections
