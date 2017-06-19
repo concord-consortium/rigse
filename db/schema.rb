@@ -883,6 +883,18 @@ ActiveRecord::Schema.define(:version => 20170606205853) do
 
   add_index "external_reports", ["client_id"], :name => "index_external_reports_on_client_id"
 
+  create_table "favorites", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "favoritable_id"
+    t.string   "favoritable_type"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "favorites", ["favoritable_id"], :name => "index_favorites_on_favoritable_id"
+  add_index "favorites", ["favoritable_type"], :name => "index_favorites_on_favoritable_type"
+  add_index "favorites", ["user_id", "favoritable_id", "favoritable_type"], :name => "favorite_unique", :unique => true
+
   create_table "firebase_apps", :force => true do |t|
     t.string   "name"
     t.string   "client_email"

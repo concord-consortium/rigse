@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :authentications, :dependent => :delete_all
   has_many :access_grants, :dependent => :delete_all
 
+  has_many :favorites
 
   devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable, :bearer_token_authenticatable, :jwt_bearer_token_authenticatable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1

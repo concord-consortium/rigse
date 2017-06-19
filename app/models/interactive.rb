@@ -12,6 +12,7 @@ class Interactive < ActiveRecord::Base
 
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
+  has_many :favorites, as: :favoritable
 
   belongs_to :license,
     :class_name  => 'CommonsLicense',

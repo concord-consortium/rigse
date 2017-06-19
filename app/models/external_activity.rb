@@ -71,6 +71,8 @@ class ExternalActivity < ActiveRecord::Base
   belongs_to :user
   belongs_to :external_report
 
+  has_many :favorites, as: :favoritable
+
   # offerings are not deleted if they have learners, so you need to explicitly remove the learners
   # before you can delete the offering
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
