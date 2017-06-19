@@ -2,8 +2,8 @@
 log/*.log
 tmp/*
 .DS_Store
-doc/api
-doc/app
+docs/api
+docs/app
 rerun.txt
 coverage
 db/*.sqlite3
@@ -41,7 +41,7 @@ public/stylesheets/*packaged*
 public/investigations
 public/page_cache
 config/settings-backup.yml
-doc/guides
+docs/guides
 import_log.txt*
 public/stylesheets/themes/
 resources/bitrock_installer/jars/*
@@ -77,8 +77,8 @@ public/stylesheets/*.css
 bin/
 .rspec
 *.orig
-doc/gource/*.mp4
-doc/gource/*.webm
+docs/gource/*.mp4
+docs/gource/*.webm
 *.tmproj
 .redcar
 .idea

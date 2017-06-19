@@ -338,12 +338,6 @@ end
 
 namespace :import do
 
-  desc 'import grade span expectations from files in config/rigse_data/'
-  task :import_gses_from_file, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:import_gses_from_file --trace"
-  end
-
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
   task :generate_otrunk_examples_rails_models, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
@@ -405,12 +399,6 @@ namespace :convert do
   task :wrap_orphaned_activities_in_investigations, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "bundle exec rake RAILS_ENV=#{rails_env} app:make:investigations --trace"
-  end
-
-  desc 'set new grade_span_expectation attribute: gse_key'
-  task :set_gse_keys, :roles => :db, :only => { :primary => true } do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:set_gse_keys --trace"
   end
 
   desc 'find page_elements whithout owners and reclaim them'

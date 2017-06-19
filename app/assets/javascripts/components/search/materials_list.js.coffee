@@ -9,3 +9,7 @@ window.SMaterialsListClass = React.createClass
     )
 
 window.SMaterialsList = React.createFactory SMaterialsListClass
+
+Portal.renderMaterialsList = (data, dest) ->
+  ReactDOM.render SMaterialsList(materials: data), jQuery(dest)[0]
+

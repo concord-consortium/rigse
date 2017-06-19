@@ -164,44 +164,6 @@ Given /^the student "([^"]*)" has run the investigation "([^"]*)" in the class "
   learner = offering.find_or_create_learner(student)
 end
 
-Given /^a recording of a report for "([^"]*)"$/ do |name|
-  investigation = Investigation.find_by_name(name)
-  buffer = StringIO.new
-  spreadsheet = Spreadsheet::Workbook.new
-  modified_report_for(investigation).run_report(buffer,spreadsheet)
-  recorded_sheet = RecordingComparison.new(spreadsheet,name)
-  recorded_sheet.record_data
-end
-
-Then /^the report [^"]* "([^"]*)" should match recorded data$/ do |investigation_name|
-  investigation = Investigation.find_by_name(investigation_name)
-  buffer = StringIO.new
-  spreadsheet = Spreadsheet::Workbook.new
-  modified_report_for(investigation).run_report(buffer,spreadsheet)
-  compared_sheet = RecordingComparison.new(spreadsheet,investigation_name)
-  compared_sheet.should_match_recorded
-end
-
-Then /^the report generated for "([^"]*)" should have \((\d+)\) links to blobs$/ do |investigation_name, num_blobs|
-  investigation = Investigation.find_by_name(investigation_name)
-  buffer = StringIO.new
-  spreadsheet = Spreadsheet::Workbook.new
-  modified_report_for(investigation).run_report(buffer,spreadsheet)
-  find_bloblinks_in_spreadheet(spreadsheet,num_blobs)
-end
-
-Then /^the usage report for "([^"]*)" should have \((\d+)\) answers for "([^"]*)"$/ do |investigation_name,value,student|
-  pending
-  # The reason this is pending is beause the assessments_completed_for method at the top of this file needs help.
-  #
-  #buffer = StringIO.new
-  #spreadsheet = Spreadsheet::Workbook.new
-  #investigation = Investigation.find_by_name(investigation_name)
-  #report  = Reports::Usage.new(:runnables => Investigation.all)
-  #report.run_report(buffer,spreadsheet)
-  #assessments_completed_for(spreadsheet,student,investigation_name).strip.downcase.should == value.strip.downcase
-end
-
 Then /^"([^"]*)" should have completed \((\d+)\) assessments for Activity "([^"]*)" in "([^"]*)"$/ do |student_name, num_answers, activity_name, class_name|
   activity = Activity.find_by_name(activity_name)
   investigation = activity.investigation
@@ -229,12 +191,6 @@ Given /^the following researchers exist:$/ do |users_table|
       # assume this user is already created...
     end
   end
-end
-
-Given /^a mocked spreadsheet library$/ do
-  workbook = Spreadsheet::Workbook.new
-  workbook.stub("write").and_return('')
-  Spreadsheet::Workbook.stub(:new).and_return(workbook)
 end
 
 Given /^a mocked remote endpoint url$/ do

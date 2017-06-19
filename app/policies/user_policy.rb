@@ -74,6 +74,10 @@ class UserPolicy < ApplicationPolicy
     admin_or_manager? || its_me?
   end
 
+  def favorites?
+    its_me?
+  end
+
   private
   def project_admin_for_user?
     return false unless record.respond_to? :cohorts

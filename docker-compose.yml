@@ -14,9 +14,11 @@ services:
       SOLR_HOST: solr
       SOLR_PORT: 8983
       PORTAL_FEATURES:
+      SITE_URL:
       RESEARCHER_REPORT_ONLY:
       TEST_SOLR_HOST: solr-test
       TEST_SOLR_PORT: 8981
+      REPORT_VIEW_URL:
     # no ports are published, see below for details
     volumes:
       - .:/rigse

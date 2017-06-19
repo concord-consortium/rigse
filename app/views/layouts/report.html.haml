@@ -17,8 +17,12 @@
     = render :partial => 'dynamic_scripts/all'
 
     != javascript_include_tag 'application'
+
+    / add the portal pages javascript and css if defined
+    = render :partial => "layouts/portal_pages_library"
+
     = calpicker_includes "silver"
-    
+
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
     - if protect_against_forgery?

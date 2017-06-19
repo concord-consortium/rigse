@@ -4,7 +4,7 @@ class Reports::Usage < Reports::Excel
 
     @hide_names = opts[:hide_names] || false
 
-    @runnables =  opts[:runnables]  || Investigation.published
+    @runnables =  opts[:runnables]  || ExternalActivity.published
     @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
     @include_child_usage = opts[:include_child_usage]
     #@column_defs = [
@@ -41,7 +41,9 @@ class Reports::Usage < Reports::Excel
     @report_learners.sort_by {|l| [l.school_name, l.class_name, l.student_name, l.runnable_name]}
   end
 
-  def run_report(stream_or_path,book=Spreadsheet::Workbook.new)
+  def run_report
+    book = Reports::Book.new(verbose: @verbose)
+
     @sheets = []
     print "Creating #{@sheet_defs.size} worksheets for report" if @verbose
     @sheet_defs.each_with_index do |s_def, i|
@@ -107,8 +109,6 @@ class Reports::Usage < Reports::Excel
       end
     end
 
-    print "Writing xls file..." if @verbose
-    book.write stream_or_path
-    print " done." if @verbose
+    return book
   end
 end

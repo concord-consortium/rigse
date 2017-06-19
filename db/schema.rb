@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170328065224) do
+ActiveRecord::Schema.define(:version => 20170605173636) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -881,6 +881,18 @@ ActiveRecord::Schema.define(:version => 20170328065224) do
   end
 
   add_index "external_reports", ["client_id"], :name => "index_external_reports_on_client_id"
+
+  create_table "favorites", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "favoritable_id"
+    t.string   "favoritable_type"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "favorites", ["favoritable_id"], :name => "index_favorites_on_favoritable_id"
+  add_index "favorites", ["favoritable_type"], :name => "index_favorites_on_favoritable_type"
+  add_index "favorites", ["user_id", "favoritable_id", "favoritable_type"], :name => "favorite_unique", :unique => true
 
   create_table "firebase_apps", :force => true do |t|
     t.string   "name"

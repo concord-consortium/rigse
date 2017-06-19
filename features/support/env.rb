@@ -17,6 +17,7 @@ require 'cucumber/rails/capybara/select_dates_and_times'
 require 'email_spec'
 require 'email_spec/cucumber'
 
+require 'cucumber/formatter/unicode'
 require 'cucumber/rspec/doubles'
 require 'rspec/expectations'
 

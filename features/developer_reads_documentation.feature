@@ -12,13 +12,13 @@ Feature: A developer reads technical documentation about the software
     Then I should see "Technical Documentation"
 
   Scenario: A developer looks at a textile formatted document in the doc directory
-    Given I am on /doc/core-extensions.textile
+    Given I am on /docs/core-extensions.textile
     Then I should see "Extensions to Existing Ruby Classes"
 
   Scenario: A developer tries to read documentation that doesn't exist
-    Given I am on /doc/does_not_exist.md
+    Given I am on /docs/does_not_exist.md
     Then I should see "Technical document: does_not_exist.md not found"
 
   Scenario: A developer tries to read a file that is not documentation
-    Given I am on /doc/jamis.rb
+    Given I am on /docs/jamis.rb
     Then I should see "Document: jamis.rb not displayable"

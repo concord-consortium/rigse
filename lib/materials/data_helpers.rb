@@ -11,7 +11,7 @@ module Materials
       Sanitize.fragment(html_fragment, Sanitize::Config::BASIC)
     end
 
-    def materials_data(materials, assigned_to_class=nil)
+    def materials_data(materials, assigned_to_class = nil)
       data = []
 
       if assigned_to_class
@@ -57,6 +57,39 @@ module Materials
         description = material.respond_to?(:description_for_teacher) && current_visitor.portal_teacher && material.description_for_teacher.present? ?
             safe_sanitize(material.description_for_teacher) : safe_sanitize(material.abstract_text)
 
+        #
+        # Find favorite data
+        #
+        is_favorite = false
+        favorite_id = nil
+
+        if  current_user                        && 
+            !current_user.anonymous?            &&
+            material.respond_to?(:favorites)
+
+          favorites = material.favorites.where(:user_id => current_user.id)
+          if favorites.count > 0
+            favorite_id = favorites[0].id
+            is_favorite = true
+
+          end
+        end
+
+        #
+        # Add subject_areas and grade_levels
+        # from the ActsAsTaggableOn associated properties lists.
+        #
+        tags = {}
+        tags['subject_areas']   = []
+        tags['grade_levels']    = []
+
+        tags.each do |key, value|
+            list = material.send(key)
+            list.each do |o|
+                tags[key].push o.name
+            end
+        end
+
         mat_data = {
           id: material.id,
           name: material.name,
@@ -69,6 +102,13 @@ module Materials
           material_properties: material.material_property_list,
           is_official: material.is_official,
           is_archived: material.archived?,
+
+          is_favorite: is_favorite,
+          favorite_id: favorite_id,
+
+          subject_areas:    tags['subject_areas'],
+          grade_levels:     tags['grade_levels'],
+
           publication_status: material.publication_status,
           links: links_for_material(material),
           preview_url: view_context.run_url_for(material, (material.teacher_only? ? {:teacher_mode => true} : {})),
@@ -258,7 +298,7 @@ module Materials
 
     def assigned_clazz_names(material)
       return [] unless current_visitor.portal_teacher
-      offerings = current_visitor.portal_teacher.offerings.select { |o| o.runnable == material }
+      offerings = current_visitor.portal_teacher.offerings.includes(:runnable, :clazz).select { |o| o.runnable == material }
       offerings.map { |o| o.clazz.name }
     end
   end

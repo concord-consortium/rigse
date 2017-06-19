@@ -10,7 +10,8 @@
       - unless @emulate_anonymous_user
         - anon_can_browse = current_settings ? current_settings.anonymous_can_browse_materials : true
         - unless current_visitor.only_a_student? || (current_visitor.anonymous? && !anon_can_browse)
-          %li.trail= link_to 'Search' , configured_search_path
+          %li.trail= link_to 'Search', configured_search_path
+          %li.trail= link_to 'My Favorite Resources', favorites_user_path(current_visitor)
 
         - if current_visitor.has_role?('admin', 'manager','researcher') || current_visitor.is_project_admin? || current_visitor.is_project_researcher?
           %li.trail= link_to 'Admin', admin_path

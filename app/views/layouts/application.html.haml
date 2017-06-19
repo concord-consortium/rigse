@@ -35,6 +35,8 @@
     / TODO: if themes need their own javascript, add theme_ to this:
     != javascript_include_tag 'application'
 
+    / add the portal pages javascript and css if defined
+    = render :partial => "layouts/portal_pages_library"
 
     / TODO: See if there's a less un-Rails-like calendar widget which will go in the asset pipeline
     = calpicker_includes "silver"

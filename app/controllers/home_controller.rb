@@ -1,4 +1,5 @@
 class HomeController < ApplicationController
+  include Materials::DataHelpers
 
   protected
 
@@ -58,7 +59,7 @@ class HomeController < ApplicationController
 
   def doc
     if document_path = params[:document].gsub(/\.\.\//, '')
-      @document = FormattedDoc.new(File.join('doc', document_path))
+      @document = FormattedDoc.new(File.join('docs', document_path))
       render :action => "formatted_doc", :layout => "technical_doc"
     end
   end
@@ -198,7 +199,28 @@ class HomeController < ApplicationController
 
   end
 
+  def stem_resources
+    case params[:type]
+    when "activity", "sequence"
+      @lightbox_resource = ExternalActivity.find_by_id(params[:id])
+    when "interactive"
+      @lightbox_resource = Interactive.find_by_id(params[:id])
+    else
+      @lightbox_resource = nil
+    end
+    if @lightbox_resource
+      @lightbox_resource = materials_data([@lightbox_resource]).shift()
+      @page_title = @lightbox_resource[:name]
+    else
+      @page_title = "Resource not found"
+    end
+    @auto_show_lightbox_resource = true
 
+    homePage = HomePage.new(current_visitor, current_settings)
+    load_notices
+    load_featured_materials
+    render :home, locals: homePage.view_options, layout: homePage.layout, status: @lightbox_resource.nil? ? 404: 200
+  end
 
   protected
 
