@@ -190,10 +190,9 @@ class UsersController < ApplicationController
   end
 
   def account_report
-    sio = StringIO.new
     rep = Reports::Account.new({:verbose => false})
-    rep.run_report(sio)
-    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "accounts-report.xls" )
+    book = rep.run_report
+    send_data(book.to_data_string, :type => book.mime_type, :filename => "accounts-report.#{book.file_extension}" )
   end
 
   def reset_password

@@ -89,69 +89,6 @@ Feature: Investigations can be reported on
     And "student" should have 0% of the questions correctly for "first investigation" in "My Class"
     And "student" should have 2 answers for "first investigation" in "My Class"
 
-  Scenario: Comprehensive report tests for two investigations and two students
-    Given PENDING yaml dumping on hudson and local machines differ.
-    Given the following student answers:
-       | student | class       | investigation        | question_prompt | answer |
-       | student | My Class    | first investigation  | a               | a      |
-       | student | My Class    | first investigation  | b               | a      |
-       | student | My Class    | first investigation  | c               | a      |
-       | student | My Class    | first investigation  | d               | a      |
-       | dave    | My Class    | first investigation  | b               | a      |
-       | dave    | My Class    | first investigation  | c               | b      |
-       | dave    | My Class    | first investigation  | d               | b      |
-       | student | My Class    | second investigation | b_a             | a      |
-       | student | My Class    | second investigation | b_b             | a      |
-       | student | My Class    | second investigation | b_c             | a      |
-       | student | My Class    | second investigation | b_d             | a      |
-       | student | My Class    | second investigation | image_q         | Y      |
-       | dave    | My Class    | second investigation | b_a             | a      |
-       | dave    | My Class    | second investigation | b_b             | a      |
-       | dave    | My Class    | second investigation | b_c             | b      |
-       | dave    | My Class    | second investigation | b_d             | b      |
-       | dave    | My Class    | second investigation | image_q         | Y      |
-       | student | Biology     | second investigation | b_a             | a      |
-       | student | Biology     | second investigation | b_b             | a      |
-       | student | Biology     | second investigation | b_c             | a      |
-       | student | Biology     | second investigation | b_d             | a      |
-       | student | Biology     | second investigation | image_q         | Y      |
-       | dave    | Biology     | second investigation | b_a             | b      |
-       | dave    | Biology     | second investigation | b_b             | b      |
-
-
-    Then "student" should have 4 answers for "first investigation" in "My Class"
-
-    And  "student" should have answered 100% of the questions for "first investigation" in "My Class"
-    And  "student" should have 100% of the questions correctly for "first investigation" in "My Class"
-
-    And  "dave" should have 3 answers for "first investigation" in "My Class"
-    And  "dave" should have answered 75% of the questions for "first investigation" in "My Class"
-    And  "dave" should have 25% of the questions correctly for "first investigation" in "My Class"
-
-    And  "student" should have 5 answers for "second investigation" in "My Class"
-    And  "student" should have answered 100% of the questions for "second investigation" in "My Class"
-    And  "student" should have 100% of the questions correctly for "second investigation" in "My Class"
-
-    And  "dave" should have 5 answers for "second investigation" in "My Class"
-    And  "dave" should have answered 100% of the questions for "second investigation" in "My Class"
-    And  "dave" should have 50% of the questions correctly for "second investigation" in "My Class"
-
-    And  "student" should have 5 answers for "second investigation" in "Biology"
-    And  "student" should have answered 100% of the questions for "second investigation" in "Biology"
-    And  "student" should have 100% of the questions correctly for "second investigation" in "Biology"
-
-    And  "dave" should have 2 answers for "second investigation" in "Biology"
-    And  "dave" should have answered 40% of the questions for "second investigation" in "Biology"
-    And  "dave" should have 0% of the questions correctly for "second investigation" in "Biology"
-
-    # Record a complex report, and ensure that it looks the same
-    # time after time.
-    And  a recording of a report for "first investigation"
-    Then the report generated for "first investigation" should match recorded data
-
-    And  the report generated for "second investigation" should have (3) links to blobs
-    And  the usage report for "first investigation" should have (3) answers for "dave"
-
   @pending
   Scenario: a student has a record for an answer, which wasn't assigned ...
   # Failing, because question #e wasn't part of the investigation. (!) woah.
@@ -183,7 +120,6 @@ Feature: Investigations can be reported on
         | student | My Class | first investigation | a               | a      |
         | student | My Class | first investigation | c               | b      |
 
-    And a mocked spreadsheet library
     And a mocked remote endpoint url
 
     And I am logged in with the username researcher
