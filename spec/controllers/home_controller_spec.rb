@@ -2,14 +2,18 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe HomeController do
   render_views
 
+  let(:activity) { Factory.create(:external_activity, :name => "test activity") }
+  let(:sequence) { Factory.create(:external_activity, :name => "test sequence") }
+  let(:interactive) { Factory.create(:interactive, :name => "test interactive") }
+
   before(:each) do
 
     #
-    # Warning: 
-    # When the specs are run different ways sometimes the @test_settings 
-    # mock is used and sometimes it is not. 
+    # Warning:
+    # When the specs are run different ways sometimes the @test_settings
+    # mock is used and sometimes it is not.
     # see this PT story for more details: https://www.pivotaltracker.com/story/show/145134539
-    # 
+    #
     @test_settings = mock("settings")
     Admin::Settings.stub(:default_settings).and_return(@test_settings)
     @test_settings.stub!(:use_student_security_questions).and_return(false)
@@ -60,6 +64,7 @@ describe HomeController do
       end
     end
   end
+
   describe "Post preview_home_page" do
     it "should set variables to preview home page" do
       anonymous_user = Factory.next(:anonymous_user)
@@ -69,6 +74,78 @@ describe HomeController do
       post :preview_home_page, @post_params
       assert_response :success
       response.body.should include(@post_params[:home_page_preview_content])
+    end
+  end
+
+  describe "STEM resources" do
+    before(:each) do
+      @test_settings.stub!(:home_page_content).and_return("stubbed homepage content")
+    end
+
+    # note: in the tests below the "slug" param is always optional
+    it "should return 200 when a valid activity is used" do
+      get :stem_resources, :type => "activity", :id => activity.id
+      response.should be_success
+      get :stem_resources, :type => "activity", :id => activity.id, :slug => "test"
+      response.should be_success
+    end
+    it "should return 404 when an unknown activity is used" do
+      get :stem_resources, :type => "activity", :id => 999999999999999
+      response.should_not be_success
+      get :stem_resources, :type => "activity", :id => 999999999999999, :slug => "test"
+      response.should_not be_success
+    end
+
+    it "should return 200 when a valid sequence is used" do
+      get :stem_resources, :type => "sequence", :id => sequence.id
+      response.should be_success
+      get :stem_resources, :type => "sequence", :id => sequence.id, :slug => "test"
+      response.should be_success
+    end
+    it "should return 404 when an unknown sequence is used" do
+      get :stem_resources, :type => "sequence", :id => 999999999999999
+      response.should_not be_success
+      get :stem_resources, :type => "sequence", :id => 999999999999999, :slug => "test"
+      response.should_not be_success
+    end
+
+    it "should return 200 when a valid interactive is used" do
+      get :stem_resources, :type => "interactive", :id => interactive.id
+      response.should be_success
+      get :stem_resources, :type => "interactive", :id => interactive.id, :slug => "test"
+      response.should be_success
+    end
+    it "should return 404 when an unknown interactive is used" do
+      get :stem_resources, :type => "interactive", :id => 999999999999999
+      response.should_not be_success
+      get :stem_resources, :type => "interactive", :id => 999999999999999, :slug => "test"
+      response.should_not be_success
+    end
+
+    it "should return 404 when an unknown type is used" do
+      get :stem_resources, :type => "unknown-type", :id => 1
+      response.should_not be_success
+      get :stem_resources, :type => "unknown-type", :id => 1, :slug => "test"
+      response.should_not be_success
+    end
+
+    it "should include the required Javascript when a valid activity is used" do
+      get :stem_resources, :type => "activity", :id => activity.id
+      response.body.should include("auto_show_lightbox_resource")
+      response.body.should include("PortalPages.settings.autoShowingLightboxResource = {\"id\":#{activity.id},")
+      response.body.should include("PortalPages.renderResourceLightbox(")
+    end
+
+    it "should include the required Javascript when an unknown activity is used" do
+      get :stem_resources, :type => "activity", :id => 999999999999999
+      response.body.should include("auto_show_lightbox_resource")
+      response.body.should include("PortalPages.settings.autoShowingLightboxResource = null")
+      response.body.should include("PortalPages.renderResourceLightbox(")
+    end
+
+    it "should set the start of the page title to the resource name" do
+      get :stem_resources, :type => "activity", :id => activity.id
+      response.body.should include("<title>#{activity.name}")
     end
   end
 end
