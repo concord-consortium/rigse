@@ -63,7 +63,7 @@ module Materials
         is_favorite = false
         favorite_id = nil
 
-        if  current_user                        && 
+        if  current_user                        &&
             !current_user.anonymous?            &&
             material.respond_to?(:favorites)
 
@@ -89,6 +89,9 @@ module Materials
                 tags[key].push o.name
             end
         end
+
+        slug = material.name.respond_to?(:parameterize) ? material.name.parameterize : nil
+        stem_resource_type = material.respond_to?(:lara_sequence?) ? (material.lara_sequence? ? 'sequence' : 'activity') : material.class.name.downcase
 
         mat_data = {
           id: material.id,
@@ -129,6 +132,8 @@ module Materials
           user: user_data,
           assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}"),
           credits: material.respond_to?(:credits) ? material.credits : nil,
+          slug: slug,
+          stem_resource_url: view_context.stem_resources_url(stem_resource_type, material.id, slug)
         }
 
         data.push mat_data
