@@ -16,6 +16,13 @@ class Saveable::OpenResponse < ActiveRecord::Base
 
   include Saveable::Saveable
 
+  #
+  # Override answered? to ensure last answer is not empty.
+  #
+  def answered?
+    answers.length > 0 && answers.last.answer && answers.last.answer.present?
+  end
+
   def embeddable
     open_response
   end
