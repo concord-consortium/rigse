@@ -93,6 +93,16 @@ module Materials
         slug = material.name.respond_to?(:parameterize) ? material.name.parameterize : nil
         stem_resource_type = material.respond_to?(:lara_sequence?) ? (material.lara_sequence? ? 'sequence' : 'activity') : material.class.name.downcase
 
+        projects = []
+        if material.respond_to?(:projects)
+          material.projects.select {|p| p.public}.each do |p|
+            projects.push({
+              name: p.name,
+              url: p.landing_page_slug.nil? ? nil : view_context.project_page_url(p.landing_page_slug)
+            })
+          end
+        end
+
         mat_data = {
           id: material.id,
           name: material.name,
@@ -133,7 +143,8 @@ module Materials
           assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}"),
           credits: material.respond_to?(:credits) ? material.credits : nil,
           slug: slug,
-          stem_resource_url: view_context.stem_resources_url(stem_resource_type, material.id, slug)
+          stem_resource_url: view_context.stem_resources_url(stem_resource_type, material.id, slug),
+          projects: projects
         }
 
         data.push mat_data
