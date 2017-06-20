@@ -684,7 +684,6 @@ RailsPortal::Application.routes.draw do
           get   :featured
           post  :assign_to_class
           get   :all
-          get   :get_material
           get   :add_favorite
           get   :remove_favorite
           get   :get_favorites
@@ -727,6 +726,8 @@ RailsPortal::Application.routes.draw do
     if Rails.env.cucumber? || Rails.env.test?
       match '/login/:username' => 'users#backdoor', :as => :login_backdoor
     end
+
+    match "api/v1/materials/:material_type/:id", to: "api/v1/materials#show"
 
     match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
     match '/readme' => 'home#readme', :as => :readme

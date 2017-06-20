@@ -8,7 +8,6 @@ class Investigation < ActiveRecord::Base
 
   # see https://github.com/sunspot/sunspot/blob/master/README.md
   searchable do
-    integer :id
     text :name
     string :name
     text :description
@@ -59,10 +58,6 @@ class Investigation < ActiveRecord::Base
     end
 
     integer :project_ids, :multiple => true, :references => Admin::Project
-
-    string :project_names, :multiple => true do
-      projects.map { |p| p.name }
-    end
 
   end
 

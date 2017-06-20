@@ -22,7 +22,6 @@ class Interactive < ActiveRecord::Base
   before_validation :smart_add_url_protocol
 
   searchable do
-    integer :id
     text :name
     string :name
     text :description
@@ -99,10 +98,6 @@ class Interactive < ActiveRecord::Base
 
     boolean :is_assessment_item do
       false
-    end
-
-    string :project_names, :multiple => true do
-      projects.map { |p| p.name }
     end
 
   end

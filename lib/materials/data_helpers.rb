@@ -92,7 +92,21 @@ module Materials
             end
         end
 
-        projects = material.projects.map { |p| p.name }
+        project_ids = material.projects.map { |p| p.id }
+
+        projects = material.projects.map { |p| 
+            url = nil
+            if p.landing_page_slug
+                url = project_page_url(p.landing_page_slug)
+            end
+
+            {
+                id:                 p.id,
+                name:               p.name,
+                landing_page_url:   url,
+                public:             p.public
+            }
+        }
 
         #
         # Check if we should search for related material
@@ -105,10 +119,10 @@ module Materials
   				fulltext "*" do
     				boost(4.0) { with(:subject_areas, tags['subject_areas']) }
     				boost(2.0) { with(:grade_levels, tags['grade_levels']) }
-    				boost(1.0) { with(:project_names, projects) }
+    				boost(1.0) { with(:project_ids, project_ids) }
   				end                
 
-                without     :id, [material.id]
+                without     material
                 order_by    :score, :desc
             end
 

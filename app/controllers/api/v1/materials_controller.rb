@@ -11,8 +11,7 @@ class API::V1::MaterialsController < API::APIController
   #
   @@supported_material_types = {
     "external_activity" => ExternalActivity,
-    "interactive"       => Interactive,
-    "investigation"     => Investigation
+    "interactive"       => Interactive
   }
 
 
@@ -239,9 +238,9 @@ class API::V1::MaterialsController < API::APIController
   #
   #
   # Get a single materials item and return a json representation
-  # GET /api/v1/materials/get_material
+  # GET /api/v1/materials/:type/:id
   #
-  def get_material
+  def show
 
     type            = params[:material_type]
     id              = params[:id]
@@ -250,7 +249,12 @@ class API::V1::MaterialsController < API::APIController
     status          = 200
     data            = {}
 
-    item = get_materials_item id, type
+    begin
+      item = get_materials_item id, type
+    rescue ActiveRecord::RecordNotFound => rnf
+      render json: { :message => rnf.message}, :status => 400
+      return
+    end
 
     if item
       array = materials_data [item], nil, include_related
@@ -317,25 +321,25 @@ class API::V1::MaterialsController < API::APIController
   #
   def get_materials_item(id, type)
 
-    begin
+    rubyclass = @@supported_material_types[type]
 
-      rubyclass = @@supported_material_types[type]
+    if rubyclass 
+      item = rubyclass.includes(:template, 
+                                :user, 
+                                :projects, 
+                                :subject_areas,
+                                :grade_levels   ).find(id)
 
-      if rubyclass 
-        item = rubyclass.find(id)
-
-        if item
-          return item
-        end
- 
-      else
-        Rails.logger.error "Invalid material type #{type}"
+      if item
+        return item
       end
-    rescue ActiveRecord::RecordNotFound => rnf
-      Rails.logger.error "RecordNotFound Invalid material id #{id}"
+ 
+    else
+        raise ActiveRecord::RecordNotFound, "Invalid material type (#{type})"
     end
 
-    return nil
+    raise ActiveRecord::RecordNotFound, 
+            "Cannot find material type (#{type}) with id (#{id})"
   end
 
 end
