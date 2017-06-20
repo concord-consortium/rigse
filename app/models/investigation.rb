@@ -53,10 +53,17 @@ class Investigation < ActiveRecord::Base
     string  :grade_levels, :multiple => true do
       grade_level_list
     end
+
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+
     integer :project_ids, :multiple => true, :references => Admin::Project
+
+    string :project_names do
+      projects.map { |p| p.name }
+    end
+
   end
 
   belongs_to :user

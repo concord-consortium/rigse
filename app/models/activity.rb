@@ -115,6 +115,11 @@ class Activity < ActiveRecord::Base
       subject_area_list
     end
     integer :project_ids, :multiple => true, :references => Admin::Project
+
+    string :project_names do
+      projects.map { |p| p.name }
+    end
+
   end
 
   send_update_events_to :investigation

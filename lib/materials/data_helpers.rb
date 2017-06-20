@@ -92,19 +92,21 @@ module Materials
             end
         end
 
+        projects = material.projects.map { |p| p.name }
+
         #
         # Check if we should search for related material
         #
         related_materials = []
         if include_related
             
-            search = Sunspot.search(Search::SearchableModels) do 
+            search = Sunspot.search(Search::SearchableModels) do
 
-                facet       :subject_areas
-                with        :subject_areas, tags['subject_areas']
-
-                facet       :grade_levels
-                with        :grade_levels,  tags['grade_levels']
+  				fulltext "*" do
+    				boost(4.0) { with(:subject_areas, tags['subject_areas']) }
+    				boost(2.0) { with(:grade_levels, tags['grade_levels']) }
+    				boost(1.0) { with(:project_names, projects) }
+  				end                
 
                 without     :id, [material.id]
                 order_by    :score, :desc
@@ -133,6 +135,7 @@ module Materials
 
           subject_areas:    tags['subject_areas'],
           grade_levels:     tags['grade_levels'],
+          projects:         projects,
 
           publication_status: material.publication_status,
           links: links_for_material(material),
