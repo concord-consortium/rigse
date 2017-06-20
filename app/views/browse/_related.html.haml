@@ -16,14 +16,11 @@
   jQuery(document).ready(function() {
 
     var dest    = '.related_materials_list';
-    var apiBase = '#{api_v1_materials_get_material_path}';
-    var query 	= 'id=#{material.id}&' +
-                    'material_type=#{material.class.name.underscore}&' +
-                    'include_related=true';
+    var apiUrl  = '/api/v1/materials/#{material.class.name.underscore}/#{material.id}?include_related=true';
 
     jQuery.ajax({
         dataType: "json",
-        url: apiBase + "?" + query,
+        url: apiUrl,
         success: function(data) {
 
             console.log("DEBUG related materials " + data.related_materials.length);

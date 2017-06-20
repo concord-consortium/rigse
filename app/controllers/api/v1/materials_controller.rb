@@ -324,11 +324,17 @@ class API::V1::MaterialsController < API::APIController
     rubyclass = @@supported_material_types[type]
 
     if rubyclass 
-      item = rubyclass.includes(:template, 
-                                :user, 
-                                :projects, 
-                                :subject_areas,
-                                :grade_levels   ).find(id)
+
+      includes = [  :user, 
+                    :projects, 
+                    :subject_areas,
+                    :grade_levels   ]
+
+      if rubyclass == ExternalActivity
+        includes.push :template
+      end
+
+      item = rubyclass.includes(includes).find(id)
 
       if item
         return item
