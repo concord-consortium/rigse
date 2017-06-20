@@ -67,50 +67,42 @@ class API::V1::MaterialsController < API::APIController
   #
   def remove_favorite
 
-    status  = 200
-    message = "Removing favorite..."
- 
-    if current_user && !current_user.anonymous?
-      favorite_id = params[:favorite_id]
-
-      if favorite_id
-        favorite = nil
-
-        begin
-          favorite = Favorite.find(favorite_id)
-        rescue ActiveRecord::RecordNotFound => rnf
-          status = 400
-          message = "RecordNotFound Favorite #{favorite_id} does not exist."
-        end
-
-        if favorite
-
-          if favorite.user == current_user
-
-            favorite.destroy
-            message = "Favorite #{favorite_id} removed."
-
-          else
-            status = 400
-            message = "Cannot delete favorite not owned by current user."
-          end
-
-        else
-          status = 400
-          message = "Favorite #{favorite_id} does not exist."
-        end
-
-      else
-        status = 400
-        message = "No favorite id specified."
-      end
-
-    else 
-      status = 400
-      message = "Cannot remove favorite for non-logged in user."
+    if !current_user || current_user.anonymous?
+      render json: {:message => "Cannot remove favorite for non-logged in user."}, :status => 400
+      return
     end
 
-    render json: {:message => message}, :status => status
+    favorite_id = params[:favorite_id]
+
+    if favorite_id.nil?
+      render json: {:message => "No favorite id specified."}, :status => 400
+      return
+    end
+    
+    favorite = nil
+
+    begin
+      favorite = Favorite.find(favorite_id)
+    rescue ActiveRecord::RecordNotFound => rnf
+      render json: {:message => "RecordNotFound Favorite #{favorite_id} does not exist."}, :status => 400
+      return
+    end
+
+    if favorite.nil?
+      render json: {:message => "Favorite #{favorite_id} does not exist."}, :status => 400
+      return
+    end
+
+    if favorite.user != current_user
+      render json: {:message => "Cannot delete favorite not owned by current user."}, :status => 400
+      return
+    end 
+
+    favorite.destroy
+    message = "Favorite #{favorite_id} removed."
+
+    render json: {  :message => "Favorite #{favorite_id} removed."}, 
+                    :status => 200
 
   end
 
@@ -126,110 +118,62 @@ class API::V1::MaterialsController < API::APIController
   #
   def add_favorite
 
-    status      = 200
-    message     = "Adding favorite..."
+    if !current_user || current_user.anonymous?
+      render json: {:message => "Cannot add favorite for non-logged in user."},
+                    :status => 400
+      return
+    end
+
     favorite_id = -1
+    type        = params[:material_type]
+    id          = params[:id]
 
-    if current_user && !current_user.anonymous?
-    
-      type  = params[:material_type]
-      id    = params[:id]
+    if type.nil? || id.nil?
+      render json: {:message => "Missing material type (#{type}) or id (#{id})"}, :status => 400
+      return
+    end
 
-      if type && id 
+    item = nil
 
-        item = nil
+    begin
 
-        begin
-
-          #
-          # Map of class types supported for favorites.
-          #
-          # Might also consider using "classify" and "constantize" here
-          # rather than a hard coded map of types. But that might require
-          # additional input validation or otherwise constrain how we define
-          # the http parameters.
-          #
-          supported_types = {
+      #
+      # Map of class types supported for favorites.
+      #
+      # Might also consider using "classify" and "constantize" here
+      # rather than a hard coded map of types. But that might require
+      # additional input validation or otherwise constrain how we define
+      # the http parameters.
+      #
+      supported_types = {
             "external_activity" => ExternalActivity,
-            "interactive"       => Interactive,
-            "investigation"     => Investigation
-          }
+            "interactive"       => Interactive
+      }
 
-          rubyclass = supported_types[type]
+      rubyclass = supported_types[type]
 
-          if rubyclass 
-            item = rubyclass.find(id)
-
-            if item
-              #
-              # Unclear if this should first check for the existence of 
-              # the favorite. The unique index should ensure there is only
-              # one favorite per user per item. When attempting to add 
-              # a duplicate, rails logs:
-              # Favorite Exists (1.0ms) SELECT 1 AS one FROM `favorites` ...
-              # and no error is reported. This might be less expensive than
-              # attempting to determine if the favorite exists otherwise.
-              #
-              favorite = Favorite.create(   user: current_user, 
-                                            favoritable: item       )
-              if ! favorite.id.nil?
-
-                #
-                # Add the new favorite for this user.
-                #
-                current_user.favorites.append( favorite )
-                message     = "Added new favorite with id #{favorite.id}."
-                favorite_id = favorite.id
-
-              else
-
-                #
-                # Query for the existing favorite so that we can 
-                # return the ID to the client who presumably did not have it
-                # prior to this call.
-                #
-                favorites = Favorite.where( user_id: current_user.id, 
-                                            favoritable_id: id,
-                                            favoritable_type: rubyclass.name )
-                if favorites.count == 1
-
-                  favorite = favorites[0] 
-                  message = "Favorite already exists with id #{favorite.id}."
-                  favorite_id = favorite.id
-
-                else
-                  #
-                  # This shouldn't happen...
-                  #
-                  status = 400
-                  message = "Could not create favorite even though " +
-                            "#{favorites.count} favorite(s) already exist."
-                end
-              end
-
-            else 
-              status = 400
-              message = "Invalid material id #{id}"
-            end
-
-          else
-            status = 400
-            message = "Invalid material type #{type}"
-          end
-
-        rescue ActiveRecord::RecordNotFound => rnf
-          status = 400
-          message = "RecordNotFound Invalid material id #{id}"
-        end
-
-      else
-        status = 400
-        message = "Missing material type (#{type}) or id (#{id})"
+      if rubyclass.nil?
+        render json: {  :message => "Invalid material type #{type}"}, 
+                        :status => 400
+        return
       end
 
-    else
+      item = rubyclass.find(id)
+
+      if item.nil?
+        render json: {:message => "Invalid material id #{id}"}, :status => 400
+        return
+      end
+
+      favorite = current_user.favorites.create(favoritable: item)
+      if favorite.id.nil?
+        favorite = current_user.favorites.find_by_favoritable_id(item.id)
+      end
+      favorite_id = favorite.id
+
+    rescue ActiveRecord::RecordNotFound => rnf
       status = 400
-      message = "Cannot add favorite for non-logged in user."
+      message = "RecordNotFound Invalid material id #{id}"
     end
 
     render json: {  :message        => message, 
@@ -242,62 +186,38 @@ class API::V1::MaterialsController < API::APIController
   #
   def get_favorites
 
-    status  = 200
-    data    = nil
-
-    if current_user && !current_user.anonymous?
-
-      favorites     = current_user.favorites
-      type_ids_map  = {}
-      materials     = []
-
-      #
-      # Build sets of IDs for each type
-      #
-      favorites.each do |favorite|
-        favoritable_type    = favorite.favoritable_type
-        favoritable_id      = favorite.favoritable_id
-        if !type_ids_map[favoritable_type] 
-          type_ids_map[favoritable_type] = []
-        end
-        type_ids_map[favoritable_type].append(favoritable_id)
-      end
-
-      #
-      # Optimize queries for different material types.
-      #
-      includes_map = {}
-
-      includes_map['ExternalActivity']  = [ :template,
-                                            :user,
-                                            :subject_areas,
-                                            :grade_levels       ]
-
-      includes_map['Interactive']       = [ :user,
-                                            :subject_areas,
-                                            :grade_levels       ]
-
-      includes_map['Investigation']     = [ ]
-
-      #
-      # Now do a single query for each type
-      #
-      type_ids_map.each do |key, val| 
-        list = includes_map[key]
-        items = key.constantize.includes(*list).find(val)   
-                                # E.g. the above might become:
-                                # ExternalActivity.includes(...).find([1,2,3])
-        materials += items
-      end
-
-      data = materials_data(materials)
-
-    else 
-      status = 400
-      data = {:message => "Cannot retrieve favorites for non-logged in user."}
+    if !current_user || current_user.anonymous?
+      render json: {:message => "Cannot retrieve favorites for non-logged in user."}, :status => 400
+      return
     end
 
-    render json: data, :status => status
+    favorites     = current_user.favorites
+    type_ids_map  = {}
+    materials     = []
+
+    #
+    # Build sets of IDs for each type
+    #
+    favorites.each do |favorite|
+      favoritable_type    = favorite.favoritable_type
+      favoritable_id      = favorite.favoritable_id
+      if !type_ids_map[favoritable_type] 
+        type_ids_map[favoritable_type] = []
+      end
+      type_ids_map[favoritable_type].append(favoritable_id)
+    end
+
+    if type_ids_map['ExternalActivity']
+      materials += ExternalActivity.includes(:template, :user, :subject_areas, :grade_levels).find(type_ids_map['ExternalActivity'])
+    end
+
+    if type_ids_map['Interactive']
+      materials += Interactive.includes(:user, :subject_areas, :grade_levels).find(type_ids_map['Interactive'])
+    end
+
+    data = materials_data(materials)
+
+    render json: data, :status => 200
 
   end
 
