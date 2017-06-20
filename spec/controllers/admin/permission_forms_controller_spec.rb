@@ -10,10 +10,10 @@ describe Admin::PermissionFormsController do
     @project2.cohorts << @cohort2
     @form1 = Factory.create(:permission_form, project: @project1)
     @form2 = Factory.create(:permission_form, project: @project2)
-    @teacher1 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher1"))
+    @teacher1 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher1", :first_name => "Teacher", :last_name => "One"))
     @teacher1.cohorts << @cohort1
     @teacher_view1 = Admin::PermissionFormsController::TeacherView.new(@teacher1)
-    @teacher2 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher2"))
+    @teacher2 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher2", :first_name => "Teacher", :last_name => "Two"))
     @teacher_view2 = Admin::PermissionFormsController::TeacherView.new(@teacher2)
     @teacher2.cohorts << @cohort2
   end

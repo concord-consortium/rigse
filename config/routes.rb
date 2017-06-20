@@ -387,6 +387,15 @@ RailsPortal::Application.routes.draw do
         end
       end
       get '/learner_detail/:id_or_key.:format' => 'learner_details#show',  :as => :learner_detail
+
+      # can't use resources here as the key is a natural key instead of id and Rails 3 doesn't allow you to specifiy the param name
+      get '/commons_licenses/' => 'commons_licenses#index', :as => :commons_licenses
+      get '/commons_licenses/new' => 'commons_licenses#new', :as => :new_commons_license
+      get '/commons_licenses/:code' => 'commons_licenses#show', :as => :commons_license
+      get '/commons_licenses/:code/edit' => 'commons_licenses#edit', :as => :edit_commons_license
+      post '/commons_licenses/' => 'commons_licenses#create', :as => :create_commons_license
+      put '/commons_licenses/:code' => 'commons_licenses#update', :as => :update_commons_license
+      delete '/commons_licenses/:code' => 'commons_licenses#destroy', :as => :delete_commons_license
     end
 
     resources :materials_collections do

@@ -1,0 +1,3 @@
+= remote_form_for(license, update: { success: dom_id_for(license), failure: dom_id_for(license, :edit)},
+                           html: { id: dom_id_for(license, :edit)}) do |f|
+  = render partial: 'form', locals: { license: license, f: f }
