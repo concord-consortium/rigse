@@ -100,6 +100,11 @@ class ExternalActivity < ActiveRecord::Base
 
   acts_as_replicatable
 
+  belongs_to :license,
+    :class_name  => 'CommonsLicense',
+    :primary_key => 'code',
+    :foreign_key => 'license_code'
+
   include Cohorts
   include Publishable
   include SearchModelInterface
@@ -225,7 +230,6 @@ class ExternalActivity < ActiveRecord::Base
   def options_for_external_report
     ExternalReport.all.map { |r| [r.name, r.id] }
   end
-
 
   private
 

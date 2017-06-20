@@ -144,6 +144,10 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    axlsx (2.0.1)
+      htmlentities (~> 4.3.1)
+      nokogiri (>= 1.4.1)
+      rubyzip (~> 1.0.0)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -301,6 +305,7 @@ GEM
     highline (1.6.15)
     hike (1.2.3)
     hirb (0.6.2)
+    htmlentities (4.3.4)
     httparty (0.8.3)
       multi_json (~> 1.0)
       multi_xml
@@ -485,7 +490,7 @@ GEM
     ruby-prof (0.12.1)
     ruby-prof (0.12.1-x86-mingw32)
     ruby-rc4 (0.1.5)
-    rubyzip (1.2.0)
+    rubyzip (1.0.0)
     sanitize (4.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
@@ -611,6 +616,7 @@ DEPENDENCIES
   arrayfields
   awesome_print
   aws-sdk (~> 1.55.0)
+  axlsx (~> 2.0, >= 2.0.1)
   better_errors (~> 1.1.0)
   bullet
   calpicker!
@@ -696,8 +702,8 @@ DEPENDENCIES
   rspec (~> 2.11.0)
   rspec-rails (~> 2.11.0)
   ruby-debug
-  ruby-ole (~> 1.2.11.2)
   ruby-prof
+  rubyzip (~> 1.0.0)
   rush!
   sanitize
   sass
@@ -705,7 +711,6 @@ DEPENDENCIES
   select2-rails
   selenium-webdriver
   sextant
-  spreadsheet (~> 0.7.3)
   spring
   spring-commands-cucumber
   spring-commands-rspec

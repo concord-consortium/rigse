@@ -17,5 +17,5 @@ bundle exec rake db:test:prepare
 #
 # Run spec tests
 #
-RAILS_ENV=test bundle exec rspec spec/
+bundle exec rspec spec/
 

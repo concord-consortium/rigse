@@ -34,19 +34,19 @@ Create a local cache of gravatar images of the developers in .git/avatar http://
 
 From the root directory of this application:
 
-    $ perl doc/gource/get_gravatar_images.pl
+    $ perl docs/gource/get_gravatar_images.pl
 
 To interactively play with a gource visualization (hiding the directories in vendor and public/javascript/):
 
-    $ ./doc/gource/interactive.sh
+    $ ./docs/gource/interactive.sh
 
 See: the [Gource readme](http://github.com/acaudwell/Gource/blob/master/README) for more information about these parameters and the commands available while the rendering is running.
 
 Generating an mpeg4 video of the gource output (*ffmpeg required*):
 
-    $ ./doc/gource/generate-mp4.sh
+    $ ./docs/gource/generate-mp4.sh
 
 Generating an webm video of the gource output (*ffmpeg required*):
 
-    $ ./doc/gource/generate-webm.sh
+    $ ./docs/gource/generate-webm.sh
 

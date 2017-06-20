@@ -1,0 +1,2 @@
+= form_for(@license, url: url_for(controller: 'commons_licenses', action: 'create')) do |f|
+  = render partial: 'form', locals: { license: @license, f: f }

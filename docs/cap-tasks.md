@@ -50,7 +50,7 @@ The capistran-autoscaling gem will prevent you from doing an update unless your 
 *IMPORTANT:* Deploying to a load-balanced server will TERMINATE ec2 instances that are in the load balance group
 that do not have a Name tag set.
 
-If you do load balancing deployments, you should specify the deployment target host without using 
+If you do load balancing deployments, you should specify the deployment target host without using
 the load-balancers web domain name. For example, the deploy-to host for has-production is has.production.concord.org
 and the load balancer responds to has.portal.concord.org.
 
@@ -59,13 +59,6 @@ As of October 30, 2014 the only servers which are should be using load-balancers
   1. Read the documentation here: https://github.com/concord-consortium/capistrano-autoscaling/tree/concord
   2. setup the AMI source name.  This should be the Name (tag) of the EC2 instance you deploy to. It will be imaged after
   the deploy:restart task. That image will seed the launch-configuration for the auto-scaling group.
-  3. export your credentials using something like this: 
+  3. export your credentials using something like this:
   `export AWS_ACCESS_KEY_ID='xxxx'` and
   `export AWS_SECRET_ACCESS_KEY='xxxx'`
-
-
-### Miscellaneous recipes
-
-**Set the gse_key field for existing GradeSpanExpectations**
-* `cap convert:set_gse_keys`
-

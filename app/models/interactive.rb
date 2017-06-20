@@ -14,6 +14,11 @@ class Interactive < ActiveRecord::Base
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
   has_many :favorites, as: :favoritable
 
+  belongs_to :license,
+    :class_name  => 'CommonsLicense',
+    :primary_key => 'code',
+    :foreign_key => 'license_code'
+
   before_validation :smart_add_url_protocol
 
   searchable do

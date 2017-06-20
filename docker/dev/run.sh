@@ -27,6 +27,7 @@ if [ ! -f $DB_CONFIG ]; then
   cp $APP_HOME/config/database.sample.yml $DB_CONFIG
   # Setup DB when this script is run for the first time.
   bundle exec rake db:setup
+  bundle exec rake sso:add_dev_client
 fi
 
 if [ "$RAILS_ENV" = "production" ]; then

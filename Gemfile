@@ -40,10 +40,11 @@ source "http://rubygems.org"
 
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
-  gem "spreadsheet",          "~> 0.7.3"  #see http://spreadsheet.rubyforge.org/
+  gem 'axlsx',                "~> 2.0", ">= 2.0.1"
 
-  # ruby-ole is a spreadsheet dependency but v1.2.11.1 doesn't work on Ruby 1.9.3
-  gem "ruby-ole",             "~> 1.2.11.2"
+  # currently (2017-06-13) axlsx requires an older version of rubyzip, hopefully this will
+  # shortly be remedied
+  gem 'rubyzip',              "~> 1.0.0"
 
   gem "prawn",                "~> 0.12.0"
   gem 'prawn_rails',          "~> 0.0.6"

@@ -5,64 +5,39 @@ namespace :app do
       args.with_defaults(:filename => 'account.xls')
 
       filename = args[:filename]
-      File.new(filename, 'w') do |file|
-        rep = Reports::Account.new({:verbose => true})
-        rep.run_report(file)
-      end
+      rep = Reports::Account.new(verbose: true)
+      book = rep.run_report
+      book.save filename
     end
 
     desc "Generate a detail report"
     task :detail, [:filename] => :environment do |t, args|
       args.with_defaults(:filename => 'detail.xls', :hostname => 'portal.concord.org')
-      include ActionController::UrlWriter
+      include Rails.application.routes.url_helpers
       default_url_options[:host] = args[:hostname]
 
       filename = args[:filename]
-      File.new(filename, 'w') do |file|
-        rep = Reports::Detail.new({:verbose => true,
-                                   :blobs_url => dataservice_blobs_url,
-                                   :url_helpers => Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
-                                   })
-        rep.run_report(file)
-      end
+      rep = Reports::Detail.new(verbose: true,
+                                blobs_url: dataservice_blobs_url,
+                                url_helpers: Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
+                                )
+      book = rep.run_report
+      book.save filename
     end
 
     desc "Generate an usage report"
     task :usage, [:filename, :hostname] => :environment do |t, args|
       args.with_defaults(:filename => 'usage.xls', :hostname => 'portal.concord.org')
-      include ActionController::UrlWriter
+      include Rails.application.routes.url_helpers
       default_url_options[:host] = args[:hostname]
 
       filename = args[:filename]
-      File.new(filename, 'w') do |file|
-        rep = Reports::Usage.new({:verbose => true,
-                                  :blobs_url => dataservice_blobs_url,
-                                  :url_helpers => Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
-                                  })
-        rep.run_report(file)
-      end
-    end
-
-    desc "Generate an usage report"
-    task :assigned_usage_with_activities, [:filename, :hostname] => :environment do |t, args|
-      args.with_defaults(:filename => 'assigned_usage.xls', :hostname => 'portal.concord.org')
-      include ActionController::UrlWriter
-      default_url_options[:host] = args[:hostname]
-
-      filename = args[:filename]
-      File.new(filename, 'w') do |file|
-        all_runnables = Investigation.published + Investigation.assigned
-        all_runnables = all_runnables.uniq.sort_by { |i| i.name.downcase }
-
-        rep = Reports::Usage.new({:runnables => all_runnables,
-                                  :report_learners => Report::Learner.all,
-                                  :blobs_url => dataservice_blobs_url,
-                                  :include_child_usage => true,
-                                  :verbose => true,
-                                  :url_helpers => Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
-                                   })
-        rep.run_report(file)
-      end
+      rep = Reports::Usage.new(verbose: true,
+                               blobs_url: dataservice_blobs_url,
+                               url_helpers: Reports::UrlHelpers.new(:protocol => 'https', :host_with_port => 'portal.concord.org')
+                               )
+      book = rep.run_report
+      book.save filename
     end
 
     desc "Generate some usage counts"

@@ -53,14 +53,14 @@ describe Reports::Detail do
     describe "with a complete answer" do
       let(:mock_answer)  {{ answer: "my answer" }}
       it 'should not raise an excpetion' do
-        expect{report.run_report(stream)}.to_not raise_error
+        expect{report.run_report}.to_not raise_error
       end
     end
 
     describe "with a null answer" do
       let(:mock_answer)  {{ answer: nil }}
       it 'should STILL not raise an excpetion' do
-        expect{report.run_report(stream)}.to_not raise_error
+        expect{report.run_report}.to_not raise_error
       end
     end
   end

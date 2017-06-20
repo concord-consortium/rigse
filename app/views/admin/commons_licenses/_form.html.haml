@@ -1,0 +1,31 @@
+.item
+  .content
+    - if license.errors.any?
+      %ul.menu_v.error-explanation
+        %li License can't be saved, there are errors in form:
+        - license.errors.full_messages.each do |msg|
+          %li= msg
+    %p
+      %ul.menu_v
+        %li
+          Code:
+          = f.text_field :code
+        %li
+          Number:
+          = f.text_field :number
+        %li
+          Name:
+          = f.text_field :name
+        %li
+          Description:
+          = f.text_field :description
+        %li
+          Deed:
+          = f.text_field :deed
+        %li
+          Legal:
+          = f.text_field :legal
+        %li
+          Image:
+          = f.text_field :image
+      = submit_tag

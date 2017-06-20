@@ -5,9 +5,9 @@ class CommonsLicense < ActiveRecord::Base
 
   Site = "creativecommons.org"
 
-  ImageFormat = "http://i.#{Site}/l/%{code}/3.0/88x31.png"
-  DeedFormat  =   "http://#{Site}/licenses/%{code}/3.0/"
-  LegalFormat =   "http://#{Site}/licenses/%{code}/3.0/legalcode"
+  ImageFormat = "http://i.#{Site}/l/%{code}/%{version}/88x31.png"
+  DeedFormat  =   "http://#{Site}/licenses/%{code}/%{version}/"
+  LegalFormat =   "http://#{Site}/licenses/%{code}/%{version}/legalcode"
 
   default_scope :order => 'number ASC'
 
@@ -22,9 +22,12 @@ class CommonsLicense < ActiveRecord::Base
   end
 
   def self.url(license,fmt)
-    modified_code = license.code.downcase
-    modified_code.gsub!("cc-","")
-    fmt % {:code => modified_code}
+    match = /^CC-(.+)\s+([0-9.]+)$/.match(license.code)
+    if match
+      fmt % {:code => match[1].downcase, :version => match[2]}
+    else
+      ""
+    end
   end
 
   def self.image(license)
@@ -38,16 +41,4 @@ class CommonsLicense < ActiveRecord::Base
   def self.legal(license)
     url(license, LegalFormat)
   end
-
-  # TODO: CRUD actions and views? Maybe not.
-  def self.load_all_from_yaml!
-    defs = YAML::load_file(File.join(Rails.root,"config","licenses.yml"));
-    defs['licenses'].each do |license_hash|
-      license = CommonsLicense.find_or_create_by_code(license_hash)
-      license.update_attributes(license_hash)
-      license.save
-    end
-  end
-
-  self.load_all_from_yaml! rescue nil
 end

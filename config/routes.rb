@@ -387,6 +387,15 @@ RailsPortal::Application.routes.draw do
         end
       end
       get '/learner_detail/:id_or_key.:format' => 'learner_details#show',  :as => :learner_detail
+
+      # can't use resources here as the key is a natural key instead of id and Rails 3 doesn't allow you to specifiy the param name
+      get '/commons_licenses/' => 'commons_licenses#index', :as => :commons_licenses
+      get '/commons_licenses/new' => 'commons_licenses#new', :as => :new_commons_license
+      get '/commons_licenses/:code' => 'commons_licenses#show', :as => :commons_license
+      get '/commons_licenses/:code/edit' => 'commons_licenses#edit', :as => :edit_commons_license
+      post '/commons_licenses/' => 'commons_licenses#create', :as => :create_commons_license
+      put '/commons_licenses/:code' => 'commons_licenses#update', :as => :update_commons_license
+      delete '/commons_licenses/:code' => 'commons_licenses#destroy', :as => :delete_commons_license
     end
 
     resources :materials_collections do
@@ -488,10 +497,8 @@ RailsPortal::Application.routes.draw do
         post :sort_pages
         get :duplicate
         post :delete_page
-        get :details_report
         post :add_page
         get :add_page
-        get :usage_report
         get :print
       end
     end
@@ -524,10 +531,8 @@ RailsPortal::Application.routes.draw do
       end
       member do
         get :duplicate
-        get :details_report
         post :add_activity
         get :add_activity
-        get :usage_report
         post :sort_activities
         get :print
         post :delete_activity
@@ -539,8 +544,6 @@ RailsPortal::Application.routes.draw do
     match '/investigations/list/filter' => 'investigations#index', :as => :list_filter_investigation, :method => :get
     match '/investigations/teacher/:id.otml' => 'investigations#teacher', :as => :investigation_teacher_otml, :method => :get, :format => :otml
     match '/investigations/teacher/:id.dynamic_otml' => 'investigations#teacher', :as => :investigation_teacher_dynamic_otml, :method => :get, :format => :dynamic_otml
-    match '/investigations/reports/usage' => 'investigations#usage_report', :as => :investigation_usage_report, :method => :get
-    match '/investigations/reports/details' => 'investigations#details_report', :as => :investigation_details_report, :method => :get
     match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
     match '/report/learner/logs_query' => 'report/learner#logs_query', :as => :learner_logs_query, :method => :get
     match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get
@@ -727,7 +730,7 @@ RailsPortal::Application.routes.draw do
 
     match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
     match '/readme' => 'home#readme', :as => :readme
-    match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
+    match '/docs/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
     match '/home'       => 'home#index', :as => :home
     match '/my_classes' => 'home#my_classes', :as => :my_classes
     match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
@@ -748,6 +751,8 @@ RailsPortal::Application.routes.draw do
     match '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
     post  '/installer_report' => 'misc#installer_report', :as => :installer_report
+
+    match '/stem-resources/:type/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
     match '/:controller(/:action(/:id))'
 
