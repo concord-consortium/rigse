@@ -116,7 +116,7 @@ class Activity < ActiveRecord::Base
     end
     integer :project_ids, :multiple => true, :references => Admin::Project
 
-    string :project_names do
+    string :project_names, :multiple => true do
       projects.map { |p| p.name }
     end
 

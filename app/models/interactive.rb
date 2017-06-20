@@ -101,7 +101,7 @@ class Interactive < ActiveRecord::Base
       false
     end
 
-    string :project_names_text do
+    string :project_names, :multiple => true do
       projects.map { |p| p.name }
     end
 
