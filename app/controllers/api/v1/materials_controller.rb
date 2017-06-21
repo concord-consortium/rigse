@@ -2,6 +2,11 @@ class API::V1::MaterialsController < API::APIController
   include Materials::DataHelpers
 
   #
+  # Default number of related materials to return
+  #
+  @@DEFAULT_RELATED_MATERIALS_COUNT = 4
+
+  #
   # Map of class types supported material types.
   #
   # Might also consider using "classify" and "constantize" here
@@ -244,7 +249,9 @@ class API::V1::MaterialsController < API::APIController
 
     type            = params[:material_type]
     id              = params[:id]
-    include_related = params[:include_related]
+    include_related = params.has_key?(:include_related)     ? 
+                        params[:include_related].to_i       : 
+                        @@DEFAULT_RELATED_MATERIALS_COUNT
 
     status          = 200
     data            = {}
