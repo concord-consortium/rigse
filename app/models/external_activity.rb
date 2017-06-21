@@ -1,7 +1,9 @@
 require 'uri'
 class ExternalActivity < ActiveRecord::Base
 
+  # 
   # see https://github.com/sunspot/sunspot/blob/master/README.md
+  #
   searchable do
     text :name
     string :name
@@ -56,16 +58,21 @@ class ExternalActivity < ActiveRecord::Base
       material_property_list
     end
     string  :cohort_ids, :multiple => true, :references => Admin::Cohort
+
     string  :grade_levels, :multiple => true do
       grade_level_list
     end
+
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+
     string  :sensors, :multiple => true do
       sensor_list
     end
+
     integer :project_ids, :multiple => true, :references => Admin::Project
+
   end
 
   belongs_to :user

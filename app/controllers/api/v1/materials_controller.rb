@@ -1,6 +1,20 @@
 class API::V1::MaterialsController < API::APIController
   include Materials::DataHelpers
 
+  #
+  # Map of class types supported material types.
+  #
+  # Might also consider using "classify" and "constantize" here
+  # rather than a hard coded map of types. But that might require
+  # additional input validation or otherwise constrain how we define
+  # the http parameters.
+  #
+  @@supported_material_types = {
+    "external_activity" => ExternalActivity,
+    "interactive"       => Interactive
+  }
+
+
   # GET /api/v1/materials/own
   # Template materials are not listed.
   def own
@@ -171,13 +185,13 @@ class API::V1::MaterialsController < API::APIController
       end
       favorite_id = favorite.id
 
-    rescue ActiveRecord::RecordNotFound => rnf
-      status = 400
-      message = "RecordNotFound Invalid material id #{id}"
-    end
+      render json: {  :message        => "Created favorite #{favorite_id}",
+                      :favorite_id    => favorite_id  }, :status => 200
 
-    render json: {  :message        => message, 
-                    :favorite_id    => favorite_id  }, :status => status
+    rescue ActiveRecord::RecordNotFound => rnf
+      render json: {:message => "RecordNotFound Invalid material id #{id}" }, 
+                    :status => 400
+    end
 
   end
 
@@ -221,6 +235,49 @@ class API::V1::MaterialsController < API::APIController
 
   end
 
+  #
+  #
+  # Get a single materials item and return a json representation
+  # GET /api/v1/materials/:type/:id
+  #
+  def show
+
+    type            = params[:material_type]
+    id              = params[:id]
+    include_related = params[:include_related]
+
+    status          = 200
+    data            = {}
+
+    begin
+      item = get_materials_item id, type
+    rescue ActiveRecord::RecordNotFound => rnf
+      render json: { :message => rnf.message}, :status => 400
+      return
+    end
+
+    if item
+      array = materials_data [item], nil, include_related
+  
+      if array.size == 1
+
+        data = array[0]
+
+      else
+        status = 400
+        data = {:message => 
+                "Unexpected materials size #{array.size}"}
+      end
+
+    else
+      status = 400
+      data = {  :message => 
+                "Cannot find materials item type (#{type}) with id (#{id})" }
+    end
+
+    render json: data, :status => status
+
+  end
 
   def assign_to_class
     # only add/delete if assign parameter exists to avoid deleting data on a bad request
@@ -249,4 +306,46 @@ class API::V1::MaterialsController < API::APIController
 
     render json: {:message => message}, :status => status
   end
+
+  private
+
+  #
+  # Return a single material item.
+  #
+  # id      The item id. (An id of ExternalActivity, Investigation, etc)
+  # type    A supported material type as a string key present in
+  #         the @@supported_material_types map. This will map to a
+  #         ruby class of the appropiate type, which will be returned
+  #         and can be used by materials libs to convert into json
+  #         and be consumed by API clients. 
+  #
+  def get_materials_item(id, type)
+
+    rubyclass = @@supported_material_types[type]
+
+    if rubyclass 
+
+      includes = [  :user, 
+                    :projects, 
+                    :subject_areas,
+                    :grade_levels   ]
+
+      if rubyclass == ExternalActivity
+        includes.push :template
+      end
+
+      item = rubyclass.includes(includes).find(id)
+
+      if item
+        return item
+      end
+ 
+    else
+        raise ActiveRecord::RecordNotFound, "Invalid material type (#{type})"
+    end
+
+    raise ActiveRecord::RecordNotFound, 
+            "Cannot find material type (#{type}) with id (#{id})"
+  end
+
 end

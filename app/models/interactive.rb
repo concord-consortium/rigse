@@ -85,12 +85,15 @@ class Interactive < ActiveRecord::Base
     string  :grade_levels, :multiple => true do
       grade_level_list
     end
+
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+
     string  :model_types, :multiple => true do
       model_type_list
     end
+
     integer :project_ids, :multiple => true, :references => Admin::Project
 
     boolean :is_assessment_item do

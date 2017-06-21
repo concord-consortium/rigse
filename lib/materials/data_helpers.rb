@@ -11,7 +11,9 @@ module Materials
       Sanitize.fragment(html_fragment, Sanitize::Config::BASIC)
     end
 
-    def materials_data(materials, assigned_to_class = nil)
+    def materials_data( materials, 
+                        assigned_to_class   = nil, 
+                        include_related     = false )
       data = []
 
       if assigned_to_class
@@ -90,6 +92,44 @@ module Materials
             end
         end
 
+        project_ids = material.projects.map { |p| p.id }
+
+        projects = material.projects.map { |p| 
+            url = nil
+            if p.landing_page_slug
+                url = project_page_url(p.landing_page_slug)
+            end
+
+            {
+                id:                 p.id,
+                name:               p.name,
+                landing_page_url:   url,
+                public:             p.public
+            }
+        }
+
+        #
+        # Check if we should search for related material
+        #
+        related_materials = []
+        if include_related
+            
+            search = Sunspot.search(Search::SearchableModels) do
+
+  				fulltext "*" do
+    				boost(4.0) { with(:subject_areas, tags['subject_areas']) }
+    				boost(2.0) { with(:grade_levels, tags['grade_levels']) }
+    				boost(1.0) { with(:project_ids, project_ids) }
+  				end                
+
+                without     material
+                order_by    :score, :desc
+            end
+
+            related = search.results
+            related_materials = materials_data(related)
+        end
+
         slug = material.name.respond_to?(:parameterize) ? material.name.parameterize : nil
         stem_resource_type = material.respond_to?(:lara_sequence?) ? (material.lara_sequence? ? 'sequence' : 'activity') : material.class.name.downcase
 
@@ -111,6 +151,7 @@ module Materials
 
           subject_areas:    tags['subject_areas'],
           grade_levels:     tags['grade_levels'],
+          projects:         projects,
 
           publication_status: material.publication_status,
           links: links_for_material(material),
@@ -132,6 +173,9 @@ module Materials
           user: user_data,
           assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}"),
           credits: material.respond_to?(:credits) ? material.credits : nil,
+       
+          related_materials: related_materials,
+
           slug: slug,
           stem_resource_url: view_context.stem_resources_url(stem_resource_type, material.id, slug)
         }
