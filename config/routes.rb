@@ -684,8 +684,8 @@ RailsPortal::Application.routes.draw do
           get   :featured
           post  :assign_to_class
           get   :all
-          get   :add_favorite
-          get   :remove_favorite
+          post  :add_favorite
+          post  :remove_favorite
           get   :get_favorites
         end
         namespace :materials_bin do
