@@ -12,7 +12,7 @@ Working git, ruby or jruby, and rubgems, wget
 #### Core Extensions
 
 -   [Extensions to core classes applied at application
-    startup](doc/core-extensions.textile)
+    startup](docs/core-extensions.textile)
 
 #### Simple Getting Started
 
@@ -55,7 +55,7 @@ Now open your browser to [http://0.0.0.0:3000](http://0.0.0.0:3000). On OS X thi
 take more than 5 minutes to load the first page. Look in the terminal where you ran
 `docker-compose up` to monitor progress.
 
-Visit [the Docker docs](doc/docker.md) for how to use your portal running in docker. This
+Visit [the Docker docs](docs/docker.md) for how to use your portal running in docker. This
 also includes: instructions on speeding things up on OS X, using a local dns+proxy system
 to avoid port conflicts, and setting up ssh for capistrano deploys.
 
@@ -411,7 +411,7 @@ Other libraries
 
 ## Capistano Tasks:
 
-- [Capistrano Deployment Recipes](doc/cap-tasks.md)
+- [Capistrano Deployment Recipes](docs/cap-tasks.md)
 
 
 ## Updating a staging server.

@@ -55,8 +55,8 @@ class Reports::Account < Reports::Excel
     row.concat [user.id, user.external_id, user_name, user_login, user_email, user_school, user_district, user_state, user_classes, user_cohorts, user_created, user_runs, user_last_run]
   end
 
-  def run_report(stream_or_path)
-    book = Spreadsheet::Workbook.new
+  def run_report
+    book = Reports::Book.new(verbose: @verbose)
 
     teachers_sheet = book.create_worksheet :name => 'Teachers'
     students_sheet = book.create_worksheet :name => 'Students'
@@ -76,7 +76,8 @@ class Reports::Account < Reports::Excel
         process_portal_user(user, user.portal_student, "Student", students_sheet)
       end
     end
-    book.write stream_or_path
+
+    return book
   end
 
   private

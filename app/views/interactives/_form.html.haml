@@ -6,6 +6,8 @@
       = f.text_field :name
     = field_set_tag 'Interactive Description' do
       = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'License' do
+      = f.select :license_code, CommonsLicense.for_select, include_blank: 'none'
     = field_set_tag 'Publication Status' do
       = f.select :publication_status, Interactive.publication_states.map {|s| s.to_s}
     = field_set_tag 'Interactive URL' do

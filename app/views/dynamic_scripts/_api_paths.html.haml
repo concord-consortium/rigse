@@ -9,18 +9,39 @@
     STATES: "#{api_v1_states_path}",
     DISTRICTS: "#{api_v1_districts_path}",
     SCHOOLS: "#{api_v1_schools_path}",
-    EMAILS: "#{email_available_api_v1_teachers_path}",
-    LOGINS: "#{login_available_api_v1_teachers_path}",
+
+    //
+    // Login and email availability.
+    //
+    EMAILS:         "#{email_available_api_v1_teachers_path}",
+    LOGINS:         "#{login_available_api_v1_teachers_path}",
+
+    //
+    // Login and name validation.
+    //
     LOGIN_VALID:    "#{login_valid_api_v1_teachers_path}",
     NAME_VALID:     "#{name_valid_api_v1_teachers_path}",
+
     CLASSWORD: "#{check_class_word_api_v1_students_path}",
     COLLABORATIONS: "#{api_v1_collaborations_path}",
     AVAILABLE_COLLABORATORS: "#{available_collaborators_api_v1_collaborations_path}",
+
+    //
+    // Materials
+    //
     MATERIALS_FEATURED: "#{api_v1_materials_featured_path}",
     MATERIALS_OWN: "#{api_v1_materials_own_path}",
     MATERIALS_BIN_COLLECTIONS: "#{api_v1_materials_bin_collections_path}",
     MATERIALS_BIN_UNOFFICIAL_MATERIALS: "#{api_v1_materials_bin_unofficial_materials_path}",
     MATERIALS_BIN_UNOFFICIAL_MATERIALS_AUTHORS: "#{api_v1_materials_bin_unofficial_materials_authors_path}",
+
+    //
+    // Favorites
+    //
+    MATERIALS_ADD_FAVORITE:     "#{api_v1_materials_add_favorite_path}",
+    MATERIALS_REMOVE_FAVORITE:  "#{api_v1_materials_remove_favorite_path}",
+    MATERIALS_GET_FAVORITE:     "#{api_v1_materials_get_favorites_path}",
+
     SEARCH: "#{api_v1_search_search_path}",
     ASSIGN_MATERIAL_TO_CLASS: "#{api_v1_materials_assign_to_class_path}"
   };

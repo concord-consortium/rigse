@@ -52,10 +52,13 @@ class Investigation < ActiveRecord::Base
     string  :grade_levels, :multiple => true do
       grade_level_list
     end
+
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+
     integer :project_ids, :multiple => true, :references => Admin::Project
+
   end
 
   belongs_to :user
@@ -118,6 +121,8 @@ class Investigation < ActiveRecord::Base
 
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
+
+  has_many :favorites, as: :favoritable
 
   acts_as_replicatable
 

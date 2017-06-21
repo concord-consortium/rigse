@@ -9,7 +9,7 @@
 #
 # Prepare spec tests
 #
-export RTAILS_ENV=test
+export RAILS_ENV=test
 bundle exec rake db:create
 bundle exec rake db:schema:load
 bundle exec rake db:test:prepare
@@ -17,5 +17,5 @@ bundle exec rake db:test:prepare
 #
 # Run spec tests
 #
-RAILS_ENV=test bundle exec rspec spec/
+bundle exec rspec spec/
 

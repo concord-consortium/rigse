@@ -52,6 +52,14 @@ class UsersController < ApplicationController
     @projects = Admin::Project.all_sorted
   end
 
+  #
+  # GET /users/1/favorites
+  #
+  def favorites
+    @user = User.find(params[:id])
+    authorize @user
+  end
+
    # /users/1/switch
   def switch
     @user = User.find(params[:id])
@@ -182,10 +190,9 @@ class UsersController < ApplicationController
   end
 
   def account_report
-    sio = StringIO.new
     rep = Reports::Account.new({:verbose => false})
-    rep.run_report(sio)
-    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "accounts-report.xls" )
+    book = rep.run_report
+    send_data(book.to_data_string, :type => book.mime_type, :filename => "accounts-report.#{book.file_extension}" )
   end
 
   def reset_password

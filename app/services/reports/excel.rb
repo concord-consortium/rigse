@@ -1,5 +1,4 @@
 class Reports::Excel
-  require 'spreadsheet'
   require 'nokogiri' # text sanitization ...
 
   def initialize(opts = {})

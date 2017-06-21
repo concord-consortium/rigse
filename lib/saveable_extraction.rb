@@ -50,7 +50,7 @@ module SaveableExtraction
         choices_to_process << $1.to_i if c.has_attribute?('local_id') && c.get_attribute('local_id') =~ /(?:embeddable__)?multiple_choice_choice_(\d+)/
       end
       rationales = extract_multiple_choice_rationales(choice.parent)
-      process_multiple_choice(choices_to_process.uniq, rationales)
+      process_multiple_choice(nil, choices_to_process.uniq, rationales)
     end
   end
 
@@ -64,13 +64,42 @@ module SaveableExtraction
     return rationales
   end
 
-  def process_multiple_choice(choice_ids, rationales = {}, is_final = nil)
+  #
+  # Persist a multiple choice selection.
+  #
+  # embeddable_id   The multiple_choice_id that the choice_ids belong to.
+  #                 This can be nil if a non-empty array of choice_ids
+  #                 is supplied.
+  # choice_ids      The choice ids to set as selected.
+  # rationales      The rationales.
+  # is_final        is_final.
+  #
+  #
+  def process_multiple_choice(  embeddable_id,
+                                choice_ids,
+                                rationales = {},
+                                is_final = nil )
+
+    if embeddable_id && choice_ids.count == 0
+      #
+      # User is unselecting a previous selection.
+      # Do not associate answers with this question.
+      #
+      saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, embeddable_id)
+      saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => embeddable_id, :is_final => is_final)
+      return
+    end
+
     choice = Embeddable::MultipleChoiceChoice.find_by_id(choice_ids.first, :include => :multiple_choice)
     multiple_choice = choice ? choice.multiple_choice : nil
+
     if multiple_choice && choice
+
       saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, multiple_choice.id)
+
       if saveable.answers.empty? || # we don't have any answers yet
          saveable.answers.last.answer.size != choice_ids.size || # the number of selected choices differs
+         ( !(saveable.answers.last.answer[0].key?(:choice_id)) ) || # a placeholder value indicating "no selection" is present.
          ((saveable.answers.last.rationale_choices.map{|rc| rc.choice_id} - choice_ids).size != 0) || # the actual selections differ
          ((saveable.answers.last.rationale_choices.map{|rc| rc.rationale}.compact - rationales.values).size != 0) || # the actual rationales differ
          saveable.answers.last.is_final != is_final # is_final differs (answer is explicitly submitted by learner)
@@ -83,8 +112,7 @@ module SaveableExtraction
     else
       if ! choice
         logger.error("Missing Embeddable::MultipleChoiceChoice id: #{choice_ids.join(",")}")
-      end
-      if ! multiple_choice
+      elsif ! multiple_choice
         logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
       end
     end

@@ -78,17 +78,58 @@ width: 300px;
     font-size: 0.75em;
     color: #999;
 }
+
+/**
+ *
+ * Stem finder favorite material styles
+ *
+ */
+.stem-finder-result-favorite {
+  position: 	absolute;
+  top: 			0px;
+  right: 		5px;
+  color: 		#FFFFFF;
+  font-size: 	32px;
+  cursor:       default;
+}
+.stem-finder-result-favorite-active {
+  color: 		#F8CF4D;
+}
+
+/**
+ *
+ * Legacy favorite material styles
+ *
+ */
+.legacy-favorite {
+  position: 	absolute;
+  top: 			0px;
+  margin-top:   -10px;
+  right: 		0px;
+  color: 		#FFFFFF;
+  font-size: 	32px;
+  font-family:  initial;
+  cursor:       default;
+}
+.legacy-favorite-active {
+  color: 		#F8CF4D;
+}
+.legacy-favorite-outline {
+  color: 		#CCCCCC;
+}
+
 .material_icon {
-  float:left;
-  margin:17px 10px 0 5px;
-  padding: 0px;
-  height: 100px;
-  width: 120px;
-  overflow: hidden;
-  text-align:center;
-  .thumb_link {
-    cursor: pointer;
-  }
+    position:   relative;
+    float:      left;
+    margin:     17px 10px 0 5px;
+    padding:    0px;
+    height:     100px;
+    width:      120px;
+    overflow:   hidden;
+    text-align: center;
+    .thumb_link {
+        cursor: pointer;
+    }
 }
 .material_type{
   width:120px;

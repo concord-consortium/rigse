@@ -1,7 +1,9 @@
 require 'uri'
 class ExternalActivity < ActiveRecord::Base
 
+  # 
   # see https://github.com/sunspot/sunspot/blob/master/README.md
+  #
   searchable do
     text :name
     string :name
@@ -56,20 +58,27 @@ class ExternalActivity < ActiveRecord::Base
       material_property_list
     end
     string  :cohort_ids, :multiple => true, :references => Admin::Cohort
+
     string  :grade_levels, :multiple => true do
       grade_level_list
     end
+
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+
     string  :sensors, :multiple => true do
       sensor_list
     end
+
     integer :project_ids, :multiple => true, :references => Admin::Project
+
   end
 
   belongs_to :user
   belongs_to :external_report
+
+  has_many :favorites, as: :favoritable
 
   # offerings are not deleted if they have learners, so you need to explicitly remove the learners
   # before you can delete the offering
@@ -87,6 +96,11 @@ class ExternalActivity < ActiveRecord::Base
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
 
   acts_as_replicatable
+
+  belongs_to :license,
+    :class_name  => 'CommonsLicense',
+    :primary_key => 'code',
+    :foreign_key => 'license_code'
 
   include Cohorts
   include Publishable
@@ -213,7 +227,6 @@ class ExternalActivity < ActiveRecord::Base
   def options_for_external_report
     ExternalReport.all.map { |r| [r.name, r.id] }
   end
-
 
   private
 

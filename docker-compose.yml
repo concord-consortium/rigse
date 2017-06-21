@@ -19,6 +19,7 @@ services:
       TEST_SOLR_HOST: solr-test
       TEST_SOLR_PORT: 8981
       SERVICE_API_KEY: unsecure local key
+      REPORT_VIEW_URL:
     # no ports are published, see below for details
     volumes:
       - .:/rigse
