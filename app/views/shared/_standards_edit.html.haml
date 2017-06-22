@@ -3,8 +3,10 @@
   = field_set_tag 'Standards' do
     Search Standard Documents to Import
     %br
-    %input{:type=>"text"}
-    %input{:type=>"button", :value => "Search", :onclick => "window.jsFunction()"}
+    %input{:id => "asn_search_text", :type => "text"}
+    %input{:type => "button", :value => "Search", :onclick => "window.searchASN()"}
+    %div{:id => "asn_search_results" }
+      %select{:id => "asn_search_results_options", :multiple => true}
     %br
     %br
     %br
@@ -32,9 +34,34 @@
 :javascript
   jQuery(document).ready(function() {
 
-    window.jsFunction = function() {
-      alert("Search");
-    }
+    window.searchASN = function() {
+
+      var search_term   = jQuery("#asn_search_text").attr("value");
+      var apiUrl        = "/api/v1/materials/get_standard_documents"
+      var data          = { "search_term": search_term };
+
+      var widget        = jQuery("#asn_search_results_options");
+      widget.empty();
+       
+      console.log("Search term " + search_term);
+      jQuery.ajax({
+        type: "POST",
+        dataType: "json",
+        url: apiUrl,
+        data: data,
+   	 	success: function(response) {
+     	  console.log('Response ', response);
+          hits = response.asn_response.hits.hit;
+          for(var i = 0; i < hits.length; i++) {
+            var option = jQuery('<option></option>');
+            option.attr("value", hits[i].identifier);
+            option.text(hits[i].data.title[0]);
+            widget.append(option);
+          }
+   		}	
+      });
+
+    }   // end window.searchASN
 
   });
 

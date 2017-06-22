@@ -341,16 +341,13 @@ class API::V1::MaterialsController < API::APIController
         return
     end
 
-    url = @@ASN_SEARCH_BASE_URL <<
-            "bq=(and title:'#{search_term}' type:'Standard Document')" <<
-            "&" << 
-            "return-fields=identifier,type,title" <<
-            "&" << 
-            "key=#{key}"
+    query = {   "bq" => "(and title:'#{search_term}' type:'Standard Document')",
+                "return-fields" => "identifier,type,title",
+                "key" => "#{key}" }
 
-    response = HTTParty.get(url)
+    response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
 
-    render json: {:response => response}, :status => 200
+    render json: {:asn_response => response}, :status => 200
   end
 
   private
