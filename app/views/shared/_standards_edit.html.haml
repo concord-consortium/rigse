@@ -3,10 +3,12 @@
   = field_set_tag 'Standards' do
     Search Standard Documents to Import
     %br
-    %input{:id => "asn_search_text", :type => "text"}
+    %input.asn_doc_search_text{:id => "asn_search_text", :type => "text"}
     %input{:type => "button", :value => "Search", :onclick => "window.searchASN()"}
+    %div{:id => "asn_search_results_message" }
     %div{:id => "asn_search_results" }
-      %select{:id => "asn_search_results_options", :multiple => true}
+      %select.asn_doc_search_results_options{:id => "asn_search_results_options", :multiple => true }
+      %input{:type => "button", :value => "Import", :onclick => "window.importAsnDocument()"}
     %br
     %br
     %br
@@ -34,13 +36,21 @@
 :javascript
   jQuery(document).ready(function() {
 
+    jQuery("#asn_search_results_message").hide();
+    jQuery("#asn_search_results").hide();
+
     window.searchASN = function() {
 
       var search_term   = jQuery("#asn_search_text").attr("value");
       var apiUrl        = "/api/v1/materials/get_standard_documents"
       var data          = { "search_term": search_term };
 
+      var resultDiv     = jQuery("#asn_search_results");
+      var message       = jQuery("#asn_search_results_message");
       var widget        = jQuery("#asn_search_results_options");
+
+      message.hide();
+      resultDiv.hide();
       widget.empty();
        
       console.log("Search term " + search_term);
@@ -52,16 +62,28 @@
    	 	success: function(response) {
      	  console.log('Response ', response);
           hits = response.asn_response.hits.hit;
+
+          if(hits.length == 0) {
+            message.html("No results found.");
+            message.show();
+            return;
+          }
+
           for(var i = 0; i < hits.length; i++) {
             var option = jQuery('<option></option>');
             option.attr("value", hits[i].identifier);
             option.text(hits[i].data.title[0]);
             widget.append(option);
           }
-   		}	
+          resultDiv.show();
+   		}
       });
 
-    }   // end window.searchASN
+    }   // end window.searchASN()
+
+    window.importAsnDocument = function() {
+        alert("Import");
+    }   // end window.importAsnDocument()
 
   });
 
