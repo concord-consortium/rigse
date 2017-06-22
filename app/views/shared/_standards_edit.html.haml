@@ -1,9 +1,22 @@
 -# Expects locals: object
 - if object && object.respond_to?("standards") && current_visitor.has_role?("admin", "manager")
   = field_set_tag 'Standards' do
+    Search Standard Documents to Import
+    %br
+    %input{:type=>"text"}
+    %input{:type=>"button", :value => "Search", :onclick => "window.jsFunction()"}
+    %br
+    %br
+    %br
+    %br
+    Available Standard Documents
+    %select{:multiple => false}
+      - ['NGSS', 'AAAS', 'YMCA'].each do |s|
+        %option{value: s} #{s}
     %table.multiselect_table
       %tr
         %td.multiselect_td_large
+          Available Statement
           %select.multiselect_left{:multiple => true}
             - object.standards.each do |s|
               %option{value: s[:id]} #{s[:name]}
@@ -13,6 +26,16 @@
           %button.multiselect_button
             >>
         %td.multiselect_td_large
+          Applied Statement
           %select.multiselect_right{:multiple => true}
 
+:javascript
+  jQuery(document).ready(function() {
 
+    window.jsFunction = function() {
+      alert("Hello");
+    }
+
+  });
+
+  

@@ -7,6 +7,11 @@ class API::V1::MaterialsController < API::APIController
   @@DEFAULT_RELATED_MATERIALS_COUNT = 4
 
   #
+  # Default base URL for ASN search
+  #
+  @@ASN_SEARCH_BASE_URL = "https://elastic1.asn.desire2learn.com/api/1/search?"
+
+  #
   # Map of class types supported material types.
   #
   # Might also consider using "classify" and "constantize" here
@@ -312,6 +317,40 @@ class API::V1::MaterialsController < API::APIController
     end
 
     render json: {:message => message}, :status => status
+  end
+
+  #
+  # Get standard statements
+  #
+  # param[:document]    The document URI
+  #
+  def get_standard_statements
+
+  end
+
+  #
+  # Get available standard documents
+  #
+  def get_standard_documents
+
+    search_term = params[:search_term]
+    key         = ENV['ASN_API_KEY']
+
+    if !key
+        render json: {:message => "No ASN API key configured."}, :status => 403
+        return
+    end
+
+    url = @@ASN_SEARCH_BASE_URL <<
+            "bq=(and title:'#{search_term}' type:'Standard Document')" <<
+            "&" << 
+            "return-fields=identifier,type,title" <<
+            "&" << 
+            "key=#{key}"
+
+    response = HTTParty.get(url)
+
+    render json: {:response => response}, :status => 200
   end
 
   private
