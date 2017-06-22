@@ -322,10 +322,45 @@ class API::V1::MaterialsController < API::APIController
   #
   # Get standard statements
   #
-  # param[:document]    The document URI
+  # params[:asn_document_id]                 The document URI
+  # params[:asn_statement_notation_query]    The statement notation to match
+  # params[:asn_statement_label_query]       The statement label to match
+  # params[:asn_description_query]           Text in the description to match
   #
   def get_standard_statements
 
+    key                     = ENV['ASN_API_KEY']
+    document_id             = params[:asn_document_id]
+    statement_notation_q    = params[:asn_statement_notation_query]
+    statement_label_q       = params[:asn_statement_label_query]
+    description_q           = params[:asn_description_query]
+
+    if !key
+        render json: {:message => "No ASN API key configured."}, :status => 403
+        return
+    end
+
+    query_string = "(and is_part_of:'#{document_id}' type:'Statement'"
+
+    if statement_notation_q
+        query_string << " statement_notation:'*#{statement_notation_q}*'"
+    end
+    if statement_label_q
+        query_string << " statement_label:'*#{statement_label_q}*'"
+    end
+    if description_q
+        query_string << " description:'*#{description_q}*'"
+    end
+    query_string << ")"
+
+    query = {   "bq" => query_string,
+                "return-fields" => "identifier,type,statement_notation,statement_label,description",
+                "key" => "#{key}" }
+
+    response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
+
+    render json: {:asn_response => response}, :status => 200
+ 
   end
 
   #

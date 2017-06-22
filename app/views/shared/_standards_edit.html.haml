@@ -1,37 +1,39 @@
 -# Expects locals: object
 - if object && object.respond_to?("standards") && current_visitor.has_role?("admin", "manager")
   = field_set_tag 'Standards' do
-    Search Standard Documents to Import
+    Filters
     %br
-    %input.asn_doc_search_text{:id => "asn_search_text", :type => "text"}
-    %input{:type => "button", :value => "Search", :onclick => "window.searchASN()"}
+    %table
+      %tr
+        %td
+          Standard Document
+        %td
+          %select{:id => "asn_document_id", :multiple => false}
+            - StandardDocument.all.each do |s|
+              %option{value: s.uri} #{s.name}
+        %td
+      %tr
+        %td
+          Notation
+        %td
+          %input{:id => "asn_statement_notation_query",   :type => "text"}
+        %td
+      %tr
+        %td
+          Label
+        %td
+          %input{:id => "asn_statement_label_query",      :type => "text"}
+        %td
+      %tr
+        %td
+          Description
+        %td
+          %input{:id => "asn_description_query",          :type => "text"}
+        %td
+          %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
     %div{:id => "asn_search_results_message" }
     %div{:id => "asn_search_results" }
-      %select.asn_doc_search_results_options{:id => "asn_search_results_options", :multiple => true }
-      %input{:type => "button", :value => "Import", :onclick => "window.importAsnDocument()"}
     %br
-    %br
-    %br
-    %br
-    Available Standard Documents
-    %select{:multiple => false}
-      - ['NGSS', 'AAAS', 'YMCA'].each do |s|
-        %option{value: s} #{s}
-    %table.multiselect_table
-      %tr
-        %td.multiselect_td_large
-          Available Statement
-          %select.multiselect_left{:multiple => true}
-            - object.standards.each do |s|
-              %option{value: s[:id]} #{s[:name]}
-        %td.multiselect_td_small
-          %button.multiselect_button
-            <<
-          %button.multiselect_button
-            >>
-        %td.multiselect_td_large
-          Applied Statement
-          %select.multiselect_right{:multiple => true}
 
 :javascript
   jQuery(document).ready(function() {
@@ -41,19 +43,23 @@
 
     window.searchASN = function() {
 
-      var search_term   = jQuery("#asn_search_text").attr("value");
-      var apiUrl        = "/api/v1/materials/get_standard_documents"
-      var data          = { "search_term": search_term };
+      var fields = [    "asn_document_id",
+                        "asn_statement_notation_query",
+                        "asn_statement_label_query",
+                        "asn_description_query" ];
 
+      var data          = {};
+      var apiUrl        = "/api/v1/materials/get_standard_statements";
       var resultDiv     = jQuery("#asn_search_results");
       var message       = jQuery("#asn_search_results_message");
-      var widget        = jQuery("#asn_search_results_options");
 
       message.hide();
       resultDiv.hide();
-      widget.empty();
+
+      for(var field in fields) {
+        data[field] = jQuery("#"+field).attr("value");
+      }
        
-      console.log("Search term " + search_term);
       jQuery.ajax({
         type: "POST",
         dataType: "json",
@@ -61,30 +67,11 @@
         data: data,
    	 	success: function(response) {
      	  console.log('Response ', response);
-          hits = response.asn_response.hits.hit;
-
-          if(hits.length == 0) {
-            message.html("No results found.");
-            message.show();
-            return;
-          }
-
-          for(var i = 0; i < hits.length; i++) {
-            var option = jQuery('<option></option>');
-            option.attr("value", hits[i].identifier);
-            option.text(hits[i].data.title[0]);
-            widget.append(option);
-          }
-          resultDiv.show();
-   		}
+        }
       });
 
-    }   // end window.searchASN()
+    };  // end window.searchASN()
 
-    window.importAsnDocument = function() {
-        alert("Import");
-    }   // end window.importAsnDocument()
-
-  });
+  }); 
 
   

@@ -108,5 +108,26 @@ namespace :app do
     task :unsuspend_default_users => :environment do
       User.unsuspend_default_users
     end
+
+    desc "Create Standard Documents"
+    task :create_standard_documents => :environment do
+
+      StandardDocument.create(  
+        :name           => "NGSS",
+        :jurisdiction   => "Next Generation Science Standards",
+        :title          => "Next Generation Science Standards",
+        :uri            => "http://asn.jesandco.org/resources/D2454348" )
+      StandardDocument.create(  
+        :name           => "NSES",
+        :jurisdiction   => "National Science Education Standards",
+        :title          => "National Science Education Standards",
+        :uri            => "http://asn.jesandco.org/resources/D10001D0" )
+      StandardDocument.create(  
+        :name           => "AAAS",
+        :jurisdiction   => "American Association for the Advancement of Science",
+        :title          => "Benchmarks for Science Literacy",
+        :uri            => "http://asn.jesandco.org/resources/D2365735" )
+    end
+
   end
 end

@@ -1,7 +1,3 @@
 class StandardDocument < ActiveRecord::Base
-
-  has_many: standard_statements
-
-  attr_accessible :title, :uri
-
+  attr_accessible :jurisdiction, :name, :title, :uri
 end
