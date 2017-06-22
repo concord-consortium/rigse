@@ -228,6 +228,17 @@ class ExternalActivity < ActiveRecord::Base
     ExternalReport.all.map { |r| [r.name, r.id] }
   end
 
+  def standards
+    [ 
+      { name:   'foo',
+        id:     'S2454351' }, 
+      { name:   'baz',
+        id:     'S2454352' },
+      { name:   'zee',
+        id:     'S2454353' }
+    ]
+  end
+
   private
 
   def append_query(uri, query_str)
