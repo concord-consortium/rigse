@@ -340,26 +340,50 @@ class API::V1::MaterialsController < API::APIController
         return
     end
 
+    #
+    # Find our local peristed copy of this document
+    #
+    doc = StandardDocument.find_by_uri(document_id)
+
     query_string = "(and is_part_of:'#{document_id}' type:'Statement'"
 
-    if statement_notation_q
+    if statement_notation_q.present?
         query_string << " statement_notation:'*#{statement_notation_q}*'"
     end
-    if statement_label_q
+    if statement_label_q.present?
         query_string << " statement_label:'*#{statement_label_q}*'"
     end
-    if description_q
+    if description_q.present?
         query_string << " description:'*#{description_q}*'"
     end
+
     query_string << ")"
 
     query = {   "bq" => query_string,
-                "return-fields" => "identifier,type,statement_notation,statement_label,description",
+                "return-fields" => "identifier,is_part_of,type,statement_notation,statement_label,description",
                 "key" => "#{key}" }
 
     response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
 
-    render json: {:asn_response => response}, :status => 200
+    hits = response["hits"]["hit"]
+    statements = []
+
+    for hit in hits
+        
+        statements.push( {
+            # Use join() on these arrays. Sometimes a "description" will
+            # contain multiple array elements. 
+            # It also handles empty array.
+            uri:                hit["data"]["identifier"][0],
+            description:        hit["data"]["description"].join(" "),
+            statement_label:    hit["data"]["statement_label"].join(" "),
+            statement_notation: hit["data"]["statement_notation"].join(" "),
+            doc:                doc.name,
+            is_applied:         false
+        })
+    end
+
+    render json: {:statements => statements}, :status => 200
  
   end
 

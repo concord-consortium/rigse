@@ -1,0 +1,32 @@
+-# Expects locals: statements
+%table
+  %tr
+    %th
+      Applied
+    %th
+      Description
+    %th
+      Label 
+    %th
+      Notation
+    - if statements && statements.size > 0
+      - statements.each do |s|
+        %tr
+          %td
+            %input{:type => "checkbox", :onclick => "window.applyStandardStatement(this, \"#{s['uri']}\")" }
+          %td
+            #{s["description"]}
+          %td
+            #{s["statement_label"]}
+          %td
+            #{s["statement_notation"]}
+
+:javascript
+  jQuery(document).ready(function() {
+
+    window.applyStandardStatement = function(checkbox, uri) {
+        alert("Apply " + uri + " " + checkbox.checked);
+
+    }; // end window.applyStandardStatement()
+
+  });

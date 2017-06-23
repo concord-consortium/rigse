@@ -33,6 +33,7 @@
           %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
     %div{:id => "asn_search_results_message" }
     %div{:id => "asn_search_results" }
+    = render :partial => 'shared/standards_table', :locals => {:statements => [ {"description" => "dummy desc", "statement_label" => "Math", "statement_notation" => "ASD1234", "is_applied" => false, "uri" => "dummy://uri/abc" } ] }
     %br
 
 :javascript
@@ -43,7 +44,7 @@
 
     window.searchASN = function() {
 
-      var fields = [    "asn_document_id",
+      var params = [    "asn_document_id",
                         "asn_statement_notation_query",
                         "asn_statement_label_query",
                         "asn_description_query" ];
@@ -56,8 +57,9 @@
       message.hide();
       resultDiv.hide();
 
-      for(var field in fields) {
-        data[field] = jQuery("#"+field).attr("value");
+      for(let p of params) {
+        data[p] = jQuery("#"+p).attr("value");
+        console.log("Added " + p + ": " + data[p]);
       }
        
       jQuery.ajax({
@@ -67,6 +69,7 @@
         data: data,
    	 	success: function(response) {
      	  console.log('Response ', response);
+
         }
       });
 
