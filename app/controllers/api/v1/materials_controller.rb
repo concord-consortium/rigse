@@ -371,10 +371,17 @@ class API::V1::MaterialsController < API::APIController
     for hit in hits
         
         statements.push( {
+
             # Use join() on these arrays. Sometimes a "description" will
             # contain multiple array elements. 
             # It also handles empty array.
             uri:                hit["data"]["identifier"][0],
+
+            #
+            # Include a "key" to help React clients. 
+            #
+            key:                hit["data"]["identifier"][0],
+
             description:        hit["data"]["description"].join(" "),
             statement_label:    hit["data"]["statement_label"].join(" "),
             statement_notation: hit["data"]["statement_notation"].join(" "),

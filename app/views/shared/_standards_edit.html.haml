@@ -32,15 +32,13 @@
         %td
           %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
     %div{:id => "asn_search_results_message" }
-    %div{:id => "asn_search_results" }
-    = render :partial => 'shared/standards_table', :locals => {:statements => [ {"description" => "dummy desc", "statement_label" => "Math", "statement_notation" => "ASD1234", "is_applied" => false, "uri" => "dummy://uri/abc" } ] }
+    %div{:id => "asn_search_results", :className => "asn_results_div"}
     %br
 
 :javascript
   jQuery(document).ready(function() {
 
     jQuery("#asn_search_results_message").hide();
-    jQuery("#asn_search_results").hide();
 
     window.searchASN = function() {
 
@@ -51,11 +49,13 @@
 
       var data          = {};
       var apiUrl        = "/api/v1/materials/get_standard_statements";
-      var resultDiv     = jQuery("#asn_search_results");
+      var results       = jQuery("#asn_search_results");
       var message       = jQuery("#asn_search_results_message");
 
-      message.hide();
-      resultDiv.hide();
+      results.html('');
+
+      message.html('Searching...');
+      message.show();
 
       for(let p of params) {
         data[p] = jQuery("#"+p).attr("value");
@@ -69,7 +69,8 @@
         data: data,
    	 	success: function(response) {
      	  console.log('Response ', response);
-
+          ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
+          message.hide();
         }
       });
 
