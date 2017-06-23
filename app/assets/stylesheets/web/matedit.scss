@@ -17,33 +17,41 @@
 
 /**
  *
- * Styles for ASN document search widget and search results
+ * Styles for Standatds Documents ASN document search widget and search results
  *
  */
 
-.asn_doc_search_text {
-    width: 300px;
+.asn_add_table {
+    width:          100%;
 }
 
-.asn_doc_search_results_options {
-    width: 300px;
+.asn_add_table_td_right {
+    text-align:     right;
 }
 
 .asn_results_div {
-    min-height: 200px;
+    min-height:     200px;
 }
 
 .asn_results_table {
-    cellpadding: 2px;
-    cellspacing: 2px;
+    cellpadding:    2px;
+    cellspacing:    2px;
+}
+
+.asn_results_tr {
+    /* border:         1px solid #E0E0E0; */
 }
 
 .asn_results_th {
-    text-align: left;
+    text-align:     left;
+    padding-left:   0px;
+    padding-right:  10px;
 }
 
 .asn_results_td {
+    vertical-align: top;
 }
+
 
 
 

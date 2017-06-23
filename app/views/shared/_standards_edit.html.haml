@@ -1,47 +1,79 @@
 -# Expects locals: object
-- if object && object.respond_to?("standards") && current_visitor.has_role?("admin", "manager")
+- if object && current_visitor.has_role?("admin", "manager")
   = field_set_tag 'Standards' do
-    Filters
-    %br
-    %table
-      %tr
-        %td
-          Standard Document
-        %td
-          %select{:id => "asn_document_id", :multiple => false}
-            - StandardDocument.all.each do |s|
-              %option{value: s.uri} #{s.name}
-        %td
-      %tr
-        %td
-          Notation
-        %td
-          %input{:id => "asn_statement_notation_query",   :type => "text"}
-        %td
-      %tr
-        %td
-          Label
-        %td
-          %input{:id => "asn_statement_label_query",      :type => "text"}
-        %td
-      %tr
-        %td
-          Description
-        %td
-          %input{:id => "asn_description_query",          :type => "text"}
-        %td
-          %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
-    %div{:id => "asn_search_results_message" }
-    %div{:id => "asn_search_results", :class => "asn_results_div"}
-    %br
+    %div
+      Applied Standards
+      %br
+    %div
+      %table{:class => "asn_add_table"}
+        %tr
+          %td
+            Add Standards
+          %td{:class => "asn_add_table_td_right"}
+            %input{:id => "add_statement_button", :type => "button", :value => "Add", :onclick => "window.toggleAddDiv()"}
+    %div{:id => "add_statement_div"}
+      %table
+        %tr
+          %td
+            Standard Document
+          %td
+            %select{:id => "asn_document_id", :multiple => false}
+              - StandardDocument.all.each do |s|
+                %option{value: s.uri} #{s.name}
+          %td
+        %tr
+          %td
+            Notation
+          %td
+            %input{:id => "asn_statement_notation_query",   :type => "text"}
+          %td
+        %tr
+          %td
+            Label
+          %td
+            %input{:id => "asn_statement_label_query",      :type => "text"}
+          %td
+        %tr
+          %td
+            Description
+          %td
+            %input{:id => "asn_description_query",          :type => "text"}
+          %td
+            %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
+      %div{:id => "asn_search_results_message" }
+      %div{:id => "asn_search_results", :class => "asn_results_div"}
+      %br
 
 :javascript
   jQuery(document).ready(function() {
 
     jQuery("#asn_search_results_message").hide();
+    jQuery("#add_statement_div").hide();
 
+    //
+    // Toggle the visibility of the add statement div
+    //
+    window.toggleAddDiv = function() {
+      div       = jQuery("#add_statement_div");
+      button    = jQuery("#add_statement_button");
+      if(div.is(':visible')) {
+        div.hide();
+        button.attr('value', 'Add');
+      } else {
+        div.show();
+        button.attr('value', 'Done');
+      }
+    };  // end window.toggleAddDiv()
+
+
+    //
+    // Perform ASN search
+    //
     window.searchASN = function() {
 
+      //
+      // Form parameters sent to ASN as query params (through controller)
+      //
       var params = [    "asn_document_id",
                         "asn_statement_notation_query",
                         "asn_statement_label_query",
@@ -57,9 +89,11 @@
       message.html('Searching...');
       message.show();
 
+      //
+      // Collect form paramter values to send as ajax POST data.
+      //
       for(let p of params) {
         data[p] = jQuery("#"+p).attr("value");
-        console.log("Added " + p + ": " + data[p]);
       }
        
       jQuery.ajax({
@@ -68,7 +102,8 @@
         url: apiUrl,
         data: data,
    	 	success: function(response) {
-     	  console.log('Response ', response);
+
+     	  console.log('AJAX Response ', response);
           message.hide();
           if(response.statements.length == 0) {
             results.html('');
@@ -76,6 +111,11 @@
             message.show();
             return;
           }
+
+          response["material"] = { 
+            material_type:  "#{object.class.name.underscore}",
+            material_id:    "#{object.id}" };
+
           ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
         }
       });

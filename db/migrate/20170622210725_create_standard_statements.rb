@@ -10,5 +10,9 @@ class CreateStandardStatements < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index "standard_statements", ["uri", "material_type", "material_id"], :name => "standard_unique", :unique => true
+
   end
+
 end

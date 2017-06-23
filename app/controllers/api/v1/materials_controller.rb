@@ -12,6 +12,22 @@ class API::V1::MaterialsController < API::APIController
   @@ASN_SEARCH_BASE_URL = "https://elastic1.asn.desire2learn.com/api/1/search?"
 
   #
+  # Fields to return from ASN queries.
+  #
+  # These are fields required by process_asn_response()
+  # You can specify your own desired return fields in your http query
+  # but you will have to process that response yourself.
+  #
+  @@asn_return_fields = "identifier,"           <<
+                        "is_part_of,"           <<
+                        "type,"                 <<
+                        "statement_notation,"   <<
+                        "statement_label,"      <<
+                        "description,"          <<
+                        "list_id"
+
+
+  #
   # Map of class types supported material types.
   #
   # Might also consider using "classify" and "constantize" here
@@ -24,9 +40,25 @@ class API::V1::MaterialsController < API::APIController
     "interactive"       => Interactive
   }
 
+  #
+  # Validate methods that require material type and id.
+  #
+  before_filter :validate_material, 
+                :only => [  :get_materials_standards, 
+                            :add_materials_standard,
+                            :remove_materials_standard  ]
 
+  #
+  # Validate methods that require an ASN api key be configured.
+  #
+  before_filter :validate_asn_api_key, 
+                :only => [  :get_standard_statements,
+                            :add_materials_standard     ]
+
+  #
   # GET /api/v1/materials/own
   # Template materials are not listed.
+  #
   def own
     # Filter out template objects.
     materials = current_visitor.external_activities +
@@ -161,20 +193,7 @@ class API::V1::MaterialsController < API::APIController
 
     begin
 
-      #
-      # Map of class types supported for favorites.
-      #
-      # Might also consider using "classify" and "constantize" here
-      # rather than a hard coded map of types. But that might require
-      # additional input validation or otherwise constrain how we define
-      # the http parameters.
-      #
-      supported_types = {
-            "external_activity" => ExternalActivity,
-            "interactive"       => Interactive
-      }
-
-      rubyclass = supported_types[type]
+      rubyclass = @@supported_material_types[type]
 
       if rubyclass.nil?
         render json: {  :message => "Invalid material type #{type}"}, 
@@ -320,7 +339,99 @@ class API::V1::MaterialsController < API::APIController
   end
 
   #
-  # Get standard statements
+  # Get the standards associated with a material
+  #
+  # params[:material_type]  The material type
+  # params[:material_id]    The material ID
+  #
+  def get_materials_standards
+    
+    type        = params[:material_type]
+    id          = params[:id]
+
+    rubyclass = @@supported_material_types[type]
+
+    if rubyclass.nil?
+      render json: {:message => "Invalid material type #{type}"}, 
+                    :status => 400
+      return
+    end
+
+  end
+
+  #
+  # Add a standard to a material
+  #
+  # params[:identifier]     The standard statement identifier (URI)
+  # params[:material_type]  The material type
+  # params[:material_id]    The material ID
+  #
+  def add_materials_standard
+
+    key     = ENV['ASN_API_KEY']
+    uri     = params[:identifier]
+    type    = params[:material_type]
+    id      = params[:material_id]
+
+	#
+    # Before querying ASN, check if we already have this standard associated
+    #
+    existing = StandardStatement.find_by_uri_and_material_type_and_material_id(
+                                                                        uri,
+                                                                        type,
+                                                                        id )
+    if !existing.nil? 
+      render json: {:message => "Standard #{uri} already exists for material type (#{type}) id (#{id})" },
+                    :status => 200
+      return
+    end
+
+    #
+    # Build ASN query to return only the standard matching this 
+    # uri identifier.
+    #
+    query_string = "identifier:'#{uri}'"
+
+    query = {   "bq"            => query_string,
+                "return-fields" => @@asn_return_fields,
+                "key"           => "#{key}" }
+
+    response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
+
+    puts "ASN response #{response}"
+
+    hits        = response['hits']['hit']
+    statement   = process_asn_response(hits)[0]
+    
+    StandardStatement.create(
+						:uri			    => uri,
+  						:material_type	    => type,
+  						:material_id	    => id,
+  						:description		=> statement["description"],
+  						:statement_label    => statement["statement_label"],
+  						:statement_notation => statement["statement_notation"] )
+
+    render json: {  :message => "Successfully added standard." },
+                    :status => 200
+  end
+
+
+  #
+  # Remove a standard from a material
+  #
+  # params[:identifier]     The standard statement identifier (URI)
+  # params[:material_type]  The material type
+  # params[:material_id]    The material ID
+  #
+  def remove_materials_standard
+
+    render json: {  :message => "Successfully removed standard." },
+                    :status => 200
+  end
+
+
+  #
+  # Get standard statements from ASN query
   #
   # params[:asn_document_id]                 The document URI
   # params[:asn_statement_notation_query]    The statement notation to match
@@ -334,18 +445,6 @@ class API::V1::MaterialsController < API::APIController
     statement_notation_q    = params[:asn_statement_notation_query]
     statement_label_q       = params[:asn_statement_label_query]
     description_q           = params[:asn_description_query]
-
-    if !key
-        render json: {:message => "No ASN API key configured."}, :status => 403
-        return
-    end
-
-    #
-    # Find our local peristed copy of the document these statements belong to.
-    #
-    docs = StandardDocument.all
-    docs_map = {}
-    docs.map { |d| docs_map[d.uri] = d }
 
     # 
     # Build query string
@@ -374,32 +473,47 @@ class API::V1::MaterialsController < API::APIController
     puts "Query is: #{query_string}"
 
     #
-    # Fields to return
+    # Sort order.
+    # Notes:
+    # list_id is null on NGSS.
     #
-    return_fields = "identifier,"           <<
-                    "is_part_of,"           <<
-                    "type,"                 <<
-                    "statement_notation,"   <<
-                    "statement_label,"      <<
-                    "description,"          <<
-                    "list_id"
-
-    #
-    # sort order
-    #
-    rank = "list_id"
+    rank = "identifier"
 
     #
     # See http://toolkit.asn.desire2learn.com/documentation/asn-search
     #
     query = {   "bq"            => query_string,
-                "return-fields" => return_fields,
+                "return-fields" => @@asn_return_fields,
                 "rank"          => rank,
                 "key"           => "#{key}" }
 
     response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
 
     hits = response["hits"]["hit"]
+
+    statements = process_asn_response(hits)
+
+    render json: {:statements => statements}, :status => 200
+ 
+  end
+
+
+  private
+
+
+  #
+  # Process the resulting json of an ASN query and
+  # transform it into something more compatible with our object model.
+  #
+  def process_asn_response(hits)
+
+    #
+    # Find our local peristed copy of the document these statements belong to.
+    #
+    docs = StandardDocument.all
+    docs_map = {}
+    docs.map { |d| docs_map[d.uri] = d }
+
     statements = []
 
     for hit in hits
@@ -430,33 +544,11 @@ class API::V1::MaterialsController < API::APIController
         })
     end
 
-    render json: {:statements => statements}, :status => 200
+    statements
  
   end
 
-  #
-  # Get available standard documents
-  #
-  def get_standard_documents
 
-    search_term = params[:search_term]
-    key         = ENV['ASN_API_KEY']
-
-    if !key
-        render json: {:message => "No ASN API key configured."}, :status => 403
-        return
-    end
-
-    query = {   "bq" => "(and title:'#{search_term}' type:'Standard Document')",
-                "return-fields" => "identifier,type,title",
-                "key" => "#{key}" }
-
-    response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
-
-    render json: {:asn_response => response}, :status => 200
-  end
-
-  private
 
   #
   # Return a single material item.
@@ -495,6 +587,39 @@ class API::V1::MaterialsController < API::APIController
 
     raise ActiveRecord::RecordNotFound, 
             "Cannot find material type (#{type}) with id (#{id})"
+  end
+
+  #
+  # Validate that parameters contain a valid material type and id
+  #
+  def validate_material
+
+    type        = params[:material_type]
+    id          = params[:material_id]
+
+    begin
+        item = get_materials_item id, type
+    rescue ActiveRecord::RecordNotFound => rnf
+        render json: {  
+                :message => "Invalid material type (#{type}) or id (#{id})"}, 
+                :status => 400
+        return
+    end
+
+  end
+
+  #
+  # Validate that the ASN API key is configured
+  #
+  def validate_asn_api_key
+
+    key                     = ENV['ASN_API_KEY']
+
+    if !key
+        render json: {:message => "No ASN API key configured."}, :status => 403
+        return
+    end
+
   end
 
 end

@@ -21,7 +21,7 @@ window.StandardsTableClass = React.createClass
         )
 
         for statement in @props.statements
-          (StandardsRow {statement: statement, key: statement.uri} )
+          (StandardsRow {statement: statement, key: statement.uri, material: @props.material} )
       )
     )
 
