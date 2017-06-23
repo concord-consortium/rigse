@@ -69,8 +69,14 @@
         data: data,
    	 	success: function(response) {
      	  console.log('Response ', response);
-          ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
           message.hide();
+          if(response.statements.length == 0) {
+            results.html('');
+            message.html('No results found.');
+            message.show();
+            return;
+          }
+          ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
         }
       });
 

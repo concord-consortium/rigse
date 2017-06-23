@@ -1,4 +1,4 @@
-{div, table, thead, tbody, tr, th, td} = React.DOM
+{div, table, thead, tbody, tr, th, td, button} = React.DOM
 
 window.StandardsTableClass = React.createClass
 
@@ -13,21 +13,18 @@ window.StandardsTableClass = React.createClass
       (tbody {},
 
         (tr {},
-          (th {className: 'asn_results_th'}, "Applied")
+          (th {className: 'asn_results_th'}, "Document")
           (th {className: 'asn_results_th'}, "Description")
           (th {className: 'asn_results_th'}, "Label")
           (th {className: 'asn_results_th'}, "Notation")
+          (th {className: 'asn_results_th'}, "Action")
         )
 
         for statement in @props.statements
-          (tr {},
-            (td {}, statement.is_applied)
-            (td {}, statement.description)
-            (td {}, statement.statement_label)
-            (td {}, statement.statement_notation)
-          )
+          (StandardsRow {statement: statement, key: statement.uri} )
       )
     )
+
 
 window.StandardsTable = React.createFactory StandardsTableClass
 

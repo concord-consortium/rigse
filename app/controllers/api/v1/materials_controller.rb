@@ -341,27 +341,61 @@ class API::V1::MaterialsController < API::APIController
     end
 
     #
-    # Find our local peristed copy of this document
+    # Find our local peristed copy of the document these statements belong to.
     #
-    doc = StandardDocument.find_by_uri(document_id)
+    docs = StandardDocument.all
+    docs_map = {}
+    docs.map { |d| docs_map[d.uri] = d }
 
+    # 
+    # Build query string
+    #
     query_string = "(and is_part_of:'#{document_id}' type:'Statement'"
 
+    #
+    # Notation doesn't seem to match wildcards (this is a "literal" field
+    # type, though I thought the documentation says it allows wildcards in 
+    # literal fields...)
+    #
     if statement_notation_q.present?
-        query_string << " statement_notation:'*#{statement_notation_q}*'"
+        query_string << " statement_notation:'#{statement_notation_q}'"
     end
+
     if statement_label_q.present?
-        query_string << " statement_label:'*#{statement_label_q}*'"
+        query_string << " statement_label:'#{statement_label_q}'"
     end
+
     if description_q.present?
         query_string << " description:'*#{description_q}*'"
     end
 
     query_string << ")"
 
-    query = {   "bq" => query_string,
-                "return-fields" => "identifier,is_part_of,type,statement_notation,statement_label,description",
-                "key" => "#{key}" }
+    puts "Query is: #{query_string}"
+
+    #
+    # Fields to return
+    #
+    return_fields = "identifier,"           <<
+                    "is_part_of,"           <<
+                    "type,"                 <<
+                    "statement_notation,"   <<
+                    "statement_label,"      <<
+                    "description,"          <<
+                    "list_id"
+
+    #
+    # sort order
+    #
+    rank = "list_id"
+
+    #
+    # See http://toolkit.asn.desire2learn.com/documentation/asn-search
+    #
+    query = {   "bq"            => query_string,
+                "return-fields" => return_fields,
+                "rank"          => rank,
+                "key"           => "#{key}" }
 
     response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
 
@@ -369,7 +403,12 @@ class API::V1::MaterialsController < API::APIController
     statements = []
 
     for hit in hits
-        
+   
+        #
+        # Document this statement belongs to.
+        #
+        doc = docs_map[hit["data"]["is_part_of"][0]]
+
         statements.push( {
 
             # Use join() on these arrays. Sometimes a "description" will
@@ -380,12 +419,13 @@ class API::V1::MaterialsController < API::APIController
             #
             # Include a "key" to help React clients. 
             #
-            key:                hit["data"]["identifier"][0],
+            # key:                hit["data"]["identifier"][0],
 
             description:        hit["data"]["description"].join(" "),
             statement_label:    hit["data"]["statement_label"].join(" "),
             statement_notation: hit["data"]["statement_notation"].join(" "),
-            doc:                doc.name,
+            doc:                doc.nil? ? "Unknown" : doc.name,
+            list_id:            hit["data"]["list_id"][0],
             is_applied:         false
         })
     end
