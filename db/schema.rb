@@ -2758,6 +2758,7 @@ ActiveRecord::Schema.define(:version => 20170622210725) do
 
   create_table "standard_statements", :force => true do |t|
     t.string   "uri"
+    t.string   "doc"
     t.string   "statement_notation"
     t.string   "statement_label"
     t.string   "description"

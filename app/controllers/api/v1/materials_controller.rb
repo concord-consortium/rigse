@@ -338,6 +338,7 @@ class API::V1::MaterialsController < API::APIController
     render json: {:message => message}, :status => status
   end
 
+
   #
   # Get the standards associated with a material
   #
@@ -345,19 +346,33 @@ class API::V1::MaterialsController < API::APIController
   # params[:material_id]    The material ID
   #
   def get_materials_standards
-    
-    type        = params[:material_type]
-    id          = params[:id]
 
-    rubyclass = @@supported_material_types[type]
+    uri     = params[:identifier]
+    type    = params[:material_type]
+    id      = params[:material_id]
 
-    if rubyclass.nil?
-      render json: {:message => "Invalid material type #{type}"}, 
-                    :status => 400
-      return
+    statements = StandardStatement.find_all_by_material_type_and_material_id(
+                                                                        type,
+                                                                        id )
+    ret = []
+
+    statements.each do |statement|
+   
+        ret.push( {
+            uri:                statement.uri,
+            description:        statement.description,
+            statement_label:    statement.statement_label,
+            statement_notation: statement.statement_notation,
+            doc:                statement.doc,
+            is_applied:         true
+        })
+
     end
 
+    render json: {:statements => ret}, :status => 200
+ 
   end
+
 
   #
   # Add a standard to a material
@@ -398,18 +413,17 @@ class API::V1::MaterialsController < API::APIController
 
     response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
 
-    puts "ASN response #{response}"
-
     hits        = response['hits']['hit']
     statement   = process_asn_response(hits)[0]
-    
+   
     StandardStatement.create(
 						:uri			    => uri,
+						:doc                => statement[:doc],
   						:material_type	    => type,
   						:material_id	    => id,
-  						:description		=> statement["description"],
-  						:statement_label    => statement["statement_label"],
-  						:statement_notation => statement["statement_notation"] )
+  						:description		=> statement[:description],
+  						:statement_label    => statement[:statement_label],
+  						:statement_notation => statement[:statement_notation] )
 
     render json: {  :message => "Successfully added standard." },
                     :status => 200
@@ -424,6 +438,21 @@ class API::V1::MaterialsController < API::APIController
   # params[:material_id]    The material ID
   #
   def remove_materials_standard
+
+    uri     = params[:identifier]
+    type    = params[:material_type]
+    id      = params[:material_id]
+
+    existing = StandardStatement.find_by_uri_and_material_type_and_material_id(
+                                                                        uri,
+                                                                        type,
+                                                                        id )
+    if existing.nil?
+        render json: {  :message => "No existing standard statement to delete." },
+                        :status => 200
+    end
+
+    existing.destroy
 
     render json: {  :message => "Successfully removed standard." },
                     :status => 200
@@ -469,8 +498,6 @@ class API::V1::MaterialsController < API::APIController
     end
 
     query_string << ")"
-
-    puts "Query is: #{query_string}"
 
     #
     # Sort order.

@@ -3,6 +3,7 @@
   = field_set_tag 'Standards' do
     %div
       Applied Standards
+      %div{:id => "applied_standards_div"}
       %br
     %div
       %table{:class => "asn_add_table"}
@@ -51,6 +52,41 @@
     jQuery("#add_statement_div").hide();
 
     //
+    // Load the standards associated with this material.
+    //
+    window.loadAppliedStandards = function() {
+
+      apiUrl    = "/api/v1/materials/get_materials_standards"
+      data      = { material_type:  "#{object.class.name.underscore}",
+                    material_id:    "#{object.id}" };
+      div       = jQuery("#applied_standards_div");
+
+      jQuery.ajax({
+        type:       "POST",
+        dataType:   "json",
+        url:        apiUrl,
+        data:       data,
+   	 	success:    function(response) {
+
+     	  console.log('AJAX Response ', response);
+
+          if(response.statements.length == 0) {
+            div.html('&nbsp;&nbsp;<i>No standards applied</i>.');
+            return;
+          }
+
+          response["material"] = { 
+            material_type:  "#{object.class.name.underscore}",
+            material_id:    "#{object.id}" };
+
+          ReactDOM.render(StandardsTable(response), div[0]);
+        }
+      });
+
+ 
+    }; // end window.loadAppliedStandards()
+
+    //
     // Toggle the visibility of the add statement div
     //
     window.toggleAddDiv = function() {
@@ -97,14 +133,15 @@
       }
        
       jQuery.ajax({
-        type: "POST",
-        dataType: "json",
-        url: apiUrl,
-        data: data,
-   	 	success: function(response) {
+        type:       "POST",
+        dataType:   "json",
+        url:        apiUrl,
+        data:       data,
+   	 	success:    function(response) {
 
      	  console.log('AJAX Response ', response);
           message.hide();
+
           if(response.statements.length == 0) {
             results.html('');
             message.html('No results found.');
@@ -121,6 +158,8 @@
       });
 
     };  // end window.searchASN()
+
+    window.loadAppliedStandards();
 
   }); 
 
