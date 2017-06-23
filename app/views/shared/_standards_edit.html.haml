@@ -13,7 +13,7 @@
           %td{:class => "asn_add_table_td_right"}
             %input{:id => "add_statement_button", :type => "button", :value => "Add", :onclick => "window.toggleAddDiv()"}
     %div{:id => "add_statement_div"}
-      %table
+      %table{:class => "asn_search_table"}
         %tr
           %td
             Standard Document
@@ -39,7 +39,7 @@
             Description
           %td
             %input{:id => "asn_description_query",          :type => "text"}
-          %td
+          %td{:class => "asn_search_table_td_right"}
             %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
       %div{:id => "asn_search_results_message" }
       %div{:id => "asn_search_results", :class => "asn_results_div"}
@@ -67,8 +67,6 @@
         url:        apiUrl,
         data:       data,
    	 	success:    function(response) {
-
-     	  console.log('AJAX Response ', response);
 
           if(response.statements.length == 0) {
             div.html('&nbsp;&nbsp;<i>No standards applied</i>.');
@@ -131,7 +129,9 @@
       for(let p of params) {
         data[p] = jQuery("#"+p).attr("value");
       }
-       
+      data["material_type"] = "#{object.class.name.underscore}";
+      data["material_id"]   = "#{object.id}";
+
       jQuery.ajax({
         type:       "POST",
         dataType:   "json",
@@ -139,7 +139,6 @@
         data:       data,
    	 	success:    function(response) {
 
-     	  console.log('AJAX Response ', response);
           message.hide();
 
           if(response.statements.length == 0) {

@@ -351,9 +351,12 @@ class API::V1::MaterialsController < API::APIController
     type    = params[:material_type]
     id      = params[:material_id]
 
-    statements = StandardStatement.find_all_by_material_type_and_material_id(
-                                                                        type,
-                                                                        id )
+    statements = 
+        StandardStatement.find_all_by_material_type_and_material_id(
+            type,
+            id,
+            :order => "uri ASC")
+
     ret = []
 
     statements.each do |statement|
@@ -467,6 +470,10 @@ class API::V1::MaterialsController < API::APIController
   # params[:asn_statement_label_query]       The statement label to match
   # params[:asn_description_query]           Text in the description to match
   #
+  # Optionally supply material_type and material_id to populate
+  # the is_applied property.
+  #
+  #
   def get_standard_statements
 
     key                     = ENV['ASN_API_KEY']
@@ -474,6 +481,20 @@ class API::V1::MaterialsController < API::APIController
     statement_notation_q    = params[:asn_statement_notation_query]
     statement_label_q       = params[:asn_statement_label_query]
     description_q           = params[:asn_description_query]
+
+    material_type           = params[:material_type]
+    material_id             = params[:material_id]
+
+    applied_map = {}
+
+    #
+    # See if we can populate is_applied data
+    #
+    if material_type.present? && material_id.present?
+        statements = StandardStatement.find_all_by_material_type_and_material_id(material_type, material_id)
+
+        statements.map { |s| applied_map[s.uri] = true }
+    end
 
     # 
     # Build query string
@@ -518,7 +539,7 @@ class API::V1::MaterialsController < API::APIController
 
     hits = response["hits"]["hit"]
 
-    statements = process_asn_response(hits)
+    statements = process_asn_response(hits, applied_map)
 
     render json: {:statements => statements}, :status => 200
  
@@ -532,7 +553,7 @@ class API::V1::MaterialsController < API::APIController
   # Process the resulting json of an ASN query and
   # transform it into something more compatible with our object model.
   #
-  def process_asn_response(hits)
+  def process_asn_response(hits, applied_map = {})
 
     #
     # Find our local peristed copy of the document these statements belong to.
@@ -567,7 +588,9 @@ class API::V1::MaterialsController < API::APIController
             statement_notation: hit["data"]["statement_notation"].join(" "),
             doc:                doc.nil? ? "Unknown" : doc.name,
             list_id:            hit["data"]["list_id"][0],
-            is_applied:         false
+            is_applied:         applied_map.key?(hit["data"]["identifier"][0]) ?
+                                    true : false
+
         })
     end
 

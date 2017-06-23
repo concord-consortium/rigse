@@ -6,7 +6,7 @@ window.StandardsRowClass = React.createClass
 
   addStandardStatement: (e) -> 
 
-    console.log("addStandardStatement", @props.statement.uri, @props.material.material_type, @props.material.material_id);
+    console.log("INFO adding standard", @props.statement.uri, @props.material.material_type, @props.material.material_id);
 
     statement   = @props.statement
     material    = @props.material
@@ -29,6 +29,8 @@ window.StandardsRowClass = React.createClass
         console.log("INFO", data.message)
         statement.is_applied = !statement.is_applied
         @setState { statement: statement }
+        window.loadAppliedStandards()
+
       error: (jqXHR, textStatus, errorThrown) =>
         console.error("ERROR", jqXHR.responseText, jqXHR)
 
@@ -36,8 +38,6 @@ window.StandardsRowClass = React.createClass
 
   render: ->
     statement   = @props.statement
-
-    console.log("Rendering statement.", statement);
 
     if !statement.is_applied
       buttonText = "Add"
