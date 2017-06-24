@@ -51,6 +51,7 @@
     jQuery("#asn_search_results_message").hide();
     jQuery("#add_statement_div").hide();
 
+
     //
     // Load the standards associated with this material.
     //
@@ -84,19 +85,28 @@
  
     }; // end window.loadAppliedStandards()
 
+
     //
     // Toggle the visibility of the add statement div
     //
     window.toggleAddDiv = function() {
       div       = jQuery("#add_statement_div");
       button    = jQuery("#add_statement_button");
+
       if(div.is(':visible')) {
+
         div.hide();
+        var results = jQuery("#asn_search_results");
+        results.html('');
         button.attr('value', 'Add');
+
       } else {
+
         div.show();
         button.attr('value', 'Done');
+
       }
+
     };  // end window.toggleAddDiv()
 
 
