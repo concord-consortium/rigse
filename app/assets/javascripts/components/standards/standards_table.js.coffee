@@ -6,14 +6,12 @@ window.StandardsTableClass = React.createClass
 
   render: ->
 
-    console.log("Rendering component.", @props);
-
     (table {className: 'asn_results_table'},
 
       (tbody {},
 
         (tr {},
-          (th {className: 'asn_results_th'}, "Document")
+          (th {className: 'asn_results_th'}, "Type")
           (th {className: 'asn_results_th'}, "Description")
           (th {className: 'asn_results_th'}, "Label")
           (th {className: 'asn_results_th'}, "Notation")

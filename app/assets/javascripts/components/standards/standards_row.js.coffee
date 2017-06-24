@@ -4,7 +4,7 @@ window.StandardsRowClass = React.createClass
 
   displayName: "StandardsRowClass"
 
-  addStandardStatement: (e) -> 
+  handleButton: (e) -> 
 
     console.log("INFO adding standard", @props.statement.uri, @props.material.material_type, @props.material.material_id);
 
@@ -46,11 +46,13 @@ window.StandardsRowClass = React.createClass
 
     (tr {className: 'asn_results_tr'},
       (td {className: 'asn_results_td'}, statement.doc)
-      (td {className: 'asn_results_td'}, statement.description)
+      (td {className: 'asn_results_td asn_results_td_fixed'}, 
+        (TextPreview { config: { text: statement.description, preview: true} } )
+      )
       (td {className: 'asn_results_td'}, statement.statement_label)
       (td {className: 'asn_results_td'}, statement.statement_notation)
       (td {className: 'asn_results_td'}, 
-        (button {onClick: @addStandardStatement }, 
+        (button {onClick: @handleButton}, 
           buttonText
         )
       )
