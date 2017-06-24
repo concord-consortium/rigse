@@ -11,7 +11,7 @@ window.TextPreviewClass = React.createClass
 
   render: ->
     
-    PREVIEW_LENGTH = 20
+    PREVIEW_LENGTH = 17
 
     text    = @props.config.text
     preview = @props.config.preview

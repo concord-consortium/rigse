@@ -49,9 +49,11 @@ window.StandardsRowClass = React.createClass
       (td {className: 'asn_results_td asn_results_td_fixed'}, 
         (TextPreview { config: { text: statement.description, preview: true} } )
       )
-      (td {className: 'asn_results_td'}, statement.statement_label)
+      (td {className: 'asn_results_td asn_results_td_fixed'}, 
+        (TextPreview { config: { text: statement.statement_label, preview: true} } )
+      )
       (td {className: 'asn_results_td'}, statement.statement_notation)
-      (td {className: 'asn_results_td'}, 
+      (td {className: 'asn_results_td_right'}, 
         (button {onClick: @handleButton}, 
           buttonText
         )
