@@ -720,6 +720,14 @@ RailsPortal::Application.routes.draw do
         namespace :jwt do
           post :firebase
         end
+
+        #
+        # Service APIs
+        #
+        namespace :service do
+          get :sunspot_reindex
+        end
+
       end
     end
 

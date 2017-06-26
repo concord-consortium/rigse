@@ -18,6 +18,7 @@ services:
       RESEARCHER_REPORT_ONLY:
       TEST_SOLR_HOST: solr-test
       TEST_SOLR_PORT: 8981
+      SERVICE_API_KEY: unsecure local key
       REPORT_VIEW_URL:
     # no ports are published, see below for details
     volumes:
@@ -36,6 +37,13 @@ services:
     volumes:
       - .:/rigse
     command: /bin/bash ./start-solr.sh
+    environment:
+      #
+      # Solr ping URL is http://<host>:<port>/solr/<core>/admin/ping
+      #
+      SOLR_PING_URL: http://localhost:8983/solr/development/admin/ping
+      SERVICE_API_KEY: unsecure local key
+      SERVICE_API_ENDPOINT: http://app:3000/api/v1/service/sunspot_reindex
   mysql:
     image: mysql:5.6
     environment:
