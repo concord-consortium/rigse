@@ -706,6 +706,10 @@ RailsPortal::Application.routes.draw do
         namespace :jwt do
           post :firebase
         end
+
+        namespace :service do
+          get :solr_initialized        
+        end
       end
     end
 
