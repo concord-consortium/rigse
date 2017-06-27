@@ -13,34 +13,35 @@
           %td{:class => "asn_add_table_td_right"}
             %input{:id => "add_statement_button", :type => "button", :value => "Add", :onclick => "window.toggleAddDiv()"}
     %div{:id => "add_statement_div"}
-      %table{:class => "asn_search_table"}
-        %tr
-          %td
-            Standard Document
-          %td
-            %select{:id => "asn_document_id", :multiple => false}
-              - StandardDocument.all.each do |s|
-                %option{value: s.uri} #{s.name}
-          %td
-        %tr
-          %td
-            Notation
-          %td
-            %input{:id => "asn_statement_notation_query",   :type => "text"}
-          %td
-        %tr
-          %td
-            Label
-          %td
-            %input{:id => "asn_statement_label_query",      :type => "text"}
-          %td
-        %tr
-          %td
-            Description
-          %td
-            %input{:id => "asn_description_query",          :type => "text"}
-          %td{:class => "asn_search_table_td_right"}
-            %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
+      %form
+        %table{:class => "asn_search_table"}
+          %tr
+            %td
+              Standard Document
+            %td
+              %select{:id => "asn_document_id", :multiple => false}
+                - StandardDocument.all.each do |s|
+                  %option{value: s.uri} #{s.name}
+            %td
+          %tr
+            %td
+              Notation
+            %td
+              %input{:id => "asn_statement_notation_query", :type => "text" }
+            %td
+          %tr
+            %td
+              Label
+            %td
+              %input{:id => "asn_statement_label_query", :type => "text" }
+            %td
+          %tr
+            %td
+              Description
+            %td
+              %input{:id => "asn_description_query", :type => "text" }
+            %td{:class => "asn_search_table_td_right"}
+              %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
       %div{:id => "asn_search_results_message" }
       %div{:id => "asn_search_results", :class => "asn_results_div"}
       %br
@@ -50,6 +51,38 @@
 
     jQuery("#asn_search_results_message").hide();
     jQuery("#add_statement_div").hide();
+
+    //
+    // Form parameters sent to ASN as query params (through controller)
+    //
+    var PARAM_INPUTS = [    "asn_document_id",
+                            "asn_statement_notation_query",
+                            "asn_statement_label_query",
+                            "asn_description_query" ];
+
+
+    //
+    // Handle user pressing enter on form fields. Otherwise the
+    // modal popup is dismissed.
+    //
+    window.onKeyPress = function(event) {
+      if (event.which === 13) {
+        window.searchASN();
+        event.preventDefault();
+      }
+    };  // end window.onKeyPress()
+
+
+    //
+    // Need to attach these handlers here. HAML can't seem to correctly
+    // register them with :onkeypress maybe because this takes an 
+    // event parameter.
+    //
+    for(let p of PARAM_INPUTS) {
+      jQuery("#"+p).keypress(function(event) {
+        window.onKeyPress(event);
+      });
+    }
 
 
     //
@@ -115,14 +148,6 @@
     //
     window.searchASN = function(startIndex) {
 
-      //
-      // Form parameters sent to ASN as query params (through controller)
-      //
-      var params = [    "asn_document_id",
-                        "asn_statement_notation_query",
-                        "asn_statement_label_query",
-                        "asn_description_query" ];
-
       var data          = {};
       var apiUrl        = "/api/v1/materials/get_standard_statements";
       var results       = jQuery("#asn_search_results");
@@ -136,7 +161,7 @@
       //
       // Collect form paramter values to send as ajax POST data.
       //
-      for(let p of params) {
+      for(let p of PARAM_INPUTS) {
         data[p] = jQuery("#"+p).attr("value");
       }
       data["material_type"] = "#{object.class.name.underscore}";
@@ -165,8 +190,6 @@
           response["material"] = { 
             material_type:  "#{object.class.name.underscore}",
             material_id:    "#{object.id}" };
-
-          response["query"] = data
 
           ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
         }
