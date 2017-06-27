@@ -41,6 +41,10 @@
     min-height:     200px;
 }
 
+.asn_results_pagination_row {
+    text-align:     center;
+}
+
 .asn_results_pagination_arrows {
     cursor:         pointer;
 }
@@ -49,10 +53,6 @@
     width:          100%;
     cellpadding:    2px;
     cellspacing:    2px;
-}
-
-.asn_results_tr {
-    /* border:         1px solid #E0E0E0; */
 }
 
 .asn_results_th {

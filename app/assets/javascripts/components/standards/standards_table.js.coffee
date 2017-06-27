@@ -1,4 +1,4 @@
-{div, a, table, thead, tbody, tr, th, td, button} = React.DOM
+{div, a, table, thead, tbody, tr, th, td, button, center} = React.DOM
 
 window.StandardsTableClass = React.createClass
 
@@ -32,22 +32,21 @@ window.StandardsTableClass = React.createClass
             end = @props.count
 
           (tr {},
-            (td {colSpan: 5}, 
-              "Total results " + @props.count + ". "
-          
+            (td {colSpan: 5, className: 'asn_results_pagination_row'}, 
+         
               if @props.start - @PAGE_SIZE > -1
                 (a {className: "asn_results_pagination_arrows", onClick: @paginateDown}, "<<")
               else
                 "<<"
-
+  
               " "
-              "Showing " + (@props.start + 1) + " - " + end
+              "Showing " + (@props.start + 1) + " - " + end + " of " + @props.count
               " "
-
+  
               if @props.start + @PAGE_SIZE < (@props.count) 
                 (a {className: "asn_results_pagination_arrows", onClick: @paginateUp}, ">>")
               else
-                 ">>"
+                ">>"
             )
           )
 
