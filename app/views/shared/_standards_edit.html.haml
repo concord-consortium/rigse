@@ -1,5 +1,5 @@
 -# Expects locals: object
-- if object && current_visitor.has_role?("admin", "manager")
+- if object && current_visitor.has_role?("admin", "manager", "author")
   = field_set_tag 'Standards' do
     %div
       Applied Standards
