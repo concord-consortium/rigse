@@ -2,16 +2,11 @@
 class API::V1::ServiceController < API::APIController
 
   def solr_initialized
-    search = Sunspot.search([ExternalActivity])
-
-    if ExternalActivity.count != search.total
-      # FIXME: what about if there is a re-indexing job in process?
-      # if the job itself re-checked if it was necessary to do the re-indexing
-      # that would help a little bit. Especially if there is only one job worker.
-      Delayed::Job.enqueue ReindexSolrJob.new
-      message = "Re-indexing"
-    else
+    if API::V1::ReindexSolrJob.is_up_to_date
       message = "Up to date"
+    else
+      Delayed::Job.enqueue API::V1::ReindexSolrJob.new
+      message = "Re-indexing"
     end
 
     render json: {message: message},
