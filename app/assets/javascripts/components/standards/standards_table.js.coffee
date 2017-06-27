@@ -25,29 +25,31 @@ window.StandardsTableClass = React.createClass
 
       (tbody {},
 
-        end = (@props.start + @PAGE_SIZE)
-        if end > @props.count
-          end = @props.count
+        if @props.count
 
-        (tr {},
-          (td {colSpan: 5}, 
-            "Total results " + @props.count + ". "
-        
-            if @props.start - @PAGE_SIZE > -1
-              (a {className: "asn_results_pagination_arrows", onClick: @paginateDown}, "<<")
-            else
-              "<<"
+          end = (@props.start + @PAGE_SIZE)
+          if end > @props.count
+            end = @props.count
 
-            " "
-            "Showing " + (@props.start + 1) + " - " + end
-            " "
+          (tr {},
+            (td {colSpan: 5}, 
+              "Total results " + @props.count + ". "
+          
+              if @props.start - @PAGE_SIZE > -1
+                (a {className: "asn_results_pagination_arrows", onClick: @paginateDown}, "<<")
+              else
+                "<<"
 
-            if @props.start + @PAGE_SIZE < (@props.count) 
-              (a {className: "asn_results_pagination_arrows", onClick: @paginateUp}, ">>")
-            else
-               ">>"
+              " "
+              "Showing " + (@props.start + 1) + " - " + end
+              " "
+
+              if @props.start + @PAGE_SIZE < (@props.count) 
+                (a {className: "asn_results_pagination_arrows", onClick: @paginateUp}, ">>")
+              else
+                 ">>"
+            )
           )
-        )
 
 
         (tr {},
