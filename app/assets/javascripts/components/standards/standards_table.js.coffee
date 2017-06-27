@@ -1,14 +1,59 @@
-{div, table, thead, tbody, tr, th, td, button} = React.DOM
+{div, a, table, thead, tbody, tr, th, td, button} = React.DOM
 
 window.StandardsTableClass = React.createClass
 
-  displayName: "StandardsTableClass"
+  PAGE_SIZE:    10
+
+  displayName:  "StandardsTableClass"
+
+  paginateUp:     ->
+    start = @props.start
+
+    if start + @PAGE_SIZE < (@props.count)
+      window.searchASN(start + @PAGE_SIZE)
+
+  paginateDown:    ->
+    start = @props.start
+
+    if start - @PAGE_SIZE > -1
+      window.searchASN(start - @PAGE_SIZE)
+
 
   render: ->
+
+    console.log("INFO", @props)
 
     (table {className: 'asn_results_table'},
 
       (tbody {},
+
+        if @props.count > @PAGE_SIZE
+
+          end = (@props.start + @PAGE_SIZE)
+          if end > @props.count
+            end = @props.count
+
+          (tr {},
+            (td {colSpan: 5}, 
+              "Total results " + @props.count + ". "
+
+              if @props.start - @PAGE_SIZE > -1
+                (a {className: "asn_results_pagination_arrows", onClick: @paginateDown}, "<<")
+              else
+                "<<"
+
+              " "
+              "Showing " + (@props.start + 1) + " - " + end
+              " "
+
+              if @props.start + @PAGE_SIZE < (@props.count) 
+                (a {className: "asn_results_pagination_arrows", onClick: @paginateUp}, ">>")
+              else
+                ">>"
+
+            )
+          )
+
 
         (tr {},
           (th {className: 'asn_results_th'}, "Type")

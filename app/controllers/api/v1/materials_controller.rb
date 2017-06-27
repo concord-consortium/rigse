@@ -473,6 +473,7 @@ class API::V1::MaterialsController < API::APIController
   # Optionally supply material_type and material_id to populate
   # the is_applied property.
   #
+  # params[:start]                          The start index
   #
   def get_standard_statements
 
@@ -484,6 +485,8 @@ class API::V1::MaterialsController < API::APIController
 
     material_type           = params[:material_type]
     material_id             = params[:material_id]
+
+    start                   = params[:start]
 
     applied_map = {}
 
@@ -535,13 +538,22 @@ class API::V1::MaterialsController < API::APIController
                 "rank"          => rank,
                 "key"           => "#{key}" }
 
+    if start.present?
+        query["start"] = start
+    end
+
     response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
+
+    puts "*** Reponse #{response}"
+
+    count = response["hits"]["found"]
+    start = response["hits"]["start"]
 
     hits = response["hits"]["hit"]
 
     statements = process_asn_response(hits, applied_map)
 
-    render json: {:statements => statements}, :status => 200
+    render json: {:count => count, :start => start, :statements => statements}, :status => 200
  
   end
 
