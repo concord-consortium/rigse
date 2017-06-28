@@ -8,10 +8,6 @@ module MaterialSharedPolicy
     admin_or_material_admin?
   end
 
-  def edit_standards_settings?
-    author? || admin_or_material_admin?
-  end
-
   def edit_credits?
     admin_or_material_admin?
   end
