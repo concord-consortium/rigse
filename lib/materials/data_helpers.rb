@@ -134,6 +134,27 @@ module Materials
         slug = material.name.respond_to?(:parameterize) ? material.name.parameterize : nil
         stem_resource_type = material.respond_to?(:lara_sequence?) ? (material.lara_sequence? ? 'sequence' : 'activity') : material.class.name.downcase
 
+
+        #
+        # Include associated standards
+        #
+        standard_statements = 
+            StandardStatement.find_all_by_material_type_and_material_id(
+                material.class.name.underscore,
+                material.id,
+                :order => "uri ASC")
+
+        standard_statements_json = []
+    
+        standard_statements.each do |statement|
+            standard_statements_json.push( {
+                type:           statement.doc,
+                uri:            statement.uri,
+                notation:       statement.statement_notation,
+                description:    statement.description
+            });
+        end
+ 
         mat_data = {
           id: material.id,
           name: material.name,
@@ -176,6 +197,8 @@ module Materials
           credits: material.respond_to?(:credits) ? material.credits : nil,
        
           related_materials: related_materials,
+
+          standard_statements: standard_statements_json,
 
           slug: slug,
           stem_resource_url: view_context.stem_resources_url(stem_resource_type, material.id, slug)
