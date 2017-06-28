@@ -1,5 +1,6 @@
 -# Expects locals: object
-- if object && current_visitor.has_role?("admin", "manager", "author")
+- if object && (policy(object).admin_or_material_admin? || policy(object).author?)
+
   = field_set_tag 'Standards' do
     %div
       Applied Standards

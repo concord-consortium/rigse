@@ -56,6 +56,15 @@ class API::V1::MaterialsController < API::APIController
                             :add_materials_standard     ]
 
   #
+  # Validate methods that mutate material standards, or
+  # attempt to access the ASN API.
+  #
+  before_filter :validate_standards_permissions,
+                :only => [  :get_standard_statements,
+                            :add_materials_standard,
+                            :remove_materials_standard  ]
+
+  #
   # GET /api/v1/materials/own
   # Template materials are not listed.
   #
@@ -391,6 +400,14 @@ class API::V1::MaterialsController < API::APIController
     type    = params[:material_type]
     id      = params[:material_id]
 
+
+    if !uri.present?
+      render json: {:message => "No standard statement URI specified." },
+                    :status => 400
+      return
+    end
+
+
 	#
     # Before querying ASN, check if we already have this standard associated
     #
@@ -656,8 +673,8 @@ class API::V1::MaterialsController < API::APIController
   #
   def validate_material
 
-    type        = params[:material_type]
-    id          = params[:material_id]
+    type    = params[:material_type]
+    id      = params[:material_id]
 
     begin
         item = get_materials_item id, type
@@ -675,10 +692,29 @@ class API::V1::MaterialsController < API::APIController
   #
   def validate_asn_api_key
 
-    key                     = ENV['ASN_API_KEY']
+    key = ENV['ASN_API_KEY']
 
     if !key
         render json: {:message => "No ASN API key configured."}, :status => 403
+        return
+    end
+
+  end
+
+  #
+  # Check authorization for setting materials standards or accessing ASN.
+  #
+  def validate_standards_permissions
+
+    validate_material
+
+    type    = params[:material_type]
+    id      = params[:material_id]
+
+    item = get_materials_item id, type
+
+    if !(policy(item).admin_or_material_admin? || policy(item).author?)
+        render json: {:message => "You do not have permission to modify this material."}, :status => 403
         return
     end
 
