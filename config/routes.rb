@@ -689,8 +689,8 @@ RailsPortal::Application.routes.draw do
           get   :get_favorites
           get   :get_standard_statements
           get   :get_materials_standards
-          get   :add_materials_standard
-          get   :remove_materials_standard
+          post  :add_materials_standard
+          post  :remove_materials_standard
         end
         namespace :materials_bin do
           get :collections

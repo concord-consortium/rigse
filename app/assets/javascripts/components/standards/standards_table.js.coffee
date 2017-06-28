@@ -52,11 +52,11 @@ window.StandardsTableClass = React.createClass
 
 
         (tr {},
-          (th {className: 'asn_results_th'}, "Type")
-          (th {className: 'asn_results_th'}, "Description")
-          (th {className: 'asn_results_th'}, "Label")
-          (th {className: 'asn_results_th'}, "Notation")
-          (th {className: 'asn_results_th'}, "Action")
+          (th {className: 'asn_results_th'},        "Type")
+          (th {className: 'asn_results_th'},        "Description")
+          (th {className: 'asn_results_th'},        "Label")
+          (th {className: 'asn_results_th'},        "Notation")
+          (th {className: 'asn_results_th_right'},  "Action")
         )
 
         for statement in @props.statements

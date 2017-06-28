@@ -63,6 +63,18 @@
 
 
     //
+    //
+    //
+    window.clearSearchForm = function(event) {
+      for(var i = 0; i < PARAM_INPUTS.length; i++) {
+        if(PARAM_INPUTS[i] != "asn_document_id") {
+          jQuery("#"+PARAM_INPUTS[i]).attr('value', '');
+        }
+      }
+    };  // end window.clearSearchForm()
+
+
+    //
     // Handle user pressing enter on form fields. Otherwise the
     // modal popup is dismissed.
     //
@@ -79,8 +91,8 @@
     // register them with :onkeypress maybe because this takes an 
     // event parameter.
     //
-    for(let p of PARAM_INPUTS) {
-      jQuery("#"+p).keypress(function(event) {
+    for(var i = 0; i < PARAM_INPUTS.length; i++) {
+      jQuery("#"+PARAM_INPUTS[i]).keypress(function(event) {
         window.onKeyPress(event);
       });
     }
@@ -95,6 +107,8 @@
       data      = { material_type:  "#{object.class.name.underscore}",
                     material_id:    "#{object.id}" };
       div       = jQuery("#applied_standards_div");
+
+      div.html('&nbsp;&nbsp;<i>Loading applied standards</i>.');
 
       jQuery.ajax({
         type:       "POST",
@@ -133,6 +147,7 @@
         var results = jQuery("#asn_search_results");
         results.html('');
         button.attr('value', 'Add');
+        window.clearSearchForm();
 
       } else {
 
@@ -162,8 +177,8 @@
       //
       // Collect form paramter values to send as ajax POST data.
       //
-      for(let p of PARAM_INPUTS) {
-        data[p] = jQuery("#"+p).attr("value");
+      for(var i = 0; i < PARAM_INPUTS.length; i++) {
+        data[PARAM_INPUTS[i]] = jQuery("#"+PARAM_INPUTS[i]).attr("value");
       }
       data["material_type"] = "#{object.class.name.underscore}";
       data["material_id"]   = "#{object.id}";

@@ -513,7 +513,7 @@ class API::V1::MaterialsController < API::APIController
     if material_type.present? && material_id.present?
         statements = StandardStatement.find_all_by_material_type_and_material_id(material_type, material_id)
 
-        statements.map { |s| applied_map[s.uri] = true }
+        statements.each { |s| applied_map[s.uri] = true }
     end
 
     # 
@@ -561,7 +561,15 @@ class API::V1::MaterialsController < API::APIController
 
     response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
 
-    puts "*** Reponse #{response}"
+    #
+    # Might need to look further into how ASN returns 
+    # error codes. For now return empty results if we can't 
+    # find the key we need in the returned json.
+    #
+    if !response.key?("hits")
+        render json: {:statements => []}, :status => 200
+        return
+    end
 
     count = response["hits"]["found"]
     start = response["hits"]["start"]
@@ -695,7 +703,7 @@ class API::V1::MaterialsController < API::APIController
     key = ENV['ASN_API_KEY']
 
     if !key
-        render json: {:message => "No ASN API key configured."}, :status => 403
+        render json: {:message => "No ASN API key configured."}, :status => 500 
         return
     end
 
