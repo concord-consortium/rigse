@@ -20,6 +20,7 @@ services:
       TEST_SOLR_PORT: 8981
       REPORT_VIEW_URL:
       ASN_API_KEY:
+      PORTAL_PAGES_LIBRARY_URL:
     # no ports are published, see below for details
     volumes:
       - .:/rigse
