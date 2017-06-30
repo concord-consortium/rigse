@@ -102,6 +102,7 @@ window.SMaterialIconClass = React.createClass
     jQuery.ajax
       url: apiUrl
       data: params
+      type: 'POST'
       dataType: 'json'
       success: (data) =>
         material.is_favorite = !material.is_favorite

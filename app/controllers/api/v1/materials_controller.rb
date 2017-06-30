@@ -75,9 +75,9 @@ class API::V1::MaterialsController < API::APIController
   #
   # Request params should contain:
   #
-  # favorite_id     The favorite id 
+  # favorite_id     The favorite id
   #
-  # GET /api/v1/materials/remove_favorite
+  # POST /api/v1/materials/remove_favorite
   #
   def remove_favorite
 
@@ -92,7 +92,7 @@ class API::V1::MaterialsController < API::APIController
       render json: {:message => "No favorite id specified."}, :status => 400
       return
     end
-    
+
     favorite = nil
 
     begin
@@ -110,12 +110,12 @@ class API::V1::MaterialsController < API::APIController
     if favorite.user != current_user
       render json: {:message => "Cannot delete favorite not owned by current user."}, :status => 400
       return
-    end 
+    end
 
     favorite.destroy
     message = "Favorite #{favorite_id} removed."
 
-    render json: {  :message => "Favorite #{favorite_id} removed."}, 
+    render json: {  :message => "Favorite #{favorite_id} removed."},
                     :status => 200
 
   end
@@ -128,7 +128,7 @@ class API::V1::MaterialsController < API::APIController
   # id      The id of the material
   # type    The type of the material
   #
-  # GET /api/v1/materials/add_favorite
+  # POST /api/v1/materials/add_favorite
   #
   def add_favorite
 
@@ -167,7 +167,7 @@ class API::V1::MaterialsController < API::APIController
       rubyclass = supported_types[type]
 
       if rubyclass.nil?
-        render json: {  :message => "Invalid material type #{type}"}, 
+        render json: {  :message => "Invalid material type #{type}"},
                         :status => 400
         return
       end
@@ -189,7 +189,7 @@ class API::V1::MaterialsController < API::APIController
                       :favorite_id    => favorite_id  }, :status => 200
 
     rescue ActiveRecord::RecordNotFound => rnf
-      render json: {:message => "RecordNotFound Invalid material id #{id}" }, 
+      render json: {:message => "RecordNotFound Invalid material id #{id}" },
                     :status => 400
     end
 
@@ -215,7 +215,7 @@ class API::V1::MaterialsController < API::APIController
     favorites.each do |favorite|
       favoritable_type    = favorite.favoritable_type
       favoritable_id      = favorite.favoritable_id
-      if !type_ids_map[favoritable_type] 
+      if !type_ids_map[favoritable_type]
         type_ids_map[favoritable_type] = []
       end
       type_ids_map[favoritable_type].append(favoritable_id)
@@ -258,20 +258,20 @@ class API::V1::MaterialsController < API::APIController
 
     if item
       array = materials_data [item], nil, include_related
-  
+
       if array.size == 1
 
         data = array[0]
 
       else
         status = 400
-        data = {:message => 
+        data = {:message =>
                 "Unexpected materials size #{array.size}"}
       end
 
     else
       status = 400
-      data = {  :message => 
+      data = {  :message =>
                 "Cannot find materials item type (#{type}) with id (#{id})" }
     end
 
@@ -317,16 +317,16 @@ class API::V1::MaterialsController < API::APIController
   #         the @@supported_material_types map. This will map to a
   #         ruby class of the appropiate type, which will be returned
   #         and can be used by materials libs to convert into json
-  #         and be consumed by API clients. 
+  #         and be consumed by API clients.
   #
   def get_materials_item(id, type)
 
     rubyclass = @@supported_material_types[type]
 
-    if rubyclass 
+    if rubyclass
 
-      includes = [  :user, 
-                    :projects, 
+      includes = [  :user,
+                    :projects,
                     :subject_areas,
                     :grade_levels   ]
 
@@ -339,12 +339,12 @@ class API::V1::MaterialsController < API::APIController
       if item
         return item
       end
- 
+
     else
         raise ActiveRecord::RecordNotFound, "Invalid material type (#{type})"
     end
 
-    raise ActiveRecord::RecordNotFound, 
+    raise ActiveRecord::RecordNotFound,
             "Cannot find material type (#{type}) with id (#{id})"
   end
 
