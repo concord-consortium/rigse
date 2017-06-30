@@ -508,6 +508,17 @@ class API::V1::MaterialsController < API::APIController
     applied_map = {}
 
     #
+    # Prevent anonymous user from using this as open ASN proxy.
+    # Though this should not be encountered if before_filters are
+    # configured correctly to check for author/admin/project admin on
+    # the specified material.
+    #
+    if current_visitor.anonymous?
+        render json: {:message => "Access denied to standards API."}, 
+                        :status => 403
+    end
+
+    #
     # See if we can populate is_applied data
     #
     if material_type.present? && material_id.present?
@@ -704,9 +715,10 @@ class API::V1::MaterialsController < API::APIController
 
     if !key
         render json: {:message => "No ASN API key configured."}, :status => 500 
-        return
+        return false
     end
 
+    return true
   end
 
   #
@@ -714,7 +726,9 @@ class API::V1::MaterialsController < API::APIController
   #
   def validate_standards_permissions
 
-    validate_material
+    if !validate_material
+        return
+    end
 
     type    = params[:material_type]
     id      = params[:material_id]

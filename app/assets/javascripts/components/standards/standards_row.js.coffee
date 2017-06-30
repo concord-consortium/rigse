@@ -6,8 +6,6 @@ window.StandardsRowClass = React.createClass
 
   handleButton: (e) -> 
 
-    console.log("INFO adding standard", @props.statement.uri, @props.material.material_type, @props.material.material_id);
-
     statement   = @props.statement
     material    = @props.material
     apiUrl      = null
@@ -22,11 +20,11 @@ window.StandardsRowClass = React.createClass
       apiUrl = "/api/v1/materials/remove_materials_standard"
 
     jQuery.ajax
-      url: apiUrl
-      data: params
+      type:     "POST",
+      url:      apiUrl
+      data:     params
       dataType: 'json'
-      success: (data) =>
-        console.log("INFO", data.message)
+      success:  (data) =>
         statement.is_applied = !statement.is_applied
         @setState { statement: statement }
         window.loadAppliedStandards()

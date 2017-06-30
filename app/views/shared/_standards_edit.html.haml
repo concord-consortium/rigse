@@ -111,7 +111,7 @@
       div.html('&nbsp;&nbsp;<i>Loading applied standards</i>.');
 
       jQuery.ajax({
-        type:       "POST",
+        type:       "GET",
         dataType:   "json",
         url:        apiUrl,
         data:       data,
@@ -175,7 +175,7 @@
       message.show();
 
       //
-      // Collect form paramter values to send as ajax POST data.
+      // Collect form paramter values to send as ajax data.
       //
       for(var i = 0; i < PARAM_INPUTS.length; i++) {
         data[PARAM_INPUTS[i]] = jQuery("#"+PARAM_INPUTS[i]).attr("value");
@@ -188,7 +188,7 @@
       }
 
       jQuery.ajax({
-        type:       "POST",
+        type:       "GET",
         dataType:   "json",
         url:        apiUrl,
         data:       data,

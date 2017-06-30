@@ -2756,6 +2756,8 @@ ActiveRecord::Schema.define(:version => 20170622210725) do
     t.datetime "updated_at",   :null => false
   end
 
+  add_index "standard_documents", ["name"], :name => "index_standard_documents_on_name", :unique => true
+
   create_table "standard_statements", :force => true do |t|
     t.string   "uri"
     t.string   "doc"

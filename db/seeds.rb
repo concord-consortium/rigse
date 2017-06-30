@@ -167,3 +167,8 @@ create_settings
 # populate Countries table
 Portal::Country.from_csv_file
 
+#
+# Populate default Standard Documents
+#
+StandardDocument.create_defaults
+

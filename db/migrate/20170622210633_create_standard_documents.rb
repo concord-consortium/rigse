@@ -8,5 +8,9 @@ class CreateStandardDocuments < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :standard_documents, :name, :unique => true
+
   end
+
 end
