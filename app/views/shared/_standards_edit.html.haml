@@ -4,7 +4,7 @@
   = field_set_tag 'Standards' do
 
     %div{:id => "asn_search_modal" }
-      %div{:class => "special-msg"}
+      %div{:class => "special-msg asn_modal_msg"}
 
     %div
       Applied Standards
@@ -191,7 +191,7 @@
         data["start"] = startIndex;
       }
 
-      Portal.showModal("#asn_search_modal", "Searching...");
+      Portal.showModal("#asn_search_modal", "Processing...", true);
 
       jQuery.ajax({
         type:       "GET",

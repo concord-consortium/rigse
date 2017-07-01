@@ -5,9 +5,12 @@
 // Portal.showModal(clickHandler, "#my-modal");
 // Close button and overlay will be automatically added.
 // Related styles are in modal.scss file.
-Portal.showOverlay = function(clickHandler,modalId) {
+Portal.showOverlay = function(clickHandler,modalId,fixedPosition) {
     jQuery('.modal').hide();
     jQuery(modalId).addClass('modal');
+    if(fixedPosition) {
+        jQuery(modalId).addClass('modal-fixed');
+    }
     if (jQuery('#modal-overlay').length === 0) {
         jQuery('body').append('<div id="modal-overlay"></div>');
     }
@@ -18,8 +21,8 @@ Portal.showOverlay = function(clickHandler,modalId) {
     jQuery('#modal-overlay').css({'height': jQuery(document).height() + 'px'}).fadeIn('fast');
 };
 
-Portal.showModal = function(modalId, specialMsg) {
-  Portal.showOverlay(Portal.hideModal,modalId);
+Portal.showModal = function(modalId, specialMsg, fixedPosition) {
+  Portal.showOverlay(Portal.hideModal,modalId,fixedPosition);
 
   if (jQuery(modalId + ' .close').length === 0) {
     jQuery(modalId).append('<a class="close">x</a>');

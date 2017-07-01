@@ -9,6 +9,7 @@ window.StandardsRowClass = React.createClass
     statement   = @props.statement
     material    = @props.material
     apiUrl      = null
+    add         = false
 
     params      = { identifier:     statement.uri,          \
                     material_type:  material.material_type, \
@@ -16,6 +17,8 @@ window.StandardsRowClass = React.createClass
 
     if !statement.is_applied
       apiUrl = "/api/v1/materials/add_materials_standard"
+      add = true
+      Portal.showModal("#asn_search_modal", "Processing...", true)
     else
       apiUrl = "/api/v1/materials/remove_materials_standard"
 
@@ -24,10 +27,14 @@ window.StandardsRowClass = React.createClass
       url:      apiUrl
       data:     params
       dataType: 'json'
+
       success:  (data) =>
         statement.is_applied = !statement.is_applied
         @setState { statement: statement }
         window.loadAppliedStandards()
+
+        if add
+          Portal.hideModal()
 
       error: (jqXHR, textStatus, errorThrown) =>
         console.error("ERROR", jqXHR.responseText, jqXHR)
