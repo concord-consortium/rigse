@@ -215,6 +215,10 @@
 
           ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
           Portal.hideModal();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          console.log("ERROR", xhr.responseText);
+          Portal.hideModal();
         }
       });
 
