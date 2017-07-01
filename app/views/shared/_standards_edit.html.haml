@@ -2,6 +2,10 @@
 - if object && (policy(object).admin_or_material_admin? || policy(object).author?)
 
   = field_set_tag 'Standards' do
+
+    %div{:id => "asn_search_modal" }
+      %div{:class => "special-msg"}
+
     %div
       Applied Standards
       %div{:id => "applied_standards_div"}
@@ -187,6 +191,8 @@
         data["start"] = startIndex;
       }
 
+      Portal.showModal("#asn_search_modal", "Searching...");
+
       jQuery.ajax({
         type:       "GET",
         dataType:   "json",
@@ -208,6 +214,7 @@
             material_id:    "#{object.id}" };
 
           ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
+          Portal.hideModal();
         }
       });
 

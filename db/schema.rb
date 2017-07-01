@@ -2764,6 +2764,7 @@ ActiveRecord::Schema.define(:version => 20170622210725) do
     t.string   "statement_notation"
     t.string   "statement_label"
     t.text     "description"
+    t.text     "parents"
     t.string   "material_type"
     t.integer  "material_id"
     t.datetime "created_at",         :null => false

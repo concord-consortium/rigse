@@ -19,8 +19,13 @@ class StandardStatement < ActiveRecord::Base
   #
   # statement fields
   #
-  attr_accessible :description
-  attr_accessible :statement_label
-  attr_accessible :statement_notation
+  attr_accessible   :description
+  serialize         :description
+
+  attr_accessible   :statement_label
+  attr_accessible   :statement_notation
+
+  attr_accessible   :parents
+  serialize         :parents
 
 end

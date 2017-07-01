@@ -16,6 +16,10 @@ window.TextPreviewClass = React.createClass
     text    = @props.config.text
     preview = @props.config.preview
 
+    isArray = Array.isArray || (o) -> return {}.toString.call(o) is '[object Array]'
+    if isArray text
+      text = text.join(' ')
+
     if preview is true
       if text.length > PREVIEW_LENGTH
         text = text.substring(0, PREVIEW_LENGTH) + " ..."

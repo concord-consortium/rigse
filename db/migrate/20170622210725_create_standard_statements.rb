@@ -6,6 +6,7 @@ class CreateStandardStatements < ActiveRecord::Migration
       t.string  :statement_notation
       t.string  :statement_label
       t.text    :description
+      t.text    :parents
       t.string  :material_type
       t.integer :material_id
 

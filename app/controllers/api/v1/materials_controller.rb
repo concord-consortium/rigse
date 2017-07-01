@@ -20,6 +20,7 @@ class API::V1::MaterialsController < API::APIController
   #
   @@asn_return_fields = "identifier,"           <<
                         "is_part_of,"           <<
+                        "is_child_of,"          <<
                         "type,"                 <<
                         "statement_notation,"   <<
                         "statement_label,"      <<
@@ -435,7 +436,53 @@ class API::V1::MaterialsController < API::APIController
 
     hits        = response['hits']['hit']
     statement   = process_asn_response(hits)[0]
-   
+  
+    #
+    # Find all parents. Walk up the tree until is_child_of is equal to
+    # the uri of the document itself is_part_of
+    #
+    parents     = []
+    doc_uri     = statement[:is_part_of]
+    parent_uri  = statement[:is_child_of]
+
+    while parent_uri != doc_uri
+
+      puts "Parent  #{parent_uri}"
+      puts "Doc     #{doc_uri}"
+
+      query_string = "identifier:'#{parent_uri}'"
+
+      query = { "bq"            => query_string,
+                "return-fields" => @@asn_return_fields,
+                "key"           => "#{key}" }
+
+      response  = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
+
+      if response['hits'] && response['hits']['hit']
+
+        hits    = response['hits']['hit']
+        parent  = process_asn_response(hits)[0]
+        
+        puts "Parent is #{parent}"
+
+        parents.push({
+                    uri:                parent['uri'],
+                    description:        parent['description'],
+                    statement_notation: parent['statement_notation']
+                })
+
+        parent_uri = parent[:is_child_of]
+
+        puts "After push"
+        puts "Parent  #{parent_uri}"
+        puts "Doc     #{doc_uri}"
+
+      else
+        break
+      end
+
+    end
+
     StandardStatement.create(
 						:uri			    => uri,
 						:doc                => statement[:doc],
@@ -443,7 +490,8 @@ class API::V1::MaterialsController < API::APIController
   						:material_id	    => id,
   						:description		=> statement[:description],
   						:statement_label    => statement[:statement_label],
-  						:statement_notation => statement[:statement_notation] )
+  						:statement_notation => statement[:statement_notation],
+                        :parents            => parents )
 
     render json: {  :message => "Successfully added standard." },
                     :status => 200
@@ -631,10 +679,12 @@ class API::V1::MaterialsController < API::APIController
             #
             # key:                hit["data"]["identifier"][0],
 
-            description:        hit["data"]["description"].join(" "),
+            description:        hit["data"]["description"],
             statement_label:    hit["data"]["statement_label"].join(" "),
             statement_notation: hit["data"]["statement_notation"].join(" "),
             doc:                doc.nil? ? "Unknown" : doc.name,
+            is_child_of:        hit["data"]["is_child_of"][0],
+            is_part_of:         hit["data"]["is_part_of"][0],
             list_id:            hit["data"]["list_id"][0],
             is_applied:         applied_map.key?(hit["data"]["identifier"][0]) ?
                                     true : false
