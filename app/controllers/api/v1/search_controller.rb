@@ -28,7 +28,7 @@ class API::V1::SearchController < API::APIController
     {
       type: type.to_s.pluralize,
       header: view_context.t(type).pluralize.titleize,
-      materials: materials_data(collection),
+      materials: materials_data(collection, nil, params[:include_related].to_i || 0),
       pagination: {
         current_page: collection.current_page,
         total_pages: collection.total_pages,

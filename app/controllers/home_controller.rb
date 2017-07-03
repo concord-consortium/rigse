@@ -209,7 +209,7 @@ class HomeController < ApplicationController
       @lightbox_resource = nil
     end
     if @lightbox_resource
-      @lightbox_resource = materials_data([@lightbox_resource]).shift()
+      @lightbox_resource = materials_data([@lightbox_resource], nil, 4).shift()
       @page_title = @lightbox_resource[:name]
     else
       @page_title = "Resource not found"

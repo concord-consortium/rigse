@@ -13,7 +13,7 @@ module Materials
 
     def materials_data( materials, 
                         assigned_to_class   = nil, 
-                        include_related     = false )
+                        include_related     = 0 )
       data = []
 
       if assigned_to_class
@@ -112,7 +112,7 @@ module Materials
         # Check if we should search for related material
         #
         related_materials = []
-        if include_related
+        if include_related > 0
             
             search = Sunspot.search(Search::SearchableModels) do
 
@@ -124,6 +124,7 @@ module Materials
 
                 without     material
                 order_by    :score, :desc
+                paginate    page: 1, per_page: include_related
             end
 
             related = search.results
