@@ -13,3 +13,79 @@
     position: relative;
   }
 }
+
+
+/**
+ *
+ * Styles for Standatds Documents ASN document search widget and search results
+ *
+ */
+
+.asn_add_table {
+    width:          100%;
+}
+
+.asn_add_table_td_right {
+    text-align:     right;
+}
+
+.asn_search_table {
+    width:          100%;
+}
+
+.asn_search_table_td_right {
+    text-align:     right;
+}
+
+.asn_results_div {
+    min-height:     200px;
+}
+
+.asn_results_pagination_row {
+    text-align:     center;
+}
+
+.asn_results_pagination_arrows {
+    cursor:         pointer;
+}
+
+.asn_results_table {
+    width:          100%;
+    cellpadding:    2px;
+    cellspacing:    2px;
+}
+
+.asn_results_th {
+    text-align:     left;
+    padding-left:   0px;
+    padding-right:  10px;
+}
+
+.asn_results_th_right {
+    text-align:     right;
+    padding-left:   0px;
+    padding-right:  10px;
+}
+
+.asn_results_td {
+    vertical-align: top;
+}
+
+.asn_results_td_right {
+    vertical-align: top;
+    text-align:     right;
+    float:          right;
+}
+
+.asn_results_td_fixed {
+    width:          150px;
+}
+
+.asn_modal_msg {
+    text-align:     center;
+    font-size:      16px;
+    padding-bottom: 40px;
+}
+
+
+
