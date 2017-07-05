@@ -27,6 +27,12 @@ class API::V1::StudentsController < API::APIController
       attributes = registration.attributes
       attributes.delete(:password)
       attributes.delete(:password_confirmation)
+      #
+      # For students, get rid of email address after registration
+      #
+      if session['omniauth_email']
+        session['omniauth_email'] = nil
+      end
       render :json => attributes
     else
       error(registration.errors)

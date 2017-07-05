@@ -39,6 +39,14 @@ class API::V1::TeachersController < API::APIController
       attributes = teacher_registration.attributes
       attributes.delete(:password)
       attributes.delete(:password_confirmation)
+      #
+      # For teachers, if we came from omniauth set the valid email address.
+      #
+      if session[:omniauth_email]
+        current_user.email = session['omniauth_email']
+        current_user.save!
+        session['omniauth_email'] = nil
+      end 
       render status: 201, json: attributes
     else
       error(teacher_registration.errors)

@@ -38,8 +38,10 @@ modulejs.define 'components/signup/basic_data_form',
       @setState password: model.password
 
     onBasicFormValid: ->
-      @setState canSubmit:  (   @refs.firstName.isValidAsync() &&
-                                @refs.lastName.isValidAsync()       )
+      {anonymous} = @props
+      @setState canSubmit:  (   !anonymous || (
+                                  @refs.firstName.isValidAsync() &&
+                                  @refs.lastName.isValidAsync()     )  )
 
     onBasicFormInvalid: ->
       @setState canSubmit: false
