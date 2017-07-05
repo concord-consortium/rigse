@@ -4,7 +4,7 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
     generic_oauth
   end
 
-  def Google
+  def google
     generic_oauth
   end
 

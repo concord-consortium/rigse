@@ -221,7 +221,7 @@ Devise.setup do |config|
   if ENV['GOOGLE_CLIENT_ID'] && ENV['GOOGLE_CLIENT_SECRET']
 
     config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], 
-    {   :name => "Google",
+    {   :name => "google",
         :scope => [ 'https://www.googleapis.com/auth/userinfo.profile',
                     'https://www.googleapis.com/auth/userinfo.email'    ]
     }
