@@ -1,6 +1,13 @@
 class AuthenticationsController < Devise::OmniauthCallbacksController
+
   def schoology
     generic_oauth
+  end
+
+  def Google
+    puts "Params #{params}"
+    puts "env" "#{env['omniauth.auth']}"
+
   end
 
   private
