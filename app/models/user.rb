@@ -266,6 +266,8 @@ class User < ActiveRecord::Base
     end
   end
 
+
+
   def removed_investigation
     unless self.has_investigations?
       self.remove_role('author')
@@ -315,6 +317,13 @@ class User < ActiveRecord::Base
 
   def inactive_message
     user_active? ? super : "You cannot login since your account has been suspended."
+  end
+
+  #
+  # Determine if this user is an oauth user
+  #
+  def is_oauth_user?
+    self.authentications.length > 0
   end
 
   def name
