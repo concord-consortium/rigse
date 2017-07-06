@@ -38,4 +38,7 @@
   -# Partials below can be available for project admins (separate policy method).
   = render :partial => 'shared/projects_edit', :locals => { :object => @interactive }
   = render :partial => 'shared/cohorts_edit', :locals => { :object => @interactive }
+  - if not @interactive.new_record?
+    = render :partial => 'shared/standards_edit', :locals => { :object => @interactive }
+
 = javascript_tag("focus_first_field();");
