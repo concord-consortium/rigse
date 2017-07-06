@@ -100,5 +100,6 @@ modulejs.define 'components/signup/basic_data_form',
             {label: 'Student', value: 'student'}
           ]
         )
+        (button {className: 'submit-btn', type: 'submit', disabled: !@state.canSubmit}, @props.signupGoogle)
         (button {className: 'submit-btn', type: 'submit', disabled: !@state.canSubmit}, @props.signupText)
       )
