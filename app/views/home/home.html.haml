@@ -21,9 +21,6 @@
       = content_for :project_info
     - else
       = custom_content.html_safe
-  - if show_signup
-    .signup-box
-      = render partial: "home/signup"
 
 - if show_featured
   = render partial: "home/featured_content"
