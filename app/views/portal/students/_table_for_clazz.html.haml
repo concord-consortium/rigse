@@ -36,6 +36,11 @@
                           class: "change_password" }
                           
           - if policy(roster_row.student.user).reset_password?
-            = link_to 'Change Password', reset_password_user_path(roster_row.student.user),
-              :title => I18n.t("RosterChangePassword", name: roster_row.name),
-              :class => "change_password"
+            - if roster_row.student.user.is_oauth_user?
+              = link_to 'Change Password', '#', 
+                :onclick => "javascript:alert('This student is authenticated as a #{roster_row.student.user.authentications[0].provider} user. You cannot change this password.')",
+                :class => "change_password"
+            - else
+              = link_to 'Change Password', reset_password_user_path(roster_row.student.user),
+                :title => I18n.t("RosterChangePassword", name: roster_row.name),
+                :class => "change_password"
