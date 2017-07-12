@@ -4,10 +4,10 @@
   - providers = []
   - Devise.omniauth_providers.each do |provider|
     - name = "#{provider.to_s.underscore}"
-    - text = "Log In with #{provider.to_s.titleize}"
+    - display_name = "#{provider.to_s.titleize}"
     - directPath = omniauth_authorize_path('user', provider, after_sign_in_path: params[:after_sign_in_path])
     - authCheckPath = auth_check_path(provider: provider.to_s, popup: 'true')
-    - providers.push({ name: "#{name}", text: "#{text}", directPath: "#{directPath}", authCheckPath: "#{authCheckPath}" })
+    - providers.push({ name: "#{name}", display_name: "#{display_name}", directPath: "#{directPath}", authCheckPath: "#{authCheckPath}" })
 
   %script{:type=>"text/javascript"}
     PortalPages.renderPageHeader( { oauthProviders: #{raw providers.to_json} }, "test-header");
