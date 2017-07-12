@@ -301,4 +301,13 @@ class Portal::Clazz < ActiveRecord::Base
     Rails.application.routes.url_helpers.api_v1_class_url(id: self.id, protocol: protocol, host: host)
   end
 
+  def external_class_reports
+    self.offerings.includes(:runnable)
+      .select{ |o| o.runnable && o.runnable.respond_to?(:external_report) && o.runnable.external_report }
+      .map{ |o| o.runnable.external_report }
+      .select{ |r| r.report_type == "class" }
+      .uniq{ |r| r.id }
+      .sort{ |r1, r2| r1.launch_text <=> r2.launch_text }
+  end
+
 end
