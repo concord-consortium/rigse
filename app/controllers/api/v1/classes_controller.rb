@@ -7,7 +7,7 @@ class API::V1::ClassesController < API::APIController
     end
 
     if !current_visitor.portal_student && !current_visitor.portal_teacher
-      error('You must be logged in as a student to use this endpoint')
+      error('You must be logged in as a student or teacher to use this endpoint')
     end
 
     clazz = Portal::Clazz.find_by_id(params[:id])
@@ -23,6 +23,29 @@ class API::V1::ClassesController < API::APIController
     end
 
     render_info clazz
+  end
+
+  # GET api/v1/classes/mine
+  # lists the users classes
+  def mine
+    if current_visitor.anonymous?
+      return error('You must be logged in to use this endpoint')
+    end
+
+    user_with_clazzes = current_visitor.portal_student || current_visitor.portal_teacher
+    if !user_with_clazzes
+      error('You must be logged in as a student or teacher to use this endpoint')
+    end
+
+    render :json => {
+      classes: user_with_clazzes.clazzes.map do |clazz|
+        next {
+          :uri => api_v1_class_url(clazz.id),
+          :name => clazz.name,
+          :class_hash => clazz.class_hash
+        }
+      end
+    }
   end
 
   # GET api/v1/classes/info?class_word=[class word]

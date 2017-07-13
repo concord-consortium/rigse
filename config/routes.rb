@@ -720,6 +720,7 @@ RailsPortal::Application.routes.draw do
         end
         namespace :classes do
           get :info
+          get :mine
         end
 
         namespace :jwt do
