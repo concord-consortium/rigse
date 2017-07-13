@@ -23,7 +23,7 @@
           = submit_tag 'Cancel'
         %li
           - if @user.is_oauth_user?
-            = submit_tag "Change Password", :type => "button", :onclick => "javascript:alert('You are logged in as a #{@user.authentications[0].provider} user. You cannot change your password here.')"
+            = submit_tag "Change Password", :type => "button", :onclick => "javascript:Portal.confirm({message: 'You are logged in as a #{@user.authentications[0].provider} user. You cannot change your password here.', noCancel: true})"
           - else
             = link_to "Change Password", reset_password_user_path(@user),:class => "button"
 
