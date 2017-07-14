@@ -11,16 +11,23 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
   private
 
   def generic_oauth
-    omniauth = request.env["omniauth.auth"]
+
+    omniauth    = request.env["omniauth.auth"]
+    origin      = request.env['omniauth.origin']
+
     if extra = omniauth.extra
+
       if extra.username.present?
+
         #
         # Handle Schoology oauth data.
         #
         session[:portal_username] = extra.username
         session[:portal_user_id]  = extra.user_id
         session[:portal_domain]   = extra.domain
+
       else
+
         #
         # Handle google oauth data
         #
@@ -32,11 +39,18 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
                                                         # effectively stores 
                                                         # the email....?
       end
+
       #
       # For teachers we should set a valid email after creating
       # the teacher user.
       #
       session[:omniauth_email]  = omniauth.info.email
+
+      #
+      # Return user to omniauth_origin after signup is complete.
+      #
+      session[:omniauth_origin] = origin
+
     end
     begin
       @user = User.find_for_omniauth(omniauth, current_user)

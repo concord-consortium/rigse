@@ -39,6 +39,7 @@ class API::V1::TeachersController < API::APIController
       attributes = teacher_registration.attributes
       attributes.delete(:password)
       attributes.delete(:password_confirmation)
+
       #
       # For teachers, if we came from omniauth set the valid email address.
       #
@@ -47,6 +48,14 @@ class API::V1::TeachersController < API::APIController
         current_user.save!
         session['omniauth_email'] = nil
       end 
+
+      if session[:omniauth_origin]
+        attributes["omniauth_origin"] = session[:omniauth_origin]
+        attributes["omniauth_origin"] = nil
+      end
+    
+      puts "Created teacher with attributes #{attributes}"
+
       render status: 201, json: attributes
     else
       error(teacher_registration.errors)

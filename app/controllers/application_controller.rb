@@ -233,7 +233,19 @@ class ApplicationController < ActionController::Base
     if request.format && request.format.html? && current_visitor && current_visitor.require_portal_user_type && !current_visitor.has_portal_user_type?
       unless session_sensitive_path
         flash.keep
-        redirect_to portal_user_type_selector_path
+
+        #
+        # TODO If there were some way render the underlying content of
+        # the omniauth_origin url beneath the modal signup popup, that would
+        # be nice.
+        #
+        # Also if this could be passed in, rather than stored in the
+        # session, that would. 
+        #
+        # Otherwise, this is not actually used. 
+        #
+        redirect_to portal_user_type_selector_path(omniauth_origin: session["omniauth.origin"])
+
       end
     end
   end
@@ -269,6 +281,7 @@ class ApplicationController < ActionController::Base
   # so it has access to the parameters that were passed in. This allows us to pass
   # a hidden param :after_sign_in_path to the sign in form.
   def after_sign_in_path_for(resource)
+
     redirect_path = root_path
     if ENV['RESEARCHER_REPORT_ONLY']
       redirect_path = learner_report_path
