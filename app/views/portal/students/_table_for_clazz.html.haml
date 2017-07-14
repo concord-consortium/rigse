@@ -20,7 +20,10 @@
         %td.show_border
           = roster_row.name
         %td.show_border{:title => roster_row.login}
-          = roster_row.login
+          - if roster_row.student.user.is_oauth_user?
+            #{roster_row.student.user.authentications[0].provider.titleize} user
+          - else
+            = roster_row.login
         %td.show_border{:title => I18n.t("RosterNoLastLoginHeading") }
           = roster_row.last_login
         %td.show_border{:title => I18n.t("RosterAssignmentsHeading") }

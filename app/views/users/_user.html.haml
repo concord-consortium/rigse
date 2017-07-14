@@ -22,7 +22,7 @@
           - else
             - if policy(user).limited_edit?
               %li.menu=link_to 'edit', limited_edit_user_path(user)
-          - if policy(user).reset_password?
+          - if policy(user).reset_password? && !user.is_oauth_user?
             %li.menu=link_to 'Reset Password', reset_password_user_path(user)
           - if user.state == 'pending' && policy(user).confirm?
             %li.menu=link_to 'Activate', confirm_user_path(user)

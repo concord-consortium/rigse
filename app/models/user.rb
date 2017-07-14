@@ -28,7 +28,9 @@ class User < ActiveRecord::Base
     where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[token_authentication_key], Time.now]).joins(:access_grants).select("users.*").first
   end
 
-  NO_EMAIL_STRING='no-email-'
+  NO_EMAIL_STRING = 'no-email-'
+  NO_EMAIL_DOMAIN = 'concord.org'
+
   has_many :investigations
   has_many :activities
   has_many :interactives
@@ -229,7 +231,8 @@ class User < ActiveRecord::Base
       # there is no authentication for this provider and uid
       # see if we should create a new authentication for an existing user
       # or make a whole new user
-      email = Digest::MD5.hexdigest(auth.info.email) << "@example.com"
+      digest = Digest::MD5.hexdigest(auth.info.email)
+      email = NO_EMAIL_STRING + digest + '@' + NO_EMAIL_DOMAIN
 
       # the devise validatable model enforces unique emails, so no need find_all
       existing_user_by_email = User.find_by_email email
@@ -246,7 +249,7 @@ class User < ActiveRecord::Base
         # no user with this email, so make a new user with a random password
         pw = Devise.friendly_token.first(12)
         user = User.create!(
-          login:        email[0..39], # <digest>@example.com is too long for db
+          login:        digest,
           email:        email,
           first_name:   auth.extra.first_name   || auth.info.first_name,
           last_name:    auth.extra.last_name    || auth.info.last_name,
