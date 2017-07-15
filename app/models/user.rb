@@ -231,8 +231,8 @@ class User < ActiveRecord::Base
       # there is no authentication for this provider and uid
       # see if we should create a new authentication for an existing user
       # or make a whole new user
-      digest = Digest::MD5.hexdigest(auth.info.email)
-      email = NO_EMAIL_STRING + digest + '@' + NO_EMAIL_DOMAIN
+      login = auth.provider + "-" + auth.uid
+      email = NO_EMAIL_STRING + login + '@' + NO_EMAIL_DOMAIN
 
       # the devise validatable model enforces unique emails, so no need find_all
       existing_user_by_email = User.find_by_email email
@@ -249,7 +249,7 @@ class User < ActiveRecord::Base
         # no user with this email, so make a new user with a random password
         pw = Devise.friendly_token.first(12)
         user = User.create!(
-          login:        digest,
+          login:        login,
           email:        email,
           first_name:   auth.extra.first_name   || auth.info.first_name,
           last_name:    auth.extra.last_name    || auth.info.last_name,
