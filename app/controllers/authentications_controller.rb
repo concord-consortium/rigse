@@ -13,7 +13,7 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
   def generic_oauth
 
     omniauth    = request.env["omniauth.auth"]
-    origin      = request.env['omniauth.origin']
+    origin      = request.env["omniauth.origin"]
 
     if extra = omniauth.extra
 

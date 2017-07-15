@@ -50,8 +50,8 @@ class API::V1::TeachersController < API::APIController
       end 
 
       if session[:omniauth_origin]
-        attributes["omniauth_origin"] = session[:omniauth_origin]
-        attributes["omniauth_origin"] = nil
+        attributes["omniauth_origin"]   = session[:omniauth_origin]
+        session[:omniauth_origin]       = nil
       end
     
       puts "Created teacher with attributes #{attributes}"
