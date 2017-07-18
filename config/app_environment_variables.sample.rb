@@ -33,3 +33,6 @@ ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 # This the input to the SHA-256 HMAC so the max secret length should be 32 bytes (longer secrets are first hashed to 32 bytes)
 # This can be generated in the Rails console via `SecureRandom.random_bytes(32)`
 # ENV['JWT_HMAC_SECRET']  ||= "<32 bytes of random characters>"
+
+# ASN_API_KEY
+# a key to for the ASN standards service
