@@ -21,6 +21,7 @@ services:
       REPORT_VIEW_URL:
       ASN_API_KEY:
       PORTAL_PAGES_LIBRARY_URL:
+      EXTERNAL_CSS_URL:
     # no ports are published, see below for details
     volumes:
       - .:/rigse
