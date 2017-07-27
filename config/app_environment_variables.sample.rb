@@ -35,7 +35,22 @@ ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 # ENV['JWT_HMAC_SECRET']  ||= "<32 bytes of random characters>"
 
 # ASN_API_KEY
+#
 # A key for using the ASN standards service API.
 # See http://asn.jesandco.org/
 # See http://toolkit.asn.desire2learn.com/documentation/asn-search
+#
+
+# PORTAL_PAGES_LIBRARY_URL
+#
+# Path to portal-pages "library" dir containing
+# portal-pages.js and portal-pages.css
+# E.g. PORTAL_PAGES_LIBRARY_URL=http://localhost:10000/library
+#
+
+# EXTERNAL_CSS_URL
+#
+# Full path to site-redesign.css
+# E.g. EXTERNAL_CSS_URL=http://localhost:10000/site-redesign/site-redesign.css
+#
 
