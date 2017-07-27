@@ -35,4 +35,7 @@ ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 # ENV['JWT_HMAC_SECRET']  ||= "<32 bytes of random characters>"
 
 # ASN_API_KEY
-# a key to for the ASN standards service
+# A key for using the ASN standards service API.
+# See http://asn.jesandco.org/
+# See http://toolkit.asn.desire2learn.com/documentation/asn-search
+
