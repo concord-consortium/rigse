@@ -1349,9 +1349,10 @@ module ApplicationHelper
   end
 
   def google_analytics_config
-    <<CONFIG
+    if ENV['GOOGLE_ANALYTICS_ACCOUNT']
+      javascript_tag <<CONFIG
 var _gaq = _gaq || [];
-_gaq.push(['_setAccount', '#{GOOGLE_ANALYTICS_ACCOUNT}']);
+_gaq.push(['_setAccount', '#{ENV['GOOGLE_ANALYTICS_ACCOUNT']}']);
 _gaq.push(['_trackPageview']);
 
 (function() {
@@ -1360,6 +1361,7 @@ _gaq.push(['_trackPageview']);
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 CONFIG
+   end
   end
 
   # This fixes an error in polymorphic_url brought on because the Admin::Settings model name is plural.
