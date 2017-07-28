@@ -54,3 +54,6 @@ ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 # E.g. EXTERNAL_CSS_URL=http://localhost:10000/site-redesign/site-redesign.css
 #
 
+# GOOGLE_ANALYTICS_ACCOUNT
+#
+# Key for the GA account.

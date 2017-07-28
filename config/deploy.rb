@@ -243,7 +243,6 @@ namespace :deploy do
       touch #{shared_path}/config/initializers/site_keys.rb &&
       touch #{shared_path}/config/initializers/subdirectory.rb &&
       touch #{shared_path}/config/database.yml &&
-      touch #{shared_path}/config/google_analytics.yml
       touch #{shared_path}/config/padlet.yml
     CMD
 
@@ -274,7 +273,6 @@ namespace :deploy do
     CMD
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
-    run "ln -nfs #{shared_path}/config/google_analytics.yml #{release_path}/config/google_analytics.yml"
 
     # support for running SproutCore app from the public directory
     run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
