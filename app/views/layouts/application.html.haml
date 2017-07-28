@@ -56,8 +56,7 @@
     /[if lt IE 10]
       = javascript_include_tag("pie/PIE")
 
-    - if USING_GOOGLE_ANALYTICS
-      = javascript_tag google_analytics_config
+    = google_analytics_config
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
   %body{:class => current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }.unshift(current_visitor.has_role?('guest') ? 'main-nav-hidden' : '').join(' ').squish, :'ng-app' => 'cc-portal'}
 
