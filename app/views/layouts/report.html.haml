@@ -35,8 +35,7 @@
     - if @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
 
-    - if USING_GOOGLE_ANALYTICS
-      = javascript_tag google_analytics_config
+    = google_analytics_config
 
   %body
 
@@ -60,4 +59,3 @@
       #under_footer
         - if current_visitor.has_role?('admin')
           = display_system_info
-
