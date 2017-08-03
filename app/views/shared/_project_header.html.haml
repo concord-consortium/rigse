@@ -1,5 +1,5 @@
 - if current_visitor.anonymous? || @emulate_anonymous_user
-  %div{:id => "test-header", :style => { alignContent: "left" } }
+  %div{:id => "portal-pages-header", :style => { alignContent: "left" } }
 
   - providers = []
   - Devise.omniauth_providers.each do |provider|
@@ -10,7 +10,7 @@
     - providers.push({ name: "#{name}", display_name: "#{display_name}", directPath: "#{directPath}", authCheckPath: "#{authCheckPath}" })
 
   %script{:type=>"text/javascript"}
-    PortalPages.renderPageHeader( { oauthProviders: #{raw providers.to_json} }, "test-header");
+    PortalPages.renderPageHeader( { oauthProviders: #{raw providers.to_json} }, "portal-pages-header");
 - else
   #lead.project-header
     %h1{:class => theme_name}
