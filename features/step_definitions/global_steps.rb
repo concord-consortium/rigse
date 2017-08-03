@@ -16,13 +16,16 @@ def login_as(username)
 end
 
 def login_with_ui_as(username, password)
-  visit "/home"
-  within(".header-login-box") do
-    fill_in("header_login", :with => username)
-    fill_in("header_password", :with => password)
-    click_button("Log In")
+
+  visit "/users/sign_in"
+
+  within("form[@id='new_user']") do
+    fill_in("user_login",       :with => username)
+    fill_in("user_password",    :with => password)
+    click_button("Sign in")
     @cuke_current_username = username
   end
+
   user = User.find_by_login(username)
   user_first_name = user.first_name
   user_last_name = user.last_name
