@@ -45,6 +45,8 @@ services:
       PORTAL_PAGES_LIBRARY_URL:
       EXTERNAL_CSS_URL:
 
+      GOOGLE_ANALYTICS_ACCOUNT:
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse
