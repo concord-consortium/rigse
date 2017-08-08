@@ -80,6 +80,7 @@ describe HomeController do
   describe "STEM resources" do
     before(:each) do
       @test_settings.stub!(:home_page_content).and_return("stubbed homepage content")
+      @test_settings.stub(:custom_search_path)
     end
 
     # note: in the tests below the "slug" param is always optional
