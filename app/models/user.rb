@@ -228,26 +228,31 @@ class User < ActiveRecord::Base
         return authentication.user
       end
 
-      # there is no authentication for this provider and uid
-      # see if we should create a new authentication for an existing user
-      # or make a whole new user
-      login = auth.provider + "-" + auth.uid
-      email = NO_EMAIL_STRING + login + '@' + NO_EMAIL_DOMAIN
-
+      #
+      # Check for an existing user with this email.
       # the devise validatable model enforces unique emails, so no need find_all
-      existing_user_by_email = User.find_by_email email
+      #
+      existing_user_by_email = User.find_by_email auth.info.email
 
       if existing_user_by_email
-        if existing_user_by_email.authentications.find_by_provider auth.provider
-          throw "Can't have duplicate email addresses: #{email}. " +
-                "There is an user with an authentication for this provider #{auth.provider} " +
-                "and the same email already."
-        end
-        # There is no authentication for this provider and user
         user = existing_user_by_email
+
+        #
+        # Check if this is a student. This shouldn't be the case if we have
+        # an email stored.
+        #
+        if user.portal_student
+          throw "Error: found portal student with persisted email from #{auth.proivder}."
+        end
+
       else
+        #
         # no user with this email, so make a new user with a random password
+        #
+        login = auth.provider + "-" + auth.uid
+        email = NO_EMAIL_STRING + login + '@' + NO_EMAIL_DOMAIN
         pw = Devise.friendly_token.first(12)
+
         user = User.create!(
           login:        login,
           email:        email,
@@ -259,12 +264,19 @@ class User < ActiveRecord::Base
         )
         user.confirm!
       end
-      # create new authentication for this user that we found or created
-      user.authentications.create(
-        provider: auth.provider,
-        uid:      auth.uid
-        # token:    auth.credentials.token
-      )
+
+      #
+      # Create new authentication for this user that we found or created
+      # if one does not exist.
+      #
+      if ! user.authentications.find_by_provider auth.provider
+        user.authentications.create(
+          provider: auth.provider,
+          uid:      auth.uid
+          # token:    auth.credentials.token
+        )
+      end
+
       user
     end
   end
