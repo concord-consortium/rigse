@@ -8,8 +8,17 @@ class PasswordsController < ApplicationController
   end
 
   def create_by_email
+
     @password = Password.new(params[:password])
     @password.user = User.find_by_email(@password.email)
+
+    if @password.user && @password.user.is_oauth_user?
+      provider      =   @password.user.authentications[0].provider.titleize
+      flash[:error] =   "This is a #{provider} authenticated account. " <<
+                        "Please use #{provider} to make password changes."
+      render :action => :email
+      return
+    end
 
     if @password.save
       PasswordMailer.forgot_password(@password).deliver
@@ -33,9 +42,10 @@ class PasswordsController < ApplicationController
       flash[:error] = "User '#{params[:login]}' not found."
 
     elsif user.is_oauth_user?
-      provider = user.authentications[0].provider.titleize
+      provider      =   user.authentications[0].provider.titleize
       flash[:error] =   "This is a #{provider} authenticated account. " <<
                         "Please use #{provider} to make password changes."
+      return
 
     elsif user.portal_student
       if user.security_questions.size == 3
