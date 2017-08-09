@@ -31,6 +31,12 @@ class PasswordsController < ApplicationController
 
     if user.nil?
       flash[:error] = "User '#{params[:login]}' not found."
+
+    elsif user.is_oauth_user?
+      provider = user.authentications[0].provider.titleize
+      flash[:error] =   "This is a #{provider} authenticated account. " <<
+                        "Please use #{provider} to make password changes."
+
     elsif user.portal_student
       if user.security_questions.size == 3
         redirect_to password_questions_path(user)
