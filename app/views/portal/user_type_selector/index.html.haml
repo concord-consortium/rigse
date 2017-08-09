@@ -1,7 +1,5 @@
 .landing-container
-  .home-page-content
-    %h3 Finish Signing Up
-    %p
-      To complete your registration please answer the questions in the dialog to the right.
-  .signup-box
-    = render partial: "home/signup"
+
+:javascript
+  PortalPages.renderSignupModal({omniauth: true});
+

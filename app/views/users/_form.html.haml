@@ -18,4 +18,9 @@
       - if current_visitor.portal_student.blank?
         %li
           = f.label :email, 'Email', :class=>"right"
-          = f.text_field :email, :live => false, :class => "aligned"
+          = f.text_field :email, :live => false, :class => "aligned", :disabled => @user.is_oauth_user?
+          - if @user.is_oauth_user?
+            You are logged in as a #{@user.authentications[0].provider} user. This email address cannot be changed.
+
+
+

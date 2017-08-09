@@ -57,3 +57,17 @@ ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 # GOOGLE_ANALYTICS_ACCOUNT
 #
 # Key for the GA account.
+
+# SCHOOLOGY_CONSUMER_KEY
+# SCHOOLOGY_CONSUMER_SECRET
+#
+# Schoology key and secret for Schoology SSO oauth.
+#
+
+# GOOGLE_CLIENT_KEY
+# GOOGLE_CLIENT_SECRET
+#
+# Google key and secret for Google SSO oauth.
+#
+
+

@@ -11,18 +11,42 @@ services:
       DB_HOST: mysql
       DB_USER: root
       DB_PASSWORD: xyzzy
+
+      #
+      # Solr hosts and ports
+      #
       SOLR_HOST: solr
       SOLR_PORT: 8983
-      PORTAL_FEATURES:
-      SITE_URL:
-      RESEARCHER_REPORT_ONLY:
       TEST_SOLR_HOST: solr-test
       TEST_SOLR_PORT: 8981
+
+      PORTAL_FEATURES:
+
+      #
+      # OAuth keys
+      #
+      SCHOOLOGY_CONSUMER_KEY:
+      SCHOOLOGY_CONSUMER_SECRET:
+      GOOGLE_CLIENT_KEY:
+      GOOGLE_CLIENT_SECRET:
+
+      SITE_URL:
+      RESEARCHER_REPORT_ONLY:
       REPORT_VIEW_URL:
+
+      #
+      # ASN API key
+      #
       ASN_API_KEY:
+
+      #
+      # portal-pages URLs
+      #
       PORTAL_PAGES_LIBRARY_URL:
       EXTERNAL_CSS_URL:
+
       GOOGLE_ANALYTICS_ACCOUNT:
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse

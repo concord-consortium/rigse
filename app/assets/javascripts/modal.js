@@ -47,6 +47,7 @@ Portal.confirm = function(opts) {
     var message    = (opts && opts.message)  || "Are you sure?";
     var okText     = (opts && opts.okText)   || "OK";
     var cancelText = (opts && opts.okText)   || "Cancel";
+    var noCancel   = (opts && opts.noCancel) || false;
     var wrapper    = jQuery('<div id="portal-confirm-wrapper"/>');
     var dialog     = jQuery('<div class="cc-confirm"/>');
     var messageDiv = jQuery('<div class="message"/>').text(message);
@@ -54,7 +55,9 @@ Portal.confirm = function(opts) {
     var cancelBtn  = jQuery('<button class="submit-btn" type="submit"/>').text(cancelText);
     var okBtn      = jQuery('<button class="submit-btn" type="submit"/>').text(okText);
 
-    buttonDiv.append(cancelBtn);
+    if(!noCancel) {
+        buttonDiv.append(cancelBtn);
+    }
     buttonDiv.append(okBtn);
     dialog.append(messageDiv);
     dialog.append(buttonDiv);

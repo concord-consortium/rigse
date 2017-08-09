@@ -122,8 +122,6 @@ describe UsersController do
     assert_select 'p', /login/i
     
     assert_select "*#clazzes_nav", false
-    assert_select "input#header_login"
-    
     
     assert_nil flash[:error]
     assert_nil flash[:notice]

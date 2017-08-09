@@ -14,7 +14,7 @@ bundle exec rake db:create
 bundle exec rake db:schema:load
 bundle exec rake db:test:prepare
 
-if [ $1 == "setup" ]; then
+if [ "$1" == "setup" ]; then
     echo 
     echo "Spec test setup completed." 
     echo 

@@ -28,7 +28,3 @@ Feature: User logs in using header login box to use the portal
     Then I should not see "Invalid login or password."
     
     
-  Scenario: Anonymous user should see header login box
-    When I am an anonymous user
-    And I am on the home page
-    Then I should see "Can't log in?" within header login box

@@ -7,20 +7,29 @@ describe "Portal::Offering" do
     @user = @learner.student.user
     @user.save!
     @user.confirm!
-    
-    
-    # log in as this learner
-    visit "/"
-    
-    within("div.header-login-box") do
-      fill_in("Username", :with => @user.login)
-      fill_in("Password", :with => 'password')
+   
+    #
+    # log in as this learner (this URL will render login form for non-logged
+    # in user)
+    #
+    visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
+
+    #
+    # This still uses the login form on /portal/offerings/[id].jnlp
+    # as this page is not styled to use
+    # portal-pages header.
+    #
+    within("form[@id='login-form']") do
+      fill_in("username", :with => @user.login)
+      fill_in("password", :with => 'password')
       click_button("Log In")
     end
+
   end
 
   it "returns a valid jnlp file" do
-    visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
+    path = portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
+    visit path
     xml = Nokogiri::XML(page.driver.response.body)
     jnlp_elements = xml.xpath("/jnlp")
     jnlp_elements.should_not be_empty

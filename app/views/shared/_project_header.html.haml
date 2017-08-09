@@ -1,14 +1,25 @@
-#lead.project-header
-  %h1{:class => theme_name}
-    %a{ :href => root_path }= "#{APP_CONFIG[:site_name]}"
 - if current_visitor.anonymous? || @emulate_anonymous_user
-  = render :partial => "shared/header_login_box"
+  %div{:id => "portal-pages-header", :style => { alignContent: "left" } }
+
+  - providers = []
+  - Devise.omniauth_providers.each do |provider|
+    - name = "#{provider.to_s.underscore}"
+    - display_name = "#{provider.to_s.titleize}"
+    - directPath = omniauth_authorize_path('user', provider, after_sign_in_path: params[:after_sign_in_path])
+    - authCheckPath = auth_check_path(provider: provider.to_s, popup: 'true')
+    - providers.push({ name: "#{name}", display_name: "#{display_name}", directPath: "#{directPath}", authCheckPath: "#{authCheckPath}" })
+
+  %script{:type=>"text/javascript"}
+    PortalPages.renderPageHeader( { oauthProviders: #{raw providers.to_json} }, "portal-pages-header");
 - else
+  #lead.project-header
+    %h1{:class => theme_name}
+      %a{ :href => root_path }= "#{APP_CONFIG[:site_name]}"
   .welcome-box
     %table{ :width => "100%" }
       %tbody
         %tr
-          %td
+          %td{ :nowrap => 'nowrap' }
             %b
               Welcome
               = "#{current_visitor.name}"
