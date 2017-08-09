@@ -248,6 +248,9 @@ class User < ActiveRecord::Base
       else
         #
         # no user with this email, so make a new user with a random password
+        # if a teacher finishes the registration this generated email will be replaced
+        # with the real email from the provider. If a student finishes the registration
+        # the generate email will remain.
         #
         login = auth.provider + "-" + auth.uid
         email = NO_EMAIL_STRING + login + '@' + NO_EMAIL_DOMAIN
