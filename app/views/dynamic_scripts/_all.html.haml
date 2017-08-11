@@ -1,9 +1,19 @@
+- providers = []
+- Devise.omniauth_providers.each do |provider|
+  - name = "#{provider.to_s.underscore}"
+  - display_name = "#{provider.to_s.titleize}"
+  - directPath = omniauth_authorize_path('user', provider, after_sign_in_path: params[:after_sign_in_path])
+  - authCheckPath = auth_check_path(provider: provider.to_s, popup: 'true')
+  - providers.push({ name: "#{name}", display_name: "#{display_name}", directPath: "#{directPath}", authCheckPath: "#{authCheckPath}" })
+
 :javascript
   if (typeof Portal === 'undefined') {
     Portal = {
       siteName: "#{APP_CONFIG[:site_name]}"
     }
   }
+
+  Portal.oauthProviders = #{raw providers.to_json};
 
 = render :partial => 'dynamic_scripts/api_paths'
 = render :partial => 'dynamic_scripts/current_user'
