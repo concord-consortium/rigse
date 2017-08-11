@@ -17,20 +17,9 @@ class API::V1::SessionsController < Devise::SessionsController
 
     user = User.find_by_login(username)
 
-    #
-    # Would be nice to use warden.authenticate! which returns the
-    # authenticated user, but if it fails it responds with its own json.
-    #
-    # So cannot use:
-    # warden.custom_failure!
-    # self.resource = warden.authenticate!(auth_options)
-    #
-
     if user && user.valid_password?(password)
 
-      resource = user
-      sign_in(resource_name, resource)
-
+      sign_in(resource_name, user)
       render status: 200, :json => { :message => "Login success." }
 
     else
