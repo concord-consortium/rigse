@@ -71,6 +71,12 @@
       / For non-visual user agents:
       #top
         %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
+      %div{:class => 'portal-pages-umbrella'}
+        %div{:class => 'portal-pages-umbrella-contain cols'}
+          %div{:class => 'portal-pages-concord-link col-12'}
+            %a{:class => 'portal-pages-concord-link__item', :href => 'https://concord.org/'}
+              Learn about the Concord Consortium
+              %i{:class => 'icon-arrow-diagonal'}
     #wrapper.wrapper
       = render :partial => 'shared/project_header'
       #primary{ :class => @wide_content_layout ? "wide" : nil}

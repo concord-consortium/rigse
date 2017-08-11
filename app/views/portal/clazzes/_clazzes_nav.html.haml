@@ -2,14 +2,54 @@
 / Clazz navigation: top_node could be course, teacher, student ...
 
 #clazzes_nav
+  #utility-links
+    %p
+      Welcome,
+      %br
+      %strong
+        = "#{current_visitor.name}!"
+    %ul
+      - if current_settings && ((current_settings.help_type == 'external url') || (current_settings.help_type == 'help custom html'))
+        %li
+          %a{:href => '/help', :target => '_blank', :class => 'help-link'}
+            %i{:class => 'icon-search'}
+            &nbsp;Help
+      %li
+        %a{:href => preferences_user_path(current_visitor)}
+          %i{:class => 'icon-settings'}
+          &nbsp;Settings
+      - if @original_user != current_visitor
+        - switch_user_form_id = "switch_user_id_#{@original_user.id}"
+        %a{:href => 'javascript: void(0);', :onclick => "$('#{switch_user_form_id}').submit();"}
+          %i{:class => 'icon-login'}
+          &nbsp;Switch Back
+        = form_for @original_user, :url => switch_user_path(@original_user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
+          = hidden_field_tag 'user[id]', @original_user.id
+          = hidden_field_tag 'commit', 'Switch'
+  -#
+    %ul.aux-links
+      %li
+        = link_to 'Activities', '/activities'
+      %li
+        = link_to 'Interactives', '/interactives'
+      %li
+        = link_to 'Teacher Guides', 'http://guides.itsi.concord.org/'
+      %li
+        = link_to 'Images', '/images'
+      %li
+        = link_to 'Careersight', 'http://careersight.concord.org/'
+      %li
+        = link_to 'Probesight', 'http://probesight.concord.org/'
+      %li
+        = link_to 'Schoology', 'http://schoology.com/'
   = javascript_include_tag "clazzes_nav"
-  %br
   .padded_content
     = render :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => top_node, :selects => selects}
     - if top_node.is_a? Portal::Teacher
       .create{:id=>dom_id_for(top_node, :nav_list_create_class)}
         .create_link
-          = link_to 'Create a Class', new_portal_clazz_path, :class=>"button pie", :id=>"btn_create_class"
+          = link_to 'Add a New Class', new_portal_clazz_path, :class=>"pie", :id=>"btn_create_class"
         .manage_classes_link
-          = link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"button pie", :id=>"btn_manage_classes"
-          
+          = link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"pie", :id=>"btn_manage_classes"
+-#
+    %ul
