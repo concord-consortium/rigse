@@ -7,7 +7,7 @@ describe "Portal::Offering" do
     @user = @learner.student.user
     @user.save!
     @user.confirm!
-   
+
     #
     # log in as this learner (this URL will render login form for non-logged
     # in user)
@@ -60,22 +60,6 @@ describe "Portal::Offering" do
         argument = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
         argument.text.should match 'config'
         argument.text.should match 'jnlp_session'
-      end
-
-      it "logs in the student" do
-        visit portal_offering_path(:id => @learner.offering.id, :format => :jnlp)
-        jnlp_xml = Nokogiri::XML(page.driver.response.body)
-        argument = jnlp_xml.xpath("/jnlp/application-desc/argument")[0]
-
-        page.reset!
-        # make sure that worked by checking we are not logged in
-        visit "/"
-        page.should have_no_content "Welcome"
-
-        # load in the config file
-        visit argument
-        visit "/"
-        page.should have_content "Welcome #{@user.name}"
       end
 
       it "returns a valid config that sets the correct session" do
