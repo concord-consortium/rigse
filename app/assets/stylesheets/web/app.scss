@@ -1686,7 +1686,7 @@ table.teacher_class_table th, table.teacher_class_table td
 .classsetupform table { margin: 0;}
 .classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
 
-.new_portal_clazz a { color: #888; }
+.new_portal_clazz a, .edit_portal_clazz a { color: #888; }
 
 .offerings{text-align:left;margin:0}
 .offerings tr { vertical-align: top; }
@@ -1715,9 +1715,8 @@ table.roster_student_list a { white-space: 'nowrap'}
 .linkdiv{float:right;}
 
 .header{padding-left: 10px;color:#3A878B;font-size:20px;font-weight:bold;clear:both}
-.subheader{color:#3A878B;font-size:16px;font-weight:bold}
+.subheader{font-size:16px;font-weight:500}
 .labelvalue{font-weight:bold;padding-left:5px}
-.classdata{float:right;text-align:left}
 .classdata label { font-weight: normal }
 .classdata .labelvalue { font-weight: bold }
 .classsummary{padding-left: 10px;float:left;text-align:left}
@@ -1727,14 +1726,38 @@ td.title { padding-left: 20px; text-align: left; }
 .maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}
 
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
-#sortable li { margin: 0 0px 5px 0px; padding: 0.4em;cursor:move }
+#sortable li { margin: 0 0 5px 0; padding: 0.4em; cursor:move }
 #sortable li label { padding-top:0 }
 #sortable td {vertical-align:top }
 
+.offering-title {
+  display: inline-block;
+  font-weight: 500;
+  text-transform: uppercase;
+  width: 575px;
+}
 .offering-prop-checkbox {
   display: inline-block;
-  width: 50px;
+  font-weight: 500;
+  margin-left: 30px;
   text-align: center;
+  width: 90px;
+}
+
+.classsetupform #sortable {
+  width: 100%;
+
+  li {
+    padding: 0;
+  }
+}
+
+.offering {
+  padding: 30px 0;
+}
+.offering .offering-title, .offering .offering-title label {
+  font-weight: 300;
+  text-transform: none;
 }
 
 a.hlink{color:#479492;text-decoration:none;cursor:pointer}

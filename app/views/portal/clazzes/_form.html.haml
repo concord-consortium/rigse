@@ -4,9 +4,9 @@
     .content
       = f.error_messages
     .right
+      %h1 Class Setup Information
       - if !(portal_clazz.id.nil?)
         = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
-      %h1 Class Setup Information
       %table.classsetupform
         %tr
           %td.title= label_tag :name, 'Class Name:', :class=>"right", :style=>"white-space:nowrap"
