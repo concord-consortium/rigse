@@ -102,7 +102,7 @@
             = render :partial => 'shared/left_menu', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}
           - elsif @portal_student && (@portal_student.user == current_visitor)
             = render :partial => 'shared/left_menu', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
-          - elsif current_visitor.has_role?('admin', 'manager','researcher')
+          - elsif current_user.present?
             -# handle the case of users that are not portal_teachers
             = render :partial => 'shared/left_menu', :locals => {:top_node => nil, :selects => []}
           = content_for :side_bar

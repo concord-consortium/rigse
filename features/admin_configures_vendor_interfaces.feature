@@ -9,9 +9,9 @@ Feature: The Project administrator disables certain vendor interfaces
 
   @javascript
   Scenario: The project administrator removes some probe interfaces
-    Given the following users exist:
-      | login        | password            | roles                |
-      | student_login| student_password    | member               |
+    Given the following students exist:
+      | login        | password            |
+      | student_login| student_password    |
     And I login as an admin
     And the following vendor interfaces exist:
       | name             | description              |
@@ -56,9 +56,9 @@ Feature: The Project administrator disables certain vendor interfaces
       | pasco bluetooth  | true    |
 
   Scenario: The student user can only select configured interfaces
-    Given the following users exist:
-      | login        | password            | roles                |
-      | student_login| student_password    | member               |
+    Given the following students exist:
+      | login          | password            |
+      | student_login | student_password    |
     And the following vendor interfaces exist:
       | name             | description              |
       | pasco usb        | a pasco usb interface    |
@@ -72,7 +72,7 @@ Feature: The Project administrator disables certain vendor interfaces
       | vernier usb      |
 
     When I login with username: student_login
-    When I follow "My Preferences"
+    When I follow "Settings"
     Then I should see "User Preferences"
     And I should see "Probeware Interface"
     Then I should have the following selection options:
