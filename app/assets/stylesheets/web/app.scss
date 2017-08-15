@@ -1687,6 +1687,8 @@ table.teacher_class_table th, table.teacher_class_table td
 .classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
 
 .new_portal_clazz a, .edit_portal_clazz a { color: #888; }
+.new_portal_clazz a.button, .edit_portal_clazz a.button { color: #fff; }
+.new_portal_clazz a.button.secondary, .edit_portal_clazz a.button.secondary { color: #ea6d2f; }
 
 .offerings{text-align:left;margin:0}
 .offerings tr { vertical-align: top; }
@@ -1721,7 +1723,18 @@ table.roster_student_list a { white-space: 'nowrap'}
 .classdata .labelvalue { font-weight: bold }
 .classsummary{padding-left: 10px;float:left;text-align:left}
 .classdata td:nth-child(odd) { padding-left: 20px; text-align: left; }
-.classdata-buttons { margin: 0; }
+.classdata-buttons {
+  margin: 0; text-align: right;
+
+  a {
+    color: #ea6d2f;
+    margin-left: 20px;
+
+    &:active, &:hover {
+      color: #ffc320;
+      }
+    }
+  }
 td.title { padding-left: 20px; text-align: left; }
 .maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}
 
