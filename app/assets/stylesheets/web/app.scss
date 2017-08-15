@@ -134,6 +134,8 @@ body#tinymce {
 .hidden {
   display: none !important; }
 
+.orange { color: #ea6d2f !important; }
+
 #page {
   min-width: 860px; }
 
@@ -1710,6 +1712,7 @@ table.teacher_class_table th, table.teacher_class_table td
 #student_roster #students_listing{padding-right:0px !important}
 
 table.add_student, table.roster_student_list{margin:0;clear:both;}
+table.add_student .chosen-container { margin-top: 3px; width: 97% !important; }
 table.roster_student_list .action_link_container{padding-left:0px}
 table.roster_student_list a { white-space: 'nowrap'}
 
