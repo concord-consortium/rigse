@@ -1427,13 +1427,16 @@ ul.quiet_list {
     font-weight:bold;
     font-size: 1.3em;
     color: #000000;
-    display:inline;
-    float: left;
     padding-top: 20px;
 }
-
+.checkbox_title {
+  font-weight: 500;
+  margin-bottom: 30px;
+  }
 .class_list_element
 {
+  border-bottom: solid 1px #999;
+  padding: 30px 0;
   div
   {
     float: left;
@@ -1441,6 +1444,7 @@ ul.quiet_list {
   table
   {
     margin: 0;
+    width: 100%;
   }
   a{
     margin-top: 5px;
@@ -1454,9 +1458,8 @@ ul.quiet_list {
   }
   label
   {
-    font-weight:bold;
-    font-size: 1.3em;
-    color: #000000;
+    font-weight: 300;
+    font-size: 18px;
     display:inline;
     text-transform: none;
   }
@@ -1476,16 +1479,22 @@ ul.quiet_list {
   }
 }
 
-.manage_classes_panel
-{
-  #sortable li label{
+.manage_classes_panel {
+  #sortable {
+    list-style-type: none;
     margin: 0;
-    padding: 3px 0px 0px 0px ;
-    cursor:move ;
-    height:auto;
+    padding: 0;
+    width:auto;
+
+    li { padding: 0; }
+    label{
+      margin: 0;
+      padding: 3px 0px 0px 0px ;
+      cursor:move ;
+      height:auto;
+      }
     }
-    #sortable { list-style-type: none; margin: 0; padding: 0;width:auto; }
-}
+  }
 
 .portal_class_header {
   margin-bottom: 0;
