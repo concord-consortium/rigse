@@ -49,22 +49,6 @@ module ApplicationHelper
     name.strip.downcase.gsub(/\W+/, '_')
   end
 
-  def display_system_info
-    commit = git_repo_info rescue {:branch => "<b>Error loading git info!</b>"}
-    jnlp = current_settings.jnlp_url || "#"
-    info = <<-HEREDOC
-<span class="tiny menu_h">
-  #{commit[:branch]}
-  | <a href="#{commit[:href]}">#{commit[:short_id]}</a>
-  | #{commit[:author]}
-  | #{commit[:date]}
-  | #{commit[:short_message]}
-  | <a href="#{jnlp}">#{jnlp}</a>
-</span>
-    HEREDOC
-    info.html_safe
-  end
-
   def git_repo_info
     # For some strange reason running repo.head during tests sometimes generates this
     # error running the first time: Errno::ECHILD Exception: No child processes
