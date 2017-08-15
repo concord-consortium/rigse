@@ -16,7 +16,7 @@ html, body {
 /*keep ie happy */
 
 body {
-  font: 100 100%/1.5 museo-sans, verdana, helvetica, arial, sans-serif; }
+  font: 300 100%/1.5 museo-sans, verdana, helvetica, arial, sans-serif; }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
@@ -219,7 +219,7 @@ body#tinymce {
     border-left: solid 1px white; } }
 
 #lead {
-  border-bottom: 1px solid #a1d2d1;
+  border-bottom: 1px solid #0592af;
   clear: both;
   line-height: 1.833;
   margin-bottom: 1.833em;
@@ -459,7 +459,6 @@ body#tinymce {
 
 /* MAIN CONTENT - two columns, #primary on right, #secondary on left */
 #content {
-  font-size: 110%;
   overflow: hidden;
   overflow-y: visible;
   padding-top: 10px;
@@ -948,30 +947,35 @@ form {
     display: block !important;
     font-size: 1em;
     margin-bottom: 0.5em;
-    padding: 0 10px 10px;
+    padding: 5px 20px 10px;
     legend {
       background: transparent;
       display: block;
       font-weight: bold;
       margin-left: 1em 0 0 10px;
       padding: 5px !important; } }
-  label, input, select {
+  label, select {
     display: inline;
-    font-weight: normal; }
+    font-weight: 500; }
+  input {
+    display: inline;
+    font-weight: 300;
+    padding: 10px;
+  }
   .menu_v {
     clear: both;
     margin-left: 10px; } }
 
 label {
-  text-transform: capitalize;
+  text-transform: uppercase;
   font-weight: bold; }
 
 select, textarea, label, button {
   display: block; }
 
 input, textarea {
-  border: 1px solid #a1d2d1;
-  padding: 0.3em 5px; }
+  border: 2px solid #0592af;
+  }
 
 input {
   &.text:focus, &[type='text']:focus {
@@ -992,7 +996,7 @@ textarea {
 
 button {
   background: #ea6d2f;
-  border: none;
+  border: solid 2px #ea6d2f;
   color: white;
   cursor: pointer;
   font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
@@ -1001,7 +1005,7 @@ button {
 input {
   &[type=button], &.button, &[type='submit'] {
     background: #ea6d2f;
-    border: none;
+    border: solid 2px #ea6d2f;
     color: white;
     cursor: pointer;
     font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
@@ -1009,7 +1013,7 @@ input {
 
 button {
   background: #ea6d2f;
-  border: none;
+  border: solid 2px #ea6d2f;
   color: white;
   font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
   padding: 10px 20px; }
@@ -1017,10 +1021,17 @@ button {
 input {
   &[type=button], &.button, &[type=submit] {
     background: #ea6d2f;
-    border: none;
+    border: solid 2px #ea6d2f;
     color: white;
     font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
     padding: 10px 20px; } }
+
+a.button.secondary, button.secondary, input.button.secondary, input[type='submit'].secondary {
+    background: #fff;
+    border: solid 2px #ea6d2f;
+    color: #ea6d2f;
+    font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
+    padding: 10px 20px; }
 
 a.button {
   display: inline-block;
@@ -1041,14 +1052,20 @@ a.button {
 
 button:hover {
   background: #ffc320;
+  border-color: #ffc320;
+  color: #fff;
 }
 
 input {
   &[type=button]:hover, &.button.over, &[type=submit]:hover {
-    background: #ffc320; } }
+    background: #ffc320;
+    border-color: #ffc320;
+    color: #fff; } }
 
 a.button:hover, button.over {
-  background: #ffc320; }
+  background: #ffc320;
+  border-color: #ffc320;
+  color: #fff; }
 
 .container_element {
   .action_menu {
@@ -1226,8 +1243,8 @@ ul.quiet_list {
     margin-right: 15px; } }
 
 .menu_h {
-  margin: 0 0 5px 10px;
-  padding: 5px 0;
+  margin: 0;
+  padding: 10px 0;
   li {
     list-style: none;
     margin-right: 15px; } }
@@ -1895,10 +1912,10 @@ input:-moz-placeholder, textarea:-moz-placeholder { color: #d0d0d0; }
   }
   .aligned {
     ul {
-      margin : 1em 0 0 1em;
+      margin : 15px 0 0 0;
       li {
         float: left;
-        margin-right: 2em;
+        margin-right: 15px;
       }
     }
   }
