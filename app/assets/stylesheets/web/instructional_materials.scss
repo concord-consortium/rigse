@@ -184,12 +184,14 @@
   border: solid 1px #666;
 }
 .showhidedetails {
-  white-space:nowrap;
   float: right;
   font-weight:normal;
+  margin-right: 12px;
+  white-space:nowrap;
   width:100px;
-  a{
-    text-decoration:underline;
+
+  .expandcollapse {
+    color: #ea6d2f;
   }
 }
 .report {
