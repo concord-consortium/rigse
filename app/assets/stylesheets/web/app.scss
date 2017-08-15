@@ -844,7 +844,7 @@ li.item_selectable {
 
 /* TYPE AND LINKS */
 a {
-  color: #479492;
+  color: #ea6d2f;
   text-decoration: none;
   &:visited {
     color: #ea6d2f;
@@ -853,7 +853,7 @@ a {
     color: #ffc320; } }
 
 h2 a, h3 a {
-  font-family: arial, helvetica, sans-serif; }
+  font-family: museo-sans, verdana, helvetica, sans-serif; }
 
 a img {
   border: 0;vertical-align:middle }
@@ -877,6 +877,17 @@ div.hr {
   margin: 20px 0;
   hr {
     display: none; } }
+hr {
+  border: 0;
+  border-top-width: 1px;
+  clear: both;
+  display: block;
+  height: 1px;
+  margin: 20px 0;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  &.hr-thick {
+  border-top: 5px solid #f5f5f5; } }
 
 .copyright {
   letter-spacing: 0.1em; }
@@ -954,9 +965,16 @@ form {
       font-weight: bold;
       margin-left: 1em 0 0 10px;
       padding: 5px !important; } }
-  label, select {
+  label {
     display: inline;
-    font-weight: 500; }
+    font-weight: 500;
+    &.right {
+      display: block;
+      text-align: right; } }
+  select {
+    display: inline;
+    font-weight: 300;
+    }
   input {
     display: inline;
     font-weight: 300;
@@ -973,7 +991,11 @@ label {
 select, textarea, label, button {
   display: block; }
 
-input, textarea {
+select {
+  padding: 10px;
+  }
+
+input, textarea, select {
   border: 2px solid #0592af;
   }
 
@@ -1635,12 +1657,18 @@ table.teacher_class_table th, table.teacher_class_table td
 }
 
 .classsetupform {
-  width: 100%; text-align: left;
+  margin-bottom: 50px;
+  width: 100%;
+  text-align: left;
   #sortable li label{
     margin: 0;
-    padding: 3px 0px 0px 0px ;
+    padding: 3px 0 0;
     cursor:move ;
     height:auto;
+    }
+  input[type='text'], textarea {
+    font-weight: 300;
+    padding: 10px;
     }
 }
 .classsetupform tr { vertical-align: top; }
@@ -1648,6 +1676,8 @@ table.teacher_class_table th, table.teacher_class_table td
 .classsetupform td.title{ width: 60px;}
 .classsetupform table { margin: 0;}
 .classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
+
+.new_portal_clazz a { color: #888; }
 
 .offerings{text-align:left;margin:0}
 .offerings tr { vertical-align: top; }

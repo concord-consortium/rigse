@@ -1,36 +1,31 @@
-= javascript_include_tag "class_setup_info.js" 
+= javascript_include_tag "class_setup_info.js"
 .maincontainer.pie
   .container
     .content
       = f.error_messages
     .right
-      - if !(portal_clazz.id.nil?) 
+      - if !(portal_clazz.id.nil?)
         = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
-      .header Class Setup Information
+      %h1 Class Setup Information
       %table.classsetupform
         %tr
-          %td.title{:class=>"left", :style=>"white-space:nowrap"}
-            Class Name:  
-          %td= f.text_field :name, :size => 50
+          %td.title= label_tag :name, 'Class Name:', :class=>"right", :style=>"white-space:nowrap"
+          %td= f.text_field :name
         %tr
-          %td.title{:class=>"left"}
-            Term: 
+          %td.title= label_tag :semester, 'Term:', :class=>"right", :style=>"white-space:nowrap"
           %td= f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string")
         - if !(portal_clazz.id.nil?)
           %tr
-            %td.title{:class=>"left"}
-              Teacher(s): 
+            %td.title= label_tag :teachers, 'Teachers:', :class=>"right", :style=>"white-space:nowrap"
             %td{:class=>"left"}= render :partial => 'portal/teachers/table_for_clazz_setup', :locals => {:portal_clazz => portal_clazz}
         %tr
-          %td.title{:class=>"left"}
-            Description: 
+          %td.title= label_tag :description, 'Description:', :class=>"right", :style=>"white-space:nowrap"
           %td= f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
         - if portal_clazz.new_record? || !APP_CONFIG[:lock_classword]
           %tr
-            %td.title{ :class=>"left", :style=>"white-space:nowrap"}
-              Class Word:
+            %td.title= label_tag :class_word, 'Class Word:', :class=>"right", :style=>"white-space:nowrap"
             %td
-              = f.text_field :class_word, :size => 24
+              = f.text_field :class_word
 
         - if portal_clazz.new_record?
           %tr
@@ -44,8 +39,7 @@
 
         - if Admin::Settings.default_settings.enable_grade_levels?
           %tr
-            %td.title
-              Grade Levels: 
+            %td.title= label_tag :grade_levels, 'Grade Levels:', :class=>"right", :style=>"white-space:nowrap"
             %td
               %table{:style=>"width: 100%;"}
                 - cols = 4
@@ -59,13 +53,13 @@
                     = label_tag tag_name, name
         - if !(portal_clazz.id.nil?)
           = render :partial => 'manage_materials', :locals => {:portal_clazz => portal_clazz}
-
+      %hr{:class => 'hr-thick'}
       .right
         %table{:width=>"100%"}
           %tr
             %td{:style=>"text-align:right"}
               %span.create_button
-                = f.submit 'Save', {:class => 'pie'} 
+                = f.submit 'Save', {:class => 'pie'}
                 .create_in_progress{:style => "display: none;"}
                   .status
                     %span.wait_image
@@ -74,7 +68,7 @@
                       Please wait while your class is created
               &nbsp;&nbsp;
               - if portal_clazz.id.nil?
-                = link_to "Cancel", home_url 
+                = link_to "Cancel", home_url
               - else
                 = link_to "Cancel", materials_portal_clazz_url(portal_clazz)
 
