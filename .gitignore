@@ -93,7 +93,6 @@ users_error*
 users_updated.csv
 *.sublime-project
 *.sublime-workspace
-config/paperclip.yml
 chromedriver.log
 public/assets/
 public/*/calendar_date_select

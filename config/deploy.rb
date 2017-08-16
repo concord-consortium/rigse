@@ -257,7 +257,6 @@ namespace :deploy do
       ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml &&
       ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml &&
       ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml &&
-      ln -nfs #{shared_path}/config/paperclip.yml #{release_path}/config/paperclip.yml &&
       ln -nfs #{shared_path}/config/aws_s3.yml #{release_path}/config/aws_s3.yml &&
       ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml &&
       ln -nfs #{shared_path}/config/padlet.yml #{release_path}/config/padlet.yml &&
@@ -324,10 +323,10 @@ namespace :setup do
 
   desc "setup the NCES districts: download and configure NCES districts"
   task :districts, :roles => :app do
-    run_remote_rake "portal:setup:download_nces_data --trace"  
+    run_remote_rake "portal:setup:download_nces_data --trace"
     run_remote_rake "portal:setup:import_nces_from_files --trace"
     run_remote_rake "portal:setup:create_districts_and_schools_from_nces_data --trace"
-  end 
+  end
 end
 
 #############################################################
