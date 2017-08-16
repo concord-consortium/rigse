@@ -13,8 +13,8 @@ Feature: Student must give consent for research study
   Scenario: Teacher signs up a student, student them must give consent on logging in
     When I am logged in with the username teacher
     And I am on "Student Roster" page for "My Class"
-    And I follow "Register and add new student"
-    And I should see "Register and Add New Student"
+    And I follow "Register & Add New Student"
+    And I should see "Register & Add New Student"
     And I should not see "Your age"
     Then I fill in the following:
       | user_first_name            | Example  |
