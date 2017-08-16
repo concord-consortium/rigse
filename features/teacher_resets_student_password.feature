@@ -19,7 +19,7 @@ Feature: Teacher can reset a students password
     When I fill in "New Password" with "new_password"
     And I fill in "Confirm New Password" with "new_password"
     And I press "Save"
-    Then I should see "Class Name : Class_with_no_students"
+    Then I should see "Class Name: Class_with_no_students"
     When I log out
     And I login with username: student password: new_password
     Then I should see "Signed in successfully."

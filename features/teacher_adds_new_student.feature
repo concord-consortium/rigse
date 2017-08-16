@@ -29,8 +29,8 @@ Feature: Teacher adds a new student
     And the student "student" belongs to class "Physics"
     And I login with username: teacher
     And I am on "Student Roster" page for "Mathematics"
-    And I follow "Register and add new student"
-    And I should see "Register and Add New Student"
+    And I follow "Register & Add New Student"
+    And I should see "Register & Add New Student"
     And I fill in the following:
       | user_first_name            | John   |
       | user_last_name             | Albert |
@@ -48,8 +48,8 @@ Feature: Teacher adds a new student
     And the student "student" belongs to class "Physics"
     And I login with username: teacher
     And I am on "Student Roster" page for "Mathematics"
-    And I follow "Register and add new student"
-    And I should see "Register and Add New Student"
+    And I follow "Register & Add New Student"
+    And I should see "Register & Add New Student"
     And I fill in the following:
       | user_first_name            | John   |
       | user_last_name             | Albert |

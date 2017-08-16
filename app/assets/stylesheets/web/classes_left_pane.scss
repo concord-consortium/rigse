@@ -1,54 +1,31 @@
 /* Padded Content Submenu*/
-div#classes_selected
-{
-    background-color: #fee9aa;
-    color: #000000;
-    font-weight: normal;
-    padding: 0px 20px 5px 25px;
-    text-indent: 20px;
-    
-    div
-    {
-      padding: 3px;
-    }
-    
-    a {
-      color: #000000;
-      display: block;
-      margin: 0;
-      padding: 0px; }
+div#classes_selected {
+  padding: 0px 20px 5px 20px;
 
-    .selected
-    {
-      padding: 3px;
-      background: image-url("class_arrow_horizontal.png");
-      background-repeat: no-repeat;
-      background-position: left top;
-      color: #000000;
-      font-weight: bold;
-    }
-    
-    .upper_of_selected
-    {
-      
-      background: image-url("class_arrow_vertical.png");
-      background-repeat: repeat-y;
-      background-position: left;
-      
-      a.selected {
-        background: none;
-       }
-    }
-    
+  div {
+    padding: 3px; }
+
+  a {
+    display: block;
+    margin: 0;
+    padding: 0px; }
+
+  .selected a {
+    color: #313131;
+    font-weight: 500; }
+
 }
 
+#secondary .clazz_list_container {
+  li:last-child {
+    border-bottom: solid 1px #fff;
+    padding-bottom: 20px; }
+}
 
 .create_link,
-.manage_classes_link
-{
+.manage_classes_link {
+  margin: 20px;
   a.button {
     /* this was the only property not already deifned in a.button */
-    _background: #f6f2e2;
-  }
+    _background: #f6f2e2; }
 }
-

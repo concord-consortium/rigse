@@ -1,13 +1,13 @@
-- students = clazz_offering.clazz.students 
+- students = clazz_offering.clazz.students
 - learners = clazz_offering.learners
 - if clazz_offering.clazz.students.length > 0 && (clazz_offering.inprogress_students_count > 0 || clazz_offering.completed_students_count > 0)
   - students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
   %div
     %div{:class => cycle('right', 'right even')}
       - clazz = clazz_offering.clazz
-      - runnable = clazz_offering.runnable 
+      - runnable = clazz_offering.runnable
       %div
-        %table.recent_activity_table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"width:100%;"}
+        %table.recent_activity_table{:border=>0,:cellpadding=>0,:cellspacing=>0,:style=>"margin:10px;width:845px;"}
           %tr
             %th{:colspan=>2}
               .class_offering_name
@@ -15,14 +15,14 @@
                 = runnable.name
               .showhidedetails
                 %span.expandcollapse{:id=>"oExpandCollapseText_#{clazz_offering.id}"} +
-                = link_to('Show detail', 'javascript: void(0);', :onclick => "showHideActivityDetails('#{clazz_offering.id}',this,'#{get_recent_student_report_portal_offering_url(clazz_offering)}')")
+                = link_to('Show Detail', 'javascript: void(0);', :onclick => "showHideActivityDetails('#{clazz_offering.id}',this,'#{get_recent_student_report_portal_offering_url(clazz_offering)}')")
           %tr
             %td.investigation_info{:style=>"vertical-align:top"}
               %div
                 %table{:border=>0,:cellpadding=>0,:cellspacing=>0}
                   %tr
                     %td
-                      Class Size = 
+                      Class Size =
                       = clazz.students.length
                   %tr
                     %td{:colspan=>2}
