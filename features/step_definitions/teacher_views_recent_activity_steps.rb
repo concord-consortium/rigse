@@ -25,7 +25,7 @@ Then /^I should see the progress of the student$/ do
     page.should have_xpath("//table/tbody/tr/td[@class='LeftMost_legend_completed']")
     page.should_not have_xpath("//table/tbody/tr/td[@class='RightMost_legend_not_started']")
   end
- click_link('Show detail')
+ click_link('Show Detail')
  page.should have_xpath("//div[@class='progressbar_container']/div[@class='progressbar']/div[@class='progress']") 
 end
 
