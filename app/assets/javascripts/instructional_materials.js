@@ -32,11 +32,11 @@ function showHideActivityDetails(investigation_id, oLink, strURL){
     var strLinkText = "";
     var strExpandCollapseText = "";
     if(bVisible){
-        strLinkText = "Show detail";
+        strLinkText = "Show Detail";
         strExpandCollapseText = "+";
     }
     else{
-        strLinkText = "Hide detail";
+        strLinkText = "Hide Detail";
         strExpandCollapseText = "-";
     }
 
@@ -129,4 +129,3 @@ function openReportLinkPopup(descriptionText)
 
     return;
 }
-

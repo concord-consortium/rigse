@@ -24,7 +24,7 @@ Feature: Class state should be saved
     When I am on "Student Roster" page for "My Class"
     And I go to the Manage Class Page 
     And I follow "Physics" within left panel for class navigation
-    Then I should see "Class Name : Physics"
+    Then I should see "Class Name: Physics"
     And I should be on "Student Roster" page for "Physics" 
   
   @javascript
@@ -33,5 +33,5 @@ Feature: Class state should be saved
     And I log out
     And I login with username: teacher password: password
     And I follow "Physics" within left panel for class navigation
-    Then I should see "Class Name : Physics"
+    Then I should see "Class Name: Physics"
     And I should be on "Student Roster" page for "Physics" 

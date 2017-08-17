@@ -38,6 +38,9 @@
     / add the portal pages javascript and css if defined
     = render :partial => "layouts/portal_pages_library"
 
+    / add the external css if defined
+    = render :partial => "layouts/external_css"
+
     / TODO: See if there's a less un-Rails-like calendar widget which will go in the asset pipeline
     = calpicker_includes "silver"
 
@@ -58,8 +61,7 @@
     /[if lt IE 10]
       = javascript_include_tag("pie/PIE")
 
-    - if USING_GOOGLE_ANALYTICS
-      = javascript_tag google_analytics_config
+    = google_analytics_config
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
 
   %body{:class => 'blank', :'ng-app' => 'cc-portal'}

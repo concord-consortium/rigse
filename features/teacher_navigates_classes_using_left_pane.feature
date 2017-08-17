@@ -30,11 +30,3 @@ Feature: Teacher navigates using left pane
     When I follow "My Class"
     And I follow "Assignments"
     Then I should be on Instructional Materials page for "My Class"
-
-
-  Scenario: Teacher visits Full Status page
-    When I follow "My Class"
-    And I follow "Full Status"
-    Then I should be on the full status page for "My Class"
-
-

@@ -16,14 +16,8 @@
       a, a:visited, a:active {
         text-transform: capitalize;
         cursor: pointer;
-        color: $_color;
-        font-weight: bold;
-        text-decoration: none;
-        padding: 2px 8px 0px 2px;
-        background-color: $_bg_color; }
-      a:hover {
-        color: $_color_hover;
-        background-color: $_bg_color_hover; } }
+        text-decoration: none; }
+      a:hover { } }
     li.selected {
       a, a:visited, a:active {
         background-color: blue;
@@ -66,8 +60,6 @@ a.rollover:hover {
 .action_menu {
   margin: 0 !important;
   padding: 3px 10px;
-  background-color: #fee9aa;
-  color: #53857c;
   ul {
     li {
       list-style-type: none; } }
@@ -107,17 +99,7 @@ a.rollover:hover {
       background: transparent;
       li {
         background: transparent;
-        a, a:visited, a:active {
-          color: #fff;
-          font-weight: normal;
-          text-align: center;
-          margin: 7px 0;
-          padding: 3px 7px;
-          /* CSS3 */
-          @include background-image(linear-gradient(#f3951d, #dd6e0d));
-          -moz-border-radius: 12px;
-          -webkit-border-radius: 12px;
-          border-radius: 12px; }
+        a, a:visited, a:active { }
         a.rollover {
           background: transparent;
           border-radius: 0px;

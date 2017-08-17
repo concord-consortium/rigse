@@ -38,8 +38,6 @@
       = link_to 'Student Roster', roster_portal_clazz_url(portal_clazz)
     %div{:class => class_setup_link_class}
       = link_to 'Class Setup', edit_portal_clazz_url(portal_clazz)
-    %div{:class => full_status_link_class}
-      = link_to 'Full Status', fullstatus_portal_clazz_url(portal_clazz)
     - if bookmarks_enabled # Portal::BookmarkHelper
       %div{:class => class_bookmarks_link_class}
         = link_to 'Links', portal_clazz_bookmarks_url(portal_clazz)

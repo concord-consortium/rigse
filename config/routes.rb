@@ -650,6 +650,7 @@ RailsPortal::Application.routes.draw do
 
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do
+        devise_for :users
         resources :countries
         resources :projects
         resources :teachers do
@@ -747,6 +748,7 @@ RailsPortal::Application.routes.draw do
     match '/getting_started' => 'home#getting_started', :as => :getting_started
     match '/about' => 'home#about', :as => :about
     match '/report' => 'home#report', :as => :report
+    match '/collections' => 'home#collections', :as => :about
     match '/test_exception' => 'home#test_exception', :as => :test_exception
     match '/' => 'home#index', :as => :root
     match '/requirements' => 'home#requirements', :as => :requirements

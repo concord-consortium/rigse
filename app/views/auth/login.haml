@@ -143,6 +143,7 @@
           - providerPath = omniauth_authorize_path('user', provider, after_sign_in_path: @after_sign_in_path)
           = link_to "Log In with #{provider.to_s.titleize}", providerPath, class: 'button',
               id: "#{provider.to_s.underscore}_login_button", style: "color: white; width: inherit"
+          %br
 
     %script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"}
     = javascript_include_tag 'jquery.placeholder'

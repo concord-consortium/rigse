@@ -33,3 +33,41 @@ ENV['REPORT_DOMAINS']    ||= '*.concord.org concord-consortium.github.io'
 # This the input to the SHA-256 HMAC so the max secret length should be 32 bytes (longer secrets are first hashed to 32 bytes)
 # This can be generated in the Rails console via `SecureRandom.random_bytes(32)`
 # ENV['JWT_HMAC_SECRET']  ||= "<32 bytes of random characters>"
+
+# ASN_API_KEY
+#
+# A key for using the ASN standards service API.
+# See http://asn.jesandco.org/
+# See http://toolkit.asn.desire2learn.com/documentation/asn-search
+#
+
+# PORTAL_PAGES_LIBRARY_URL
+#
+# Path to portal-pages "library" dir containing
+# portal-pages.js and portal-pages.css
+# E.g. PORTAL_PAGES_LIBRARY_URL=http://localhost:10000/library
+#
+
+# EXTERNAL_CSS_URL
+#
+# Full path to site-redesign.css
+# E.g. EXTERNAL_CSS_URL=http://localhost:10000/site-redesign/site-redesign.css
+#
+
+# GOOGLE_ANALYTICS_ACCOUNT
+#
+# Key for the GA account.
+
+# SCHOOLOGY_CONSUMER_KEY
+# SCHOOLOGY_CONSUMER_SECRET
+#
+# Schoology key and secret for Schoology SSO oauth.
+#
+
+# GOOGLE_CLIENT_KEY
+# GOOGLE_CLIENT_SECRET
+#
+# Google key and secret for Google SSO oauth.
+#
+
+

@@ -28,7 +28,9 @@ class User < ActiveRecord::Base
     where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[token_authentication_key], Time.now]).joins(:access_grants).select("users.*").first
   end
 
-  NO_EMAIL_STRING='no-email-'
+  NO_EMAIL_STRING = 'no-email-'
+  NO_EMAIL_DOMAIN = 'concord.org'
+
   has_many :investigations
   has_many :activities
   has_many :interactives
@@ -226,45 +228,63 @@ class User < ActiveRecord::Base
         return authentication.user
       end
 
-      # there is no authentication for this provider and uid
-      # see if we should create a new authentication for an existing user
-      # or make a whole new user
-      email = auth.info.email || "#{Devise.friendly_token[0,20]}@example.com"
-
+      #
+      # Check for an existing user with this email.
       # the devise validatable model enforces unique emails, so no need find_all
-      existing_user_by_email = User.find_by_email email
+      #
+      existing_user_by_email = User.find_by_email auth.info.email
 
       if existing_user_by_email
-        if existing_user_by_email.authentications.find_by_provider auth.provider
-          throw "Can't have duplicate email addresses: #{email}. " +
-                "There is an user with an authentication for this provider #{auth.provider} " +
-                "and the same email already."
-        end
-        # There is no authentication for this provider and user
         user = existing_user_by_email
+
+        #
+        # Check if this is a student. This shouldn't be the case if we have
+        # an email stored.
+        #
+        if user.portal_student
+          throw "Error: found portal student with persisted email from #{auth.proivder}."
+        end
+
       else
+        #
         # no user with this email, so make a new user with a random password
+        # if a teacher finishes the registration this generated email will be replaced
+        # with the real email from the provider. If a student finishes the registration
+        # the generate email will remain.
+        #
+        login = auth.provider + "-" + auth.uid
+        email = NO_EMAIL_STRING + login + '@' + NO_EMAIL_DOMAIN
         pw = Devise.friendly_token.first(12)
+
         user = User.create!(
-          login:    email,
-          email:    email,
-          first_name: auth.extra.first_name,
-          last_name:  auth.extra.last_name,
+          login:        login,
+          email:        email,
+          first_name:   auth.extra.first_name   || auth.info.first_name,
+          last_name:    auth.extra.last_name    || auth.info.last_name,
           password: pw,
           password_confirmation: pw,
           skip_notifications: true
         )
         user.confirm!
       end
-      # create new authentication for this user that we found or created
-      user.authentications.create(
-        provider: auth.provider,
-        uid:      auth.uid
-        # token:    auth.credentials.token
-      )
+
+      #
+      # Create new authentication for this user that we found or created
+      # if one does not exist.
+      #
+      if ! user.authentications.find_by_provider auth.provider
+        user.authentications.create(
+          provider: auth.provider,
+          uid:      auth.uid
+          # token:    auth.credentials.token
+        )
+      end
+
       user
     end
   end
+
+
 
   def removed_investigation
     unless self.has_investigations?
@@ -315,6 +335,13 @@ class User < ActiveRecord::Base
 
   def inactive_message
     user_active? ? super : "You cannot login since your account has been suspended."
+  end
+
+  #
+  # Determine if this user is an oauth user
+  #
+  def is_oauth_user?
+    self.authentications.length > 0
   end
 
   def name

@@ -20,7 +20,10 @@
         %td.show_border
           = roster_row.name
         %td.show_border{:title => roster_row.login}
-          = roster_row.login
+          - if roster_row.student.user.is_oauth_user?
+            #{roster_row.student.user.authentications[0].provider.titleize} user
+          - else
+            = roster_row.login
         %td.show_border{:title => I18n.t("RosterNoLastLoginHeading") }
           = roster_row.last_login
         %td.show_border{:title => I18n.t("RosterAssignmentsHeading") }
@@ -36,6 +39,11 @@
                           class: "change_password" }
                           
           - if policy(roster_row.student.user).reset_password?
-            = link_to 'Change Password', reset_password_user_path(roster_row.student.user),
-              :title => I18n.t("RosterChangePassword", name: roster_row.name),
-              :class => "change_password"
+            - if roster_row.student.user.is_oauth_user?
+              = link_to 'Change Password', '#', 
+                :onclick => "javascript:Portal.confirm({message: 'This student is authenticated as a #{roster_row.student.user.authentications[0].provider} user. You cannot change this password.', noCancel: true } )",
+                :class => "change_password"
+            - else
+              = link_to 'Change Password', reset_password_user_path(roster_row.student.user),
+                :title => I18n.t("RosterChangePassword", name: roster_row.name),
+                :class => "change_password"

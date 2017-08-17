@@ -16,8 +16,8 @@ function get_Add_Register_Student_Popup(strURL)
     }
     var lightboxconfig={
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
-        title:"Register and Add New Student",
-        width:400,
+        title:"Register & Add New Student",
+        width:500,
         height:350
     };
     student_list_modal = new Lightbox(lightboxconfig);

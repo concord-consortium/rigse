@@ -49,22 +49,6 @@ module ApplicationHelper
     name.strip.downcase.gsub(/\W+/, '_')
   end
 
-  def display_system_info
-    commit = git_repo_info rescue {:branch => "<b>Error loading git info!</b>"}
-    jnlp = current_settings.jnlp_url || "#"
-    info = <<-HEREDOC
-<span class="tiny menu_h">
-  #{commit[:branch]}
-  | <a href="#{commit[:href]}">#{commit[:short_id]}</a>
-  | #{commit[:author]}
-  | #{commit[:date]}
-  | #{commit[:short_message]}
-  | <a href="#{jnlp}">#{jnlp}</a>
-</span>
-    HEREDOC
-    info.html_safe
-  end
-
   def git_repo_info
     # For some strange reason running repo.head during tests sometimes generates this
     # error running the first time: Errno::ECHILD Exception: No child processes
@@ -1349,9 +1333,10 @@ module ApplicationHelper
   end
 
   def google_analytics_config
-    <<CONFIG
+    if ENV['GOOGLE_ANALYTICS_ACCOUNT']
+      javascript_tag <<CONFIG
 var _gaq = _gaq || [];
-_gaq.push(['_setAccount', '#{GOOGLE_ANALYTICS_ACCOUNT}']);
+_gaq.push(['_setAccount', '#{ENV['GOOGLE_ANALYTICS_ACCOUNT']}']);
 _gaq.push(['_trackPageview']);
 
 (function() {
@@ -1360,6 +1345,7 @@ _gaq.push(['_trackPageview']);
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 CONFIG
+   end
   end
 
   # This fixes an error in polymorphic_url brought on because the Admin::Settings model name is plural.

@@ -16,13 +16,16 @@ def login_as(username)
 end
 
 def login_with_ui_as(username, password)
-  visit "/home"
-  within(".header-login-box") do
-    fill_in("header_login", :with => username)
-    fill_in("header_password", :with => password)
-    click_button("Log In")
+
+  visit "/users/sign_in"
+
+  within("form[@id='new_user']") do
+    fill_in("user_login",       :with => username)
+    fill_in("user_password",    :with => password)
+    click_button("Sign in")
     @cuke_current_username = username
   end
+
   user = User.find_by_login(username)
   user_first_name = user.first_name
   user_last_name = user.last_name
@@ -83,7 +86,7 @@ Given /the following users[(?exist):\s]*$/i do |users_table|
       end
       user.save!
       user.confirm!
-      
+
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...
     end
@@ -183,12 +186,12 @@ Then /^the location should be "([^"]*)"$/ do |location|
   current_url.should == location
 end
 
-Then /^I should see the button "([^"]*)"$/ do |locator| 
+Then /^I should see the button "([^"]*)"$/ do |locator|
   msg = "no button '#{locator}' found"
   find(:xpath, XPath::HTML.button(locator), :message => msg)
 end
 
-Then /^I should not see the button "([^"]*)"$/ do |button| 
+Then /^I should not see the button "([^"]*)"$/ do |button|
   page.should have_no_button(button)
 end
 
@@ -196,11 +199,11 @@ Given /^PENDING/ do
   pending
 end
 
-When /^(?:|I )accept the dialog$/ do 
+When /^(?:|I )accept the dialog$/ do
   page.driver.browser.switch_to.alert.accept
 end
 
-When /^(?:|I )dismiss the dialog$/ do 
+When /^(?:|I )dismiss the dialog$/ do
   page.driver.browser.switch_to.alert.dismiss
 end
 
@@ -224,7 +227,7 @@ When /^the newly opened window (should|should not) have content "(.*)"$/ do |pre
 end
 
 When /^Help link should not appear in the top navigation bar$/ do
-  find('#help').should_not be_visible
+  find('#help-link').should_not be_visible
 end
 
 When /^(?:|I )close the newly opened window$/ do

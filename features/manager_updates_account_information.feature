@@ -22,7 +22,7 @@ Feature: A manager updates account information for another user
       | username | changed_email          |
       | student  | test1@mailintator.com  |
       | teacher  | test2@mailintator.com  |
-  
+
   Scenario Outline: Managers can change a users password
     When I am logged in with the username mymanager
     And I am on the user list page
@@ -35,7 +35,7 @@ Feature: A manager updates account information for another user
     When I log out
     And I login with username: <userlogin> password: <new_password>
     Then I should see "Welcome"
-    And I should see "My Preferences"
+    And I should see "Settings"
 
     Examples:
       | username      | userlogin | new_password |
@@ -51,4 +51,3 @@ Feature: A manager updates account information for another user
     And I activate the user from user list by searching "justsignedup"
     Then I should be on the user list page
     And I should see "Activation of user, joe ( justsignedup ) complete."
-

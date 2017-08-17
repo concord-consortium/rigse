@@ -18,8 +18,11 @@ source "http://rubygems.org"
 
   gem "devise",               "~>2.1.0"
   gem 'devise-encryptable'
+
   gem 'omniauth'
-  gem 'omniauth-oauth'  # for schoology integration
+  gem 'omniauth-oauth'                      # For schoology integration.
+  gem "omniauth-google-oauth2"              # For google login integration.
+
   gem 'test-unit',            '~> 3.0'
 
   gem "rails",                "~> 3.2.22"

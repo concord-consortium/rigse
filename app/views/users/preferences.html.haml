@@ -1,4 +1,4 @@
-%h2
+%h1
   User Preferences
 = form_for @user do |form|
   .item
@@ -20,9 +20,13 @@
         %li
           = submit_tag 'Save'
         %li
-          = submit_tag 'Cancel'
+          = submit_tag 'Cancel', :class => 'button secondary'
         %li
-          = link_to "Change Password", reset_password_user_path(@user),:class => "button"
+          - if @user.is_oauth_user?
+            = submit_tag "Change Password", :class => "secondary", :type => "button", :onclick => "javascript:Portal.confirm({message: 'You are logged in as a #{@user.authentications[0].provider} user. You cannot change your password here.', noCancel: true})"
+          - else
+            = link_to "Change Password", reset_password_user_path(@user), :class => "button secondary"
+
 
 :sass
   #flash
