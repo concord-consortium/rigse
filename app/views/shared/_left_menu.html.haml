@@ -18,6 +18,11 @@
         %a{:href => preferences_user_path(current_visitor)}
           %i{:class => 'icon-settings'}
           &nbsp;Settings
+      %li
+        %a{:href => favorites_user_path(current_visitor)}
+          %i{:class => 'icon-favorite'}
+          &nbsp;Favorites
+
       - if @original_user != current_visitor
         - switch_user_form_id = "switch_user_id_#{@original_user.id}"
         %a{:href => 'javascript: void(0);', :onclick => "$('#{switch_user_form_id}').submit();"}
