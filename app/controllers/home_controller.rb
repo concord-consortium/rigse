@@ -70,6 +70,9 @@ class HomeController < ApplicationController
   def about
   end
 
+  def collections
+  end
+
   def requirements
   end
 
