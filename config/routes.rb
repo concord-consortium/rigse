@@ -649,6 +649,7 @@ RailsPortal::Application.routes.draw do
 
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do
+        devise_for :users
         resources :countries
         resources :projects
         resources :teachers do
