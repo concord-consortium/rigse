@@ -22,6 +22,7 @@ Portal.showOverlay = function(clickHandler,modalId,fixedPosition) {
 };
 
 Portal.showModal = function(modalId, specialMsg, fixedPosition) {
+  jQuery('html, body').css({'overflow': 'hidden'});
   Portal.showOverlay(Portal.hideModal,modalId,fixedPosition);
 
   if (jQuery(modalId + ' .close').length === 0) {
@@ -36,6 +37,7 @@ Portal.showModal = function(modalId, specialMsg, fixedPosition) {
 };
 
 Portal.hideModal = function() {
+  jQuery('html, body').css({'overflow': 'auto'});
   jQuery('.modal').fadeOut('fast');
   jQuery('#modal-overlay').fadeOut('slow');
   jQuery('.special-msg').text('').hide();
