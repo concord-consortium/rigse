@@ -149,6 +149,7 @@ RailsPortal::Application.routes.draw do
 
     namespace :portal do
 
+      get 'classes/:id/external_report/:report_id' => 'clazzes#external_report', :as => :external_class_report
       resources :clazzes, :path => :classes do
         member do
           post :add_teacher
