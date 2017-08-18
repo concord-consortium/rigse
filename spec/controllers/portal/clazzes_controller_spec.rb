@@ -813,11 +813,10 @@ describe Portal::ClazzesController do
         :id => @mock_clazz.id
       }
     end
-    it "should redirect to home page for anonymous user" do
-      sign_in @normal_user
+    it "should not allow access for anonymous user" do
+      sign_out :user
       get :fullstatus, @params
       response.should_not be_success
-      response.should redirect_to root_url
     end
     it "should retrieve the class when user is not anonymous user" do
       sign_in @authorized_teacher_user
