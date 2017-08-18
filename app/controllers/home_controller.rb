@@ -71,6 +71,7 @@ class HomeController < ApplicationController
   end
 
   def collections
+    render layout: 'minimal'
   end
 
   def requirements

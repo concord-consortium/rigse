@@ -18,6 +18,11 @@
         %a{:href => preferences_user_path(current_visitor)}
           %i{:class => 'icon-settings'}
           &nbsp;Settings
+      %li
+        %a{:href => favorites_user_path(current_visitor)}
+          %i{:class => 'icon-favorite'}
+          &nbsp;Favorites
+
       - if @original_user != current_visitor
         - switch_user_form_id = "switch_user_id_#{@original_user.id}"
         %a{:href => 'javascript: void(0);', :onclick => "$('#{switch_user_form_id}').submit();"}
@@ -26,13 +31,13 @@
         = form_for @original_user, :url => switch_user_path(@original_user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
           = hidden_field_tag 'user[id]', @original_user.id
           = hidden_field_tag 'commit', 'Switch'
-  - if current_visitor.has_role?('admin', 'manager', 'researcher') || current_visitor.portal_teacher
-    %ul.aux-links
-      - if current_visitor.has_role?('admin', 'manager','researcher') || current_visitor.is_project_admin? || current_visitor.is_project_researcher?
-        %li= link_to 'Admin', admin_path
-      - current_visitor.projects.each do |project|
-        - project.links.each do |link|
-          %li= link_to link.name, link.href
+    - if current_visitor.has_role?('admin', 'manager', 'researcher') || current_visitor.portal_teacher
+      %ul.aux-links
+        - if current_visitor.has_role?('admin', 'manager','researcher') || current_visitor.is_project_admin? || current_visitor.is_project_researcher?
+          %li= link_to 'Admin', admin_path
+        - current_visitor.projects.each do |project|
+          - project.links.each do |link|
+            %li= link_to link.name, link.href
 
   - if top_node
     .padded_content

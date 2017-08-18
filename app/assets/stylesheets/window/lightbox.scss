@@ -33,7 +33,9 @@
 .lightbox .content {
     background-color:#fff;
     color:#00233a;
+    height: auto !important;
     overflow:auto;
+    padding-bottom: 55px;
 }
 
 .lightbox .w {
