@@ -10,12 +10,15 @@ class API::V1::SessionsController < Devise::SessionsController
   # The #create method (through the /api/v1/users/sign_in route) receives:
   # {"user"=>{"login"=>"login", "password"=>"password"}}
   #
-  # It return a json object with a success message, and a path which the user should
-  # be redirected to
+  # It return a json object with a message, and a redirect_path which the user should
+  # be redirected to. For example:
+  # {"message": "Login success.", "redirect_path": "/cool-project-page"}
   #
-  # this method also accepts an additional top level json paramter "after_sign_in_path"
-  # if this is set, in most cases it will override the default path
-  #
+  # This method can optionally receive an additional top level json paramter "after_sign_in_path".
+  # For example:
+  # {"user"=>{"login"=>"login", "password"=>"password"}, "after_sign_in_path": "/cool-project-page"}
+  # If the method receives "after_sign_in_path", it will affect what redirect_path the
+  # method passes back. See ApplicationController#after_sign_in_path_for for details.
   def create
 
     username = params[:user][:login]
