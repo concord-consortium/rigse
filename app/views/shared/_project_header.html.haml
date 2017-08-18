@@ -1,4 +1,7 @@
 %div{:id => "portal-pages-header", :style => { alignContent: "left" } }
 
 %script{:type=>"text/javascript"}
-  PortalPages.renderPageHeader( { oauthProviders: Portal.oauthProviders }, "portal-pages-header");
+  PortalPages.renderPageHeader( { oauthProviders: Portal.oauthProviders
+  - if @after_sign_in_path
+    , afterSigninPath: "#{@after_sign_in_path}"
+  }, "portal-pages-header");
