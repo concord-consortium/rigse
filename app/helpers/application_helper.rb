@@ -1367,4 +1367,22 @@ CONFIG
     end
   end
 
+  def current_user_home_path
+    if current_user.nil?
+      # anonymous home is the '/'
+      root_path
+    elsif current_user.portal_student
+      my_classes_path
+    elsif APP_CONFIG[:recent_activity_on_login] &&
+          current_user.portal_teacher &&
+          current_user.has_active_classes?
+      # Teachers with active classes are redirected to the "Recent Activity" page
+      recent_activity_path
+    else
+      # this is a generic logged in user (not teacher or student)
+      # or it is teacher without active classes
+      getting_started_path
+    end
+  end
+
 end
