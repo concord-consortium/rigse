@@ -53,7 +53,7 @@ describe Admin::SiteNoticesController do
       sign_out :user
       sign_in @guest_user
       get :new
-      response.should redirect_to("/")
+      response.should redirect_to("/getting_started")
 
     end
   end
