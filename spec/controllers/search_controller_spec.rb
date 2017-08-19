@@ -67,11 +67,11 @@ describe SearchController do
 
   describe "GET index" do
     describe "when its a student visiting" do
-      it "should redirect to root" do
+      it "should redirect to student home" do
         student # Ensure student_user has a PortalStudent
-        controller.stub!(:current_visitor).and_return(student_user)
+        controller.stub!(:current_user).and_return(student_user)
         get :index
-        response.should redirect_to("/")
+        response.should redirect_to("/my_classes")
       end
     end
 
