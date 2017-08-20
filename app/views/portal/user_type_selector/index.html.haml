@@ -7,7 +7,12 @@
   // but this is cleared out after logout.
   //
   if (!Portal.currentUser.isAnonymous) {
-    PortalPages.renderSignupModal({omniauth: true});
+    PortalPages.renderSignupModal(
+        {
+            omniauth: true,
+            omniauth_origin: "#{session[:omniauth_origin]}"
+        }
+    );
   } else {
     window.location.href = "/";
   }
