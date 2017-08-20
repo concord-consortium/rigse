@@ -1,5 +1,14 @@
 .landing-container
 
 :javascript
-  PortalPages.renderSignupModal({omniauth: true});
+  if (!Portal.currentUser.isAnonymous) {
+    PortalPages.renderSignupModal(
+        {
+            omniauth: true,
+            omniauth_origin: "#{session[:omniauth_origin]}"
+        }
+    );
+  } else {
+    window.location.href = "/";
+  }
 
