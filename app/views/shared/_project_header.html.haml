@@ -1,7 +1,12 @@
 %div{:id => "portal-pages-header", :style => { alignContent: "left" } }
 
+- options = {}
+- if @after_sign_in_path
+  - options[:afterSigninPath] = @after_sign_in_path
+- if local_assigns[:extra_options]
+  - options.merge!(extra_options)
+
 %script{:type=>"text/javascript"}
-  PortalPages.renderPageHeader( { oauthProviders: Portal.oauthProviders
-  - if @after_sign_in_path
-    , afterSigninPath: "#{@after_sign_in_path}"
-  }, "portal-pages-header");
+  var pageHeaderOptions = #{raw options.to_json};
+  pageHeaderOptions.oauthProviders = Portal.oauthProviders;
+  PortalPages.renderPageHeader( pageHeaderOptions, "portal-pages-header");
