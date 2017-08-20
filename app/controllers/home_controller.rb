@@ -68,6 +68,7 @@ class HomeController < ApplicationController
   end
 
   def about
+    render layout: 'minimal'
   end
 
   def collections
