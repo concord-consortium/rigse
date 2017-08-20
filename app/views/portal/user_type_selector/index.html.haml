@@ -1,11 +1,6 @@
 .landing-container
 
 :javascript
-  //
-  // Would be nice to redirect to:
-  // #{session[:omniauth_origin]}
-  // but this is cleared out after logout.
-  //
   if (!Portal.currentUser.isAnonymous) {
     PortalPages.renderSignupModal(
         {
