@@ -48,4 +48,8 @@ RUN cp docker/prod/config/settings.yml config/settings.yml
 
 EXPOSE 80
 
+# this font is used by imagemagick to add attribution to the images in the image library
+# the DejaVu-Sans font is provided by the docker image this one is built on 
+ENV WATERMARK_FONT=DejaVu-Sans
+
 CMD ./docker/prod/run.sh
