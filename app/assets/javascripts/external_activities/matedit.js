@@ -1,7 +1,7 @@
 function get_edit_resource_popup(external_activity_id, popup_options){
   var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
-        title:"Edit External Activity"
+        title:"Edit Options"
     };
     list_lightbox=new Lightbox(lightboxConfig);
     jQuery(".n.move_handle").css({"width":"400px"});
