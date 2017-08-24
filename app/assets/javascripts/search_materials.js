@@ -203,7 +203,119 @@ function close_popup()
     list_lightbox = null;
 }
 
+function addMaterialBookmark(material_id, material_type, class_id) {
+    close_popup()
+	jQuery.ajax({
+        type:       'POST',
+        url:        '/api/v1/materials/add_material_bookmark',
+        dataType:   'json',
+		data: {
+            material_id:    material_id,
+            material_type:  material_type,
+            class_id:       class_id
+        }
 
+   	}).done(function (data) {
+
+        console.log("INFO bookmark success", data);
+
+        var lightboxConfig = {
+            title:   "Success",
+            content: 
+                "<div style='padding:10px'>" +
+                    "<div style='text-align: center'>Link added<br/><br/></div>" + 
+                    "<div style='text-align: center'>" +
+                        "<a href='#' class='button' " +
+                        "onclick='javascript:list_lightbox.handle.destroy()'>OK</a>" +
+                    "</div>" +
+                "</div>"
+        };
+
+        list_lightbox = new Lightbox(lightboxConfig);
+        list_lightbox.handle.center();
+ 
+   	}).fail(function(err) {
+        console.log("ERROR bookmark error", err);
+        console.log("ERROR bookmark response" + err.responseText);
+    });
+
+}
+
+function get_Bookmark_To_Class_Popup(   material_id,
+                                        material_type, 
+                                        lightbox_material_text ) {
+
+    console.log("INFO get_Bookmark_To_Class_Popup", material_id, material_type);
+    console.log("INFO getting classes...");
+    classes_api = "/api/v1/classes/mine";
+
+    var lightboxConfig = {
+        content:    "<div style='padding:10px'>Loading classes... Please Wait.</div>",
+        title:      "Link " + lightbox_material_text + " to a Class."
+    };
+ 
+    var options = {
+        method:     'get',
+        parameters: {},
+        onSuccess: function(transport) {
+
+            list_lightbox = new Lightbox(lightboxConfig);
+            var text = transport.responseText;
+
+            console.log("INFO found class data " + text);
+
+            var response    = jQuery.parseJSON(text);
+            var classes     = response.classes;
+
+            // http://localhost:3000/api/v1/materials/add_bookmark?class_id=129&name=1foo&url=bar
+            
+            var content = "<div id='windowcontent' style='padding:10px'>";
+
+            //
+            // Class list table
+            //
+            content += "<table class='material_detail'>";
+            for(var i = 0; i < classes.length; i++) {
+                content += "<tr>";
+                content += "<td class='clazz_name'>";
+                content +=  "<a href='#' " +
+                            "onclick=\"addMaterialBookmark(" + 
+                                        material_id + ", " +
+                                        "'" + material_type + "', " + 
+                                        classes[i].id +  
+                                        ")\">" + classes[i].name + "</a>";
+                content += "</td>";
+                content += "</tr>";
+            }
+            content += "</table>";
+
+            //
+            // Button table
+            //
+            content += "<table class='classdata'>";
+            content += "<tr>";
+
+            content +=  "<td>";
+            content +=  "<a href='#' class='button' " +
+                        "onclick='javascript:list_lightbox.handle.destroy()'>Cancel</a>";
+            content += "</td>";
+            content += "</tr>";
+            content += "</table>";
+
+            content += "</div>";
+
+            list_lightbox.handle.setContent(content);
+            
+            // list_lightbox.handle.destroy();
+
+            var contentheight=$('windowcontent').getHeight();
+            var contentoffset=40;
+            list_lightbox.handle.setSize(500,contentheight+contentoffset+20);
+            list_lightbox.handle.center();
+        }
+    };
+    new Ajax.Request(classes_api, options);
+}
 
 function get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_text, skip_reload)
 {

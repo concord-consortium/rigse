@@ -350,12 +350,27 @@ module Materials
         }
       end
 
-      if current_visitor.portal_teacher && material.respond_to?(:offerings)
-        links[:assign_material] = {
-            text: "Assign to a Class",
-            url: "javascript:void(0)",
-            onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}')"
-        }
+      if current_visitor.portal_teacher 
+        if material.respond_to?(:offerings)
+            #
+            # Create assign button
+            #
+            links[:assign_material] = {
+                text: "Assign to a Class",
+                url: "javascript:void(0)",
+                onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}')"
+            }
+        else
+            #
+            # Create link (bookmark) button
+            #
+            links[:bookmark_material] = {
+                text: "Add Link for Class",
+                url: "javascript:void(0)",
+                onclick: "get_Bookmark_To_Class_Popup(#{material.id},'#{material.class.name.underscore}','#{t('material').pluralize.capitalize}')"
+            }
+ 
+        end
       end
 
       if current_visitor.has_role?('admin') && material.respond_to?(:materials_collections)

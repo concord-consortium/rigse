@@ -642,6 +642,69 @@ class API::V1::MaterialsController < API::APIController
   end
 
 
+  #
+  # Add a material bookmark
+  #
+  def add_material_bookmark
+
+    if !current_user || current_user.anonymous?
+      render json: {:message => "Cannot create bookmark for non-logged in user."}, :status => 400
+      return
+    end
+
+	material_id     = params['material_id']	
+	material_type   = params['material_type']
+    class_id 	    = params['class_id']
+
+    if material_id.nil? || material_type.nil? || class_id.nil?
+      render json: {:message => "Missing material_id (#{material_id}), material_type (#{material_type}) or class id ({#class_id}). "}, :status => 400
+      return
+    end
+
+    material    = get_materials_item(material_id, material_type)
+    name        = material.name
+    url         = view_context.run_url_for(material, {})
+
+    if name.nil? || url.nil? 
+      render json: {:message => "Material missing name (#{name}) or url (#{url}). "}, :status => 400
+      return
+    end
+
+    props = {
+      name: name,
+      url:  url
+    }
+    clazz = Portal::Clazz.find_by_id(class_id)
+
+    puts "Finding bookmark name (#{name}) for class ({#clazz}). "
+
+    mark = Portal::Bookmark.where("name = ? AND clazz_id = ?", name, clazz.id)
+
+    puts "Found bookmark #{mark}."
+
+    if mark.size > 0
+      render json:  { :message =>   "Bookmark name (#{name}) already " <<
+                                    "exists for class id (#{class_id}). "}, 
+                    :status => 200
+      return
+    end
+
+    puts "Creating bookmark #{name}."
+
+    mark        = Portal::GenericBookmark.new(props)
+    mark.user   = current_visitor
+    mark.clazz  = clazz
+    mark.save!
+
+    render json: 
+                {  :message =>  "Bookmark name (#{name}) " <<
+                                "created for class id (#{class_id}). "}, 
+                :status     =>  200
+
+  end
+
+
+
   private
 
 
