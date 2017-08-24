@@ -199,8 +199,6 @@ RailsPortal::Application.routes.draw do
 
       resources :learners do
         member do
-          get :open_response_report
-          get :multiple_choice_report
           get :report
           get :bundle_report
           get :activity_report
@@ -213,11 +211,7 @@ RailsPortal::Application.routes.draw do
         member do
           get :deactivate
           get :activate
-          get :open_response_report
-          get :multiple_choice_report
           get :report
-          get :separated_report
-          post :report_embeddable_filter
           post :answers
           post :offering_collapsed_status
           post :get_recent_student_report

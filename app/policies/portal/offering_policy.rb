@@ -50,22 +50,6 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin?
   end
 
-  def open_response_report?
-    class_teacher_or_admin?
-  end
-
-  def multiple_choice_report?
-    class_teacher_or_admin?
-  end
-
-  def separated_report?
-    class_teacher_or_admin?
-  end
-
-  def report_embeddable_filter?
-    class_teacher_or_admin?
-  end
-
   def offering_collapsed_status?
     teacher?
   end

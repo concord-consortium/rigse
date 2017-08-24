@@ -162,9 +162,6 @@ module RailsPortal
       pie/PIE.js
       calpicker/calendar_date_select.js
       calpicker/silver.css
-      contentflow_configured.css
-      contentflow_configured.js
-      contentflow_report_fix.js
       web/search_materials.css
       readme.css
       print.css
