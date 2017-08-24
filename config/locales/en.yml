@@ -81,7 +81,7 @@ en:
     report_client: Report Auth Client
   matedit:
     assign_to_class: Assign To Class
-    edit__options: Edit Resource Options
+    edit_options: Edit Options
     archive: Archive
     unarchive: Unarchive
     archive_confirm: "Are you sure you want to archive this activity?"

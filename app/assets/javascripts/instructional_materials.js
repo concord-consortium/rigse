@@ -121,7 +121,7 @@ function openReportLinkPopup(descriptionText)
                     "</div>";
     var reportLinkPopup = new Lightbox({
         width:  410,
-        height: 125,
+        height: 165,
         title: "Message",
         content: popupHtml,
         type: Lightbox.type.ALERT

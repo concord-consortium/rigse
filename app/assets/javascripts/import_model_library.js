@@ -4,8 +4,8 @@ jQuery(function() {
   var lightboxconfig={
           content:"<div style='padding:10px'>Loading...Please Wait.</div>",
           title:"Import Model Library",
-          width:400,
-          height:160
+          width:450,
+          height:200
       },import_model_library_modal;
 
   function ajaxSuccess(data) {
