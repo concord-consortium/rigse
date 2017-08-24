@@ -10,7 +10,7 @@ function showCopyClassPopup(copy_clazz_id, clazz_name, class_word, class_descrip
 
     var popupConfig = {
         id: 'CopyClass',
-        width:  500,
+        width:  520,
         height: 270,
         title:"Copy Class",
         content: null
