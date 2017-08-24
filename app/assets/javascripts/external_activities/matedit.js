@@ -5,6 +5,10 @@ function get_edit_resource_popup(external_activity_id, popup_options){
     };
     list_lightbox=new Lightbox(lightboxConfig);
     jQuery(".buttons")[0].innerHTML = jQuery(".buttons")[0].innerHTML + "<a href='javascript:void(0)' style='float:right;margin-top: 5px;margin-right: 10px' class='button' onclick='close_popup()'>Cancel</a>"
+
+    // This 999 template is used because we cannot use route helpers in assets
+    // The docker build process precompiles the assets and while doing so the route helpers
+    // are not available.
     var target_url = "/eresources/999/edit";
     if (popup_options && popup_options.use_short_form) {
       target_url = "/eresources/999/edit_basic"
