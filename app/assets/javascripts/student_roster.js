@@ -18,7 +18,7 @@ function get_Add_Register_Student_Popup(strURL)
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         title:"Register & Add New Student",
         width:500,
-        height:350
+        height:360
     };
     student_list_modal = new Lightbox(lightboxconfig);
     var clazz_id = $("portal_clazz_id").value;
