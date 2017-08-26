@@ -255,44 +255,23 @@ module Materials
         end
       end
 
-      if current_visitor.anonymous? or external
-        links[:preview] = {
-          url: view_context.run_url_for(material, {}),
-          text: 'Preview',
-          target: '_blank'
-        }
-      else
-        if material.teacher_only?
-          links[:preview] = {
-            url: view_context.run_url_for(material, {:teacher_mode => true}),
-            text: 'Preview',
-            target: '_blank'
-          }
-        else
-          links[:preview] = {
-            type: 'dropdown',
-            text: 'Preview &#9660;',
-            expandedText: 'Preview &#9650;',
-            url: 'javascript:void(0)',
-            className: 'button preview_Button Expand_Collapse_Link',
-            options: [
-              {
-                text: 'As Teacher',
-                url: view_context.run_url_for(material, {:teacher_mode => true}),
-                target: '_blank',
-                className: ''
-              },
-              {
-                text: 'As Student',
-                url: view_context.run_url_for(material, {}),
-                target: '_blank',
-                className: ''
-              }
-            ]
 
-          }
-        end
-      end
+
+      #
+      # TODO if current visitor is not anonymous and
+      # the material is not teacher_only, then it can be
+      # previewed in a teacher mode or a student mode.
+      # This needs to be fixed to work with portal-pages.
+      #
+      # if !current_visitor.anonymous? && !external && !material.teacher_only? 
+      #     ...
+      #
+
+      links[:preview] = {
+        url: view_context.run_url_for(material, {}),
+        text: 'Preview',
+        target: '_blank'
+      }
 
       if external && material.launch_url
         if policy(material).matedit?
