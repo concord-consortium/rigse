@@ -267,8 +267,9 @@ function get_Bookmark_To_Class_Popup(   material_id,
             var response    = jQuery.parseJSON(text);
             var classes     = response.classes;
 
-            // http://localhost:3000/api/v1/materials/add_bookmark?class_id=129&name=1foo&url=bar
-            
+            //
+            // Main div
+            //
             var content = "<div id='windowcontent' style='padding:10px'>";
 
             //
@@ -290,24 +291,21 @@ function get_Bookmark_To_Class_Popup(   material_id,
             content += "</table>";
 
             //
-            // Button table
+            // Button div
             //
-            content += "<table class='classdata'>";
-            content += "<tr>";
-
-            content +=  "<td>";
+            content +=  "<div style='text-align: center'>";
             content +=  "<a href='#' class='button' " +
                         "onclick='javascript:list_lightbox.handle.destroy()'>Cancel</a>";
-            content += "</td>";
-            content += "</tr>";
-            content += "</table>";
+            content += "</div>";
 
+
+            //
+            // Close main div
+            //
             content += "</div>";
 
             list_lightbox.handle.setContent(content);
             
-            // list_lightbox.handle.destroy();
-
             var contentheight=$('windowcontent').getHeight();
             var contentoffset=40;
             list_lightbox.handle.setSize(500,contentheight+contentoffset+20);
