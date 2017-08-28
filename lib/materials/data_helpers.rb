@@ -255,18 +255,6 @@ module Materials
         end
       end
 
-
-
-      #
-      # TODO if current visitor is not anonymous and
-      # the material is not teacher_only, then it can be
-      # previewed in a teacher mode or a student mode.
-      # This needs to be fixed to work with portal-pages.
-      #
-      # if !current_visitor.anonymous? && !external && !material.teacher_only? 
-      #     ...
-      #
-
       links[:preview] = {
         url: view_context.run_url_for(material, {}),
         text: 'Preview',
