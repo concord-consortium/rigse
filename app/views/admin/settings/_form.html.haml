@@ -77,9 +77,15 @@
           %li
             = f.label :show_collections_menu, "Show Collections Menu:", :style => "display:inline;"
             = f.check_box :show_collections_menu
+
+          %li
+            = f.label :enable_social_media, "Enable social media sharing", :style => "display:inline;"
+            = f.check_box :enable_social_media
+
           %li
             = f.label :auto_set_teachers_as_authors, "Auto set teachers as authors:", :style => "display:inline;"
             = f.check_box :auto_set_teachers_as_authors
+
           %li
             = f.label :custom_search_path, "Custom Search Path:", :style => "display:inline;"
             = f.text_field :custom_search_path
