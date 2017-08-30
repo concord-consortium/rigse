@@ -159,8 +159,8 @@ module Materials
         # Determine if we should enable social media sharing
         #
         enable_sharing = true
-        if material.is_a?(ExternalActivity) && !material.enable_sharing
-            enable_sharing = false
+        if material.is_a?(ExternalActivity)
+            enable_sharing = material.enable_sharing
         end
 
         mat_data = {
