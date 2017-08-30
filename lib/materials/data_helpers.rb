@@ -8,6 +8,7 @@ module Materials
     # The main difference between this sanitization method and one provided by Rails natively is
     # is that Sanitize module *always* returns valid HTML input.
     def safe_sanitize(html_fragment)
+      html_fragment = "" if (html_fragment.nil?)
       Sanitize.fragment(html_fragment, Sanitize::Config::BASIC)
     end
 
@@ -58,6 +59,10 @@ module Materials
         # output is a valid HTML. Invalid HTML can totally break React view components.
         description = material.respond_to?(:description_for_teacher) && current_visitor.portal_teacher && material.description_for_teacher.present? ?
             safe_sanitize(material.description_for_teacher) : safe_sanitize(material.abstract_text)
+
+        full_description = safe_sanitize(material.description)
+        abstract = material.respond_to?(:abstract) ? safe_sanitize(material.abstract) : ""
+        description_for_teacher = material.respond_to?(:description_for_teacher) ? safe_sanitize(material.description_for_teacher) : ""
 
         #
         # Find favorite data
@@ -159,6 +164,9 @@ module Materials
           id: material.id,
           name: material.name,
           description: description,
+          full_description: full_description,
+          abstract: abstract,
+          description_for_teacher: description_for_teacher,
           class_name: material.class.name,
           class_name_underscored: material.class.name.underscore,
           icon: {
