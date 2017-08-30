@@ -79,6 +79,7 @@ def generate_default_settings_and_jnlps_with_mocks
     :require_user_consent?          => false,
     :allow_default_class            => false,
     :allow_default_class?           => false,
+    :enable_social_media?           => true,
     :default_cohort                 => nil,
     :jnlp_cdn_hostname              => '',
     :enabled_bookmark_types         => []

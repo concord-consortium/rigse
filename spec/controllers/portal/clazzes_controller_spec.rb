@@ -45,6 +45,7 @@ describe Portal::ClazzesController do
     @mock_settings.stub(:use_student_security_questions).and_return(false)
     @mock_settings.stub!(:require_user_consent?).and_return(false)
     @mock_settings.stub!(:default_cohort).and_return(nil)
+    @mock_settings.stub!(:enable_social_media?).and_return(true)
     Admin::Settings.stub(:default_settings).and_return(@mock_settings)
   end
 

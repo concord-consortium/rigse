@@ -145,6 +145,17 @@
                     No
                   (Collections menu will appear in the navbar.)
               %li
+                Enable social media sharing:
+                - if admin_settings.enable_social_media?
+                  %b
+                    Yes
+                  (Resource lightbox will display social media sharing links.)
+                - else
+                  %b
+                    No
+                  (Resource lightbox will not display social media sharing 
+                  links.)
+              %li
                 Auto set new teachers as authors:
                 - if admin_settings.auto_set_teachers_as_authors?
                   %b

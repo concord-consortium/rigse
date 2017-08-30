@@ -23,6 +23,7 @@ describe HomeController do
     @test_settings.stub!(:allow_default_class).and_return(false)
     @test_settings.stub!(:allow_adhoc_schools).and_return(false)
     @test_settings.stub!(:show_collections_menu).and_return(false)
+    @test_settings.stub!(:enable_social_media?).and_return(true)
     @test_settings.stub!(:auto_set_teachers_as_authors).and_return(false)
     @test_settings.stub!(:wrap_home_page_content?).and_return(true)
     @test_settings.stub!(:teacher_home_path).and_return(nil)
@@ -81,6 +82,7 @@ describe HomeController do
     before(:each) do
       @test_settings.stub!(:home_page_content).and_return("stubbed homepage content")
       @test_settings.stub(:custom_search_path)
+      @test_settings.stub(:enable_social_media)
     end
 
     # note: in the tests below the "slug" param is always optional

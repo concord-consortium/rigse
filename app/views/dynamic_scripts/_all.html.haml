@@ -9,12 +9,15 @@
 :javascript
   if (typeof Portal === 'undefined') {
     Portal = {
-      siteName: "#{APP_CONFIG[:site_name]}"
+      siteName: "#{APP_CONFIG[:site_name]}",
+      settings: {}
     }
   }
 
+  Portal.settings.enable_social_media = #{Admin::Settings.default_settings.enable_social_media?};
   Portal.oauthProviders = #{raw providers.to_json};
   Portal.theme = "#{APP_CONFIG[:theme]}";
 
 = render :partial => 'dynamic_scripts/api_paths'
 = render :partial => 'dynamic_scripts/current_user'
+
