@@ -11,7 +11,7 @@
 </td></tr>
 <tr><td align="left" style="background:#ffffff;padding:16px;">
 <p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 16px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">Welcome, <%= @user.first_name %>!</p>
-<p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 20px;font-weight:bold;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">Thanks for creating an account on the #{APP_CONFIG[:site_name]}.</p>
+<p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 20px;font-weight:bold;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">Thanks for creating an account on the <%= APP_CONFIG[:site_name] %>.</p>
 <p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 16px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">To complete your registration, click the button below.</p>
 <p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 16px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;"><%= link_to 'Confirm Account', confirmation_url(@user, :confirmation_token => @user.confirmation_token), :style=>'background:#75a643; border:none; border-radius:4px; color:#ffffff; display:inline-block; margin:0; padding:8px 17px; text-decoration:none;' %></p>
 <p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 12px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">The Concord Consortium<br />
