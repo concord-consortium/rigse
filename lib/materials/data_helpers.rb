@@ -159,7 +159,7 @@ module Materials
         # Determine if we should enable social media sharing
         #
         enable_sharing = true
-        if material.is_a?(ExternalActivity)
+        if material.is_a?(ExternalActivity) && material.respond_to?(:enable_sharing)
             enable_sharing = material.enable_sharing
         end
 
