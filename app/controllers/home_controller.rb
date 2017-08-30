@@ -204,7 +204,63 @@ class HomeController < ApplicationController
 
   end
 
+
+  #
+  # Valid set of stem finder filter names and values.
+  #
+  @@STEM_FILTER_VALIDATION =
+    {   "subject"       =>  {
+                                "physics-chemistry" => {},
+                                "life-sciences"     => {},
+                                "engineering-tech"  => {},
+                                "earth-space"       => {},
+                                "mathematics"       => {}
+                            },
+        "grade-level"   =>  {
+                                "elementary-school" => {},
+                                "middle-school"     => {},
+                                "high-school"       => {},
+                                "higher-education"  => {}
+                            } 
+    }
+
+
+  #
+  #
+  # Handle /stem-reources/ routes to either pre-populate stem finder filters
+  # or render an individual resource lightbox.
+  #
+  #
   def stem_resources
+
+    # logger.info("INFO stem_resources called.")
+
+    #
+    # See if we are filtering categories in URL to pass to
+    # stem finder.
+    #
+    if params[:filter_name] && params[:filter_value]
+        filter_name     = params[:filter_name]
+        filter_value    = params[:filter_value]
+
+        # logger.info("INFO filter_name/filter_value #{filter_name} #{filter_value}.")
+
+        if  @@STEM_FILTER_VALIDATION.key?(filter_name) &&
+            @@STEM_FILTER_VALIDATION[filter_name].key?(filter_value)
+        
+            # logger.info("INFO Rendering index...")
+
+            index
+            return
+
+        end
+    end
+
+    # logger.info("INFO Could not match stem finder filters.")
+
+    #
+    # See if we are rendering a specifiec resource in a lightbox
+    #
     case params[:type]
     when "activity", "sequence"
       @lightbox_resource = ExternalActivity.find_by_id(params[:id])
@@ -213,6 +269,7 @@ class HomeController < ApplicationController
     else
       @lightbox_resource = nil
     end
+
     if @lightbox_resource
       @lightbox_resource = materials_data([@lightbox_resource], nil, 4).shift()
       @page_title = @lightbox_resource[:name]

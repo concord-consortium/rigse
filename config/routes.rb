@@ -767,6 +767,8 @@ RailsPortal::Application.routes.draw do
 
     match '/stem-resources/:type/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
+    match '/stem-resources/:filter_name/:filter_value' => 'home#stem_resources', :as => :stem_resources
+
     match '/:controller(/:action(/:id))'
 
     root :to => 'home#index'
