@@ -159,7 +159,15 @@ module Materials
                 description:    statement.description
             });
         end
- 
+
+        #
+        # Determine if we should enable social media sharing
+        #
+        enable_sharing = true
+        if material.is_a?(ExternalActivity) && material.respond_to?(:enable_sharing)
+            enable_sharing = material.enable_sharing
+        end
+
         mat_data = {
           id: material.id,
           name: material.name,
@@ -207,6 +215,8 @@ module Materials
           related_materials: related_materials,
 
           standard_statements: standard_statements_json,
+
+          enable_sharing: enable_sharing,
 
           slug: slug,
           stem_resource_url: view_context.stem_resources_url(stem_resource_type, material.id, slug)

@@ -39,6 +39,13 @@
       - else
         = f.check_box :is_featured, :disabled => true
       This activity should be displayed to anonymous users on the landing page
+    - if @external_activity.respond_to?(:enable_sharing)
+      = field_set_tag 'Enable social media sharing' do
+        - if current_user.has_role? 'admin','manager','author'
+          = f.check_box :enable_sharing
+        - else
+          = f.check_box :enable_sharing, :disabled => true
+        The resource lightbox for this activity will display social media sharing links.
     = field_set_tag 'Has Pre And Post Tests' do
       = f.check_box :has_pretest
       This unit has pre- and post-tests available.
