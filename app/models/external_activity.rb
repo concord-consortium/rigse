@@ -152,6 +152,7 @@ class ExternalActivity < ActiveRecord::Base
         append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
         append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
         if append_auth_token
+          AccessGrant.prune!
           token = learner.user.create_access_token_valid_for(3.minutes)
           append_query(uri, "token=#{token}")
         end
