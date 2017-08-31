@@ -117,7 +117,7 @@ en:
   RosterRemoveStudentLong: "Remove Student %{name} from %{clazz}"
   RosterChangePassword: "Change password for %{name}"
 
-  UserBadName: "cannot be empty, must include letter characters and cannot use non-printing characters or %{restricted_characters}." 
+  UserBadName: "cannot be empty, must include letter characters and cannot use non-printing characters or %{restricted_characters}."
 
   HomePage:
     MyClassesNav: My Classes
@@ -169,57 +169,6 @@ en:
         Instructions: |
           To get started, click the logo in the top left to view all lessons.
           You can set up a class by clicking the “Add a New Class” link on the left
-
-'en-NEXTGEN':
-  activerecord:
-    models:
-      ExternalActivity : Activity
-      external_activity:
-        zero: activities
-        one: activity
-        other: activities
-  will_paginate:
-    models:
-      external_activity:
-        zero: activities
-        one: activity
-        other: activities
-'en-INTERACTIONS':
-  investigation: investigation
-  activerecord:
-    models:
-      investigation: Investigation
-
-'en-RITES':
-  activerecord:
-    models:
-      investigation: Investigation
-  investigation: investigation
-  will_paginate:
-    investigation:
-      page_entries_info:
-        single_page:
-          zero: "No investigations found"
-          one: "Showing 1 investigation"
-          other: "Showing all %{count} investigations"
-        single_page_html:
-          zero: "No investigations found"
-          one: "Showing 1 investigation"
-          other: "Showing all %{count} investigations"
-        multi_page: "Displaying investigations %{from} - %{to} of %{count} in total"
-        multi_page_html: "Displaying investigations %{from} - %{to} of %{count} in total"
-'en-GENIVERSE':
-  recent_activity:
-    no_offerings: ''
-    no_students:  ''
-    no_activity:  'This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available.'
-  offerings_for_class:
-    no_materials: "This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available."
-  class_full_status:
-    no_students: "This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available."
-    no_assignments: "This area is active only when materials additional to Geniverse in use. At the present time, no other materials are available."
-  class_materials:
-    no_assignments: "Currently, this class is engaged in Geniverse."
 
 'en-ITSI-LEARN':
   material: activity
