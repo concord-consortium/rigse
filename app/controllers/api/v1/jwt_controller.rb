@@ -13,8 +13,8 @@ class API::V1::JwtController < API::APIController
 
       user = grant.user
     else
-      return error('You must be logged in to use this endpoint') if current_visitor.anonymous?
-      user = current_visitor
+      return error('You must be logged in to use this endpoint') if !current_user
+      user = current_user
     end
 
     return error('Missing firebase_app parameter') if params[:firebase_app].blank?
