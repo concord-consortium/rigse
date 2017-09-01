@@ -85,53 +85,56 @@ describe HomeController do
 
     # note: in the tests below the "slug" param is always optional
     it "should return 200 when a valid activity is used" do
-      get :stem_resources, :type => "activity", :id => activity.id
+      get :stem_resources, :type => "activity", :id_or_filter_value => activity.id
       response.should be_success
-      get :stem_resources, :type => "activity", :id => activity.id, :slug => "test"
+      get :stem_resources, :type => "activity", :id_or_filter_value => activity.id, :slug => "test"
       response.should be_success
     end
     it "should return 404 when an unknown activity is used" do
-      get :stem_resources, :type => "activity", :id => 999999999999999
+      get :stem_resources, :type => "activity", :id_or_filter_value => 999999999999999
       response.should_not be_success
       get :stem_resources, :type => "activity", :id => 999999999999999, :slug => "test"
       response.should_not be_success
     end
 
     it "should return 200 when a valid sequence is used" do
-      get :stem_resources, :type => "sequence", :id => sequence.id
+      get :stem_resources, :type => "sequence", :id_or_filter_value => sequence.id
       response.should be_success
-      get :stem_resources, :type => "sequence", :id => sequence.id, :slug => "test"
+      get :stem_resources, :type => "sequence", :id_or_filter_value => sequence.id, :slug => "test"
       response.should be_success
     end
     it "should return 404 when an unknown sequence is used" do
-      get :stem_resources, :type => "sequence", :id => 999999999999999
+      get :stem_resources, :type => "sequence", :id_or_filter_value => 999999999999999
       response.should_not be_success
-      get :stem_resources, :type => "sequence", :id => 999999999999999, :slug => "test"
+      get :stem_resources, :type => "sequence", :id_or_filter_value => 999999999999999, :slug => "test"
       response.should_not be_success
     end
 
     it "should return 200 when a valid interactive is used" do
-      get :stem_resources, :type => "interactive", :id => interactive.id
+      get :stem_resources, :type => "interactive", :id_or_filter_value => interactive.id
       response.should be_success
-      get :stem_resources, :type => "interactive", :id => interactive.id, :slug => "test"
+      get :stem_resources, :type => "interactive", :id_or_filter_value => interactive.id, :slug => "test"
       response.should be_success
     end
     it "should return 404 when an unknown interactive is used" do
-      get :stem_resources, :type => "interactive", :id => 999999999999999
+      get :stem_resources, :type => "interactive", :id_or_filter_value => 999999999999999
       response.should_not be_success
-      get :stem_resources, :type => "interactive", :id => 999999999999999, :slug => "test"
+      get :stem_resources, :type => "interactive", :id_or_filter_value => 999999999999999, :slug => "test"
       response.should_not be_success
     end
 
-    it "should return 404 when an unknown type is used" do
-      get :stem_resources, :type => "unknown-type", :id => 1
-      response.should_not be_success
-      get :stem_resources, :type => "unknown-type", :id => 1, :slug => "test"
-      response.should_not be_success
+    #
+    # This should fall through to the home page as a search filter.
+    #
+    it "should return 200 when an unknown type is used" do
+      get :stem_resources, :type => "unknown-type", :id_or_filter_value => 1
+      response.should be_success
+      get :stem_resources, :type => "unknown-type", :id_or_filter_value => 1, :slug => "test"
+      response.should be_success
     end
 
     it "should include the required Javascript when a valid activity is used" do
-      get :stem_resources, :type => "activity", :id => activity.id
+      get :stem_resources, :type => "activity", :id_or_filter_value => activity.id
       response.body.should include("auto_show_lightbox_resource")
       response.body.should include("PortalPages.settings.autoShowingLightboxResource = {\"id\":#{activity.id},")
       response.body.should include("PortalPages.renderResourceLightbox(")
@@ -145,7 +148,7 @@ describe HomeController do
     end
 
     it "should set the start of the page title to the resource name" do
-      get :stem_resources, :type => "activity", :id => activity.id
+      get :stem_resources, :type => "activity", :id_or_filter_value => activity.id
       response.body.should include("<title>#{activity.name}")
     end
   end
