@@ -10,6 +10,16 @@ class Portal::ClazzesController < ApplicationController
   before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
   before_filter :student_teacher_admin_or_config, :only => [:show]
 
+  #
+  # Check that the current teacher owns the class they are
+  # accessing.
+  #
+  include RestrictedTeacherController
+  before_filter :check_teacher_owns_clazz, :only => [   :roster,
+                                                        :manage_classes,
+                                                        :materials,
+                                                        :fullstatus ]
+
   def current_clazz
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -533,9 +543,8 @@ class Portal::ClazzesController < ApplicationController
     # authorize @clazz
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
-    unless current_visitor.portal_teacher
-      raise Pundit::NotAuthorizedError
-    end
+
+
     @portal_clazzes = Portal::Clazz.all
     @portal_clazz = Portal::Clazz.find(params[:id])
     if request.xhr?
@@ -574,9 +583,7 @@ class Portal::ClazzesController < ApplicationController
     # authorize @clazz
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
-    unless current_visitor.portal_teacher
-      raise Pundit::NotAuthorizedError
-    end
+
 
     @teacher = current_visitor.portal_teacher;
 
@@ -688,9 +695,7 @@ class Portal::ClazzesController < ApplicationController
     # authorize @clazz
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
-    unless current_visitor.portal_teacher
-      raise Pundit::NotAuthorizedError
-    end
+
 
     @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:id])
 
@@ -722,9 +727,8 @@ class Portal::ClazzesController < ApplicationController
     # authorize @clazz
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
-    unless current_visitor.portal_teacher
-      raise Pundit::NotAuthorizedError
-    end
+
+
     @portal_clazz = Portal::Clazz.find(params[:id]);
 
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
@@ -778,5 +782,6 @@ class Portal::ClazzesController < ApplicationController
     next_url = report.url_for_class(portal_clazz.id, current_visitor, request.protocol, request.host_with_port)
     redirect_to next_url
   end
+
 
 end

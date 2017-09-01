@@ -1,6 +1,15 @@
 class Portal::BookmarksController < ApplicationController
   include Portal::BookmarksHelper
 
+  #
+  # Check that current teacher has permissions to access the clazz
+  #
+  include RestrictedTeacherController
+  before_filter :check_teacher_owns_clazz, :only => [   :add,
+                                                        :add_padlet,
+                                                        :index          ]
+
+
   def index
     @portal_clazz = get_current_clazz
     @bookmarks = Portal::Bookmark.where(clazz_id: @portal_clazz)

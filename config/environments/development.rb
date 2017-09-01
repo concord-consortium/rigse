@@ -45,7 +45,7 @@ RailsPortal::Application.configure do
   config.assets.debug = true
   config.after_initialize do
     Bullet.enable = true
-    Bullet.bullet_logger = true
+    # Bullet.bullet_logger = true
     Bullet.rails_logger = true
     Bullet.add_footer = true
   end
