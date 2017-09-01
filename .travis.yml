@@ -26,7 +26,7 @@ before_script:
   - cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
   - cp config/settings.sample.yml config/settings.yml
   - mysql -e "create database rigse_test;"
-  - mysql -e 'GRANT ALL ON rigse_test.* TO 'travis'@'localhost';'
+  - mysql -uroot -e 'GRANT ALL ON rigse_test.* TO 'travis'@'localhost';'
   - bundle exec spring binstub --all
   - ./bin/rake db:schema:load
   - ./bin/rake db:migrate
