@@ -16,7 +16,6 @@ class Portal::ClazzesController < ApplicationController
   #
   include RestrictedTeacherController
   before_filter :check_teacher_owns_clazz, :only => [   :roster,
-                                                        :manage_classes,
                                                         :materials,
                                                         :fullstatus ]
 
@@ -603,7 +602,11 @@ class Portal::ClazzesController < ApplicationController
 
       position = 1
       arrTeacherClazzPosition.each do |teacher_clazz_id|
+
         teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
+
+        check_teacher_owns_clazz_id(teacher_clazz.clazz_id)
+
         teacher_clazz.position = position;
         if (arrActiveTeacherClazz.include?(teacher_clazz_id))
           teacher_clazz.active = true
