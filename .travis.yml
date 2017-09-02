@@ -45,9 +45,6 @@ cache: bundler
 
 bundler_args: --binstubs --without development
 
-services:
-  - mysql
-
 addons:
   artifacts:
     paths:
