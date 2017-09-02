@@ -66,6 +66,9 @@
         = f.check_box :append_survey_monkey_uid
         Append a unique Survey Monkey user id to the url (e.g. http://www.surveymonkey.com/s/H2Y9H27?c=00001)
       .config
+        = f.check_box :append_auth_token
+        Append a short-lived authentication token
+      .config
         = f.check_box :is_official
         Designate this as an "official" Concord activity in lists
       .config
