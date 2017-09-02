@@ -1,0 +1,23 @@
+FROM travisci/ci-garnet:packer-1499451976
+
+ENV APP_HOME /rigse
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+#
+# Install some basic dev tools
+#
+RUN apt-get update && apt-get install -y vim xvfb firefox
+
+# use a mounted volume so the gems don't need to be rebundled each time
+ENV BUNDLE_PATH /bundle
+
+ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
+  BUNDLE_JOBS=2 \
+  BUNDLE_PATH=/bundle
+
+ENV RAILS_ENV=development
+
+EXPOSE 3000
+
+CMD rails s -b 0.0.0.0

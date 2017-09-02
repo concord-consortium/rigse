@@ -5,8 +5,18 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile-dev
-    command: docker/dev/run.sh
+      dockerfile: Dockerfile-travis
+    
+    # command: docker/dev/run.sh
+
+    #
+    # For debugging, set "command" to "bash" to start a shell.
+    # Additionally specify "stdin_open" and "tty" both set to "true".
+    #
+    stdin_open: true
+    tty: true
+    command: bash
+
     environment:
       DB_HOST: mysql
       DB_USER: root
