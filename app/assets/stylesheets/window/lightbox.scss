@@ -33,9 +33,9 @@
 .lightbox .content {
     background-color:#fff;
     color:#00233a;
-    height: auto !important;
-    overflow:auto;
-    padding-bottom: 55px;
+    // padding-bottom: 55px;
+    // height: auto !important;
+    // overflow:auto;
 }
 
 .lightbox .w {
@@ -172,6 +172,5 @@ div.buttons{
     font-size:18px;
     padding-top:5px;
     cursor:move;
-    width:95%;
     text-align:left;
 }

@@ -348,7 +348,7 @@ function getMessagePopup(message, skip_reload)
 
     var lightboxConfig = {
         width: 375,
-        height: 150,
+        height: 250,
         closeOnNextPopup: true,
         type: Lightbox.type.ALERT,
         content: content,

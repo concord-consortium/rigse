@@ -49,17 +49,6 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I should see "differential calculus"
 
 
-  @javascript  @search
-  Scenario: Teacher should be on materials preview page to preview materials
-    When I follow the "Preview" link for the investigation "differential calculus"
-    Then I should see "As Teacher"
-    And I should see "As Student"
-    And I should be on the search instructional materials page
-    When I follow the "Preview" link for the activity "differential calculus"
-    Then I should see "As Teacher"
-    And I should see "As Student"
-
-
   @javascript @search
   @with_mysql_failures
   Scenario: Teacher can see classes in which materials are assigned on the search page

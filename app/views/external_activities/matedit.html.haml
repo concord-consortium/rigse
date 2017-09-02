@@ -26,45 +26,6 @@
 
     (function() {
       var $ = jQuery;
-      var actionMenuPosition= "static";
-      var actionMenuLeft  = 0;
-      var actionMenuWidth = 0;
-      var actionMenuTop   = 0;
-
-
-      var pinActionMenu = function() {
-        var bodyScroll = $(window).scrollTop();
-
-        var saveActionMenu = function() {
-          actionMenuPosition =  $('.action_menu').css('position');
-          actionMenuWidth  =  $('.action_menu').css('width');
-          actionMenuLeft =  $('.action_menu').offset().left + "px";
-        };
-
-        var restoreActionMenu = function() {
-          $('.action_menu').css('position', actionMenuPosition || "static");
-          $('.action_menu').css('top', null);
-          $('.action_menu').css('left', null);
-          $('.action_menu').css('z-index',null);
-          $('.action_menu').css('width', actionMenuWidth);
-        };
-
-        if( $('.action_menu').css('position') != 'fixed') {
-          actionMenuTop = $('.action_menu').offset().top;
-          saveActionMenu();
-        }
-
-        if (bodyScroll > actionMenuTop) {
-          $('.action_menu').css('top', '0px');
-          $('.action_menu').css('position', 'fixed');
-          $('.action_menu').css('left', actionMenuLeft);
-          $('.action_menu').css('width', actionMenuWidth);
-          $('.action_menu').css('z-index', 10);
-        }
-        else {
-          restoreActionMenu();
-        }
-      };
 
       var adjustIframeContainer = function() {
         var footerHeight = $("#footer").height();
@@ -89,7 +50,6 @@
 
       var registerListeners = function() {
         $(window).resize(resizeIframe);
-        $(window).scroll(pinActionMenu);
       };
 
       $(document).ready(function() {

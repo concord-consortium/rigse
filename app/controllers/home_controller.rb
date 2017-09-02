@@ -204,15 +204,29 @@ class HomeController < ApplicationController
 
   end
 
+
+  #
+  #
+  # Handle /stem-reources/ routes to either pre-populate stem finder filters
+  # or render an individual material resource lightbox.
+  #
+  #
   def stem_resources
+
     case params[:type]
     when "activity", "sequence"
-      @lightbox_resource = ExternalActivity.find_by_id(params[:id])
+      @lightbox_resource = ExternalActivity.find_by_id(params[:id_or_filter_value])
     when "interactive"
-      @lightbox_resource = Interactive.find_by_id(params[:id])
+      @lightbox_resource = Interactive.find_by_id(params[:id_or_filter_value])
     else
-      @lightbox_resource = nil
+      #
+      # Otherwise assume the type is referring to a filter name.
+      # And in this case the id_or_filter_value is a filter value.
+      #
+      index
+      return
     end
+
     if @lightbox_resource
       @lightbox_resource = materials_data([@lightbox_resource], nil, 4).shift()
       @page_title = @lightbox_resource[:name]

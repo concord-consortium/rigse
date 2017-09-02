@@ -1,26 +1,23 @@
 %fieldset
   %legend
-    User: 
+    User:
     = @user.name
 
   .aligned
     %ul.quiet_list
       %li
-        = f.label :first_name, 'First name', :class => "right"
+        = f.label :first_name, 'First name', :class => "right inline"
         = f.text_field :first_name, :live => false, :class => "aligned"
       %li
-        = f.label :last_name, 'Last name', :class=>"right"
+        = f.label :last_name, 'Last name', :class=>"right inline"
         = f.text_field :last_name, :live => false, :class => "aligned"
       - unless current_page?(:controller => 'users', :action => 'preferences')
         %li
-          = f.label :login, 'Login', :class=>"right"
+          = f.label :login, 'Login', :class=>"right inline"
           = f.text_field :login, :live => false, :class => "aligned"
       - if current_visitor.portal_student.blank?
         %li
-          = f.label :email, 'Email', :class=>"right"
+          = f.label :email, 'Email', :class=>"right inline"
           = f.text_field :email, :live => false, :class => "aligned", :disabled => @user.is_oauth_user?
           - if @user.is_oauth_user?
             You are logged in as a #{@user.authentications[0].provider} user. This email address cannot be changed.
-
-
-

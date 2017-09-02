@@ -12,12 +12,11 @@
   %table{:width => "100%"}
     %tr
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :sort_order, 'sort: ', :class => 'right'
+        = label_tag :sort_order, 'sort: ', :class => 'right inline'
         = sort_dropdown(@sort_order, ["Newest","Alphabetical"])
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'matching: ', :class=>"right"
+        = label_tag :filter, 'matching: ', :class=>"right inline"
         = text_field_tag :name, name
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'only mine: ', :class=>"right"
+        = label_tag :filter, 'only mine: ', :class=>"right inline"
         = check_box_tag :only_mine, only_mine
-
