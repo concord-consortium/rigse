@@ -769,6 +769,8 @@ RailsPortal::Application.routes.draw do
 
     match '/:controller(/:action(/:id))'
 
+    get 'robots.:format' => 'robots#index'
+
     root :to => 'home#index'
   end
   # Web interface to show the delayed jobs for admins
