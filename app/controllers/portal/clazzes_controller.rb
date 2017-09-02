@@ -583,6 +583,9 @@ class Portal::ClazzesController < ApplicationController
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
 
+    if current_user.nil? || !current_visitor.portal_teacher
+      raise Pundit::NotAuthorizedError
+    end
 
     @teacher = current_visitor.portal_teacher;
 
@@ -600,12 +603,15 @@ class Portal::ClazzesController < ApplicationController
         arrActiveTeacherClazz = []
       end
 
+      arrTeacherClazzPosition.each do |teacher_clazz_id|
+        o = Portal::TeacherClazz.find(teacher_clazz_id);
+        check_teacher_owns_clazz_id(o.clazz_id)
+      end
+
       position = 1
       arrTeacherClazzPosition.each do |teacher_clazz_id|
 
         teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
-
-        check_teacher_owns_clazz_id(teacher_clazz.clazz_id)
 
         teacher_clazz.position = position;
         if (arrActiveTeacherClazz.include?(teacher_clazz_id))
@@ -616,7 +622,14 @@ class Portal::ClazzesController < ApplicationController
         teacher_clazz.clazz.save!
         teacher_clazz.save!
         position += 1;
+
       end
+
+      #
+      # Reload this otherwise we have stale data in memory
+      # getting passed to our partial below for rendering.
+      #
+      current_user.portal_teacher.teacher_clazzes.reload
 
       render(:update) { |page|
         page.replace_html 'clazz_list_container', :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => @teacher, :selects => []}

@@ -6,7 +6,12 @@ module RestrictedTeacherController
   # Raises Pundit::NotAuthorizedError if the check fails.
   #
   def check_teacher_owns_clazz
-    # logger.info("INFO check_teacher_owns_clazz user #{current_visitor.login} params #{params}")
+
+    if current_user.nil?
+      raise Pundit::NotAuthorizedError
+    end
+
+    # logger.info("INFO check_teacher_owns_clazz user #{current_user.login} params #{params}")
 
     clazz_id = params[:clazz_id]
     if clazz_id.nil?
@@ -25,19 +30,23 @@ module RestrictedTeacherController
   end
 
   #
-  # Check if the clazz_id belongs to the current_visitor.
+  # Check if the clazz_id belongs to the current_user.
   # Raises Pundit::NotAuthorizedError if the check fails.
   #
   def check_teacher_owns_clazz_id(clazz_id)
 
-    # logger.info("INFO check_teacher_owns_clazz_id user #{current_visitor.login} clazz_id #{clazz_id}")
+    if current_user.nil?
+      raise Pundit::NotAuthorizedError
+    end
 
-    unless current_visitor.portal_teacher
+    # logger.info("INFO check_teacher_owns_clazz_id user #{current_user.login} clazz_id #{clazz_id}")
+
+    if !current_user.portal_teacher
       # logger.info("INFO check_teacher_owns_clazz not a teacher.")
       raise Pundit::NotAuthorizedError
     end
 
-    current_visitor.portal_teacher.teacher_clazzes.each do |teacher_clazz|
+    current_user.portal_teacher.teacher_clazzes.each do |teacher_clazz|
       if teacher_clazz.clazz_id == clazz_id
 
         # logger.info("INFO check_teacher_owns_clazz_id authorized.")
