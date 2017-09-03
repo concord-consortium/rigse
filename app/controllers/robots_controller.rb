@@ -2,22 +2,6 @@ class RobotsController < ApplicationController
   
   layout false
 
-  @@STEM_URLS = 
-    {   "subject"       =>  [
-                                "physics-chemistry",
-                                "life-sciences",
-                                "engineering-tech",
-                                "earth-space",
-                                "mathematics"
-                            ],
-        "grade-level"   =>  [
-                                "elementary-school",
-                                "middle-school",
-                                "high-school",
-                                "higher-education"
-                            ] 
-    } 
-
   def index
     if ENV['DYNAMIC_ROBOTS_TXT'] == 'true'
 
@@ -32,17 +16,9 @@ class RobotsController < ApplicationController
             "Allow: /home",
             "Allow: /about",
             "Allow: /collections",
+            "Allow: /stem-resources/*"
         ]
 
-        #
-        # Add stem finder URLs
-        #
-        @@STEM_URLS.each do |filter, values|
-            values.each do |value|
-                lines.push("Allow: /stem-resources/#{filter}/#{value}")
-            end
-        end
-      
         #
         # Add public collections
         #
