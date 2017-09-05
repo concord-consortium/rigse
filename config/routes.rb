@@ -767,6 +767,9 @@ RailsPortal::Application.routes.draw do
 
     match '/stem-resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
+    match '/subject/:id_or_filter_value' => 'home#stem_resources', :type => "subject"
+    match '/grade-level/:id_or_filter_value' => 'home#stem_resources', :type => "grade-level"
+
     match '/:controller(/:action(/:id))'
 
     get 'robots.:format' => 'robots#index'
