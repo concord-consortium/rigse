@@ -132,10 +132,18 @@ en:
         adding new resources, so check back often!
       GettingStarted:
         Heading: Getting Started
-        Instructions: |
-          To get started, click the Concord Consortium logo in the upper left to search all resources
-          or view curated Collections of resources by clicking the link above. You can set up a class
-          by clicking the “Add a New Class” link on the left
+        Instructions_html: |
+          <p>
+          To get started, <b>Add a New Class</b> by clicking the link on the left and enter
+          <b>Class Setup Information</b>, including class name, description, and applicable
+          grade level(s). Create a unique class word, which students will use to enroll in
+          this class.
+          </p>
+          <p>
+          You can then assign resources to this class. Click the Concord Consortium logo
+          in the upper left to search all resources or view curated Collections of
+          resources by clicking the Collections link above.
+          </p>
 
   search:
     only_mine: Show only materials authored by me
@@ -166,7 +174,7 @@ en:
       Intro: |
         Welcome to the High Adventure Science portal.
       GettingStarted:
-        Instructions: |
+        Instructions_html: |
           To get started, click the logo in the top left to view all lessons.
           You can set up a class by clicking the “Add a New Class” link on the left
 
@@ -187,7 +195,7 @@ en:
         data acquisition. This comprehensive project will assist teachers in preparing diverse students
         for STEM careers by engaging them in exciting, inquiry-based science projects.
       GettingStarted:
-        Instructions: |
+        Instructions_html: |
           To get started, click the Activities link on the left to view all activities
           You can set up a class by clicking the “Add a New Class” link on the left
 
@@ -197,7 +205,12 @@ en:
       Intro: |
         Welcome to the Next Generation Science Assessment portal.
       GettingStarted:
-        Instructions: |
-          Try setting up a class by clicking the "Add a New Class" link on the left, and
-          then find assessment tasks to assign by clicking the "Collections" link above
-          and selecting "NGSA Task Collections."
+        Instructions_html: |
+          <p>
+          Try setting up a class by clicking the <b>Add a New Class</b> link on the left, and
+          then find assessment tasks to assign by clicking the <b>Collections</b> link above
+          and find the <b>NGSA Task Collections.</b>
+          </p>
+          <p>
+          For help on using this portal click the Help link on the right.
+          </p>
