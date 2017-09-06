@@ -16,7 +16,9 @@ class RobotsController < ApplicationController
             "Allow: /home",
             "Allow: /about",
             "Allow: /collections",
-            "Allow: /stem-resources/*"
+            "Allow: /stem-resources/*",
+            "Allow: /subject/*",
+            "Allow: /grade-level/*"
         ]
 
         #
