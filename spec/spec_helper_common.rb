@@ -46,6 +46,7 @@ require 'capybara-screenshot/rspec'
 Capybara::Screenshot.prune_strategy = :keep_last_run
 
 Dir.mkdir "tmp/capybara" rescue nil
+Capybara.save_path = "tmp/capybara"
 Capybara.save_and_open_page_path = "tmp/capybara"
 
 require 'remarkable_activerecord'

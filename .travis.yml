@@ -3,8 +3,6 @@ language: ruby
 rvm:
   - "2.2.6"
 
-dist: precise
-
 env:
   matrix:
   - RAILS_ENV=test TEST_SUITE=spec

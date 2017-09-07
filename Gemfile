@@ -193,11 +193,11 @@ end
 group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
-  gem "selenium-webdriver"
+  gem "selenium-webdriver", ">= 3.3"
   gem "cucumber",           "~> 1.3.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
-  gem "capybara",           "~> 1.1.2"
+  gem "capybara",           "~> 2.7.1"
   gem "rspec",              "~> 2.11.0"
   gem "rspec-rails",        "~> 2.11.0"
   gem "email_spec",         "~> 1.2.1"
@@ -205,7 +205,7 @@ group :test, :cucumber do
   gem "ci_reporter",        "~> 1.7.0"
   gem "delorean",           "~> 1.1"
   gem "webmock",            "~> 1.11.0", :require => false
-  gem "capybara-mechanize", "~> 0.3.0"
+  gem "capybara-mechanize"
   gem 'capybara-screenshot'
   gem "codeclimate-test-reporter", require: nil
   gem "connection_pool"

@@ -8,5 +8,5 @@ class Capybara::Mechanize::Browser
     return post_data_without_raw(params)
   end
 
-  alias_method_chain :post_data, :raw
+  # alias_method_chain :post_data, :raw
 end
