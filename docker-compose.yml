@@ -57,6 +57,11 @@ services:
 
       GOOGLE_ANALYTICS_ACCOUNT:
 
+      #
+      # Set to true to enable dynamic robots.txt
+      #
+      DYNAMIC_ROBOTS_TXT: 
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse

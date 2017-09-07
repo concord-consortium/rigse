@@ -227,6 +227,29 @@ class HomeController < ApplicationController
       return
     end
 
+    #
+    # Check that user has permission to view the resource.
+    #
+    if  @lightbox_resource                                      &&
+        @lightbox_resource.respond_to?(:publication_status)     &&
+        @lightbox_resource.publication_status != 'published'
+
+        if current_user.nil?
+            #
+            # Block anonymous user.
+            #
+            @lightbox_resource = nil
+        else 
+            #
+            # For logged in user, block if user is not either resource owner
+            # or admin.
+            #
+            if ! (current_user.id == @lightbox_resource.user_id || current_user.has_role?('admin'))
+                @lightbox_resource = nil
+            end
+        end
+    end
+
     if @lightbox_resource
       @lightbox_resource = materials_data([@lightbox_resource], nil, 4).shift()
       @page_title = @lightbox_resource[:name]

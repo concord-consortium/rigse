@@ -1,2 +1,3 @@
 %p= I18n.t('HomePage.Teacher.Intro')
-%p= I18n.t('HomePage.Teacher.GettingStarted.Instructions')
+-# in newer versions of rails the string will be marked safe just by having the _html suffix
+%p= I18n.t('HomePage.Teacher.GettingStarted.Instructions_html').html_safe
