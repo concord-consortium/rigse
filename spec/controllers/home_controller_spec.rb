@@ -2,9 +2,17 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe HomeController do
   render_views
 
-  let(:activity) { Factory.create(:external_activity, :name => "test activity") }
-  let(:sequence) { Factory.create(:external_activity, :name => "test sequence") }
-  let(:interactive) { Factory.create(:interactive, :name => "test interactive") }
+  let(:activity) { Factory.create(      :external_activity,
+                                        :name => "test activity",
+                                        :publication_status => "published") }
+
+  let(:sequence) { Factory.create(      :external_activity,
+                                        :name => "test sequence",
+                                        :publication_status => "published") }
+
+  let(:interactive) { Factory.create(   :interactive,
+                                        :name => "test interactive",
+                                        :publication_status => "published") }
 
   before(:each) do
 
