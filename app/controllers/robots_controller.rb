@@ -16,7 +16,7 @@ class RobotsController < ApplicationController
             "Allow: /home",
             "Allow: /about",
             "Allow: /collections",
-            "Allow: /stem-resources/*"
+            "Allow: /resources/*"
         ]
 
         #
@@ -24,7 +24,11 @@ class RobotsController < ApplicationController
         #
         collections = Admin::Project.where(:public => true)
         collections.each do |collection|
-            lines.push("Allow: /#{collection.landing_page_slug}")
+            if  collection.landing_page_slug &&
+                !collection.landing_page_slug.blank?
+
+                lines.push("Allow: /#{collection.landing_page_slug}")
+            end
         end
 
         #
