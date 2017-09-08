@@ -45,7 +45,7 @@ Capybara.register_driver :selenium do |app|
     Capybara::Selenium::Driver.new(app,
         browser: :firefox,
         # profile: profile,
-        driver_path: '/rigse/test-deps/geckodriver')
+        driver_path: Rails.root.join('test-deps','geckodriver').to_s )
 end
 
 
