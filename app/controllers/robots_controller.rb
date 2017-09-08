@@ -102,7 +102,9 @@ class RobotsController < ApplicationController
             #
             # Add activities, sequences and interactives.
             #
-            materials = ExternalActivity.all + Interactive.all
+            materials =
+                ExternalActivity.where(:publication_status => "published") +
+                Interactive.where(:publication_status => "published")
 
             materials.each do |material|
 
