@@ -126,7 +126,9 @@ module Materials
     				boost(2.0) { with(:grade_levels, tags['grade_levels']) }
     				boost(1.0) { with(:project_ids, project_ids) }
   				end                
-
+                
+                with        :published,     true
+                with        :is_archived,   false
                 without     material
                 order_by    :score, :desc
                 paginate    page: 1, per_page: include_related

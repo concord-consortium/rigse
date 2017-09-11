@@ -45,6 +45,10 @@ class Interactive < ActiveRecord::Base
       false
     end
 
+    boolean :is_archived do |o|
+        o.archived?
+    end
+
     boolean :is_official
 
     boolean :is_template do
@@ -98,6 +102,10 @@ class Interactive < ActiveRecord::Base
 
     boolean :is_assessment_item do
       false
+    end
+
+    boolean :published do |o|
+      o.publication_status == 'published'
     end
 
   end

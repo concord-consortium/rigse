@@ -26,7 +26,11 @@ class ExternalActivity < ActiveRecord::Base
 
     integer :offerings_count
     boolean :is_official
-    boolean :is_archived
+
+    boolean :is_archived do |o|
+        o.archived?
+    end
+
     boolean :is_assessment_item
     boolean :is_template do
       false
