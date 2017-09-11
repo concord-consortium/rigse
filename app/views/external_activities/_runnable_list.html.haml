@@ -42,7 +42,7 @@
           %i
             Used in: #{external_activity.offerings.length} classes.
             - if external_activity.is_archived
-              (Archived)
+              (archived)
             = link_to "(portal settings)", edit_polymorphic_url(external_activity)
 
   =draggable_element dom_id_for(external_activity), :revert => true , :scroll => 'window'
