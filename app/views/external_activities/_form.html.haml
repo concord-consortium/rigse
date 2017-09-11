@@ -52,6 +52,11 @@
     = field_set_tag 'Student Report Enabled' do
       = f.check_box :student_report_enabled
       = t('authoring.student_report_enabled_description')
+
+    = field_set_tag 'Archive' do
+      = f.check_box :is_archived
+      This material is archived
+
     = field_set_tag 'Extra Options' do
       .config
         = f.check_box :popup
