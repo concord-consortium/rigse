@@ -25,6 +25,10 @@ class Investigation < ActiveRecord::Base
       inv.publication_status == 'published'
     end
 
+    boolean :is_archived do |o|
+        o.archived?
+    end
+
     integer :probe_type_ids, :multiple => true do |inv|
       inv.data_collectors.map { |dc| dc.probe_type_id }.compact
     end
