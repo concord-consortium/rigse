@@ -1,6 +1,12 @@
 = form_for(@external_activity) do |f|
   = f.error_messages
   = edit_menu_for(@external_activity, f)
+  .action_menu
+    .action_menu_header_right{:style => "padding-right: 20px"}
+      = link_to t("matedit.archive"),
+        archive_external_activity_path(@external_activity),
+        class: "button",
+        data: {cc_confirm: t("matedit.archive_confirm")}
   - if @external_activity.new_record? || policy(@external_activity).edit_settings?
     = field_set_tag 'Activity Name' do
       = f.text_field :name
