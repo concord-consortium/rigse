@@ -62,7 +62,7 @@ module MaterialSharedPolicy
   end
 
   #
-  # Is this material visible to the current_user
+  # Is this material visible to the specified user
   #
   def visible?
 
@@ -74,33 +74,58 @@ module MaterialSharedPolicy
     end
 
     #
-    # If it has cohorts, only teachers in those cohorts can view.
+    # Allow owner to view
     #
-    if material.cohorts.length > 0
-        if current_user.nil?
-            return false
-        end
-        if  current_user.portal_teacher &&
-            current_user.portal_teacher.cohorts
-
-            cohort_ids = current_user.portal_teacher.cohorts.map {|c| c.id}
-        end
+    if owner?
+        return true
     end
 
     #
-    # For assessment, deny access to anonymous 
+    # If it's not published, do not allow anonymous 
     #
-    if material.is_assessment_item
-        if current_user.nil? || current_user.only_a_student?
+    if record.publication_status != 'published'
+        if user.nil?
             return false
         end
     end
 
-    if current_user.portal_teacher?
-       
+    #
+    # If material has cohorts, only teachers in those cohorts can view.
+    #
+    if record.cohorts.length > 0
+
+        if user.nil?
+            return false
+        end
+
+        if  user.portal_teacher &&
+            user.portal_teacher.cohorts
+
+            user_cohort_ids     = user.portal_teacher.cohorts.map {|c| c.id}
+            material_cohort_ids = record.cohorts.map { |c| c.id }
+
+            if (user_cohort_ids & material_cohort_ids).empty?
+                #
+                # No intersection, deny access.
+                #
+                return false
+            end
+        end
     end
 
-    return false
+    #
+    # For assessments, deny access to anonymous and student.
+    #
+    if  record.respond_to?(:is_assessment_item) &&
+        record.is_assessment_item
+
+        if user.nil? || user.only_a_student?
+            return false
+        end
+
+    end
+
+    return true
 
   end
 

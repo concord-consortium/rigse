@@ -37,9 +37,6 @@ class Interactive < ActiveRecord::Base
     end
 
     integer :user_id
-    boolean :published do |ea|
-      ea.publication_status == 'published'
-    end
 
     boolean :teacher_only do
       false

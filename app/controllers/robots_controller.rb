@@ -113,7 +113,7 @@ class RobotsController < ApplicationController
 
             materials.each do |material|
 
-                if material.cohorts.length > 0
+                if ! policy(material).visible?
                     next
                 end
 
