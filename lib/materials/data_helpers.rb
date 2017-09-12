@@ -153,6 +153,10 @@ module Materials
                     end
                 end
 
+                if current_user.nil? || current_user.only_a_student
+                    with(:is_assessment_item, false)
+                end
+
                 with        :is_archived,   false
                 without     material
                 order_by    :score, :desc
