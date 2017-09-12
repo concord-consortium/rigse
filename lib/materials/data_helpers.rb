@@ -144,10 +144,12 @@ module Materials
                     with    :user_id,       user_id
                 end
 
-                unless user.has_role? ['admin']
-                    any_of do
-                        with    :cohort_ids,    nil
-                        with    :cohort_ids,    cohort_ids
+                if ! current_user.nil? 
+                    if ! current_user.has_role? ['admin']
+                        any_of do
+                            with    :cohort_ids,    nil
+                            with    :cohort_ids,    cohort_ids
+                        end
                     end
                 end
 
