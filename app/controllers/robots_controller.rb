@@ -103,10 +103,19 @@ class RobotsController < ApplicationController
             # Add activities, sequences and interactives.
             #
             materials =
-                ExternalActivity.where(:publication_status => "published") +
-                Interactive.where(:publication_status => "published")
+                ExternalActivity.
+                    includes([:cohorts, :cohort_items]).
+                    where(:publication_status => "published") +
+                Interactive.
+                    includes([:cohorts, :cohort_items]).
+                    where(:publication_status => "published")
+
 
             materials.each do |material|
+
+                if material.cohorts.length > 0
+                    next
+                end
 
                 stem_resource_type = material.respond_to?(:lara_sequence?) ? 
                                         (material.lara_sequence? ? 
