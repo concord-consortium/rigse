@@ -7,6 +7,7 @@ describe "browse/activities/show" do
 
   before(:each) do
     view.stub!(:current_visitor).and_return(user)
+    view.stub!(:current_user).and_return(user)
     assigns[:search_material] = @search_material = search_material
   end
 

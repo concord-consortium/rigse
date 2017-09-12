@@ -52,6 +52,11 @@ services:
       #
       DYNAMIC_ROBOTS_TXT: 
 
+      #
+      # Set the portal version displayed in the UI footer.
+      #
+      CC_PORTAL_VERSION:
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse
