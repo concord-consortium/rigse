@@ -61,4 +61,47 @@ module MaterialSharedPolicy
     admin? || material_admin?
   end
 
+  #
+  # Is this material visible to the current_user
+  #
+  def visible?
+
+    #
+    # Admins or material admins can view all.
+    #
+    if admin_or_material_admin? 
+        return true
+    end
+
+    #
+    # If it has cohorts, only teachers in those cohorts can view.
+    #
+    if material.cohorts.length > 0
+        if current_user.nil?
+            return false
+        end
+        if  current_user.portal_teacher &&
+            current_user.portal_teacher.cohorts
+
+            cohort_ids = current_user.portal_teacher.cohorts.map {|c| c.id}
+        end
+    end
+
+    #
+    # For assessment, deny access to anonymous 
+    #
+    if material.is_assessment_item
+        if current_user.nil? || current_user.only_a_student?
+            return false
+        end
+    end
+
+    if current_user.portal_teacher?
+       
+    end
+
+    return false
+
+  end
+
 end
