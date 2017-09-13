@@ -45,6 +45,8 @@ services:
       PORTAL_PAGES_LIBRARY_URL:
       EXTERNAL_CSS_URL:
 
+      GOOGLE_ANALYTICS_ACCOUNT:
+
       #
       # OG tag default values
       #
@@ -52,7 +54,10 @@ services:
       OG_DESCRIPTION:
       OG_IMAGE_URL:
 
-      GOOGLE_ANALYTICS_ACCOUNT:
+      #
+      # Set to true to enable dynamic robots.txt
+      #
+      DYNAMIC_ROBOTS_TXT:
 
       #
       # Set the portal version displayed in the UI footer.
