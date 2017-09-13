@@ -37,12 +37,13 @@ class Interactive < ActiveRecord::Base
     end
 
     integer :user_id
-    boolean :published do |ea|
-      ea.publication_status == 'published'
-    end
 
     boolean :teacher_only do
       false
+    end
+
+    boolean :is_archived do |o|
+        o.archived?
     end
 
     boolean :is_official
@@ -98,6 +99,10 @@ class Interactive < ActiveRecord::Base
 
     boolean :is_assessment_item do
       false
+    end
+
+    boolean :published do |o|
+      o.publication_status == 'published'
     end
 
   end

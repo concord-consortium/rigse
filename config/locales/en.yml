@@ -126,10 +126,12 @@ en:
       One way to do this is run <pre>bin/rake app:setup:new_app</pre>
     Teacher:
       Intro: |
-        The Learn portal is being developed as a central repository for our online activities, giving
-        teachers and students access to open educational resources across our projects, past and
-        present. The portal currently offers a limited number of activities. We’re actively working on
-        adding new resources, so check back often!
+        Since 1994, the Concord Consortium has been developing deeply digital tools and
+        learning activities that capture the power of curiosity and create revolutionary
+        new approaches to science, math, and engineering education. Our
+        STEM Resource Finder is a central repository for our simulations and activities,
+        giving teachers and students access to open educational resources across our
+        projects, past and present.
       GettingStarted:
         Heading: Getting Started
         Instructions_html: |
