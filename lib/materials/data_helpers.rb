@@ -133,17 +133,30 @@ module Materials
 
             search = Sunspot.search(Search::SearchableModels) do
 
-  				fulltext "*" do
-    				boost(4.0) { with(:subject_areas, tags['subject_areas']) }
-    				boost(2.0) { with(:grade_levels, tags['grade_levels']) }
-    				boost(1.0) { with(:project_ids, project_ids) }
-  				end
+                fulltext "*" do
+                    boost(4.0) { with(:subject_areas, tags['subject_areas']) }
+                    boost(2.0) { with(:grade_levels, tags['grade_levels']) }
+                    boost(1.0) { with(:project_ids, project_ids) }
+                end
 
                 any_of do
                     with    :published,     true
                     with    :user_id,       user_id
-                    with    :cohort_ids,    nil
-                    with    :cohort_ids,    cohort_ids
+                end
+
+                if current_user
+                    if ! current_user.has_role? ['admin']
+                        any_of do
+                            with    :cohort_ids,    nil
+                            with    :cohort_ids,    cohort_ids
+                        end
+                    end
+                else
+                    with :cohort_ids, nil
+                end
+
+                if current_user.nil? || current_user.only_a_student?
+                    with(:is_assessment_item, false)
                 end
 
                 with        :is_archived,   false

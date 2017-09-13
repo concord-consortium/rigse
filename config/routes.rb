@@ -769,7 +769,8 @@ RailsPortal::Application.routes.draw do
 
     match '/:controller(/:action(/:id))'
 
-    get 'robots.:format' => 'robots#index'
+    get 'robots.txt'    => 'robots#index'
+    get 'sitemap.xml'   => 'robots#sitemap'
 
     root :to => 'home#index'
   end

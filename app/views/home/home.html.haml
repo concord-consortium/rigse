@@ -15,17 +15,18 @@
   = render :partial => "project_cards"
 
 - if defined?(@auto_show_lightbox_resource) && @auto_show_lightbox_resource
-  #auto_show_lightbox_resource
-  %script{:type=>"text/javascript"}
-    PortalPages.settings.autoShowingLightboxResource = #{raw @lightbox_resource.to_json };
-    :plain
-      var toggleAutoShowLightbox = function () {
-        ReactDOM.unmountComponentAtNode(document.getElementById('auto_show_lightbox_resource'));
-        delete PortalPages.settings.autoShowingLightboxResource;
-      };
-      PortalPages.renderResourceLightbox({
-        toggleLightbox: toggleAutoShowLightbox,
-        savedUrl: '#{root_url}',
-        savedTitle: '#{APP_CONFIG[:site_name]}',
-        resource: PortalPages.settings.autoShowingLightboxResource
-      }, "auto_show_lightbox_resource")
+  - content_for :after_footer do
+    #auto_show_lightbox_resource
+    %script{:type=>"text/javascript"}
+      PortalPages.settings.autoShowingLightboxResource = #{raw @lightbox_resource.to_json };
+      :plain
+        var toggleAutoShowLightbox = function () {
+          ReactDOM.unmountComponentAtNode(document.getElementById('auto_show_lightbox_resource'));
+          delete PortalPages.settings.autoShowingLightboxResource;
+        };
+        PortalPages.renderResourceLightbox({
+          toggleLightbox: toggleAutoShowLightbox,
+          savedUrl: '#{root_url}',
+          savedTitle: '#{APP_CONFIG[:site_name]}',
+          resource: PortalPages.settings.autoShowingLightboxResource
+        }, "auto_show_lightbox_resource")
