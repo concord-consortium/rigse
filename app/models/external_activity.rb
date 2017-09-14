@@ -165,7 +165,17 @@ class ExternalActivity < ActiveRecord::Base
     end
   end
 
+  # 
+  # external_type: "Investigation", "activity", "Interactive"
+  #
+  # New ExternalActivities (ext_type interactives) appear in Interactives bin.
+  #
+  # interactives_controller searched old interactives
+  #
   def material_type
+    if external_type
+        return external_type
+    end
     template_type ? template_type : 'Activity'
   end
 
