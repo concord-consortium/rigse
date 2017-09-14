@@ -98,12 +98,9 @@ class ExternalActivitiesController < ApplicationController
   # GET /external_activities/new
   # GET /external_activities/new.xml
   def new
-    puts "*** new ***"
     authorize ExternalActivity
-    puts "*** authorize ***"
     @external_activity = ExternalActivity.new
     @external_activity.user = current_visitor
-    puts "*** respond_to ***"
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @external_activity }
