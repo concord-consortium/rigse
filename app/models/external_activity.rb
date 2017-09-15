@@ -173,7 +173,7 @@ class ExternalActivity < ActiveRecord::Base
   # interactives_controller searched old interactives
   #
   def material_type
-    if external_type
+    if external_type && !external_type.blank?
         return external_type
     end
     template_type ? template_type : 'Activity'
