@@ -40,6 +40,18 @@ class Search
   InteractiveMaterial     = "Interactive"
   AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial]
 
+  #
+  # A constant with all searchable models. 
+  #
+  AllSearchableModels       = [ Investigation, 
+                                Activity, 
+                                ExternalActivity, 
+                                Interactive ]
+
+  DefaultSearchableModels   = [ Investigation, 
+                                Activity, 
+                                ExternalActivity ]
+
   Newest       = 'Newest'
   Oldest       = 'Oldest'
   Alphabetical = 'Alphabetical'
@@ -102,7 +114,7 @@ class Search
     # If this is not a subclass, use the default models.
     #
     if self.class == Search
-        self.searchable_models = [Investigation, Activity, ExternalActivity]
+        self.searchable_models = DefaultSearchableModels
     end
 
     self.text                 = Search.clean_search_terms(opts[:search_term])
@@ -196,8 +208,6 @@ class Search
 
     self.clean_material_types.each do |type|
 
-      puts("*** SEARCH Searching #{type}")
-
       _results = self.engine.search(self.searchable_models) do |s|
         s.fulltext(self.text)
         # default list: published, plus all those authored by the current user
@@ -218,9 +228,11 @@ class Search
         search_by_subject_areas(s)
         search_by_projects(s)
         search_without_assessments(s)
+
         s.with(:is_template, false) unless self.include_templates
         s.without(:is_archived, true) unless self.show_archived
         s.with(:is_archived, true) if self.show_archived
+
         if (!self.private && self.user_id)
           unless show_user_all_materials?
             s.any_of do |c|
@@ -247,10 +259,7 @@ class Search
           s.paginate(:page => self.interactive_page, :per_page => self.per_page)
         end
 
-
       end
-
-      puts "*** hits #{_results.hits}"
 
       self.results[:all] += _results.results
       self.hits[:all]    += _results.hits

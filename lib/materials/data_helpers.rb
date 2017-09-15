@@ -131,7 +131,7 @@ module Materials
                 end
             end
 
-            search = Sunspot.search(Search::SearchableModels) do
+            search = Sunspot.search(Search::DefaultSearchableModels) do
 
                 fulltext "*" do
                     boost(4.0) { with(:subject_areas, tags['subject_areas']) }

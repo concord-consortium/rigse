@@ -4,13 +4,13 @@ Sunspot.session = Sunspot::Rails::StubSessionProxy.new($original_sunspot_session
 module SolrSpecHelper
 
   def clean_solar_index
-    Search::SearchableModels.each do |model_type|
+    Search::AllSearchableModels.each do |model_type|
       model_type.remove_all_from_index!
     end
   end
 
   def reindex_all
-    Search::SearchableModels.each do |m|
+    Search::AllSearchableModels.each do |m|
       m.reindex
       Sunspot.commit
     end
