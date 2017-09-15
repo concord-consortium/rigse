@@ -17,25 +17,14 @@ class Admin::ProjectsController < ApplicationController
     # Redirect back to project landing page after user signs in.
     @after_sign_in_path = request.path
     # set page title tag and meta tag values
-    page_meta = {
-      :meta_tags => {},
-      :open_graph => {}
-    }
     @page_title = @project.name
-    meta_tags = page_meta[:meta_tags]
-    meta_tags[:description] = @project.project_card_description
-    if meta_tags[:description].blank?
-      meta_tags[:description] = "Check out this collection of educational resources from the Concord Consortium."
-    end
-    open_graph = page_meta[:open_graph]
-    open_graph[:title] = @page_title
-    open_graph[:description] = meta_tags[:description]
-    open_graph[:image] = @project.project_card_image_url
-    if open_graph[:image].blank?
-      open_graph[:image] = "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
-    end
-    @open_graph = page_meta[:open_graph]
-
+    @open_graph = {
+      title: @page_title,
+      description: @project.project_card_description ||
+        "Check out this collection of educational resources from the Concord Consortium.",
+      image: @project.project_card_image_url ||
+        "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
+    }
   end
 
   # GET /admin/projects

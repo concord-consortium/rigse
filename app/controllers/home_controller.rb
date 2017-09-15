@@ -15,20 +15,9 @@ class HomeController < ApplicationController
   def index
     homePage = HomePage.new(current_visitor, current_settings)
     flash.keep
-    page_meta = {
-      :open_graph => {}
-    }
-    open_graph = page_meta[:open_graph]
-    unless ENV['OG_TITLE'].blank?
-      open_graph[:title] = ENV['OG_TITLE']
-    end
-    unless ENV['OG_DESCRIPTION'].blank?
-      open_graph[:description] = ENV['OG_DESCRIPTION']
-    end
-    unless ENV['OG_IMAGE_URL'].blank?
-      open_graph[:image] = ENV['OG_IMAGE_URL']
-    end
-    @open_graph = page_meta[:open_graph]
+
+    @open_graph = default_open_graph
+
     case homePage.redirect
       when HomePage::MyClasses
         redirect_to :my_classes
@@ -83,33 +72,21 @@ class HomeController < ApplicationController
 
   def about
     @page_title = 'About'
-    page_meta = {
-      :open_graph => {}
-    }
-    open_graph = page_meta[:open_graph]
-    open_graph[:title] = 'About the STEM Resource Finder'
-    unless ENV['OG_DESCRIPTION'].blank?
-      open_graph[:description] = ENV['OG_DESCRIPTION']
-    end
-    unless ENV['OG_IMAGE_URL'].blank?
-      open_graph[:image] = ENV['OG_IMAGE_URL']
-    end
-    @open_graph = page_meta[:open_graph]
+    @open_graph = default_open_graph
+    @open_graph[:title] = "About the #{APP_CONFIG[:site_name]}"
+
     render layout: 'minimal'
   end
 
   def collections
     @page_title = 'Collections'
-    page_meta = {
-      :open_graph => {}
-    }
-    open_graph = page_meta[:open_graph]
-    open_graph[:title] = @page_title
-    open_graph[:description] = 'Many of the Concord Consortium\'s educational STEM resources are part of collections created by our various research projects. Each collection has specific learning goals within the context of a larger subject area.'
-    unless ENV['OG_IMAGE_URL'].blank?
-      open_graph[:image] = ENV['OG_IMAGE_URL']
-    end
-    @open_graph = page_meta[:open_graph]
+    @open_graph = default_open_graph
+    @open_graph[:title] = @page_title
+    @open_graph[:description] = %{
+      Many of the Concord Consortium's educational STEM resources are part of collections
+      created by our various research projects. Each collection has specific learning
+      goals within the context of a larger subject area.
+    }.gsub(/\s+/, " ").strip
   render layout: 'minimal'
   end
 
@@ -291,27 +268,14 @@ class HomeController < ApplicationController
     if @lightbox_resource
       @lightbox_resource = materials_data([@lightbox_resource], nil, 4).shift()
       @page_title = @lightbox_resource[:name]
-      page_meta = {
-        :title => nil,
-        :meta_tags => {},
-        :open_graph => {}
-      }
-      page_meta[:title] = @page_title
-      meta_tags = page_meta[:meta_tags]
-      meta_tags[:title] = page_meta[:title]
-      meta_tags[:description] = @lightbox_resource[:description]
-      if meta_tags[:description].blank?
-        meta_tags[:description] = "Check out this educational resource from the Concord Consortium."
-      end
-      open_graph = page_meta[:open_graph]
-      open_graph[:title] = @page_title
-      open_graph[:description] = meta_tags[:description]
       @resource_icon = @lightbox_resource[:icon]
-      open_graph[:image] = @resource_icon[:url]
-      if open_graph[:image].blank?
-        open_graph[:image] = "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
-      end
-      @open_graph = page_meta[:open_graph]
+      @open_graph = {
+        title: @page_title,
+        description: @lightbox_resource[:description] ||
+          "Check out this educational resource from the Concord Consortium.",
+        image: @resource_icon[:url] ||
+          "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
+      }
     else
       @page_title = "Resource not found"
     end
@@ -333,5 +297,19 @@ class HomeController < ApplicationController
 
   def load_featured_materials
     @show_featured_materials = true
+  end
+
+  def default_open_graph
+    open_graph = {}
+    if ENV['OG_TITLE']
+      open_graph[:title] = ENV['OG_TITLE']
+    end
+    if ENV['OG_DESCRIPTION']
+      open_graph[:description] = ENV['OG_DESCRIPTION']
+    end
+    if ENV['OG_IMAGE_URL']
+      open_graph[:image] = ENV['OG_IMAGE_URL']
+    end
+    open_graph
   end
 end
