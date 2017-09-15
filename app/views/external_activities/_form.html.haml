@@ -24,6 +24,8 @@
     = field_set_tag 'Activity Description for Teacher' do
       = t('authoring.description_for_teacher_description')
       = f.text_area :description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'External Type' do
+      = f.text_field :external_type, :size => 60
     = field_set_tag 'License' do
       = f.select :license_code, CommonsLicense.for_select, include_blank: 'none'
     = field_set_tag 'URL' do

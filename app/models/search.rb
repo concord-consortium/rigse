@@ -28,13 +28,13 @@ class Search
   attr_accessor :grade_level_groups
   attr_accessor :subject_areas
   attr_accessor :project_ids
-  attr_accessor :model_types
+
   attr_accessor :available_subject_areas
   attr_accessor :available_grade_level_groups
-  attr_accessor :available_model_types
   attr_accessor :available_projects
 
-  SearchableModels        = [Investigation, Activity, ExternalActivity, Interactive]
+  attr_accessor :searchable_models
+
   InvestigationMaterial   = "Investigation"
   ActivityMaterial        = "Activity"
   InteractiveMaterial     = "Interactive"
@@ -97,6 +97,14 @@ class Search
 
 
   def initialize(opts={})
+
+    #
+    # If this is not a subclass, use the default models.
+    #
+    if self.class == Search
+        self.searchable_models = [Investigation, Activity, ExternalActivity]
+    end
+
     self.text                 = Search.clean_search_terms(opts[:search_term])
     self.domain_id            = Search.clean_domain_id(opts[:domain_id])
     self.clean_material_types = Search.clean_material_types(opts[:material_types])
@@ -110,8 +118,6 @@ class Search
     self.available_subject_areas     = []
     self.available_projects          = []
     self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0, 'Higher Ed' => 0 }
-    self.model_types                 = opts[:model_types] || nil
-    self.available_model_types       = []
 
     self.results        = {}
     self.hits           = {}
@@ -138,22 +144,25 @@ class Search
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
     self.show_archived     = opts[:show_archived]    || false
-    self.fetch_available_model_types()
+
     self.fetch_available_grade_subject_areas_projects()
+
+    #
+    # Allow subclasses to add their own available search parameters
+    #
+    self.fetch_custom_search_params
+
     self.search() unless opts[:skip_search]
   end
 
-  def fetch_available_model_types
-    results = self.engine.search([Interactive]) do |s|
-      s.facet :model_types
-    end
-    results.facet(:model_types).rows.each do |facet|
-      self.available_model_types << facet.value
-    end
-  end
+  #
+  # Subclasses can override this to set attributes
+  # that clients might use to find available search parameters.
+  #
+  def fetch_custom_search_params; end
 
   def fetch_available_grade_subject_areas_projects
-    results = self.engine.search([Investigation, Activity, ExternalActivity, Interactive]) do |s|
+    results = self.engine.search(self.searchable_models) do |s|
       s.facet :subject_areas
       s.facet :grade_levels do
         Search.grade_level_groups.each do |key, value|
@@ -184,8 +193,12 @@ class Search
     self.results[:all] = []
     self.hits[:all] = []
     self.total_entries[:all] = 0
+
     self.clean_material_types.each do |type|
-      _results = self.engine.search(SearchableModels) do |s|
+
+      puts("*** SEARCH Searching #{type}")
+
+      _results = self.engine.search(self.searchable_models) do |s|
         s.fulltext(self.text)
         # default list: published, plus all those authored by the current user
         s.any_of do |c|
@@ -220,16 +233,25 @@ class Search
 
         s.facet :material_type
         s.order_by(*SortOptions[self.sort_order])
-        if (type==Search::ActivityMaterial)
+
+        #
+        # Allow subclasses to add filters
+        #
+        add_custom_search_filters(s)
+
+        if (type == ActivityMaterial)
           s.paginate(:page => self.activity_page, :per_page => self.per_page)
-        elsif (type==Search::InvestigationMaterial)
+        elsif (type == InvestigationMaterial)
           s.paginate(:page => self.investigation_page, :per_page => self.per_page)
-        elsif (type==Search::InteractiveMaterial)
-          search_by_model_types(s)
+        elsif (type == InteractiveMaterial)
           s.paginate(:page => self.interactive_page, :per_page => self.per_page)
         end
 
+
       end
+
+      puts "*** hits #{_results.hits}"
+
       self.results[:all] += _results.results
       self.hits[:all]    += _results.hits
       self.total_entries[:all] += _results.results.total_entries
@@ -239,11 +261,16 @@ class Search
     end
   end
 
+  #
+  # Subclasses can override this to add their own filters.
+  #
+  def add_custom_search_filters(search); end
+
   def params
     params = {}
     keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
       :per_page, :include_contributed,:include_mine, :investigation_page, :activity_page, :material_properties,
-      :grade_level_groups, :subject_areas, :project_ids, :model_types]
+      :grade_level_groups, :subject_areas, :project_ids ]
     keys.each do |key|
       value = self.send key
       if value
@@ -336,13 +363,6 @@ class Search
       project_ids.each do |g|
         s.with(:project_ids, g)
       end
-    end
-  end
-
-  def search_by_model_types(search)
-    return if model_types.nil? || model_types == "All"
-    search.any_of do |s|
-      s.with(:model_types, model_types)
     end
   end
 
