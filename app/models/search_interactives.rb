@@ -34,11 +34,11 @@ class SearchInteractives < Search
     #
     # Add filters for Interactives
     #
-  	def add_custom_search_filters(search)
-    	return if model_types.nil? || model_types == "All"
-    	search.any_of do |s|
-      		s.with(:model_types, model_types)
-    	end
-  	end
+    def add_custom_search_filters(search)
+        return if model_types.nil? || model_types == "All"
+        search.any_of do |s|
+            s.with(:model_types, model_types)
+        end
+    end
 
 end
