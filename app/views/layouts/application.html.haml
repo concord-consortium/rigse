@@ -4,11 +4,9 @@
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
     - page_title = (@page_title) ? "#{@page_title} | #{APP_CONFIG[:site_name]}" : APP_CONFIG[:site_name]
     %title= page_title
-    %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
     %meta{ :name => "distribution", :content => "all" }
     %meta{ :name => "robots", :content => "all" }
     %meta{ :name => "resource-type", :content => "document" }
-    %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     %link{ :href => asset_path("favicon.ico"), :rel => "shortcut icon"}/
 
     - @meta_tags = @meta_tags || {}
