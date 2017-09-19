@@ -21,7 +21,7 @@ namespace :app do
                 :credits            => interactive.credits,
                 :license_code       => interactive.license_code,
 
-                :external_type      => Interactive.name,
+                :material_type      => Interactive.name,
                 :is_official        => true
             }
         )

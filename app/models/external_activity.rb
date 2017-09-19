@@ -165,18 +165,8 @@ class ExternalActivity < ActiveRecord::Base
     end
   end
 
-  # 
-  # external_type: "Investigation", "activity", "Interactive"
-  #
-  # New ExternalActivities (ext_type interactives) appear in Interactives bin.
-  #
-  # interactives_controller searched old interactives
-  #
   def material_type
-    if external_type && !external_type.blank?
-        return external_type
-    end
-    template_type ? template_type : 'Activity'
+    attributes['material_type']
   end
 
   def display_name
@@ -209,7 +199,7 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   def activities
-    template.activities if material_type == 'Investigation'
+    template.activities if material_type == 'Investigation' && !template.nil?
   end
   # end methods required by Search::SearchMaterial
 
