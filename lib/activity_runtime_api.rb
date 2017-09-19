@@ -157,7 +157,8 @@ class ActivityRuntimeAPI
         :publication_status => "published",
         :user => user,
         :author_email => hash["author_email"],
-        :is_locked => hash["is_locked"]
+        :is_locked => hash["is_locked"],
+        :material_type => Investigation.name
       )
       self.update_external_report(external_activity, hash["external_report_url"])
       # update investigation so external_activity.template is correctly initialzed
