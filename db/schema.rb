@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170914202111) do
+ActiveRecord::Schema.define(:version => 20170830191912) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -865,7 +865,6 @@ ActiveRecord::Schema.define(:version => 20170914202111) do
     t.string   "license_code"
     t.boolean  "enable_sharing",                               :default => true
     t.boolean  "append_auth_token"
-    t.string   "external_type"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public", :length => {"is_featured"=>nil, "publication_status"=>191}
