@@ -1,16 +1,15 @@
 class AddMaterialTypeToExternalActivity < ActiveRecord::Migration
 
-  def change
-    add_column :external_activities, :material_type, :string
+  class ExternalActivity < ActiveRecord::Base
+    self.table_name = 'external_activities'
+  end
 
-    ExternalActivity.all.each do |external_activity|
-        if ! external_activity.template_type.nil? &&
-            ! external_activity.template_type.blank?
-            external_activity.update_attributes(:material_type => external_activity.template_type)
-        else
-            external_activity.update_attributes(:material_type => 'Activity')
-        end
-    end
+  def change
+    add_column :external_activities, :material_type, :string, :default => 'Activity'
+
+    ExternalActivity.where('template_type is null').update_all(material_type: 'Activity')
+    ExternalActivity.where(template_type: 'Activity').update_all(material_type: 'Activity')
+    ExternalActivity.where(template_type: 'Investigation').update_all(material_type: 'Investigation')
 
   end
 
