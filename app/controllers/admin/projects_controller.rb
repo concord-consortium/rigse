@@ -12,9 +12,19 @@ class Admin::ProjectsController < ApplicationController
   def landing_page
     # no authorization needed ...
     @project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
+
     @landing_page_content = @project.landing_page_content
     # Redirect back to project landing page after user signs in.
     @after_sign_in_path = request.path
+    # set page title tag and meta tag values
+    @page_title = @project.name
+    @open_graph = {
+      title: @page_title,
+      description: @project.project_card_description ||
+        "Check out this collection of educational resources from the Concord Consortium.",
+      image: @project.project_card_image_url ||
+        "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
+    }
   end
 
   # GET /admin/projects

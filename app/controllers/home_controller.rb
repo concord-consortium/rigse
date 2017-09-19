@@ -15,6 +15,9 @@ class HomeController < ApplicationController
   def index
     homePage = HomePage.new(current_visitor, current_settings)
     flash.keep
+
+    @open_graph = default_open_graph
+
     case homePage.redirect
       when HomePage::MyClasses
         redirect_to :my_classes
@@ -68,11 +71,23 @@ class HomeController < ApplicationController
   end
 
   def about
+    @page_title = 'About'
+    @open_graph = default_open_graph
+    @open_graph[:title] = "About the #{APP_CONFIG[:site_name]}"
+
     render layout: 'minimal'
   end
 
   def collections
-    render layout: 'minimal'
+    @page_title = 'Collections'
+    @open_graph = default_open_graph
+    @open_graph[:title] = @page_title
+    @open_graph[:description] = %{
+      Many of the Concord Consortium's educational STEM resources are part of collections
+      created by our various research projects. Each collection has specific learning
+      goals within the context of a larger subject area.
+    }.gsub(/\s+/, " ").strip
+  render layout: 'minimal'
   end
 
   def requirements
@@ -239,7 +254,7 @@ class HomeController < ApplicationController
             # Block anonymous user.
             #
             @lightbox_resource = nil
-        else 
+        else
             #
             # For logged in user, block if user is not either resource owner
             # or admin.
@@ -253,6 +268,14 @@ class HomeController < ApplicationController
     if @lightbox_resource
       @lightbox_resource = materials_data([@lightbox_resource], nil, 4).shift()
       @page_title = @lightbox_resource[:name]
+      @resource_icon = @lightbox_resource[:icon]
+      @open_graph = {
+        title: @page_title,
+        description: @lightbox_resource[:description] ||
+          "Check out this educational resource from the Concord Consortium.",
+        image: @resource_icon[:url] ||
+          "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
+      }
     else
       @page_title = "Resource not found"
     end
@@ -274,5 +297,19 @@ class HomeController < ApplicationController
 
   def load_featured_materials
     @show_featured_materials = true
+  end
+
+  def default_open_graph
+    open_graph = {}
+    if ENV['OG_TITLE']
+      open_graph[:title] = ENV['OG_TITLE']
+    end
+    if ENV['OG_DESCRIPTION']
+      open_graph[:description] = ENV['OG_DESCRIPTION']
+    end
+    if ENV['OG_IMAGE_URL']
+      open_graph[:image] = ENV['OG_IMAGE_URL']
+    end
+    open_graph
   end
 end
