@@ -31,10 +31,27 @@ describe API::V1::SearchController do
   let(:thermodynamics_activity)  { Factory.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
   let(:parallel_lines)           { Factory.create(:activity, :name => 'parallel_lines' , :investigation_id => lines.id, :user => author_user) }
 
-  let(:external_activity1)   { Factory.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
-  let(:external_activity2)   { Factory.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published', :is_official => true) }
+  let(:external_activity1)   { Factory.create(:external_activity, 
+                                        :name => 'external_1', 
+                                        :url => "http://concord.org", 
+                                        :publication_status => 'published', 
+                                        :is_official => true,
+                                        :material_type => 'Activity' ) }
 
-  let(:contributed_activity) { Factory.create(:external_activity, :name => "Copy of external_1", :url => "http://concord.org", :publication_status => 'published', :is_official => false) }
+  let(:external_activity2)   { Factory.create(:external_activity, 
+                                        :name => 'a_study_in_lines_and_curves', 
+                                        :url => "http://github.com", 
+                                        :publication_status => 
+                                        'published', 
+                                        :is_official => true,
+                                        :material_type => 'Activity' ) }
+
+  let(:contributed_activity) { Factory.create(:external_activity, 
+                                        :name => "Copy of external_1", 
+                                        :url => "http://concord.org", 
+                                        :publication_status => 'published', 
+                                        :is_official => false,
+                                        :material_type => 'Activity' ) }
 
   let(:all_investigations)    { [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines]}
   let(:official_activities)   { [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines, external_activity1, external_activity2]}

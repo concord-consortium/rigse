@@ -109,6 +109,13 @@ class ExternalActivity < ActiveRecord::Base
   include SearchModelInterface
   include Archiveable
 
+  #
+  # Override the material_type method from SearchModelInterface
+  #
+  def material_type
+    template_type ? template_type : attributes['material_type']
+  end
+
   validate :valid_url
 
   def valid_url
@@ -165,10 +172,6 @@ class ExternalActivity < ActiveRecord::Base
     end
   end
 
-  def material_type
-    attributes['material_type']
-  end
-
   def display_name
     return template.display_name if template
     return ExternalActivity.display_name
@@ -199,7 +202,7 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   def activities
-    template.activities if material_type == 'Investigation' && !template.nil?
+    template.activities if template_type == 'Investigation'
   end
   # end methods required by Search::SearchMaterial
 
