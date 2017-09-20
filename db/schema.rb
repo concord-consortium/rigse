@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170830191912) do
+ActiveRecord::Schema.define(:version => 20170914202111) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -833,8 +833,8 @@ ActiveRecord::Schema.define(:version => 20170830191912) do
     t.text     "description",              :limit => 16777215
     t.text     "url",                      :limit => 16777215
     t.string   "publication_status"
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.integer  "offerings_count",                              :default => 0
     t.string   "save_path"
     t.boolean  "append_learner_id_to_url"
@@ -865,6 +865,7 @@ ActiveRecord::Schema.define(:version => 20170830191912) do
     t.string   "license_code"
     t.boolean  "enable_sharing",                               :default => true
     t.boolean  "append_auth_token"
+    t.string   "material_type",                                :default => "Activity"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public", :length => {"is_featured"=>nil, "publication_status"=>191}

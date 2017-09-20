@@ -2,9 +2,23 @@
   .action_menu_header
     .action_menu_header_left
       = form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
-        = content_tag :label do
-          = text_field_tag :search, params[:search], :size => 30
-        %input{ :type => "submit", :value => "Search"}
+
+        %table
+          %tr
+            %td
+              = content_tag :label do
+                = text_field_tag :search, params[:search], :size => 30
+            %td
+              %input{ :type => "submit", :value => "Search"}
+
+          %tr
+            %td
+              .filterheader
+                Interactive Types
+              .tablecell
+                = render :partial=>"search/model_types_filter"
+            %td
+
       - if @interactives
         %p= page_entries_info @interactives
       %p.paginator

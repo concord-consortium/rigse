@@ -109,6 +109,29 @@ class ExternalActivity < ActiveRecord::Base
   include SearchModelInterface
   include Archiveable
 
+  #
+  # Override the material_type method from SearchModelInterface
+  #
+  def material_type
+    attributes['material_type']
+  end
+
+  #
+  # Ensure changes to the template_type update the material_type
+  #
+  before_validation :if => :template_type_changed? do |ea|
+    ea.material_type = template_type
+  end
+
+  #
+  # Ensure changes to the template update the material_type
+  #
+  alias_method :original_template=, :template=
+  def template=(t)
+    self.original_template 	= t
+    self.material_type  	= t.class.name
+  end
+
   validate :valid_url
 
   def valid_url
@@ -165,10 +188,6 @@ class ExternalActivity < ActiveRecord::Base
     end
   end
 
-  def material_type
-    template_type ? template_type : 'Activity'
-  end
-
   def display_name
     return template.display_name if template
     return ExternalActivity.display_name
@@ -199,7 +218,7 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   def activities
-    template.activities if material_type == 'Investigation'
+    template.activities if template_type == 'Investigation'
   end
   # end methods required by Search::SearchMaterial
 

@@ -10,16 +10,29 @@ class InteractivesController < ApplicationController
 
   def index
     authorize Interactive
+
     search_params = {
-      :material_types     => [Search::InteractiveMaterial],
-      :interactive_page   => params[:page],
-      :per_page           => 30,
-      :user_id            => current_visitor.id,
-      :private            => current_visitor.has_role?('admin'),
-      :search_term        => params[:search]
+      :material_types       => [Search::InteractiveMaterial],
+      :interactive_page     => params[:page],
+      :per_page             => 30,
+      :user_id              => current_visitor.id,
+      :private              => current_visitor.has_role?('admin'),
+      :search_term          => params[:search],
+      :model_types          => params[:model_types],
+      :skip_search          => true
     }
 
-    s = Search.new(search_params)
+    #
+    # Load available params 
+    #
+    @form_model = SearchInteractives.new(search_params)
+
+    #
+    # Actually perform the search
+    #
+    search_params.except!(:skip_search)
+
+    s = SearchInteractives.new(search_params)
     @interactives = s.results[Search::InteractiveMaterial]
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)

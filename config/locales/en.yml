@@ -76,6 +76,8 @@ en:
     is_assessment_item: Student assessment item.
     is_assessment_item_description: Materials marked as student assessment items are not displayed to students or visitors in search results.
     launch_url_description: If there is a launch url, it is used when a student starts an activity otherwise the main URL is used. The main URL is used for preview links. Activities with a launch url are assumed to support editing by appending /edit.
+    material_type_label: Material Type
+    material_type_description: Users can see the type of material in various places, use this field to change that type
     external_report_label: External Reporting
     external_report_description: Specify and alternate report link to be shown to teachers in the offering view. Unless you know what you are doing 'none' is recommended.
     report_client: Report Auth Client
