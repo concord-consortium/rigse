@@ -123,6 +123,15 @@ class ExternalActivity < ActiveRecord::Base
     ea.material_type = template_type
   end
 
+  #
+  # Ensure changes to the template update the material_type
+  #
+  alias_method :original_template=, :template=
+  def template=(t)
+    self.original_template 	= t
+    self.material_type  	= t.class.name
+  end
+
   validate :valid_url
 
   def valid_url

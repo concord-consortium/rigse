@@ -58,7 +58,6 @@ describe ExternalActivity do
       activity.template = real_activity
       activity.material_type.should == 'Activity'
       activity.template = investigation
-      activity.save!
       activity.material_type.should == 'Investigation'
     end
   end
