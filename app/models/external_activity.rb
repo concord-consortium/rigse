@@ -113,7 +113,14 @@ class ExternalActivity < ActiveRecord::Base
   # Override the material_type method from SearchModelInterface
   #
   def material_type
-    template_type ? template_type : attributes['material_type']
+    attributes['material_type']
+  end
+
+  #
+  # Ensure changes to the template_type update the material_type
+  #
+  before_validation :if => :template_type_changed? do |ea|
+    ea.material_type = template_type
   end
 
   validate :valid_url
