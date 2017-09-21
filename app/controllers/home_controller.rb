@@ -262,7 +262,6 @@ class HomeController < ApplicationController
       #
       # Redirect to external_activity under /resource/:id/:slug
       #
-      # redirect_to("/resources/#{id}/#{@lightbox_resource[:slug]}")
       redirect_to view_context.stem_resources_url(id, @lightbox_resource[:slug])
       return
     end
