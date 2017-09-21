@@ -33,15 +33,6 @@ GIT
       rails (~> 3.2.11)
 
 GIT
-  remote: git://github.com/concord-consortium/contentflow
-  revision: 03b18e3c81abead40614f4a748878c63b6381eac
-  branch: remove-addon-support
-  specs:
-    contentflow (0.0.3)
-      railties (>= 3.0)
-      sass (>= 3.2)
-
-GIT
   remote: git://github.com/concord-consortium/genigames-connector
   revision: d46d31cad789dd806377a8e28feecf387a9020ee
   specs:
@@ -648,7 +639,6 @@ DEPENDENCIES
   compass-blueprint
   compass-rails (~> 2.0.4)
   connection_pool
-  contentflow!
   cucumber (~> 1.3.0)
   cucumber-rails (~> 1.3.0)
   daemons (~> 1.1.8)

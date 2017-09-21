@@ -228,19 +228,49 @@ class HomeController < ApplicationController
   #
   def stem_resources
 
-    case params[:type]
-    when "activity", "sequence"
-      @lightbox_resource = ExternalActivity.find_by_id(params[:id_or_filter_value])
-    when "interactive"
-      @lightbox_resource = Interactive.find_by_id(params[:id_or_filter_value])
-    else
+    # logger.info("INFO stem_resources")
+
+    if ! params[:id]
+      case params[:type]
+      when "activity", "sequence"
+
+        # logger.info("INFO loading external_activity")
+
+        @lightbox_resource = ExternalActivity.find_by_id(params[:id_or_filter_value])
+        id = @lightbox_resource.id
+
+      when "interactive"
+        @lightbox_resource = Interactive.find_by_id(params[:id_or_filter_value])
+        id = @lightbox_resource.external_activity_id
+
+      else
+        #
+        # Otherwise assume the type is referring to a filter name.
+        # And in this case the id_or_filter_value is a filter value.
+        #
+        index
+        return
+      end
+
       #
-      # Otherwise assume the type is referring to a filter name.
-      # And in this case the id_or_filter_value is a filter value.
+      # Get slug to append to redirect
       #
-      index
+      @lightbox_resource = materials_data([@lightbox_resource], nil, 0).shift()
+
+      # logger.info("INFO redirecting for #{id}")
+
+      #
+      # Redirect to external_activity under /resource/:id/:slug
+      #
+      # redirect_to("/resources/#{id}/#{@lightbox_resource[:slug]}")
+      redirect_to view_context.stem_resources_url(id, @lightbox_resource[:slug])
       return
     end
+
+    logger.info("INFO loading #{params[:id]}")
+
+    external_activity_id = params[:id]
+    @lightbox_resource = ExternalActivity.find_by_id(external_activity_id)
 
     #
     # Check that user has permission to view the resource.

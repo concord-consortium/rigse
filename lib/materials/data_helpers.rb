@@ -201,6 +201,16 @@ module Materials
             enable_sharing = material.enable_sharing
         end
 
+        #
+        # Create stem_resource_url
+        #
+        stem_resource_url = nil
+        if material.is_a?(ExternalActivity)
+            stem_resource_url = view_context.stem_resources_url(material.id, slug)
+        elsif material.is_a?(Interactive) && material.respond_to?(:external_activity_id)
+            stem_resource_url = view_context.stem_resources_url(material.external_activity_id, slug)
+        end
+
         mat_data = {
           id: material.id,
           name: material.name,
@@ -252,7 +262,8 @@ module Materials
           enable_sharing: enable_sharing,
 
           slug: slug,
-          stem_resource_url: view_context.stem_resources_url(stem_resource_type, material.id, slug)
+
+          stem_resource_url: stem_resource_url
         }
 
         data.push mat_data

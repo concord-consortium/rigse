@@ -759,6 +759,8 @@ RailsPortal::Application.routes.draw do
     match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
     post  '/installer_report' => 'misc#installer_report', :as => :installer_report
 
+    match '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
+
     match '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
     match '/:controller(/:action(/:id))'
