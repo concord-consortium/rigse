@@ -4,9 +4,16 @@ class AuthController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
   def verify_logged_in
-    if current_user.nil?
+
+    if session[:omniauth_origin]
       session[:sso_callback_params] = params
-      session[:sso_application] = application
+      session[:sso_application]     = application
+    else
+      session.delete :sso_callback_params
+      session.delete :sso_application
+    end
+
+    if current_user.nil?
       redirect_to auth_login_path
     end
   end
@@ -29,6 +36,11 @@ class AuthController < ApplicationController
       redirect_path = redirect_uri.to_s
 
       redirect_to @after_sign_in_path
+    elsif current_user
+      #
+      # User is signed in but there is no after_sign_in_path
+      #
+      redirect_to view_context.current_user_home_path
     else
       render :layout => false
     end
