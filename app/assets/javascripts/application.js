@@ -42,7 +42,6 @@
 = require 'search_materials_add_to_collection'
 = require 'search_materials_expand'
 = require 'progress_disclosure'
-= require 'anonymizer'
 = require 'bookmarks'
 = require 'run_status'
 = require 'create_status'

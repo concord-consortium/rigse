@@ -99,8 +99,6 @@ source "http://rubygems.org"
   gem "aws-sdk",              "~> 1.55.0"
   gem 'newrelic_rpm',         "~> 3.15", ">= 3.15.0.314"
   gem "tinymce-rails",        "~>3.5.6"
-  gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
-    :branch => "remove-addon-support"
 
 # Ideally we pre-compile all asetts and then run production
 # with out the asset compiling requirements. But We have dynamic assets

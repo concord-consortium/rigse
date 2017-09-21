@@ -139,7 +139,7 @@ canvas, .flotr-labels div, .flotr-legend, .flotr-legend-bg {
 
 /* this is cool too from ethan; display link url after links */
 /* a:link:after { content: " (" attr(href) ")"; }            */
-    
+
 a:link    {color:black; text-decoration:none;}
 a:visited {color:black; text-decoration:none;}
 a:hover   {color:black; text-decoration:none;}
@@ -152,17 +152,17 @@ table.teacher_class_table th, table.teacher_class_table td
     border: 1px solid #242323;
     padding-left:10px;
     color: black;
-   
+
    .change_password
   {
     padding-left:20px;
   }
-  
+
   .remove_student
   {
     padding-left:20px;
   }
-  
+
   .remove {
     padding-left:20px;
   }
@@ -191,39 +191,9 @@ table.teacher_class_table th, table.teacher_class_table td
 .print_link {
   display: none; }
 
-// Reports stuff
-@import "reports";
-
-.optionbarbar {
-  border: 2px solid black; }
-.filter_checkbox,.filter_selection_control,.print_control,#header,#footer,#under_footer {
-  display: none; }
-.report_embeddable {
-  overflow: visible;
-  .learner_response {
-    page-break-inside: avoid; }
-  .item {
-    border: none; }
-  .ContentFlow {
-    display: none;
-    overflow: visible; }
-  .accordion_container {
-    overflow: visible;
-    border: none;
-    border-bottom: 2px solid black;
-    page-break-inside: avoid;
-    .action_menu {
-      overflow: visible; }
-    .accordion_toggle {
-      display: none; }
-    .accordion_content {
-      overflow: visible; } } }
 #wrapper {
   overflow: visible; }
 
-.report_question_prompt {
-  width: 545px; }
-  
 .hide_in_print
 { display:none;}
 
