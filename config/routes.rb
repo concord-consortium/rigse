@@ -761,7 +761,7 @@ RailsPortal::Application.routes.draw do
 
     match '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
-    match '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :stem_resources
+    match '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
 
     match '/:controller(/:action(/:id))'
 

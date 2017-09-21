@@ -240,8 +240,13 @@ class HomeController < ApplicationController
         id = @lightbox_resource.id
 
       when "interactive"
-        @lightbox_resource = Interactive.find_by_id(params[:id_or_filter_value])
-        id = @lightbox_resource.external_activity_id
+
+        interactive = Interactive.find_by_id(params[:id_or_filter_value])
+
+        if interactive && interactive.respond_to?(:external_activity_id)
+            id = interactive.external_activity_id
+            @lightbox_resource = ExternalActivity.find_by_id(id)
+        end
 
       else
         #
@@ -253,23 +258,32 @@ class HomeController < ApplicationController
       end
 
       #
-      # Get slug to append to redirect
+      # Get slug to append to redirect url
       #
-      @lightbox_resource = materials_data([@lightbox_resource], nil, 0).shift()
+      slug = nil
+      if    @lightbox_resource && 
+            @lightbox_resource.name &&
+            @lightbox_resource.name.respond_to?(:parameterize)
+
+        slug = @lightbox_resource.name.parameterize
+
+      end
 
       # logger.info("INFO redirecting for #{id}")
 
       #
       # Redirect to external_activity under /resource/:id/:slug
       #
-      redirect_to view_context.stem_resources_url(id, @lightbox_resource[:slug])
+      redirect_to view_context.stem_resources_url(id, slug)
       return
     end
 
-    logger.info("INFO loading #{params[:id]}")
+    # logger.info("INFO loading #{params[:id]}")
 
     external_activity_id = params[:id]
     @lightbox_resource = ExternalActivity.find_by_id(external_activity_id)
+
+    # logger.info("INFO found lightbox_resource #{@lightbox_resource}")
 
     #
     # Check that user has permission to view the resource.

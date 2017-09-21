@@ -206,9 +206,9 @@ module Materials
         #
         stem_resource_url = nil
         if material.is_a?(ExternalActivity)
-            stem_resource_url = view_context.stem_resources_url(material.id, slug)
+            stem_resource_url = view_context.stem_resources_url(material.id.to_i, slug)
         elsif material.is_a?(Interactive) && material.respond_to?(:external_activity_id)
-            stem_resource_url = view_context.stem_resources_url(material.external_activity_id, slug)
+            stem_resource_url = view_context.stem_resources_url(material.external_activity_id.to_i, slug)
         end
 
         mat_data = {
