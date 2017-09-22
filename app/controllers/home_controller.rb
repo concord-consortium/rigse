@@ -237,7 +237,9 @@ class HomeController < ApplicationController
         # logger.info("INFO loading external_activity")
 
         @lightbox_resource = ExternalActivity.find_by_id(params[:id_or_filter_value])
-        id = @lightbox_resource.id
+        if @lightbox_resource
+            id = @lightbox_resource.id
+        end
 
       when "interactive"
 
@@ -258,24 +260,32 @@ class HomeController < ApplicationController
       end
 
       #
-      # Get slug to append to redirect url
+      # If id is non nil, redirect to valid resource.
       #
-      slug = nil
-      if    @lightbox_resource && 
-            @lightbox_resource.name &&
-            @lightbox_resource.name.respond_to?(:parameterize)
+      if ! id.nil?
 
-        slug = @lightbox_resource.name.parameterize
+        #
+        # Get slug to append to redirect url
+        #
+        slug = nil
+        if    @lightbox_resource && 
+                @lightbox_resource.name &&
+                @lightbox_resource.name.respond_to?(:parameterize)
+    
+            slug = @lightbox_resource.name.parameterize
+    
+        end
+    
+        # logger.info("INFO redirecting for #{id}")
+    
+        #
+        # Redirect to external_activity under /resource/:id/:slug
+        #
+        redirect_to view_context.stem_resources_url(id, slug)
+        return
 
       end
 
-      # logger.info("INFO redirecting for #{id}")
-
-      #
-      # Redirect to external_activity under /resource/:id/:slug
-      #
-      redirect_to view_context.stem_resources_url(id, slug)
-      return
     end
 
     # logger.info("INFO loading #{params[:id]}")
