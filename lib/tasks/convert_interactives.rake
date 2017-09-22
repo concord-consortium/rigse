@@ -10,7 +10,7 @@ namespace :app do
 
       interactives = Interactive.all
       interactives.each do |interactive|
-        ExternalActivity.create( 
+        external_activity = ExternalActivity.create( 
             { 
                 :name               => interactive.name,
                 :description        => interactive.description,
@@ -25,6 +25,8 @@ namespace :app do
                 :is_official        => true
             }
         )
+        interactive.external_activity_id = external_activity.id
+        interactive.save!
       end
     end
 
