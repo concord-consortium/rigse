@@ -31,6 +31,9 @@
       = f.text_field :image_url
     = field_set_tag 'Credits' do
       = f.text_field :credits
+    - if @interactive.respond_to?(:external_activity_id)
+      = field_set_tag 'External Activity ID' do
+        = f.text_field :external_activity_id
     = render :partial => 'shared/material_properties_edit', :locals => { :object => @interactive }
     = render :partial => 'shared/grade_levels_edit', :locals => { :object => @interactive }
     = render :partial => 'shared/subject_areas_edit', :locals => { :object => @interactive }

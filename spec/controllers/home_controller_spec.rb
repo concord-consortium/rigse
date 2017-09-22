@@ -12,7 +12,8 @@ describe HomeController do
 
   let(:interactive) { Factory.create(   :interactive,
                                         :name => "test interactive",
-                                        :publication_status => "published") }
+                                        :publication_status => "published",
+                                        :external_activity_id => activity.id ) }
 
   before(:each) do
 
@@ -93,37 +94,40 @@ describe HomeController do
 
     # note: in the tests below the "slug" param is always optional
     it "should return 200 when a valid activity is used" do
-      get :stem_resources, :type => "activity", :id_or_filter_value => activity.id
+      get :stem_resources, :id => activity.id
       response.should be_success
-      get :stem_resources, :type => "activity", :id_or_filter_value => activity.id, :slug => "test"
+      get :stem_resources, :id => activity.id, :slug => "test"
       response.should be_success
     end
+
     it "should return 404 when an unknown activity is used" do
-      get :stem_resources, :type => "activity", :id_or_filter_value => 999999999999999
+      get :stem_resources, :id => 999999999999999
       response.should_not be_success
-      get :stem_resources, :type => "activity", :id => 999999999999999, :slug => "test"
+      get :stem_resources, :id => 999999999999999, :slug => "test"
       response.should_not be_success
     end
 
     it "should return 200 when a valid sequence is used" do
-      get :stem_resources, :type => "sequence", :id_or_filter_value => sequence.id
+      get :stem_resources, :id => sequence.id
       response.should be_success
-      get :stem_resources, :type => "sequence", :id_or_filter_value => sequence.id, :slug => "test"
+      get :stem_resources, :id => sequence.id, :slug => "test"
       response.should be_success
     end
+
     it "should return 404 when an unknown sequence is used" do
-      get :stem_resources, :type => "sequence", :id_or_filter_value => 999999999999999
+      get :stem_resources, :id => 999999999999999
       response.should_not be_success
-      get :stem_resources, :type => "sequence", :id_or_filter_value => 999999999999999, :slug => "test"
+      get :stem_resources, :id => 999999999999999, :slug => "test"
       response.should_not be_success
     end
 
     it "should return 200 when a valid interactive is used" do
       get :stem_resources, :type => "interactive", :id_or_filter_value => interactive.id
-      response.should be_success
+      response.should redirect_to stem_resources_url(interactive.external_activity_id, activity.name.parameterize)
       get :stem_resources, :type => "interactive", :id_or_filter_value => interactive.id, :slug => "test"
-      response.should be_success
+      response.should redirect_to stem_resources_url(interactive.external_activity_id, activity.name.parameterize)
     end
+
     it "should return 404 when an unknown interactive is used" do
       get :stem_resources, :type => "interactive", :id_or_filter_value => 999999999999999
       response.should_not be_success
@@ -142,7 +146,7 @@ describe HomeController do
     end
 
     it "should include the required Javascript when a valid activity is used" do
-      get :stem_resources, :type => "activity", :id_or_filter_value => activity.id
+      get :stem_resources, :id => activity.id
       response.body.should include("auto_show_lightbox_resource")
       response.body.should include("PortalPages.settings.autoShowingLightboxResource = {\"id\":#{activity.id},")
       response.body.should include("PortalPages.renderResourceLightbox(")
@@ -156,7 +160,7 @@ describe HomeController do
     end
 
     it "should set the start of the page title to the resource name" do
-      get :stem_resources, :type => "activity", :id_or_filter_value => activity.id
+      get :stem_resources, :id => activity.id
       response.body.should include("<title>#{activity.name}")
     end
   end

@@ -105,11 +105,7 @@ class RobotsController < ApplicationController
             materials =
                 ExternalActivity.
                     includes([:cohorts, :cohort_items]).
-                    where(:publication_status => "published") +
-                Interactive.
-                    includes([:cohorts, :cohort_items]).
                     where(:publication_status => "published")
-
 
             materials.each do |material|
 
@@ -117,16 +113,11 @@ class RobotsController < ApplicationController
                     next
                 end
 
-                stem_resource_type = material.respond_to?(:lara_sequence?) ? 
-                                        (material.lara_sequence? ? 
-                                            'sequence' : 'activity') 
-                                        : material.class.name.downcase
-
                 slug = material.name.respond_to?(:parameterize) ? 
                         material.name.parameterize : nil
 
                 xml.url {
-                    xml.loc     "#{view_context.stem_resources_url(stem_resource_type, material.id, slug)}"
+                    xml.loc     "#{view_context.stem_resources_url(material.id, slug)}"
                     xml.lastmod "#{material.updated_at.strftime('%Y-%m-%d')}"
                 }
 

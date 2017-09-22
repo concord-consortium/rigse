@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170914202111) do
+ActiveRecord::Schema.define(:version => 20170921190628) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -863,8 +863,8 @@ ActiveRecord::Schema.define(:version => 20170914202111) do
     t.datetime "archive_date"
     t.string   "credits"
     t.string   "license_code"
-    t.boolean  "enable_sharing",                               :default => true
     t.boolean  "append_auth_token"
+    t.boolean  "enable_sharing",                               :default => true
     t.string   "material_type",                                :default => "Activity"
   end
 
@@ -1095,6 +1095,7 @@ ActiveRecord::Schema.define(:version => 20170914202111) do
     t.boolean  "no_snapshots",                               :default => false
     t.boolean  "save_interactive_state",                     :default => false
     t.string   "license_code"
+    t.integer  "external_activity_id"
   end
 
   create_table "investigations", :force => true do |t|
