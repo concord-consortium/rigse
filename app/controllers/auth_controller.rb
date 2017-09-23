@@ -5,17 +5,46 @@ class AuthController < ApplicationController
 
   def verify_logged_in
 
-    if session[:omniauth_origin]
-      session[:sso_callback_params] = params
-      session[:sso_application]     = application
+    action = params[:action]
+
+    if action == 'oauth_authorize'
+
+        #
+        # Calling as SSO provider
+        #
+        # Example params
+        # {"response_type"=>"code", "client_id"=>"localhost", "redirect_uri"=>"http://app.lara.docker/users/auth/cc_portal_localhost/callback", "state"=>"8d300e331c03b2255a4d56269b09fa906f1ff5349e943099", "controller"=>"auth", "action"=>"oauth_authorize"}
+        #
+        #
+        # puts "INFO *** Calling as SSO provider"
+
+        if current_user.nil?
+            session[:sso_callback_params] = params
+            session[:sso_application]     = application
+            redirect_to auth_login_path
+        end
+
     else
-      session.delete :sso_callback_params
-      session.delete :sso_application
+
+        #
+        # Example params
+        # {"controller"=>"auth", "action"=>"user", "format"=>"json"}
+        #
+        # puts "INFO *** Not calling as SSO provider"
+
+        if session[:omniauth_origin]
+            session[:sso_callback_params] = params
+            session[:sso_application]     = application
+        else
+            session.delete :sso_callback_params
+            session.delete :sso_application
+        end
+        if current_user.nil?
+            redirect_to auth_login_path
+        end
+
     end
 
-    if current_user.nil?
-      redirect_to auth_login_path
-    end
   end
 
   def login
