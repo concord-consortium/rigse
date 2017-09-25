@@ -32,13 +32,9 @@ class AuthController < ApplicationController
         #
         # puts "INFO *** Not calling as SSO provider"
 
-        if session[:omniauth_origin]
-            session[:sso_callback_params] = params
-            session[:sso_application]     = application
-        else
-            session.delete :sso_callback_params
-            session.delete :sso_application
-        end
+        session.delete :sso_callback_params
+        session.delete :sso_application
+
         if current_user.nil?
             redirect_to auth_login_path
         end
